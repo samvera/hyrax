@@ -66,7 +66,7 @@ module MetadataHelper
     opts[:default] = "" unless opts[:defualt]
     oid = resource.pid
     new_element_id = "#{resource_type}_#{field_name}_-1"
-    rel = url_for(:action=>"update", :controller=>"documents")
+    rel = url_for(:action=>"update", :controller=>"assets")
     
     #opts[:default] ||= ""
     #Output all of the current field values.
