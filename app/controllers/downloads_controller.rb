@@ -10,7 +10,7 @@ class DownloadsController < ApplicationController
     # in order to avoid ActionController being clever with the filenames/extensions/formats.
     # To download a datastream, pass the datastream id as ?document_id=#{dsid} in the url
     def index
-      fedora_object = ActiveFedora::Base.load_instance(params[:document_id])
+      fedora_object = ActiveFedora::Base.load_instance(params[:asset_id])
       if params[:download_id]
         @datastream = fedora_object.datastreams[params[:download_id]]
         send_data @datastream.content, :filename=>@datastream.label, :type=>@datastream.attributes["mimeType"]
