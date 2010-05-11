@@ -59,7 +59,7 @@ module MetadataHelper
     resource_type = resource.class.to_s.underscore
     result = ""
     result << "<dt for=\"#{resource_type}_#{field_name}\">#{label}"
-    result << link_to_function("+" , "insertValue(\"#{field_name}\")", :class=>'addval') 
+    result << "<a class='addval' data-field_name='#{field_name}' href='#'>+</a>"
     result << "</dt>"
     result << "<dd id=\"#{resource_type}_#{field_name}\"><ol id=\"#{resource_type}_#{field_name}_values\">"
     
@@ -74,7 +74,7 @@ module MetadataHelper
     vlist = get_values_from_datastream(resource, datastream_name, field_name, opts)
     vlist.each_with_index do |field_value,z|
       result << "<li class=\"editable\" id=\"#{resource_type}_#{field_name}_#{z}\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
-      result << link_to_function(image_tag("delete.png") , "removeFieldValue(this)", :class=>'destructive') unless z == 0
+      result << "<a href='#' class='destructive'><img src='/images/delete.png' border='0' /></a>" unless z == 0
       result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
     end
