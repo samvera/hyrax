@@ -17,6 +17,8 @@
 #
 module Hydra::RepositoryController
   
+  include MediaShelf::ActiveFedoraHelper
+      
   # Returns a list of datastreams for download.
   # Uses user's roles and "mime_type" value in submitted params to decide what to return.
   # if you pass the optional argument of :canonical=>true, it will return the canonical datastream for this object (a single object not a hash of datastreams)
