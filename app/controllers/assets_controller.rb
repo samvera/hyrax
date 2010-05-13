@@ -4,6 +4,7 @@ class AssetsController < ApplicationController
     include MediaShelf::ActiveFedoraHelper
     include Blacklight::SolrHelper
     include Hydra::RepositoryController
+    include Hydra::AssetsControllerHelper
     
     
     include Blacklight::CatalogHelper
