@@ -48,17 +48,4 @@ class AssetsController < ApplicationController
       end
     end
     
-    private
-    def retrieve_af_model(class_name)
-      klass = Module.const_get(class_name.camelcase)
-      #klass.included_modules.include?(ActiveFedora::Model)  
-      if klass.is_a?(Class) && klass.superclass == ActiveFedora::Base
-        return klass
-      else
-        return false
-      end
-      rescue NameError
-        return false
-    end
-    
 end
