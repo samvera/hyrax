@@ -1,4 +1,6 @@
+- if response.layout.nil?
+  -# include jquery if rendering the page without the application-wide layout
+  =javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'
+  
 =render :partial=>"fluid_infusion/uploader"
 =render :partial=>"fluid_infusion/uploader_js"
-
--#=link_to_if(params[:container_id].nil?, "Finished", :controller=>:file_assets, :action=>:index) {link_to("Finished", :controller=>:file_assets, :action=>:index, :id=>params[:container_id])}
