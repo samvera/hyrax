@@ -138,7 +138,7 @@ module MetadataHelper
     opts[:default] = ""
     result = ""
     result << "<dt for=\"#{resource_type}_#{field_name}\">#{label}"
-    result << link_to_function("+" , "insertTextileValue(\"#{field_name}\", \"#{datastream_name}\", \"#{basic_url}\")", :class=>'addval') 
+    result << "<a class='addval textArea' data-datastream_name='#{datastream_name}' data-field_name='#{field_name}' href='#{basic_url}'>+</a>"
     result << "</dt>"   
     
     result << "<dd id=\"#{resource_type}_#{field_name}\"><ol id=\"#{resource_type}_#{field_name}_values\">"
