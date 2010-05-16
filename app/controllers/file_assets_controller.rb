@@ -24,7 +24,7 @@ class FileAssetsController < ApplicationController
   end
   
   def new
-    render :action=>"new", :layout=>false
+    render :partial=>"new", :layout=>false
   end
   
   def create
