@@ -19,6 +19,14 @@ module Hydra::RepositoryController
   
   include MediaShelf::ActiveFedoraHelper
       
+  def self.included(c)
+    c.helper_method :solr_name
+  end
+  
+  def solr_name(field_name, field_type = :text)
+    ActiveFedora::SolrMapper.solr_name(field_name, field_type)
+  end
+  
   # Returns a list of datastreams for download.
   # Uses user's roles and "mime_type" value in submitted params to decide what to return.
   # if you pass the optional argument of :canonical=>true, it will return the canonical datastream for this object (a single object not a hash of datastreams)

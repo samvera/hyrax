@@ -2,6 +2,7 @@ class FileAssetsController < ApplicationController
   
   include Hydra::AssetsControllerHelper
   include Hydra::FileAssetsHelper  
+  include Hydra::RepositoryController  
   include MediaShelf::ActiveFedoraHelper
   
   before_filter :require_fedora
