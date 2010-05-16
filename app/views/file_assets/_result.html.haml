@@ -1,11 +1,11 @@
 %tr[result]
   %td
-    =link_to(image_tag("#{result[ActiveFedora::SolrMapper.solr_name('active_fedora_model',:symbol)]}.png", :class=>"file_type icon"), file_asset_path(:id=>result["id"]))
+    =link_to(image_tag("#{result[solr_name('active_fedora_model',:symbol)]}.png", :class=>"file_type icon"), file_asset_path(:id=>result["id"]))
     =link_to result["title_field"], file_asset_path(result["id"])
   %td
-    =result["system_create_date"]
+    =result[solr_name("system_create", :date)]
   %td
-    =result["system_modified_date"]
+    =result[solr_name("system_modified", :date)]
   %td
-    =render :partial=>"shared/solr_result_field_value", :collection => result["has_model_field"]
+    =render :partial=>"shared/solr_result_field_value", :collection => result[solr_name("has_model", :symbol)]
 -#    =render :partial=>"result_field_value", :collection => result["subject_heading_field"]
