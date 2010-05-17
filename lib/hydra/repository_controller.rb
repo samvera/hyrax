@@ -20,7 +20,9 @@ module Hydra::RepositoryController
   include MediaShelf::ActiveFedoraHelper
       
   def self.included(c)
-    c.helper_method :solr_name
+    if c.respond_to?(:helper_method)
+      c.helper_method :solr_name
+    end
   end
   
   def solr_name(field_name, field_type = :text)
