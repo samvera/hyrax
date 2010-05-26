@@ -81,7 +81,7 @@ module MetadataHelper
     vlist = get_values_from_datastream(resource, datastream_name, field_name, opts)
     vlist.each_with_index do |field_value,z|
       result << "<li class=\"editable\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
-      result << link_to_function(image_tag("delete.png") , "removeFieldValue(this)", :class=>'destructive') unless z == 0
+      result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
       result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
     end
@@ -171,13 +171,13 @@ module MetadataHelper
       resource_type = resource.class.to_s.underscore
       opts[:default] ||= ""
       
-      result = "<dt for=\"#{resource_type}_#{field_name}\">#{label}</dt>"
+      result = "<dt for=\"#{field_name}\">#{label}</dt>"
       
       choices = opts[:choices]
       field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
       choices.delete_if {|k, v| v == field_value || v == field_value.capitalize }
-      result << "<dd id=\"#{resource_type}_#{field_name}\">"
-      result << "<select name=\"#{resource_type}[#{field_name}][0]\" onchange=\"saveSelect(this)\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
+      result << "<dd id=\"#{field_name}\">"
+      result << "<select name=\"#{resource_type}[#{field_name}][0]\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
       choices.each_pair do |k,v|
         result << "<option value=\"#{v}\">#{h(k)}</option>"
       end
@@ -197,8 +197,8 @@ module MetadataHelper
     
     z = "0" # single-values only 
     
-    result = "<dt for=\"#{resource_type}_#{field_name}\">#{label}</dt>"
-    result << "<dd id=\"#{resource_type}_#{field_name}\">"
+    result = "<dt for=\"#{field_name}\">#{label}</dt>"
+    result << "<dd id=\"#{field_name}\">"
     # result << "<ol id=\"#{resource_type}_#{field_name}_values\">"
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
@@ -241,8 +241,8 @@ module MetadataHelper
     
     z = "0" # single-values only 
     
-    result = "<dt for=\"#{resource_type}_#{field_name}\">#{label}</dt>"
-    result << "<dd id=\"#{resource_type}_#{field_name}\">"
+    result = "<dt for=\"#{field_name}\">#{label}</dt>"
+    result << "<dd id=\"#{field_name}\">"
 
     opts[:default] ||= ""
     value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
@@ -262,7 +262,7 @@ module MetadataHelper
     
     year_options.insert(0, ["Year", "-1"])
 
-    result << "<div class=\"date-select\"  id=\"#{resource_type}_#{field_name}_#{z}\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
+    result << "<div class=\"date-select\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
     # result << "<select id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\">"
     # result << options_for_select(year_options, year)
     # result << "</select> / "
