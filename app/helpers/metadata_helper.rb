@@ -23,8 +23,6 @@ module MetadataHelper
     when :editable_textile
       result << editable_textile(resource, datastream_name, field_name, opts)
     when :date_picker
-      # result << date_picker_inline_edit(resource, datastream_name, field_name, opts)
-      # result << date_controlled_input(resource, datastream_name, field_name, opts)
       result << date_select(resource, datastream_name, field_name, opts)
 
     when :select
@@ -39,7 +37,6 @@ module MetadataHelper
     return result
   end
   
-
   def single_value_inline_edit(resource, datastream_name, field_name, opts={})
     resource_type = resource.class.to_s.underscore
     if opts.has_key?(:label) 
@@ -85,39 +82,6 @@ module MetadataHelper
       result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
     end
-    # result << "<div id=\"#{resource_type}_#{field_name}_new_values\"></div>"
-    result << "</ol></dd>"
-    
-    return result
-  end
-
-  def text_area_inline_edit(resource, datastream_name, field_name, opts={})
-    if opts.has_key?(:label) 
-      label = opts[:label]
-    else
-      label = field_name
-    end
-    resource_type = resource.class.to_s.underscore
-    opts[:default] = ""
-    result = ""
-    result << "<dt for=\"#{resource_type}_#{field_name}\">#{label}"
-    result << link_to_function("+" , "insertTextAreaValue(\"#{field_name}\")", :class=>'addval') 
-    result << "</dt>"   
-    
-    result << "<dd id=\"#{resource_type}_#{field_name}\"><ol id=\"#{resource_type}_#{field_name}_values\">"
-    
-    vlist = get_values_from_datastream(resource, datastream_name, field_name, opts)
-    vlist.each_with_index do |field_value,z|
-      result << "<li id=\"#{resource_type}_#{field_name}_#{z}\" name=\"#{resource_type}[#{field_name}][#{z}]\"  class=\"editable_textarea\">"
-      result << link_to_function(image_tag("delete.png") , "removeFieldValue(this)", :class=>'destructive') unless z == 0
-      result << "<div class=\"flc-inlineEdit-text\">#{field_value}</div>"
-      result << "<div class=\"flc-inlineEdit-editContainer\">"
-      result << "      <textarea></textarea>"
-      result << "      <button class=\"save\">Save</button> <button class=\"cancel\">Cancel</button>"
-      result << "</div>"
-      result << "</li>"
-    end
-    # result << "<div id=\"#{resource_type}_#{field_name}_new_values\"></div>"
     result << "</ol></dd>"
     
     return result
@@ -150,7 +114,6 @@ module MetadataHelper
       result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
       result << "</li>"
     end
-    # result << "<div id=\"#{resource_type}_#{field_name}_new_values\"></div>"
     result << "</ol></dd>"
     
     return result
@@ -187,50 +150,6 @@ module MetadataHelper
     end
   end
   
-  def date_controlled_input(resource, datastream_name, field_name, opts={})
-    resource_type = resource.class.to_s.underscore
-    if opts.has_key?(:label) 
-      label = opts[:label]
-    else
-      label = field_name
-    end
-    
-    z = "0" # single-values only 
-    
-    result = "<dt for=\"#{field_name}\">#{label}</dt>"
-    result << "<dd id=\"#{field_name}\">"
-    # result << "<ol id=\"#{resource_type}_#{field_name}_values\">"
-    opts[:default] ||= ""
-    field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
-    
-    # result << "<li id=\"#{resource_type}_#{field_name}_#{z}\" name=\"#{resource_type}[#{field_name}][#{z}]\"  class=\"editable_date_picker\">"
-    
-    field_value[/(\d+)-(\d+)-(\d+)/]
-    result << <<-EOF
-    <div class="split-date-wrap" cellpadding="0" cellspacing="0" border="0">
-        <div class="controlled-date-part"><input type="text" class="w4em" style="width:4em;" id="#{field_name}_#{z}-y" name="#{field_name}_#{z}-y" value="#{$1}" maxlength="4" />/</div>
-        <div class="controlled-date-part"><input type="text" class="w2em" style="width:2em;" id="#{field_name}_#{z}-mm" name="#{field_name}_#{z}-mm" value="#{$2}" maxlength="2" />/</div>          
-        <div class="lastRow controlled-date-part"><input type="text" class="w2em" style="width:2em;" id="#{field_name}_#{z}-dd" name="#{field_name}_#{z}-dd" value="#{$3}" maxlength="2" /></div>
-    </div>
-    <script type="text/javascript">
-    // <![CDATA[  
-      var opts = {                            
-              formElements:{"#{field_name}_#{z}-dd":"d","#{field_name}_#{z}-mm":"m","#{field_name}_#{z}-y":"Y"},
-              showWeeks:true,
-              statusFormat:"l-cc-sp-d-sp-F-sp-Y", 
-              // Remove the "Today" button
-              noTodayButton:true
-              };           
-      datePickerController.createDatePicker(opts);
-    // ]]>
-    </script>
-    EOF
-    # result << "</li></ol>"
-    result << "</dd>"
-    
-    return result
-  end
-  
   def date_select(resource, datastream_name, field_name, opts={})
     resource_type = resource.class.to_s.underscore
     if opts.has_key?(:label) 
@@ -263,10 +182,6 @@ module MetadataHelper
     year_options.insert(0, ["Year", "-1"])
 
     result << "<div class=\"date-select\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
-    # result << "<select id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\">"
-    # result << options_for_select(year_options, year)
-    # result << "</select> / "
-    
     result << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
     result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-mm\" name=\"#{field_name}_#{z}-sel-mm\">"
     result << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
@@ -281,48 +196,15 @@ module MetadataHelper
     result << <<-EOF
     <script type="text/javascript">
     // <![CDATA[  
-      var opts = {                            
-              formElements:{"#{field_name}_#{z}-sel-dd":"d","#{field_name}_#{z}-sel-y":"Y","#{field_name}_#{z}-sel-mm":"m"},
-              showWeeks:true,
-              statusFormat:"l-cc-sp-d-sp-F-sp-Y",   
-              callbackFunctions:{
-                "dateset": [saveDateWidgetEdit]
-              }          
-              };           
-      datePickerController.createDatePicker(opts);
+      // since the form element ids need to be generated on the server side for the options, the options are attached to the wrapping div via the jQuery data() method.
+      $('div.date-select[name="#{resource_type}[#{field_name}][#{z}]"]').data("opts", {                            
+        formElements:{"#{field_name}_#{z}-sel-dd":"d","#{field_name}_#{z}-sel-y":"Y","#{field_name}_#{z}-sel-mm":"m"}         
+      });          
     // ]]>
     </script>
     EOF
     result << "</dd>"
     
-  end
-  
-  def date_picker_inline_edit(resource, datastream_name, field_name, opts={})
-    resource_type = resource.class.to_s.underscore
-    if opts.has_key?(:label) 
-      label = opts[:label]
-    else
-      label = field_name
-    end
-    
-    z = "0" # single-values only 
-    
-    result = "<dt for=\"#{resource_type}_#{field_name}\">#{label}</dt>"
-    result << "<dd id=\"#{resource_type}_#{field_name}\"><ol id=\"#{resource_type}_#{field_name}_values\">"
-    opts[:default] ||= ""
-    field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
-    # result << "<li class=\"date_picker\" id=\"#{resource_type}_#{field_name}\" name=\"#{resource_type}[#{field_name}][0]\"><span class=\"editableText\">#{field_value}</span></li>"
-    result << "<li id=\"#{resource_type}_#{field_name}_#{z}\" name=\"#{resource_type}[#{field_name}][#{z}]\"  class=\"editable_date_picker\">"
-    # result << link_to_remote(image_tag("delete.png"), :update => "", :url => {:action=>:show, "#{resource_type}[#{field_name}][#{z}]"=>""}, :method => :put, :success => visual_effect(:fade, "#{field_name}_#{z}"),:html => { :class  => "destructive" })
-    result << "<div class=\"flc-inlineEdit-text editableText\">#{field_value}</div>"
-    result << "<div class=\"flc-inlineEdit-editContainer\">"
-    result << "      <input type=\"text\" readonly=\"readonly\" class=\"date_picker w16em flc-inlineEdit-edit\" id=\"#{resource_type}_#{field_name}_#{z}_value_input\" value=\"#{field_value}\"></input>"
-    result << "</div>"
-    result << "</li>"
-    #result << "<input type=\"text\" class=\"date_picker w16em\" id=\"#{resource_type}_#{field_name}_value\" name=\"#{resource_type}[#{field_name}][0]\" value=\"#{field_value}\"></input>"
-    result << "</ol></dd>"
-    
-    return result
   end
   
   def get_values_from_datastream(resource, datastream_name, field_name, opts={})
