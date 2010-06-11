@@ -10,9 +10,9 @@ class FileAsset < ActiveFedora::Base
   
   def save
     super
-    if defined?(Shelver::Shelver)
-      shelver = Shelver::Shelver.new
-      shelver.shelve_object( self )
+    if defined?(Solrizer::Solrizer)
+      solrizer = Solrizer::Solrizer.new
+      solrizer.solrize( self )
     end
   end
   
