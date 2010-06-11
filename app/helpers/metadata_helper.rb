@@ -48,7 +48,7 @@ module MetadataHelper
     result << "<dd id=\"#{field_name}\"><ol>"
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
-    result << "<li class=\"editable\" name=\"#{resource_type}[#{field_name}][0]\"><span class=\"editableText\">#{h(field_value)}</span></li>"
+    result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\"><span class=\"editableText\">#{h(field_value)}</span></li>"
     result << "</ol></dd>"
     
     return result
@@ -77,7 +77,7 @@ module MetadataHelper
     datastream = resource.datastreams[datastream_name]
     vlist = get_values_from_datastream(resource, datastream_name, field_name, opts)
     vlist.each_with_index do |field_value,z|
-      result << "<li class=\"editable\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
+      result << "<li class=\"editable\" name=\"asset[#{field_name}][#{z}]\">"
       result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
       result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
@@ -109,7 +109,7 @@ module MetadataHelper
     vlist.each_with_index do |field_value,z|
       processed_field_value = white_list( RedCloth.new(field_value, [:sanitize_html]).to_html)
       field_id = "#{field_name}_#{z}"
-      result << "<li name=\"#{resource_type}[#{field_name}][#{z}]\"  class=\"field_value textile_value\">"
+      result << "<li name=\"asset[#{field_name}][#{z}]\"  class=\"field_value textile_value\">"
       result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
       result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
       result << "</li>"
@@ -140,7 +140,7 @@ module MetadataHelper
       field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
       choices.delete_if {|k, v| v == field_value || v == field_value.capitalize }
       result << "<dd id=\"#{field_name}\">"
-      result << "<select name=\"#{resource_type}[#{field_name}][0]\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
+      result << "<select name=\"asset[#{field_name}][0]\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
       choices.each_pair do |k,v|
         result << "<option value=\"#{v}\">#{h(k)}</option>"
       end
@@ -181,7 +181,7 @@ module MetadataHelper
     
     year_options.insert(0, ["Year", "-1"])
 
-    result << "<div class=\"date-select\" name=\"#{resource_type}[#{field_name}][#{z}]\">"
+    result << "<div class=\"date-select\" name=\"asset[#{field_name}][#{z}]\">"
     result << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
     result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-mm\" name=\"#{field_name}_#{z}-sel-mm\">"
     result << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
@@ -197,7 +197,7 @@ module MetadataHelper
     <script type="text/javascript">
     // <![CDATA[  
       // since the form element ids need to be generated on the server side for the options, the options are attached to the wrapping div via the jQuery data() method.
-      $('div.date-select[name="#{resource_type}[#{field_name}][#{z}]"]').data("opts", {                            
+      $('div.date-select[name="asset[#{field_name}][#{z}]"]').data("opts", {                            
         formElements:{"#{field_name}_#{z}-sel-dd":"d","#{field_name}_#{z}-sel-y":"Y","#{field_name}_#{z}-sel-mm":"m"}         
       });          
     // ]]>

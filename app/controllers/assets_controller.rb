@@ -55,7 +55,9 @@ class AssetsController < ApplicationController
       end
       @document = af_model.find(params[:id])
       
-      attrs = unescape_keys(params[af_model.to_s.underscore])
+      # metadata_changes = params[af_model.to_s.underscore].nil? ? params[:asset] : params[af_model.to_s.underscore]
+      
+      attrs = unescape_keys(params[:asset])
       logger.debug("attributes submitted: #{attrs.inspect}")
       result = @document.update_indexed_attributes(attrs)
       @document.save
