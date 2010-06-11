@@ -85,4 +85,13 @@ class AssetsController < ApplicationController
       end
     end
     
+    def new
+      af_model = retrieve_af_model(params[:content_type])
+      if af_model
+        @asset = af_model.new
+        @asset.save
+      end
+      redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid)
+    end
+    
 end
