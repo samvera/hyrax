@@ -101,6 +101,7 @@ module CustomMetadataHelper
         processed_field_value = white_list( RedCloth.new(field_value, [:sanitize_html]).to_html)
           field_id = "#{field_name}_#{z}"
           result << "<li name=\"asset[#{field_name}][#{z}]\"  class=\"field_value textile_value\">"
+            # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
             result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
             result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
           result << "</li>"
