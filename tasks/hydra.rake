@@ -2,6 +2,26 @@
 
 namespace :hydra do
   
+  desc "Delete the object identified by pid"
+  task :delete => :environment do
+    # If a destination url has been provided, attampt to export from the fedora repository there.
+    if ENV["destination"]
+      Fedora::Repository.register(ENV["destination"])
+    end
+    
+    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
+    ActiveFedora.init unless Thread.current[:repo]
+    
+    if ENV["pid"].nil? 
+      puts "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
+    else
+      pid = ENV["pid"]
+      puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      ActiveFedora::Base.load_instance(pid).delete
+      puts "The object has been deleted."
+    end
+  end
+  
   desc "Export the object identified by pid into spec/fixtures. Example:rake hydra:harvest_fixture pid=druid:sb733gr4073 source=http://fedoraAdmin:fedoraAdmin@127.0.0.1:8080/fedora"
   task :harvest_fixture => :environment do
         
@@ -59,7 +79,8 @@ namespace :hydra do
       else
         puts "Failed to ingest the fixture."
       end
-    end
+    end    
+    
   end
 
 end
