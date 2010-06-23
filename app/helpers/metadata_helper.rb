@@ -13,31 +13,30 @@ module MetadataHelper
   
   # Convenience method for creating editable metadata fields.  Defaults to creating single-value field, but creates multi-value field if :multiple => true
   # Field name can be provided as a string or a symbol (ie. "title" or :title)
-  def editable_metadata_field(resource, datastream_name, field_key, opts={})    
-    field_name=field_key.to_s    
+  def editable_metadata_field(resource, datastream_name, field_key, opts={})        
     result = ""
-    
     case opts[:type]
     when :text_area
-      result << editable_textile(resource, datastream_name, field_name, opts)
+      result << editable_textile(resource, datastream_name, field_key, opts)
     when :editable_textile
-      result << editable_textile(resource, datastream_name, field_name, opts)
+      result << editable_textile(resource, datastream_name, field_key, opts)
     when :date_picker
-      result << date_select(resource, datastream_name, field_name, opts)
+      result << date_select(resource, datastream_name, field_key, opts)
 
     when :select
-      result << metadata_drop_down(resource, datastream_name, field_name, opts)
+      result << metadata_drop_down(resource, datastream_name, field_key, opts)
     else
       if opts[:multiple] == true
-        result << multi_value_inline_edit(resource, datastream_name, field_name, opts)
+        result << multi_value_inline_edit(resource, datastream_name, field_key, opts)
       else
-        result << single_value_inline_edit(resource, datastream_name, field_name, opts)
+        result << single_value_inline_edit(resource, datastream_name, field_key, opts)
       end
     end
     return result
   end
   
-  def single_value_inline_edit(resource, datastream_name, field_name, opts={})
+  def single_value_inline_edit(resource, datastream_name, field_key, opts={})
+    field_name=field_key.to_s
     resource_type = resource.class.to_s.underscore
     if opts.has_key?(:label) 
       label = opts[:label]
@@ -47,14 +46,15 @@ module MetadataHelper
     result = "<dt for=\"#{field_name}\">#{label}</dt>"
     result << "<dd id=\"#{field_name}\"><ol>"
     opts[:default] ||= ""
-    field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
+    field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\"><span class=\"editableText\">#{h(field_value)}</span></li>"
     result << "</ol></dd>"
     
     return result
   end
   
-  def multi_value_inline_edit(resource, datastream_name, field_name, opts={})
+  def multi_value_inline_edit(resource, datastream_name, field_key, opts={})
+    field_name=field_key.to_s
     if opts.has_key?(:label) 
       label = opts[:label]
     else
@@ -75,7 +75,7 @@ module MetadataHelper
     #opts[:default] ||= ""
     #Output all of the current field values.
     datastream = resource.datastreams[datastream_name]
-    vlist = get_values_from_datastream(resource, datastream_name, field_name, opts)
+    vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
     vlist.each_with_index do |field_value,z|
       result << "<li class=\"editable\" name=\"asset[#{field_name}][#{z}]\">"
       result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
@@ -87,7 +87,8 @@ module MetadataHelper
     return result
   end
   
-  def editable_textile(resource, datastream_name, field_name, opts={})
+  def editable_textile(resource, datastream_name, field_key, opts={})
+    field_name=field_key.to_s
     if opts.has_key?(:label) 
       label = opts[:label]
     else
@@ -105,7 +106,7 @@ module MetadataHelper
     
     result << "<dd id=\"#{field_name}\" data-datastream-name='#{datastream_name}'><ol>"
     
-    vlist = get_values_from_datastream(resource, datastream_name, field_name, opts)
+    vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
     vlist.each_with_index do |field_value,z|
       processed_field_value = white_list( RedCloth.new(field_value, [:sanitize_html]).to_html)
       field_id = "#{field_name}_#{z}"
@@ -122,9 +123,10 @@ module MetadataHelper
   # Returns an HTML select with options populated from opts[:choices].
   # If opts[:choices] is not provided, or if it's not a Hash, a single_value_inline_edit will be returned instead.
   # Will capitalize the key for each choice when displaying it in the options list.  The value is left alone.
-  def metadata_drop_down(resource, datastream_name, field_name, opts={})
+  def metadata_drop_down(resource, datastream_name, field_key, opts={})
+    field_name=field_key.to_s
     if opts[:choices].nil? || !opts[:choices].kind_of?(Hash)
-      single_value_inline_edit(resource, datastream_name, field_name, opts)
+      single_value_inline_edit(resource, datastream_name, field_key, opts)
     else
       if opts.has_key?(:label) 
         label = opts[:label]
@@ -137,7 +139,7 @@ module MetadataHelper
       result = "<dt for=\"#{field_name}\">#{label}</dt>"
       
       choices = opts[:choices]
-      field_value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
+      field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
       choices.delete_if {|k, v| v == field_value || v == field_value.capitalize }
       result << "<dd id=\"#{field_name}\">"
       result << "<select name=\"asset[#{field_name}][0]\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
@@ -150,7 +152,8 @@ module MetadataHelper
     end
   end
   
-  def date_select(resource, datastream_name, field_name, opts={})
+  def date_select(resource, datastream_name, field_key, opts={})
+    field_name=field_key.to_s
     resource_type = resource.class.to_s.underscore
     if opts.has_key?(:label) 
       label = opts[:label]
@@ -207,8 +210,22 @@ module MetadataHelper
     
   end
   
-  def get_values_from_datastream(resource, datastream_name, field_name, opts={})
-    result = resource.datastreams[datastream_name].send("#{field_name}_values")
+  def get_values_from_datastream(resource, datastream_name, field_key, opts={})
+    ds = resource.datastreams[datastream_name]
+    if ds.kind_of?(ActiveFedora::NokogiriDatastream)
+      if field_key.kind_of?(String)
+        xpath = field_key
+      else
+        if field_key.kind_of?(Hash)
+          field_key = [field_key]
+        end
+        xpath = ds.class.accessor_xpath(*field_key)
+      end
+      result = ds.property_values(xpath)
+    else
+      field_name=field_key.to_s
+      result = ds.send("#{field_name}_values")
+    end
     if result.empty? && opts[:default]
       result = [opts[:default]]
     end
