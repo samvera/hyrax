@@ -8,3 +8,5 @@ require 'hydra/testing_server'
 require 'hydra/assets_controller_helper'
 require 'hydra/file_assets_helper'
 
+require 'hydra/rights_metadata'
+
