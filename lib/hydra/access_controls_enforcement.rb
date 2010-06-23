@@ -5,7 +5,7 @@ module Hydra::AccessControlsEnforcement
   # If someone hits the show action while their session's viewing_context is in edit mode, 
   # this will redirect them to the edit action.
   # If they do not have sufficient privileges to edit documents, it will silently switch their session to browse mode.
-  def enforce_viewing_context_for_show_requests
+  def enforce_viewing_context_for_show_requests    
     if params[:viewing_context] == "browse"
       session[:viewing_context] = params[:viewing_context]
     elsif session[:viewing_context] == "edit"
@@ -23,7 +23,6 @@ module Hydra::AccessControlsEnforcement
       return @extra_controller_params
     end
   end
-
   def enforce_read_permissions
     unless @document['access_t'] && (@document['access_t'].first == "public" || @document['access_t'].first == "Public")
     # case @document['access_t'].first
@@ -39,7 +38,7 @@ module Hydra::AccessControlsEnforcement
     if !editor?
       session[:viewing_context] = "browse"
       flash[:notice] = "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
-      #redirect_to :action=>:show
+      redirect_to :action=>:show
     end
   end
 
