@@ -51,7 +51,7 @@ class AssetsController < ApplicationController
     def update
       af_model = retrieve_af_model(params[:content_type])
       unless af_model 
-        af_model = SaltDocument
+        af_model = HydrangeaArticle
       end
       @document = af_model.find(params[:id])
       
