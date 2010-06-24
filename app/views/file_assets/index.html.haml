@@ -6,10 +6,10 @@
   %col{:width=>"15%"}/
   %col{:width=>"55%"}/
   
-  %th Title (or pid)
-  %th Date Created
-  %th Date Last Modified 
-  %th Model(s) 
+  %th File
+  %th Description
+  %th Size
+  %th Uploaded
   =render :partial=>'result', :collection=>@solr_result.hits
 
 - if editor?

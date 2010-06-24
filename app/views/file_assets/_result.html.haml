@@ -1,11 +1,10 @@
 %tr[result]
   %td
-    =link_to(image_tag("#{result[solr_name('active_fedora_model',:symbol)]}.png", :class=>"file_type icon"), file_asset_path(:id=>result["id"]))
-    =link_to result["title_field"], file_asset_path(result["id"])
+    =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
   %td
-    =result[solr_name("system_create", :date)]
+    =result[solr_name("description", :text)]
   %td
-    =result[solr_name("system_modified", :date)]
+    =result[solr_name("extent", :text)]
   %td
-    =render :partial=>"shared/solr_result_field_value", :collection => result[solr_name("has_model", :symbol)]
--#    =render :partial=>"result_field_value", :collection => result["subject_heading_field"]
+    - dt = DateTime.parse(result[ solr_name("system_create", :date)] )
+    = dt.strftime("%Y-%m-%d %I:%M%p UTC")
