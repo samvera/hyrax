@@ -1,5 +1,6 @@
 %tr[result]
   %td
+  %td
     =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
   %td
     =result[solr_name("description", :text)]
@@ -8,3 +9,5 @@
   %td
     - dt = DateTime.parse(result[ solr_name("system_create", :date)] )
     = dt.strftime("%Y-%m-%d %I:%M%p UTC")
+  %td
+    %a.destructive{:href=>'#', :title=>"Remove file"} X

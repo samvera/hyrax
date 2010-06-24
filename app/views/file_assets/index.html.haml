@@ -1,15 +1,20 @@
 %h2 File Assets
 
 %table#assets
+  %col{:width=>"10%"}/
   %col{:width=>"25%"}/
-  %col{:width=>"15%"}/
-  %col{:width=>"15%"}/
-  %col{:width=>"55%"}/
+  %col{:width=>"30%"}/  
+  %col{:width=>"8%"}/
+  %col{:width=>"22%"}/
+  %col{:width=>"5%"}/
   
+  %th
   %th File
   %th Description
   %th Size
   %th Uploaded
+  %th
+  
   =render :partial=>'result', :collection=>@solr_result.hits
 
 - if editor?
