@@ -39,8 +39,11 @@ module CustomMetadataHelper
   
   
   def custom_single_value_inline_edit(resource, datastream_name, field_key, opts={})
-    field_name=field_key.to_s
     resource_type = resource.class.to_s.underscore
+    
+    field_params = field_update_params(resource, datastream_name, field_key, opts)
+    field_name = field_params[:field_name]
+    
     if opts.has_key?(:label) 
       label = opts[:label]
     else
@@ -50,7 +53,14 @@ module CustomMetadataHelper
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result = "<ol>"
-      result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\">"
+      if field_params["parent_select"].empty?
+        name = field_params.to_query + {"asset"=>{field_name=>{0=>nil}}}.to_query.chop
+        # result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\">" 
+      else
+        name = field_params.merge({"child_index"=>0}).to_query + "&value"
+        # result << "<li class=\"editable\" name=\"datastream=#{datastream_name}#{xml_update_params}&child_index=0&value\">"
+      end
+      result << "<li class=\"editable\" name=\"#{name}\">"
         result <<"<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
     result << "</ol>"
@@ -199,6 +209,24 @@ module CustomMetadataHelper
     return :label=>label, :field=>result
   end
   
+  def field_update_params(resource, datastream_name, field_key, opts={})
+    url_params = {"datastream"=>datastream_name}
+    field_name = field_key.to_s
+    url_params[:field_name] = field_name
+    
+    if field_key.kind_of?(Array)
+      url_params["parent_select"] = field_key
+      # field_key.each do |x|
+      #   if x.kind_of?(Hash)
+      #     url_params << "&parent_select[][#{x.keys.first.inspect}]=#{x.values.first.inspect}"          
+      #   else
+      #     url_params << "&parent_select[]=#{x.inspect}"
+      #   end
+      # end
+    end
+      #{"asset"=>{"fieldName"=>{1=>nil}}}
   
+    return url_params
+  end
   
 end

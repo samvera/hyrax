@@ -57,9 +57,10 @@ class AssetsController < ApplicationController
       
       # metadata_changes = params[af_model.to_s.underscore].nil? ? params[:asset] : params[af_model.to_s.underscore]
       
-      attrs = unescape_keys(params[:asset])
-      logger.debug("attributes submitted: #{attrs.inspect}")
-      result = @document.update_indexed_attributes(attrs)
+      updater_method_args = prep_updater_method_args(params)
+      
+      logger.debug("attributes submitted: #{updater_method_args.inspect}")
+      result = @document.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
       @document.save
       #response = attrs.keys.map{|x| escape_keys({x=>attrs[x].values})}
       response = Hash["updated"=>[]]

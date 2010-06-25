@@ -1,3 +1,4 @@
+require "ruby-debug"
 module MetadataHelper
   
   include WhiteListHelper
@@ -36,7 +37,7 @@ module MetadataHelper
   end
   
   def single_value_inline_edit(resource, datastream_name, field_key, opts={})
-    field_name=field_key.to_s
+    field_name=field_key.inspect
     resource_type = resource.class.to_s.underscore
     if opts.has_key?(:label) 
       label = opts[:label]
