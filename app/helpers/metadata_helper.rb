@@ -254,4 +254,18 @@ module MetadataHelper
     url = "#{classname}_#{resource.pid}"   
   end
   
+  def prefab_editable_metadata_field(resource, datastream_name, field_key, opts={})
+    field_name = field_key.to_s
+    result = ""
+    generated_stuff = editable_metadata_field(@document_fedora, "rightsMetadata", :discover_access_group, :label => "Discover Access:", :type=>:select, :choices=>{"Public" => "public","Researchers" => "researcher", "Archivists" => "archivist", "Archivists" => "archivist"})      
+    result << "<dt>"
+    result << "<label for=\'#{field_name}\">"
+    result << generated_stuff[:label]
+    result << "</dt>"
+    
+    result << "<dd id=\"#{field_name}\">"
+    result << generated_stuff[:field]
+    result << "</dd>"
+  end
+  
 end

@@ -53,12 +53,12 @@ module CustomMetadataHelper
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result = "<ol>"
-      if field_params["parent_select"].empty?
-        name = field_params.to_query + {"asset"=>{field_name=>{0=>nil}}}.to_query.chop
-        # result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\">" 
-      else
+      if field_params.has_key?("parent_select")
         name = field_params.merge({"child_index"=>0}).to_query + "&value"
         # result << "<li class=\"editable\" name=\"datastream=#{datastream_name}#{xml_update_params}&child_index=0&value\">"
+      else
+        name = field_params.to_query + "&asset[#{field_name}][0]"
+        # result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\">"
       end
       result << "<li class=\"editable\" name=\"#{name}\">"
         result <<"<span class=\"editableText\">#{h(field_value)}</span>"
