@@ -53,10 +53,8 @@ module MetadataHelper
     result = "<ol>"
       if field_params.has_key?("parent_select")
         name = field_params.merge({"child_index"=>0}).to_query + "&value"
-        # result << "<li class=\"editable\" name=\"datastream=#{datastream_name}#{xml_update_params}&child_index=0&value\">"
       else
         name = field_params.to_query + "&asset[#{field_name}][0]"
-        # result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\">"
       end
       result << "<li class=\"editable\" name=\"#{name}\">"
         result <<"<span class=\"editableText\">#{h(field_value)}</span>"
@@ -236,7 +234,7 @@ module MetadataHelper
         if field_key.kind_of?(Hash)
           field_key = [field_key]
         end
-        xpath = ds.class.accessor_xpath(field_key)
+        xpath = ds.class.accessor_xpath(*field_key)
       end
       result = ds.property_values(xpath)
     else
