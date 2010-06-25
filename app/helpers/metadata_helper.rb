@@ -14,44 +14,56 @@ module MetadataHelper
   
   # Convenience method for creating editable metadata fields.  Defaults to creating single-value field, but creates multi-value field if :multiple => true
   # Field name can be provided as a string or a symbol (ie. "title" or :title)
-  def editable_metadata_field(resource, datastream_name, field_key, opts={})        
-    result = ""
+  def editable_metadata_field(resource, datastream_name, field_key, opts={})    
     case opts[:type]
     when :text_area
-      result << editable_textile(resource, datastream_name, field_key, opts)
+      result = editable_textile(resource, datastream_name, field_key, opts)
     when :editable_textile
-      result << editable_textile(resource, datastream_name, field_key, opts)
+      result = editable_textile(resource, datastream_name, field_key, opts)
     when :date_picker
-      result << date_select(resource, datastream_name, field_key, opts)
+      result = date_select(resource, datastream_name, field_key, opts)
 
     when :select
-      result << metadata_drop_down(resource, datastream_name, field_key, opts)
+      result = metadata_drop_down(resource, datastream_name, field_key, opts)
     else
       if opts[:multiple] == true
-        result << multi_value_inline_edit(resource, datastream_name, field_key, opts)
+        result = multi_value_inline_edit(resource, datastream_name, field_key, opts)
       else
-        result << single_value_inline_edit(resource, datastream_name, field_key, opts)
+        result = single_value_inline_edit(resource, datastream_name, field_key, opts)
       end
     end
     return result
   end
   
+  
   def single_value_inline_edit(resource, datastream_name, field_key, opts={})
-    field_name=field_key.inspect
     resource_type = resource.class.to_s.underscore
+    
+    field_params = field_update_params(resource, datastream_name, field_key, opts)
+    field_name = field_params[:field_name]
+    
     if opts.has_key?(:label) 
       label = opts[:label]
     else
       label = field_name
     end
-    result = "<dt for=\"#{field_name}\">#{label}</dt>"
-    result << "<dd id=\"#{field_name}\"><ol>"
+    
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
-    result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\"><span class=\"editableText\">#{h(field_value)}</span></li>"
-    result << "</ol></dd>"
+    result = "<ol>"
+      if field_params.has_key?("parent_select")
+        name = field_params.merge({"child_index"=>0}).to_query + "&value"
+        # result << "<li class=\"editable\" name=\"datastream=#{datastream_name}#{xml_update_params}&child_index=0&value\">"
+      else
+        name = field_params.to_query + "&asset[#{field_name}][0]"
+        # result << "<li class=\"editable\" name=\"asset[#{field_name}][0]\">"
+      end
+      result << "<li class=\"editable\" name=\"#{name}\">"
+        result <<"<span class=\"editableText\">#{h(field_value)}</span>"
+      result << "</li>"
+    result << "</ol>"
     
-    return result
+    return :label=>label, :field=> result
   end
   
   def multi_value_inline_edit(resource, datastream_name, field_key, opts={})
@@ -59,33 +71,25 @@ module MetadataHelper
     if opts.has_key?(:label) 
       label = opts[:label]
     else
-      label = field_name
+      label = field_name.dup
     end
+    label << "<a class='addval input' href='#'>+</a>"
     resource_type = resource.class.to_s.underscore
-    result = ""
-    result << "<dt for=\"#{field_name}\">#{label}"
-    result << "<a class='addval input' href='#'>+</a>"
-    result << "</dt>"
-    result << "<dd id=\"#{field_name}\"><ol>"
-    
     opts[:default] = "" unless opts[:default]
-    oid = resource.pid
-    new_element_id = "#{field_name}_-1"
-    rel = url_for(:action=>"update", :controller=>"assets")
-    
-    #opts[:default] ||= ""
-    #Output all of the current field values.
-    datastream = resource.datastreams[datastream_name]
-    vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
-    vlist.each_with_index do |field_value,z|
-      result << "<li class=\"editable\" name=\"asset[#{field_name}][#{z}]\">"
-      result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
-      result << "<span class=\"editableText\">#{h(field_value)}</span>"
+    result = ""
+    result << "<ol>"
+      #Output all of the current field values.
+      datastream = resource.datastreams[datastream_name]
+      vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
+      vlist.each_with_index do |field_value,z|
+        result << "<li class=\"editable\" name=\"asset[#{field_name}][#{z}]\">"
+          result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
+        result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
     end
-    result << "</ol></dd>"
+    result << "</ol>"
     
-    return result
+    return :label=>label, :field => result
   end
   
   def editable_textile(resource, datastream_name, field_key, opts={})
@@ -93,32 +97,29 @@ module MetadataHelper
     if opts.has_key?(:label) 
       label = opts[:label]
     else
-      label = field_name
+      label = field_name.dup
     end
+    label << "<a class='addval textArea' href='#'>+</a>"
     escaped_field_name=field_name.gsub(/_/, '+')
     resource_type = resource.class.to_s.underscore
     escaped_resource_type = resource_type.gsub(/_/, '+')
     
     opts[:default] = ""
     result = ""
-    result << "<dt for=\"#{field_name}\">#{label}"
-    result << "<a class='addval textArea' href='#'>+</a>"
-    result << "</dt>"   
-    
-    result << "<dd id=\"#{field_name}\" data-datastream-name='#{datastream_name}'><ol>"
-    
-    vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
-    vlist.each_with_index do |field_value,z|
-      processed_field_value = white_list( RedCloth.new(field_value, [:sanitize_html]).to_html)
-      field_id = "#{field_name}_#{z}"
-      result << "<li name=\"asset[#{field_name}][#{z}]\"  class=\"field_value textile_value\">"
-      result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
-      result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
-      result << "</li>"
+    result << "<ol>"
+      vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
+      vlist.each_with_index do |field_value,z|
+        processed_field_value = white_list( RedCloth.new(field_value, [:sanitize_html]).to_html)
+          field_id = "#{field_name}_#{z}"
+          result << "<li name=\"asset[#{field_name}][#{z}]\"  class=\"field_value textile_value\">"
+            # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
+            result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
+            result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
+          result << "</li>"
     end
-    result << "</ol></dd>"
+    result << "</ol>"
     
-    return result
+    return :label=>label, :field=>result
   end
   
   # Returns an HTML select with options populated from opts[:choices].
@@ -137,19 +138,17 @@ module MetadataHelper
       resource_type = resource.class.to_s.underscore
       opts[:default] ||= ""
       
-      result = "<dt for=\"#{field_name}\">#{label}</dt>"
-      
+      result = ""      
       choices = opts[:choices]
       field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
       choices.delete_if {|k, v| v == field_value || v == field_value.capitalize }
-      result << "<dd id=\"#{field_name}\">"
+
       result << "<select name=\"asset[#{field_name}][0]\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
-      choices.each_pair do |k,v|
-        result << "<option value=\"#{v}\">#{h(k)}</option>"
-      end
+        choices.each_pair do |k,v|
+          result << "<option value=\"#{v}\">#{h(k)}</option>"
+        end
       result << "</select>"
-      result << "</dd>"
-      return result
+      return :label=>label, :field=>result
     end
   end
   
@@ -164,11 +163,9 @@ module MetadataHelper
     
     z = "0" # single-values only 
     
-    result = "<dt for=\"#{field_name}\">#{label}</dt>"
-    result << "<dd id=\"#{field_name}\">"
-
+    result = ""
     opts[:default] ||= ""
-    value = get_values_from_datastream(resource, datastream_name, field_name, opts).first
+    value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     field_value = value.nil? ? "" : value
         
     field_value[/(\d+)-(\d+)-(\d+)/]
@@ -186,16 +183,16 @@ module MetadataHelper
     year_options.insert(0, ["Year", "-1"])
 
     result << "<div class=\"date-select\" name=\"asset[#{field_name}][#{z}]\">"
-    result << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
-    result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-mm\" name=\"#{field_name}_#{z}-sel-mm\">"
-    result << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
-                                  ["April", "04"],["May", "05"],["June", "06"],["July", "07"],["August", "08"],
-                                  ["September", "09"],["October", "10"],["November", "11"],["December", "12"]
-                                  ], month)
-    result << "</select> / "
-    result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-dd\" name=\"#{field_name}_#{z}-sel-dd\">"
-    result << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
-    result << "</select>"
+      result << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
+      result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-mm\" name=\"#{field_name}_#{z}-sel-mm\">"
+        result << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
+                                      ["April", "04"],["May", "05"],["June", "06"],["July", "07"],["August", "08"],
+                                      ["September", "09"],["October", "10"],["November", "11"],["December", "12"]
+                                      ], month)
+      result << "</select> / "
+      result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-dd\" name=\"#{field_name}_#{z}-sel-dd\">"
+        result << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
+      result << "</select>"
     result << "</div>"
     result << <<-EOF
     <script type="text/javascript">
@@ -207,8 +204,27 @@ module MetadataHelper
     // ]]>
     </script>
     EOF
-    result << "</dd>"
+    return :label=>label, :field=>result
+  end
+  
+  def field_update_params(resource, datastream_name, field_key, opts={})
+    url_params = {"datastream"=>datastream_name}
+    field_name = field_key.to_s
+    url_params[:field_name] = field_name
     
+    if field_key.kind_of?(Array)
+      url_params["parent_select"] = field_key
+      # field_key.each do |x|
+      #   if x.kind_of?(Hash)
+      #     url_params << "&parent_select[][#{x.keys.first.inspect}]=#{x.values.first.inspect}"          
+      #   else
+      #     url_params << "&parent_select[]=#{x.inspect}"
+      #   end
+      # end
+    end
+      #{"asset"=>{"fieldName"=>{1=>nil}}}
+  
+    return url_params
   end
   
   def get_values_from_datastream(resource, datastream_name, field_key, opts={})
@@ -220,7 +236,7 @@ module MetadataHelper
         if field_key.kind_of?(Hash)
           field_key = [field_key]
         end
-        xpath = ds.class.accessor_xpath(*field_key)
+        xpath = ds.class.accessor_xpath(field_key)
       end
       result = ds.property_values(xpath)
     else
