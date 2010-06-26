@@ -60,6 +60,9 @@ class AssetsController < ApplicationController
       updater_method_args = prep_updater_method_args(params)
       
       logger.debug("attributes submitted: #{updater_method_args.inspect}")
+      
+      # this will only work if there is only one datastream being updated.
+      # once ActiveFedora::MetadataDatastream supports .update_datastream_attributes, use that method instead (will also be able to pass through params["asset"] as-is without usin prep_updater_method_args!)
       result = @document.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
       @document.save
       #response = attrs.keys.map{|x| escape_keys({x=>attrs[x].values})}
