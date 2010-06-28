@@ -1,4 +1,3 @@
-require "ruby-debug"
 module MetadataHelper
   
   include WhiteListHelper
@@ -206,21 +205,20 @@ module MetadataHelper
   end
   
   def field_update_params(resource, datastream_name, field_key, opts={})
-    url_params = {"datastream"=>datastream_name}
-    field_name = field_key.to_s
-    url_params[:field_name] = field_name
     
-    if field_key.kind_of?(Array)
-      url_params["parent_select"] = field_key
-      # field_key.each do |x|
-      #   if x.kind_of?(Hash)
-      #     url_params << "&parent_select[][#{x.keys.first.inspect}]=#{x.values.first.inspect}"          
-      #   else
-      #     url_params << "&parent_select[]=#{x.inspect}"
-      #   end
-      # end
+    url_params = {"asset"=>{}}
+    # url_params = {"datastream"=>datastream_name}
+    ds = resource.datastreams_in_memory[datastream_name]
+    
+    if ds.kind_of?(ActiveFedora::NokogiriDatastream)
+      field_name = ds.class.accessor_hierarchical_name(*field_key)
+      url_params[:field_name] = field_name
+      url_params["field_selectors"] = {datastream_name=>{field_name => field_key} }
+    else
+      field_name = field_key.to_s
+      url_params[:field_name] = field_name
     end
-      #{"asset"=>{"fieldName"=>{1=>nil}}}
+    # url_params["asset"][datastream_name] = {field_name => }
   
     return url_params
   end
