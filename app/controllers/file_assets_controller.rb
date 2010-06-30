@@ -4,6 +4,7 @@ class FileAssetsController < ApplicationController
   include Hydra::FileAssetsHelper  
   include Hydra::RepositoryController  
   include MediaShelf::ActiveFedoraHelper
+  include Blacklight::SolrHelper
   
   before_filter :require_fedora
   before_filter :require_solr, :only=>[:index, :create, :show]
@@ -15,6 +16,7 @@ class FileAssetsController < ApplicationController
       layout = false
     end
     if !params[:container_id].nil?
+      @document = get_solr_response_for_doc_id(params[:container_id])
       @container =  ActiveFedora::Base.load_instance(params[:container_id])
       @solr_result = @container.collection_members(:response_format=>:solr)
     else

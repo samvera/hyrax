@@ -17,7 +17,7 @@
   
   =render :partial=>'result', :collection=>@solr_result.hits
 
-- if editor?
+- if !@document.nil? && editor?
   %h2
     %a#toggle-uploader{:href => ""}
       Upload files
