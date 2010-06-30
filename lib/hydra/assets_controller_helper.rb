@@ -1,3 +1,4 @@
+require "om"
 module Hydra::AssetsControllerHelper
   
   def prep_updater_method_args(params)
@@ -12,7 +13,7 @@ module Hydra::AssetsControllerHelper
         # if no field selector, exists, use the field name
         fields.each_pair do |field_name,field_values|
           
-          parent_select = destringify( params["field_selectors"][datastream_name].fetch(field_name, field_name) )
+          parent_select = OM.destringify( params["field_selectors"][datastream_name].fetch(field_name, field_name) )
           args[:params][parent_select] = field_values       
         end
       
@@ -36,38 +37,10 @@ module Hydra::AssetsControllerHelper
     return args
      
   end
-  
-  # @params String, Array, or Hash
-  # Recursively changes any strings beginning with : to symbols and any number strings to integers
-  # Converts [{":person"=>"0"}, ":last_name"] to [{:person=>0}, :last_name]
-  def destringify(params)
-    case params
-    when String       
-      if params == "0" || params.to_i != 0
-        result = params.to_i
-      elsif params[0,1] == ":"
-        result = params.sub(":","").to_sym
-      else
-        result = params.to_sym
-      end
-      return result
-    when Hash 
-      result = {}
-      params.each_pair do |k,v|
-        result[ destringify(k) ] = destringify(v)
-      end
-      return result
-    when Array 
-      result = []
-      params.each do |x|
-        result << destringify(x)
-      end
-      return result
-    else
-      return params
-    end
-    
-  end
+
+  # moved destringify into OM gem. 
+  # ie.  OM.destringify( params )
+  # Note: OM now handles destringifying params internally.  You probably don't have to do it!
   
   private
     

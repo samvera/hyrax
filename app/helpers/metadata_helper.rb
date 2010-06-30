@@ -224,25 +224,26 @@ module MetadataHelper
   end
   
   def get_values_from_datastream(resource, datastream_name, field_key, opts={})
+    # return resource.get_values_from_datastream(datastream_name, field_key)
     ds = resource.datastreams[datastream_name]
-    if ds.kind_of?(ActiveFedora::NokogiriDatastream)
-      if field_key.kind_of?(String)
-        xpath = field_key
-      else
-        if field_key.kind_of?(Hash)
-          field_key = [field_key]
+        if ds.kind_of?(ActiveFedora::NokogiriDatastream)
+          if field_key.kind_of?(String)
+            xpath = field_key
+          else
+            if field_key.kind_of?(Hash)
+              field_key = [field_key]
+            end
+            xpath = ds.class.accessor_xpath(*field_key)
+          end
+          result = ds.property_values(xpath)
+        else
+          field_name=field_key.to_s
+          result = ds.send("#{field_name}_values")
         end
-        xpath = ds.class.accessor_xpath(*field_key)
-      end
-      result = ds.property_values(xpath)
-    else
-      field_name=field_key.to_s
-      result = ds.send("#{field_name}_values")
-    end
-    if result.empty? && opts[:default]
-      result = [opts[:default]]
-    end
-    return result
+        if result.empty? && opts[:default]
+          result = [opts[:default]]
+        end
+        return result
   end
   
   def custom_dom_id(resource)
