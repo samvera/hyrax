@@ -54,9 +54,7 @@ class AssetsController < ApplicationController
         af_model = HydrangeaArticle
       end
       @document = af_model.find(params[:id])
-      
-      # metadata_changes = params[af_model.to_s.underscore].nil? ? params[:asset] : params[af_model.to_s.underscore]
-      
+            
       updater_method_args = prep_updater_method_args(params)
       
       logger.debug("attributes submitted: #{updater_method_args.inspect}")

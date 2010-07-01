@@ -39,7 +39,7 @@ module MetadataHelper
     resource_type = resource.class.to_s.underscore
     
     field_params = field_update_params(resource, datastream_name, field_key, opts)
-    field_name = field_params[:field_name]
+    field_name = field_params.delete(:field_name)
     
     if opts.has_key?(:label) 
       label = opts[:label]
@@ -50,7 +50,8 @@ module MetadataHelper
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result = "<ol>"
-      name = field_params.to_query + "&asset[#{datastream_name}][#{field_name}][0]"
+      z = "0"
+      name = add_param(field_params.to_query,"asset[#{datastream_name}][#{field_name}][#{z}]")
       result << "<li class=\"editable\" name=\"#{name}\">"
         result <<"<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
@@ -60,7 +61,11 @@ module MetadataHelper
   end
   
   def multi_value_inline_edit(resource, datastream_name, field_key, opts={})
-    field_name=field_key.to_s
+    resource_type = resource.class.to_s.underscore
+    
+    field_params = field_update_params(resource, datastream_name, field_key, opts)
+    field_name = field_params.delete(:field_name)
+    
     if opts.has_key?(:label) 
       label = opts[:label]
     else
@@ -75,7 +80,8 @@ module MetadataHelper
       datastream = resource.datastreams[datastream_name]
       vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
       vlist.each_with_index do |field_value,z|
-        result << "<li class=\"editable\" name=\"asset[#{field_name}][#{z}]\">"
+        name = add_param(field_params.to_query,"asset[#{datastream_name}][#{field_name}][#{z}]")
+        result << "<li class=\"editable\" name=\"#{name}\">"
           result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
         result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
@@ -86,13 +92,19 @@ module MetadataHelper
   end
   
   def editable_textile(resource, datastream_name, field_key, opts={})
-    field_name=field_key.to_s
+    resource_type = resource.class.to_s.underscore
+    
+    field_params = field_update_params(resource, datastream_name, field_key, opts)
+    field_name = field_params.delete(:field_name)
+    
     if opts.has_key?(:label) 
       label = opts[:label]
     else
       label = field_name.dup
     end
-    label << "<a class='addval textArea' href='#'>+</a>"
+    if opts[:multiple]
+      label << "<a class='addval textArea' href='#'>+</a>"
+    end
     escaped_field_name=field_name.gsub(/_/, '+')
     resource_type = resource.class.to_s.underscore
     escaped_resource_type = resource_type.gsub(/_/, '+')
@@ -102,9 +114,10 @@ module MetadataHelper
     result << "<ol>"
       vlist = get_values_from_datastream(resource, datastream_name, field_key, opts)
       vlist.each_with_index do |field_value,z|
+        name = add_param(field_params.to_query,"asset[#{datastream_name}][#{field_name}][#{z}]")
         processed_field_value = white_list( RedCloth.new(field_value, [:sanitize_html]).to_html)
           field_id = "#{field_name}_#{z}"
-          result << "<li name=\"asset[#{field_name}][#{z}]\"  class=\"field_value textile_value\">"
+          result << "<li name=\"#{name}\"  class=\"field_value textile_value\">"
             # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
             result << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
             result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
@@ -119,7 +132,11 @@ module MetadataHelper
   # If opts[:choices] is not provided, or if it's not a Hash, a single_value_inline_edit will be returned instead.
   # Will capitalize the key for each choice when displaying it in the options list.  The value is left alone.
   def metadata_drop_down(resource, datastream_name, field_key, opts={})
-    field_name=field_key.to_s
+    resource_type = resource.class.to_s.underscore
+    
+    field_params = field_update_params(resource, datastream_name, field_key, opts)
+    field_name = field_params.delete(:field_name)
+
     if opts[:choices].nil? || !opts[:choices].kind_of?(Hash)
       single_value_inline_edit(resource, datastream_name, field_key, opts)
     else
@@ -134,9 +151,15 @@ module MetadataHelper
       result = ""      
       choices = opts[:choices]
       field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
-      choices.delete_if {|k, v| v == field_value || v == field_value.capitalize }
-
-      result << "<select name=\"asset[#{field_name}][0]\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
+      z = "0"
+      name = add_param(field_params.to_query,"asset[#{datastream_name}][#{field_name}][#{z}]")
+      
+      if field_value.nil?
+        result << "<select name=\"#{name}\" class=\"metadata-dd\">"
+      else
+        choices.delete_if {|k, v| v == field_value || v == field_value.capitalize }
+        result << "<select name=\"#{name}\" class=\"metadata-dd\"><option value=\"#{field_value}\" selected=\"selected\">#{h(field_value.capitalize)}</option>"
+      end
         choices.each_pair do |k,v|
           result << "<option value=\"#{v}\">#{h(k)}</option>"
         end
@@ -146,8 +169,11 @@ module MetadataHelper
   end
   
   def date_select(resource, datastream_name, field_key, opts={})
-    field_name=field_key.to_s
     resource_type = resource.class.to_s.underscore
+    
+    field_params = field_update_params(resource, datastream_name, field_key, opts)
+    field_name = field_params.delete(:field_name)
+    
     if opts.has_key?(:label) 
       label = opts[:label]
     else
@@ -174,8 +200,8 @@ module MetadataHelper
     # year_options = Array.new(4) {|i| 1990+i}
     
     year_options.insert(0, ["Year", "-1"])
-
-    result << "<div class=\"date-select\" name=\"asset[#{field_name}][#{z}]\">"
+    name = add_param(field_params.to_query,"asset[#{datastream_name}][#{field_name}][#{z}]")
+    result << "<div class=\"date-select\" name=\"#{name}\">"
       result << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{field_name}_#{z}-sel-y\" name=\"#{field_name}_#{z}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
       result << "<select class=\"controlled-date-part\" id=\"#{field_name}_#{z}-sel-mm\" name=\"#{field_name}_#{z}-sel-mm\">"
         result << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
@@ -202,7 +228,7 @@ module MetadataHelper
   
   def field_update_params(resource, datastream_name, field_key, opts={})
     
-    url_params = {"asset"=>{}}
+    url_params = {}
     # url_params = {"datastream"=>datastream_name}
     ds = resource.datastreams_in_memory[datastream_name]
     
@@ -219,26 +245,15 @@ module MetadataHelper
   end
   
   def get_values_from_datastream(resource, datastream_name, field_key, opts={})
-    # return resource.get_values_from_datastream(datastream_name, field_key)
-    ds = resource.datastreams[datastream_name]
-        if ds.kind_of?(ActiveFedora::NokogiriDatastream)
-          if field_key.kind_of?(String)
-            xpath = field_key
-          else
-            if field_key.kind_of?(Hash)
-              field_key = [field_key]
-            end
-            xpath = ds.class.accessor_xpath(*field_key)
-          end
-          result = ds.property_values(xpath)
-        else
-          field_name=field_key.to_s
-          result = ds.send("#{field_name}_values")
-        end
-        if result.empty? && opts[:default]
-          result = [opts[:default]]
-        end
-        return result
+    return resource.get_values_from_datastream(datastream_name, field_key)
+  end
+  
+  def add_param(query_string, new_param)
+    if query_string.empty?
+      return new_param
+    else
+      return query_string + "&" + new_param
+    end
   end
   
   def custom_dom_id(resource)
