@@ -209,24 +209,24 @@ module CustomMetadataHelper
     return :label=>label, :field=>result
   end
   
-  def field_update_params(resource, datastream_name, field_key, opts={})
-    url_params = {"datastream"=>datastream_name}
-    field_name = field_key.to_s
-    url_params[:field_name] = field_name
-    
-    if field_key.kind_of?(Array)
-      url_params["parent_select"] = field_key
-      # field_key.each do |x|
-      #   if x.kind_of?(Hash)
-      #     url_params << "&parent_select[][#{x.keys.first.inspect}]=#{x.values.first.inspect}"          
-      #   else
-      #     url_params << "&parent_select[]=#{x.inspect}"
-      #   end
-      # end
-    end
-      #{"asset"=>{"fieldName"=>{1=>nil}}}
-  
-    return url_params
-  end
+  # def field_update_params(resource, datastream_name, field_key, opts={})
+  #   url_params = {"datastream"=>datastream_name}
+  #   field_name = field_key.to_s
+  #   url_params[:field_name] = field_name
+  #   
+  #   if field_key.kind_of?(Array)
+  #     url_params["parent_select"] = field_key
+  #     # field_key.each do |x|
+  #     #   if x.kind_of?(Hash)
+  #     #     url_params << "&parent_select[][#{x.keys.first.inspect}]=#{x.values.first.inspect}"          
+  #     #   else
+  #     #     url_params << "&parent_select[]=#{x.inspect}"
+  #     #   end
+  #     # end
+  #   end
+  #     #{"asset"=>{"fieldName"=>{1=>nil}}}
+  # 
+  #   return url_params
+  # end
   
 end

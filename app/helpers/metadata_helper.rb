@@ -50,11 +50,7 @@ module MetadataHelper
     opts[:default] ||= ""
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result = "<ol>"
-      if field_params.has_key?("parent_select")
-        name = field_params.merge({"child_index"=>0}).to_query + "&value"
-      else
-        name = field_params.to_query + "&asset[#{field_name}][0]"
-      end
+      name = field_params.to_query + "&asset[#{datastream_name}][#{field_name}][0]"
       result << "<li class=\"editable\" name=\"#{name}\">"
         result <<"<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
@@ -219,7 +215,6 @@ module MetadataHelper
       url_params[:field_name] = field_name
     end
     # url_params["asset"][datastream_name] = {field_name => }
-  
     return url_params
   end
   
