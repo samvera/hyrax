@@ -45,7 +45,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                 :subelements=>["publisher","dateIssued"]
                 
     property :issue, :path=>'part',
-                :subelements=>[:start_page, :end_page],
+                # :subelements=>[:start_page, :end_page],
                 :convenience_methods => {
                   :volume => {:path=>"detail", :attributes=>{:type=>"volume"}},
                   :level => {:path=>"detail", :attributes=>{:type=>"level"}},
@@ -57,8 +57,8 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                 }
 
     # Correct usage of Start & End pages...
-    property :start_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "start"
-    property :end_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "end"
+    # property :start_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "start"
+    # property :end_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "end"
                 
     generate_accessors_from_properties      
     
