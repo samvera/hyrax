@@ -23,7 +23,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
                 }
                     
     property :access, :path=>"access",
-                :subelements=>[:machine],
+                # :subelements=>[:machine],
                 :convenience_methods => {
                   :human_readable => {:path=>"human"},
                   :group => {:path=>"group"},
@@ -37,9 +37,10 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     #             :subelements=>["group","person"]
                 
     generate_accessors_from_properties
-    
-    accessor :access_group, :relative_xpath=>'access/machine/group'
-    accessor :access_person, :relative_xpath=>'access/machine/person'
+
+    # These are convenience accessors.  They can be used to look up values, but not to edit/update them.
+    accessor :access_group, :relative_xpath=>'oxns:access/oxns:group'
+    accessor :access_person, :relative_xpath=>'oxns:access/oxns:person'
     
     # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
     def self.xml_template
