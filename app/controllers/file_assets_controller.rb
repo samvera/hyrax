@@ -16,7 +16,7 @@ class FileAssetsController < ApplicationController
       layout = false
     end
     if !params[:container_id].nil?
-      @response,@document = get_solr_response_for_doc_id(params[:container_id])
+      @response, @document = get_solr_response_for_doc_id(params[:container_id])
       @container =  ActiveFedora::Base.load_instance(params[:container_id])
       @solr_result = @container.collection_members(:response_format=>:solr)
     else
