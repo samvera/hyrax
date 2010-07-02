@@ -26,12 +26,4 @@ class FileAsset < ActiveFedora::Base
     datastreams_in_memory["DC"].extent_values = bits_to_human_readable(file.size)
   end
   
-  def save
-    super
-    if defined?(Solrizer::Solrizer)
-      solrizer = Solrizer::Solrizer.new
-      solrizer.solrize( self )
-    end
-  end
-  
 end
