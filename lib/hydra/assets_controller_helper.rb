@@ -1,6 +1,9 @@
 require "om"
 module Hydra::AssetsControllerHelper
   
+  # 
+  # parses your params hash, massaging them into an appropriate set of params and opts to pass into ActiveFedora::Base.update_indexed_attributes
+  #
   def prep_updater_method_args(params)
     args = {:params=>{}, :opts=>{}}
     
@@ -21,18 +24,6 @@ module Hydra::AssetsControllerHelper
         args[:params] = unescape_keys(params[:asset][datastream_name])
       end
     end
-    
-    # if params.has_key?("parent_select")
-    #   args[:params][:parent_select] = destringify( params["parent_select"] )
-    #   args[:params][:child_index] = destringify( params["child_index"] )
-    #   args[:params][:values] = params[:value]
-    # else
-    #   args[:params] = unescape_keys(params[:asset])
-    # end
-    
-    # if params.has_key?("datastream")
-    #   args[:opts][:datastreams] = params["datastream"]
-    # end
     
     return args
      

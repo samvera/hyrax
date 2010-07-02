@@ -56,7 +56,7 @@ class AssetsController < ApplicationController
       @document = af_model.find(params[:id])
             
       updater_method_args = prep_updater_method_args(params)
-      
+    
       logger.debug("attributes submitted: #{updater_method_args.inspect}")
       # this will only work if there is only one datastream being updated.
       # once ActiveFedora::MetadataDatastream supports .update_datastream_attributes, use that method instead (will also be able to pass through params["asset"] as-is without usin prep_updater_method_args!)
@@ -72,12 +72,12 @@ class AssetsController < ApplicationController
         end
       end
       logger.debug("returning #{response.inspect}")
-      
+    
       # If handling submission from jeditable (which will only submit one value at a time), return the value it submitted
       if params.has_key?(:field_id)
         response = last_result_value
       end
-      
+    
       respond_to do |want| 
         want.js {
           render :json=> response

@@ -9,5 +9,6 @@ ActionController::Routing::Routes.draw do |map|
      
      map.resources :assets do |assets|
        assets.resources :downloads, :only=>[:index]
+       assets.resources :contributors, :only=>[:new,:create]
      end
 end
