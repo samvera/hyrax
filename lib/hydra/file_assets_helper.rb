@@ -5,6 +5,7 @@ module Hydra::FileAssetsHelper
       @file_asset = create_asset_from_params
       add_posted_blob_to_asset
       @file_asset.save
+      return @file_asset
     else
       render :text => "400 Bad Request", :status => 400
     end

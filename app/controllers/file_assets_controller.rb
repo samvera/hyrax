@@ -32,7 +32,8 @@ class FileAssetsController < ApplicationController
   
   def create
     
-    create_and_save_file_asset_from_params
+    @file_asset = create_and_save_file_asset_from_params
+    apply_depositor_metadata(@file_asset)
     
     if !params[:container_id].nil?
       @container =  ActiveFedora::Base.load_instance(params[:container_id])
