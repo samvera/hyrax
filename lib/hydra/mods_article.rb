@@ -25,7 +25,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                 }
                 
     property :person, :variant_of=>:name_, :attributes=>{:type=>"personal"}
-    property :organizaton, :variant_of=>:name_, :attributes=>{:type=>"institutional"}
+    property :organization, :variant_of=>:name_, :attributes=>{:type=>"corporate"}
     property :conference, :variant_of=>:name_, :attributes=>{:type=>"conference"}
     
     property :role, :path=>"role",
@@ -60,7 +60,149 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
     # property :start_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "start"
     # property :end_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "end"
                 
-    generate_accessors_from_properties      
+    generate_accessors_from_properties  
+    
+    # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
+    def self.xml_template
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.mods(:version=>"3.3", "xmlns:xlink"=>"http://www.w3.org/1999/xlink",
+           "xmlns:xsi"=>"http://www.w3.org/2001/XMLSchema-instance",
+           "xmlns"=>"http://www.loc.gov/mods/v3",
+           "xsi:schemaLocation"=>"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd") {
+             xml.titleInfo {
+               xml.title
+             }
+             xml.name(:type=>"personal") {
+               xml.namePart(:type=>"given")
+               xml.namePart(:type=>"family")
+               xml.affiliation
+               xml.role {
+                 xml.roleTerm(:authority=>"marcrelator", :type=>"text")
+               }
+             }
+             xml.name(:type=>"corporate") {
+               xml.namePart
+               xml.role {
+                 xml.roleTerm(:authority=>"marcrelator", :type=>"text")
+               }                          
+             }
+             xml.name(:type=>"conference") {
+               xml.namePart
+               xml.role {
+                 xml.roleTerm(:authority=>"marcrelator", :type=>"text")
+               }                          
+             }
+             xml.typeOfResource
+             xml.genre(:authority=>"marcgt")
+             xml.language {
+               xml.languageTerm(:authority=>"iso639-2b", :type=>"code")
+             }
+             xml.abstract
+             xml.subject {
+               xml.topic
+             }
+             xml.relatedItem(:type=>"host") {
+               xml.titleInfo {
+                 xml.title
+               }
+               xml.identifier(:type=>"issn")
+               xml.originInfo {
+                 xml.publisher
+                 xml.dateIssued
+               }
+               xml.part {
+                 xml.detail(:type=>"volume") {
+                   xml.number
+                 }
+                 xml.detail(:type=>"number") {
+                   xml.number
+                 }
+                 xml.extent(:unit=>"page") {
+                   xml.start
+                   xml.end
+                 }
+                 xml.date
+               }
+             }
+             xml.location {
+               xml.url
+             }
+        }
+      end
+      return builder.doc
+    end    
+    
+    # Generates a new Person node
+    def self.person_template
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.name(:type=>"personal") {
+          xml.namePart(:type=>"family")
+          xml.namePart(:type=>"given")
+          xml.affiliation
+          xml.role {
+            xml.roleTerm(:type=>"text")
+          }
+        }
+      end
+      return builder.doc.root
+    end
+    
+    # Generates a new Organization node
+    # Uses mods:name[@type="corporate"]
+    def self.organization_template
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.name(:type=>"corporate") {
+          xml.namePart
+          xml.role {
+            xml.roleTerm(:authority=>"marcrelator", :type=>"text")
+          }                          
+        }
+      end
+      return builder.doc.root
+    end
+    
+    # Generates a new Conference node
+    def self.conference_template
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.name(:type=>"conference") {
+          xml.namePart
+          xml.role {
+            xml.roleTerm(:authority=>"marcrelator", :type=>"text")
+          }                          
+        }
+      end
+      return builder.doc.root
+    end
+    
+    def insert_contributor(type, opts={})
+      case type.to_sym 
+      when :person
+        node = Hydra::ModsArticle.person_template
+        nodeset = self.retrieve(:person)
+      when :organization
+        node = Hydra::ModsArticle.organization_template
+        nodeset = self.retrieve(:organization)
+      when :conference
+        node = Hydra::ModsArticle.conference_template
+        nodeset = self.retrieve(:conference)
+      else
+        ActiveFedora.logger.warn("#{type} is not a valid argument for Hydra::ModsArticle.insert_contributor")
+        node = nil
+        index = nil
+      end
+      
+      unless nodeset.nil?
+        if nodeset.empty?
+          self.ng_xml.root.add_child(node)
+          index = 0
+        else
+          nodeset.after(node)
+          index = nodeset.length
+        end
+      end
+      
+      return node, index
+    end
     
 end
 end
