@@ -7,11 +7,11 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
     property :title_info, :path=>"titleInfo", 
                 :convenience_methods => {
                   :main_title => {:path=>"title"},
-                  :language => {:path=>{:attribute=>"lang"}},                    
+                  # :language => {:path=>{:attribute=>"lang"}},    
+                  :language => {:path=>"language"},                 
                 }
     property :abstract, :path=>"abstract"
-    property :topic_tag, :path=>'subject',:default_content_path => "topic"
-    
+    property :subject, :path=>'subject',:subelements => "topic"    
     property :name_, :path=>"name", 
                 :attributes=>[:xlink, :lang, "xml:lang", :script, :transliteration, {:type=>["personal", "enumerated", "corporate"]} ],
                 :subelements=>["namePart", "displayForm", "affiliation", :role, "description"],
@@ -45,21 +45,28 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                 :subelements=>["publisher","dateIssued"]
                 
     property :issue, :path=>'part',
-                # :subelements=>[:start_page, :end_page],
+                # :subelements=>[:start_page, :end_page, :volume, :level],
                 :convenience_methods => {
+                  # Hacks to support provisional spot for start & end page, etc (nesting was too deep for this version of OM)
                   :volume => {:path=>"detail", :attributes=>{:type=>"volume"}},
-                  :level => {:path=>"detail", :attributes=>{:type=>"level"}},
-                  # Hack to support provisional spot for start & end page (nesting was too deep for this version of OM)
-                  :citation_start_page => {:path=>"pages", :attributes=>{:type=>"start"}},
-                  :citation_end_page => {:path=>"pages", :attributes=>{:type=>"end"}},
-                  :foo => {:path=>"foo", :attributes=>{:type=>"ness"}},
+                  :level => {:path=>"detail", :attributes=>{:type=>"number"}},
+                  :start_page => {:path=>"pages", :attributes=>{:type=>"start"}},
+                  :end_page => {:path=>"pages", :attributes=>{:type=>"end"}},
                   :publication_date => {:path=>"date"}
                 }
 
     # Correct usage of Start & End pages...
-    # property :start_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "start"
-    # property :end_page, :path=>"extent", :attributes=>{:unit=>"pages"}, :default_content_path => "end"
-                
+    # property :start_page, :path=>"extent", :attributes=>{:unit=>"pages"}, 
+    #             :convenience_methods => {
+    #               :number=>{:path=>"start"}
+    #             }
+    # property :end_page, :path=>"extent", :attributes=>{:unit=>"pages"}, 
+    #             :convenience_methods => {
+    #               :number=>{:path=>"end"}
+    #             }
+    # property :volume, :path=>"detail", :attributes=>{:type=>"volume"}, :subelements=>"number"
+    # property :level, :path=>"detail", :attributes=>{:type=>"number"}, :subelements=>"number"
+               
     generate_accessors_from_properties  
     
     accessor :title,  :relative_xpath=>'oxns:mods/oxns:titleInfo/oxns:title'
@@ -113,16 +120,23 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                  xml.dateIssued
                }
                xml.part {
-                 xml.detail(:type=>"volume") {
-                   xml.number
-                 }
-                 xml.detail(:type=>"number") {
-                   xml.number
-                 }
-                 xml.extent(:unit=>"page") {
-                   xml.start
-                   xml.end
-                 }
+                 # A hack implementation to reduce nesting
+                 xml.detail(:type=>"volume")
+                 xml.detail(:type=>"number")
+                 xml.pages(:type=>"start")
+                 xml.pages(:type=>"end")
+                 
+                 # The correct implementation (nesting too deep for current version of OM)
+                 # xml.detail(:type=>"volume") {
+                 #   xml.number
+                 # }
+                 # xml.detail(:type=>"number") {
+                 #   xml.number
+                 # }
+                 # xml.extent(:unit=>"page") {
+                 #   xml.start
+                 #   xml.end
+                 # }
                  xml.date
                }
              }

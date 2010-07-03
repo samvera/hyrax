@@ -47,7 +47,7 @@ module MetadataHelper
       label = field_name
     end
     
-    opts[:default] ||= ""
+    
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result = "<ol>"
       z = "0"
@@ -146,7 +146,7 @@ module MetadataHelper
         label = field_name
       end
       resource_type = resource.class.to_s.underscore
-      opts[:default] ||= ""
+      
       
       result = ""      
       choices = opts[:choices]
@@ -183,7 +183,7 @@ module MetadataHelper
     z = "0" # single-values only 
     
     result = ""
-    opts[:default] ||= ""
+    
     value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     field_value = value.nil? ? "" : value
         
@@ -245,7 +245,7 @@ module MetadataHelper
   end
   
   def get_values_from_datastream(resource, datastream_name, field_key, opts={})
-    return resource.get_values_from_datastream(datastream_name, field_key)
+    return resource.get_values_from_datastream(datastream_name, field_key, opts.fetch(:default, ""))
   end
   
   def add_param(query_string, new_param)
