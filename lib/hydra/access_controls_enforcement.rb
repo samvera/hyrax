@@ -46,4 +46,31 @@ module Hydra::AccessControlsEnforcement
     end
   end
 
+  def build_lucene_query(user_query)
+    q = ""
+    # start query of with user supplied query term
+      q << "_query_:\"{!dismax qf=$qf_dismax pf=$pf_dismax}#{user_query}\""
+
+    # Append the exclusion of FileAssets
+      q << " AND NOT _query_:\"info\\\\:fedora/afmodel\\\\:FileAsset\""
+
+    # Append the query responsible for adding the users discovery level
+      field_queries = ["_query_:\"discover_access_group_t:public\""]
+      unless current_user.nil? 
+        permission_types = ["edit","discover","read"] 
+        # for roles
+        RoleMapper.roles(current_user.login).each do |role|
+          permission_types.each do |type|
+            field_queries << "_query_:\"#{type}_access_group_t:#{role}\""
+          end
+        end
+        # for individual person access
+        permission_types.each do |type|
+          field_queries << "_query_:\"#{type}_access_person_t:#{current_user.login}\""
+        end
+      end
+      q << " AND (#{field_queries.join(" OR ")})"
+    return q
+  end
+
 end
