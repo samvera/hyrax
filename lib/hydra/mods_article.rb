@@ -62,6 +62,8 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                 
     generate_accessors_from_properties  
     
+    accessor :title,  :relative_xpath=>'oxns:mods/oxns:titleInfo/oxns:title'
+    
     # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
     def self.xml_template
       builder = Nokogiri::XML::Builder.new do |xml|
