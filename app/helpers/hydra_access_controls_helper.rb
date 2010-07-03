@@ -15,19 +15,12 @@ module HydraAccessControlsHelper
       case permission_type
         when :edit
           logger.debug("Checking edit permissions for user: #{user}")
-          allowed_edit_groups = (@document == nil || @document['edit_access_group_t'] == nil) ? [] : @document['edit_access_group_t']
-          logger.debug("  allowed_edit_groups: #{allowed_edit_groups}")
-          group_intersection = user_groups & allowed_edit_groups
-          allowed_edit_persons = (@document == nil || @document['edit_access_person_t'] == nil) ? [] : @document['edit_access_person_t']
-          logger.debug("  allowed_edit_persons: #{allowed_edit_persons}")
-          result = !group_intersection.empty? || allowed_edit_persons.include?(user)
+          group_intersection = user_groups & edit_groups
+          result = !group_intersection.empty? || edit_persons.include?(user)
         when :read
           logger.debug("Checking read permissions for user: #{user}")
-          allowed_read_groups = (@document == nil || @document['read_access_group_t'] == nil) ? [] : @document['read_access_group_t']
-          logger.debug("  allowed_read_groups: #{allowed_read_groups}")
-          group_intersection = user_groups & allowed_read_groups
-          allowed_read_persons = (@document == nil || @document['read_access_person_t'] == nil) ? [] : @document['read_access_person_t']
-          result = !group_intersection.empty? || allowed_read_persons.include?(user)
+          group_intersection = user_groups & read_groups
+          result = !group_intersection.empty? || read_persons.include?(user)
         else
           result = false
       end
@@ -45,6 +38,33 @@ module HydraAccessControlsHelper
   
   def reader?
    test_permission(:read)
+  end
+
+  private
+  def edit_groups
+    eg = (@document == nil || @document['edit_access_group_t'] == nil) ? [] : @document['edit_access_group_t']
+    logger.debug("edit_groups: #{eg.inspect}")
+    return eg
+  end
+
+  # edit implies read, so read_groups is the union of edit and read groups
+  def read_groups
+    rg = edit_groups | ((@document == nil || @document['read_access_group_t'] == nil) ? [] : @document['read_access_group_t'])
+    logger.debug("read_groups: #{rg.inspect}")
+    return rg
+  end
+
+  def edit_persons
+    ep = (@document == nil || @document['edit_access_person_t'] == nil) ? [] : @document['edit_access_person_t']
+    logger.debug("edit_persons: #{ep.inspect}")
+    return ep
+  end
+
+  # edit implies read, so read_persons is the union of edit and read persons
+  def read_persons
+    rp = edit_persons | ((@document == nil || @document['read_access_person_t'] == nil) ? [] : @document['read_access_person_t'])
+    logger.debug("read_persons: #{rp.inspect}")
+    return rp
   end
 
 end
