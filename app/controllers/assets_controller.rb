@@ -83,6 +83,9 @@ class AssetsController < ApplicationController
           render :json=> response
         }
         want.textile {
+          if response.kind_of?(Hash)
+            response = response.values.first
+          end
           render :text=> white_list( RedCloth.new(response, [:sanitize_html]).to_html )
         }
       end
