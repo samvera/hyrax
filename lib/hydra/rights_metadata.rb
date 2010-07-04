@@ -86,6 +86,83 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     #   {:human_readable=>{:relative_xpath=>'human'}},
     #   {:machine_readable=>{:relative_xpath=>'machine'}}
     # ]
+    
+    # Returns the permissions for the selected person/group
+    # If new_access_level is provided, updates the selected person/group access_level to the one specified 
+    # A new_access_level of "none" will remove all access_levels for the selected person/group
+    # @selector Hash in format {type => identifier}
+    # @new_access_level (default nil)
+    # @response Hash in format {type => access_level}.  
+    # 
+    # ie. 
+    # permissions({:person=>"person123"})
+    # => {"person123"=>"edit"}
+    # permissions({:person=>"person123"}, "read")
+    # => {"person123"=>"read"}
+    # permissions({:person=>"person123"})
+    # => {"person123"=>"read"}
+    def permissions(selector, new_access_level=nil)
+      
+      type = selector.keys.first.to_sym
+      actor = selector.values.first
+      
+      if new_access_level.nil?
+        xpath = self.class.accessor_constrained_xpath([:access, type], actor)
+        nodeset = self.retrieve(xpath)
+        if nodeset.empty?
+          return "none"
+        else
+          return nodeset.first.ancestors.first.attributes["type"].text
+        end
+      else
+        remove_all_permissions(selector)
+        unless new_access_level == "none" 
+          access_type_symbol = "#{new_access_level}_access".to_sym
+          result = self.update_properties([access_type_symbol, type] => actor)
+        end
+        return new_access_level
+      end
+        
+    end
+    
+    # Reports on which groups have which permissions
+    # @response Hash in format {group_name => group_permissions, group_name => group_permissions}
+    def groups
+      return quick_search_by_type(:group)
+    end
+    
+    # Reports on which groups have which permissions
+    # @response Hash in format {person_name => person_permissions, person_name => person_permissions}
+    def individuals
+      return quick_search_by_type(:person)
+    end
+    
+    # @type symbol (either :group or :person)
+    # @response 
+    # This method limits the respons to known access levels.  Probably runs a bit faster than .permissions().
+    def quick_search_by_type(type)
+      result = {}
+      [{:discover_access=>"discover"},{:read_access=>"read"},{:edit_access=>"edit"}].each do |access_levels_hash|
+        access_level = access_levels_hash.keys.first
+        access_level_name = access_levels_hash.values.first
+        self.retrieve(*[access_level, type]).each do |entry|
+          result[entry.text] = access_level_name
+        end
+      end
+      return result
+    end
+    
+    
+    private
+    # Purge all access given group/person 
+    def remove_all_permissions(selector)
+      type = selector.keys.first.to_sym
+      actor = selector.values.first
+      
+      xpath = self.class.accessor_constrained_xpath([:access, type], actor)
+      nodes_to_purge = self.retrieve(xpath)
+      nodes_to_purge.each {|node| node.remove}
+    end
   
 end
 end
