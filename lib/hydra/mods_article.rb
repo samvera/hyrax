@@ -215,6 +215,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
           nodeset.after(node)
           index = nodeset.length
         end
+        self.dirty = true
       end
       
       return node, index
