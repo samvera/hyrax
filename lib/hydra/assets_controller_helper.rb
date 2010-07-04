@@ -46,6 +46,10 @@ module Hydra::AssetsControllerHelper
   
   private
     
+  def send_datastream(datastream)
+    send_data datastream.content, :filename=>datastream.label, :type=>datastream.attributes["mimeType"]
+  end
+  
   #underscores are escaped w/ + signs, which are unescaped by rails to spaces
   def unescape_keys(attrs)
     h=Hash.new

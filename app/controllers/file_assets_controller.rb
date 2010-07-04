@@ -45,10 +45,13 @@ class FileAssetsController < ApplicationController
   
   def show
     @file_asset = FileAsset.find(params[:id]) #.hits.first
-    @solr_result = FileAsset.find_by_solr(params[:id]).hits.first
-    if params[:layout] == "false"
-      render :action=>"show_embedded", :layout=>false
+    if @file_asset.datastreams_in_memory.include?("DS1")
+      send_datastream @file_asset.datastreams_in_memory["DS1"]
     end
+    # @solr_result = FileAsset.find_by_solr(params[:id]).hits.first
+    # if params[:layout] == "false"
+    #   render :action=>"show_embedded", :layout=>false
+    # end
     # add_crumb @file_asset.pid, @file_asset
   end
 end
