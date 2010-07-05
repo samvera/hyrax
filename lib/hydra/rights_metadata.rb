@@ -118,7 +118,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
         remove_all_permissions(selector)
         unless new_access_level == "none" 
           access_type_symbol = "#{new_access_level}_access".to_sym
-          result = self.update_properties([access_type_symbol, type] => actor)
+          result = self.update_properties([access_type_symbol, type] => {"-1"=>actor})
         end
         return new_access_level
       end
