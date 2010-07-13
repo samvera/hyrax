@@ -1,7 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
      map.resources :file_assets
-     map.update_group_permissions 'assets/:asset_id/permissions', :controller=>:permissions, :action=>:update
-     
+          
      # This creates routes named asset_file_assets, new_asset_file_asset, etc.
      # The routes map to the :file_assets controller with the param :container_id 
      # which is then used within the controller to deal with parent - child relationships 
@@ -13,5 +12,7 @@ ActionController::Routing::Routes.draw do |map|
        assets.resources :contributors, :only=>[:new,:create]
        assets.resources :permissions
     end
+    # Allow updates to assets/:asset_id/permissions (no :id necessary)
+    map.update_group_permissions 'assets/:asset_id/permissions', :controller=>:permissions, :action=>:update
     
 end

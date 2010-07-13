@@ -120,6 +120,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
           access_type_symbol = "#{new_access_level}_access".to_sym
           result = self.update_properties([access_type_symbol, type] => {"-1"=>actor})
         end
+        self.dirty = true
         return new_access_level
       end
         
@@ -141,8 +142,8 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     # @params ex. {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}}
     # Currently restricts actor type to group or person.  Any others will be ignored
     def update_permissions(params)
-      params["group"].each_pair {|group_id, access_level| self.permissions({"group"=>group_id}, access_level)}
-      params["person"].each_pair {|group_id, access_level| self.permissions({"person"=>group_id}, access_level)}
+      params.fetch("group", {}).each_pair {|group_id, access_level| self.permissions({"group"=>group_id}, access_level)}
+      params.fetch("person", {}).each_pair {|group_id, access_level| self.permissions({"person"=>group_id}, access_level)}
     end
     
     # @type symbol (either :group or :person)
