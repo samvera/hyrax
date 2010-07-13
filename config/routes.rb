@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
      map.resources :file_assets
-     map.update_group_permissions 'assets/:asset_id/permissions/:actor_type/:actor_id', :controller=>:permissions, :action=>:update
+     map.update_group_permissions 'assets/:asset_id/permissions', :controller=>:permissions, :action=>:update
      
      # This creates routes named asset_file_assets, new_asset_file_asset, etc.
      # The routes map to the :file_assets controller with the param :container_id 

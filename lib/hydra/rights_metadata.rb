@@ -137,6 +137,14 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
       return quick_search_by_type(:person)
     end
     
+    # Updates permissions for all of the persons and groups in a hash
+    # @params ex. {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}}
+    # Currently restricts actor type to group or person.  Any others will be ignored
+    def update_permissions(params)
+      params["group"].each_pair {|group_id, access_level| self.permissions({"group"=>group_id}, access_level)}
+      params["person"].each_pair {|group_id, access_level| self.permissions({"person"=>group_id}, access_level)}
+    end
+    
     # @type symbol (either :group or :person)
     # @response 
     # This method limits the respons to known access levels.  Probably runs a bit faster than .permissions().
