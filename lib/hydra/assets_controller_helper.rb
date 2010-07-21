@@ -3,7 +3,7 @@ module Hydra::AssetsControllerHelper
   
   
   def apply_depositor_metadata(asset)
-    if asset.respond_to?(:apply_depositor_metadata)
+    if asset.respond_to?(:apply_depositor_metadata) && current_user.respond_to?(:login)
       asset.apply_depositor_metadata(current_user.login)
     end
   end
