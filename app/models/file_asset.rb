@@ -15,17 +15,17 @@ class FileAsset < ActiveFedora::Base
       end
   end
   
-  has_metadata :name => "DC", :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
+  has_metadata :name => "descMetadata", :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
   end
       
   def label=(label)
     super
-    datastreams_in_memory["DC"].title_values = label
+    datastreams_in_memory["descMetadata"].title_values = label
   end    
   
   def add_file_datastream(file, opts={})
     super
-    datastreams_in_memory["DC"].extent_values = bits_to_human_readable(file.size)
+    datastreams_in_memory["descMetadata"].extent_values = bits_to_human_readable(file.size)
   end
   
 end

@@ -3,11 +3,15 @@
   %td
     =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
   %td
-    =result[solr_name("description", :text)]
+    %form#document_metadata{:action=>url_for(:id=>result["id"],:controller=>"assets",:action=>"update", :content_type=>"file_asset"), :method=>"post"}
+      - description = editable_metadata_field(result["id"], "descMetadata", :description, :values=>result[solr_name("description", :text)])
+      =description[:field]
+    / =result[solr_name("description", :text)]
   %td
     =result[solr_name("extent", :text)]
   %td
     - dt = DateTime.parse(result[ solr_name("system_create", :date)] )
     = dt.strftime("%Y-%m-%d %I:%M%p UTC")
   %td
-    %a.destructive{:href=>'#', :title=>"Remove file"} X
+    - if editor?
+      %a.destructive{:href=>file_asset_path(result["id"]), :title=>"Remove file"} X
