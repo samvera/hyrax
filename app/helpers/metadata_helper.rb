@@ -35,9 +35,7 @@ module MetadataHelper
   end
   
   
-  def single_value_inline_edit(resource, datastream_name, field_key, opts={})
-    resource_type = resource.class.to_s.underscore
-    
+  def single_value_inline_edit(resource, datastream_name, field_key, opts={})    
     field_params = field_update_params(resource, datastream_name, field_key, opts)
     field_name = field_params.delete(:field_name)
     
@@ -60,9 +58,7 @@ module MetadataHelper
     return :label=>label, :field=> result
   end
   
-  def multi_value_inline_edit(resource, datastream_name, field_key, opts={})
-    resource_type = resource.class.to_s.underscore
-    
+  def multi_value_inline_edit(resource, datastream_name, field_key, opts={})    
     field_params = field_update_params(resource, datastream_name, field_key, opts)
     field_name = field_params.delete(:field_name)
     
@@ -72,7 +68,6 @@ module MetadataHelper
       label = field_name.dup
     end
     label << "<a class='addval input' href='#'>+</a>"
-    resource_type = resource.class.to_s.underscore
     opts[:default] = "" unless opts[:default]
     result = ""
     result << "<ol>"
@@ -91,9 +86,7 @@ module MetadataHelper
     return :label=>label, :field => result
   end
   
-  def editable_textile(resource, datastream_name, field_key, opts={})
-    resource_type = resource.class.to_s.underscore
-    
+  def editable_textile(resource, datastream_name, field_key, opts={})    
     field_params = field_update_params(resource, datastream_name, field_key, opts)
     field_name = field_params.delete(:field_name)
     
@@ -106,8 +99,6 @@ module MetadataHelper
       label << "<a class='addval textArea' href='#'>+</a>"
     end
     escaped_field_name=field_name.gsub(/_/, '+')
-    resource_type = resource.class.to_s.underscore
-    escaped_resource_type = resource_type.gsub(/_/, '+')
     
     opts[:default] = ""
     result = ""
@@ -131,9 +122,7 @@ module MetadataHelper
   # Returns an HTML select with options populated from opts[:choices].
   # If opts[:choices] is not provided, or if it's not a Hash, a single_value_inline_edit will be returned instead.
   # Will capitalize the key for each choice when displaying it in the options list.  The value is left alone.
-  def metadata_drop_down(resource, datastream_name, field_key, opts={})
-    resource_type = resource.class.to_s.underscore
-    
+  def metadata_drop_down(resource, datastream_name, field_key, opts={})    
     field_params = field_update_params(resource, datastream_name, field_key, opts)
     field_name = field_params.delete(:field_name)
 
@@ -144,9 +133,7 @@ module MetadataHelper
         label = opts[:label]
       else
         label = field_name
-      end
-      resource_type = resource.class.to_s.underscore
-      
+      end      
       
       result = ""      
       choices = opts[:choices]
@@ -169,8 +156,6 @@ module MetadataHelper
   end
   
   def date_select(resource, datastream_name, field_key, opts={})
-    resource_type = resource.class.to_s.underscore
-    
     field_params = field_update_params(resource, datastream_name, field_key, opts)
     field_name = field_params.delete(:field_name)
     
@@ -230,7 +215,11 @@ module MetadataHelper
     
     url_params = {}
     # url_params = {"datastream"=>datastream_name}
-    ds = resource.datastreams_in_memory[datastream_name]
+    if resource.kind_of?(String)
+      ds = ActiveFedora::NokogiriDatastream.new
+    else
+      ds = resource.datastreams_in_memory[datastream_name]
+    end
     
     if ds.kind_of?(ActiveFedora::NokogiriDatastream)
       field_name = ds.class.accessor_hierarchical_name(*field_key)
@@ -245,7 +234,11 @@ module MetadataHelper
   end
   
   def get_values_from_datastream(resource, datastream_name, field_key, opts={})
-    return resource.get_values_from_datastream(datastream_name, field_key, opts.fetch(:default, ""))
+    if opts.has_key?(:values)
+      return opts[:values]
+    else
+      return resource.get_values_from_datastream(datastream_name, field_key, opts.fetch(:default, ""))
+    end
   end
   
   def add_param(query_string, new_param)
