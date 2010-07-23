@@ -2,6 +2,9 @@
 
 namespace :hydra do
   
+  desc "Delete and re-import the fixture identified by pid" 
+  task :refresh_fixture => [:delete,:import_fixture]
+  
   desc "Delete the object identified by pid"
   task :delete => :environment do
     # If a destination url has been provided, attampt to export from the fedora repository there.
