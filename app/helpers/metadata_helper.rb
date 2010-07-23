@@ -45,7 +45,6 @@ module MetadataHelper
       label = field_name
     end
     
-    
     field_value = get_values_from_datastream(resource, datastream_name, field_key, opts).first
     result = "<ol>"
       z = "0"
@@ -235,7 +234,9 @@ module MetadataHelper
   
   def get_values_from_datastream(resource, datastream_name, field_key, opts={})
     if opts.has_key?(:values)
-      return opts[:values]
+      values = opts[:values]
+      if values.nil? then values = [opts.fetch(:default, "")] end
+      return values
     else
       return resource.get_values_from_datastream(datastream_name, field_key, opts.fetch(:default, ""))
     end
