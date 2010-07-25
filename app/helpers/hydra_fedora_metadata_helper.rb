@@ -161,12 +161,18 @@ module HydraFedoraMetadataHelper
   def fedora_text_field_insert_link(resource, datastream_name, field_key, opts={})
   end
   
-  def fedora_field_label()
+  def fedora_field_label(datastream_name, field_key, label=nil)
+    field_name = field_name_for(field_key)
+    if label.nil?
+      label = field_name
+    end
+    return content_tag "label", label, :for=>field_name
   end
   
-  def metadata_field_info(resource, datastream_name, field_key, opts={})
-  end
-  
+  # Generate hidden inputs to handle mapping field names to server-side metadata mappings
+  # this allows us to round-trip OM metadata mappings
+  # also (importantly) allows us to avoid executing xpath queries from http requests.
+  # *Note*: It's important that you serialize these inputs in order from top to bottom (standard HTML form behavior)
   def field_selectors_for(datastream_name, field_key)
     result = ""
     if field_key.kind_of?(Array)
@@ -228,6 +234,10 @@ module HydraFedoraMetadataHelper
     end
 
   end
+  
+  #
+  # Internal helper methods
+  #
   
   # retrieve field values from datastream.
   # If :values is provided, skips accessing the datastream and returns the contents of :values instead.
