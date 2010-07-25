@@ -18,9 +18,9 @@ module HydraFedoraMetadataHelper
         base_id = generate_base_id(field_name, current_value, field_values, opts)
         name = "asset[#{datastream_name}][#{base_id}]"
         
-        body << "<#{container_tag_type.to_s} class=\"editable\" id=\"#{base_id}-container\">"
-          body << "<span class=\"editableText\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
-          body << "<input class=\"editableTarget\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<#{container_tag_type.to_s} class=\"editable-container\" id=\"#{base_id}-container\">"
+          body << "<span class=\"editable-text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
+          body << "<input class=\"editable-edit\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
         body << "</#{container_tag_type}>"
       end
     if opts.fetch(:multiple, true)
