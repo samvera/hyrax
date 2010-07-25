@@ -7,13 +7,15 @@ module HydraFedoraMetadataHelper
     
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
     
-    body = ""
     if opts.fetch(:multiple, true)
       container_tag_type = :li
     else
       field_values = field_values.first
       container_tag_type = :span
     end
+    
+      body = ""
+      
       field_values.each do |current_value|
         base_id = generate_base_id(field_name, current_value, field_values, opts)
         name = "asset[#{datastream_name}][#{base_id}]"
@@ -23,10 +25,13 @@ module HydraFedoraMetadataHelper
           body << "<input class=\"editable-edit\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
         body << "</#{container_tag_type}>"
       end
+      
+    result = field_selectors_for(datastream_name, field_key)
+    
     if opts.fetch(:multiple, true)
-      result = content_tag :ol, body
+      result << content_tag(:ol, body)
     else
-      result = body
+      result << body
     end
     
     return result
@@ -59,7 +64,21 @@ module HydraFedoraMetadataHelper
   end
   
   def field_selectors_for(datastream_name, field_key)
-    return ""
+    result = ""
+    if field_key.kind_of?(Array)
+      h_name = ActiveFedora::NokogiriDatastream.accessor_hierarchical_name(*field_key)
+      field_key.each do |pointer|
+        if pointer.kind_of?(Hash)
+          k = pointer.keys.first
+          v = pointer.values.first
+          # result << "<input type=\"hidden\", rel=\"#{h_name}\" name=\"field_selectors[#{datastream_name}][#{h_name}][][#{k}]\" value=\"#{v}\"/>"
+          result << tag(:input, :type=>"hidden", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][][#{k}]", :value=>v)
+        else
+          result << tag(:input, :type=>"hidden", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][]", :value=>pointer.to_s)
+        end
+      end
+    end
+    return result
   end
   
   # hydra_form_for block helper 
