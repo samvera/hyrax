@@ -6,33 +6,38 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key)
     
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    
+    body = ""
     if opts.fetch(:multiple, true)
-      result = "<ol>"
-        field_values.each_with_index do |current_value,z|
-          base_id = generate_base_id(field_name, current_value, field_values, opts)
-          name = "asset[#{datastream_name}][#{base_id}]"
-          result << "<li id=\"#{base_id}-container\" class=\"editable\">"
-            result << "<span class=\"editableText\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
-            result << "<input class=\"editableTarget\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
-          result << "</li>"
-        end
-      result << "</ol>"
+      container_tag_type = :li
     else
-      result = ""
-      current_value = field_values.first
-      base_id = field_name
-      name = "asset[#{datastream_name}][#{base_id}]"
-      result << "<span id=\"#{base_id}-container\" class=\"editable\">"
-        result << "<span class=\"editableText\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
-        result << "<input class=\"editableTarget\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
-      result << "</span>"
+      field_values = field_values.first
+      container_tag_type = :span
+    end
+      field_values.each do |current_value|
+        base_id = generate_base_id(field_name, current_value, field_values, opts)
+        name = "asset[#{datastream_name}][#{base_id}]"
+        
+        body << "<#{container_tag_type.to_s} class=\"editable\" id=\"#{base_id}-container\">"
+          body << "<span class=\"editableText\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
+          body << "<input class=\"editableTarget\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "</#{container_tag_type}>"
+      end
+    if opts.fetch(:multiple, true)
+      result = content_tag :ol, body
+    else
+      result = body
     end
     
     return result
   end
   
   def generate_base_id(field_name, current_value, values, opts)
-    return field_name+"_"+values.index(current_value).to_s
+    if opts.fetch(:multiple, true)
+      return field_name+"_"+values.index(current_value).to_s
+    else
+      return field_name
+    end
   end
   
   def fedora_text_area(resource, datastream_name, field_key, opts={})
@@ -54,6 +59,7 @@ module HydraFedoraMetadataHelper
   end
   
   def field_selectors_for(datastream_name, field_key)
+    return ""
   end
   
   # hydra_form_for block helper 
