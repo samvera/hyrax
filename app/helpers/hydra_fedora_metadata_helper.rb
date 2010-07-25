@@ -4,7 +4,6 @@ module HydraFedoraMetadataHelper
   def fedora_text_field(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
-    
     if opts.fetch(:multiple, true)
       container_tag_type = :li
     else
@@ -20,12 +19,10 @@ module HydraFedoraMetadataHelper
       
       body << "<#{container_tag_type.to_s} class=\"editable-container\" id=\"#{base_id}-container\">"
         body << "<span class=\"editable-text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
-        body << "<input class=\"editable-edit\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<input class=\"editable-edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
-      
     result = field_selectors_for(datastream_name, field_key)
-    
     if opts.fetch(:multiple, true)
       result << content_tag(:ol, body)
     else
@@ -59,11 +56,11 @@ module HydraFedoraMetadataHelper
       name = "asset[#{datastream_name}][#{base_id}]"
       processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
       
-      body << "<#{container_tag_type.to_s} class=\"field_value textile-container\" id=\"#{base_id}-container\" data-datastream-name=\"#{datastream_name}\">"
+      body << "<#{container_tag_type.to_s} class=\"field_value textile-container\" id=\"#{base_id}-container\">"
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
         body << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
         body << "<div class=\"textile-text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
-        body << "<input class=\"textile-edit\" id=\"#{base_id}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<input class=\"textile-edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
     
@@ -158,7 +155,12 @@ module HydraFedoraMetadataHelper
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
   end
   
-  def fedora_text_field_insert_link(resource, datastream_name, field_key, opts={})
+  def fedora_text_field_insert_link(datastream_name, field_key, opts={})
+    "<a class='addval textfield' href='#'>+</a>"
+  end
+  
+  def fedora_text_area_insert_link(datastream_name, field_key, opts={})
+    "<a class='addval textarea' href='#'>+</a>"
   end
   
   def fedora_field_label(datastream_name, field_key, label=nil)
@@ -182,9 +184,9 @@ module HydraFedoraMetadataHelper
           k = pointer.keys.first
           v = pointer.values.first
           # result << "<input type=\"hidden\", rel=\"#{h_name}\" name=\"field_selectors[#{datastream_name}][#{h_name}][][#{k}]\" value=\"#{v}\"/>"
-          result << tag(:input, :type=>"hidden", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][][#{k}]", :value=>v)
+          result << tag(:input, :type=>"hidden", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][][#{k}]", :value=>v)
         else
-          result << tag(:input, :type=>"hidden", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][]", :value=>pointer.to_s)
+          result << tag(:input, :type=>"hidden", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][]", :value=>pointer.to_s)
         end
       end
     end
@@ -245,10 +247,11 @@ module HydraFedoraMetadataHelper
     if opts.has_key?(:values)
       values = opts[:values]
       if values.nil? then values = [opts.fetch(:default, "")] end
-      return values
     else
-      return resource.get_values_from_datastream(datastream_name, field_key, opts.fetch(:default, ""))
+      values = resource.get_values_from_datastream(datastream_name, field_key, opts.fetch(:default, ""))
+      if values.empty? then values = [ opts.fetch(:default, "") ] end
     end
+    return values
   end
   
   def field_name_for(field_key)
