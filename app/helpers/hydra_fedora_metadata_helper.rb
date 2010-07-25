@@ -98,13 +98,61 @@ module HydraFedoraMetadataHelper
       body << "</select>"
       
       result = field_selectors_for(datastream_name, field_key)
-      
       result << body
     end
     return result
   end
   
   def fedora_date_select(resource, datastream_name, field_key, opts={})
+    field_name = field_name_for(field_key)
+    field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
+    name = "asset[#{datastream_name}][#{base_id}]"
+    
+    value = field_values.first
+    field_value = value.nil? ? "" : value
+        
+    field_value[/(\d+)-(\d+)-(\d+)/]
+    year = ($1.nil? or $1.empty?) ? "" : $1.to_i
+    month = ($2.nil? or $2.empty?) ? "-1" : $2
+    day = ($3.nil? or $3.empty?) ? "-1" : $3
+    
+    # Make sure that month and day values are double-digit
+    [month, day].each {|v| v.length == 1 ? v.insert(0, "0") : nil }
+    
+    
+    year_options = Array.new(101) {|i| 1910+i}
+    # year_options = Array.new(4) {|i| 1990+i}
+    
+    year_options.insert(0, ["Year", "-1"])
+    
+    body = ""
+    body << "<div class=\"date-select\" name=\"#{name}\">"
+      body << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{base_id}-sel-y\" name=\"#{base_id}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
+      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-mm\" name=\"#{base_id}-sel-mm\">"
+        body << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
+                                      ["April", "04"],["May", "05"],["June", "06"],["July", "07"],["August", "08"],
+                                      ["September", "09"],["October", "10"],["November", "11"],["December", "12"]
+                                      ], month)
+      body << "</select> / "
+      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-dd\" name=\"#{base_id}-sel-dd\">"
+        body << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
+      body << "</select>"
+    body << "</div>"
+    body << <<-EOF
+    <script type="text/javascript">
+    // <![CDATA[  
+      // since the form element ids need to be generated on the server side for the options, the options are attached to the wrapping div via the jQuery data() method.
+      $('div.date-select[name="#{name}"]').data("opts", {                            
+        formElements:{"#{base_id}-sel-dd":"d","#{base_id}-sel-y":"Y","#{base_id}-sel-mm":"m"}         
+      });          
+    // ]]>
+    </script>
+    EOF
+    
+    result = field_selectors_for(datastream_name, field_key)
+    result << body
+    return result
   end
   
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
