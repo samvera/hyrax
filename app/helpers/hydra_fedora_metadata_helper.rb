@@ -7,7 +7,7 @@ module HydraFedoraMetadataHelper
     if opts.fetch(:multiple, true)
       container_tag_type = :li
     else
-      field_values = field_values.first
+      field_values = [field_values.first]
       container_tag_type = :span
     end
     
@@ -15,8 +15,7 @@ module HydraFedoraMetadataHelper
     
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
-      name = "asset[#{datastream_name}][#{base_id}]"
-      
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       body << "<#{container_tag_type.to_s} class=\"editable-container\" id=\"#{base_id}-container\">"
         body << "<span class=\"editable-text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
         body << "<input class=\"editable-edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
@@ -42,18 +41,17 @@ module HydraFedoraMetadataHelper
   def fedora_textile_text_area(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
-    
     if opts.fetch(:multiple, true)
       container_tag_type = :li
     else
-      field_values = field_values.first
+      field_values = [field_values.first]
       container_tag_type = :span
     end
     body = ""
 
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
-      name = "asset[#{datastream_name}][#{base_id}]"
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
       
       body << "<#{container_tag_type.to_s} class=\"field_value textile-container\" id=\"#{base_id}-container\">"
@@ -88,7 +86,7 @@ module HydraFedoraMetadataHelper
       
       body = ""
       base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-      name = "asset[#{datastream_name}][#{base_id}]"
+      name = "asset[#{datastream_name}][#{field_name}]"
 
       body << "<select name=\"#{name}\" class=\"metadata-dd\">"
         body << options_for_select(choices, field_values)
