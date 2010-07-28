@@ -1,4 +1,5 @@
 require "inline_editable_metadata_helper"
+require "block_helpers"
 module HydraFedoraMetadataHelper
   
   def fedora_text_field(resource, datastream_name, field_key, opts={})
