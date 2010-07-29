@@ -4,18 +4,6 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     # have to call this in order to set namespace & schema
     root_property :rightsMetadata, "rightsMetadata", "http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd"          
     
-    property :name_, :path=>"name", 
-                :attributes=>[:xlink, :lang, "xml:lang", :script, :transliteration, {:type=>["personal", "enumerated", "corporate"]} ],
-                :subelements=>["namePart", "displayForm", "affiliation", :role, "description"],
-                :default_content_path => "namePart",
-                :convenience_methods => {
-                  :date => {:path=>"namePart", :attributes=>{:type=>"date"}},
-                  :last_name => {:path=>"namePart", :attributes=>{:type=>"family"}},
-                  :first_name => {:path=>"namePart", :attributes=>{:type=>"given"}},
-                  :terms_of_address => {:path=>"namePart", :attributes=>{:type=>"termsOfAddress"}},
-                  :institution=>{:path=>'affiliation'}
-                }
-    
     property :copyright, :path=>"copyright",
                 :subelements=>["machine"],
                 :convenience_methods => {
