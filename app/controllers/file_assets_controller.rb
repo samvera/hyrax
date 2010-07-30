@@ -12,7 +12,7 @@ class FileAssetsController < ApplicationController
   
   def index
     if params[:layout] == "false"
-      action = "index_embedded"
+      # action = "index_embedded"
       layout = false
     end
     if !params[:container_id].nil?
@@ -23,7 +23,7 @@ class FileAssetsController < ApplicationController
       # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
       @solr_result = FileAsset.find_by_solr(:all)
     end
-    render :action=>action, :layout=>layout
+    render :action=>params[:action], :layout=>layout
   end
   
   def new
