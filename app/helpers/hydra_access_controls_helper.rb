@@ -1,13 +1,18 @@
 module HydraAccessControlsHelper
   
   # Incomplete.  Currently returns true if user is logged in (regardless of permission level)
-  def test_permission(permission_type)
-    if !current_user.nil?
+  def test_permission(permission_type)    
+    # if !current_user.nil?
       if (@document == nil)
         logger.warn("SolrDocument is nil")
       end
 
-      user = current_user.login
+      if current_user.nil? 
+        user = "public"
+      else
+        user = current_user.login
+      end
+      
       user_groups = RoleMapper.roles(user)
       # everyone is automatically a member of the group 'public'
       user_groups.push 'public' unless user_groups.include?('public')
@@ -26,10 +31,10 @@ module HydraAccessControlsHelper
       end
       logger.debug("test_permission result: #{result}")
       return result
-    else
-      logger.debug("nil user, test_permission returning false")
-      return false
-    end
+    # else
+    #   logger.debug("nil user, test_permission returning false")
+    #   return false
+    # end
   end
   
   def editor?
