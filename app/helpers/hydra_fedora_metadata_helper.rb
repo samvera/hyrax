@@ -89,7 +89,7 @@ module HydraFedoraMetadataHelper
       base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
       name = "asset[#{datastream_name}][#{field_name}]"
 
-      body << "<select name=\"#{name}\" class=\"metadata-dd\">"
+      body << "<select name=\"#{name}\" class=\"metadata-dd select-edit\" rel=\"#{field_name}\">"
         body << options_for_select(choices, field_values)
       body << "</select>"
       
@@ -123,7 +123,7 @@ module HydraFedoraMetadataHelper
     year_options.insert(0, ["Year", "-1"])
     
     body = ""
-    body << "<div class=\"date-select\" name=\"#{name}\">"
+    body << "<div class=\"date-select\" name=\"#{name}\" rel=\"#{field_name}\">"
       body << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{base_id}-sel-y\" name=\"#{base_id}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
       body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-mm\" name=\"#{base_id}-sel-mm\">"
         body << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
