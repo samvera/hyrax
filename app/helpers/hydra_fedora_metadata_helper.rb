@@ -17,14 +17,14 @@ module HydraFedoraMetadataHelper
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
-      body << "<#{container_tag_type.to_s} class=\"editable-container\" id=\"#{base_id}-container\">"
+      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
         body << "<span class=\"editable-text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
         body << "<input class=\"editable-edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
     result = field_selectors_for(datastream_name, field_key)
     if opts.fetch(:multiple, true)
-      result << content_tag(:ol, body)
+      result << content_tag(:ol, body, :rel=>field_name)
     else
       result << body
     end
@@ -55,7 +55,7 @@ module HydraFedoraMetadataHelper
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
       
-      body << "<#{container_tag_type.to_s} class=\"field_value textile-container\" id=\"#{base_id}-container\">"
+      body << "<#{container_tag_type.to_s} class=\"field_value textile-container field\" id=\"#{base_id}-container\">"
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
         body << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
         body << "<div class=\"textile-text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
@@ -66,7 +66,7 @@ module HydraFedoraMetadataHelper
     result = field_selectors_for(datastream_name, field_key)
     
     if opts.fetch(:multiple, true)
-      result << content_tag(:ol, body)
+      result << content_tag(:ol, body, :rel=>field_name)
     else
       result << body
     end
@@ -155,7 +155,8 @@ module HydraFedoraMetadataHelper
   end
   
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
-    "<a class='addval textfield' href='#'>+</a>"
+    field_name = field_name_for(field_key)
+    "<a class='addval textfield' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\">+</a>"
   end
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})

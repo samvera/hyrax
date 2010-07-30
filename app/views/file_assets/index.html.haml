@@ -1,6 +1,19 @@
+- javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
+- javascript_includes << "jquery.jeditable.mini"
+- javascript_includes << 'custom'
+- javascript_includes << "catalog/edit"
+- javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
+- javascript_includes << "jquery.form.js"
+
+- extra_head_content << capture do 
+  :javascript
+    $(document).ready(function() {
+      $(document).catalogEdit();
+    });
+    
 %h2 File Assets
 
-%table#assets
+%table#assets.multipleEdit
   %col{:width=>"10%"}/
   %col{:width=>"25%"}/
   %col{:width=>"30%"}/  
