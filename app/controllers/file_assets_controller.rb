@@ -7,7 +7,7 @@ class FileAssetsController < ApplicationController
   include Blacklight::SolrHelper
   
   before_filter :require_fedora
-  before_filter :require_solr, :only=>[:index, :create, :show]
+  before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
   
   
   def index
@@ -31,7 +31,6 @@ class FileAssetsController < ApplicationController
   end
   
   def create
-    
     @file_asset = create_and_save_file_asset_from_params
     apply_depositor_metadata(@file_asset)
     
@@ -42,6 +41,21 @@ class FileAssetsController < ApplicationController
     end
     render :nothing => true
   end
+  
+  # Common destroy method for all AssetsControllers 
+  def destroy
+    # The correct implementation, with garbage collection:
+    # if params.has_key?(:container_id)
+    #   container = ActiveFedora::Base.load_instance(params[:container_id]) 
+    #   container.file_objects_remove(params[:id])
+    #   FileAsset.garbage_collect(params[:id])
+    # else
+    
+    # The dirty implementation (leaves relationship in container object, deletes regardless of whether the file object has other containers)
+    ActiveFedora::Base.load_instance(params[:id]).delete 
+    render :text => "Deleted #{params[:id]} from #{params[:container_id]}."
+  end
+  
   
   def show
     @file_asset = FileAsset.find(params[:id]) #.hits.first

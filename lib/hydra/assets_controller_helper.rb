@@ -1,11 +1,6 @@
 require "om"
 module Hydra::AssetsControllerHelper
   
-  # Common destroy method for all AssetsControllers 
-  def destroy
-    ActiveFedora::Base.load_instance(params[:id]).delete
-  end
-  
   def apply_depositor_metadata(asset)
     if asset.respond_to?(:apply_depositor_metadata) && current_user.respond_to?(:login)
       asset.apply_depositor_metadata(current_user.login)
