@@ -1,4 +1,4 @@
-%tr[result]
+%tr.file_asset{:id=>result["id"]}
   %td
   %td
     =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
@@ -14,4 +14,8 @@
     = dt.strftime("%Y-%m-%d %I:%M%p UTC")
   %td
     - if editor?
-      %a.destructive{:href=>file_asset_path(result["id"]), :title=>"Remove file"} X
+      - if @container.nil?
+        - file_asset_url = file_asset_path(result["id"])
+      - else
+        - file_asset_url = asset_file_asset_path(@container.pid, result["id"])        
+      %a.destructive{:href=>file_asset_url, :title=>"Remove file"} X
