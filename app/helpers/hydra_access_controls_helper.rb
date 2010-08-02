@@ -1,6 +1,5 @@
 module HydraAccessControlsHelper
   
-  # Incomplete.  Currently returns true if user is logged in (regardless of permission level)
   def test_permission(permission_type)    
     # if !current_user.nil?
       if (@document == nil)
@@ -9,6 +8,7 @@ module HydraAccessControlsHelper
 
       if current_user.nil? 
         user = "public"
+        logger.debug("current_user is nil, assigning public")
       else
         user = current_user.login
       end
