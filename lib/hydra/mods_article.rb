@@ -89,18 +89,6 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                  xml.roleTerm(:authority=>"marcrelator", :type=>"text")
                }
              }
-             xml.name(:type=>"corporate") {
-               xml.namePart
-               xml.role {
-                 xml.roleTerm(:authority=>"marcrelator", :type=>"text")
-               }                          
-             }
-             xml.name(:type=>"conference") {
-               xml.namePart
-               xml.role {
-                 xml.roleTerm(:authority=>"marcrelator", :type=>"text")
-               }                          
-             }
              xml.typeOfResource
              xml.genre(:authority=>"marcgt")
              xml.language {
