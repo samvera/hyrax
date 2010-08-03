@@ -18,8 +18,9 @@ module HydraFedoraMetadataHelper
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
-        body << "<span class=\"editable-text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
-        body << "<input class=\"editable-edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<a href='#' class='destructive field'>X</a>" unless z == 0
+        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
     result = field_selectors_for(datastream_name, field_key)
@@ -57,9 +58,9 @@ module HydraFedoraMetadataHelper
       
       body << "<#{container_tag_type.to_s} class=\"field_value textile-container field\" id=\"#{base_id}-container\">"
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
-        body << "<a href='#' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
-        body << "<div class=\"textile-text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
-        body << "<input class=\"textile-edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<a href='#' class='destructive field'>X</a>" unless z == 0
+        body << "<div class=\"textile-text text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
+        body << "<input class=\"textile-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
     

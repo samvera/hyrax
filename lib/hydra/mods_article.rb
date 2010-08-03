@@ -214,6 +214,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
     # Remove the contributor entry identified by @contributor_type and @index
     def remove_contributor(contributor_type, index)
       self.retrieve( {contributor_type.to_sym => index.to_i} ).first.remove
+      self.dirty = true
     end
     
     def self.common_relator_terms
