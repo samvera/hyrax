@@ -22,6 +22,7 @@ class FileAssetsController < ApplicationController
     else
       # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
       @solr_result = FileAsset.find_by_solr(:all)
+      puts @solr_result.inspect
     end
     render :action=>params[:action], :layout=>layout
   end
@@ -58,14 +59,32 @@ class FileAssetsController < ApplicationController
   
   
   def show
-    @file_asset = FileAsset.find(params[:id]) #.hits.first
-    if @file_asset.datastreams_in_memory.include?("DS1")
-      send_datastream @file_asset.datastreams_in_memory["DS1"]
+    @file_asset = FileAsset.find(params[:id])
+    if (@file_asset.nil?)
+      logger.warn("No such file asset: " + params[:id])
+      flash[:notice]= "No such file asset."
+      redirect_to(:action => 'index', :q => nil , :f => nil)
+    else
+      # get array of parent (container) objects for this FileAsset
+      @id_array = @file_asset.containers(:response_format => :id_array)
+      @downloadable = false
+      # A FileAsset is downloadable iff the user has read or higher access to a parent
+      @id_array.each do |pid|
+        @response, @document = get_solr_response_for_doc_id(pid)
+        if reader?
+          @downloadable = true
+          break
+        end
+      end
+
+      if @downloadable
+        if @file_asset.datastreams_in_memory.include?("DS1")
+          send_datastream @file_asset.datastreams_in_memory["DS1"]
+        end
+      else
+        flash[:notice]= "You do not have sufficient access privileges to download this document, which has been marked private."
+        redirect_to(:action => 'index', :q => nil , :f => nil)
+      end
     end
-    # @solr_result = FileAsset.find_by_solr(params[:id]).hits.first
-    # if params[:layout] == "false"
-    #   render :action=>"show_embedded", :layout=>false
-    # end
-    # add_crumb @file_asset.pid, @file_asset
   end
 end
