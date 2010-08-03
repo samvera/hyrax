@@ -12,6 +12,10 @@ ActionController::Routing::Routes.draw do |map|
        assets.resources :contributors, :only=>[:new,:create]
        assets.resources :permissions
     end
+    
+    map.asset_contributor 'assets/:asset_id/contributors/:contributor_type/:id', :controller=>:permissions, :action=>:update
+    
+    
     # Allow updates to assets/:asset_id/permissions (no :id necessary)
     map.update_group_permissions 'assets/:asset_id/permissions', :controller=>:permissions, :action=>:update
     
