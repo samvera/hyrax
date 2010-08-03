@@ -13,7 +13,8 @@ ActionController::Routing::Routes.draw do |map|
        assets.resources :permissions
     end
     
-    map.asset_contributor 'assets/:asset_id/contributors/:contributor_type/:id', :controller=>:permissions, :action=>:update
+    map.asset_contributor 'assets/:asset_id/contributors/:contributor_type/:index', :controller=>:contributors, :action=>:show
+    map.connect 'assets/:asset_id/contributors/:contributor_type/:index', :controller=>:contributors, :action=>:destroy
     
     
     # Allow updates to assets/:asset_id/permissions (no :id necessary)

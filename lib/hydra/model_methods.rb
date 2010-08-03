@@ -13,9 +13,18 @@ module Hydra::ModelMethods
     return true
   end
 
+  # Call insert_contributor on the descMetadata datastream
   def insert_contributor(type, opts={})
     ds = self.datastreams_in_memory["descMetadata"]   
     node, index = ds.insert_contributor(type,opts)
     return node, index
   end
+  
+  # Call remove_contributor on the descMetadata datastream
+  def remove_contributor(type, index)
+    ds = self.datastreams_in_memory["descMetadata"]   
+    result = ds.remove_contributor(type,index)
+    return result
+  end
+  
 end

@@ -178,6 +178,8 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       return builder.doc.root
     end
     
+    # Inserts a new contributor (mods:name) into the mods document
+    # creates contributors of type :person, :organization, or :conference
     def insert_contributor(type, opts={})
       case type.to_sym 
       when :person
@@ -207,6 +209,11 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       end
       
       return node, index
+    end
+    
+    # Remove the contributor entry identified by @contributor_type and @index
+    def remove_contributor(contributor_type, index)
+      self.retrieve( {contributor_type.to_sym => index.to_i} ).first.remove
     end
     
     def self.common_relator_terms
