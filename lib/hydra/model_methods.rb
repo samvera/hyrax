@@ -13,6 +13,16 @@ module Hydra::ModelMethods
     return true
   end
 
+  #
+  # Set the collection type (e.g. hydrangea_article) for the asset
+  #
+  def set_collection_type(collection)
+    prop_ds = self.datastreams_in_memory["properties"]
+    if !prop_ds.nil? && prop_ds.respond_to?(:collection_values)
+      prop_ds.collection_values = collection
+    end
+  end
+
   # Call insert_contributor on the descMetadata datastream
   def insert_contributor(type, opts={})
     ds = self.datastreams_in_memory["descMetadata"]   

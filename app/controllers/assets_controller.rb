@@ -96,6 +96,7 @@ class AssetsController < ApplicationController
       if af_model
         @asset = af_model.new
         apply_depositor_metadata(@asset)
+        set_collection_type(@asset, params[:content_type])
         @asset.save
       end
       redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid)
