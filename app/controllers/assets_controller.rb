@@ -102,8 +102,10 @@ class AssetsController < ApplicationController
     end
     
     def destroy
-      ActiveFedora::Base.load_instance(params[:id]).delete 
-      render :text => "Deleted #{params[:id]}."
+      ActiveFedora::Base.load_instance(params[:id]).delete
+
+      flash[:notice]= "Deleted " + params[:id]
+      redirect_to url_for(:action => 'index', :controller => "catalog", :q => nil , :f => nil)
     end
     
 end
