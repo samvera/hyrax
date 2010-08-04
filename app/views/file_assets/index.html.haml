@@ -1,8 +1,8 @@
 - if params[:layout] == "false"
-  :javascript
-      $(document).ready(function() {
-        $(document).catalogEdit();
-      });
+  / :javascript
+  /     $(document).ready(function() {
+  /       $(document).catalogEdit();
+  /     });
 - else
   - javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
   - javascript_includes << "jquery.jeditable.mini"
