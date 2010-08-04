@@ -6,7 +6,12 @@ module Hydra::AssetsControllerHelper
       asset.apply_depositor_metadata(current_user.login)
     end
   end
-  
+
+  def set_collection_type(asset, collection)
+    if asset.respond_to?(:set_collection_type)
+      asset.set_collection_type(collection)
+    end
+  end
   
   # 
   # parses your params hash, massaging them into an appropriate set of params and opts to pass into ActiveFedora::Base.update_indexed_attributes
