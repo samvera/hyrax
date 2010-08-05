@@ -18,4 +18,4 @@
         - file_asset_url = file_asset_path(result["id"])
       - else
         - file_asset_url = asset_file_asset_path(@container.pid, result["id"])        
-      %a.destructive{:href=>file_asset_url, :title=>"Remove file"} X
+      %a.destroy_file_asset{:href=>file_asset_url, :title=>"Remove file"} X
