@@ -24,12 +24,11 @@ class AssetsController < ApplicationController
         # result = document_fedora.datastreams_in_memory[params["datastream"]].send("#{params[:field]}_values")
         unless result.nil?
           if params.has_key?("field_index")
-            result = result[params["field_index"].to_i]
+            result = result[params["field_index"].to_i-1]
           elsif result.kind_of?(Array)
             result = result.first
           end
         end
-        
         respond_to do |format|
           format.html     { render :text=>result }
           format.textile  { render :text=> white_list( RedCloth.new(result, [:sanitize_html]).to_html ) }
