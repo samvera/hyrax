@@ -229,8 +229,36 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
         "trl" => "Translator",
         }
     end
-      
-    def self.relator_terms
+    
+    def self.person_relator_terms
+      {"aut" => "Author",
+       "clb" => "Collaborator",
+       "com" => "Compiler",
+       "cre" => "Creator",
+       "ctb" => "Contributor",
+       "edt" => "Editor",
+       "ill" => "Illustrator",
+       "res" => "Researcher",
+       "rth" => "Research team head",
+       "rtm" => "Research team member",
+       "trl" => "Translator"
+       }
+    end
+    
+    def self.conference_relator_terms
+      {
+        "hst" => "Host"
+      }
+    end
+    
+    def self.organization_relator_terms
+      {
+        "fnd" => "Funder",
+        "hst" => "Host"
+      }
+    end
+    
+    def self.dc_relator_terms
        {"acp" => "Art copyist",
         "act" => "Actor",
         "adp" => "Adapter",
