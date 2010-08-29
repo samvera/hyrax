@@ -1,0 +1,44 @@
+%form#document_metadata{ :action=>url_for(:action=>"update", :controller=>"assets"), :method=>"post","data-resourceType"=>"hydrangea_dataset", "accept-charset"=>"utf-8"}
+  %input#content_type{:type=>"hidden", :name=>"content_type", :value=>"hydrangea_dataset"}
+  
+  %fieldset
+    %legend Title (required)
+    %dl
+      %dt
+        = fedora_field_label("descMetadata", [:title_info, :main_title], "Title:")
+      %dd.title
+        = fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false)
+      %dd.multi_inline.completeness
+        %ul
+          %li
+            =# fedora_radio_button(@document_fedora, "descMetadata", [:completeness], "ongoing", "ongoing, to be updated")
+            = fedora_select(@document_fedora,"descMetadata", [:interval], :choices=>Hydra::ModsDataset.interval_choices)
+          %li
+            =# fedora_radio_button(@document_fedora, "descMetadata", [:completeness], "completed", "Completed")
+        
+
+  %fieldset
+    %legend Researchers (a primary researcher is required)
+    // Button for adding person/conference/organization
+    - if params[:action] == "edit"
+      - format = document_partial_name(@document)
+      %div#add-contributor-box
+        %input#re-run-add-contributor-action{:type => "button", :value => "Add a researcher"}
+        %button#select-contributor-type{:type => "button"} Select type of contributor to add      
+        %ul#add-contributor-menu
+          %li#add_person Add a person
+          %li#add_organization Add an organization
+          %li#add_conference Add a conference
+
+    %ol
+      = render :partial=>"contributors/edit_person", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].retrieve(:person)
+
+      
+  %fieldset
+    %legend Coverage and Methodology (required)
+    = render :partial=>"hydrangea_datasets/edit_coverage_and_methodology"
+
+  %fieldset
+    %legend Additional Info (optional)  
+    = render :partial=>"hydrangea_datasets/edit_additional_info"
+    

@@ -1,0 +1,63 @@
+- stylesheet_links << "../javascripts/date-picker/css/datepicker" 
+- javascript_includes << infusion_javascripts(:default_no_jquery, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
+- javascript_includes << "jquery.jeditable.mini" 
+- javascript_includes << "date-picker/js/datepicker" 
+- javascript_includes << "jquery.form.js"
+- javascript_includes << "jquery.hydraMetadata.js"  
+- javascript_includes << 'custom'
+- javascript_includes << "catalog/edit"
+- javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
+- javascript_includes << "jquery.notice.js" 
+- javascript_includes << "fancybox/jquery.fancybox-1.3.1.pack.js"
+- stylesheet_links << "../javascripts/fancybox/jquery.fancybox-1.3.1.css"
+
+// For slider controls
+- javascript_includes << "select_to_ui_slider/selectToUISlider.jQuery.js"
+- stylesheet_links << ["../javascripts/select_to_ui_slider/css/ui.slider.extras.css"]
+- stylesheet_links << "slider"
+
+- extra_head_content << capture do 
+  :javascript
+    $(document).ready(function() {
+      $(document).catalogEdit();
+    });
+
+.document_viewer#cover_container
+
+  .multipleEdit
+    #loading{:style=>"display:none;"}
+      %img{:src=>"/images/ajax-loader.gif", :width=>"32", :height=>"32", :alt=>"Saving..."} 
+    - if flash[:notice]
+      .notice
+        = flash[:notice]
+    %div.accordion-section
+      %h2.section-title Describe the Dataset
+      = render :partial => 'hydrangea_datasets/edit_description'
+
+    %div.accordion-section
+      %h2.section-title Files
+      %div#uploads{'data-pid' => params[:id]}
+
+    %div.accordion-section#permissions
+      %h2.section-title Set permissions
+      %span#permissions
+        = render :partial => "permissions/index", :locals => {:document => document, :asset_id=>params[:id]}
+      
+    // This hidden form really belongs elsewhere, but putting it inside of an 
+    // accordion section un-hides it, so I stuck it here for now. -MZ
+    
+    %form#new_contributor{:action=>url_for(:action=>"create", :controller=>"contributors", :asset_id=>params[:id]), :method=>"post", :style=>"display:none;"}
+      %input#content_type{:type=>"hidden", :name=>"content_type", :value=>"hydrangea_article"} 
+      %label{:for=>"contributor_type"} Contributor Type
+      %select#contributor_type{:name=>"contributor_type"}
+        %option{:value=>"person"} Person
+        %option{:value=>"organization"} Organization
+        %option{:value=>"conference"} Conference
+      %input{:type=>"submit", :value=>"Add Contributor"}
+
+- sidebar_items << capture do 
+  =# render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} 
+  =# render :partial=>'facets' 
+  = delete_asset_link(params[:id], "dataset")
+
+= async_load_tag(asset_file_assets_path(params[:id]), 'uploads')

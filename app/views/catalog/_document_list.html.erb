@@ -1,0 +1,11 @@
+<% # container for all documents in index view -%>
+<div id="documents">
+  <% facet_name = grouping_facet %>
+  <%- if facet_name -%>
+    <%- @response.docs.group_by {|d| d.get(facet_name)}.each do |grouping| -%>
+      <%= render :partial => 'catalog/_index_partials/default_group', :locals => {:docs => grouping[1], :facet_name => facet_name, :facet_value => grouping[0].to_s} %>
+    <%- end -%>
+  <%- else -%>
+    <%= render :partial => 'catalog/_index_partials/default_group', :locals => {:docs => @response.docs, :facet_name => nil, :facet_value => nil} %>
+  <%- end -%>
+</div>

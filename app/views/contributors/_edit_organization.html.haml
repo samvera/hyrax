@@ -1,0 +1,23 @@
+- organization = edit_organization
+- organization_counter = edit_organization_counter
+- base_id = "organization_#{organization_counter}"
+- if @document_fedora.class.respond_to?(:organization_relator_terms)
+  - choices = @document_fedora.class.organization_relator_terms
+- else
+  - choices = Hydra::ModsArticle.organization_relator_terms
+  
+%li
+  %dl.organization.contributor{:id=>base_id}
+    %dt
+      = fedora_field_label("descMetadata", [{:organization => organization_counter}, :role, :text], "Organization's Role:")
+      = fedora_select(@document_fedora,"descMetadata", [{:organization => organization_counter}, :role, :text], :choices=>choices.values.sort)
+    %dd.organization
+      %ul    
+        %li
+          = fedora_field_label("descMetadata", [{:organization => organization_counter}, :namePart], "Organization:")
+          = fedora_text_field(@document_fedora,"descMetadata", [{:organization => organization_counter}, :namePart], :multiple=>false)
+    
+      -# Generate the field selectors and delete button for the whole person entry
+      - if params[:action] == "edit"
+        = field_selectors_for("descMetadata", [{:person=>organization_counter}])
+        %a.destructive.destroy_contributor{:href=>asset_contributor_path(@document_fedora.pid, "organization", organization_counter)} X

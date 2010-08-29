@@ -16,4 +16,18 @@ module HydraAssetsHelper
     return result    
   end
 
+  def document_type(document)
+    document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","")
+  end
+
+  def get_person_from_role(doc,role,opts={})  
+    i = 0
+    while i < 10
+      persons_roles = doc["person_#{i}_role_t"].map{|w|w.strip.downcase} unless doc["person_#{i}_role_t"].nil?
+      if persons_roles and persons_roles.include?(role.downcase)
+        return {:first=>doc["person_#{i}_first_name_t"], :last=>doc["person_#{i}_last_name_t"]}
+      end
+      i += 1
+    end
+  end
 end

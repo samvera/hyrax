@@ -1,0 +1,23 @@
+- javascript_includes << "/plugin_assets/fluid-infusion/infusion-1.2-src/lib/jquery/ui/js/jquery.ui.accordion.js"
+- javascript_includes << 'custom'
+- javascript_includes << "catalog/show"
+
+:plain
+  <style type="text/css" media="screen">
+    input.editable-edit, input.textile-edit {display:none}
+  </style>
+  
+.document_viewer#cover_container
+
+  %div.accordion-section
+    %h2.section-title Description
+    = render :partial => 'hydrangea_datasets/edit_description'
+
+  %div.accordion-section
+    %h2.section-title Download Files
+    %div#uploads{'data-pid' => params[:id]}
+
+- sidebar_items << capture do 
+  = #render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"}
+
+= async_load_tag(asset_file_assets_path(params[:id]), 'uploads')

@@ -1,0 +1,29 @@
+%dl
+  %dt
+    = fedora_field_label("descMetadata", [:contact_name], "Contact:")
+  %dd.contact_name
+    = fedora_text_field(@document_fedora,"descMetadata", [:contact_name])
+  %dt
+    = fedora_field_label("descMetadata", [:contact_email], "Email:")
+  %dd.contact_email
+    = fedora_text_field(@document_fedora,"descMetadata", [:contact_email])
+  %dt
+    = fedora_field_label("descMetadata", [:subject, :topic], "Keywords:")
+    = fedora_text_field_insert_link "descMetadata", [:subject, :topic] #, "add a keyword"
+  %dd.keywords
+    = fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic])
+  %dt
+    %label Grant(s)
+    -# link to insert another grant ...
+  %dd.multi_inline.grant
+    %ul
+      %li.grant_agency
+        = fedora_field_label("descMetadata", [{:organization=>0}, :namePart], "Granting agency")
+        = fedora_text_field(@document_fedora,"descMetadata", [{:organization=>0}, :namePart])
+      %li.grant_number
+        = fedora_field_label("descMetadata", [:grant_number], "Grant number")
+        = fedora_text_field(@document_fedora,"descMetadata", [:grant_number])
+  %dt
+    = fedora_field_label("descMetadata", [:data_quality], "Notes about data quality:")
+  %dd.data_quality
+    = fedora_text_area(@document_fedora,"descMetadata", [:data_quality], :multiple=>false)

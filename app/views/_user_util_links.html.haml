@@ -1,0 +1,24 @@
+- if current_user 
+  = link_to "Log Out", logout_path 
+  [
+  = link_to current_user.login, user_path 
+  ]
+  - if current_user.last_search_url
+
+    =# link_to('View your last search', catalog_index_path(current_user.last_search_url))
+
+  =# link_to 'Your Bookmarks', bookmarks_path  
+
+  =# link_to "Saved Searches", saved_searches_path
+- else 
+  = link_to 'Login', login_path
+
+=# link_to "Search History", search_history_index_path 
+
+- if current_user
+  %div#create-asset-box
+    %input#re-run-action{:type => "button", :value => "Add an article", :onclick => "javascript:location.href = '#{url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_article")}'"}
+    %button#select-asset{:type => "button"} Select type of content to create
+    %ul#create-asset-menu
+      %li{:onclick => "javascript:createAssetNavigateTo(this, '#{url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_article")}');"} Add an article
+      %li{:onclick => "javascript:createAssetNavigateTo(this, '#{url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_dataset")}');"} Add a dataset
