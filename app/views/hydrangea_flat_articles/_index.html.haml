@@ -1,9 +1,0 @@
-%tr.document{:class => cycle("even","odd") }
-  %td
-    = document.get(:publication_date_d)
-  %td
-    = link_to_document(document, :label => Blacklight.config[:show][:heading].to_sym, :counter => (counter + 1 + @response.params[:start].to_i))
-  %td
-    = document.get(:medium_t) || document_type(document)
-  %td
-    // location is empty
