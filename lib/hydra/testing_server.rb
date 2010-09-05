@@ -19,6 +19,7 @@
 class Hydra::TestingServer
   require 'singleton'
   include Singleton
+  require 'win32/process' if RUBY_PLATFORM =~ /mswin32/
   attr_accessor :port, :jetty_home, :solr_home, :quiet, :fedora_home
 
   # configure the singleton with some defaults
@@ -26,96 +27,138 @@ class Hydra::TestingServer
     @pid = nil
   end
 
-  def self.configure(params = {})
-    hydra_server = self.instance
-    hydra_server.quiet = params[:quiet].nil? ? true : params[:quiet]
-    if defined?(RAILS_ROOT)
-      base_path = RAILS_ROOT
-    else
-      base_path = "."
+  class << self
+    def configure(params = {})
+      hydra_server = self.instance
+      hydra_server.quiet = params[:quiet].nil? ? true : params[:quiet]
+      if defined?(Rails.root)
+        base_path = Rails.root
+      else
+        base_path = "."
+      end
+      hydra_server.jetty_home = params[:jetty_home] || File.expand_path(File.join(base_path, 'jetty'))
+      hydra_server.solr_home = params[:solr_home]  || File.join( hydra_server.jetty_home, "solr")
+      hydra_server.fedora_home = params[:fedora_home] || File.join( hydra_server.jetty_home, "fedora","default")
+      hydra_server.port = params[:jetty_port] || 8888
+      return hydra_server
     end
-    hydra_server.jetty_home = params[:jetty_home] || File.expand_path(File.join(base_path, 'jetty'))
-    hydra_server.solr_home = params[:solr_home]  || File.join( hydra_server.jetty_home, "solr")
-    hydra_server.fedora_home = params[:fedora_home] || File.join( hydra_server.jetty_home, "fedora/default")
-    hydra_server.port = params[:jetty_port] || 8888
-    return hydra_server
-  end
-  
-  def self.wrap(params = {})
-    error = false
-    hydra_server = self.configure(params)
-    begin
-      puts "starting Hydra jetty server on #{RUBY_PLATFORM}"
-      hydra_server.start
-      sleep params[:startup_wait] || 5
-      yield
-    rescue
-      error = true
-    ensure
-      puts "stopping Hydra jetty server"
-      hydra_server.stop
-    end
+    
+    def wrap(params = {})
+      error = false
+      hydra_server = self.configure(params)
+      begin
+        puts "starting Hydra jetty server on #{RUBY_PLATFORM}"
+        hydra_server.start
+        sleep params[:startup_wait] || 5
+        yield
+      rescue
+        error = true
+      ensure
+        puts "stopping Hydra jetty server"
+        hydra_server.stop
+      end
 
-    return error
+      return error
+    end
   end
-  
+
   def jetty_command
     "java -Djetty.port=#{@port} -Dsolr.solr.home=#{@solr_home} -Dfedora.home=#{@fedora_home} -jar start.jar"
   end
-  
+ 
   def start
     puts "jetty_home: #{@jetty_home}"
     puts "solr_home: #{@solr_home}"
     puts "fedora_home: #{@fedora_home}"
     puts "jetty_command: #{jetty_command}"
-    platform_specific_start
+    if pid
+      begin
+        Process.kill(0,pid)
+        raise("Server is already running with PID #{pid}")
+      rescue Errno::ESRCH
+        STDERR.puts("Removing stale PID file at #{pid_path}")
+        File.delete(pid_path)
+      end
+    end
+    Dir.chdir(@jetty_home) do
+      self.send "#{platform}_process".to_sym
+    end
+    begin
+      f = File.new(pid_path,  "w+")
+    rescue Errno::ENOENT, Errno::EACCES
+      f = File.new(File.join('tmp',pid_file))
+    end
+    f.puts "#{@pid}"
+    f.close
   end
   
   def stop
-    platform_specific_stop
+    puts "stopping"
+    if pid
+      begin
+        self.send "#{platform}_stop".to_sym
+      rescue Errno::ESRCH
+        STDERR.puts("Removing stale PID file at #{pid_path}")
+      end
+      FileUtils.rm(pid_path)
+    end
   end
   
-  if RUBY_PLATFORM =~ /mswin32/
-    require 'win32/process'
+  def win_process
+    @pid = Process.create(
+          :app_name         => jetty_command,
+          :creation_flags   => Process::DETACHED_PROCESS,
+          :process_inherit  => false,
+          :thread_inherit   => true,
+          :cwd              => "#{@jetty_home}"
+       ).process_id
+  end
 
-    # start the solr server
-    def platform_specific_start
-      Dir.chdir(@jetty_home) do
-        @pid = Process.create(
-              :app_name         => jetty_command,
-              :creation_flags   => Process::DETACHED_PROCESS,
-              :process_inherit  => false,
-              :thread_inherit   => true,
-              :cwd              => "#{@jetty_home}"
-           ).process_id
-      end
-    end
-
-    # stop a running solr server
-    def platform_specific_stop
-      Process.kill(1, @pid)
-      Process.wait
-    end
-  else # Not Windows
-    # start the solr server
-    def platform_specific_start
-      puts self.inspect
-      Dir.chdir(@jetty_home) do
-        @pid = fork do
-          STDERR.close if @quiet
-          exec jetty_command
-        end
-      end
-    end
-
-    # stop a running solr server
-    def platform_specific_stop
-      Process.kill('TERM', @pid)
-      Process.wait
+  def platform
+    case RUBY_PLATFORM
+    when /mswin32/
+      return 'win'
+    else
+      return 'nix'
     end
   end
 
+  def nix_process
+    @pid = fork do
+      STDERR.close if @quiet
+      exec jetty_command
+    end
+  end
+
+  # stop a running solr server
+  def win_stop
+    Process.kill(1, @pid)
+  end
+
+  def nix_stop
+    Process.kill('TERM',pid)
+  end
+
+  def pid_path
+    File.join(pid_dir, pid_file)
+  end
+
+  def pid_file
+    @pid_file || 'hydra-jetty.pid'
+  end
+
+  def pid_dir
+    File.expand_path(@pid_dir || File.join(Rails.root,'tmp','pids'))
+  end
+
+  def pid
+    @pid || File.open( pid_path ) { |f| return f.gets.to_i } if File.exist?(pid_path)
+  end
+
+
+
 end
+
 # 
 # puts "hello"
 # SOLR_PARAMS = {
