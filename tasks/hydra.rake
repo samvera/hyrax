@@ -86,4 +86,51 @@ namespace :hydra do
     
   end
 
+  namespace :default_fixtures do
+
+    FIXTURES = [
+        "hydrangea:fixture_mods_article1",
+        "hydrangea:fixture_mods_article3",
+        "hydrangea:fixture_file_asset1",
+        "hydrangea:fixture_mods_article2",
+        "hydrangea:fixture_uploaded_svg1",
+        "hydrangea:fixture_archivist_only_mods_article",
+        "hydrangea:fixture_mods_dataset1"
+    ]
+
+    desc "Load default Hydra fixtures"
+    task :load do
+      FIXTURES.each_with_index do |fixture,index|
+        ENV["pid"] = fixture
+        Rake::Task["hydra:import_fixture"].invoke if index == 0
+        Rake::Task["hydra:import_fixture"].execute if index > 0
+      end
+    end
+
+    desc "Remove default Hydra fixtures"
+    task :delete do
+      FIXTURES.each_with_index do |fixture,index|
+        ENV["pid"] = fixture
+        puts "deleting #{fixture}"
+        puts "#{ENV["pid"]}"
+        Rake::Task["hydra:delete"].invoke if index == 0
+        Rake::Task["hydra:delete"].execute if index > 0
+      end
+    end
+
+    desc "Refresh default Hydra fixtures"
+    task :refresh do
+      FIXTURES.each_with_index do |fixture,index|
+        ENV["pid"] = fixture
+        if index == 0
+          Rake::Task["hydra:delete"].invoke if index == 0
+          Rake::Task["hydra:import_fixture"].invoke if index == 0
+        else 
+          Rake::Task["hydra:delete"].execute if index > 0
+          Rake::Task["hydra:import_fixture"].execute if index > 0
+        end
+      end
+    end
+  end
+
 end
