@@ -221,7 +221,7 @@ module MetadataHelper
     end
     
     if ds.kind_of?(ActiveFedora::NokogiriDatastream)
-      field_name = ds.class.accessor_hierarchical_name(*field_key)
+      field_name = OM::XML::Terminology.term_hierarchical_name(*field_key)
       url_params[:field_name] = field_name
       url_params["field_selectors"] = {datastream_name=>{field_name => field_key} }
     else

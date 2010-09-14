@@ -1,55 +1,65 @@
 module Hydra
   class ModsDataset < ActiveFedora::NokogiriDatastream
 
-    # have to call this in order to set namespace & schema
-    root_property :mods, "mods", "http://www.loc.gov/mods/v3", :attributes=>["id", "version"], :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd"          
+    set_terminology do |t|
+      t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 
-    property :title_info, :path=>"titleInfo", 
-                :convenience_methods => {
-                  :main_title => {:path=>"title"},
-                  # :language => {:path=>{:attribute=>"lang"}},    
-                  :language => {:path=>"language"},                 
-                }
-    
-    property :note, :path=>"note"
-    property :completeness, :variant_of=>:note, :attributes=>{:type=>"completeness"}
-    property :interval, :variant_of=>:note, :attributes=>{:type=>"interval"}
-    property :data_type, :variant_of=>:note, :attributes=>{:type=>"datatype"}
-    property :timespan_start, :variant_of=>:note, :attributes=>{:type=>"timespan-start"}
-    property :timespan_end, :variant_of=>:note, :attributes=>{:type=>"timespan-end"}
-    property :location, :variant_of=>:note, :attributes=>{:type=>"location"}
-    property :grant_number, :variant_of=>:note, :attributes=>{:type=>"grant"}
-    property :data_quality, :variant_of=>:note, :attributes=>{:type=>"data quality"}
-    property :contact_name, :variant_of=>:note, :attributes=>{:type=>"contact-name"}
-    property :contact_email, :variant_of=>:note, :attributes=>{:type=>"contact-email"}
-    
-    property :methodology, :path=>"abstract"
-                
-    property :name_, :path=>"name", 
-                :attributes=>[:xlink, :lang, "xml:lang", :script, :transliteration, {:type=>["personal", "corporate", "conference"]} ],
-                :subelements=>["namePart", "displayForm", "affiliation", :role, "description"],
-                :default_content_path => "namePart",
-                :convenience_methods => {
-                  :last_name => {:path=>"namePart", :attributes=>{:type=>"family"}},
-                  :first_name => {:path=>"namePart", :attributes=>{:type=>"given"}},
-                  :institution=>{:path=>'affiliation'}
-                }
-    property :person, :variant_of=>:name_, :attributes=>{:type=>"personal"}
-    property :organization, :variant_of=>:name_, :attributes=>{:type=>"corporate"}
-    
-    property :role, :path=>"role",
-                :parents=>[:name_],
-                :convenience_methods => {
-                  :text => {:path=>"roleTerm", :attributes=>{:type=>"text"}},
-                  :code => {:path=>"roleTerm", :attributes=>{:type=>"code"}},                    
-                }
-    
-    property :subject, :path=>'subject',:subelements => "topic"    
+      # Common MODS info -- might eventually be put into its own shared terminology.
+      
+      t.title_info(:path=>"titleInfo") {
+        t.main_title(:path=>"title", :label=>"title")
+        t.language(:path=>{:attribute=>"lang"})
+      } 
+      t.abstract   
+      t.subject {
+        t.topic
+      }      
+      t.topic_tag(:path=>"subject", :default_content_path=>"topic")           
+      # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
+      t.name_ {
+        # this is a namepart
+        t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
+        # affiliations are great
+        t.affiliation
+        t.displayForm
+        t.role(:ref=>[:role])
+        t.description
+        t.date(:path=>"namePart", :attributes=>{:type=>"date"})
+        t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
+        t.first_name(:path=>"namePart", :attributes=>{:type=>"given"}, :label=>"first name")
+        t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"})
+      }
+      # lookup :person, :first_name        
+      t.person(:ref=>:name, :attributes=>{:type=>"personal"})
+      t.organization(:ref=>:name, :attributes=>{:type=>"institutional"})
+      t.conference(:ref=>:name, :attributes=>{:type=>"conference"})
+
+      t.role {
+        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
+        t.code(:path=>"roleTerm",:attributes=>{:type=>"code"})
+      }
+      
+      # Dataset-specific Terms
+      
+      # In datasets, we're calling the abstract "methodology"
+      t.methodology(:path=>"abstract")
+      
+      # Most of these are forcing non-bibliographic information into mods by using the note field pretty freely
+      t.note
+      t.completeness(:ref=>:note, :attributes=>{:type=>"completeness"})
+      t.interval(:ref=>:note, :attributes=>{:type=>"interval"})
+      t.data_type(:ref=>:note, :attributes=>{:type=>"datatype"})
+      t.timespan_start(:ref=>:note, :attributes=>{:type=>"timespan-start"})
+      t.timespan_end(:ref=>:note, :attributes=>{:type=>"timespan-end"})
+      t.location(:ref=>:note, :attributes=>{:type=>"location"})
+      t.grant_number(:ref=>:note, :attributes=>{:type=>"grant"})
+      t.data_quality(:ref=>:note, :attributes=>{:type=>"data quality"})
+      t.contact_name(:ref=>:note, :attributes=>{:type=>"contact-name"})
+      t.contact_email(:ref=>:note, :attributes=>{:type=>"contact-email"})
+    end   
 
     # It would be nice if we could declare properties with refined info like this
     # accessor :grant_agency,  :relative_xpath=>'oxns:mods/oxns:name[contains(oxns:role/oxns:roleTerm, "Funder")]'
-
-    generate_accessors_from_properties  
   
     # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
     def self.xml_template

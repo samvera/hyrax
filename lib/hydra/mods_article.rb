@@ -1,75 +1,63 @@
 module Hydra
 class ModsArticle < ActiveFedora::NokogiriDatastream       
   
-    # have to call this in order to set namespace & schema
-    root_property :mods, "mods", "http://www.loc.gov/mods/v3", :attributes=>["id", "version"], :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd"          
-                
-    property :title_info, :path=>"titleInfo", 
-                :convenience_methods => {
-                  :main_title => {:path=>"title"},
-                  # :language => {:path=>{:attribute=>"lang"}},    
-                  :language => {:path=>"language"},                 
-                }
-    property :abstract, :path=>"abstract"
-    property :subject, :path=>'subject',:subelements => "topic"    
-    property :name_, :path=>"name", 
-                :attributes=>[:xlink, :lang, "xml:lang", :script, :transliteration, {:type=>["personal", "enumerated", "corporate"]} ],
-                :subelements=>["namePart", "displayForm", "affiliation", :role, "description"],
-                :default_content_path => "namePart",
-                :convenience_methods => {
-                  :date => {:path=>"namePart", :attributes=>{:type=>"date"}},
-                  :last_name => {:path=>"namePart", :attributes=>{:type=>"family"}},
-                  :first_name => {:path=>"namePart", :attributes=>{:type=>"given"}},
-                  :terms_of_address => {:path=>"namePart", :attributes=>{:type=>"termsOfAddress"}},
-                  :institution=>{:path=>'affiliation'}
-                }
-                
-    property :person, :variant_of=>:name_, :attributes=>{:type=>"personal"}
-    property :organization, :variant_of=>:name_, :attributes=>{:type=>"corporate"}
-    property :conference, :variant_of=>:name_, :attributes=>{:type=>"conference"}
-    
-    property :role, :path=>"role",
-                :parents=>[:name_],
-                :convenience_methods => {
-                  :text => {:path=>"roleTerm", :attributes=>{:type=>"text"}},
-                  :code => {:path=>"roleTerm", :attributes=>{:type=>"code"}},                    
-                }
-                
-    property :journal, :path=>'relatedItem', :attributes=>{:type=>"host"},
-                :subelements=>[:title_info, :origin_info, :issue],
-                :convenience_methods => {
-                  :issn => {:path=>"identifier", :attributes=>{:type=>"issn"}},
-                }
-    
-    property :origin_info, :path=>'originInfo',
-                :subelements=>["publisher","dateIssued"]
-                
-    property :issue, :path=>'part',
-                # :subelements=>[:start_page, :end_page, :volume, :level],
-                :convenience_methods => {
-                  # Hacks to support provisional spot for start & end page, etc (nesting was too deep for this version of OM)
-                  :volume => {:path=>"detail", :attributes=>{:type=>"volume"}},
-                  :level => {:path=>"detail", :attributes=>{:type=>"number"}},
-                  :start_page => {:path=>"pages", :attributes=>{:type=>"start"}},
-                  :end_page => {:path=>"pages", :attributes=>{:type=>"end"}},
-                  :publication_date => {:path=>"date"}
-                }
+  set_terminology do |t|
+    t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 
-    # Correct usage of Start & End pages...
-    # property :start_page, :path=>"extent", :attributes=>{:unit=>"pages"}, 
-    #             :convenience_methods => {
-    #               :number=>{:path=>"start"}
-    #             }
-    # property :end_page, :path=>"extent", :attributes=>{:unit=>"pages"}, 
-    #             :convenience_methods => {
-    #               :number=>{:path=>"end"}
-    #             }
-    # property :volume, :path=>"detail", :attributes=>{:type=>"volume"}, :subelements=>"number"
-    # property :level, :path=>"detail", :attributes=>{:type=>"number"}, :subelements=>"number"
-               
-    generate_accessors_from_properties  
+    t.title_info(:path=>"titleInfo") {
+      t.main_title(:path=>"title", :label=>"title")
+      t.language(:path=>{:attribute=>"lang"})
+    } 
+    t.abstract   
+    t.subject {
+      t.topic
+    }      
+    t.topic_tag(:path=>"subject", :default_content_path=>"topic")           
+    # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
+    t.name_ {
+      # this is a namepart
+      t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
+      # affiliations are great
+      t.affiliation
+      t.displayForm
+      t.role(:ref=>[:role])
+      t.description
+      t.date(:path=>"namePart", :attributes=>{:type=>"date"})
+      t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
+      t.first_name(:path=>"namePart", :attributes=>{:type=>"given"}, :label=>"first name")
+      t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"})
+    }
+    # lookup :person, :first_name        
+    t.person(:ref=>:name, :attributes=>{:type=>"personal"})
+    t.organization(:ref=>:name, :attributes=>{:type=>"institutional"})
+    t.conference(:ref=>:name, :attributes=>{:type=>"conference"})
+
+    t.role {
+      t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
+      t.code(:path=>"roleTerm",:attributes=>{:type=>"code"})
+    }
+    t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
+      t.title_info
+      t.origin_info(:path=>"originInfo") {
+        t.publisher
+        t.date_issued(:path=>"dateIssued")
+      }
+      t.issn(:path=>"identifier", :attributes=>{:type=>"issn"})
+      t.issue(:path=>"part") {
+        t.volume(:path=>"detail", :attributes=>{:type=>"volume"}, :default_content_path=>"number")
+        t.level(:path=>"detail", :attributes=>{:type=>"number"}, :default_content_path=>"number")
+        t.extent
+        t.pages(:path=>"extent", :attributes=>{:unit=>"pages"}) {
+          t.start
+          t.end
+        }
+        t.publication_date(:path=>"date")
+      }
+    }
     
-    accessor :title,  :relative_xpath=>'oxns:mods/oxns:titleInfo/oxns:title'
+  end
+  
+    # accessor :title, :term=>[:mods, :title_info, :main_title]
     
     # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
     def self.xml_template
@@ -184,13 +172,13 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       case type.to_sym 
       when :person
         node = Hydra::ModsArticle.person_template
-        nodeset = self.retrieve(:person)
+        nodeset = self.find_by_terms(:person)
       when :organization
         node = Hydra::ModsArticle.organization_template
-        nodeset = self.retrieve(:organization)
+        nodeset = self.find_by_terms(:organization)
       when :conference
         node = Hydra::ModsArticle.conference_template
-        nodeset = self.retrieve(:conference)
+        nodeset = self.find_by_terms(:conference)
       else
         ActiveFedora.logger.warn("#{type} is not a valid argument for Hydra::ModsArticle.insert_contributor")
         node = nil
@@ -213,7 +201,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
     
     # Remove the contributor entry identified by @contributor_type and @index
     def remove_contributor(contributor_type, index)
-      self.retrieve( {contributor_type.to_sym => index.to_i} ).first.remove
+      self.find_by_terms( {contributor_type.to_sym => index.to_i} ).first.remove
       self.dirty = true
     end
     
