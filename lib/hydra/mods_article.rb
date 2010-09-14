@@ -29,7 +29,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
     }
     # lookup :person, :first_name        
     t.person(:ref=>:name, :attributes=>{:type=>"personal"})
-    t.organization(:ref=>:name, :attributes=>{:type=>"institutional"})
+    t.organization(:ref=>:name, :attributes=>{:type=>"corporate"})
     t.conference(:ref=>:name, :attributes=>{:type=>"conference"})
 
     t.role {
@@ -66,7 +66,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
            "xmlns:xsi"=>"http://www.w3.org/2001/XMLSchema-instance",
            "xmlns"=>"http://www.loc.gov/mods/v3",
            "xsi:schemaLocation"=>"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd") {
-             xml.titleInfo {
+             xml.titleInfo(:lang=>"") {
                xml.title
              }
              xml.name(:type=>"personal") {
@@ -96,23 +96,16 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                  xml.dateIssued
                }
                xml.part {
-                 # A hack implementation to reduce nesting
-                 xml.detail(:type=>"volume")
-                 xml.detail(:type=>"number")
-                 xml.pages(:type=>"start")
-                 xml.pages(:type=>"end")
-                 
-                 # The correct implementation (nesting too deep for current version of OM)
-                 # xml.detail(:type=>"volume") {
-                 #   xml.number
-                 # }
-                 # xml.detail(:type=>"number") {
-                 #   xml.number
-                 # }
-                 # xml.extent(:unit=>"page") {
-                 #   xml.start
-                 #   xml.end
-                 # }
+                 xml.detail(:type=>"volume") {
+                   xml.number
+                 }
+                 xml.detail(:type=>"number") {
+                   xml.number
+                 }
+                 xml.extent(:unit=>"pages") {
+                   xml.start
+                   xml.end
+                 }
                  xml.date
                }
              }
