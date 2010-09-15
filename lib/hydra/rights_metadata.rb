@@ -9,8 +9,13 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     }
     t.access {
       t.human_readable(:path=>"human")
-      t.group(:path=>"group")
-      t.person(:path=>"person")
+      t.machine {
+        t.group
+        t.person
+      }
+      t.person(:proxy=>[:machine, :person])
+      t.group(:proxy=>[:machine, :group])
+      # accessor :access_person, :term=>[:access, :machine, :person]
     }
     t.discover_access(:ref=>[:access], :attributes=>{:type=>"discover"})
     t.read_access(:ref=>[:access], :attributes=>{:type=>"read"})
@@ -63,14 +68,13 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     
     type = selector.keys.first.to_sym
     actor = selector.values.first
-    
     if new_access_level.nil?
       xpath = self.class.terminology.xpath_for(:access, type, actor)
       nodeset = self.find_by_terms(xpath)
       if nodeset.empty?
         return "none"
       else
-        return nodeset.first.ancestors.first.attributes["type"].text
+        return nodeset.first.ancestors("access").first.attributes["type"].text
       end
     else
       remove_all_permissions(selector)
