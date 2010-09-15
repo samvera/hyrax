@@ -17,10 +17,9 @@ module Hydra
       t.topic_tag(:path=>"subject", :default_content_path=>"topic")           
       # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
       t.name_ {
-        # this is a namepart
         t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
-        # affiliations are great
         t.affiliation
+        t.institution(:path=>"affiliation")
         t.displayForm
         t.role(:ref=>[:role])
         t.description

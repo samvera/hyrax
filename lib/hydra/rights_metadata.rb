@@ -20,11 +20,10 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     t.discover_access(:ref=>[:access], :attributes=>{:type=>"discover"})
     t.read_access(:ref=>[:access], :attributes=>{:type=>"read"})
     t.edit_access(:ref=>[:access], :attributes=>{:type=>"edit"})
+    # A bug in OM prevnts us from declaring proxy terms at the root of a Terminology
+    # t.access_person(:proxy=>[:access,:machine,:person])
+    # t.access_group(:proxy=>[:access,:machine,:group])
   end
-
-  # These are convenience accessors.  They can be used to look up values, but not to edit/update them.  
-  # accessor :access_group, :relative_xpath=>'oxns:access/oxns:group'
-  # accessor :access_person, :relative_xpath=>'oxns:access/oxns:person'
     
   # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
   def self.xml_template

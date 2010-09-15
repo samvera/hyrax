@@ -19,6 +19,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
       # affiliations are great
       t.affiliation
+      t.institution(:path=>"affiliation")
       t.displayForm
       t.role(:ref=>[:role])
       t.description
@@ -37,7 +38,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       t.code(:path=>"roleTerm",:attributes=>{:type=>"code"})
     }
     t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
-      t.title_info
+      t.title_info(:ref=>[:title_info])
       t.origin_info(:path=>"originInfo") {
         t.publisher
         t.date_issued(:path=>"dateIssued")
@@ -51,10 +52,11 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
           t.start
           t.end
         }
+        t.start_page(:proxy=>[:pages, :start])
+        t.end_page(:proxy=>[:pages, :end])
         t.publication_date(:path=>"date")
       }
     }
-    
   end
   
     # accessor :title, :term=>[:mods, :title_info, :main_title]
