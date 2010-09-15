@@ -162,8 +162,9 @@ module HydraFedoraMetadataHelper
   end
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})
+    field_name = field_name_for(field_key)
     link_text = "Add #{field_key[1].to_s.titlecase}"
-    "<a class='addval textfield' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"    
+    "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"    
   end
   
   def fedora_field_label(datastream_name, field_key, label=nil)
