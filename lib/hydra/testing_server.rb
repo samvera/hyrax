@@ -83,10 +83,11 @@ class Hydra::TestingServer
     Dir.chdir(@jetty_home) do
       self.send "#{platform}_process".to_sym
     end
+    mkpath(pid_dir) unless File.directory?(pid_dir)
     begin
-      f = File.new(pid_path,  "w+")
+      f = File.new(pid_path,  "w")
     rescue Errno::ENOENT, Errno::EACCES
-      f = File.new(File.join('tmp',pid_file))
+      f = File.new(File.join(Rails.root,'tmp',pid_file),"w")
     end
     f.puts "#{@pid}"
     f.close
@@ -154,8 +155,6 @@ class Hydra::TestingServer
   def pid
     @pid || File.open( pid_path ) { |f| return f.gets.to_i } if File.exist?(pid_path)
   end
-
-
 
 end
 
