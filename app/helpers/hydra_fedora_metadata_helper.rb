@@ -1,5 +1,6 @@
 require "inline_editable_metadata_helper"
 require "block_helpers"
+
 module HydraFedoraMetadataHelper
   
   def fedora_text_field(resource, datastream_name, field_key, opts={})
@@ -155,6 +156,16 @@ module HydraFedoraMetadataHelper
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
   end
   
+  def fedora_radio_button(resource, datastream_name, field_key, opts={})
+    result = ""
+    h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+    field_key.each do |pointer|
+      result << tag(:input, :type=>"radio", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][#{opts[0]}]", :value=>pointer.to_s)
+      result << " #{opts.first[1]}"
+    end
+    return result
+  end  
+  
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     link_text = "Add #{field_key[1].to_s.titlecase}"
@@ -224,6 +235,10 @@ module HydraFedoraMetadataHelper
     def fedora_checkbox(datastream_name, field_key, opts={})
       helper.fedora_checkbox(@resource, datastream_name, field_key, opts)
     end
+    
+    def fedora_radio_button(datastream_name, field_key, opts={})
+      helper.fedora_radio_button(@resource, datastream_name, field_key, opts)
+    end    
     
     def fedora_text_field_insert_link(datastream_name, field_key, opts={})
       helper.fedora_text_field_insert_link(@resource, datastream_name, field_key, opts={})
