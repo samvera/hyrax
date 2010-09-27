@@ -168,7 +168,7 @@ module HydraFedoraMetadataHelper
   
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
-    link_text = "Add #{field_key[1].to_s.titlecase}"
+    link_text = "Add #{(opts[:label] || field_key[1]).to_s.titlecase}"
     "<a class='addval textfield' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"
   end
   

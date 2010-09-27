@@ -10,12 +10,15 @@ ActionController::Routing::Routes.draw do |map|
      map.resources :assets do |assets|
        assets.resources :downloads, :only=>[:index]
        assets.resources :contributors, :only=>[:new,:create]
+       assets.resources :grants, :only=>[:new,:create]       
        assets.resources :permissions
     end
     
     map.asset_contributor 'assets/:asset_id/contributors/:contributor_type/:index', :controller=>:contributors, :action=>:show, :conditions => { :method => :get }
     map.connect 'assets/:asset_id/contributors/:contributor_type/:index', :controller=>:contributors, :action=>:destroy, :conditions => { :method => :delete }
     
+    map.asset_grant 'assets/:asset_id/grants/:grant_type/:index', :controller=>:grants, :action=>:show, :conditions => { :method => :get }
+    map.connect 'assets/:asset_id/grants/:grant_type/:index', :controller=>:grants, :action=>:destroy, :conditions => { :method => :delete }
     
     # Allow updates to assets/:asset_id/permissions (no :id necessary)
     map.update_group_permissions 'assets/:asset_id/permissions', :controller=>:permissions, :action=>:update

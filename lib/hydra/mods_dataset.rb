@@ -45,17 +45,7 @@ module Hydra
       
       # Most of these are forcing non-bibliographic information into mods by using the note field pretty freely
       t.note
-      t.completeness(:ref=>:note, :attributes=>{:type=>"completeness"})
-      t.interval(:ref=>:note, :attributes=>{:type=>"interval"})
-      t.data_type(:ref=>:note, :attributes=>{:type=>"datatype"})
-      t.timespan_start(:ref=>:note, :attributes=>{:type=>"timespan-start"})
-      t.timespan_end(:ref=>:note, :attributes=>{:type=>"timespan-end"})
-      t.location(:ref=>:note, :attributes=>{:type=>"location"})
-      t.grant_number(:ref=>:note, :attributes=>{:type=>"grant"})
-      t.data_quality(:ref=>:note, :attributes=>{:type=>"data quality"})
-      t.contact_name(:ref=>:note, :attributes=>{:type=>"contact-name"})
-      t.contact_email(:ref=>:note, :attributes=>{:type=>"contact-email"})
-    end   
+      end   
 
     # It would be nice if we could declare properties with refined info like this
     # accessor :grant_agency,  :relative_xpath=>'oxns:mods/oxns:name[contains(oxns:role/oxns:roleTerm, "Funder")]'
@@ -129,6 +119,13 @@ module Hydra
         "rtm" => "Research team member"
         }
     end
+
+    def self.completed_choices
+      ["Time Series",
+        "Snapshot / Sample"
+      ]
+    end
+
     
     def self.interval_choices
       ["Monthly",
