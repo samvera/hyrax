@@ -2,6 +2,12 @@
   %td
   %td
     =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
+
+  %td
+    %form#document_metadata{:action=>url_for(:id=>result["id"], :controller=>"assets", :action=>"update"), :method=>"post"}
+      %input#content_type{:type=>"hidden", :name=>"content_type", :value=>"file_asset"}
+      = fedora_select(result["id"], "HydraMetadata", :description, :values=>result[solr_name("contents", :text)], :choices => ["data", "supporting file", "profile", "lorem ipsum", "dolor"])
+
   %td
     %form#document_metadata{:action=>url_for(:id=>result["id"], :controller=>"assets", :action=>"update"), :method=>"post"}
       %input#content_type{:type=>"hidden", :name=>"content_type", :value=>"file_asset"}

@@ -32,6 +32,8 @@
 
                         <tr>
                             <th scope="col" class="fl-uploader-file-name">File Name</th>
+							<th scope="col" class="fl-uploader-file-metadata-type">Type</th>
+							<th scope="col" class="fl-uploader-file-metadata-value">Description</th>
                             <th scope="col" class="fl-uploader-file-size">Size&nbsp;&nbsp;</th>
                             <th scope="col" class="fl-uploader-file-actions">&nbsp;</th>
                         </tr>
@@ -49,6 +51,12 @@
                             <!-- Template markup for the file queue rows -->
                             <tr class="flc-uploader-file-tmplt flc-uploader-file fl-uploader-hidden-templates">
                                 <th class="flc-uploader-file-name fl-uploader-file-name" scope="row">File Name Placeholder</th>
+                                <td class="flc-uploader-metadata-type fl-uploader-metadata-type">
+									<%= select("asset[HydraMetadata]", "contents", ["data", "supporting file", "profile", "lorem ipsum", "dolor"]) %>
+								</td>
+                                <td class="flc-uploader-metadata-value fl-uploader-metadata-value">
+									<%= text_field("asset[HydraMetadata]", "description", :value => "") %>
+								</td>
                                 <td class="flc-uploader-file-size fl-uploader-file-size">0 KB</td>
                                 <td class="fl-uploader-file-actions">
                                     <button type="button" class="flc-uploader-file-action fl-uploader-file-action" title="Remove File" tabindex="-1">
@@ -88,6 +96,7 @@
                 </table>
                 <div class="flc-uploader-total-progress fl-uploader-total-progress-okay">&nbsp;</div>
             </div>
+
         </div>
         
         <!-- Action buttons -->
@@ -95,5 +104,6 @@
             <button type="button" class="flc-uploader-button-pause fl-uploader-pause fl-uploader-hidden">Stop Upload</button><button type="button" class="flc-uploader-button-upload fl-uploader-upload fl-uploader-button-default fl-uploader-dim" disabled="disabled">Upload</button>
         </div>
     </form>
-
+	
 </div>
+<div style="clear:both;"></div>
