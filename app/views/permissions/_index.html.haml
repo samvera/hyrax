@@ -4,7 +4,7 @@
 
   %fieldset.slider
     %legend Group Permissions
-    - choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read & Upload" => "read"}, {"Edit & Download" => "edit"}]
+    - choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}]
     / - group_permissions = {"no_access"=>[]}
     / - choices.each do |choice|
     /   - choice_name = choice.values.first
