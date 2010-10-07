@@ -55,9 +55,13 @@ module Hydra::AccessControlsEnforcement
       q << " AND NOT _query_:\"info\\\\:fedora/afmodel\\\\:FileAsset\""
 
     # Append the query responsible for adding the users discovery level
-      field_queries = ["_query_:\"discover_access_group_t:public\""]
-      unless current_user.nil? 
-        permission_types = ["edit","discover","read"] 
+      permission_types = ["edit","discover","read"]
+      field_queries = []
+      permission_types.each do |type|
+        field_queries << "_query_:\"#{type}_access_group_t:public\""
+      end
+
+      unless current_user.nil?
         # for roles
         RoleMapper.roles(current_user.login).each do |role|
           permission_types.each do |type|
