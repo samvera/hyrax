@@ -18,9 +18,15 @@
     <% choices.each do |choice| %>
       <% choice_label = choice.keys.first %>
       <% choice_name = choice.values.first %>
-      <option value="<%=h choice_name %>" selected="<%= (current_permissions == choice_name) %>">
-        <%= choice_label %>
-      </option>
+      <% if current_permissions == choice_name %>
+        <option value="<%=h choice_name %>" selected="selected">
+           <%= choice_label %>
+        </option>
+      <% else %>
+        <option value="<%=h choice_name %>">
+           <%= choice_label %>
+        </option>
+      <% end %>
     <% end %>
   </select>
 <% end %>
