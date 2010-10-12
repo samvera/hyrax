@@ -1,0 +1,50 @@
+<% unless defined?(asset_id) %>
+  <% asset_id = params[:asset_id] %>
+<% end %>
+<form id="document_metadata" action="<%= url_for(:asset_id=>@document_fedora.pid,:action=>"update", :controller=>"permissions") %>" method="post" data-resourceType="hydrangea_article" accept-charset="utf-8">
+  <fieldset class="slider">
+    <legend>Group Permissions</legend>
+    <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
+    <% roles = RoleMapper.role_names %>
+    <%# This next line should be conditional upon a person having Publish permissions on the object's collection %>
+    <% roles << "public" %>
+    <% roles.each do |role| %>
+      <% role_permissions = @document_fedora.datastreams_in_memory["rightsMetadata"].permissions({"group"=>role}) %>
+      <% field_name = "#{role}_group_access" %>
+      <label for="<%=h field_name %>">
+        <%= role.capitalize %>
+      </label>
+      <select id="<%=h field_name %>" name="permission[group][<%=h role %>]">
+        <% choices.each do |choice| %>
+          <% choice_label = choice.keys.first %>
+          <% choice_name = choice.values.first %>
+          <% if role_permissions == choice_name %>
+            <option value="<%=h choice_name %>" selected="selected">
+               <%= choice_label %>
+            </option>
+          <% else %>
+            <option value="<%=h choice_name %>">
+               <%= choice_label %>
+            </option>
+          <% end %>
+        <% end %>
+      </select>
+    <% end %> 
+  </fieldset>  
+  <%#
+  //
+  //  Need to put control for adding new people here...
+  //
+  %>
+  <fieldset id="individual_permissions" class="slider">
+    <legend>Individual Permissions</legend>
+    <% choices = [{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
+    <% individual_permissions = {} %>
+    <% choices.each do |choice| %>
+      <% choice_name = choice.values.first %>
+      <% individual_permissions[choice_name] = get_values_from_datastream(@document_fedora,"rightsMetadata", ["#{choice_name}_access".to_sym, :person]) %>
+    <%= render :partial=>"permissions/edit_person_permissions", :collection=>@document_fedora.datastreams_in_memory["rightsMetadata"].find_by_terms(:access, :person) %>
+    <% end %>
+  </fieldset>
+</form>
+<%= render :partial=>"permissions/new", :locals=>{:asset_id=>asset_id} %>

@@ -1,5 +1,0 @@
-=stylesheet_link_tag 'file_assets.css', :plugin=>"fedora_assets"
-=link_to_ajax_form "Add file", new_file_asset_path(:container_id=>params[:container_id]), :id=>"add_file_button", :class=>"action"
-#file_asset_list.file_tree
-  %ul#datastreams
-    =render :partial=>"file_asset", :collection => @solr_result.hits

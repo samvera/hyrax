@@ -1,7 +1,0 @@
-.preview_box 
-  - unless @solr_result.nil?
-    =render :partial=>"#{@solr_result[ActiveFedora::SolrMapper.solr_name("active_fedora_model", :symbol)].first.underscore.pluralize}/preview", :locals=>{:asset=>@file_asset}
-.asset_actions
-  - unless @file_asset.nil?
-    =link_to "download", @file_asset.datastreams["DS1"].content_url, :class=>"download action"
-
