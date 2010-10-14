@@ -31,9 +31,14 @@ class ApplicationController
     javascript_includes << ['blacklight', 'application', 'accordion', { :plugin=>:blacklight } ]
     
     stylesheet_links << ['yui', 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', 'application', {:plugin=>:blacklight, :media=>'all'}]
+<<<<<<< HEAD
     stylesheet_links << ['redmond/jquery-ui-1.8.5.custom.css', {:media=>'all'}]     
     stylesheet_links << ['styles', 'hydrangea', {:media=>'all'}]
    
+=======
+    stylesheet_links << ['redmond/jquery-ui-1.8.5.custom.css', {:media=>'all'}]      
+    stylesheet_links << ['styles', 'hydrangea', {:media=>'all'}]          
+>>>>>>> master
   end 
       
   protected
