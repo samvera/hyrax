@@ -57,11 +57,11 @@ module HydraFedoraMetadataHelper
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
       
-      body << "<#{container_tag_type.to_s} class=\"field_value textile-container field\" id=\"#{base_id}-container\">"
+      body << "<#{container_tag_type.to_s} class=\"field_value editable-container field\" id=\"#{base_id}-container\">"
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
         body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" unless z == 0
-        body << "<div class=\"textile-text text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
-        body << "<input class=\"textile-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<div class=\"editable-text text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
     
