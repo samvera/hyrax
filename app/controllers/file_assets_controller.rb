@@ -18,7 +18,7 @@ class FileAssetsController < ApplicationController
     if !params[:container_id].nil?
       @response, @document = get_solr_response_for_doc_id(params[:container_id])
       @container =  ActiveFedora::Base.load_instance(params[:container_id])
-      @solr_result = @container.collection_members(:response_format=>:solr)
+      @solr_result = @container.file_objects(:response_format=>:solr)
     else
       # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
       @solr_result = FileAsset.find_by_solr(:all)
