@@ -36,9 +36,17 @@ class FileAsset < ActiveFedora::Base
     datastreams_in_memory["descMetadata"].title_values = label
   end    
   
+  # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in dc:extent 
   def add_file_datastream(file, opts={})
     super
-    datastreams_in_memory["descMetadata"].extent_values = bits_to_human_readable(file.size)
+    if file.respond_to?(:size)
+      size = bits_to_human_readable(file.size)
+    elsif file.kind_of?(File)
+      size = bits_to_human_readable(File.size(file))
+    else
+      size = ""
+    end
+    datastreams_in_memory["descMetadata"].extent_values = size
   end
   
 end
