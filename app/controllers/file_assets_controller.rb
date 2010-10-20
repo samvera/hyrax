@@ -40,6 +40,7 @@ class FileAssetsController < ApplicationController
       @container.file_objects_append(@file_asset)
       @container.save
     end
+    logger.debug "Created #{@file_asset.pid}."
     render :nothing => true
   end
   
