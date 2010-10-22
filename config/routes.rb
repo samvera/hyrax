@@ -23,4 +23,5 @@ ActionController::Routing::Routes.draw do |map|
     # Allow updates to assets/:asset_id/permissions (no :id necessary)
     map.update_group_permissions 'assets/:asset_id/permissions', :controller=>:permissions, :action=>:update
     
+    map.generic_content_object 'generic_contents_object/content/:container_id', :controller=>:generic_content_objects, :action=>:create, :conditions => {:method => :post}
 end

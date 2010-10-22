@@ -1,0 +1,40 @@
+
+<dl>
+		<%= render :partial => "#{content_type}s/show_content" %>
+	
+    <% unless get_values_from_datastream(@document_fedora,"descMetadata", [:title]).first.empty? %>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:title], "Title:") %>
+      </dt>
+      <dd class="title">
+        <%= get_values_from_datastream(@document_fedora,"descMetadata", [:title]) %>
+      </dd>
+    <% end %>
+
+    <% unless get_values_from_datastream(@document_fedora,"descMetadata", [:description]).first.empty? %>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:description], "Description:") %>
+      </dt>
+      <dd class="description">
+        <%= get_values_from_datastream(@document_fedora,"descMetadata", [:description]) %>
+      </dd>
+    <% end %>
+
+    <% unless get_values_from_datastream(@document_fedora,"descMetadata", [:subject]).first.empty? %>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:subject], "Subject:") %>
+      </dt>
+      <dd class="subject">
+        <%= get_values_from_datastream(@document_fedora,"descMetadata", [:subject]) %>
+      </dd>
+    <% end %>
+
+    <% unless get_values_from_datastream(@document_fedora,"descMetadata", [:medium]).first.empty? %>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:medium], "Medium:") %>
+      </dt>
+      <dd class="medium">
+        <%= get_values_from_datastream(@document_fedora,"descMetadata", [:medium]) %>
+      </dd>
+    <% end %>
+</dl>

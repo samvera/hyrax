@@ -1,0 +1,29 @@
+<form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>content_type)%>" method="post" data-resourceType="<%= content_type %>" accept-charset="utf-8">
+    <input id="content_type" type="hidden" name="<%= content_type %>" value="<%= content_type %>" />
+    <dl>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:title], "Title:") %>
+      </dt>
+      <dd class="title">
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:title], :multiple=>false) %>
+      </dd>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:description], "Description:") %>
+      </dt>
+      <dd class="description">
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:description], :multiple=>false) %>
+      </dd>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:subject], "Subject:") %>
+      </dt>
+      <dd class="subject">
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:subject], :multiple=>true) %>
+      </dd>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:medium], "Medium:") %>
+      </dt>
+      <dd class="medium">
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:medium], :multiple=>true) %>
+      </dd>
+    </dl>
+</form>
