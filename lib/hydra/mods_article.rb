@@ -16,10 +16,10 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
     # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
     t.name_ {
       # this is a namepart
-      t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
+      t.namePart(:type=>:string, :label=>"generic name")
       # affiliations are great
       t.affiliation
-      t.institution(:path=>"affiliation")
+      t.institution(:path=>"affiliation", :index_as=>[:facetable], :label=>"organization")
       t.displayForm
       t.role(:ref=>[:role])
       t.description
