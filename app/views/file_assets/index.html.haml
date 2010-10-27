@@ -20,32 +20,30 @@
         $("#file_assets  .editable-container").hydraTextField();
       });
     
-%h2 File Assets
+- unless @solr_result.hits.empty?
+  %table#file_assets.multipleEdit
+    %col{:width=>"10%"}/
+    %col{:width=>"25%"}/
+    %col{:width=>"25%"}/
+    %col{:width=>"30%"}/  
+    %col{:width=>"8%"}/
+    %col{:width=>"22%"}/
+    %col{:width=>"5%"}/
 
-%table#file_assets.multipleEdit
-  %col{:width=>"10%"}/
-  %col{:width=>"25%"}/
-  %col{:width=>"25%"}/
-  %col{:width=>"30%"}/  
-  %col{:width=>"8%"}/
-  %col{:width=>"22%"}/
-  %col{:width=>"5%"}/
-  
-  %tr
-    %th Primary
-    %th File
-    %th Type
-    %th Description
-    %th Size
-    %th Uploaded
-    %th
-  
+    %tr
+      %th Primary
+      %th File
+      %th Type
+      %th Description
+      %th Size
+      %th Uploaded
+      %th
   =render :partial=>'result', :collection=>@solr_result.hits
 
 - if !@document.nil? && editor?
-  %h2
-    %a#toggle-uploader{:href => ""}
-      Upload files
-
   %div#uploader
     = render :partial=>"new", :layout=>false
+  
+  %h2
+    %a#toggle-uploader{:href => ""}
+      Hide file uploader
