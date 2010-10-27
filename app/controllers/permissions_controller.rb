@@ -61,7 +61,7 @@ class PermissionsController < ApplicationController
     ds.save
     
     # Re-index the object
-    Solrizer::Solrizer.new.solrize(pid)
+    Solrizer::Fedora::Solrizer.new.solrize(pid)
     
     render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}
   end
@@ -92,7 +92,7 @@ class PermissionsController < ApplicationController
     ds.save
     
     # Re-index the object
-    Solrizer::Solrizer.new.solrize(pid)
+    Solrizer::Fedora::Solrizer.new.solrize(pid)
     
     # This should be replaced ...
     if params[:permission].has_key?(:group)
