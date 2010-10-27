@@ -26,7 +26,7 @@ module Hydra::RepositoryController
   end
   
   def solr_name(field_name, field_type = :text)
-    ::Solrizer::FieldNameMapper.solr_name(field_name, field_type)
+    ::ActiveFedora::SolrService.solr_name(field_name, field_type)
   end
   
   # Returns a list of datastreams for download.
