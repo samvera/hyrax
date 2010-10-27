@@ -1,4 +1,5 @@
 # require File.expand_path(File.dirname(__FILE__) + '/hydra_jetty.rb')
+require "solrizer-fedora"
 
 namespace :hydra do
   
@@ -76,7 +77,7 @@ namespace :hydra do
       if result
         puts "The fixture has been ingested as #{result}"
         if !pid.nil?
-          solrizer = Solrizer::Solrizer.new 
+          solrizer = Solrizer::Fedora::Solrizer.new 
           solrizer.solrize(pid) 
         end    
       else
