@@ -12,6 +12,7 @@ class ApplicationController
   
   helper :all
   helper :hydra_access_controls, :hydra_djatoka, :downloads, :metadata, :hydra, :custom_metadata, :hydra_fedora_metadata, :hydra_assets
+  helper :generic_content_objects
   
   # helper_method [:request_is_for_user_resource?]#, :user_logged_in?]
   before_filter [:store_bounce]
