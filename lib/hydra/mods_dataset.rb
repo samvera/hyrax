@@ -139,5 +139,10 @@ module Hydra
     def self.data_type_choices
       ["transect","observation","data logging","remote sensing"]
     end
-end
+    
+    def self.valid_child_types
+      ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
+    end
+  
+  end
 end

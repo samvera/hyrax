@@ -457,5 +457,9 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
         "wit" => "Witness"}
       end
     
-end
+      def self.valid_child_types
+        ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
+      end
+    
+    end
 end
