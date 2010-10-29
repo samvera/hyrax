@@ -4,6 +4,7 @@ require "block_helpers"
 module HydraFedoraMetadataHelper
   
   def fedora_text_field(resource, datastream_name, field_key, opts={})
+    
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
     if opts.fetch(:multiple, true)
@@ -25,13 +26,24 @@ module HydraFedoraMetadataHelper
       body << "</#{container_tag_type}>"
     end
     result = field_selectors_for(datastream_name, field_key)
+  
     if opts.fetch(:multiple, true)
       result << content_tag(:ol, body, :rel=>field_name)
     else
       result << body
     end
     
-    return result
+    dd = opts.has_key?(:content_wrapper) ? opts.fetch(:content_wrapper) : :dd
+    result = content_tag(dd, result)
+  
+    if opts.has_key?(:label)
+      label = fedora_field_label(datastream_name, field_key, opts.fetch(:label))
+      dt = opts.has_key?(:label_wrapper) ? opts.fetch(:label_wrapper) : :dt
+      result = content_tag(dt, label) << result  
+    end
+    
+    dl = opts.has_key?(:wrapper) ? opts.fetch(:wrapper) : :dl
+    return content_tag(dl, result)
   end
   
   def fedora_text_area(resource, datastream_name, field_key, opts={})
@@ -166,7 +178,7 @@ module HydraFedoraMetadataHelper
     result = ""
     h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
     field_key.each do |pointer|
-      result << tag(:input, :type=>"checkbox", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>pointer.to_s)
+      result << tag(:input, :type=>"checkbox", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>pointer.to_s, :checked=>opts['checked'])
     end
     return result
   end

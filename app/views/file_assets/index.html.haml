@@ -38,12 +38,12 @@
       %th Size
       %th Uploaded
       %th
-  =render :partial=>'result', :collection=>@solr_result.hits
+    
+    =render :partial=>'result', :collection=>@solr_result.hits
 
 - if !@document.nil? && editor?
   %div#uploader
     = render :partial=>"new", :layout=>false
   
-  %h2
-    %a#toggle-uploader{:href => ""}
-      Hide file uploader
+  %a#toggle-uploader{:href => ""}
+    Hide file uploader
