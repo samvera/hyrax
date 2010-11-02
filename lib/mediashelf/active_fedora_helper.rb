@@ -33,7 +33,12 @@ module MediaShelf
       rescue NameError
         return false
     end
-    
+
+    def get_af_object_from_solr_doc(doc)
+      pid = doc[:id] ? doc[:id] : doc[:id.to_s]
+      pid ? ActiveFedora::Base.load_instance_from_solr(pid,doc) : nil
+    end
+
     private
   
     def require_fedora

@@ -4,7 +4,7 @@ class CatalogController
   #include Blacklight::CatalogHelper
   include Hydra::RepositoryController
   include Hydra::AccessControlsEnforcement
-  before_filter :require_solr, :require_fedora, :only=>[:show, :edit]
+  before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index]
   
   def edit
     af_base = ActiveFedora::Base.load_instance(params[:id])

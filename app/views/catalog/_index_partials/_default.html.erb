@@ -13,7 +13,8 @@
     <%= (document.get(:medium_t) || document_type(document)).gsub("Hydrangea","") %>
   </td>
   <td>
-    <%= document[:has_collection_member_s] ? document[:has_collection_member_s].length : 0 %>
+    <%obj = get_af_object_from_solr_doc(document)%>
+    <%=obj ? obj.parts.length : 0%>
   </td>
   <td>
     Created
