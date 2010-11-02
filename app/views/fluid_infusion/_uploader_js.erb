@@ -13,9 +13,12 @@
              },
       
       listeners: {
-                  onFileSuccess: function (file, serverData){
-                  },
-      
+                  onFileSuccess: function (file, serverData){},
+      			 
+				  onFileStart: function(file) { 
+					myUploader.uploadManager.postParams = {'file': file, 'asset[HydraMetadata][description]': $("#asset_HydraMetadata_description").val();};
+				},
+				
                   afterUploadComplete: function () {
                       // first check to see if the file queue is empty and there haven't been any errors
                       if (myUploader.uploadManager.queue.getReadyFiles().length === 0 && myUploader.uploadManager.queue.getErroredFiles().length === 0) {
