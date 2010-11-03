@@ -13,8 +13,7 @@
     <%= (document.get(:medium_t) || document_type(document)).gsub("Hydrangea","") %>
   </td>
   <td>
-    <%obj = get_af_object_from_solr_doc(document)%>
-    <%=obj ? obj.parts.length : 0%>
+    <%get_file_asset_count(document)%>
   </td>
   <td>
     Created

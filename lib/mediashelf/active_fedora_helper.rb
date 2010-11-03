@@ -34,7 +34,7 @@ module MediaShelf
         return false
     end
 
-    def get_af_object_from_solr_doc(doc)
+    def load_af_instance_from_solr(doc)
       pid = doc[:id] ? doc[:id] : doc[:id.to_s]
       pid ? ActiveFedora::Base.load_instance_from_solr(pid,doc) : nil
     end

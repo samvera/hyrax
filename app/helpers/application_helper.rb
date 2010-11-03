@@ -1,7 +1,4 @@
-require 'mediashelf/active_fedora_helper'
-
 module ApplicationHelper
-  include MediaShelf::ActiveFedoraHelper
   include Stanford::SearchworksHelper
   #include Stanford::SolrHelper # this is already included by the SearchworksHelper
   include HydraHelper

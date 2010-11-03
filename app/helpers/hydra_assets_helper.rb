@@ -1,4 +1,7 @@
+require 'mediashelf/active_fedora_helper'
+
 module HydraAssetsHelper
+  include MediaShelf::ActiveFedoraHelper
 
   # Render a link to delete the given asset from the repository.
   # Includes a confirmation message. 
@@ -29,5 +32,12 @@ module HydraAssetsHelper
       end
       i += 1
     end
+  end
+
+  def get_file_asset_count(document)
+    count = 0
+    obj = load_af_instance_from_solr(document)
+    count += obj.file_objects.length unless obj.nil?
+    count
   end
 end

@@ -16,7 +16,7 @@
     <%= (document.get(:medium_t) || document_type(document)).gsub(/^Generic/,"") %>
   </td>
   <td>
-    <%= document[:has_collection_member_s] ? document[:has_collection_member_s].length : 0 %>
+    <%get_file_asset_count(document)%>
   </td>
   <td>
 		Created
