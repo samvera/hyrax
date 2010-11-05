@@ -40,8 +40,11 @@
 		
     <h2 class="section-title"><a href="#">Upload Content</a></h2>
     <div id="uploads" data-pid="<%= params[:id] %>">
-			<%= render :partial=>"fluid_infusion/uploader" %>
-			<%= render :partial=>"fluid_infusion/uploader_generic_content_objects.js" %>
+      <h2><a id='toggle-uploader-generic' href="">Upload file</a></h2>
+      <div id='uploader'>
+        <%= render :partial=>"fluid_infusion/uploader" %>
+        <%= render :partial=>"fluid_infusion/uploader_generic_content_objects.js" %>
+      </div>
 	  </div>
 
 

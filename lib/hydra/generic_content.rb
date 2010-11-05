@@ -53,7 +53,7 @@ module Hydra::GenericContent
     case file
     when File
         logger.debug "adding #{ds_name} file datastream"
-        add_file_datastream(file, :dsid => ds_name, :label => ds_name )
+        add_file_datastream(file, :dsid => ds_name, :label => ds_name, :mimeType => mime_type(file.path))
     when String
         from_url(file, ds_name)
     when Hash
