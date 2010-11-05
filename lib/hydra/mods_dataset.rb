@@ -45,6 +45,12 @@ module Hydra
       
       # Most of these are forcing non-bibliographic information into mods by using the note field pretty freely
       t.note
+      t.gps(:path=>"note",:attributes=>{:type=>"location"})
+      t.timespan_start(:path=>"note",:attributes=>{:type=>"timespan-start"})
+      t.timespan_end(:path=>"note",:attributes=>{:type=>"timespan-end"})
+      t.region(:path=>"note",:attributes=>{:type=>"region"})
+      t.site(:path=>"site",:attributes=>{:type=>"site"})
+      t.ecosystem(:path=>"ecosystem",:attributes=>{:type=>"ecosystem"})
       end   
 
     # It would be nice if we could declare properties with refined info like this

@@ -22,7 +22,7 @@
                       // first check to see if the file queue is empty and there haven't been any errors
                       if (myUploader.uploadManager.queue.getReadyFiles().length === 0 && myUploader.uploadManager.queue.getErroredFiles().length === 0) {
                           //async_load('<%= "/generic_content_objects/#{params[:container_id]}/content"%>', '#uploads'); 
-                         // $("#file_assets  .editable-container").hydraTextField();
+                         $("#file_assets  .editable-container").hydraTextField();
                       }
                   }
               },
