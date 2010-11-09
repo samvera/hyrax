@@ -152,8 +152,23 @@ module HydraFedoraMetadataHelper
     result << body
     return result
   end
+
+  def fedora_submit(resource, datastream_name, field_key, opts={})
+    result = ""
+    h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+    field_key.each do |pointer|
+      result << tag(:input, :type=>"submit", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value => field_key.to_s.capitalize)
+    end
+    return result
+  end
   
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
+    result = ""
+    h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+    field_key.each do |pointer|
+      result << tag(:input, :type=>"checkbox", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>pointer.to_s, :checked=>opts[:checked])
+    end
+    return result
   end
   
   def fedora_radio_button(resource, datastream_name, field_key, opts={})
@@ -173,7 +188,7 @@ module HydraFedoraMetadataHelper
   
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key) || field_key
-    field_type = field_name == "grant" ? "grant" : "textfield"    
+    field_type = field_name == "person" ? "person" : "textfield"    
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
     "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"
   end
@@ -236,6 +251,10 @@ module HydraFedoraMetadataHelper
     
     def fedora_select(datastream_name, field_key, opts={})
       helper.fedora_select(@resource, datastream_name, field_key, opts)
+    end
+
+    def fedora_submit(datastream_name, field_key, opts={})
+      helper.fedora_submit(@resource, datastream_name, field_key, opts)
     end
     
     def fedora_checkbox(datastream_name, field_key, opts={})
