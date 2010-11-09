@@ -23,6 +23,14 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     # A bug in OM prevnts us from declaring proxy terms at the root of a Terminology
     # t.access_person(:proxy=>[:access,:machine,:person])
     # t.access_group(:proxy=>[:access,:machine,:group])
+    
+    t.embargo {
+      t.human_readable(:path=>"human")
+      t.machine{
+        t.date(:type =>"release")
+      }
+      t.embargo_release_date(:proxy => [:machine, :date])
+    }    
   end
     
   # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
@@ -44,6 +52,10 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
           xml.human
           xml.machine
         }
+        xml.embargo{
+          xml.human
+          xml.machine
+        }        
       }
     end
     return builder.doc
