@@ -11,4 +11,3 @@ require 'hydra/file_assets_helper'
 require 'hydra/rights_metadata'
 require 'hydra/mods_article'
 require 'hydra/model_methods'
-
