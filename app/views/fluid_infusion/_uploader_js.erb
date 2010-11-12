@@ -13,6 +13,15 @@
              },
       
       listeners: {
+	
+				onFileStart: function(file){	
+					myUploader.uploadManager.swfUploader.addPostParam("asset[hydraDataset][contents][]", $('asset_hydraMetadata_contents').val());
+					myUploader.uploadManager.swfUploader.addPostParam("asset[hydraDataset][description][]", $('#asset_hydraMetadata_description').val());					
+		},
+	
+	
+	
+	
                   onFileSuccess: function (file, serverData){},
       			 
                   afterUploadComplete: function () {
