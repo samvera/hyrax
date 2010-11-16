@@ -52,10 +52,20 @@
                             <tr class="flc-uploader-file-tmplt flc-uploader-file fl-uploader-hidden-templates">
                                 <th class="flc-uploader-file-name fl-uploader-file-name" scope="row">File Name Placeholder</th>
                                 <td class="flc-uploader-metadata-type fl-uploader-metadata-type">
-									<%= select("asset[hydraMetadata]", "contents", ["data", "supporting file", "profile", "lorem ipsum", "dolor"]) %>
+
+									<select id="asset_descMetadata_type" name="asset[descMetadata][type][0]">
+										<option value="data">data</option>
+										<option value="supporting file">supporting file</option>
+										<option value="profile">profile</option>
+										<option value="lorem ipsum">lorem ipsum</option>
+										<option value="dolor">dolor</option>
+									</select>
+
+									
 								</td>
                                 <td class="flc-uploader-metadata-value fl-uploader-metadata-value">
-									<%= text_field("asset[hydraMetadata]", "description", :value => "") %>
+									<input id="asset_descMetadata_description" name="asset[descMetadata][description][0]" size="30" value="" type="text">
+									
 								</td>
                                 <td class="flc-uploader-file-size fl-uploader-file-size">0 KB</td>
                                 <td class="fl-uploader-file-actions">

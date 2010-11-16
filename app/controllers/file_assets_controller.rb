@@ -34,12 +34,20 @@ class FileAssetsController < ApplicationController
   def create
     @file_asset = create_and_save_file_asset_from_params
     apply_depositor_metadata(@file_asset)
-    
+        
     if !params[:container_id].nil?
       @container =  ActiveFedora::Base.load_instance(params[:container_id])
       @container.file_objects_append(@file_asset)
       @container.save
     end
+    
+    ## FOR CAPTURING FILE ASSETS METADATA  
+    updater_method_args = prep_updater_method_args(params)
+    logger.debug("attributes submitted: #{updater_method_args.inspect}")
+    result = @file_asset.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
+    @file_asset.save
+    ##
+    
     logger.debug "Created #{@file_asset.pid}."
     render :nothing => true
   end
