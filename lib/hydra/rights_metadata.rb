@@ -39,7 +39,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
         xml.access(:type=>"read") {
           xml.human 
           xml.machine {
-            xml.group "uva"
+            xml.group "uva-only"
             xml.group "public"            
           }
         }
