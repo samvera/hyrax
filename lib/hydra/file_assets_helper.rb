@@ -19,7 +19,7 @@ module Hydra::FileAssetsHelper
   # @param [FileAsset] the File Asset to add the blob to
   # @return [FileAsset] the File Asset  
   def add_posted_blob_to_asset(asset=@file_asset)
-    asset.add_file_datastream(params[:Filedata], :label=>params[:Filename])
+    asset.add_file_datastream(params[:Filedata], :label=>params[:Filename], :mimeType=>mime_type(params[:Filename]))
   end
   
   # Creates a File Asset and sets its label from params[:Filename]
@@ -81,6 +81,15 @@ module Hydra::FileAssetsHelper
     else
      FileAsset
     end
+  end
+
+  private
+  # Return the mimeType for a given file name
+  # @param [String] file_name The filename to use to get the mimeType
+  # @return [String] mimeType for filename passed in. Default: application/octet-stream if mimeType cannot be determined
+  def mime_type file_name
+    mime_types = MIME::Types.of(file_name)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
   end
   
 end
