@@ -41,11 +41,13 @@ class FileAssetsController < ApplicationController
       @container.save
     end
     
-    ## FOR CAPTURING FILE ASSETS METADATA  
-    updater_method_args = prep_updater_method_args(params)
-    logger.debug("attributes submitted: #{updater_method_args.inspect}")
-    result = @file_asset.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
-    @file_asset.save
+    ## FOR CAPTURING ANY FILE METADATA  
+    unless params[:asset].nil?
+      updater_method_args = prep_updater_method_args(params)
+      logger.debug("attributes submitted: #{updater_method_args.inspect}")
+      result = @file_asset.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
+      @file_asset.save
+    end
     ##
     
     logger.debug "Created #{@file_asset.pid}."
