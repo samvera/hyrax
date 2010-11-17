@@ -4,8 +4,13 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   set_terminology do |t|
     t.root(:path=>"rightsMetadata", :xmlns=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
     t.copyright {
-      t.machine
+      t.machine {
+        t.uvalicense
+        t.cclicense        
+      }
       t.human_readable(:path=>"human")
+      t.uvalicense(:proxy=>[:machine, :uvalicense ])            
+      t.cclicense(:proxy=>[:machine, :cclicense ])                  
     }
     t.access {
       t.human_readable(:path=>"human")
@@ -31,6 +36,10 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
       xml.rightsMetadata(:version=>"0.1", "xmlns"=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1") {
         xml.copyright {
           xml.human
+          xml.machine {
+            xml.uvalicense "yes"
+            xml.cclicense "yes"
+          }
         }
         xml.access(:type=>"discover") {
           xml.human
