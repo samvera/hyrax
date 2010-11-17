@@ -1,18 +1,23 @@
 module Hydra
 class ModsArticle < ActiveFedora::NokogiriDatastream       
-  
+  include Hydra::CommonModsIndexMethods
+
   set_terminology do |t|
     t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 
     t.title_info(:path=>"titleInfo") {
       t.main_title(:path=>"title", :label=>"title")
-      t.language(:path=>{:attribute=>"lang"})
+      t.language(:index_as=>[:facetable],:path=>{:attribute=>"lang"})
     } 
+    
+    t.language{
+      t.lang_code(:index_as=>[:facetable], :path=>"languageTerm", :attributes=>{:type=>"code"})
+    }
     t.abstract   
     t.subject {
       t.topic
     }      
-    t.topic_tag(:path=>"subject", :default_content_path=>"topic")           
+    t.topic_tag(:index_as=>[:facetable],:path=>"subject", :default_content_path=>"topic")
     # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
     t.name_ {
       # this is a namepart
@@ -29,16 +34,15 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"})
     }
     # lookup :person, :first_name        
-    t.person(:ref=>:name, :attributes=>{:type=>"personal"})
-    t.organization(:ref=>:name, :attributes=>{:type=>"corporate"})
-    t.conference(:ref=>:name, :attributes=>{:type=>"conference"})
-
+    t.person(:ref=>:name, :attributes=>{:type=>"personal"}, :index_as=>[:facetable])
+    t.organization(:ref=>:name, :attributes=>{:type=>"corporate"}, :index_as=>[:facetable])
+    t.conference(:ref=>:name, :attributes=>{:type=>"conference"}, :index_as=>[:facetable])
     t.role {
       t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
       t.code(:path=>"roleTerm",:attributes=>{:type=>"code"})
     }
     t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
-      t.title_info(:ref=>[:title_info])
+      t.title_info(:index_as=>[:facetable],:ref=>[:title_info])
       t.origin_info(:path=>"originInfo") {
         t.publisher
         t.date_issued(:path=>"dateIssued")
@@ -133,7 +137,14 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       end
       return builder.doc.root
     end
-    
+   
+    def self.full_name_template
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.full_name(:type => "personal")
+      end
+      return builder.doc.root
+    end
+
     # Generates a new Organization node
     # Uses mods:name[@type="corporate"]
     def self.organization_template
@@ -460,6 +471,14 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
       def self.valid_child_types
         ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
       end
-    
+
+      def to_solr(solr_doc=Solr::Document.new)
+        super(solr_doc)
+        extract_person_full_names.each {|pfn| solr_doc << pfn }
+        extract_person_organizations.each {|org| solr_doc << org }
+        solr_doc << {:object_type_facet => "Article"}
+        solr_doc
+      end
+
     end
 end

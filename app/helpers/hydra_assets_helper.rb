@@ -40,4 +40,21 @@ module HydraAssetsHelper
     count += obj.file_objects.length unless obj.nil?
     count
   end
+  
+  def get_file_asset_description(document)
+    obj = load_af_instance_from_solr(document)
+    if obj.nil? || obj.file_objects.empty?
+      return ""
+    else
+       fobj = FileAsset.load_instance_from_solr(obj.file_objects.first.pid)
+       fobj.nil? ? "" : short_description(fobj.datastreams["descMetadata"].get_values("description").first)
+    end
+  end
+
+  def short_description(desc,max=150)
+    if desc.length > max
+      desc = desc[0..max].concat("...")
+    end
+    short_description = desc.capitalize
+  end
 end
