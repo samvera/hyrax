@@ -38,11 +38,11 @@ module HydraAccessControlsHelper
   end
   
   def editor?
-    test_permission(:edit)
+    test_permission(:edit) or (current_user and current_user.is_being_superuser?(session))
   end
   
   def reader?
-   test_permission(:read)
+    test_permission(:read) or (current_user and current_user.is_being_superuser?(session))
   end
 
   private

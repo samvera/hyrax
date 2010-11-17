@@ -76,6 +76,11 @@ module Hydra::AccessControlsEnforcement
         permission_types.each do |type|
           field_queries << "_query_:\"#{type}_access_person_t:#{current_user.login}\""
         end
+        if current_user.is_being_superuser?(session)
+          permission_types.each do |type|
+            field_queries << "_query_:\"#{type}_access_person_t:[* TO *]\""
+          end
+        end
       end
       q << " AND (#{field_queries.join(" OR ")})"
     return q
