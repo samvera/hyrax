@@ -13,6 +13,12 @@
              },
       
       listeners: {
+	
+				onFileStart: function(file){	
+					myUploader.uploadManager.swfUploader.addPostParam("asset[descMetadata][type][0]", $('#asset_descMetadata_type').val());
+					myUploader.uploadManager.swfUploader.addPostParam("asset[descMetadata][description][0]", $('#asset_descMetadata_description').val());					
+		},
+
                   onFileSuccess: function (file, serverData){},
       			 
                   afterUploadComplete: function () {

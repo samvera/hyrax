@@ -11,7 +11,11 @@ module Hydra::AccessControlsEnforcement
     elsif session[:viewing_context] == "edit"
       if editor?
         logger.debug("enforce_viewing_context_for_show_requests redirecting to edit")
-        redirect_to :action=>:edit
+        if params[:files]
+          redirect_to :action=>:edit, :files=>true
+        else
+          redirect_to :action=>:edit
+        end
       else
         session[:viewing_context] = "browse"
       end

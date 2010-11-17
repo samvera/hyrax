@@ -45,7 +45,7 @@ module Hydra::GenericImage
       end
       
       def #{ds_name}=(file)
-        create_or_update_datastream(file, "#{ds_name}")
+        create_or_update_datastream("#{ds_name}",file)
       end
       
       def derive_#{ds_name}

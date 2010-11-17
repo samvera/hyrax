@@ -1,0 +1,33 @@
+<div id="sortAndPerPage">
+	
+	<% form_tag catalog_index_path, :method=>:get, :class=>'per_page' do %>
+		<%= label_tag(:per_page, "Show " + select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), :title => "Number of results to display per page", :onchange => 'this.form.submit()') + " per page") %>
+
+    <%= search_as_hidden_fields(:omit_keys => [:page, :per_page]) %>
+		
+    <noscript><%= submit_tag 'update' %></noscript>
+	<% end %>
+
+
+	<% unless @response.response['numFound'] < 2 %>
+		<% form_tag catalog_index_path, :method=>:get, :class=>'sort', :id => "sort_form" do %>
+			<%= label :sort, "Sort by" %>
+			<%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort])), :onchange => 'this.form.submit()') %>
+			      
+      <%= search_as_hidden_fields(:omit_keys => [:page, :sort]) %>
+      
+			<noscript><%= submit_tag 'sort results' %></noscript>
+		<% end %>
+	<% end %>
+	
+	<% form_tag catalog_index_path, :method => :get, :class=>'display_type', :style=>'display:inline;margin-left:auto;margin-right:auto;', :id => 'display_type' do %>
+		<span style="text-align:center;">
+		<%= label_tag(:display_type, "Display as " + select_tag(:display_type, options_for_select(['table', 'list'], h(params[:display_type])), :title => "Format for displaying results", :onchange => 'this.form.submit()') ) %>
+
+		<%= search_as_hidden_fields(:omit_keys => [:page, :display_type]) %>
+
+		<noscript><%= submit_tag 'display_results' %></noscript>
+		</span>
+	<% end %>
+
+</div>
