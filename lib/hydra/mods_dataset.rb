@@ -1,6 +1,6 @@
 module Hydra
   class ModsDataset < ActiveFedora::NokogiriDatastream
-
+    include Hydra::CommonModsIndexMethods
     set_terminology do |t|
       t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 
@@ -45,12 +45,12 @@ module Hydra
       
       # Most of these are forcing non-bibliographic information into mods by using the note field pretty freely
       t.note
-      t.gps(:path=>"note",:attributes=>{:type=>"location"})
+      t.gps(:index_as=>[:facetable],:path=>"note",:attributes=>{:type=>"location"})
       t.timespan_start(:path=>"note",:attributes=>{:type=>"timespan-start"})
       t.timespan_end(:path=>"note",:attributes=>{:type=>"timespan-end"})
-      t.region(:path=>"note",:attributes=>{:type=>"region"})
-      t.site(:path=>"site",:attributes=>{:type=>"site"})
-      t.ecosystem(:path=>"ecosystem",:attributes=>{:type=>"ecosystem"})
+      t.region(:index_as=>[:facetable],:path=>"note",:attributes=>{:type=>"region"})
+      t.site(:index_as=>[:facetable],:path=>"note",:attributes=>{:type=>"site"})
+      t.ecosystem(:index_as=>[:facetable],:path=>"note",:attributes=>{:type=>"ecosystem"})
       end   
 
     # It would be nice if we could declare properties with refined info like this
@@ -149,6 +149,11 @@ module Hydra
     def self.valid_child_types
       ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
     end
-  
+    def to_solr(solr_doc=Solr::Document.new)
+      super(solr_doc)
+      extract_person_full_names.each {|pfn| solr_doc << pfn }
+      solr_doc << {:object_type_facet => "Dataset"}
+      solr_doc
+    end
   end
 end
