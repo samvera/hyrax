@@ -4,7 +4,7 @@ module ApplicationHelper
   include HydraHelper
   
   def application_name
-    'Hydrangea (Hydra Demo App)'
+    'Libra Open Access (Pilot)'
   end
   
   def get_data_with_linked_label(doc, label, field_string, opts={})
