@@ -37,4 +37,23 @@ module Hydra::ModelMethods
     return result
   end
   
+  # Call to remove file obects
+  def destroy_child_assets
+    destroyable_child_assets.each.inject([]) do |destroyed,fo| 
+        destroyed << fo.pid 
+        fo.delete
+        destroyed
+    end
+
+  end
+
+  def destroyable_child_assets
+    return [] unless self.file_objects
+    self.file_objects.each.inject([]) do |file_assets, fo| 
+      if fo.relationships[:self].has_key?(:is_part_of) && fo.relationships[:self][:is_part_of].length == 1 &&  fo.relationships[:self][:is_part_of][0].match(/#{self.pid}$/)
+        file_assets << fo
+      end
+      file_assets
+    end
+  end
 end
