@@ -1,0 +1,12 @@
+<div id="max_and_thumb" style="height:550px;">
+	<dl>
+		<dt>Content</dt>
+		<% source_url = datastream_disseminator_url(params[:id], "content") %>
+		<dd>
+			<audio controls="controls">
+				<source src="<%= source_url %>"></source>
+			</audio>
+		</dd>
+
+	</dl>
+</div>

@@ -1,0 +1,24 @@
+<% javascript_includes << "/plugin_assets/fluid-infusion/infusion-1.2-src/lib/jquery/ui/js/jquery.ui.accordion.js" %>
+<% javascript_includes << 'custom' %>
+<% javascript_includes << "catalog/show" %>
+<% javascript_includes << "fancybox/jquery.fancybox-1.3.1.pack.js" %>
+<% javascript_includes << "/plugin_assets/hydra_repository/javascripts/generic_content_objects_fancybox.js" %>
+<% javascript_includes << "/plugin_assets/html5media/html5media.min.js" %>
+<% stylesheet_links << "../javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
+
+<style type="text/css" media="screen">
+  input.editable-edit, input.textile-edit {display:none}
+</style>
+
+<div class="document_viewer" id="cover_container">
+
+  <div id="accordion">
+		<h2 class="section-title"><a href="#">Description</a></h2>
+			<%= render :partial => "generic_content_objects/show_description", :locals => {:content_type => "generic_audio" } %>
+
+    <h2 class="section-title"><a href="#">Other Audio Items</a></h2>
+			<%= render :partial => "generic_audios/show_all" %>
+
+  </div>
+
+</div>
