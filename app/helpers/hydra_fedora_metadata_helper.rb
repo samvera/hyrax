@@ -88,8 +88,9 @@ module HydraFedoraMetadataHelper
       field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
       
       body = ""
+      z = 0
       base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-      name = "asset[#{datastream_name}][#{field_name}]"
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
 
       body << "<select name=\"#{name}\" class=\"metadata-dd select-edit\" rel=\"#{field_name}\">"
         body << options_for_select(choices, field_values)
