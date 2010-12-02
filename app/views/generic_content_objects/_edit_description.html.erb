@@ -1,29 +1,64 @@
-<form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>content_type)%>" method="post" data-resourceType="<%= content_type %>" accept-charset="utf-8">
-    <input id="content_type" type="hidden" name="<%= content_type %>" value="<%= content_type %>" />
+<form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"hydrangea_article")%>" method="post" data-resourceType="hydrangea_article" accept-charset="utf-8">
+  <fieldset id="title_fields">
+    <legend>Title</legend>
+    <input id="content_type" type="hidden" name="content_type" value="hydrangea_article" />
     <dl>
       <dt>
-        <%= fedora_field_label("descMetadata", [:title], "Title:") %>
+        <%= fedora_field_label("descMetadata", [:title_info, :main_title], "Title:") %>
       </dt>
       <dd class="title">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:title], :multiple=>false) %>
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false) %>
       </dd>
       <dt>
-        <%= fedora_field_label("descMetadata", [:description], "Description:") %>
+        <%= fedora_field_label("descMetadata", [:title_info, :language], "Language:") %>
       </dt>
-      <dd class="description">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:description], :multiple=>false) %>
-      </dd>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:subject], "Subject:") %>
-      </dt>
-      <dd class="subject">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:subject], :multiple=>true) %>
-      </dd>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:medium], "Medium:") %>
-      </dt>
-      <dd class="medium">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:medium], :multiple=>true) %>
+      <dd class="language">
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :language], :multiple=>false) %>
       </dd>
     </dl>
+  </fieldset>
+  <fieldset id="contributor_fields">
+    <legend>Contributors</legend>
+    <ol>
+      <%= render :partial=>"contributors/edit_person", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:person) %>
+      <%= render :partial=>"contributors/edit_organization", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:organization) %>
+    </ol>    
+    <%# Button for adding person/conference/organization %>
+    <% if params[:action] == "edit" %>
+      <% format = document_partial_name(@document) %>
+      <div id="add-contributor-box">
+        <input id="re-run-add-contributor-action" type="button" value="Add a person" />
+        <button id="select-contributor-type" type="button">Select type of contributor to add</button>
+        <ul id="add-contributor-menu">
+          <li id="add_person">Add a person</li>
+          <li id="add_organization">Add an organization</li>
+          <li id="add_conference">Add a conference</li>
+        </ul>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <fieldset id="abstract_fields">
+    <legend>Abstract</legend>
+    <dl>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:abstract], "Abstract:") %>
+      </dt>
+      <dd id="abstract">
+        <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false) %>
+      </dd>
+    </dl>
+  </fieldset>
+  <fieldset id="topic_fields">
+    <legend>Topics</legend>
+    <dl>
+      <dt>
+        <%= fedora_field_label("descMetadata", [:subject, :topic], "Topic(s):") %>
+        <%= fedora_text_field_insert_link "descMetadata", [:subject, :topic] %>
+      </dt>
+      <dd id="topic_tag" class="topic_tag">
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic], :multiple=>true) %>
+      </dd>
+    </dl>
+  </fieldset>
 </form>

@@ -1,6 +1,6 @@
 # GenericAudio
 #
-# Default content datastreams: content, original (optional), max, thumbnail, screen
+# Default content datastreams: content
 #
 
 # this is just a copy of GenericImage for now - so the same methods apply.
@@ -14,7 +14,7 @@ class GenericAudio < ActiveFedora::Base
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata 
 
-  has_metadata :name => "descMetadata", :type => ActiveFedora::QualifiedDublinCoreDatastream
+  has_metadata :name => "descMetadata", :type => Hydra::ModsAudio
   
   # A place to put extra metadata values
   has_metadata :name => "properties", :type => ActiveFedora::MetadataDatastream do |m|

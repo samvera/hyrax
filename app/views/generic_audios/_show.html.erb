@@ -1,3 +1,12 @@
+<% if params[:files] %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#accordion").accordion({active: 1});
+    });
+  </script>
+<% end %>
+
+
 <% javascript_includes << "/plugin_assets/fluid-infusion/infusion-1.2-src/lib/jquery/ui/js/jquery.ui.accordion.js" %>
 <% javascript_includes << 'custom' %>
 <% javascript_includes << "catalog/show" %>
@@ -5,10 +14,6 @@
 <% javascript_includes << "/plugin_assets/hydra_repository/javascripts/generic_content_objects_fancybox.js" %>
 <% javascript_includes << "/plugin_assets/html5media/html5media.min.js" %>
 <% stylesheet_links << "../javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
-
-<style type="text/css" media="screen">
-  input.editable-edit, input.textile-edit {display:none}
-</style>
 
 <div class="document_viewer" id="cover_container">
 
@@ -22,3 +27,6 @@
   </div>
 
 </div>
+
+<%= async_load_tag(asset_file_assets_path(params[:id]), 'uploads') %>
+
