@@ -44,7 +44,7 @@
 
   <div id="accordion">
 		<h2 class="section-title"><a href="#">Description</a></h2>
-		<%= render :partial => "generic_content_objects/edit_description", :locals => {:content_type => "generic_content"} %>
+		<%= render :partial => "generic_content_objects/edit_description", :locals => {:content_type => "generic_image"} %>
 		
     <h2 class="section-title"><a href="#">Upload Content</a></h2>
     <div id="uploads" data-pid="<%= params[:id] %>">
@@ -83,6 +83,6 @@
 <% sidebar_items << capture do %>
   <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
   <%#= render :partial=>'facets' %>
-  <%= delete_asset_link(params[:id], "GenericContent") %>
+  <%= delete_asset_link(params[:id], "GenericImage") %>
 <% end %>
 <%= async_load_tag(generic_content_object_path(params[:id], :layout=>"false", :method => ":get"), 'uploads') %>
