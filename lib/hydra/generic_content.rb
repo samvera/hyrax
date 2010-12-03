@@ -78,7 +78,7 @@ module Hydra::GenericContent
       end
   end   
   
-  # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in dc:extent 
+  # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in mods:physicaldescription/mods:extent 
   def add_file_datastream(file, opts={})
     label = opts.has_key?(:label) ? opts[:label] : ""
     mimeType = opts.has_key?(:mimeType) ? opts[:mimeType] : ""
@@ -92,7 +92,7 @@ module Hydra::GenericContent
     else
       size = ""
     end
-    datastreams_in_memory["descMetadata"].extent_values = size
+    datastreams_in_memory["descMetadata"].update_indexed_attributes( [:physical_description, :extent] => size )
   end
   
   def mime_type file_name

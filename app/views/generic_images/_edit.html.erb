@@ -1,11 +1,18 @@
+<% if files = params[:files] %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#accordion").accordion({active: 1});
+    });
+  </script>
+<% end %>
 <% stylesheet_links << "../javascripts/date-picker/css/datepicker" %>
 <% javascript_includes << infusion_javascripts(:default_no_jquery, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) %>
 <% javascript_includes << "jquery.jeditable.mini" %>
 <% javascript_includes << "date-picker/js/datepicker" %>
 <% javascript_includes << "jquery.form.js" %>
-<% javascript_includes << "jquery.hydraMetadata.js" %>
 <% javascript_includes << 'custom' %>
 <% javascript_includes << "catalog/edit" %>
+<% javascript_includes << "jquery.hydraMetadata.js" %>
 <% javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" %>
 <% javascript_includes << "jquery.notice.js" %>
 <%# For Fancybox> %>
@@ -26,6 +33,7 @@
   <div class="multipleEdit">
     <div id="loading" style="display:none;">
       <img src="/images/ajax-loader.gif" width="32" height="32" alt="Saving...">
+      </img>
     </div>
     <% if flash[:notice] %>
       <div class="notice">
@@ -36,7 +44,7 @@
 
   <div id="accordion">
 		<h2 class="section-title"><a href="#">Description</a></h2>
-		<%= render :partial => "generic_content_objects/edit_description", :locals => {:content_type => "generic_image"} %>
+		<%= render :partial => "generic_content_objects/edit_description", :locals => {:content_type => "generic_content"} %>
 		
     <h2 class="section-title"><a href="#">Upload Content</a></h2>
     <div id="uploads" data-pid="<%= params[:id] %>">
@@ -61,7 +69,7 @@
     // accordion section un-hides it, so I stuck it here for now. -MZ
     %>
     <form id="new_contributor" action="<%=url_for(:action=>"create", :controller=>"contributors", :asset_id=>params[:id]) %>" method="post" style="display:none;">
-      <input id="content_type" type="hidden" name="content_type" value="generic_image" />
+      <input id="content_type" type="hidden" name="content_type" value="generic_content" />
       <label for="contributor_type">Contributor Type</label>
       <select id="contributor_type" name="contributor_type">
         <option value="person">Person</option>
@@ -75,6 +83,6 @@
 <% sidebar_items << capture do %>
   <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
   <%#= render :partial=>'facets' %>
-  <%#= delete_asset_link(params[:id], "article") %>
+  <%= delete_asset_link(params[:id], "GenericContent") %>
 <% end %>
-<%#= async_load_tag(generic_content_object_path(params[:id], :layout=>"false", :method => ":get"), 'uploads') %>
+<%= async_load_tag(generic_content_object_path(params[:id], :layout=>"false", :method => ":get"), 'uploads') %>

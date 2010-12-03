@@ -15,6 +15,12 @@ module Hydra
         t.topic
       }      
       t.topic_tag(:path=>"subject", :default_content_path=>"topic")           
+
+	  # mods:physicaldescription/mods:extent - used for storing file size in human-readable form.
+      t.physical_description(:path => "physicalDescription") {
+		t.extent( :path => "extent" )
+      }
+
       # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
       t.name_ {
         t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
@@ -82,6 +88,9 @@ module Hydra
              xml.language {
                xml.languageTerm("eng", :authority=>"iso639-2b", :type=>"code")
              }
+			 xml.physicalDescription {
+			   xml.extent
+			 }
              xml.abstract
              xml.subject {
                xml.topic

@@ -1,9 +1,11 @@
  <dt>
-	Original audio content:
  </dt>
  <dd class="media-player">
+	<fieldset>
+		<legend>Original audio content:</legend>
 	<% source_url = datastream_disseminator_url(params[:id], "content") %>
 	<audio controls="controls">
 		<source src="<%= source_url %>" />
 	</audio>
- <dd>
+	</fieldset>
+<dd>
