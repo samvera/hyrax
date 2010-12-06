@@ -20,9 +20,13 @@ namespace :hydra do
       puts "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
       pid = ENV["pid"]
-      puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
-      ActiveFedora::Base.load_instance(pid).delete
-      puts "The object has been deleted."
+      # puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      begin
+        ActiveFedora::Base.load_instance(pid).delete
+      rescue ActiveFedora::ObjectNotFoundError
+        # The object has already been deleted (or was never created).  Do nothing.
+      end
+      puts "Deleted '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
     end
   end
   
@@ -112,8 +116,7 @@ namespace :hydra do
     task :delete do
       FIXTURES.each_with_index do |fixture,index|
         ENV["pid"] = fixture
-        puts "deleting #{fixture}"
-        puts "#{ENV["pid"]}"
+        # puts "#{ENV["pid"]}"
         Rake::Task["hydra:delete"].invoke if index == 0
         Rake::Task["hydra:delete"].execute if index > 0
       end

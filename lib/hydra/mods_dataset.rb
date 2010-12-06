@@ -10,6 +10,7 @@ module Hydra
         t.main_title(:path=>"title", :label=>"title")
         t.language(:path=>{:attribute=>"lang"})
       } 
+      t.title(:proxy=>[:title_info, :main_title]) 
       t.abstract   
       t.subject {
         t.topic
