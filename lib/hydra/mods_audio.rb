@@ -18,7 +18,7 @@ module Hydra
 
 	  # mods:physicaldescription/mods:extent - used for storing file size in human-readable form.
       t.physical_description(:path => "physicalDescription") {
-		t.extent( :path => "extent" )
+		t.extent( :path => "extent", :proxy=> :extent)
       }
 
       # This is a mods:name.  The underscore is purely to avoid namespace conflicts.

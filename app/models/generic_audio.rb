@@ -23,6 +23,15 @@ class GenericAudio < ActiveFedora::Base
     m.field 'title', :string
   end
   
+  
+  # Somewhere to put content info: a stub as per ticket HYDRA-344
+  
+  has_metadata :name => "contentInfo", :type => ActiveFedora::MetadataDatastream
+  
+  # Somewhere to put file information etc. as per https://wiki.duraspace.org/display/hydra/contentMetadata+for+Hydra+and+Hydrangea#contentMetadataforHydraandHydrangea-virtual
+  
+  has_metadata :name => "resourceInfo", :type => Hydra::ResourceInfoMetadata
+    
   def initialize( attrs={} )
     super
   end
