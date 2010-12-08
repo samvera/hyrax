@@ -12,9 +12,9 @@ module Hydra
       } 
       t.abstract   
       t.subject {
-        t.topic
+        t.topic(:index_as=>[:facetable])
       }      
-      t.topic_tag(:path=>"subject", :default_content_path=>"topic")           
+      t.topic_tag(:proxy=>[:subject, :topic])           
       # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
       t.name_ {
         t.namePart(:index_as=>[:searchable, :displayable, :facetable, :sortable], :required=>:true, :type=>:string, :label=>"generic name")
