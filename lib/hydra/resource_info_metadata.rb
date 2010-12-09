@@ -3,7 +3,7 @@ class ResourceInfoMetadata < ActiveFedora::NokogiriDatastream
   
   set_terminology do |t|
     t.root(:path=>"resourceInfo", :xmlns=>"http://hydra-collab.stanford.edu/schemas/resourceInfo/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
-    t.file (attributes=>{}){
+    t.file(:attributes=>{:type, :format, :mimetype, :size}){
       t.location(:path=>"location", :attribute=>"type")
 	  t.checksum(:path=>"checksum", :attribute=>"type")
     }
@@ -12,7 +12,9 @@ class ResourceInfoMetadata < ActiveFedora::NokogiriDatastream
   # Generates an empty ResourceInfoMetadata (used when you call ResourceInfoMetadata.new without passing in existing xml)
   def self.xml_template
     builder = Nokogiri::XML::Builder.new do |xml|
-      xml.ResourceInfoMetadata(:version=>"0.1", "xmlns"=>"http://hydra-collab.stanford.edu/schemas/resourceInfo/v1") {      
+      xml.ResourceInfoMetadata(:version=>"0.1", "xmlns"=>"http://hydra-collab.stanford.edu/schemas/resourceInfo/v1") {
+		xml.file(:id=> "", :format=> "", :mimetype=>"", :size=>"")
+			xml.location(:type=>"")
       }
     end
     return builder.doc

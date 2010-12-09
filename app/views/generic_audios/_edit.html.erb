@@ -69,7 +69,7 @@
     // accordion section un-hides it, so I stuck it here for now. -MZ
     %>
     <form id="new_contributor" action="<%=url_for(:action=>"create", :controller=>"contributors", :asset_id=>params[:id]) %>" method="post" style="display:none;">
-      <input id="content_type" type="hidden" name="content_type" value="generic_audio" />
+      <input id="content_type" type="hidden" name="content_type" value="generic_content" />
       <label for="contributor_type">Contributor Type</label>
       <select id="contributor_type" name="contributor_type">
         <option value="person">Person</option>
