@@ -12,10 +12,10 @@ class ResourceInfoMetadata < ActiveFedora::NokogiriDatastream
   # Generates an empty ResourceInfoMetadata (used when you call ResourceInfoMetadata.new without passing in existing xml)
   def self.xml_template
     builder = Nokogiri::XML::Builder.new do |xml|
-      xml.ResourceInfoMetadata(:version=>"0.1", "xmlns"=>"http://hydra-collab.stanford.edu/schemas/resourceInfo/v1") {
-		xml.file(:id=> "", :format=> "", :mimetype=>"", :size=>"")
-			xml.location(:type=>"")
-      }
+	xml.file(:id=> "", :format=> "", :mimetype=>"", :size=>""){
+		xml.location(:type=>"")
+		xml.checksum(:type=>"")
+		}
     end
     return builder.doc
   end
