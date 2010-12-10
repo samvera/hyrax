@@ -4,7 +4,7 @@ module ApplicationHelper
   include HydraHelper
   
   def application_name
-    'Libra Open Access (Pilot)'
+    'Libra Open Access (Beta)'
   end
   
   def get_data_with_linked_label(doc, label, field_string, opts={})
