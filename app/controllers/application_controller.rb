@@ -27,13 +27,13 @@ class ApplicationController
     #javascript_includes << ['jquery-1.4.2.min.js', 'jquery-ui-1.8.1.custom.min.js', { :plugin=>:blacklight } ]
   
     javascript_includes << ['http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js']
-    javascript_includes << ['application']
+    javascript_includes << ['application', {:plugin=>:hydra_repository, :media=>'all'}]
     
     javascript_includes << ['blacklight', 'application', 'accordion', { :plugin=>:blacklight } ]
     
     stylesheet_links << ['yui', 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', 'application', {:plugin=>:blacklight, :media=>'all'}]
-    stylesheet_links << ['redmond/jquery-ui-1.8.5.custom.css', {:media=>'all'}]      
-    stylesheet_links << ['styles', 'hydrangea', "hydrangea-split-button.css", {:media=>'all'}]
+    stylesheet_links << ['redmond/jquery-ui-1.8.5.custom.css', {:plugin=>:hydra_repository, :media=>'all'}]      
+    stylesheet_links << ['styles', 'hydrangea', "hydrangea-split-button.css", {:plugin=>:hydra_repository,:media=>'all'}]
   end 
       
   def current_user

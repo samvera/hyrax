@@ -1,0 +1,44 @@
+.slider legend {
+	font-size: 1.2em;
+	padding: 0 5px;
+	}
+
+.slider label {
+width:10%;
+float:left;
+padding:7px 28px 7px 7px;
+clear: both;
+text-align: right;
+}
+
+.slider .ui-slider {
+margin:1em 0 1em 1em;
+font-size: inherit;
+background: #eee;
+width:70%;
+float:left;
+}
+
+.slider .ui-slider-label {
+	margin-top:-3em;
+}
+
+.slider a.remove {
+background:none repeat scroll 0 0 #F6F6F6;
+border:1px solid #EEEEEE;
+display:block;
+float:left;
+font-weight:bold;
+line-height:1.5em;
+margin-left:2em;
+margin-top:0.6em;
+text-align:center;
+text-decoration:none;
+width:1.5em;
+}
+
+.slider a.remove:hover {
+	color:red;
+}
+
+fieldset.slider { border:1px dotted #CCCCCC; margin-top: 10px; padding-top: 20px;}

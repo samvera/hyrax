@@ -11,7 +11,6 @@ This is an exact copy of the Blacklight application.html.erb with one modificati
     
     <title><%= h(@page_title || application_name) %></title>
     <link href="<%= url_for :controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
-    
     <%= render_head_content %>
     
     
