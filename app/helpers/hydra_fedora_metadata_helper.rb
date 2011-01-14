@@ -181,27 +181,44 @@ module HydraFedoraMetadataHelper
     else
       result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"no")
     end
-#result << tag(:input, :type=>"hidden", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>["#{field_key.first}","#{field_key.last}"])
-#    field_values.each do |pointer|
-#      result << tag(:input, :type=>"checkbox", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>pointer.to_s, :checked=>checked)
-#    end
     return result
   end
   
+  # Expects :choices option. 
+  # :choices should be a hash with value/label pairs
+  # :choices => {"first_choice"=>"Apple", "second_choice"=>"Pear" }
+  # If no :choices option is provided, returns a regular fedora_text_field
   def fedora_radio_button(resource, datastream_name, field_key, opts={})
-    field_name = field_name_for(field_key)
-    field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
-    base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-    
-    result = ""
-    h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
-    
-    field_values.each_with_index do |current_value, z|
-      result << tag(:input, :type=>"radio", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][#{opts[0]}]", :value=>opts.first[0])
-      result << " #{opts.first[1]}"
+    if opts[:choices].nil?
+      result = fedora_text_field(resource, datastream_name, field_key, opts)
+    else
+      choices = opts[:choices]
+
+      field_name = field_name_for(field_key)
+      field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+      h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+      
+      selected_value = field_values.empty? ? "" : field_values.first
+
+      body = ""
+      z = 0
+      base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
+      
+      result = field_selectors_for(datastream_name, field_key)
+      choices.sort.each do |choice,label|
+        if choice == selected_value
+          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase, :checked=>true)
+        else
+          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase)
+        end
+        result << " <label>#{label}</label> "
+      end
+      result
     end
     return result
-  end  
+  end
+  
   
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key) || field_key
