@@ -165,10 +165,26 @@ module HydraFedoraMetadataHelper
   
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
     result = ""
+    field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
     h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
-    field_key.each do |pointer|
-      result << tag(:input, :type=>"checkbox", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>pointer.to_s, :checked=>opts[:checked])
+    logger.debug "\n\nFIELD_VALUES: #{field_values.inspect}\n\n"
+    
+    v_name = field_key.last.to_s
+
+    checked = field_values.first.downcase == "yes" ? "checked" : ""
+    logger.debug "CHECKED: #{checked}"
+    
+    result = field_selectors_for(datastream_name, field_key)
+    
+    if field_values.first.downcase == "yes"
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"yes", :checked=>"checked")
+    else
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"no")
     end
+#result << tag(:input, :type=>"hidden", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>["#{field_key.first}","#{field_key.last}"])
+#    field_values.each do |pointer|
+#      result << tag(:input, :type=>"checkbox", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value=>pointer.to_s, :checked=>checked)
+#    end
     return result
   end
   
