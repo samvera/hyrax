@@ -45,8 +45,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
         xml.copyright {
           xml.human
           xml.machine {
-            xml.uvalicense "yes"
-            xml.cclicense "yes"
+            xml.uvalicense "no"
           }
         }
         xml.access(:type=>"discover") {
