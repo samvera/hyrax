@@ -85,7 +85,7 @@ module Hydra::AccessControlsEnforcement
 
         # if it is the depositor and it is under embargo, that is ok
         # otherwise if it not the depositor and it is under embargo, don't show it
-        embargo_query = " AND (_query_:\"embargo_release_date_dt:[NOW TO *]\" AND  _query_:\"depositor_t:js6en\") AND NOT (NOT _query_:\"depositor_t:js6en\" AND _query_:\"embargo_release_date_dt:[NOW TO *]\")"
+        embargo_query = " OR  ((_query_:\"embargo_release_date_dt:[NOW TO *]\" AND  _query_:\"depositor_t:#{current_user.login}\") AND NOT (NOT _query_:\"depositor_t:#{current_user.login}\" AND _query_:\"embargo_release_date_dt:[NOW TO *]\"))"
       end
       
       # remove anything with an embargo release date in the future  
