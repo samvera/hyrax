@@ -193,12 +193,14 @@ module HydraFedoraMetadataHelper
       result = fedora_text_field(resource, datastream_name, field_key, opts)
     else
       choices = opts[:choices]
-
+      
       field_name = field_name_for(field_key)
       field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
       h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+      default_value = opts.keys.include?(:default_value) ? opts[:default_value] : ""
       
       selected_value = field_values.empty? ? "" : field_values.first
+      selected_value = default_value if selected_value.blank?
 
       body = ""
       z = 0
