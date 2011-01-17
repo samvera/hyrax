@@ -61,7 +61,6 @@ module Hydra::AccessControlsEnforcement
     # Append the query responsible for adding the users discovery level
       permission_types = ["edit","discover","read"]
       field_queries = []
-      embargo_query = ""
       permission_types.each do |type|
         field_queries << "_query_:\"#{type}_access_group_t:public\""
       end
@@ -83,16 +82,10 @@ module Hydra::AccessControlsEnforcement
           end
         end
 
-        # if it is the depositor and it is under embargo, that is ok
-        # otherwise if it not the depositor and it is under embargo, don't show it
-        embargo_query = " OR  ((_query_:\"embargo_release_date_dt:[NOW TO *]\" AND  _query_:\"depositor_t:#{current_user.login}\") AND NOT (NOT _query_:\"depositor_t:#{current_user.login}\" AND _query_:\"embargo_release_date_dt:[NOW TO *]\"))"
       end
       
-      # remove anything with an embargo release date in the future  
-      embargo_query = " AND NOT _query_:\"embargo_release_date_dt:[NOW TO *]\"" if embargo_query.blank?
       
       q << " AND (#{field_queries.join(" OR ")})"
-      q << embargo_query 
     return q
   end
 
