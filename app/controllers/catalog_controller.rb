@@ -19,6 +19,13 @@ class CatalogController
     show_without_customizations
     enforce_edit_permissions
   end
+
+# displays values and pagination links for a single facet field
+  def facet
+    # adding the following for facet_pagination with Lucene queries to avoide NPE
+    params[:qt] = "dismax"
+    @pagination = get_facet_pagination(params[:id], params)
+  end
   
   # get search results from the solr index
   def index
