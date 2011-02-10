@@ -42,10 +42,23 @@ namespace :hydra do
         cp("#{f}", 'jetty/solr/development-core/conf/', :verbose => true)
         cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
       end
+
+    end
+
+    desc "Copies a custom fedora config for the bundled Hydra Testing Server"
+    task :config_fedora do
+      # load a custom fedora.fcfg - 
+      fcfg = File.join(Rails.root,"fedora","conf","fedora.fcfg")
+      if File.exists?(fcfg)
+        puts "copying over fedora.fcfg"
+        cp("#{fcfg}", 'jetty/fedora/default/server/config/', :verbose => true)
+      else
+        puts "#{fcfg} file not found -- skipping fedora config"
+      end
     end
 
     desc "Copies the default SOLR config files and starts up the fedora instance."
-    task :load => [:config, :start]
+    task :load => [:config, :config_fedora, :start]
 
     desc "Returns the status of the Hydra::TestingServer."
     task :status => [:environment] do
