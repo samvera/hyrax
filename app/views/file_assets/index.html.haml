@@ -7,12 +7,8 @@
   -# javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
   -# javascript_includes << ['../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', {:cache=>true, :plugin=>"fluid-infusion"}]
   
-  - javascript_includes << "jquery.jeditable.mini"
-  - javascript_includes << 'custom'
-  - javascript_includes << "catalog/edit"
-  - javascript_includes << "jquery.hydraMetadata.js"  
+  - javascript_includes << ["jquery.jeditable.mini.js", "jquery.form.js", 'custom', "catalog/edit", "jquery.hydraMetadata.js", {:plugin=>:hydra_repository}]
   - javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
-  - javascript_includes << "jquery.form.js"
 
   - extra_head_content << capture do 
     :javascript

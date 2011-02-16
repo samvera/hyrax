@@ -1,4 +1,4 @@
-<% javascript_includes << "jquery.form.js" %>
+<% javascript_includes << ["jquery.form.js", {:plugin=>:hydra_repository}] %>
 <% unless defined?(asset_id) %>
   <% asset_id = params[:asset_id] %>
 <% end %>

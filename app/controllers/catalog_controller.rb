@@ -1,7 +1,7 @@
 require 'mediashelf/active_fedora_helper'
 class CatalogController
   
-  #include Blacklight::CatalogHelper
+  include Blacklight::CatalogHelper
   include Hydra::RepositoryController
   include Hydra::AccessControlsEnforcement
   before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index]

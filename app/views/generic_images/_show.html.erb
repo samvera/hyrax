@@ -1,9 +1,6 @@
 <% javascript_includes << "/plugin_assets/fluid-infusion/infusion-1.2-src/lib/jquery/ui/js/jquery.ui.accordion.js" %>
-<% javascript_includes << 'custom' %>
-<% javascript_includes << "catalog/show" %>
-<% javascript_includes << "fancybox/jquery.fancybox-1.3.1.pack.js" %>
-<% javascript_includes << "/plugin_assets/hydra_repository/javascripts/generic_content_objects_fancybox.js" %>
-<% stylesheet_links << "../javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
+<% javascript_includes << ['custom', "catalog/show", "fancybox/jquery.fancybox-1.3.1.pack.js", "generic_content_objects_fancybox.js", {:plugin=>:hydra_repository}] %>
+<% stylesheet_links << "../plugin_assets/hydra_repository/javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
 
 <style type="text/css" media="screen">
   input.editable-edit, input.textile-edit {display:none}

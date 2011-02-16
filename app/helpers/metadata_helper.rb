@@ -76,7 +76,7 @@ module MetadataHelper
       vlist.each_with_index do |field_value,z|
         name = add_param(field_params.to_query,"asset[#{datastream_name}][#{field_name}][#{z}]")
         result << "<li class=\"editable\" name=\"#{name}\">"
-          result << "<a href='' title='Delete \'#{h(field_value)}\' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
+          result << "<a href='' title='Delete \'#{h(field_value)}\' class='destructive'><img src='/plugin_assets/hydra_repository/images/delete.png' alt='Delete'></a>" unless z == 0
         result << "<span class=\"editableText\">#{h(field_value)}</span>"
       result << "</li>"
     end
@@ -109,7 +109,7 @@ module MetadataHelper
           field_id = "#{field_name}_#{z}"
           result << "<li name=\"#{name}\"  class=\"field_value textile_value\">"
             # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
-            result << "<a href='' title='Delete \'#{processed_field_value}\'' class='destructive'><img src='/images/delete.png' alt='Delete'></a>" unless z == 0
+            result << "<a href='' title='Delete \'#{processed_field_value}\'' class='destructive'><img src='/plugin_assets/hydra_repository/images/delete.png' alt='Delete'></a>" unless z == 0
             result << "<div class=\"textile\" id=\"#{field_id}\">#{processed_field_value}</div>"
           result << "</li>"
     end

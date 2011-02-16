@@ -1,20 +1,13 @@
 <%# default partial to display solr document fields in catalog show view -%>
 
-<%- stylesheet_links << "../javascripts/date-picker/css/datepicker" %>
+<%- stylesheet_links << "../plugin_assets/hydra_repository/javascripts/date-picker/css/datepicker" %>
 <%- javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) %>
-<%- javascript_includes << "jquery.jeditable.mini" %>
-<%- javascript_includes << "date-picker/js/datepicker" %>
-<%- javascript_includes << "jquery.form.js" %>
-<%- javascript_includes << "custom" %>
-<%- javascript_includes << "catalog/edit" %>
-<%- javascript_includes << "jquery.hydraMetadata.js" %>
+<%  javascript_includes << ["jquery.jeditable.mini.js", "date-picker/js/datepicker", "jquery.form.js", 'custom', "catalog/edit", "jquery.hydraMetadata.js", "fancybox/jquery.fancybox-1.3.1.pack.js", "select_to_ui_slider/selectToUISlider.jQuery.js", {:plugin=>:hydra_repository}] %>
 
-<%- javascript_includes << "fancybox/jquery.fancybox-1.3.1.pack.js" %>
-<%- stylesheet_links << "../javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
+<%- stylesheet_links << "../plugin_assets/hydra_repository/javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
 
-<%- javascript_includes << "select_to_ui_slider/selectToUISlider.jQuery.js" %>
-<%- stylesheet_links << ["../javascripts/select_to_ui_slider/css/ui.slider.extras.css"] %>
-<%- stylesheet_links << "slider" %>
+<%- stylesheet_links << ["../plugin_assets/hydra_repository/javascripts/select_to_ui_slider/css/ui.slider.extras.css"] %>
+<%- stylesheet_links << ["slider", {:plugin=>:hydra_repository}] %>
 
 <%- extra_head_content << capture do %>
   <script type="text/javascript">
