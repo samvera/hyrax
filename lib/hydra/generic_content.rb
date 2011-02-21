@@ -8,6 +8,17 @@ module Hydra::GenericContent
    klass.send :include, Hydra::ModelMethods
   end
   
+  # For each value in DEFAULT_CONTENT_DATASTREAMS, instances will have 3 corresponding methods for
+  # * getting the datastream's content
+  # * setting a new file as the datastream's content
+  # * checking whether the current object has the datastream already
+  #
+  # Example: DEFAULT_CONTENT_DATASTREAMS = ['content','original']
+  # These methods will be available on the object:
+  #
+  # .has_original?, original, orginal=()
+  # .has_content?, content, content=()
+  #
   DEFAULT_CONTENT_DATASTREAMS = ['content','original']
   
   DEFAULT_CONTENT_DATASTREAMS.each do |m|

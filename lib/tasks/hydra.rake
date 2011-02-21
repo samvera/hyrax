@@ -6,7 +6,7 @@ namespace :hydra do
   desc "Delete and re-import the fixture identified by pid" 
   task :refresh_fixture => [:delete,:import_fixture]
   
-  desc "Delete the object identified by pid"
+  desc "Delete the object identified by pid. Example: rake hydra:delete pid=demo:12"
   task :delete => :environment do
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]
@@ -54,7 +54,7 @@ namespace :hydra do
     end
   end
   
-  desc "Import the fixture located at the provided path"
+  desc "Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=spec/fixtures/demo_12.foxml.xml"
   task :import_fixture => :environment do
         
     # If a destination url has been provided, attampt to export from the fedora repository there.
