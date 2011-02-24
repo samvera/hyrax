@@ -152,7 +152,8 @@ module Hydra
     end
     def to_solr(solr_doc=Solr::Document.new)
       super(solr_doc)
-      extract_person_full_names.each {|pfn| solr_doc << pfn }
+      solr_doc.merge!(extract_person_full_names)
+      solr_doc.merge!(extract_person_organizations)
       solr_doc << {:object_type_facet => "Dataset"}
       solr_doc
     end
