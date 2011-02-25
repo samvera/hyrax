@@ -150,11 +150,11 @@ module Hydra
     def self.valid_child_types
       ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
     end
-    def to_solr(solr_doc=Solr::Document.new)
+    def to_solr(solr_doc=Hash.new)
       super(solr_doc)
       solr_doc.merge!(extract_person_full_names)
       solr_doc.merge!(extract_person_organizations)
-      solr_doc << {:object_type_facet => "Dataset"}
+      solr_doc.merge!(:object_type_facet => "Dataset")
       solr_doc
     end
   end
