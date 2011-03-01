@@ -19,9 +19,9 @@ module HydraFedoraMetadataHelper
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
-        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" unless z == 0
-        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\">#{h(current_value)}</span>"
-        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" if opts.fetch(:multiple, true) && !current_value.empty?
+        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{h(current_value.lstrip)}</span>"
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value.lstrip)}\"/>"
       body << "</#{container_tag_type}>"
     end
     result = field_selectors_for(datastream_name, field_key)
@@ -57,11 +57,12 @@ module HydraFedoraMetadataHelper
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
       processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
       
-      body << "<#{container_tag_type.to_s} class=\"field_value textile-container field\" id=\"#{base_id}-container\">"
+      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
         body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" unless z == 0
-        body << "<div class=\"textile-text text\" id=\"#{base_id}-text\">#{processed_field_value}</div>"
-        body << "<input class=\"textile-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
+        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{processed_field_value}</span>"
+        body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\">#{h(current_value)}</textarea>"
+        #body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>"
     end
     
@@ -153,28 +154,78 @@ module HydraFedoraMetadataHelper
     result << body
     return result
   end
-  
-  def fedora_checkbox(resource, datastream_name, field_key, opts={})
-  end
-  
-  def fedora_radio_button(resource, datastream_name, field_key, opts={})
-    field_name = field_name_for(field_key)
-    field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
-    base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-    
+
+  def fedora_submit(resource, datastream_name, field_key, opts={})
     result = ""
     h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
-    
-    field_values.each_with_index do |current_value, z|
-      result << tag(:input, :type=>"radio", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][#{opts[0]}]", :value=>opts.first[0])
-      result << " #{opts.first[1]}"
+    field_key.each do |pointer|
+      result << tag(:input, :type=>"submit", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value => field_key.to_s.capitalize)
     end
     return result
-  end  
+  end
+  
+  def fedora_checkbox(resource, datastream_name, field_key, opts={})
+    result = ""
+    field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+    logger.debug "\n\nFIELD_VALUES: #{field_values.inspect}\n\n"
+    
+    v_name = field_key.last.to_s
+
+    checked = field_values.first.downcase == "yes" ? "checked" : ""
+    logger.debug "CHECKED: #{checked}"
+    
+    result = field_selectors_for(datastream_name, field_key)
+    
+    if field_values.first.downcase == "yes"
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"yes", :checked=>"checked")
+    else
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"no")
+    end
+    return result
+  end
+  
+  # Expects :choices option. 
+  # :choices should be a hash with value/label pairs
+  # :choices => {"first_choice"=>"Apple", "second_choice"=>"Pear" }
+  # If no :choices option is provided, returns a regular fedora_text_field
+  def fedora_radio_button(resource, datastream_name, field_key, opts={})
+    if opts[:choices].nil?
+      result = fedora_text_field(resource, datastream_name, field_key, opts)
+    else
+      choices = opts[:choices]
+      
+      field_name = field_name_for(field_key)
+      field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+      h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
+      default_value = opts.keys.include?(:default_value) ? opts[:default_value] : ""
+      
+      selected_value = field_values.empty? ? "" : field_values.first
+      selected_value = default_value if selected_value.blank?
+
+      body = ""
+      z = 0
+      base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
+      
+      result = field_selectors_for(datastream_name, field_key)
+      choices.sort.each do |choice,label|
+        if choice == selected_value
+          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase, :checked=>true)
+        else
+          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase)
+        end
+        result << " <label>#{label}</label> "
+      end
+      result
+    end
+    return result
+  end
+  
   
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key) || field_key
-    field_type = field_name == "grant" ? "grant" : "textfield"    
+    field_type = field_name == "person" ? "person" : "textfield"    
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
     "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"
   end
@@ -237,6 +288,10 @@ module HydraFedoraMetadataHelper
     
     def fedora_select(datastream_name, field_key, opts={})
       helper.fedora_select(@resource, datastream_name, field_key, opts)
+    end
+
+    def fedora_submit(datastream_name, field_key, opts={})
+      helper.fedora_submit(@resource, datastream_name, field_key, opts)
     end
     
     def fedora_checkbox(datastream_name, field_key, opts={})

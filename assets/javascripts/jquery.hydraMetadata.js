@@ -16,23 +16,25 @@
        var new_value_index = values_list.children('li').size();
        var unique_id = fieldName + "_" + new_value_index;
 
-       var $item = $('<li class=\"editable-container field\" id="'+unique_id+'-container"><a href="" class="destructive field" title="Delete \'[NAME OF THING] in hydraMetadata.insertTextField\'">Delete</a><span class="editable-text" id="'+unique_id+'-text"></span><input class="editable-edit" id="'+unique_id+'" data-datastream-name="'+datastreamName+'" rel="'+fieldName+'" name="asset['+datastreamName+'][' + fieldName + '][' + new_value_index + ']"/></li>');
-       $item.appendTo(values_list);
+       //var $item = $('<li class=\"editable-container field\" id="'+unique_id+'-container"><a href="" class="destructive field" title="Delete \'[NAME OF THING] in hydraMetadata.insertTextField\'">Delete</a><span class="editable-text text" id="'+unique_id+'-text"></span><input class="editable-edit edit" id="'+unique_id+'" data-datastream-name="'+datastreamName+'" rel="'+fieldName+'" name="asset['+datastreamName+'][' + fieldName + '][' + new_value_index + ']"/></li>');
+       var $item = $('<li class=\"editable-container field\" id="'+unique_id+'-container"><a href="" class="destructive field" title="Delete">Delete</a><span class="editable-text text" id="'+unique_id+'-text"></span><input class="editable-edit edit" id="'+unique_id+'" data-datastream-name="'+datastreamName+'" rel="'+fieldName+'" name="asset['+datastreamName+'][' + fieldName + '][' + new_value_index + ']"/></li>');
+			$item.appendTo(values_list);
+
        var newVal = fluid.inlineEdit($item, {
                      selectors: {
-                       editables : ".editable-container",
+                       editables : ".editable-container_PPP",
                        text : ".editable-text",
-                       edit: ".editable-edit"
-                     },
-                     componentDecorators: {
-                       type: "fluid.undoDecorator"
+                       edit: ".editable-edit_PPP"
                      },
                      listeners : {
                        onFinishEdit : jQuery.fn.hydraMetadata.fluidFinishEditListener,
                        modelChanged : jQuery.fn.hydraMetadata.fluidModelChangedListener
                      }
                    });
-                   newVal.edit();
+                  // added the following for completion of neutering the inlineEdit functionality
+                  $(".editable-text").hide();
+                  $("#"+unique_id).hydraTextField();
+                   //newVal.edit();
      },
      
      /*
@@ -91,14 +93,21 @@
        var content_type = $("form#new_contributor > input#content_type").first().attr("value");
        var contributors_group_selector = "."+type+".contributor";
        var url = $("form#new_contributor").attr("action");
-
+      
        $.post(url, {contributor_type: type, content_type: content_type},function(data) {
-         $(contributors_group_selector).last().after(data);
+         if ($(contributors_group_selector).size() == 0) {
+           $("ol#contributors").append(data);
+         } else {
+           $(contributors_group_selector).last().after(data);
+         }
          $inserted = $(contributors_group_selector).last();
-         $(".editable-container", $inserted).hydraTextField();
+         //$(".editable-container", $inserted).hydraTextField();
+         $(".editable-edit.edit", $inserted).hydraTextField();
          $("a.destructive", $inserted).hydraContributorDeleteButton();
 				$("#re-run-add-contributor-action").val("Add a " + type);
        });
+      
+			return false;
      },
      
      addPersonPermission: function(responseText, statusText, xhr, $form)  { 
@@ -183,6 +192,10 @@
          $.fn.hydraMetadata.saveEdit(element);
        }
      },
+
+     saveCheckbox: function(element) {
+         $.fn.hydraMetadata.saveEdit(element);
+     },
      
      saveDateWidgetEdit: function(callback) {
          name = $("#"+callback["id"]).parent().attr("name");
@@ -224,8 +237,146 @@
      *  Save the values from a Hydra editable field (fedora_textfield, fedora_textarea, fedora_textile, fedora_select, fedora_date)
      *
      */
-     saveEdit: function(editNode) {
+    saveEdit: function(editNode) {
        $editNode = $(editNode);
+       var $closestForm = $editNode.closest("form");
+       var url = $closestForm.attr("action");
+       var field_param = $editNode.fieldSerialize();
+       var content_type_param = $("input#content_type", $closestForm).fieldSerialize();
+       var field_selectors = $("input.fieldselector[rel="+$editNode.attr("rel")+"]").fieldSerialize();
+       var params = field_param + "&" + content_type_param + "&" + field_selectors + "&_method=put";
+       
+       // FOR UVA
+       var field_id = field_param.match(/person_._computing_id/);
+       if (field_id) { 
+         ix = field_id[0].match(/\d+/);
+         field = field_id[0];
+       }
+       // Show processing in Progress
+       switch($editNode.attr("id")) {
+       case "title_info_main_title":
+         var titleUpdated = true;
+         $.fn.hydraProgressBox.showProcessingInProgress('step_1_label');
+         break;
+       case "person_0_first_name":
+         var personUpdated = true;
+         $.fn.hydraProgressBox.showProcessingInProgress('step_1_label');
+         break;
+       case "person_0_last_name":
+         var personUpdated = true;
+         $.fn.hydraProgressBox.showProcessingInProgress('step_1_label');
+         break;
+       case "copyright_uvalicense":
+         var licenseUpdated = true;
+         $.fn.hydraProgressBox.showProcessingInProgress('step_1_label');
+         break;
+       case "journal_0_title_info_main_title":
+         var journalTitleUpdated = true;
+         $.fn.hydraProgressBox.showProcessingInProgress('step_2_label');
+         break;
+       default:
+       }
+
+       $.ajax({
+         type: "PUT",
+         url: url,
+         dataType : "json",
+         data: params,
+         success: function(msg){
+          // if this is computing id field, need to update the first_name, last_name and institution
+          if (field_id) {
+            $.fn.hydraMetadata.getPersonInformation(url,ix);
+          }
+          
+          
+          // Update progress box for step 1
+          if (titleUpdated || personUpdated || licenseUpdated) {
+            var stepOneReady = $.fn.hydraProgressBox.testStepOneReadiness();
+            $.fn.hydraProgressBox.checkUncheckProgress('step_1_label', stepOneReady);
+          }
+          
+          // Update progress box for step 2
+          if (journalTitleUpdated) {
+            var stepTwoReady = $.fn.hydraProgressBox.testStepTwoReadiness();
+            $.fn.hydraProgressBox.checkUncheckProgress('step_2_label', stepTwoReady);
+          }
+          // Check if releasable, and if so enable the submit button
+          $.fn.hydraProgressBox.testReleaseReadiness();
+     			$.noticeAdd({
+             inEffect:               {opacity: 'show'},      // in effect
+             inEffectDuration:       600,                    // in effect duration in miliseconds
+             stayTime:               6000,                   // time in miliseconds before the item has to disappear
+             text:                   "Your edit to "+ msg.updated[0].field_name +" has been saved as "+msg.updated[0].value+" at index "+msg.updated[0].index,   // content of the item
+             stay:                   false,                  // should the notice item stay or not?
+             type:                   'notice'                // could also be error, succes
+            });
+         },
+         error: function(xhr, textStatus, errorThrown){
+     			$.noticeAdd({
+             inEffect:               {opacity: 'show'},      // in effect
+             inEffectDuration:       600,                    // in effect duration in miliseconds
+             stayTime:               6000,                   // time in miliseconds before the item has to disappear
+             text:                   'Your changes to' + $editNode.attr("rel") + ' could not be saved because of '+ xhr.statusText + ': '+ xhr.responseText,   // content of the item
+             stay:                   true,                  // should the notice item stay or not?
+             type:                   'error'                // could also be error, succes
+            });
+         }
+       });
+     },
+    
+    /*
+    *  Update the values of first_name, last_name and institution - called upon successful completion of computing_id field
+    *
+    */
+    getPersonInformation: function(url,ix) {
+      $.ajax({
+        type: "GET",
+        url: url+"&field=person_"+ix+"_first_name",
+        success: function(msg){
+          $("#person_"+ix+"_first_name").val(msg);
+          $("#person_"+ix+"_first_name-text").text(msg);
+          $("#person_"+ix+"_first_name-text").removeClass("fl-inlineEdit-invitation-text");
+          var authorProvided = (msg.length > 0);
+          $.fn.hydraProgressBox.checkUncheckProgress('step_1_label', authorProvided);
+        }
+      });
+      $.ajax({
+        type: "GET",
+        url: url+"&field=person_"+ix+"_last_name",
+        success: function(msg){
+          $("#person_"+ix+"_last_name").val(msg);
+          $("#person_"+ix+"_last_name-text").text(msg);
+          $("#person_"+ix+"_last_name-text").removeClass("fl-inlineEdit-invitation-text");
+          var authorProvided = (msg.length > 0);
+          $.fn.hydraProgressBox.checkUncheckProgress('step_1_label', authorProvided);
+        }
+      });
+      $.ajax({
+        type: "GET",
+        url: url+"&field=person_"+ix+"_institution",
+        success: function(msg){
+          $("#person_"+ix+"_institution").val(msg);
+          $("#person_"+ix+"_institution-text").text(msg);
+          $("#person_"+ix+"_institution-text").removeClass("fl-inlineEdit-invitation-text");
+        }
+      });
+      $.ajax({
+        type: "GET",
+        url: url+"&field=person_"+ix+"_description",
+        success: function(msg){
+          $("#person_"+ix+"_description").val(msg);
+          $("#person_"+ix+"_description-text").text(msg);
+          $("#person_"+ix+"_description-text").removeClass("fl-inlineEdit-invitation-text");
+        }
+      });
+    },
+
+     /*
+     *  Save the values from a Hydra editable field (fedora_textfield, fedora_textarea, fedora_textile, fedora_select, fedora_date)
+     *
+     */
+    updateNode: function(refreshNode) {
+       $refreshNode = $(refreshNode);
        var $closestForm = $editNode.closest("form");
        var url = $closestForm.attr("action");
        var field_param = $editNode.fieldSerialize();
@@ -235,7 +386,7 @@
        var params = field_param + "&" + content_type_param + "&" + field_selectors + "&_method=put";
        
        $.ajax({
-         type: "PUT",
+         type: "GET",
          url: url,
          dataType : "json",
          data: params,
@@ -276,7 +427,10 @@
    			success: function() {
    				$fileAssetNode.slideUp(300,function() {
    					$fileAssetNode.remove();
-   				});
+   					// UVA Libra -- update progress box if files deleted.
+     				var fileUploaded = ($("#file_assets tr.file_asset").length > 0);
+     				$.fn.hydraProgressBox.checkUncheckProgress('step_1_label', fileUploaded);
+   				});         
  				}
        });
      },
@@ -320,29 +474,23 @@
    * Initialize the element as a Hydra Editable TextField
    */
    $.fn.hydraTextField = function(settings) {
-     var config = {
-        selectors : {
-          text  : ".editable-text",
-          edit  : ".editable-edit"           
-        },
-        componentDecorators: {
-          type  : "fluid.undoDecorator"
-        },
-        listeners : {
-          onFinishEdit : jQuery.fn.hydraMetadata.fluidFinishEditListener,
-          modelChanged : jQuery.fn.hydraMetadata.fluidModelChangedListener
-        },
-        defaultViewText: "click to edit"
-      };
- 
-     if (settings) $.extend(config, settings);
- 
-     this.each(function() {
-       fluid.inlineEdit(this, config);
+      this.each(function() {
+       $(this).unbind('blur').bind('blur', function(e) {
+         if ($(this).hasClass("data-changed")) {
+           $.fn.hydraMetadata.saveEdit(this,e);
+           $(this).removeClass("data-changed");
+         }
+       });
+       $(this).unbind('change').bind('change', function(e) {
+         $(this).addClass("data-changed");
+         if ($(this).attr("id") == "embargo_embargo_release_date") {
+           if ($(this).val().length == 10) {
+             $(this).blur();
+           }
+         }
+       });
      });
- 
      return this;
- 
    };
    
    /*
@@ -353,11 +501,11 @@
        method    : "PUT",
        indicator : "<img src='/plugin_assets/hydra_repository/images/ajax-loader.gif'>",
        type      : "textarea",
-       submit    : "OK",
-       cancel    : "Cancel",
-       placeholder : "click to edit",
+       //submit    : "OK",
+       //cancel    : "Cancel",
+       placeholder : "<textarea></textarea>",
        tooltip   : "Click to edit ...",
-       onblur    : "ignore",
+       onblur    : "submit",
        id        : "field_id",
        height    : "100"
      };
@@ -383,8 +531,8 @@
       // Note: the field value must match the field name in solr (minus the solr suffix)
       var load_params = {
         datastream  : $editNode.attr('data-datastream-name'),
-        field       : $editNode.attr("rel"),
-        field_index : $this.index()
+        field       : $editNode.attr("rel")//,
+        //field_index : $this.index()
       };
       
       var nodeSpecificSettings = {
@@ -415,7 +563,59 @@
  
      return this;
    };
+<<<<<<< HEAD:public/javascripts/jquery.hydraMetadata.js
+   
+   $.fn.hydraRadioButton = function(settings) {
+     var config = {};
+ 
+     if (settings) $.extend(config, settings);
+ 
+     this.each(function() {
+       $(this).unbind('click.hydra').bind('click.hydra', function(e) {
+           $.fn.hydraMetadata.saveSelect(this, e);
+           //e.preventDefault();
+         });
+     });
+ 
+     return this;
+ 
+   };
 
+   $.fn.hydraCheckbox = function(settings) {
+     var config = {};
+ 
+     if (settings) $.extend(config, settings);
+ 
+     this.each(function() {
+       $(this).unbind('click.hydra').bind('click.hydra', function(e) {
+         var checked = $(this).attr("checked");
+         // temporarily uncheck it so it gets submitted
+         if(!checked) {
+           $(this).attr("checked",true);
+         }
+         // adding checks for yes and no attributes so that other values can be passed in
+         checkbox_id = $(this).attr("id");
+
+         if ($(this).val() == $("#"+checkbox_id+"_checked_value").val() ) {
+           $(this).val($("#"+checkbox_id+"_unchecked_value").val() );
+         } else {
+           $(this).val($("#"+checkbox_id+"_checked_value").val() );
+         }
+         $.fn.hydraMetadata.saveCheckbox(this,e);
+         if (!checked) {
+           $(this).attr("checked",false);
+         }
+         //e.preventDefault();
+       });
+     });
+ 
+     return this;
+ 
+   };
+  
+=======
+
+>>>>>>> 452a6f670bfebaa30c378b72a22f1d05877ea648:vendor/plugins/hydra_repository/assets/javascripts/jquery.hydraMetadata.js
    // 
    // This method relies on some options being saved in the dom element's data, which is populated by a little script inserted by the fedora_date_select helper.  
    // For example:
@@ -530,6 +730,9 @@
 				 contributor_type = contributor_label[contributor_label.length-1];
 				 if (contributor_type == "researcher") {contributor_type = "person";};
          $.fn.hydraMetadata.addContributor(contributor_type);
+       });
+       $("#add_author", this).click(function() {
+         $.fn.hydraMetadata.addContributor("person");
        });
        $("#add_person", this).click(function() {
          $.fn.hydraMetadata.addContributor("person");
@@ -662,3 +865,5 @@
    };
    
  })(jQuery);
+
+

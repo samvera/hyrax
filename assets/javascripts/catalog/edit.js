@@ -18,11 +18,17 @@
   	  $metaDataForm = $("form#document_metadata", $el);
   	  $fileAssetsList = $("#file_assets", $el);
       bindDomEvents();
-      $(".editable-container").hydraTextField();
+      //$(".editable-container").hydraTextField();
       $(".textile-container").hydraTextileField();
+      $(".textile-text").show();
+      // Non-fluid inline edit fields
+      $(".fedora-checkbox").hydraCheckbox();
+      $(".fedora-radio-button").hydraRadioButton();
       setUpDatePicker();
       setUpSliders();
       setUpNewPermissionsForm();
+      $("input.editable-edit").hydraTextField();
+      $("textarea.editable-edit").hydraTextField();
       $("#add-contributor-box").hydraNewContributorForm();
       $("a.inline").fancybox({
       		'hideOnContentClick': true,
@@ -32,9 +38,9 @@
 
   	function bindDomEvents () {
   	  $metaDataForm.delegate("a.addval.textfield", "click", function(e) {
-        insertValue(this, e);
-        e.preventDefault();
-      });
+        $.fn.hydraMetadata.insertTextField(this, e);
+        e.preventDefault();
+      });
   	  $metaDataForm.delegate("a.addval.grant", "click", function(e) {
 				addGrant(this, e);
         e.preventDefault();
@@ -61,7 +67,7 @@
       
       $fileAssetsList.delegate("a.destructive", "click", function(e) {
         url = $(this).attr("href");
-        deleteFileAsset(this, url) 
+        deleteFileAsset(this, url);
         e.preventDefault();
       });
       
@@ -195,7 +201,6 @@
 		};
 
 		function removeGrant(element) {
-			alert(element.html());
 		  var content_type = $("form#document_metadata > input#content_type").first().attr("value");
 		  var url = $(element).attr("href");
 		  var $grantNode = $(element).closest(".grant")
@@ -359,7 +364,7 @@
       var new_value_index = values_list.children('li').size();
       var unique_id = fieldName + "_" + new_value_index;
       
-      var $item = $('<li class=\"editable-container field\" id="'+unique_id+'-container"><a href="" class="destructive field" title="Delete \'NAME OF THING\'">Delete</a><span class="editable-text" id="'+unique_id+'-text"></span><input class="editable-edit" id="'+unique_id+'" data-datastream-name="'+datastreamName+'" rel="'+fieldName+'" name="asset['+datastreamName+'][' + fieldName + '][' + new_value_index + ']"/></li>');
+      var $item = $('<li class=\"editable-container field\" id="'+unique_id+'-container"><a href="" class="destructive field" title="Delete">Delete</a><span class="editable-text" id="'+unique_id+'-text"></span><input class="editable-edit" id="'+unique_id+'" data-datastream-name="'+datastreamName+'" rel="'+fieldName+'" name="asset['+datastreamName+'][' + fieldName + '][' + new_value_index + ']"/></li>');
       $item.appendTo(values_list);
       var newVal = fluid.inlineEdit($item, {
                     selectors: {
@@ -367,13 +372,11 @@
                       text : ".editable-text",
                       edit: ".editable-edit"
                     },
-                    componentDecorators: {
-                      type: "fluid.undoDecorator"
-                    },
                     listeners : {
                       onFinishEdit : hydraFinishEditListener,
                       modelChanged : hydraModelChangedListener
-                    }
+                    }	,
+					          defaultViewText: "click to edit"
                   });
                   newVal.edit();
     };
@@ -446,6 +449,7 @@
       $editNode = $(element).siblings("input.edit").first();
       $editNode.attr("value", "");
       hydraSaveEdit($editNode, "");
+			$(element).parent('li').remove();	
     }
     
     function hydraSaveEdit(editNode, newValue) {

@@ -16,6 +16,9 @@ module HydraAccessControlsHelper
       user_groups = RoleMapper.roles(user)
       # everyone is automatically a member of the group 'public'
       user_groups.push 'public' unless user_groups.include?('public')
+      # logged-in users are automatically members of the group "registered"
+      user_groups.push 'registered' unless user == "public"
+      
       logger.debug("User #{user} is a member of groups: #{user_groups.inspect}")
       case permission_type
         when :edit

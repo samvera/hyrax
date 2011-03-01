@@ -81,7 +81,10 @@ module Hydra::AccessControlsEnforcement
             field_queries << "_query_:\"#{type}_access_person_t:[* TO *]\""
           end
         end
+
       end
+      
+      
       q << " AND (#{field_queries.join(" OR ")})"
     return q
   end

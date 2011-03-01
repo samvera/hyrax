@@ -1,6 +1,20 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+jQuery(document).ready(function($) {
+	// ACTIVATE THE HOVER STATES OF THE IMAGE LINKS
+	$(".libra_buttons img, .home_buttons img").hover(function(){
+		$(this).siblings('ul').show();
+		
+	});
+	
+	$(".libra_buttons ul, .home_buttons ul").mouseleave(function(){
+		$(this).hide();
+	});
+	
+});
+
+
 $(function() {
 	// for create asset button at the top
   $("#re-run-action").next().button( {
@@ -17,7 +31,7 @@ $(function() {
 		the_selected_content_type = $('#content_type').val();
 		the_selected_content_type_label = $('#create-asset-menu li[onclick*="' + the_selected_content_type + '"]').html();
 		$("#re-run-action").val(the_selected_content_type_label);
-		$('#re-run-action')[0].onclick = function(){ location.href='/assets/new?content_type=' + the_selected_content_type; };		
+		//$('#re-run-action')[0].onclick = function(){ location.href='/assets/new?content_type=' + the_selected_content_type; };		
 	}
 	
 	

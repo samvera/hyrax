@@ -22,9 +22,6 @@ jQuery(document).ready(function () {
           text : ".editableText",
           editables : "li.editable"
         }, 
-        componentDecorators: {
-          type: "fluid.undoDecorator" 
-        },
         listeners : {
           onFinishEdit : myFinishEditListener,
           modelChanged : myModelChangedListener
@@ -38,9 +35,6 @@ jQuery(document).ready(function () {
         FCKEditor: {
           BasePath: "/javascripts/fckeditor/", 
           ToolbarSet: "Basic"
-        },
-        componentDecorators: {
-          type: "fluid.undoDecorator" 
         },
         listeners : {
           onFinishEdit : myFinishEditListener,
@@ -105,9 +99,6 @@ function insertValue(fieldName) {
   var div = jQuery('<li class=\"editable\" id="'+unique_id+'" name="salt_document[' + fieldName + '][' + new_value_index + ']"><a href="javascript:void();" onClick="removeFieldValue(this);" class="destructive"><img src="/plugin_assets/hydra_repository/images/delete.png" border="0" /></a><span class="flc-inlineEdit-text"></span></li>');
   div.appendTo(values_list); 
   var newVal = fluid.inlineEdit("#"+unique_id, {
-    componentDecorators: {
-      type: "fluid.undoDecorator" 
-    },
     listeners : {
       onFinishEdit : myFinishEditListener,
       modelChanged : myModelChangedListener
@@ -140,9 +131,6 @@ function insertValue(fieldName) {
         FCKEditor: {
           BasePath: "/javascripts/fckeditor/", 
           ToolbarSet: "Basic"
-        },
-        componentDecorators: {
-          type: "fluid.undoDecorator" 
         },
         listeners : {
           onFinishEdit : myFinishEditListener,

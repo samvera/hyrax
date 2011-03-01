@@ -80,7 +80,7 @@ dl dt {
 	clear: left; 
 	float:left;
 	width:10em;
-	text-align: right;
+	text-align: left;
 	font-weight: bold;
 	font-size: .9em;
 	margin-top: 1.7em;
@@ -219,8 +219,8 @@ a.destructive {
 	overflow:hidden;
 	border-bottom: none;
   position: absolute;
-	top: 1px;
-	right: -25px;	
+	top: 0px;
+	right: 0px;	
 	width: 20px;
 } 
 
