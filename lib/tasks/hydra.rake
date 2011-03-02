@@ -132,7 +132,9 @@ namespace :hydra do
         "hydrangea:fixture_mods_article2",
         "hydrangea:fixture_uploaded_svg1",
         "hydrangea:fixture_archivist_only_mods_article",
-        "hydrangea:fixture_mods_dataset1"
+        "hydrangea:fixture_mods_dataset1",
+        "hydrus:admin_class1",
+        "hydrus:test_object1"
     ]
 
     desc "Load default Hydra fixtures"
