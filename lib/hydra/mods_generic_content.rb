@@ -21,7 +21,7 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
 
 	# mods:physicaldescription/mods:extent - used for storing file size in human-readable form.
 	t.physical_description(:path => "physicalDescription") {
-	  t.extent( :path => "extent", :proxy=> :extent)
+	  t.extent( :path => "extent")
 	}
 	  
 	# This is a mods:name.  The underscore is purely to avoid namespace conflicts.
