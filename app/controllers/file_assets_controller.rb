@@ -22,7 +22,6 @@ class FileAssetsController < ApplicationController
     else
       # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
       @solr_result = FileAsset.find_by_solr(:all)
-      puts @solr_result.inspect
     end
     render :action=>params[:action], :layout=>layout
   end

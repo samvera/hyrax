@@ -6,7 +6,7 @@ class AssetsController < ApplicationController
     include Hydra::RepositoryController
     include Hydra::AssetsControllerHelper
     include WhiteListHelper
-    include LibraHelper
+    include ReleaseProcessHelper
     
     
     include Blacklight::CatalogHelper

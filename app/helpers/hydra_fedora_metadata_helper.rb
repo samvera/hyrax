@@ -6,6 +6,7 @@ module HydraFedoraMetadataHelper
   def fedora_text_field(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    field_values = [""] if field_values.empty?
     if opts.fetch(:multiple, true)
       container_tag_type = :li
     else
@@ -44,6 +45,7 @@ module HydraFedoraMetadataHelper
   def fedora_textile_text_area(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    field_values = [""] if field_values.empty?
     if opts.fetch(:multiple, true)
       container_tag_type = :li
     else
@@ -51,7 +53,7 @@ module HydraFedoraMetadataHelper
       container_tag_type = :span
     end
     body = ""
-
+    
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
@@ -73,7 +75,6 @@ module HydraFedoraMetadataHelper
     else
       result << body
     end
-    
     return result
     
   end
@@ -168,19 +169,24 @@ module HydraFedoraMetadataHelper
     result = ""
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
     h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
-    logger.debug "\n\nFIELD_VALUES: #{field_values.inspect}\n\n"
     
     v_name = field_key.last.to_s
 
     checked = field_values.first.downcase == "yes" ? "checked" : ""
-    logger.debug "CHECKED: #{checked}"
     
     result = field_selectors_for(datastream_name, field_key)
     
+    # adding so that customized checked and unchecked values can be passed in
+    checked_value = (opts[:default_values] && opts[:default_values][:checked]) ? opts[:default_values][:checked] : "yes"
+    unchecked_value = (opts[:default_values] && opts[:default_values][:unchecked]) ? opts[:default_values][:unchecked] : "no"
+
+    result << tag(:input, :type=>"hidden", :id=>"#{h_name}_checked_value", :value=>checked_value )
+    result << tag(:input, :type=>"hidden", :id=>"#{h_name}_unchecked_value", :value=>unchecked_value )
+    
     if field_values.first.downcase == "yes"
-      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"yes", :checked=>"checked")
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>checked_value, :checked=>"checked")
     else
-      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>"no")
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>unchecked_value)
     end
     return result
   end
