@@ -6,6 +6,7 @@ class AssetsController < ApplicationController
     include Hydra::RepositoryController
     include Hydra::AssetsControllerHelper
     include WhiteListHelper
+    include LibraHelper
     
     
     include Blacklight::CatalogHelper
@@ -55,7 +56,9 @@ class AssetsController < ApplicationController
       @document = af_model.find(params[:id])
             
       updater_method_args = prep_updater_method_args(params)
-    
+      @document.update_from_computing_id(params)
+      check_embargo_date_format
+      
       logger.debug("attributes submitted: #{updater_method_args.inspect}")
       # this will only work if there is only one datastream being updated.
       # once ActiveFedora::MetadataDatastream supports .update_datastream_attributes, use that method instead (will also be able to pass through params["asset"] as-is without usin prep_updater_method_args!)
@@ -102,9 +105,16 @@ class AssetsController < ApplicationController
     end
     
     def destroy
-      ActiveFedora::Base.load_instance(params[:id]).delete
-
-      flash[:notice]= "Deleted " + params[:id]
+      af = ActiveFedora::Base.load_instance_from_solr(params[:id])
+      the_model = ActiveFedora::ContentModel.known_models_for( af ).first
+      unless the_model.nil?
+        af = the_model.load_instance_from_solr(params[:id])
+        assets = af.destroy_child_assets
+      end
+      af.delete
+      msg = "Deleted #{params[:id]}"
+      msg.concat(" and associated file_asset(s): #{assets.join(", ")}") unless assets.empty?
+      flash[:notice]= msg
       redirect_to url_for(:action => 'index', :controller => "catalog", :q => nil , :f => nil)
     end
     
