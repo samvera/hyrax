@@ -482,11 +482,11 @@ class ModsImage < ActiveFedora::NokogiriDatastream
         ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
       end
 
-      def to_solr(solr_doc=Solr::Document.new)
+      def to_solr(solr_doc=Hash.new)
         super(solr_doc)
-        extract_person_full_names.each {|pfn| solr_doc << pfn }
-        extract_person_organizations.each {|org| solr_doc << org }
-        solr_doc << {:object_type_facet => "Image"}
+        solr_doc.merge!(extract_person_full_names)
+        solr_doc.merge!(extract_person_organizations)
+        solr_doc.merge!(:object_type_facet => "Image")
         solr_doc
       end
 
