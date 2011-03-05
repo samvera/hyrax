@@ -3,9 +3,9 @@
 # == Methods
 # 
 # extract_person_full_names
-#   This method returns an array of Solr::Field objects which combine Lastname, Firstname
+#   This method returns a Hash of person_full_name_facet values which combine Lastname, Firstname
 # extract_person_organizations
-#   This method returns an array of Solr::Field objects which extract the persons affiliation and puts it in an mods_organization_facet
+#   This method returns a Hash of person_full_name_facet values which extract the persons affiliation and puts it in an mods_organization_facet
 
 module Hydra::CommonModsIndexMethods
   # Extracts the first and last names of persons and creates Solr::Field objects with for person_full_name_facet
