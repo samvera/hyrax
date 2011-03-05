@@ -3,8 +3,9 @@ module CatalogHelper
   include Blacklight::SolrHelper
   
   def format_date date
-    date.strftime("%Y-%m-%d %I:%M%p").gsub(" 0", " ").gsub(/([AP])M/,'\1').downcase
+   date.strftime("%b. %e, %Y")
   end
+  
   def depositor_string depositor=nil
     "#{depositor}" unless depositor.nil? 
   end
