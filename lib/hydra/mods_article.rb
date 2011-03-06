@@ -1,70 +1,79 @@
 module Hydra
-class ModsArticle < ActiveFedora::NokogiriDatastream       
-  include Hydra::CommonModsIndexMethods
-
-  set_terminology do |t|
-    t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
-
-    t.title_info(:path=>"titleInfo") {
-      t.main_title(:path=>"title", :label=>"title")
-      t.language(:index_as=>[:facetable],:path=>{:attribute=>"lang"})
-    } 
-    t.title(:proxy=>[:title_info, :main_title]) 
-    
-    t.language{
-      t.lang_code(:index_as=>[:facetable], :path=>"languageTerm", :attributes=>{:type=>"code"})
-    }
-    t.abstract   
-    t.subject {
-      t.topic(:index_as=>[:facetable])
-    }      
-    t.topic_tag(:proxy=>[:subject, :topic])
-    # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
-    t.name_ {
-      # this is a namepart
-      t.namePart(:type=>:string, :label=>"generic name")
-      # affiliations are great
-      t.affiliation
-      t.institution(:path=>"affiliation", :index_as=>[:facetable], :label=>"organization")
-      t.displayForm
-      t.role(:ref=>[:role])
-      t.description
-      t.date(:path=>"namePart", :attributes=>{:type=>"date"})
-      t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
-      t.first_name(:path=>"namePart", :attributes=>{:type=>"given"}, :label=>"first name")
-      t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"})
-    }
-    # lookup :person, :first_name        
-    t.person(:ref=>:name, :attributes=>{:type=>"personal"}, :index_as=>[:facetable])
-    t.organization(:ref=>:name, :attributes=>{:type=>"corporate"}, :index_as=>[:facetable])
-    t.conference(:ref=>:name, :attributes=>{:type=>"conference"}, :index_as=>[:facetable])
-    t.role {
-      t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
-      t.code(:path=>"roleTerm",:attributes=>{:type=>"code"})
-    }
-    t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
-      t.title_info(:index_as=>[:facetable],:ref=>[:title_info])
-      t.origin_info(:path=>"originInfo") {
-        t.publisher
-        t.date_issued(:path=>"dateIssued")
-      }
-      t.issn(:path=>"identifier", :attributes=>{:type=>"issn"})
-      t.issue(:path=>"part") {
-        t.volume(:path=>"detail", :attributes=>{:type=>"volume"}, :default_content_path=>"number")
-        t.level(:path=>"detail", :attributes=>{:type=>"number"}, :default_content_path=>"number")
-        t.extent
-        t.pages(:path=>"extent", :attributes=>{:unit=>"pages"}) {
-          t.start
-          t.end
-        }
-        t.start_page(:proxy=>[:pages, :start])
-        t.end_page(:proxy=>[:pages, :end])
-        t.publication_date(:path=>"date")
-      }
-    }
-  end
+  require_dependency 'vendor/plugins/hydra_repository/lib/hydra/mods_article.rb'
   
-    # accessor :title, :term=>[:mods, :title_info, :main_title]
+  class ModsArticle < ActiveFedora::NokogiriDatastream       
+    include Hydra::CommonModsIndexMethods
+    include Uva::ModsIndexMethods
+
+    set_terminology do |t|
+      t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
+
+      t.title_info(:path=>"titleInfo") {
+        t.main_title(:index_as=>[:facetable],:path=>"title", :label=>"title")
+        t.language(:index_as=>[:facetable],:path=>{:attribute=>"lang"})
+      } 
+      t.language{
+        t.lang_code(:index_as=>[:facetable], :path=>"languageTerm", :attributes=>{:type=>"code"})
+      }
+      t.abstract   
+      t.subject {
+        t.topic(:index_as=>[:facetable])
+      }      
+      t.topic_tag(:proxy=>[:subject, :topic])    
+      # t.topic_tag(:index_as=>[:facetable],:path=>"subject", :default_content_path=>"topic")
+      # This is a mods:name.  The underscore is purely to avoid namespace conflicts.
+      t.name_ {
+        # this is a namepart
+        t.namePart(:type=>:string, :label=>"generic name")
+        # affiliations are great
+        t.affiliation
+        t.institution(:path=>"affiliation", :index_as=>[:facetable], :label=>"organization")
+        t.displayForm
+        t.role(:ref=>[:role])
+        t.description(:index_as=>[:facetable])
+        t.date(:path=>"namePart", :attributes=>{:type=>"date"})
+        t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
+        t.first_name(:path=>"namePart", :attributes=>{:type=>"given"}, :label=>"first name")
+        t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"})
+        t.computing_id
+      }
+      # lookup :person, :first_name        
+      t.person(:ref=>:name, :attributes=>{:type=>"personal"}, :index_as=>[:facetable])
+      t.department(:proxy=>[:person,:description],:index_as=>[:facetable])
+      t.organization(:ref=>:name, :attributes=>{:type=>"corporate"}, :index_as=>[:facetable])
+      t.conference(:ref=>:name, :attributes=>{:type=>"conference"}, :index_as=>[:facetable])
+      t.role {
+        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
+        t.code(:path=>"roleTerm",:attributes=>{:type=>"code"})
+      }
+      t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
+        t.title_info(:index_as=>[:facetable],:ref=>[:title_info])
+        t.origin_info(:path=>"originInfo") {
+          t.publisher
+          t.date_issued(:path=>"dateIssued")
+          t.issuance(:index_as=>[:facetable])
+        }
+        t.issn(:path=>"identifier", :attributes=>{:type=>"issn"})
+        t.issue(:path=>"part") {
+          t.volume(:path=>"detail", :attributes=>{:type=>"volume"}, :default_content_path=>"number")
+          t.level(:path=>"detail", :attributes=>{:type=>"number"}, :default_content_path=>"number")
+          t.extent
+          t.pages(:path=>"extent", :attributes=>{:unit=>"pages"}) {
+            t.start
+            t.end
+          }
+          t.start_page(:proxy=>[:pages, :start])
+          t.end_page(:proxy=>[:pages, :end])
+          t.publication_date(:path=>"date")
+        }
+      }
+      t.note
+      t.location(:path=>"location") {
+        t.url (:path=>"url")
+      }
+      t.publication_url(:proxy=>[:location,:url])
+      t.peer_reviewed(:proxy=>[:journal,:origin_info,:issuance], :index_as=>[:facetable])
+    end
     
     # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
     def self.xml_template
@@ -80,8 +89,10 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                xml.namePart(:type=>"given")
                xml.namePart(:type=>"family")
                xml.affiliation
+               xml.computing_id
+               xml.description
                xml.role {
-                 xml.roleTerm(:authority=>"marcrelator", :type=>"text")
+                 xml.roleTerm("Author", :authority=>"marcrelator", :type=>"text")
                }
              }
              xml.typeOfResource
@@ -101,6 +112,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
                xml.originInfo {
                  xml.publisher
                  xml.dateIssued
+                 xml.issuance
                }
                xml.part {
                  xml.detail(:type=>"volume") {
@@ -122,7 +134,7 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
         }
       end
       return builder.doc
-    end    
+    end
     
     # Generates a new Person node
     def self.person_template
@@ -131,14 +143,16 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
           xml.namePart(:type=>"family")
           xml.namePart(:type=>"given")
           xml.affiliation
+          xml.computing_id
+          xml.description
           xml.role {
-            xml.roleTerm(:type=>"text")
+            xml.roleTerm("Author", :type=>"text")
           }
         }
       end
       return builder.doc.root
     end
-   
+
     def self.full_name_template
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.full_name(:type => "personal")
@@ -473,15 +487,17 @@ class ModsArticle < ActiveFedora::NokogiriDatastream
         ["data", "supporting file", "profile", "lorem ipsum", "dolor"]
       end
 
-      def to_solr(solr_doc=Hash.new)
-        super(solr_doc)
-        solr_doc.merge!(extract_person_full_names)
-        solr_doc.merge!(extract_person_organizations)
-        # extract_person_full_names.each {|pfn| solr_doc << pfn }
-        # extract_person_organizations.each {|org| solr_doc << org }
-        solr_doc.merge!(:object_type_facet => "Article")
-        solr_doc
-      end
+    def to_solr(solr_doc=Hash.new)
+      super(solr_doc)
+      
+      extract_person_full_names.each_pair {|n,v| ::Solrizer::Extractor.insert_solr_field_value(solr_doc, n, v) }
+      extract_person_organizations.each_pair {|n,v| ::Solrizer::Extractor.insert_solr_field_value(solr_doc, n, v) }
+      extract_person_full_names_and_computing_ids.each_pair {|n,v| ::Solrizer::Extractor.insert_solr_field_value(solr_doc, n, v) }
+      
+      ::Solrizer::Extractor.insert_solr_field_value(solr_doc, "object_type_facet", "Article")
+      ::Solrizer::Extractor.insert_solr_field_value(solr_doc, "mods_journal_title_info_facet", "Unknown") if solr_doc["mods_journal_title_info_facet"].nil? || solr_doc["mods_journal_title_info_facet"].blank?
 
+      solr_doc
     end
+  end
 end
