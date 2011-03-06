@@ -1,29 +1,34 @@
-<% @page_title = "#{document_show_html_title} - #{application_name}" %>
+<%-
+  doc_title = (document_show_html_title.nil? || document_show_html_title.empty?) ? @document[:id] : document_show_html_title.first
+  @page_title = "#{doc_title} - #{application_name}" 
+-%>
+<% if !editor? %>
 <div id="showHead">
   <div id="showUtils">
   <div class="tools"><%= render :partial => 'show_tools' %></div>
-    <span class="back_to_cat"><%= link_back_to_catalog :label=>'&laquo; Back to Results' %></span>
+    <span class="back_to_cat"><%= link_back_to_catalog :label=>'&larr; Return to search results' %></span>
     <% if @previous_document || @next_document %>
       <div id="previousNextDocument">
 	    <span class="previous"><%= link_to_previous_document(@previous_document) %></span>
     <% end %>
     <%- if session[:search][:counter].to_i > 0 -%>
-      #<%= session[:search][:counter].to_i %> of <%= format_num(session[:search][:total]) %>
+      <%= session[:search][:counter].to_i %> of <%= format_num(session[:search][:total]) %>
     <%- end -%>
     <% if @previous_document || @next_document %>
 	    <span class="next"><%= link_to_next_document(@next_document)%></span>	
       </div>
     <% end %>
-    <span class="edit-browse">
-      <% if editor? %>
-        <%= edit_and_browse_links %>
-      <% end -%>
-    </span>
   </div>
 </div>
-<div id="document">
+<% end %>
+<% if editor? %>
+	<span class="edit-browse">
+		<%= edit_and_browse_links %>
+	</span>
+<% end -%>
+<div id="document" class="<%= controller.action_name == "edit" ? "document_edit" : "document_show" %>">
   <div id="doc_<%= @document[:id] %>">
-    <h1 class="document_heading"><%= h(document_heading) %><br/><%= h(vern_document_heading) %></h1>
+    <h1><%= h(document_heading) %><br/><%= h(vern_document_heading) %></h1>
     <div class="document">
       <%= render_document_partial @document, params["action"] %>
     </div>

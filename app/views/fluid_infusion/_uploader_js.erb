@@ -22,11 +22,15 @@
                   onFileSuccess: function (file, serverData){},
       			 
                   afterUploadComplete: function () {
+                    
                       // first check to see if the file queue is empty and there haven't been any errors
                       if (myUploader.uploadManager.queue.getReadyFiles().length === 0 && myUploader.uploadManager.queue.getErroredFiles().length === 0) {
+                          // Custom for UVA Libra -- triggers update of File Uploaded indicator in progress box
+                          //$.fn.hydraProgressBox.checkUncheckProgress('pbFileUploaded', true);                          
                           async_load('<%= "/assets/#{params[:container_id]}/file_assets"%>', '#uploads'); 
                           $("#file_assets  .editable-container").hydraTextField();
                       }
+  
                   }
               },
       

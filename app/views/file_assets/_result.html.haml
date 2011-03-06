@@ -1,25 +1,10 @@
 %tr.file_asset{:id=>result["id"]}
   %td
-  %td
     =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
-    - @file_asset = FileAsset.load_instance(result["id"])
-  %td
-    %form#document_metadata{:action=>url_for(:id=>result["id"], :controller=>"assets", :action=>"update"), :method=>"post"}
-      %input#content_type{:type=>"hidden", :name=>"content_type", :value=>"file_asset"}
-      = fedora_select(@file_asset, "descMetadata", :type, :choices => ["data", "supporting file", "profile", "lorem ipsum", "dolor"])
-  %td
-    %form#document_metadata{:action=>url_for(:id=>result["id"], :controller=>"assets", :action=>"update"), :method=>"post"}
-      %input#content_type{:type=>"hidden", :name=>"content_type", :value=>"file_asset"}
-      = fedora_text_field(@file_asset, "descMetadata", [:description], :multiple=>false)
-  %td
-    =result[solr_name("extent", :text)]
-  %td
-    - dt = DateTime.parse(result[ solr_name("system_create", :date)] )
-    = dt.strftime("%Y-%m-%d %I:%M%p UTC")
   %td
     - if editor?
       - if @container.nil?
         - file_asset_url = file_asset_path(result["id"])
       - else
         - file_asset_url = asset_file_asset_path(@container.pid, result["id"])        
-      %a.destroy_file_asset{:href=>file_asset_url, :title=>"Remove file"} X
+      %a.destroy_file_asset{:href=>file_asset_url, :title=>"Remove file"} Delete

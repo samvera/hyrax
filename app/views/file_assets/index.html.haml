@@ -1,45 +1,37 @@
-- if params[:layout] == "false"
-  :javascript
-      $(document).ready(function() {
-        $("#file_assets  .editable-container").hydraTextField();
-      });
-- else
-  -# javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
-  -# javascript_includes << ['../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', {:cache=>true, :plugin=>"fluid-infusion"}]
-  
-  - javascript_includes << ["jquery.jeditable.mini.js", "jquery.form.js", 'custom', "catalog/edit", "jquery.hydraMetadata.js", {:plugin=>:hydra_repository}]
-  - javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
-
-  - extra_head_content << capture do 
+-unless params[:deletable] == "true"
+  - if params[:layout] == "false"
     :javascript
-      $(document).ready(function() {
-        $("#file_assets  .editable-container").hydraTextField();
-      });
+        $(document).ready(function() {
+          $("#file_assets  .editable-container").hydraTextField();
+        });
+  - else
+    -# javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
+    -# javascript_includes << ['../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', {:cache=>true, :plugin=>"fluid-infusion"}]
+    
+    - javascript_includes << "jquery.jeditable.mini"
+    - javascript_includes << 'custom'
+    - javascript_includes << "catalog/edit"
+    - javascript_includes << "jquery.hydraMetadata.js"  
+    - javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
+    - javascript_includes << "jquery.form.js"
+
+    - extra_head_content << capture do 
+      :javascript
+        $(document).ready(function() {
+          $("#file_assets  .editable-container").hydraTextField();
+        });
 
 - unless @solr_result.hits.empty?
-  %table#file_assets.multipleEdit
-    %col{:width=>"10%"}/
-    %col{:width=>"25%"}/
-    %col{:width=>"25%"}/
-    %col{:width=>"30%"}/  
-    %col{:width=>"8%"}/
-    %col{:width=>"22%"}/
-    %col{:width=>"5%"}/
-
-    %tr
-      %th Primary
-      %th File
-      %th Type
-      %th Description
-      %th Size
-      %th Uploaded
-      %th
-    
-    =render :partial=>'result', :collection=>@solr_result.hits
+  -if params[:deletable] == "true"
+    %ul
+      =render :partial=>'deletable_result', :collection=>@solr_result.hits
+  -else
+    %table#file_assets.multipleEdit
+      %tr
+        %th File
+        %th   
+      =render :partial=>'result', :collection=>@solr_result.hits
 
 - if !@document.nil? && editor?
   %div#uploader
     = render :partial=>"new", :layout=>false
-  
-  %a#toggle-uploader{:href => ""}
-    Hide file uploader

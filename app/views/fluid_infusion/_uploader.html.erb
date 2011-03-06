@@ -1,4 +1,4 @@
-<%= stylesheet_link_tag '../infusion/framework/fss/css/fss-layout.css', '../infusion/components/uploader/css/Uploader.css', :plugin=>"fluid-infusion" %>
+<%= stylesheet_link_tag '../infusion/framework/fss/css/fss-layout.css', :plugin=>"fluid-infusion" %>
 
 <%#=javascript_include_tag '../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', :cache=>true, :plugin=>"fluid-infusion" %>
 
@@ -25,22 +25,6 @@
         <!-- The file queue -->
         <div class="fl-uploader-queue-wrapper">
             
-            <!-- Top of the queue -->
-            <div class="fl-uploader-queue-header">
-                <table cellspacing="0" cellpadding="0" summary="Headers for the file queue.">
-                    <caption>File Upload Queue:</caption>
-
-                        <tr>
-                            <th scope="col" class="fl-uploader-file-name">File Name</th>
-							<th scope="col" class="fl-uploader-file-metadata-type">Type</th>
-							<th scope="col" class="fl-uploader-file-metadata-value">Description</th>
-                            <th scope="col" class="fl-uploader-file-size">Size&nbsp;&nbsp;</th>
-                            <th scope="col" class="fl-uploader-file-actions">&nbsp;</th>
-                        </tr>
-
-                </table>
-            </div>
-            
             <!-- Scrollable view -->
             <div class="flc-scroller fl-scroller">
                 <div class="fl-scroller-inner">
@@ -51,22 +35,8 @@
                             <!-- Template markup for the file queue rows -->
                             <tr class="flc-uploader-file-tmplt flc-uploader-file fl-uploader-hidden-templates">
                                 <th class="flc-uploader-file-name fl-uploader-file-name" scope="row">File Name Placeholder</th>
-                                <td class="flc-uploader-metadata-type fl-uploader-metadata-type">
 
-									<select id="asset_descMetadata_type" name="asset[descMetadata][type][0]">
-										<option value="data">data</option>
-										<option value="supporting file">supporting file</option>
-										<option value="profile">profile</option>
-										<option value="lorem ipsum">lorem ipsum</option>
-										<option value="dolor">dolor</option>
-									</select>
 
-									
-								</td>
-                                <td class="flc-uploader-metadata-value fl-uploader-metadata-value">
-									<input id="asset_descMetadata_description" name="asset[descMetadata][description][0]" size="30" value="" type="text">
-									
-								</td>
                                 <td class="flc-uploader-file-size fl-uploader-file-size">0 KB</td>
                                 <td class="fl-uploader-file-actions">
                                     <button type="button" class="flc-uploader-file-action fl-uploader-file-action" title="Remove File" tabindex="-1">
@@ -85,9 +55,7 @@
                 </div>
             </div>
             
-            <div class="flc-uploader-browse-instructions fl-uploader-browse-instructions">
-                Choose <em>Browse files</em> to add files to the queue 
-            </div>
+            <div class="flc-uploader-browse-instructions fl-uploader-browse-instructions"></div>
 
             <!-- Foot of the queue -->
             <div class="flc-uploader-queue-footer fl-uploader-queue-footer">
@@ -95,11 +63,11 @@
 
                         <tr>
                             <td class="flc-uploader-total-progress-text">
-                                Total: <span class="fl-uploader-totalFiles">0</span> files 
-                                (<span class="fl-uploader-totalBytes">0 KB</span>)
+                                <!-- Total: <span class="fl-uploader-totalFiles">0</span> files 
+                                (<span class="fl-uploader-totalBytes">0 KB</span>) -->
                             </td>
                             <td class=".fl-uploader-footer-buttons" align="right" >
-                                <a href="#" class="flc-uploader-button-browse fl-uploader-browse">Browse files</a>
+                                <a href="#" class="flc-uploader-button-browse fl-uploader-browse">Add Files</a>
                             </td>
                         </tr>
 
@@ -111,7 +79,7 @@
         
         <!-- Action buttons -->
         <div class="fl-uploader-btns">
-            <button type="button" class="flc-uploader-button-pause fl-uploader-pause fl-uploader-hidden">Stop Upload</button><button type="button" class="flc-uploader-button-upload fl-uploader-upload fl-uploader-button-default fl-uploader-dim" disabled="disabled">Upload</button>
+            <button type="button" class="flc-uploader-button-pause fl-uploader-pause fl-uploader-hidden">Stop Upload</button><button type="button" class="flc-uploader-button-upload fl-uploader-upload fl-uploader-button-default fl-uploader-dim ui-button ui-widget ui-state-default" disabled="disabled">Upload</button>
         </div>
     </form>
 	
