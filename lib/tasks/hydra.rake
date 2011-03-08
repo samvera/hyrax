@@ -30,6 +30,31 @@ namespace :hydra do
     end
   end
   
+  desc "Delete a range of objects in a given namespace.  ie 'rake hydra:purge_range[demo, 22, 50]' will delete demo:22 through demo:50"
+  task :purge_range => :environment do |t, args|
+    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
+    ActiveFedora.init unless Thread.current[:repo]
+    
+    namespace = ENV["namespace"]
+    start_point = ENV["start"].to_i
+    stop_point = ENV["stop"].to_i
+    unless start_point < stop_point 
+      raise StandardError "start point must be less that end point."
+    end
+    puts "Deleting #{stop_point - start_point} objects from #{namespace}:#{start_point.to_s} to #{namespace}:#{stop_point.to_s}"
+    i = start_point
+    while i <= stop_point do
+      pid = namespace + ":" + i.to_s
+      begin
+        ActiveFedora::Base.load_instance(pid).delete
+      rescue ActiveFedora::ObjectNotFoundError
+        # The object has already been deleted (or was never created).  Do nothing.
+      end
+      puts "Deleted '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      i += 1
+    end
+  end
+  
   desc "Export the object identified by pid into spec/fixtures. Example:rake hydra:harvest_fixture pid=druid:sb733gr4073 source=http://fedoraAdmin:fedoraAdmin@127.0.0.1:8080/fedora"
   task :harvest_fixture => :environment do
         
