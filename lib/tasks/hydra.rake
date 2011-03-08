@@ -3,6 +3,7 @@ require "solrizer-fedora"
 
 namespace :hydra do
   
+  
   desc "Delete and re-import the fixture identified by pid" 
   task :refresh_fixture => [:delete,:import_fixture]
   
@@ -52,6 +53,12 @@ namespace :hydra do
       end
       puts "Deleted '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
       i += 1
+    end
+  end
+
+  namespace :fixtures do
+    desc "Refresh the fixtures applicable to this hydra head"
+    task :refresh => ["hydra:default_fixtures:refresh", "libra_oa:default_fixtures:refresh"] do
     end
   end
   
