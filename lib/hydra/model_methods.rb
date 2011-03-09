@@ -84,11 +84,13 @@ module Hydra::ModelMethods
     person = Ldap::Person.new(computing_id)
     desc_ds = self.datastreams_in_memory["descMetadata"]
     return if desc_ds.nil?
-    desc_ds.find_by_terms(:person, :computing_id)[person_number].content = person.computing_id
+    if desc_ds.class.terminology.has_term?(:person, :computing_id)
+      desc_ds.find_by_terms(:person, :computing_id)[person_number].content = person.computing_id
+    end    
     desc_ds.find_by_terms(:person, :first_name)[person_number].content = person.first_name
     desc_ds.find_by_terms(:person, :last_name)[person_number].content = person.last_name
     desc_ds.find_by_terms(:person, :institution)[person_number].content = person.institution    
-    desc_ds.find_by_terms(:person, :description)[person_number].content = person.department
+    desc_ds.find_by_terms(:person, :description)[person_number].content = person.department unless desc_ds.find_by_terms(:person, :description)[person_number].nil?
   end
   
 
