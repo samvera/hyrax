@@ -31,18 +31,20 @@ namespace :libra_oa do
       LIBRA_OA_FIXTURE_FILES.each_with_index do |fixture,index|
         ENV["pid"] = nil
         ENV["fixture"] = "#{Rails.root}/spec/fixtures/libra-oa/#{fixture}"
-        puts ENV["fixture"] 
-        Rake::Task["hydra:import_fixture"].invoke if index == 0
-        Rake::Task["hydra:import_fixture"].execute if index > 0
+        # logger.debug ENV["fixture"] 
+        if index == 0
+          Rake::Task["hydra:import_fixture"].invoke 
+        elsif index > 0
+          Rake::Task["hydra:import_fixture"].execute
+        end 
       end
       LIBRA_OA_FIXTURES.each_with_index do |fixture,index|
         ENV["PID"] = fixture
-        Rake::Task["solrizer:fedora:solrize"].invoke if index == 0
-        Rake::Task["solrizer:fedora:solrize"].execute if index > 0
-      end
-      LIBRA_OA_FIXTURES.each_with_index do |fixture,index|
-        ENV["PID"] = fixture
-        Rake::Task["solrizer:fedora:solrize"].execute
+        if index == 0
+          Rake::Task["solrizer:fedora:solrize"].invoke 
+        elsif index > 0
+          Rake::Task["solrizer:fedora:solrize"].execute
+        end
       end
     end
 
@@ -50,8 +52,6 @@ namespace :libra_oa do
     task :delete do
       LIBRA_OA_FIXTURES.each_with_index do |fixture,index|
         ENV["pid"] = fixture
-        puts "deleting #{fixture}"
-        puts "#{ENV["pid"]}"
         Rake::Task["hydra:delete"].invoke if index == 0
         Rake::Task["hydra:delete"].execute if index > 0
       end

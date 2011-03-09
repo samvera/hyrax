@@ -97,11 +97,11 @@ namespace :hydra do
     # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
     ActiveFedora.init unless Thread.current[:repo]
     
-    if !ENV["pid"].nil?
+    if !ENV["fixture"].nil? 
+      filename = ENV["fixture"]
+    elsif !ENV["pid"].nil?
       pid = ENV["pid"]
       filename = File.join("spec","fixtures","#{pid.gsub(":","_")}.foxml.xml")
-    elsif !ENV["fixture"].nil? 
-      filename = ENV["fixture"]
     else
       puts "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=spec/fixtures/demo_12.foxml.xml"
     end
