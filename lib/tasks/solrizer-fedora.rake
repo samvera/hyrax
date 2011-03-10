@@ -30,6 +30,15 @@ namespace :solrizer do
       solrizer.solrize_objects
       puts "Solrizer task complete."
     end  
+    
+    desc 'Remove fedora-system objects from index'
+    task :forget_system_objects => :environment do
+      objects = ::Fedora::Repository.instance.find_objects("pid~fedora-system:*")
+      objects.each do |obj|
+        logger.debug "Deleting solr doc for #{obj.pid} from #{ActiveFedora.solr_config[:url]}"
+        ActiveFedora::SolrService.instance.conn.delete(obj.pid) 
+      end
+    end
   end
   
 end
