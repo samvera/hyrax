@@ -9,7 +9,6 @@ require_plugin_dependency "vendor/plugins/blacklight/app/controllers/application
 class ApplicationController
   
   include HydraAccessControlsHelper
-  
   helper :all
   helper :hydra_access_controls, :hydra_djatoka, :downloads, :hydra, :hydra_fedora_metadata, :hydra_assets
   helper :generic_content_objects, :personalization
