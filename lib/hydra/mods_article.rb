@@ -1,5 +1,4 @@
 module Hydra
-  require_dependency 'vendor/plugins/hydra_repository/lib/hydra/mods_article.rb'
   
   class ModsArticle < ActiveFedora::NokogiriDatastream       
     include Hydra::CommonModsIndexMethods
@@ -69,7 +68,7 @@ module Hydra
       }
       t.note
       t.location(:path=>"location") {
-        t.url (:path=>"url")
+        t.url(:path=>"url")
       }
       t.publication_url(:proxy=>[:location,:url])
       t.peer_reviewed(:proxy=>[:journal,:origin_info,:issuance], :index_as=>[:facetable])
