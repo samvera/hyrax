@@ -1,0 +1,10 @@
+<% form_for @user_session do |f| %>
+  <div class="row"><%= f.label :login %> <%= f.text_field :login %></div>
+  <div class="row"><%= f.label :password %> <%= f.password_field :password %></div>
+  <% if @redirect_params %>
+    <%= hidden_field_tag "redirect_action", @redirect_params[:action] %> 
+    <%= hidden_field_tag "redirect_controller", @redirect_params[:controller] %> 
+    <%= hidden_field_tag "redirect_content_type", @redirect_params[:content_type] %> 
+  <% end %>
+  <div class="row submit"><%= f.submit 'Login' %></div>
+<% end %>

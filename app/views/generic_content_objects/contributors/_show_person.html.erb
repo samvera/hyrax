@@ -1,0 +1,38 @@
+<% person = show_person %>
+<% person_counter = show_person_counter %>
+<% person_name = "#{get_values_from_datastream(@document_fedora,'descMetadata', [{:person=>person_counter}, :first_name])} #{get_values_from_datastream(@document_fedora,'descMetadata', [{:person=>person_counter}, :last_name])}" %>
+<% base_id = "person_#{person_counter}" %>
+<% unless ( get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name]).first.empty? || get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name]).first.empty? ) %>
+  <li>
+    <dl class="person contributor" id="<%= base_id %>">
+      <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :role]).first.empty? %>
+        <dt>
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :role, :text], "Person's Role:") %>
+          <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :role, :text]) %>
+        </dt>
+      <% end %>
+      <dd class="multi_inline person">
+        <ul>
+          <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name]).first.empty? %>
+            <li class="name_first">
+              <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "First Name") %>
+              <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name]) %>
+            </li>
+          <% end %>
+          <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name]).first.empty? %>
+            <li class="name_last">
+              <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :last_name], "Last Name") %>
+              <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name]) %>
+            </li>
+          <% end %>
+          <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution]).first.empty? %>
+            <li class="affiliation">
+              <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :institution], "Institution") %>
+              <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution]) %>
+            </li>
+          <% end %>
+        </ul>
+      </dd>
+    </dl>
+  </li>
+<% end %>

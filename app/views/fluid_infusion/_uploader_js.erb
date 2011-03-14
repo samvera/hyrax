@@ -1,0 +1,45 @@
+<script type="text/javascript">
+          var myUploader = fluid.progressiveEnhanceableUploader(".flc-uploader", ".fl-progEnhance-basic", {
+                  uploadManager: {
+                 type: "fluid.swfUploadManager",
+      
+                 options: {
+                    // Set the uploadURL to the URL for posting files to your server.
+                    uploadURL: "<%= file_assets_path(:container_id=> params[:container_id], :only_path => false) %>",
+      
+                    // This option points to the location of the SWFUpload Flash object that ships with Fluid Infusion.
+                    flashURL: "<%= image_path("../infusion/lib/swfupload/flash/swfupload.swf", :plugin=>"fluid-infusion") %>"
+               }
+             },
+      
+      listeners: {
+	
+				onFileStart: function(file){	
+					myUploader.uploadManager.swfUploader.addPostParam("asset[descMetadata][type][0]", $('#asset_descMetadata_type').val());
+					myUploader.uploadManager.swfUploader.addPostParam("asset[descMetadata][description][0]", $('#asset_descMetadata_description').val());					
+		},
+
+                  onFileSuccess: function (file, serverData){},
+      			 
+                  afterUploadComplete: function () {
+                    
+                      // first check to see if the file queue is empty and there haven't been any errors
+                      if (myUploader.uploadManager.queue.getReadyFiles().length === 0 && myUploader.uploadManager.queue.getErroredFiles().length === 0) {
+                          // Custom for UVA Libra -- triggers update of File Uploaded indicator in progress box
+                          //$.fn.hydraProgressBox.checkUncheckProgress('pbFileUploaded', true);                          
+                          async_load('<%= "/assets/#{params[:container_id]}/file_assets"%>', '#uploads'); 
+                          $("#file_assets  .editable-container").hydraTextField();
+                      }
+  
+                  }
+              },
+      
+                  decorators: {
+                      type: "fluid.swfUploadSetupDecorator",
+                      options: {
+                          // This option points to the location of the Browse Files button used with Flash 10 clients.
+                          flashButtonImageURL: "<%= image_path("../infusion/components/uploader/images/browse.png", :plugin=>"fluid-infusion") %>"
+                      }
+                  }
+              });
+</script>

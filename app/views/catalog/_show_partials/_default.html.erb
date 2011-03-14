@@ -1,0 +1,23 @@
+<%# default partial to display solr document fields in catalog show view -%>
+
+
+<div class="document_viewer" id="cover_container">
+  <dl class="defList">
+    <%= get_data_with_label(document, "ID:", 'id') %>
+    <dt>Download:</dt>
+    <dd id="downloads">
+	  <ul>
+        <% %>
+      </ul>
+    </dd>
+    <%= get_data_with_label(document, "Copyright:", 'rights_t') %>
+  </dl>
+</div>
+<div class="<%= params[:action]%>_details">
+  <%= render :partial => "#{params[:controller]}/_#{params[:action]}_partials/default_details", :locals => {:document => document}%>
+</div>
+<% sidebar_items << capture do %>
+  <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
+<% end %>
+
+<%= async_load_tag(asset_downloads_path(params[:id]), 'downloads') %>

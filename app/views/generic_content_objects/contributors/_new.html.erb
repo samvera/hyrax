@@ -1,0 +1,10 @@
+<form id="new_contributor" :action=>"http://localhost:3000/assets/#{params[:asset_id]}! /contributors", :method=>"post">
+  <input class="content_type" :type=>"hidden", :name=>"content_type", :value=>params[:content_type] />
+  <label :for=>"contributor_type">Contributor Type</label>
+  <select id="contributor_type" :name=>"contributor_type">
+    <option :value=>"person">Person</option>
+    <option :value=>"organization">Organization</option>
+    <option :value=>"conference">Conference</option>
+  </select>
+  <input :type=>"submit", :value=>"Add Contributor" />
+</form>

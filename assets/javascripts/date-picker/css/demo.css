@@ -1,0 +1,229 @@
+/* DATEPICKER DEMO CSS */
+body
+        {
+        padding:2em 0 0 0;
+        border:0;
+        margin:0;
+        text-align:center;
+        font-size:12px;
+        font-family: verdana,arial,sans-serif;
+        color:#545454;
+        min-width: 800px;
+        }
+p
+        {
+        line-height:1.6em;
+        margin:0 0 1em 0;
+        }
+.fauxhr
+        {
+        margin-top:1em;
+        border-top:1px dotted #bbb;
+        padding-top:1.48em;
+        }
+h1
+        {
+        font-weight:lighter;
+        font-family:georgia, times new roman, times, georgia, palatino, serif;
+        text-align:center;
+        margin-top:0.6em;
+        color:#000;
+        font-size:2em;
+        }
+h2
+        {
+        font-weight:lighter;
+        font-family:verdana,arial,sans-serif;
+        text-align:center;
+        margin-top:1em;
+        color:#333;
+        text-transform:uppercase;
+        letter-spacing:1px;
+        font-size:1.2em;
+        }
+kbd
+        {
+        background-color:#eeeeee;
+        padding:2px;
+        border:1px solid #dddddd;
+        border-bottom-color:#999999;
+        border-left-color:#999999;
+        }
+kbd, code
+        {
+        font-family:'andale mono','lucida console','courier new',monospace;
+        font-size:1em;
+        }
+a
+        {
+        font-weight:normal;
+        outline:none;
+        }
+a:link,
+a:visited
+        {
+        color:#333;
+        text-decoration:underline;
+        }
+a:hover
+        {
+        color:#fff;
+        text-decoration:none;
+        background:#000;
+        }
+a:active
+        {
+        color:#000;
+        text-decoration:underline;
+        }
+form
+        {
+        width:740px;
+        background:#fcfcfc;
+        border:3px double #ccc;
+        text-align:left;
+        padding:10px;
+        margin:0 auto;
+        }
+fieldset
+        {
+        display:block;
+        margin:0;
+        padding:1em 1em 1.5em 1em;
+        }
+form > fieldset
+        {
+        border:1px solid #ccc;
+        margin:0 0 1.6em 0;
+        }
+legend
+        {
+        color:#545454;
+        font-weight:bold;
+        _margin-bottom:1em;
+        }
+label
+        {
+        line-height:1em;
+        margin:0;
+        font-weight:bold;
+        color:#545454;
+        display:inline;
+        }
+input
+        {
+        margin:0;
+        padding:0;
+        border:1px solid #ccc;
+        border-top-color:#aaa;
+        border-left-color:#aaa;
+        /*position:relative;*/
+        height:1.2em;
+        }
+select
+        {
+        margin:0;
+        border:1px solid #ccc;
+        border-top-color:#aaa;
+        border-left-color:#aaa;
+        position:relative;
+        }
+option.alt
+        {
+        background:#eee;
+        }
+.w2em
+        {
+        width:2em;
+        }
+.w3em
+        {
+        width:3em;
+        }
+.w4em
+        {
+        width:4em;
+        }
+.w8em
+        {
+        width:8em;
+        }
+.w16em
+        {
+        width:16em;
+        }
+.w18em
+        {
+        width:18.5em;
+        }
+.firstup
+        {
+        padding-right:2em;
+        }
+.lastup
+        {
+        margin-bottom:0;
+        }
+.al-center
+        {
+        text-align:center;
+        }
+#fd-dp-aria-describedby
+        {
+        width:100%;
+        margin-bottom:1.6em;
+        }
+#fd-dp-aria-describedby th, #fd-dp-aria-describedby td
+        {
+        padding:0.6em 0;
+        border-bottom:1px solid #ccc;
+        vertical-align:top;
+        text-align:left;
+        }
+#fd-dp-aria-describedby th
+        {
+        border-top:1px solid #ccc;
+        }
+table.split-date-wrap
+        {
+        width:auto;
+        margin-bottom:1em;
+        }
+table.split-date-wrap td
+        {
+        padding:0 0.2em 0.4em 0;
+        border-bottom:0 none;
+        }
+table.split-date-wrap td input
+        {
+        margin-right:0.3em;
+        }
+table.split-date-wrap td label
+        {
+        font-size:10px;
+        font-weight:normal;
+        display:block;
+        }
+table td.lastTD input 
+        {
+        margin-right:0;
+        }
+.warning
+        {
+        border:3px solid #a84444;
+        padding:1em;
+        margin-bottom:1.5em;
+        }
+.warning p
+        {         
+        margin:0;
+        }  
+span.longhand-date
+        {  
+        margin-left:1em;        
+        font-style:oblique;       
+        }
+p.bump
+        {
+        margin:0 0 1.5em 0;
+        }

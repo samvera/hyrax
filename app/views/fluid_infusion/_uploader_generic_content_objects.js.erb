@@ -1,0 +1,38 @@
+<script type="text/javascript">
+
+
+    var myUploader = fluid.progressiveEnhanceableUploader(".flc-uploader", ".fl-progEnhance-basic", {
+                  uploadManager: {
+                 type: "fluid.swfUploadManager",
+      
+                 options: {
+                    // Set the uploadURL to the URL for posting files to your server.
+                    uploadURL: "<%= generic_content_object_path(:container_id => params[:id], :only_path => false) %>",
+      
+                    // This option points to the location of the SWFUpload Flash object that ships with Fluid Infusion.
+                    flashURL: "<%= image_path("../infusion/lib/swfupload/flash/swfupload.swf", :plugin=>"fluid-infusion") %>"
+               }
+             },
+      
+      listeners: {
+                  onFileSuccess: function (file, serverData){
+                  },
+      
+                  afterUploadComplete: function () {
+                      // first check to see if the file queue is empty and there haven't been any errors
+                      if (myUploader.uploadManager.queue.getReadyFiles().length === 0 && myUploader.uploadManager.queue.getErroredFiles().length === 0) {
+                          //async_load('<%= "/generic_content_objects/#{params[:container_id]}/content"%>', '#uploads'); 
+                         $("#file_assets  .editable-container").hydraTextField();
+                      }
+                  }
+              },
+      
+                  decorators: {
+                      type: "fluid.swfUploadSetupDecorator",
+                      options: {
+                          // This option points to the location of the Browse Files button used with Flash 10 clients.
+                          flashButtonImageURL: "<%= image_path("../infusion/components/uploader/images/browse.png", :plugin=>"fluid-infusion") %>"
+                      }
+                  }
+              });
+</script>

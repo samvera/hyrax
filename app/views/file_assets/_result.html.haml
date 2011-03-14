@@ -1,0 +1,10 @@
+%tr.file_asset{:id=>result["id"]}
+  %td
+    =link_to result[solr_name("title", :text)], file_asset_path(result["id"])
+  %td
+    - if editor?
+      - if @container.nil?
+        - file_asset_url = file_asset_path(result["id"])
+      - else
+        - file_asset_url = asset_file_asset_path(@container.pid, result["id"])        
+      %a.destroy_file_asset{:href=>file_asset_url, :title=>"Remove file"} Delete
