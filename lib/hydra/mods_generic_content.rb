@@ -104,6 +104,7 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
              xml.subject {
                xml.topic
              }
+             xml.identifier            
              xml.relatedItem(:type=>"host") {
                xml.titleInfo {
                  xml.title
@@ -134,6 +135,7 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
       end
       return builder.doc
     end    
+    
     
     # Generates a new Person node
     def self.person_template

@@ -111,7 +111,7 @@ module Hydra
              xml.subject {
                xml.topic
              }
-             xml.identifer
+             xml.identifier            
              xml.relatedItem(:type=>"host") {
                xml.titleInfo {
                  xml.title

@@ -95,7 +95,7 @@ module Hydra
              xml.subject {
                xml.topic
              }
-             xml.identifer
+             xml.identifier
              xml.note(:type=>"completeness")
              xml.note(:type=>"interval")
              xml.note(:type=>"datatype")
