@@ -14,12 +14,14 @@
 	
 	<%= render 'constraints', :localized_params=>params %>
 	
-	<div class="pagination">
-	  <h2>Results navigation</h2>
-	  <%= will_paginate @response.docs, :page_links => true, :class => 'prev_next_links' %>
-	</div>
-	
+	<div class="pageEntriesInfo">
+    <%= page_entries_info @response.docs, :entry_name=>'item' %>
+    <%=link_to "Start&nbsp;over&thinsp;", catalog_index_path, :id=>"startOverLink" %>
+  </div>
+  
 	<%= render 'sort_and_per_page' %>
+	
+	<%= render 'results_pagination' %>
 	
 	<%= render :partial=>'document_list' %>
 	
@@ -27,9 +29,7 @@
 	  <%= render :partial=>'facets' %>
 	<% end %>
 
-	<div class="pagination">
-	  <%= will_paginate @response.docs, :page_links => true, :class => 'prev_next_links' %>
-	</div>
+  <%= render 'results_pagination' %>
 
 	<%= render :partial=>'solr_request' %>
 </div>
