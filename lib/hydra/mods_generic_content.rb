@@ -18,7 +18,9 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
       t.topic
     }      
     t.topic_tag(:index_as=>[:facetable],:path=>"subject", :default_content_path=>"topic")
-
+    t.identifier {
+      t.type_(:path=>{:attribute=>"type"})
+    }
 	# mods:physicaldescription/mods:extent - used for storing file size in human-readable form.
 	t.physical_description(:path => "physicalDescription") {
 	  t.extent( :path => "extent")
