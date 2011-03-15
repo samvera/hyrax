@@ -2,7 +2,7 @@
 /* CSS Document */
 
 h1.site_title {
-	background:url("/images/hydrangea_logo.png") no-repeat scroll left top transparent;
+	background:url("../images/hydrangea_logo.png") no-repeat scroll left top transparent;
 	height:42px;
 	margin:0 0 0 0;
 	width:120px;
