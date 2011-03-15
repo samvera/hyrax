@@ -23,7 +23,7 @@ div#search select#search_field {display: none;}
 	line-height:22px; 
 	padding:1em 0 0 0; 
 	background:#FFFFFF;}
-.appliedFilter .btnRemove{display:inline; position:absolute; right:-30px; top:0; background:url("/plugin_assets/hydra_repository/images/icons/delete.png") no-repeat center center; border-left:none;}
+.appliedFilter .btnRemove{display:inline; position:absolute; right:-30px; top:0; background:url("/images/remove.png") no-repeat center center; border-left:none;}
 .appliedFilter a.btnRemove {border:none;}
 #appliedParams a#startOverLink{text-decoration:none; border-bottom: none;}
 .queryName, .filterName {padding-right:14px;}
@@ -81,7 +81,7 @@ fieldset dl dd input {
 
 	/* undo-redo - show only the icon until the cursor hovers over, then display the text */
 a.flc-undo-redoControl, a.flc-undo-undoControl {
-	background-image:url("/plugin_assets/hydra_repository/images/icons/undo.png");
+	background-image:url("/images/icons/undo.png");
 	background-position:0 1px;
 	background-repeat:no-repeat;
 	color: transparent;
@@ -93,7 +93,7 @@ a.flc-undo-redoControl, a.flc-undo-undoControl {
 }
 	
 a.flc-undo-redoControl {
-	background-image:url("/plugin_assets/hydra_repository/images/icons/redo.png") !important;
+	background-image:url("/images/icons/redo.png") !important;
 }
 
 a.flc-undo-redoControl:hover, a.flc-undo-undoControl:hover {

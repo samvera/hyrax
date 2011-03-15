@@ -2,7 +2,7 @@
 /* CSS Document */
 
 h1.site_title {
-	background:url("/plugin_assets/hydra_repository/images/hydrangea_logo.png") no-repeat scroll left top transparent;
+	background:url("/images/hydrangea_logo.png") no-repeat scroll left top transparent;
 	height:42px;
 	margin:0 0 0 0;
 	width:120px;
@@ -212,7 +212,7 @@ div#add-contributor-box .ui-widget {font-size: .9em;}
 
 
 a.destructive {
-    background-image:url("/plugin_assets/hydra_repository/images/icons/delete-blue.png");
+    background-image:url("/images/icons/delete-blue.png");
 	background-position: 0 0;
 	background-repeat:no-repeat;
 	color: transparent;
@@ -225,7 +225,7 @@ a.destructive {
 } 
 
 a.destroy_grant {
-  background-image:url("/plugin_assets/hydra_repository/images/icons/delete-blue.png");
+  background-image:url("/images/icons/delete-blue.png");
 	background-position: 0 0;
 	background-repeat:no-repeat;
 	color: transparent;
@@ -247,7 +247,7 @@ td a.destructive {
 	} 
 
 a:hover.destructive {
-    background-image:url("/plugin_assets/hydra_repository/images/icons/delete-red.png");
+    background-image:url("/images/icons/delete-red.png");
 	}
 
 a.addval {
@@ -284,18 +284,9 @@ div#ft {
 	}
 
 div.powered_by {
-	background:url("/plugin_assets/hydra_repository/images/hydra_logo_h50_white_bg.png") no-repeat scroll center 15px transparent;
+	background:url("/images/hydra_logo_h50_white_bg.png") no-repeat scroll center 15px transparent;
 	font-size:0.9em;
 	font-weight:bold;
 	height:70px;
 	}
-
-a.thumbnail-container {
-	width: 75px;
-	padding: 2px;
-	border: 1px solid #b4b4b4;
-	display: inline-block;
-	text-align: center;
-	vertical-align: middle;
-}
 	
