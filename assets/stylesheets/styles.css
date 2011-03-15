@@ -18,7 +18,6 @@ div#search select#search_field {display: none;}
 
 
 #appliedParams h3 {position:relative; padding:0px; margin:0;background-color:#FFFFFF; border: none; overflow:visible; font-weight: normal; display: inline;}
-.appliedFilter {display:inline; background-color:#ffffff; padding:0px; margin: 0px; border:none;position:relative;}
 #appliedParams div {
 	line-height:22px; 
 	padding:1em 0 0 0; 
