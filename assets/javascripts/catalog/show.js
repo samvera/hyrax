@@ -1,3 +1,0 @@
-$(function() {
-    Hydrangea.FileUploader.setUp();
-  });
