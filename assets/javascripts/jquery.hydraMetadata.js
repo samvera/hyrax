@@ -88,6 +88,19 @@
          $("a.destructive", $inserted).hydraContributorDeleteButton();
        });
      },
+
+			addIdentifier: function(type) {
+			  var content_type = $("form#new_identifier > input#content_type").first().attr("value");
+			  var identifiers_group_selector = "."+type+".identifier";
+			  var url = $("form#new_identifier").attr("action");
+
+			  $.post(url, {identifier_type: type, content_type: content_type},function(data) {
+			    $(identifiers_group_selector).last().after(data);
+			    $inserted = $(identifiers_group_selector).last();
+			    $(".editable-container", $inserted).hydraTextField();
+			    $("a.destructive", $inserted).hydraIdentifierDeleteButton();
+			  });
+			},
           
      addContributor: function(type) {
        var content_type = $("form#new_contributor > input#content_type").first().attr("value");
@@ -166,6 +179,27 @@
        
      },
      
+		deleteIdentifier: function(element) {
+		  var content_type = $("form#new_identifier > input#content_type").first().attr("value");
+		  var url = $(element).attr("href");
+		  var $identifierNode = $(element).closest(".identifier");
+
+		  $.ajax({
+		    type: "DELETE",
+		    url: url,
+		    dataType: "html",
+		    beforeSend: function() {
+					$identifierNode.animate({'backgroundColor':'#fb6c6c'},300);
+		    },
+				 success: function() {
+		      $identifierNode.slideUp(300,function() {
+		        $identifierNode.remove();
+					});
+		    }        
+		  });
+
+		},
+		
      deleteContributor: function(element) {
        var content_type = $("form#new_contributor > input#content_type").first().attr("value");
        var url = $(element).attr("href");
