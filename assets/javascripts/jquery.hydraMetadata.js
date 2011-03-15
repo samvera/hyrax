@@ -50,7 +50,7 @@
 
        var assetUrl = $values_list.closest("form").attr("action");
 
-       var $item = jQuery('<li class=\"field_value textile_value\" name="asset[' + fieldName + '][' + new_value_index + ']"><a href="" class="destructive"><img src="/plugin_assets/hydra_repository/images/delete.png" border="0" /></a><div class="textile" id="'+fieldName+'_'+new_value_index+'">click to edit</div></li>');
+       var $item = jQuery('<li class=\"field_value textile_value\" name="asset[' + fieldName + '][' + new_value_index + ']"><a href="" class="destructive"><img src="/images/delete.png" border="0" /></a><div class="textile" id="'+fieldName+'_'+new_value_index+'">click to edit</div></li>');
        $item.appendTo(values_list);
 
        $("div.textile", $item).editable(assetUrl+"&format=textile", {
@@ -563,7 +563,6 @@
  
      return this;
    };
-<<<<<<< HEAD:public/javascripts/jquery.hydraMetadata.js
    
    $.fn.hydraRadioButton = function(settings) {
      var config = {};
@@ -613,9 +612,6 @@
  
    };
   
-=======
-
->>>>>>> 452a6f670bfebaa30c378b72a22f1d05877ea648:vendor/plugins/hydra_repository/assets/javascripts/jquery.hydraMetadata.js
    // 
    // This method relies on some options being saved in the dom element's data, which is populated by a little script inserted by the fedora_date_select helper.  
    // For example:
@@ -814,6 +810,7 @@
  
    };
 
+
    
    $.fn.hydraContributorDeleteButton = function(settings) {
      var config = {};
@@ -825,23 +822,6 @@
           $.fn.hydraMetadata.deleteContributor(this, e);
           e.preventDefault();
         });
-     });
- 
-     return this;
- 
-   };
-
-
-   $.fn.hydraSelectMenu = function(settings) {
-     var config = {};
- 
-     if (settings) $.extend(config, settings);
- 
-     this.each(function() {
-       $(this).unbind('change.hydra').bind('change.hydra', function(e) {
-           $.fn.hydraMetadata.saveSelect(this, e);
-           e.preventDefault();
-         });
      });
  
      return this;
