@@ -5,7 +5,6 @@ function async_load(url, divid) {
     dataType: "html",
     success: function(data){
             $(divid).html(data);
-            $("#file_assets  .select-edit").hydraSelectMenu();
             $("#file_assets  .editable-container").hydraTextField();
             $("#file_assets  a.destroy_file_asset").hydraFileAssetDeleteButton();
             // Custom for Libra -- update progress box when necessary
@@ -100,19 +99,12 @@ jQuery(document).ready(function($) {
 	// HIDE THE INPLACE EDIT FIELDS
 	$('span.editable-text.text').hide();
 	
-<<<<<<< HEAD:public/javascripts/custom.js
 	// SHOW THE INPLACE TEXTILE FIELDS
 	$('input.textile-edit.edit').css('display', 'block');
-=======
-	if ( $("input:radio").filter("[value=publicdomain]").attr("checked", false) && $("input:radio").filter("[value=odc-by]").attr("checked",false) && $("input:radio").filter("[value=odc-odbl]").attr("checked",false)) {
-		$("input:radio").filter("[value=publicdomain]").attr("checked","checked");
-	}
->>>>>>> 452a6f670bfebaa30c378b72a22f1d05877ea648:vendor/plugins/hydra_repository/assets/javascripts/custom.js
 	
 	// ADD THE DATEPICKER CLASS TO _DATE FIELDS
 	//	<input type="text" class="datepicker" size="30" name="d1" value="" placeholder="YYYY-MM-DD"/>
 	$('input[name*=_date]').addClass('datepicker');
-<<<<<<< HEAD:public/javascripts/custom.js
 	// fluid.defaults('inlineEdit').blurHandlerBinder = function(that) {
 	// 	// This is just fluid's normal default handling of a blur event:
 	// 	that.editField.blur(
@@ -122,30 +114,6 @@ jQuery(document).ready(function($) {
 	// 			return false;
 	// 		}
 	// 	);
-=======
-	fluid.defaults('inlineEdit').blurHandlerBinder = function(that) {
-		// This is just fluid's normal default handling of a blur event:
-		that.editField.blur(
-			function (evt) {
-				if (that.isEditing())
-					that.finish();
-				return false;
-			}
-		);
-		
-		// InlineEdit doesn't watch for change events on the input field, which means that it doesn't
-		// pick up a new date from the datepicker. We fix this by adding a change observer which fires
-		// the same update of the Fluid model that a blur event does.
-		that.editField.change(
-			function (evt) {
-				if (!that.isEditing() && that.editView.value != that.model.value)
-					that.finish();
-				return true;
-			}
-		)
-	}
-	
->>>>>>> 452a6f670bfebaa30c378b72a22f1d05877ea648:vendor/plugins/hydra_repository/assets/javascripts/custom.js
 		
 		// InlineEdit doesn't watch for change events on the input field, which means that it doesn't
 		// pick up a new date from the datepicker. We fix this by adding a change observer which fires
