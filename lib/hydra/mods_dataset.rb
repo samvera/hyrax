@@ -12,7 +12,10 @@ module Hydra
         t.language(:path=>{:attribute=>"lang"})
       } 
       t.title(:proxy=>[:title_info, :main_title]) 
-      t.abstract   
+      t.abstract  
+      t.identifier {
+        t.type_(:path=>{:attribute=>"type"})
+      } 
       t.subject {
         t.topic(:index_as=>[:facetable])
       }      
