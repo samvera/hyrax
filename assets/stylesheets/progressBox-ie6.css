@@ -1,0 +1,40 @@
+#progressBox {
+  position: absolute;
+  margin-left: 20px;
+  margin-top: -100px;
+	margin-right: 2px;
+	height: 211px;
+  width: 250px;	
+  zoom: 1;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=225, Color='#0F1C38')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=225, Color='#0F1C38');
+}
+
+#progressBoxContent {
+  width: 220px;
+  padding: 0 5px 20px 15px;
+}
+
+#progressBoxContentChecked {
+  background-image: url('chkbox_checked.png');
+}
+
+.progressItemChecked {
+  background-image: url('/images/chkbox_checked.png');
+}
+
+.progressItemRejected {
+  background-image: url('/images/chkbox_cross.png');
+}
+
+.progressBoxInvisibleStatus {
+  height: 1px;
+  width: 1px;
+  color: #fff;
+}
+
+#progressBoxContent ol li {
+	width: 200px;
+}

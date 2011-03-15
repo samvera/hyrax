@@ -22,7 +22,7 @@ div#search select#search_field {display: none;}
 	line-height:22px; 
 	padding:1em 0 0 0; 
 	background:#FFFFFF;}
-.appliedFilter {margin-right:2em;}
+.appliedFilter {display:inline; background-color:#ffffff; padding:0px; margin: 0px; border:none;position:relative;}
 .appliedFilter .btnRemove{display:inline; position:absolute; right:-30px; top:0; background:url("/images/remove.png") no-repeat center center; border-left:none;}
 .appliedFilter a.btnRemove {border:none;}
 #appliedParams a#startOverLink{text-decoration:none; border-bottom: none;}
