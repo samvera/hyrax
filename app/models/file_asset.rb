@@ -86,4 +86,24 @@ class FileAsset < ActiveFedora::Base
   def containers_from_solr
     containers(:response_format => :load_from_solr)
   end
+
+   # Override ActiveFedora::Base.to_solr to...
+  # Check if we are dealing with a child of FileAsset and if so when calling to_solr from Solrizer indexer we want to skip loading parent metadata again 
+  #
+  # if known models greater than one (without ActiveFedora::Base) and
+  #   known models contains a child of FileAsset and
+  #   opts[:model_only] == true and
+  #   current object class is FileAsset
+  # that means that the child already has had to_solr called which included metadata from FileAsset
+  # if any of the above is false then call to_solr as normal
+  def to_solr(solr_doc = Solr::Document.new, opts={})
+
+    active_fedora_model_s = solr_doc["active_fedora_model_s"] if solr_doc["active_fedora_model_s"]
+    actual_class = active_fedora_model_s.constantize if active_fedora_model_s
+    if actual_class && actual_class != self.class && actual_class.superclass == FileAsset
+      solr_doc
+    else
+      super(solr_doc,opts)
+    end
+  end
 end
