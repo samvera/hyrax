@@ -36,9 +36,9 @@
         var titleProvided = ($("#title_info_main_title").attr("value").length > 0);
         var authorLastProvided = ($("#person_0_last_name").attr("value").length > 0);
         var authorFirstProvided =  ($("#person_0_first_name").attr("value").length > 0 );
-        var licenseAgreedTo = ($("#copyright_uvalicense").attr("value")=="yes");
+        // var licenseAgreedTo = ($("#copyright_uvalicense").attr("value")=="yes");
         var fileUploaded = ( $("a.destroy_file_asset").length > 0); 
-        if (fileUploaded && titleProvided && authorLastProvided && authorFirstProvided && licenseAgreedTo) {
+        if (fileUploaded && titleProvided && authorLastProvided && authorFirstProvided) {
             stepOneIsReady=true;
         }
       }
