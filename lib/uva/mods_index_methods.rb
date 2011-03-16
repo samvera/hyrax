@@ -1,5 +1,4 @@
-module Uva
-module ModsIndexMethods
+module Uva::ModsIndexMethods
   # extracts the last_name##full_name##computing_id to be used by home view
   def extract_person_full_names_and_computing_ids
     names = {}
@@ -20,5 +19,5 @@ module ModsIndexMethods
     end
     names
   end
-end
+
 end
