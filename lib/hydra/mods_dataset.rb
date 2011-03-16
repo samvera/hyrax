@@ -1,3 +1,4 @@
+require "uva/mods_index_methods"
 module Hydra
   class ModsDataset < ActiveFedora::NokogiriDatastream
     include Hydra::CommonModsIndexMethods
