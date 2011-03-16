@@ -36,7 +36,7 @@ module Ldap
     end
     
     def institution
-      LDAP_INSTITUTION
+      @ldap_vals.empty? ? "" : LDAP_INSTITUTION
     end
     
     def department

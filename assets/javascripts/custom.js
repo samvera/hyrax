@@ -85,13 +85,6 @@ jQuery(document).ready(function($) {
 	
 	// REDUCE MARGIN-TOP FOR FIRST <h2>
 	$('h2:first').css('margin-top', '0');
-	 	
-	// HIDE & TOGGLE THE LICENSE
-	$('#uvalicense p').hide();
-	$('#uvalicense_read_all').click(function() {
-		$('#uvalicense p').toggle('slow');
-	});
-	//
 	
 	// REDUCE MARGIN-TOP FOR FIRST <h2>
 	$('h2:first').css('margin-top', '0');		

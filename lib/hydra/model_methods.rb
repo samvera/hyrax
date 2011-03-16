@@ -81,6 +81,7 @@ module Hydra::ModelMethods
   # applies the ldap attributes
   #
   def apply_ldap_values(computing_id, person_number)
+    return if computing_id.blank? || person_number.blank?
     person = Ldap::Person.new(computing_id)
     desc_ds = self.datastreams_in_memory["descMetadata"]
     return if desc_ds.nil?
