@@ -16,11 +16,10 @@
     <link href="<%= url_for :controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
     
     <%= render_head_content %>
-    <%#= stylesheet_link_tag('uva/styles') %>
 
 		<!--[if IE]>
-    	<%= stylesheet_link_tag('uva/ie-styles') %>
-    	<%= stylesheet_link_tag('progressBox-ie6.css') %>
+    	<%= stylesheet_link_tag('hydra/ie-styles', {:plugin=>:hydra_repository, :media=>'all'}) %>
+    	<%= stylesheet_link_tag('progressBox-ie6.css', {:plugin=>:hydra_repository, :media=>'all'}) %>
 		<![endif]-->
 	</head>
   
