@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--[if lt IE 7 ]> <html xmlns="http://www.w3.org/1999/xhtml" class="ie6"> <![endif]--> 
+<!--[if IE 7 ]>    <html xmlns="http://www.w3.org/1999/xhtml" class="ie7"> <![endif]--> 
+<!--[if IE 8 ]>    <html xmlns="http://www.w3.org/1999/xhtml" class="ie8"> <![endif]--> 
+<!--[if IE 9 ]>    <html xmlns="http://www.w3.org/1999/xhtml" class="ie9"> <![endif]--> 
+<!--[if gt IE 9]>  <html xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if !IE]><!--> <html xmlns="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+
+  <head>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title><%= h(@page_title || application_name) %></title>
+    <link href="<%= url_for :controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
+    
+    <%= render_head_content %>
+    <%= stylesheet_link_tag('uva/styles') %>
+
+		<!--[if IE]>
+    	<%= stylesheet_link_tag('uva/ie-styles') %>
+    	<%= stylesheet_link_tag('progressBox-ie6.css') %>
+		<![endif]-->
+	</head>
+  
+    <body  onload="$('#facet_author').closest('div').hide();<% if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil? %>$('input#q').focus();<% end %>">
+
+		<div id="uva_lib_banner">				
+		  <div id="container1">	
+			  <div id="container1_uva_lib_logo"><%= link_to(image_tag('uva/uva_lib_logo.png', :width => 200, :height => 15, :alt => "University of Virginia Library"), "http://www.lib.virginia.edu/") %></div>
+        <div id="container1_links">
+        </div>
+    		<div id="container1_login">
+    		  <div id="globalUtilNav">
+              <div class="NetbadgeLogin">               
+                <ul class="login">
+    		          <% if current_user %>
+    		            <li class="button"><span>My Account (<%= current_user.login %>)</span></li>
+    		            <li class="util_menu"><ul>
+    		              <% if current_user.can_be_superuser? -%>
+    		                <% if current_user.is_being_superuser?(session) -%>
+    		                  <li><%= link_to "Stop being superuser", superuser_path -%></li>
+    		                <% else -%>
+    		                  <li><%= link_to "Become superuser", superuser_path -%></li>
+    			              <% end -%>
+    		              <% end -%>
+    		              <li><%= link_to "Log Out", logout_path %></li>
+    		            </ul></li>
+    		          <% else %>
+    		            <li class="button"><span><%= link_to 'Login', login_path %></span></li>
+    		          <% end %>
+    		        </ul>
+    		    </div>
+    	    </div>
+        </div>
+      </div>
+    </div>
+		<div id="libra_banner_container">
+	    <div id="libra_banner">
+				<%= link_to image_tag('uva/libra_logo.jpg', :width => 127, :height => 78, :alt => "Libra"), root_path, :class => 'libra_logo' %>
+				<div class="libra_buttons">
+					<% unless request.request_uri.match(/\/(\?)?(total=[0-9]+)?$|\/catalog(\?)?$/) %>
+		            	<%= link_to image_tag('learn_more_small_btn.png', :alt => "Learn more"), '/about', {:class => "learn_more"} %>			
+						<%= render :partial => '/user_util_links.html' %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+		
+
+	  <div id="doc4" class="yui-t2">
+		
+			<div id="hd">
+				<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>" : "" %>
+			</div>
+	    
+	    <div id="bd">
+
+      	<div id="yui-main">
+        <!-- <div id="uva-tabs"><%= (params[:controller] == "catalog" and !params[:id]) ? render(:partial => 'catalog/uva_tabs') : ""  %></div>  -->
+           <%= render :partial=>'/flash_msg' %>
+        	<div class="sidebar"><%= sidebar_items.join('') %></div>	
+           <%= yield %>
+        </div>
+         
+	    </div>
+	    
+	  </div>
+		<div id="footer">
+			<div id="container3">
+					<div class="contact_info"> 
+			      <a href="http://lib.virginia.edu" target="_blank">University of Virginia Library</a><br /> 
+			      PO Box 400113, Charlottesville, VA 22904-4113<br /> 
+			      ph: (434) 924-3021, fax: (434) 924-1431, <a href="mailto:library@virginia.edu">library@virginia.edu</a> 
+			    </div> 
+			    <div class="aux_links"> 
+			      <a href="http://www.lib.virginia.edu/dir/libdir.html" target="_blank">Depts./Contacts</a> | <a href="http://www.virginia.edu" target="_blank">U.Va. Home</a> | <a href="http://www.itc.virginia.edu" target="_blank">ITC</a><br /> 
+			      <a href="/feedback" target="_blank">VIRGO Feedback</a> | <a href="http://www.lib.virginia.edu/questions.html" target="_blank">Questions? Ask a Librarian</a> | <a href="http://www.lib.virginia.edu/sitesearch.html" target="blank">Search</a> | <a href="http://www.lib.virginia.edu/hours/" target="_blank">Hours</a> | <a href="http://www.lib.virginia.edu/map.html" target="_blank">Map</a> | <a href="http://www.lib.virginia.edu/policies/" target="_blank">Policies</a> | <a href="http://www.lib.virginia.edu/press/" target="_blank">Press</a> | <a href="http://www.lib.virginia.edu/HR/" target="_blank">Jobs</a><br /> 
+			      <a href="http://www.virginia.edu/copyright.html" id="copyrightLink" target="_blank">©</a> 2011 by the Rector and Visitors of the <a href="http://www.virginia.edu" target="_blank">University of Virginia</a> 
+			    </div>
+					<div id="footer_notices">
+	          <div id="federal_lib_logo"><%= image_tag('uva/federal_lib_logo.png', :width => 37, :height => 33, :alt => "Federal Library Depository logo") %></div>
+						<div id="bottom_text">
+	              <div id="federal_lib">This library is a Congressionally designated depository for <a href="http://www2.lib.virginia.edu/govtinfo" target="_blank">U.S. Government documents</a>.
+	              Public access to the Government documents is guaranteed by public law.</div>
+	      		</div>
+	          <div id="hydra_logo"><%= image_tag('powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
+					</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+    $(document).ready(function() {
+        $("#globalUtilNav").hover(
+        	function () {
+        		$(".login ul").stop(true, true).slideDown(100);
+        	},
+        	function () {
+        		$(".login ul").stop(true, true).slideUp(100);
+        	}
+        );
+    })
+    </script>
+  </body>
+  
+</html>
