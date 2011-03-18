@@ -1,5 +1,4 @@
 html {
-<<<<<<< HEAD
   background-color: white;
 	overflow-y: scroll;
 }
@@ -9,19 +8,10 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
-=======
-    background-color: white;
-	overflow-y: scroll;
-}
-
-#document h1 {
-    display: none;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 body {
 	background: #fff;
-<<<<<<< HEAD
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 13px;
   color: #121212;
@@ -30,15 +20,6 @@ body {
 
 #document h1 {
     display: none;
-=======
-    margin: 0;
-    padding: 0;
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    color: #121212;
-    text-align: center; /* for IE */
-
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 body td, body ul, body p, body ol {
@@ -95,7 +76,6 @@ div.notice-wrap {
     text-decoration: none;
 }
 
-<<<<<<< HEAD
 #hd ul {
 	margin: 5px;
 	padding: 5px;
@@ -113,20 +93,10 @@ div.notice-wrap {
     height: 26px;
     float: right;
 		margin-right: 40px;
-=======
-#container1_login {
-    height: 26px;
-    float: right;
-    padding-left: 20px;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
     padding-top: 7px;
 }
 
 #libra_banner_container {
-<<<<<<< HEAD
-=======
-	background: url(/images/uva/libra_banner_bg.jpg);
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	height: 78px;
 	width: 100%;
 }
@@ -170,11 +140,7 @@ button.ui-button-icon-only {
 
 #re-run-action, #re-run-add-contributor-action {
     font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-<<<<<<< HEAD
     color: blue
-=======
-    color: #0F3E83;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 .edit-browse .active {
@@ -223,11 +189,7 @@ button.ui-button-icon-only {
 }
 
 a:link, a:visited, a:active, #uvalicense_read_all {
-<<<<<<< HEAD
     color: blue
-=======
-    color: #0F3E83;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
     text-decoration: underline;
     border: none;
 }
@@ -241,11 +203,7 @@ a:link, a:visited, a:active, #uvalicense_read_all {
 }
 
 a:hover, a:hover.addval, #uvalicense_read_all:hover {
-<<<<<<< HEAD
     color: blue
-=======
-    color: #4079A0;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 a.addval {
@@ -326,11 +284,7 @@ dl dd {
 }
 
 .home_text h1 {
-<<<<<<< HEAD
 	color: blue
-=======
-	color: #4079A0;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	font-size: 24px;
 	margin: 0;
 }
@@ -405,11 +359,7 @@ dl dd {
 .home_buttons ul li,
 .libra_buttons ul li {
 	border-top: 1px solid #b6c8de;
-<<<<<<< HEAD
 	color: blue
-=======
-	color: #0F3E83;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	cursor: pointer;
 	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 	font-size: 13px;
@@ -499,7 +449,6 @@ table#file_assets {
     text-align: center;
 }
 
-<<<<<<< HEAD
 #doc4 {
   position: absolute;
   top: 0;
@@ -510,8 +459,6 @@ table#file_assets {
 }
 
 
-=======
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 #bd {
     width: 960px;
     margin: 0 auto;
@@ -534,10 +481,6 @@ table#file_assets {
 .yui-g {
     height: 78px;
     width: 100%;
-<<<<<<< HEAD
-=======
-    background-image: url(/images/uva/libra_banner_bg.jpg);
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
     background-repeat: repeat-x;
     color: #F3A729;
     text-align: left;
@@ -614,46 +557,26 @@ table#file_assets {
 }
 
 #bd .sidebar {
-<<<<<<< HEAD
   margin: 0;
 	padding: 0;
   text-align: right;
   float: left;
-=======
-    margin: 0;
-	padding: 0;
-    text-align: right;
-    float: left;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	width: 238px;
 }
 
 #facets {
-<<<<<<< HEAD
   text-align: left;
   background-color: white;
-=======
-	border-bottom: 1px solid #83A1C9;
-    border-left: 1px solid #83A1C9;
-	border-top: 1px solid #83A1C9;
-    text-align: left;
-    background-color: white;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	padding: 0;
 	font-size: 12px;
 }
 
 .side_bar_heading, #facets div h3 {
-<<<<<<< HEAD
     background-color: white;
-=======
-    background-color: #CCD9F2;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
     height: 50px;
 }
 
 #facets h2 {
-<<<<<<< HEAD
   color: blue;
   font: normal normal normal 10px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
   padding: 1em 0px 1em 10px;
@@ -664,30 +587,12 @@ table#file_assets {
 
 #facets div {
   background-color: #EEE;
-=======
-    color: #617DA6;
-    font: normal normal normal 10px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
-    padding: 1em 0px 1em 10px;
-	margin: 0;
-	border-top: 1px solid #dddddd;
-    text-transform: uppercase;
-}
-
-#facets div {
-    background-color: #E5EBFD;
-	border-top: 1px solid #B7C5DC;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 #facets div h3 {
     margin-top: 0;
     margin-left: 0;
-<<<<<<< HEAD
     color: black;
-=======
-    color: #4079A0;
-    color: #0F3E83;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
     font-size: 13px;
     font-weight: bold;
     line-height: 20px;
@@ -722,51 +627,24 @@ body .ui-widget {
 }
 
 #search {
-<<<<<<< HEAD
-=======
-    background-image: url(/images/uva/search_bg.jpg);
-    background-repeat: repeat-x;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
     height: 42px;
     left: 0px;
     position: static;
     top: 0px;
     width: 100%;
     text-align: right;
-<<<<<<< HEAD
 		border-radius: 0;
 		font-size: 100%;
 		padding: 0;
-=======
-		border: 1px solid #AAA;
-		border-radius: 0;
-		font-size: 100%;
-		padding: 0;
-    /*  width: 695px;
-     background-image: url(/images/uva/search_bg.jpg);
-     background-repeat: repeat-x;
-     height: 42px;
-     margin: -11px -11px 0 0;
-     top: 0;
-     left: ;
-     position: static;
-     float: right;*/
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 #search #form1 {
     height: 25px;
     width: 615px;
     margin-left: 12px;
-<<<<<<< HEAD
     background-color: white;
     margin-top: 7px;
     border: none;
-=======
-    background-color: #FFF;
-    margin-top: 7px;
-    border: 1px solid #0F1C38;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 #search form {
@@ -1043,20 +921,12 @@ tr.document {
 }*/
 
 #footer {
-<<<<<<< HEAD
 	width: 100%;
 	background-color: white;
-=======
-    width: 100%;
-	background-color: #4672AF;
-    background-image: url(/images/uva/footer_bg.png);
-    background-repeat: repeat-x;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 #footer #container3 {
 	height: 160px;
-<<<<<<< HEAD
   width: 960px;
   margin-right: auto;
   margin-left: auto;
@@ -1066,17 +936,6 @@ tr.document {
   color: #FFF;
   line-height: 21px;
   padding-top: 15px;
-=======
-    width: 960px;
-    margin-right: auto;
-    margin-left: auto;
-    text-align: right;
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-    font-size: 11px;
-    color: #FFF;
-    line-height: 21px;
-    padding-top: 15px;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 }
 
 #footer .contact_info {
@@ -1091,10 +950,6 @@ tr.document {
 }
 
 #footer_notices {
-<<<<<<< HEAD
-=======
-	border-top: 1px solid #648FC7;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	clear: both;
 	padding-top: 1.5em;
 	width: 100%;
@@ -1157,11 +1012,6 @@ div .author_browse_image {
     vertical-align: baseline;
     padding: 6px;
     width: 102px;
-<<<<<<< HEAD
-=======
-	background: #FFFBEF;
-	border: 2px solid #EEE4CC;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	-webkit-border-radius: 4px 4px 4px 4px;
 	-moz-border-radius:    4px 4px 4px 4px;
 	border-radius:         4px 4px 4px 4px;
@@ -1169,10 +1019,6 @@ div .author_browse_image {
 }
 
 .author_browse_image a.facet_image {
-<<<<<<< HEAD
-=======
-	border: 1px solid #EEE4CC;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	display: block;
 	width: 100px;
 	max-height: 100px;
@@ -1371,11 +1217,7 @@ table#file_assets tr.file_asset td {
     padding: 4px 7px 4px 26px;
     border: none;
     white-space: nowrap;
-<<<<<<< HEAD
     color: blue
-=======
-    color: #0F3E83;
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.
 	font-size: 1.06em;
 	font-style: normal;
     font-weight: bold;
@@ -2320,7 +2162,6 @@ h1.about_head {
 .about_text .example_license {
 	font-style: italic;
 	margin: 0 5em 1em;
-<<<<<<< HEAD
 }
 
 /* ---------------------------------------------------------- */
@@ -2381,6 +2222,3 @@ z-index: -1;}
 /* ---------------------------------------------------------- */
 /* LIGHTBOXES
 /* ---------------------------------------------------------- */
-=======
-}
->>>>>>> (Hydrus) Moving uva css to plugin and renaming as hydra.

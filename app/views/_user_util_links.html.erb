@@ -1,30 +1,23 @@
 <% if current_user %>
-  <% if current_user.can_be_superuser? %>
-    <% if current_user.is_being_superuser?(session) %>
-      <%=   link_to "Stop being superuser", superuser_path %>
-    <% else %>
-      <%= link_to "Become superuser", superuser_path %>
-    <% end %> 
-  <% end %>
-  <div class="add_work">
-		<img id="add_work_image_sm" src="/images/add_your_work_small_btn.png" alt="Add your work" />
-    <ul class="add_sub_menu">
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_article") %>');">Add an article</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_book") %>');">Add a book</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_dataset") %>');">Add a dataset</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_image") %>');">Add an image</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_content") %>');">Add generic content</li>
+
+    <ul>
+      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_article") %>');">Add an Article</li>
+      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_book") %>');">Add a Book</li>
+      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_dataset") %>');">Add a Dataset</li>
+      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_image") %>');">Add an Image</li>
+      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_content") %>');">Add Generic Content</li>
+	  <li><%= current_user.login %> (<%= link_to "Log Out", logout_path %>)</li>
     </ul>
-  </div>
+
 <% else %>
-  <div class="add_work">
-	<img id="add_work_image_sm" src="/images/add_your_work_small_btn.png" alt="Add your work" />	
-    <ul class="add_sub_menu">
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_article"}) %>'">Add an article</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_book"}) %>'">Add a book</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_dataset"}) %>'">Add a dataset</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_image"}) %>'">Add an image</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_content"}) %>'">Add generic content</li>
+
+    <ul>
+      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_article"}) %>'">Add an Article</li>
+      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_book"}) %>'">Add a Book</li>
+      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_dataset"}) %>'">Add a Dataset</li>
+      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_image"}) %>'">Add an Image</li>
+      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_content"}) %>'">Add Generic Content</li>
+  	  <li><%= link_to 'Login', login_path %></li>
     </ul>
-  </div>
+
 <% end %>

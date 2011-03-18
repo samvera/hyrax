@@ -3,31 +3,10 @@
 	<%= render :partial=>'search_form' %>
 	
 	<div class="home_text">
-		<h1>Welcome to LIBRA</h1>
-		<h2>The online archive of UVa scholarship</h2>
-    <p>LIBRA makes publications available to the world and
-    provides safe and secure storage for the scholarly output of the
-    UVa community.</p>
+		<h1>Welcome to HYDRA</h1>
+		<p>Edit or override this page (vendor/plugins/hydra_repository/views/catalog/_home_text.html.erb)</p>
 	</div>
 	
-	<div class="home_buttons">
-	
-	<%= link_to image_tag('learn_more_lrg_btn.png', :alt => "Learn more"), "/about", {:class => "learn_more"} %>
-	
-	  <div class="add_work">
-		<%= image_tag('add_your_work_lrg_btn.png', {:id => 'add_work_image', :alt => "Add your work"})%>
-	    <ul class="add_sub_menu">
-	      <% if current_user %>
-	        <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_article") %>');">Add an article</li>
-	        <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_book") %>');">Add a book</li>
-        <% else %>
-          <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_article"}) %>'">Add an article</li>
-          <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_book"}) %>'">Add a book</li>
-        <% end %>
-	    </ul>
-	  </div>
-	
-	</div>
 
   <% # container for facets -%>
   <%-
