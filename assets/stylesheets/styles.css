@@ -100,3 +100,38 @@ a.flc-undo-redoControl:hover, a.flc-undo-undoControl:hover {
 	color:#2E4F81;
 }
 
+/* HYDRUS HTML MENU */
+#menu {
+	width: 30%;
+	display: inline;
+}
+
+#menu ul {
+	cursor: pointer;
+	text-align: left;		
+	list-style-type: none;
+	width: 200px;
+	background-color: white;
+}
+
+#menu ul small {
+	color: gray;
+	display: block;
+}
+
+#menu:hover ul li {
+	display: block;
+	position: relative;
+	z-index: 500;	
+}
+
+#menu:hover ul li:hover a {
+	color: black;
+	text-decoration: none;		
+}
+
+#menu ul li, #menu ul li ul li {
+	display: none;
+}
+
+/* END HYDRUS HTML MENU */
