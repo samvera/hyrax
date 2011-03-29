@@ -13,7 +13,10 @@ class ModsImage < ActiveFedora::NokogiriDatastream
     t.language{
       t.lang_code(:index_as=>[:facetable], :path=>"languageTerm", :attributes=>{:type=>"code"})
     }
-    t.abstract   
+    t.abstract  
+    t.identifier {
+      t.type_(:path=>{:attribute=>"type"})
+    } 
     t.subject {
       t.topic
     }      
