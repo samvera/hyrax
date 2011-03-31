@@ -66,11 +66,11 @@
 		
 	   <dl>
 	     <dt>
-	       <%= fedora_field_label("descMetadata", [:identifier], "Identifier(s):") %>
-	       <%= fedora_text_field_insert_link "descMetadata", [:identifier] %>
+	       <%= fedora_field_label("descMetadata", [:mods, :identifier], "Identifier(s):") %>
+	       <%= fedora_text_field_insert_link "descMetadata", [:mods, :identifier] %>
 	     </dt>
 	     <dd id="identifiers" class="multi_inline identifier">
-	     	<%= render :partial=>"identifiers/edit", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:identifier) %>
+	     	<%= render :partial=>"identifiers/edit", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:mods, :identifier) %>
 	     </dd>
 	   </dl>
 	

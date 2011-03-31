@@ -176,9 +176,9 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
     end    
  
     def self.identifier_relator_terms
-       {"isbn" => "ISBN",
-        "oclc" => "OCLC"
-        }
+      {"ISBN" => "isbn",
+       "OCLC" => "oclc",
+       }
     end
     
     # Generates a new Person node

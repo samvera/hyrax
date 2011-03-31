@@ -224,9 +224,9 @@ module Hydra
     end    
  
     def self.identifier_relator_terms
-       {"isbn" => "ISBN",
-        "oclc" => "OCLC"
-        }
+      {"ISBN" => "isbn",
+       "OCLC" => "oclc",
+       }
     end
 
     

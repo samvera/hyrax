@@ -97,7 +97,7 @@
 				$.post(url, {content_type: content_type},function(data) {						
 			  	$(identifiers_group_selector).last().after(data);
 			    $inserted = $(identifiers_group_selector).last();
-			  	$(".editable-container", $inserted).hydraTextField();
+			  	$(".editable-edit.edit", $inserted).hydraTextField();
 			  	$("a.destructive", $inserted).hydraContributorDeleteButton();
 			  });
 				return false;

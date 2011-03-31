@@ -45,7 +45,7 @@
 				addGrant(this, e);
         e.preventDefault();
       });
-  	  $metaDataForm.delegate("a.addval.identifier", "click", function(e) {
+  	  $metaDataForm.delegate("a.addval.mods_identifier", "click", function(e) {
 				$.fn.hydraMetadata.addIdentifier(this, e);
         e.preventDefault();
       });
