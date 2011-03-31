@@ -144,7 +144,7 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
     # Generates a new Identifier node
     def self.identifier_template
       builder = Nokogiri::XML::Builder.new do |xml|
-        xml.identifier
+        xml.identifier(:type=>"isbn")
       end
       return builder.doc.root
     end
