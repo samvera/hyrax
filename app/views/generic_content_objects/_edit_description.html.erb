@@ -62,17 +62,18 @@
     </dl>
   </fieldset>
   <fieldset id="identifier_fields">
-    <legend>Identifiers</legend>
-    <dl>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:identifier], "Identifier(s):") %>
-        <%= fedora_text_field_insert_link "descMetadata", [:identifier] %>
-      </dt>
-      <dd id="identifier_type" class="identifier_type">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:identifier], :multiple=>true) %>
-      </dd>
-    </dl>
+	<legend>Identifiers</legend>
+		
+	   <dl>
+	     <dt>
+	       <%= fedora_field_label("descMetadata", [:identifier], "Identifier(s):") %>
+	       <%= fedora_text_field_insert_link "descMetadata", [:identifier] %>
+	     </dt>
+	     <dd id="identifiers" class="multi_inline identifier">
+	     	<%= render :partial=>"identifiers/edit", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:identifier) %>
+	     </dd>
+	   </dl>
+	
+	
   </fieldset>
 </form>
-
-<%= render :partial => 'identifiers/new' %>

@@ -16,7 +16,7 @@ class ModsImage < ActiveFedora::NokogiriDatastream
     t.abstract  
     t.identifier {
       t.type_(:path=>{:attribute=>"type"})
-    } 
+    }
     t.subject {
       t.topic
     }      

@@ -45,6 +45,10 @@
 				addGrant(this, e);
         e.preventDefault();
       });
+  	  $metaDataForm.delegate("a.addval.identifier", "click", function(e) {
+				$.fn.hydraMetadata.addIdentifier(this, e);
+        e.preventDefault();
+      });
       $metaDataForm.delegate("a.addval.textarea", "click", function(e) {
         insertTextileValue(this, e);
         e.preventDefault();

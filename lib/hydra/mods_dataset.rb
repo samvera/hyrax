@@ -15,7 +15,7 @@ module Hydra
       t.abstract  
       t.identifier {
         t.type_(:path=>{:attribute=>"type"})
-      } 
+      }
       t.subject {
         t.topic(:index_as=>[:facetable])
       }      

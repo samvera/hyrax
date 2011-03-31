@@ -6,7 +6,8 @@ module HydraFedoraMetadataHelper
   
   def fedora_text_field(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
-    field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    # field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
+    field_values = Array.new( get_values_from_datastream(resource, datastream_name, field_key, opts) )
     field_values = [""] if field_values.empty?
     if opts.fetch(:multiple, true)
       container_tag_type = :li
@@ -234,7 +235,7 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key) || field_key
     field_type = field_name == "person" ? "person" : "textfield"    
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
-    "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"
+    "<a class='addval #{field_type} #{field_name}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"
   end
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})

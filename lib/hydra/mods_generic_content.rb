@@ -16,7 +16,7 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
     t.abstract  
     t.identifier {
       t.type_(:path=>{:attribute=>"type"})
-    } 
+    }
     t.subject {
       t.topic
     }      
@@ -107,7 +107,9 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
              xml.subject {
                xml.topic
              }
-             xml.identifier            
+             xml.identifier{
+               xml.identi
+             }            
              xml.relatedItem(:type=>"host") {
                xml.titleInfo {
                  xml.title
@@ -139,6 +141,45 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
       return builder.doc
     end    
     
+    # Generates a new Identifier node
+    def self.identifier_template
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.identifier
+      end
+      return builder.doc.root
+    end
+
+    # Inserts a new identifier into the xml document
+    # We should probably write a helper that auto-generates this for you.
+    def insert_identifier
+      node = self.class.identifier_template
+      nodeset = self.find_by_terms(:identifier)
+
+      unless nodeset.nil?
+        if nodeset.empty?
+          self.ng_xml.root.add_child(node)
+          index = 0
+        else
+          nodeset.after(node)
+          index = nodeset.length
+        end
+        self.dirty = true
+      end
+
+      return node, index
+    end
+
+    # Remove the identifier entry identified by @index
+    def remove_identifier(index)
+      self.find_by_terms({:identifier=>index.to_i}).first.remove
+      self.dirty = true
+    end    
+ 
+    def self.identifier_relator_terms
+       {"isbn" => "ISBN",
+        "oclc" => "OCLC"
+        }
+    end
     
     # Generates a new Person node
     def self.person_template

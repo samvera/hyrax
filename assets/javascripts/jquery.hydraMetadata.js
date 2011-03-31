@@ -81,7 +81,7 @@
      },
 
      addGrant: function() {
-       var content_type = $("formr > input#content_type").first().attr("value");
+       var content_type = $("form > input#content_type").first().attr("value");
        var url = $("form#document_metadata").attr("action").split('?')[0];
 
        $.post(url, {content_type: content_type},function(data) {
@@ -90,16 +90,17 @@
      },
 
 			addIdentifier: function(type) {
-			  var content_type = $("form#new_identifier > input#content_type").first().attr("value");
-			  var identifiers_group_selector = "."+type+".identifier";
-			  var url = $("form#new_identifier").attr("action");
-
-			  $.post(url, {identifier_type: type, content_type: content_type},function(data) {
-			    $(identifiers_group_selector).last().after(data);
+			  var content_type = $("form > input#content_type").first().attr("value");
+		  	var url = $("form#document_metadata").attr("action").split('?')[0] + '/identifiers/';			
+			  var identifiers_group_selector = "dl.identifier";
+			
+				$.post(url, {content_type: content_type},function(data) {						
+			  	$(identifiers_group_selector).last().after(data);
 			    $inserted = $(identifiers_group_selector).last();
-			    $(".editable-container", $inserted).hydraTextField();
-			    $("a.destructive", $inserted).hydraIdentifierDeleteButton();
+			  	$(".editable-container", $inserted).hydraTextField();
+			  	$("a.destructive", $inserted).hydraContributorDeleteButton();
 			  });
+				return false;
 			},
           
      addContributor: function(type) {
@@ -719,6 +720,25 @@
  
      this.each(function() {
        $(this).ajaxForm(config);
+     });
+ 
+     return this;
+ 
+   };
+
+   /*
+   *  Initialize the form for inserting new Identifier
+   */
+   $.fn.hydraNewIdentifierForm = function(settings) {
+     var config = {};
+ 
+     if (settings) $.extend(config, settings);
+ 
+     this.each(function() {
+       $("#.addval.identifier").click(function(e) {
+				$.fn.hydraMetadata.addIdentifier(this, e);
+         e.preventDefault();
+       });
      });
  
      return this;
