@@ -57,7 +57,7 @@ class AssetsController < ApplicationController
       logger.debug("attributes submitted: #{@sanitized_params.inspect}")
            
       @response = update_document(@document, @sanitized_params)
-      
+     
       @document.save
       flash[:notice] = "Your changes have been saved."
       
