@@ -12,10 +12,7 @@ module Hydra
         t.language(:path=>{:attribute=>"lang"})
       } 
       t.title(:proxy=>[:title_info, :main_title]) 
-      t.abstract  
-      t.identifier {
-        t.type_(:path=>{:attribute=>"type"})
-      }
+      t.abstract   
       t.subject {
         t.topic(:index_as=>[:facetable])
       }      
@@ -98,7 +95,6 @@ module Hydra
              xml.subject {
                xml.topic
              }
-             xml.identifier
              xml.note(:type=>"completeness")
              xml.note(:type=>"interval")
              xml.note(:type=>"datatype")

@@ -81,27 +81,13 @@
      },
 
      addGrant: function() {
-       var content_type = $("form > input#content_type").first().attr("value");
+       var content_type = $("formr > input#content_type").first().attr("value");
        var url = $("form#document_metadata").attr("action").split('?')[0];
 
        $.post(url, {content_type: content_type},function(data) {
          $("a.destructive", $inserted).hydraContributorDeleteButton();
        });
      },
-
-			addIdentifier: function(type) {
-			  var content_type = $("form > input#content_type").first().attr("value");
-		  	var url = $("form#document_metadata").attr("action").split('?')[0] + '/identifiers/';			
-			  var identifiers_group_selector = "dl.identifier";
-			
-				$.post(url, {content_type: content_type},function(data) {						
-			  	$(identifiers_group_selector).last().after(data);
-			    $inserted = $(identifiers_group_selector).last();
-			  	$(".editable-edit.edit", $inserted).hydraTextField();
-			  	$("a.destructive", $inserted).hydraContributorDeleteButton();
-			  });
-				return false;
-			},
           
      addContributor: function(type) {
        var content_type = $("form#new_contributor > input#content_type").first().attr("value");
@@ -180,27 +166,6 @@
        
      },
      
-		deleteIdentifier: function(element) {
-		  var content_type = $("form#new_identifier > input#content_type").first().attr("value");
-		  var url = $(element).attr("href");
-		  var $identifierNode = $(element).closest(".identifier");
-
-		  $.ajax({
-		    type: "DELETE",
-		    url: url,
-		    dataType: "html",
-		    beforeSend: function() {
-					$identifierNode.animate({'backgroundColor':'#fb6c6c'},300);
-		    },
-				 success: function() {
-		      $identifierNode.slideUp(300,function() {
-		        $identifierNode.remove();
-					});
-		    }        
-		  });
-
-		},
-		
      deleteContributor: function(element) {
        var content_type = $("form#new_contributor > input#content_type").first().attr("value");
        var url = $(element).attr("href");
@@ -720,25 +685,6 @@
  
      this.each(function() {
        $(this).ajaxForm(config);
-     });
- 
-     return this;
- 
-   };
-
-   /*
-   *  Initialize the form for inserting new Identifier
-   */
-   $.fn.hydraNewIdentifierForm = function(settings) {
-     var config = {};
- 
-     if (settings) $.extend(config, settings);
- 
-     this.each(function() {
-       $("#.addval.identifier").click(function(e) {
-				$.fn.hydraMetadata.addIdentifier(this, e);
-         e.preventDefault();
-       });
      });
  
      return this;

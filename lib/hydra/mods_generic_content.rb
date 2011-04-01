@@ -13,17 +13,12 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
     t.language{
       t.lang_code(:index_as=>[:facetable], :path=>"languageTerm", :attributes=>{:type=>"code"})
     }
-    t.abstract  
-    t.identifier {
-      t.type_(:path=>{:attribute=>"type"})
-    }
+    t.abstract   
     t.subject {
       t.topic
     }      
     t.topic_tag(:index_as=>[:facetable],:path=>"subject", :default_content_path=>"topic")
-    t.identifier {
-      t.type_(:path=>{:attribute=>"type"})
-    }
+
 	# mods:physicaldescription/mods:extent - used for storing file size in human-readable form.
 	t.physical_description(:path => "physicalDescription") {
 	  t.extent( :path => "extent")
@@ -107,9 +102,6 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
              xml.subject {
                xml.topic
              }
-             xml.identifier{
-               xml.identi
-             }            
              xml.relatedItem(:type=>"host") {
                xml.titleInfo {
                  xml.title
@@ -140,46 +132,6 @@ class ModsGenericContent < ActiveFedora::NokogiriDatastream
       end
       return builder.doc
     end    
-    
-    # Generates a new Identifier node
-    def self.identifier_template
-      builder = Nokogiri::XML::Builder.new do |xml|
-        xml.identifier(:type=>"isbn")
-      end
-      return builder.doc.root
-    end
-
-    # Inserts a new identifier into the xml document
-    # We should probably write a helper that auto-generates this for you.
-    def insert_identifier
-      node = self.class.identifier_template
-      nodeset = self.find_by_terms(:identifier)
-
-      unless nodeset.nil?
-        if nodeset.empty?
-          self.ng_xml.root.add_child(node)
-          index = 0
-        else
-          nodeset.after(node)
-          index = nodeset.length
-        end
-        self.dirty = true
-      end
-
-      return node, index
-    end
-
-    # Remove the identifier entry identified by @index
-    def remove_identifier(index)
-      self.find_by_terms({:identifier=>index.to_i}).first.remove
-      self.dirty = true
-    end    
- 
-    def self.identifier_relator_terms
-      {"ISBN" => "isbn",
-       "OCLC" => "oclc",
-       }
-    end
     
     # Generates a new Person node
     def self.person_template
