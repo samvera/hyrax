@@ -4,7 +4,7 @@ module JavascriptIncludesHelper
   # @param [String] content_type
   # @param [String] action
   # @example
-  # javascript_includes_for :hydrangea_articles, :edit 
+  # javascript_includes_for "hydrangea_articles", "edit" 
   def javascript_includes_for(content_type, action, opts={})
     begin
       method_name = "javascript_includes_for_#{content_type}_#{action}"
