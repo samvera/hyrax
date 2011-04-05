@@ -1,26 +1,10 @@
 -unless params[:deletable] == "true"
   - if params[:layout] == "false"
-    :javascript
-        $(document).ready(function() {
-          $("#file_assets  .editable-container").hydraTextField();
-        });
-  - else
-    -# javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
-    -# javascript_includes << ['../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', {:cache=>true, :plugin=>"fluid-infusion"}]
     
-    - javascript_includes << "jquery.jeditable.mini"
-    - javascript_includes << 'custom'
-    - javascript_includes << "catalog/edit"
-    - javascript_includes << "jquery.hydraMetadata.js"  
-    - javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
-    - javascript_includes << "jquery.form.js"
+  - else
 
     - extra_head_content << capture do 
-      :javascript
-        $(document).ready(function() {
-          $("#file_assets  .editable-container").hydraTextField();
-        });
-
+      
 - unless @solr_result.hits.empty?
   -if params[:deletable] == "true"
     %ul

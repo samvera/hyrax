@@ -11,6 +11,23 @@ class FileAssetsController < ApplicationController
   
   
   def index
+=begin
+Removed from file_assets/index.html.haml
+-# javascript_includes << infusion_javascripts(:inline_edit, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false) 
+-# javascript_includes << ['../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', {:cache=>true, :plugin=>"fluid-infusion"}]
+
+- javascript_includes << "jquery.jeditable.mini"
+- javascript_includes << 'custom'
+- javascript_includes << "catalog/edit"
+- javascript_includes << "jquery.hydraMetadata.js"  
+- javascript_includes << "/plugin_assets/fluid-infusion/infusion/components/undo/js/Undo.js" 
+- javascript_includes << "jquery.form.js"
+
+
+
+
+=end
+
     if params[:layout] == "false"
       # action = "index_embedded"
       layout = false
@@ -35,6 +52,11 @@ class FileAssetsController < ApplicationController
   end
   
   def new
+=begin
+From file_assets/_new.html.haml
+=render :partial=>"fluid_infusion/uploader"
+=render :partial=>"fluid_infusion/uploader_js"
+=end
     render :partial=>"new", :layout=>false
   end
   

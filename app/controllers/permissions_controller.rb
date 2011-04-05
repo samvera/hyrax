@@ -16,6 +16,11 @@ class PermissionsController < ApplicationController
   end
   
   def new
+=begin
+HYDRA-150
+Removed from permissions/_new.html.erb
+<% javascript_includes << ["jquery.form.js", {:plugin=>:hydra_repository}] %>
+=end
     render :partial=>"permissions/new"
   end
   
