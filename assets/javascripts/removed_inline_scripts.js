@@ -1,5 +1,6 @@
 // This is tied to HYDRUS-150
 // Dumping ground for inline javascript that has been removed from view templates & partials
+<<<<<<< HEAD
 // Make sure to indicate what file the scripts came from
 
 /*
@@ -167,3 +168,6 @@ From vendor/plugins/dor_objects/app/views/dor_objects/_edit.html.erb
 <% end %>
 
 */
+=======
+// Make sure to indicate what file the scripts came from
+>>>>>>> (Hydrus) created removed_inline_scripts.js as a dumping ground
