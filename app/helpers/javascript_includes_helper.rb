@@ -1,10 +1,11 @@
 # Use this helper to declare which javascript should be loaded in which views
-# Internally, it assumes that you are appending javascript includes to the controller's javascript_includes array
+# Internally, it relies on include_javascript_for_#{controller}_#{action} helper methods 
+# These helper methods will usually append their includes to the controller's javascript_includes array
 #
 # @example Within your views (or in your controllers), call the helper like this
 #   include_javascript_for "hydrangea_articles", "edit"
 #
-# To declare your own array of includes for a specific content type or action, define a method in your host application or plugin like this
+# To declare your own array of includes for a specific content type or action, define a helper method in your host application or plugin like this
 # @example Declaring the javascript includes for hydrangea_datasets show view while reusing the includes from catalog_edit
 #   def include_javascript_for_hydrangea_datasets_show
 #     include_javascript_for_catalog_edit
@@ -43,6 +44,10 @@ module JavascriptIncludesHelper
       logger.debug "No default javascript includes defined for #{method} views.  Doing nothing."
     end
   end
+  
+  #
+  #   Helpers for Catalog Show & Edit Javascript Includes
+  #
   
   # Adds the appropriate javascripts to javascript_includes for CatalogController show views
   # Override this if you want to change the set of javascript_includes for CatalogController show views
