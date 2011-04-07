@@ -29,6 +29,16 @@ module Hydra::RepositoryController
     ::ActiveFedora::SolrService.solr_name(field_name, field_type)
   end
   
+  # Uses submitted params Hash to figure out what Model to load
+  # params should contain :content_type and :id
+  def load_document_from_params
+    af_model = retrieve_af_model(params[:content_type])
+    unless af_model 
+      af_model = HydrangeaArticle
+    end
+    return af_model.find(params[:id])
+  end
+  
   # Returns a list of datastreams for download.
   # Uses user's roles and "mime_type" value in submitted params to decide what to return.
   # if you pass the optional argument of :canonical=>true, it will return the canonical datastream for this object (a single object not a hash of datastreams)

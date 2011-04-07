@@ -15,6 +15,10 @@ class AssetsController < ApplicationController
     before_filter :search_session, :history_session
     before_filter :require_solr, :require_fedora
     
+    # prepend_before_filter :sanitize_update_params, :only=>:update
+    prepend_before_filter :prep_updater_method_args, :only=>:update    
+    before_filter :check_embargo_date_format, :only=>:update
+        
     def show
       if params.has_key?("field")
         
@@ -43,42 +47,23 @@ class AssetsController < ApplicationController
     # This should behave pretty much like the ActiveRecord update_indexed_attributes method
     # For more information, see the ActiveFedora docs.
     # 
-    # Examples
-    # put :update, :id=>"_PID_", "document"=>{"subject"=>{"-1"=>"My Topic"}}
-    # Appends a new "subject" value of "My Topic" to any appropriate datasreams in the _PID_ document.
-    # put :update, :id=>"_PID_", "document"=>{"medium"=>{"1"=>"Paper Document", "2"=>"Image"}}
-    # Sets the 1st and 2nd "medium" values on any appropriate datasreams in the _PID_ document, overwriting any existing values.
+    # @example Appends a new "subject" value of "My Topic" to on the descMetadata datastream in in the _PID_ document.
+    #   put :update, :id=>"_PID_", "asset"=>{"descMetadata"=>{"subject"=>{"-1"=>"My Topic"}}
+    # @example Sets the 1st and 2nd "medium" values on the descMetadata datastream in the _PID_ document, overwriting any existing values.
+    #   put :update, :id=>"_PID_", "asset"=>{"descMetadata"=>{"medium"=>{"0"=>"Paper Document", "1"=>"Image"}}
     def update
-      af_model = retrieve_af_model(params[:content_type])
-      unless af_model 
-        af_model = HydrangeaArticle
-      end
-      @document = af_model.find(params[:id])
-            
-      updater_method_args = prep_updater_method_args(params)
-      @document.update_from_computing_id(params)
-      check_embargo_date_format
+      @document = load_document_from_params
+      @document.update_from_computing_id(params) # This should be moved to a UVA/Libra-specific location and called as a before_filter
       
-      logger.debug("attributes submitted: #{updater_method_args.inspect}")
-      # this will only work if there is only one datastream being updated.
-      # once ActiveFedora::MetadataDatastream supports .update_datastream_attributes, use that method instead (will also be able to pass through params["asset"] as-is without usin prep_updater_method_args!)
-      result = @document.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
+      logger.debug("attributes submitted: #{@sanitized_params.inspect}")
+           
+      result = update_document(@document, @sanitized_params)
+      
       @document.save
-      #response = attrs.keys.map{|x| escape_keys({x=>attrs[x].values})}
-      response = Hash["updated"=>[]]
-      last_result_value = ""
-      result.each_pair do |field_name,changed_values|
-        changed_values.each_pair do |index,value|
-          response["updated"] << {"field_name"=>field_name,"index"=>index,"value"=>value} 
-          last_result_value = value
-        end
-      end
+      
+      response = tidy_response_from_update(result)    
+
       logger.debug("returning #{response.inspect}")
-    
-      # If handling submission from jeditable (which will only submit one value at a time), return the value it submitted
-      if params.has_key?(:field_id)
-        response = last_result_value
-      end
     
       respond_to do |want| 
         want.js {
@@ -117,5 +102,5 @@ class AssetsController < ApplicationController
       flash[:notice]= msg
       redirect_to url_for(:action => 'index', :controller => "catalog", :q => nil , :f => nil)
     end
-    
+
 end
