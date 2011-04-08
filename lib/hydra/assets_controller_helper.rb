@@ -17,6 +17,7 @@ module Hydra::AssetsControllerHelper
   # parses your params hash, massaging them into an appropriate set of params and opts to pass into ActiveFedora::Base.update_indexed_attributes
   #
   def prep_updater_method_args
+    logger.warn "DEPRECATED: Hydra::AssetsControllerHelper.prep_updater_method_args is deprecated.  Use/override sanitize_update_params instead."
     args = {:params=>{}, :opts=>{}}
     
     params["asset"].each_pair do |datastream_name,fields|
