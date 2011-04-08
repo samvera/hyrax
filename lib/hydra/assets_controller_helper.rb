@@ -82,6 +82,7 @@ module Hydra::AssetsControllerHelper
   
   # Tidies up the response from updating the document, making it more JSON-friendly
   # @param [Hash] response_from_update the response from updating the object's values
+  # @return [Hash] A Hash where value of "updated" is an array with fieldname / index / value Hash for each field updated
   def tidy_response_from_update(response_from_update)
     response = Hash["updated"=>[]]
     last_result_value = ""
