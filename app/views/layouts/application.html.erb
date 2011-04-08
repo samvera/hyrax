@@ -23,54 +23,37 @@
 		<![endif]-->
 	</head>
   
-    <body  onload="$('#facet_author').closest('div').hide();<% if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil? %>$('input#q').focus();<% end %>">
-
-        <div id="container1_links"></div>
-    	<div id="container1_login">
-		
-        </div>
+    <body>
 
 	  <div id="doc4" class="yui-t2">
 		
-			<div id="hd">
-				<%= render :partial => '/user_util_links.html' %>
-				<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>" : "" %>
-			</div>
+		<div id="hd">
+			<%= render :partial => '/user_util_links.html' %>
+			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>" : "" %>
+		</div>
 	    
 	    <div id="bd">
-
-      	<div id="yui-main">
-
-           <%= render :partial=>'/flash_msg' %>
-        	<div class="sidebar"><%= sidebar_items.join('') %></div>	
-           <%= yield %>
-        </div>
-         
+			<div id="yui-main">
+           		<%= render :partial=>'/flash_msg' %>
+        		<div class="sidebar"><%= sidebar_items.join('') %></div>	
+           		<%= yield %>
+        	</div>
 	    </div>
 	    
 		<div id="footer">
 			<div id="container3">
-				<div class="contact_info"> </div> 
+				<div class="contact_info"></div> 
 			    <div class="aux_links"> </div>
 				<div id="footer_notices">
-				<div id="bottom_text">
-					<div id="hydra_logo"><%= image_tag('powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
+					<div id="bottom_text">
+						<div id="hydra_logo"><%= image_tag('powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
+					</div>
 				</div>
 			</div>
 		</div>
 		
-		<script type="text/javascript">
-    $(document).ready(function() {
-        $("#globalUtilNav").hover(
-        	function () {
-        		$(".login ul").stop(true, true).slideDown(100);
-        	},
-        	function () {
-        		$(".login ul").stop(true, true).slideUp(100);
-        	}
-        );
-    })
-    </script>
+	  </div>
+      <%= render 'accept_terms/index' %>
   </body>
-  
+
 </html>
