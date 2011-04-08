@@ -99,12 +99,13 @@ module Hydra::AssetsControllerHelper
   
   
   # Updates the document based on the provided parameters
-  # The parameters should be the type expected by ActiveFedora::Base.update_datastream_attributes
+  # @param [ActiveFedora::Base] document
+  # @param [Hash] params should be the type expected by ActiveFedora::Base.update_datastream_attributes
   def update_document(document, params)
     # this will only work if there is only one datastream being updated.
     # once ActiveFedora::MetadataDatastream supports .update_datastream_attributes, use that method instead (will also be able to pass through params["asset"] as-is without usin prep_updater_method_args!)
-    result = document.update_indexed_attributes(params[:params], params[:opts])
-    # result = document.update_datastream_attributes(params[:asset])
+    # result = document.update_indexed_attributes(params[:params], params[:opts])
+    result = document.update_datastream_attributes(params)
   end
   
   # moved destringify into OM gem. 

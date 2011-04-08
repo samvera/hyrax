@@ -15,8 +15,7 @@ class AssetsController < ApplicationController
     before_filter :search_session, :history_session
     before_filter :require_solr, :require_fedora
     
-    # prepend_before_filter :sanitize_update_params, :only=>:update
-    prepend_before_filter :prep_updater_method_args, :only=>:update    
+    prepend_before_filter :sanitize_update_params, :only=>:update
     before_filter :check_embargo_date_format, :only=>:update
         
     def show
@@ -57,23 +56,25 @@ class AssetsController < ApplicationController
       
       logger.debug("attributes submitted: #{@sanitized_params.inspect}")
            
-      result = update_document(@document, @sanitized_params)
+      @response = update_document(@document, @sanitized_params)
       
       @document.save
+      flash[:notice] = "Your changes have been saved."
       
-      response = tidy_response_from_update(result)    
-
       logger.debug("returning #{response.inspect}")
     
       respond_to do |want| 
         want.js {
-          render :json=> response
+          render :json=> tidy_response_from_update(@response)  
         }
         want.textile {
-          if response.kind_of?(Hash)
-            response = response.values.first
+          if @response.kind_of?(Hash)
+            textile_response = tidy_response_from_update(@response).values.first
           end
-          render :text=> white_list( RedCloth.new(response, [:sanitize_html]).to_html )
+          render :text=> white_list( RedCloth.new(textile_response, [:sanitize_html]).to_html )
+        }
+        want.html {
+          redirect_to :controller=>"catalog", :action=>"edit"
         }
       end
     end
