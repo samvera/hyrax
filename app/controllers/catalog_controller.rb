@@ -5,7 +5,7 @@ class CatalogController
   include Blacklight::CatalogHelper
   include Hydra::RepositoryController
   include Hydra::AccessControlsEnforcement
-  before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index]
+  before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index, :delete]
     
   def edit
     
@@ -113,6 +113,20 @@ Pulled from vendor/plugins/dor_objects/app/views/dor_object/_edit.html.erb
     enforce_edit_permissions
   end
 
+  def delete
+      af_base = ActiveFedora::Base.load_instance(params[:id])
+      the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
+      if the_model.nil?
+        the_model = DcDocument
+      end
+      @document_fedora = the_model.load_instance(params[:id])
+      #fedora_object = ActiveFedora::Base.load_instance(params[:id])
+      #params[:action] = "edit"
+      #@downloadables = downloadables( @document_fedora )
+      show_without_customizations
+      enforce_edit_permissions
+  end
+  
 # displays values and pagination links for a single facet field
   def facet
     # adding the following for facet_pagination with Lucene queries to avoide NPE

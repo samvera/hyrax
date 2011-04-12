@@ -104,4 +104,12 @@ class AssetsController < ApplicationController
       redirect_to url_for(:action => 'index', :controller => "catalog", :q => nil , :f => nil)
     end
 
+    
+    # This is a method to simply remove the item from SOLR but keep the object in fedora. 
+    alias_method :withdraw, :destroy
+    
+    #def withdraw
+    #  
+    #end
+    
 end

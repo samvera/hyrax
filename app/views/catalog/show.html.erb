@@ -21,7 +21,7 @@
   </div>
 </div>
 <% end %>
-<% if editor? %>
+<% if editor? && controller.action_name != "delete" %>
 	<span class="edit-browse">
 		<%= edit_and_browse_links %>
 	</span>
