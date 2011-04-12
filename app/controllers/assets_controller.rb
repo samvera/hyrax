@@ -52,7 +52,6 @@ class AssetsController < ApplicationController
     #   put :update, :id=>"_PID_", "asset"=>{"descMetadata"=>{"medium"=>{"0"=>"Paper Document", "1"=>"Image"}}
     def update
       @document = load_document_from_params
-      @document.update_from_computing_id(params) # This should be moved to a UVA/Libra-specific location and called as a before_filter
       
       logger.debug("attributes submitted: #{@sanitized_params.inspect}")
            
