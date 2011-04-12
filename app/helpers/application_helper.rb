@@ -104,8 +104,6 @@ module ApplicationHelper
     computing_id = extract_computing_id(item.value)
     if File.exists?("#{Rails.root}/public/images/faculty_images/#{computing_id}.jpg")
       img = image_tag "/images/faculty_images/#{computing_id}.jpg", :width=> "100", :alt=>"#{item.value}"
-    elsif   Ldap::Person.new(computing_id).has_photo?
-      img = image_tag ldap_photo_path(computing_id), :width=>"100", :alt=>"#{item.value}"
     else
       img = image_tag "/plugin_assets/hydra_repository/images/default_thumbnail.gif", :width=>"100", :alt=>"#{item.value}"
     end
