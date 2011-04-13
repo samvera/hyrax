@@ -9,7 +9,7 @@
 # @example Declaring the javascript includes for hydrangea_datasets show view while reusing the includes from catalog_edit
 #   def include_javascript_for_hydrangea_datasets_show
 #     include_javascript_for_catalog_edit
-#     javascript_includes << ['hydrangeaArticleBehaviors.js', {:plugin=>:hydrangea_articles, :media=>"all"}]
+#     javascript_includes << ['hydrangeaArticleBehaviors.js', {:plugin=>:hydrangea_articles}]
 #   end
 module JavascriptIncludesHelper
   
@@ -52,10 +52,10 @@ module JavascriptIncludesHelper
   # Adds the appropriate javascripts to javascript_includes for CatalogController show views
   # Override this if you want to change the set of javascript_includes for CatalogController show views
   def include_javascript_for_catalog_show
-    javascript_includes << ['custom', {:plugin=>:hydra_repository, :media=>"all"}] 
+    javascript_includes << ['custom', {:plugin=>:hydra_repository}] 
     
     # This file contains the page initialization scripts for catalog show views
-    javascript_includes << ["catalog/show", {:plugin=>:hydra_repository, :media=>"all"}]
+    javascript_includes << ["catalog/show", {:plugin=>:hydra_repository}]
   end
   
   # Adds the appropriate javascripts to javascript_includes for CatalogController edit views
@@ -64,30 +64,30 @@ module JavascriptIncludesHelper
     # This _would_ include the fluid infusion javascripts, but we don't want them
     # javascript_includes << infusion_javascripts(:default_no_jquery, :extras=>[:inline_editor_integrations], :debug=>true, :render_html=>false)
     
-    javascript_includes << ["jquery.jeditable.mini.js", {:plugin=>:hydra_repository, :media=>"all"}]
-    javascript_includes << ["jquery.form.js", {:plugin=>:hydra_repository, :media=>"all"}]
-    javascript_includes << ['custom', {:plugin=>:hydra_repository, :media=>"all"}]
+    javascript_includes << ["jquery.jeditable.mini.js", {:plugin=>:hydra_repository}]
+    javascript_includes << ["jquery.form.js", {:plugin=>:hydra_repository}]
+    javascript_includes << ['custom', {:plugin=>:hydra_repository}]
     
-    javascript_includes << ["jquery.hydraMetadata.js", {:plugin=>:hydra_repository, :media=>"all"}]
-    javascript_includes << ["jquery.notice.js", {:plugin=>:hydra_repository, :media=>"all"}]
+    javascript_includes << ["jquery.hydraMetadata.js", {:plugin=>:hydra_repository}]
+    javascript_includes << ["jquery.notice.js", {:plugin=>:hydra_repository}]
     
     javascript_includes << ["jquery.jeditable.mini.js", "date-picker/js/datepicker", "jquery.form.js", 'custom', "catalog/edit", "jquery.hydraMetadata.js", "jquery.notice.js", {:plugin=>:hydra_repository}]
-    javascript_includes << ["../infusion/components/undo/js/Undo.js", {:plugin=>:"fluid-infusion", :media=>"all"}]
+    javascript_includes << ["../infusion/components/undo/js/Undo.js", {:plugin=>:"fluid-infusion"}]
 
     # For DatePicker
     javascript_includes << ["jquery.ui.widget.js","jquery.ui.datepicker.js", "mediashelf.datepicker.js", {:plugin=>:hydra_repository }]
     
     # For Fancybox
     javascript_includes << ["fancybox/jquery.fancybox-1.3.1.pack.js", {:plugin=>:hydra_repository}] 
-    stylesheet_links << ["../javascripts/fancybox/jquery.fancybox-1.3.1.css", {:plugin=>:hydra_repository, :media=>"all"}] 
+    stylesheet_links << ["../javascripts/fancybox/jquery.fancybox-1.3.1.css", {:plugin=>:hydra_repository}] 
 
     # For slider controls 
     javascript_includes << ["select_to_ui_slider/selectToUISlider.jQuery.js", {:plugin=>:hydra_repository}] 
-    stylesheet_links << ["../javascripts/select_to_ui_slider/css/ui.slider.extras.css", {:plugin=>:hydra_repository, :media=>"all"}] 
+    stylesheet_links << ["../javascripts/select_to_ui_slider/css/ui.slider.extras.css", {:plugin=>:hydra_repository}] 
     stylesheet_links << ["slider", {:plugin=>:hydra_repository}] 
     
     # This file contains the page initialization scripts for catalog edit views
-    javascript_includes << ["catalog/edit", {:plugin=>:hydra_repository, :media=>"all"}]
+    javascript_includes << ["catalog/edit", {:plugin=>:hydra_repository}]
   end
   
 end

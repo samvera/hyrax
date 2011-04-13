@@ -27,7 +27,7 @@
 	</span>
 <% end -%>
 <div id="document" class="<%= controller.action_name == "edit" ? "document_edit" : "document_show" %>">
-  <div id="doc_<%= @document[:id] %>">
+  <div id="<%= format_pid(@document[:id]) %>">
     <h1><%= h(document_heading) %><br/><%= h(vern_document_heading) %></h1>
     <div class="document">
       <%= render_document_partial @document, params["action"] %>

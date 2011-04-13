@@ -5,6 +5,7 @@ module CatalogHelper
   def format_date date
    date.strftime("%b. %e, %Y")
   end
+    
   
   def depositor_string depositor=nil
     "#{depositor}" unless depositor.nil? 
