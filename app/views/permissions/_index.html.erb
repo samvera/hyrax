@@ -10,24 +10,28 @@
     <% roles.each do |role| %>
       <% role_permissions = @document_fedora.datastreams_in_memory["rightsMetadata"].permissions({"group"=>role}) %>
       <% field_name = "#{role}_group_access" %>
-      <label for="<%=h field_name %>">
-        <%= role.capitalize %>
-      </label>
-      <select id="<%=h field_name %>" name="permission[group][<%=h role %>]">
-        <% choices.each do |choice| %>
-          <% choice_label = choice.keys.first %>
-          <% choice_name = choice.values.first %>
-          <% if role_permissions == choice_name %>
-            <option value="<%=h choice_name %>" selected="selected">
-               <%= choice_label %>
-            </option>
-          <% else %>
-            <option value="<%=h choice_name %>">
-               <%= choice_label %>
-            </option>
+      <dt class="permissions">
+        <label for="<%=h field_name %>">
+          <%= role.capitalize %>
+        </label>
+      </dt>
+      <dd id="<%=h "#{field_name}-container" %>" class="permissions">
+        <select id="<%=h field_name %>" name="permission[group][<%=h role %>]">
+          <% choices.each do |choice| %>
+            <% choice_label = choice.keys.first %>
+            <% choice_name = choice.values.first %>
+            <% if role_permissions == choice_name %>
+              <option value="<%=h choice_name %>" selected="selected">
+                 <%= choice_label %>
+              </option>
+            <% else %>
+              <option value="<%=h choice_name %>">
+                 <%= choice_label %>
+              </option>
+            <% end %>
           <% end %>
-        <% end %>
-      </select>
+        </select>
+      </dd>
     <% end %> 
   </fieldset>
 </form>
