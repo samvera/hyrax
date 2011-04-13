@@ -58,7 +58,7 @@ namespace :hydra do
 
   namespace :fixtures do
     desc "Refresh the fixtures applicable to this hydra head"
-    task :refresh => ["hydra:default_fixtures:refresh", "libra_oa:default_fixtures:refresh"] do
+    task :refresh => ["hydra:default_fixtures:refresh", "libra_oa:default_fixtures:refresh", "hydrus:default_fixtures:refresh"] do
     end
   end
   
