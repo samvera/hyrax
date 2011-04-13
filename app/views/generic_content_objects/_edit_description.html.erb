@@ -1,4 +1,4 @@
-<form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"hydrangea_article")%>" method="post" data-resourceType="hydrangea_article" accept-charset="utf-8">
+<form id="descriptive_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"hydrangea_article")%>" method="post" data-resourceType="hydrangea_article" accept-charset="utf-8">
   <fieldset id="title_fields">
     <legend>Title</legend>
     <input id="content_type" type="hidden" name="content_type" value="hydrangea_article" />
@@ -61,4 +61,5 @@
       </dd>
     </dl>
   </fieldset>
+  <%= button_to 'Save Description', {},{:id => "submitDescription"} %>
 </form>
