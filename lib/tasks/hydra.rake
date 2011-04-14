@@ -157,13 +157,16 @@ namespace :hydra do
     desc "Refresh default Hydra fixtures"
     task :refresh do
       FIXTURES.each_with_index do |fixture,index|
-        ENV["pid"] = fixture
-        if index == 0
-          Rake::Task["hydra:delete"].invoke if index == 0
-          Rake::Task["hydra:import_fixture"].invoke if index == 0
-        else 
-          Rake::Task["hydra:delete"].execute if index > 0
-          Rake::Task["hydra:import_fixture"].execute if index > 0
+        begin
+          ENV["pid"] = fixture
+          if index == 0
+            Rake::Task["hydra:delete"].invoke if index == 0
+            Rake::Task["hydra:import_fixture"].invoke if index == 0
+          else 
+            Rake::Task["hydra:delete"].execute if index > 0
+            Rake::Task["hydra:import_fixture"].execute if index > 0
+          end
+        rescue 
         end
       end
     end
