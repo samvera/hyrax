@@ -166,7 +166,8 @@ namespace :hydra do
             Rake::Task["hydra:delete"].execute if index > 0
             Rake::Task["hydra:import_fixture"].execute if index > 0
           end
-        rescue 
+        rescue Errno::ECONNREFUSED => e
+          puts "Can't connect to Fedora! Are you sure jetty is running?"
         end
       end
     end
