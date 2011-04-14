@@ -59,8 +59,15 @@ namespace :libra_oa do
 
     desc "Refresh default libra-oa fixtures"
     task :refresh do
-      Rake::Task["libra_oa:default_fixtures:delete"].invoke
-      Rake::Task["libra_oa:default_fixtures:load"].invoke
+      begin
+        Rake::Task["libra_oa:default_fixtures:delete"].invoke
+      rescue 
+      end
+      
+      begin
+        Rake::Task["libra_oa:default_fixtures:load"].invoke
+      rescue 
+      end
     end
   end
 
