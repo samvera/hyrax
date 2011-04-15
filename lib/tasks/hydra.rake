@@ -21,13 +21,17 @@ namespace :hydra do
       puts "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
       pid = ENV["pid"]
-      # puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
       begin
         ActiveFedora::Base.load_instance(pid).delete
       rescue ActiveFedora::ObjectNotFoundError
-        # The object has already been deleted (or was never created).  Do nothing.
+        puts "The object #{pid} has already been deleted (or was never created)."
+      rescue Errno::ECONNREFUSED => e
+        puts "Can't connect to Fedora! Are you sure jetty is running?"
+      rescue Fedora::ServerError => e
+          logger.error("Received a Fedora error while deleting #{pid}")
       end
-      puts "Deleted '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      logger.info "Deleted '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
     end
   end
   
@@ -157,18 +161,13 @@ namespace :hydra do
     desc "Refresh default Hydra fixtures"
     task :refresh do
       FIXTURES.each_with_index do |fixture,index|
-        begin
-          ENV["pid"] = fixture
-          if index == 0
-            Rake::Task["hydra:delete"].invoke if index == 0
-            Rake::Task["hydra:import_fixture"].invoke if index == 0
-          else 
-            Rake::Task["hydra:delete"].execute if index > 0
-            Rake::Task["hydra:import_fixture"].execute if index > 0
-          end
-        rescue Errno::ECONNREFUSED => e
-          puts "Can't connect to Fedora! Are you sure jetty is running?"
-        end
+        logger.debug("Refreshing #{fixture}")
+        ENV["fixture"] = nil
+        ENV["pid"] = fixture        
+        Rake::Task["hydra:delete"].reenable
+        Rake::Task["hydra:delete"].execute
+        Rake::Task["hydra:import_fixture"].reenable
+        Rake::Task["hydra:import_fixture"].execute
       end
     end
   end
