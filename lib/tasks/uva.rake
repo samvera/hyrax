@@ -61,12 +61,14 @@ namespace :libra_oa do
     task :refresh do
       begin
         Rake::Task["libra_oa:default_fixtures:delete"].invoke
-      rescue 
+      rescue Exception => e
+        puts e.inspect
       end
       
       begin
         Rake::Task["libra_oa:default_fixtures:load"].invoke
-      rescue 
+      rescue Exception => e
+        puts e.inspect
       end
     end
   end
