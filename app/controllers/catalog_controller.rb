@@ -5,6 +5,8 @@ class CatalogController
   include Blacklight::CatalogHelper
   include Hydra::RepositoryController
   include Hydra::AccessControlsEnforcement
+  include Hydra::FileAssetsHelper  
+  
   before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index, :delete]
     
   def edit
@@ -105,10 +107,10 @@ Pulled from vendor/plugins/dor_objects/app/views/dor_object/_edit.html.erb
     if the_model.nil?
       the_model = DcDocument
     end
+    
     @document_fedora = the_model.load_instance(params[:id])
-    #fedora_object = ActiveFedora::Base.load_instance(params[:id])
-    #params[:action] = "edit"
-    #@downloadables = downloadables( @document_fedora )
+    @file_assets = @document_fedora.file_objects(:response_format=>:solr)
+    
     show_without_customizations
     enforce_edit_permissions
   end

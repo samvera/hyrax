@@ -1,19 +1,5 @@
-<% unless @solr_result.hits.empty? %>
-  <% if params[:deletable] == "true" %>
-    <ul><%= render :partial=>'deletable_result', :collection=>@solr_result.hits %></ul>
-  <% else %>
-    <table class='multipleEdit' id='file_assets'>
-      <tr>
-        <th>File</th>
-        <th></th>
-      </tr>
-      <%= render :partial=>'result', :collection=>@solr_result.hits %>
-    </table>
-  <% end %>
-<% end %>
-
-<% if !@document.nil? && editor? %>
-  <div id='uploader'>
-    <%= render :partial=>"new", :layout=>false %>
-  </div>
-<% end %>
+<%# This file is for backwards compatiability purposes. 
+		Probably should eventually go away. 
+%> 
+<%# @solr_result.hits %>
+<%= render :partial=>'file_assets/index', :locals => { :file_assets => @solr_result }  %>
