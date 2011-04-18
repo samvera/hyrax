@@ -2,11 +2,6 @@
 
 <%#=javascript_include_tag '../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', :cache=>true, :plugin=>"fluid-infusion" %>
 
-<style type="text/css" rel="stylesheet">
-	/* TODO: These uploader elements are hidden for our demonstration. Put this CSS in an external stylesheet soon. */
-	form.fl-progEnhance-basic, .fl-uploader-manually-degrade {display:none;}
-</style>
-
 
 <div id="uploader-contents">
     
@@ -14,7 +9,7 @@
     <form method="post" enctype="multipart/form-data" class="fl-uploader fl-progEnhance-basic">
         <p>Browse to upload a file.</p>
         <input name="fileData" type="file" />
-        <div><input type="submit" value="Save"/></div>
+        <div><input type="submit" value="Upload File"/></div>
     </form>
     
     <!-- This is the markup for the Fluid Uploader component itself. -->
