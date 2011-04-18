@@ -71,16 +71,25 @@ module Hydra::FileAssetsHelper
   # VideoAsset => ".mov", ".flv", ".mp4"
   # ImageAsset => ".jpeg", ".jpg", ".gif", ".png"
   def choose_model_by_filename_extension(extension)
-    case extension
-    when ".wav", ".mp3", ".aiff"
-      AudioAsset
-    when ".mov", ".flv", ".mp4"
-      VideoAsset
-    when ".jpeg", ".jpg", ".gif", ".png"
-      ImageAsset
-    else
-     FileAsset
+    
+    Hydra.config[:file_asset_types][:extension_mappings].each_pair do |klass, extensions|
+      if extensions.include?(extension)
+        return klass
+      end
     end
+    
+    return Hydra.config[:file_asset_types][:default]
+    
+    # case extension
+    # when ".wav", ".mp3", ".aiff"
+    #   AudioAsset
+    # when ".mov", ".flv", ".mp4", ".m4v"
+    #   VideoAsset
+    # when ".jpeg", ".jpg", ".gif", ".png"
+    #   ImageAsset
+    # else
+    #  FileAsset
+    # end
   end
 
   private

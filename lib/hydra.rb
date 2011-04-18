@@ -1,5 +1,9 @@
 # Hydra libraries
-module Hydra; end
+module Hydra
+  autoload :Configurable, 'blacklight/configurable'
+  extend Blacklight::Configurable
+end
+
 require 'mediashelf/active_fedora_helper'
 
 require 'hydra/repository_controller'
