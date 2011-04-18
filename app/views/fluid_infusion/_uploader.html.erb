@@ -5,10 +5,11 @@
 
 <div id="uploader-contents">
     
-    <!-- This form will be progressively enhanced by the Fluid Uploader component. -->
-    <form method="post" enctype="multipart/form-data" class="fl-uploader fl-progEnhance-basic">
+    <!-- This form will be progressively enhanced by the Fluid Uploader component. -->    
+    <form method="post" enctype="multipart/form-data" class="fl-uploader fl-progEnhance-basic" action="<%=h upload_url %>">
+        <input type="hidden" name="container_id" value="<%=h container_id %>">
         <p>Browse to upload a file.</p>
-        <input name="fileData" type="file" />
+        <input name="Filedata" type="file" />
         <div><input type="submit" value="Upload File"/></div>
     </form>
     
