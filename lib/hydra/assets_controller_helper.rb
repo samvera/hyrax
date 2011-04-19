@@ -47,8 +47,9 @@ module Hydra::AssetsControllerHelper
   end
 
   
-  # 
-  # @return [Hash] returns a Hash that you can feed into ActiveFedora::Base.update_datstream_attributes
+  # Builds a Hash that you can feed into ActiveFedora::Base.update_datstream_attributes
+  # If params[:asset] is empty, returns an empty Hash
+  # @return [Hash] a Hash that you can feed into ActiveFedora::Base.update_datstream_attributes
   #   {
   #    "descMetadata"=>{ [{:person=>0}, :role]=>{"0"=>"role1", "1"=>"role2", "2"=>"role3"} },
   #    "properties"=>{ "notes"=>"foo" }
@@ -56,24 +57,26 @@ module Hydra::AssetsControllerHelper
   def sanitize_update_params
     @sanitized_params ||= {}
     
-    params["asset"].each_pair do |datastream_name,fields|
+    unless params["asset"].nil?
+      params["asset"].each_pair do |datastream_name,fields|
       
-      @sanitized_params[datastream_name] = {}
+        @sanitized_params[datastream_name] = {}
       
-      # TEMPORARY HACK: special case for supporting textile 
-      if params["field_id"]=="abstract_0" 
-        params[:field_selectors] = {"descMetadata" => {"abstract" => [:abstract]}}
-      end
+        # TEMPORARY HACK: special case for supporting textile 
+        if params["field_id"]=="abstract_0" 
+          params[:field_selectors] = {"descMetadata" => {"abstract" => [:abstract]}}
+        end
       
-      if params.fetch("field_selectors",false) && params["field_selectors"].fetch(datastream_name, false)
-        # If there is an entry in field_selectors for the datastream (implying a nokogiri datastream), retrieve the field_selector for this field.
-        # if no field selector, exists, use the field name
-        fields.each_pair do |field_name,field_values|
-          parent_select = OM.destringify( params["field_selectors"][datastream_name].fetch(field_name, field_name) )
-          @sanitized_params[datastream_name][parent_select] = field_values       
-        end        
-      else
-        @sanitized_params[datastream_name] = unescape_keys(params[:asset][datastream_name])
+        if params.fetch("field_selectors",false) && params["field_selectors"].fetch(datastream_name, false)
+          # If there is an entry in field_selectors for the datastream (implying a nokogiri datastream), retrieve the field_selector for this field.
+          # if no field selector, exists, use the field name
+          fields.each_pair do |field_name,field_values|
+            parent_select = OM.destringify( params["field_selectors"][datastream_name].fetch(field_name, field_name) )
+            @sanitized_params[datastream_name][parent_select] = field_values       
+          end        
+        else
+          @sanitized_params[datastream_name] = unescape_keys(params[:asset][datastream_name])
+        end
       end
     end
     
