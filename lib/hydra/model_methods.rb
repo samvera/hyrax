@@ -22,6 +22,42 @@ module Hydra::ModelMethods
       prop_ds.collection_values = collection
     end
   end
+  
+  # Set the title and label on the current object
+  #
+  # @params [String] new_title
+  # @params [Hash] opts (optional) hash of configuration options
+  #
+  # @example Use :only_if_blank option to only update the values when the label is empty
+  #   obj.set_title_and_label("My Title", :only_if_blank=> true)
+  def set_title_and_label(new_title, opts={})
+    if opts[:only_if_blank]
+      if self.label.nil? || self.label.empty?
+        self.label = new_title
+        self.set_title( new_title )
+      end
+    else
+      self.label = new_title
+      set_title( new_title )
+    end
+  end
+  
+  # Set the title and label on the current object
+  #
+  # @params [String] new_title
+  # @params [Hash] opts (optional) hash of configuration options
+  def set_title(new_title, opts={})
+    if self.datastreams.has_key?("descMetadata")
+      desc_metadata_ds = self.datastreams["descMetadata"]
+      if desc_metadata_ds.kind_of?(ActiveFedora::NokogiriDatastream)
+        if desc_metadata_ds.class.terminology.has_term?(:title)
+          desc_metadata_ds.update_values([:title]=>new_title)
+        end
+      elsif desc_metadata_ds.respond_to?(:title_values)
+        desc_metadata_ds.title_values = new_title
+      end
+    end
+  end
 
   # Call insert_contributor on the descMetadata datastream
   def insert_contributor(type, opts={})
