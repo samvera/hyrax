@@ -8,7 +8,7 @@ class FileAssetsController < ApplicationController
   
   before_filter :require_fedora
   before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
-  
+  prepend_before_filter :sanitize_update_params
   
   def index
 =begin
@@ -61,26 +61,26 @@ From file_assets/_new.html.haml
   end
   
   def create
+    redirect_params = {:action=>:index}
     @file_asset = create_and_save_file_asset_from_params
     apply_depositor_metadata(@file_asset)
-        
+    
+    flash[:notice] = "The file #{params[:Filename]} has been saved in <a href=\"#{asset_url(@file_asset.pid)}\">#{@file_asset.pid}</a>."
+            
     if !params[:container_id].nil?
-      @container =  ActiveFedora::Base.load_instance(params[:container_id])
-      @container.file_objects_append(@file_asset)
-      @container.save
+      associate_file_asset_with_container
+      redirect_params[:container_id] = params[:container_id]
     end
     
-    ## FOR CAPTURING ANY FILE METADATA // THERE'S PROBABY A BETTER PLACE FOR THIS. 
+    ## Apply any posted file metadata
     unless params[:asset].nil?
-      updater_method_args = prep_updater_method_args(params)
-      logger.debug("attributes submitted: #{updater_method_args.inspect}")
-      result = @file_asset.update_indexed_attributes(updater_method_args[:params], updater_method_args[:opts])
-      @file_asset.save
+      logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
+      apply_file_metadata
     end
-    ##
     
     logger.debug "Created #{@file_asset.pid}."
-    render :nothing => true
+    
+    redirect_to redirect_params
   end
   
   # Common destroy method for all AssetsControllers 

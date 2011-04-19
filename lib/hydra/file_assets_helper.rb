@@ -15,11 +15,51 @@ module Hydra::FileAssetsHelper
   end
   
   # Puts the contents of params[:Filedata] (posted blob) into a datastream within the given @asset
+  # Sets asset label and title to filename if they're empty
   #
   # @param [FileAsset] the File Asset to add the blob to
   # @return [FileAsset] the File Asset  
   def add_posted_blob_to_asset(asset=@file_asset)
-    asset.add_file_datastream(params[:Filedata], :label=>params[:Filename], :mimeType=>mime_type(params[:Filename]))
+    file_name = filename_from_params
+    asset.add_file_datastream(posted_file, :label=>file_name, :mimeType=>mime_type(file_name))
+    asset.set_title_and_label( file_name, :only_if_blank=>true )
+  end
+  
+  # Associate the new file asset with its container
+  def associate_file_asset_with_container(file_asset=nil, container_id=nil)
+    if container_id.nil?
+      container_id = params[:container_id]
+    end
+    if file_asset.nil?
+      file_asset = @file_asset
+    end
+    file_asset.add_relationship(:is_part_of, container_id)
+    file_asset.datastreams["RELS-EXT"].dirty = true
+    file_asset.save
+  end
+  
+  # Apply any posted file metadata to the file asset
+  def apply_posted_file_metadata         
+    @metadata_update_response = update_document(@file_asset, @sanitized_params)
+    @file_asset.save
+  end
+  
+  
+  # The posted File 
+  # @return [File] the posted file.  Defaults to nil if no file was posted.
+  def posted_file
+    params[:Filedata]
+  end
+  
+  # A best-guess filename based on POST params
+  # If Filename was submitted, it uses that.  Otherwise, it calls +original_filename+ on the posted file
+  def filename_from_params
+    if !params[:Filename].nil?
+      file_name = params[:Filename]      
+    else
+      file_name = posted_file.original_filename
+      params[:Filename] = file_name
+    end
   end
   
   # Creates a File Asset and sets its label from params[:Filename]
