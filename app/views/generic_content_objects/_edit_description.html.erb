@@ -1,4 +1,5 @@
 <form id="descriptive_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"hydrangea_article")%>" method="post" data-resourceType="hydrangea_article" accept-charset="utf-8">
+  <input type="hidden" name="_method" value="put"/>
   <fieldset id="title_fields">
     <legend>Title</legend>
     <input id="content_type" type="hidden" name="content_type" value="hydrangea_article" />

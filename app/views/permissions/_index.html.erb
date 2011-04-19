@@ -2,6 +2,7 @@
   <% asset_id = params[:asset_id] %>
 <% end %>
 <form id="permissions" action="<%= url_for(:asset_id=>@document_fedora.pid,:action=>"update", :controller=>"permissions") %>" method="post" data-resourceType="hydrangea_article" accept-charset="utf-8">
+  <input type="hidden" name="_method" value="put"/>
   <fieldset class="slider">
     <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
     <% roles = RoleMapper.role_names %>
