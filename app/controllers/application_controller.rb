@@ -11,7 +11,7 @@ class ApplicationController
   include HydraAccessControlsHelper
   
   helper :all
-  helper :hydra_access_controls, :hydra_djatoka, :downloads, :hydra, :hydra_fedora_metadata, :hydra_assets
+  helper :hydra_access_controls, :hydra_djatoka, :downloads, :hydra, :hydra_fedora_metadata, :hydra_assets, :hydra_uploader
   helper :generic_content_objects, :personalization
   
   # helper_method [:request_is_for_user_resource?]#, :user_logged_in?]
