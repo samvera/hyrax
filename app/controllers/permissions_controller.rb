@@ -15,7 +15,7 @@ class PermissionsController < ApplicationController
     
     respond_to do |format|
       format.html 
-      format.inline { render :partial=>"permissions/index" }
+      format.inline { render :partial=>"permissions/index.html", :format=>"html" }
     end
   end
   
@@ -27,7 +27,7 @@ Removed from permissions/_new.html.erb
 =end
     respond_to do |format|
       format.html 
-      format.inline { render :partial=>"permissions/new" }
+      format.inline { render :partial=>"permissions/new.html" }
     end
   end
   
