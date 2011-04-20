@@ -12,7 +12,11 @@ class PermissionsController < ApplicationController
     ds.pid = pid
     ds.dsid = dsid
     @document_fedora.datastreams_in_memory[dsid] = ds
-    render :partial=>"permissions/index"
+    
+    respond_to do |format|
+      format.html 
+      format.inline { render :partial=>"permissions/index" }
+    end
   end
   
   def new
@@ -21,7 +25,10 @@ HYDRA-150
 Removed from permissions/_new.html.erb
 <% javascript_includes << ["jquery.form.js", {:plugin=>:hydra_repository}] %>
 =end
-    render :partial=>"permissions/new"
+    respond_to do |format|
+      format.html 
+      format.inline { render :partial=>"permissions/new" }
+    end
   end
   
   def edit
@@ -33,7 +40,11 @@ Removed from permissions/_new.html.erb
     ds.pid = pid
     ds.dsid = dsid
     @document_fedora.datastreams_in_memory[dsid] = ds
-    render :edit
+    
+    respond_to do |format|
+      format.html 
+      format.inline {render :action=>"edit", :layout=>false}
+    end
   end
   
   # Create a new permissions entry
@@ -68,7 +79,13 @@ Removed from permissions/_new.html.erb
     # Re-index the object
     Solrizer::Fedora::Solrizer.new.solrize(pid)
     
-    render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}
+    flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
+    
+    respond_to do |format|
+      format.html { redirect_to :controller=>"permissions", :action=>"index" }
+      format.inline { render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}}
+    end
+
   end
   
   # Updates the permissions for all actors in a hash.  Can specify as many groups and persons as you want
@@ -99,14 +116,22 @@ Removed from permissions/_new.html.erb
     # Re-index the object
     Solrizer::Fedora::Solrizer.new.solrize(pid)
     
-    # This should be replaced ...
-    if params[:permission].has_key?(:group)
-      access_actor_type = "group"
-    else
-      access_actor_type = "person"
-    end
-    actor_id = params["permission"][access_actor_type].first[0]
+    flash[:notice] = "The permissions have been updated."
     
-    render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}
+    respond_to do |format|
+      format.html { redirect_to :controller=>"permissions", :action=>"index" }
+      format.inline do
+        # This should be replaced ...
+        if params[:permission].has_key?(:group)
+          access_actor_type = "group"
+        else
+          access_actor_type = "person"
+        end
+        actor_id = params["permission"][access_actor_type].first[0]
+        render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id} 
+      end
+    end
+    
   end
+    
 end
