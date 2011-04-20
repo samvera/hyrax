@@ -14,19 +14,22 @@
 	<% choices = [{"No Access" => "none"},{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
 	<% current_permissions = @document_fedora.datastreams_in_memory["rightsMetadata"].permissions({"person"=>person_id}) %>
 	
-	<label for="<%= field_name %>">
-		<%= person_id %>
-	</label>
-	
-	<select id="<%= field_name %>" name="permission[person][<%# person_id %>]">
-  	<% choices.each do |choice| %>
-	  	<% choice_label = choice.keys.first %>
-	  	<% choice_name = choice.values.first %>
+	<dt>
+  	<label for="<%= field_name %>">
+  		<%= person_id %>
+  	</label>
+	</dt>
+	<dd>
+  	<select id="<%= field_name %>" name="permission[person][<%=h person_id %>]">
+    	<% choices.each do |choice| %>
+  	  	<% choice_label = choice.keys.first %>
+  	  	<% choice_name = choice.values.first %>
 	  	
-			<option value="<%= choice_name %>" selected="<%= current_permissions == choice_name %>"
-	    	<%= choice_label %>
-  		</option>
-  	<% end %>
-	</select>
+  			<option value="<%= choice_name %>" selected="<%= current_permissions == choice_name %>">
+  	    	<%= choice_label %>
+    		</option>
+    	<% end %>
+  	</select>
+	</dd>
 	
 <% end %>

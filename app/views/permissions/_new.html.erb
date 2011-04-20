@@ -1,9 +1,9 @@
 <% unless defined?(asset_id) %>
   <% asset_id = params[:asset_id] %>
 <% end %>
-<fieldset id="individual_permissions" class="slider">
+<div id="add_permissions" class="slider">
   <h2>Add Individual Permissions</h2>
-  <form id="new_permissions" action="<% url_for(:action=>"create", :controller=>"permissions", :asset_id=>asset_id) %>" method="post">
+  <form id="new_permissions" action="<%= url_for(:action=>"create", :controller=>"permissions", :asset_id=>asset_id) %>" method="post">
     <input id="permission_actor_type" type="hidden" name="permission[actor_type]" value="person" />
     <label for="permission_actor_id">User ID</label>
     <input id="permission_actor_id" name="permission[actor_id]" />
@@ -15,4 +15,4 @@
     </select>
     <input type="submit" value="Add Permissions" />
   </form>
-</fieldset>
+</div>
