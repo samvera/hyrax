@@ -203,7 +203,7 @@ Pulled from vendor/plugins/dor_objects/app/views/dor_objects/_show.html.erb
       the_model = DcDocument
     end
     @document_fedora = the_model.load_instance(params[:id])
-    params = {:qt=>"dismax",:q=>"*:*",:rows=>"0",:facet=>"true", :facets=>{:fields=>Blacklight.config[:facet][:field_names]}}
+    params = {:qt=>"search",:defType=>"dismax",:q=>"*:*",:rows=>"0",:facet=>"true", :facets=>{:fields=>Blacklight.config[:facet][:field_names]}}
     @facet_lookup = Blacklight.solr.find params
     enforce_read_permissions
   end
