@@ -1,22 +1,17 @@
-<%= stylesheet_link_tag '../infusion/framework/fss/css/fss-layout.css', :plugin=>"fluid-infusion" %>
-
-<%#=javascript_include_tag '../infusion/framework/core/js/ProgressiveEnhancement.js', '../infusion/InfusionAll.js', :cache=>true, :plugin=>"fluid-infusion" %>
-
+<%- stylesheet_links << ['../infusion/framework/fss/css/fss-layout.css', {:plugin=>"fluid-infusion"}] %>
 
 <div id="uploader-contents">
     
     <!-- This form will be progressively enhanced by the Fluid Uploader component. -->    
     <form method="post" enctype="multipart/form-data" class="fl-uploader fl-progEnhance-basic" action="<%=h upload_url %>">
-        <input type="hidden" name="container_id" value="<%=h container_id %>">
+        <input type="hidden" name="container_id" value="<%=h container_id %>"/>
         <p>Browse to upload a file.</p>
         <input name="Filedata" type="file" />
         <div><input type="submit" value="Upload File"/></div>
     </form>
     
     <!-- This is the markup for the Fluid Uploader component itself. -->
-    <form class="flc-uploader fl-uploader fl-progEnhance-enhanced" 
-          method="get" 
-          enctype="multipart/form-data">
+    <form class="flc-uploader fl-uploader fl-progEnhance-enhanced" action="<%=h upload_url %>" method="get" enctype="multipart/form-data">
               
         <!-- The file queue -->
         <div class="fl-uploader-queue-wrapper">

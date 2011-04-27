@@ -63,6 +63,9 @@ class AssetsController < ApplicationController
       logger.debug("returning #{response.inspect}")
     
       respond_to do |want| 
+        want.html {
+          redirect_to :controller=>"catalog", :action=>"edit"
+        }
         want.js {
           render :json=> tidy_response_from_update(@response)  
         }
@@ -71,9 +74,6 @@ class AssetsController < ApplicationController
             textile_response = tidy_response_from_update(@response).values.first
           end
           render :text=> white_list( RedCloth.new(textile_response, [:sanitize_html]).to_html )
-        }
-        want.html {
-          redirect_to :controller=>"catalog", :action=>"edit"
         }
       end
     end
