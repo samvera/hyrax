@@ -65,24 +65,32 @@ From file_assets/_new.html.haml
   # * the File Asset will use RELS-EXT to assert that it's a part of the specified container
   # * the method will redirect to the container object's edit view after saving
   def create
-    @file_asset = create_and_save_file_asset_from_params
-    apply_depositor_metadata(@file_asset)
+    if params.has_key?(:Filedata)
+      @file_asset = create_and_save_file_asset_from_params
+      apply_depositor_metadata(@file_asset)
     
-    flash[:notice] = "The file #{params[:Filename]} has been saved in <a href=\"#{asset_url(@file_asset.pid)}\">#{@file_asset.pid}</a>."
+      flash[:notice] = "The file #{params[:Filename]} has been saved in <a href=\"#{asset_url(@file_asset.pid)}\">#{@file_asset.pid}</a>."
             
+      if !params[:container_id].nil?
+        associate_file_asset_with_container
+      end
+    
+      ## Apply any posted file metadata
+      unless params[:asset].nil?
+        logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
+        apply_file_metadata
+      end
+      # If redirect_params has not been set, use {:action=>:index}
+      logger.debug "Created #{@file_asset.pid}."
+    else
+      flash[:notice] = "You must specify a file to upload."
+    end
+    
     if !params[:container_id].nil?
-      associate_file_asset_with_container
       redirect_params = {:controller=>"catalog", :id=>params[:container_id], :action=>:edit}
     end
     
-    ## Apply any posted file metadata
-    unless params[:asset].nil?
-      logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
-      apply_file_metadata
-    end
-    # If redirect_params has not been set, use {:action=>:index}
     redirect_params ||= {:action=>:index}
-    logger.debug "Created #{@file_asset.pid}."
     
     redirect_to redirect_params
   end
