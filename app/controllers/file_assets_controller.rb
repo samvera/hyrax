@@ -60,8 +60,11 @@ From file_assets/_new.html.haml
     render :partial=>"new", :layout=>false
   end
   
+  # Creates and Saves a File Asset to contain the the Uploaded file 
+  # If container_id is provided:
+  # * the File Asset will use RELS-EXT to assert that it's a part of the specified container
+  # * the method will redirect to the container object's edit view after saving
   def create
-    redirect_params = {:action=>:index}
     @file_asset = create_and_save_file_asset_from_params
     apply_depositor_metadata(@file_asset)
     
@@ -69,7 +72,7 @@ From file_assets/_new.html.haml
             
     if !params[:container_id].nil?
       associate_file_asset_with_container
-      redirect_params[:container_id] = params[:container_id]
+      redirect_params = {:controller=>"catalog", :id=>params[:container_id], :action=>:edit}
     end
     
     ## Apply any posted file metadata
@@ -77,7 +80,8 @@ From file_assets/_new.html.haml
       logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
       apply_file_metadata
     end
-    
+    # If redirect_params has not been set, use {:action=>:index}
+    redirect_params ||= {:action=>:index}
     logger.debug "Created #{@file_asset.pid}."
     
     redirect_to redirect_params

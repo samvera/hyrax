@@ -119,7 +119,7 @@ Removed from permissions/_new.html.erb
     flash[:notice] = "The permissions have been updated."
     
     respond_to do |format|
-      format.html { redirect_to :controller=>"permissions", :action=>"index" }
+      format.html { redirect_to :controller=>"catalog", :action=>"edit", :id=>params[:asset_id] }
       format.inline do
         # This should be replaced ...
         if params[:permission].has_key?(:group)
