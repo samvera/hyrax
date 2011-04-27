@@ -6,7 +6,7 @@
   <fieldset class="slider">
     <legend>Group Permissions</legend>
     <dl>
-    <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
+    <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read"}, {"Edit &amp; Upload" => "edit"}] %>
     <% roles = RoleMapper.role_names %>
     <%# This next line should be conditional upon a person having Publish permissions on the object's collection %>
     <% roles << "public" %>
@@ -41,7 +41,7 @@
   <fieldset id="individual_permissions" class="slider">
       <legend>Individual Permissions</legend>
       <dl>
-        <% choices = [{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
+        <% choices = [{"Discover" => "discover"}, {"Read &amp; Download" => "read"}, {"Edit &amp; Upload" => "edit"}] %>
         <% individual_permissions = {} %>
         <% choices.each do |choice| %>
           <% choice_name = choice.values.first %>

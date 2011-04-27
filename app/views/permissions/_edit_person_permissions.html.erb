@@ -11,7 +11,7 @@
 
 <% if person_id != current_user.login %>
 	<% field_name = "#{person_id}_access" %>
-	<% choices = [{"No Access" => "none"},{"Discover" => "discover"}, {"Read & Download" => "read"}, {"Edit & Upload" => "edit"}] %>
+	<% choices = [{"No Access" => "none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read"}, {"Edit &amp; Upload" => "edit"}] %>
 	<% current_permissions = @document_fedora.datastreams_in_memory["rightsMetadata"].permissions({"person"=>person_id}) %>
 	
 	<dt>

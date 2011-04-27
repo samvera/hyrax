@@ -2,7 +2,7 @@
   <input type="hidden" name="_method" value="put"/>
   <fieldset id="title_fields">
     <legend>Title</legend>
-    <input id="content_type" type="hidden" name="content_type" value="hydrangea_article" />
+    <input class="content_type" type="hidden" name="content_type" value="hydrangea_article" />
     <dl>
       <dt>
         <%= fedora_field_label("descMetadata", [:title_info, :main_title], "Title:") %>
@@ -29,7 +29,7 @@
       <dt>
         <%= fedora_field_label("descMetadata", [:abstract], "Abstract:") %>
       </dt>
-      <dd id="abstract">
+      <dd class="abstract">
         <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false) %>
       </dd>
     </dl>
@@ -46,5 +46,5 @@
       </dd>
     </dl>
   </fieldset>
-  <%= button_to 'Save Description', {},{:id => "submitDescription"} %>
+  <%= submit_tag 'Save Description', {:id => "submitDescription"} %>
 </form>
