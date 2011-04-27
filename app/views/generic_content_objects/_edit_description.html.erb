@@ -20,14 +20,7 @@
   </fieldset>
   <fieldset id="contributor_fields">
     <legend>Contributors</legend>
-    <ol>
-      <%= render :partial=>"contributors/edit_person", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:person) %>
-      <%= render :partial=>"contributors/edit_organization", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:organization) %>
-    </ol>    
-    
-    <%= render :partial => "contributors/add_contributor_split_button" %>
-    
-    
+    <%= render :partial => "contributors/index" %>
   </fieldset>
 
   <fieldset id="abstract_fields">
