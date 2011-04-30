@@ -1,8 +1,48 @@
 # This file is copied to ~/spec when you run 'ruby script/generate rspec'
 # from the project root directory.
 ENV["RAILS_ENV"] ||= 'test'
-require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_ROOT)
-require 'spec/autorun'
+
+unless defined?(Rails) 
+  
+  module Rails
+    def self.root
+      File.join(File.dirname(__FILE__), "..")
+    end
+    def self.logger
+      Logger.new(STDOUT)
+    end
+    def self.env
+      ENV["RAILS_ENV"]
+    end
+  end
+  
+  # Capture any calls to require_dependency
+  def require_dependency(dependency_path)
+  end
+  
+end
+
+# Initialize Controllers that would usually be initialized by Blacklight
+require "action_controller"
+class ApplicationController < ActionController::Base
+end
+class CatalogController < ActionController::Base
+  def show
+  end
+end
+
+$LOAD_PATH << File.join(File.dirname(__FILE__), "..", "app", "helpers")
+$LOAD_PATH << File.join("app", "models")
+$LOAD_PATH << File.join("app", "controllers") 
+
+require 'lib/hydra-head'
+Dir[File.join(File.dirname(__FILE__), "lib", "**", "*.rb")].each {|f| require f}
+
+Dir["app/helpers/*.rb"].each {|f| require f }
+Dir["app/models/*.rb"].each {|f| require f}
+Dir["app/controllers/*.rb"].each {|f| require f}
+# require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_ROOT)
+# require 'spec/autorun'
 require 'spec/rails'
 
 
@@ -13,7 +53,8 @@ end
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+# Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+Dir[File.join(File.dirname(__FILE__), "support", "**", "*.rb")].each {|f| require f}
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these

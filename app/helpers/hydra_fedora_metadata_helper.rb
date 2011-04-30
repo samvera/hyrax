@@ -1,7 +1,13 @@
 require "inline_editable_metadata_helper"
 require "block_helpers"
+require "active_support"
 
 module HydraFedoraMetadataHelper
+  
+  def self.included(klass)
+    # This is necessary to support calls to methods like underscore & capitalize when running tests outside of Rails environment
+    klass.extend(ActiveSupport::Inflector)
+  end
   
   def fedora_text_field(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
