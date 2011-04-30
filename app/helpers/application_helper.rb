@@ -1,3 +1,4 @@
+require "hydra_helper"
 module ApplicationHelper
   include Stanford::SearchworksHelper
   #include Stanford::SolrHelper # this is already included by the SearchworksHelper

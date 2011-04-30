@@ -10,7 +10,7 @@ class AssetsController < ApplicationController
     
     
     include Blacklight::CatalogHelper
-    helper :hydra, :metadata, :infusion_view
+    helper :hydra
     
     before_filter :search_session, :history_session
     before_filter :require_solr, :require_fedora

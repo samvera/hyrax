@@ -6,13 +6,13 @@
 # Load Blacklight's ApplicationController first
 require_dependency "vendor/plugins/blacklight/app/controllers/application_controller.rb"
 
-class ApplicationController 
+class ApplicationController
   
   include HydraAccessControlsHelper
   
   helper :all
-  helper :hydra_access_controls, :hydra_djatoka, :downloads, :metadata, :hydra, :custom_metadata, :hydra_fedora_metadata, :hydra_assets
-  helper :generic_content_objects, :personalization, :hydrangea_datasets
+  helper :hydra_access_controls, :hydra_djatoka, :downloads, :hydra, :hydra_fedora_metadata, :hydra_assets
+  helper :generic_content_objects, :personalization
   
   # helper_method [:request_is_for_user_resource?]#, :user_logged_in?]
   before_filter [:store_bounce]
