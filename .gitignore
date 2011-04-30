@@ -1,0 +1,69 @@
+## MAC OS
+.DS_Store
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
+
+## OSX
+.DS_Store
+nohup.out
+
+## Cucumber
+
+rerun.txt
+
+## rcov
+coverage.data
+coverage/*
+
+## TEST APP
+pkg/
+spec/dummy/db/*.sqlite3
+spec/dummy/log/*.log
+spec/dummy/tmp/
+
+
+## PROJECT::GENERAL
+coverage
+rdoc
+pkg
+/.bundle
+/.rvmrc
+db/*.sqlite3
+log/*.log
+tmp/
+
+*.sqlite3
+*.log
+*~
+*.swp
+
+vendor/plugins/haml/init.rb
+vendor/plugins/blacklight/.git
+log/*
+
+public/plugin_assets
+public/plugin_assets/
+
+tmp/**/*
+tmp/performance
+
+db/schema.rb
+
+.project
+.buildpath
+.rvmrc
+
+/.bundle
+/.yardoc
+/doc
+## PROJECT::SPECIFIC
