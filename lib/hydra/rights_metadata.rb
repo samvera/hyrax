@@ -1,3 +1,4 @@
+require "active-fedora"
 module Hydra
 class RightsMetadata < ActiveFedora::NokogiriDatastream       
   

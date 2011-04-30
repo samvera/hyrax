@@ -1,3 +1,4 @@
+require "file_asset"
 class AudioAsset < FileAsset
   def initialize(attrs = {})
     super(attrs)

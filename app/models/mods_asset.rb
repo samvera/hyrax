@@ -2,5 +2,5 @@
 class ModsAsset < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::ModsObject
-  include Hydra::ModelMixins::ModelMethods
+  include Hydra::ModelMethods
 end
