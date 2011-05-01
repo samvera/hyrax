@@ -23,7 +23,7 @@ class PermissionsController < ApplicationController
 =begin
 HYDRA-150
 Removed from permissions/_new.html.erb
-<% javascript_includes << ["jquery.form.js", {:plugin=>:hydra_repository}] %>
+<% javascript_includes << ["jquery.form.js", {:plugin=>"hydra-head"}] %>
 =end
     respond_to do |format|
       format.html 

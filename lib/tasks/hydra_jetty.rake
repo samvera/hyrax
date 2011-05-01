@@ -3,9 +3,9 @@
 # 
 #    rake SOLR_CONSOLE=true
 #require 'hydra/testing_server'
-#require "#{Rails.root}/vendor/plugins/hydra_repository/lib/mediashelf/active_fedora_helper.rb"
-#require "#{Rails.root}/vendor/plugins/hydra_repository/lib/hydra.rb"
-#require "#{Rails.root}/vendor/plugins/hydra_repository/lib/hydra/testing_server.rb"
+#require "#{Rails.root}/vendor/plugins/hydra-head/lib/mediashelf/active_fedora_helper.rb"
+#require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra.rb"
+#require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra/testing_server.rb"
 
 JETTY_PARAMS = {
   :quiet => ENV['HYDRA_CONSOLE'] ? false : true,

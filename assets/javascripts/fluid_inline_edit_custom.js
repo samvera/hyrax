@@ -96,7 +96,7 @@ function insertValue(fieldName) {
   var new_value_index = values_list.children('li').size()
   var unique_id = "salt_document_" + fieldName + "_" + new_value_index;
   
-  var div = jQuery('<li class=\"editable\" id="'+unique_id+'" name="salt_document[' + fieldName + '][' + new_value_index + ']"><a href="javascript:void();" onClick="removeFieldValue(this);" class="destructive"><img src="/plugin_assets/hydra_repository/images/delete.png" border="0" /></a><span class="flc-inlineEdit-text"></span></li>');
+  var div = jQuery('<li class=\"editable\" id="'+unique_id+'" name="salt_document[' + fieldName + '][' + new_value_index + ']"><a href="javascript:void();" onClick="removeFieldValue(this);" class="destructive"><img src="/plugin_assets/hydra-head/images/delete.png" border="0" /></a><span class="flc-inlineEdit-text"></span></li>');
   div.appendTo(values_list); 
   var newVal = fluid.inlineEdit("#"+unique_id, {
     listeners : {
@@ -122,7 +122,7 @@ function insertValue(fieldName) {
    //     <textarea></textarea>
    //     <button class="save">Save</button> <button class="cancel">Cancel</button>
    // </div>
-   var div = jQuery('<li class=\"editable_textarea\" id="'+unique_id+'" name="document[' + fieldName + '][-1]"><a href="javascript:void();" onClick="removeFieldValue(this);" class="destructive"><img src="/plugin_assets/hydra_repository/images/delete.png" border="0" /></a><div class="flc-inlineEdit-text"></div><div class="flc-inlineEdit-editContainer"><textarea></textarea><button class="save">Save</button> <button class="cancel">Cancel</button></div> </dd>');
+   var div = jQuery('<li class=\"editable_textarea\" id="'+unique_id+'" name="document[' + fieldName + '][-1]"><a href="javascript:void();" onClick="removeFieldValue(this);" class="destructive"><img src="/plugin_assets/hydra-head/images/delete.png" border="0" /></a><div class="flc-inlineEdit-text"></div><div class="flc-inlineEdit-editContainer"><textarea></textarea><button class="save">Save</button> <button class="cancel">Cancel</button></div> </dd>');
    div.appendTo("#salt_document_"+fieldName+"_values"); 
    //return false;
 

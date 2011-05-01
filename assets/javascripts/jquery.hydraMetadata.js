@@ -55,7 +55,7 @@
 
        $("div.textile", $item).editable(assetUrl+"&format=textile", {
            method    : "PUT",
-           indicator : "<img src='/plugin_assets/hydra_repository/images/ajax-loader.gif'>",
+           indicator : "<img src='/plugin_assets/hydra-head/images/ajax-loader.gif'>",
            loadtext  : "",
            type      : "textarea",
            submit    : "OK",
@@ -499,7 +499,7 @@
    $.fn.hydraTextileField = function(settings) {
      var config = {
        method    : "PUT",
-       indicator : "<img src='/plugin_assets/hydra_repository/images/ajax-loader.gif'>",
+       indicator : "<img src='/plugin_assets/hydra-head/images/ajax-loader.gif'>",
        type      : "textarea",
        //submit    : "OK",
        //cancel    : "Cancel",

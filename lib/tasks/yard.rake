@@ -12,8 +12,8 @@ namespace :doc do
     YARD::Rake::YardocTask.new(:generate) do |yt|
       yt.files   =  Dir.glob(File.join(project_root, 'lib', '*.rb')) + 
                     Dir.glob(File.join(project_root, 'lib', '**', '*.rb')) +
-                    Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydra_repository', 'lib', '*.rb')) +
-                    Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydra_repository', 'lib', '**', '*.rb')) +
+                    Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydra-head', 'lib', '*.rb')) +
+                    Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydra-head', 'lib', '**', '*.rb')) +
                     Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydrangea_articles', 'app', '**', '*.rb')) +
                     Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydrangea_articles', 'lib', '*.rb')) +
                     Dir.glob(File.join(project_root, 'vendor', 'plugins', 'hydrangea_datasets', 'app', '**', '*.rb')) +
