@@ -4,7 +4,7 @@
 #
 
 # Load Blacklight's ApplicationController first
-require_dependency "vendor/plugins/blacklight/app/controllers/application_controller.rb"
+require_plugin_dependency "vendor/plugins/blacklight/app/controllers/application_controller.rb"
 
 class ApplicationController
   

@@ -1,5 +1,5 @@
 module Stanford::SearchworksHelper
-  require_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
+  require_plugin_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
   
   include Stanford::SolrHelper  # for nearby on shelf lookups
     

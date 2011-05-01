@@ -1,3 +1,4 @@
+require_plugin_dependency File.join('vendor','plugins','blacklight','app','controllers','catalog_controller.rb')
 require 'mediashelf/active_fedora_helper'
 class CatalogController
   

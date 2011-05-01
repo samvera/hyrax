@@ -2,47 +2,27 @@
 # from the project root directory.
 ENV["RAILS_ENV"] ||= 'test'
 
-unless defined?(Rails) 
+require File.dirname(__FILE__) + "/../hydra-plugin_test_host/config/environment" unless defined?(RAILS_ROOT)
   
-  module Rails
-    def self.root
-      File.join(File.dirname(__FILE__), "..")
-    end
-    def self.logger
-      Logger.new(STDOUT)
-    end
-    def self.env
-      ENV["RAILS_ENV"]
-    end
-  end
-  
-  # Capture any calls to require_dependency
-  def require_dependency(dependency_path)
-  end
-  
-end
-
-# Initialize Controllers that would usually be initialized by Blacklight
-require "action_controller"
-class ApplicationController < ActionController::Base
-end
-class CatalogController < ActionController::Base
-  def show
-  end
+# Overrides require_plugin_dependency, pointing to plugins within dummy app
+# Original require_plugin_dependency method defined in init.rb
+def require_plugin_dependency(dependency_path)
+  modified_path = File.dirname(__FILE__) + "/../hydra-plugin_test_host/" + dependency_path
+  p "requiring #{modified_path}"
+  require_dependency modified_path
 end
 
 $LOAD_PATH << File.join(File.dirname(__FILE__), "..", "app", "helpers")
 $LOAD_PATH << File.join("app", "models")
 $LOAD_PATH << File.join("app", "controllers") 
-
+require "init"
 require 'lib/hydra-head'
 Dir[File.join(File.dirname(__FILE__), "lib", "**", "*.rb")].each {|f| require f}
 
 Dir["app/helpers/*.rb"].each {|f| require f }
 Dir["app/models/*.rb"].each {|f| require f}
 Dir["app/controllers/*.rb"].each {|f| require f}
-# require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_ROOT)
-# require 'spec/autorun'
+require 'spec/autorun'
 require 'spec/rails'
 
 
