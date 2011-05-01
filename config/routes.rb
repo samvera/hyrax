@@ -14,6 +14,18 @@ ActionController::Routing::Routes.draw do |map|
        assets.resources :permissions
     end
     
+    map.edit_catalog 'catalog/:id/edit', :controller=>:catalog, :action=>:edit
+    map.delete_catalog "catalog/:id/delete", :controller=>:catalog, :action=>:delete
+    map.about 'about', :controller => 'catalog', :action => 'about'
+    
+    map.logged_out 'logged_out', :controller => 'user_sessions', :action => 'logged_out'
+    map.superuser 'superuser', :controller => 'user_sessions', :action => 'superuser'
+    
+    map.resources :get, :only=>:show 
+    
+    # this is to remove documents from SOLR but not from Fedora.
+    map.withdraw "withdraw", :controller => "assets", :action => :withdraw 
+    
     map.asset_contributor 'assets/:asset_id/contributors/:contributor_type/:index', :controller=>:contributors, :action=>:show, :conditions => { :method => :get }
     map.connect 'assets/:asset_id/contributors/:contributor_type/:index', :controller=>:contributors, :action=>:destroy, :conditions => { :method => :delete }
     

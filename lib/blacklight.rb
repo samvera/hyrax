@@ -1,7 +1,7 @@
 module Blacklight
 
 
-  require_dependency "vendor/plugins/blacklight/lib/blacklight.rb"
+  require_plugin_dependency "vendor/plugins/blacklight/lib/blacklight.rb"
   
  # This method overrides the default Blacklight self.init in order to support the opention of dual default/fulltext indexing
  # that's supported in hydrangea. This also supports the traditional one index structure of Blacklight.  
