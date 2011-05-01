@@ -1,8 +1,6 @@
 # This file is copied to ~/spec when you run 'ruby script/generate rspec'
 # from the project root directory.
 ENV["RAILS_ENV"] ||= 'test'
-
-require File.dirname(__FILE__) + "/../hydra-plugin_test_host/config/environment" unless defined?(RAILS_ROOT)
   
 # Overrides require_plugin_dependency, pointing to plugins within dummy app
 # Original require_plugin_dependency method defined in init.rb
@@ -12,16 +10,18 @@ def require_plugin_dependency(dependency_path)
   require_dependency modified_path
 end
 
-$LOAD_PATH << File.join(File.dirname(__FILE__), "..", "app", "helpers")
-$LOAD_PATH << File.join("app", "models")
-$LOAD_PATH << File.join("app", "controllers") 
-require "init"
-require 'lib/hydra-head'
-Dir[File.join(File.dirname(__FILE__), "lib", "**", "*.rb")].each {|f| require f}
+require File.dirname(__FILE__) + "/../hydra-plugin_test_host/config/environment" unless defined?(RAILS_ROOT)
 
-Dir["app/helpers/*.rb"].each {|f| require f }
-Dir["app/models/*.rb"].each {|f| require f}
-Dir["app/controllers/*.rb"].each {|f| require f}
+# $LOAD_PATH << File.join(File.dirname(__FILE__), "..", "app", "helpers")
+# $LOAD_PATH << File.join("app", "models")
+# $LOAD_PATH << File.join("app", "controllers") 
+# require "init"
+# require 'lib/hydra-head'
+# Dir[File.join(File.dirname(__FILE__), "lib", "**", "*.rb")].each {|f| require f}
+# 
+# Dir["app/helpers/*.rb"].each {|f| require f }
+# Dir["app/models/*.rb"].each {|f| require f}
+# Dir["app/controllers/*.rb"].each {|f| require f}
 require 'spec/autorun'
 require 'spec/rails'
 
