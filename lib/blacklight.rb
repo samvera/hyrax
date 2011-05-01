@@ -1,4 +1,4 @@
-require "init" # This is a hacky way of ensuring that require_plugin_dependency is defined.
+require "hydra-head" # This is a hacky way of ensuring that require_plugin_dependency is defined.
 module Blacklight
 
   require_plugin_dependency "vendor/plugins/blacklight/lib/blacklight.rb"

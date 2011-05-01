@@ -1,4 +1,6 @@
 require "active-fedora"
+require "solrizer"
+require "solrizer-fedora"
 
 module Hydra
   module Head
@@ -6,6 +8,14 @@ module Hydra
     require 'hydra-head/version' 
   end
 end
+
+module ActiveSupport::Dependencies::Loadable
+  # Provides a hook for intercepting calls to require_dependency that are referencing other plugins
+  def require_plugin_dependency(dependency_path)
+    require_dependency modified_path
+  end
+end
+
 Dir[File.join(File.dirname(__FILE__), "hydra", "**", "*.rb")].each {|f| require f}
 require "hydra"
 require "stanford_blacklight_extensions"
