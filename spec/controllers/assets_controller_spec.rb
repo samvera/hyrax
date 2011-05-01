@@ -24,7 +24,7 @@ describe AssetsController do
       mock_document.stubs(:update_from_computing_id).returns(nil)
       controller.expects(:check_embargo_date_format).returns(nil)
 
-      HydrangeaArticle.expects(:find).with("_PID_").returns(mock_document)
+      ModsAsset.expects(:find).with("_PID_").returns(mock_document)
       
       simple_request_params = {"asset"=>{
           "descMetadata"=>{
@@ -42,7 +42,7 @@ describe AssetsController do
     it "should support updating OM::XML datastreams" do
       mock_document = mock("document")
       mock_document.stubs(:update_from_computing_id).returns(nil)
-      # content_type is specified as hydrangea_dataset.  If not specified, it defaults to HydrangeaArticle
+      # content_type is specified as hydrangea_dataset.  If not specified, it defaults to ModsAsset
       HydrangeaDataset.expects(:find).with("_PID_").returns(mock_document)
       
       update_method_args = [ "descMetadata" => { [{:person=>0}, :role] => {"0"=>"role1","1"=>"role2","2"=>"role3"} } ]
@@ -90,8 +90,8 @@ describe AssetsController do
       mock_obj = mock("asset", :delete)
       mock_obj.expects(:destroy_child_assets).returns([])
       ActiveFedora::Base.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
-      ActiveFedora::ContentModel.expects(:known_models_for).with(mock_obj).returns([HydrangeaArticle])
-      HydrangeaArticle.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
+      ActiveFedora::ContentModel.expects(:known_models_for).with(mock_obj).returns([ModsAsset])
+      ModsAsset.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
   end
@@ -103,8 +103,8 @@ describe AssetsController do
       mock_obj = mock("asset", :delete)
       mock_obj.expects(:destroy_child_assets).returns([])
       ActiveFedora::Base.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
-      ActiveFedora::ContentModel.expects(:known_models_for).with(mock_obj).returns([HydrangeaArticle])
-      HydrangeaArticle.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
+      ActiveFedora::ContentModel.expects(:known_models_for).with(mock_obj).returns([ModsAsset])
+      ModsAsset.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
       delete(:withdraw, :id => "__PID__")
     end
   end
