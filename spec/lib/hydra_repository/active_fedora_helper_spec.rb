@@ -24,18 +24,12 @@ describe MediaShelf::ActiveFedoraHelper do
       result.included_modules.should include(ActiveFedora::Model) 
     end
     
-    it "should return a Model is the object is a Dor::Base" do
-      result = helper.retrieve_af_model("admin_policy_object")
-      result.should == AdminPolicyObject
-      result.superclass.should == Dor::Base
-      result.included_modules.should include(ActiveFedora::Model) 
-    end
     it "should accept camel cased OR underscored model name" do
-       result = helper.retrieve_af_model("admin_policy_object")
-       result.should == AdminPolicyObject
+       result = helper.retrieve_af_model("generic_content")
+       result.should == GenericContent
         
-       result = helper.retrieve_af_model("AdminPolicyObject")
-       result.should == AdminPolicyObject
+       result = helper.retrieve_af_model("GenericContent")
+       result.should == GenericContent
     
     end
     

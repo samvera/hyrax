@@ -42,8 +42,7 @@ describe AssetsController do
     it "should support updating OM::XML datastreams" do
       mock_document = mock("document")
       mock_document.stubs(:update_from_computing_id).returns(nil)
-      # content_type is specified as hydrangea_dataset.  If not specified, it defaults to ModsAsset
-      HydrangeaDataset.expects(:find).with("_PID_").returns(mock_document)
+      ModsAsset.expects(:find).with("_PID_").returns(mock_document)
       
       update_method_args = [ "descMetadata" => { [{:person=>0}, :role] => {"0"=>"role1","1"=>"role2","2"=>"role3"} } ]
       mock_document.expects(:update_datastream_attributes).with( *update_method_args ).returns({"person_0_role"=>{"0"=>"role1","1"=>"role2","2"=>"role3"}})
@@ -52,7 +51,7 @@ describe AssetsController do
       
       nokogiri_request_params = {
         "id"=>"_PID_", 
-        "content_type"=>"hydrangea_dataset",
+        "content_type"=>"mods_asset",
         "field_selectors"=>{
           "descMetadata"=>{
             "person_0_role"=>[{":person"=>"0"}, "role"]
