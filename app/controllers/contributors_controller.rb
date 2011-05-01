@@ -38,7 +38,7 @@ class ContributorsController < ApplicationController
   end
   
   def destroy
-    af_model = retrieve_af_model(params[:content_type], :default=>HydrangeaArticle)
+    af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
     @document_fedora = af_model.find(params[:asset_id])
     @document_fedora.remove_contributor(params[:contributor_type], params[:index])
     result = @document_fedora.save
@@ -48,7 +48,7 @@ class ContributorsController < ApplicationController
   private
   
   def load_document_from_id(asset_id)
-    af_model = retrieve_af_model(params[:content_type], :default=>HydrangeaArticle)
+    af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
     af_model.find(asset_id)
   end
 end

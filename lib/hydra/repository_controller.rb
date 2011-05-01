@@ -48,7 +48,7 @@ module Hydra::RepositoryController
   def load_document_from_params
     af_model = retrieve_af_model(params[:content_type])
     unless af_model 
-      af_model = HydrangeaArticle
+      af_model = ModsAsset
     end
     return af_model.find(params[:id])
   end
