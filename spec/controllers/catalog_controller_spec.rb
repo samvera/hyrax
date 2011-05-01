@@ -46,31 +46,10 @@ describe CatalogController do
   describe "index" do
     describe "access controls" do
       before(:all) do
-        @public_document = SaltDocument.new(:pid=>"test:public_document")
-        @public_document.datastreams["properties"].access_values = "public"
-        extracted = ActiveFedora::Datastream.new(:dsid=>"extProperties")
-        extracted.content = fixture("druid-bv448hq0314-extProperties.xml").read
-        @public_document.add_datastream( extracted )
-        @public_document.save
-        
-        @private_document = SaltDocument.new(:pid=>"test:private_document")
-        @private_document.datastreams["properties"].access_values = "private"
-        extracted = ActiveFedora::Datastream.new(:dsid=>"extProperties")
-        extracted.content = fixture("druid-bv448hq0314-extProperties.xml").read
-        @private_document.add_datastream( extracted )
-        @private_document.save
-        
         @public_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"public"}]
         @private_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"private"}]
+      end
 
-      end
-      after(:all) do
-        connect_bl_solr
-        @public_document.delete
-        @bl_solr.delete("test\:public_document")
-        @private_document.delete
-        @bl_solr.delete("test\:private_document")
-      end
       it "should only return public documents if role does not have permissions" do
         pending("FIXME")
         request.env["WEBAUTH_USER"]="Mr. Notallowed"
