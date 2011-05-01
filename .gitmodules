@@ -1,0 +1,3 @@
+[submodule "hydra-plugin_test_host"]
+	path = hydra-plugin_test_host
+	url = git@github.com:projecthydra/hydra-plugin_test_host.git
