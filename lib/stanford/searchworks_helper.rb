@@ -1,9 +1,6 @@
 module Stanford::SearchworksHelper
-<<<<<<< HEAD
+  
   require_plugin_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
-=======
-  require_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
->>>>>>> (Hydrus) HYDRUS-149 - reverting files that are in conflict with debranded hydrangea
   
   include Stanford::SolrHelper  # for nearby on shelf lookups
     
