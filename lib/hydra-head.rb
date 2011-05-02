@@ -10,9 +10,12 @@ module Hydra
 end
 
 module ActiveSupport::Dependencies::Loadable
+  
+  # Calls require_dependency with the given path
   # Provides a hook for intercepting calls to require_dependency that are referencing other plugins
+  # @param [String] dependency_path path to the desired depencency
   def require_plugin_dependency(dependency_path)
-    require_dependency modified_path
+    require_dependency dependency_path
   end
 end
 
