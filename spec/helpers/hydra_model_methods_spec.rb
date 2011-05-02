@@ -53,10 +53,10 @@ describe Hydra::ModelMethods do
     it "should set the collection metadata field" do
       prop_ds = mock("properties ds")
       prop_ds.expects(:respond_to?).with(:collection_values).returns(true)
-      prop_ds.expects(:collection_values=).with("hydrangea_article")
+      prop_ds.expects(:collection_values=).with("mods_asset")
 
       helper.stubs(:datastreams_in_memory).returns({"properties"=>prop_ds})
-      helper.set_collection_type("hydrangea_article")
+      helper.set_collection_type("mods_asset")
     end
   end
 

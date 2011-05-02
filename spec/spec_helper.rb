@@ -15,7 +15,7 @@ require File.dirname(__FILE__) + "/../hydra-plugin_test_host/config/environment"
 # This ensures that the current plugin's models, helpers and controllers are loaded last
 Dir["app/helpers/*.rb"].each {|f| require f }
 Dir["app/models/*.rb"].each {|f| require f}
-Dir["app/controllers/*.rb"].each {|f| require f}
+# Dir["app/controllers/*.rb"].each {|f| require f} # Loading the controllers a second time messes up the method aliasing for CatalogController.show
 
 require 'spec/autorun'
 require 'spec/rails'

@@ -1,9 +1,7 @@
 <% if current_user %>
 
     <ul>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_article") %>');">Add an Article</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_book") %>');">Add a Book</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "hydrangea_dataset") %>');">Add a Dataset</li>
+      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "mods_asset") %>');">Add a Basic MODS Asset</li>
       <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_image") %>');">Add an Image</li>
       <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_content") %>');">Add Generic Content</li>
 	  <li><%= current_user.login %> (<%= link_to "Log Out", logout_path %>)</li>
@@ -12,9 +10,7 @@
 <% else %>
 
     <ul>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_article"}) %>'">Add an Article</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_book"}) %>'">Add a Book</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "hydrangea_dataset"}) %>'">Add a Dataset</li>
+      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "mods_asset"}) %>'">Add a basic MODS asset</li>
       <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_image"}) %>'">Add an Image</li>
       <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_content"}) %>'">Add Generic Content</li>
   	  <li><%= link_to 'Login', login_path %></li>

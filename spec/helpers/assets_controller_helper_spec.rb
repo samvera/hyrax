@@ -4,7 +4,7 @@ describe Hydra::AssetsControllerHelper do
   
   describe "prep_updater_method_args" do
     it "should parse the input params" do
-      sample_params = {"content_type"=>"hydrangea_article", 
+      sample_params = {"content_type"=>"mods_asset", 
         "action"=>"update", 
         "_method"=>"put", 
         "field_selectors"=>{"descMetadata"=>{"person_0_computing_id"=>[{"person"=>"0"}, "computing_id"], "journal_0_issue_start_page"=>[{"journal"=>"0"}, "issue", "start_page"], "person_1_description"=>[{"person"=>"1"}, "description"], "person_1_institution"=>[{"person"=>"1"}, "institution"], "journal_0_origin_info_publisher"=>[{"journal"=>"0"}, "origin_info", "publisher"], "abstract"=>["abstract"], "person_0_last_name"=>[{"person"=>"0"}, "last_name"], "person_0_description"=>[{"person"=>"0"}, "description"], "journal_0_issue_volume"=>[{"journal"=>"0"}, "issue", "volume"], "title_info_main_title"=>["title_info", "main_title"], "location_url"=>["location", "url"], "note"=>["note"], "person_1_last_name"=>[{"person"=>"1"}, "last_name"], "subject_topic"=>["subject", "topic"], "person_0_institution"=>[{"person"=>"0"}, "institution"], "person_1_first_name"=>[{"person"=>"1"}, "first_name"], "person_1"=>[{"person"=>"1"}], "journal_0_title_info_main_title"=>[{"journal"=>"0"}, "title_info", "main_title"], "journal_0_issue_level"=>[{"journal"=>"0"}, "issue", "level"], "journal_0_issue_end_page"=>[{"journal"=>"0"}, "issue", "end_page"], "peer_reviewed"=>["peer_reviewed"], "person_0_first_name"=>[{"person"=>"0"}, "first_name"], "person_1_computing_id"=>[{"person"=>"1"}, "computing_id"], "journal_0_issn"=>[{"journal"=>"0"}, "issn"], "journal_0_issue_publication_date"=>[{"journal"=>"0"}, "issue", "publication_date"]}, "rightsMetadata"=>{"embargo_embargo_release_date"=>["embargo", "embargo_release_date"]}, "properties"=>{"release_to"=>["release_to"]}}, 
@@ -20,7 +20,7 @@ describe Hydra::AssetsControllerHelper do
   describe "sanitize_update_params" do
     it "should create a hash appropriate for passing into ActiveFedora::Base.update_datastream_attributes" do
       sample_params = {
-        "content_type"=>"hydrangea_article", 
+        "content_type"=>"mods_asset", 
         "action"=>"update", 
         "_method"=>"put", 
         "field_selectors"=>{
