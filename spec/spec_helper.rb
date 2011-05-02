@@ -1,11 +1,21 @@
 # This file is copied to ~/spec when you run 'ruby script/generate rspec'
 # from the project root directory.
 ENV["RAILS_ENV"] ||= 'test'
-  
+
+require "fileutils"
+def apply_blacklight_config_to_host
+  bl_config_src_path = File.join(File.dirname(__FILE__), "..", "config", "initializers", "blacklight_config.rb")
+  bl_config_dest_path = File.join(File.dirname(__FILE__), "..","hydra-plugin_test_host", "config", "initializers", "blacklight_config.rb")
+  # f = File.new(bl_config_path) 
+  FileUtils.copy_file(bl_config_src_path, bl_config_dest_path)
+end
+
+apply_blacklight_config_to_host
+
 # Overrides require_plugin_dependency, pointing to plugins within dummy app
 # Original require_plugin_dependency method defined in init.rb
 def require_plugin_dependency(dependency_path)
-  modified_path = File.dirname(__FILE__) + "/../hydra-plugin_test_host/" + dependency_path
+  modified_path = File.join(File.dirname(__FILE__), "..","hydra-plugin_test_host", dependency_path)
   p "(spec_helper) Re-routing require path to: #{modified_path}"
   require_dependency modified_path
 end
