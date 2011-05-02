@@ -6,22 +6,17 @@ ENV["RAILS_ENV"] ||= 'test'
 # Original require_plugin_dependency method defined in init.rb
 def require_plugin_dependency(dependency_path)
   modified_path = File.dirname(__FILE__) + "/../hydra-plugin_test_host/" + dependency_path
-  p "requiring #{modified_path}"
+  p "(spec_helper) Re-routing require path to: #{modified_path}"
   require_dependency modified_path
 end
 
 require File.dirname(__FILE__) + "/../hydra-plugin_test_host/config/environment" unless defined?(RAILS_ROOT)
 
-# $LOAD_PATH << File.join(File.dirname(__FILE__), "..", "app", "helpers")
-# $LOAD_PATH << File.join("app", "models")
-# $LOAD_PATH << File.join("app", "controllers") 
-# require "init"
-# require 'lib/hydra-head'
-# Dir[File.join(File.dirname(__FILE__), "lib", "**", "*.rb")].each {|f| require f}
-# 
-# Dir["app/helpers/*.rb"].each {|f| require f }
-# Dir["app/models/*.rb"].each {|f| require f}
-# Dir["app/controllers/*.rb"].each {|f| require f}
+# This ensures that the current plugin's models, helpers and controllers are loaded last
+Dir["app/helpers/*.rb"].each {|f| require f }
+Dir["app/models/*.rb"].each {|f| require f}
+Dir["app/controllers/*.rb"].each {|f| require f}
+
 require 'spec/autorun'
 require 'spec/rails'
 

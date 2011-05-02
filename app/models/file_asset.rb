@@ -96,7 +96,7 @@ class FileAsset < ActiveFedora::Base
   #   current object class is FileAsset
   # that means that the child already has had to_solr called which included metadata from FileAsset
   # if any of the above is false then call to_solr as normal
-  def to_solr(solr_doc = Solr::Document.new, opts={})
+  def to_solr(solr_doc=Hash.new, opts={})
 
     active_fedora_model_s = solr_doc["active_fedora_model_s"] if solr_doc["active_fedora_model_s"]
     actual_class = active_fedora_model_s.constantize if active_fedora_model_s

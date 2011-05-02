@@ -17,7 +17,7 @@ describe ModsAsset do
     @asset.datastreams.should have_key("descMetadata")
     @asset.datastreams["descMetadata"].should be_instance_of(Hydra::ModsArticle)
     @asset.datastreams.should have_key("rightsMetadata")
-    @asset.datastreams["descMetadata"].should be_instance_of(Hydra::RightsMetadata)
+    @asset.datastreams["rightsMetadata"].should be_instance_of(Hydra::RightsMetadata)
   end
   
   it "should have has_model relationships pointing to commonMetadata and modsObject cModels" do

@@ -17,7 +17,7 @@ describe ContributorsController do
         mock_document.expects(:insert_contributor).with(type).returns(["foo node",989])
         mock_document.expects(:save)
         ModsAsset.expects(:find).with("_PID_").returns(mock_document)
-        post :create, :asset_id=>"_PID_", :controller => "contributors", :content_type => "hydrangea_article", :contributor_type=>type
+        post :create, :asset_id=>"_PID_", :controller => "contributors", :content_type => "mods_asset", :contributor_type=>type
         response.should redirect_to "http://test.host/catalog/_PID_/edit##{type}_989"
       end
     end
@@ -27,7 +27,7 @@ describe ContributorsController do
         mock_document.expects(:insert_contributor).with(type).returns(["foo node","foo index"])
         mock_document.expects(:save)
         ModsAsset.expects(:find).with("_PID_").returns(mock_document)
-        post :create, :asset_id=>"_PID_", :controller => "contributors", :content_type => "hydrangea_article", :contributor_type=>type, :format=>"inline"
+        post :create, :asset_id=>"_PID_", :controller => "contributors", :content_type => "mods_asset", :contributor_type=>type, :format=>"inline"
         response.should render_template "contributors/_edit_#{type}"
       end
     end
