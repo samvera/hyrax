@@ -1,6 +1,7 @@
 # require File.expand_path(File.dirname(__FILE__) + '/hydra_jetty.rb')
+require "active-fedora"
 require "solrizer-fedora"
-
+require "active_support" # This is just to load ActiveSupport::CoreExtensions::String::Inflections
 namespace :hydra do
   
   
@@ -8,7 +9,7 @@ namespace :hydra do
   task :refresh_fixture => [:delete,:import_fixture]
   
   desc "Delete the object identified by pid. Example: rake hydra:delete pid=demo:12"
-  task :delete => :environment do
+  task :delete => :init do
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]
       Fedora::Repository.register(ENV["destination"])
@@ -36,7 +37,7 @@ namespace :hydra do
   end
   
   desc "Delete a range of objects in a given namespace.  ie 'rake hydra:purge_range[demo, 22, 50]' will delete demo:22 through demo:50"
-  task :purge_range => :environment do |t, args|
+  task :purge_range => :init do |t, args|
     # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
     ActiveFedora.init unless Thread.current[:repo]
     
@@ -62,12 +63,12 @@ namespace :hydra do
 
   namespace :fixtures do
     desc "Refresh the fixtures applicable to this hydra head"
-    task :refresh => ["hydra:default_fixtures:refresh", "libra_oa:default_fixtures:refresh", "hydrus:default_fixtures:refresh"] do
+    task :refresh => ["hydra:default_fixtures:refresh", "libra_oa:default_fixtures:refresh"] do
     end
   end
   
   desc "Export the object identified by pid into spec/fixtures. Example:rake hydra:harvest_fixture pid=druid:sb733gr4073 source=http://fedoraAdmin:fedoraAdmin@127.0.0.1:8080/fedora"
-  task :harvest_fixture => :environment do
+  task :harvest_fixture => :init do
         
     # If a source url has been provided, attampt to export from the fedora repository there.
     if ENV["source"]
@@ -91,7 +92,7 @@ namespace :hydra do
   end
   
   desc "Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=spec/fixtures/demo_12.foxml.xml"
-  task :import_fixture => :environment do
+  task :import_fixture => :init do
         
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]
@@ -125,6 +126,11 @@ namespace :hydra do
       end
     end    
     
+  end
+  
+  desc "Init Hydra configuration" 
+  task :init do
+    ActiveFedora.init
   end
 
   namespace :default_fixtures do

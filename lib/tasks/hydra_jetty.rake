@@ -1,12 +1,12 @@
-# if you would like to see solr startup messages on STDERR
-# when starting solr test server during functional tests use:
-# 
-#    rake SOLR_CONSOLE=true
-#require 'hydra/testing_server'
+require "hydra/testing_server"
 #require "#{Rails.root}/vendor/plugins/hydra-head/lib/mediashelf/active_fedora_helper.rb"
 #require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra.rb"
 #require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra/testing_server.rb"
 
+# if you would like to see solr startup messages on STDERR
+# when starting solr test server during functional tests use:
+# 
+#    rake SOLR_CONSOLE=true
 JETTY_PARAMS = {
   :quiet => ENV['HYDRA_CONSOLE'] ? false : true,
   :jetty_home => ENV['HYDRA_JETTY_HOME'],
@@ -19,18 +19,18 @@ JETTY_PARAMS = {
 namespace :hydra do
   namespace :jetty do
     desc "Starts the bundled Hydra Testing Server"
-    task :start => [:environment] do
+    task :start do
       Hydra::TestingServer.configure(JETTY_PARAMS)
       Hydra::TestingServer.instance.start
     end
     
     desc "Stops the bundled Hydra Testing Server"
-    task :stop => [:environment] do
+    task :stop do
       Hydra::TestingServer.instance.stop
     end
     
     desc "Restarts the bundled Hydra Testing Server"
-    task :restart => [:environment] do
+    task :restart do
       Hydra::TestingServer.instance.stop
       Hydra::TestingServer.configure(JETTY_PARAMS)
       Hydra::TestingServer.instance.start
@@ -48,7 +48,14 @@ namespace :hydra do
     desc "Copies a custom fedora config for the bundled Hydra Testing Server"
     task :config_fedora do
       # load a custom fedora.fcfg - 
-      fcfg = File.join(Rails.root,"fedora","conf","fedora.fcfg")
+      if defined?(Rails.root)
+        app_root = Rails.root
+      else
+        app_root = File.join(File.dirname(__FILE__),"..","..")
+      end
+       
+      fcfg = File.join(app_root,"fedora","conf","fedora.fcfg")
+      
       if File.exists?(fcfg)
         puts "copying over fedora.fcfg"
         cp("#{fcfg}", 'jetty/fedora/default/server/config/', :verbose => true)
@@ -61,7 +68,7 @@ namespace :hydra do
     task :load => [:config, :config_fedora, :start]
 
     desc "Returns the status of the Hydra::TestingServer."
-    task :status => [:environment] do
+    task :status do
       status = Hydra::TestingServer.instance.pid ? "Running: #{Hydra::TestingServer.instance.pid}" : "Not running"
       puts status
     end

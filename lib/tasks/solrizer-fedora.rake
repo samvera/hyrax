@@ -2,7 +2,7 @@ namespace :solrizer do
   
   namespace :fedora  do
     desc 'Index a fedora object of the given pid.'
-    task :solrize => :environment do 
+    task :solrize => :init do 
       index_full_text = ENV['FULL_TEXT'] == 'true'
       if ENV['PID']
         puts "indexing #{ENV['PID'].inspect}"
@@ -15,7 +15,7 @@ namespace :solrizer do
     end
   
     desc 'Index all objects in the repository.'
-    task :solrize_objects => :environment do
+    task :solrize_objects => :init do
       index_full_text = ENV['FULL_TEXT'] == 'true'
       if ENV['INDEX_LIST']
         @@index_list = ENV['INDEX_LIST']
@@ -32,12 +32,18 @@ namespace :solrizer do
     end  
     
     desc 'Remove fedora-system objects from index'
-    task :forget_system_objects => :environment do
+    task :forget_system_objects => :init do
       objects = ::Fedora::Repository.instance.find_objects("pid~fedora-system:*")
       objects.each do |obj|
         logger.debug "Deleting solr doc for #{obj.pid} from #{ActiveFedora.solr_config[:url]}"
         ActiveFedora::SolrService.instance.conn.delete(obj.pid) 
       end
+    end
+    
+    desc "Init solrizer-fedora configuration" 
+    task :init do
+      # Don't need to do anything.  The gem handles loading all configurations for you.
+      # ActiveFedora.init
     end
   end
   

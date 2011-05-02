@@ -10,21 +10,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require "hydra"
+
 # A singleton class for starting/stopping a Jetty server for testing purposes
 # The behavior of TestSolrServer can be modified prior to start() by changing 
 # port, solr_home, and quiet properties.
-
+#
 # This class is based on Blacklight's TestSolrServer
-
 class Hydra::TestingServer
   require 'singleton'
   include Singleton
   require 'win32/process' if RUBY_PLATFORM =~ /mswin32/
-  attr_accessor :port, :jetty_home, :solr_home, :quiet, :fedora_home
+  attr_accessor :port, :jetty_home, :solr_home, :quiet, :fedora_home, :base_path
 
   # configure the singleton with some defaults
   def initialize(params = {})
     @pid = nil
+    if defined?(Rails.root)
+      @base_path = Rails.root
+    else
+      @base_path = "."
+    end
   end
 
   class << self
@@ -87,7 +93,7 @@ class Hydra::TestingServer
     begin
       f = File.new(pid_path,  "w")
     rescue Errno::ENOENT, Errno::EACCES
-      f = File.new(File.join(Rails.root,'tmp',pid_file),"w")
+      f = File.new(File.join(@base_path,'tmp',pid_file),"w")
     end
     f.puts "#{@pid}"
     f.close
@@ -149,7 +155,7 @@ class Hydra::TestingServer
   end
 
   def pid_dir
-    File.expand_path(@pid_dir || File.join(Rails.root,'tmp','pids'))
+    File.expand_path(@pid_dir || File.join(@base_path,'tmp','pids'))
   end
 
   def pid
