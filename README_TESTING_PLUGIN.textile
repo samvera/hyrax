@@ -23,7 +23,7 @@ h3.  Installation Instructions to Run Hydra-Head tests:
 
 <pre>
 git clone git@github.com:projecthydra/hydra-head.git hydra-head
-cd testing-hydra-head
+cd hydra-head
 </pre>
 
 NOTE:  I believe it *must* be called "hydra-head" and there can't be anything
