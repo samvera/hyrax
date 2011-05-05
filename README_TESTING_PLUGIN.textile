@@ -94,11 +94,8 @@ rake hydra:default_fixtures:refresh RAILS_ENV=test
 You need to do this from the engines plugin directory, not from the testing application directory.
 
 <pre>
-rake spec
+rake hydra_head:rspec
 </pre>
-
-
-(TO DO: get specs running in color)
 
 
 
