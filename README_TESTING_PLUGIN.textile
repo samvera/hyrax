@@ -1,0 +1,129 @@
+Hydra-Head Engines Plugin
+================
+
+Introduction goes here.
+
+
+Installation Instructions
+=======
+
+h3. Prerequisites
+* ruby v 1.8.7 or higher
+* rubygems
+* these ruby gems:
+** bundler
+** rails version < 3.
+* git
+* java 1.6 or higher
+
+
+h3.  Installation Instructions to Run Hydra-Head tests:
+
+1. Get the hydra-head engines plugin from github
+
+<pre>
+git clone git@github.com:projecthydra/hydra-head.git hydra-head
+cd testing-hydra-head
+</pre>
+
+NOTE:  I believe it *must* be called "hydra-head" and there can't be anything
+called "hydra-head" in sibling directories or their children
+
+
+2. Use bundler to install the gem dependencies.
+
+<pre>
+bundle install
+</pre>
+
+
+3. Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
+Also pull a rails application set up just for testing the Hydra-Head engines plugin.
+
+<pre>
+git submodule init
+git submodule update
+</pre>
+
+(currently not working.  Try:)
+
+<pre>
+  git clone git@github.com:projecthydra/hydra-plugin_test_host.git hydra-plugin_test_host
+  git clone git@github.com:projecthydra/hydra-jetty jetty
+</pre>
+
+
+4.  Migrate the databases
+
+You must do this from the testing rails application directory, not from the engine plugin directory
+
+You need to be sure there is nothing else named "hydra-head" approximating an engines plugin in any part of the directory tree with the root node 3 levels up from the testing application.
+
+<pre>
+cd hydra-plugin_test_host
+rake db:migrate:plugins RAILS_ENV=test
+</pre>
+
+
+4. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
+
+Note that java 1.6 must be invoked by the "java" command or Hydrangea won't work.
+
+You must do this from the engines plugin directory, not from the testing rails application directory.
+
+<pre>
+rake hydra:jetty:load
+</pre>
+
+This will start up jetty on port 8983.
+
+
+4.  Load test fixtures into Fedora/Solr
+
+You need to do this from the engines plugin directory, not from the testing application directory.
+
+<pre>
+rake hydra:default_fixtures:refresh RAILS_ENV=test
+</pre>
+
+(TO DO: get rid of irrelevant fixtures; get rid of non-generic fixtures)
+
+
+6.  Run specs 
+
+You need to do this from the engines plugin directory, not from the testing application directory.
+
+<pre>
+rake spec
+</pre>
+
+
+(TO DO: get specs running in color)
+
+
+
+h2. Acknowledgements
+
+h3. Design & Strategic Contributions
+
+The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia and University of Hull.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, and Chris Awre.  
+
+Thorny Staples from Fedora Commons & DuraSpace deserves special thanks for putting all of these people in the same room together.
+
+h3. Technical Contributions
+
+*Technical Lead:* Matt Zumwalt ("MediaShelf":http://yourmediashelf.com)
+*User Interface & User Experience Designer:* Jennifer Vine
+
+Developers:
+Eddie Shin, Jessie Keck, Christopher Jesudurai, McClain Looney, Luke Francl, Dan Weinand, Ken Earley, Paul Wenzel, Bess Sadler, Naomi Dushay
+
+Testers:
+Charles Kerns, Bess Sadler, Richard Green, Tom Lauderman, Mark Matienzo
+
+h3. Additional thanks
+
+Project Blacklight and the Blacklight contributors
+Willy Mene, who created one of the "Hydra head" prototypes on which Hydrangea is based.
+Chris Fitzpatrick & Douglas Kim, who created the first version of Solrizer and then thoroughly exercised it.
+Stu Snydman, project manager for the SALT Hydra prototype.
