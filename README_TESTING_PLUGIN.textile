@@ -66,7 +66,7 @@ rake db:migrate:plugins RAILS_ENV=test
 </pre>
 
 
-4. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
+5. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
 
 Note that java 1.6 must be invoked by the "java" command or Hydrangea won't work.
 
@@ -79,7 +79,15 @@ rake hydra:jetty:load
 This will start up jetty on port 8983.
 
 
-4.  Load test fixtures into Fedora/Solr
+6.  Make a symlink in the test rails application to point to the hydra-head engines plugin
+
+<pre>
+cd hydra-plugin_test_host/vendor/plugins
+ln -s ../../ hydra-head
+</pre>
+
+
+7.  Load test fixtures into Fedora/Solr
 
 You need to do this from the engines plugin directory, not from the testing application directory.
 
@@ -90,7 +98,7 @@ rake hydra:default_fixtures:refresh RAILS_ENV=test
 (TO DO: get rid of irrelevant fixtures; get rid of non-generic fixtures)
 
 
-6.  Run specs 
+8.  Run specs 
 
 You need to do this from the engines plugin directory, not from the testing application directory.
 
@@ -98,6 +106,16 @@ You need to do this from the engines plugin directory, not from the testing appl
 rake hydra_head:rspec
 </pre>
 
+
+Last: Don't forget to stop the jetty server!
+
+You must do this from the engines plugin directory, not from the testing rails application directory.
+
+<pre>
+rake hydra:jetty:stop
+</pre>
+
+Use ps to ensure the java process has stopped.  If not, kill it manually.
 
 
 h2. Acknowledgements
