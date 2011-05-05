@@ -61,6 +61,7 @@ You need to be sure there is nothing else named "hydra-head" approximating an en
 
 <pre>
 cd hydra-plugin_test_host
+rake db:migrate RAILS_ENV=test
 rake db:migrate:plugins RAILS_ENV=test
 </pre>
 
