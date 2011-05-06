@@ -42,6 +42,9 @@ namespace :solrizer do
     
     desc "Init solrizer-fedora configuration" 
     task :init do
+      if !ENV["environment"].nil? 
+        RAILS_ENV = ENV["environment"]
+      end
       # Don't need to do anything.  The gem handles loading all configurations for you.
       # ActiveFedora.init
     end

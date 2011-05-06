@@ -15,9 +15,6 @@ namespace :hydra do
       Fedora::Repository.register(ENV["destination"])
     end
     
-    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
-    ActiveFedora.init unless Thread.current[:repo]
-    
     if ENV["pid"].nil? 
       puts "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
@@ -39,7 +36,7 @@ namespace :hydra do
   desc "Delete a range of objects in a given namespace.  ie 'rake hydra:purge_range[demo, 22, 50]' will delete demo:22 through demo:50"
   task :purge_range => :init do |t, args|
     # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
-    ActiveFedora.init unless Thread.current[:repo]
+    # ActiveFedora.init unless Thread.current[:repo]
     
     namespace = ENV["namespace"]
     start_point = ENV["start"].to_i
@@ -75,9 +72,6 @@ namespace :hydra do
       Fedora::Repository.register(ENV["source"])
     end
     
-    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
-    ActiveFedora.init unless Thread.current[:repo]
-    
     if ENV["pid"].nil? 
       puts "You must specify a valid pid.  Example: rake hydra:harvest_fixture pid=demo:12"
     else
@@ -98,10 +92,7 @@ namespace :hydra do
     if ENV["destination"]
       Fedora::Repository.register(ENV["destination"])
     end
-    
-    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
-    ActiveFedora.init unless Thread.current[:repo]
-    
+        
     if !ENV["fixture"].nil? 
       filename = ENV["fixture"]
     elsif !ENV["pid"].nil?
@@ -130,7 +121,11 @@ namespace :hydra do
   
   desc "Init Hydra configuration" 
   task :init do
-    ActiveFedora.init
+    if !ENV["environment"].nil? 
+      RAILS_ENV = ENV["environment"]
+    end
+    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
+    ActiveFedora.init unless Thread.current[:repo]  
   end
 
   namespace :default_fixtures do
