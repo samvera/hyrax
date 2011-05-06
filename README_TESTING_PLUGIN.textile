@@ -1,7 +1,19 @@
 Hydra-Head Engines Plugin
 ================
 
-Introduction goes here.
+This is the Ruby on Rails 2 Engines Plugin containing the code for a Hydra
+Ruby on Rails application:
+
+- Blacklight for the User Interface
+- Solr for the Search Engine
+- ActiveFedora to let the rails application talk to fedora
+- OM to streamline the metadata configuration
+- Solrizer to write Fedora content to the Solr index
+- SolrizerFedora for something.
+
+This code will soon migrate to:
+a rails 3 engines plugin
+a rails 3 engines plugin gem
 
 
 Installation Instructions
@@ -19,7 +31,7 @@ h3. Prerequisites
 
 h3.  Installation Instructions to Run Hydra-Head tests:
 
-0. Make an empty directory, call it whatever you want
+1. Make an empty directory, call it whatever you want
 
 Make an empty directory, call it whatever you want, then cd into that directory and clone the hydra-head plugin
 
@@ -30,7 +42,8 @@ Make an empty directory, call it whatever you want, then cd into that directory 
 
 You have to do this because the test host app adds "../../" to its plugin paths, which allows it to load its _parent_ directory as a plugin but will also load all of that parent's sibling directories as plugins as well.  In order to test just the plugin, it must live in a directory all by itself.  This is a hack that will only last until we upgrade to rails3 or find a better hack.
 
-1. Get the hydra-head engines plugin from github
+
+2. Get the hydra-head engines plugin from github
 
 While in your empty hydra-head-test directory
 
@@ -39,18 +52,19 @@ git clone git@github.com:projecthydra/hydra-head.git hydra-head
 cd hydra-head
 </pre>
 
-NOTE:  I believe it *must* be called "hydra-head" and there can't be anything
-called "hydra-head" in sibling directories or their children
+NOTE:  I believe it *must* be called "hydra-head" 
+
+This hydra-head directory is the _root_ of the _plugin_
 
 
-2. Use bundler to install the gem dependencies.
+3. Use bundler to install the gem dependencies.
 
 <pre>
 bundle install
 </pre>
 
 
-3. Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
+4. Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
 Also pull a rails application set up just for testing the Hydra-Head engines plugin.
 
 <pre>
@@ -58,17 +72,10 @@ git submodule init
 git submodule update
 </pre>
 
-(currently not working.  Try:)
 
-<pre>
-  git clone git@github.com:projecthydra/hydra-plugin_test_host.git hydra-plugin_test_host
-  git clone git@github.com:projecthydra/hydra-jetty jetty
-</pre>
+5.  Migrate the databases
 
-
-4.  Migrate the databases
-
-You must do this from the testing rails application directory, not from the engine plugin directory
+You must do this within the _hydra-plugin_test_host directory_, not at the root of the plugin. 
 
 You need to be sure there is nothing else named "hydra-head" approximating an engines plugin in any part of the directory tree with the root node 3 levels up from the testing application.
 
@@ -86,31 +93,24 @@ rake db:drop RAILS_ENV=test
 rake db:migrate:all RAILS_ENV=test
 </pre>
 
-Now cd back out of the test host app
+Now cd up to the root of the _plugin_
 
 <pre>
   cd ../
 </pre>
 
-5. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
+
+6. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
 
 Note that java 1.6 must be invoked by the "java" command or Hydrangea won't work.
 
-You must do this from the engines plugin directory, not from the testing rails application directory.
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
 
 <pre>
 rake hydra:jetty:load
 </pre>
 
 This will start up jetty on port 8983.
-
-
--6.  Make a symlink in the test rails application to point to the hydra-head engines plugin-
-
-_You shouldn't have to do this if you've cloned the plugin into an empty directory_ -MZ
--cd hydra-plugin_test_host/vendor/plugins-
--ln -s ../../ hydra-head-
-
 
 
 7.  Load test fixtures into Fedora/Solr
@@ -133,9 +133,9 @@ rake hydra_head:rspec
 </pre>
 
 
-Last: Don't forget to stop the jetty server!
+LAST: Don't forget to stop the jetty server!
 
-You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
+You must run the rake task at the root of the _plugin_, not within the hydra-plugin_test_host directory
 
 <pre>
 rake hydra:jetty:stop
