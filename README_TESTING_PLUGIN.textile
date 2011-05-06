@@ -19,7 +19,20 @@ h3. Prerequisites
 
 h3.  Installation Instructions to Run Hydra-Head tests:
 
+0. Make an empty directory, call it whatever you want
+
+Make an empty directory, call it whatever you want, then cd into that directory and clone the hydra-head plugin
+
+<pre>
+  mkdir hydra-head-test
+  cd hydra-head-test
+</pre>
+
+You have to do this because the test host app adds "../../" to its plugin paths, which allows it to load its _parent_ directory as a plugin but will also load all of that parent's sibling directories as plugins as well.  In order to test just the plugin, it must live in a directory all by itself.  This is a hack that will only last until we upgrade to rails3 or find a better hack.
+
 1. Get the hydra-head engines plugin from github
+
+While in your empty hydra-head-test directory
 
 <pre>
 git clone git@github.com:projecthydra/hydra-head.git hydra-head
@@ -65,6 +78,19 @@ rake db:migrate RAILS_ENV=test
 rake db:migrate:plugins RAILS_ENV=test
 </pre>
 
+or
+
+<pre>
+cd hydra-plugin_test_host
+rake db:drop RAILS_ENV=test
+rake db:migrate:all RAILS_ENV=test
+</pre>
+
+Now cd back out of the test host app
+
+<pre>
+  cd ../
+</pre>
 
 5. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
 
@@ -79,17 +105,17 @@ rake hydra:jetty:load
 This will start up jetty on port 8983.
 
 
-6.  Make a symlink in the test rails application to point to the hydra-head engines plugin
+-6.  Make a symlink in the test rails application to point to the hydra-head engines plugin-
 
-<pre>
-cd hydra-plugin_test_host/vendor/plugins
-ln -s ../../ hydra-head
-</pre>
+_You shouldn't have to do this if you've cloned the plugin into an empty directory_ -MZ
+-cd hydra-plugin_test_host/vendor/plugins-
+-ln -s ../../ hydra-head-
+
 
 
 7.  Load test fixtures into Fedora/Solr
 
-You need to do this from the engines plugin directory, not from the testing application directory.
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
 
 <pre>
 rake hydra:default_fixtures:refresh RAILS_ENV=test
@@ -100,7 +126,7 @@ rake hydra:default_fixtures:refresh RAILS_ENV=test
 
 8.  Run specs 
 
-You need to do this from the engines plugin directory, not from the testing application directory.
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
 
 <pre>
 rake hydra_head:rspec
@@ -109,7 +135,7 @@ rake hydra_head:rspec
 
 Last: Don't forget to stop the jetty server!
 
-You must do this from the engines plugin directory, not from the testing rails application directory.
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
 
 <pre>
 rake hydra:jetty:stop
