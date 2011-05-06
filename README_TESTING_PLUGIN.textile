@@ -31,9 +31,9 @@ h3. Prerequisites
 
 h3.  Installation Instructions to Run Hydra-Head tests:
 
-1. Make an empty directory, call it whatever you want
+1. Make an empty directory, call it whatever you want.
 
-Make an empty directory, call it whatever you want, then cd into that directory and clone the hydra-head plugin
+Make an empty directory, call it whatever you want, then cd into that directory and clone the hydra-head plugin:
 
 <pre>
   mkdir hydra-head-test
@@ -43,9 +43,9 @@ Make an empty directory, call it whatever you want, then cd into that directory 
 You have to do this because the test host app adds "../../" to its plugin paths, which allows it to load its _parent_ directory as a plugin but will also load all of that parent's sibling directories as plugins as well.  In order to test just the plugin, it must live in a directory all by itself.  This is a hack that will only last until we upgrade to rails3 or find a better hack.
 
 
-2. Get the hydra-head engines plugin from github
+2. Get the hydra-head engines plugin from github.
 
-While in your empty hydra-head-test directory
+While in your empty hydra-head-test directory:
 
 <pre>
 git clone git@github.com:projecthydra/hydra-head.git hydra-head
@@ -73,7 +73,7 @@ git submodule update
 </pre>
 
 
-5.  Migrate the databases
+5.  Migrate the databases.
 
 You must do this within the _hydra-plugin_test_host directory_, not at the root of the plugin. 
 
@@ -93,7 +93,7 @@ rake db:drop RAILS_ENV=test
 rake db:migrate:all RAILS_ENV=test
 </pre>
 
-Now cd up to the root of the _plugin_
+Now cd back up to the root of the _plugin_:
 
 <pre>
   cd ../
@@ -104,7 +104,7 @@ Now cd up to the root of the _plugin_
 
 Note that java 1.6 must be invoked by the "java" command or Hydrangea won't work.
 
-You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory.
 
 <pre>
 rake hydra:jetty:load
@@ -113,20 +113,20 @@ rake hydra:jetty:load
 This will start up jetty on port 8983.
 
 
-7.  Load test fixtures into Fedora/Solr
+7.  Load test fixtures into Fedora/Solr.
 
-You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory.
 
 <pre>
-rake hydra:default_fixtures:refresh RAILS_ENV=test
+rake hydra:default_fixtures:refresh environment=test
 </pre>
 
-(TO DO: get rid of irrelevant fixtures; get rid of non-generic fixtures)
+(TO DO: get rid of irrelevant fixtures; get rid of non-generic fixtures.)
 
 
-8.  Run specs 
+8.  Run specs.
 
-You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory
+You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory.
 
 <pre>
 rake hydra_head:rspec
@@ -157,11 +157,11 @@ rake hydra:jetty:stop
 </pre>
 
 A2.  Clean out Solr and Fedora on Jetty
-
 <pre>
 cd jetty
 git clean -df
 git checkout .
+git status     should show nothing to commit
 cd ..   (back to root of the _plugin_)
 </pre>
 
@@ -170,11 +170,9 @@ A3.  Re-initialize and start Jetty:
 rake hydra:jetty:load
 </pre>
 
-Then reload the pristine fixtures.
-
-A4.  If you want to load the fixtures anew:
+A4. Reload the pristine fixtures.
 <pre>
-  rake hydra:default_fixtures:refresh RAILS_ENV=test
+  rake hydra:default_fixtures:refresh environment=test
 </pre>
 
 
