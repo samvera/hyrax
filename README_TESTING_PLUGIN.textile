@@ -144,6 +144,50 @@ rake hydra:jetty:stop
 Use ps to ensure the java process has stopped.  If not, kill it manually.
 
 
+
+A. If you need to Re-run the tests:
+
+Clean out the fixtures:
+
+A1.  Stop jetty
+at the root of the _plugin_
+<pre>
+rake hydra:jetty:stop
+  Use ps to ensure the java process has stopped.  If not, kill it manually.
+</pre>
+
+A2.  Clean out Solr and Fedora on Jetty
+
+<pre>
+cd jetty
+git clean -df
+git checkout .
+cd ..   (back to root of the _plugin_)
+</pre>
+
+A3.  Re-initialize and start Jetty:
+<pre>
+rake hydra:jetty:load
+</pre>
+
+Then reload the pristine fixtures.
+
+A4.  If you want to load the fixtures anew:
+<pre>
+  rake hydra:default_fixtures:refresh RAILS_ENV=test
+</pre>
+
+
+B.  If you need to clean out the databases:
+
+<pre>
+cd hydra-plugin_test_host
+rake db:drop RAILS_ENV=test
+rake db:migrate:all RAILS_ENV=test
+</pre>
+
+
+
 h2. Acknowledgements
 
 h3. Design & Strategic Contributions
