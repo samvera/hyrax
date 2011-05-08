@@ -1,5 +1,4 @@
-Hydra-Head Engines Plugin
-================
+h1. Hydra-Head Engines Plugin
 
 This is the Ruby on Rails 2 Engines Plugin containing the code for a Hydra
 Ruby on Rails application:
@@ -16,8 +15,7 @@ a rails 3 engines plugin
 a rails 3 engines plugin gem
 
 
-Installation Instructions
-=======
+h2. Installation Instructions
 
 h3. Prerequisites
 * ruby v 1.8.7 or higher
@@ -31,7 +29,16 @@ h3. Prerequisites
 
 h3.  Installation Instructions to Run Hydra-Head tests:
 
-1. Make an empty directory, call it whatever you want.
+0.  We strongly suggest using RVM  (ruby virtual machine) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+
+See https://rvm.beginrescueend.com/
+
+If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it.
+<pre>
+rvm install ree-1.8.7
+</pre>
+
+1. Make an empty directory
 
 Make an empty directory, call it whatever you want, then cd into that directory and clone the hydra-head plugin:
 
@@ -54,17 +61,32 @@ cd hydra-head
 
 NOTE:  I believe it *must* be called "hydra-head" 
 
-This hydra-head directory is the _root_ of the _plugin_
+This hydra-head directory is the _root_ of the _plugin_.
 
 
-3. Use bundler to install the gem dependencies.
+3.  Create an RVM gemset for your local hydra application
+The following will create an .rvmrc file, which ensures that this gemset will be used whenever you are in the my-hydra-app directory.
+<pre>
+echo "rvm use ree-1.8.7@hydra-head --create" >.rvmrc
+. .rvmrc
+</pre>
+
+You should get a message like this:
+ Using /usr/local/you/.rvm/gems/ree-1.8.7-2010.02 with gemset hydra-head
+
+
+4. Use bundler to install the gem dependencies.
+
+You may need to install bundler into the gemset first:
+<pre>
+gem install bundler
+</pre>
 
 <pre>
 bundle install
 </pre>
 
-
-4. Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
+5. Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
 Also pull a rails application set up just for testing the Hydra-Head engines plugin.
 
 <pre>
@@ -73,7 +95,7 @@ git submodule update
 </pre>
 
 
-5.  Migrate the databases.
+6.  Migrate the databases.
 
 You must do this within the _hydra-plugin_test_host directory_, not at the root of the plugin. 
 
@@ -100,7 +122,7 @@ Now cd back up to the root of the _plugin_:
 </pre>
 
 
-6. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
+7. Run the bundled copy of Jetty, preloaded with Fedora and Solr applications.
 
 Note that java 1.6 must be invoked by the "java" command or Hydrangea won't work.
 
@@ -113,7 +135,7 @@ rake hydra:jetty:load
 This will start up jetty on port 8983.
 
 
-7.  Load test fixtures into Fedora/Solr.
+8.  Load test fixtures into Fedora/Solr.
 
 You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory.
 
@@ -124,7 +146,7 @@ rake hydra:default_fixtures:refresh environment=test
 (TO DO: get rid of irrelevant fixtures; get rid of non-generic fixtures.)
 
 
-8.  Run specs.
+9.  Run specs.
 
 You must do this at the root of the _plugin_, not within the hydra-plugin_test_host directory.
 
