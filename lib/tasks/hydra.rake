@@ -86,7 +86,7 @@ namespace :hydra do
   end
   
   desc "Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=spec/fixtures/demo_12.foxml.xml"
-  task :import_fixture => :init do
+  task :import_fixture => [:init, :environment] do
         
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]

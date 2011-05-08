@@ -2,7 +2,7 @@ namespace :solrizer do
   
   namespace :fedora  do
     desc 'Index a fedora object of the given pid.'
-    task :solrize => :init do 
+    task :solrize => [:init, :environment] do 
       index_full_text = ENV['FULL_TEXT'] == 'true'
       if ENV['PID']
         puts "indexing #{ENV['PID'].inspect}"
@@ -15,7 +15,7 @@ namespace :solrizer do
     end
   
     desc 'Index all objects in the repository.'
-    task :solrize_objects => :init do
+    task :solrize_objects => [:init, :environment] do
       index_full_text = ENV['FULL_TEXT'] == 'true'
       if ENV['INDEX_LIST']
         @@index_list = ENV['INDEX_LIST']
