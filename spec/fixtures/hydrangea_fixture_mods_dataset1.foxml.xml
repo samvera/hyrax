@@ -111,7 +111,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
 <foxml:xmlContent>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about="info:fedora/hydrangea:fixture_mods_dataset1">
-    <hasModel xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/afmodel:HydrangeaDataset"></hasModel>
+    <hasModel xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/afmodel:ModsAsset"></hasModel>
   </rdf:Description>
 </rdf:RDF>
 </foxml:xmlContent>
