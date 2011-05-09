@@ -35,7 +35,7 @@ module Hydra::RepositoryController
   # This method converts pid strings into xhtml safe IDs, since xhmlt expects namespaces to be defined. 
   # I.E. hydrus:123 = hydrus_123
   def format_pid(pid)
-    h(pid.gsub(":", "_"))
+    pid.gsub(":", "_")
   end
   
   
