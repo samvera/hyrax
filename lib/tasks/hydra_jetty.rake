@@ -1,7 +1,8 @@
-require "hydra/testing_server"
-#require "#{Rails.root}/vendor/plugins/hydra-head/lib/mediashelf/active_fedora_helper.rb"
-#require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra.rb"
-#require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra/testing_server.rb"
+if defined?(Rails.root)
+  require "#{Rails.root}/vendor/plugins/hydra-head/lib/hydra/testing_server.rb"
+else
+  require "hydra/testing_server"
+end
 
 # if you would like to see solr startup messages on STDERR
 # when starting solr test server during functional tests use:
