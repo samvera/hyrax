@@ -21,8 +21,8 @@ end
 # This checks document for validity (if required) and well formedness  
 # Pass in a html string. IF you want to check for XHTML validity, do rake spec HTML_VALIDITY=true. Otherwise only document form is checked
 # by nokogiri.  
-def document_check(html)
-  if ENV["HTML_VALIDITY"] and ENV["HTML_VALIDITY"] == "true"
+def document_check(html, html_validity=ENV["HTML_VALIDITY"])
+  if html_validity == "true" || html_validity == true
     html.should be_xhtml_transitional
   end
   well_formed(html).should == "ok"
@@ -40,7 +40,6 @@ describe CatalogController do
     it "Should have Valid HTML when not logged in" do
       get("index", "controller"=>"catalog")
       document_check(response.body)
-     
     end
     
     it "Should have Valid HTML when I'm logged in" do
