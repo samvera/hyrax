@@ -4,6 +4,7 @@ module Hydra
   extend Blacklight::Configurable
 end
 
+
 require 'mediashelf/active_fedora_helper'
 
 require 'hydra/repository_controller'
