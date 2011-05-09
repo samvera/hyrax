@@ -1,0 +1,17 @@
+id: id
+default: searchable
+searchable: 
+  default: _t
+  date: _dt
+  string: _t
+  text: _t
+  symbol: _s
+  integer: _i
+  long: _l
+  boolean: _b
+  float: _f
+  double: _d
+displayable: _display
+facetable: _facet
+sortable: _sort
+unstemmed_searchable: _unstem_search

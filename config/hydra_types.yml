@@ -1,0 +1,4 @@
+info:fedora/afmodel:SaltDocument : salt_document
+info:fedora/afmodel:JP2Document : jp2_document
+info:fedora/afmodel:ModsDocument : mods_document
+info:fedora/afmodel:DCDocument : dc_document
