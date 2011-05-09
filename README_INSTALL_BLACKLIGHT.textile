@@ -1,0 +1,29 @@
+Run the Blacklight installation script
+
+<pre>
+rails ./my-hydra-head -m http://projectblacklight.org/templates/latest.rb 
+</pre>
+
+install gems? yes
+run migrations? yes.
+install solr? no.
+
+
+Add configs
+
+#	config/fedora.yml
+#	config/hydra_types.yml
+#	config/initializers/fedora_config.rb
+#	config/initializers/hydra_config.rb
+#	config/role_map_cucumber.yml
+#	config/role_map_development.yml
+#	config/role_map_production.yml
+#	config/role_map_test.yml
+#	config/solr_mappings.yml
+
+#	modified:   config/solr.yml
+
+in config/environment.rb
+<pre>
+  config.plugins = ["blacklight", "hydra-head", :all ]
+</pre>
