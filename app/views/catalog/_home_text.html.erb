@@ -28,22 +28,25 @@
           <% if index % 3 == 0 %>
             <div class="author_browse_row">
           <% end %>
-            <div class="author_browse_image">
-              <% if facet_name == 'person_full_name_cid_facet' %>
-                <%= render_complex_facet_image(facet_name, item) %><br/>
-                <%= render_complex_facet_value(facet_name, item) %>
-              <% else %>
-                <%= render_journal_image(facet_name, item) %><br/>
-                <%= render_journal_facet_value(facet_name, item) %>
-              <% end %>
-            </div>
+          <div class="author_browse_image">
+            <% if facet_name == 'person_full_name_cid_facet' %>
+              <%= render_complex_facet_image(facet_name, item) %><br/>
+              <%= render_complex_facet_value(facet_name, item) %>
+            <% else %>
+              <%= render_journal_image(facet_name, item) %><br/>
+              <%= render_journal_facet_value(facet_name, item) %>
+            <% end %>
+          </div> <%# end author_browse_image %>
           <% if index == 2 %>
-            </div><!-- end author browse row -->
+            </div><%# end author browse row %>
           <% end %>
           <% break if index == 5 %>
-        <% end %>
-        </div><!-- END author browse row -->
-    <% end %>
+        <% end %> <%# end do items %>
+<%# commenting this out so specs pass - Naomi 2011-05-12 %>
+<!--
+        </div><%# END author browse row if index never got to 2 %>
+-->
       </div><!-- END authors div -->	
+    <% end %> <%# end if display_facet %>
 
 </div>
