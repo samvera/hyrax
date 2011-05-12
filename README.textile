@@ -4,8 +4,7 @@ This is the core part of Hydra code needed to create a Hydra application.
 
 For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":http://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
 
-This is (currently) a Ruby on Rails 2 Engines Plugin.  It will eventually become Rails 3, and then a Rails 3 gem.
-
+This is (currently) a Ruby on Rails 2 Engines Plugin.  It will eventually become a Rails 3 Engines Plugin, and then a Rails 3 Engines gem.
 
 
 h2. How to Create a Rails Application Using Hydra-Head 
@@ -22,51 +21,14 @@ h3. Prerequisites
 
 h3.  Installation Instructions:
 
-1.  we suggest using RVM  (ruby virtual machine) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
-
-
-* get rvm
-* ...
-
-If you don't have the desired ruby version, e.g. ree-1.8.7, install it in RVM:
-<pre>
-rvm install ree-1.8.7
-</pre>
-
-Tell rvm to use the correct ruby instance and to create your gemset:
-<pre>
-rvm use ree-1.8.7@my-hydra-app --create
-</pre>
-
-Install bundler and rails gems into the gemset:
-<pre>
-gem install bundler
-gem install -v=2.3.11 --no-rdoc --no-ri rails
-</pre>
-
-2.  Create an empty rails application
-<pre>
-rails my-hydra-app
-cd my-hydra-app
-</pre>
-
-3.  Set up your new rails application to use the rvm gemset you just created.
-First go back to using the system ruby, so you can be sure you've changed to
-the correct gemset;  then set up .rvmrc
-<pre>
-rvm use system
-echo "rvm use ree-1.8.7@my-hydra-app" >.rvmrc
-. .rvmrc
-</pre>
-
-You should see a message like this:
-
-Using /homedir/.rvm/gems/ree-1.8.7-2010.02 with gemset my-hydra-app
-
-4.  Get the hydra-head engines plugin from github.
+To get the hydra-head engines plugin from github.
 <pre>
 git clone git@github.com:projecthydra/hydra-head.git vendor/plugins/hydra-head
 </pre>
+
+To use hydra-head in a rails app, see 
+  see README_TESTING_PLUGIN
+
 
 FIXME:  you also need engines and blacklight and whitelist ...
 blacklight - careful about rails 2 version!
@@ -75,128 +37,10 @@ git clone git://github.com/projectblacklight/blacklight.git vendor/plugins/black
 git clone git://github.com/lazyatom/engines.git vendor/plugins/engines
 
 
-4.5  tell rails to load the engines plugins:
-
-in config/environment.rb  AFTER 
-
-<pre>
-  require File.join(File.dirname(__FILE__), 'boot')
-</pre>
-
-add this line:
-
-<pre>
-  require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
-</pre>
-
-within the loop, add:
-
-<pre>
-  config.plugin_paths += ["#{RAILS_ROOT}/vendor/plugins/blacklight/vendor/plugins"]
-  config.plurgins = %W(engines blacklight hydra_head)
-</pre>
-
-FIXME:  you need all the config files for initializers folder:
- blacklight_config.rb
- fedora_config.rb
- hydra_config.rb
- ...
-
-5.  Install the required ruby gems via Bundler.
-You first need a Gemfile; copy the one from the hydra-head plugin.
-<pre>
-cp vendor/plugins/hydra-head/Gemfile .
-</pre>
-
-If the bundler gem is not in your global rvm gemset, you will need to install 
-it into this RVM gemset before you can use it to install the other gems:
-<pre>
-gem install bundler
-</pre>
-
-Now install the required gems:
-<pre>
-bundle install
-</pre>
-
-6.  Migrate the databases.
-<pre>
-rake db:migrate:all
-</pre>
-
-LOOK HERE:  error w/o blacklight and engines plugins
-
-$ rake db:migrate
-(in /Users/naomi/hypatia/from-fresh-rails)
-rake aborted!
-uninitialized constant Spec
-/Users/naomi/hypatia/from-fresh-rails/Rakefile:10
-
-
-LOOK HERE:  error with blacklight and engines plugins in vendor/plugins
-
-$ rake db:migrate
-(in /Users/naomi/hypatia/from-fresh-rails)
-SOLRIZER: loading field name mappings from /Users/naomi/.rvm/gems/ree-1.8.7-2010.02@from-fresh-rails/gems/solrizer-1.0.4/config/solr_mappings.yml
-resetting mappings for Solrizer::FieldMapper::Default
-rake aborted!
-no such file to load -- hydra/testing_server
-/Users/naomi/hypatia/from-fresh-rails/Rakefile:10
-(See full trace by running task with --trace)
-
-
-
-7.  Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
-<pre>
-git clone git@github.com:projecthydra/hydra-jetty jetty
-</pre>
-
-8.  Start Jetty, preloaded with Fedora and Solr applications.
-
-Note that java 1.6 must be invoked by the "java" command or Hydrangea won't work.
-
-<pre>
-rake hydra:jetty:load
-</pre>
-
-This will start up jetty on port 8983.
-
-9.  Load some test data
-
-
-10.  Start the rails app
-
-
-h4. Don't forget to stop jetty.
-
-It's easy to forget a running jetty, start another jetty process, 
-and then get confusing behavior because you have two jetty instances on the
-same port.
-
-From the rails application directory  (my-hydra-app)
-<pre>
-rake hydra:jetty:stop
-</pre>
-
-
 
 h3.  Running the hydra-head tests
 
-1. Migrate the test databases.
-<pre>
-rake db:drop RAILS_ENV=test
-rake db:migrate:all RAILS_ENV=test
-</pre>
-
-2. Stop the test jetty.
-<pre>
-rake hydra:jetty:stop
-</pre>
-
-
-3. Clean out data in the test jetty.
-<pre>
-</pre>
+see README_TESTING_PLUGIN
 
 
 

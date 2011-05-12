@@ -1,3 +1,5 @@
+DRAFT DRAFT DRAFT DRAFT DRAFT
+
 Run the Blacklight installation script
 
 <pre>
