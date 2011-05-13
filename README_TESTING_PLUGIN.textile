@@ -158,11 +158,11 @@ NOTE: to ensure that the tests do not rely on non-test data, do this first:
 h4. (9) Run specs.
 
 <pre>
-  rake hydra_head:rspec
+  rake hyhead:spec
 </pre>
 
 
-h3. Don't forget to stop Jetty!
+h2. Don't forget to stop Jetty!
 
 It's easy to forget a running jetty, start another jetty process, 
 and then get confusing behavior because you have two jetty instances on the
@@ -178,7 +178,7 @@ From the rails application directory  (my-hydra-head-test-app)
 Use ps to ensure the java process has stopped.  If not, kill it manually.
 
 
-h3. If you need to Re-run the tests:
+h2. If you need to Re-run the tests:
 
 h4. Clean out the databases:
 
@@ -220,7 +220,7 @@ TODO: can this be a single rake task?
 3. Re-initialize and start Jetty:
 
 <pre>
-  rake hydra:jetty:load
+  rake hydra:jetty:load RAILS_ENV=test
 </pre>
 
 4. Reload the pristine fixtures.
