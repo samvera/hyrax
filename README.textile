@@ -10,6 +10,7 @@ This is (currently) a Ruby on Rails 2 Engines Plugin.  It will eventually become
 h2. How to Create a Rails Application Using Hydra-Head 
 
 h3. Prerequisites
+
 * ruby v 1.8.7 or higher
 * rubygems
 * these ruby gems:
@@ -21,7 +22,8 @@ h3. Prerequisites
 
 h3.  Installation Instructions:
 
-To get the hydra-head engines plugin from github.
+Get the hydra-head engines plugin from github:
+
 <pre>
 git clone git@github.com:projecthydra/hydra-head.git vendor/plugins/hydra-head
 </pre>
@@ -30,12 +32,9 @@ To use hydra-head in a rails app, see
   see README_TESTING_PLUGIN
 
 
-FIXME:  you also need engines and blacklight and whitelist ...
-blacklight - careful about rails 2 version!
-git clone git://github.com/projectblacklight/blacklight.git vendor/plugins/blacklight
-
-git clone git://github.com/lazyatom/engines.git vendor/plugins/engines
-
+FIXME:  the best instructions we have for running this in a rails app are 
+located at 
+  https://github.com/projecthydra/hydra-plugin_test_host/blob/master/README.textile
 
 
 h3.  Running the hydra-head tests

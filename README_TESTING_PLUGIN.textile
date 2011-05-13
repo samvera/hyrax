@@ -1,6 +1,6 @@
 h1. Hydra-Head Engines Plugin Testing
 
-This is the Ruby on Rails 2 Engines Plugin containing the code for a Hydra
+Hydra-Head is a rails 2 Engines Plugin containing the code for a Hydra
 Ruby on Rails application.  The full hydra stack includes the following:
 
 - Blacklight for the User Interface
@@ -18,6 +18,7 @@ a rails 3 engines plugin gem
 h2. Installation Instructions
 
 h3. Prerequisites
+
 * ruby v 1.8.7 or higher
 * rubygems
 * these ruby gems:
@@ -29,26 +30,206 @@ h3. Prerequisites
 
 h3.  Installation Instructions to Run Hydra-Head tests:
 
-0.  We strongly suggest using RVM  (ruby virtual machine) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+h4. (0) We strongly suggest using RVM  (ruby virtual machine) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
 
 See https://rvm.beginrescueend.com/
 
 If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it.
-<pre>
-rvm install ree-1.8.7
-</pre>
-
-1.  For the current Rails 2 incarnation, you have to install hydra-head as a plugin in a full rails application.  We have a preconfigured testing application created for this purpose.  
 
 <pre>
-  git clone git@github.com:projecthydra/hydra-plugin_test_host.git my-hydra-head-testing-app
-  cd my-hydra-head-testing-app
+  rvm install ree-1.8.7
 </pre>
 
-2.  We use a git BRANCH of the testing rails application for this testing:
+h4. (1) Make an empty directory
+
+Make an empty directory: (call it whatever you want):
+
 <pre>
-  git checkout installed-plugin
+  mkdir hyhead-testing
+  cd hyhead-testing
 </pre>
 
-3.  Follow the instructions in the README_FOR_HYDRA_HEAD_TESTING of hydra-plugin_test_host
+You have to do this because the test host app adds “../../” to its plugin paths, which allows it to load its parent directory as a plugin but will also load all of that parent’s sibling directories as plugins as well. In order to test just the plugin, it must live in a directory all by itself. This is a hack that will only last until we upgrade to rails3 or find a better hack.
 
+h4. (2) Get the hydra-head engines plugin from github.
+
+While in your empty hydra-head-test directory:
+
+<pre>
+git clone git@github.com:projecthydra/hydra-head.git
+cd hydra-head
+</pre>
+
+<b>This hydra-head directory is the <i>root of the plugin</i>.</b>
+
+h4. (3) Ensure you are using the RVM gemset
+
+<pre>
+  . .rvmrc
+</pre>
+
+You should get a message like this:
+ Using /usr/local/you/.rvm/gems/ree-1.8.7-2010.02 with gemset hyhead-rails2-testing
+
+
+h4. (4) Use bundler to install the gem dependencies.
+
+<pre>
+  bundle install
+</pre>
+
+You may need to install bundler into the gemset first:
+
+<pre>
+  gem install bundler
+</pre>
+
+
+h4. (5) Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
+Also pull the rails application set up just for testing the Hydra-Head engines plugin.
+
+For the current Rails 2 incarnation, you have to install hydra-head as a plugin in a full rails application.  This will pull the a preconfigured testing application created for this purpose, as well as jetty preconfigured with Fedora and Solr.
+
+<pre>
+  git submodule init
+  git submodule update
+</pre>
+
+h4. (6) Migrate the test databases
+
+See below to reset the test databases when re-running tests.
+
+You must do this within the <b><i>hydra-plugin_test_host</i> directory</b>, not at the root of the plugin.
+
+<pre>
+  cd hydra-plugin_test_host
+</pre>  
+
+NOTE: to ensure that the tests do not rely on non-test data, do this:
+
+<pre>
+  rake db:drop:all
+</pre>
+
+Migrate the test databases:
+
+<pre>
+  rake db:migrate:all RAILS_ENV=test  
+</pre>
+
+Now cd back up to the root of the <b><i>hydra-head plugin</i> directory</b>:
+
+<pre>
+  cd ../
+</pre>
+
+h4. (7) Start Jetty, preloaded with Fedora and Solr applications
+
+See below to reset jetty when re-running tests, or when running a simultaneous development instance.
+
+Ensure nothing is running on port 8983.
+
+You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the hydra-plugin_test_host directory.
+
+Note that java 1.6 must be invoked by the "java" command or Fedora won't work.
+
+<pre>
+  rake hydra:jetty:load RAILS_ENV=test
+</pre>
+
+This will start up jetty on port 8983.
+
+h4. (8) Load test fixtures into Fedora/Solr.
+
+You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the hydra-plugin_test_host directory.
+
+NOTE: to ensure that the tests do not rely on non-test data, do this first: 
+
+<pre>
+  rake hydra:default_fixtures:delete
+</pre>
+
+<pre>
+  rake hydra:default_fixtures:refresh environment=test
+</pre>
+
+(TO DO: get rid of irrelevant fixtures; get rid of non-generic fixtures.)
+
+h4. (9) Run specs.
+
+<pre>
+  rake hydra_head:rspec
+</pre>
+
+
+h3. Don't forget to stop Jetty!
+
+It's easy to forget a running jetty, start another jetty process, 
+and then get confusing behavior because you have two jetty instances on the
+same port.
+
+To stop jetty:
+From the rails application directory  (my-hydra-head-test-app)
+
+<pre>
+  rake hydra:jetty:stop
+</pre>
+
+Use ps to ensure the java process has stopped.  If not, kill it manually.
+
+
+h3. If you need to Re-run the tests:
+
+h4. Clean out the databases:
+
+<pre>
+  rake db:drop RAILS_ENV=test
+    or
+  rake db:drop:all   (to ensure that the tests do not rely on non-test data)
+</pre>
+
+<pre>
+  rake db:migrate:all RAILS_ENV=test  
+</pre>
+
+
+h4. Clean out the fixtures:
+
+1. Stop jetty
+
+<pre>
+  rake hydra:jetty:stop
+</pre>
+
+Use ps to ensure the java process has stopped.  If not, kill it manually.
+
+2. Clean out Solr and Fedora on Jetty
+
+(Note:  this will also wipe out the development data until we use the single solr instance of hydra-jetty)
+
+TODO: can this be a single rake task?
+
+<pre>
+  cd jetty
+  git clean -df
+  git checkout .
+  git status     should show nothing to commit
+  cd ..   (back to root of the _plugin_)
+</pre>
+
+3. Re-initialize and start Jetty:
+
+<pre>
+  rake hydra:jetty:load
+</pre>
+
+4. Reload the pristine fixtures.
+NOTE: to ensure that the tests do not rely on non-test data, do this first:
+
+<pre>
+  rake hydra:default_fixtures:delete
+</pre>
+
+<pre>
+  rake hydra:default_fixtures:refresh environment=test
+</pre>
