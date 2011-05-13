@@ -180,7 +180,7 @@ Use ps to ensure the java process has stopped.  If not, kill it manually.
 
 h2. If you need to Re-run the tests:
 
-h4. Clean out the databases:
+h4. Clean out and reload the databases:
 
 <pre>
   rake db:drop RAILS_ENV=test
@@ -193,7 +193,7 @@ h4. Clean out the databases:
 </pre>
 
 
-h4. Clean out the fixtures:
+h4. Clean out and reload the fixtures:
 
 1. Stop jetty
 
