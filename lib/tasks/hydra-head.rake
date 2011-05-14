@@ -28,10 +28,12 @@ namespace :hyhead do
     Rake::Task["hyhead:spec"].invoke
   end
   
-
+  desc "Copy code to host plugins dir then run spec"
+  task :spec => [:remove_from_host_plugins_dir, :copy_to_host_plugins_dir, :rspec] do
+  end
 
   desc "Run the hydra-head specs"
-  Spec::Rake::SpecTask.new(:spec) do |t|
+  Spec::Rake::SpecTask.new(:rspec) do |t|
 #    t.spec_opts = ['--options', "/spec/spec.opts"]
     t.spec_files = FileList['spec/**/*_spec.rb']
     t.rcov = true
@@ -71,7 +73,7 @@ namespace :hyhead do
     plugin_dir = "hydra-plugin_test_host/vendor/plugins/hydra-head"
     FileUtils.mkdir_p(plugin_dir)
     
-    puts "copying files to #{plugin_dir}:"
+    puts "Copying plugin files to #{plugin_dir}:"
 
     Dir.foreach(".") do |fn| 
       unless excluded.include?(fn)
@@ -83,7 +85,9 @@ namespace :hyhead do
   
   desc "Remove hydra-plugin_test_host/vendor/plugins/hydra-head"
   task :remove_from_host_plugins_dir do
-    %x[rm -rf hydra-plugin_test_host/vendor/plugins/hydra-head]
+    plugin_path = "hydra-plugin_test_host/vendor/plugins/hydra-head"
+    puts "Emptying out #{plugin_path}"
+    %x[rm -rf #{plugin_path}]
   end
 
 end
