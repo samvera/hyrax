@@ -14,11 +14,17 @@ cd ..
 rake hydra:jetty:load RAILS_ENV=test
 rake hydra:default_fixtures:refresh environment=test
 
-rake hyhead:spec_with_copy
+rake hyhead:spec
 rake hyhead:remove_from_host_plugins_dir
 
 OR
 
 rake hyhead:copy_to_host_plugins_dir
-rake hyhead:spec
-rake hyhead:remove_from_host_plugins_dir
+rake hyhead:rspec
+rake hyhead:remove_from_host_plugin
+
+
+h2. Running the App
+
+cd hydra-plugin_test_host
+script/server
