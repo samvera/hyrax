@@ -60,5 +60,30 @@ namespace :hyhead do
       end
     end
   end
+  
+  desc "Copy code to host plugins dir then run spec"
+  task :spec_with_copy => [:copy_to_host_plugins_dir, :spec] do
+  end
+  
+  desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
+  task :copy_to_host_plugins_dir do
+    excluded = [".", "..", ".git", ".gitignore", ".gitmodules", ".rvmrc", "coverage", "coverage.data", "tmp", "hydra-plugin_test_host", "jetty"]
+    plugin_dir = "hydra-plugin_test_host/vendor/plugins/hydra-head"
+    FileUtils.mkdir_p(plugin_dir)
+    
+    puts "copying files to #{plugin_dir}:"
+
+    Dir.foreach(".") do |fn| 
+      unless excluded.include?(fn)
+        puts " #{fn}"
+        FileUtils.cp_r(fn, "#{plugin_dir}/#{fn}", :remove_destination=>true)
+      end
+    end
+  end
+  
+  desc "Remove hydra-plugin_test_host/vendor/plugins/hydra-head"
+  task :remove_from_host_plugins_dir do
+    %x[rm -rf hydra-plugin_test_host/vendor/plugins/hydra-head]
+  end
 
 end

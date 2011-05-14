@@ -1,0 +1,24 @@
+git clone git@github.com:projecthydra/hydra-head.git
+
+cd hydra-head
+git submodule init
+git submodule update
+bundle update
+
+cd hydra-plugin_test_host
+rake db:drop:all
+rake db:migrate:all
+rake db:migrate:all RAILS_ENV=test  
+cd ..
+
+rake hydra:jetty:load RAILS_ENV=test
+rake hydra:default_fixtures:refresh environment=test
+
+rake hyhead:spec_with_copy
+rake hyhead:remove_from_host_plugins_dir
+
+OR
+
+rake hyhead:copy_to_host_plugins_dir
+rake hyhead:spec
+rake hyhead:remove_from_host_plugins_dir
