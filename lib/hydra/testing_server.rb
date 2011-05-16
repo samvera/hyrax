@@ -10,14 +10,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require "hydra"
 
+module Hydra 
 # A singleton class for starting/stopping a Jetty server for testing purposes
 # The behavior of TestSolrServer can be modified prior to start() by changing 
 # port, solr_home, and quiet properties.
 #
 # This class is based on Blacklight's TestSolrServer
-class Hydra::TestingServer
+class TestingServer
   require 'singleton'
   include Singleton
   require 'win32/process' if RUBY_PLATFORM =~ /mswin32/
@@ -162,7 +162,8 @@ class Hydra::TestingServer
     @pid || File.open( pid_path ) { |f| return f.gets.to_i } if File.exist?(pid_path)
   end
 
-end
+end # class TestingServer
+end # module Hydra
 
 # 
 # puts "hello"
