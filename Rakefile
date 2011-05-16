@@ -2,6 +2,8 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+$: << "lib"
+
 # load rake tasks in lib/tasks
 Dir.glob('lib/tasks/*.rake').each { |r| import r }
 
