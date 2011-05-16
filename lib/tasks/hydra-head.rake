@@ -49,10 +49,11 @@ namespace :hyhead do
     require 'yard'
     require 'yard/rake/yardoc_task'
     project_root = File.expand_path("#{File.dirname(__FILE__)}/../../")
-    doc_dir = 'doc'
-    FileUtils.rm_r(doc_dir)
-    FileUtils.mkdir_p(doc_dir)
-    doc_destination = File.join(project_root, doc_dir)
+    doc_destination = File.join(project_root, 'doc')
+    if File.exists?(doc_destination)
+      FileUtils.rm_r(doc_destination)
+    end
+    FileUtils.mkdir_p(doc_destination)
   
     YARD::Rake::YardocTask.new(:doc) do |yt|
       yt.files   = Dir.glob(File.join(project_root, '*.rb')) + 
