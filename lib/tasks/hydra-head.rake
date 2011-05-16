@@ -2,6 +2,8 @@ namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
+    Rake::Task["hyhead:doc"].invoke
+
     require 'jettywrapper'
     jetty_params = {
       :jetty_home => File.expand_path(File.dirname(__FILE__) + '/../../jetty'),
@@ -9,13 +11,12 @@ namespace :hyhead do
       :jetty_port => 8983,
       :solr_home => File.expand_path(File.dirname(__FILE__) + '/../../jetty/solr'),
       :fedora_home => File.expand_path(File.dirname(__FILE__) + '/../../jetty/fedora/default'),
-      :startup_wait => 30
+      :startup_wait => 20
       }
 
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
       system("rake hydra:default_fixtures:refresh environment=test")
-      Rake::Task["hyhead:doc"].invoke
       Rake::Task["hyhead:spec"].invoke
       system("rake hydra:default_fixtures:delete environment=test")
     end
