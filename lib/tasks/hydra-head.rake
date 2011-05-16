@@ -20,7 +20,6 @@ namespace :hyhead do
     error = Jettywrapper.wrap(jetty_params) do
       system("rake hydra:default_fixtures:refresh environment=test")
       Rake::Task["hyhead:spec"].invoke
-      system("rake hydra:default_fixtures:delete environment=test")
     end
     raise "test failures: #{error}" if error
   end
