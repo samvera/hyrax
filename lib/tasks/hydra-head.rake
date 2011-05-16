@@ -1,3 +1,5 @@
+require 'spec/rake/spectask'
+
 namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
@@ -23,18 +25,11 @@ namespace :hyhead do
     raise "test failures: #{error}" if error
   end
 
-
-  desc "Execute Continuous Integration build (docs, tests with coverage) without jetty wrapper"
-  task :orig_ci do
-    Rake::Task["hyhead:doc"].invoke
-    Rake::Task["hyhead:spec"].invoke
-  end
-  
-  desc "Copy code to host plugins dir then run spec"
+  desc "Copy code to host plugins dir then run specs - need to have jetty running and fixtures loaded."
   task :spec => [:remove_from_host_plugins_dir, :copy_to_host_plugins_dir, :rspec] do
   end
 
-  desc "Run the hydra-head specs"
+  desc "Run the hydra-head specs - need to have jetty running and fixtures loaded."
   Spec::Rake::SpecTask.new(:rspec) do |t|
 #    t.spec_opts = ['--options', "/spec/spec.opts"]
     t.spec_files = FileList['spec/**/*_spec.rb']
@@ -43,6 +38,16 @@ namespace :hyhead do
       IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
     end
   end
+
+=begin
+  require 'spec/rake/spectask'
+  Spec::Rake::SpecTask.new(:spec) do |spec|
+    spec.libs << 'lib' << 'spec'
+    spec.spec_files = FileList['spec/**/*_spec.rb']
+  end
+=end
+
+
   
   # The following is a task named :doc which generates documentation using yard
   begin
@@ -76,10 +81,6 @@ namespace :hyhead do
     task :doc do
       abort "Please install the YARD gem to generate rdoc."
     end
-  end
-  
-  desc "Copy code to host plugins dir then run spec"
-  task :spec_with_copy => [:copy_to_host_plugins_dir, :spec] do
   end
   
   desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
