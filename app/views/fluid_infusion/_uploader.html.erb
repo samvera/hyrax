@@ -1,12 +1,15 @@
 <%- stylesheet_links << ['../infusion/framework/fss/css/fss-layout.css', {:plugin=>"fluid-infusion"}] %>
-
+<%- field_tag_options = defined?(uploader_options) ? uploader_options : {} %>
+<%- container_content_type_param = defined?(container_content_type) ? "?container_content_type=#{container_content_type}" : "" %>
 <div id="uploader-contents">
     
     <!-- This form will be progressively enhanced by the Fluid Uploader component. -->    
     <form method="post" enctype="multipart/form-data" class="fl-uploader fl-progEnhance-basic" action="<%=h upload_url %>">
         <input type="hidden" name="container_id" value="<%=h container_id %>"/>
+        <%= hidden_field_tag("container_content_type", container_content_type) if defined?(container_content_type) %>
         <p>Browse to upload a file.</p>
-        <input name="Filedata" type="file" />
+        <!-- <input name="Filedata-orig" type="file" /> -->
+        <%= file_field_tag "Filedata", field_tag_options %>
         <div><input type="submit" value="Upload File"/></div>
     </form>
     
