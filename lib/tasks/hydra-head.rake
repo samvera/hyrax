@@ -84,7 +84,7 @@ namespace :hyhead do
   
   desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
   task :copy_to_host_plugins_dir do
-    excluded = [".", "..", ".git", ".gitignore", ".gitmodules", ".rvmrc", "coverage", "coverage.data", "tmp", "hydra-plugin_test_host", "jetty"]
+    excluded = [".", "..", ".git", ".gitignore", ".gitmodules", ".rvmrc", ".yardoc", "coverage", "coverage.data", "doc", "tmp", "hydra-plugin_test_host", "jetty"]
     plugin_dir = "hydra-plugin_test_host/vendor/plugins/hydra-head"
     FileUtils.mkdir_p(plugin_dir)
     
