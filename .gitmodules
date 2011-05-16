@@ -1,6 +1,6 @@
 [submodule "hydra-plugin_test_host"]
 	path = hydra-plugin_test_host
-	url = git@github.com:projecthydra/hydra-plugin_test_host.git
+	url = git://github.com/projecthydra/hydra-plugin_test_host.git 
 [submodule "jetty"]
 	path = jetty
-	url = git@github.com:projecthydra/hydra-jetty
+	url = git://github.com/projecthydra/hydra-jetty.git
