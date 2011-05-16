@@ -1,3 +1,4 @@
---exclude "spec/*,gems/*,ruby/*"
+--exclude "spec/*,features/*,gems/*,ruby/*"
+--include-file "vendor/plugins/hydra-head/app/*,vendor/plugins/hydra-head/lib/*"
 --rails
 --aggregate "coverage.data"
