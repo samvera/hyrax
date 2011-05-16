@@ -39,15 +39,6 @@ namespace :hyhead do
     end
   end
 
-=begin
-  require 'spec/rake/spectask'
-  Spec::Rake::SpecTask.new(:spec) do |spec|
-    spec.libs << 'lib' << 'spec'
-    spec.spec_files = FileList['spec/**/*_spec.rb']
-  end
-=end
-
-
   
   # The following is a task named :doc which generates documentation using yard
   begin
@@ -63,12 +54,6 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
-
-      if File.exists?(doc_destination)
-        FileUtils.rm_r(doc_destination)
-      end
-      FileUtils.mkdir_p(doc_destination)
-
       yt.files   = Dir.glob(File.join(project_root, '*.rb')) + 
                    Dir.glob(File.join(project_root, 'app', '**', '*.rb')) + 
                    Dir.glob(File.join(project_root, 'config', '**', '*.rb')) + 
