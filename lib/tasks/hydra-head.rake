@@ -17,6 +17,7 @@ namespace :hyhead do
       system("rake hydra:default_fixtures:refresh environment=test")
       Rake::Task["hyhead:doc"].invoke
       Rake::Task["hyhead:spec"].invoke
+      system("rake hydra:default_fixtures:delete environment=test")
     end
     raise "test failures: #{error}" if error
   end
@@ -48,8 +49,10 @@ namespace :hyhead do
       require 'yard'
       require 'yard/rake/yardoc_task'
       project_root = File.expand_path("#{File.dirname(__FILE__)}/../../")
-      doc_destination = File.join(project_root, 'doc')
-
+      doc_dir = 'doc'
+      FileUtils.mkdir_p(doc_dir)
+      doc_destination = File.join(project_root, doc_dir)
+    
       YARD::Rake::YardocTask.new(:doc) do |yt|
         yt.files   = Dir.glob(File.join(project_root, 'lib', '**', '*.rb')) + 
                      [ File.join(project_root, 'README.textile') ]
