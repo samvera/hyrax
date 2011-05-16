@@ -43,26 +43,28 @@ namespace :hyhead do
     end
   end
   
-  desc "Generate the hydra-head documentation (using yard)"
-  task :doc do
-    begin
-      require 'yard'
-      require 'yard/rake/yardoc_task'
-      project_root = File.expand_path("#{File.dirname(__FILE__)}/../../")
-      doc_dir = 'doc'
-      FileUtils.mkdir_p(doc_dir)
-      doc_destination = File.join(project_root, doc_dir)
-    
-      YARD::Rake::YardocTask.new(:doc) do |yt|
-        yt.files   = Dir.glob(File.join(project_root, 'lib', '**', '*.rb')) + 
-                     [ File.join(project_root, 'README.textile') ]
-        yt.options = ['--output-dir', doc_destination, '--readme', 'README.textile']
-      end
-    rescue LoadError
-      desc "Generate YARD Documentation"
-      task :doc do
-        abort "Please install the YARD gem to generate rdoc."
-      end
+  # The following is a task named :doc which generates documentation using yard
+  begin
+    require 'yard'
+    require 'yard/rake/yardoc_task'
+    project_root = File.expand_path("#{File.dirname(__FILE__)}/../../")
+    doc_dir = 'doc'
+    FileUtils.rm_r(doc_dir)
+    FileUtils.mkdir_p(doc_dir)
+    doc_destination = File.join(project_root, doc_dir)
+  
+    YARD::Rake::YardocTask.new(:doc) do |yt|
+      yt.files   = Dir.glob(File.join(project_root, '*.rb')) + 
+                   Dir.glob(File.join(project_root, 'app', '**', '*.rb')) + 
+                   Dir.glob(File.join(project_root, 'config', '**', '*.rb')) + 
+                   Dir.glob(File.join(project_root, 'lib', '**', '*.rb')) + 
+                   [ File.join(project_root, 'README.textile') ]
+      yt.options = ['--output-dir', doc_destination, '--readme', 'README.textile']
+    end
+  rescue LoadError
+    desc "Generate YARD Documentation"
+    task :doc do
+      abort "Please install the YARD gem to generate rdoc."
     end
   end
   
