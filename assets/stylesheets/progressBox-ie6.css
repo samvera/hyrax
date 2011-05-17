@@ -18,15 +18,15 @@
 }
 
 #progressBoxContentChecked {
-  background-image: url('chkbox_checked.png');
+  background-image: url('/plugin_assets/hydra-head/images/chkbox_checked.png');
 }
 
 .progressItemChecked {
-  background-image: url('/images/chkbox_checked.png');
+  background-image: url('/plugin_assets/hydra-head/images/chkbox_checked.png');
 }
 
 .progressItemRejected {
-  background-image: url('/images/chkbox_cross.png');
+  background-image: url('/plugin_assets/hydra-head/images/chkbox_cross.png');
 }
 
 .progressBoxInvisibleStatus {

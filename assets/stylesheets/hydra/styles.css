@@ -1396,7 +1396,7 @@ html>body .fl-uploader a.fl-uploader-browse {
 }
 
 .fl-uploader-queue .fl-uploader-file-action-remove {
-    background-image: url(/images/remove.png);
+    background-image: url(../../images/remove.png);
     cursor: pointer !important;
 }
 

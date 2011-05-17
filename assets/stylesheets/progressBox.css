@@ -71,12 +71,12 @@ li p.bold {
 }
 
 .progressItem {
-  list-style-image:url('/images/chkbox_empty.png');		
+  list-style-image:url('/plugin_assets/hydra-head/images/chkbox_empty.png');		
 /*  background:	#EEF5FB url('/images/chkbox_empty.png') no-repeat center left;*/
 }
 
 #progressBoxContentChecked {
-  background: #EEF5FB url('/images/chkbox_checked.png') no-repeat center left;
+  background: #EEF5FB url('/plugin_assets/hydra-head/images/chkbox_checked.png') no-repeat center left;
   padding:2px 0 2px 20px;
 }
 
@@ -91,22 +91,24 @@ li p.bold {
 }
 
 .progressItemChecked {
-  list-style-image:url('/images/chkbox_checked.png');
+  list-style-image:url('/plugin_assets/hydra-head/images/chkbox_checked.png');
 /*  background-image:url('/images/chkbox_checked.png');*/
 }
 
 .progressItemRejected {
-  list-style-image:url('/images/chkbox_cross.png');	
+  list-style-image:url('/plugin_assets/hydra-head/images/chkbox_cross.png');	
 /*  background-image:url('/images/chkbox_cross.png');*/
 }
 
 .progressItemUnChecked {
-  list-style-image:url('/images/chkbox_empty.png');	
+  list-style-image:url('/plugin_assets/hydra-head/images/chkbox_empty.png');	
 /*  background-image:url('/images/chkbox_empty.png');*/
 }
 
+
+/* could not find a checked_readonly.png in any of the hydra heads */
 .chkbox_readonly {
-  background:transparent url('/images/checked_readonly.png') no-repeat left center;
+  background:transparent url('/plugin_assets/hydra-head/images/checked_readonly.png') no-repeat left center;
   padding:0 0 0 20px;
 }
 
