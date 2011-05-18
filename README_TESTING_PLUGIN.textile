@@ -17,7 +17,7 @@ a rails 3 engines plugin gem
 
 h2. I. Install the Test Host 
 
-In order to run the tests, you need to have a test rails app installed in the  hydra-plugin_test_host.  The plugin provides rake tasks for setting this up.  See "README_INSTALL_TEST_HOST":README_INSTALL_TEST_HOST.textile for instructions on setting this up.
+In order to run the tests, you need to have a test rails app installed in the  hydra-plugin_test_host.  The plugin provides rake tasks for setting this up.  See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile for instructions on setting this up.
 
 h2. II. Running the full Continuous Integration build
 
