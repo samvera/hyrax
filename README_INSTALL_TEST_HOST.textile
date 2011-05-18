@@ -1,0 +1,135 @@
+h2. Installation Instructions
+
+h3. Prerequisites
+
+* ruby v 1.8.7 or higher
+* rubygems
+* these ruby gems:
+** bundler
+** rails version < 3.
+* git
+* java 1.6 or higher
+
+
+h3.  Installation Instructions to Run Hydra-Head tests:
+
+h4. (0) We strongly suggest using RVM  (Ruby Version Manager) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+
+See https://rvm.beginrescueend.com/
+
+If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it.
+
+<pre>
+  rvm install ree-1.8.7
+</pre>
+
+h4. (1) Get the hydra-head engines plugin from github.
+
+While in your empty hydra-head-test directory:
+
+<pre>
+git clone git@github.com:projecthydra/hydra-head.git
+cd hydra-head
+</pre>
+
+<b>This hydra-head directory is the <i>root of the plugin</i>.</b>
+
+h4. (1a) Ensure you are using the RVM gemset
+
+<pre>
+  . .rvmrc
+</pre>
+
+You should get a message like this:
+ Using /usr/local/you/.rvm/gems/ree-1.8.7-2010.02 with gemset hyhead-rails2-testing
+
+
+h4. (2) Use bundler to install the gem dependencies.
+
+<pre>
+  bundle install
+</pre>
+
+You may need to install bundler into the gemset first:
+
+<pre>
+  gem install bundler
+</pre>
+
+h4. (3) Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
+Also pull the rails application set up just for testing the Hydra-Head engines plugin.
+
+For the current Rails 2 incarnation, you have to install hydra-head as a plugin in a full rails application.  This will pull the a preconfigured testing application created for this purpose, as well as jetty preconfigured with Fedora and Solr.
+
+<pre>
+  git submodule init
+  git submodule update
+</pre>
+
+This will put hydra-jetty into the jetty directory and the test host application into hydra-plugin_test_host
+
+h4. (4) IMPORTANT: Put a copy of the plugin into the host app
+
+*If you don't run this, you will not be able to run the test host app or its rake tasks*
+
+The host application needs a copy of the plugin in its vendor/plugins directory.  We provide a rake task for this.  The rake task will copy all of the plugin code into hydra-plugin_test_host/vendor/plugins
+
+<pre>
+rake hyhead:copy_to_host_plugins_dir
+</pre>
+
+h4. (5) Migrate the test databases
+
+See below to reset the test databases when re-running tests.
+
+You must do this within the <b><i>hydra-plugin_test_host</i> directory</b>, not at the root of the plugin.
+
+<pre>
+  cd hydra-plugin_test_host
+</pre>  
+
+NOTE: to ensure that the tests do not rely on non-test data, do this:
+
+<pre>
+  rake db:drop:all 
+</pre>
+
+Migrate the test databases:
+
+<pre>
+  rake db:migrate:all RAILS_ENV=test  
+</pre>
+
+In case you ever run the server in development mode, you will need to migrate the databases without RAILS_ENV set to test
+
+<pre>
+  rake db:migrate:all
+</pre>
+
+Now cd back up to the root of the <b><i>hydra-head plugin</i> directory</b>:
+
+<pre>
+  cd ../
+</pre>
+
+h3. Now you're ready to run the tests
+
+If you want to run the tests, see "README_TESTING_PLUGIN"README_TESTING_PLUGIN.textile
+
+h2. Running the App
+
+The test host app is a regular Rails app with Blacklight installed.  Its configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
+
+Before starting the app, make sure that you have the latest copy of the plugin code copied into its plugins directory.
+
+<pre>
+rake hyhead:remove_from_host_plugin
+rake hyhead:copy_to_host_plugins_dir
+</pre>
+
+After copying the plugin code, cd into the root of the test app and start it like you normally start any rails app.
+
+<pre>
+cd hydra-plugin_test_host
+script/server
+</pre>
