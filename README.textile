@@ -1,71 +1,92 @@
-h1. Hydra-Head
+h2. Installation/Setup
 
-This is the core part of Hydra code needed to create a Hydra application.
-
-For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":http://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
-
-This is (currently) a Ruby on Rails 2 Engines Plugin.  It will eventually become a Rails 3 Engines Plugin, and then a Rails 3 Engines gem.
-
-
-h2. How to Create a Rails Application Using Hydra-Head 
-
-h3. Prerequisites
-
-* ruby v 1.8.7 or higher
-* rubygems
-* these ruby gems:
-** bundler
-** rails version < 3.
-* git
-* java 1.6 or higher
-
-
-h3.  Installation Instructions:
-
-Get the hydra-head engines plugin from github:
+h3. (1) Grab the code
 
 <pre>
-git clone git@github.com:projecthydra/hydra-head.git vendor/plugins/hydra-head
+git clone git@github.com:projecthydra/hydra-head.git
 </pre>
 
-To use hydra-head in a rails app, see 
-  see README_TESTING_PLUGIN
+h3. (2) Grab jetty and the test host application
+
+The git repository includes references to git submodules containing hydra-jetty and a sample Blacklight app that you can install the hydra-head plugin into.
+
+<pre>
+cd hydra-head
+git submodule init
+git submodule update
+bundle install
+</pre>
 
 
-FIXME:  the best instructions we have for running this in a rails app are 
-located at 
-  https://github.com/projecthydra/hydra-plugin_test_host/blob/master/README.textile
+h3. (3) IMPORTANT: Put a copy of the plugin into the host app
+
+*If you don't run this, you will not be able to run the test host app or its rake tasks*
+
+The host application needs a copy of the plugin in its vendor/plugins directory.  We provide a rake task for this.  The rake task will copy all of the plugin code into hydra-plugin_test_host/vendor/plugins
+
+<pre>
+rake hyhead:copy_to_host_plugins_dir
+</pre>
 
 
-h3.  Running the hydra-head tests
+h3. (4) Migrate the host app's databases
 
-see README_TESTING_PLUGIN
+<pre>
+cd hydra-plugin_test_host
+rake db:drop:all
+rake db:migrate:all
+rake db:migrate:all RAILS_ENV=test  
+cd ..
+</pre>
+
+h2. Running the full Continuous Integration build
+
+_Stop any copies of jetty that you have running before running this._
+
+This will spin up jetty, import your fixtures into it run the tests, and stop jetty.
+
+<pre>
+rake hyhead:ci RAILS_ENV=test 
+</pre>
+
+h2. Running the Tests Manually
+
+h3. Start Jetty and load the fixtures
+
+<pre>
+rake hydra:jetty:load RAILS_ENV=test
+rake hydra:default_fixtures:refresh environment=test
+</pre>
+
+h3. Run the RSpec Tests
+
+<pre>
+rake hyhead:spec
+</pre>
+
+OR
+
+<pre>
+rake hyhead:remove_from_host_plugins_dir
+rake hyhead:copy_to_host_plugins_dir
+rake hyhead:rspec
+</pre>
 
 
+h2. Running the App
 
-h2. Acknowledgements
+The test host app is a regular Rails app with Blacklight installed.  Its configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
 
-h3. Design & Strategic Contributions
+Before starting the app, make sure that you have the latest copy of the plugin code copied into its plugins directory.
 
-The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia and University of Hull.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, and Chris Awre.  
+<pre>
+rake hyhead:remove_from_host_plugin
+rake hyhead:copy_to_host_plugins_dir
+</pre>
 
-Thorny Staples from Fedora Commons & DuraSpace deserves special thanks for putting all of these people in the same room together.
+After copying the plugin code, cd into the root of the test app and start it like you normally start any rails app.
 
-h3. Technical Contributions
-
-*Technical Lead:* Matt Zumwalt ("MediaShelf":http://yourmediashelf.com)
-*User Interface & User Experience Designer:* Jennifer Vine
-
-Developers:
-Eddie Shin, Jessie Keck, Christopher Jesudurai, McClain Looney, Luke Francl, Dan Weinand, Ken Earley, Paul Wenzel, Bess Sadler, Naomi Dushay
-
-Testers:
-Charles Kerns, Bess Sadler, Richard Green, Tom Lauderman, Mark Matienzo
-
-h3. Additional thanks
-
-Project Blacklight and the Blacklight contributors
-Willy Mene, who created one of the "Hydra head" prototypes on which Hydrangea is based.
-Chris Fitzpatrick & Douglas Kim, who created the first version of Solrizer and then thoroughly exercised it.
-Stu Snydman, project manager for the SALT Hydra prototype.
-
+<pre>
+cd hydra-plugin_test_host
+script/server
+</pre>
