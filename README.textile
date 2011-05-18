@@ -1,10 +1,18 @@
 h1. Hydra-Head
 
-This is the core part of Hydra code needed to create a Hydra application.
+Hydra-Head is a rails 2 Engine containing the code for a
+Ruby on Rails application that functions as a Hydra Head.  The full hydra stack includes the following:
+
+- Blacklight for the User Interface
+- Solr for the Search Engine
+- ActiveFedora to let the rails application talk to fedora
+- OM to streamline the metadata configuration
+- Solrizer to write Fedora content to the Solr index
+- SolrizerFedora for something.
 
 For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":http://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
 
-This is (currently) a Ruby on Rails 2 Engines Plugin.  It will eventually become a Rails 3 Engines Plugin, and then a Rails 3 Engines gem.
+This is (currently) a Ruby on Rails 2 Engines Plugin.  It will soon become a Rails 3 Plugin, which will be distributed as a gem.
 
 h2. Installation/Setup
 

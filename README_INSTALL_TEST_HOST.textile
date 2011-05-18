@@ -1,4 +1,4 @@
-h2. Installation Instructions
+h2. Installing the Test Host Applicaton
 
 h3. Prerequisites
 
@@ -9,9 +9,6 @@ h3. Prerequisites
 ** rails version < 3.
 * git
 * java 1.6 or higher
-
-
-h3.  Installation Instructions to Run Hydra-Head tests:
 
 h4. (0) We strongly suggest using RVM  (Ruby Version Manager) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
 

@@ -1,20 +1,5 @@
 h1. Testing the hydra-head Plugin
 
-Hydra-Head is a rails 2 Engines Plugin containing the code for a Hydra
-Ruby on Rails application.  The full hydra stack includes the following:
-
-- Blacklight for the User Interface
-- Solr for the Search Engine
-- ActiveFedora to let the rails application talk to fedora
-- OM to streamline the metadata configuration
-- Solrizer to write Fedora content to the Solr index
-- SolrizerFedora for something.
-
-This code will soon migrate to:
-a rails 3 engines plugin
-a rails 3 engines plugin gem
-
-
 h2. I. Install the Test Host 
 
 In order to run the tests, you need to have a test rails app installed in the  hydra-plugin_test_host.  The plugin provides rake tasks for setting this up.  See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile for instructions on setting this up.
