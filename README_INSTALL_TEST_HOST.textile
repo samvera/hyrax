@@ -111,7 +111,7 @@ Now cd back up to the root of the <b><i>hydra-head plugin</i> directory</b>:
 
 h3. Now you're ready to run the tests
 
-If you want to run the tests, see "README_TESTING_PLUGIN"https://github.com/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
+If you want to run the tests, see "README_TESTING_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
 
 h2. Running the App
 
