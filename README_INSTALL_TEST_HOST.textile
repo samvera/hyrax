@@ -94,13 +94,13 @@ NOTE: to ensure that the tests do not rely on non-test data, do this:
 Migrate the test databases:
 
 <pre>
-  rake db:migrate:all RAILS_ENV=test  
+  rake db:migrate RAILS_ENV=test  
 </pre>
 
 In case you ever run the server in development mode, you will need to migrate the databases without RAILS_ENV set to test
 
 <pre>
-  rake db:migrate:all
+  rake db:migrate
 </pre>
 
 Now cd back up to the root of the <b><i>hydra-head plugin</i> directory</b>:

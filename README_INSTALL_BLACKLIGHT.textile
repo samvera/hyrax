@@ -167,12 +167,18 @@ There are many ways to get the hydra-head code into vendor/plugins.  One way is 
   script/plugin install git://github.com/projecthydra/hydra-head.git 
 </pre>
 
+h2. Copy the hydra-head database migrations into the root app
+
+<pre>
+  cp vendor/plugins/hydra-head/db/migrations db/migrations
+</pre>
+
 h2. Run the Database Migrations
 
 You must do this _after_ installing the hydra-head plugin, whether you've installed it using the test host approach or installed it explicitly.
 
 <pre>
-  rake db:migrate:all
+  rake db:migrate
 </pre>
 
 h2. Run the app
