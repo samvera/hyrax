@@ -34,8 +34,8 @@ h3. (4) Migrate the host app's databases
 <pre>
 cd hydra-plugin_test_host
 rake db:drop:all
-rake db:migrate:all
-rake db:migrate:all RAILS_ENV=test  
+rake db:migrate
+rake db:migrate RAILS_ENV=test  
 cd ..
 </pre>
 

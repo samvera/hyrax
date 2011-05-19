@@ -72,7 +72,7 @@ h4. Clean out and reload the databases:
   rake db:drop RAILS_ENV=test
     or
   rake db:drop:all   (to ensure that the tests do not rely on non-test data)
-  rake db:migrate:all RAILS_ENV=test  
+  rake db:migrate RAILS_ENV=test  
   cd ..
 </pre>
 
