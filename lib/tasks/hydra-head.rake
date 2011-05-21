@@ -70,7 +70,7 @@ namespace :hyhead do
     plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"
     FileUtils.mkdir_p(plugin_dir)
     
-    puts "Copying plugin files to #{plugin_path}:"
+    puts "Copying plugin files to #{plugin_dir}:"
 
     Dir.foreach(".") do |fn| 
       unless excluded.include?(fn)
@@ -116,7 +116,7 @@ namespace :hyhead do
     Rake::Task["hyhead:copy_features_to_host"].invoke
     Dir.chdir(TEST_HOST_PATH)
     puts "Running cucumber features in test host app"
-    puts %x[cucumber features]
+    puts %x[cucumber --tags ~@pending features]
   end
 
 end
