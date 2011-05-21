@@ -65,12 +65,12 @@ namespace :hyhead do
   end
   
   desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
-  task :copy_to_host_plugins_dir do
+  task :copy_to_host_plugins_dir => [:set_test_host_path] do
     excluded = [".", "..", ".git", ".gitignore", ".gitmodules", ".rvmrc", ".yardoc", "coverage", "coverage.data", "doc", "tmp", "hydra-plugin_test_host", "jetty"]
-    plugin_dir = "hydra-plugin_test_host/vendor/plugins/hydra-head"
+    plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"
     FileUtils.mkdir_p(plugin_dir)
     
-    puts "Copying plugin files to #{plugin_dir}:"
+    puts "Copying plugin files to #{plugin_path}:"
 
     Dir.foreach(".") do |fn| 
       unless excluded.include?(fn)
@@ -81,10 +81,42 @@ namespace :hyhead do
   end
   
   desc "Remove hydra-plugin_test_host/vendor/plugins/hydra-head"
-  task :remove_from_host_plugins_dir do
-    plugin_path = "hydra-plugin_test_host/vendor/plugins/hydra-head"
-    puts "Emptying out #{plugin_path}"
-    %x[rm -rf #{plugin_path}]
+  task :remove_from_host_plugins_dir => [:set_test_host_path] do
+    plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"    
+    puts "Emptying out #{plugin_dir}"
+    %x[rm -rf #{plugin_dir}]
+  end
+  
+  desc "Copy current contents of the features directory into hydra-plugin_test_host/features"
+  task :copy_features_to_host => [:set_test_host_path] do
+    features_dir = 
+    excluded = [".", ".."]
+    FileUtils.mkdir_p(features_dir)
+    
+    puts "Copying features to #{TEST_HOST_PATH}/features"
+    
+    %x[cp -R features #{TEST_HOST_PATH}]
+  end
+  
+  desc "Copy current contents of the features directory into hydra-plugin_test_host/features"
+  task :remove_features_from_host => [:set_test_host_path] do
+    features_dir = "#{TEST_HOST_PATH}/features"
+    puts "Emptying out #{features_dir}"
+    %x[rm -rf #{features_dir}]
+  end
+  
+  
+  task :set_test_host_path do
+    TEST_HOST_PATH = "hydra-plugin_test_host"
+  end
+  
+  desc "Run cucumber tests for hyhead"
+  task :cucumber => [:set_test_host_path] do
+    Rake::Task["hyhead:remove_features_from_host"].invoke
+    Rake::Task["hyhead:copy_features_to_host"].invoke
+    Dir.chdir(TEST_HOST_PATH)
+    puts "Running cucumber features in test host app"
+    puts %x[cucumber features]
   end
 
 end
