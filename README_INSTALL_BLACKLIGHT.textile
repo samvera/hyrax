@@ -82,6 +82,14 @@ This is a legacy dependency.  We will be removing it soon, but for now you need 
   script/plugin install git://github.com/projecthydra/white_list.git
 </pre>
 
+h3. fluid-infusion plugin
+
+This is another legacy dependency.  Now we mainly rely on it just for the implementation of swfuploader.
+
+<pre>
+  script/plugin install  git://github.com/mediashelf/fluid-infusion.git
+</pre>
+
 
 h2. Update config/environment.rb
 
@@ -97,7 +105,7 @@ Switch line 8 to use '../vendor/plugins/engines/boot' instead of '../vendor/plug
 Set the load order for plugins, ensuring that blacklight is loaded before hydra-head
 
 <pre>
-  config.plugins = %W(engines blacklight hydra-head white_list)
+  config.plugins = %W(engines blacklight fluid-infusion hydra-head white_list)
 </pre>
 
 h2. Patch Blacklight's CatalogController
