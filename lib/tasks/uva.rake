@@ -31,7 +31,9 @@ namespace :libra_oa do
       LIBRA_OA_FIXTURE_FILES.each_with_index do |fixture,index|
         ENV["pid"] = nil
         ENV["fixture"] = "#{File.dirname(__FILE__)}/../../spec/fixtures/libra-oa/#{fixture}"
-        # logger.debug ENV["fixture"] 
+        # For some reason, the first one gets run twice if you call .execute
+        # Calling .invoke will avoid this, but will also cause the first fixture to be skipped whenever this is called by a rake task that 
+        # calls hydra:import_fixture for other fixtures before calling libra_oa:default_fixtures:load
         if index == 0
           begin
             Rake::Task["hydra:import_fixture"].execute 
