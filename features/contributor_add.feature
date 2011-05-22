@@ -10,7 +10,7 @@ Feature: Add a Contributor
   @nojs
   Scenario: Add a person without javascript
     Given I am logged in as "archivist1"
-    And I am on the edit document page for hydrus:test_object1
+    And I am on the edit document page for hydrangea:fixture_mods_article1
     When I follow "Add a Person"
     And I fill in the following:
     | Computing ID  | 098556 |
@@ -30,7 +30,7 @@ Feature: Add a Contributor
   @nojs
   Scenario: Add an organization without javascript
     Given I am logged in as "archivist1"
-    And I am on the edit document page for hydrus:test_object1
+    And I am on the edit document page for hydrangea:fixture_mods_article1
     When I follow "Add an Organization"
     And I fill in "Organization" with "American Film Academy"
     # And I press "Add Organization"

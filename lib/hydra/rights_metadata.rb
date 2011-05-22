@@ -7,10 +7,11 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
     t.copyright {
       t.machine {
         t.uvalicense
-        t.cclicense        
+        t.cclicense   
+        t.license     
       }
       t.human_readable(:path=>"human")
-      t.uvalicense(:proxy=>[:machine, :uvalicense ])            
+      t.license(:proxy=>[:machine, :license ])            
       t.cclicense(:proxy=>[:machine, :cclicense ])                  
     }
     t.access {
