@@ -25,7 +25,7 @@ namespace :hyhead do
   end
 
   desc "Copy code to host plugins dir then run specs - need to have jetty running and fixtures loaded."
-  task :spec => [:remove_from_host_plugins_dir, :copy_to_host_plugins_dir, :rspec] do
+  task :spec => [:setup_test_host, :rspec] do
   end
 
   desc "Run the hydra-head specs - need to have jetty running and fixtures loaded."
@@ -64,8 +64,29 @@ namespace :hyhead do
     end
   end
   
+  desc "Set up test host and run cucumber tests"
+  task :cucumber => "cucumber:setup_and_run"
+  
+  namespace :cucumber do
+      
+    desc "Run cucumber tests for hyhead"
+    task :run => :set_test_host_path do
+      Dir.chdir(TEST_HOST_PATH)
+      puts "Running cucumber features in test host app"
+      puts %x[cucumber --tags ~@pending --tags ~@overwritten features]
+    end
+    
+    desc "Set up test host and run cucumber tests"
+    task :setup_and_run => [:setup_test_host, :run] 
+        
+  end
+    
+  desc "Copy all of the necessary code into the test host"
+  task :setup_test_host => [:remove_plugin_from_host, :copy_plugin_to_host,:remove_features_from_host, :copy_features_to_host, :remove_fixtures_from_host, :copy_fixtures_to_host] do
+  end
+  
   desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
-  task :copy_to_host_plugins_dir => [:set_test_host_path] do
+  task :copy_plugin_to_host => [:set_test_host_path] do
     excluded = [".", "..", ".git", ".gitignore", ".gitmodules", ".rvmrc", ".yardoc", "coverage", "coverage.data", "doc", "tmp", "hydra-plugin_test_host", "jetty"]
     plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"
     FileUtils.mkdir_p(plugin_dir)
@@ -81,7 +102,7 @@ namespace :hyhead do
   end
   
   desc "Remove hydra-plugin_test_host/vendor/plugins/hydra-head"
-  task :remove_from_host_plugins_dir => [:set_test_host_path] do
+  task :remove_plugin_from_host => [:set_test_host_path] do
     plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"    
     puts "Emptying out #{plugin_dir}"
     %x[rm -rf #{plugin_dir}]
@@ -92,31 +113,35 @@ namespace :hyhead do
     features_dir = 
     excluded = [".", ".."]
     FileUtils.mkdir_p(features_dir)
-    
     puts "Copying features to #{TEST_HOST_PATH}/features"
-    
     %x[cp -R features #{TEST_HOST_PATH}]
   end
   
-  desc "Copy current contents of the features directory into hydra-plugin_test_host/features"
+  desc "Remove hydra-plugin_test_host/features"
   task :remove_features_from_host => [:set_test_host_path] do
     features_dir = "#{TEST_HOST_PATH}/features"
     puts "Emptying out #{features_dir}"
     %x[rm -rf #{features_dir}]
   end
   
+  desc "Copy current contents of the spec/fixtures directory into hydra-plugin_test_host/spec/fixtures"
+  task :copy_fixtures_to_host => [:set_test_host_path] do
+    fixtures_dir = "#{TEST_HOST_PATH}/spec/fixtures"
+    excluded = [".", ".."]
+    FileUtils.mkdir_p(fixtures_dir)
+    puts "Copying features to #{fixtures_dir}"
+    %x[cp -R spec/fixtures/* #{fixtures_dir}]
+  end
+  
+  desc "Remove hydra-plugin_test_host/spec/fixtures"
+  task :remove_fixtures_from_host => [:set_test_host_path] do
+    fixtures_dir = "#{TEST_HOST_PATH}/spec/fixtures"
+    puts "Emptying out #{fixtures_dir}"
+    %x[rm -rf #{fixtures_dir}]
+  end  
   
   task :set_test_host_path do
     TEST_HOST_PATH = "hydra-plugin_test_host"
   end
-  
-  desc "Run cucumber tests for hyhead"
-  task :cucumber => [:set_test_host_path, :remove_from_host_plugins_dir, :copy_to_host_plugins_dir,:remove_features_from_host, :copy_features_to_host] do
-    Dir.chdir(TEST_HOST_PATH)
-    puts "Running cucumber features in test host app"
-    puts %x[cucumber --tags ~@pending --tags ~@overwritten features]
-  end
-  
-  
 
 end
