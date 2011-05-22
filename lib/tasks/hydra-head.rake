@@ -18,14 +18,15 @@ namespace :hyhead do
 
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
-      system("rake hydra:default_fixtures:refresh environment=test")
       Rake::Task["hyhead:spec"].invoke
     end
     raise "test failures: #{error}" if error
   end
 
-  desc "Copy code to host plugins dir then run specs - need to have jetty running and fixtures loaded."
-  task :spec => [:setup_test_host, :rspec] do
+  desc "Copy code to host plugins dir, load fixtures, then run specs - need to have jetty running."
+  task :spec => [:setup_test_host] do
+    system("rake hydra:default_fixtures:refresh environment=test")
+    Rake::Task["hyhead:rspec"].invoke
   end
 
   desc "Run the hydra-head specs - need to have jetty running and fixtures loaded."
