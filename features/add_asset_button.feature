@@ -8,12 +8,12 @@ Feature: Create Asset or Dataset Split Button
     Given I am logged in as "archivist1" 
     Given I am on the base search page
     Then I should see "Add a Basic MODS Asset" within "ul li"
-    Then I should see "Add an Image" within "ul li"
-    Then I should see "Add Generic Content" within "ul li"
-    
-
-  Scenario: Non-editor views the search results page and does not see the buttons to add assets
+    Then I should see "Add an Image"
+    Then I should see "Add Generic Content"
+  
+  # Need to build this out more
+  Scenario: Non-editor views the search results page and sees the buttons to add assets which link to login then create an asset
    Given I am on the base search page
-   Then I should not see "Add a Basic MODS Asset"
-   Then I should not see "Add an Image" 
-   Then I should not see "Add Generic Content"
+   Then I should see "Add a Basic MODS Asset"
+   Then I should see "Add an Image" 
+   Then I should see "Add Generic Content"
