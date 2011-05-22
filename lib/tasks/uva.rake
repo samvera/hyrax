@@ -33,7 +33,10 @@ namespace :libra_oa do
         ENV["fixture"] = "#{File.dirname(__FILE__)}/../../spec/fixtures/libra-oa/#{fixture}"
         # logger.debug ENV["fixture"] 
         if index == 0
-          Rake::Task["hydra:import_fixture"].invoke 
+          begin
+            Rake::Task["hydra:import_fixture"].execute 
+          rescue
+          end
         elsif index > 0
           Rake::Task["hydra:import_fixture"].execute
         end 
