@@ -111,12 +111,12 @@ namespace :hyhead do
   end
   
   desc "Run cucumber tests for hyhead"
-  task :cucumber => [:set_test_host_path] do
-    Rake::Task["hyhead:remove_features_from_host"].invoke
-    Rake::Task["hyhead:copy_features_to_host"].invoke
+  task :cucumber => [:set_test_host_path, :remove_from_host_plugins_dir, :copy_to_host_plugins_dir,:remove_features_from_host, :copy_features_to_host] do
     Dir.chdir(TEST_HOST_PATH)
     puts "Running cucumber features in test host app"
-    puts %x[cucumber --tags ~@pending features]
+    puts %x[cucumber --tags ~@pending --tags ~@overwritten features]
   end
+  
+  
 
 end
