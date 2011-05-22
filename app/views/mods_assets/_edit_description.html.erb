@@ -1,0 +1,82 @@
+<%- stylesheet_links << ["progressBox", {:plugin=>"hydra-head", :media=>"all"}] %>
+
+<%- @ds_desc_metadata = @document_fedora.datastreams["descMetadata"] %>
+<%- @ds_rights_metadata = @document_fedora.datastreams["rightsMetadata"] %>
+<%- author_entries = @ds_desc_metadata.find_by_terms_and_value('//oxns:name[@type="personal" and contains(oxns:role, "Author") and string-length(oxns:namePart[@type="family"]) > 0 ]') %>
+<%- title_values = @ds_desc_metadata.term_values(:title_info, :main_title) %>
+<%- license_values = @ds_rights_metadata.term_values(:copyright, :license) %>
+<%- journal_title_values = @ds_desc_metadata.term_values(:journal,:title_info,:main_title) %>
+
+<form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"mods_asset")%>" method="post" data-resourceType="mods_asset" accept-charset="utf-8">
+    <input name="_method" type="hidden" value="put" />
+
+    <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
+
+		<fieldset id="contributors_fields">
+		<legend>Authors
+			<small>Required</small>
+	    	<label>An individual or organizational author of work.</label>			
+		</legend>	
+		<div id="contributors">
+		  <%= render "contributors/index" %>
+	  </div>
+		</fieldset>
+	
+	<fieldset id="title_fieldset">
+	<legend>Title<small>Required</small></legend>	
+<%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false) %>
+	</fieldset>
+  
+	<fieldset id="license_fieldset">
+	<legend>License
+		<label>The license outlines the Library's use of your work while acknowledging that you, or the current copyright owner, will continue to be the rights holder.</label>
+	</legend>
+	</fieldset>
+
+	
+	<%= render :partial=>"mods_assets/edit_journal", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:journal) %>
+	
+		<fieldset id="abstract_fieldset">
+		<legend>Abstract
+			<label>Provide the abstract of the work, or if none exists, a short summary.</label></legend>
+	  <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false) %>
+		</fieldset>
+
+		<fieldset id="peer_reviewed_fieldset">
+		<legend>Peer Reviewed</legend>
+		  <%= fedora_checkbox(@document_fedora, "descMetadata", [:peer_reviewed], :default_values=>{:checked=>"peer reviewed",:unchecked=>""}) %>
+		 <label>This work has undergone a peer review process</label>	
+		</fieldset>	
+	
+		<fieldset id="notes_fieldset">
+		<legend>Notes
+			<label>Any additional notes or comments about the work.</label>	
+		</legend>
+		
+	  <%= fedora_text_area(@document_fedora,"descMetadata", [:note], :multiple=>false) %>
+		</fieldset>
+
+		<fieldset id="keywords_fieldset">
+		<legend>Keywords
+			<label>Add keywords to describe the work.</label>				
+		</legend>
+    	<%= fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic], :multiple=>true) %>
+		<%= fedora_text_field_insert_link "descMetadata", [:subject, :topic] %>
+		</fieldset>
+
+
+		<fieldset id="embargo_fieldset">
+			<legend>Release Date
+				<label>Choose when to make your work's files available.</label>
+			</legend>
+		  	<%= fedora_text_field(@document_fedora, "rightsMetadata", [:embargo, :embargo_release_date], :multiple => false) %>				
+		</fieldset>
+
+		<input name="_method" type="hidden" value="put" />
+		<%= submit_tag 'Save Description', {:id => "saveDescription"} %>   
+</form>
+
+<%= render :partial => "shared/delete_asset_confirmation", :locals => {:pid => params[:id], :title => (get_values_from_datastream(@document_fedora,"descMetadata", [:title_info, :main_title]).first.empty? ? "this article" : "'" << get_values_from_datastream(@document_fedora,"descMetadata", [:title_info, :main_title]).first << "'")  } %>
+	<div id="deleteAsset">
+	<%= delete_asset_link(params[:id], "article") %>
+	</div>

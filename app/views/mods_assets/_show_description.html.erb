@@ -1,0 +1,44 @@
+<div id="contributors_list">
+<ol> 
+	<%= render :partial=>"contributors/show_person", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:person) %>
+	<%= render :partial=>"contributors/show_organization", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:organization) %>
+	<%= render :partial=>"contributors/show_conference", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:conference) %>
+</ol>
+</div>
+
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => 0}, :title_info, :main_title]).first.empty? %>
+	<fieldset><legend>Published</legend>
+	<div id="journal" class="browse_value">
+	<%= render :partial=>"mods_assets/show_journal", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:journal) %>
+	</div>
+	</fieldset>
+	<% end %>
+
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).first.empty? %>
+<fieldset><legend>Keywords</legend>
+	<div class="browse_value">
+	<%= get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).join(', ') %>
+	</div>
+</fieldset>
+<% end %>
+
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [:abstract]).first.empty? %>
+<fieldset><legend>Abstract</legend>
+<div id="abstract" class="browse_value">
+	<%= white_list( RedCloth.new(get_values_from_datastream(@document_fedora,"descMetadata", [:abstract]).first, [:sanitize_html]).to_html) %>
+</div>
+</fieldset>
+<% end %>
+
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).first.empty? %>
+<fieldset><legend>License</legend>
+	<div class="browse_value">
+		<ol>
+      <%# unless get_values_from_datastream(@document_fedora, "rightsMetadata", [:copyright, :uvalicense]).first.match('no') %> 
+				<li>UVA Libra Contributor's License</li> 
+      <%# end %>  
+		</ol>
+	</div>
+</fieldset>
+<% end %>
+

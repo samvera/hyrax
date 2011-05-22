@@ -1,0 +1,42 @@
+<% person = edit_person %>
+<% person_counter = edit_person_counter %>
+<% person_name = "#{get_values_from_datastream(@document_fedora,'descMetadata', [{:person=>person_counter}, :first_name])} #{get_values_from_datastream(@document_fedora,'descMetadata', [{:person=>person_counter}, :last_name])}" %>
+<% base_id = "person_#{person_counter}" %>
+<% if @document_fedora.class.respond_to?(:person_relator_terms) %>
+  <% choices = @document_fedora.class.person_relator_terms %>
+<% else %>
+  <% choices = Hydra::ModsArticle.person_relator_terms %>
+<% end %>
+  <dl class="person contributor" id="<%= base_id %>">
+    <dd class="multi_inline person">
+      <ul>
+        <%- if @document_fedora.datastreams["descMetadata"].class.terminology.has_term?(:person, :computing_id) %>
+        <li class="computing_id">
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "Computing ID") %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :computing_id], :multiple=>false) %>
+        </li>
+        <%- end %>
+        <li class="name_first">
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "First Name") %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name], :multiple=>false) %>
+        </li>
+        <li class="name_last">
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :last_name], "Last Name") %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name], :multiple=>false) %>
+        </li>
+        <li class="department">
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :description], "Department") %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :description], :multiple=>false) %>
+        </li>
+        <li class="affiliation">
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :institution], "Institution") %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution], :multiple=>false) %>
+        </li>
+
+      <% if ( (person_counter > 0) && (params[:action] == "edit" || params[:action] == "create") && !person_name.strip.empty? ) %>
+        <%= field_selectors_for("descMetadata", [{:person=>person_counter}]) %>
+        <a class="destructive destroy_contributor" href="<%= asset_contributor_path(@document_fedora.pid, "person", person_counter) %>" title="Delete '<%= person_name %>'"> Delete</a>
+      <% end %>
+	</ul>
+    </dd>
+  </dl>

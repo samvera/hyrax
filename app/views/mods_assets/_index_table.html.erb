@@ -1,0 +1,7 @@
+<tr class="document <%= cycle("even","odd") %>">
+  <td class="document_title"><%= link_to_document(document, :label => :mods_0_title_info_0_main_title_t, :counter => (counter + 1 + @response.params[:start].to_i)) %></td>
+  <td class="document_author"><% author = get_person_from_role(document, "author") %><%= author.nil? ? "n/a" : [author[:last], author[:first]].join(", ") %></td>
+  <td class="document_work"><%= document.get(:journal_title_info_main_title_t) %></td>
+  <td class="document_date"><%= format_date(DateTime.parse(document.get(:system_create_dt)).to_time) %></td>
+  <td class="document_files"><%= get_file_asset_count(document) %></td>
+</tr>
