@@ -107,7 +107,7 @@ namespace :hydra do
       file = File.new(filename, "r")
       result = foxml = Fedora::Repository.instance.ingest(file.read)
       if result
-        puts "The fixture has been ingested as #{result}"
+        puts "The fixture has been ingested as #{result.body}"
         if !pid.nil?
           solrizer = Solrizer::Fedora::Solrizer.new 
           solrizer.solrize(pid) 

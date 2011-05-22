@@ -30,11 +30,7 @@ namespace :libra_oa do
     task :load do
       LIBRA_OA_FIXTURE_FILES.each_with_index do |fixture,index|
         ENV["pid"] = nil
-        if defined?(Rails.root)
-          ENV["fixture"] = "#{Rails.root}/spec/fixtures/libra-oa/#{fixture}"
-        else
-          ENV["fixture"] = "#{File.dirname(__FILE__)}/../../spec/fixtures/libra-oa/#{fixture}"
-        end
+        ENV["fixture"] = "#{File.dirname(__FILE__)}/../../spec/fixtures/libra-oa/#{fixture}"
         # logger.debug ENV["fixture"] 
         if index == 0
           Rake::Task["hydra:import_fixture"].invoke 
