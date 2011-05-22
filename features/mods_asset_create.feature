@@ -9,4 +9,4 @@ Feature: Add a new Dataset
     And I am on the home page	
     And I create a new mods_asset
     Then I should see "Describe the Asset"
-    And the "Title:" inline edit should be empty
+    And the "title_info_main_title" field should contain ""
