@@ -66,7 +66,7 @@ describe Hydra::ModelMethods do
       deletable_assets = ma.destroyable_child_assets
       deletable_assets.should be_a_kind_of Array
       deletable_assets.length.should >= 1
-      deletable_assets[0].pid.should == "hydrangea:fixture_uploaded_svg1"
+      deletable_assets.select {|a| a.pid == "hydrangea:fixture_uploaded_svg1"}[0].pid.should == "hydrangea:fixture_uploaded_svg1"
     end
     it "should return an empty array if there are now file assets" do
       ma = ModsAsset.load_instance("hydrangea:fixture_mods_article2")
