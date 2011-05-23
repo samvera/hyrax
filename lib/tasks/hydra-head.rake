@@ -87,6 +87,7 @@ namespace :hyhead do
       Dir.chdir(TEST_HOST_PATH)
       puts "Running cucumber features in test host app"
       puts %x[cucumber --tags ~@pending --tags ~@overwritten features]
+      raise "Cucumber tests failed" unless $?.success?
     end
     
     desc "Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running."
