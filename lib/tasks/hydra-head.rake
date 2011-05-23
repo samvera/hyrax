@@ -6,6 +6,8 @@ namespace :hyhead do
   task :ci do
     Rake::Task["hyhead:doc"].invoke
 
+    Rake::Task["hydra:jetty:config"].invoke
+    
     require 'jettywrapper'
     jetty_params = {
       :jetty_home => File.expand_path(File.dirname(__FILE__) + '/../../jetty'),

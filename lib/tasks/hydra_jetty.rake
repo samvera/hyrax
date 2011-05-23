@@ -37,12 +37,18 @@ namespace :hydra do
       Hydra::TestingServer.instance.start
     end
 
-    desc "Copies the default SOLR config for the bundled Hydra Testing Server"
+    desc "Copies the default Solr & Fedora configs into the bundled Hydra Testing Server"
     task :config do
+      Rake::Task["hydra:jetty:config_fedora"].invoke
+      Rake::Task["hydra:jetty:config_solr"].invoke
+    end
+    
+    desc "Copies the default SOLR config for the bundled Hydra Testing Server"
+    task :config_solr do
       FileList['solr/conf/*'].each do |f|  
         cp("#{f}", 'jetty/solr/development-core/conf/', :verbose => true)
         cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
-      end
+    end
 
     end
 
@@ -66,7 +72,7 @@ namespace :hydra do
     end
 
     desc "Copies the default SOLR config files and starts up the fedora instance."
-    task :load => [:config, :config_fedora, :start]
+    task :load => [:config, :start]
 
     desc "Returns the status of the Hydra::TestingServer."
     task :status do
