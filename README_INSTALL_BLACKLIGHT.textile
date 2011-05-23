@@ -1,6 +1,3 @@
-DRAFT DRAFT DRAFT DRAFT DRAFT
-I don't believe this works -- Naomi   2011-05-13
-
 Run the Blacklight installation script
 
 <pre>
