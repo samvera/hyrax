@@ -6,47 +6,5 @@
 		<h1>Welcome to HYDRA</h1>
 		<p>Edit or override this page (vendor/plugins/hydra-head/views/catalog/_home_text.html.erb)</p>
 	</div>
-	
-
-  <% # container for facets -%>
-  <%-
-    case params[:home_context]
-    when "authors"
-      facet_name = 'person_full_name_cid_facet'
-    when "journals"
-      facet_name = 'mods_journal_title_info_facet'
-    else
-      facet_name = 'person_full_name_cid_facet'
-    end
-    -%>
-    <% display_facet = @response.facets.detect {|f| f.name == facet_name } -%>
-    <% if display_facet &&  display_facet.items.length > 0 %>
-      <div id="authors" >
-        <%-
-          get_randomized_display_items(display_facet.items).slice(0..5).each_with_index do |item,index| 
-        -%>
-          <% if index % 3 == 0 %>
-            <div class="author_browse_row">
-          <% end %>
-          <div class="author_browse_image">
-            <% if facet_name == 'person_full_name_cid_facet' %>
-              <%= render_complex_facet_image(facet_name, item) %><br/>
-              <%= render_complex_facet_value(facet_name, item) %>
-            <% else %>
-              <%= render_journal_image(facet_name, item) %><br/>
-              <%= render_journal_facet_value(facet_name, item) %>
-            <% end %>
-          </div> <%# end author_browse_image %>
-          <% if index == 2 %>
-            </div><%# end author browse row %>
-          <% end %>
-          <% break if index == 5 %>
-        <% end %> <%# end do items %>
-<%# commenting this out so specs pass - Naomi 2011-05-12 %>
-<!--
-        </div><%# END author browse row if index never got to 2 %>
--->
-      </div><!-- END authors div -->	
-    <% end %> <%# end if display_facet %>
 
 </div>
