@@ -12,7 +12,14 @@ def well_formed(html)
     Nokogiri::XML(html.gsub("&", "&amp;" )) { |config| config.strict } #Literal & in text are not allowed, but we don't care. 
     return "ok"
   rescue Nokogiri::XML::SyntaxError => e
-      return "#{e.inspect} -- Line: #{e.line} -- Level: #{e.level} -- Code: #{e.code} "
+    # Write the offensive HTML to a file in tmp/html_validity_failures with a filename based on Time.now.iso8601
+    html_failures_dir = File.expand_path(File.dirname(__FILE__) + '/../../tmp/html_validity_failures')
+    FileUtils.mkdir_p(html_failures_dir)
+    filename = Time.now.iso8601(3).gsub(":","")+".html"
+    file_path = File.join(html_failures_dir, filename)
+    file = File.open(file_path, "w")
+    file.write(html)
+    return "#{e.inspect} -- Line: #{e.line} -- Level: #{e.level} -- Code: #{e.code}.  HTML Saved to RAILS_ROOT/tmp/html_validity_failures/#{filename}"
   end
 end
 
