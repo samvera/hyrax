@@ -1,0 +1,67 @@
+h1. Getting Started Building your own Hydra Head
+
+*!!! This is a WORK IN PROGRESS !!!*
+
+h2.  General
+
+What you will be able to do at the end of this...
+
+Our Model:   (Hydrangea) MODS-based Article
+
+h2. Defining Model:
+
+descMetadata -- MODS -- include a facet
+rightsMetadata
+
+h3. Understanding Parts (Where will my uploaded files go?)
+
+h2. Indexing
+
+indexing object(s) once you've set up your model
+* make sure to make a new facet
+
+load object & save again
+reference to solrizer & solrizer docs
+
+h2. Default Views
+
+search results, facets
+detail & edit views
+
+h2. Defining Custom Views
+
+h3. Changing the Home Text
+
+Overriding the helper
+
+h3. Add a link to create an Article
+
+Overriding the user_util_links partial
+
+h3. custom search result template
+
+h3. custom show view template
+
+h3. custom edit view template
+
+displaying MODS edit
+rednering permissions_edit views
+rendering file uploader
+
+h3. The File List
+
+-- show & edit
+
+h2. Access Controls (Example)
+
+Create an object, edit permissions, see that permissions have changed.
+
+h2. Miscellaneous
+
+* Adding a Facet
+* Link to info on overriding styling
+* Overriding Helpers
+
+
+
+
