@@ -128,10 +128,10 @@ namespace :hyhead do
   
   desc "Copy current contents of the features directory into hydra-plugin_test_host/features"
   task :copy_features_to_host => [:set_test_host_path] do
-    features_dir = 
+    features_dir = "#{TEST_HOST_PATH}/features"
     excluded = [".", ".."]
     FileUtils.mkdir_p(features_dir)
-    puts "Copying features to #{TEST_HOST_PATH}/features"
+    puts "Copying features to features_dir"
     %x[cp -R features #{TEST_HOST_PATH}]
   end
   
