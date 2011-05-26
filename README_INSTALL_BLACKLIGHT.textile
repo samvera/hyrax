@@ -1,13 +1,16 @@
+Install ruby version manager so you can keep your sets of gems separated. Get more information here: https://rvm.beginrescueend.com/
+
+<pre>
+rvm install ree-1.8.7
+rvm gemset create hydra-head
+rvm use ree-1.8.7@hydra-head
+gem install -v=2.3.11 rails
+</pre> 
+
 Run the Blacklight installation script
 
 <pre>
-rails ./my-hydra-head -m http://projectblacklight.org/templates/latest.rb 
-</pre>
-
-OR
-
-<pre>
-rails ./blacklight-app -m http://projectblacklight.org/templates/2-8-0.rb 
+rails ./my-hydra-head -m http://projectblacklight.org/templates/2-8-0.rb 
 </pre>
 
 install gems? yes
