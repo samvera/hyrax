@@ -60,35 +60,229 @@ Overriding the helper
 
 h2. The new Content Type: JournalArticle
 
+In this tutorial, we are creating a new JournalArticle content type.  This will allow us to create Journal Articles in a Fedora Repository, collect custom metadata for them, index them in solr, and display that custom metadata in the user interface.
 
-descMetadata -- MODS 
-* title, author (with nameparts), publication date, abstract, journal title, journal volume, journal issue, start page, end page
-rightsMetadata
+In order to describe our Fedora objects, we can use whatever metadata schemas suit our needs.  Some metadata schemas currently being used in Hydra Heads include MODS, Dublin Core, EAD, PBcore, EAC-CPF and VRE.  This list continues to grow as people set up Hydra Heads to deal with their own specialized content.
 
-RELS-EXT & DC (there by default)
+The JournalArticle content type will use MODS to track descriptive metadata about Articles.  Some of the metadata is common to many types of content:
+
+* title
+* author (first name, last name, role)
+* abstract
+
+Other metadata fields are more specifically relevant to journal articles, but they still fit into the MODS schema:
+
+* journal title
+* publication date
+* journal volume
+* journal issue
+* start page
+* end page
+
+In addition to the MODS metadata, JournalArticle objects will use Hydra Rights Metadata to track information about licenses, rights, and which people/groups should be able to discover, view, and/or edit each Journal Article.
 
 h2. Define the ActiveFedora Model for JournalArticles
 
-h3. Where to find the tull tutorial on defining ActiveFedora Models
+The first thing to do when adding a new content type is to create the ActiveFedora Model.  This model is a Ruby class that uses ActiveFedora to tell the application the structure of your content and its metadata.
+
+This model will not only be useful within a Hydra Head.  You only need ActiveFedora and OM to use the model in any application.  Outside of a Hydra Head, the most common way that ActiveFedora models are used is in batch scripts, command line utilities, and robots that perform automated actions on your fedora objects based on information and behaviors stored in their ActiveFedora models.
+
+h3. Where to find the full tutorial on defining ActiveFedora Models
 
 
-This tutorial will only cover the very basics of defining an ActiveFedora Model and defining OM terminologies for its XML datastreams.  For a complete introduction to those topics, see the  ActiveFedora Console Tour:”http://hudson.projecthydra.org/job/active_fedora/Documentation/file.CONSOLE_GETTING_STARTED.html” and the tutorials included in the “OM Documentation”:http://hudson.projecthydra.org/job/om/Documentation/
+This tutorial will only cover the very basics of defining an ActiveFedora Model and defining OM terminologies for its XML datastreams.  For a complete introduction to those topics, see the  {http://hudson.projecthydra.org/job/active_fedora/Documentation/file.CONSOLE_GETTING_STARTED.html ActiveFedora Console Tour} and the tutorials included in the {http://hudson.projecthydra.org/job/om/Documentation/ OM Documentation}.
 
 h3. Defining the Datastreams
 
+A Fedora object is made up of any number of _datastreams_.  Those datastreams can contain any type of content at all and each is identified by a _datastream id_ or _dsid_.  The ActiveFedora tells us which datastreams to expect or create in an object and tells us what kind of content each datastream should have inside it.
 
-h4. Modeling your Metadata with OM & ActiveFedora::NokogiriDatastream
+For our JournalArticle model, we're particularly interested datastreams with XML content because a JournalArticle object is basically a container for XML metadata.  The actual content of the Article (PDF,text,whatever.) will be stored in a separate Fedora object, a _primitive_, with the RDF isPartOf relationship connecting the JournalArticle (primarily metadata) to its content (any number of primitives with files in them).  For more information about datastreams, primitives, and where the actual content of an object lives, see the Reference links at the end of this tutorial.
+
+h4. descMetadata -- The Descriptive Metadata
+
+Our MODS xml will go into a datastream with the datastream id of _descMetadata_.  Technically, we could give it any name we want but the Hydra community has come up with some conventions to make things simpler.  One of these conventions is to always put descriptive metadata in a datastream called descMetadata.
+
+As we said above, we want to create MODS metadata that keeps track of title, author (first name/last name/role), publication date, abstract, journal title, journal volume, journal issue, start page and end page.  In order to do this we will use ActiveFedora to define a special type of Ruby object that uses OM (Opinionated Metadata) to read and modify XML.
+
+Example of the MODS XML we will be creating:
+
+<pre>
+<mods xmlns="http://www.loc.gov/mods/v3" version="3.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3
+     http://www.loc.gov/standards/mods/v3/mods-3-0.xsd">
+   <titleInfo>
+       <title>ARTICLE TITLE</title>                                   <!-- title -->
+   </titleInfo>
+   <name type="personal">
+       <namePart type="family">FAMILY NAME</namePart>                 <!-- author last name -->
+       <namePart type="given">GIVEN NAMES</namePart>                  <!-- author first name -->
+       <role> 
+           <roleTerm authority="marcrelator" type="text">Creator</roleTerm> <!-- author role -->
+       </role>
+   </name>
+   <abstract>ABSTRACT</abstract>                                    <!-- abstract -->
+   <relatedItem type="host">
+       <titleInfo>
+           <title>TITLE OF HOST JOURNAL</title>                     <!-- journal title -->
+       </titleInfo>
+       <part>
+           <detail type="volume">
+               <number>2</number>                                   <!-- journal volume -->
+           </detail>
+           <detail type="level">
+               <number>2</number>                                   <!-- journal issue -->
+           </detail>
+           <extent unit="pages">
+               <start>195</start>                                   <!-- start page -->
+               <end>230</end>                                       <!-- end page -->
+           </extent>
+           <date>FEB. 2007</date>                                   <!-- publication date -->
+       </part>
+    </relatedItem>
+</mods>
+</pre>
+
+As you can see, the constraints of a metadata schema sometimes force us to put information into structures that don't map directly to the vocabulary that we use when talking about that information.  The "title" has ended up in a spot that you might call the "mods titleInfo title" and the "start page" has ended up in a spot that you might call the "mods host-relatedItem part pages-extent start" or "//mods/relatedItem[@type=host]/part/extent[@unit='pages']/start" ... quite the mouthful, isn't it?  This is where OM comes in.  OM lets us define a Terminology that will allow us to access values in the xml based on our natural vocabulary (title, start page, etc.) while also allowing us to access those same values using the more cumbersome XML-speak when necessary.
+
+Here's how we define the datastream class for the descMetadata.  Notice that we use set_terminology to define its OM Terminology.  
+
+Create a new file in app/models called journal_article_mods_datastream.rb and put this into it (*Note*: you could also save this file as lib/journal_article_mods_datastream.rb and get the same results):
+
+<pre>
+class JournalArticleModsDatastream < ActiveFedora::NokogiriDatastream  
+  set_terminology do |t|
+    t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
+    t.title_info(:path=>"titleInfo") {
+      t.main_title(:index_as=>[:facetable],:path=>"title", :label=>"title")
+    }
+    t.author {
+      t.first_name(:path=>"namePart", :attributes=>{:type=>"given"})
+      t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
+      t.role {
+        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
+      }
+    }
+    t.abstract 
+    t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
+      t.title_info(:ref=>[:title_info])
+      t.issue(:path=>"part") {
+        t.volume(:path=>"detail", :attributes=>{:type=>"volume"}, :default_content_path=>"number")
+        t.level(:path=>"detail", :attributes=>{:type=>"number"}, :default_content_path=>"number")
+        t.pages(:path=>"extent", :attributes=>{:unit=>"pages"}) {
+          t.start
+          t.end
+        }
+        t.date
+      }
+      
+      # These Proxy Terms allow you to refer to Terms with more familiar names that hide the details of the XML structure
+      
+      t.title(:proxy=>[:title_info, :main_title])
+      t.start_page(:proxy=>[:journal, :pages, :start])
+      t.end_page(:proxy=>[:journal, :pages, :end])
+      t.publication_date(:proxy=>[:journal, :issue, :date])
+  end
+end
+</pre>
+
+This will allow you to access metadata values like this when dealing with JournalArticleModsDatastream:
+
+<pre>
+  ds.term_values(:author, :first_name)
+  ds.term_values(:start_page)
+  ds.term_values(:journal, :issue, :pages, :start)  # same result as the previous line, but more detailed reference to the xml node
+</pre>
+
+h4. rightsMetadata -- The Hydra Rights Metadata
+
+Hydra provides a class definition for the rightsMetadata datastream, so you won't have to define the Terminology yourself.  The definition is in the hydra-head code in {https://github.com/projecthydra/hydra-head/blob/master/lib/hydra/rights_metadata.rb lib/hydra/rights_metadata.rb}.
+
+Here's an example of what rightsMetadata XML looks like:
+
+<pre>
+  <rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1">
+      <copyright>
+        <human>(c)2009 The Hydra Project</human>
+        <human type="someSpecialisedType">Blah Blah</human>
+        <human type="aDifferentType">More blah</human>
+    		<machine><a rel="license" href="http://creativecommons.org/licenses/publicdomain/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/publicdomain/88x31.png" /></a><br />This work is in the <a rel="license" href="http://creativecommons.org/licenses/publicdomain/">Public Domain</a>.</machine>
+  	</copyright>
+  	<access type="discover">
+  		<human></human>
+  		<machine>
+  			<policy>hydra-policy:4502</policy>
+        <group>public</group>
+      </machine>
+  	</access>
+  	<access type="read">
+  		<human></human>
+  		<machine>
+        <group>public</group>
+      </machine>
+  	</access>
+  	<access type="edit">
+  		<human></human>
+  		<machine>
+  		  <person>researcher1</person>
+        <group>archivist</group>
+  		</machine>        
+  	</access>
+    <access type="etc">
+            <!-- etc -->
+    </access>
+  	<use>
+  		<human>You are free to re-distribute this object, but you cannot change it or sell it. </human>
+  		<machine><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/us/88x31.png" /></a><br />This <span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/Sound" rel="dc:type">work</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/us/">Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License</a>.</machine>
+  	</use>
+
+  </rightsMetadata>
+</pre>
+
+h4. RELS-EXT & DC (there by default)
+
+There are two special datastreams that Fedora creates for you -- the DC datastream and the RELS-EXT datastream.  We don't really use the DC datastream.  It contains simple Dublin Core metadata that mainly exists for Fedora's internal use.  The RELS-EXT datastream contains RDF representing the relationships between the objects in a Fedora repository.  ActiveFedora and Hydra both use these RDF relationships in a number of ways.  For more information about how to work with RDF relationships in ActiveFedora, see the ActiveFedora documentation links at the end of this tutorial.
+
+h4. Defining the Model and adding the Datastreams to it
+
+Create a file in app/models called journal_article.rb and put these lines into it:
+<pre>
+  class JournalArticle < ActiveFedora::Base
+    has_metadata :name => "descMetadata", :type=> JournalArticleModsDatastream
+    has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadataDatastream
+  end
+</pre>
 
 
-h4. Adding datastreams to a model with has_metadata
+h2. Loading your new Model in the Rails App
+
+If you have put the new files you've created into app/models and/or the lib directory, then they will be automatically loaded by the application when you run it using script/server or script/console.
+
+h2. Creating new JournalArticle Objects
+
+<pre>script/console</pre>
+
+<pre>
+  article = JournalArticle.new
+  article.save
+  # In case you're curious, explore a bit...
+  article.datastreams.keys
+  article.datastreams["descMetadata"].class
+  article.datastreams["rightsMetadata"].class
+</pre>
 
 h2. Index JournalArticles into Solr
 
+By default, ActiveFedora automatically updates Solr whenever you save an object to Fedora.  If you want to re-index it, all you have to do is load an instance of the object and call its update_index method.  For example, if you wanted to update an object that has a pid "changeme:30", you could do it like this:
 
-indexing object(s) once you've set up your model
+<pre>
+  article = JournalArticle.load_instance("changeme:30")
+  article.update_index
+</pre>
 
-load object & save again
-reference to solrizer & solrizer docs
+In reality, when you want to re-index an object in Solr, you should use solrizer.  Solrizer is specifically designed to help you keep your solr indexes up to date.
+
+[reference to solrizer & solrizer docs]
+
+Solrizer is able to figure out how to index XML based on the OM Terminologies you've defined.  It defaults to indexing nearly everything in generic ways, but there are many ways to customize this behavior. See the solrizer documentation for more information about how it works.
 
 h2. Defining Custom Views
 
