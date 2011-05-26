@@ -1,48 +1,118 @@
 h1. Getting Started Building your own Hydra Head
 
+
 *!!! This is a WORK IN PROGRESS !!!*
 
-h2.  General
+h2. What you will be able to do at the end of this
 
-What you will be able to do at the end of this...
 
-Our Model:   (Hydrangea) MODS-based Article
+Set up a Hydra Head ( a rails app that uses the hydra-head plugin ) and run it
+Define a new Content Type called JournalArticle
+# Define the ActiveFedora Model for JournalArticles
+# Index JournalArticles into solr
+# Customize how JournalArticles appear in search results
+# Define JournalArticles “show” view
+# Define JournalArticles “edit” view 
 
-h2. Defining Model:
+h2. Set up a Hydra Head
 
-descMetadata -- MODS -- include a facet
+
+For the purposes of this tutorial, we have set up a preconfigured rails app that you can download from github.
+
+!!! link to download the preconfigured rails app
+
+h3. Starting the App out of the Box
+
+
+start fedora & solr
+see fedora & solr
+
+starting the rails app
+
+Importing some Sample Content
+
+h3. How to tell if everything is set up properly
+
+
+Run cucumber tests ...
+
+h3. Exploring what comes out of the box
+
+
+* log in, create sample account
+* use facets
+* run a search
+* look at one of the sample objects
+* edit one of the sample objects
+* create a new MODS article …
+* upload a file …
+* change the permissions on the new article, making it visible to the public (before setting permissions, prove that you can’t see it when logged out, then change permissions, log out again & prove that it’s visible)
+
+
+h2. Making local changes to your Hydra Head
+
+In order to have a clean upgrade path....
+
+h3. Changing the Home Text
+
+
+Overriding the helper
+
+h2. The new Content Type: JournalArticle
+
+
+descMetadata -- MODS 
+* title, author (with nameparts), publication date, abstract, journal title, journal volume, journal issue, start page, end page
 rightsMetadata
 
-h3. Understanding Parts (Where will my uploaded files go?)
+RELS-EXT & DC (there by default)
 
-h2. Indexing
+h2. Define the ActiveFedora Model for JournalArticles
+
+h3. Where to find the tull tutorial on defining ActiveFedora Models
+
+
+This tutorial will only cover the very basics of defining an ActiveFedora Model and defining OM terminologies for its XML datastreams.  For a complete introduction to those topics, see the  ActiveFedora Console Tour:”http://hudson.projecthydra.org/job/active_fedora/Documentation/file.CONSOLE_GETTING_STARTED.html” and the tutorials included in the “OM Documentation”:http://hudson.projecthydra.org/job/om/Documentation/
+
+h3. Defining the Datastreams
+
+
+h4. Modeling your Metadata with OM & ActiveFedora::NokogiriDatastream
+
+
+h4. Adding datastreams to a model with has_metadata
+
+h2. Index JournalArticles into Solr
+
 
 indexing object(s) once you've set up your model
-* make sure to make a new facet
 
 load object & save again
 reference to solrizer & solrizer docs
 
-h2. Default Views
+h2. Defining Custom Views
+
+
+h3. Default Views
+
+
+JournalArticles will show up with the default views until you create custom views for that content type
 
 search results, facets
 detail & edit views
-
-h2. Defining Custom Views
-
-h3. Changing the Home Text
-
-Overriding the helper
-
 h3. Add a link to create an Article
+
 
 Overriding the user_util_links partial
 
-h3. custom search result template
+h3. Customize how JournalArticles appear in search results
 
-h3. custom show view template
 
-h3. custom edit view template
+h3. Define JournalArticles “show” view
+
+
+h3. Define JournalArticles “edit” view
+
 
 displaying MODS edit
 rednering permissions_edit views
@@ -50,18 +120,67 @@ rendering file uploader
 
 h3. The File List
 
+
 -- show & edit
 
 h2. Access Controls (Example)
 
+
 Create an object, edit permissions, see that permissions have changed.
 
 h2. Miscellaneous
+
 
 * Adding a Facet
 * Link to info on overriding styling
 * Overriding Helpers
 
 
+h2. Reference
 
 
+h3. Documentation & More Tutorials
+
+h4. API Docs
+
+ActiveFedora API Docs
+OM API Docs
+
+h4. Tutorials
+
+ActiveFedora Console Tour:”http://hudson.projecthydra.org/job/active_fedora/Documentation/file.CONSOLE_GETTING_STARTED.html”
+OM-based NokogiriDatastreams:”http://hudson.projecthydra.org/job/active_fedora/Documentation/file.NOKOGIRI_DATASTREAMS.html”
+OM Documentation:”http://hudson.projecthydra.org/job/om/Documentation/”
+
+h3. Hydra Modeling Conventions
+
+
+h4. Reference info on the Hydra Wiki
+
+
+“Hydra objects, content models(cModels) and disseminators”:https://wiki.duraspace.org/display/hydra/Hydra+objects%2C+content+models+%28cModels%29+and+disseminators
+
+“Don’t Call it a Content Model”:https://wiki.duraspace.org/display/hydra/Don%27t+call+it+a+%27content+model%27%21
+h4. genericContent cModel
+
+
+* descMetadata (required): Descriptive Metadata like MODS or DC.  MODS is recommended
+* rightsMetadata (recommended): Rights, License, and Permissions information.  Hydra rightsMetadata XML is recommended.
+h4. Understanding Parts (Where will my uploaded files go?)
+
+h5. Primitives contain actual files
+
+
+bq. A primitive is a fundamental atom object that bears an actual file payload. They are single, (near-) universal content types which may either stand-alone or be incorporated into higher order content types (in a book or ETD, e.g.).
+
+h5. Higher Level Objects
+
+
+bq. Higher Level Objects represent higher-level, molecular objects that may have primitives and/or other Higher-level objects as children.
+
+h5. Relationships
+
+isPartOf  (info:fedora/fedora-system:def/relations-external#isPartOf) -- Hydra reserves this predicate for use in representing part-whole relationships between objects.  This occurs most often when representing which Primitives (ie. an uploaded PDF) are _part_ of a Higher Level object (ie. a MODS Article)
+
+
+h3. How to Add a New Facet

@@ -18,15 +18,15 @@ h2. Installation/Setup
 
 h3. Installing the Test Host (for testing/demo)
 
-See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
+See {file:README_INSTALL_TEST_HOST.textile README_INSTALL_TEST_HOST}
 
 h3. Installing the plugin into a Rails App
 
-See "README_INSTALL_BLACKLIGHT":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_BLACKLIGHT.textile  (work in progress)
+See {file:README_INSTALL_BLACKLIGHT.textile README_INSTALL_BLACKLIGHT}  
 
 h2. Testing
 
-See "README_TESTING_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
+See {file:README_TESTING_PLUGIN.textile README_TESTING_PLUGIN}
 
 
 h2. Acknowledgements

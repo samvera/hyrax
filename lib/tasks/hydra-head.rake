@@ -65,12 +65,20 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
+      readme_filename = 'README.textile'
+      textile_docs = []
+      Dir[File.join(project_root, "*.textile")].each_with_index do |f, index| 
+        unless f.include?("/#{readme_filename}") # Skip readme, which is already built by the --readme option
+          textile_docs << '-'
+          textile_docs << f
+        end
+      end
       yt.files   = Dir.glob(File.join(project_root, '*.rb')) + 
                    Dir.glob(File.join(project_root, 'app', '**', '*.rb')) + 
                    Dir.glob(File.join(project_root, 'config', '**', '*.rb')) + 
                    Dir.glob(File.join(project_root, 'lib', '**', '*.rb')) + 
-                   [ File.join(project_root, 'README.textile') ]
-      yt.options = ['--output-dir', doc_destination, '--readme', 'README.textile']
+                   textile_docs
+      yt.options = ['--output-dir', doc_destination, '--readme', readme_filename]
     end
   rescue LoadError
     desc "Generate YARD Documentation"
