@@ -18,7 +18,7 @@ h2. Installation/Setup
 
 h3. Installing the Test Host (for testing/demo)
 
-See "README_INSTALL_TEST_HOST":/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile"
+See "README_INSTALL_TEST_HOST":/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
 
 h3. Installing the plugin into a Rails App
 
