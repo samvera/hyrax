@@ -95,6 +95,14 @@ git add *
 git commit -a -m "Applying hydra-head files"
 </pre>
 
+h2. Install required gems
+
+Now that you have the hydra-head Gemfile in your application you can run bundle install to install the required gems. 
+
+<pre>
+bundle install 
+</pre>
+
 h2. Install required plugins
 
 h3. Engines plugin
@@ -168,58 +176,39 @@ Commit that file to git:
 git commit config/ -m "Update config/environment.rb to load plugins in the right order"
 </pre>
 
-h2. If you plan to use this as a test host
+h2. If you plan to use this as a test host (i.e., an app for running the automated tests)
 
-If you're setting this up as a test host application for testing the hydra_head plugin, you need to do the following.
-
-in app/controllers/application_controller.rb and app/helpers/application_helper.rb, replace require_dependency with require_plugin_dependency
-
-In app/controllers/application_controller.rb
-
-<pre>
-  require_plugin_dependency( 'vendor/plugins/blacklight/app/controllers/application_controller.rb')
-</pre>
-
-In app/helpers/application_helper.rb
-
-<pre>
-  require_plugin_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
-</pre>
-
-
-h2. If you plan to run this as a full app (not as a test host)
-
-_DON'T do these steps if you're setting up a test host app for testing a plugin._
-
-A sample of a fully installed hydra head application is located in the "fully_installed": https://github.com/projecthydra/hydra-plugin_test_host/tree/fully_installed branch of the hydra-plugin_test_host git repository.
+Stop here and go read README_INSTALL_TEST_HOST
 
 h2. Add Jetty
 
 Put a copy of hydra-jetty into the jetty directory within your app. This provides copies of solr and fedora that you can use for testing and development purposes.
 
 <pre>
-  git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
+git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
 </pre>
 
 h2. Add .rvmrc
 
 Only do this if you're using RVM.  DON'T do this if you're running this app as a test host.
+You can use the one from hydra-head. 
 
-Sample .rvmrc: https://github.com/projecthydra/hydra-head/blob/master/.rvmrc
-
+<pre>
+cp ../hydra-head/.rvmrc .	
+</pre>
 
 h2. Install the hydra-head plugin
 
 There are many ways to get the hydra-head code into vendor/plugins.  One way is to use script/plugin install
 
 <pre>
-  script/plugin install git://github.com/projecthydra/hydra-head.git 
+script/plugin install git://github.com/projecthydra/hydra-head.git 
 </pre>
 
 h2. Copy the hydra-head database migrations into the root app
 
 <pre>
-  cp vendor/plugins/hydra-head/db/migrations db/migrations
+cp vendor/plugins/hydra-head/db/migrate/* ./db/migrate
 </pre>
 
 h2. Run the Database Migrations
@@ -227,7 +216,8 @@ h2. Run the Database Migrations
 You must do this _after_ installing the hydra-head plugin, whether you've installed it using the test host approach or installed it explicitly.
 
 <pre>
-  rake db:migrate
+rake hydra:jetty:start
+rake db:migrate
 </pre>
 
 h2. Run the app
@@ -236,5 +226,4 @@ h2. Run the app
   script/server
 </pre>
 
-h2. Troubleshooting
-
+You should now be able to go to your application at http://localhost:3000
