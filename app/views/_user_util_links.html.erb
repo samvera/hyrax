@@ -1,10 +1,7 @@
 <% if current_user %>
 
-    <ul class="add_assets">
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "mods_asset") %>');">Add a Basic MODS Asset</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_image") %>');">Add an Image</li>
-      <li onclick="javascript:createAssetNavigateTo(this, '<%= url_for(:action => "new", :controller => "assets", :content_type => "generic_content") %>');">Add Generic Content</li>
-    </ul>
+    <%= render :partial=>"/add_assets_links" %>
+  
     <% if current_user.can_be_superuser? %>
       <% if current_user.is_being_superuser?(session) %>
         <%= link_to "Stop being superuser", superuser_path %>
@@ -24,11 +21,8 @@
       <%= link_to "Saved Searches", saved_searches_path %>
 <% else %>
 
-    <ul class="add_assets">
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "mods_asset"}) %>'">Add a Basic MODS Asset</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_image"}) %>'">Add an Image</li>
-      <li onclick="javascript:location.href='<%= url_for(:action => "new", :controller => "user_sessions", :redirect_params => {:action => "new", :controller=> "assets", :content_type => "generic_content"}) %>'">Add Generic Content</li>
-    </ul>
+    <%= render :partial=>"/add_assets_links" %>
+    
     <%= link_to 'Login', login_path %>
 
 <% end %>

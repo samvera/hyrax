@@ -3,6 +3,18 @@ require 'mediashelf/active_fedora_helper'
 module HydraAssetsHelper
   include MediaShelf::ActiveFedoraHelper
 
+  # Create a link for creating a new asset of the specified content_type
+  # If user is not logged in, the link leads to the login page with appropriate redirect params for creating the asset after logging in
+  # @param [String] link_label for the link
+  # @param [String] content_type 
+  def link_to_create_asset(link_label, content_type)
+    if current_user
+      link_to link_label, {:action => 'new', :controller => 'assets', :content_type => content_type}, :class=>"create_asset"
+    else      
+      link_to link_label, {:action => 'new', :controller => 'user_sessions', :redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}}, :class=>"create_asset"
+    end
+  end
+  
   # Render a link to delete the given asset from the repository.
   # Includes a confirmation message. 
   def delete_asset_link(pid, asset_type_display="asset")
