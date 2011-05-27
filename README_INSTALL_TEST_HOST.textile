@@ -22,12 +22,12 @@ If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install 
 
 h4. (1) Get the hydra-head engines plugin from github.
 
-While in your empty hydra-head-test directory:
-
 <pre>
-git clone git@github.com:projecthydra/hydra-head.git
+git clone --recursive git@github.com:projecthydra/hydra-head.git
 cd hydra-head
 </pre>
+
+This will also initialize and update the jetty and hydra-plugin_test_host submodules. The former is a copy of Jetty pre-configured for Hydra with Fedora and Solr installed. The latter is a preconfigured Rails application to house and test the hydra-head engines plugin.
 
 <b>This hydra-head directory is the <i>root of the plugin</i>.</b>
 
@@ -38,7 +38,7 @@ h4. (1a) Ensure you are using the RVM gemset
 </pre>
 
 You should get a message like this:
- Using /usr/local/you/.rvm/gems/ree-1.8.7-2010.02 with gemset hyhead-rails2-testing
+ Using /usr/local/you/.rvm/gems/ree-1.8.7-2010.02 with gemset hyhead
 
 
 h4. (2) Use bundler to install the gem dependencies.
@@ -53,19 +53,7 @@ You may need to install bundler into the gemset first:
   gem install bundler
 </pre>
 
-h4. (3) Pull a copy of jetty pre-configured for Hydra with Fedora and Solr installed.
-Also pull the rails application set up just for testing the Hydra-Head engines plugin.
-
-For the current Rails 2 incarnation, you have to install hydra-head as a plugin in a full rails application.  This will pull the a preconfigured testing application created for this purpose, as well as jetty preconfigured with Fedora and Solr.
-
-<pre>
-  git submodule init
-  git submodule update
-</pre>
-
-This will put hydra-jetty into the jetty directory and the test host application into hydra-plugin_test_host
-
-h4. (4) IMPORTANT: Put a copy of the plugin into the host app
+h4. (3) IMPORTANT: Put a copy of the plugin into the host app
 
 *If you don't run this, you will not be able to run the test host app or its rake tasks*
 
@@ -111,11 +99,11 @@ Now cd back up to the root of the <b><i>hydra-head plugin</i> directory</b>:
 
 h3. Now you're ready to run the tests
 
-If you want to run the tests, see "README_TESTING_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
+If you want to run the tests, see "README_TESTING_PLUGIN":/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
 
 h2. Running the App
 
-The test host app is a regular Rails app with Blacklight installed.  Its configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
+The test host app is a regular Rails app with Blacklight installed.  It's configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
 
 Before starting the app, make sure that you have the latest copy of the plugin code copied into its plugins directory.
 
