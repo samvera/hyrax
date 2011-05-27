@@ -10,7 +10,7 @@ Ruby on Rails application that functions as a Hydra Head.  The full hydra stack 
 - Solrizer to write Fedora content to the Solr index
 - SolrizerFedora for something.
 
-For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":http://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
+For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
 
 This is (currently) a Ruby on Rails 2 Engines Plugin.  It will soon become a Rails 3 Plugin, which will be distributed as a gem.
 
@@ -18,15 +18,15 @@ h2. Installation/Setup
 
 h3. Installing the Test Host (for testing/demo)
 
-See {file:README_INSTALL_TEST_HOST.textile README_INSTALL_TEST_HOST}
+See "README_INSTALL_TEST_HOST":/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
 
 h3. Installing the plugin into a Rails App
 
-See {file:README_INSTALL_BLACKLIGHT.textile README_INSTALL_BLACKLIGHT}  
+See "README_INSTALL_BLACKLIGHT":/projecthydra/hydra-head/blob/master/README_INSTALL_BLACKLIGHT.textile
 
 h2. Testing
 
-See {file:README_TESTING_PLUGIN.textile README_TESTING_PLUGIN}
+See "README_TESTING_PLUGIN":/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
 
 
 h2. Acknowledgements

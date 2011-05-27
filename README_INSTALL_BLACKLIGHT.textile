@@ -1,53 +1,79 @@
-Run the Blacklight installation script
+h2. Installing Blacklight and its pre-requisites
+
+h3. Install system pre-requisites
+
+Ensure you have git, ruby version manager (http://rvm.beginrescueend.com/), java 1.6, and sqlite3 installed
+
+h3. Create a gem set and install some gems to start with
 
 <pre>
-rails ./my-hydra-head -m http://projectblacklight.org/templates/latest.rb 
-</pre>
+rvm install ree-1.8.7
+rvm gemset create hydra-head
+rvm use ree-1.8.7@hydra-head
+gem install -v=2.3.11 rails
+gem install sqlite3
+</pre> 
 
-OR
+h3. Run the Blacklight installation script
 
 <pre>
-rails ./blacklight-app -m http://projectblacklight.org/templates/2-8-0.rb 
+rails ./my-hydra-head -m http://projectblacklight.org/templates/2-8-0.rb 
 </pre>
 
 install gems? yes
-run migrations? yes.
-install solr? no.
+
+run migrations? yes
+
+install solr? no
+
+h3. Put your new hydra-head into version control
+
+<pre>
+cd my-hydra-head
+git init .
+git add *
+git commit -m "first commit"
+</pre>
+
 
 Update .gitignore  !! before you commit the new blacklight files
 
-Add blacklight code into your git repository (rather than as a submodule)
+h3. Add blacklight code into your git repository (rather than as a submodule)
 
 <pre>
-  mkdir vendor/plugins/blacklight-temp
+mkdir vendor/plugins/blacklight-temp
   
-  cp -R vendor/plugins/blacklight/* vendor/plugins/blacklight-temp/
-  rm -rf vendor/plugins/blacklight
+cp -R vendor/plugins/blacklight/* vendor/plugins/blacklight-temp/
+rm -rf vendor/plugins/blacklight
   
-  git rm vendor/plugins/blacklight
-  mv vendor/plugins/blacklight-temp vendor/plugins/blacklight
-  git add vendor/plugins/blacklight
+git rm vendor/plugins/blacklight
+mv vendor/plugins/blacklight-temp vendor/plugins/blacklight
+git add vendor/plugins/blacklight
+git commit -a -m "Add blacklight code into your git repository (rather than as a submodule)"
 </pre>
 
 h2. Apply hydra-head files
 
-These steps will eventually be handled by a generator.  For now, clone a copy of the hydra-head repository and copy the files from there
+These steps will eventually be handled by a generator.  For now, clone a copy of the hydra-head repository and copy the files from there.
+
+<pre>
+cd ..
+git clone git://github.com/projecthydra/hydra-head.git
+cd my-hydra-head
+</pre>
 
 !! Don't override routes.rb!  Save a copy of the one that blacklight set up before running these commands
 
 <pre>
-  cp config/routes.rb routes-copy.rb
-</pre>
-
-<pre>
+cp config/routes.rb routes-copy.rb
 cp ../hydra-head/Gemfile ./
 cp -R ../hydra-head/config/* config/
+mv routes-copy.rb config/routes.rb 
 </pre>
+
+When you run @git status@ you should see something like this: 
 
 <pre>
-  mv routes-copy.rb config/routes.rb 
-</pre>
-
 #	modified:   config/initializers/blacklight_config.rb
 #	modified:   config/solr.yml
 #	added:   Gemfile
@@ -60,6 +86,22 @@ cp -R ../hydra-head/config/* config/
 #	added:   config/role_map_production.yml
 #	added:   config/role_map_test.yml
 #	added:   config/solr_mappings.yml
+</pre>
+
+Commit those files to your git repository:
+
+<pre>
+git add *
+git commit -a -m "Applying hydra-head files"
+</pre>
+
+h2. Install required gems
+
+Now that you have the hydra-head Gemfile in your application you can run bundle install to install the required gems. 
+
+<pre>
+bundle install 
+</pre>
 
 h2. Install required plugins
 
@@ -76,7 +118,7 @@ h3. White List plugin
 This is a legacy dependency.  We will be removing it soon, but for now you need to have it installed in order for hydra-head to run properly.
 
 <pre>
-  script/plugin install git://github.com/projecthydra/white_list.git
+script/plugin install git://github.com/projecthydra/white_list.git
 </pre>
 
 h3. fluid-infusion plugin
@@ -84,30 +126,12 @@ h3. fluid-infusion plugin
 This is another legacy dependency.  Now we mainly rely on it just for the implementation of swfuploader.
 
 <pre>
-  script/plugin install  git://github.com/mediashelf/fluid-infusion.git
-</pre>
-
-
-h2. Update config/environment.rb
-
-in config/environment.rb
-
-Switch line 8 to use '../vendor/plugins/engines/boot' instead of '../vendor/plugins/blacklight/vendor/plugins/engines/boot'
-
-<pre>
-  require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
-  # require File.join(File.dirname(__FILE__), '../vendor/plugins/blacklight/vendor/plugins/engines/boot')
-</pre>
-
-Set the load order for plugins, ensuring that blacklight is loaded before hydra-head
-
-<pre>
-  config.plugins = %W(engines blacklight fluid-infusion hydra-head white_list)
+script/plugin install  git://github.com/mediashelf/fluid-infusion.git
 </pre>
 
 h2. Patch Blacklight's CatalogController
 
-Comment out these lines in Blacklight's CatalogControer.show method (lines 47-51)
+Comment out these lines in Blacklight's CatalogController.show method (lines 47-51)
 You have to comment this out because it breaks the hydra-head overrides.
 
 Note: The long-term fix to this will be to implement before_render callbacks in CatalogController.show and refactor hydra-head to use those callbacks instead of aliasing the show method itself.
@@ -122,60 +146,69 @@ Note: The long-term fix to this will be to implement before_render callbacks in 
   #end
 </pre>
 
-
-
-h2. If you plan to use this as a test host
-
-If you're setting this up as a test host application for testing the hydra_head plugin, you need to do the following.
-
-in app/controllers/application_controller.rb and app/helpers/application_helper.rb, replace require_dependency with require_plugin_dependency
-
-In app/controllers/application_controller.rb
+h3. Add the plugins to git
 
 <pre>
-  require_plugin_dependency( 'vendor/plugins/blacklight/app/controllers/application_controller.rb')
+git add *
+git commit -a -m "Install required plugins"
 </pre>
 
-In app/helpers/application_helper.rb
+h2. Update config/environment.rb to load plugins in the right order
+
+Edit config/environment.rb
+
+Switch line 8 to use '../vendor/plugins/engines/boot' instead of '../vendor/plugins/blacklight/vendor/plugins/engines/boot'
 
 <pre>
-  require_plugin_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
+  require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
+  # require File.join(File.dirname(__FILE__), '../vendor/plugins/blacklight/vendor/plugins/engines/boot')
 </pre>
 
+In that same file, add the following lines inside the @Rails::Initializer.run do |config|@ code block. This will set the load order for plugins, ensuring that blacklight is loaded before hydra-head.
 
-h2. If you plan to run this as a full app (not as a test host)
+<pre>
+config.plugins = %W(engines blacklight fluid-infusion hydra-head white_list)
+</pre>
 
-_DON'T do these steps if you're setting up a test host app for testing a plugin._
+Commit that file to git:
 
-A sample of a fully installed hydra head application is located in the "fully_installed": https://github.com/projecthydra/hydra-plugin_test_host/tree/fully_installed branch of the hydra-plugin_test_host git repository.
+<pre>
+git commit config/ -m "Update config/environment.rb to load plugins in the right order"
+</pre>
+
+h2. If you plan to use this as a test host (i.e., an app for running the automated tests)
+
+Stop here and go read README_INSTALL_TEST_HOST
 
 h2. Add Jetty
 
 Put a copy of hydra-jetty into the jetty directory within your app. This provides copies of solr and fedora that you can use for testing and development purposes.
 
 <pre>
-  git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
+git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
 </pre>
 
 h2. Add .rvmrc
 
 Only do this if you're using RVM.  DON'T do this if you're running this app as a test host.
+You can use the one from hydra-head. 
 
-Sample .rvmrc: https://github.com/projecthydra/hydra-head/blob/master/.rvmrc
-
+<pre>
+cp ../hydra-head/.rvmrc .	
+</pre>
 
 h2. Install the hydra-head plugin
 
 There are many ways to get the hydra-head code into vendor/plugins.  One way is to use script/plugin install
 
 <pre>
-  script/plugin install git://github.com/projecthydra/hydra-head.git 
+script/plugin install git://github.com/projecthydra/hydra-head.git 
 </pre>
 
 h2. Copy the hydra-head database migrations into the root app
 
 <pre>
-  cp vendor/plugins/hydra-head/db/migrations db/migrations
+cp vendor/plugins/hydra-head/db/migrate/* ./db/migrate
 </pre>
 
 h2. Run the Database Migrations
@@ -183,7 +216,8 @@ h2. Run the Database Migrations
 You must do this _after_ installing the hydra-head plugin, whether you've installed it using the test host approach or installed it explicitly.
 
 <pre>
-  rake db:migrate
+rake hydra:jetty:start
+rake db:migrate
 </pre>
 
 h2. Run the app
@@ -191,3 +225,5 @@ h2. Run the app
 <pre>
   script/server
 </pre>
+
+You should now be able to go to your application at http://localhost:3000
