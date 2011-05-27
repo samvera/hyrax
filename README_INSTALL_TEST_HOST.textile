@@ -10,11 +10,9 @@ h3. Prerequisites
 * git
 * java 1.6 or higher
 
-h4. (0) We strongly suggest using RVM  (Ruby Version Manager) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+h4. (0) We strongly suggest using "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
 
-See https://rvm.beginrescueend.com/
-
-If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it.
+If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instruction assume the use of RVM.
 
 <pre>
   rvm install ree-1.8.7
@@ -31,26 +29,10 @@ This will also initialize and update the jetty and hydra-plugin_test_host submod
 
 <b>This hydra-head directory is the <i>root of the plugin</i>.</b>
 
-h4. (1a) Ensure you are using the RVM gemset
-
-<pre>
-  . .rvmrc
-</pre>
-
-You should get a message like this:
- Using /usr/local/you/.rvm/gems/ree-1.8.7-2010.02 with gemset hyhead
-
-
 h4. (2) Use bundler to install the gem dependencies.
 
 <pre>
   bundle install
-</pre>
-
-You may need to install bundler into the gemset first:
-
-<pre>
-  gem install bundler
 </pre>
 
 h4. (3) IMPORTANT: Put a copy of the plugin into the host app
