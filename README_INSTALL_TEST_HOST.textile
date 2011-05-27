@@ -39,10 +39,10 @@ h4. (3) IMPORTANT: Put a copy of the plugin into the host app
 
 *If you don't run this, you will not be able to run the test host app or its rake tasks*
 
-The host application needs a copy of the plugin in its vendor/plugins directory.  We provide a rake task for this.  The rake task will copy all of the plugin code into hydra-plugin_test_host/vendor/plugins
+The host application needs a copy of the plugin in its vendor/plugins directory. We provide a "rake task":http://hudson.projecthydra.org/job/hydra-head-rails2-plugin/Documentation/file.README_RAKE_TASKS.html#hyhead_Test_Host_Setup__setup_test_host for this which copies your current hydra-head plugin code into hydra-plugin_test_host/vendor/plugins as well as copies over the fixtures and cucumber features required for testing.
 
 <pre>
-rake hyhead:copy_to_host_plugins_dir
+rake hyhead:setup_test_host
 </pre>
 
 h4. (5) Migrate the test databases
@@ -87,14 +87,7 @@ h2. Running the App
 
 The test host app is a regular Rails app with Blacklight installed.  It's configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
 
-Before starting the app, make sure that you have the latest copy of the plugin code copied into its plugins directory.
-
-<pre>
-rake hyhead:remove_from_host_plugin
-rake hyhead:copy_to_host_plugins_dir
-</pre>
-
-After copying the plugin code, cd into the root of the test app and start it like you normally start any rails app.
+Change into the root of the test app and start it like you normally start any rails app.
 
 <pre>
 cd hydra-plugin_test_host
