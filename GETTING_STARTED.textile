@@ -21,23 +21,82 @@ For the purposes of this tutorial, we have set up a preconfigured rails app that
 
 !!! link to download the preconfigured rails app
 
+h3.  Or, you can use the test app included with the plugin. 
+
+Follow the directions at "README_INSTALL_TEST_HOST":/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
+
+Make sure you do (or have done) the following:
+
+h4. (1) Copy hydra-head plugin code to rails test app.
+
+From the root of the <b><i>hydra-head plugin</i> directory</b>:
+
+<pre>
+  rake hyhead:setup_test_host
+</pre>
+
+h4. (2) Migrate the development databases.
+
+From the <b><i>hydra-plugin_test_host</i> directory</b>:
+
+<pre>
+  rake db:migrate
+</pre>  
+
+h4. (3) Load some fixture data into Fedora and Solr.
+
+_Stop any copies of jetty (or anything else using port 8983) before running this command._
+
+Note that java 1.6 must be invoked by the "java" command or Fedora won't work.
+
+From the root of the <b><i>hydra-head plugin</i> directory</b>:
+
+<pre>
+  rake hydra:jetty:load RAILS_ENV=development
+</pre>  
+
+This will start up a pre-configured jetty instance running Fedora and Solr on port 8983.
+
+Then, from the root of the <b><i>hydra-head plugin</i> directory</b>, load the fixture data:
+
+<pre>
+  rake hydra:default_fixtures:refresh environment=development
+</pre>
+
 h3. Starting the App out of the Box
 
+h4. (1) Start Fedora and Solr
 
-start fedora & solr
-see fedora & solr
+_Stop any copies of jetty (or anything else using port 8983) before running this command._
 
-starting the rails app
+From the root of the <b><i>hydra-head plugin</i> directory</b>:
+(Note that java 1.6 must be invoked by the "java" command or Fedora won't work.)
+
+<pre>
+  rake hydra:jetty:load RAILS_ENV=development
+</pre>  
+
+Ensure Solr is running:  http://localhost:8983/solr/development/admin should show the Solr admin page.  You should be able to click on the Statistics link (or go to http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.
+
+Ensure Fedora is running:  http://127.0.0.1:8983/fedora/describe should show the Fedora Repository Information View.  The following query should return objects:  http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20
+
+h4. (2) Start the Rails Application
+
+From the <b><i>hydra-plugin_test_host</i> directory</b>:
+
+<pre>
+  ./script/server
+</pre>  
+
+To ensure the rails app is running, go to http://localhost:3000/
 
 Importing some Sample Content
 
 h3. How to tell if everything is set up properly
 
-
-Run cucumber tests ...
+Run cucumber tests ... except they are for test, not development environment ...
 
 h3. Exploring what comes out of the box
-
 
 * log in, create sample account
 * use facets

@@ -20,7 +20,7 @@ h4. (1) Start Jetty, preloaded with Fedora and Solr applications
 
 See below to reset jetty when re-running tests, or when running a simultaneous development instance.
 
-Ensure nothing is running on port 8983.
+_Stop any copies of jetty (or anything else using port 8983) before running this command._
 
 You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the hydra-plugin_test_host directory.
 
