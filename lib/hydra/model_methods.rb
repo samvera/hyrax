@@ -25,8 +25,8 @@ module Hydra::ModelMethods
   
   # Set the title and label on the current object
   #
-  # @params [String] new_title
-  # @params [Hash] opts (optional) hash of configuration options
+  # @param [String] new_title
+  # @param [Hash] opts (optional) hash of configuration options
   #
   # @example Use :only_if_blank option to only update the values when the label is empty
   #   obj.set_title_and_label("My Title", :only_if_blank=> true)
@@ -44,8 +44,8 @@ module Hydra::ModelMethods
   
   # Set the title and label on the current object
   #
-  # @params [String] new_title
-  # @params [Hash] opts (optional) hash of configuration options
+  # @param [String] new_title
+  # @param [Hash] opts (optional) hash of configuration options
   def set_title(new_title, opts={})
     if self.datastreams.has_key?("descMetadata")
       desc_metadata_ds = self.datastreams["descMetadata"]

@@ -74,9 +74,9 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   # Returns the permissions for the selected person/group
   # If new_access_level is provided, updates the selected person/group access_level to the one specified 
   # A new_access_level of "none" will remove all access_levels for the selected person/group
-  # @selector Hash in format {type => identifier}
-  # @new_access_level (default nil)
-  # @response Hash in format {type => access_level}.  
+  # @param [Hash] selector hash in format {type => identifier}
+  # @param new_access_level (default nil)
+  # @return Hash in format {type => access_level}.  
   # 
   # ie. 
   # permissions({:person=>"person123"})
@@ -110,28 +110,28 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   end
   
   # Reports on which groups have which permissions
-  # @response Hash in format {group_name => group_permissions, group_name => group_permissions}
+  # @return Hash in format {group_name => group_permissions, group_name => group_permissions}
   def groups
     return quick_search_by_type(:group)
   end
   
   # Reports on which groups have which permissions
-  # @response Hash in format {person_name => person_permissions, person_name => person_permissions}
+  # @return Hash in format {person_name => person_permissions, person_name => person_permissions}
   def individuals
     return quick_search_by_type(:person)
   end
   
   # Updates permissions for all of the persons and groups in a hash
-  # @params ex. {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}}
+  # @param ex. {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}}
   # Currently restricts actor type to group or person.  Any others will be ignored
   def update_permissions(params)
     params.fetch("group", {}).each_pair {|group_id, access_level| self.permissions({"group"=>group_id}, access_level)}
     params.fetch("person", {}).each_pair {|group_id, access_level| self.permissions({"person"=>group_id}, access_level)}
   end
   
-  # @type symbol (either :group or :person)
-  # @response 
-  # This method limits the respons to known access levels.  Probably runs a bit faster than .permissions().
+  # @param [Symbol] symbol (either :group or :person)
+  # @return 
+  # This method limits the response to known access levels.  Probably runs a bit faster than .permissions().
   def quick_search_by_type(type)
     result = {}
     [{:discover_access=>"discover"},{:read_access=>"read"},{:edit_access=>"edit"}].each do |access_levels_hash|

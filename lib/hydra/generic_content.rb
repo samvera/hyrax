@@ -76,9 +76,9 @@ module Hydra::GenericContent
     end
   end
   
-  # @num file size in bits
   # Returns a human readable filesize appropriate for the given number of bytes (ie. automatically chooses 'bytes','KB','MB','GB','TB')
   # Based on a bit of python code posted here: http://blogmag.net/blog/read/38/Print_human_readable_file_size
+  # @param [Numeric] file size in bits
   def bits_to_human_readable(num)
       ['bytes','KB','MB','GB','TB'].each do |x|
         if num < 1024.0

@@ -3,7 +3,7 @@ class UserAttribute < ActiveRecord::Base
 
 
 # Finds the user_attributes based on login
-# @params [sting] login the login of the user
+# @param [sting] login the login of the user
 # @return the user attribute object or nil
  def self.find_by_login(login)
     user = User.find_by_login(login)
