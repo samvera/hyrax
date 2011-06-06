@@ -2,13 +2,13 @@ h1. Testing the hydra-head Plugin
 
 h2. I. Install the Test Host 
 
-In order to run the tests, you need to have a test rails app installed in the  hydra-plugin_test_host.  The plugin provides rake tasks for setting this up.  See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile for instructions on setting this up.
+In order to run the tests, you need to have a test rails app installed in the  hydra-plugin_test_host.  See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile for instructions on setting this up.
 
 h2. II. Running the full Continuous Integration build
 
-_Stop any copies of jetty that you have running before running this._
+_Stop any copies of jetty (or anything else using port 8983) before running this command._
 
-This will spin up jetty, import your fixtures into it run the tests, and stop jetty.
+This will spin up jetty pre-configured with Fedora and Solr on port 8983, import your fixtures into it, run the tests, and stop jetty.
 
 <pre>
   rake hyhead:ci RAILS_ENV=test 
