@@ -35,7 +35,7 @@ h4. (2) Use bundler to install the gem dependencies.
   bundle install
 </pre>
 
-Note that if you have RVM installed, it will create a gemset called "hyhead".
+Note that if you have RVM installed, it will create/use a gemset called "hyhead".
 
 
 h4. (3) Put a copy of the hydra-head plugin into the testing application
