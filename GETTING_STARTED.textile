@@ -47,9 +47,8 @@ h4. (3) Load some fixture data into Fedora and Solr.
 
 _Stop any copies of jetty (or anything else using port 8983) before running this command._
 
-Note that java 1.6 must be invoked by the "java" command or Fedora won't work.
-
 From the root of the <b><i>hydra-head plugin</i> directory</b>:
+(Note that java 1.6 must be invoked by the "java" command or Fedora won't work.)
 
 <pre>
   rake hydra:jetty:load RAILS_ENV=development
@@ -57,7 +56,7 @@ From the root of the <b><i>hydra-head plugin</i> directory</b>:
 
 This will start up a pre-configured jetty instance running Fedora and Solr on port 8983.
 
-Then, from the root of the <b><i>hydra-head plugin</i> directory</b>, load the fixture data:
+Staying in the <b><i>hydra-head plugin</i> directory</b>, load the fixture data:
 
 <pre>
   rake hydra:default_fixtures:refresh environment=development
@@ -76,9 +75,9 @@ From the root of the <b><i>hydra-head plugin</i> directory</b>:
   rake hydra:jetty:load RAILS_ENV=development
 </pre>  
 
-Ensure Solr is running:  http://localhost:8983/solr/development/admin should show the Solr admin page.  You should be able to click on the Statistics link (or go to http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.
+Ensure Solr is running:  "http://localhost:8983/solr/development/admin":http://localhost:8983/solr/development/admin should show the Solr admin page.  You should be able to click on the Statistics link (or go to "http://localhost:8983/solr/development/admin/stats.jsp":http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.
 
-Ensure Fedora is running:  http://127.0.0.1:8983/fedora/describe should show the Fedora Repository Information View.  The following query should return objects:  http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20
+Ensure Fedora is running:  "http://127.0.0.1:8983/fedora/describe":http://127.0.0.1:8983/fedora/describe should show the Fedora Repository Information View.  The following query should return objects:  "http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20":http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20
 
 h4. (2) Start the Rails Application
 
@@ -88,9 +87,9 @@ From the <b><i>hydra-plugin_test_host</i> directory</b>:
   ./script/server
 </pre>  
 
-To ensure the rails app is running, go to http://localhost:3000/
+To ensure the rails app is running, go to "http://localhost:3000/":http://localhost:3000/
 
-Importing some Sample Content
+Importing some Sample Content (other than fixtures??)
 
 h3. How to tell if everything is set up properly
 
