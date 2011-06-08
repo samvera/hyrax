@@ -1,16 +1,16 @@
 h1. Hydra-Head
 
-Hydra-Head is a rails 2 Engine containing the code for a
-Ruby on Rails application that functions as a Hydra Head.  The full hydra stack includes the following:
+Hydra-Head is a Rails Engines plugin containing the core code for a Hydra application.  The full hydra stack includes the following:
 
-- Blacklight for the User Interface
-- Solr for the Search Engine
-- ActiveFedora to let the rails application talk to fedora
-- OM to streamline the metadata configuration
-- Solrizer to write Fedora content to the Solr index
-- SolrizerFedora for something.
+- "Blacklight":http://projectblacklight.org/  (a Rails Engines plugin) for the User Interface
+- "Solr":http://lucene.apache.org/solr/ (a java application, also ported to other languages) for the Search Engine 
+- "ActiveFedora":https://github.com/mediashelf/active_fedora (a ruby gem) to let the rails application talk to fedora 
+- "OM (Opinionated Metadata)":https://github.com/mediashelf/om (a ruby gem) to streamline the metadata configuration
+- "Solrizer":https://github.com/projecthydra/solrizer (a ruby gem) to write Fedora content to the Solr index
+- "SolrizerFedora":https://github.com/projecthydra/solrizer-fedora (a ruby gem) for something.
+- HydraHead (a Rails Engines plugin) to glue it all together 
 
-For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
+For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":https://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
 
 This is (currently) a Ruby on Rails 2 Engines Plugin.  It will soon become a Rails 3 Plugin, which will be distributed as a gem.
 
@@ -18,16 +18,19 @@ h2. Installation/Setup
 
 h3. Installing the Test Host (for testing/demo)
 
-See "README_INSTALL_TEST_HOST":/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
+See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
 
 h3. Installing the plugin into a Rails App
 
-See "README_INSTALL_BLACKLIGHT":/projecthydra/hydra-head/blob/master/README_INSTALL_BLACKLIGHT.textile
+See "README_INSTALL_BLACKLIGHT":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_BLACKLIGHT.textile
 
 h2. Testing
 
-See "README_TESTING_PLUGIN":/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
+See "README_TESTING_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
 
+h2. Getting started with ActiveFedora and OM
+
+See "GETTING STARTED":https://github.com/mediashelf/om/blob/master/GETTING_STARTED.textile
 
 h2. Acknowledgements
 
