@@ -143,7 +143,7 @@ namespace :hydra do
 
     desc "Load default Hydra fixtures"
     task :load do
-      FIXTURES.each_with_index do |fixture,index|
+      FIXTURES.each do |fixture|
         ENV["fixture"] = nil
         ENV["pid"] = fixture
         Rake::Task["hydra:import_fixture"].reenable
@@ -153,7 +153,7 @@ namespace :hydra do
 
     desc "Remove default Hydra fixtures"
     task :delete do
-      FIXTURES.each_with_index do |fixture,index|
+      FIXTURES.each do |fixture|
         ENV["fixture"] = nil
         ENV["pid"] = fixture
         Rake::Task["hydra:delete"].reenable
@@ -163,7 +163,7 @@ namespace :hydra do
 
     desc "Refresh default Hydra fixtures"
     task :refresh do
-      FIXTURES.each_with_index do |fixture,index|
+      FIXTURES.each do |fixture|
         logger.debug("Refreshing #{fixture}")
         ENV["fixture"] = nil
         ENV["pid"] = fixture        
