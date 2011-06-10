@@ -4,28 +4,30 @@ This document describes how to create a Hydra rails application.
 
 It does NOT describe how to get the hydra-head plugin code with the pre-configured rails application for testing:  for that, see "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile.
 
-h4. (0) Install Prerequisites.
+h3. I. Install Prerequisites
 
-* ruby v 1.8.7 or higher
-* rubygems
+* "ruby":http://www.ruby-lang.org/en/    NOTE: version 1.8.7 or higher
+* "rubygems":http://rubygems.org/pages/download
 * these ruby gems:
-** bundler
-** rails version < 3.
-* git
-* java 1.6 or higher
-* sqlite3
+** "bundler":http://gembundler.com/
+** "rails":http://rubyonrails.org/    NOTE: version < 3.
+* "git":http://git-scm.com/
+* "java":http://www.java.com/en/    NOTE:  version 1.6 or higher
+* "sqlite3":http://www.sqlite.org/
 
 * "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager)
-** We strongly suggest using  as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
-** If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instruction assume the use of RVM.
+** We strongly suggest using RVM as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+** If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instructions assume the use of RVM.
 
 <pre>
   rvm install ree-1.8.7
 </pre>
 
-h2. Install a Blacklight Application
+h2. II. Install a Blacklight Application
 
-h4. (1) Create the RVM gem set and install pre-requisite gems.
+This process begins with the installation of a rails application.
+
+h4. (1) Create the RVM Gemset and Install Pre-Requisite Gems.
 
 <pre>
 rvm gemset create hydra-head
@@ -34,10 +36,10 @@ gem install -v=2.3.11 rails
 gem install sqlite3
 </pre> 
 
-h4. (2) Run the Blacklight installation script.
+h4. (2) Run the Blacklight Installation Script.
 
 <pre>
-rails ./my-hydra-head -m http://projectblacklight.org/templates/2-8-0.rb 
+rails ./my-hydra-app -m http://projectblacklight.org/templates/2-8-0.rb 
 </pre>
 
 install gems? yes
@@ -46,27 +48,27 @@ run migrations? yes
 
 install solr? no
 
-h4. (3) Put your new hydra-head into version control.
+h4. (3) Put Your New Hydra Rails Application into Version Control.
 
-Set up git repository.
+Set up git repository:
 
 <pre>
-cd my-hydra-head
+cd my-hydra-app
 git init .
 </pre>
 
 Create a .gitignore file.  A good model is at  "https://github.com/projecthydra/hydra-head/blob/master/.gitignore":https://github.com/projecthydra/hydra-head/blob/master/.gitignore
 
-Do the initial commit.
+Do the initial commit:
+
 <pre>
 git add .
 git commit -m "installed blacklight via its template installer"
 </pre>
 
+h4. (4) Add Blacklight Plugin Files into Version Control.
 
-h3. (4) Add blacklight plugin code directly into your git repository.
-
-The blacklight template installer has the blacklight plugin code included as a submodule.  We want it to be added in its entirety into our local git repository.
+The blacklight template installer has the blacklight plugin code included as a git submodule.  We want it to be added in its entirety into your local git repository.
 
 <pre>
 cp -R vendor/plugins/blacklight/ vendor/plugins/blacklight-temp/
@@ -76,20 +78,26 @@ git rm vendor/plugins/blacklight
 
 mv vendor/plugins/blacklight-temp vendor/plugins/blacklight
 git add vendor/plugins/blacklight
-git commit -m "blacklight plugin code added to git repository (no longer a submodule)"
+git commit -m "blacklight plugin files added to git repository (no longer a submodule)"
 </pre>
 
-h2. Apply hydra-head files
+h2. III. Add the Hydra-Head Configuration Files to Your Application
 
-These steps will eventually be handled by a generator.  For now, clone a copy of the hydra-head repository and copy the files from there.
+Note: these steps will eventually be handled by a generator.  For now:
+
+h4. (1) Clone a copy of the hydra-head repository
+
+Make sure you don't do this within the rails application you are creating.
 
 <pre>
 cd ..
 git clone git://github.com/projecthydra/hydra-head.git
-cd my-hydra-head
+cd my-hydra-app
 </pre>
 
-!! Don't override routes.rb!  Save a copy of the one that blacklight set up before running these commands
+h4. (2) Copy the desired hydra-head config files
+
+Be careful not to override routes.rb!  The following commands avoid this:
 
 <pre>
 cp config/routes.rb routes-copy.rb
@@ -102,45 +110,70 @@ When you run @git status@ you should see something like this:
 
 <pre>
 #	modified:   config/initializers/blacklight_config.rb
+#	modified:   config/initializers/mime_types_.rb
 #	modified:   config/solr.yml
-#	added:   Gemfile
-#	added:   config/fedora.yml
-#	added:   config/hydra_types.yml
-#	added:   config/initializers/fedora_config.rb
-#	added:   config/initializers/hydra_config.rb
-#	added:   config/role_map_cucumber.yml
-#	added:   config/role_map_development.yml
-#	added:   config/role_map_production.yml
-#	added:   config/role_map_test.yml
-#	added:   config/solr_mappings.yml
+
+# Untracked files:
+#	         Gemfile
+#	         config/fedora.yml
+#	         config/hydra_types.yml
+#	         config/initializers/fedora_config.rb
+#	         config/initializers/hydra_config.rb
+#	         config/role_map_cucumber.yml
+#	         config/role_map_development.yml
+#	         config/role_map_production.yml
+#	         config/role_map_test.yml
+#	         config/solr_mappings.yml
 </pre>
 
-Commit those files to your git repository:
+h4. (3) Put the hydra-head database migrations into the root app.
+
+<pre>
+cp ../hydra-head/db/migrate/* db/migrate
+</pre>
+
+h4. (4) Add .rvmrc
+
+Only do this if you're using RVM.  DON'T do this if you're going to use this application for running tests.  (Naomi asks "Why?")
+
+<pre>
+cp ../hydra-head/.rvmrc .	
+</pre>
+
+h4. (5) Commit the files to your git repository:
 
 <pre>
 git add *
-git commit -a -m "Applying hydra-head files"
+git commit -a -m "adding hydra-head configuration files, including db migrations and .rvmrc"
 </pre>
 
-h2. Install required gems
+h2. IV. Get Required Gems
 
-Now that you have the hydra-head Gemfile in your application you can run bundle install to install the required gems. 
+Now that you have the hydra-head Gemfile in your application, you can run bundle install to get the required gems:
 
 <pre>
 bundle install 
 </pre>
 
-h2. Install required plugins
+h2. V. Install Required Plugins
 
-h3. Engines plugin
+h3. (1) engines plugin
 
 Move Blacklight's copy of the engines plugin into the app's vendor/plugins directory.  This is mainly so you have access to the rake tasks that the engines plugin provides.
 
 <pre>
-  cp -R vendor/plugins/blacklight/vendor/plugins/engines vendor/plugins/
+  mv vendor/plugins/blacklight/vendor/plugins/engines vendor/plugins/
 </pre>
 
-h3. White List plugin
+h3. (2) hydra-head plugin
+
+There are many ways to get the hydra-head code into vendor/plugins.  One way is to use script/plugin install:
+
+<pre>
+script/plugin install git://github.com/projecthydra/hydra-head.git 
+</pre>
+
+h3. (3) white_list plugin
 
 This is a legacy dependency.  We will be removing it soon, but for now you need to have it installed in order for hydra-head to run properly.
 
@@ -148,7 +181,7 @@ This is a legacy dependency.  We will be removing it soon, but for now you need 
 script/plugin install git://github.com/projecthydra/white_list.git
 </pre>
 
-h3. fluid-infusion plugin
+h3. (4) fluid-infusion plugin
 
 This is another legacy dependency.  Now we mainly rely on it just for the implementation of swfuploader.
 
@@ -156,12 +189,11 @@ This is another legacy dependency.  Now we mainly rely on it just for the implem
 script/plugin install  git://github.com/mediashelf/fluid-infusion.git
 </pre>
 
-h2. Patch Blacklight's CatalogController
+h3. (5) blacklight plugin: patch CatalogController
 
-Comment out these lines in Blacklight's CatalogController.show method (lines 47-51)
-You have to comment this out because it breaks the hydra-head overrides.
+Note: the long-term fix to this will be to implement before_render callbacks in CatalogController.show and refactor hydra-head to use those callbacks instead of aliasing the show method itself.
 
-Note: The long-term fix to this will be to implement before_render callbacks in CatalogController.show and refactor hydra-head to use those callbacks instead of aliasing the show method itself.
+Blacklight's CatalogController.show method breaks the hydra-head overrides.  To fix this, comment out lines 47-51 in vendor/plugins/blacklight/app/controllers/catalog-controller.rb:
 
 <pre>
   # Add all dynamically added (such as by document extensions)
@@ -173,18 +205,18 @@ Note: The long-term fix to this will be to implement before_render callbacks in 
   #end
 </pre>
 
-h3. Add the plugins to git
+h3. (6) Add the plugins to git.
 
 <pre>
 git add *
-git commit -a -m "Install required plugins"
+git commit -a -m "adding required plugins"
 </pre>
 
-h2. Update config/environment.rb to load plugins in the right order
+h2. VI. Update config/environment.rb to Load Plugins in the Correct Order
 
-Edit config/environment.rb
+h4. (1) Edit config/environment.rb.
 
-Switch line 8 to use '../vendor/plugins/engines/boot' instead of '../vendor/plugins/blacklight/vendor/plugins/engines/boot'
+In config/environment.rb, change line 8 to use '../vendor/plugins/engines/boot' instead of '../vendor/plugins/blacklight/vendor/plugins/engines/boot'
 
 <pre>
   require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
@@ -197,60 +229,61 @@ In that same file, add the following lines inside the @Rails::Initializer.run do
 config.plugins = %W(engines blacklight fluid-infusion hydra-head white_list)
 </pre>
 
-Commit that file to git:
+h4. (2) Commit the changes to git.
 
 <pre>
 git commit config/ -m "Update config/environment.rb to load plugins in the right order"
 </pre>
 
-h2. If you plan to use this as a test host (i.e., an app for running the automated tests)
+h2. VII. If You Plan to Use This Rails App For Running the Automated Tests
 
 Stop here and go to "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile.
 
-h2. Add Jetty
+h2. VIII. Run the Database Migrations
 
-Put a copy of hydra-jetty into the jetty directory within your app. This provides copies of solr and fedora that you can use for testing and development purposes.
+The following will run the migrations for the app and for its plugins:
+
+<pre>
+rake db:migrate:all
+</pre>
+
+h2. VIII. Spin up Solr and Fedora
+
+The easiest way is to put a copy of hydra-jetty into the jetty directory within your app. This provides copies of solr and fedora that you can use for testing and development purposes.
+
+h4. (1) Get hydra-jetty (jetty preconfigured with Fedora and Solr)
 
 <pre>
 git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
 </pre>
 
-h2. Add .rvmrc
-
-Only do this if you're using RVM.  DON'T do this if you're running this app as a test host.
-You can use the one from hydra-head. 
+h4. (2) Add submodule SHA to git, but not the hydra-jetty files.
 
 <pre>
-cp ../hydra-head/.rvmrc .	
+(add line containing "jetty" to .git/info/excludes file)
+git add .gitmodules
+git commit -m "Adding hydra-jetty submodule"
 </pre>
 
-h2. Install the hydra-head plugin
+h4. (3) Run Jetty
 
-There are many ways to get the hydra-head code into vendor/plugins.  One way is to use script/plugin install:
-
-<pre>
-script/plugin install git://github.com/projecthydra/hydra-head.git 
-</pre>
-
-h2. Copy the hydra-head database migrations into the root app
-
-<pre>
-cp vendor/plugins/hydra-head/db/migrate/* ./db/migrate
-</pre>
-
-h2. Run the Database Migrations
-
-You must do this _after_ installing the hydra-head plugin, whether you've installed it using the test host approach or installed it explicitly.
+The following will copy Solr and Fedora configuration files over to jetty in addition to starting it:
 
 <pre>
 rake hydra:jetty:start
-rake db:migrate
 </pre>
 
-h2. Run the app
+h2. IX. Run Your New Hydra Application
 
 <pre>
   script/server
 </pre>
 
-You should now be able to go to your application at http://localhost:3000
+You should now be able to go to your application at http://localhost:3000.
+
+Note that there are no objects pre-installed into Fedora (or Solr).
+
+h2. X. Develop your Hydra Application with ActiveFedora and OM
+
+See "HOW_TO_GET_STARTED":https://github.com/mediashelf/om/blob/master/HOW_TO_GET_STARTED.textile.
+
