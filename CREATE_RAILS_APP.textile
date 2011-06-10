@@ -267,6 +267,9 @@ git commit -m "Adding hydra-jetty submodule"
 
 h4. (3) Run Jetty
 
+_Stop any copies of jetty (or anything else using port 8983) before running this command._
+(Note that java 1.6 must be invoked by the "java" command or Fedora won't work.)
+
 The following will copy Solr and Fedora configuration files over to jetty in addition to starting it:
 
 <pre>

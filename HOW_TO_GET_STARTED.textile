@@ -1,12 +1,11 @@
-h1. Getting Started Building your own Hydra Head
+h1. Getting Started Building Your Own Hydra Application
 
 
 *!!! This is a WORK IN PROGRESS !!!*
 
-h2. What you will be able to do at the end of this
+h3. What you will learn form this document:
 
-
-Set up a Hydra Head ( a rails app that uses the hydra-head plugin ) and run it
+Set up a Hydra application (a rails app that uses the hydra-head plugin) and run it
 Define a new Content Type called JournalArticle
 # Define the ActiveFedora Model for JournalArticles
 # Index JournalArticles into solr
@@ -14,18 +13,19 @@ Define a new Content Type called JournalArticle
 # Define JournalArticles “show” view
 # Define JournalArticles “edit” view 
 
-h2. Set up a Hydra Head
-
+h2. Set up a Hydra Application
 
 For the purposes of this tutorial, we have set up a preconfigured rails app that you can download from github.
 
 !!! link to download the preconfigured rails app
 
+For now, see "CREATE_RAILS_APP":https://github.com/projecthydra/hydra-head/blob/master/CREATE_RAILS_APP.textile.
+
 h3. Starting the App out of the Box
 
 h4. (1) Migrate the development databases.
 
-From the <b><i>hydra-plugin_test_host</i> directory</b>:
+From the rails application root directory:
 
 <pre>
   rake db:migrate
@@ -50,8 +50,6 @@ h4. (2.5) Import some Sample Content (other than fixtures??)
 
 h4. (3) Start the Rails Application
 
-From the <b><i>hydra-plugin_test_host</i> directory</b>:
-
 <pre>
   ./script/server
 </pre>  
@@ -74,9 +72,14 @@ h3. Exploring what comes out of the box
 * change the permissions on the new article, making it visible to the public (before setting permissions, prove that you can’t see it when logged out, then change permissions, log out again & prove that it’s visible)
 
 
-h2. Making local changes to your Hydra Head
+h2. Making local changes to your Hydra Application
 
-In order to have a clean upgrade path....
+In order to make it easy to get new functionality added to the hydra stack (see "README":https://github.com/projecthydra/hydra-head/blob/master/README.textile), while retaining your localizations, your local code should be set up to override the upstream Hydra stack code.
+
+Luckily, rails engines has made this easy.  
+
+1.  always write tests for your local modifications
+2.  always change code at the app level, and never change anything in vendor/plugins.
 
 h3.  tests tests tests
 
@@ -89,9 +92,9 @@ We STRONGLY recommend that you write tests for every local change you make.  Thi
 
 h3. Easy changes for practice.
 
-h5. Overriding the helper
+h3. Overriding the helper
 
-h6. (1) Write the test.
+h4. (1) Write the test.
 
 The application name is set in app/helpers/application_helper.rb.  So we will have a spec for the application_helper file.
 
@@ -124,7 +127,7 @@ Add a test for checking the application name might be inserted like so:
 
 When you run this spec, the spec should run, but this test should fail (because you haven't changed anything yet.)
 
-h6. (2) Change the code
+h4. (2) Change the code
 
 Now you need to change the local app:
 
@@ -155,13 +158,13 @@ Now when you run the spec, the test should pass.
 
 
 
-h5. Changing the Home Text
+h3. Changing the Home Text
 
-h6. (1) Write the test
+h4. (1) Write the test
 
 (a feature?)
 
-h6. (2) Change the code
+h4. (2) Change the code
 
 
 h2. The new Content Type: JournalArticle
@@ -187,21 +190,21 @@ Other metadata fields are more specifically relevant to journal articles, but th
 
 In addition to the MODS metadata, JournalArticle objects will use Hydra Rights Metadata to track information about licenses, rights, and which people/groups should be able to discover, view, and/or edit each Journal Article.
 
-h3. Define the ActiveFedora Model for JournalArticles
+h2. Define the ActiveFedora Model for JournalArticles
 
 The first thing to do when adding a new content type is to create the ActiveFedora Model.  This model is a Ruby class that uses ActiveFedora to tell the application the structure of your content and its metadata.
 
 The model we create can be used in any application with ActiveFedora and OM (Opinionated Metadata), not just in a Hydra Head.  For example, ActiveFedora models can be used in batch scripts, command line utilities, and robots that perform automated actions on your fedora objects based on information and behaviors stored in their ActiveFedora models.
 
-h5. Where to find the full tutorial on defining ActiveFedora Models
+h4. Where to find the full tutorial on defining ActiveFedora Models
 
 This tutorial will only cover the very basics of defining an ActiveFedora Model and defining OM terminologies for its XML datastreams.  For a complete introduction to those topics, see the  "ActiveFedora Console Tour":http://hudson.projecthydra.org/job/active_fedora/Documentation/file.CONSOLE_GETTING_STARTED.html and the tutorials included in the "OM documentation":http://hudson.projecthydra.org/job/om/Documentation/.
 
-h4. Tests to Define Expected Behaviors
+h3. Tests to Define Expected Behaviors
 
 (<b>MUST HAVE EXAMPLES HERE PERTINENT TO EXPECTED JOURNAL ARTICLE BEHAVIORS</b>)
 
-h5. Run the tests
+h4. Run the tests
 
 The test code should execute but the tests should fail because we haven't written the code yet.
 
@@ -211,7 +214,7 @@ A Fedora object is made up of any number of _datastreams_.  Datastreams can have
 
 For our JournalArticle model, we're particularly interested datastreams with XML content because a JournalArticle object is basically a container for XML metadata.  The actual content of the Article (PDF,text,whatever.) will be stored in a separate Fedora object, a _primitive_, with the RDF isPartOf relationship connecting the JournalArticle (primarily metadata) to its content (any number of primitives with files in them).  For more information about datastreams, primitives, and where the actual content of an object lives, see the Reference links at the end of this tutorial.
 
-h4. descMetadata -- the Descriptive Metadata Datastream
+h3. descMetadata -- the Descriptive Metadata Datastream
 
 Our MODS xml will go into a datastream with the datastream id of _descMetadata_.  Technically, we could give it any name we want but the Hydra community has come up with some conventions to make things simpler.  One of these conventions is to always put descriptive metadata in a datastream called descMetadata.
 
@@ -256,11 +259,11 @@ Example of the MODS XML we will be creating:
 
 The constraints of a metadata schema sometimes force us to put information into structures that don't map directly to the vocabulary that we use when talking about that information.  The "title" has ended up in a spot that you might call the "mods titleInfo title" and the "start page" has ended up in a spot that you might call the <pre>"mods host-relatedItem part pages-extent start"</pre> or <pre>"//mods/relatedItem[@type=host]/part/extent[@unit='pages']/start"</pre> ... quite the mouthful, isn't it?  This is where OM comes in.  OM lets us define a Terminology that will allow us to access values in the xml based on our natural vocabulary (title, start page, etc.) while also allowing us to access those same values using the more cumbersome XML-speak when necessary.
 
-h5. WRITE TESTS HERE!  (for the expected behaviors of a descMetadata datastream model?)
+h4. WRITE TESTS HERE!  (for the expected behaviors of a descMetadata datastream model?)
 
 specs to test model?  features?
 
-h5. Coding the descMetadata Datastream model
+h4. Coding the descMetadata Datastream model
 
 Here's how we define the datastream class for the descMetadata.  Notice that we use set_terminology which defines its OM Terminology.  
 
@@ -321,7 +324,7 @@ This will allow you to access the metadata values like this when dealing with a 
 
 <b>(CAN WE DO TESTING NOW?  OR DO WE NEED TO DEAL WITH THE ENTIRE FEDORA OBJECT BEFORE TESTING?)</b>
 
-h4. rightsMetadata -- The Hydra Rights Metadata Datastream
+h3. rightsMetadata -- The Hydra Rights Metadata Datastream
 
 The hydra-head plugin provides a class definition for the rightsMetadata datastream, so you won't have to define the OM Terminology yourself.  The definition is in the hydra-head plugin code in "lib/hydra/rights_metadata.rb":https://github.com/projecthydra/hydra-head/blob/master/lib/hydra/rights_metadata.rb.
 
@@ -366,11 +369,11 @@ Here's an example of what rightsMetadata XML looks like:
   </rightsMetadata>
 </pre>
 
-h4. RELS-EXT & DC Datastreams (Fedora defaults)
+h3. RELS-EXT & DC Datastreams (Fedora defaults)
 
 There are two special datastreams that Fedora creates for you -- the DC datastream and the RELS-EXT datastream.  We don't really use the DC datastream.  It contains simple Dublin Core metadata that mainly exists for Fedora's internal use.  The RELS-EXT datastream contains RDF representing the relationships between the objects in a Fedora repository.  ActiveFedora and Hydra both use these RDF relationships in a number of ways.  For more information about how to work with RDF relationships in ActiveFedora, see the ActiveFedora documentation links at the end of this tutorial.
 
-h3. Defining the Model and adding the Datastreams to it
+h2. Defining the Model and adding the Datastreams to it
 
 <b><i>Create a file in app/models called journal_article.rb</i></b> and put these lines into it:
 
@@ -385,13 +388,13 @@ end
 <b>(CAN WE DO TESTING NOW?)</b>
 
 
-h3. Test Your Work
+h2. Test Your Work
 
 <b>THE TESTS WE WROTE ABOVE SHOULD PASS NOW ...</b>
 
 (specs?  if features ... jetty must be running?)
 
-h3. Loading your new Model in the Rails App
+h2. Loading your new Model in the Rails App
 
 If you have put the new files you've created into app/models and/or the lib directory, then they will be automatically loaded by the application when you run it using script/server or script/console.
 
