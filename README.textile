@@ -2,40 +2,40 @@ h1. Hydra-Head
 
 Hydra-Head is a Rails Engines plugin containing the core code for a Hydra application.  The full hydra stack includes the following:
 
-- "Blacklight":http://projectblacklight.org/  (a Rails Engines plugin) for the User Interface
+- "Blacklight":http://projectblacklight.org/  (a rails engines plugin) for the User Interface
 - "Solr":http://lucene.apache.org/solr/ (a java application, also ported to other languages) for the Search Engine 
 - "ActiveFedora":https://github.com/mediashelf/active_fedora (a ruby gem) to let the rails application talk to fedora 
 - "OM (Opinionated Metadata)":https://github.com/mediashelf/om (a ruby gem) to streamline the metadata configuration
-- "Solrizer":https://github.com/projecthydra/solrizer (a ruby gem) to write Fedora content to the Solr index
-- "SolrizerFedora":https://github.com/projecthydra/solrizer-fedora (a ruby gem) for something.
-- HydraHead (a Rails Engines plugin) to glue it all together 
+- "Solrizer":https://github.com/projecthydra/solrizer (a ruby gem) to write content to the Solr index
+- "SolrizerFedora":https://github.com/projecthydra/solrizer-fedora (a ruby gem) to write Fedora content to the Solr index.
+- HydraHead (a rails engines plugin) to glue it all together 
 
-For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":https://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile
+For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":https://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile.
 
 This is (currently) a Ruby on Rails 2 Engines Plugin.  It will soon become a Rails 3 Plugin, which will be distributed as a gem.
 
 h2. Installation/Setup
 
-h3. Installing the Test Host (for testing/demo)
+h3. How To Create a Hydra Rails Application using the Hydra-Head plugin
 
-See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile
+See "CREATE_RAILS_APP":https://github.com/projecthydra/hydra-head/blob/master/CREATE_RAILS_APP.textile.
 
-h3. Installing the plugin into a Rails App
+h2. How To Get Started Developing your Hydra Application with ActiveFedora and OM
 
-See "README_INSTALL_BLACKLIGHT":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_BLACKLIGHT.textile
+See "HOW_TO_GET_STARTED":https://github.com/mediashelf/om/blob/master/HOW_TO_GET_STARTED.textile.
 
-h2. Testing
+h3. How To Set Up the Hydra-Head Plugin as a Project Containing a Rails Application for Testing or Demo
 
-See "README_TESTING_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
+See "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile.
 
-h2. Getting started with ActiveFedora and OM
+h2. How To Test the plugin code
 
-See "GETTING STARTED":https://github.com/mediashelf/om/blob/master/GETTING_STARTED.textile
+See "TESTING_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/TESTING_PLUGIN.textile.
 
 h2. Acknowledgements
 
 h3. Design & Strategic Contributions
 
-The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia and University of Hull.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, and Chris Awre.  
+The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia, and University of Hull.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, and Chris Awre.  
 
 Thorny Staples from Fedora Commons & DuraSpace deserves special thanks for putting all of these people in the same room together.

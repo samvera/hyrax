@@ -1,20 +1,40 @@
-h2. Installing Blacklight and its pre-requisites
+h1. Creating a Rails Application with the Hydra-Head Plugin.
 
-h3. Install system pre-requisites
+This document describes how to create a Hydra rails application.
 
-Ensure you have git, ruby version manager (http://rvm.beginrescueend.com/), java 1.6, and sqlite3 installed
+It does NOT describe how to get the hydra-head plugin code with the pre-configured rails application for testing:  for that, see "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile.
 
-h3. Create a gem set and install some gems to start with
+h4. (0) Install Prerequisites.
+
+* ruby v 1.8.7 or higher
+* rubygems
+* these ruby gems:
+** bundler
+** rails version < 3.
+* git
+* java 1.6 or higher
+* sqlite3
+
+* "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager)
+** We strongly suggest using  as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+** If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instruction assume the use of RVM.
 
 <pre>
-rvm install ree-1.8.7
+  rvm install ree-1.8.7
+</pre>
+
+h2. Install a Blacklight Application
+
+h4. (1) Create the RVM gem set and install pre-requisite gems.
+
+<pre>
 rvm gemset create hydra-head
 rvm use ree-1.8.7@hydra-head
 gem install -v=2.3.11 rails
 gem install sqlite3
 </pre> 
 
-h3. Run the Blacklight installation script
+h4. (2) Run the Blacklight installation script.
 
 <pre>
 rails ./my-hydra-head -m http://projectblacklight.org/templates/2-8-0.rb 
@@ -26,30 +46,37 @@ run migrations? yes
 
 install solr? no
 
-h3. Put your new hydra-head into version control
+h4. (3) Put your new hydra-head into version control.
+
+Set up git repository.
 
 <pre>
 cd my-hydra-head
 git init .
-git add *
-git commit -m "first commit"
+</pre>
+
+Create a .gitignore file.  A good model is at  "https://github.com/projecthydra/hydra-head/blob/master/.gitignore":https://github.com/projecthydra/hydra-head/blob/master/.gitignore
+
+Do the initial commit.
+<pre>
+git add .
+git commit -m "installed blacklight via its template installer"
 </pre>
 
 
-Update .gitignore  !! before you commit the new blacklight files
+h3. (4) Add blacklight plugin code directly into your git repository.
 
-h3. Add blacklight code into your git repository (rather than as a submodule)
+The blacklight template installer has the blacklight plugin code included as a submodule.  We want it to be added in its entirety into our local git repository.
 
 <pre>
-mkdir vendor/plugins/blacklight-temp
-  
-cp -R vendor/plugins/blacklight/* vendor/plugins/blacklight-temp/
-rm -rf vendor/plugins/blacklight
-  
+cp -R vendor/plugins/blacklight/ vendor/plugins/blacklight-temp/
+
+rm -rf vendor/plugins/blacklight  
 git rm vendor/plugins/blacklight
+
 mv vendor/plugins/blacklight-temp vendor/plugins/blacklight
 git add vendor/plugins/blacklight
-git commit -a -m "Add blacklight code into your git repository (rather than as a submodule)"
+git commit -m "blacklight plugin code added to git repository (no longer a submodule)"
 </pre>
 
 h2. Apply hydra-head files
@@ -178,7 +205,7 @@ git commit config/ -m "Update config/environment.rb to load plugins in the right
 
 h2. If you plan to use this as a test host (i.e., an app for running the automated tests)
 
-Stop here and go read README_INSTALL_TEST_HOST
+Stop here and go to "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile.
 
 h2. Add Jetty
 
@@ -199,7 +226,7 @@ cp ../hydra-head/.rvmrc .
 
 h2. Install the hydra-head plugin
 
-There are many ways to get the hydra-head code into vendor/plugins.  One way is to use script/plugin install
+There are many ways to get the hydra-head code into vendor/plugins.  One way is to use script/plugin install:
 
 <pre>
 script/plugin install git://github.com/projecthydra/hydra-head.git 

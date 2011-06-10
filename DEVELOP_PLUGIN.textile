@@ -1,6 +1,12 @@
-h2. Installing the Test Host Applicaton
+h1. Setting Up the Hydra-Head Plugin as a Project Containing a Rails Application for Testing or Demo
 
-h3. Prerequisites
+This document describes how to set up a project for the hydra-head plugin code itself - primarily intended for the hydra-head plugin developers.  It will contain a pre-configured rails application for testing the hydra-head plugin.
+
+It does NOT describe how to set up a rails application that uses the hydra-head plugin.  For that, see "CREATE_RAILS_APP":https://github.com/projecthydra/hydra-head/blob/master/CREATE_RAILS_APP.textile.
+
+h2. Install the Hydra-Plugin and its Contained Test Host Application
+
+h4. (0) Install Prerequisites.
 
 * ruby v 1.8.7 or higher
 * rubygems
@@ -9,16 +15,17 @@ h3. Prerequisites
 ** rails version < 3.
 * git
 * java 1.6 or higher
+* sqlite3
 
-h4. (0) We strongly suggest using "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager) as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
-
-If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instruction assume the use of RVM.
+* "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager)
+** We strongly suggest using  as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+** If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instruction assume the use of RVM.
 
 <pre>
   rvm install ree-1.8.7
 </pre>
 
-h4. (1) Get the hydra-head engines plugin from github.
+h4. (1) Get the hydra-head engines plugin from github and include the testing rails application.
 
 <pre>
 git clone --recursive git@github.com:projecthydra/hydra-head.git
@@ -82,9 +89,9 @@ Now cd back up to the root of the <b><i>hydra-head plugin</i> directory</b>:
 
 h3. Now you're ready to run the tests
 
-If you want to run the tests, see "README_TESTING_PLUGIN":/projecthydra/hydra-head/blob/master/README_TESTING_PLUGIN.textile
+If you want to run the tests, see "TESTING_PLUGIN":/projecthydra/hydra-head/blob/master/TESTING_PLUGIN.textile
 
-h2. Running the App
+h2. Running the Testing Application
 
 The test host app is a regular Rails app with Blacklight installed.  It's configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
 

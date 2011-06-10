@@ -1,8 +1,8 @@
 h1. Testing the hydra-head Plugin
 
-h2. I. Install the Test Host 
+h2. I. Install the Testing Rails Application 
 
-In order to run the tests, you need to have a test rails app installed in the  hydra-plugin_test_host.  See "README_INSTALL_TEST_HOST":https://github.com/projecthydra/hydra-head/blob/master/README_INSTALL_TEST_HOST.textile for instructions on setting this up.
+In order to run the tests, you need to have a properly configured rails app installed in the hydra-plugin_test_host directory.  See "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile for instructions on setting this up.
 
 h2. II. Running the full Continuous Integration build
 
