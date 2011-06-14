@@ -191,7 +191,9 @@ script/plugin install  git://github.com/mediashelf/fluid-infusion.git
 
 h3. (5) blacklight plugin: patch CatalogController
 
-Note: the long-term fix to this will be to implement before_render callbacks in CatalogController.show and refactor hydra-head to use those callbacks instead of aliasing the show method itself.
+Note: (this may no longer be necessary 2011-06-14)
+
+(or maybe: the long-term fix to this will be to implement before_render callbacks in CatalogController.show and refactor hydra-head to use those callbacks instead of aliasing the show method itself.)
 
 Blacklight's CatalogController.show method breaks the hydra-head overrides.  To fix this, comment out lines 47-51 in vendor/plugins/blacklight/app/controllers/catalog-controller.rb:
 
