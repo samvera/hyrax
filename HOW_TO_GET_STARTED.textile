@@ -15,11 +15,7 @@ Define a new Content Type called JournalArticle
 
 h2. Set up a Hydra Application
 
-For the purposes of this tutorial, we have set up a preconfigured rails app that you can download from github.
-
-!!! link to download the preconfigured rails app
-
-For now, see "CREATE_RAILS_APP":https://github.com/projecthydra/hydra-head/blob/master/CREATE_RAILS_APP.textile.
+See "CREATE_RAILS_APP":https://github.com/projecthydra/hydra-head/blob/master/CREATE_RAILS_APP.textile.
 
 h3. Starting the App out of the Box
 
