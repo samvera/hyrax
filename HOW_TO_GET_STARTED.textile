@@ -217,10 +217,19 @@ Since the application name is set in vendor/plugins/(blah)/app/helpers/applicati
   end
 </pre>
 
+First, change the require_plugin_dependency line to be hydra-head instead of blacklight:
+
+<pre>
+  require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
+  # Methods added to this helper will be available to all templates in the application.
+  module ApplicationHelper
+  end
+</pre>
+
 Code for changing the application name might be inserted like so:
 
 <pre>
-  require_plugin_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
+  require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
   # Methods added to this helper will be available to all templates in the application.
   module ApplicationHelper
 
