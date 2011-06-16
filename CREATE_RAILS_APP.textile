@@ -237,11 +237,11 @@ h4. (2) Commit the changes to git.
 git commit config/ -m "Update config/environment.rb to load plugins in the right order"
 </pre>
 
-h2. VII. Update Application's application_controller and application_helper to Use Hydra-Head
+h2. VII. Update Application's application_controller and application_helper to Use Hydra-Head Plugin
 
 h4. (1) Edit app/controllers/application_controller.rb
 
-Change the first line to require the hydra-head controller rather than the blacklight controller:
+Change the first line to require the hydra-head plugin's controller rather than blacklight's:
 
 <pre>
 require_dependency( 'vendor/plugins/blacklight/app/controllers/application_controller.rb')
@@ -255,7 +255,7 @@ require_dependency( 'vendor/plugins/hydra-head/app/controllers/application_contr
 
 h4. (2) Edit app/helpers/application_helper.rb
 
-Change the first line to require the hydra-head helper rather than the blacklight helper:
+Change the first line to require the hydra-head plugin's helper rather than blacklight's:
 
 <pre>
 require 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
@@ -270,7 +270,7 @@ require 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
 h4. (3) Commit the changes to git.
 
 <pre>
-git commit app/ -m "Update application_controller and application_helper to require hydra-head, not blacklight"
+git commit app/ -m "Update application_controller and application_helper to require hydra-head plugin, not blacklight"
 </pre>
 
 
