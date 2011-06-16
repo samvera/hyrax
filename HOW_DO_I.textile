@@ -1,0 +1,72 @@
+h1. How Do I ...
+
+This is a list of questions a Hydra implementer might ask, and where to find the appropriate documentation.
+
+h4. Determine How (ActiveFedora, OM, Solrizer, Solrizer-Fedora, Blacklight ...) fits into the Hydra stack and what it is responsible for?
+
+h4. Change What is Displayed on Home Page?
+
+h4. Change What is Displayed in Search Results?
+
+h4. Change the Header Content?
+
+h4. Change What is Displayed in Show View for an Object?
+
+h4. Change What is Displayed in Edit View for an Object?
+
+h4. Set Up Permissions for Reading / Editing / Creating / Deleting Objects?
+
+h4. Set Up User Accounts and How Do They Work?
+
+h4. Understand the Rights Metadata?
+
+h4. Develop My Local Application So I Can Easily Pull Updates To Hydra-Head Plugin?
+
+- Blacklight Plugin??  (answer: bad idea?  wait for hh to go to new blacklight release?)
+
+h4. See What the Fixture Users Are and Log In as Those Users?
+
+h4. Make Searches Return What I Want? 
+
+h4. Create A New Object Type
+
+- Active Fedora modelling
+
+h4. Create An Object Type to Match Existing Fedora Objects?
+
+- get foxml (?), then see "Create a New Object"
+
+h4. Get Facets to Display on Home Page and in Search Results?
+
+h4. Set up a Hydra Rails Application?
+
+h4. Determine how the code decides what views will be used for display?
+
+h4. Configure What Will Be Put Into Solr?
+
+given an ActiveFedora model ...
+- OM will let you do things like xxx;  see these docs:
+- to do more complex things, see these docs:
+- Solr field properties
+- what Solr will get by default for any ActiveFedora object ...
+- what are 
+- What Is Required in the Solr Schema?  (e.g. format, id, _t, _facet, _display _sort, ...)
+
+For More about Solr:  
+
+h4. Index the attribute of an XML element in Solr?
+
+h4. Configure Solrizer, or Don't I Ever Have To?
+
+h4. Make My Hydra Application Behave Differently From The Defaults
+
+blah blah rails engines blah overrides blah see these documents:
+
+h4. Find Out More About the Constructs Used in the Fixture Objects?
+
+MODs
+Fedora DC
+Fedora RELS-EXT
+other?
+
+h4. Experiment at the rails console?
