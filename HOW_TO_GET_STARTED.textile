@@ -106,7 +106,7 @@ h3. Easy Changes for Practice.
 
 h3. Changing the Home Text (also Demonstrates Writing a Feature)
 
-The home text is set in the view partial (vendor/plugins/blah/)app/views/catalog/_home_text.html.erb
+The home text is set in the view partial (vendor/plugins/hydra-head/)app/views/catalog/_home_text.html.erb
 
 Because it is set in a view, a cucumber feature is the most appropriate test (rather than an rspec test).
 
@@ -141,7 +141,7 @@ h4. (3) Change the code
 
 We want to override the text on the home page locally, keeping our local changes separate from upstream changes to the plugins' code.
 
-Since the home text is set in vendor/plugins/(blah)/app/views/catalog/_home_text.html.erb, we will override that code by creating a local app/views/catalog/_home_text.html.erb file.  
+Since the home text is set in vendor/plugins/hydra-head/app/views/catalog/_home_text.html.erb, we will override that code by creating a local app/views/catalog/_home_text.html.erb file.  
 
 Our app/views/catalog/_home_text.html.erb might look like this
 
@@ -171,7 +171,7 @@ We want to change the application name (what displays as the html page's title).
 
 h4. (1) Write the test.
 
-Since the application name is set in (vendor/plugins/blah/)app/helpers/application_helper.rb, we need a spec to run against the application_helper file.
+Since the application name is set in (vendor/plugins/hydra-head/)app/helpers/application_helper.rb, we need a spec to run against the application_helper file.
 
 Create a file "spec/helpers/application_helper_spec.rb" containing this:
 
@@ -208,16 +208,7 @@ h4. (3) Change the code
 
 We want to override the application name locally, keeping our local changes separate from upstream changes to the plugins' code.
 
-Since the application name is set in vendor/plugins/(blah)/app/helpers/application_helper.rb, we will override that code by putting a method of the same name in app/helpers/application_helper.rb.  The current app/helpers/application_helper.rb file may look like this:
-
-<pre>
-  require_plugin_dependency 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
-  # Methods added to this helper will be available to all templates in the application.
-  module ApplicationHelper
-  end
-</pre>
-
-First, change the require_plugin_dependency line to be hydra-head instead of blacklight:
+Since the application name is set in vendor/plugins/hydra-head/app/helpers/application_helper.rb, we will override that code by putting a method of the same name in app/helpers/application_helper.rb.  The current app/helpers/application_helper.rb file may look like this:
 
 <pre>
   require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
