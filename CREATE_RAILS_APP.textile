@@ -91,6 +91,14 @@ cp -R ../hydra-head/config/* config/
 mv routes-copy.rb config/routes.rb 
 </pre>
 
+Copy the fedora and solr config files into the application. This is where you will keep your application-specific copies of solr and fedora configuration. When running the app, you need to copy these files into your copies of Fedora and Solr. When you're using the copy of hydra-jetty in the"jetty" directory, running rake hydra:jetty:load will copy them into the jetty directory for you.
+
+<pre>
+cp -R ../hydra-head/solr ./
+cp -R ../hydra-head/fedora ./
+</pre>
+
+
 When you run @git status@ you should see something like this: 
 
 <pre>
