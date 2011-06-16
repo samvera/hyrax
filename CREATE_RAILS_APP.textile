@@ -25,7 +25,7 @@ h3. I. Install Prerequisites
 
 h2. II. Install a Blacklight Application
 
-This process begins with the installation of a rails application.
+This process begins with the installation of the Blacklight ("http://projectblacklight.org":http://projectblacklight.org) rails application.
 
 h4. (1) Create the RVM Gemset and Install Pre-Requisite Gems.
 
@@ -237,11 +237,48 @@ h4. (2) Commit the changes to git.
 git commit config/ -m "Update config/environment.rb to load plugins in the right order"
 </pre>
 
-h2. VII. If You Plan to Use This Rails App For Running the Automated Tests
+h2. VII. Update Application's application_controller and application_helper to Use Hydra-Head
+
+h4. (1) Edit app/controllers/application_controller.rb
+
+Change the first line to require the hydra-head controller rather than the blacklight controller:
+
+<pre>
+require_dependency( 'vendor/plugins/blacklight/app/controllers/application_controller.rb')
+</pre>
+
+becomes
+
+<pre>
+require_dependency( 'vendor/plugins/hydra-head/app/controllers/application_controller.rb')
+</pre>
+
+h4. (2) Edit app/helpers/application_helper.rb
+
+Change the first line to require the hydra-head helper rather than the blacklight helper:
+
+<pre>
+require 'vendor/plugins/blacklight/app/helpers/application_helper.rb'
+</pre>
+
+becomes
+
+<pre>
+require 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
+</pre>
+
+h4. (3) Commit the changes to git.
+
+<pre>
+git commit app/ -m "Update application_controller and application_helper to require hydra-head, not blacklight"
+</pre>
+
+
+h2. VIII. If You Plan to Use This Rails App For Running the Automated Tests
 
 Stop here and go to "DEVELOP_PLUGIN":https://github.com/projecthydra/hydra-head/blob/master/DEVELOP_PLUGIN.textile.
 
-h2. VIII. Run the Database Migrations
+h2. IX. Run the Database Migrations
 
 The following will run the migrations for the app and for its plugins:
 
@@ -249,7 +286,7 @@ The following will run the migrations for the app and for its plugins:
 rake db:migrate:all
 </pre>
 
-h2. VIII. Spin up Solr and Fedora
+h2. X. Spin up Solr and Fedora
 
 The easiest way is to put a copy of hydra-jetty into the jetty directory within your app. This provides copies of solr and fedora that you can use for testing and development purposes.
 
@@ -278,7 +315,7 @@ The following will copy Solr and Fedora configuration files over to jetty in add
 rake hydra:jetty:start
 </pre>
 
-h2. IX. Run Your New Hydra Application
+h2. XI. Run Your New Hydra Application
 
 <pre>
   script/server
@@ -288,7 +325,7 @@ You should now be able to go to your application at http://localhost:3000.
 
 Note that there are no objects pre-installed into Fedora (or Solr).
 
-h2. X. Develop your Hydra Application with ActiveFedora and OM
+h2. XII. Develop your Hydra Application with ActiveFedora and OM
 
 See "HOW_TO_GET_STARTED":https://github.com/mediashelf/om/blob/master/HOW_TO_GET_STARTED.textile.
 
