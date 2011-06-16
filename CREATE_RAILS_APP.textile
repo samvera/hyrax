@@ -109,7 +109,6 @@ When you run @git status@ you should see something like this:
 # Untracked files:
 #	         Gemfile
 #	         config/fedora.yml
-#	         config/hydra_types.yml
 #	         config/initializers/fedora_config.rb
 #	         config/initializers/hydra_config.rb
 #	         config/role_map_cucumber.yml
