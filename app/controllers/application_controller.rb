@@ -49,7 +49,7 @@ class ApplicationController
   end
 
   def set_x_ua_compat
-    # Always force latest IE rendering engine (even in intranet) & Chrome Frame
+    # Always force latest IE rendering engine & Chrome Frame through header information.
     response.headers["X-UA-Compatible"] = "IE=edge,chrome=1"
   end
 end
