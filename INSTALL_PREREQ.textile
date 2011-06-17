@@ -1,0 +1,19 @@
+h1. Hydra Installation Prerequisites
+
+* "ruby":http://www.ruby-lang.org/en/    NOTE: version 1.8.7 or higher
+* "rubygems":http://rubygems.org/pages/download
+* these ruby gems:
+** "bundler":http://gembundler.com/
+** "rails":http://rubyonrails.org/    NOTE: version < 3.
+* "git":http://git-scm.com/
+* "java":http://www.java.com/en/    NOTE:  version 1.6 or higher
+* "sqlite3":http://www.sqlite.org/
+
+* "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager)
+** We strongly suggest using RVM as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
+** If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instructions assume the use of RVM.
+
+<pre>
+  rvm install ree-1.8.7
+</pre>
+
