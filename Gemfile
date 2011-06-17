@@ -16,7 +16,7 @@ gem 'httparty'
 gem 'jettywrapper'
 gem 'json_pure', '>1.4.3'
 gem 'launchy'
-gem 'linecache'
+gem 'linecache', '0.43' # 0.43 predates the bug described at http://makandra.com/notes/1290-no-such-file-to-load-require_relative-missingsourcefile-after-installing-ruby-debug
 gem 'mime-types'
 gem 'multipart-post'
 # gem 'mysql', '2.8.1'

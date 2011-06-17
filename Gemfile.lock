@@ -169,7 +169,7 @@ DEPENDENCIES
   jettywrapper
   json_pure (> 1.4.3)
   launchy
-  linecache
+  linecache (= 0.43)
   marc (= 0.3.0)
   markup_validity
   mime-types
