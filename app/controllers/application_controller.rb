@@ -15,7 +15,7 @@ class ApplicationController
   helper :generic_content_objects, :personalization #, :hydrangea_datasets
   
   # helper_method [:request_is_for_user_resource?]#, :user_logged_in?]
-  before_filter [:store_bounce]
+  before_filter [:store_bounce, :set_x_ua_compat]
   
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -48,4 +48,8 @@ class ApplicationController
     session[:bounce]=params[:bounce]
   end
 
+  def set_x_ua_compat
+    # Always force latest IE rendering engine (even in intranet) & Chrome Frame
+    response.headers["X-UA-Compatible"] = "IE=edge,chrome=1"
+  end
 end
