@@ -15,5 +15,3 @@ production:
     url: http://your.production.server:8080/solr 
 cucumber:
   <<: *TEST
-cucumber:
-  <<: *TEST
