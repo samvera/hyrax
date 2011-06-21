@@ -153,7 +153,7 @@ Pulled from vendor/plugins/dor_objects/app/views/dor_object/_edit.html.erb
       format.html { save_current_search_params }
       format.rss  { render :layout => false }
     end
-    rescue RSolr::RequestError
+    rescue RSolr::Error::Http
       logger.error("Unparseable search error: #{params.inspect}" ) 
       flash[:notice] = "Sorry, I don't understand your search." 
       redirect_to :action => 'index', :q => nil , :f => nil
