@@ -1,11 +1,9 @@
-require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'bundler'
+Bundler::GemHelper.install_tasks
 
-$: << "lib"
+Rake::TestTask.new do |test|
+  test.pattern = 'test/**/*_test.rb'
+  test.libs << 'test'
+end
 
-# load rake tasks in lib/tasks
-Dir.glob('lib/tasks/*.rake').each { |r| import r }
-
-#desc 'Default: run hydra-head specs.'
-#task :default => :hyhead:rspec
