@@ -1,0 +1,12 @@
+
+<% content_for :content do %>
+
+  <%= stylesheet_link_tag("hydra-head") %>
+  
+  <div class="red_border">
+    <%= yield %>
+  </div>
+
+<% end -%>
+
+<%= render :file => 'layouts/application' %>
