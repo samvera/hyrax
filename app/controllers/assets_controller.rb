@@ -85,6 +85,9 @@ class AssetsController < ApplicationController
         apply_depositor_metadata(@asset)
         set_collection_type(@asset, params[:content_type])
         @asset.save
+        model_display_name = af_model.to_s.camelize.scan(/[A-Z][^A-Z]*/).join(" ")
+        msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
+        flash[:notice]= msg
       end
       redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid)
     end
