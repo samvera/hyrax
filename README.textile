@@ -22,7 +22,7 @@ See "CREATE_RAILS_APP":https://github.com/projecthydra/hydra-head/blob/master/CR
 
 h2. How To Get Started Developing your Hydra Application with ActiveFedora and OM
 
-See "HOW_TO_GET_STARTED":https://github.com/mediashelf/om/blob/master/HOW_TO_GET_STARTED.textile.
+See "HOW_TO_GET_STARTED":https://github.com/projecthydra/hydra-head/blob/master/HOW_TO_GET_STARTED.textile.
 
 h3. How To Set Up the Hydra-Head Plugin as a Project Containing a Rails Application for Testing or Demo
 
