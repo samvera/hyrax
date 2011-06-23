@@ -359,8 +359,36 @@ In reality, when you want to re-index an object in Solr, you should use Solrizer
 
 Solrizer is able to figure out how to index XML based on the OM Terminologies you've defined.  It defaults to indexing nearly everything in generic ways, but there are many ways to customize this behavior. See the "Solrizer Documentation":http://hudson.projecthydra.org/job/solrizer/Documentation/ for more information about how it works.
 
+h2. Basic Access Controls
+
+The access controls in the hydra-head plugin work on the assumption that you will put your access controls information into a datastream called rightsMetadata and then index the values from that datastream into Solr.  The plugin provides all the tools that you need in order to do this.  Most of the work is handled for you by this line in your model:
+
+<pre>
+  has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
+</pre>
+
+The plugin defaults to *denying access* when the permissions are unclear.  This means that in cases where there is no rightsMetadata datastream or the information in the datastream is unclear or incomplete, the Hydra head will act like the object does not exist.  _The object will not show up in search results and you will not be able to view it._
+
+To give yourself permission to view and edit an object, you need to set those permissions.  For example, if we want the object to show up in search results for everyone but we only want a user called archivist1 to edit it, we can do the following:
+
+<pre>
+  article = JournalArticle.load_instance("changeme:30")
+  article.permissions({"group"=>"public"}, "read")
+  article.permissions({"person"=>"archivist1"}, "edit")
+  article.save
+</pre>
+
+hydra-head provides you with tools to expose a permissions editor to your end-users.  This allows them to control who can discover/read/download/edit the objects they create.
+
+h2. Logging into the Hydra Head and creating a User Account
+
+Blacklight & the hydra-head plugin provide a basic user authentication that is meant to be replaced by code that connects to your institutional authentication system like LDAP or Shibboleth.  While setting up this sample hydra-head, you need to create user accounts in that system.  To do this, run the application, visit http://localhost:3000 and click on "login" then click on "create an account" below the login form.  
+
+In thes sample above, we gave "edit" permissions to a user called "archivist1", so create an account with that login id.  Choose whatever email & password you want.  Now you can log in as that user when you want to test features that require you to be logged into the hydra head.
+
 h2. Defining Custom Views
 
+Now that you've created a couple objects and indexed them, you can view them in the application.  Remember, _objects will not show up in search results unless the permissions are set properly in rightsMetadata_.
 
 h3. Default Views
 
@@ -369,6 +397,7 @@ JournalArticles will show up with the default views until you create custom view
 
 search results, facets
 detail & edit views
+
 h3. Add a link to create an Article
 
 
@@ -376,6 +405,7 @@ Overriding the user_util_links partial
 
 h3. Customize how JournalArticles appear in search results
 
+h3. Change the Search Result Headings
 
 h3. Define JournalArticles “show” view
 
