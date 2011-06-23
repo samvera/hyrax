@@ -299,6 +299,8 @@ h2. Defining the Model and adding the Datastreams to it
 <pre>
 # a Fedora object for the Journal Article hydra content type
 class JournalArticle < ActiveFedora::Base
+  include Hydra::ModelMethods
+  
   has_metadata :name => "descMetadata", :type=> JournalArticleModsDatastream
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
 end
@@ -390,6 +392,37 @@ h2. Defining Custom Views
 
 Now that you've created a couple objects and indexed them, you can view them in the application.  Remember, _objects will not show up in search results unless the permissions are set properly in rightsMetadata_.
 
+h3. Add a link to create an Article
+
+First, we need to add a link to the Hydra Head that lets you create Journal Articles.  To do this, you need to override the _add_asset_links view partial.  Here's the cucumber test for what you want:
+
+<pre>
+  Feature: Button to Add Articles
+    In order to create Journal Articles
+    As a person with submit permissions
+    I want to see a button for adding articles
+
+    Scenario: button to add articles on home page
+      Given I am logged in as "archivist1"
+      When I am on the home page
+      Then I should not see "Add a MODS Asset"
+      And I should see "Add an Article"
+</pre>
+
+hydra-head puts a list of "add asset" links into the user_util_links section of the page.  This list is defined in app/views/_add_asset_links.html.erb. By default, this list includes links for adding Images, MODS Assets and Generic Content.  We want it to have just one link -- create an Article.  To override the list, create a file at app/views/_add_asset_links.html.erb and put this into it:
+
+<pre>
+  <div id="select-item-box">
+    <ul id="select-item-list">
+      <li>
+        <%= link_to_create_asset 'Add an Article', 'journal_article' %>
+      </li>
+    </ul>
+  </div>
+</pre>
+
+Now start your application and visit http://localhost:3000
+
 h3. Default Views
 
 
@@ -397,11 +430,6 @@ JournalArticles will show up with the default views until you create custom view
 
 search results, facets
 detail & edit views
-
-h3. Add a link to create an Article
-
-
-Overriding the user_util_links partial
 
 h3. Customize how JournalArticles appear in search results
 
