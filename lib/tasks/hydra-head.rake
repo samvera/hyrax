@@ -15,7 +15,7 @@ namespace :hyhead do
       :jetty_port => 8983,
       :solr_home => File.expand_path(File.dirname(__FILE__) + '/../../jetty/solr'),
       :fedora_home => File.expand_path(File.dirname(__FILE__) + '/../../jetty/fedora/default'),
-      :startup_wait => 20
+      :startup_wait => 30
       }
     
     Rake::Task["hyhead:setup_test_host"].invoke
