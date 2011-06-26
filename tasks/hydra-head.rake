@@ -23,7 +23,7 @@ namespace :hyhead do
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
       system("rake hydra:fixtures:refresh environment=test")
-      Rake::Task["hyhead:clean_test_app"].invoke
+      Rake::Task["hyhead:test"].invoke
     end
     raise "test failures: #{error}" if error
   end
@@ -167,7 +167,8 @@ namespace :hyhead do
   task :set_test_host_path do
     TEST_HOST_PATH = "tmp/test_app"
   end
-
+  
+  desc "Creates a new test app and runs the cukes/specs from within it"
   task :clean_test_app => [:set_test_host_path] do
     puts "Cleaning out test app path"
     %x[rm -fr #{TEST_HOST_PATH}]
@@ -195,6 +196,8 @@ namespace :hyhead do
     
     puts "Executing bundle install --local"
     %[bundle install --local]
+    
+    %[rails g cucumber:install]
     
     puts "Running rspec tests"
     %[bundle exec hyhead:rspec]
