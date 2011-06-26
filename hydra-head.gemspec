@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'linecache'
   s.add_dependency 'mime-types'
   s.add_dependency 'multipart-post'
-  s.add_dependency 'nokogiri', '1.5.0.beta.3'
+  s.add_dependency 'nokogiri' # Default to using the version required by Blacklight
   s.add_dependency 'om', '>=1.2.3'
   s.add_dependency 'rack'
   s.add_dependency 'rack-test'
