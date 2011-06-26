@@ -1,0 +1,23 @@
+source 'http://rubygems.org'
+
+gem 'rails', '>=3.0.4'
+
+gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'blacklight', '3.0.0pre6'
+gem 'hydra-head', :path => '../../'
+
+# For testing
+group :development, :test do 
+       gem 'rspec'
+       gem 'rspec-rails', '>=2.5.0'
+       gem 'mocha'
+       #gem 'generator_spec'
+       gem 'cucumber-rails'
+       gem 'database_cleaner'
+       gem 'capybara'
+       #gem 'webrat'
+       #gem 'aruba'
+       gem 'factory_girl'
+       gem 'markup_validity'
+end
+
