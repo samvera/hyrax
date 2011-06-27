@@ -22,7 +22,7 @@ namespace :hyhead do
     
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
-      system("rake hydra:fixtures:refresh environment=test")
+      #system("rake hydra:fixtures:refresh environment=test")
       Rake::Task["hyhead:test"].invoke
     end
     raise "test failures: #{error}" if error
@@ -195,10 +195,28 @@ namespace :hyhead do
     FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
     
     puts "Executing bundle install --local"
-    %[bundle install --local]
+    %x[bundle install --local]
+    errors << 'Error running bundle install in test app' unless $?.success?
+
+    puts "Installing cucumber in test app"
+    %x[rails g cucumber:install]
+    errors << 'Error installing cucumber in test app' unless $?.success?
+
+    puts "generating default blacklight install"
+    %x[rails generate blacklight -d]
+    errors << 'Error generating default blacklight install' unless $?.success?
+
+    puts "Running rake db:migrate"
+    %x[rake db:migrate]
     
-    %[rails g cucumber:install]
-    
+    raise "Errors: #{errors.join("; ")}" unless errors.empty?
+
+  end
+
+  desc "Run tests against test app"
+  task :test => [:set_test_host_path] do
+    Rake::Task['setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
+    FileUtils.cd(TEST_HOST_PATH)
     puts "Running rspec tests"
     %[bundle exec hyhead:rspec]
     
