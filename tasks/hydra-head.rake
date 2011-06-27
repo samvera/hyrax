@@ -19,11 +19,11 @@ namespace :hyhead do
       :fedora_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/fedora/default'),
       :startup_wait => 30
       }
-    
+
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
-      #system("rake hydra:fixtures:refresh environment=test")
-      Rake::Task["hyhead:test"].invoke
+      system("rake hydra:fixtures:refresh environment=test")
+      system("rake hyhead:test")
     end
     raise "test failures: #{error}" if error
   end
