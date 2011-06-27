@@ -181,7 +181,7 @@ namespace :hyhead do
 
   desc "Run tests against test app"
   task :test => [:set_test_host_path] do
-    Rake::Task['setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
+    Rake::Task['hyhead:setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
     FileUtils.cd(TEST_HOST_PATH)
     puts "Running rspec tests"
     puts  %x[bundle exec rake hyhead:spec]
