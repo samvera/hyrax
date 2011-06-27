@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <!-- For complete comments from the Solr project example solrconfig.xml:
+      http://svn.apache.org/repos/asf/lucene/dev/trunk/solr/example/solr/conf/solrconfig.xml
+    See also:  
+      http://wiki.apache.org/solr/SolrConfigXml
+  -->
+  <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
+
+  <indexDefaults>
+    <useCompoundFile>false</useCompoundFile>
+    <mergeFactor>10</mergeFactor>
+    <ramBufferSizeMB>32</ramBufferSizeMB>
+    <maxMergeDocs>2147483647</maxMergeDocs>
+    <maxFieldLength>10000</maxFieldLength>
+    <writeLockTimeout>1000</writeLockTimeout>
+    <commitLockTimeout>10000</commitLockTimeout>
+    <lockType>single</lockType>
+  </indexDefaults>
+
+  <mainIndex>
+    <useCompoundFile>false</useCompoundFile>
+    <ramBufferSizeMB>32</ramBufferSizeMB>
+    <mergeFactor>10</mergeFactor>
+    <maxMergeDocs>2147483647</maxMergeDocs>
+    <maxFieldLength>10000</maxFieldLength>
+    <unlockOnStartup>false</unlockOnStartup>
+  </mainIndex>
+  
+  <jmx />
+
+  <!-- the default high-performance update handler -->
+  <updateHandler class="solr.DirectUpdateHandler2">
+  </updateHandler>
+
+
+  <query>
+    <maxBooleanClauses>1024</maxBooleanClauses>
+    <filterCache class="solr.LRUCache"
+      size="512"
+      initialSize="512"
+      autowarmCount="128"/>
+    <queryResultCache class="solr.LRUCache"
+      size="512"
+      initialSize="512"
+      autowarmCount="32"/>
+    <documentCache class="solr.LRUCache"
+      size="512"
+      initialSize="512"
+      autowarmCount="0"/>
+    <enableLazyFieldLoading>true</enableLazyFieldLoading>
+    <queryResultWindowSize>50</queryResultWindowSize>
+    <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+    <HashDocSet maxSize="3000" loadFactor="0.75"/>
+
+    <listener event="newSearcher" class="solr.QuerySenderListener">
+      <arr name="queries">
+        <lst> <str name="q">hydrus</str></lst>
+      </arr>
+    </listener>
+
+    <listener event="firstSearcher" class="solr.QuerySenderListener">
+      <arr name="queries">
+        <lst> <str name="q">hydrus</str></lst>
+      </arr>
+    </listener>
+
+    <useColdSearcher>false</useColdSearcher>
+    <maxWarmingSearchers>2</maxWarmingSearchers>
+  </query>
+
+  <requestDispatcher handleSelect="true" >
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
+    <httpCaching lastModifiedFrom="openTime"
+                 etagSeed="Solr">
+    </httpCaching>
+  </requestDispatcher>
+  
+  <requestHandler name="standard" class="solr.SearchHandler">
+     <lst name="defaults">
+       <str name="echoParams">explicit</str>
+     </lst>
+  </requestHandler>
+
+  <!-- For complete comments from the Solr project example solrconfig.xml:
+      http://svn.apache.org/repos/asf/lucene/dev/trunk/solr/example/solr/conf/solrconfig.xml
+    See also:  
+      http://wiki.apache.org/solr/SolrConfigXml
+  -->
+
+  <requestHandler name="search" class="solr.SearchHandler" default="true">
+    <lst name="defaults">
+      <!-- Making defType lucene to exclude file assets -->
+      <str name="defType">lucene</str>
+      <!-- lucene params -->
+      <str name="df">has_model_s</str>
+      <str name="q.op">AND</str>
+      <!-- dismax params -->
+      <str name="mm"> 2&lt;-1 5&lt;-2 6&lt;90% </str>
+      <str name="q.alt">*:*</str>
+      <str name="qf_dismax">id^0.8 id_t^0.8 title_t^0.3 mods_t^0.2</str>
+      <str name="pf_dismax">id^0.9  id_t^0.9 title_t^0.5 mods_t^0.2</str>
+      <int name="ps">100</int>
+      <float name="tie">0.01</float>
+      <!-- general -->
+      <str name="facet">on</str>
+      <str name="facet.mincount">1</str>
+	    <str name="echoParams">explicit</str>
+      <str name="fl">
+        id,title_t,date_t,year_facet,month_facet,has_model_s,has_collection_member_s,system_create_dt,
+        person_0_role_t,person_1_role_t,person_2_role_t,person_3_role_t,person_4_role_t,person_5_role_t,person_6_role_t,
+        person_7_role_t,person_8_role_t,person_9_role_t,
+        person_0_first_name_t,person_1_first_name_t,person_2_first_name_t,person_3_first_name_t,person_4_first_name_t,
+        person_5_first_name_t,person_6_first_name_t,person_7_first_name_t,person_8_first_name_t,person_9_first_name_t,
+        person_0_last_name_t,person_1_last_name_t,person_2_last_name_t,person_3_last_name_t,person_4_last_name_t,
+        person_5_last_name_t,person_6_last_name_t,person_7_last_name_t,person_8_last_name_t,person_9_last_name_t,
+        status_t,subject_t,depositor_t,
+				journal_title_info_t,journal_issue_publication_date_t,
+				journal_issue_pages_end_t,journal_issue_volume_t,journal_title_info_main_title_t,journal_issue_pages_start_t,
+				journal_issue_start_page_t, journal_issue_end_page_t, abstract_t,
+        person_0_institution_t,person_1_institution_t,person_2_institution_t,person_3_institution_t,person_4_institution_t,person_5_institution_t,person_institution_role_t,
+        person_7_institution_t,person_8_institution_t,person_9_institution_t,
+        mods_gps_t, mods_region_t, mods_site_t, mods_ecosystem_t,
+        mods_timespan_start_t, mods_timespan_end_t, description_t, mods_title_info_main_title_t, mods_0_title_info_0_main_title_t, embargo_release_date_dt, note_t,
+        object_type_facet, department_facet, peer_reviewed_facet
+      </str>
+    </lst>
+  </requestHandler>
+  
+  <requestHandler name="public_search" class="solr.SearchHandler" >
+    <lst name="defaults">
+      <!-- Making defType lucene to exclude file assets -->
+      <str name="defType">lucene</str>
+      <!-- lucene params -->
+      <str name="df">has_model_s</str>
+      <str name="q.op">AND</str>
+      <!-- dismax params -->
+      <str name="mm"> 2&lt;-1 5&lt;-2 6&lt;90% </str>
+      <str name="q.alt">*:*</str>
+      <str name="qf_dismax">id^0.8 id_t^0.8 format text^0.3</str>
+      <str name="pf_dismax">id^0.9  id_t^0.9 text^0.5</str>
+      <int name="ps">100</int>
+      <float name="tie">0.01</float>
+      <!-- general -->
+      <str name="facet">on</str>
+      <str name="facet.mincount">1</str>
+	    <str name="echoParams">explicit</str>
+      <str name="fl">
+        id,text,title_t,date_t,year_facet,month_facet,medium_t,series_facet,box_facet,folder_facet,has_model_s,has_collection_member_s,system_create_dt,
+        person_0_role_t,person_1_role_t,person_2_role_t,person_3_role_t,person_4_role_t,person_5_role_t,person_6_role_t,person_7_role_t,person_8_role_t,person_9_role_t,
+        person_0_first_name_t,person_1_first_name_t,person_2_first_name_t,person_3_first_name_t,person_4_first_name_t,person_5_first_name_t,person_6_first_name_t,person_7_first_name_t,person_8_first_name_t,person_9_first_name_t,
+        person_0_last_name_t,person_1_last_name_t,person_2_last_name_t,person_3_last_name_t,person_4_last_name_t,person_5_last_name_t,person_6_last_name_t,person_7_last_name_t,person_8_last_name_t,person_9_last_name_t,depositor_t,
+
+        journal_title_info_t, journal_title_info_main_title_t, journal_issue_publication_date_t, journal_issue_pages_start_t, journal_issue_pages_end_t, journal_issue_volume_t, journal_issue_start_page_t, journal_issue_end_page_t, abstract_t,
+        person_0_institution_t,person_1_institution_t,person_2_institution_t,person_3_institution_t,person_4_institution_t,person_5_institution_t,person_institution_role_t,
+        person_7_institution_t,person_8_institution_t,person_9_institution_t,
+        mods_gps_t, mods_region_t, mods_site_t, mods_ecosystem_t,
+        mods_timespan_start_t, mods_timespan_end_t, description_t, mods_title_info_t,mods_0_title_info_0_main_title_t, embargo_release_date_dt, note_t,
+        object_type_facet, department_facet, peer_reviewed_facet
+      </str>
+    </lst>
+  </requestHandler>
+  
+  <requestHandler name="fulltext" class="solr.SearchHandler" >
+    <lst name="defaults">
+      <str name="defType">dismax</str>
+      <str name="facet">on</str>
+      <str name="facet.mincount">1</str> 
+      <str name="echoParams">explicit</str>
+      <float name="tie">0.01</float>
+      <str name="qf">id^0.8 id_t^0.8 format text^0.3</str>
+      <str name="pf">id^0.9  id_t^0.9 text^0.5</str>
+      <str name="fl">
+        id,text,title_t,date_t,year_facet,month_facet,medium_t,series_facet,box_facet,folder_facet
+      </str>
+      <str name="mm"> 2&lt;-1 5&lt;-2 6&lt;90% </str>
+      <int name="ps">100</int>
+      <str name="q.alt">*:*</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- for requests to get a single document; use id=666 instead of q=id:666 -->
+  <requestHandler name="document" class="solr.SearchHandler" >
+    <lst name="defaults">
+      <str name="echoParams">all</str>
+      <str name="fl">*</str>
+      <str name="rows">1</str>
+      <str name="q">{!raw f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
+
+      <!-- facets on for a single document response??? -->      
+      <str name="facet">on</str>
+	    <str name="facet.mincount">1</str>
+
+      <str name="facet.field">collection_facet</str>
+      <str name="facet.field">technology_facet</str>
+      <str name="facet.field">person_facet</str>
+      <!-- <str name="facet.field">title_t</str>       -->
+      <str name="facet.field">city_facet</str>
+      <str name="facet.field">organization_facet</str>
+      <str name="facet.field">company_facet</str>
+      <str name="facet.field">year_facet</str>
+      <str name="facet.field">state_facet</str>
+      <str name="facet.field">series_facet</str>
+      <str name="facet.field">box_facet</str>
+      <str name="facet.field">folder_facet</str>
+      <str name="facet.field">donor_tags_facet</str>
+      <str name="facet.field">archivist_tags_facet</str>
+
+    </lst>
+  </requestHandler>
+  
+   <!-- The spell check component can return a list of alternative spelling
+  suggestions.  -->
+  <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
+
+    <str name="queryAnalyzerFieldType">textSpell</str>
+
+    <lst name="spellchecker">
+      <str name="name">default</str>
+      <str name="field">spell</str>
+      <str name="spellcheckIndexDir">./spellchecker1</str>
+
+    </lst>
+    <lst name="spellchecker">
+      <str name="name">jarowinkler</str>
+      <str name="field">spell</str>
+      <!-- Use a different Distance Measure -->
+      <str name="distanceMeasure">org.apache.lucene.search.spell.JaroWinklerDistance</str>
+      <str name="spellcheckIndexDir">./spellchecker2</str>
+
+    </lst>
+
+    <lst name="spellchecker">
+      <str name="classname">solr.FileBasedSpellChecker</str>
+      <str name="name">file</str>
+      <str name="sourceLocation">spellings.txt</str>
+      <str name="characterEncoding">UTF-8</str>
+      <str name="spellcheckIndexDir">./spellcheckerFile</str>
+    </lst>
+  </searchComponent>
+
+  <!-- a request handler utilizing the spellcheck component -->
+  <requestHandler name="/spellCheckCompRH" class="solr.SearchHandler">
+    <lst name="defaults">
+      <!-- omp = Only More Popular -->
+      <str name="spellcheck.onlyMorePopular">false</str>
+      <!-- exr = Extended Results -->
+      <str name="spellcheck.extendedResults">false</str>
+      <!--  The number of suggestions to return -->
+      <str name="spellcheck.count">1</str>
+    </lst>
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>
+  </requestHandler>
+ 
+  <!-- a search component that enables you to configure the top results for
+       a given query regardless of the normal lucene scoring.-->
+  <searchComponent name="elevator" class="solr.QueryElevationComponent" >
+    <!-- pick a fieldType to analyze queries -->
+    <str name="queryFieldType">string</str>
+    <str name="config-file">elevate.xml</str>
+  </searchComponent>
+ 
+  <!-- a request handler utilizing the elevator component -->
+  <requestHandler name="/elevate" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+    </lst>
+    <arr name="last-components">
+      <str>elevator</str>
+    </arr>
+  </requestHandler>
+
+  <requestHandler name="/update" class="solr.XmlUpdateRequestHandler" />
+  <requestHandler name="/analysis" class="solr.AnalysisRequestHandler" />
+  <requestHandler name="/update/csv" class="solr.CSVRequestHandler" startup="lazy" />
+  <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
+  <requestHandler name="/admin/ping" class="PingRequestHandler">
+    <lst name="defaults">
+      <str name="qt">standard</str>
+      <str name="q">solrpingquery</str>
+      <str name="echoParams">all</str>
+    </lst>
+  </requestHandler>
+  <requestHandler name="/debug/dump" class="solr.DumpRequestHandler" >
+    <lst name="defaults">
+     <str name="echoParams">explicit</str> <!-- for all params (including the default etc) use: 'all' -->
+     <str name="echoHandler">true</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- 
+  <queryResponseWriter name="xml" class="org.apache.solr.request.XMLResponseWriter" default="true"/>
+  <queryResponseWriter name="json" class="org.apache.solr.request.JSONResponseWriter"/>
+  <queryResponseWriter name="ruby" class="org.apache.solr.request.RubyResponseWriter"/>
+  -->
+
+  <!-- XSLT response writer transforms the XML output by any xslt file found
+       in Solr's conf/xslt directory.  Changes to xslt files are checked for
+       every xsltCacheLifetimeSeconds.  
+   -->
+  <queryResponseWriter name="xslt" class="org.apache.solr.request.XSLTResponseWriter">
+    <int name="xsltCacheLifetimeSeconds">5</int>
+  </queryResponseWriter> 
+
+  <admin>
+    <defaultQuery>hydra</defaultQuery>
+  </admin>
+
+</config>
