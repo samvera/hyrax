@@ -124,54 +124,19 @@ namespace :hyhead do
 #      end
 #    end
 #  end
-#  
-#  desc "Remove hydra-plugin_test_host/vendor/plugins/hydra-head"
-#  task :remove_plugin_from_host => [:set_test_host_path] do
-#    plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"    
-#    puts "Emptying out #{plugin_dir}"
-#    %x[rm -rf #{plugin_dir}]
-#  end
-#  
-#  desc "Copy current contents of the features directory into hydra-plugin_test_host/features"
-#  task :copy_features_to_host => [:set_test_host_path] do
-#    features_dir = "#{TEST_HOST_PATH}/features"
-#    excluded = [".", ".."]
-#    FileUtils.mkdir_p(features_dir)
-#    puts "Copying features to features_dir"
-#    %x[cp -R features #{TEST_HOST_PATH}]
-#  end
-#  
-#  desc "Remove hydra-plugin_test_host/features"
-#  task :remove_features_from_host => [:set_test_host_path] do
-#    features_dir = "#{TEST_HOST_PATH}/features"
-#    puts "Emptying out #{features_dir}"
-#    %x[rm -rf #{features_dir}]
-#  end
-#  
-#  desc "Copy current contents of the spec/fixtures directory into hydra-plugin_test_host/spec/fixtures"
-#  task :copy_fixtures_to_host => [:set_test_host_path] do
-#    fixtures_dir = "#{TEST_HOST_PATH}/spec/fixtures"
-#    excluded = [".", ".."]
-#    FileUtils.mkdir_p(fixtures_dir)
-#    puts "Copying features to #{fixtures_dir}"
-#    %x[cp -R spec/fixtures/* #{fixtures_dir}]
-#  end
-#  
-#  desc "Remove hydra-plugin_test_host/spec/fixtures"
-#  task :remove_fixtures_from_host => [:set_test_host_path] do
-#    fixtures_dir = "#{TEST_HOST_PATH}/spec/fixtures"
-#    puts "Emptying out #{fixtures_dir}"
-#    %x[rm -rf #{fixtures_dir}]
-#  end  
+
   
   task :set_test_host_path do
     TEST_HOST_PATH = "tmp/test_app"
   end
   
   desc "Creates a new test app and runs the cukes/specs from within it"
-  task :clean_test_app => [:set_test_host_path] do
+  task :setup_test_app => [:set_test_host_path] do
+    errors = []
     puts "Cleaning out test app path"
     %x[rm -fr #{TEST_HOST_PATH}]
+    errors << 'Error removing test app' unless $?.success?
+
     FileUtils.mkdir_p(TEST_HOST_PATH)
 
     puts "Copying over .rvmrc file"
@@ -186,6 +151,7 @@ namespace :hyhead do
     
     puts "Generating new rails app"
     %x[rails new test_app]
+    errors << 'Error generating new rails test app' unless $?.success?
     FileUtils.cd('test_app')
 
     puts "Copying Gemfile from test_support/etc"
@@ -195,14 +161,25 @@ namespace :hyhead do
     FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
     
     puts "Executing bundle install --local"
-    %[bundle install --local]
+    %x[bundle install --local]
+    errors << 'Error running bundle install in test app' unless $?.success?
     
-    %[rails g cucumber:install]
+    puts "Installing cucumber in test app"
+    %x[rails g cucumber:install]
+    errors << 'Error installing cucumber in test app' unless $?.success?
     
+    puts "Running rake db:migrate"
+    %x[rake db:migrate]
+  end
+
+  desc "Run tests against test app"
+  task :test => [:set_test_host_path] do
+    Rake::Task['setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
+    FileUtils.cd(TEST_HOST_PATH)
     puts "Running rspec tests"
-    %[bundle exec hyhead:rspec]
-    
+    puts  %x[bundle exec rake hyhead:spec]
+
     puts "Running cucumber tests"
-    %[bundle exec hyhead:cucumber]
+    puts %x[bundle exec rake hyhead:cucumber]
   end
 end
