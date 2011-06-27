@@ -1,0 +1,1951 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foxml:digitalObject VERSION="1.1" PID="libra-oa:3"
+xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+<foxml:objectProperties>
+<foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+<foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE=""/>
+<foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+<foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2011-01-25T19:48:24.857Z"/>
+<foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2011-01-25T19:57:35.799Z"/>
+</foxml:objectProperties>
+<foxml:datastream ID="AUDIT" STATE="A" CONTROL_GROUP="X" VERSIONABLE="false">
+<foxml:datastreamVersion ID="AUDIT.0" LABEL="Audit Trail for this object" CREATED="2011-01-25T19:48:24.857Z" MIMETYPE="text/xml" FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit">
+<foxml:xmlContent>
+<audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+<audit:record ID="AUDREC1">
+<audit:process type="Fedora API-M"/>
+<audit:action>addDatastream</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:48:25.039Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC2">
+<audit:process type="Fedora API-M"/>
+<audit:action>addDatastream</audit:action>
+<audit:componentID>RELS-EXT</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:48:25.195Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC3">
+<audit:process type="Fedora API-M"/>
+<audit:action>addDatastream</audit:action>
+<audit:componentID>rightsMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:48:25.293Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC4">
+<audit:process type="Fedora API-M"/>
+<audit:action>addDatastream</audit:action>
+<audit:componentID>properties</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:48:25.508Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC5">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:48:35.057Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC6">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:48:35.109Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC7">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:26.952Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC8">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:27.028Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC9">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:28.825Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC10">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:28.868Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC11">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:31.957Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC12">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:32.024Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC13">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:33.862Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC14">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:33.904Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC15">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:37.443Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC16">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:37.500Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC17">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:55.661Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC18">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:49:55.712Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC19">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:50:04.211Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC20">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:50:04.259Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC21">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:50:06.464Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC22">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>rightsMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:50:06.520Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC23">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:50:41.401Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC24">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:32.063Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC25">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:32.176Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC26">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:43.065Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC27">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:43.117Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC28">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:45.169Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC29">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:45.261Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC30">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:46.904Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC31">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:47.002Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC32">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:50.377Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC33">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:50.437Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC34">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:52.941Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC35">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:52.993Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC36">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:55.047Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC37">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:53:55.128Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC38">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:04.152Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC39">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:04.298Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC40">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:05.732Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC41">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:05.822Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC42">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:18.676Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC43">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:18.732Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC44">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:20.421Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC45">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:20.494Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC46">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:36.180Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC47">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:36.276Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC48">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:38.108Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC49">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:38.158Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC50">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:40.552Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC51">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:54:40.605Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC52">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:56:47.867Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC53">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:56:48.082Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC54">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:57:09.652Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC55">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:57:09.775Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC56">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:57:12.825Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC57">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>descMetadata</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:57:12.900Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC58">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyObject</audit:action>
+<audit:componentID></audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:57:35.569Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+<audit:record ID="AUDREC59">
+<audit:process type="Fedora API-M"/>
+<audit:action>modifyDatastreamByValue</audit:action>
+<audit:componentID>properties</audit:componentID>
+<audit:responsibility>fedoraAdmin</audit:responsibility>
+<audit:date>2011-01-25T19:57:35.799Z</audit:date>
+<audit:justification></audit:justification>
+</audit:record>
+</audit:auditTrail>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+</foxml:datastream>
+<foxml:datastream ID="DC" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+<foxml:datastreamVersion ID="DC1.0" LABEL="Dublin Core Record for this object" CREATED="2011-01-25T19:48:24.857Z" MIMETYPE="text/xml" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" SIZE="342">
+<foxml:xmlContent>
+<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+  <dc:identifier>libra-oa:3</dc:identifier>
+</oai_dc:dc>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+</foxml:datastream>
+<foxml:datastream ID="descMetadata" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+<foxml:datastreamVersion ID="descMetadata.0" LABEL="" CREATED="2011-01-25T19:48:25.039Z" MIMETYPE="text/xml" SIZE="1464">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given"></namePart>
+    <namePart type="family"></namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id></computing_id>
+    <description></description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.1" LABEL="" CREATED="2011-01-25T19:48:35.109Z" MIMETYPE="text/xml" SIZE="1464">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given"></namePart>
+    <namePart type="family"></namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id></computing_id>
+    <description></description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.2" LABEL="" CREATED="2011-01-25T19:49:27.028Z" MIMETYPE="text/xml" SIZE="1514">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.3" LABEL="" CREATED="2011-01-25T19:49:28.868Z" MIMETYPE="text/xml" SIZE="1509">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given"></namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.4" LABEL="" CREATED="2011-01-25T19:49:32.024Z" MIMETYPE="text/xml" SIZE="1503">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given"></namePart>
+    <namePart type="family"></namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.5" LABEL="" CREATED="2011-01-25T19:49:33.904Z" MIMETYPE="text/xml" SIZE="1514">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.6" LABEL="" CREATED="2011-01-25T19:49:37.500Z" MIMETYPE="text/xml" SIZE="1514">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.7" LABEL="" CREATED="2011-01-25T19:49:55.712Z" MIMETYPE="text/xml" SIZE="1514">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title></title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.8" LABEL="" CREATED="2011-01-25T19:50:04.259Z" MIMETYPE="text/xml" SIZE="1569">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title></title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.9" LABEL="" CREATED="2011-01-25T19:53:32.176Z" MIMETYPE="text/xml" SIZE="1592">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">
+        <number></number>
+      </detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.10" LABEL="" CREATED="2011-01-25T19:53:43.117Z" MIMETYPE="text/xml" SIZE="1561">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <detail type="number">
+        <number></number>
+      </detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.11" LABEL="" CREATED="2011-01-25T19:53:45.261Z" MIMETYPE="text/xml" SIZE="1490">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.12" LABEL="" CREATED="2011-01-25T19:53:47.002Z" MIMETYPE="text/xml" SIZE="1490">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start></start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.13" LABEL="" CREATED="2011-01-25T19:53:50.437Z" MIMETYPE="text/xml" SIZE="1493">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end></end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.14" LABEL="" CREATED="2011-01-25T19:53:52.993Z" MIMETYPE="text/xml" SIZE="1496">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.15" LABEL="" CREATED="2011-01-25T19:53:55.128Z" MIMETYPE="text/xml" SIZE="1496">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher></publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.16" LABEL="" CREATED="2011-01-25T19:54:04.298Z" MIMETYPE="text/xml" SIZE="1504">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.17" LABEL="" CREATED="2011-01-25T19:54:05.822Z" MIMETYPE="text/xml" SIZE="1504">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn"></identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.18" LABEL="" CREATED="2011-01-25T19:54:18.732Z" MIMETYPE="text/xml" SIZE="1513">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.19" LABEL="" CREATED="2011-01-25T19:54:20.494Z" MIMETYPE="text/xml" SIZE="1513">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date></date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.20" LABEL="" CREATED="2011-01-25T19:54:36.276Z" MIMETYPE="text/xml" SIZE="1517">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date>2001</date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.21" LABEL="" CREATED="2011-01-25T19:54:38.158Z" MIMETYPE="text/xml" SIZE="1517">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date>2001</date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.22" LABEL="" CREATED="2011-01-25T19:54:40.605Z" MIMETYPE="text/xml" SIZE="1517">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract></abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date>2001</date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.23" LABEL="" CREATED="2011-01-25T19:56:48.082Z" MIMETYPE="text/xml" SIZE="1954">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract>Shallcross and Monks (New Directions: A role for isoprene in biosphere-climate-chemistry feedbacks, Atmospheric Environment, Vol. 34 (2000) pp. 1659}1660) recently summarised the importance of biogenic isoprene in a biosphere-atmosphere system under constant change. In this article, we expand this synthesis to include the biophysical feedbacks between plants that produce volatile organic compounds (VOCs) and the overlying atmosphere.</abstract>
+  <subject>
+    <topic></topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date>2001</date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.24" LABEL="" CREATED="2011-01-25T19:57:09.775Z" MIMETYPE="text/xml" SIZE="1958">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract>Shallcross and Monks (New Directions: A role for isoprene in biosphere-climate-chemistry feedbacks, Atmospheric Environment, Vol. 34 (2000) pp. 1659}1660) recently summarised the importance of biogenic isoprene in a biosphere-atmosphere system under constant change. In this article, we expand this synthesis to include the biophysical feedbacks between plants that produce volatile organic compounds (VOCs) and the overlying atmosphere.</abstract>
+  <subject>
+    <topic>VOCs</topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date>2001</date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="descMetadata.25" LABEL="" CREATED="2011-01-25T19:57:12.900Z" MIMETYPE="text/xml" SIZE="2008">
+<foxml:xmlContent>
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+  <titleInfo lang="">
+    <title>New Directions: VOCs and biosphere-atmosphere feedbacks</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart type="given">Bruce</namePart>
+    <namePart type="family">Hayden</namePart>
+    <affiliation>University of Virginia</affiliation>
+    <computing_id>bph</computing_id>
+    <description>Department of Environmental Sciences</description>
+    <role>
+      <roleTerm authority="marcrelator" type="text">Author</roleTerm>
+    </role>
+  </name>
+  <typeOfResource></typeOfResource>
+  <genre authority="marcgt"></genre>
+  <language>
+    <languageTerm authority="iso639-2b" type="code"></languageTerm>
+  </language>
+  <abstract>Shallcross and Monks (New Directions: A role for isoprene in biosphere-climate-chemistry feedbacks, Atmospheric Environment, Vol. 34 (2000) pp. 1659}1660) recently summarised the importance of biogenic isoprene in a biosphere-atmosphere system under constant change. In this article, we expand this synthesis to include the biophysical feedbacks between plants that produce volatile organic compounds (VOCs) and the overlying atmosphere.</abstract>
+  <subject>
+    <topic>VOCs</topic>
+    <topic>biosphere-atmosphere feedbacks</topic>
+  </subject>
+  <relatedItem type="host">
+    <titleInfo>
+      <title>Atmospheric Environment</title>
+    </titleInfo>
+    <identifier type="issn">1352-2310</identifier>
+    <originInfo>
+      <publisher>Elsevier</publisher>
+      <dateIssued></dateIssued>
+      <issuance></issuance>
+    </originInfo>
+    <part>
+      <detail type="volume">35</detail>
+      <extent unit="pages">
+        <start>189</start>
+        <end>191</end>
+      </extent>
+      <date>2001</date>
+    </part>
+  </relatedItem>
+  <location>
+    <url></url>
+  </location>
+</mods>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+</foxml:datastream>
+<foxml:datastream ID="RELS-EXT" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+<foxml:datastreamVersion ID="RELS-EXT.0" LABEL="" CREATED="2011-01-25T19:48:25.195Z" MIMETYPE="text/xml" SIZE="280">
+<foxml:xmlContent>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about="info:fedora/libra-oa:3">
+    <hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/afmodel:ModsAsset"></hasModel>
+  </rdf:Description>
+</rdf:RDF>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+</foxml:datastream>
+<foxml:datastream ID="rightsMetadata" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+<foxml:datastreamVersion ID="rightsMetadata.0" LABEL="" CREATED="2011-01-25T19:48:25.293Z" MIMETYPE="text/xml" SIZE="578">
+<foxml:xmlContent>
+<rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1" version="0.1">
+  <copyright>
+    <human></human>
+    <machine>
+      <uvalicense>no</uvalicense>
+    </machine>
+  </copyright>
+  <access type="discover">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="read">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="edit">
+    <human></human>
+    <machine>
+      <person>archivist1</person>
+    </machine>
+  </access>
+  <embargo>
+    <human></human>
+    <machine></machine>
+  </embargo>
+</rightsMetadata>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="rightsMetadata.1" LABEL="" CREATED="2011-01-25T19:50:06.520Z" MIMETYPE="text/xml" SIZE="579">
+<foxml:xmlContent>
+<rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1" version="0.1">
+  <copyright>
+    <human></human>
+    <machine>
+      <uvalicense>yes</uvalicense>
+    </machine>
+  </copyright>
+  <access type="discover">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="read">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="edit">
+    <human></human>
+    <machine>
+      <person>archivist1</person>
+    </machine>
+  </access>
+  <embargo>
+    <human></human>
+    <machine></machine>
+  </embargo>
+</rightsMetadata>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+</foxml:datastream>
+<foxml:datastream ID="properties" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+<foxml:datastreamVersion ID="properties.0" LABEL="" CREATED="2011-01-25T19:48:25.508Z" MIMETYPE="text/xml" SIZE="101">
+<foxml:xmlContent>
+<fields>
+  <depositor>archivist1</depositor>
+  <collection>hydrangea_article</collection>
+</fields>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+<foxml:datastreamVersion ID="properties.1" LABEL="" CREATED="2011-01-25T19:57:35.799Z" MIMETYPE="text/xml" SIZE="163">
+<foxml:xmlContent>
+<fields>
+  <released>true</released>
+  <depositor>archivist1</depositor>
+  <collection>hydrangea_article</collection>
+  <release_to>public</release_to>
+</fields>
+</foxml:xmlContent>
+</foxml:datastreamVersion>
+</foxml:datastream>
+</foxml:digitalObject>

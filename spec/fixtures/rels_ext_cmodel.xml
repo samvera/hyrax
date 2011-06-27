@@ -1,0 +1,8 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<rdf:Description rdf:about="info:fedora/demo:multipurpose-objects-model_and_sdef">
+		<hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/fedora-system:ContentModel-3.0"/>
+		<hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/afmodel:SaltDocument"/>
+		<hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/afmodel:JP2Document"/>
+		<hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/afmodel:DCDocument"/>
+	</rdf:Description>
+</rdf:RDF>

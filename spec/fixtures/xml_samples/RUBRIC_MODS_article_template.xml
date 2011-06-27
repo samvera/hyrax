@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Based on MODS JOURNAL ARTICLE TEMPLATE edited with XMLSpy v2006 rel. 3 sp1
+(http://www.altova.com) by Neil Godfrey (RUBRIC) -->
+<!-- NOTE: For further details on more granular and other
+applications of elements, see the MODS User Guidelines 
+at http://www.loc.gov/standards/mods/v3/mods-userguide-elements.html 
+Modifications will be necessary for local harvesting and mapping
+requirements -->
+
+<mods version="3.0" xsi:schemaLocation="http://www.loc.gov/mods/v3
+ http://www.loc.gov/standards/mods/v3/mods-3-0.xsd"
+ xmlns=”http://www.loc.gov/mods/v3”
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <titleInfo>
+        <nonSort>THE</nonSort>
+        <title>ARTICLE TITLE</title>
+        <subTitle>SUBTITLE</subTitle>
+    </titleInfo>
+    <titleInfo type="alternative">
+        <title>VARYING FORM OF TITLE</title>
+    </titleInfo>
+
+    <name type="personal">
+        <namePart type=”family”>FAMILY NAME</namePart>
+        <namePart type=”given”>GIVEN NAMES</namePart>
+        <namePart type=”termsOfAddress”>DR.</namePart>
+        <displayForm>NAME AS IT APPEARS</displayForm>
+        <affiliation>FACULTY, UNIVERSITY</affiliation>    
+        <role> 
+            <roleTerm authority="marcrelator" type="text">creator</roleTerm>
+        </role>
+        <role>
+            <roleTerm type="text">submitter</roleTerm>
+        </role>
+    </name>
+
+    <typeOfResource>text</typeOfResource>
+    <genre authority="local">journal article</genre>
+    
+    <abstract>ABSTRACT</abstract>
+    <subject>
+        <topic>TOPIC 1</topic>
+        <topic>TOPIC 2</topic>
+    </subject>
+    <subject authority=”AUTHORITY SOURCE (RFCD, LCSH)”>
+        <topic>CONTROLLED TERM</topic>
+    </subject>
+
+    <language>
+        <languageTerm authority="iso639-2b" type="code">en-aus </languageTerm>
+    </language>
+
+    <physicalDescription>
+        <internetMediaType>application/pdf</internetMediaType>
+        <extent>36 p.</extent>
+    </physicalDescription>
+    
+    <relatedItem type="host">
+        <titleInfo>
+            <title>TITLE OF HOST JOURNAL</title>
+        </titleInfo>
+        <originInfo>
+            <publisher>PUBLISHER</publisher>
+            <dateIssued>DATE</dateIssued>
+        </originInfo>
+        <identifier type="issn">0013-8908</identifier>    
+        <part>
+            <detail type=”volume”>
+                <number>2</number>
+            <detail type=”level”>
+                <number>2</number>
+            </detail>
+            <extent unit=”pages”>
+                <start>195</start>
+                <end>230</end>
+            </extent>
+            <date>FEB. 2007</date>
+        </part>            
+    </relatedItem>
+
+    <identifier type="uri">http://URL.edu.au/</identifier>
+    <identifier type="doi">doi:10.1006/jmbi.1995.0238</identifier>
+    <location>
+        <url>http://URL.edu.au/</url>
+    </location>        
+    <accessCondition type="restrictionOnAccess">EMBARGO NOTE</accessCondition>
+    <accessCondition type="use and reproduction">OPEN ACCESS</accessCondition>
+
+</mods>

@@ -1,0 +1,11 @@
+<dc xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <dcterms:type xsi:type="DCMITYPE">text</dcterms:type>
+  <dcterms:medium>Paper Document</dcterms:medium>
+  <dcterms:rights>Presumed under copyright. Do not publish.</dcterms:rights>
+  <dcterms:date>1985-12-30</dcterms:date>
+  <dcterms:format>application/tiff</dcterms:format>
+  <dcterms:format>application/jp2000</dcterms:format>
+  <dcterms:format>application/pdf</dcterms:format>
+  <dcterms:title>This is a Sample Title</dcterms:title>
+  <dcterms:publisher>Sample Unversity</dcterms:publisher>
+</dc>

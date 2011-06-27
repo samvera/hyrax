@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <attributes>
+    <attribute type="item">5958</attribute>
+    <attribute type="objectid">FEI0010-00013142</attribute>
+    <attribute type="title">Letter from Ellie Engelmore to Professor K. C. Reddy</attribute>
+    <attribute type="copyright">Presumed under copyright. Do not publish.</attribute>
+    <attribute type="description"/>
+    <attribute type="date">1985-12-30</attribute>
+    <attribute type="datestr">30/12/1985</attribute>
+    <attribute type="docurl">https://www.stanford.edu/group/salt_project/SLA/Feigenbaum/eaf7000/pdf/00013142.pdf</attribute>
+    <attribute type="doctn">http://www.stanford.edu/group/salt_project/cgi-bin/SLA/Feigenbaum/eaf7000/png/small_00013142.png</attribute>
+    <attribute type="url"/>
+    <attribute type="industryterm"/>
+    <attribute type="technology">artificial intelligence</attribute>
+    <attribute type="company"/>
+    <attribute type="person">ELLIE ENGELMORE</attribute>
+    <attribute type="year">1985</attribute>
+    <attribute type="organization">Mathematics and Computer/Information Sciences University of Hyderabad Central University P. O. Hyder</attribute>
+    <attribute type="sourcelocation">Folder 15</attribute>
+  </attributes>
+  <facets>
+    <facet type="year" id="49">1980s</facet>
+    <facet type="year" id="49">1985</facet>
+    <facet type="year" id="42">1980s</facet>
+    <facet type="sourcelocation" id="592">Feigenbaum</facet>
+    <facet type="sourcelocation" id="592">eaf7000</facet>
+    <facet type="sourcelocation" id="592">Box 51A</facet>
+    <facet type="sourcelocation" id="594">Feigenbaum</facet>
+    <facet type="sourcelocation" id="594">eaf7000</facet>
+    <facet type="sourcelocation" id="594">Box 51A</facet>
+    <facet type="sourcelocation" id="594">Folder 15</facet>
+    <facet type="sourcelocation" id="691">Feigenbaum</facet>
+    <facet type="sourcelocation" id="692">Feigenbaum</facet>
+    <facet type="sourcelocation" id="692">eaf7000</facet>
+    <facet type="doctype" id="32">Correspondence</facet>
+    <facet type="city" id="82">Ann Arbor</facet>
+    <facet type="city" id="910">Hyderabad</facet>
+    <facet type="city" id="1519">Palo Alto</facet>
+    <facet type="country" id="68">India</facet>
+    <facet type="emailaddress" id="288">EENGELMORE@SUMEX-AIM.ARPA</facet>
+    <facet type="organization" id="5065">Heuristic Programming Project</facet>
+    <facet type="organization" id="7012">Mathematics and Computer/Information Sciences University of Hyderabad Central University P. O. Hyder</facet>
+    <facet type="organization" id="8878">Professor K. C. Reddy School of Mathematics and Computer/Information Sciences</facet>
+    <facet type="person" id="5810">ELLIE ENGELMORE</facet>
+    <facet type="person" id="17934">Reddy</facet>
+    <facet type="person" id="5787">EDWARD FEIGENBAUM</facet>
+    <facet type="provinceorstate" id="96">Michigan</facet>
+    <facet type="provinceorstate" id="27">California</facet>
+    <facet type="technology" id="1713">artificial intelligence</facet>
+  </facets>
+</document>
