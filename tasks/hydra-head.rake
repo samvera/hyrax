@@ -45,7 +45,7 @@ namespace :hyhead do
     end
     
     desc "Sets up test host, loads fixtures, then runs specs - need to have jetty running."
-    task :setup_and_run => ["hyhead:setup_test_host"] do
+    task :setup_and_run => ["hyhead:setup_test_app"] do
       system("rake hydra:fixtures:refresh environment=test")
       Rake::Task["hyhead:rspec:run"].invoke
     end
@@ -99,14 +99,14 @@ namespace :hyhead do
 #    end
 #    
 #    desc "Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running."
-#    task :setup_and_run => ["hyhead:setup_test_host"] do
+#    task :setup_and_run => ["hyhead:setup_test_app"] do
 #      system("rake hydra:fixtures:refresh environment=test")
 #      Rake::Task["hyhead:cucumber:run"].invoke
 #    end    
 #  end
 #    
 #  desc "Copy all of the necessary code into the test host"
-#  task :setup_test_host => [:remove_plugin_from_host, :copy_plugin_to_host,:remove_features_from_host, :copy_features_to_host, :remove_fixtures_from_host, :copy_fixtures_to_host] do
+#  task :setup_test_app => [:remove_plugin_from_host, :copy_plugin_to_host,:remove_features_from_host, :copy_features_to_host, :remove_fixtures_from_host, :copy_fixtures_to_host] do
 #  end
 #  
 #  desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
