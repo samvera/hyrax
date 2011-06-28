@@ -65,7 +65,7 @@ begin
         t.profile = 'default'
         t.rcov = true
         t.rcov_opts = %w{--rails --exclude osx\/objc,gems\/,spec\/,features\/ --aggregate hyhead-coverage.data}
-        t.rcov_opts << %[-o "hyhead-coverage"]
+        t.rcov_opts << %[-o "#{HydraHead.root}/coverage"]
       end
       end	
   

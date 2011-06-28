@@ -23,6 +23,7 @@ namespace :hyhead do
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
       system("rake hydra:fixtures:refresh environment=test")
+      system("rake hyhead:setup_test_app")
       system("rake hyhead:test")
     end
     raise "test failures: #{error}" if error
@@ -223,9 +224,9 @@ namespace :hyhead do
     
     FileUtils.cd(TEST_HOST_PATH)
     puts "Running rspec tests"
-    %[bundle exec hyhead:rspec]
+    %[bundle exec hyhead:rspec:rcov]
     
     puts "Running cucumber tests"
-    %[bundle exec hyhead:cucumber]
+    %[bundle exec hyhead:cucumber:rcov]
   end
 end
