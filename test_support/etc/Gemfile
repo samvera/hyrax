@@ -18,5 +18,6 @@ group :development, :test do
        #gem 'webrat'
        #gem 'aruba'
        gem 'factory_girl'
+       gem 'bcrypt-ruby'
 end
 
