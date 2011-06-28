@@ -21,7 +21,7 @@
 		<![endif]-->
 	</head>
   
-    <body>
+    <body class="<%= render_body_class %>">
 
 	  <div id="doc4" class="yui-t2">
 		
@@ -30,13 +30,14 @@
 			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>" : "" %>
 		</div>
 	    
-	    <div id="bd">
+	  <div id="bd">
 			<div id="yui-main">
-           		<%= render :partial=>'/flash_msg' %>
-        		<div class="sidebar"><%= sidebar_items.join('') %></div>	
-           		<%= yield %>
-        	</div>
-	    </div>
+        <%= render :partial=>'/flash_msg' %>
+        <%= yield %>
+      </div>
+      <div class="yui-b sidebar"><%= sidebar_items.join('') %></div>	
+	  </div>
+	    
 	    
 		<div id="footer">
 			<div id="container3">
