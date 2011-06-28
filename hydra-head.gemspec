@@ -54,7 +54,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'cucumber', '>=0.8.5'
-  s.add_development_dependency 'cucumber-rails'
+  s.add_development_dependency 'cucumber-rails', '>=1.0.0'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'gherkin'
   s.add_development_dependency 'factory_girl'

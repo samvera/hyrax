@@ -111,8 +111,10 @@ GEM
       gherkin (~> 2.4.1)
       json (>= 1.4.6)
       term-ansicolor (>= 1.0.5)
-    cucumber-rails (0.3.2)
-      cucumber (>= 0.8.0)
+    cucumber-rails (1.0.2)
+      capybara (>= 1.0.0)
+      cucumber (~> 1.0.0)
+      nokogiri (>= 1.4.6)
     curb (0.7.15)
     daemons (1.1.4)
     database_cleaner (0.6.7)
@@ -245,7 +247,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   cucumber (>= 0.8.5)
-  cucumber-rails
+  cucumber-rails (>= 1.0.0)
   factory_girl
   gherkin
   hydra-head!
