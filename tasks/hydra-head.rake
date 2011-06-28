@@ -171,6 +171,10 @@ namespace :hyhead do
     puts "generating default blacklight install"
     %x[rails generate blacklight -d]
     errors << 'Error generating default blacklight install' unless $?.success?
+    
+    puts "generating default hydra-head install"
+    %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
+    errors << 'Error generating default hydra-head install' unless $?.success?
 
     puts "Running rake db:migrate"
     %x[rake db:migrate]
