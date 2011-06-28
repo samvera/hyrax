@@ -14,5 +14,8 @@ require 'hydra/assets_controller_helper'
 require 'hydra/file_assets_helper'
 
 require 'hydra/rights_metadata'
+require 'hydra/common_mods_index_methods'
 require 'hydra/mods_article'
 require 'hydra/model_methods'
+
+Dir[File.join(File.dirname(__FILE__), "hydra", "*.rb")].each {|f| require f}
