@@ -2,7 +2,7 @@
 require 'rails/generators'
 require 'rails/generators/migration'     
 
-require "generators/blacklight/blacklight_generator"
+# require "generators/blacklight/blacklight_generator"
 
 module Hydra
 class HeadGenerator < Rails::Generators::Base
@@ -12,11 +12,19 @@ class HeadGenerator < Rails::Generators::Base
   
     desc """
   This generator makes the following changes to your application:
-   1. ...
-   2. ...
+    1. Creates several database migrations if they do not exist in /db/migrate
+    2. Adds additional mime types to you application in the file '/config/initializers/mime_types.rb'   
+    3. Creates config/initializers/hydra_config.rb 
+    4. Creates config/initializers/fedora_config.rb 
+    5. Creates config/fedora.yml and config/solr.yml which you may need to modify to tell the hydra head where to find fedora & solr
+    6. Creates a number of role_map config files that are used in the placeholder user roles implementation 
   Enjoy building your Hydra Head!
          """
   
+  #
+  # Config Files & Initializers
+  #
+         
   # Copy all files in templates/config directory to host config
   def create_configuration_files
     # Initializers
@@ -52,10 +60,29 @@ Mime::Type.register_alias "text/html", :inline
 EOF
     end
   end
+  
+  #
+  # Migrations
+  #
+  
+  # Implement the required interface for Rails::Generators::Migration.
+  # taken from http://github.com/rails/rails/blob/master/activerecord/lib/generators/active_record.rb
+  def self.next_migration_number(dirname)
+    if ActiveRecord::Base.timestamped_migrations
+      Time.now.utc.strftime("%Y%m%d%H%M%S")
+    else
+      "%.3d" % (current_migration_number(dirname) + 1)
+    end
+  end
+
+  def create_migration_file
+    migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
+    migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
+  end
          
   # wraps BlacklightGenerator.better_migration_template        
-  def self.better_migration_template(file)
-    BlacklightGenerator.better_migration_template(file)
-  end
+  # def self.better_migration_template(file)
+  #   BlacklightGenerator.better_migration_template(file)
+  # end
 end # HeadGenerator
 end # Hydra
