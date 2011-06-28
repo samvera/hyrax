@@ -40,7 +40,9 @@ pkg
 /.rvmrc
 db/*.sqlite3
 log/*.log
-tmp/
+tmp/*.log
+tmp/pids/
+tmp/test_app/
 
 *.sqlite3
 *.log
