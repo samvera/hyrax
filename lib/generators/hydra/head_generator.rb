@@ -82,6 +82,7 @@ EOF
 
   def create_migration_file
     migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
+    sleep 1 # ensure scripts have different time stamps
     migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
   end
          
