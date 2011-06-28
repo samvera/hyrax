@@ -127,7 +127,7 @@ namespace :hyhead do
 
   
   task :set_test_host_path do
-    TEST_HOST_PATH = "tmp/test_app"
+    TEST_HOST_PATH = File.join(File.expand_path(File.dirname(__FILE__)),'..','tmp','test_app')
   end
   
   desc "Creates a new test app and runs the cukes/specs from within it"
@@ -138,7 +138,7 @@ namespace :hyhead do
     errors << 'Error removing test app' unless $?.success?
 
     FileUtils.mkdir_p(TEST_HOST_PATH)
-
+    
     puts "Copying over .rvmrc file"
     FileUtils.cp("./test_support/etc/rvmrc",File.join(TEST_HOST_PATH,".rvmrc"))
     FileUtils.cd("tmp")
@@ -182,11 +182,12 @@ namespace :hyhead do
   desc "Run tests against test app"
   task :test => [:set_test_host_path] do
     Rake::Task['hyhead:setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
+    
     FileUtils.cd(TEST_HOST_PATH)
     puts "Running rspec tests"
-    puts  %x[bundle exec rake hyhead:spec]
+    puts  %x[rake hyhead:spec]
 
     puts "Running cucumber tests"
-    puts %x[bundle exec rake hyhead:cucumber]
+    puts %x[rake hyhead:cucumber]
   end
 end
