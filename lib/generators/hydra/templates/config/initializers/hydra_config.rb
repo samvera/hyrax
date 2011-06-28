@@ -8,20 +8,21 @@ require "hydra"
 # As long as your module includes methods for full_name, affiliation, and photo the personalization_helper should function correctly
 #
 # NOTE: For your development environment, also specify the module in lib/user_attributes_loader.rb
-User.send(:include, Hydra::GenericUserAttributes)
+# User.send(:include, Hydra::GenericUserAttributes)  # commented out 06/2011 - MZ
 # 
 
-if Hydra.respond_to?(:configure)
-  Hydra.configure(:shared) do |config|
-  
-    config[:file_asset_types] = {
-      :default => FileAsset, 
-      :extension_mappings => {
-        AudioAsset => [".wav", ".mp3", ".aiff"] ,
-        VideoAsset => [".mov", ".flv", ".mp4", ".m4v"] ,
-        ImageAsset => [".jpeg", ".jpg", ".gif", ".png"] 
-      }
-    }
-
-  end
-end
+# MZ - Commented out b/c the contents of /app are not loaded before the config files?
+# if Hydra.respond_to?(:configure)
+#   Hydra.configure(:shared) do |config|
+#   
+#     config[:file_asset_types] = {
+#       :default => FileAsset, 
+#       :extension_mappings => {
+#         AudioAsset => [".wav", ".mp3", ".aiff"] ,
+#         VideoAsset => [".mov", ".flv", ".mp4", ".m4v"] ,
+#         ImageAsset => [".jpeg", ".jpg", ".gif", ".png"] 
+#       }
+#     }
+# 
+#   end
+# end

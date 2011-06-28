@@ -4,7 +4,8 @@ require 'rails/generators/migration'
 
 require "generators/blacklight/blacklight_generator"
 
-class HydraHeadGenerator < Rails::Generators::Base
+module Hydra
+class HeadGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
   
   source_root File.expand_path('../templates', __FILE__)
@@ -35,9 +36,26 @@ class HydraHeadGenerator < Rails::Generators::Base
    copy_file "config/fedora.yml", "config/fedora.yml"
    copy_file "config/solr.yml", "config/solr.yml"
   end
+  
+  # Register mimetypes required by hydra-head
+  def add_mime_types
+    puts "Updating Mime Types"
+    insert_into_file "config/initializers/mime_types.rb", :before => 'Mime::Type.register_alias "text/plain", :refworks_marc_txt' do <<EOF
+# Mime Types Added By Hydra Head:
+
+# Mime::Type.register "text/html", :html
+# Mime::Type.register "application/pdf", :pdf
+# Mime::Type.register "image/jpeg2000", :jp2
+Mime::Type.register_alias "text/html", :textile
+Mime::Type.register_alias "text/html", :inline
+
+EOF
+    end
+  end
          
   # wraps BlacklightGenerator.better_migration_template        
   def self.better_migration_template(file)
     BlacklightGenerator.better_migration_template(file)
   end
-end
+end # HeadGenerator
+end # Hydra
