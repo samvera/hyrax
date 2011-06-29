@@ -7,4 +7,3 @@ Feature: Homepage
   Scenario: Visiting home page
     Given I am on the home page
     Then I should see "Search"
-    And the page should be HTML5 valid
