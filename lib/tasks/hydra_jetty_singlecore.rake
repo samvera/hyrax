@@ -1,4 +1,5 @@
 require 'jettywrapper'
+require 'fileutils'
 
 namespace :hydra do
   namespace :jetty do
@@ -18,6 +19,10 @@ namespace :hydra do
       :solr_home => File.expand_path("#{test_jetty_home}/solr"),
       :fedora_home => File.expand_path("#{test_jetty_home}/fedora/default")
     }
+    
+    task :copy do
+      FileUtils.cp_r(test_jetty_home, dev_jetty_home, :verbose => true)
+    end
       
     namespace :config do
       desc "Configure solr and fedora for dev and test"
@@ -63,7 +68,7 @@ namespace :hydra do
       
       desc "Return the status of jetty-test"
       task :test do
-        status = Jettywrapper.is_jetty_running?(test) ? "Running: #{Jettywrapper.pid(test)}" : "Not running"
+        status = Jettywrapper.is_jetty_running?(TEST) ? "Running: #{Jettywrapper.pid(TEST)}" : "Not running"
         puts status
       end
       
@@ -79,8 +84,8 @@ namespace :hydra do
       
       desc "Start jetty-test"
       task :test do
-        Jettywrapper.start(test)
-        puts "jetty-test started at PID #{Jettywrapper.pid(test)}"
+        Jettywrapper.start(TEST)
+        puts "jetty-test started at PID #{Jettywrapper.pid(TEST)}"
       end
     
     end
@@ -95,7 +100,7 @@ namespace :hydra do
       
       desc "Stop jetty-test"
       task :test do
-        Jettywrapper.stop(test)
+        Jettywrapper.stop(TEST)
         puts "Stopping jetty-test"
       end
     
@@ -114,12 +119,12 @@ namespace :hydra do
       
       desc "Restart jetty-test"
       task :test do
-        puts "jetty-test is running at PID #{Jettywrapper.pid(test)}"
-        Jettywrapper.stop(test)
+        puts "jetty-test is running at PID #{Jettywrapper.pid(TEST)}"
+        Jettywrapper.stop(TEST)
         sleep 10
-        Jettywrapper.start(test)
+        Jettywrapper.start(TEST)
         puts "Restarting jetty-test"
-        puts "jetty-test is running at PID #{Jettywrapper.pid(test)}"
+        puts "jetty-test is running at PID #{Jettywrapper.pid(TEST)}"
       end
     end
   end
