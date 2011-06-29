@@ -13,3 +13,11 @@
 #search #submit {
 	margin-bottom:-12px;
 }
+
+/* Record view next/previous links */
+#previousNextDocument {
+	text-align:center;
+}
+#previousNextDocument .previous {
+	float:left;
+}

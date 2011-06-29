@@ -2,10 +2,9 @@
   doc_title = (document_show_html_title.nil? || document_show_html_title.empty?) ? @document[:id] : document_show_html_title.first
   @page_title = "#{doc_title} - #{application_name}" 
 -%>
-<% if !editor? %>
 <div id="showHead">
   <div id="showUtils">
-  <div class="tools"><%= render :partial => 'show_tools' %></div>
+    <div class="tools"><%= render :partial => 'show_tools' %></div>
     <span class="back_to_cat"><%= link_back_to_catalog :label=>'&larr; Return to search results' %></span>
     <% if @previous_document || @next_document %>
       <div id="previousNextDocument">
@@ -20,7 +19,6 @@
     <% end %>
   </div>
 </div>
-<% end %>
 <% if editor? && controller.action_name != "delete" %>
 	<span class="edit-browse">
 		<%= edit_and_browse_links %>
