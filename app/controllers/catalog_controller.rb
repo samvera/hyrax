@@ -254,8 +254,8 @@ Pulled from vendor/plugins/dor_objects/app/views/dor_objects/_show.html.erb
     end
   end
   
-  def setup_next_document
-    @next_document = (session[:search][:counter] && session[:search][:counter].to_i > 1) ? setup_document_by_counter(session[:search][:counter].to_i + 1) : nil
-  end
+  # def setup_next_document
+  #   @next_document = (session[:search][:counter] && session[:search][:counter].to_i > 1) ? setup_document_by_counter(session[:search][:counter].to_i + 1) : nil
+  # end
 
 end
