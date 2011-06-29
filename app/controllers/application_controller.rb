@@ -15,7 +15,7 @@ class ApplicationController
   helper :generic_content_objects, :personalization #, :hydrangea_datasets
   
   # helper_method [:request_is_for_user_resource?]#, :user_logged_in?]
-  before_filter [:store_bounce, :set_x_ua_compat, :add_custom_css]
+  before_filter [:store_bounce, :set_x_ua_compat, :load_css, :load_js]
   
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -53,8 +53,13 @@ class ApplicationController
     response.headers["X-UA-Compatible"] = "IE=edge,chrome=1"
   end
   
-  def add_custom_css
+  def load_css
     stylesheet_links << ["html_refactor", {:plugin=>"hydra-head", :media=>"all"}]
   end
   
+  def load_js
+    # This JS file implementes Blacklight's JavaScript framework and simply assigns all of the Blacklight provided JS functionality to empty functions.
+    # We can use this file in the future, however we will want to implement a jQuery plugin architecture as we actually add in JS functionality.
+    javascript_includes << ["hydra-head", {:plugin=>"hydra-head"}]
+  end
 end
