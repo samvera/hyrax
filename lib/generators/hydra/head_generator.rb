@@ -85,9 +85,5 @@ EOF
     migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
   end
          
-  # wraps BlacklightGenerator.better_migration_template        
-  # def self.better_migration_template(file)
-  #   BlacklightGenerator.better_migration_template(file)
-  # end
 end # HeadGenerator
 end # Hydra
