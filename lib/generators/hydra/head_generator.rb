@@ -10,6 +10,8 @@ class HeadGenerator < Rails::Generators::Base
   
   source_root File.expand_path('../templates', __FILE__)
   
+  argument     :model_name, :type => :string , :default => "user"
+  
     desc """
   This generator makes the following changes to your application:
     1. Creates several database migrations if they do not exist in /db/migrate
@@ -86,5 +88,18 @@ EOF
     migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
   end
          
+  # Add Blacklight to the user model
+  def inject_hydra_user_behavior
+    file_path = "app/models/#{model_name.underscore}.rb"
+    if File.exists?(file_path) 
+      inject_into_class file_path, model_name.classify do 
+        "# Connects this user object to Hydra behaviors. " +
+        "\n include Hydra::User\n"        
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Hydra requires a user object in order to apply access controls. This generators assumes that the model is defined in the file /app/models/user.rb, which does not exist.  If you used a different name, please re-run the migration and provide that name as an argument. Such as \b  rails -g hydra:head client" 
+    end    
+  end
+  
 end # HeadGenerator
 end # Hydra
