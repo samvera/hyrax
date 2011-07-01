@@ -48,6 +48,73 @@ describe Hydra::AccessControlsEnforcement do
    end
 
  end
+ 
+ it "should have necessary fieldnames from initializer" do
+   Hydra.config[:permissions][:catchall].should_not be_nil
+   Hydra.config[:permissions][:discover][:group].should_not be_nil
+   Hydra.config[:permissions][:discover][:individual].should_not be_nil
+   Hydra.config[:permissions][:read][:group].should_not be_nil
+   Hydra.config[:permissions][:read][:individual].should_not be_nil
+   Hydra.config[:permissions][:edit][:group].should_not be_nil
+   Hydra.config[:permissions][:edit][:individual].should_not be_nil
+   Hydra.config[:permissions][:owner].should_not be_nil
+   Hydra.config[:permissions][:embargo_release_date].should_not be_nil
+ end
+ 
+ # SPECS FOR SINGLE DOCUMENT REQUESTS
+ describe 'Get Document Permissions By Id' do
+   before(:each) do
+     @doc_id = 'hydrangea:fixture_mods_article1'
+     @bad_id = "redrum"
+     @response2, @document = helper.get_permissions_solr_response_for_doc_id(@doc_id)
+   end
+
+   it "should raise Blacklight::InvalidSolrID for an unknown id" do
+     lambda {
+       helper.get_permissions_solr_response_for_doc_id(@bad_id)
+     }.should raise_error(Blacklight::Exceptions::InvalidSolrID)
+   end
+
+   it "should have a non-nil result for a known id" do
+     @document.should_not == nil
+   end
+   it "should have a single document in the response for a known id" do
+     @response2.docs.size.should == 1
+   end
+   it 'should have the expected value in the id field' do
+     @document.id.should == @doc_id
+   end
+   it 'should have non-nil values for permissions fields that are set on the object' do
+     @document.get(Hydra.config[:permissions][:catchall]).should_not be_nil
+     @document.get(Hydra.config[:permissions][:discover][:group]).should_not be_nil
+     @document.get(Hydra.config[:permissions][:edit][:group]).should_not be_nil
+     @document.get(Hydra.config[:permissions][:edit][:individual]).should_not be_nil
+     @document.get(Hydra.config[:permissions][:read][:group]).should_not be_nil
+     
+     # @document.get(Hydra.config[:permissions][:discover][:individual]).should_not be_nil
+     # @document.get(Hydra.config[:permissions][:read][:individual]).should_not be_nil
+     # @document.get(Hydra.config[:permissions][:owner]).should_not be_nil
+     # @document.get(Hydra.config[:permissions][:embargo_release_date]).should_not be_nil
+   end
+ end
+
+ describe "Get Document by custom unique id" do
+=begin    
+   # Can't test this properly without updating the "document" request handler in solr
+   it "should respect the configuration-supplied unique id" do
+     SolrDocument.should_receive(:unique_key).and_return("title_display")
+     @response, @document = helper.get_permissions_solr_response_for_doc_id('"Strong Medicine speaks"')
+     @document.id.should == '"Strong Medicine speaks"'
+     @document.get(:id).should == 2007020969
+   end
+=end
+   it "should respect the configuration-supplied unique id" do
+     doc_params = helper.permissions_solr_doc_params('"Strong Medicine speaks"')
+     doc_params[:id].should == '"Strong Medicine speaks"'
+   end
+ end
+   
+
 end
 
 
