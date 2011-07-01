@@ -1,5 +1,35 @@
 module Hydra::AccessControlsEnforcement
 
+  #
+  #  Solr integration
+  #
+  
+  # returns a params hash with the permissions info for a single solr document 
+  # If the id arg is nil, then the value is fetched from params[:id]
+  # This method is primary called by the get_permissions_solr_response_for_doc_id method.
+  # Modeled on Blacklight::SolrHelper.solr_doc_params
+  # @param [String] id of the documetn to retrieve
+  def permissions_solr_doc_params(id=nil)
+    id ||= params[:id]
+    # just to be consistent with the other solr param methods:
+    {
+      :qt => :permissions,
+      :id => id # this assumes the document request handler will map the 'id' param to the unique key field
+    }
+  end
+  
+  # a solr query method
+  # retrieve a solr document, given the doc id
+  # Modeled on Blacklight::SolrHelper.get_permissions_solr_response_for_doc_id
+  # @param [String] id of the documetn to retrieve
+  # @param [Hash] extra_controller_params (optional)
+  def get_permissions_solr_response_for_doc_id(id=nil, extra_controller_params={})
+    solr_response = Blacklight.solr.find permissions_solr_doc_params(id).merge(extra_controller_params)
+    raise Blacklight::Exceptions::InvalidSolrID.new if solr_response.docs.empty?
+    document = SolrDocument.new(solr_response.docs.first, solr_response)
+    [solr_response, document]
+  end
+  
   private
 
   # If someone hits the show action while their session's viewing_context is in edit mode, 
@@ -105,6 +135,5 @@ module Hydra::AccessControlsEnforcement
       q << embargo_query 
     return q
   end
-
 
 end

@@ -179,6 +179,27 @@
     </lst>
   </requestHandler>
   
+  <!-- 
+    Hydra Permissions request Handler
+    For requests to get just the permissions related info about a document 
+  -->
+  <requestHandler name="permissions" class="solr.SearchHandler" >
+    <lst name="defaults">
+      <str name="facet">off</str>
+      <str name="echoParams">all</str>
+      <str name="rows">1</str>
+      <str name="q">{!raw f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
+      <str name="fl">
+        id,access_t,
+        discover_access_group_t,discover_access_person_t,
+        read_access_group_t,read_access_person_t,
+        edit_access_group_t,edit_access_person_t,
+        depositor_t,
+        embargo_release_date_dt
+      </str>
+    </lst>
+  </requestHandler>
+  
   <!-- for requests to get a single document; use id=666 instead of q=id:666 -->
   <requestHandler name="document" class="solr.SearchHandler" >
     <lst name="defaults">
