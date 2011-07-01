@@ -82,13 +82,7 @@ EOF
     @previous_migration_nr.to_s
   end
 
-  def create_migration_file
-    migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
-    sleep 1 # ensure scripts have different time stamps
-    migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
-  end
-         
-  # Add Blacklight to the user model
+  # Add Hydra behaviors to the user model
   def inject_hydra_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exists?(file_path) 
@@ -100,6 +94,31 @@ EOF
       puts "     \e[31mFailure\e[0m  Hydra requires a user object in order to apply access controls. This generators assumes that the model is defined in the file /app/models/user.rb, which does not exist.  If you used a different name, please re-run the migration and provide that name as an argument. Such as \b  rails -g hydra:head client" 
     end    
   end
+  
+  # Add Hydra behaviors and Filters to CatalogController
+  def inject_hydra_catalog_behavior
+    puts "Adding Hydra behaviors to CatalogController"
+    controller_name = "catalog_controller"
+    file_path = "app/controllers/#{controller_name.underscore}.rb"
+    if File.exists?(file_path) 
+      insert_into_file file_path, :after => 'include Blacklight::Catalog' do      
+        "\n  # Extend Blacklight::Catalog with Hydra behaviors (primarily editing & access controls)." +
+        "\n  include Hydra::Catalog\n"        
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller module in the Controller class definition.  See the Hydra::Controller section in the Hydra API Docs for more info." 
+    end    
+  end
+  
+  def create_migration_file
+    migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
+    sleep 1 # ensure scripts have different time stamps
+    migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
+  end
+         
+
+  
+
   
 end # HeadGenerator
 end # Hydra
