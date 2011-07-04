@@ -110,6 +110,14 @@ EOF
     end    
   end
   
+  # Inject call to HydraHead.add_routes in config/routes.rb
+  def inject_hydra_routes
+    insert_into_file "config/routes.rb", :after => 'Blacklight.add_routes(self)' do
+      "\n  # Add Hydra routes.  For options, see API docs for HydraHead.routes"
+      "\n  HydraHead.add_routes(self)"
+    end
+  end
+  
   def create_migration_file
     migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
     sleep 1 # ensure scripts have different time stamps
