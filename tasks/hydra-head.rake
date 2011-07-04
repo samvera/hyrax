@@ -179,6 +179,7 @@ namespace :hyhead do
 
     puts "Running rake db:migrate"
     %x[rake db:migrate]
+    %x[rake db:migrate RAILS_ENV=test]
     
     raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
