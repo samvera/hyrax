@@ -1,5 +1,24 @@
 module Hydra::AccessControlsEnforcement
-
+  
+  #
+  #   Access Controls Enforcement Filters
+  #
+  
+  # Controller "before" filter that delegates enforcement based on the controller action
+  # Action-specific implementations are enforce_index_permissions, enforce_show_permissions, etc.
+  # @param [Hash] opts (optional, not currently used)
+  #
+  # @example
+  #   class CatalogController < ApplicationController  
+  #     before_filter :enforce_access_controls
+  #   end
+  def enforce_access_controls(opts={})
+    controller_action = params[:action]
+    if params[:action] == "destroy" then controller_action = "edit" end
+    delegate_method = "enforce_#{controller_action}_permissions"
+  end
+  
+  
   #
   #  Solr integration
   #
@@ -30,6 +49,13 @@ module Hydra::AccessControlsEnforcement
     [solr_response, document]
   end
   
+  # Loads permissions info into @permissions_solr_response and @permissions_solr_document
+  def load_permissions_from_solr(id=nil, extra_controller_params={})
+    unless !@permissions_solr_document.nil? && !@permissions_solr_response.nil?
+      @permissions_solr_response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(id, extra_controller_params)
+    end
+  end
+  
   private
 
   # If someone hits the show action while their session's viewing_context is in edit mode, 
@@ -52,20 +78,26 @@ module Hydra::AccessControlsEnforcement
     end
   end
 
-  def enforce_search_permissions
+  # Controller "before" filter for enforcing access controls on index actions
+  # Points user searches at :public_qt response handler if user does not have read permissions in the application
+  # @param [Hash] opts (optional, not currently used)
+  def enforce_index_permissions(opts={})
     if !reader? 
       @extra_controller_params[:qt] = Blacklight.config[:public_qt]
       return @extra_controller_params
     end
   end
-
-  def enforce_read_permissions
-    unless @document['access_t'] && (@document['access_t'].first == "public" || @document['access_t'].first == "Public")
-      if @document["embargo_release_date_dt"] 
-        embargo_date = Date.parse(@document["embargo_release_date_dt"].split(/T/)[0])
+  
+  # Controller "before" filter for enforcing access controls on show actions
+  # @param [Hash] opts (optional, not currently used)
+  def enforce_show_permissions(opts={})
+    load_permissions_from_solr
+    unless @permissions_solr_document['access_t'] && (@permissions_solr_document['access_t'].first == "public" || @permissions_solr_document['access_t'].first == "Public")
+      if @permissions_solr_document["embargo_release_date_dt"] 
+        embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
           # check for depositor raise "#{@document["depositor_t"].first} --- #{current_user.login}"
-          unless current_user && current_user.login == @document["depositor_t"].first
+          unless current_user && current_user.login == @permissions_solr_document["depositor_t"].first
             flash[:notice] = "This item is under embargo.  You do not have sufficient access privileges to read this document."
             redirect_to(:action=>'index', :q=>nil, :f=>nil) and return false
           end
@@ -77,8 +109,11 @@ module Hydra::AccessControlsEnforcement
       end
     end
   end
-
-  def enforce_edit_permissions
+  
+  # Controller "before" filter for enforcing access controls on edit actions
+  # @param [Hash] opts (optional, not currently used)
+  def enforce_edit_permissions(opts={})
+    load_permissions_from_solr
     if !editor?
       session[:viewing_context] = "browse"
       flash[:notice] = "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
@@ -88,7 +123,25 @@ module Hydra::AccessControlsEnforcement
       render :action=>:show
     end
   end
+  
+  # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
+  def apply_gated_discovery
+    @extra_controller_params.merge!(:q=>build_lucene_query(params[:q]))
+    # logger.debug("LUCENE QUERY: #{ @extra_controller_params[:q]) }")
+  end
+  
+  # proxy for {enforce_index_permissions}
+  def enforce_search_permissions
+    enforce_index_permissions
+  end
 
+  # proxy for {enforce_show_permissions}
+  def enforce_read_permissions
+    enforce_show_permissions
+  end
+
+  # Build the lucene query that performs gated discovery based on Hydra rightsMetadata information in Solr
+  # @param [String] user_query the user's original query request that will be wrapped in access controls
   def build_lucene_query(user_query)
     q = ""
     # start query of with user supplied query term
