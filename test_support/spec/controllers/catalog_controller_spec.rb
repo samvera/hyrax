@@ -49,6 +49,7 @@ describe CatalogController do
   end
   
   describe "index" do
+    
     describe "access controls" do
       before(:all) do
         @public_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"public"}]
@@ -74,27 +75,25 @@ describe CatalogController do
     end
   end
   
-  describe "show" do
-    describe "access controls" do
-      it "should deny access to documents if role does not have permissions" do
-        request.env["WEBAUTH_USER"]="Mr. Notallowed"
-        get :show, :id=>"hydrus:admin_class1"
-        response.should redirect_to('/')
-        flash[:notice].should ==  "You do not have sufficient access privileges to read this document, which has been marked private."
+  describe "filters" do
+    describe "index" do
+      it "should trigger enforce_index_permissions" do
+        controller.expects(:enforce_index_permissions)
+        get :index
+      end
+    end
+    describe "show" do
+      it "should trigger enforce_show_permissions" do
+        controller.expects(:enforce_show_permissions)
+        get :index
+      end
+    end
+    describe "edit" do
+      it "should trigger enforce_edit_permissions" do
+        controller.expects(:enforce_edit_permissions)
+        get :index
       end
     end
   end
-  
-  describe "delete" do 
-      describe "access controls" do
-        it "should deny access to documents if role does not have permissions" do
-          request.env["WEBAUTH_USER"]="Mr. Notallowed"
-          delete :destroy, :id=>"hydrus:admin_class1"
-          response.should redirect_to(:action => 'show')
-          flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
-        end
-      end
-    end
-  
   
 end
