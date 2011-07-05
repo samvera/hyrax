@@ -117,6 +117,9 @@ The cached gems also provide a quick means for generating a gemset for the test_
 
 When developing the hydra-head gem, be sure to commit changes to the vendor/cache directory when you update or install a new gem.
 
+h2. Note about solr and fedora config files
+
+When you change the solr and fedora config files, you must update them in the generator templates directory (lib/generators/hydra-head) as well as root of the hydra_head code.
 
 h2. Acknowledgements
 
