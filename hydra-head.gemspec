@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'facets', '2.8.4'
   s.add_dependency 'haml'
   s.add_dependency 'httparty'
-  s.add_dependency 'jettywrapper', '0.0.3'
+  s.add_dependency 'jettywrapper'
   s.add_dependency 'json_pure', '>1.4.3'
   s.add_dependency 'launchy'
   s.add_dependency 'linecache'
