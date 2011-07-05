@@ -62,7 +62,7 @@ namespace :hydra do
       end
        
       fcfg = File.join(app_root,"fedora_conf","conf","fedora.fcfg")
-      
+      puts "PWD:: #{FileUtils.pwd}"
       if File.exists?(fcfg)
         puts "copying over fedora.fcfg"
         cp("#{fcfg}", 'jetty/fedora/default/server/config/', :verbose => true)

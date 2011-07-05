@@ -7,7 +7,6 @@ namespace :hyhead do
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
     Rake::Task["hyhead:doc"].invoke
-
     Rake::Task["hydra:jetty:config"].invoke
     
     require 'jettywrapper'
@@ -22,11 +21,8 @@ namespace :hyhead do
 
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
-      ### This will make it slower
-      #system("rake hydra:fixtures:refresh environment=test")
-      #system("rake hyhead:setup_test_app")
-      #system("rake hyhead:test")
-      Rake::Task['hydra:fixtures:refresh'].invoke
+      ### This will make it slower, can't we just invoke the  hydra:fixtures:refresh task?
+      system("rake hydra:fixtures:refresh environment=test")
       Rake::Task['hyhead:setup_test_app'].invoke
       Rake::Task['hyhead:test'].invoke
     end
@@ -199,6 +195,10 @@ namespace :hyhead do
     puts "Creating local vendor/cache dir and copying gems from hyhead-rails3 gemset"
     FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
     
+    puts "Copying fixtures into test app spec/fixtures directory"
+    FileUtils.mkdir_p( File.join('.','test_support') )
+    FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
+    
     puts "Executing bundle install --local"
     %x[bundle install --local]
     errors << 'Error running bundle install in test app' unless $?.success?
@@ -224,14 +224,18 @@ namespace :hyhead do
   end
 
   desc "Run tests against test app"
-  task :test => [:set_test_host_path] do
-    Rake::Task['hyhead:setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
+  task :test => [:use_test_app]  do
     
-    FileUtils.cd(TEST_HOST_PATH)
     puts "Running rspec tests"
     %[bundle exec hyhead:rspec:rcov]
     
     puts "Running cucumber tests"
     %[bundle exec hyhead:cucumber:rcov]
+  end
+  
+  desc "Make sure the test app is installed, then run the tasks from its root directory"
+  task :use_test_app => [:set_test_host_path] do
+    Rake::Task['hyhead:setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
+    FileUtils.cd(TEST_HOST_PATH)
   end
 end
