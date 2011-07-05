@@ -19,7 +19,7 @@ Rails.application.routes.draw do |map|
 
 # resources :file_assets, :path_prefix => '/assets/:container_id', :name_prefix => "asset_"
    
-  resources :assets do |assets|
+  resources :assets do
     resources :downloads, :only=>[:index]
     resources :contributors, :only=>[:new,:create]
     resources :grants, :only=>[:new,:create]       
