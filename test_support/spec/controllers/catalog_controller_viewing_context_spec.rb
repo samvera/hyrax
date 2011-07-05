@@ -18,6 +18,7 @@ describe CatalogController do
     it "should redirect to edit view if session is in edit context and user has edit permission" do
       mock_user = mock("User")
       mock_user.stubs(:login).returns("archivist1")
+      mock_user.stubs(:is_being_superuser?).returns(false)
       controller.stubs(:current_user).returns(mock_user)
       
       controller.session[:viewing_context] = "edit"

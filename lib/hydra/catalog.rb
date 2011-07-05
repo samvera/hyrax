@@ -19,4 +19,7 @@ module Hydra::Catalog
     klass.send(:include, Hydra::AccessControlsEnforcement)
   end
   
+  def edit
+  end
+  
 end
