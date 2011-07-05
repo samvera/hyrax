@@ -6,7 +6,7 @@ namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
-#    Rake::Task["hyhead:doc"].invoke
+    Rake::Task["hyhead:doc"].invoke
 
     Rake::Task["hydra:jetty:config"].invoke
     
@@ -22,8 +22,8 @@ namespace :hyhead do
 
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
-#      Rake::Task['hydra:fixtures:refresh'].invoke
-#      Rake::Task['hyhead:setup_test_app'].invoke
+      Rake::Task['hydra:fixtures:refresh'].invoke
+      Rake::Task['hyhead:setup_test_app'].invoke
       Rake::Task['hyhead:test'].invoke
     end
     raise "test failures: #{error}" if error
