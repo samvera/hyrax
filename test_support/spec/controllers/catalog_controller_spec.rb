@@ -29,11 +29,8 @@ describe CatalogController do
     it "should map {:controller=>'catalog', :action=>'show', :id=>'test:3'} to GET /catalog/test:3" do
       { :get => "/catalog/test:3" }.should route_to(:controller => 'catalog', :action => 'show', :id=>'test:3')
     end
-    it "should map {:controller=>'catalog', :action=>'show', :id=>'test:3'} to GET /catalog/test:3" do
+    it "should map {:controller=>'catalog', :action=>'edit', :id=>'test:3'} to GET /catalog/test:3" do
       { :get => "/catalog/test:3/edit" }.should route_to(:controller => 'catalog', :action => 'edit', :id=>'test:3')
-    end
-    it "should map {:controller=>'catalog', :action=>'delete', :id=>'test:3'} to DELETE /catalog/test:3" do
-      { :delete => "/catalog//test:3" }.should route_to(:controller => 'catalog', :action => 'destroy', :id=>'test:3')
     end
 
     it "should map catalog_path" do
@@ -75,6 +72,11 @@ describe CatalogController do
     end
   end
   
+  describe "edit" do
+    it "should load @document_fedora and @file_assets"
+    it "should trigger show action"
+  end
+  
   describe "filters" do
     describe "index" do
       it "should trigger enforce_index_permissions" do
@@ -85,13 +87,13 @@ describe CatalogController do
     describe "show" do
       it "should trigger enforce_show_permissions" do
         controller.expects(:enforce_show_permissions)
-        get :index
+        get :show, :id=>'test:3'
       end
     end
     describe "edit" do
       it "should trigger enforce_edit_permissions" do
         controller.expects(:enforce_edit_permissions)
-        get :index
+        get :edit, :id=>'test:3'
       end
     end
   end

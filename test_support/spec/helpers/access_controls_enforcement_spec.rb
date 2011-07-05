@@ -21,14 +21,6 @@ describe Hydra::AccessControlsEnforcement do
         helper.enforce_access_controls
       end
     end
-  
-    describe "[destroy]" do 
-      it "should trigger enforce_edit_permissions" do
-        helper.params[:action] = "destroy"
-        helper.expects(:enforce_edit_permissions)
-        helper.enforce_access_controls
-      end
-    end
     
     describe "[edit]" do
       it "should trigger enforce_edit_permissions" do
@@ -84,21 +76,22 @@ describe Hydra::AccessControlsEnforcement do
   
   describe "build_lucene_query" do
 
-   it "should return fields for all roles the user is a member of checking against the discover, access, read fields" do
-     pending "This test is breaking RoleMapper for all other tests "
+    it "should return fields for all roles the user is a member of checking against the discover, access, read fields" do
      stub_user = User.new
      stub_user.stubs(:is_being_superuser?).returns false
+     stub_user.stubs(:login).returns "archivist1"
      helper.stubs(:current_user).returns(stub_user)
-     RoleMapper.stubs(:roles).with(stub_user.login).returns(["archivist", "researcher"])
-   
+     # This example assumes that archivist1 is in the archivist and researcher groups.
+     # Tried stubbing RoleMapper.roles instead, but that broke 26 other tests because mocha fails to release the expectation.
+     # RoleMapper.stubs(:roles).with(stub_user.login).returns(["archivist", "researcher"])
      query = helper.send(:build_lucene_query, "string")
-   
+     
      ["discover","edit","read"].each do |type|
        query.should match(/_query_\:\"#{type}_access_group_t\:archivist/) and
        query.should match(/_query_\:\"#{type}_access_group_t\:researcher/)
      end
-   end
-   it "should return fields for all the person specific discover, access, read fields" do
+    end
+    it "should return fields for all the person specific discover, access, read fields" do
      stub_user = User.new
      stub_user.stubs(:is_being_superuser?).returns false
      helper.stubs(:current_user).returns(stub_user)
@@ -106,8 +99,8 @@ describe Hydra::AccessControlsEnforcement do
      ["discover","edit","read"].each do |type|
        query.should match(/_query_\:\"#{type}_access_person_t\:#{stub_user.login}/)
      end
-   end
-   describe "for superusers" do
+    end
+    describe "for superusers" do
      it "should return superuser access level" do
        stub_user = User.new
        stub_user.stubs(:is_being_superuser?).returns true
@@ -126,8 +119,7 @@ describe Hydra::AccessControlsEnforcement do
          query.should_not match(/_query_\:\"#{type}_access_person_t\:\[\* TO \*\]/)
        end
      end
-   end
-
+    end
   end
 
   it "should have necessary fieldnames from initializer" do
@@ -171,7 +163,7 @@ describe Hydra::AccessControlsEnforcement do
      @document.get(Hydra.config[:permissions][:edit][:group]).should_not be_nil
      @document.get(Hydra.config[:permissions][:edit][:individual]).should_not be_nil
      @document.get(Hydra.config[:permissions][:read][:group]).should_not be_nil
-   
+ 
      # @document.get(Hydra.config[:permissions][:discover][:individual]).should_not be_nil
      # @document.get(Hydra.config[:permissions][:read][:individual]).should_not be_nil
      # @document.get(Hydra.config[:permissions][:owner]).should_not be_nil

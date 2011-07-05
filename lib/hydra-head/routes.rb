@@ -30,7 +30,7 @@ module HydraHead
     module RouteSets
       def catalog
         add_routes do |options|
-          resources :catalog, :only => [:edit, :destroy]
+          resources :catalog, :only => [:edit]
         end
       end
       
