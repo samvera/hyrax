@@ -20,6 +20,7 @@ module Hydra::AccessControlsEnforcement
     controller_action = params[:action]
     if params[:action] == "destroy" then controller_action = "edit" end
     delegate_method = "enforce_#{controller_action}_permissions"
+    self.send(delegate_method.to_sym)
   end
   
   
@@ -86,9 +87,9 @@ module Hydra::AccessControlsEnforcement
   # Points user searches at :public_qt response handler if user does not have read permissions in the application
   # @param [Hash] opts (optional, not currently used)
   def enforce_index_permissions(opts={})
+    apply_gated_discovery
     if !reader? 
       @extra_controller_params[:qt] = Blacklight.config[:public_qt]
-      return @extra_controller_params
     end
   end
   
