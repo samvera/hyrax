@@ -64,7 +64,7 @@ namespace :hydra do
     end
   end
   
-  desc "Export the object identified by pid into spec/fixtures. Example:rake hydra:harvest_fixture pid=druid:sb733gr4073 source=http://fedoraAdmin:fedoraAdmin@127.0.0.1:8080/fedora"
+  desc "Export the object identified by pid into test_support/fixtures. Example:rake hydra:harvest_fixture pid=druid:sb733gr4073 source=http://fedoraAdmin:fedoraAdmin@127.0.0.1:8080/fedora"
   task :harvest_fixture => :init do
         
     # If a source url has been provided, attampt to export from the fedora repository there.
@@ -85,9 +85,9 @@ namespace :hydra do
     end
   end
   
-  desc "Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=spec/fixtures/demo_12.foxml.xml"
-  task :import_fixture => [:init, :load_models] do
-        
+  desc "Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
+  task :import_fixture => [:init, :environment] do
+    
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]
       Fedora::Repository.register(ENV["destination"])
@@ -99,7 +99,7 @@ namespace :hydra do
       pid = ENV["pid"]
       filename = File.join("test_support","fixtures","#{pid.gsub(":","_")}.foxml.xml")
     else
-      puts "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=spec/fixtures/demo_12.foxml.xml"
+      puts "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
     end
     
     if !filename.nil?
@@ -130,7 +130,8 @@ namespace :hydra do
 
   desc "Load hydra-head models"
   task :load_models do
-    Dir.glob(File.join(File.expand_path(File.dirname(__FILE__)),'lib', 'hydra-head','app','models', '*.rb')).each do |model|
+    require "hydra"
+    Dir.glob(File.join(File.expand_path(File.dirname(__FILE__)), "..",'app','models', '*.rb')).each do |model|
       load model
     end
   end
