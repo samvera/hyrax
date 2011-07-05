@@ -20,16 +20,16 @@ module HydraFedoraMetadataHelper
     
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
-      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
-      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
-        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" if opts.fetch(:multiple, true) && !current_value.empty?
-        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{h(current_value.lstrip)}</span>"
-        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value.lstrip)}\"/>"
-      body << "</#{container_tag_type}>"
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
+      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">".html_safe
+        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>".html_safe if opts.fetch(:multiple, true) && !current_value.empty?
+        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{h(current_value.lstrip)}</span>".html_safe
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value.lstrip)}\"/>".html_safe
+      body << "</#{container_tag_type}>".html_safe
     end
     result = field_selectors_for(datastream_name, field_key)
     if opts.fetch(:multiple, true)
-      result << content_tag(:ol, body, :rel=>field_name)
+      result << content_tag(:ol, body.html_safe, :rel=>field_name)
     else
       result << body
     end
@@ -58,24 +58,24 @@ module HydraFedoraMetadataHelper
     
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
-      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
       processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
       
-      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
+      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">".html_safe
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
-        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" unless z == 0
-        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{processed_field_value}</span>"
-        body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" rows=\"10\" cols=\"25\">#{h(current_value)}</textarea>"
+        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>".html_safe unless z == 0
+        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{processed_field_value}</span>".html_safe
+        body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" rows=\"10\" cols=\"25\">#{h(current_value)}</textarea>".html_safe
         #body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
-      body << "</#{container_tag_type}>"
+      body << "</#{container_tag_type}>".html_safe
     end
     
     result = field_selectors_for(datastream_name, field_key)
     
     if opts.fetch(:multiple, true)
-      result << content_tag(:ol, body, :rel=>field_name)
+      result << content_tag(:ol, body.html_safe, :rel=>field_name)
     else
-      result << body
+      result << body.html_safe
     end
     return result
     
@@ -94,14 +94,14 @@ module HydraFedoraMetadataHelper
       body = ""
       z = 0
       base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
 
-      body << "<select name=\"#{name}\" class=\"metadata-dd select-edit\" id=\"#{field_name}\" rel=\"#{field_name}\">"
+      body << "<select name=\"#{name}\" class=\"metadata-dd select-edit\" id=\"#{field_name}\" rel=\"#{field_name}\">".html_safe
         body << options_for_select(choices, field_values)
-      body << "</select>"
+      body << "</select>".html_safe
       
       result = field_selectors_for(datastream_name, field_key)
-      result << body
+      result << body.html_safe
     end
     return result
   end
@@ -110,7 +110,7 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
     base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-    name = "asset[#{datastream_name}][#{base_id}]"
+    name = "asset[#{datastream_name}][#{base_id}]".html_safe
     
     value = field_values.first
     field_value = value.nil? ? "" : value
@@ -130,19 +130,20 @@ module HydraFedoraMetadataHelper
     year_options.insert(0, ["Year", "-1"])
     
     body = ""
-    body << "<div class=\"date-select\" name=\"#{name}\" rel=\"#{field_name}\">"
-      body << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{base_id}-sel-y\" name=\"#{base_id}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"    
-      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-mm\" name=\"#{base_id}-sel-mm\">"
+    body << "<div class=\"date-select\" name=\"#{name}\" rel=\"#{field_name}\">".html_safe
+      body << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{base_id}-sel-y\" name=\"#{base_id}-sel-y\" maxlength=\"4\" value=\"#{year}\" />".html_safe
+      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-mm\" name=\"#{base_id}-sel-mm\">".html_safe
         body << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
                                       ["April", "04"],["May", "05"],["June", "06"],["July", "07"],["August", "08"],
                                       ["September", "09"],["October", "10"],["November", "11"],["December", "12"]
                                       ], month)
-      body << "</select> / "
-      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-dd\" name=\"#{base_id}-sel-dd\">"
-        body << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
-      body << "</select>"
-    body << "</div>"
-    body << <<-EOF
+      body << "</select> / ".html_safe
+      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-dd\" name=\"#{base_id}-sel-dd\">".html_safe
+      body << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
+      body << "</select>".html_safe
+    body << "</div>".html_safe
+
+    script = <<-EOF
     <script type="text/javascript">
     // <![CDATA[  
       // since the form element ids need to be generated on the server side for the options, the options are attached to the wrapping div via the jQuery data() method.
@@ -152,9 +153,11 @@ module HydraFedoraMetadataHelper
     // ]]>
     </script>
     EOF
+    body << script.html_safe
+
     
     result = field_selectors_for(datastream_name, field_key)
-    result << body
+    result << body.html_safe
     return result
   end
 
@@ -223,7 +226,7 @@ module HydraFedoraMetadataHelper
         else
           result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase)
         end
-        result << " <label>#{label}</label> "
+        result << " <label>#{label}</label> ".html_safe
       end
       result
     end
@@ -235,13 +238,13 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key) || field_key
     field_type = field_name == "person" ? "person" : "textfield"    
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
-    "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"
+    "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>".html_safe
   end
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
-    link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
-    "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>"    
+    link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}".html_safe
+    "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>".html_safe
   end
   
   def fedora_field_label(datastream_name, field_key, label=nil)
