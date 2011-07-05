@@ -8,6 +8,7 @@ gem 'hydra-head', :path => '../../'
 
 # For testing
 group :development, :test do 
+       gem 'ruby-debug'
        gem 'rspec'
        gem 'rspec-rails', '>=2.5.0'
        gem 'mocha'
