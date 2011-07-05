@@ -1,5 +1,9 @@
 module Hydra::AccessControlsEnforcement
   
+  def self.included(klass)
+    klass.send(:include, Hydra::AccessControlsEvaluation)
+  end
+  
   #
   #   Access Controls Enforcement Filters
   #

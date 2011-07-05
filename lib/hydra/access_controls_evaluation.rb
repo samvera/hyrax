@@ -1,5 +1,20 @@
-module HydraAccessControlsHelper
+# Provides methods for testing permissions
+# If you include this into a Controller, it will also make a number of these methods available as view helpers.
+module Hydra::AccessControlsEvaluation
   
+  def self.included(klass)
+    if klass.respond_to?(:helper_method)
+      klass.helper_method(:editor?)
+      klass.helper_method(:reader?)
+      klass.helper_method(:test_permission?)
+    end
+  end
+  
+  # Test the current user's permissions.  This method is used by the editor? and reader? methods
+  # @param [Symbol] permission_type valid options: :edit, :read
+  # This is available as a view helper method as well as within your controllers.
+  # @example
+  #   test_permission(:edit)
   def test_permission(permission_type)    
     # if !current_user.nil?
       if (@document == nil)
@@ -40,10 +55,14 @@ module HydraAccessControlsHelper
     # end
   end
   
+  # Test whether the the current user has edit permissions.  
+  # This is available as a view helper method as well as within your controllers.
   def editor?
     test_permission(:edit) or (current_user and current_user.is_being_superuser?(session))
   end
   
+  # Test whether the the current user has read permissions.  
+  # This is available as a view helper method as well as within your controllers.
   def reader?
     test_permission(:read) or (current_user and current_user.is_being_superuser?(session))
   end
