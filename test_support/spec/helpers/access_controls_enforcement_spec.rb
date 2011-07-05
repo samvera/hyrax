@@ -42,6 +42,7 @@ describe Hydra::AccessControlsEnforcement do
     it "should make blacklight use the :public_qt response handler if user does not have read permissions" do
       helper.stubs(:reader?).returns(false)
       helper.stubs(:params).returns({:action=>:index})
+      helper.stubs(:apply_gated_discovery)
       helper.send(:enforce_index_permissions)
       @extra_controller_params[:qt].should == Blacklight.config[:public_qt]
     end
