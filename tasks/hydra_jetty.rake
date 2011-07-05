@@ -45,7 +45,7 @@ namespace :hydra do
     
     desc "Copies the default SOLR config for the bundled Hydra Testing Server"
     task :config_solr do
-      FileList['solr/conf/*'].each do |f|  
+      FileList['solr_conf/conf/*'].each do |f|  
         cp("#{f}", 'jetty/solr/development-core/conf/', :verbose => true)
         cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
     end
@@ -58,10 +58,10 @@ namespace :hydra do
       if defined?(Rails.root)
         app_root = Rails.root
       else
-        app_root = File.join(File.dirname(__FILE__),"..","..")
+        app_root = File.join(File.dirname(__FILE__),"..")
       end
        
-      fcfg = File.join(app_root,"fedora","conf","fedora.fcfg")
+      fcfg = File.join(app_root,"fedora_conf","conf","fedora.fcfg")
       
       if File.exists?(fcfg)
         puts "copying over fedora.fcfg"

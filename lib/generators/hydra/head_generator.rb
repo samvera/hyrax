@@ -45,6 +45,12 @@ class HeadGenerator < Rails::Generators::Base
    # Fedora & Solr YAML files
    copy_file "config/fedora.yml", "config/fedora.yml"
    copy_file "config/solr.yml", "config/solr.yml"
+   
+   # Fedora & Solr Config files
+   directory "fedora_conf"
+   directory "solr_conf"
+   # directory "../../../../fedora_conf", "fedora_conf"
+   # directory "../../../../solr_conf", "solr_conf"
   end
   
   # Register mimetypes required by hydra-head
