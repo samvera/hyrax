@@ -22,9 +22,13 @@ namespace :hyhead do
 
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
-      system("rake hydra:fixtures:refresh environment=test")
-      system("rake hyhead:setup_test_app")
-      system("rake hyhead:test")
+      ### This will make it slower
+      #system("rake hydra:fixtures:refresh environment=test")
+      #system("rake hyhead:setup_test_app")
+      #system("rake hyhead:test")
+      Rake::Task['hydra:fixtures:refresh'].invoke
+      Rake::Task['hyhead:setup_test_app'].invoke
+      Rake::Task['hyhead:test'].invoke
     end
     raise "test failures: #{error}" if error
   end
