@@ -1,3 +1,4 @@
+require "blacklight"
 # Hydra libraries
 module Hydra
   autoload :Configurable, 'blacklight/configurable'
