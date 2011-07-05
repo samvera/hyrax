@@ -20,6 +20,7 @@ module Hydra::Catalog
   end
   
   def edit
+    show
   end
   
 end
