@@ -50,7 +50,7 @@ describe Hydra::AccessControlsEnforcement do
   describe "enforce_show_permissions" do
     it "should deny access to documents if role does not have read permissions" do
       helper.stubs(:reader?).returns(false)
-      helper.stubs(:params).returns({:action=>:show,:id=>"hydrus:admin_class1"})
+      helper.stubs(:params).returns({:action=>:show,:id=>"hydrangea:fixture_mods_article1"}) # the permissions from this are not actually used because we stub the :reader? method
       helper.expects(:redirect_to).with(:f => nil, :q => nil, :action => 'index')
       helper.send(:enforce_show_permissions)
       flash[:notice].should ==  "You do not have sufficient access privileges to read this document, which has been marked private."
@@ -59,7 +59,7 @@ describe Hydra::AccessControlsEnforcement do
   describe "enforce_edit_permissions" do
     it "should deny access to documents if role does not have edit permissions" do
       helper.stubs(:editor?).returns(false)
-      helper.stubs(:params).returns({:action=>:edit,:id=>"hydrus:admin_class1"} )
+      helper.stubs(:params).returns({:action=>:edit,:id=>"hydrangea:fixture_mods_article1"} ) # the permissions from this are not actually used because we stub the :editor? method
       helper.expects(:redirect_to).with(:action => :show)
       helper.send(:enforce_edit_permissions)
       flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
@@ -146,6 +146,12 @@ describe Hydra::AccessControlsEnforcement do
    it "should raise Blacklight::InvalidSolrID for an unknown id" do
      lambda {
        helper.get_permissions_solr_response_for_doc_id(@bad_id)
+     }.should raise_error(Blacklight::Exceptions::InvalidSolrID)
+   end
+   
+   it "should raise Blacklight::InvalidSolrID for nil id" do
+     lambda {
+       helper.get_permissions_solr_response_for_doc_id(nil)
      }.should raise_error(Blacklight::Exceptions::InvalidSolrID)
    end
 
