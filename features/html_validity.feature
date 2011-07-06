@@ -24,3 +24,20 @@ Feature: HTML validity
     And I follow "Article"
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
+    
+  Scenario: Record view browse (unauthenticated)
+    Given I am on the show document page for hydrangea:fixture_mods_article2
+    Then I should see "TITLE OF HOST JOURNAL"
+    And the page should be HTML5 valid
+    
+  Scenario: Record view browse (authenticated)
+    Given I am logged in as "archivist1" 
+    When I am on the show document page for hydrangea:fixture_mods_article2
+    Then I should see "TITLE OF HOST JOURNAL"
+    And the page should be HTML5 valid
+    
+  Scenario: Record view edit (authenticated)
+    Given I am logged in as "archivist1" 
+    When I am on the edit document page for hydrangea:fixture_mods_article2
+    Then I should see "TITLE OF HOST JOURNAL"
+    And the page should be HTML5 valid
