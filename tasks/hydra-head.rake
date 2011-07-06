@@ -22,7 +22,7 @@ namespace :hyhead do
     # does this make jetty run in TEST environment???
     error = Jettywrapper.wrap(jetty_params) do
       Rake::Task['hyhead:setup_test_app'].invoke
-      puts %x[hyhead:fixtures:refresh RAILS_ENV=test]
+      puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test] # calling hydra:fixtures:refresh from the root of the test app
       Rake::Task['hyhead:test'].invoke
     end
     raise "test failures: #{error}" if error
@@ -37,16 +37,16 @@ namespace :hyhead do
     desc "Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded."
     RSpec::Core::RakeTask.new(:run) do |t|
   #    t.spec_opts = ['--options', "/spec/spec.opts"]
-      t.pattern = 'spec/**/*_spec.rb'
+      t.pattern = 'test_support/spec/**/*_spec.rb'
       t.rcov = true
       t.rcov_opts = lambda do
-        IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
+        IO.readlines("test_support/spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
       end
     end
     
     desc "Sets up test host, loads fixtures, then runs specs - need to have jetty running."
     task :setup_and_run => ["hyhead:setup_test_app"] do
-      system("rake hydra:fixtures:refresh environment=test")
+      system("rake hyhead:fixtures:refresh environment=test")
       Rake::Task["hyhead:rspec:run"].invoke
     end
         
@@ -183,6 +183,8 @@ namespace :hyhead do
     puts "Running rake db:migrate"
     %x[rake db:migrate]
     %x[rake db:migrate RAILS_ENV=test]
+    
+    FileUtils.cd('../../')
     
     raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
