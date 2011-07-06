@@ -48,14 +48,15 @@ module Hydra::AccessControlsEnforcement
   # @param [String] id of the documetn to retrieve
   # @param [Hash] extra_controller_params (optional)
   def get_permissions_solr_response_for_doc_id(id=nil, extra_controller_params={})
+    raise Blacklight::Exceptions::InvalidSolrID.new("The application is trying to retrieve permissions without specifying an asset id") if id.nil?
     solr_response = Blacklight.solr.find permissions_solr_doc_params(id).merge(extra_controller_params)
-    raise Blacklight::Exceptions::InvalidSolrID.new if solr_response.docs.empty?
+    raise Blacklight::Exceptions::InvalidSolrID.new("The solr permissions search handler didn't return anything for id \"#{id}\"") if solr_response.docs.empty?
     document = SolrDocument.new(solr_response.docs.first, solr_response)
     [solr_response, document]
   end
   
   # Loads permissions info into @permissions_solr_response and @permissions_solr_document
-  def load_permissions_from_solr(id=nil, extra_controller_params={})
+  def load_permissions_from_solr(id=params[:id], extra_controller_params={})
     unless !@permissions_solr_document.nil? && !@permissions_solr_response.nil?
       @permissions_solr_response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(id, extra_controller_params)
     end
