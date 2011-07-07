@@ -11,7 +11,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe CatalogController do
   
   before do
-    #request.env['WEBAUTH_USER']='bob'
+    controller.stubs(:load_fedora_document)
   end
 
   describe "show" do
