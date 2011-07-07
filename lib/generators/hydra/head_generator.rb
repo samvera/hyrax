@@ -108,8 +108,9 @@ EOF
     file_path = "app/controllers/#{controller_name.underscore}.rb"
     if File.exists?(file_path) 
       insert_into_file file_path, :after => 'include Blacklight::Catalog' do      
-        "\n  # Extend Blacklight::Catalog with Hydra behaviors (primarily editing & access controls)." +
+        "\n  # Extend Blacklight::Catalog with Hydra behaviors (primarily editing)." +
         "\n  include Hydra::Catalog\n"  +
+        "\n  # These before_filters apply the hydra access controls" +
         "\n  before_filter :enforce_access_controls" +
         "\n  before_filter :enforce_viewing_context_for_show_requests, :only=>:show"             
       end

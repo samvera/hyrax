@@ -71,9 +71,26 @@ describe CatalogController do
       end
     end
   end
+
+
+  describe "load_fedora_document" do
+    it "should load @document_fedora and @file_assets" do
+      controller.stubs(:params).returns({:id=>"foo:id"})
+      stub_base_object = stub("Base Object")
+      ActiveFedora::Base.expects(:load_instance).with("foo:id").returns( stub_base_object )
+      ActiveFedora::ContentModel.expects(:known_models_for).with( stub_base_object ).returns( [ModsAsset] )
+      stub_mods_asset = stub("MODS Asset")
+      stub_mods_asset.expects(:file_objects).with(:response_format=>:solr).returns("file assets response")
+      ModsAsset.expects(:load_instance).returns( stub_mods_asset )
+      controller.load_fedora_document
+      
+      assigns[:document_fedora].should == stub_mods_asset
+      assigns[:file_assets].should == "file assets response"
+    end
+  end
   
   describe "edit" do
-    it "should load @document_fedora and @file_assets"
+
     it "should trigger show action" do
       pending
       controller.expects(:show)
@@ -94,13 +111,15 @@ describe CatalogController do
       end
     end
     describe "show" do
-      it "should trigger enforce_show_permissions" do
+      it "should trigger enforce_show_permissions and load_fedora_document" do
+        controller.expects(:load_fedora_document)
         controller.expects(:enforce_show_permissions)
         get :show, :id=>'test:3'
       end
     end
     describe "edit" do
-      it "should trigger enforce_edit_permissions" do
+      it "should trigger enforce_edit_permissions and load_fedora_document" do
+        controller.expects(:load_fedora_document)
         controller.expects(:enforce_edit_permissions)
         get :edit, :id=>'test:3'
       end
