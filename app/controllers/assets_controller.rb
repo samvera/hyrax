@@ -5,11 +5,11 @@ class AssetsController < ApplicationController
     include Blacklight::SolrHelper
     include Hydra::RepositoryController
     include Hydra::AssetsControllerHelper
-    include WhiteListHelper
+#    include WhiteListHelper
     include ReleaseProcessHelper
     
     
-    include Blacklight::CatalogHelper
+    include Blacklight::Catalog
     helper :hydra
     
     before_filter :search_session, :history_session
@@ -35,7 +35,7 @@ class AssetsController < ApplicationController
         end
         respond_to do |format|
           format.html     { render :text=>result }
-          format.textile  { render :text=> white_list( RedCloth.new(result, [:sanitize_html]).to_html ) }
+          format.textile  { render :text=> RedCloth.new(result, [:sanitize_html]).to_html  }
         end
       else
         redirect_to :controller=>"catalog", :action=>"show"
@@ -73,7 +73,7 @@ class AssetsController < ApplicationController
           if @response.kind_of?(Hash)
             textile_response = tidy_response_from_update(@response).values.first
           end
-          render :text=> white_list( RedCloth.new(textile_response, [:sanitize_html]).to_html )
+          render :text=> RedCloth.new(textile_response, [:sanitize_html]).to_html
         }
       end
     end
