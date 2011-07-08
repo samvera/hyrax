@@ -1,0 +1,23 @@
+/* This is the CSS that Jessie is creating to put some CSS tweaks necessary to get the app looking like Blacklight again
+   I fully expect this CSS to either be moved to a more appropriate name or removed all together */
+/* The search results width was behaving wonky */
+#yui-main {
+	width:75%;
+}
+#documents table {
+	width:100%;
+}
+
+
+/* The hydra provided search button was miss-aligned w/ the form field */
+#search #submit {
+	margin-bottom:-12px;
+}
+
+/* Record view next/previous links */
+#previousNextDocument {
+	text-align:center;
+}
+#previousNextDocument .previous {
+	float:left;
+}

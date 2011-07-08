@@ -1,16 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<!--[if lt IE 7 ]> <html xmlns="http://www.w3.org/1999/xhtml" class="ie6"> <![endif]--> 
-<!--[if IE 7 ]>    <html xmlns="http://www.w3.org/1999/xhtml" class="ie7"> <![endif]--> 
-<!--[if IE 8 ]>    <html xmlns="http://www.w3.org/1999/xhtml" class="ie8"> <![endif]--> 
-<!--[if IE 9 ]>    <html xmlns="http://www.w3.org/1999/xhtml" class="ie9"> <![endif]--> 
-<!--[if gt IE 9]>  <html xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
-<!--[if !IE]><!--> <html xmlns="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<!--[if lt IE 7 ]> <html class="ie6"> <![endif]--> 
+<!--[if IE 7 ]>    <html class="ie7"> <![endif]--> 
+<!--[if IE 8 ]>    <html class="ie8"> <![endif]--> 
+<!--[if IE 9 ]>    <html class="ie9"> <![endif]--> 
+<!--[if gt IE 9]>  <html> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
 
   <head>
-    
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
 
     <title><%= h(@page_title || application_name) %></title>
     <link href="<%= url_for :controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
@@ -23,7 +21,7 @@
 		<![endif]-->
 	</head>
   
-    <body>
+    <body class="<%= render_body_class %>">
 
 	  <div id="doc4" class="yui-t2">
 		
@@ -32,13 +30,14 @@
 			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>" : "" %>
 		</div>
 	    
-	    <div id="bd">
+	  <div id="bd">
 			<div id="yui-main">
-           		<%= render :partial=>'/flash_msg' %>
-        		<div class="sidebar"><%= sidebar_items.join('') %></div>	
-           		<%= yield %>
-        	</div>
-	    </div>
+        <%= render :partial=>'/flash_msg' %>
+        <%= yield %>
+      </div>
+      <div class="yui-b sidebar"><%= sidebar_items.join('') %></div>	
+	  </div>
+	    
 	    
 		<div id="footer">
 			<div id="container3">

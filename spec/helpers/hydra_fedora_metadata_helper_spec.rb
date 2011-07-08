@@ -172,10 +172,16 @@ describe HydraFedoraMetadataHelper do
   
   describe "fedora_field_label" do
     it "should generate a label with appropriate @for attribute" do
+      params[:action] = "edit"
       helper.fedora_field_label("ng_ds",[:title, :main_title], "Title:").should have_tag "label[for=title_main_title]", "Title:"
     end 
     it "should display the field name if no label is provided" do
+      params[:action] = "edit"
       helper.fedora_field_label("ng_ds",[:title, :main_title]).should have_tag "label[for=title_main_title]", "title_main_title"
+    end
+    it "should return a span and not a label when we are not editing the object" do
+      params[:action] = "show"
+      helper.fedora_field_label("ng_ds",[:title, :main_title]).should have_tag "span","title_main_title"
     end
   end
   
