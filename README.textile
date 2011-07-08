@@ -5,12 +5,13 @@ Hydra-Head is a Rails Engines plugin containing the core code for a Hydra applic
 Hydra-head is a Rails plugin that depends upon and extends Blacklight.  Wherever possible, hydra-head relies on Blacklight's views and styling.  This means that while hydra-head provides a lot of unique functionality, you will only get something that looks like a complete application when you combine hydra-head with Blacklight in a Rails application.  
 
 - "Blacklight":http://projectblacklight.org/  (a rails engines plugin) for the User Interface
-- "Solr":http://lucene.apache.org/solr/ (a java application, also ported to other languages) for the Search Engine 
+- "Fedora":http://fedora-commons.org/ (a java web application) for the digital content repository
+- "Solr":http://lucene.apache.org/solr/ (a java web application, also ported to other languages) for the Search Engine 
 - "ActiveFedora":https://github.com/mediashelf/active_fedora (a ruby gem) to let the rails application talk to Fedora.  Somewhat analogous to ActiveRecord in Rails. 
 - "OM (Opinionated Metadata)":https://github.com/mediashelf/om (a ruby gem) to streamline the translation from XML metadata and ruby objects (avoid XPath!)
 - "Solrizer":https://github.com/projecthydra/solrizer (a ruby gem) to write content to the Solr index
 - "SolrizerFedora":https://github.com/projecthydra/solrizer-fedora (a ruby gem) to write Fedora content to the Solr index.
-- HydraHead (a rails engines plugin) to glue it all together 
+- HydraHead (this rails engines plugin) to glue it all together 
 
 For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":https://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile.
 
