@@ -34,7 +34,7 @@ module BlacklightHelper
   def link_to_document(doc, opts={:label=>Blacklight.config[:index][:show_link].to_sym, :counter => nil,:title => nil})
     label = case opts[:label]
       when Symbol
-        doc.get(opts[:label])
+        doc.fetch(opts[:label], "foo")
       when String
         opts[:label]
       else
