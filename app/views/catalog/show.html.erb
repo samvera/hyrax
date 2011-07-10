@@ -1,0 +1,50 @@
+<%-
+  doc_title = (document_show_html_title.nil? || document_show_html_title.empty?) ? @document[:id] : document_show_html_title.first
+  @page_title = "#{doc_title} - #{application_name}" 
+-%>
+<div id="showHead">
+  <div id="showUtils">
+    <div class="tools"><%= render :partial => 'show_tools' %></div>
+    <span class="back_to_cat"><%= link_back_to_catalog :label=>'&larr; Return to search results' %></span>
+    <% if @previous_document || @next_document %>
+      <div id="previousNextDocument">
+	    <span class="previous"><%= link_to_previous_document(@previous_document) %></span>
+    <% end %>
+    <%- if session[:search][:counter].to_i > 0 -%>
+      <%= session[:search][:counter].to_i %> of <%= format_num(session[:search][:total]) %>
+    <%- end -%>
+    <% if @previous_document || @next_document %>
+	    <span class="next"><%= link_to_next_document(@next_document)%></span>	
+      </div>
+    <% end %>
+  </div>
+</div>
+<% if editor? && controller.action_name != "delete" %>
+	<span class="edit-browse">
+		<%= edit_and_browse_links %>
+	</span>
+<% end -%>
+<div id="document" class="<%= controller.action_name == "edit" ? "document_edit" : "document_show" %>">
+  <div id="<%= format_pid(@document[:id]) %>">
+    <h1><%= h(document_heading) %><br/><%= h(vern_document_heading) %></h1>
+    <div class="document">
+      <%= render_document_partial @document, params["action"] %>
+    </div>
+  </div>
+</div>
+
+
+<%= render :partial=>'solr_request' %>
+<% if @document.marc %>
+  <%= @document.marc.to_zotero(document_partial_name(@document)) %>
+<% end %>
+
+<div class="lightboxContent" id="citation" style="display:none;">
+  <%= render :partial => 'citation' %>
+</div>
+<div class="lightboxContent" id="email" style="display:none;">
+  <%= render :partial => 'email_form' %>
+</div>
+<div class="lightboxContent" id="sms" style="display:none;">
+  <%= render :partial => 'sms_form' %>
+</div>

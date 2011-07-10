@@ -1,0 +1,72 @@
+<% journal = edit_journal %>
+<% journal_counter = edit_journal_counter %>
+<% base_id = "journal_#{journal_counter}" %>
+<li>
+	<fieldset id="citation_fieldset">
+  	<legend>Article Citation</legend>
+	<ul>
+		<li id="pbJournalTitle">
+		<fieldset id="journal_title_fieldset">		
+	    <legend>Journal Title<small>Required</small></legend>
+	    <%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter}, :title_info, :main_title], :multiple=>false) %>	
+		</fieldset>
+	</li>
+
+	<li id="pbCitation">
+		<fieldset id="citation_details_fieldset">	
+		<dl class="journal citation" id="<%= base_id %>">
+		  <dd class="multi_inline citation">
+		    <ul>
+		      <li class="citation_volume">
+		        <%= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:volume], "Volume") %>
+		        <%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:volume], :multiple=>false) %>
+		      </li>
+		      <li class="citation_issue">
+		        <%= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:level], "(Issue)") %>
+		        <%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:level], :multiple=>false) %>
+		      </li>
+		      <li class="start_page">
+		        <%= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:start_page], "Start Page") %>
+		        <%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:start_page], :multiple=>false) %>
+		      </li>
+		      <li class="end_page">
+		        <%= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:end_page], "End Page") %>
+		        <%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:end_page], :multiple=>false) %>
+		      </li>
+		    </ul>
+		  </dd>
+		</dl>
+		</fieldset>
+	</li>			
+			
+	<li id="pbPublisher">
+		<fieldset id="publisher_fieldset">
+	  	<legend>Publisher</legend>
+	  <%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter},:origin_info, :publisher], :multiple=>false) %>
+		</fieldset>
+	</li>
+
+	<li id="pbISBN">
+		<fieldset id="isbn_fieldset">
+	  	<legend>ISSN</legend>
+	  	<%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter}, :issn], :multiple=>false) %>
+		</fieldset>
+	</li>
+
+
+	<li id="pbPublicationDate">
+		<fieldset id="publication_date_fieldset">
+		<legend>Publication Date</legend>
+<%= fedora_text_field(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:publication_date], :multiple=>false) %>
+		</fieldset>
+	</li>
+	
+	<li id="pbPublicationURL">
+		<fieldset id="publication_url_fieldset">
+		<legend>Publication URL</legend>
+		<label>Provide the full URL to any published version of the work.</label>		
+		<%= fedora_text_field(@document_fedora,"descMetadata", [:location, :url], :multiple=>false) %>
+		</fieldset>
+	</li>
+</ul>
+</li>

@@ -1,0 +1,16 @@
+<tr class="file_asset" id ="<%= format_pid(result["id"]) %>" >  
+  <td>
+    <%= link_to result[solr_name("title", :text)], file_asset_path(result["id"]) %>
+  </td>
+  <td>
+	
+   <% if editor? %>
+    	<% if @container.nil? %>
+    		<% file_asset_url = file_asset_path(result["id"]) %>
+    	<% else %>
+    		<% file_asset_url = asset_file_asset_path(@container.pid, result["id"]) %>
+    	<% end %>
+      <%= delete_asset_link(result["id"], result["active_fedora_model_s"].first ) %>
+   <% end %>
+  </td>
+</tr>

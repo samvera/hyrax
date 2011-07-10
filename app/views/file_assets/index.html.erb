@@ -1,0 +1,5 @@
+<%# This file is for backwards compatiability purposes. 
+		Probably should eventually go away. 
+%> 
+<%# @solr_result.hits %>
+<%= render :partial=>'file_assets/index', :locals => { :file_assets => @solr_result }  %>

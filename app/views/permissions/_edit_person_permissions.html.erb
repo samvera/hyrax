@@ -1,0 +1,35 @@
+<%# -# ie. asset[access_person][researcher1] %>
+<% unless defined?(person_id) %>
+	<% person = edit_person_permissions %>
+	<% person_id = person.text %>
+<% end %>
+ <%#
+ -# Don't allow a user to change his own permissions.
+-# Currently, just don't render the user's own permissions
+-# In the future, we should show current_user's permissions and just disable the ability to modify
+ %>
+
+<% if person_id != current_user.login %>
+	<% field_name = "#{person_id}_access" %>
+	<% choices = [{"No Access" => "none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read"}, {"Edit &amp; Upload" => "edit"}] %>
+	<% current_permissions = @document_fedora.datastreams_in_memory["rightsMetadata"].permissions({"person"=>person_id}) %>
+	
+	<dt>
+  	<label for="<%= field_name %>">
+  		<%= person_id %>
+  	</label>
+	</dt>
+	<dd>
+  	<select id="<%= field_name %>" name="permission[person][<%=h person_id %>]">
+    	<% choices.each do |choice| %>
+  	  	<% choice_label = choice.keys.first %>
+  	  	<% choice_name = choice.values.first %>
+	  	
+  			<option value="<%= choice_name %>" selected="<%= current_permissions == choice_name %>">
+  	    	<%= choice_label %>
+    		</option>
+    	<% end %>
+  	</select>
+	</dd>
+	
+<% end %>

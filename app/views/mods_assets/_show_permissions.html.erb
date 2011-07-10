@@ -1,0 +1,14 @@
+<div>
+  <dl class="defList">
+    <% if editor? %>
+      <h3>Group</h3>
+      <%= get_data_with_label(document, "Discover Access:", 'discover_access_group_t', :default=>"private") %>
+      <%= get_data_with_label(document, "Read & Download Access:", 'read_access_group_t', :default=>"private") %>
+      <%= get_data_with_label(document, "Edit & Upload Access:", 'edit_access_group_t', :default=>"private") %>
+      <h3>Individual</h3>
+      <%= get_data_with_label(document, "Discover Access:", 'discover_access_t', :default=>"private") %>
+      <%= get_data_with_label(document, "Read & Download Access:", 'read_access_t', :default=>"private") %>
+      <%= get_data_with_label(document, "Edit & Upload Access:", 'edit_access_t', :default=>"private") %>
+    <% end %>
+  </dl>
+</div>

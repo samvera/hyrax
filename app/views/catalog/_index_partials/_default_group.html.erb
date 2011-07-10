@@ -1,0 +1,15 @@
+
+<table>
+	<% unless params[:display_type] == 'list' %>
+  <tr>
+    <th class="title">Title</th>
+    <th class="creator">Author</th>
+    <th class="journal">Work</th>
+    <th class="deposited">Deposited</th>
+    <th class="files">Files</th>
+  </tr>
+  <% end %>
+  <% docs.each_with_index do |document,counter| %>
+   <%= render_document_partial document, 'index', :counter => counter %>
+  <% end %>
+</table>

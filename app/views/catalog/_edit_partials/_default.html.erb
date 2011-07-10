@@ -1,0 +1,64 @@
+<%# default partial to display solr document fields in catalog show view -%>
+
+<%- stylesheet_links << "../plugin_assets/hydra-head/javascripts/date-picker/css/datepicker" %>
+<%- stylesheet_links << "../plugin_assets/hydra-head/javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
+<%- stylesheet_links << ["../plugin_assets/hydra-head/javascripts/select_to_ui_slider/css/ui.slider.extras.css"] %>
+<%- stylesheet_links << ["slider", {:plugin=>"hydra-head"}] %>
+
+
+
+<% @fedora_object = ActiveFedora::Base.load_instance(params[:id])
+   @datastreams = @fedora_object.datastreams
+%>
+
+<div class="document_viewer" id="cover_container">
+  <dl>
+    <dt>pid:</dt>
+        <dd><%= @fedora_object.pid %></dd>
+  </dl>
+  <dl>
+    <dt>label:</dt>
+        <dd><%= @fedora_object.label %></dd>
+    <dt>state:</dt>
+        <dd><%= @fedora_object.state %></dd>
+    <dt>owner id:</dt>
+        <dd><%= @fedora_object.owner_id %></dd>
+  </dl>
+  <dl>
+    <dt>created:</dt>
+        <dd><%= @fedora_object.create_date %></dd>
+    <dt>last modified:</dt>
+        <dd><%= @fedora_object.modified_date %></dd>
+  </dl>
+  <dl>
+    <dt>datastreams:</dt>
+        <dd>
+          <ul>
+            <% @datastreams.keys.sort!.each do |dsid| %>
+                <li><a href="#<%=dsid%>" class="inline"><%=dsid%></a>
+                    <div style='display:none'>
+                      <div id='<%=dsid%>'>
+                        <h1><%=dsid%></h1>
+                        <dl>
+                            <%= ("<dt>label:</dt><dd>" + @datastreams[dsid].label + "</dd>") unless @datastreams[dsid].label.blank? %>
+                            <%= ("<dt>last modified:</dt><dd>" + @datastreams[dsid].last_modified + "</dd>") unless @datastreams[dsid].last_modified.blank? %>
+                            <%= ("<dt>mimetype:</dt><dd>" + @datastreams[dsid].mime_type + "</dd>") unless @datastreams[dsid].mime_type.blank? %>
+                            <%= ("<dt>control group:</dt><dd>" + @datastreams[dsid].control_group + "</dd>") unless @datastreams[dsid].control_group.blank? %>
+                        </dl>
+                      </div>
+                    </div></li>
+            <% end %>
+          </ul>
+        </dd>
+  </dl>
+
+  <%= render :partial => "permissions/index", :locals => {:document => document, :asset_id=>params[:id]}%>
+
+</div>
+
+
+<% sidebar_items << capture do %>
+  <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
+  <%#= render :partial=>'facets' %>
+<% end %>
+

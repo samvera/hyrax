@@ -1,0 +1,82 @@
+<%- stylesheet_links << "progressBox" %>
+<%- @ds_desc_metadata = @document_fedora.datastreams["descMetadata"] %>
+<%- author_entries = @ds_desc_metadata.find_by_terms_and_value('//oxns:name[@type="personal" and contains(oxns:role, "Author") and string-length(oxns:namePart[@type="family"]) > 0 ]') %>
+<%- title_values = @ds_desc_metadata.term_values(:title_info, :main_title) %>	
+<ol>
+<% if !title_values.empty? && !title_values.first.empty? %>
+  <li id="pbTitleProvided" class="progressItem progressItemChecked">
+    Title provided <span class="progressBoxInvisibleStatus">- Done</span> 
+  </li> 
+<% else %>
+  <li id="pbTitleProvided" class="progressItem">
+    Title provided <span class="progressBoxInvisibleStatus">- Not done</span> 
+  </li> 
+<% end %>
+
+<% if !author_entries.empty? %>
+  <li id="pbAuthorProvided" class="progressItem progressItemChecked">
+    One or more Author provided <span class="progressBoxInvisibleStatus">- Done</span> 
+  </li> 
+<% else %>
+  <li id="pbAuthorProvided" class="progressItem">
+    One or more Author provided <span class="progressBoxInvisibleStatus">- Not done</span> 
+  </li> 
+<% end %>
+
+<% if !@document_fedora.parts(:response_format=>:id_array).empty? %>
+  <li id="pbFileUploaded" class="progressItem progressItemChecked">
+    One or more Files uploaded <span class="progressBoxInvisibleStatus">- Done</span> 
+  </li> 
+<% else %>
+  <li id="pbFileUploaded" class="progressItem">
+    One or more Files uploaded <span class="progressBoxInvisibleStatus">- Not done</span> 
+  </li> 
+<% end %>
+
+
+<% if @document_fedora.submitted_for_release? %>
+  <li id="submitToRegistrarDiv" class="noIndent"> 
+    <hr size="1" />
+    <!-- <p class="progressItem progressItemChecked bold">Released</p> -->
+    <!-- <div class="progressInfoBox"><%#= formatTimestamp(@ds_properties.submit_date_values.first) %></div> -->
+      <form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"mods_asset")%>" method="post" data-resourceType="mods_asset" accept-charset="utf-8">
+        <input name="_method" type="hidden" value="put" />
+      	<div>  
+            <p class="progressItem progressItemChecked bold">
+        			<%= fedora_field_label("properties", [:release_to], "Released to") %>
+        			<%= fedora_select(@document_fedora, "properties", [:release_to], :choices => {"Public" => "public", "UVa Only"=>"registered"})   %>    
+      			<!-- Careful! Submitting this hidden input will release the article.  -->
+        			<%= tag(:input, :type=>"hidden", :name=>"asset[properties][released][0]", :value=>"true")%>
+            </p>
+      	</div>
+      </form>
+    <hr size="1" />
+    <div id="deleteAsset">
+  		<%= delete_asset_link(params[:id], "article") %>
+  	</div>
+  </li>
+<% else %>
+  <li class="progressBoxSubmit noIndent" id="submitToRegistrarDiv">
+    <hr size="1" />
+      <form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"mods_asset")%>" method="post" data-resourceType="mods_asset" accept-charset="utf-8">
+        <input name="_method" type="hidden" value="put" />
+      	<div>  
+        			<%= fedora_field_label("properties", [:release_to], "Release to") %>
+        			<%= fedora_select(@document_fedora, "properties", [:release_to], :choices => {"Public" => "public", "UVa Only"=>"registered"})   %>    
+      			<!-- Careful! Submitting this hidden input will release the article.  -->
+        			<%= tag(:input, :type=>"hidden", :name=>"asset[properties][released][0]", :value=>"true")%>
+      	  <% if @document_fedora.ready_to_release? %>
+            	<%= button_to 'Release for UVa Library Circulation', {},{:id => "submitForRelease"} %>		
+          <% else %>
+            	<%= button_to 'Release for UVa Library Circulation', {},{:id => "submitForRelease", :disabled => "disabled"} %>		
+          <% end %>
+      	</div>
+      </form>
+	  <hr size="1" />
+    <div id="deleteAsset">
+  		<%= delete_asset_link(params[:id], "article") %>
+  	</div>
+  </li> 
+<% end %>
+
+</ol>

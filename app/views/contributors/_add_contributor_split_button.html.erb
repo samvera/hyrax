@@ -1,0 +1,10 @@
+<%# This partial needs work -- needs to be progressively enhanceable AND work with JQuery UI Split Button #%>
+<div id="add-contributor-box">
+  <input id="re-run-add-contributor-action" type="button" value="Add a researcher" style="display:none"/>
+  <button id="select-contributor-type" type="button" style="display:none">Select type of contributor to add</button>
+  <ul id="add-contributor-menu">
+    <li id="add_person"><%= link_to "Add a Person", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"person") %></li>
+    <li id="add_organization"><%= link_to "Add an Organization", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"organization") %></li>
+    <li id="add_conference"><%= link_to "Add a Conference", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"conference") %></li>
+  </ul>
+</div>

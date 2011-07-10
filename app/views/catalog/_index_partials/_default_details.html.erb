@@ -1,0 +1,11 @@
+<%# default partial to display solr document fields in catalog index view -%>
+<dl class="defList">
+  <%#= get_relevance_bar(document[:score],"Relevance:") %>
+  <%= get_data_with_label(document, "Date:", 'date_t') %>  
+  <%= get_data_with_label(document, "Title:", 'title_t') %>
+  <%= get_data_with_label(document, "Document Type:", 'medium_t') %>
+  <%= get_data_with_label(document, "Location:", 'location_t') %>
+  <% callnums = get_callnum(document) %>
+  <%= get_suppl_urls(document) %>  
+  <%= show_formats(document['format']) %>
+</dl>

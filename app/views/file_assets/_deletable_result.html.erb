@@ -1,0 +1,5 @@
+<% if deletable_result["is_part_of_s"] && deletable_result["is_part_of_s"].length == 1 && deletable_result["is_part_of_s"][0].match(/#{@container.pid}$/) %>
+<li>
+  <%= deletable_result["id"] + " (" + deletable_result[solr_name("title", :text)].first + ")" %>
+</li>
+<% end %>

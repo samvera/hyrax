@@ -1,0 +1,17 @@
+<% person = show_person %>
+<% person_counter = show_person_counter %>
+<% person_name = "#{get_values_from_datastream(@document_fedora,'descMetadata', [{:person=>person_counter}, :first_name])} #{get_values_from_datastream(@document_fedora,'descMetadata', [{:person=>person_counter}, :last_name])}" %>
+<% base_id = "person_#{person_counter}" %>
+<% unless ( get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name]).first.empty? || get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name]).first.empty? ) %>
+  <li id="person_<%= person_counter %>">
+	  <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :role]).first.strip.empty? %>
+          <span class="contributor_role"><%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :role, :text]) %></span>
+      <% end %>
+      <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name]).first.empty? %>
+          <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name]).first.strip %>
+      <% end %>
+      <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name]).first.empty? %>
+          <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name]).first.strip %><% end %><% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution]).first.empty? %>, <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution]) %>
+      <% end %>
+  </li>
+<% end %>

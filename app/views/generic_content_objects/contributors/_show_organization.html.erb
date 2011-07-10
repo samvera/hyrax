@@ -1,0 +1,22 @@
+<% organization = show_organization %>
+<% organization_counter = show_organization_counter %>
+<% organization_name = get_values_from_datastream(@document_fedora,'descMetadata', [{:organization=>organization_counter}, :namePart]).first %>
+<% base_id = "organization_#{organization_counter}" %>
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:organization => organization_counter}, :namePart]).first.empty? %>
+  <li>
+    <dl class="organization contributor" id="<%= base_id %>">
+      <dt>
+        <%= fedora_field_label("descMetadata", [{:organization => organization_counter}, :role, :text], "Organization's Role:") %>
+        <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:organization => organization_counter}, :role, :text]) %>
+      </dt>
+      <dd class="organization">
+        <ul>
+          <li>
+            <%= fedora_field_label("descMetadata", [{:organization => organization_counter}, :namePart], "Organization:") %>
+            <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:organization => organization_counter}, :namePart]) %>
+          </li>
+        </ul>
+      </dd>
+    </dl>
+  </li>
+<% end %>

@@ -1,0 +1,8 @@
+<%= render :partial=>"contributors/edit_person", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:person) %>
+<%= link_to "Add a Person", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"person") %>
+
+<%= render :partial=>"contributors/edit_organization", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:organization) %>
+
+<%= link_to "Add an Organization", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"organization") %>
+
+<%#= render :partial => "contributors/add_contributor_split_button" %>
