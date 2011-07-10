@@ -29,6 +29,7 @@ module Hydra::Catalog
     # View Helpers
     klass.helper :hydra
     klass.helper :hydra_assets
+    klass.helper :article_metadata
   end
   
   def edit
