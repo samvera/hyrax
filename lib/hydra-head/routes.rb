@@ -24,24 +24,97 @@ module HydraHead
     end
 
     def default_route_sets
-      [:catalog, :assets]
+      [:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :asset_file_assets, :catalog, :user_sessions, :get]
     end
-    
+
     module RouteSets
-      def catalog
+
+      def file_assets
         add_routes do |options|
-          resources :catalog, :only => [:edit]
+          resources :file_assets
         end
       end
-      
+
       def assets
         add_routes do |options|
           resources :assets
+          # this is to remove documents from SOLR but not from Fedora.
+          match "withdraw", :to => "assets#withdraw", :as => "withdraw"   
         end
       end
-      
+
+      def downloads
+        add_routes do |options|
+          resources :assets do
+            resources :downloads, :only=>[:index]
+          end
+        end
+      end
+
+      def contributors
+        add_routes do |options|
+          resources :assets do
+            resources :contributors, :only=>[:new,:create]
+          end
+          match 'assets/:asset_id/contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'asset_contributor', :conditions => { :method => :get }
+          match 'assets/:asset_id/contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :conditions => { :method => :delete }
+        end
+      end
+
+      def grants
+        add_routes do |options|
+          resources :assets do
+            resources :grants, :only=>[:new,:create]
+          end
+        end
+      end
+
+      def permissions
+        add_routes do |options|
+          resources :assets do
+            resources :permissions
+          end
+          # Allow updates to assets/:asset_id/permissions (no :id necessary)
+          match 'assets/:asset_id/permissions', :to => 'permissions#update', :as => 'update_group_permissions'
+        end
+      end
+
+      def asset_file_assets
+        add_routes do |options|
+          resources :assets do
+            resources :file_assets
+          end
+        end
+      end
+
+      def catalog
+        add_routes do |options|
+          resources :catalog, :only => [ :index, :show ], :controller => "hydra_head/catalog", :path_prefix => HydraHead::Engine.config.mount_at, :as => "hydra_head_"
+          #resources :catalog, :only => [:edit, :delete]
+          match 'catalog/:id/edit', :to => 'catalog#edit', :as => 'edit_catalog'
+          match 'catalog/:id/delete', :to => 'catalog#delete', :as => 'delete_catalog'
+          match 'about', :to => 'catalog#about', :as => 'about'
+        end
+      end
+
+      def user_sessions
+        add_routes do |options|
+          resources :user_sessions
+          match 'logged_out', :to => 'user_sessions#logged_out', :as => 'logged_out'
+          match 'superuser', :to => 'user_sessions#superuser', :as => 'superuser'
+        end
+      end
+
+      def get
+        add_routes do |options|
+          resources :get, :only=>:show 
+        end
+      end
+
+
     end
     include RouteSets
-    
+
+#match 'generic_contents_object/content/:container_id', :to => 'generic_content_objects#create', :as => 'generic_content_object', :conditions => {:method => :post}
   end
 end
