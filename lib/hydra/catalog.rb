@@ -34,6 +34,7 @@ module Hydra::Catalog
   
   def edit
     show
+    render "show"
   end
   
   def load_fedora_document
