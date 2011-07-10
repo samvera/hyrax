@@ -249,7 +249,11 @@ module HydraFedoraMetadataHelper
     if label.nil?
       label = field_name
     end
-    return content_tag "label", label, :for=>field_name
+    if params and params[:action] == "show"
+      return content_tag :span, label 
+    else
+      return content_tag "label", label, :for=>field_name
+    end
   end
   
   # Generate hidden inputs to handle mapping field names to server-side metadata mappings

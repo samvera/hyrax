@@ -4,6 +4,39 @@ This is a list of questions a Hydra implementer might ask, and where to find the
 
 h4. Determine How (ActiveFedora, OM, Solrizer, Solrizer-Fedora, Blacklight ...) fits into the Hydra stack and what it is responsible for?
 
+h4. Learn more about test first development?
+
+h4. Learn more about rspec and cucumber?
+
+h4. Use the Cucumber Step Definitions in the Hydra-Head plugin without recopying them at the app level?
+
+1. Create a new file in features/step_definitions, such as features/step_definitions/hydra_head_steps.rb
+
+2. Add "require" statements for the files you want to use in vendor/plugins/hydra-head/features/step_definitions:
+
+<pre>
+  # just grabbing a bunch of useful step definitions from hydra-head plugin
+  require "vendor/plugins/hydra-head/features/step_definitions/html_validity_steps"
+  require "vendor/plugins/hydra-head/features/step_definitions/user_steps"
+  require "vendor/plugins/hydra-head/features/step_definitions/show_document_steps"
+</pre>
+
+There is probably an easier way to do this by adding that folder to your path.
+
+h4. Ensure my app's html is html5 valid?
+
+1.  You will need to use the html_validity_steps in the hydra-head plugin's features/step_definitions folder (see above).  You will also need the user_steps if you will be checking html5 validity of the pages when a user is logged in.
+
+2.  You will need to make sure there is a path defined in cucumber for all the pages you want to validate
+
+3.  In your scenarios, include this line:
+
+<pre>
+  Then the page should be HTML5 valid
+</pre>
+
+We recommend that you put all the validity scenarios in a separate feature file, rather than intermingling them in your other feature files -- it's easier to ensure you are checking each page and not duplicating this check.
+
 h4. Change What is Displayed on Home Page?
 
 h4. Change What is Displayed in Search Results?
@@ -37,6 +70,8 @@ h4. Create An Object Type to Match Existing Fedora Objects?
 - get foxml (?), then see "Create a New Object"
 
 h4. Get Facets to Display on Home Page and in Search Results?
+
+Assuming you've got the data in the Solr index (see xxx), this is part of the BLACKLIGHT_CONFIG.textile
 
 h4. Set up a Hydra Rails Application?
 
