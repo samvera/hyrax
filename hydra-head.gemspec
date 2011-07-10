@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.description = %q{TODO: Write a gem description}
 
   s.add_dependency "rails", '>= 3.0'
-  s.add_dependency "blacklight", '~> 3.0.0pre6'
+  # s.add_dependency "blacklight", '~> 3.0.0pre6'
+  s.add_dependency "blacklight", '3.0.0hyhead1'  
   s.add_dependency "active-fedora", '>= 2.3.0'
   s.add_dependency 'builder'
   s.add_dependency 'columnize'

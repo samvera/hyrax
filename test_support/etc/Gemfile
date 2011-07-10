@@ -1,9 +1,12 @@
+# This Gemfile comes from hydra-head/test_support/etc/Gemfile
+# It's copied into the hydra-head test app by the rake hyhead:setup_test_app task
+
 source 'http://rubygems.org'
 
 gem 'rails', '>=3.0.4'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
-gem 'blacklight', '3.0.0pre6'
+gem 'blacklight'
 gem 'hydra-head', :path => '../../'
 
 # For testing
