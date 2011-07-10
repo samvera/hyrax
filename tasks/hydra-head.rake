@@ -85,50 +85,57 @@ namespace :hyhead do
     end
   end
   
-#  desc "Easieset way to run cucumber tests. Sets up test host, refreshes fixtures and runs cucumber tests"
-#  task :cucumber => "cucumber:setup_and_run"
-#  
-#  namespace :cucumber do
-#      
-#    desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
-#    task :run => :set_test_host_path do
-#      Dir.chdir(TEST_HOST_PATH)
-#      puts "Running cucumber features in test host app"
-#      puts %x[cucumber --color --tags ~@pending --tags ~@overwritten features]
-#      raise "Cucumber tests failed" unless $?.success?
-#    end
-#    
-#    desc "Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running."
-#    task :setup_and_run => ["hyhead:setup_test_app"] do
-#      system("rake hydra:fixtures:refresh environment=test")
-#      Rake::Task["hyhead:cucumber:run"].invoke
-#    end    
-#  end
-#    
-#  desc "Copy all of the necessary code into the test host"
-#  task :setup_test_app => [:remove_plugin_from_host, :copy_plugin_to_host,:remove_features_from_host, :copy_features_to_host, :remove_fixtures_from_host, :copy_fixtures_to_host] do
-#  end
-#  
-#  desc "Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head"
-#  task :copy_plugin_to_host => [:set_test_host_path] do
-#    excluded = [".", "..", ".git", ".gitignore", ".gitmodules", ".rvmrc", ".yardoc", "coverage", "coverage.data", "doc", "tmp", "hydra-plugin_test_host", "jetty"]
-#    plugin_dir = "#{TEST_HOST_PATH}/vendor/plugins/hydra-head"
-#    FileUtils.mkdir_p(plugin_dir)
-#    
-#    puts "Copying plugin files to #{plugin_dir}:"
-#
-#    Dir.foreach(".") do |fn| 
-#      unless excluded.include?(fn)
-#        puts " #{fn}"
-#        FileUtils.cp_r(fn, "#{plugin_dir}/#{fn}", :remove_destination=>true)
-#      end
-#    end
-#  end
-
+  #
+  # Cucumber
+  #
   
-  task :set_test_host_path do
-    TEST_HOST_PATH = File.join(File.expand_path(File.dirname(__FILE__)),'..','tmp','test_app')
+  
+  # desc "Easieset way to run cucumber tests. Sets up test host, refreshes fixtures and runs cucumber tests"
+  # task :cucumber => "cucumber:setup_and_run"
+  task :cucumber => "cucumber:run"
+  
+
+  namespace :cucumber do
+   
+   desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
+   task :run => :set_test_host_path do
+     Dir.chdir(TEST_HOST_PATH)
+     puts "Running cucumber features in test host app"
+     puts %x[rake hyhead:cucumber]
+     # puts %x[cucumber --color --tags ~@pending --tags ~@overwritten features]
+     raise "Cucumber tests failed" unless $?.success?
+     FileUtils.cd('../../')
+   end
+ 
+   # desc "Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running."
+   # task :setup_and_run => ["hyhead:setup_test_app", "hyhead:remove_features_from_host", "hyhead:copy_features_to_host"] do
+   #   system("rake hydra:fixtures:refresh environment=test")
+   #   Rake::Task["hyhead:cucumber:run"].invoke
+   # end    
   end
+   
+# Not sure if these are necessary - MZ 09Jul2011 
+  # desc "Copy current contents of the features directory into TEST_HOST_PATH/test_support/features"
+  # task :copy_features_to_host => [:set_test_host_path] do
+  #   features_dir = "#{TEST_HOST_PATH}/test_support/features"
+  #   excluded = [".", ".."]
+  #   FileUtils.mkdir_p(features_dir)
+  #   puts "Copying features to #{features_dir}"
+  #   # puts %x[ls -l test_support/features/mods_asset_search_result.feature]
+  #   %x[cp -R test_support/features/* #{features_dir}]
+  # end
+  # 
+  # desc "Remove TEST_HOST_PATH/test_support/features"
+  # task :remove_features_from_host => [:set_test_host_path] do
+  #   features_dir = "#{TEST_HOST_PATH}/test_support/features"
+  #   puts "Emptying out #{features_dir}"
+  #   %x[rm -rf #{features_dir}]
+  # end
+  
+  
+  #
+  # Misc Tasks
+  #
   
   desc "Creates a new test app and runs the cukes/specs from within it"
   task :setup_test_app => [:set_test_host_path] do
@@ -189,6 +196,14 @@ namespace :hyhead do
     raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
   end
+  
+  task :set_test_host_path do
+    TEST_HOST_PATH = File.join(File.expand_path(File.dirname(__FILE__)),'..','tmp','test_app')
+  end
+  
+  #
+  # Test
+  #
 
   desc "Run tests against test app"
   task :test => [:use_test_app]  do
