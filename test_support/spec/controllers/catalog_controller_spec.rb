@@ -47,6 +47,16 @@ describe CatalogController do
   
   describe "index" do
     
+    it "should respect @extra_controller_params" do
+      # This can be removed once HYDRA-564 is closed
+      expected_params = {:q=>"sample query"}
+      controller.instance_variable_set(:@extra_controller_params, expected_params)
+      controller.stubs(:params).returns({:action=>:index})
+      controller.stubs(:enforce_access_controls)
+      controller.expects(:get_search_results).with(controller.params, expected_params)
+      get :index
+    end
+    
     describe "access controls" do
       before(:all) do
         @public_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"public"}]
