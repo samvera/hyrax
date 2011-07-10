@@ -18,11 +18,17 @@ module Hydra::Catalog
   def self.included(klass)
     # Other modules to auto-include
     klass.send(:include, Hydra::AccessControlsEnforcement)
+    klass.send(:include, MediaShelf::ActiveFedoraHelper)
     
     # Controller filters
     # Also see the generator (or generated CatalogController) to see more before_filters in action
+    klass.before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index, :delete]
     klass.before_filter :load_fedora_document, :only=>[:show,:edit]
     klass.before_filter :lookup_facets, :only=>:edit
+    
+    # View Helpers
+    klass.helper :hydra
+    klass.helper :hydra_assets
   end
   
   def edit
