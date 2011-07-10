@@ -102,13 +102,15 @@ describe CatalogController do
   describe "edit" do
 
     it "should trigger show action" do
-      pending
       controller.expects(:show)
-      get :edit, :id=>'test:3'
+      controller.stubs(:enforce_access_controls)
+      controller.stubs(:load_fedora_document)
+      get :edit, :id=>'hydrangea:fixture_mods_article1'
     end
     it "should render show template (which then delegates to edit partials)" do
-      pending
-      get :edit, :id=>'test:3'
+      controller.stubs(:enforce_access_controls)
+      controller.stubs(:load_fedora_document)
+      get :edit, :id=>'hydrangea:fixture_mods_article1'
       response.should render_template("show")
     end
   end
