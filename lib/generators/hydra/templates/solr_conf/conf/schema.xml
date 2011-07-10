@@ -89,7 +89,9 @@
 
    <!-- format is used for facet, display, and choosing which partial to use for the show view, so it must be stored and indexed -->
    <field name="format" type="string" indexed="true" stored="true"/>
-   
+   <!-- pub_date is assumed by Blacklight's default configuration, so we must define it here to avoid errors -->
+   <field name="pub_date" type="string" indexed="true" stored="true" multiValued="true"/>
+       
    <dynamicField name="*_i"  type="sint"    indexed="true"  stored="true"/>
    <dynamicField name="*_s"  type="string"  indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_l"  type="slong"   indexed="true"  stored="true"/>

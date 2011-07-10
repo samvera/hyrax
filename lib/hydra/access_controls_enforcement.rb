@@ -132,6 +132,7 @@ module Hydra::AccessControlsEnforcement
   
   # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
   def apply_gated_discovery
+    @extra_controller_params ||= {}
     @extra_controller_params.merge!(:q=>build_lucene_query(params[:q]))
     # logger.debug("LUCENE QUERY: #{ @extra_controller_params[:q]) }")
   end
