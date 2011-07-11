@@ -1,34 +1,10 @@
-<div class="document_viewer" id="cover_container">
-  <div class="multipleEdit">
-    <div id="loading" style="display:none;">
-      <img src="/plugin_assets/hydra-head/images/ajax-loader.gif" width="32" height="32" alt="Saving..." />
-    </div>
-    
-  <div id="accordion"  style="height:600px;">
-
-     <h2 class="section-title"><a href="#">Describe the Asset</a></h2>
-     <%= render :partial => 'mods_assets/edit_description' %>
-
-     	<h2 class="section-title"><a href="#">Upload Files</a></h2>
-     <div id="uploads">  			
-				<%= render :partial => "file_assets/index", :locals => { :file_assets => @file_assets} %>
-     </div>
-
-      <h2 class="section-title"><a href="#">Set permissions</a></h2>
-      <div id="permissions_editor">
-        <%= render :partial => "permissions/index", :locals => {:document => document, :asset_id=>params[:id]} %>
-      </div> 
-
+<% if !session[:scripts] %>
+  <%= render_previous_workflow_steps %>
+  <%= render_submission_workflow_step -%>
+<% else %>
+  <%= render_all_workflow_steps %>
+  <div class="all-steps-actions">
+    <button id="all_save_continue" name="all_save_continue">Save and Continue Editing</button>
+    <button id="all_save_finish" name="all_save_finish">Save and Finish</button>
   </div>
-
-      
-  </div>
-</div>
-
-<% sidebar_items << capture do %>
-  <%# = render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
-  <%# = render :partial=>'facets' %>
-  <%= delete_asset_link(params[:id], "article").html_safe %>
 <% end %>
-
-<%= async_load_tag(asset_file_assets_path(params[:id]), 'uploads') %>

@@ -1,2 +1,14 @@
-<%=render :partial=>"fluid_infusion/uploader" %>
-<%#=render :partial=>"fluid_infusion/uploader_js" %>
+<%- field_tag_options = defined?(uploader_options) ? uploader_options : {} %>
+<%- container_content_type_param = defined?(container_content_type) ? "?container_content_type=#{container_content_type}" : "" %>
+<div id="uploader-contents">
+    
+    <!-- This form will be progressively enhanced by the Fluid Uploader component. -->    
+    <form method="post" enctype="multipart/form-data" class="uploader-form" action="<%=h upload_url %>">
+        <input type="hidden" name="container_id" value="<%=h container_id %>"/>
+        <%= hidden_field_tag("container_content_type", container_content_type) if defined?(container_content_type) %>
+        <p>Browse to upload a file.</p>
+        <!-- <input name="Filedata-orig" type="file" /> -->
+        <%= file_field_tag "Filedata", field_tag_options %>
+        <p><input type="submit" value="Upload File"/></p>
+    </form>
+</div>

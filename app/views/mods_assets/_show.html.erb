@@ -14,7 +14,7 @@
 
 	<% unless @document_fedora.file_objects(:response_format=>:solr).hits.empty? %>
 		<fieldset><legend>Files</legend>
-	    <div class="uploads" id="<%= format_pid(params[:id]) %>">	
+	    <div class="uploads" id="uploads_<%= format_pid(params[:id]) %>">	
 		  <table id="file_assets" class="multipleEdit">
 		    <tr>
 		      <th>File Name</th>

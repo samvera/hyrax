@@ -1,11 +1,12 @@
 <% unless defined?(asset_id) %>
   <% asset_id = params[:asset_id] %>
 <% end %>
-<%= form_tag url_for(:asset_id=>@document_fedora.pid,:action=>"update", :controller=>"permissions"), :id=>"permissions_metadata", :method=>"post", "accept-charset"=>"utf-8" do %>
+<!-- <form id="permissions_metadata" action="<%= url_for(:asset_id=>@document_fedora.pid,:action=>"update", :controller=>"permissions") %>" method="post" accept-charset="utf-8"> -->
   <input type="hidden" name="_method" value="put"/>
+  
   <fieldset class="slider">
     <legend>Group Permissions</legend>
-    <dl>
+
     <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read"}, {"Edit &amp; Upload" => "edit"}] %>
     <% roles = RoleMapper.role_names %>
     <%# This next line should be conditional upon a person having Publish permissions on the object's collection %>
@@ -13,15 +14,11 @@
     <% roles.each do |role| %>
       <% role_permissions = @document_fedora.datastreams_in_memory["rightsMetadata"].permissions({"group"=>role}) %>
       <% field_name = "#{role}_group_access" %>
-      <dt class="permissions">
-        <label for="<%=h field_name %>">
-          <%= role.capitalize %>
-        </label>
-      </dt>
-      <dd id="<%=h "#{field_name}-container" %>" class="permissions">
+      <p id="<%=h "#{field_name}-container" %>" class="permissions">
+        <label for="<%=h field_name %>"><%= role.capitalize %></label>
         <select id="<%=h field_name %>" name="permission[group][<%=h role %>]">
           <% choices.each do |choice| %>
-            <% choice_label = choice.keys.first.html_safe %>
+            <% choice_label = choice.keys.first %>
             <% choice_name = choice.values.first %>
             <% if role_permissions == choice_name %>
               <option value="<%=h choice_name %>" selected="selected">
@@ -34,13 +31,12 @@
             <% end %>
           <% end %>
         </select>
-      </dd>
+      </p>
     <% end %> 
-    </dl>
   </fieldset>
+  
   <fieldset id="individual_permissions" class="slider">
       <legend>Individual Permissions</legend>
-      <dl>
         <% choices = [{"Discover" => "discover"}, {"Read &amp; Download" => "read"}, {"Edit &amp; Upload" => "edit"}] %>
         <% individual_permissions = {} %>
         <% choices.each do |choice| %>
@@ -48,8 +44,8 @@
           <% individual_permissions[choice_name] = get_values_from_datastream(@document_fedora,"rightsMetadata", ["#{choice_name}_access".to_sym, :person]) %>
         <% end %>
         <%= render :partial=>"permissions/edit_person_permissions.html", :collection=>@document_fedora.datastreams_in_memory["rightsMetadata"].find_by_terms(:access, :person) %>
-      </dl>
   </fieldset>
-  <%= submit_tag 'Save Permissions', {:id => "submitPermissions"} %>
-<% end %>
-<%= render :partial=>"permissions/new.html", :locals=>{:asset_id=>asset_id} %>
+  <%#= submit_tag 'Save Permissions', {:id => "submitPermissions"} %>
+<!-- </form> -->
+
+<%#= render :partial=>"permissions/new.html", :locals=>{:asset_id=>asset_id} %>
