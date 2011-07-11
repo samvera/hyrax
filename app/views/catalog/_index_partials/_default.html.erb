@@ -1,4 +1,4 @@
-<tr class="document" class="<%= cycle("even","odd") %>">
+<tr class="document <%= cycle("even","odd") %>">
   <td>
     <%= link_to_document(document, :label => Blacklight.config[:show][:heading].to_sym, :counter => (counter + 1 + @response.params[:start].to_i)) %>
   </td>
