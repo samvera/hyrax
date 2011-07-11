@@ -2,10 +2,7 @@ require "inline_editable_metadata_helper"
 require "block_helpers"
 require "active_support"
 require "redcloth" # Provides textile parsing support for textile_area method
-
-# this is a hack to get the no-longer existent white_list_helper plugin white_list method
-require 'white_list_helper'
-ActionView::Base.send :include, WhiteListHelper
+require 'sanitize' # Replaces white_list_helper
 
 module HydraFedoraMetadataHelper
   
@@ -63,7 +60,7 @@ module HydraFedoraMetadataHelper
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
-      processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
+      processed_field_value = Sanitize.clean( RedCloth.new(current_value, [:sanitize_html]).to_html, Sanitize::Config::BASIC)
       
       body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">".html_safe
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
