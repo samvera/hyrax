@@ -36,4 +36,9 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+
+  def fixture(file)
+    File.new(File.join(File.dirname(__FILE__),'..', 'fixtures', file))
+  end
+
 end

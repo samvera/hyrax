@@ -1,5 +1,6 @@
 class FileAssetsController < ApplicationController
   
+  include Hydra::AccessControlsEnforcement
   include Hydra::AssetsControllerHelper
   include Hydra::FileAssetsHelper  
   include Hydra::RepositoryController  
@@ -32,17 +33,17 @@ Removed from file_assets/index.html.haml
       # action = "index_embedded"
       layout = false
     end
-    if !params[:container_id].nil?
-      container_uri = "info:fedora/#{params[:container_id]}"
+    if !params[:asset_id].nil?
+      container_uri = "info:fedora/#{params[:asset_id]}"
       escaped_uri = container_uri.gsub(/(:)/, '\\:')
       extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}"}
       @response, @document_list = get_search_results( extra_controller_params )
       
       # Including this line so permissions tests can be run against the container
-      @container_response, @document = get_solr_response_for_doc_id(params[:container_id])
+      @container_response, @document = get_solr_response_for_doc_id(params[:asset_id])
       
       # Including these lines for backwards compatibility (until we can use Rails3 callbacks)
-      @container =  ActiveFedora::Base.load_instance(params[:container_id])
+      @container =  ActiveFedora::Base.load_instance(params[:asset_id])
       @solr_result = @container.file_objects(:response_format=>:solr)
     else
       # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
@@ -71,7 +72,7 @@ From file_assets/_new.html.haml
     
       flash[:notice] = "The file #{params[:Filename]} has been saved in <a href=\"#{asset_url(@file_asset.pid)}\">#{@file_asset.pid}</a>."
             
-      if !params[:container_id].nil?
+      if !params[:asset_id].nil?
         associate_file_asset_with_container
       end
     
@@ -86,8 +87,8 @@ From file_assets/_new.html.haml
       flash[:notice] = "You must specify a file to upload."
     end
     
-    if !params[:container_id].nil?
-      redirect_params = {:controller=>"catalog", :id=>params[:container_id], :action=>:edit}
+    if !params[:asset_id].nil?
+      redirect_params = {:controller=>"catalog", :id=>params[:asset_id], :action=>:edit}
     end
     
     redirect_params ||= {:action=>:index}
@@ -106,7 +107,7 @@ From file_assets/_new.html.haml
     
     # The dirty implementation (leaves relationship in container object, deletes regardless of whether the file object has other containers)
     ActiveFedora::Base.load_instance(params[:id]).delete 
-    render :text => "Deleted #{params[:id]} from #{params[:container_id]}."
+    render :text => "Deleted #{params[:id]} from #{params[:asset_id]}."
   end
   
   

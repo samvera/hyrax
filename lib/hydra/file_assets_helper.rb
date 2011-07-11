@@ -28,7 +28,7 @@ module Hydra::FileAssetsHelper
   # Associate the new file asset with its container
   def associate_file_asset_with_container(file_asset=nil, container_id=nil)
     if container_id.nil?
-      container_id = params[:container_id]
+      container_id = params[:asset_id]
     end
     if file_asset.nil?
       file_asset = @file_asset
