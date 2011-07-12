@@ -7,7 +7,7 @@ h2. Steps
 # install bundler gem <pre>gem install bundler</pre>
 # Get the project dependencies <pre>bundle install</pre>
 # grab the jetty submodule <pre>git submodule init; git submodule update</pre>
-# <pre>rake hyhead:ci</pre> This command:
+# test <pre>rake hyhead:ci</pre> This command:
 ## creates the test app in tmp/test_app
 ## spins up jetty (in jettywrapper)
 ## imports fixtures
