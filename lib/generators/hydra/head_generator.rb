@@ -128,6 +128,14 @@ EOF
     end
   end
   
+  # Add Hydra to the application controller
+  def inject_blacklight_controller_behavior    
+    inject_into_class "app/controllers/application_controller.rb", "ApplicationController" do
+      "  # Adds Hydra behaviors into the application controller \n " +        
+        "  include Hydra::Controller\n"
+    end
+  end
+  
   def create_migration_file
     migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
     sleep 1 # ensure scripts have different time stamps
