@@ -3,32 +3,12 @@ require 'jettywrapper'
 namespace :hydra do
   namespace :jetty do
     
-    dev = {
-      :jetty_home => File.expand_path("#{File.dirname(__FILE__)}/../../jetty-dev"),
-      :jetty_port => "8983"
-    }
-
-    test = {
-      :jetty_home => File.expand_path("#{File.dirname(__FILE__)}/../../jetty-test"),
-      :jetty_port => "8984"
-    }
-    
-    namespace :status do
-      
-      desc "Return the status of jetty-dev"
-      task :dev do
-        status = Jettywrapper.is_running?(dev) ? "Running: #{Jettywrapper.pid(dev)}" : "Not running"
-        puts status
-      end
-      
-      desc "Return the status of jetty-test"
-      task :test do
-        status = Jettywrapper.is_running?(test) ? "Running: #{Jettywrapper.pid(test)}" : "Not running"
-        puts status
-      end
-      
+    desc "Returns the status of the Hydra::TestingServer."
+    task :status do
+      puts "Expecting pid to be #{Jettywrapper.instance.pid}"
+      status = Jettywrapper.instance.pid ? "Running: #{Jettywrapper.instance.pid}" : "Not running"
+      puts status
     end
-
     
     desc "Starts the bundled jetty"
     task :start => [:init] do
