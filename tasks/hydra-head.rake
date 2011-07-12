@@ -177,7 +177,7 @@ namespace :hyhead do
     errors << 'Error installing cucumber in test app' unless $?.success?
 
     puts "generating default blacklight install"
-    %x[rails generate blacklight -d]
+    %x[rails generate blacklight --devise]
     errors << 'Error generating default blacklight install' unless $?.success?
     
     puts "generating default hydra-head install"
