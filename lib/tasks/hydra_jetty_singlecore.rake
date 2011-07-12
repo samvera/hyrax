@@ -1,40 +1,5 @@
-require 'jettywrapper'
-
 namespace :hydra do
   namespace :jetty do
-    
-    desc "Returns the status of the Hydra::TestingServer."
-    task :status do
-      puts "Expecting pid to be #{Jettywrapper.instance.pid}"
-      status = Jettywrapper.instance.pid ? "Running: #{Jettywrapper.instance.pid}" : "Not running"
-      puts status
-    end
-    
-    desc "Starts the bundled jetty"
-    task :start => [:init] do
-      if Rails.env.development? 
-        jetty_home = JETTY_HOME_DEV
-        devinstance = Jettywrapper.start_with_params(JETTY_PARAMS_DEV)
-        puts "Started at PID #{Jettywrapper.instance.pid}"
-      elsif Rails.env.test?
-        jetty_home = JETTY_HOME_TEST
-        Jettywrapper.configure(JETTY_PARAMS_TEST)
-        Jettywrapper.instance.start
-        puts "Started at PID #{Jettywrapper.instance.pid}"
-      end
-    end
-    
-    desc "Stops the bundled Hydra Testing Server"
-    task :stop do
-      Jettywrapper.instance.stop
-    end
-    
-    desc "Restarts the bundled Hydra Testing Server"
-    task :restart do
-      Jettywrapper.instance.stop
-      Jettywrapper.configure(JETTY_PARAMS)
-      Jettywrapper.instance.start
-    end
 
     desc "Init Hydra configuration" 
     task :init => [:environment] do
@@ -63,6 +28,8 @@ namespace :hydra do
       
       # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
       ActiveFedora.init unless Thread.current[:repo]  
+      puts JETTY_PARAMS_TEST
+      puts JETTY_PARAMS_DEV
     end
 
     desc "Copies the default SOLR config for the bundled jetty"
@@ -71,24 +38,6 @@ namespace :hydra do
         cp("#{f}", JETTY_PARAMS_TEST[:solr_home] + '/conf/', :verbose => true)
         cp("#{f}", JETTY_PARAMS_DEV[:solr_home] + '/conf/', :verbose => true)
       end
-    end
-    
-    desc "Copies a custom fedora config for the bundled jetty"
-    task :config_fedora => [:init] do
-      fcfg = 'fedora/conf/fedora.fcfg'
-      if File.exists?(fcfg)
-        puts "copying over fedora.fcfg"
-        cp("#{fcfg}", JETTY_PARAMS_TEST[:fedora_home] + '/server/config/', :verbose => true)
-        cp("#{fcfg}", JETTY_PARAMS_DEV[:fedora_home] + '/server/config/', :verbose => true)
-      else
-        puts "#{fcfg} file not found -- skipping fedora config"
-      end
-    end
-    
-    desc "Copies the default Solr & Fedora configs into the bundled jetty"
-    task :config do
-      Rake::Task["hydra:jetty:config_fedora"].invoke
-      Rake::Task["hydra:jetty:config_solr"].invoke
     end
 
   end
