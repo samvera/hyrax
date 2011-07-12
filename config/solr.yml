@@ -1,9 +1,9 @@
 # This is a sample config file that does not have multiple solr instances. You will also need to be sure to
 # edit the fedora.yml file to match the solr URL for active-fedora. 
 development:
-  url: http://127.0.0.1:8983/solr/
+  url: http://localhost:8984/solr/
 test: &TEST
-  url: http://127.0.0.1:8984/solr/
+  url: http://127.0.0.1:8983/solr/
 cucumber:
   <<: *TEST
 production:
