@@ -10,7 +10,7 @@ module HydraHead
 
     module InstanceMethods
       def method_for_before_filtering
-        puts "Filtering before" 
+        #puts "Filtering before" 
       end
 
       def method_not_a_filter

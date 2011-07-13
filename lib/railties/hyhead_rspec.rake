@@ -69,7 +69,7 @@ begin
         # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
         t.pattern = File.join(hyhead_spec, "/**/*_spec.rb")
           t.rspec_opts = "--colour"
-        t.rcov_opts = '-o "' + HydraHead.root + '/coverage" --exclude /gems/,/Library/,/usr/,lib/tasks,.bundle,config,/lib/rspec/,/lib/rspec-'
+        t.rcov_opts = '-o "' + HydraHead.root + '/coverage" --exclude /gems/,/Library/,/usr/,test_support,lib/tasks,.bundle,config,/lib/rspec/,/lib/rspec-'
       end
       
       # Blacklight. Solr wrapper. for now just for blacklight:spec, plan to
