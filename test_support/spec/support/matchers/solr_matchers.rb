@@ -3,7 +3,7 @@
 # Ex.
 #   @article.to_solr.should have_solr_fields("read_access_group_t"=>"public")
 #   @article.to_solr.should_not have_solr_fields("read_access_group_t"=>["public", "registered"])
-Spec::Matchers.define :have_solr_fields do |expected|
+RSpec::Matchers.define :have_solr_fields do |expected|
   match do |actual|
     result = false
     if actual.kind_of?(Hash)
