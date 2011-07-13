@@ -24,7 +24,7 @@ module HydraHead
     end
 
     def default_route_sets
-      [:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :asset_file_assets, :catalog, :user_sessions, :get]
+      [:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :asset_file_assets, :catalog, :get]
     end
 
     module RouteSets
@@ -97,13 +97,6 @@ module HydraHead
         end
       end
 
-      def user_sessions
-        add_routes do |options|
-          resources :user_sessions
-          match 'logged_out', :to => 'user_sessions#logged_out', :as => 'logged_out'
-          match 'superuser', :to => 'user_sessions#superuser', :as => 'superuser'
-        end
-      end
 
       def get
         add_routes do |options|

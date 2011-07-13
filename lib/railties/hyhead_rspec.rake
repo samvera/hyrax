@@ -54,6 +54,14 @@ begin
           t.pattern = "#{hyhead_spec}/#{sub}" 
         end
       end
+
+      desc "Run all specs"
+			task :run => spec_prereq do
+      	[:models, :controllers, :helpers, :lib, :generators].each do |sub|
+					puts "invoking: hyhead:spec:#{sub}"
+					Rake::Task["hyhead:spec:#{sub}"].invoke
+				end
+			end
     
       desc "Run all specs with rcov"
       RSpec::Core::RakeTask.new(:rcov => spec_prereq) do |t|

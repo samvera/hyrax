@@ -8,7 +8,7 @@ ENV["RAILS_ENV"] ||= 'test'
 #require File.expand_path("../../config/environment", __FILE__)
 # version that works with our blacklight:spec stuff that calls specs
 # in a remote directory. 
-require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../..", __FILE__))
+require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../../../tmp/test_app", __FILE__))
 require 'rspec/rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,

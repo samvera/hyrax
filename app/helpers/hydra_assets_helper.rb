@@ -11,7 +11,8 @@ module HydraAssetsHelper
     if current_user
       link_to link_label, {:action => 'new', :controller => 'assets', :content_type => content_type}, :class=>"create_asset"
     else      
-      link_to link_label, {:action => 'new', :controller => 'sessions', :redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}}, :class=>"create_asset"
+      link_to link_label, new_user_session_path(:redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}), :class=>"create_asset"
+      #link_to link_label, {:action => 'new', :controller => 'sessions', :redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}}, :class=>"create_asset"
     end
   end
   

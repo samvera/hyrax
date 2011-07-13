@@ -36,18 +36,16 @@ namespace :hyhead do
   namespace :rspec do
       
     desc "Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded."
-    RSpec::Core::RakeTask.new(:run) do |t|
-  #    t.spec_opts = ['--options', "/spec/spec.opts"]
-      t.pattern = 'test_support/spec/**/*_spec.rb'
-      t.rcov = true
-      t.rcov_opts = lambda do
-        IO.readlines("test_support/spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
-      end
+    task :run => :use_test_app do
+			puts "Running rspec tests"
+			puts  %x[rake hyhead:spec:run]
+      FileUtils.cd('../../')
     end
     
     desc "Sets up test host, loads fixtures, then runs specs - need to have jetty running."
     task :setup_and_run => ["hyhead:setup_test_app"] do
-      system("rake hyhead:fixtures:refresh environment=test")
+			puts "Reloading fixtures"
+      puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test] # calling hydra:fixtures:refresh from the root of the test app
       Rake::Task["hyhead:rspec:run"].invoke
     end
         

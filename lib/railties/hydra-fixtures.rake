@@ -122,7 +122,7 @@ namespace :hydra do
   desc "Init Hydra configuration" 
   task :init do
     if !ENV["environment"].nil? 
-      RAILS_ENV = ENV["environment"]
+      Rails.env = ENV["environment"]
     end
     # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
     ActiveFedora.init unless Thread.current[:repo]  
