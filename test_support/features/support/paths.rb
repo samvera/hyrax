@@ -14,9 +14,9 @@ module NavigationHelpers
     when /the search page/
       '/catalog'
     when /logout/
-      logout_path
+      destroy_user_session_path
     when /my account info/
-      user_path
+      edit_user_registration_path
     when /the base search page/
       '/catalog?q=&search_field=search&action=index&controller=catalog&commit=search'
     when /the document page for id (.+)/ 
