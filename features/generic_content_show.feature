@@ -3,8 +3,7 @@ Feature: Generic Content Show View
 
   Scenario: Viewing Generic Content
     Given I am on the show document page for hydra:fixture_generic_content
-    Then I should see "Orlob Gryphon"
-    And I should see "I am a wonderful generic content object used for testing"
+    Then I should see "I am a wonderful generic content object used for testing"
 
   Scenario: html5 valid - unauthenticated 
     Given I am on the show document page for hydra:fixture_generic_content
