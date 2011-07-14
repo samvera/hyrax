@@ -57,8 +57,8 @@ h4. (3) Run specs.
 OR
 
 <pre>
-  rake hyhead:remove_from_host_plugins_dir
-  rake hyhead:copy_to_host_plugins_dir
+  rake hyhead:remove_plugin_from_host
+  rake hyhead:copy_plugin_to_host
   rake hyhead:rspec
 </pre>
 
