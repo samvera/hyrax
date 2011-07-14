@@ -1,18 +1,18 @@
 @new @dataset 
-Feature: Add a new Dataset
-  In order to publish a Dataset
+Feature: ModsAsset Create View
   As a Depositor
-  I want to submit a new MODS Asset
+  I want to see appropriate information for creating ModsAsset objects
+  In order to submit a new MODS Asset
   
-  Scenario: Visit New MODS Asset Page
+
+  Scenario: Create Page for New ModsAsset Object
     Given I am logged in as "archivist1@example.com"
-    And I am on the home page	
-    And I create a new mods_asset
+    When I create a new mods_asset
     Then I should see "Describe the Asset"
     And the "title_info_main_title" field should contain ""
 
   Scenario: html5 valid
-    Given I am logged in as "archivist1"
-    And I create a new mods_asset
+    Given I am logged in as "archivist1@example.com"
+    When I create a new mods_asset
     Then the page should be HTML5 valid
 

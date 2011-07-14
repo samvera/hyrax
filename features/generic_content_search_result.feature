@@ -1,7 +1,7 @@
-Feature: Generic Content Search Results
-  I want to see appropriate information for generic content objects in a search result
+Feature: GenericContent Search Results
+  I want to see appropriate information for GenericContent objects in a search result
 
-  Scenario: Viewing search results
+  Scenario: Have a GenericContent Search Result
     Given I am on the home page
     And I fill in "q" with "generic content"
     When I press "submit"

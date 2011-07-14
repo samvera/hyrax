@@ -1,7 +1,7 @@
-Feature: Generic Image Search Results
-  I want to see appropriate information for generic image objects in a search result
+Feature: GenericImage Search Results
+  I want to see appropriate information for GenericImage objects in a search result
 
-  Scenario: Viewing search results
+  Scenario: Have a GenericImage Search Result
     Given I am on the home page
     And I fill in "q" with "generic image"
     When I press "submit"
