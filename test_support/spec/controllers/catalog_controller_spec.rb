@@ -118,6 +118,7 @@ describe CatalogController do
   describe "filters" do
     describe "index" do
       it "should trigger enforce_index_permissions" do
+        controller.expects(:add_access_controls_to_solr_params)
         controller.expects(:enforce_index_permissions)
         get :index
       end
