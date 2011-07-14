@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Matt Zumwalt, Bess Sadler, Naomi Dushay, Jessie Keck, John Scofield & many more.  See https://github.com/projecthydra/hydra-head/contributors"]
   s.email       = ["hydra-tech@googlegroups.com"]
   s.homepage    = "http://projecthydra.org"
-  s.summary     = %q{Hydra Repository Rails Engine (requires Rails3) }
-  s.description = %q{Hydra-Head is a Rails Engines plugin containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
+  s.summary     = %q{Hydra-Head Rails Engine (requires Rails3) }
+  s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
 
   s.add_dependency "rails", '>= 3.0'
   # s.add_dependency "blacklight", '~> 3.0.0pre6'
