@@ -155,6 +155,8 @@ namespace :hyhead do
     puts "Generating new rails app"
     %x[rails new test_app]
     FileUtils.cd('test_app')
+		
+	  FileUtils.rm('public/index.html')
 
     puts "Copying Gemfile from test_support/etc"
     FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
