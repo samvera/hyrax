@@ -18,6 +18,11 @@ describe GenericImage do
     @hydra_image.should respond_to(:apply_depositor_metadata)
   end
   
+  it "should include Hydra Generic Image Methods" do
+    @hydra_image.class.included_modules.should include(Hydra::GenericImage)
+    @hydra_image.should respond_to(:derivation_options)
+  end
+  
   it "should have accessors for its default datastreams of content and original" do
     @hydra_image.should respond_to(:has_content?)
     @hydra_image.should respond_to(:content)
@@ -45,7 +50,7 @@ describe GenericImage do
   end
   
   describe '#content=' do
-    it "shoutld create a content datastream when given an image file" do
+    it "should create a content datastream when given an image file" do
     end
   end
 
