@@ -54,7 +54,7 @@ _Stop any copies of jetty (or anything else using port 8983) before running this
 
 This will start up a pre-configured jetty instance running Fedora and Solr on port 8983.
 
-Ensure Solr is running:  "http://localhost:8983/solr/development/admin/":http://localhost:8983/solr/development/admin/ should show the Solr admin page.  You should be able to click on the Statistics link (or go to "http://localhost:8983/solr/development/admin/stats.jsp":http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.  Or look for documents in "http://localhost:8983/solr/development/select?q={!defType=dismax}*:*"http://localhost:8983/solr/development/select?q={!defType=dismax}*:*
+Ensure Solr is running:  "http://localhost:8983/solr/development/admin":http://localhost:8983/solr/development/admin should show the Solr admin page.  You should be able to click on the Statistics link (or go to "http://localhost:8983/solr/development/admin/stats.jsp":http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.  Or look for documents in http://localhost:8983/solr/development/select?q={!defType=dismax}*:*
 
 Ensure Fedora is running:  "http://127.0.0.1:8983/fedora/describe":http://127.0.0.1:8983/fedora/describe should show the Fedora Repository Information View.  The following query should return objects:  "http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20":http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20
 
