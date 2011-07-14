@@ -83,16 +83,10 @@ module Hydra::AccessControlsEnforcement
       end
     end
   end
-
-  # Controller "before" filter for enforcing access controls on index actions
-  # Points user searches at :public_qt response handler if user does not have read permissions in the application
-  # @param [Hash] opts (optional, not currently used)
-  def enforce_index_permissions(opts={})
-    apply_gated_discovery
-    if !reader? 
-      @extra_controller_params[:qt] = Blacklight.config[:public_qt]
-    end
-  end
+  
+  #
+  # Action-specific enforcement
+  #
   
   # Controller "before" filter for enforcing access controls on show actions
   # @param [Hash] opts (optional, not currently used)
@@ -130,11 +124,49 @@ module Hydra::AccessControlsEnforcement
     end
   end
   
+  # Controller "before" filter for enforcing access controls on index actions
+  # Currently does nothing, instead relies on 
+  # @param [Hash] opts (optional, not currently used)
+  def enforce_index_permissions(opts={})
+    return true
+    # Do nothing. Relies on enforce_search_permissions being included in the Controller's solr_search_params_logic
+    # apply_gated_discovery
+    # if !reader? 
+    #   solr_parameters[:qt] = Blacklight.config[:public_qt]
+    # end
+  end
+  
+  #
+  # Solr query modifications
+  #
+  
+  # Set solr_parameters to enforce appropriate permissions 
+  # * Applies a lucene query to the solr :q parameter for gated discovery
+  # * Uses public_qt search handler if user does not have "read" permissions
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
+  #
+  # @example This method should be added to your Catalog Controller's solr_search_params_logic
+  #   class CatalogController < ApplicationController 
+  #     include Hydra::Catalog
+  #     CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params
+  #   end
+  def add_access_controls_to_solr_params(solr_parameters, user_parameters)
+    apply_gated_discovery(solr_parameters, user_parameters)
+    if !reader? 
+      solr_parameters[:qt] = Blacklight.config[:public_qt]
+    end
+  end
+  
   # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
-  def apply_gated_discovery
-    @extra_controller_params ||= {}
-    @extra_controller_params.merge!(:q=>build_lucene_query(params[:q]))
-    # logger.debug("LUCENE QUERY: #{ @extra_controller_params[:q]) }")
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
+  def apply_gated_discovery(solr_parameters, user_parameters)
+    # solr_parameters[:q] ||= []
+    solr_parameters[:q] = build_lucene_query(params[:q])
+    # @extra_controller_params ||= {}
+    # @extra_controller_params.merge!(:q=>build_lucene_query(params[:q]))
+    logger.debug("Solr query: #{ solr_parameters[:q] }")
   end
   
   # proxy for {enforce_index_permissions}

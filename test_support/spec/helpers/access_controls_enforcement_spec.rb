@@ -32,21 +32,32 @@ describe Hydra::AccessControlsEnforcement do
     
   end
   
-  describe "enforce_index_permissions" do
+  describe "add_access_controls_to_solr_params" do
     it "should set up gated discovery" do
+      stub_solr_params = {}
       helper.stubs(:reader?).returns(false)
       helper.stubs(:params).returns({:action=>:index})
-      helper.expects(:apply_gated_discovery)
-      helper.send(:enforce_index_permissions)
+      helper.expects(:apply_gated_discovery).with(stub_solr_params, {})
+      helper.send(:add_access_controls_to_solr_params, stub_solr_params, {})
     end
     it "should make blacklight use the :public_qt response handler if user does not have read permissions" do
+      stub_solr_params = {}
+      helper.stubs(:solr_parameters).returns(stub_solr_params)
       helper.stubs(:reader?).returns(false)
       helper.stubs(:params).returns({:action=>:index})
       helper.stubs(:apply_gated_discovery)
-      helper.send(:enforce_index_permissions)
-      @extra_controller_params[:qt].should == Blacklight.config[:public_qt]
+      helper.send(:add_access_controls_to_solr_params, stub_solr_params, {})
+      stub_solr_params[:qt].should == Blacklight.config[:public_qt]
     end
   end
+  
+  describe "enforce_index_permissions" do
+    it "should be defined but do nothing (currently enforce_index_permissions doesn't do anything but it's there if you want to override)" do
+      # just ensure that calling the method does not raise an error
+      helper.send(:enforce_index_permissions)
+    end
+  end
+  
   describe "enforce_show_permissions" do
     it "should deny access to documents if role does not have read permissions" do
       helper.stubs(:reader?).returns(false)
@@ -67,11 +78,13 @@ describe Hydra::AccessControlsEnforcement do
   end
   describe "apply_gated_discovery" do
     it "should set the query using build_lucene_query" do
+      stub_solr_params = {}
+      helper.stubs(:solr_parameters).returns(stub_solr_params)
       user_query = "my important query"
       helper.stubs(:params).returns({:q=>user_query} )
       helper.expects(:build_lucene_query).with(user_query).returns("stub lucene query")
-      helper.send(:apply_gated_discovery)
-      @extra_controller_params[:q].should == "stub lucene query"
+      helper.send(:apply_gated_discovery, stub_solr_params, {})
+      stub_solr_params[:q].should == "stub lucene query"
     end
   end
   
