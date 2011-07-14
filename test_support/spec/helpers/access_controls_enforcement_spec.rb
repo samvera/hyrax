@@ -29,6 +29,20 @@ describe Hydra::AccessControlsEnforcement do
         helper.enforce_access_controls
       end
     end
+    describe "[update]" do
+      it "should trigger enforce_update_permissions" do
+        helper.params[:action] = "update"
+        helper.expects(:enforce_update_permissions)
+        helper.enforce_access_controls
+      end
+    end
+    # describe "[destroy]" do
+    #   it "should trigger enforce_destroy_permissions" do
+    #     helper.params[:action] = "destroy"
+    #     helper.expects(:enforce_destroy_permissions)
+    #     helper.enforce_access_controls
+    #   end
+    # end
     
   end
   
@@ -73,6 +87,24 @@ describe Hydra::AccessControlsEnforcement do
       helper.stubs(:params).returns({:action=>:edit,:id=>"hydrangea:fixture_mods_article1"} ) # the permissions from this are not actually used because we stub the :editor? method
       helper.expects(:redirect_to).with(:action => :show)
       helper.send(:enforce_edit_permissions)
+      flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
+    end  
+  end
+  describe "enforce_update_permissions" do
+    it "should deny access to documents if role does not have update permissions" do
+      helper.stubs(:editor?).returns(false)
+      helper.stubs(:params).returns({:action=>:edit,:id=>"hydrangea:fixture_mods_article1"} ) # the permissions from this are not actually used because we stub the :editor? method
+      helper.expects(:redirect_to).with(:action => :show)
+      helper.send(:enforce_update_permissions)
+      flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
+    end  
+  end
+  describe "enforce_destroy_permissions" do
+    it "should deny access to documents if role does not have update permissions" do
+      helper.stubs(:editor?).returns(false)
+      helper.stubs(:params).returns({:action=>:destroy,:id=>"hydrangea:fixture_mods_article1"} ) # the permissions from this are not actually used because we stub the :editor? method
+      helper.expects(:redirect_to).with(:action => :show)
+      helper.send(:enforce_destroy_permissions)
       flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
     end  
   end

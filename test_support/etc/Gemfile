@@ -6,7 +6,7 @@ source 'http://rubygems.org'
 gem 'rails', '>=3.0.4'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
-gem 'blacklight', '3.0.0.pre8'
+gem 'blacklight', '3.0.0'
 gem 'hydra-head', :path => '../../'
 
 # For testing
