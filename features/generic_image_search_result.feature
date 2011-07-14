@@ -5,7 +5,7 @@ Feature: Generic Image Search Results
     Given I am on the home page
     And I fill in "q" with "generic image"
     When I press "submit"
-    Then I should see a link to "the show document page for hydra:fixture_generic_image"
+    Then I should see a link to "the show document page for hydra:test_generic_image"
 
   Scenario: html5 valid - unauthenticated 
     Given I am on the home page

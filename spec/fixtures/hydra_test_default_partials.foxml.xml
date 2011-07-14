@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<foxml:digitalObject VERSION="1.1" PID="hydra:fixture_unknown_model" xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+<foxml:digitalObject VERSION="1.1" PID="hydra:test_default_partials" xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
   <foxml:objectProperties>
     <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
     <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE=""/>
@@ -13,8 +13,8 @@
       <foxml:xmlContent>
         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:identifier>hydra:fixture_unknown_model</dc:identifier>
-          <dc:description>I am a hydra fixture object with an unknown model</dc:description>
+          <dc:identifier>hydra:test_default_partials</dc:identifier>
+          <dc:description>a hydra test object with an (active)fedora model that has no specialized view partials</dc:description>
         </oai_dc:dc>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
@@ -24,8 +24,8 @@
     <foxml:datastreamVersion ID="RELS-EXT.0" LABEL="" CREATED="2011-07-14T12:34:56.666Z" MIMETYPE="text/xml" SIZE="302">
       <foxml:xmlContent>
         <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rel="info:fedora/fedora-system:def/relations-external#" xmlns:hydra="http://projecthydra.org/ns/relations#">
-          <rdf:Description rdf:about="info:fedora/hydra:fixture_unknown_model">
-            <hasModel xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/afmodel:Unknown"></hasModel>
+          <rdf:Description rdf:about="info:fedora/hydra:test_default_partials">
+            <hasModel xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/afmodel:UsesDefaultPartials"></hasModel>
           </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>
@@ -37,10 +37,10 @@
       <foxml:xmlContent>
         <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
           <mods:titleInfo>
-            <mods:title>hydra fixture of unknown model</mods:title>
+            <mods:title>test object for default partials</mods:title>
           </mods:titleInfo>
-          <mods:abstract>I am a hydra fixture object with an unknown model</mods:abstract>
-          <mods:identifier type="local">hydra:fixture_unknown_model</mods:identifier>
+          <mods:abstract>a hydra test object with an (active)fedora model that has no specialized view partials</mods:abstract>
+          <mods:identifier type="local">hydra:test_default_partials</mods:identifier>
         </mods:mods>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
@@ -56,8 +56,20 @@
             </machine>
           </access>
           <access type="read">
+            <human/>
             <machine>
+              <group>researcher</group>
               <group>public</group>
+              <group>patron</group>
+              <group>donor</group>
+            </machine>
+          </access>
+          <access type="edit">
+            <human/>
+            <machine>
+              <person>archivist1</person>
+              <group>archivist</group>
+              <group>admin_policy_object_editor</group>
             </machine>
           </access>
         </rightsMetadata>
