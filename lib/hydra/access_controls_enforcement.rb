@@ -123,6 +123,16 @@ module Hydra::AccessControlsEnforcement
       render :action=>:show
     end
   end
+
+  ## proxies to enforce_edit_permssions.  This method is here for you to override
+  def enforce_update_permissions(opts={})
+    enforce_edit_permissions(opts)
+  end
+
+  ## proxies to enforce_edit_permssions.  This method is here for you to override
+  def enforce_destroy_permissions(opts={})
+    enforce_edit_permissions(opts)
+  end
   
   # Controller "before" filter for enforcing access controls on index actions
   # Currently does nothing, instead relies on 
