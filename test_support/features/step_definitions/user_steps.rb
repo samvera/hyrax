@@ -33,5 +33,5 @@ Given /^I am not logged in$/ do
 end
 
 Given /^I log out$/ do
-  visit '/logout'
+  visit destroy_user_session_path
 end

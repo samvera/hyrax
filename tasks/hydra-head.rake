@@ -158,6 +158,8 @@ namespace :hyhead do
     %x[rails new test_app]
     errors << 'Error generating new rails test app' unless $?.success?
     FileUtils.cd('test_app')
+		
+	  FileUtils.rm('public/index.html')
 
     puts "Copying Gemfile from test_support/etc"
     FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
