@@ -3,8 +3,8 @@ PATH
   specs:
     hydra-head (0.0.1)
       RedCloth (= 4.2.3)
-      active-fedora (>= 2.3.0)
-      blacklight (= 3.0.0pre8)
+      active-fedora (>= 2.3.3pre1)
+      blacklight (= 3.0.0)
       block_helpers
       builder
       columnize
@@ -44,13 +44,21 @@ GEM
   remote: http://gemcutter.org/
   specs:
     RedCloth (4.2.3)
-    actionmailer (2.3.11)
-      actionpack (= 2.3.11)
-    actionpack (2.3.11)
-      activesupport (= 2.3.11)
-      rack (~> 1.1.0)
-    active-fedora (2.1.0)
-      active-fedora
+    abstract (1.0.0)
+    actionmailer (3.0.9)
+      actionpack (= 3.0.9)
+      mail (~> 2.2.19)
+    actionpack (3.0.9)
+      activemodel (= 3.0.9)
+      activesupport (= 3.0.9)
+      builder (~> 2.1.2)
+      erubis (~> 2.6.6)
+      i18n (~> 0.5.0)
+      rack (~> 1.2.1)
+      rack-mount (~> 0.6.14)
+      rack-test (~> 0.5.7)
+      tzinfo (~> 0.3.23)
+    active-fedora (2.3.3pre1)
       activeresource
       equivalent-xml
       mediashelf-loggable
@@ -75,10 +83,10 @@ GEM
       activesupport (= 3.0.9)
     activesupport (3.0.9)
     arel (2.0.10)
-    blacklight (3.0.0pre8)
+    blacklight (3.0.0)
       kaminari
       marc (~> 0.4.3)
-      nokogiri (~> 1.5.0.beta.3)
+      nokogiri (~> 1.5)
       rails (~> 3.0)
       rsolr (~> 1.0)
       rsolr-ext (~> 1.0)
