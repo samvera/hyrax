@@ -2,6 +2,7 @@ Feature: Default Partials - Edit View
   I want to see appropriate information in the edit view for (active) fedora objects that use the default partials
 
   Scenario: In Edit View for Object Using Default Partials
+    Given I am logged in as "archivist1" 
     When I am on the edit document page for hydra:test_default_partials
     Then I should see "hydra:test_default_partials"
     And I should see "descMetadata"
