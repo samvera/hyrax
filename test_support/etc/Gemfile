@@ -11,6 +11,7 @@ gem 'hydra-head', :path => '../../'
 
 # For testing
 group :development, :test do 
+       gem 'solrizer-fedora', '>=1.0.1'
        gem 'ruby-debug'
        gem 'rspec'
        gem 'rspec-rails', '>=2.5.0'

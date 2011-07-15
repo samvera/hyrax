@@ -56,8 +56,8 @@ module HydraHead
           resources :assets do
             resources :contributors, :only=>[:new,:create]
           end
-          match 'assets/:asset_id/contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'asset_contributor', :conditions => { :method => :get }
-          match 'assets/:asset_id/contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :conditions => { :method => :delete }
+          match 'assets/:asset_id/contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'asset_contributor', :via => 'get'
+          match 'assets/:asset_id/contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
         end
       end
 
@@ -113,6 +113,6 @@ module HydraHead
     end
     include RouteSets
 
-#match 'generic_contents_object/content/:container_id', :to => 'generic_content_objects#create', :as => 'generic_content_object', :conditions => {:method => :post}
+#match 'generic_contents_object/content/:container_id', :to => 'generic_content_objects#create', :as => 'generic_content_object', :via => :post
   end
 end
