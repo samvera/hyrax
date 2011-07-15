@@ -20,7 +20,7 @@ describe HydraAssetsHelper do
   describe "delete_asset_link" do
     it "should generate a delete link and confirmation dialog" do
       generated_html = helper.delete_asset_link("__PID__", "whizbang")
-      generated_html.should have_selector "a.delete_asset[href='/catalog/__PID__/delete']", :content=> "Delete this whizbang" 
+      generated_html.should have_tag "a.delete_asset_link[href=?]", "/catalog/__PID__/delete",  "Delete this whizbang" 
       generated_html.should be_html_safe
 #      generated_html.should have_tag 'a.inline[href=#delete_dialog]',  "Delete this whizbang"
 #      generated_html.should have_tag 'div#delete_dialog' do
