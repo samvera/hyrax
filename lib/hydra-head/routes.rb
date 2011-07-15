@@ -24,7 +24,7 @@ module HydraHead
     end
 
     def default_route_sets
-      [:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :asset_file_assets, :catalog, :get]
+      [:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :superuser, :asset_file_assets, :catalog, :get]
     end
 
     module RouteSets
@@ -76,6 +76,11 @@ module HydraHead
           end
           # Allow updates to assets/:asset_id/permissions (no :id necessary)
           match 'assets/:asset_id/permissions', :to => 'permissions#update', :as => 'update_group_permissions'
+        end
+      end
+      def superuser
+        add_routes do |options|
+          match 'superuser', :to => 'user_sessions#superuser', :as => 'superuser'
         end
       end
 
