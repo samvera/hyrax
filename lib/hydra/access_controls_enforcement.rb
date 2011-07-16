@@ -113,6 +113,7 @@ module Hydra::AccessControlsEnforcement
   # Controller "before" filter for enforcing access controls on edit actions
   # @param [Hash] opts (optional, not currently used)
   def enforce_edit_permissions(opts={})
+    logger.debug("Enforcing edit permissions")
     load_permissions_from_solr
     if !editor?
       session[:viewing_context] = "browse"
@@ -120,7 +121,6 @@ module Hydra::AccessControlsEnforcement
       redirect_to :action=>:show
     else
       session[:viewing_context] = "edit"
-      render :action=>:show
     end
   end
 
