@@ -19,6 +19,8 @@ module Hydra::Catalog
     # Other modules to auto-include
     klass.send(:include, Hydra::AccessControlsEnforcement)
     klass.send(:include, MediaShelf::ActiveFedoraHelper)
+    klass.send(:include, Hydra::RepositoryController)
+    
     
     # Controller filters
     # Also see the generator (or generated CatalogController) to see more before_filters in action
@@ -29,6 +31,7 @@ module Hydra::Catalog
     # View Helpers
     klass.helper :hydra
     klass.helper :hydra_assets
+    klass.helper :hydra_fedora_metadata
     klass.helper :article_metadata
   end
   
