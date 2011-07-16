@@ -40,7 +40,7 @@ describe GenericImage do
   end
 
   it "should create a max datastream when setting max value to image file" do
-    f = File.new(File.join( File.dirname(__FILE__), "../fixtures/image.jp2" ))
+    f = File.new(File.join( File.dirname(__FILE__), "../../fixtures/image.jp2" ))
     @hydra_image.max = f
   end
   
