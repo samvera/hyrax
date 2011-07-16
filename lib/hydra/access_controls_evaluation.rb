@@ -17,7 +17,7 @@ module Hydra::AccessControlsEvaluation
   #   test_permission(:edit)
   def test_permission(permission_type)    
     # if !current_user.nil?
-      if (@document == nil)
+      if (@permissions_solr_document == nil)
         logger.warn("SolrDocument is nil")
       end
 
@@ -69,27 +69,27 @@ module Hydra::AccessControlsEvaluation
 
   private
   def edit_groups
-    eg = (@document == nil || @document['edit_access_group_t'] == nil) ? [] : @document['edit_access_group_t']
+    eg = (@permissions_solr_document == nil || @permissions_solr_document['edit_access_group_t'] == nil) ? [] : @permissions_solr_document['edit_access_group_t']
     logger.debug("edit_groups: #{eg.inspect}")
     return eg
   end
 
   # edit implies read, so read_groups is the union of edit and read groups
   def read_groups
-    rg = edit_groups | ((@document == nil || @document['read_access_group_t'] == nil) ? [] : @document['read_access_group_t'])
+    rg = edit_groups | ((@permissions_solr_document == nil || @permissions_solr_document['read_access_group_t'] == nil) ? [] : @permissions_solr_document['read_access_group_t'])
     logger.debug("read_groups: #{rg.inspect}")
     return rg
   end
 
   def edit_persons
-    ep = (@document == nil || @document['edit_access_person_t'] == nil) ? [] : @document['edit_access_person_t']
+    ep = (@permissions_solr_document == nil || @permissions_solr_document['edit_access_person_t'] == nil) ? [] : @permissions_solr_document['edit_access_person_t']
     logger.debug("edit_persons: #{ep.inspect}")
     return ep
   end
 
   # edit implies read, so read_persons is the union of edit and read persons
   def read_persons
-    rp = edit_persons | ((@document == nil || @document['read_access_person_t'] == nil) ? [] : @document['read_access_person_t'])
+    rp = edit_persons | ((@permissions_solr_document == nil || @permissions_solr_document['read_access_person_t'] == nil) ? [] : @permissions_solr_document['read_access_person_t'])
     logger.debug("read_persons: #{rp.inspect}")
     return rp
   end
