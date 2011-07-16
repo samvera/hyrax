@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'facets', '2.8.4'
   s.add_dependency 'haml'
   s.add_dependency 'httparty'
-  s.add_dependency 'jettywrapper'
   s.add_dependency 'json_pure', '>1.4.3'
   s.add_dependency 'launchy'
   s.add_dependency 'linecache'
@@ -49,7 +48,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'yard'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
-
+  
+  s.add_development_dependency 'jettywrapper', "~> 0.0.10"
   s.add_development_dependency 'ruby-debug'
   s.add_development_dependency 'ruby-debug-base'
   s.add_development_dependency 'rspec', '>= 2.0.0'  
