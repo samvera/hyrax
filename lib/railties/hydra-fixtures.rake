@@ -146,6 +146,7 @@ namespace :hydra do
         "hydrangea:fixture_uploaded_svg1",
         "hydrangea:fixture_archivist_only_mods_article",
         "hydrangea:fixture_mods_dataset1",
+        "libra-oa:1", "libra-oa:7"
     ]
 
     desc "Load default Hydra fixtures"
