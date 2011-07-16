@@ -32,6 +32,7 @@ module Hydra::Catalog
     klass.helper :hydra
     klass.helper :hydra_assets
     klass.helper :hydra_fedora_metadata
+    klass.helper :hydra_uploader
     klass.helper :article_metadata
   end
   
