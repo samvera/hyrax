@@ -2,8 +2,7 @@
 #   I log in as "archivist1"
 # @example
 #   I am logged in as "archivist1"
-Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
-  email = "#{login}@#{login}.com"
+Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |email|
   # Given %{a User exists with a Login of "#{login}"}
   user = User.create(:email => email, :password => "password", :password_confirmation => "password")
   User.find_by_email(email).should_not be_nil
