@@ -4,16 +4,15 @@ Feature: Edit Article Contributors
   In order to manage the contributor entries (names) in a MODS document
   I want to see and edit the contributors associated with an article
 
-  @overwritten
   Scenario: Viewing contributors in edit mode
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the edit document page for hydrangea:fixture_mods_article1 
     Then the "First Name" field should contain "GIVEN NAMES"
     And the "Last Name" field should contain "FAMILY NAME"
-    And I should see "Author" within "select[rel=person_0_role_text]"
+    # And I should see "Author" within "select[rel=person_0_role_text]"
     # And the "role" field for "the 1st person" entry should contain "Author"
     And the "Institution" field should contain "FACULTY, UNIVERSITY"
-    And I should see a delete contributor button for "the 1st person entry in hydrangea:fixture_mods_article1"
+    # And I should see a delete contributor button for "the 1st person entry in hydrangea:fixture_mods_article1" # first person entry is not deletable
     
     # Then the "First Name" field for "person_1" should contain "Henrietta"
     # And the "Last Name" field for "person_1" should contain "Lacks"
@@ -21,7 +20,7 @@ Feature: Edit Article Contributors
     # And the "Institution" field for "person_1" should contain "Baltimore"
     Then I should see "Henrietta"
     And I should see "Lacks"
-    And I should see "Contributor" within "select[rel=person_1_role_text]"
+    # And I should see "Contributor" within "select[rel=person_1_role_text]" # Author roles are implicit
     And I should see "Baltimore"
     And I should see a delete contributor button for "the 2nd person entry in hydrangea:fixture_mods_article1"
     
@@ -35,19 +34,18 @@ Feature: Edit Article Contributors
 
   @local
   Scenario: Viewing contributors in edit mode
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     And I am on the edit document page for libra-oa:1 
     Then the "First Name" field should contain "Mary"
     And the "Last Name" field should contain "Gibson"
     And the "Institution" field should contain "University of Virginia"
 
-  @overwritten
   Scenario: Viewing contributors in browse mode
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     And I am on the show document page for hydrangea:fixture_mods_article1 
     Then I should see "GIVEN NAMES" within "#contributors_list"
     And I should see "FAMILY NAME" within "#contributors_list"
-    And I should see "Creator" within "#contributor_role"
+    # And I should see "Creator" within "#contributor_role" # Authors role is implicit
     # And the "role" field for "the 1st person" entry should contain "Author"
     And I should see "FACULTY, UNIVERSITY" within "#contributors_list"
     And I should not see a delete contributor button for "the 1st person entry in hydrangea:fixture_mods_article1"
@@ -58,7 +56,7 @@ Feature: Edit Article Contributors
     # And the "Institution" field for "person_1" should contain "Baltimore"
     Then I should see "Henrietta"
     And I should see "Lacks"
-    And I should see "Contributor" within "#person_1 #contributor_role"
+    # And I should see "Contributor" within "#person_1 #contributor_role" # Authors role is implicit
     And I should see "Baltimore"
     And I should not see a delete contributor button for "the 2nd person entry in hydrangea:fixture_mods_article1"
 
@@ -72,7 +70,7 @@ Feature: Edit Article Contributors
 
   @local
   Scenario: Viewing contributors in browse mode
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     And I am on the show document page for libra-oa:1
     Then I should see "Mary Gibson" within "#contributors_list"
     And I should see "Author" within ".contributor_role"
