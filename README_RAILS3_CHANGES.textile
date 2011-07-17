@@ -1,0 +1,15 @@
+
+h2. Fixtures
+
+Fixtures are loaded from a directory _within the test app_, which is updated when you run rake hyhead:setup_test_app so in order to update a fixture, you must change it in test_support/fixtures and then either re-run rake hyhead:setup_test_app or copy the fixture into tmp/test_app/test_support/fixtures
+
+h2. User objects
+
+Blacklight has switched to using devise instead of authlogic as its default user/authentication system.  As part of this switch, no longer have a "login" attribute as their unique identifier.  Instead, you must use email as the unique identifier.  
+
+h3. What this means:
+
+* Our sample user "archivist1" is now "archivist1@example.com".  
+* Your cucumber features and rspec tests must use email addresses as the unique identifier for Users
+
+Change your features and role_map YAML files accordingly.

@@ -1887,7 +1887,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
   <access type="edit">
     <human></human>
     <machine>
-      <person>archivist1</person>
+      <person>archivist1@example.com</person>
     </machine>
   </access>
   <embargo>
@@ -1917,7 +1917,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
   <access type="edit">
     <human></human>
     <machine>
-      <person>archivist1</person>
+      <person>archivist1@example.com</person>
     </machine>
   </access>
   <embargo>
@@ -1932,7 +1932,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
 <foxml:datastreamVersion ID="properties.0" LABEL="" CREATED="2011-01-25T19:48:25.508Z" MIMETYPE="text/xml" SIZE="101">
 <foxml:xmlContent>
 <fields>
-  <depositor>archivist1</depositor>
+  <depositor>archivist1@example.com</depositor>
   <collection>hydrangea_article</collection>
 </fields>
 </foxml:xmlContent>
@@ -1941,7 +1941,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
 <foxml:xmlContent>
 <fields>
   <released>true</released>
-  <depositor>archivist1</depositor>
+  <depositor>archivist1@example.com</depositor>
   <collection>hydrangea_article</collection>
   <release_to>public</release_to>
 </fields>

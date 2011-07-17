@@ -1204,7 +1204,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
 <foxml:datastreamVersion ID="properties.0" LABEL="" CREATED="2010-07-30T18:42:11.253Z" MIMETYPE="text/xml" SIZE="56">
 <foxml:xmlContent>
 <fields>
-  <depositor>archivist1</depositor>
+  <depositor>archivist1@example.com</depositor>
 </fields>
 </foxml:xmlContent>
 </foxml:datastreamVersion>
