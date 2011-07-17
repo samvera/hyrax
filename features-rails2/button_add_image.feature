@@ -5,7 +5,7 @@ Feature: Button to Add Images
   I want to see a button for adding Images
   
   Scenario: button to add articles on home page
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     When I am on the home page
     When I follow "Add an Image" 
     Then I should see "Created a Generic Image with pid "

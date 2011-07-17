@@ -9,10 +9,10 @@
     <%= [creator[:last], creator[:first]].join(", ") unless creator.nil? %>
   </td>
   <td>
-    <%= DateTime.parse(document.get(:system_create_dt)).to_time %>
+    <%= DateTime.parse(document.fetch(:system_create_dt, "")).to_time %>
   </td>
   <td>
-    <%= (document.get(:medium_t) || document_type(document)).gsub(/^Generic/,"") %>
+    <%= (document[:medium_t] || document_type(document)).gsub(/^Generic/,"") %>
   </td>
   <td>
     <%= get_file_asset_count(document)%>
