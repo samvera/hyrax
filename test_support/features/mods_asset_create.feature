@@ -5,7 +5,7 @@ Feature: Add a new Dataset
   I want to submit a new MODS Asset
   
   Scenario: Visit New MODS Asset Page
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     And I am on the home page	
     And I create a new mods_asset
     Then I should see "Describe the Asset"

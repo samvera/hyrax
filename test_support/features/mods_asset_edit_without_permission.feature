@@ -5,6 +5,6 @@ Feature: Edit an article without permission
   without sufficient permissions
   
   Scenario: Visit Document Edit Page
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the edit document page for hydrangea:fixture_mods_article2
     Then I should see a "div" tag with a "class" attribute of "notice"
