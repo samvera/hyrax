@@ -5,7 +5,7 @@ Feature: Button to Add Generic Content
   I want to see a button for adding Generic Content
   
   Scenario: button to add articles on home page
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     When I am on the home page
     When I follow "Add Generic Content" 
     Then I should see "Created a Generic Content with pid "
