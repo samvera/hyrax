@@ -21,7 +21,7 @@
       </li>
     </ul>
     <% if (params[:action] == "edit" && !organization_name.empty?) %>
-      <%= field_selectors_for("descMetadata", [{:person=>organization_counter}]) %>
+      <%= field_selectors_for("descMetadata", [{:person=>organization_counter}]).html_safe %>
       <a class="destructive destroy_contributor" href="<%= asset_contributor_path(@document_fedora.pid, "organization", organization_counter) %>" title="Delete '<%= organization_name %>"> Delete</a>
     <% end %>
   </dd>
