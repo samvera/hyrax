@@ -166,7 +166,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
     <access type="edit">
       <human></human>
       <machine>
-        <person>archivist1</person>
+        <person>archivist1@example.com</person>
         <group>researcher</group>
       </machine>
     </access>
@@ -179,7 +179,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
 <foxml:xmlContent>
 <fields>
   <collection>hydrangea_dataset</collection>
-  <depositor>archivist1</depositor>
+  <depositor>archivist1@example.com</depositor>
 </fields>
 </foxml:xmlContent>
 </foxml:datastreamVersion>
