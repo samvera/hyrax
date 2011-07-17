@@ -21,7 +21,7 @@
       <dd id="<%=h "#{field_name}-container" %>" class="permissions">
         <select id="<%=h field_name %>" name="permission[group][<%=h role %>]">
           <% choices.each do |choice| %>
-            <% choice_label = choice.keys.first %>
+            <% choice_label = choice.keys.first.html_safe %>
             <% choice_name = choice.values.first %>
             <% if role_permissions == choice_name %>
               <option value="<%=h choice_name %>" selected="selected">
