@@ -12,25 +12,25 @@
       <ul>
         <%- if @document_fedora.datastreams["descMetadata"].class.terminology.has_term?(:person, :computing_id) %>
         <li class="computing_id">
-          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "Computing ID") %>
-          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :computing_id], :multiple=>false) %>
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "Computing ID").html_safe %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :computing_id], :multiple=>false).html_safe %>
         </li>
         <%- end %>
         <li class="name_first">
-          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "First Name") %>
-          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name], :multiple=>false) %>
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :first_name], "First Name").html_safe %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :first_name], :multiple=>false).html_safe %>
         </li>
         <li class="name_last">
-          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :last_name], "Last Name") %>
-          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name], :multiple=>false) %>
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :last_name], "Last Name").html_safe %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :last_name], :multiple=>false).html_safe %>
         </li>
         <li class="department">
-          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :description], "Department") %>
-          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :description], :multiple=>false) %>
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :description], "Department").html_safe %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :description], :multiple=>false).html_safe %>
         </li>
         <li class="affiliation">
-          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :institution], "Institution") %>
-          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution], :multiple=>false) %>
+          <%= fedora_field_label("descMetadata", [{:person=>person_counter}, :institution], "Institution").html_safe %>
+          <%= fedora_text_field(@document_fedora,"descMetadata", [{:person=>person_counter}, :institution], :multiple=>false).html_safe %>
         </li>
 
       <% if ( (person_counter > 0) && (params[:action] == "edit" || params[:action] == "create") && !person_name.strip.empty? ) %>

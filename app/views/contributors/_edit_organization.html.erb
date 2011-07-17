@@ -12,12 +12,12 @@
   <dd class="multi_inline organization">
     <ul>
       <li>
-        <%= fedora_field_label("descMetadata", [{:organization => organization_counter}, :role, :text], "Organization's Role:") %>
-        <%= fedora_select(@document_fedora,"descMetadata", [{:organization => organization_counter}, :role, :text], :choices=>choices.values.sort) %>
+        <%= fedora_field_label("descMetadata", [{:organization => organization_counter}, :role, :text], "Organization's Role:").html_safe %>
+        <%= fedora_select(@document_fedora,"descMetadata", [{:organization => organization_counter}, :role, :text], :choices=>choices.values.sort).html_safe %>
       </li>
       <li>
-        <%= fedora_field_label("descMetadata", [{:organization => organization_counter}, :namePart], "Organization") %>
-        <%= fedora_text_field(@document_fedora,"descMetadata", [{:organization => organization_counter}, :namePart], :multiple=>false) %>
+        <%= fedora_field_label("descMetadata", [{:organization => organization_counter}, :namePart], "Organization").html_safe %>
+        <%= fedora_text_field(@document_fedora,"descMetadata", [{:organization => organization_counter}, :namePart], :multiple=>false).html_safe %>
       </li>
     </ul>
     <% if (params[:action] == "edit" && !organization_name.empty?) %>
