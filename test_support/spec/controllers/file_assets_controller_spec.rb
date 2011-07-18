@@ -28,7 +28,7 @@ describe FileAssetsController do
       #FileAsset.expects(:find_by_solr).with(:all, {}).returns("solr result")
       # Solr::Connection.any_instance.expects(:query).with('conforms_to_field:info\:fedora/afmodel\:FileAsset', {}).returns("solr result")
       Solr::Connection.any_instance.expects(:query).with('active_fedora_model_s:FileAsset', {}).returns("solr result")
-
+      controller.stubs(:load_permissions_from_solr)
       ActiveFedora::Base.expects(:new).never
       xhr :get, :index
       assigns[:solr_result].should == "solr result"
@@ -38,7 +38,8 @@ describe FileAssetsController do
       mock_container.expects(:file_objects).with(:response_format => :solr).returns("solr result")
       controller.expects(:get_search_results).with(:q=>'is_part_of_s:info\:fedora/_PID_').returns(["assets solr response","assets solr list"])
       controller.expects(:get_solr_response_for_doc_id).with('_PID_').returns(["container solr response","container solr doc"])
-
+      controller.stubs(:load_permissions_from_solr)
+      
       ActiveFedora::Base.expects(:load_instance).with("_PID_").returns(mock_container)
       xhr :get, :index, :asset_id=>"_PID_"
       assigns[:response].should == "assets solr response"

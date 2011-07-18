@@ -74,7 +74,7 @@ end
 
 # Delete button for assets
 Then /^I (should|should not) see a delete button for "([^\"]*)"$/ do |bool,target|
-  path_name = "the asset #{target}"
+  path_name = "the delete confirmation page for #{target}"
   if bool == "should"
     # page.should have_selector("a.destructive", :href=>path_to(target))
     page.should have_xpath(".//a[@href=\"#{path_to(path_name)}\" and @class=\"delete_asset\"]")

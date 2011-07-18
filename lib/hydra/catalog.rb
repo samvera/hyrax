@@ -40,6 +40,12 @@ module Hydra::Catalog
     render "show"
   end
   
+  # This will render the "delete" confirmation page and a form to submit a destroy request to the assets controller
+  def delete
+    show
+    render "show"
+  end
+  
   def load_fedora_document
     af_base = ActiveFedora::Base.load_instance(params[:id])
     the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
