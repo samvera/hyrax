@@ -11,6 +11,8 @@ class FileAssetsController < ApplicationController
   before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
   prepend_before_filter :sanitize_update_params
   
+  helper :hydra_uploader
+  
   def index
 =begin
 Removed from file_assets/index.html.haml
@@ -50,6 +52,9 @@ Removed from file_assets/index.html.haml
       @container =  ActiveFedora::Base.load_instance(params[:asset_id])
       @solr_result = @container.file_objects(:response_format=>:solr)
     end
+    
+    # Load permissions_solr_doc based on params[:asset_id]
+    load_permissions_from_solr(params[:asset_id])
     
     render :action=>params[:action], :layout=>layout
   end
