@@ -14,18 +14,19 @@ Feature: List files for a document
   
   @overwritten
   Scenario: Editor views the file list
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the file list page for hydrangea:fixture_mods_article1
     Then I should see a "th" element containing "File"
     And I should see a "th" element containing "Size"
     And I should see a "th" element containing "Uploaded"
     # And I should see a "td" with class "file_asset"
-    Then I should see a link to "hydrangea:fixture_uploaded_svg1" with label "OM_MANI_PADME_HUM-bw.svg" in the file assets list     
-    And I should see a button to delete "the file asset hydrangea:fixture_uploaded_svg1" from "hydrangea:fixture_mods_article1"
+    Then I should see a link to "the file asset hydrangea:fixture_uploaded_svg1" with label "OM_MANI_PADME_HUM-bw.svg" in the file assets list     
+    And I should see a delete button for "hydrangea:fixture_uploaded_svg1" 
+    # And I should see a button to delete "the asset hydrangea:fixture_uploaded_svg1" from "hydrangea:fixture_mods_article1"
 
   @local
   Scenario: Editor views the file list
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the file list page for libra-oa:1
     Then I should see a "th" element containing "File"
     Then I should see a link to "the file asset libra-oa:2" with label "gibson.pdf" in the file assets list     
@@ -33,7 +34,7 @@ Feature: List files for a document
  
   @overwritten
   Scenario: Non-editor views the file list
-    Given I am logged in as "permissionlessdude" 
+    Given I am logged in as "permissionlessdude@example.com" 
     And I am on the file list page for hydrangea:fixture_mods_article1    
     Then I should see a "th" element containing "File"
     And I should see a "th" element containing "Size"
@@ -43,7 +44,7 @@ Feature: List files for a document
     
   @local
   Scenario: Non-editor views the file list
-    Given I am logged in as "permissionlessdude" 
+    Given I am logged in as "permissionlessdude@example.com" 
     And I am on the file list page for libra-oa:1
     Then I should see a "th" element containing "File"
     Then I should see a link to "the file asset libra-oa:2" with label "gibson.pdf" in the file assets list  

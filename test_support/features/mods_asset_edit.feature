@@ -15,7 +15,7 @@ Feature: Edit a document
      And I am on the edit document page for libra-oa:1
      Then I should see "The Smallest Victims of the " within "#title_fieldset"
 		 Then I should see "gibson.pdf" within "tr.file_asset"
-		 And I should see "Delete this" within "a#delete_asset_link"
+		 And I should see a delete button for "libra-oa:1"      
 
   Scenario: Viewing browse/edit buttons
     Given I am logged in as "archivist1@example.com" 
