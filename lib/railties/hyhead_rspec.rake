@@ -42,7 +42,7 @@ begin
     #task :stats => "spec:statsetup"
     
     namespace :spec do
-      [:requests, :models, :controllers, :views, :helpers, :mailers, :lib, :routing, :generators].each do |sub|
+      [:requests, :models, :controllers, :views, :helpers, :mailers, :lib, :routing, :generators, :utilities].each do |sub|
         desc "Run the code examples in spec/#{sub}"
         RSpec::Core::RakeTask.new(sub => spec_prereq) do |t|
           # the user might not have run rspec generator because they don't
@@ -57,7 +57,7 @@ begin
 
       desc "Run all specs"
 			task :run => spec_prereq do
-      	[:models, :controllers, :helpers, :lib, :generators].each do |sub|
+      	[:models, :controllers, :helpers, :lib, :generators, :utilities].each do |sub|
 					puts "invoking: hyhead:spec:#{sub}"
 					Rake::Task["hyhead:spec:#{sub}"].invoke
 				end

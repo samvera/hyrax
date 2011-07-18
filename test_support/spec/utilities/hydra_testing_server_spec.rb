@@ -23,7 +23,7 @@ describe Hydra::TestingServer do
   it "should be configurable with default values" do
     ts = Hydra::TestingServer.configure 
     ts.quiet.should == true
-    ts.jetty_home.should == File.join(RAILS_ROOT, "jetty")
+    ts.jetty_home.should == File.join(::Rails.root.to_s, "jetty")
     ts.port.should == 8888
     ts.solr_home.should == File.join(ts.jetty_home, "solr" )
     ts.fedora_home.should == File.join(ts.jetty_home, "fedora","default")
@@ -40,7 +40,7 @@ describe Hydra::TestingServer do
     
     ts = Hydra::TestingServer.configure(jetty_params) 
     ts.quiet.should == false
-    ts.jetty_home.should == File.join(RAILS_ROOT, "jetty")
+    ts.jetty_home.should == File.join(::Rails.root.to_s, "jetty")
     ts.port.should == 8888
     ts.solr_home.should == "/path/to/solr"
     ts.fedora_home.should == File.join(ts.jetty_home, "fedora","default")
