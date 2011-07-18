@@ -7,6 +7,14 @@ h2. User objects
 
 Blacklight has switched to using devise instead of authlogic as its default user/authentication system.  As part of this switch, no longer have a "login" attribute as their unique identifier.  Instead, you must use email as the unique identifier.  
 
+h2. User Attributes
+
+User attributes (first_name, last_name, full_name, affiliation and photo) have been removed from HydraHead.
+
+h2. Controllers
+
+* Removed Djatoka (JPEG 2000) support and the GetController
+
 h3. What this means:
 
 * Our sample user "archivist1" is now "archivist1@example.com".  
