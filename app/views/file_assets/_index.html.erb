@@ -4,8 +4,7 @@
         <th>File</th>
         <th></th>
       </tr>
-   
-      <%= render :partial=>'file_assets/result', :collection=> file_assets %>
+      <%= render :partial=>'file_assets/result', :collection=> file_assets.hits %>
 			</table>
 <% end %>
 

@@ -107,7 +107,7 @@
       <str name="facet.mincount">1</str>
 	    <str name="echoParams">explicit</str>
       <str name="fl">
-        id,title_t,date_t,year_facet,month_facet,has_model_s,has_collection_member_s,system_create_dt,
+        id,title_t,date_t,year_facet,month_facet,has_model_s,has_collection_member_s,is_part_of_s,system_create_dt,
         person_0_role_t,person_1_role_t,person_2_role_t,person_3_role_t,person_4_role_t,person_5_role_t,person_6_role_t,
         person_7_role_t,person_8_role_t,person_9_role_t,
         person_0_first_name_t,person_1_first_name_t,person_2_first_name_t,person_3_first_name_t,person_4_first_name_t,
