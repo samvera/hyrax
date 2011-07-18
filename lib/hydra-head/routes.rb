@@ -94,11 +94,15 @@ module HydraHead
 
       def catalog
         add_routes do |options|
-          resources :catalog, :only => [ :index, :show ], :controller => "hydra_head/catalog", :path_prefix => HydraHead::Engine.config.mount_at, :as => "hydra_head_"
-          #resources :catalog, :only => [:edit, :delete]
           match 'catalog/:id/edit', :to => 'catalog#edit', :as => 'edit_catalog'
-          match 'catalog/:id/delete', :to => 'catalog#delete', :as => 'delete_catalog'
-          match 'about', :to => 'catalog#about', :as => 'about'
+
+	  ### The rest of these routes are defined in blacklight
+          #resources :catalog, :id=> /.+/
+         # resources :catalog, :only => [:index, :show], :controller => "hydra_head/catalog", :path_prefix => HydraHead::Engine.config.mount_at, :as => "hydra_head", :id=> /.+/
+          #match 'catalog/:id', :to => "hydra_head/catalog#show", :path_prefix => HydraHead::Engine.config.mount_at, :as => "catalog", :id => /.+/
+          #match 'catalog/:id', :to => "hydra_head/catalog#show", :id => /.+/
+          # match 'catalog/:id/delete', :to => 'catalog#delete', :as => 'delete_catalog'
+          # match 'about', :to => 'catalog#about', :as => 'about'
         end
       end
 
