@@ -5,16 +5,16 @@
     <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
     <dl>
       <dt>
-        <%= fedora_field_label("descMetadata", [:title_info, :main_title], "Title:") %>
+        <%= fedora_field_label("descMetadata", [:title_info, :main_title], "Title:").html_safe %>
       </dt>
       <dd class="title">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false) %>
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false).html_safe %>
       </dd>
       <dt>
-        <%= fedora_field_label("descMetadata", [:title_info, :language], "Language:") %>
+        <%= fedora_field_label("descMetadata", [:title_info, :language], "Language:").html_safe %>
       </dt>
       <dd class="language">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :language], :multiple=>false) %>
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :language], :multiple=>false).html_safe %>
       </dd>
     </dl>
   </fieldset>
@@ -27,10 +27,10 @@
     <legend>Abstract</legend>
     <dl>
       <dt>
-        <%= fedora_field_label("descMetadata", [:abstract], "Abstract:") %>
+        <%= fedora_field_label("descMetadata", [:abstract], "Abstract:").html_safe %>
       </dt>
       <dd class="abstract">
-        <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false) %>
+        <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false).html_safe %>
       </dd>
     </dl>
   </fieldset>
@@ -38,11 +38,11 @@
     <legend>Topics</legend>
     <dl>
       <dt>
-        <%= fedora_field_label("descMetadata", [:subject, :topic], "Topic(s):") %>
+        <%= fedora_field_label("descMetadata", [:subject, :topic], "Topic(s):").html_safe %>
         <%= fedora_text_field_insert_link "descMetadata", [:subject, :topic] %>
       </dt>
       <dd id="topic_tag" class="topic_tag">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic], :multiple=>true) %>
+        <%= fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic], :multiple=>true).html_safe %>
       </dd>
     </dl>
   </fieldset>
