@@ -215,5 +215,6 @@ Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
 end
 
 Then /^show me the page$/ do
+  # puts save_and_open_page_path
   save_and_open_page
 end
