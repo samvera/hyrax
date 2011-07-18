@@ -85,6 +85,7 @@ describe Hydra::FileAssetsHelper do
   
   describe "choose_model_by_filename" do
     it "should return model classes based on filename extensions" do
+      pending "This can only be enabled if/when we adopt replacements for ImageAsset, AudioAsset, etc. as default primitives."
       
       ["filename.wav","filename.mp3","filename.aiff"].each do |fn|
         helper.choose_model_by_filename(fn).should == AudioAsset
