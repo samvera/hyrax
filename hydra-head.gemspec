@@ -6,16 +6,15 @@ Gem::Specification.new do |s|
   s.name        = "hydra-head"
   s.version     = HydraHead::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Matt Zumwalt, Bess Sadler, Naomi Dushay, Jessie Keck, John Scofield & many more.  See https://github.com/projecthydra/hydra-head/contributors"]
+  s.authors     = ["Matt Zumwalt, Bess Sadler, Julie Meloni, Naomi Dushay, Jessie Keck, John Scofield & many more.  See https://github.com/projecthydra/hydra-head/contributors"]
   s.email       = ["hydra-tech@googlegroups.com"]
   s.homepage    = "http://projecthydra.org"
   s.summary     = %q{Hydra-Head Rails Engine (requires Rails3) }
   s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
 
   s.add_dependency "rails", '>= 3.0'
-  # s.add_dependency "blacklight", '~> 3.0.0pre6'
   s.add_dependency "blacklight", '3.0.0'  
-  s.add_dependency "active-fedora", '>= 2.3.3pre1'
+  s.add_dependency "active-fedora", '>= 2.3.3pre2'
   s.add_dependency 'builder'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
