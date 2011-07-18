@@ -109,7 +109,7 @@ describe Hydra::AccessControlsEnforcement do
     it "should return fields for all roles the user is a member of checking against the discover, access, read fields" do
      stub_user = User.new
      stub_user.stubs(:is_being_superuser?).returns false
-     stub_user.stubs(:login).returns "archivist1"
+     stub_user.stubs(:login).returns "archivist1@example.com"
      helper.stubs(:current_user).returns(stub_user)
      # This example assumes that archivist1 is in the archivist and researcher groups.
      # Tried stubbing RoleMapper.roles instead, but that broke 26 other tests because mocha fails to release the expectation.
