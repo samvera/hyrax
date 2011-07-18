@@ -3,8 +3,9 @@ require "hydra"
 if Hydra.respond_to?(:configure)
   Hydra.configure(:shared) do |config|
   
+    # This is used as a reference by choose_model_by_filename in FileAssetsHelper
     config[:file_asset_types] = {
-      # MZ - Commented out b/c the contents of /app are not in this branch yet.
+      # MZ -This can only be enabled if/when we adopt replacements for ImageAsset, AudioAsset, etc. as default primitives.
       # :default => FileAsset, 
       # :extension_mappings => {
       #   AudioAsset => [".wav", ".mp3", ".aiff"] ,
