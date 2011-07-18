@@ -20,12 +20,6 @@ require File.dirname(__FILE__) + "/../hydra-plugin_test_host/config/environment"
 require 'spec/autorun'
 require 'spec/rails'
 
-
-# setting rake spec HTML_VALIDITY=true will turn on XHTML validiation. 
-if ENV["HTML_VALIDITY"] and ENV["HTML_VALIDITY"] == "true"
-  require 'markup_validity'
-end
-
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 # Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
