@@ -35,6 +35,7 @@ module NavigationHelpers
       edit_catalog_path($1)
     when /the show document page for (.*)$/i
       catalog_path($1)
+      
     when /the file (?:asset )?list page for (.*)$/i
       asset_file_assets_path($1)
     when /the file asset creation page for (.*)$/i
@@ -50,6 +51,10 @@ module NavigationHelpers
     
     when /new (.*) page$/i
       new_asset_path(:content_type => $1)
+    when /the asset (.*)$/i
+      asset_path($1)
+    when /show asset page for (.*)$/i
+      asset_path($1)
       
     when /the (\d+)(?:st|nd|rd|th) (person|organization|conference) entry in (.*)$/i
       # contributor_id = "#{$2}_#{$1.to_i-1}"

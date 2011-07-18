@@ -95,7 +95,6 @@ module HydraHead
       def catalog
         add_routes do |options|
           match 'catalog/:id/edit', :to => 'catalog#edit', :as => 'edit_catalog'
-          match 'catalog/:id/delete', :to => 'catalog#delete', :as => 'delete_catalog'
 
 	  ### The rest of these routes are defined in blacklight
           #resources :catalog, :id=> /.+/
