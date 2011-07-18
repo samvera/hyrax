@@ -84,19 +84,23 @@ describe Hydra::FileAssetsHelper do
   end
   
   describe "choose_model_by_filename" do
-    it "should attempt to guess at type and set model accordingly" do
-      helper.choose_model_by_filename("meow.mp3").should == AudioAsset
-      helper.choose_model_by_filename("meow.wav").should == AudioAsset
-      helper.choose_model_by_filename("meow.aiff").should == AudioAsset
+    it "should return model classes based on filename extensions" do
       
-      helper.choose_model_by_filename("meow.mov").should == VideoAsset
-      helper.choose_model_by_filename("meow.flv").should == VideoAsset
-      helper.choose_model_by_filename("meow.m4v").should == VideoAsset
+      ["filename.wav","filename.mp3","filename.aiff"].each do |fn|
+        helper.choose_model_by_filename(fn).should == AudioAsset
+      end
       
-      helper.choose_model_by_filename("meow.jpg").should == ImageAsset
-      helper.choose_model_by_filename("meow.jpeg").should == ImageAsset
-      helper.choose_model_by_filename("meow.png").should == ImageAsset
-      helper.choose_model_by_filename("meow.gif").should == ImageAsset
+      ["filename.mov","filename.flv","filename.mp4", "filename.m4v"].each do |fn|
+        helper.choose_model_by_filename(fn).should == VideoAsset
+      end
+      
+      ["filename.jpeg","filename.jpg","filename.gif", "filename.png"].each do |fn|
+        helper.choose_model_by_filename(fn).should == ImageAsset
+      end
+      
+      ["filename.doc","filename.pdf","filename.jp2", "filename.zip"].each do |fn|
+        helper.choose_model_by_filename(fn).should == FileAsset
+      end
     end
   end
 end
