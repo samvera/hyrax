@@ -1,3 +1,4 @@
+require "hydra/fixtures"
 # This is the post-submission complement to "I fill in the following" from web_steps.rb
 Then /^the following (should contain|contain|should not contain|do not contain):$/ do |bool,table|
   # table is a Cucumber::Ast::Table
@@ -45,6 +46,12 @@ Then /^I should see a "([^"]*)" button(?: within "([^"]*)")?$/ do |button_locato
     end
   end
 end
+
+Given /^that "([^"]*)" has been loaded into fedora$/ do |pid|
+  Hydra::Fixtures.reload(pid)
+  
+end
+
 
 # Find a select tag on the page
 # @param [String] locator Capybara locator

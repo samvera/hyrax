@@ -11,6 +11,8 @@ Feature: List files for a document
   # Summary information at bottom of table:
   # In the file column - total number of files
   # In the size column - total size of all uploaded files
+  Background: 
+    Given that "hydrangea:fixture_uploaded_svg1" has been loaded into fedora
   
   @overwritten
   Scenario: Editor views the file list

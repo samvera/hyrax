@@ -2,11 +2,27 @@
 require "active-fedora"
 require "solrizer-fedora"
 require "active_support" # This is just to load ActiveSupport::CoreExtensions::String::Inflections
+require "hydra/fixtures"
 namespace :hydra do
   
   
   desc "Delete and re-import the fixture identified by pid" 
-  task :refresh_fixture => [:delete,:import_fixture]
+  task :refresh_fixture => :init do
+    # If a destination url has been provided, attampt to export from the fedora repository there.
+    if ENV["destination"]
+      Fedora::Repository.register(ENV["destination"])
+    end
+    if ENV["pid"].nil? 
+      raise "You must specify a valid pid.  Example: rake hydra:refresh_fixture pid=demo:12"
+    end
+    begin
+      Hydra::Fixtures.reload(ENV["pid"])
+    rescue Errno::ECONNREFUSED => e
+      puts "Can't connect to Fedora! Are you sure jetty is running?"
+    rescue Fedora::ServerError => e
+        logger.error("Received a Fedora error while deleting #{pid}")
+    end
+  end
   
   desc "Delete the object identified by pid. Example: rake hydra:delete pid=demo:12"
   task :delete => :init do
@@ -16,14 +32,12 @@ namespace :hydra do
     end
     
     if ENV["pid"].nil? 
-      puts "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
+      raise "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
       pid = ENV["pid"]
       puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
       begin
-        ActiveFedora::Base.load_instance(pid).delete
-      rescue ActiveFedora::ObjectNotFoundError
-        puts "The object #{pid} has already been deleted (or was never created)."
+        Hydra::Fixtures.delete(pid)
       rescue Errno::ECONNREFUSED => e
         puts "Can't connect to Fedora! Are you sure jetty is running?"
       rescue Fedora::ServerError => e
@@ -92,30 +106,14 @@ namespace :hydra do
     if ENV["destination"]
       Fedora::Repository.register(ENV["destination"])
     end
-        
     if !ENV["fixture"].nil? 
-      filename = ENV["fixture"]
+      body = Hydra::Fixtures.import_to_fedora(ENV["fixture"])
     elsif !ENV["pid"].nil?
-      pid = ENV["pid"]
-      filename = File.join("test_support","fixtures","#{pid.gsub(":","_")}.foxml.xml")
+      body = Hydra::Fixtures.import_and_index(ENV["pid"])
     else
-      puts "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
+      raise "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
     end
-    
-    if !filename.nil?
-      puts "Importing '#{filename}' to #{Fedora::Repository.instance.fedora_url}"
-      file = File.new(filename, "r")
-      result = foxml = Fedora::Repository.instance.ingest(file.read)
-      if result
-        puts "The fixture has been ingested as #{result.body}"
-        if !pid.nil?
-          solrizer = Solrizer::Fedora::Solrizer.new 
-          solrizer.solrize(pid) 
-        end    
-      else
-        puts "Failed to ingest the fixture."
-      end
-    end    
+    puts "The fixture has been ingested as #{body}"
     
   end
   
