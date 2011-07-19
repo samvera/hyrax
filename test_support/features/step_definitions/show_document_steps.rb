@@ -50,6 +50,7 @@ Then /^related links are displayed as urls$/ do
   pending
 end
 
+# Delete button for field or contributor
 Then /^I (should|should not) see a delete (field|contributor) button for "([^\"]*)"$/ do |bool,type,target|
   if bool == "should"
     # page.should have_selector("a, :class=>"destructive #{type}", :href=>path_to(target))
@@ -71,13 +72,14 @@ Then /^I (should|should not) see a button to delete "([^\"]*)" from "([^\"]*)"$/
   end
 end
 
+# Delete button for assets
 Then /^I (should|should not) see a delete button for "([^\"]*)"$/ do |bool,target|
+  path_name = "the delete confirmation page for #{target}"
   if bool == "should"
     # page.should have_selector("a.destructive", :href=>path_to(target))
-    page.should have_xpath(".//a[@href=\"#{path_to(target)}\" and @class=\"destructive\"]")
+    page.should have_xpath(".//a[@href=\"#{path_to(path_name)}\" and @class=\"delete_asset\"]")
   else
     # page.should_not have_selector("a.destructive", :href=>path_to(target))
-    page.should_not have_xpath(".//a[@href=\"#{path_to(target)}\" and @class=\"destructive\"]")
+    page.should_not have_xpath(".//a[@href=\"#{path_to(path_name)}\" and @class=\"delete_asset\"]")
   end
 end
-

@@ -12,6 +12,8 @@ class FileAssetsController < ApplicationController
   before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
   prepend_before_filter :sanitize_update_params
   
+  helper :hydra_uploader
+  
   def index
 =begin
 Removed from file_assets/index.html.haml
@@ -34,7 +36,11 @@ Removed from file_assets/index.html.haml
       # action = "index_embedded"
       layout = false
     end
-    if !params[:asset_id].nil?
+
+    if params[:asset_id].nil?
+      # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
+      @solr_result = FileAsset.find_by_solr(:all)
+    else
       container_uri = "info:fedora/#{params[:asset_id]}"
       escaped_uri = container_uri.gsub(/(:)/, '\\:')
       extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}"}
@@ -46,10 +52,11 @@ Removed from file_assets/index.html.haml
       # Including these lines for backwards compatibility (until we can use Rails3 callbacks)
       @container =  ActiveFedora::Base.load_instance(params[:asset_id])
       @solr_result = @container.file_objects(:response_format=>:solr)
-    else
-      # @solr_result = ActiveFedora::SolrService.instance.conn.query('has_model_field:info\:fedora/afmodel\:FileAsset', @search_params)
-      @solr_result = FileAsset.find_by_solr(:all)
     end
+    
+    # Load permissions_solr_doc based on params[:asset_id]
+    load_permissions_from_solr(params[:asset_id])
+    
     render :action=>params[:action], :layout=>layout
   end
   
