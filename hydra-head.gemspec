@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "hydra-head"
   s.version     = HydraHead::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Matt Zumwalt, Bess Sadler, Julie Meloni, Naomi Dushay, Jessie Keck, John Scofield & many more.  See https://github.com/projecthydra/hydra-head/contributors"]
+  s.authors     = ["Matt Zumwalt, Bess Sadler, Julie Meloni, Naomi Dushay, Jessie Keck, John Scofield, Justin Coyne & many more.  See https://github.com/projecthydra/hydra-head/contributors"]
   s.email       = ["hydra-tech@googlegroups.com"]
   s.homepage    = "http://projecthydra.org"
   s.summary     = %q{Hydra-Head Rails Engine (requires Rails3) }
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", '>= 3.0'
   s.add_dependency "blacklight", '3.0.0'  
-  s.add_dependency "active-fedora", '>= 2.3.3pre2'
+  s.add_dependency "active-fedora", '>= 2.3.3'
   s.add_dependency 'builder'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
@@ -55,8 +55,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'cucumber', '>=0.8.5'
-  s.add_development_dependency 'cucumber-rails'
-  s.add_development_dependency 'capybara'
+  s.add_development_dependency 'cucumber-rails', '>=1.0.0'
+#  s.add_development_dependency 'capybara'
   s.add_development_dependency 'gherkin'
   s.add_development_dependency 'factory_girl'
   s.add_development_dependency 'markup_validity'
