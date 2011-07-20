@@ -31,7 +31,7 @@ module HydraHelper
       end
     end
 
-    link_to(name, catalog_index_path(facet_params), options)
+    link_to(name, catalog_index_path(facet_params), options).html_safe
   end
   
   def edit_and_browse_links
@@ -45,7 +45,7 @@ module HydraHelper
     end
     # result << link_to "Browse", "#", :class=>"browse"
     # result << link_to "Edit", edit_document_path(@document[:id]), :class=>"edit"
-    return result
+    return result.html_safe
   end
   
   def grouped_result_count(response, facet_name=nil, facet_value=nil)
