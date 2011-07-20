@@ -5,10 +5,10 @@
 <div id="showHead">
   <div id="showUtils">
     <div class="tools"><%= render :partial => 'show_tools' %></div>
-    <span class="back_to_cat"><%= link_back_to_catalog( :label=>'&larr; Return to search results').html_safe %></span>
+    <span class="back_to_cat"><%= link_back_to_catalog( :label=>'&larr; Return to search results') %></span>
     <% if @previous_document || @next_document %>
       <div id="previousNextDocument">
-	    <span class="previous"><%= link_to_previous_document(@previous_document).html_safe %></span>
+	    <span class="previous"><%= link_to_previous_document(@previous_document) %></span>
     <% end %>
     <%- if session[:search][:counter].to_i > 0 -%>
       <%= session[:search][:counter].to_i %> of <%= format_num(session[:search][:total]) %>
