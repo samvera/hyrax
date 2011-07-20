@@ -5,7 +5,7 @@
 <div id="showHead">
   <div id="showUtils">
     <div class="tools"><%= render :partial => 'show_tools' %></div>
-    <span class="back_to_cat"><%= link_back_to_catalog( :label=>'&larr; Return to search results') %></span>
+    <span class="back_to_cat"><%= link_back_to_catalog( :label=>'&larr; Return to search results'.html_safe) %></span>
     <% if @previous_document || @next_document %>
       <div id="previousNextDocument">
 	    <span class="previous"><%= link_to_previous_document(@previous_document) %></span>
