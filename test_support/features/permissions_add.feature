@@ -12,4 +12,4 @@ Feature: Add Individual Permissions
     When I press "Add Permissions"
     Then I should see "cucumber_user has been granted read permissions for hydrangea:fixture_mods_article1"
     And "Read & Download" should be selected from "cucumber_user" within "form#permissions_metadata"
-    And "Discover" should be selected from "public" within "form#permissions_metadata"
+    And "Discover" should be selected from "Public" within "form#permissions_metadata"

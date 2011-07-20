@@ -1,8 +1,12 @@
 @permissions
 Feature: Edit Permissions
+    
   As a user with edit permissions
   In order to edit who has which levels of access to a document
   I want to see and edit the object-level permissions for users and groups
+
+  Background: 
+    Given that "hydrangea:fixture_mods_article1" has been loaded into fedora
 
   Scenario: Viewing group & individual permissions
     Given I am logged in as "archivist1@example.com" 
@@ -55,3 +59,5 @@ Feature: Edit Permissions
     ## This one fails because Capybara's selectors can't find "#individual_permissions" 
     ##
     # Then I should not see "researcher1" within "form#permissions_metadata"
+
+

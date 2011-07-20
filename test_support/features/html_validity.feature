@@ -8,20 +8,24 @@ Feature: HTML validity
     Then the page should be HTML5 valid
     
   Scenario: Home page (authenticated)
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the home page
     Then the page should be HTML5 valid
     
   Scenario: Search Results (unauthenticated)
     Given I am on the home page
-    When I follow "Article"
+    And I fill in "q" with "fixture"
+    When I press "submit"
+    When I follow "ARTICLE"
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
   Scenario: Search Results (authenticated)
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the home page
-    And I follow "Article"
+    And I fill in "q" with "fixture"
+    And I press "submit"
+    And I follow "ARTICLE"
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
@@ -31,13 +35,13 @@ Feature: HTML validity
     And the page should be HTML5 valid
     
   Scenario: Record view browse (authenticated)
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the show document page for hydrangea:fixture_mods_article2
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
   Scenario: Record view edit (authenticated)
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the edit document page for hydrangea:fixture_mods_article2
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid

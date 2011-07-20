@@ -1,6 +1,7 @@
 #require 'rake/testtask'
 require 'rspec/core'
 require 'rspec/core/rake_task'
+require 'thor/core_ext/file_binary_read'
 
 namespace :hyhead do
 
@@ -135,65 +136,76 @@ namespace :hyhead do
   # Misc Tasks
   #
   
-  desc "Creates a new test app and runs the cukes/specs from within it"
+  desc "Creates a new test app"
   task :setup_test_app => [:set_test_host_path] do
-    errors = []
-    puts "Cleaning out test app path"
-    %x[rm -fr #{TEST_HOST_PATH}]
-    errors << 'Error removing test app' unless $?.success?
+    # Thor::Util.load_thorfile('tasks/test_app_builder.thor', nil, nil)
+    # klass, task = Thor::Util.find_class_and_task_by_namespace("hydra:test_app_builder:build")
+    # klass.start([task])
+      path = TEST_HOST_PATH
+      errors = []
+      puts "Cleaning out test app path"
+      %x[rm -fr #{path}]
+      errors << 'Error removing test app' unless $?.success?
 
-    FileUtils.mkdir_p(TEST_HOST_PATH)
-    
-    puts "Copying over .rvmrc file"
-    FileUtils.cp("./test_support/etc/rvmrc",File.join(TEST_HOST_PATH,".rvmrc"))
-    FileUtils.cd("tmp")
-    system("source ./test_app/.rvmrc")
-    
-    puts "Installing rails, bundler and devise"
-    %x[gem install --no-rdoc --no-ri 'rails']
-    %x[gem install --no-rdoc --no-ri 'bundler']
-    %x[gem install --no-rdoc --no-ri 'devise']
-    
-    puts "Generating new rails app"
-    %x[rails new test_app]
-    errors << 'Error generating new rails test app' unless $?.success?
-    FileUtils.cd('test_app')
-		
-	  FileUtils.rm('public/index.html')
+      FileUtils.mkdir_p(path)
+      
+      puts "Copying over .rvmrc file"
+      FileUtils.cp("./test_support/etc/rvmrc",File.join(path,".rvmrc"))
+      FileUtils.cd("tmp")
+      system("source ./test_app/.rvmrc")
+      
+      puts "Installing rails, bundler and devise"
+      %x[gem install --no-rdoc --no-ri 'rails']
+      %x[gem install --no-rdoc --no-ri 'bundler']
+      %x[gem install --no-rdoc --no-ri 'devise']
+      
+      puts "Generating new rails app"
+      %x[rails new test_app]
+      errors << 'Error generating new rails test app' unless $?.success?
+      FileUtils.cd('test_app')
+      
+      FileUtils.rm('public/index.html')
 
-    puts "Copying Gemfile from test_support/etc"
-    FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
 
-    puts "Creating local vendor/cache dir and copying gems from hyhead-rails3 gemset"
-    FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
-    
-    puts "Copying fixtures into test app spec/fixtures directory"
-    FileUtils.mkdir_p( File.join('.','test_support') )
-    FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
-    
-    puts "Executing bundle install --local"
-    %x[bundle install --local]
-    errors << 'Error running bundle install in test app' unless $?.success?
+      after = 'TestApp::Application.configure do'
+      replace!( "#{path}/config/environments/test.rb",  /#{after}/, "#{after}\n    config.log_level = :warn\n")
+      
 
-    puts "Installing cucumber in test app"
-    %x[rails g cucumber:install]
-    errors << 'Error installing cucumber in test app' unless $?.success?
+      puts "Copying Gemfile from test_support/etc"
+      FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
 
-    puts "generating default blacklight install"
-    %x[rails generate blacklight --devise]
-    errors << 'Error generating default blacklight install' unless $?.success?
-    
-    puts "generating default hydra-head install"
-    %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
-    errors << 'Error generating default hydra-head install' unless $?.success?
+      puts "Creating local vendor/cache dir and copying gems from hyhead-rails3 gemset"
+      FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
+      
+      puts "Copying fixtures into test app spec/fixtures directory"
+      FileUtils.mkdir_p( File.join('.','test_support') )
+      FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
+      
+      puts "Executing bundle install --local"
+      %x[bundle install --local]
+      errors << 'Error running bundle install in test app' unless $?.success?
 
-    puts "Running rake db:migrate"
-    %x[rake db:migrate]
-    %x[rake db:migrate RAILS_ENV=test]
+      puts "Installing cucumber in test app"
+      %x[rails g cucumber:install]
+      errors << 'Error installing cucumber in test app' unless $?.success?
+
+      puts "generating default blacklight install"
+      %x[rails generate blacklight --devise]
+      errors << 'Error generating default blacklight install' unless $?.success?
+      
+      puts "generating default hydra-head install"
+      %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
+      errors << 'Error generating default hydra-head install' unless $?.success?
+
+      puts "Running rake db:migrate"
+      %x[rake db:migrate]
+      %x[rake db:migrate RAILS_ENV=test]
+      raise "Errors: #{errors.join("; ")}" unless errors.empty?
+
+
     
     FileUtils.cd('../../')
     
-    raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
   end
   
@@ -224,3 +236,12 @@ namespace :hyhead do
     FileUtils.cd(TEST_HOST_PATH)
   end
 end
+
+
+        # Adds the content to the file.
+        #
+        def replace!(destination, regexp, string)
+          content = File.binread(destination)
+          content.gsub!(regexp, string)
+          File.open(destination, 'wb') { |file| file.write(content) }
+        end
