@@ -21,3 +21,16 @@ h3. What this means:
 * Your cucumber features and rspec tests must use email addresses as the unique identifier for Users
 
 Change your features and role_map YAML files accordingly.
+
+
+
+h2. How to upgrade
+
+* Create a new rails 3 project
+* Add ```gem 'blacklight'``` and ```gem 'hydra-head'``` to the Gemfile
+* run ```bundle install```
+* cp -r old_project/vendor/plugin/old_project_plugin/app/* new_project/app
+* cp -r old_project/vendor/plugin/old_project_plugin/lib/* new_project/lib
+* copy any tests (test, spec, feature, etc) from the old_project_plugin directory to the new project 
+ 
+
