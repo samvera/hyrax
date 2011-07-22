@@ -32,7 +32,7 @@ def document_check(html, html_validity=ENV["HTML_VALIDITY"])
   if html_validity == "true" || html_validity == true
     html.should be_xhtml_transitional
   end
-  #well_formed(html).should == "ok"
+  well_formed(html).should == "ok"
 end
 
 
