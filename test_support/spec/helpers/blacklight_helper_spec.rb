@@ -14,6 +14,14 @@ describe BlacklightHelper do
   end
   
   describe "Overridden blacklight methods" do
+    describe "render_head_content" do
+      before (:each) do
+        helper.expects(:content_for).with(:head).returns("My added content")
+      end
+      it "adds the content of content_for(:head) to the output" do
+        helper.render_head_content.should == "My added content"
+      end
+    end
     describe "link_to_document" do
       before(:each)do
         @mock_doc = mock('mock doc')
