@@ -222,12 +222,19 @@ namespace :hyhead do
     
     puts "Running rspec tests"
     puts  %x[rake hyhead:spec:rcov]
+    rspec_success = $?.success?
 
     puts "Running cucumber tests"
     puts %x[rake hyhead:cucumber]
+    cucumber_success = $?.success?
 
     FileUtils.cd('../../')
-    puts "Completed test suite"
+    if rspec_success && cucumber_success
+      puts "Completed test suite with no errors"
+    else
+      puts "Test suite encountered failures... check console output for details."
+      fail
+    end
   end
   
   desc "Make sure the test app is installed, then run the tasks from its root directory"

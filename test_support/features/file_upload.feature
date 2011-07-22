@@ -25,7 +25,7 @@ Feature: Upload file into a document
   Scenario: Upload files on file assets list page
     Given I am logged in as "archivist1@example.com"
     And I am on the file asset list page for hydrangea:fixture_mods_dataset1
-    Then show me the page
+#Then show me the page
     And I attach the file "test_support/fixtures/image.jp2" to "Filedata"
     When I press "Upload File"
     Then I should see "The file image.jp2 has been saved"
