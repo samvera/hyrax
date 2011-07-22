@@ -103,6 +103,7 @@ describe HydraFedoraMetadataHelper do
         tag.should have_selector "span#subject-text.editable-text.text[style=display:none;]", "topic1"
         tag.should have_selector "textarea#subject.editable-edit.edit", "topic1"
       end
+      generated_html.should be_html_safe
     end
   end
   
