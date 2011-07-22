@@ -21,12 +21,12 @@ module HydraFedoraMetadataHelper
     
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
-      name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
-      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">".html_safe
-        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>".html_safe if opts.fetch(:multiple, true) && !current_value.empty?
-        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{h(current_value.lstrip)}</span>".html_safe
-        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value.lstrip)}\"/>".html_safe
-      body << "</#{container_tag_type}>".html_safe
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
+      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
+        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" if opts.fetch(:multiple, true) && !current_value.empty?
+        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{h(current_value.lstrip)}</span>"
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value.lstrip)}\"/>"
+      body << "</#{container_tag_type}>"
     end
     result = field_selectors_for(datastream_name, field_key)
     if opts.fetch(:multiple, true)
@@ -35,7 +35,7 @@ module HydraFedoraMetadataHelper
       result << body
     end
     
-    return result
+    result.html_safe
   end
   
   def fedora_text_area(resource, datastream_name, field_key, opts={})
