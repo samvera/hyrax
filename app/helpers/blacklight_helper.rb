@@ -152,6 +152,13 @@ module BlacklightHelper
     [last, "#{first[0..0]}."].join(", ")
   end
 
+  def render_head_content
+    render_stylesheet_includes +
+    render_js_includes +
+    render_extra_head_content +
+    content_for(:head)
+  end
+
 #   COPIED from vendor/plugins/blacklight/app/helpers/application_helper.rb
   # Used in catalog/facet action, facets.rb view, for a click
   # on a facet value. Add on the facet params to existing
