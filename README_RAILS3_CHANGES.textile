@@ -15,12 +15,18 @@ h2. Controllers
 
 * Removed Djatoka (JPEG 2000) support and the GetController
 
+h2. Views
+
+* removed fluid infusion javascript
+* moved javascripts from the plugin directory.  Update your views to remove ":plugin=>:hydra_repository"
+
 h3. What this means:
 
 * Our sample user "archivist1" is now "archivist1@example.com".  
 * Your cucumber features and rspec tests must use email addresses as the unique identifier for Users
 
 Change your features and role_map YAML files accordingly.
+
 
 
 
