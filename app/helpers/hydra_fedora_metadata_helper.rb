@@ -67,7 +67,6 @@ module HydraFedoraMetadataHelper
         body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>".html_safe unless z == 0
         body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{processed_field_value}</span>".html_safe
         body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" rows=\"10\" cols=\"25\">#{h(current_value)}</textarea>".html_safe
-        #body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value)}\"/>"
       body << "</#{container_tag_type}>".html_safe
     end
     
@@ -76,9 +75,9 @@ module HydraFedoraMetadataHelper
     if opts.fetch(:multiple, true)
       result << content_tag(:ol, body.html_safe, :rel=>field_name)
     else
-      result << body.html_safe
+      result << body
     end
-    return result
+    result.html_safe
     
   end
   
