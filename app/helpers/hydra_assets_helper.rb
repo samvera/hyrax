@@ -12,14 +12,13 @@ module HydraAssetsHelper
       link_to link_label, {:action => 'new', :controller => 'assets', :content_type => content_type}, :class=>"create_asset"
     else      
       link_to link_label, new_user_session_path(:redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}), :class=>"create_asset"
-      #link_to link_label, {:action => 'new', :controller => 'sessions', :redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}}, :class=>"create_asset"
     end
   end
   
   # Render a link to delete the given asset from the repository.
   # Includes a confirmation message. 
   def delete_asset_link(pid, asset_type_display="asset")
-    "<a href=\"#{ url_for(:action=>:delete, :controller=>:catalog, :id=>pid)}\" class=\"delete_asset\" >Delete this #{asset_type_display}</a>"
+    "<a href=\"#{ url_for(:action=>:delete, :controller=>:catalog, :id=>pid)}\" class=\"delete_asset\" >Delete this #{asset_type_display}</a>".html_safe
   end
 
   def document_type(document)
