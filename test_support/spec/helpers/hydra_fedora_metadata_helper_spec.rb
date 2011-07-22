@@ -54,6 +54,7 @@ describe HydraFedoraMetadataHelper do
         end
       end
       generated_html.should have_selector "input", :class=>"editable-edit", :id=>"subject_1", :name=>"asset[simple_ds][subject_1]", :value=>"topic9"                                                                                        
+      generated_html.should be_html_safe
     end
     it "should render an empty control if the field has no values" do
       helper.fedora_text_field(@resource,"empty_ds","something").should have_selector "li#something_0-container.editable-container" do |tag|
