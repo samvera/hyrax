@@ -69,27 +69,31 @@ module Hydra::AccessControlsEvaluation
 
   private
   def edit_groups
-    eg = (@permissions_solr_document == nil || @permissions_solr_document['edit_access_group_t'] == nil) ? [] : @permissions_solr_document['edit_access_group_t']
+    edit_group_field = Hydra.config[:permissions][:edit][:group]
+    eg = ((@permissions_solr_document == nil || @permissions_solr_document.fetch(edit_group_field,nil) == nil) ? [] : @permissions_solr_document.fetch(edit_group_field,nil))
     logger.debug("edit_groups: #{eg.inspect}")
     return eg
   end
 
   # edit implies read, so read_groups is the union of edit and read groups
   def read_groups
-    rg = edit_groups | ((@permissions_solr_document == nil || @permissions_solr_document['read_access_group_t'] == nil) ? [] : @permissions_solr_document['read_access_group_t'])
+    read_group_field = Hydra.config[:permissions][:read][:group]
+    rg = edit_groups | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_group_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_group_field,nil))
     logger.debug("read_groups: #{rg.inspect}")
     return rg
   end
 
   def edit_persons
-    ep = (@permissions_solr_document == nil || @permissions_solr_document['edit_access_person_t'] == nil) ? [] : @permissions_solr_document['edit_access_person_t']
+    edit_person_field = Hydra.config[:permissions][:edit][:individual]
+    ep = ((@permissions_solr_document == nil || @permissions_solr_document.fetch(edit_person_field,nil) == nil) ? [] : @permissions_solr_document.fetch(edit_person_field,nil))
     logger.debug("edit_persons: #{ep.inspect}")
     return ep
   end
 
   # edit implies read, so read_persons is the union of edit and read persons
   def read_persons
-    rp = edit_persons | ((@permissions_solr_document == nil || @permissions_solr_document['read_access_person_t'] == nil) ? [] : @permissions_solr_document['read_access_person_t'])
+    read_individual_field = Hydra.config[:permissions][:read][:individual]
+    rp = edit_persons | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_individual_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_individual_field,nil))
     logger.debug("read_persons: #{rp.inspect}")
     return rp
   end
