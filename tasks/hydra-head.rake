@@ -222,10 +222,20 @@ namespace :hyhead do
   task :test => [:use_test_app]  do
     
     puts "Running rspec tests"
-    %[bundle exec hyhead:rspec:rcov]
-    
+    puts %[bundle exec hyhead:rspec:rcov]
+    rspec_success = $?.success?
+
     puts "Running cucumber tests"
-    %[bundle exec hyhead:cucumber:rcov]
+    puts %[bundle exec hyhead:cucumber:rcov]
+    cucumber_success = $?.success?
+
+    FileUtils.cd('../../')
+    if rspec_success && cucumber_success
+      puts "Completed test suite with no errors"
+    else
+      puts "Test suite encountered failures... check console output for details."
+      fail
+    end
   end
   
   desc "Make sure the test app is installed, then run the tasks from its root directory"
