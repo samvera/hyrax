@@ -169,7 +169,7 @@ describe Hydra::AccessControlsEnforcement do
    before(:each) do
      @doc_id = 'hydrangea:fixture_mods_article1'
      @bad_id = "redrum"
-     @response2, @document = helper.get_permissions_solr_response_for_doc_id(@doc_id)
+     @permissions_solr_response2, @permissions_solr_document = helper.get_permissions_solr_response_for_doc_id(@doc_id)
    end
 
    it "should raise Blacklight::InvalidSolrID for an unknown id" do
@@ -185,28 +185,80 @@ describe Hydra::AccessControlsEnforcement do
    end
 
    it "should have a non-nil result for a known id" do
-     @document.should_not == nil
+     @permissions_solr_document.should_not == nil
    end
    it "should have a single document in the response for a known id" do
-     @response2.docs.size.should == 1
+     @permissions_solr_response2.docs.size.should == 1
    end
    it 'should have the expected value in the id field' do
-     @document.id.should == @doc_id
+     @permissions_solr_document.id.should == @doc_id
    end
    it 'should have non-nil values for permissions fields that are set on the object' do
-     @document.get(Hydra.config[:permissions][:catchall]).should_not be_nil
-     @document.get(Hydra.config[:permissions][:discover][:group]).should_not be_nil
-     @document.get(Hydra.config[:permissions][:edit][:group]).should_not be_nil
-     @document.get(Hydra.config[:permissions][:edit][:individual]).should_not be_nil
-     @document.get(Hydra.config[:permissions][:read][:group]).should_not be_nil
+     @permissions_solr_document.get(Hydra.config[:permissions][:catchall]).should_not be_nil
+     @permissions_solr_document.get(Hydra.config[:permissions][:discover][:group]).should_not be_nil
+     @permissions_solr_document.get(Hydra.config[:permissions][:edit][:group]).should_not be_nil
+     @permissions_solr_document.get(Hydra.config[:permissions][:edit][:individual]).should_not be_nil
+     @permissions_solr_document.get(Hydra.config[:permissions][:read][:group]).should_not be_nil
  
      # @document.get(Hydra.config[:permissions][:discover][:individual]).should_not be_nil
      # @document.get(Hydra.config[:permissions][:read][:individual]).should_not be_nil
      # @document.get(Hydra.config[:permissions][:owner]).should_not be_nil
      # @document.get(Hydra.config[:permissions][:embargo_release_date]).should_not be_nil
    end
+ 
+   describe "permissions helpers" do 
+     before :each do
+       @hydra_config_hash = { :permissions => {
+              :catchall => "access_t",
+              :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
+              :read => {:group =>"read_foobar_group_t", :individual=>"read_foobar_person_t"},
+              :edit => {:group =>"edit_foobar_group_t", :individual=>"edit_foobar_person_t"},
+              :owner => "depositor_t",
+              :embargo_release_date => "embargo_release_date_dt"
+            }}
+        @stub_user = User.new
+        @stub_user.stubs(:is_being_superuser?).returns false
+      end
+      it "should check fields from Hydra.config when checking read permissions" do
+        Hydra.expects(:config).at_least(2).returns(@hydra_config_hash)
+        @permissions_solr_document.expects(:fetch).with("read_foobar_group_t",nil)
+        @permissions_solr_document.expects(:fetch).with("read_foobar_person_t",nil)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_group_t",nil)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_person_t",nil)
+        helper.stubs(:current_user).returns(@stub_user)
+        helper.reader?
+      end
+      it "should check fields from Hydra.config when checking edit permissions" do
+        Hydra.expects(:config).at_least(2).returns(@hydra_config_hash)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_group_t",nil)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_person_t",nil)
+        helper.stubs(:current_user).returns(@stub_user)
+        helper.editor?
+      end
+      it "should check fields from Hydra.config when executing test_permissions for editor" do
+        Hydra.expects(:config).at_least(2).returns(@hydra_config_hash)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_group_t",nil)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_person_t",nil)
+        helper.stubs(:current_user).returns(@stub_user)
+        helper.test_permission(:edit)
+      end
+      it "should check fields from Hydra.config when executing test_permissions for reader" do
+        Hydra.expects(:config).at_least(2).returns(@hydra_config_hash)
+        @permissions_solr_document.expects(:fetch).with("read_foobar_group_t",nil)
+        @permissions_solr_document.expects(:fetch).with("read_foobar_person_t",nil)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_group_t",nil)
+        @permissions_solr_document.expects(:fetch).with("edit_foobar_person_t",nil)
+        helper.stubs(:current_user).returns(@stub_user)
+        helper.test_permission(:read)
+      end
+    end
   end
-   
+
+  it "should include the methods from Hydra::AccessControlsEvaluation" do
+    helper.should respond_to(:reader?)
+    helper.should respond_to(:editor?)
+    helper.should respond_to(:test_permission)
+  end
 end
 
 
