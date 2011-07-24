@@ -17,11 +17,31 @@ This is a Ruby on Rails 3 gem.
 
 h2. Installation/Setup
 
+h3. Install Rails, Bundler and Devise
+
+<pre>
+gem install 'rails'
+gem install 'bundler'
+gem install 'devise'
+</pre>
+  
 h3. Generate a new rails application:
 
 <pre>
-rails new my_hydra_app
-cd my_hydra_app
+rails new my_hydra_head
+cd my_hydra_head
+</pre>
+
+h3. Init the git Repository
+
+First, put a .gitignore file into the root of your project to keep your repository clean.  You could start with the ".gitignore file from the hydra-head gem":https://github.com/projecthydra/hydra-head/blob/master/.gitignore
+
+Now init the git repository and add the initial set of files
+
+<pre>
+  git init
+  git add .
+  git commit -m"Initial Commit: empty rails app"
 </pre>
 
 h3. Add the blacklight and hydra-head gems:
@@ -29,13 +49,40 @@ h3. Add the blacklight and hydra-head gems:
 First, add them to the Gemfile of your application:
 
 <pre>
-source 'http://rubygems.org'
+  source 'http://rubygems.org'
 
-gem blacklight, '3.0.0'  
-gem hydra-head
+  gem 'rails', '>=3.0.4'
+
+  gem 'blacklight', '~> 3.0.0'
+  gem 'hydra-head', '3.0.0pre1'
+  
+  # We will assume that you're using sqlite3 for testing/demo, 
+  # but in a production setup you probably want to use a real sql database like mysql or postgres
+  gem 'sqlite3-ruby', :require => 'sqlite3'
+  
+  #  We will assume you're using devise in tutorials/documentation. 
+  # You are free to implement your own User/Authentication solution in its place.
+  gem 'devise'
+
+  # For testing.  You will probably want to use all of these to run the tests you write for your hydra head
+  group :development, :test do 
+         gem 'solrizer-fedora', '>=1.0.1'
+         gem 'ruby-debug'
+         gem 'rspec'
+         gem 'rspec-rails', '>=2.5.0'
+         gem 'mocha'
+         #gem 'generator_spec'
+         gem 'cucumber-rails'
+         gem 'database_cleaner'
+         gem 'capybara'
+         #gem 'webrat'
+         #gem 'aruba'
+         gem 'factory_girl'
+         gem 'bcrypt-ruby'
+  end
 </pre>
 
-To install, run:
+To install all of the dependencies, run:
 
 <pre>
 bundle install
@@ -43,88 +90,62 @@ bundle install
 
 h3. Run the generators and migrations:
 
+Run the blacklight generator
+
+<pre>rails g blackight -devise</pre>
+
+Run the hydra-head generator
+
+<pre>rails g hydra-head -df</pre>
+
+Run the database migrations
+
 <pre>
-# run the blacklight generator
-rails g blackight -d
-
-# run the hydra-head generator
-rails g hydra-head -df
-
-# run the migrations
 rake db:migrate
+rake db:migrate RAILS_ENV=test
 </pre>
+  
+If you will be writing cucumber tests, run the cucumber generator
 
-h2. Testing the gem during development
+<pre>rails g cucumber:install</pre>
+
+h3. Add all the generated code to the Git repository
+
+<pre>
+  git add .
+  git commit -m"Ran Blacklight, Hydra-Head, and Cucumber Generators"
+</pre>
 
 h3. The Hydra Jetty
 
-In order to test the gem during development, the hydra-jetty is included as a submodule to provide both a fedora and solr instance.  Once you have cloned the github repository, 
-run the following commands to load the jetty:
+The Hydra project provides a copy of Jetty with Fedora and Solr pre-installed.  This is useful for running tests against and for running your code against while you're actively working on your hydra head.
+
+Most projects add hydra jetty to their code as a git submodule
+
+<pre>
+  git submodule add git@github.com:projecthydra/hydra-jetty.git jetty
+  git commit -m"added jetty submodule"
+</pre>
+
+Now that you've added the submodule to your git repository, whenever you grab a new working copy of the code, you can get hydra-jetty by running:
 
 <pre>
 git submodule init
 git submodule update
 </pre>
 
-To start the jetty:
+h2. Run tests to make sure everything is installed properly
 
-<pre>
-rake hydra:jetty:start
-</pre>
+*TODO*
 
-Note: the first time you start the jetty, you must use the following command in order to properly configure the jetty:
+h2. Modifying and Testing the Gem 
 
-<pre>
-rake hydra:jetty:load
-</pre>
-
-h3.  Testing the app
-
-The specs and features for testing the gem within the context of a rails 3 app are all contained within the test_support directory.  Once you have 
-installed the test app, you will be able to run the specs/features from within that app via the provided rake tasks.
-
-A rake task is provided for setting up a rails 3 test app in the tmp/test_app directory.  To generate the app, run:
-
-<pre>
-rake hyhead:setup_test_app
-</pre>
-
-Once you have done this and have a jetty running, you are ready to run the specs and cucumbers:
-
-<pre>
-rake hyhead:test
-</pre>
-
-This will run the specs and cucumber features from within the test application.
-
-In order to run a single spec, use the following from the command line:
-
-<pre>
-export RAILS_ROOT="tmp/test_app"
-rspec test_support/spec/controllers/catalog_controller_spec.rb  # path to the spec file you wish to run
-</pre>
-
-h2. Note about vendor/cache directory
-
-In order to more quickly install the required gems, the gems have been cached and are stored in the vendor/cache directory.  Initially this was done to avoid the 
-excessive amount of time bundler was taking to install all the gems and their dependencies.  To get all the requisite gems, simply run:
-
-<pre>
-bundle install --local
-</pre>
-
-The cached gems also provide a quick means for generating a gemset for the test_app.  
-
-When developing the hydra-head gem, be sure to commit changes to the vendor/cache directory when you update or install a new gem.
-
-h2. Note about solr and fedora config files
-
-When you change the solr and fedora config files, you must update them in the generator templates directory (lib/generators/hydra-head) as well as root of the hydra_head code.
+For those developers who want to or need to work on the hydra-head gem itself, see the "Instructions for Contributors":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.TESTING.html
 
 h2. Acknowledgements
 
 h3. Design & Strategic Contributions
 
-The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia, and University of Hull.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, and Chris Awre.  
+The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia, University of Hull and MediaShelf LLC.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, Chris Awre, and Matt Zumwalt.  
 
 Thorny Staples from Fedora Commons & DuraSpace deserves special thanks for putting all of these people in the same room together.
