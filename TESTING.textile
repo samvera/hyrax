@@ -1,6 +1,7 @@
-h1. Directions to Test the Rails 3 branch of hydra-head
+h1. Directions to Clone and Test the Rails 3 hydra-head Code
 
-h2. Steps
+h2. For the Impatient 
+
 # clone the hydra-head code (to a fresh working copy) <pre>git clone git@github.com:projecthydra/hydra-head.git</pre>
 # switch tot he hydra-head directory <pre>cd hydra-head</pre>
 # checkout the rails3 branch <pre>git checkout rails3</pre>
@@ -12,4 +13,73 @@ h2. Steps
 ## spins up jetty (in jettywrapper)
 ## imports fixtures
 ## runs rspec & cucumber tests
+
+h2. More Detailed Instructions & Notes
+
+h3. The Hydra Jetty
+
+In order to test the gem during development, the hydra-jetty is included as a submodule to provide both a fedora and solr instance.  Once you have cloned the github repository, 
+run the following commands to load the jetty:
+
+<pre>
+git submodule init
+git submodule update
+</pre>
+
+To start the jetty:
+
+<pre>
+rake hydra:jetty:start
+</pre>
+
+Note: the first time you start the jetty, you must use the following command in order to properly configure the jetty:
+
+<pre>
+rake hydra:jetty:load
+</pre>
+
+
+h3.  Testing the gem
+
+The specs and features for testing the gem within the context of a rails 3 app are all contained within the test_support directory.  Once you have 
+installed the test app, you will be able to run the specs/features from within that app via the provided rake tasks.
+
+A rake task is provided for setting up a rails 3 test app in the tmp/test_app directory.  To generate the app, run:
+
+<pre>
+rake hyhead:setup_test_app
+</pre>
+
+Once you have done this and have a jetty running, you are ready to run the specs and cucumbers:
+
+<pre>
+rake hyhead:test
+</pre>
+
+This will run the specs and cucumber features from within the test application.
+
+In order to run a single spec or cucumber feature, use the following from the command line:
+
+<pre>
+export RAILS_ROOT="tmp/test_app"
+rspec test_support/spec/controllers/catalog_controller_spec.rb  # path to the spec file you wish to run
+cucumber test_support/features/mods_asset_show.feature          # path to the feature file you wish to run
+</pre>
+
+h2. Note about vendor/cache directory
+
+In order to more quickly install the required gems, the gems have been cached and are stored in the vendor/cache directory.  Initially this was done to avoid the 
+excessive amount of time bundler was taking to install all the gems and their dependencies.  To get all the requisite gems, simply run:
+
+<pre>
+bundle install --local
+</pre>
+
+The cached gems also provide a quick means for generating a gemset for the test_app.  
+
+When developing the hydra-head gem, be sure to commit changes to the vendor/cache directory when you update or install a new gem.
+
+h2. Note about solr and fedora config files
+
+When you change the solr and fedora config files, you must update them in the generator templates directory (lib/generators/hydra-head) as well as root of the hydra_head code.
 
