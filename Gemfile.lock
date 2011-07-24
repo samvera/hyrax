@@ -69,17 +69,13 @@ GEM
     haml (3.1.1)
     httparty (0.7.7)
       crack (= 0.1.8)
-    jettywrapper (0.0.8)
-      loggable
-      logger
+    jettywrapper (0.0.3)
     json (1.5.1)
     json_pure (1.5.1)
     launchy (0.4.0)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
     linecache (0.43)
-    loggable (0.3.0)
-    logger (1.2.8)
     marc (0.3.0)
     mediashelf-loggable (0.4.2)
     mime-types (1.16)
