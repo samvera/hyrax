@@ -15,7 +15,7 @@ Define a new Content Type called JournalArticle
 
 h2. Set up a new Hydra Head
 
-See "README"::http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html for instructions on creating a new Hydra Head
+See "README":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html for instructions on creating a new Hydra Head
 
 h3. Starting the App out of the Box
 
@@ -70,7 +70,7 @@ h3. Exploring what comes out of the box
 
 h2. Making local changes to your Hydra Application
 
-In order to make it easy to get any new functionality added to the hydra stack (see "README":https://github.com/projecthydra/hydra-head/blob/master/README.textile), while retaining your Hydra application's localizations, your local hydra application code should be set up to override the upstream Hydra stack code. 
+In order to make it easy to get any new functionality added to the hydra stack (see "README":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html), while retaining your Hydra application's localizations, your local hydra application code should be set up to override the upstream Hydra stack code. 
 
 Luckily, rails engines has made this easy - the Hydra code is organized so your localizations are kept separate from the core hydra application code.
 
@@ -83,7 +83,7 @@ So, two key points:
 # always change code at the app level, and never change anything in vendor/plugins.
 </b>
 
-"INITIAL_APP_MODS":https://github.com/projecthydra/hydra-head/blob/master/INITIAL_APP_MODS.textile explains how to make two basic changes to your hydra rails application and how to write the appropriate tests for them.
+"INITIAL_APP_MODS":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.INITIAL_APP_MODS.html explains how to make two basic changes to your hydra rails application and how to write the appropriate tests for them.
 
 
 h2. The new Content Type: JournalArticle
@@ -357,7 +357,7 @@ In reality, when you want to re-index an object in Solr, you should use Solrizer
 
 "Solrizer Documentation":http://hudson.projecthydra.org/job/solrizer/Documentation/
 
-"Solrizer on GitHub":http://hudson.projecthydra.org/job/om/Documentation/ https://github.com/projecthydra/solrizer
+"Solrizer on GitHub":https://github.com/projecthydra/solrizer
 
 Solrizer is able to figure out how to index XML based on the OM Terminologies you've defined.  It defaults to indexing nearly everything in generic ways, but there are many ways to customize this behavior. See the "Solrizer Documentation":http://hudson.projecthydra.org/job/solrizer/Documentation/ for more information about how it works.
 

@@ -1,0 +1,186 @@
+h1. Initial Modifications to Your Own Hydra Application
+
+This document explains how to make two basic changes to your hydra rails application and how to write the appropriate tests for them.
+
+h3. What you will learn from this document:
+
+# How to Write a Simple Spec (an RSpec test)
+# How to Change the Rails Application Name of Your Hydra Application
+# How to Write a Simple Cucumber Feature
+# How to Change the Home Page Text for Your Hydra Application
+
+
+h2. Making local changes to your Hydra Application
+
+In order to make it easy to get any new functionality added to the hydra stack (see "README":https://github.com/projecthydra/hydra-head/blob/master/README.textile), while retaining your Hydra application's localizations, your local hydra application code should be set up to override the upstream Hydra stack code. 
+
+Luckily, rails engines has made this easy - the Hydra code is organized so your localizations are kept separate from the core hydra application code.
+
+Moreover, to ensure your localizations won't be broken by upgrading the Hydra core code, you should have tests for all your localizations.
+
+The two key points:
+
+<b>
+# always write tests for your local modifications
+# always change code at the app level, and never change anything in vendor/plugins.
+</b>
+
+h3.  tests tests tests
+
+We STRONGLY recommend that you write tests for every local change you make.  This will allow you to ensure that upgrading the core code doesn't break any local changes you have made.
+
+(when should it be a feature rather than a spec)
+very basic rule:  if it's testing something created with view, use a cucumber feature to test.  If it's not created by view code, use a spec to test. 
+
+h4. Run generator for specs
+
+To create the infrastructure pieces to write specs:
+
+<pre>
+  ./script/generate rspec
+</pre>
+
+h4. Run generator for features
+
+To create the infrastructure pieces to write cucumber features:
+
+<pre>
+  ./script/generate cucumber
+</pre>
+
+
+h3. Easy Changes for Practice.
+
+
+h3. Changing the Home Text (also Demonstrates Writing a Feature)
+
+The home text is set in the view partial (vendor/plugins/hydra-head/)app/views/catalog/_home_text.html.erb
+
+Because it is set in a view, a cucumber feature is the most appropriate test (rather than an rspec test).
+
+h4. (1) Write the test.
+
+Create a file "features/home_page.feature" containing this:
+
+<pre>
+  Feature: Homepage
+    I want the home page to reflect localizations properly
+</pre>
+
+A test for checking the home text might be inserted like so:
+
+<pre>
+  Feature: Homepage
+    I want the home page to reflect localizations properly
+    
+    Scenario: home page text
+      When I am on the home page
+      Then I should not see "override"
+      And I should see "My Local Hydra App"
+      And I should see "Isn't it great?"
+      And I should see "Search"
+</pre>
+
+h4. (2) Run the test - it should fail
+
+When you run this feature, the feature should run, but this test should fail (because you haven't changed anything yet.)
+
+h4. (3) Change the code
+
+We want to override the text on the home page locally, keeping our local changes separate from upstream changes to the plugins' code.
+
+Since the home text is set in vendor/plugins/hydra-head/app/views/catalog/_home_text.html.erb, we will override that code by creating a local app/views/catalog/_home_text.html.erb file.  
+
+Our app/views/catalog/_home_text.html.erb might look like this
+
+<pre>
+<div id="results">
+	
+	<%= render :partial=>'search_form' %>
+	
+	<div class="home_text">
+		<h1>Welcome to My Local Hydra App</h1>
+		<br/>
+		<p>This is my local Hydra application.  Isn't it great?
+		</p>
+	</div>
+
+</div>
+</pre>
+
+h4. (4) Run the test - it should now pass
+
+Now when you run the feature, it should pass.  If it doesn't, iterate until it does.
+
+
+h3. Overriding a Helper Method (also Demonstrates Writing a Spec)
+
+We want to change the application name (what displays as the html page's title).  This is set in a plugin's app/helper/application_helper.rb file.  Because it is set in a helper file, it is a good candidate for an rspec test (rather than a feature).
+
+h4. (1) Write the test.
+
+Since the application name is set in (vendor/plugins/hydra-head/)app/helpers/application_helper.rb, we need a spec to run against the application_helper file.
+
+Create a file "spec/helpers/application_helper_spec.rb" containing this:
+
+<pre>
+  require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+
+  describe ApplicationHelper do
+    include ApplicationHelper
+  end
+</pre>
+
+A test for checking the application name might be inserted like so:
+
+<pre>
+  require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+
+  describe ApplicationHelper do
+    include ApplicationHelper
+
+    describe "Overall UI methods" do
+      it "should get the local application name" do
+        application_name.should == "My Hydra"
+      end
+    end
+
+  end
+</pre>
+
+h4. (2) Run the test - it should fail
+
+When you run this spec, the spec should run, but this test should fail (because you haven't changed anything yet.)
+
+h4. (3) Change the code
+
+We want to override the application name locally, keeping our local changes separate from upstream changes to the plugins' code.
+
+Since the application name is set in vendor/plugins/hydra-head/app/helpers/application_helper.rb, we will override that code by putting a method of the same name in app/helpers/application_helper.rb.  The current app/helpers/application_helper.rb file may look like this:
+
+<pre>
+  require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
+  # Methods added to this helper will be available to all templates in the application.
+  module ApplicationHelper
+  end
+</pre>
+
+Code for changing the application name might be inserted like so:
+
+<pre>
+  require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
+  # Methods added to this helper will be available to all templates in the application.
+  module ApplicationHelper
+
+    def application_name
+      'My Hydra'
+    end
+
+  end
+</pre>
+
+h4. (4) Run the test - it should now pass
+
+Now when you run the spec, it should pass.  If it doesn't, iterate until it does.
+
+
