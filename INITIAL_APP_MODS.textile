@@ -12,7 +12,7 @@ h3. What you will learn from this document:
 
 h2. Making local changes to your Hydra Application
 
-In order to make it easy to get any new functionality added to the hydra stack (see "README":https://github.com/projecthydra/hydra-head/blob/master/README.textile), while retaining your Hydra application's localizations, your local hydra application code should be set up to override the upstream Hydra stack code. 
+In order to make it easy to get any new functionality added to the hydra stack (see "README":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html), while retaining your Hydra application's localizations, your local hydra application code should be set up to override the upstream Hydra stack code. 
 
 Luckily, rails engines has made this easy - the Hydra code is organized so your localizations are kept separate from the core hydra application code.
 
@@ -159,7 +159,6 @@ We want to override the application name locally, keeping our local changes sepa
 Since the application name is set in vendor/plugins/hydra-head/app/helpers/application_helper.rb, we will override that code by putting a method of the same name in app/helpers/application_helper.rb.  The current app/helpers/application_helper.rb file may look like this:
 
 <pre>
-  require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
   # Methods added to this helper will be available to all templates in the application.
   module ApplicationHelper
   end
@@ -168,7 +167,6 @@ Since the application name is set in vendor/plugins/hydra-head/app/helpers/appli
 Code for changing the application name might be inserted like so:
 
 <pre>
-  require_plugin_dependency 'vendor/plugins/hydra-head/app/helpers/application_helper.rb'
   # Methods added to this helper will be available to all templates in the application.
   module ApplicationHelper
 
