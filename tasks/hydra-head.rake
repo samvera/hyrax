@@ -171,11 +171,6 @@ namespace :hyhead do
       
       FileUtils.rm('public/index.html')
 
-
-      after = 'TestApp::Application.configure do'
-      replace!( "#{path}/config/environments/test.rb",  /#{after}/, "#{after}\n    config.log_level = :warn\n")
-      
-
       puts "Copying Gemfile from test_support/etc"
       FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
 
@@ -201,6 +196,10 @@ namespace :hyhead do
       puts "generating default hydra-head install"
       %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
       errors << 'Error generating default hydra-head install' unless $?.success?
+
+      # set log_level to :warn in the test app's test environment. (:debug is too verbose)
+      after = 'TestApp::Application.configure do'
+      replace!( "#{path}/config/environments/test.rb",  /#{after}/, "#{after}\n    config.log_level = :warn\n")
 
       puts "Running rake db:migrate"
       %x[rake db:migrate]
