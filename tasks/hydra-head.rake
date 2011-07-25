@@ -7,26 +7,31 @@ namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
-    Rake::Task["hyhead:doc"].invoke
-    Rake::Task["hydra:jetty:config"].invoke
-    
-    require 'jettywrapper'
-    jetty_params = {
-      :jetty_home => File.expand_path(File.dirname(__FILE__) + '/../jetty'),
-      :quiet => false,
-      :jetty_port => 8983,
-      :solr_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/solr'),
-      :fedora_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/fedora/default'),
-      :startup_wait => 30
-      }
+    if ( ENV['environment'] == 'test' )
+      Rake::Task["hyhead:doc"].invoke
+      Rake::Task["hydra:jetty:config"].invoke
+      
+      require 'jettywrapper'
+      jetty_params = {
+        :jetty_home => File.expand_path(File.dirname(__FILE__) + '/../jetty'),
+        :quiet => false,
+        :jetty_port => 8983,
+        :solr_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/solr'),
+        :fedora_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/fedora/default'),
+        :startup_wait => 30
+        }
 
-    # does this make jetty run in TEST environment???
-    error = Jettywrapper.wrap(jetty_params) do
-      Rake::Task['hyhead:setup_test_app'].invoke
-      puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test] # calling hydra:fixtures:refresh from the root of the test app
-      Rake::Task['hyhead:test'].invoke
+      # does this make jetty run in TEST environment???
+      error = Jettywrapper.wrap(jetty_params) do
+        Rake::Task['hyhead:setup_test_app'].invoke
+        puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test] # calling hydra:fixtures:refresh from the root of the test app
+        Rake::Task['hyhead:test'].invoke
+      end
+      raise "test failures: #{error}" if error
+    else
+      system("rake hyhead:ci environment=test")
+      fail unless $?.success?
     end
-    raise "test failures: #{error}" if error
   end
 
   
