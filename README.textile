@@ -95,7 +95,7 @@ Run the blacklight generator
 
 Run the hydra-head generator
 
-<pre>rails g hydra-head -df</pre>
+<pre>rails g hydra:head -df</pre>
 
 Run the database migrations
 
@@ -122,7 +122,7 @@ The Hydra project provides a copy of Jetty with Fedora and Solr pre-installed.  
 Most projects add hydra jetty to their code as a git submodule
 
 <pre>
-  git submodule add git@github.com:projecthydra/hydra-jetty.git jetty
+  git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
   git commit -m"added jetty submodule"
 </pre>
 
