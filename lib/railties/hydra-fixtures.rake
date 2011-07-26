@@ -2,7 +2,7 @@
 require "active-fedora"
 require "solrizer-fedora"
 require "active_support" # This is just to load ActiveSupport::CoreExtensions::String::Inflections
-require "hydra/fixtures"
+require "hydra/fixture_loader"
 namespace :hydra do
   
   
@@ -16,7 +16,7 @@ namespace :hydra do
       raise "You must specify a valid pid.  Example: rake hydra:refresh_fixture pid=demo:12"
     end
     begin
-      Hydra::Fixtures.reload(ENV["pid"])
+      Hydra::FixtureLoader.new('test_support/fixtures').reload(ENV["pid"])
     rescue Errno::ECONNREFUSED => e
       puts "Can't connect to Fedora! Are you sure jetty is running?"
     rescue Fedora::ServerError => e
@@ -37,7 +37,7 @@ namespace :hydra do
       pid = ENV["pid"]
       puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
       begin
-        Hydra::Fixtures.delete(pid)
+        Hydra::FixtureLoader.delete(pid)
       rescue Errno::ECONNREFUSED => e
         puts "Can't connect to Fedora! Are you sure jetty is running?"
       rescue Fedora::ServerError => e
@@ -107,9 +107,9 @@ namespace :hydra do
       Fedora::Repository.register(ENV["destination"])
     end
     if !ENV["fixture"].nil? 
-      body = Hydra::Fixtures.import_to_fedora(ENV["fixture"])
+      body = Hydra::FixtureLoader.import_to_fedora(ENV["fixture"])
     elsif !ENV["pid"].nil?
-      body = Hydra::Fixtures.import_and_index(ENV["pid"])
+      body = Hydra::FixtureLoader.new('test_support/fixtures').import_and_index(ENV["pid"])
     else
       raise "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
     end

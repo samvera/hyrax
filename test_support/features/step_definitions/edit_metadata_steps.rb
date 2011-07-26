@@ -1,4 +1,4 @@
-require "hydra/fixtures"
+require "hydra/fixture_loader"
 # This is the post-submission complement to "I fill in the following" from web_steps.rb
 Then /^the following (should contain|contain|should not contain|do not contain):$/ do |bool,table|
   # table is a Cucumber::Ast::Table
@@ -48,7 +48,7 @@ Then /^I should see a "([^"]*)" button(?: within "([^"]*)")?$/ do |button_locato
 end
 
 Given /^that "([^"]*)" has been loaded into fedora$/ do |pid|
-  Hydra::Fixtures.reload(pid)
+  Hydra::FixtureLoader.new('test_support/fixtures').reload(pid)
   
 end
 
