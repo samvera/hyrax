@@ -1,8 +1,14 @@
 module Hydra
 
-  class Fixtures
-    def self.filename_for_pid(pid)
-      File.join("test_support","fixtures","#{pid.gsub(":","_")}.foxml.xml")
+  class FixtureLoader
+    attr_accessor :path
+
+    def initialize(path)
+      self.path = path
+    end 
+
+    def filename_for_pid(pid)
+      File.join(path, "#{pid.gsub(":","_")}.foxml.xml")
     end
 
     def self.delete(pid)
@@ -15,14 +21,14 @@ module Hydra
       end
     end
 
-    def self.reload(pid)
-      delete(pid)
+    def reload(pid)
+      self.class.delete(pid)
       import_and_index(pid)
     end
 
-    def self.import_and_index(pid)
-      body = import_to_fedora(filename_for_pid(pid))
-      index(pid)
+    def import_and_index(pid)
+      body = self.class.import_to_fedora(filename_for_pid(pid))
+      self.class.index(pid)
       body
     end
 
@@ -33,7 +39,6 @@ module Hydra
 
     def self.import_to_fedora(filename)
       file = File.new(filename, "r")
-puts "Loading #{filename}"
       result = foxml = Fedora::Repository.instance.ingest(file.read)
       raise "Failed to ingest the fixture." unless result
       result.body
