@@ -46,6 +46,10 @@ Then /^I should not see a link to the "([^\"]*)" page$/ do |link_name|
   page.should_not have_xpath(".//a[@href=\"#{path_to(link_name)}\"]")
 end
 
+Then /^I should see a dropdown for "([^\"]*)"/ do |id|
+  page.should have_selector("select##{id}")
+end
+
 Then /^related links are displayed as urls$/ do
   pending
 end
