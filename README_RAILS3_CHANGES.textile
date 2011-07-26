@@ -3,9 +3,15 @@ h2. Fixtures
 
 Fixtures are loaded from a directory _within the test app_, which is updated when you run rake hyhead:setup_test_app so in order to update a fixture, you must change it in test_support/fixtures and then either re-run rake hyhead:setup_test_app or copy the fixture into tmp/test_app/test_support/fixtures
 
+h2. Cucumber tests
+
+We have switched from Webrat to Capybara as the driver for our Cucumber tests.  If you have been writing your own cucumber tests (you should!) and want to stay in sync with the rest of the hydra developers, you should switch to Capybara and pull all of the "step definitions from the hydra code":https://github.com/projecthydra/hydra-head/tree/rails3/test_support/features/step_definitions into your local app.
+
+Sometime soon, we hope to wrap our step definitions into the Hydra code itself so that you can use them without having to manually copy the files into your step_definitions directory.  This will probably be done in a way that imitates the "Factory Girl step definitions":http://robots.thoughtbot.com/post/284805810/gimme-three-steps
+
 h2. User objects
 
-Blacklight has switched to using devise instead of authlogic as its default user/authentication system.  As part of this switch, no longer have a "login" attribute as their unique identifier.  Instead, you must use email as the unique identifier.  
+Blacklight has switched to using devise instead of authlogic as its default user/authentication system.  As part of this switch, no longer have a "login" attribute as their unique identifier.  Instead, you must use email as the unique identifier.  We have added a "login" method that 
 
 h2. User Attributes
 
