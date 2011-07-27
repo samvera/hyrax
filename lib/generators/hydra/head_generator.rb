@@ -14,7 +14,7 @@ class HeadGenerator < Rails::Generators::Base
   
     desc """
   This generator makes the following changes to your application:
-    1. Creates several database migrations if they do not exist in /db/migrate
+    1. Creates a database migration for superusers if they do not exist in /db/migrate
     2. Adds additional mime types to you application in the file '/config/initializers/mime_types.rb'   
     3. Creates config/initializers/hydra_config.rb 
     4. Creates config/initializers/fedora_config.rb 
@@ -77,16 +77,12 @@ EOF
   # Implement the required interface for Rails::Generators::Migration.
   # taken from http://github.com/rails/rails/blob/master/activerecord/lib/generators/active_record.rb
   def self.next_migration_number(dirname)
-    unless @previous_migration_nr
-      if ActiveRecord::Base.timestamped_migrations
-        @previous_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-      else
-        @previous_migration_nr = "%.3d" % (current_migration_number(dirname) + 1).to_i
-      end
+    unless @prev_migration_nr
+      @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
     else
-      @previous_migration_nr +=1 
+      @prev_migration_nr += 1
     end
-    @previous_migration_nr.to_s
+    @prev_migration_nr.to_s
   end
 
   # Add Hydra behaviors to the user model
@@ -98,7 +94,7 @@ EOF
         "\n include Hydra::User\n"        
       end
     else
-      puts "     \e[31mFailure\e[0m  Hydra requires a user object in order to apply access controls. This generators assumes that the model is defined in the file /app/models/user.rb, which does not exist.  If you used a different name, please re-run the migration and provide that name as an argument. Such as \b  rails -g hydra:head client" 
+      puts "     \e[31mFailure\e[0m  Hydra requires a user object in order to apply access controls. This generators assumes that the model is defined in the file /app/models/user.rb, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g hydra:head client" 
     end    
   end
   
@@ -139,8 +135,6 @@ EOF
   end
   
   def create_migration_file
-    migration_template 'migrations/add_user_attributes_table.rb', 'db/migrate/add_user_attributes_table.rb'
-    sleep 1 # ensure scripts have different time stamps
     migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
   end
          
