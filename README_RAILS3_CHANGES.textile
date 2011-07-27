@@ -55,7 +55,6 @@ Run the database migrations
 rake db:migrate RAILS_ENV=test```
 
 * If you will be writing cucumber tests, run the cucumber generator
-
 ```rails g cucumber:install```
  
 
