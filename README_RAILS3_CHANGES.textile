@@ -38,11 +38,24 @@ Change your features and role_map YAML files accordingly.
 
 h2. How to upgrade
 
+The sureest and easiest path to upgrading a hydra head application from Rails 2 to Rails 3, is to start a new project from scratch.
+
 * Create a new rails 3 project
 * Add ```gem 'blacklight'``` and ```gem 'hydra-head'``` to the Gemfile
 * run ```bundle install```
 * cp -r old_project/vendor/plugin/old_project_plugin/app/* new_project/app
 * cp -r old_project/vendor/plugin/old_project_plugin/lib/* new_project/lib
-* copy any tests (test, spec, feature, etc) from the old_project_plugin directory to the new project 
+* copy any tests (test, spec, feature, etc) from the old_project_plugin directory to the new project
+* Run the generators 
+```rails g blackight -devise```
+Run the hydra-head generator
+```rails g hydra:head -df```
+Run the database migrations
+```rake db:migrate
+rake db:migrate RAILS_ENV=test```
+
+* If you will be writing cucumber tests, run the cucumber generator
+
+```rails g cucumber:install```
  
 
