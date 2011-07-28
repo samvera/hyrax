@@ -45,6 +45,7 @@ The sureest and easiest path to upgrading a hydra head application from Rails 2 
 * run ```bundle install```
 * cp -r old_project/vendor/plugin/old_project_plugin/app/* new_project/app
 * cp -r old_project/vendor/plugin/old_project_plugin/lib/* new_project/lib
+<<<<<<< HEAD
 * copy any tests (test, spec, feature, etc) from the old_project_plugin directory to the new project
 * Run the generators 
 ```rails g blackight -devise```
@@ -56,5 +57,7 @@ rake db:migrate RAILS_ENV=test```
 
 * If you will be writing cucumber tests, run the cucumber generator
 ```rails g cucumber:install```
- 
+* copy any tests (test, spec, feature, etc) from the old_project_plugin directory to the new project 
+* update your solrconfig.xml
+* update your role_map_...yml files to use appropriate identifiers
 
