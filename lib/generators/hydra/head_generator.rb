@@ -2,8 +2,6 @@
 require 'rails/generators'
 require 'rails/generators/migration'     
 
-# require "generators/blacklight/blacklight_generator"
-
 module Hydra
 class HeadGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
