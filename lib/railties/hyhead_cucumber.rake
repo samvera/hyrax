@@ -21,6 +21,9 @@ begin
   require 'cucumber/rake/task'
 
   namespace :hyhead do
+    desc 'Alias for hyhead:cucumber:ok'
+    task :cucumber => 'hyhead:cucumber:ok'
+
     namespace :cucumber do
       Cucumber::Rake::Task.new({:ok => 'db:test:prepare'}, 'Run features that should pass') do |t|
         # Blacklight customization, call features from external location, pass
