@@ -50,15 +50,15 @@ First, add them to the Gemfile of your application:
 <pre>
   source 'http://rubygems.org'
 
-  gem 'rails', '>=3.0.4'
+  gem 'rails', '~>3.0.4'
 
   gem 'blacklight', '~> 3.0.0'
   gem 'hydra-head', '3.0.0pre1'
-  
+
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
   gem 'sqlite3-ruby', :require => 'sqlite3'
-  
+
   #  We will assume you're using devise in tutorials/documentation. 
   # You are free to implement your own User/Authentication solution in its place.
   gem 'devise'
@@ -76,7 +76,6 @@ First, add them to the Gemfile of your application:
          gem 'capybara'
          #gem 'webrat'
          #gem 'aruba'
-         gem 'factory_girl'
          gem 'bcrypt-ruby'
   end
 </pre>
@@ -87,11 +86,20 @@ To install all of the dependencies, run:
 bundle install
 </pre>
 
+This will take a _very_ long time the first time you run it.  IF you become impatient, hit Ctl+C then enter this:
+
+<pre>
+  gem install blacklight
+  gem install hydra-head -v 3.0.0pre1
+</pre>
+
+Then re-run bundle install and it will run slightly faster.
+
 h3. Run the generators and migrations:
 
 Run the blacklight generator
 
-<pre>rails g blackight -devise</pre>
+<pre>rails g blacklight -devise</pre>
 
 Run the hydra-head generator
 
@@ -124,6 +132,13 @@ Most projects add hydra jetty to their code as a git submodule
 <pre>
   git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
   git commit -m"added jetty submodule"
+  cd jetty
+  git fetch --tags
+  git checkout last_solr_multicore
+  git checkout -b last_solr_multicore
+  cd ..
+  git add jetty
+  git commit -m "Pinned jetty to last_solr_multicore"
 </pre>
 
 Now that you've added the submodule to your git repository, whenever you grab a new working copy of the code, you can get hydra-jetty by running:

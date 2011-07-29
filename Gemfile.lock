@@ -151,7 +151,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     marc (0.4.3)
-    mediashelf-loggable (0.4.3)
+    mediashelf-loggable (0.4.5)
     mime-types (1.16)
     mocha (0.9.12)
     multipart-post (1.1.3)

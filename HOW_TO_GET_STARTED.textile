@@ -33,6 +33,7 @@ _Stop any copies of jetty (or anything else using port 8983) before running this
 (Note that java 1.6 must be invoked by the "java" command or Fedora won't work.)
 
 <pre>
+  rake hydra:jetty:config 
   rake hydra:jetty:start
 </pre>  
 
@@ -47,7 +48,7 @@ h4. (2.5) Import some Sample Content (other than fixtures??)
 h4. (3) Start the Rails Application
 
 <pre>
-  ./script/server
+  rails server
 </pre>  
 
 To ensure the rails app is running, go to "http://localhost:3000/":http://localhost:3000/
@@ -55,6 +56,65 @@ To ensure the rails app is running, go to "http://localhost:3000/":http://localh
 h3. Ensure your Hydra App is set up properly
 
 Run cucumber tests ... except they are for test, not development environment ...
+
+h4. Import the Fixture/Test Objects
+
+Grab the test/fixture objects that the hydra-head gem's tests rely on.  These objects are useful for getting a sense of how hydra works, but you will want to delete them later and create your own 
+fixtures to run your application's tests against.
+
+First, use the hydra:hyhead_fixtures generator to put the fixture xml files into test_support/fixtures
+
+<pre>
+  rails g hydra:hyhead_fixtures
+</pre>
+
+Now use the hydra:fixtures:refresh rake task to import the fixtures into Fedora and Solr
+
+<pre>
+  rake hydra:fixtures:refresh RAILS_ENV=test
+</pre>
+
+If you want to see the fixture objects in your development environment, run the rake task again without RAILS_ENV set.
+
+<pre>
+  rake hydra:fixtures:refresh 
+</pre>
+
+h4. Run the Hydra-Head gem's RSpec Tests
+
+<pre>
+  rake hyhead:spec
+</pre>
+
+This will print out a lot of information while the tests run.  If all the tests passed, you will see something like this (the important part is "0 failures"):
+
+<pre>
+  ...
+  Finished in 22.53 seconds
+  240 examples, 0 failures, 19 pending
+</pre>
+
+h4. Run the Hydra-Head gem's Cucumber Tests
+
+Before running the cucumber tests, you have to remove the default index.html file that Rails provides
+
+<pre>
+  rm public/index.html
+</pre>
+
+Now run the cucumber tests
+
+<pre>
+  rake hyhead:cucumber
+</pre>
+
+This will print out a lot of information while the tests run.  If all the tests passed, you will see something like this (the important part is that the number of scenarios equals the number of tests passed):
+
+<pre>
+  37 scenarios (37 passed)
+  215 steps (215 passed)
+  0m45.591s
+</pre>
 
 h3. Exploring what comes out of the box
 

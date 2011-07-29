@@ -51,6 +51,61 @@ To create the infrastructure pieces to write cucumber features:
 
 h3. Easy Changes for Practice.
 
+h3. Changing the Facets
+
+h4. Write the cucumber tests for the facets you want
+
+Create a file in your features directory called homepage_facets.feature and put the following feature description in it.  Note that this cucumber test is assuming you have imported the Hydra sample/fixture objects.
+
+<pre>
+  Feature: Homepage Facets
+  I want the home page to include the facets I chose
+
+  Scenario: home page facets
+    When I am on the home page
+    Then I should see "Fedora Model"
+    And I should see "info:fedora/afmodel:ModsAsset"
+    Then I should see "Topic"
+    Then I should see "Journal"
+    And I should see "The Journal of Mock Object"
+    And I should see "Pediatric Nursing"
+    Then I should see "Conference"
+    And I should see "some conference Host"
+</pre>
+
+Now run the test and watch it fail
+
+<pre>
+  cucumber features
+</pre> 
+
+h4. Modify blacklight_config.rb to use the facets you want
+
+In config/initializers/blacklight_config.rb, find the section that begins "config[:facet] =" (around line 45) and replace it with this:
+
+<pre>
+  config[:facet] = {
+    :field_names => (facet_fields = [
+      "has_model_s",
+      "subject_topic_facet",
+      "journal_title_info_main_title_facet",
+      "conference_facet"
+    ]),
+    :labels => {
+      "has_model_s" => "Fedora Model",
+      "subject_topic_facet" => "Topic",
+      "journal_title_info_main_title_facet" => "Journal",
+      "conference_facet" => "Conference"
+    },
+</pre>
+
+Now run the test and watch it pass!
+
+<pre>
+  cucumber features
+</pre>
+
+To see the changes for yourself, restart the application.
 
 h3. Changing the Home Text (also Demonstrates Writing a Feature)
 
