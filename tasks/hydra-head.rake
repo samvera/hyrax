@@ -225,11 +225,13 @@ namespace :hyhead do
   task :test => [:use_test_app]  do
     
     puts "Running rspec tests"
-    puts %[bundle exec hyhead:rspec:rcov]
+    #puts %[bundle exec rake hyhead:rspec:rcov]
+    puts %x[rake hyhead:rspec:rcov]
     rspec_success = $?.success?
 
     puts "Running cucumber tests"
-    puts %[bundle exec hyhead:cucumber:rcov]
+#    puts %x[bundle exec hyhead:cucumber:rcov]
+    puts %x[rake hyhead:cucumber]
     cucumber_success = $?.success?
 
     FileUtils.cd('../../')
