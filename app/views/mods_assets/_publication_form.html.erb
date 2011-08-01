@@ -1,0 +1,9 @@
+<%- form_tag(url_for(:controller=>"submission_workflow",:action=>"publication")) do -%>
+  <p id="title_field" class="fedora-text-field">
+    <%= fedora_field_label("descMetadata", [:title_info,:main_title], "Title<span class=\"required-note\">Required</span>") %>
+    <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false, :required=>true) %>
+  </p>
+  <%= render :partial=>"mods_assets/edit_journal", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:journal) %>
+  <%= hidden_field_tag("id",params[:id]) %>
+  <%= submit_tag("Continue", :name=>"continue") %>
+<%- end -%>

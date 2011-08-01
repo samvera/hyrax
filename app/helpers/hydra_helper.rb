@@ -1,5 +1,6 @@
 module HydraHelper
-
+  include Hydra::SubmissionWorkflow
+  
   # collection of stylesheet links to be rendered in the <head>
   def stylesheet_links
     @stylesheet_links ||= []
@@ -151,6 +152,12 @@ module HydraHelper
        end
     end
   
-  
+  def render_submission_workflow_step
+    if params.has_key?(:wf_step)
+      render workflow_partial_for_step(params[:wf_step])
+    else
+      render workflow_partial_for_step(first_step_in_workflow)
+    end
+  end
   
 end
