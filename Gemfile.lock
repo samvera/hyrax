@@ -182,6 +182,8 @@ GEM
     rbx-require-relative (0.0.5)
     rcov (0.9.9)
     rdoc (3.8)
+    rest-client (1.6.3)
+      mime-types (>= 1.16)
     rsolr (1.0.2)
       builder (>= 2.1.2)
     rsolr-ext (1.0.3)
@@ -253,6 +255,7 @@ DEPENDENCIES
   jettywrapper (~> 0.0.10)
   mocha
   rake
+  rest-client
   rspec (>= 2.0.0)
   rspec-rails (>= 2.0.0)
   ruby-debug

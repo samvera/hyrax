@@ -17,12 +17,9 @@ group :development, :test do
        gem 'rspec'
        gem 'rspec-rails', '>=2.5.0'
        gem 'mocha'
-       #gem 'generator_spec'
        gem 'cucumber-rails'
        gem 'database_cleaner'
        gem 'capybara'
-       #gem 'webrat'
-       #gem 'aruba'
        gem 'factory_girl'
        gem 'bcrypt-ruby'
 end
