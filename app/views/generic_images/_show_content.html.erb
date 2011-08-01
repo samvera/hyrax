@@ -1,7 +1,7 @@
- <dt>
-	Screen Sized Image:
- </dt>
- <dd class="screen-image">
-	<% source_url = datastream_disseminator_url(params[:id], "screen") %>
-	<a class="fbImage" id="single_image" href="<%= source_url %>"><img width="500" src="<%= source_url %>"></a>
- <dd>
+<dl id="generic_image_metadata_view" class="type-metadata">
+  <dt>Screen-sized Image</dt>
+  <dd class="screen-image">
+    <% source_url = datastream_disseminator_url(params[:id], "screen") %>
+    <%= link_to image_tag( source_url, :width => "500", :alt => "screen-size image" ), source_url, :class => "fbImage", :id => "single_image" %>
+  </dd>
+</dl>

@@ -1,18 +1,15 @@
-<% stylesheet_links << "../plugin_assets/hydra-head/javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
-
-<style type="text/css" media="screen">
-  input.editable-edit, input.textile-edit {display:none}
-</style>
+<% stylesheet_links << "/plugin_assets/hydra-head/javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
 
 <div class="document_viewer" id="cover_container">
 
-  <div id="accordion">
-		<h2 class="section-title"><a href="#">Description</a></h2>
+		<h2 class="section-title">Description</h2>
+		<div class="description-view">
 			<%= render :partial => "generic_content_objects/show_description", :locals => {:content_type => "generic_image" } %>
+		</div>
 
-    <h2 class="section-title"><a href="#">Other Images</a></h2>
+    <h2 class="section-title">Images</h2>
+    <div class="images-view">
 			<%= render :partial => "generic_images/show_all" %>
-
-  </div>
+		</div>
 
 </div>
