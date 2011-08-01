@@ -30,6 +30,15 @@ module Hydra::SubmissionWorkflow
   end
 
   def workflow_config
+    # This is probably what it should look like.  Will refactor to look like this soon.
+    # {
+    #   :mods_assets => [{:name => "contributor", :partial => "contributor_form"},
+    #                    {:name => "publication", :partial => "publication_form"},
+    #                    {:name => "additional_info", :partial => "additional_info_form"},
+    #                    {:name => "files", :partial => "file_assets/file_assets_form"}
+    #                   ]
+    # }
+    
     {
       :contributor     => {:order_of_step => 0, :partial => "mods_assets/contributor_form", :next_step => :publication},
       :publication     => {:order_of_step => 1, :partial => "mods_assets/publication_form", :next_step => :additional_info},
