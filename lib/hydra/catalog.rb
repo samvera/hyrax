@@ -24,7 +24,7 @@ module Hydra::Catalog
     
     # Controller filters
     # Also see the generator (or generated CatalogController) to see more before_filters in action
-    klass.before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index, :delete, :new]
+    klass.before_filter :require_solr, :require_fedora, :only=>[:show, :edit, :index, :delete, :new, :create]
     klass.before_filter :load_fedora_document, :only=>[:show,:edit]
     klass.before_filter :lookup_facets, :only=>:edit
     
