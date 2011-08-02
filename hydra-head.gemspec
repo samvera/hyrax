@@ -56,7 +56,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'cucumber', '>=0.8.5'
   s.add_development_dependency 'cucumber-rails', '>=1.0.0'
-  s.add_development_dependency 'rest-client'
   s.add_development_dependency 'gherkin'
   s.add_development_dependency 'factory_girl'
   s.add_development_dependency "rake"

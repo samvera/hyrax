@@ -16,6 +16,11 @@ module HydraHead
       def method_not_a_filter
         puts "not used as a filter"
       end
+
+      def layout_name
+        puts " ***** CALLING LAYOUT_NAME ****"
+        'application'
+      end
     end
   end
 end

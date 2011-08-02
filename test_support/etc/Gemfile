@@ -22,5 +22,6 @@ group :development, :test do
        gem 'capybara'
        gem 'factory_girl'
        gem 'bcrypt-ruby'
+       gem 'rest-client'
 end
 

@@ -1,6 +1,6 @@
 module HydraHead 
-  require 'engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
-  require 'application_controller'
+  require 'hydra-head/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  require 'hydra-head/controller'
 
   require 'hydra-head/version'
   require 'hydra-head/routes'

@@ -2,8 +2,6 @@
 require 'rails/generators'
 require 'rails/generators/migration'     
 
-# require "generators/blacklight/blacklight_generator"
-
 module Hydra
 class HeadGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
@@ -129,8 +127,11 @@ EOF
   # Add Hydra to the application controller
   def inject_blacklight_controller_behavior    
     inject_into_class "app/controllers/application_controller.rb", "ApplicationController" do
-      "  # Adds Hydra behaviors into the application controller \n " +        
-        "  include Hydra::Controller\n"
+      "  # Adds Hydra behaviors into the application controller \n" +        
+      "  include Hydra::Controller\n" +
+      "  def layout_name\n" +
+      "   'hydra-head'\n" +
+      "  end\n"
     end
   end
   
