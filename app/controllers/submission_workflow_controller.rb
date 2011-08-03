@@ -11,6 +11,7 @@ class SubmissionWorkflowController < ApplicationController
   #before_filter :validate_workflow_step, :require_solr, :require_fedora
   before_filter :require_solr, :require_fedora
   
+  # This should probably be in ContributorsController#create
   def contributor
     @document = load_document_from_params
     # generates sanatized params from params hash to update the doc with
@@ -25,6 +26,7 @@ class SubmissionWorkflowController < ApplicationController
     end
   end
   
+  # I don't really know where this should go.  Possibly the AssetsController?
   def publication
     @document = load_document_from_params
     # generates sanatized params from params hash to update the doc with
@@ -35,6 +37,7 @@ class SubmissionWorkflowController < ApplicationController
     redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:publication)})
   end
   
+  # I don't really know where this should go.  Possibly the AssetsController?
   def additional_info
     @document = load_document_from_params
     # generates sanatized params from params hash to update the doc with
@@ -45,6 +48,8 @@ class SubmissionWorkflowController < ApplicationController
     redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:additional_info)})
   end
   
+  # This should probably be in FileAssets#create
+  # This method is mostly for handling the number of files drop down.
   def file_assets
     if params.has_key?(:number_of_files) and params[:number_of_files] != "0"
       redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :files, :number_of_files => params[:number_of_files]})
