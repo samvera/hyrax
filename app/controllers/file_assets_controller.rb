@@ -6,6 +6,7 @@ class FileAssetsController < ApplicationController
   include Hydra::RepositoryController  
   include MediaShelf::ActiveFedoraHelper
   include Blacklight::SolrHelper
+  include Hydra::SubmissionWorkflow
   
   before_filter :require_fedora
   before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
@@ -74,22 +75,26 @@ From file_assets/_new.html.haml
   # * the method will redirect to the container object's edit view after saving
   def create
     if params.has_key?(:Filedata)
-      @file_asset = create_and_save_file_asset_from_params
-      apply_depositor_metadata(@file_asset)
-  
-      flash[:notice] = "The file #{params[:Filename]} has been saved in <a href=\"#{asset_url(@file_asset.pid)}\">#{@file_asset.pid}</a>."
+      @file_assets = create_and_save_file_assets_from_params
+      notice = []
+      @file_assets.each do |file_asset|
+        apply_depositor_metadata(file_asset)
+        
+        notice << "The file #{file_asset.label} has been saved in <a href=\"#{asset_url(file_asset.pid)}\">#{file_asset.pid}</a>."
           
-      if !params[:container_id].nil?
-        associate_file_asset_with_container
-      end
+        if !params[:container_id].nil?
+          associate_file_asset_with_container(file_asset,params[:container_id])
+        end
   
-      ## Apply any posted file metadata
-      unless params[:asset].nil?
-        logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
-        apply_file_metadata
+        ## Apply any posted file metadata
+        unless params[:asset].nil?
+          logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
+          apply_file_metadata
+        end
+        # If redirect_params has not been set, use {:action=>:index}
+        logger.debug "Created #{file_asset.pid}."
       end
-      # If redirect_params has not been set, use {:action=>:index}
-      logger.debug "Created #{@file_asset.pid}."
+      flash[:notice] = notice.join("<br/>") unless notice.blank?
     else
       flash[:notice] = "You must specify a file to upload."
     end
@@ -100,7 +105,11 @@ From file_assets/_new.html.haml
     
     redirect_params ||= {:action=>:index}
     
-    redirect_to redirect_params
+    #redirect_to redirect_params
+    puts "\n"
+    puts params[:id]
+    puts "\n"
+    redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:files)})
   end
   
   # Common destroy method for all AssetsControllers 
