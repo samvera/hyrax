@@ -3,19 +3,18 @@
 <%- container_content_type_param = defined?(container_content_type) ? "?container_content_type=#{container_content_type}" : "" %>
 <div id="uploader-contents">
     
-    <!-- This form will be progressively enhanced by the Fluid Uploader component. -->    
-    <form method="post" enctype="multipart/form-data" class="fl-uploader fl-progEnhance-basic" action="<%=h upload_url %>">
+    <!-- This form will be progressively enhanced by the Fluid Uploader component. -->   
+    <%= form_tag upload_url, :enctype=>"multipart/form-data", :class=>"fl-uploader fl-progEnhance-basic" do %>     
         <input type="hidden" name="container_id" value="<%=h container_id %>"/>
         <%= hidden_field_tag("container_content_type", container_content_type) if defined?(container_content_type) %>
         <p>Browse to upload a file.</p>
         <!-- <input name="Filedata-orig" type="file" /> -->
         <%= file_field_tag "Filedata", field_tag_options %>
         <div><input type="submit" value="Upload File"/></div>
-    </form>
+    <% end %>
     
     <!-- This is the markup for the Fluid Uploader component itself. -->
-    <form class="flc-uploader fl-uploader fl-progEnhance-enhanced" action="<%=h upload_url %>" method="get" enctype="multipart/form-data">
-              
+    <%= form_tag upload_url, :enctype=>"multipart/form-data", :class=>"flc-uploader fl-uploader fl-progEnhance-enhanced", :method=>:get do %>                   
         <!-- The file queue -->
         <div class="fl-uploader-queue-wrapper">
             
@@ -74,7 +73,7 @@
         <div class="fl-uploader-btns">
             <button type="button" class="flc-uploader-button-pause fl-uploader-pause fl-uploader-hidden">Stop Upload</button><button type="button" class="flc-uploader-button-upload fl-uploader-upload fl-uploader-button-default fl-uploader-dim ui-button ui-widget ui-state-default" disabled="disabled">Upload</button>
         </div>
-    </form>
+    <% end %>
 	
 </div>
 <div style="clear:both;"></div>

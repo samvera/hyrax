@@ -1,4 +1,8 @@
 
+h2. Views
+
+Security has been tightened in Rails3, forcing you to include _authenticity_token__ with all requests.  If you have forms or javascript that submits requests without this token, Rails will destroy the user session, effectively logging the user out (see http://weblog.rubyonrails.org/2011/2/8/csrf-protection-bypass-in-ruby-on-rails).  The easiest way to make sure this token is properly included in your forms is to generate the forms using the +form_tag+ or +form_for+ view helpers from Rails.
+
 h2. Fixtures
 
 Fixtures are loaded from a directory _within the test app_, which is updated when you run rake hyhead:setup_test_app so in order to update a fixture, you must change it in test_support/fixtures and then either re-run rake hyhead:setup_test_app or copy the fixture into tmp/test_app/test_support/fixtures
