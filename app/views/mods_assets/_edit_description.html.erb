@@ -7,7 +7,7 @@
 <%- license_values = @ds_rights_metadata.term_values(:copyright, :license) %>
 <%- journal_title_values = @ds_desc_metadata.term_values(:journal,:title_info,:main_title) %>
 
-<form id="document_metadata" action="<%= url_for(:action=>"update", :controller=>"assets", :content_type=>"mods_asset")%>" method="post" data-resourceType="mods_asset" accept-charset="utf-8">
+<%= form_tag url_for( :action=>"update", :controller=>"assets", :content_type=>"mods_asset"), "data-resourceType"=>"mods_asset", "accept-charset"=>"utf-8"  do %>
     <input name="_method" type="hidden" value="put" />
 
     <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
@@ -74,7 +74,7 @@
 
 		<input name="_method" type="hidden" value="put" />
 		<%= submit_tag 'Save Description', {:id => "saveDescription"} %>   
-</form>
+<% end %>
 
 <%= render :partial => "shared/delete_asset_confirmation", :locals => {:pid => params[:id], :title => (get_values_from_datastream(@document_fedora,"descMetadata", [:title_info, :main_title]).first.empty? ? "this article" : "'" << get_values_from_datastream(@document_fedora,"descMetadata", [:title_info, :main_title]).first << "'")  } %>
 	<div id="deleteAsset">

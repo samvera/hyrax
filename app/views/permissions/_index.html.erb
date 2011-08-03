@@ -1,7 +1,7 @@
 <% unless defined?(asset_id) %>
   <% asset_id = params[:asset_id] %>
 <% end %>
-<form id="permissions_metadata" action="<%= url_for(:asset_id=>@document_fedora.pid,:action=>"update", :controller=>"permissions") %>" method="post" accept-charset="utf-8">
+<%= form_tag url_for(:asset_id=>@document_fedora.pid,:action=>"update", :controller=>"permissions"), :id=>"permissions_metadata", :method=>"post", "accept-charset"=>"utf-8" do %>
   <input type="hidden" name="_method" value="put"/>
   <fieldset class="slider">
     <legend>Group Permissions</legend>
@@ -51,5 +51,5 @@
       </dl>
   </fieldset>
   <%= submit_tag 'Save Permissions', {:id => "submitPermissions"} %>
-</form>
+<% end %>
 <%= render :partial=>"permissions/new.html", :locals=>{:asset_id=>asset_id} %>
