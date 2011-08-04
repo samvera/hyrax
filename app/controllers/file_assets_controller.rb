@@ -106,9 +106,7 @@ From file_assets/_new.html.haml
     redirect_params ||= {:action=>:index}
     
     #redirect_to redirect_params
-    puts "\n"
-    puts params[:id]
-    puts "\n"
+
     redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:files)})
   end
   
