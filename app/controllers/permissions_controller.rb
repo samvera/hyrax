@@ -1,6 +1,7 @@
 require 'mediashelf/active_fedora_helper'
 class PermissionsController < ApplicationController
   include MediaShelf::ActiveFedoraHelper
+  include Hydra::SubmissionWorkflow
   before_filter :require_solr, :require_fedora
   
   def index
@@ -50,10 +51,12 @@ Removed from permissions/_new.html.erb
   # Create a new permissions entry
   # expects permission["actor_id"], permission["actor_type"] and permission["access_level"] as params. ie.   :permission=>{"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}
   def create
-    pid = params[:asset_id]
+    #pid = params[:asset_id]
+    pid = params[:id]
     dsid = "rightsMetadata"
     # xml_content = Fedora::Repository.instance.fetch_custom(pid, "datastreams/#{dsid}/content")
-    @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
+    #@document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
+    @document_fedora=ActiveFedora::Base.load_instance(params[:id])
     xml_content = @document_fedora.datastreams_in_memory[dsid].content
     ds = Hydra::RightsMetadata.from_xml(xml_content)
     ds.pid = pid
@@ -79,10 +82,19 @@ Removed from permissions/_new.html.erb
     # Re-index the object
     Solrizer::Fedora::Solrizer.new.solrize(pid)
     
-    flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
+    #flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
+    flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:id]}"
     
     respond_to do |format|
-      format.html { redirect_to :controller=>"permissions", :action=>"index" }
+      #format.html { redirect_to :controller=>"permissions", :action=>"index" }
+      format.html do 
+        if params.has_key?(:add_permission)
+          redirect_to :back
+        else
+          redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => next_step_in_workflow(:permissions)
+        end
+        
+      end
       format.inline { render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}}
     end
 
@@ -91,10 +103,13 @@ Removed from permissions/_new.html.erb
   # Updates the permissions for all actors in a hash.  Can specify as many groups and persons as you want
   # ie. :permission => {"group"=>{"group1"=>"discover","group2"=>"edit"}, {"person"=>{"person1"=>"read"}}}
   def update
-    pid = params[:asset_id]
+    #pid = params[:asset_id]
+    pid = params[:id]
+    
     dsid = "rightsMetadata"
     # xml_content = Fedora::Repository.instance.fetch_custom(pid, "datastreams/#{dsid}/content")
-    @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
+    #@document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
+    @document_fedora=ActiveFedora::Base.load_instance(params[:id])
     xml_content = @document_fedora.datastreams_in_memory[dsid].content
     ds = Hydra::RightsMetadata.from_xml(xml_content)
     ds.pid = pid
@@ -119,7 +134,14 @@ Removed from permissions/_new.html.erb
     flash[:notice] = "The permissions have been updated."
     
     respond_to do |format|
-      format.html { redirect_to :controller=>"catalog", :action=>"edit", :id=>params[:asset_id] }
+      #format.html { redirect_to :controller=>"catalog", :action=>"edit", :id=>params[:asset_id] }
+      format.html do
+        if params.has_key?(:add_permission)
+          redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => :permissions, :add_permission => true
+        else
+          redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => next_step_in_workflow(:permissions)
+        end
+      end
       format.inline do
         # This should be replaced ...
         if params[:permission].has_key?(:group)
