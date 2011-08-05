@@ -3,12 +3,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Hydra::FileAssetsHelper do
   describe "create_and_save_file_asset_from_params" do
     it "should create the file asset, add posted blob to it and save the file asset" do
-      helper.stubs(:params).returns( { :Filedata => "" } )      
       mock_fa = mock("file asset")
+      helper.stubs(:params).returns( { :Filedata => [mock_fa] } )
       mock_fa.expects(:save)
-      helper.expects(:create_asset_from_params).returns(mock_fa)
+      helper.expects(:create_asset_from_file).returns(mock_fa)
       helper.expects(:add_posted_blob_to_asset)
-      helper.create_and_save_file_asset_from_params
+      helper.create_and_save_file_assets_from_params
     end
   end
   
@@ -16,34 +16,37 @@ describe Hydra::FileAssetsHelper do
     it "should set object title and label" do
       mock_file = mock("File")
       file_name = "Posted Filename.foo"
-      helper.stubs(:params).returns( :Filedata=>mock_file, :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
+      helper.stubs(:params).returns( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
       mock_fa = mock("file asset")
+      mock_file.expects(:original_filename).returns(file_name)
       mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype")
       mock_fa.expects(:set_title_and_label).with( file_name, :only_if_blank=>true )
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
-      helper.add_posted_blob_to_asset(mock_fa)
+      helper.add_posted_blob_to_asset(mock_fa,mock_file)
     end
     
     it "should support submissions from swfupload" do
       mock_file = mock("File")
       file_name = "Posted Filename.foo"
-      helper.stubs(:params).returns( :Filedata=>mock_file, :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
+      helper.stubs(:params).returns( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
       mock_fa = mock("file asset")
+      mock_file.expects(:original_filename).returns(file_name)
       mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype")
       mock_fa.stubs(:set_title_and_label)
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
-      helper.add_posted_blob_to_asset(mock_fa)
+      helper.add_posted_blob_to_asset(mock_fa,mock_file)
     end
     it "should support submissions from single-file uploader" do
       mock_file = mock("File")
       file_name = "Posted Filename.foo"
-      helper.expects(:filename_from_params).returns(file_name)
-      helper.stubs(:params).returns( :Filedata=>mock_file, :container_id=>"hydrangea:2973" )      
+#      helper.expects(:filename_from_params).returns(file_name)
+      helper.stubs(:params).returns( :Filedata=>[mock_file], :container_id=>"hydrangea:2973" )      
+      mock_file.expects(:original_filename).returns(file_name)
       mock_fa = mock("file asset")
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
       mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype")
       mock_fa.stubs(:set_title_and_label)
-      helper.add_posted_blob_to_asset(mock_fa)
+      helper.add_posted_blob_to_asset(mock_fa,mock_file)
     end
   end
   
