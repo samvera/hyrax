@@ -77,7 +77,7 @@ module Hydra::SubmissionWorkflow
     # }
     
     {
-      :contributor     => {:order_of_step => 0, :partial => "mods_assets/contributor_form", :next_step => :publication},
+      :contributor     => {:order_of_step => 0, :partial => "contributors/contributor_form", :next_step => :publication},
       :publication     => {:order_of_step => 1, :partial => "mods_assets/publication_form", :next_step => :additional_info},
       :additional_info => {:order_of_step => 2, :partial => "mods_assets/additional_info_form", :next_step => :files},
       :files           => {:order_of_step => 3, :partial => "file_assets/file_assets_form", :next_step => :permissions},
