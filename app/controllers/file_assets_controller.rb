@@ -99,15 +99,13 @@ From file_assets/_new.html.haml
       flash[:notice] = "You must specify a file to upload."
     end
     
-    if !params[:asset_id].nil?
-      redirect_params = {:controller=>"catalog", :id=>params[:asset_id], :action=>:edit}
+    if !params[:container_id].nil?
+      redirect_params = {:controller => "catalog", :id => params[:container_id], :action => :edit, :wf_step => next_step_in_workflow(:files)}
     end
     
-    redirect_params ||= {:action=>:index}
+    redirect_params ||= {:controller => "catalog", :id => params[:id], :action => :edit,  :wf_step => next_step_in_workflow(:files)}
     
-    #redirect_to redirect_params
-
-    redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:files)})
+    redirect_to redirect_params
   end
   
   # Common destroy method for all AssetsControllers 
