@@ -20,7 +20,7 @@ class SubmissionWorkflowController < ApplicationController
     @document.save
     flash[:notice] = "Your changes have been saved."
     if params.has_key? :add_another_author
-      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :add_contributor => true})
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor, :add_contributor => true})
     else
       redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:contributor)})
     end
@@ -63,7 +63,6 @@ class SubmissionWorkflowController < ApplicationController
       @document.save
     end
   end
-  
   
   protected
 
