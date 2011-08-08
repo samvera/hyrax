@@ -30,34 +30,37 @@ Feature: Upload file into a document
     Then I should see a link to "image.jp2" in the file assets list
   
   Scenario: html5 valid uploading files on edit page
-    Given I am logged in as "archivist1"
-    And I am on the edit document page for hydrangea:fixture_mods_article1
-    And I attach the file "spec/fixtures/image.jp2" to "Filedata"
+    Given I am logged in as "archivist1@example.com"
+    When I am on the edit files page for hydrangea:fixture_mods_article1
+    Then the page should be HTML5 valid
+    And I select "1" from "number_of_files"
+    Then I press "Continue"
+    Then the page should be HTML5 valid
+    And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
     When I press "Upload File"
     Then the page should be HTML5 valid
   
-  @nojs
-  Scenario: Upload files on file assets list page
-    Given I am logged in as "archivist1@example.com"
-    And I am on the file asset list page for hydrangea:fixture_mods_dataset1
-#Then show me the page
-    And I attach the file "test_support/fixtures/image.jp2" to "Filedata"
-    When I press "Upload File"
-    Then I should see "The file image.jp2 has been saved"
-    And I should see a link to "image.jp2" in the file assets list
-  
-  Scenario: Upload files on file asset creation page
-    Given I am logged in as "archivist1@example.com"
-    And I am on the file asset creation page for hydrangea:fixture_mods_dataset1
-    And I attach the file "test_support/fixtures/image.jp2" to "Filedata"
-    When I press "Upload File"
-    Then I should see "The file image.jp2 has been saved"
-    And I should see a link to "image.jp2" in the file assets list
-
-  Scenario: html5 valid uploading files on file assets list page
-    Given I am logged in as "archivist1"
-    And I am on the file asset creation page for hydrangea:fixture_mods_article1
-    And I attach the file "spec/fixtures/image.jp2" to "Filedata"
-    When I press "Upload File"
-    Then the page should be HTML5 valid
-
+  # Not sure if the file asset list is valid.  Will the user ever actually be here?  
+  # @nojs
+  # Scenario: Upload files on file assets list page
+  #   Given I am logged in as "archivist1"
+  #   And I am on the file asset list page for hydrangea:fixture_mods_dataset1
+  #   And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
+  #   When I press "Upload File"
+  #   Then I should see "The file image.jp2 has been saved"
+  #   And I should see a link to "image.jp2" in the file assets list
+  # 
+  # Scenario: Upload files on file asset creation page
+  #   Given I am logged in as "archivist1"
+  #   And I am on the file asset creation page for hydrangea:fixture_mods_dataset1
+  #   And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
+  #   When I press "Upload File"
+  #   Then I should see "The file image.jp2 has been saved"
+  #   And I should see a link to "image.jp2" in the file assets list
+  # 
+  # Scenario: html5 valid uploading files on file assets list page
+  #   Given I am logged in as "archivist1"
+  #   And I am on the file asset creation page for hydrangea:fixture_mods_article1
+  #   And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
+  #   When I press "Upload File"
+  #   Then the page should be HTML5 valid
