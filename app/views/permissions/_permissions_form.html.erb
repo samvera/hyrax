@@ -7,7 +7,7 @@
     <%= submit_tag("Continue", :name=>"continue") %>
   <%- end -%>
 <%- else -%>
-  <%- form_tag({:controller=>"permissions", :action => "update"}) do -%>
+  <%- form_tag({:controller=>"permissions", :action => "update"}, :id => "permissions_metadata") do -%>
     <%= render :partial => "permissions/index" %>
     <%= hidden_field_tag("id", params[:id]) if params[:id] %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission")%>
