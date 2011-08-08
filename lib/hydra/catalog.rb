@@ -26,7 +26,6 @@ module Hydra::Catalog
     # Also see the generator (or generated CatalogController) to see more before_filters in action
     klass.before_filter :require_solr, :require_fedora
     klass.before_filter :load_fedora_document, :only=>[:show,:edit]
-    klass.before_filter :lookup_facets, :only=>:edit
     
     # View Helpers
     klass.helper :hydra
@@ -56,9 +55,5 @@ module Hydra::Catalog
     end
     @file_assets = @document_fedora.file_objects(:response_format=>:solr)
   end
-  
-  def lookup_facets
-    params = {:qt=>"search",:defType=>"dismax",:q=>"*:*",:rows=>"0",:facet=>"true", :facets=>{:fields=>Blacklight.config[:facet][:field_names]}}
-    @facet_lookup = Blacklight.solr.find params
-  end
+
 end
