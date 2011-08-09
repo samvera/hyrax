@@ -1,6 +1,11 @@
 h1. Git Workflow (with command line examples) for working on Hydra Projects
 
-Here's how to do it.  Note: the parts in parentheses indicates which branch you should be on when you run the command.  If it doesn't matter which branch you're on, this is indicated with (*).
+h2. Reference Material/Reading:
+
+Good places to read about git workflows:
+
+"Diaspora Git Workflow":https://github.com/diaspora/diaspora/wiki/Git-Workflow
+"Thinkup Developer Documentation":http://thinkupapp.com/docs/contribute/developers/devfromsource.html
 
 h2. Creating a Feature Branch then Rebasing, Merging and Cleaning Up
 
@@ -16,6 +21,8 @@ The steps:
 # Rebase the feature branch
 # Merge the finished work into Master
 # Clean up after yourself
+
+Here's how to do the right thing with git on the command line.  *Note*: the parts in parentheses indicates which branch you should be on when you run the command.  If it doesn't matter which branch you're on, this is indicated with (*).
 
 h3. Create your feature branch
 
