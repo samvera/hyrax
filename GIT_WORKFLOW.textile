@@ -1,0 +1,73 @@
+h1. Git Workflow (with command line examples) for working on Hydra Projects
+
+Here's how to do it.  Note: the parts in parentheses indicates which branch you should be on when you run the command.  If it doesn't matter which branch you're on, this is indicated with (*).
+
+h2. Creating a Feature Branch then Rebasing, Merging and Cleaning Up
+
+*Scenario:* You're working on the HYDRA-333 ticket.  
+
+# You already have a working copy of hydra-head cloned to your local machine.
+# Your work is starting from the contents of hydra-head/master
+
+The steps:
+
+# Create a feature branch
+# If necessary, push a copy of the working branch to github
+# Rebase the feature branch
+# Merge the finished work into Master
+# Clean up after yourself
+
+h3. Create your feature branch
+
+<pre>
+cd hydra-head
+(master) git checkout -b HYDRA-333
+</pre>
+
+Make changes and commit them to your feature branch like normal.
+
+<pre>
+(HYDRA-333) git add …
+(HYDRA-333) git commit …
+</pre>
+
+h3. If necessary, push a copy of the feature branch to github
+
+If you need to share your feature branch, push it to github
+
+<pre>
+(HYDRA-333) git push origin HYDRA-333
+</pre>
+
+h3. Rebase the feature branch
+
+Repeat work until the HYDRA-333 ticket is ready to close, then rebase that work & merge it into the master branch ...
+
+<pre>
+(*) git checkout master
+(master) git pull origin master
+(master) git checkout HYDRA-333 
+(HYDRA-333) git rebase master
+... walk through the rebase ...
+</pre>
+
+At this point, you should *rerun your full test suite* to make sure that the rebase did not break anything.  
+
+h3. Merge the finished work into Master
+
+If all of the tests pass after the rebase, you're ready to merge your work into master and push it to github.
+
+<pre>
+(HYDRA-333) git checkout master
+(master) git merge HYDRA-333
+(master) git push origin master
+</pre>
+
+h3. Clean up after yourself
+
+Now delete the local & remote copies of the feature branch 
+
+<pre>
+(master) git branch -d HYDRA-333
+(master) git push origin :HYDRA-333
+</pre>

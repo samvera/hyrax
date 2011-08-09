@@ -1,0 +1,21 @@
+h1. Defining a custom Controller that Manipulates Hydra Assets
+
+h2. Depositor/Owner Permissions
+
+Two steps are necessary in order to ensure that your Controller will set the permissions properly on Assets.  If you don't follow these steps, users will be able to create objects but won't be able to edit them.
+
+h3. (1) include AssetsControllerHelper in any Custom Controllers
+
+This will provide {AssetsControllerHelper#apply_depositor_metadata} method within your Controllers.  
+
+<pre>
+  # in your custom Controllers
+  include Hydra::AssetsControllerHelper
+</pre>
+
+h3. (2) call apply_depositor_metadata when you create assets
+
+In your controllers, whenever you create an asset, call apply_depositor_metadata to update the rightsMetadata and apply any other metadata about the depositor.
+
+*Important* You must make sure that your models support apply_depositor_metadata.  See "HOW_TO_DEFINE_A_HYDRA_MODEL":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.HOW_TO_DEFINE_A_HYDRA_MODEL.html for more information about doing this in your custom models.
+

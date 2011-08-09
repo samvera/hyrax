@@ -1,6 +1,12 @@
 require "om"
 module Hydra::AssetsControllerHelper
   
+  # This makes sure that assets have the current user marked as their depositor/owner.  
+  # Relies on the asset's model to define _what_ apply_depositor_metadata should do.  Most Hydra assets will rely on {Hydra::ModelMethods#apply_depositor_metadata}
+  #
+  # Attempts to call apply_depositor_metadata on the +asset+, passing current_user.login as the depositor
+  # Does nothing if the asset doesn't respond to .apply_depositor_metadata or current_user doesn't respond to .login
+  # @param asset to call apply_depositor_metadata on
   def apply_depositor_metadata(asset)
     if asset.respond_to?(:apply_depositor_metadata) && current_user.respond_to?(:login)
       asset.apply_depositor_metadata(current_user.login)
