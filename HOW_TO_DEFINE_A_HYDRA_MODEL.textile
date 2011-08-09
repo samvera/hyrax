@@ -1,0 +1,38 @@
+h1. Defining a custom Hydra Model 
+
+h2. General Introduction/Tutorial
+
+The "HOW_TO_GET_STARTED":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.HOW_TO_GET_STARTED.html tutorial includes a detailed section on defining a JournalArticle model.  Read that to get a sense of how to create a working Hydra Model.
+
+h2. Depositor/Owner Permissions
+
+Two steps are necessary in order to ensure that your controllers will be able to set the permissions on your Assets.  If you don't follow these steps, users will be able to create objects but won't be able to edit them.
+
+h3. (1) make sure objects have a rightsMetadata datastream
+
+If you are adhering to the formal Hydra commonMetadata cModel, which says that you must have a descMetadata datastream and a rightsMetadata datastream, you can put this line in your model:
+
+<pre>
+  # This model adheres to the formal Hydra commonMetadata cModel, meaning that it has a descMetadata datastream and a rightsMetadata datastream
+  include Hydra::ModelMixins::CommonMetadata
+</pre>
+
+If you are not adhering to the formal Hydra commonMetadata cModel and simply want to have a rightsMetadata datastream, declare the datastream directly in your Model
+
+<pre>
+  # Explicitly declaring rightsMetadata datastream
+  has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
+</pre>
+
+h3. (2) include Hydra::ModelMethods in your model or define custom apply_depositor_metadata method on yoru Model
+
+{Hydra::ModelMethods} will provide {Hydra::ModelMethods#apply_depositor_metadata} method within your Controllers.  
+
+You might want to override that method with model-specific behavior.  The most important behavior to retain is adding +depositor_id+ to the asset's individual edit permissions if the asset has a rightsMetadata datastream.
+
+<pre>
+  # in your model
+  include Hydra::ModelMethods
+</pre>
+
+

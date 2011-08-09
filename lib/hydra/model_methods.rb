@@ -1,6 +1,8 @@
 module Hydra::ModelMethods
+  
   #
   # Adds metadata about the depositor to the asset
+  # Most important behavior: if the asset has a rightsMetadata datastream, this method will add +depositor_id+ to its individual edit permissions.
   #
   def apply_depositor_metadata(depositor_id)
     prop_ds = self.datastreams_in_memory["properties"]
