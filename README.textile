@@ -53,7 +53,7 @@ First, add them to the Gemfile of your application:
   gem 'rails', '~>3.0.4'
 
   gem 'blacklight', '~> 3.0.0'
-  gem 'hydra-head', '3.0.0pre1'
+  gem 'hydra-head', '3.0.0pre3'
 
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
@@ -90,7 +90,7 @@ This will take a _very_ long time the first time you run it.  IF you become impa
 
 <pre>
   gem install blacklight
-  gem install hydra-head -v 3.0.0pre1
+  gem install hydra-head -v 3.0.0pre3
 </pre>
 
 Then re-run bundle install and it will run slightly faster.
