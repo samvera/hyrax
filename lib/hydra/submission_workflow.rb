@@ -58,11 +58,17 @@ module Hydra::SubmissionWorkflow
   
   def workflow_config_test
     {
-      :mods_assets => [{:name => "contributor", :partial => "contributor_form"},
-                       {:name => "publication", :partial => "publication_form"},
-                       {:name => "additional_info", :partial => "additional_info_form"},
-                       {:name => "files", :partial => "file_assets/file_assets_form"}
-                      ]
+      :mods_assets =>      [{:name => "contributor",     :partial => "contributors/contributor_form"},
+                            {:name => "publication",     :partial => "mods_assets/publication_form"},
+                            {:name => "additional_info", :partial => "modes_assets/additional_info_form"},
+                            {:name => "files",           :partial => "file_assets/file_assets_form"},
+                            {:name => "permissions",     :partial => "permissions/permissions_form"}
+                           ],
+      :generic_contents => [{:name => "description", :partial => "generic_content_objects/edit_description"},
+                            {:name => "files",       :partial => "file_assets/file_assets_form"},
+                            {:name => "permissions", :partial => "permissions/permissions_form"},
+                            {:name => "contributor", :partial => "contributors/contributors_form"}
+                           ]
     }    
   end
   
