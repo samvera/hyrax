@@ -8,6 +8,8 @@ h2. Depositor/Owner Permissions
 
 Two steps are necessary in order to ensure that your controllers will be able to set the permissions on your Assets.  If you don't follow these steps, users will be able to create objects but won't be able to edit them.
 
+Before reading this, make sure to read the page on "Hydra Access Controls":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.HYDRA_ACCESS_CONTROLS.html
+
 h3. (1) make sure objects have a rightsMetadata datastream
 
 If you are adhering to the formal Hydra commonMetadata cModel, which says that you must have a descMetadata datastream and a rightsMetadata datastream, you can put this line in your model:
