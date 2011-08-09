@@ -107,9 +107,14 @@ class SubmissionWorkflowController < ApplicationController
   
   def additional_info_validation
     rights_metadata = params[:asset][:rightsMetadata]
-    if rights_metadata[:embargo_embargo_release_date]["0"].blank?
-      flash[:error] = "You must enter a release date"
-      return false
+    unless rights_metadata[:embargo_embargo_release_date]["0"].blank?
+      begin
+        parsed_date = Date.parse(rights_metadata[:embargo_embargo_release_date]["0"]).to_s
+        params[:asset][:rightsMetadata][:embargo_embargo_release_date]["0"] = parsed_date
+      rescue
+        flash[:error] = "You must enter a valid release date."
+        return false
+      end
     end
     return true
   end

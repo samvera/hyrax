@@ -29,28 +29,6 @@ Feature: Edit a ModsAsset object
     And I fill in "embargo_embargo_release_date" with "25-25-25"
     And I press "Continue"
     Then I should see "You must enter a valid release date."
-    
-  Scenario: Entering different date formats for embargo
-    Given I am logged in as "archivist1" 
-    When I am on the edit additional_info page for hydrangea:fixture_mods_article1
-    And I fill in "embargo_embargo_release_date" with "11/1/2010"
-    When I press "Continue"
-    And I am on the edit additional_info page for hydrangea:fixture_mods_article1
-    Then the "embargo_embargo_release_date" field within "#release_date_field" should contain "2010-11-01"
-    When I fill in "embargo_embargo_release_date" with "November 1st 2010"
-    And I press "Continue"
-    When I am on the edit additional_info page for hydrangea:fixture_mods_article1
-    Then the "embargo_embargo_release_date" field within "#release_date_field" should contain "2010-11-01"
-    # The last 2 lines are just clean up.
-    Then I fill in "embargo_embargo_release_date" with ""
-    And I press "Continue"
-
-  Scenario: Save and Finish
-    Given I am logged in as "archivist1" 
-    When I am on the edit additional_info page for hydrangea:fixture_mods_article1
-    When I press "Save and Finish"
-    Then I should see "Switch to edit view"
-    And I should see "Your object has been saved"
 
   Scenario: html5 valid
     Given I am logged in as "archivist1"
