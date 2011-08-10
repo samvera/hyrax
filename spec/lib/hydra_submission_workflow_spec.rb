@@ -1,17 +1,22 @@
 require File.expand_path( File.join( File.dirname(__FILE__),'..','spec_helper') )
 
+mods_asset_model = "info:fedora/afmodel:ModsAsset"
+
 describe Hydra::SubmissionWorkflow do
+  before(:each) do
+    @document = {:has_model_s => [mods_asset_model]}
+  end
   include Hydra::SubmissionWorkflow
   
   describe "first step in workflow" do
     it "should return the first step of a given workflow" do
-      first_step_in_workflow.should == :contributor
+      first_step_in_workflow.should == "contributor"
     end
   end
   
   describe "next in workflow" do
     it "should provide the next step based on the provided step" do
-      next_step_in_workflow(:contributor).should == :publication
+      next_step_in_workflow(:contributor).should == "publication"
     end
     it "should return nil if there is no step (denoting the last step)" do
       next_step_in_workflow(:permissions).should be_nil
@@ -26,7 +31,6 @@ describe Hydra::SubmissionWorkflow do
 
   describe "model specific configurations" do
     it "should return the appropriate configuration when an @document object is available" do
-      @document = {:has_model_s => ["info:fedora/afmodel:ModsAsset"]}
       config = model_config
       config.is_a?(Array).should be_true
       config.length.should == 5
@@ -50,6 +54,7 @@ describe Hydra::SubmissionWorkflow do
       end
     end
     it "should return the appropriate config when the ID of an object is provided" do
+      @document = nil
       to = SubmissionWorkflowObject.new
       to.stubs(:params).returns({})
       config = to.model_config(:id => "hydrangea:fixture_mods_article1")
@@ -62,6 +67,7 @@ describe Hydra::SubmissionWorkflow do
       end
     end
     it "should return the appropriate config when the ID of an object is available in the params hash" do
+      @document = nil
       to = SubmissionWorkflowObject.new
       to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1"})
       config = to.model_config
@@ -74,6 +80,7 @@ describe Hydra::SubmissionWorkflow do
       end
     end
     it "should return the configuration for non mods assets (generic_content)" do
+      @document = nil
       to = SubmissionWorkflowObject.new
       to.stubs(:params).returns(:id=>"hydra:test_generic_content")
       config = to.model_config
@@ -91,12 +98,14 @@ describe Hydra::SubmissionWorkflow do
   end
   describe "before_filter validation" do
     it "should redirect back when the validation method returns false." do
+      @document = nil
       to = SubmissionWorkflowObject.new
       to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"contributor"})
       to.expects(:redirect_to).with(:back)
       to.validate_workflow_step
     end
     it "should not redirect when the validation method returns true." do
+      @document = nil
       to = SubmissionWorkflowObject.new
       to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"additional_info"})
       to.expects(:redirect_to).never

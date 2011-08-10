@@ -113,7 +113,8 @@ describe FileAssetsController do
       controller.expects(:associate_file_asset_with_container)      
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File", :container_id=>"_PID_"
     end
-    it "should redirect back to container edit view if no Filedata is provided but container_id is provided" do
+    it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
+      controller.expects(:model_config).at_least_once.returns(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_"
       response.should redirect_to(:controller=>"catalog", :id=>"_PID_", :action => 'edit', :wf_step=>"permissions")
       response.flash[:notice].should == "You must specify a file to upload."
