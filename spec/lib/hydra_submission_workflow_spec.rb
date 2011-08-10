@@ -89,7 +89,27 @@ describe Hydra::SubmissionWorkflow do
       partial_is_generic.include?(true).should be_true
     end
   end
+  describe "before_filter validation" do
+    it "should redirect back when the validation method returns false." do
+      to = SubmissionWorkflowObject.new
+      to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"contributor"})
+      to.expects(:redirect_to).with(:back)
+      to.validate_workflow_step
+    end
+    it "should not redirect when the validation method returns true." do
+      to = SubmissionWorkflowObject.new
+      to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"additional_info"})
+      to.expects(:redirect_to).never
+      to.validate_workflow_step
+    end
+  end
 end
 class SubmissionWorkflowObject
   include Hydra::SubmissionWorkflow
+  def contributor_mods_assets_validation
+    return false
+  end
+  def additional_info_mods_assets_validation
+    return true
+  end
 end

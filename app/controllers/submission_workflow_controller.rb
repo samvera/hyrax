@@ -3,13 +3,16 @@ class SubmissionWorkflowController < ApplicationController
   include Blacklight::SolrHelper
   include Hydra::RepositoryController
   include Hydra::AssetsControllerHelper
-  include Hydra::SubmissionWorkflow
+  
 #  include ReleaseProcessHelper
   
   # probably need to do some sort of before filter to ensure security
   #before_filter :enforce_edit
   #before_filter :validate_workflow_step, :require_solr, :require_fedora
   before_filter :require_solr, :require_fedora
+  
+  # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
+  include Hydra::SubmissionWorkflow
   
   # This should probably be in ContributorsController#create
   def contributor
@@ -78,7 +81,7 @@ class SubmissionWorkflowController < ApplicationController
   # validate the author action
   # The first author requires an ID field.
   # All authors require a First & Last name.
-  def contributor_validation
+  def contributor_mods_assets_validation
     i = 0
     desc_metadata = params[:asset][:descMetadata]
     while desc_metadata.has_key? "person_#{i}_computing_id".to_sym
@@ -95,7 +98,7 @@ class SubmissionWorkflowController < ApplicationController
     return true
   end
   
-  def publication_validation
+  def publication_mods_assets_validation
     desc_metadata = params[:asset][:descMetadata]
     if desc_metadata[:title_info_main_title]["0"].blank? or desc_metadata[:journal_0_title_info_main_title]["0"].blank?
       flash[:error] = "The title fields are required."
@@ -105,7 +108,7 @@ class SubmissionWorkflowController < ApplicationController
     end
   end
   
-  def additional_info_validation
+  def additional_info_mods_assets_validation
     rights_metadata = params[:asset][:rightsMetadata]
     unless rights_metadata[:embargo_embargo_release_date]["0"].blank?
       begin
