@@ -1,0 +1,5 @@
+<%- form_tag(url_for(:controller=>"submission_workflow",:action=>"additional_info"), :id=>"descriptive-metadata", :"data-resourceType"=>"mods_asset", :"accept-charset"=>"utf-8") do -%>
+  <%= render "generic_content_objects/edit_description" %>
+  <%= hidden_field_tag("id",params[:id]) %>
+  <%= submit_tag("Continue", :name=>"continue") %>
+<%- end -%>

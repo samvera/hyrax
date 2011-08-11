@@ -84,7 +84,7 @@ module Hydra::SubmissionWorkflow
                             {:name => "files",           :partial => "file_assets/file_assets_form"},
                             {:name => "permissions",     :partial => "permissions/permissions_form"}
                            ],
-      :generic_contents => [{:name => "description", :partial => "generic_content_objects/edit_description"},
+      :generic_contents => [{:name => "description", :partial => "generic_content_objects/description_form"},
                             {:name => "files",       :partial => "file_assets/file_assets_form"},
                             {:name => "permissions", :partial => "permissions/permissions_form"},
                             {:name => "contributor", :partial => "contributors/contributors_form"}

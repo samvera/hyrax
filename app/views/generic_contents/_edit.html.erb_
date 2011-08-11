@@ -1,0 +1,39 @@
+<div class="document_viewer" id="cover_container">
+  <div class="multipleEdit">
+
+		<h2 class="section-title">Describe the Item</h2>
+		<div id="description_editor">
+		  <%= render :partial => "generic_content_objects/edit_description", :locals => { :content_type => "generic_content"} %>
+		</div>
+		
+    <h2 class="section-title">Upload Content</h2>
+    <div id="uploads">
+      <%= render :partial => "file_assets/index", :locals => { :file_assets => @file_assets} %>
+	  </div>
+
+    <h2 class="section-title">Set Permissions</h2>
+    <div id="permissions_editor">
+      <%= render :partial => "permissions/index", :locals => {:document => document, :asset_id=>params[:id]} %>
+    </div>
+  
+    <%#
+    // This hidden form really belongs elsewhere, but putting it inside of an 
+    // accordion section un-hides it, so I stuck it here for now. -MZ
+    %>
+    <form id="new_contributor" action="<%=url_for(:action=>"create", :controller=>"contributors", :asset_id=>params[:id]) %>" method="post">
+      <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
+      <p><label for="contributor_type">Contributor Type</label>
+      <select id="contributor_type" name="contributor_type">
+        <option value="person">Person</option>
+        <option value="organization">Organization</option>
+        <option value="conference">Conference</option>
+      </select></p>
+      <p><input type="submit" value="Add Contributor" /></p>
+    </form>
+  </div>
+</div>
+<% sidebar_items << capture do %>
+  <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
+  <%#= render :partial=>'facets' %>
+  <%= delete_asset_link(params[:id], "article") %>
+<% end %>
