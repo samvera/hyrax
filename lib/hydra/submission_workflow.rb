@@ -56,8 +56,12 @@ module Hydra::SubmissionWorkflow
   
   def get_af_model(options={})
     if !@document.nil?
-      # I'm a little suspicious about the line below.  Can I count on this naming convention?
-      return @document[:has_model_s].first.gsub("info:fedora/afmodel:","").underscore.pluralize.to_sym
+      # I'm a little suspicious about this.  Can I count on this naming convention?
+      if @document.is_a?(SolrDocument)
+        return @document[:has_model_s].first.gsub("info:fedora/afmodel:","").underscore.pluralize.to_sym
+      else
+        return @document.class.to_s.underscore.pluralize.to_sym
+      end
     elsif options.has_key?(:id)
       begin
         af = ActiveFedora::Base.load_instance_from_solr(options[:id])

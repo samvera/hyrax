@@ -4,7 +4,7 @@ mods_asset_model = "info:fedora/afmodel:ModsAsset"
 
 describe Hydra::SubmissionWorkflow do
   before(:each) do
-    @document = {:has_model_s => [mods_asset_model]}
+    @document = SolrDocument.new({:has_model_s => [mods_asset_model]})
   end
   include Hydra::SubmissionWorkflow
   
