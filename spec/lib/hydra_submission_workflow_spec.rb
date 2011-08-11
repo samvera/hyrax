@@ -21,6 +21,10 @@ describe Hydra::SubmissionWorkflow do
     it "should return nil if there is no step (denoting the last step)" do
       next_step_in_workflow(:permissions).should be_nil
     end
+    it "should return the first step if the a blank current step is provided" do
+      next_step_in_workflow(nil).should == "contributor"
+      next_step_in_workflow("").should == "contributor"
+    end
   end
 
   describe "partial for step" do

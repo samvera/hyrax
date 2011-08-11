@@ -17,8 +17,12 @@ module Hydra::SubmissionWorkflow
   
   def next_step_in_workflow(current_step)
     unless model_config.nil?
+      if current_step.blank?
+        return first_step_in_workflow
+      else
       model_config.each_with_index do |step,i|
         return model_config[i+1][:name] if step[:name] == current_step.to_s and step != model_config.last
+      end
       end
     end
     nil
