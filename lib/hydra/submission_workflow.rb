@@ -5,7 +5,7 @@ module Hydra::SubmissionWorkflow
   
   def validate_workflow_step
     unless model_config.nil?
-      unless model_config.find{|config| config[:name] == params[:action] }.nil?
+      unless find_workflow_step_by_name(params[:action]).nil?
       #if workflow_config.has_key?(params[:action].to_sym)
         validation_method = "#{params[:action]}_#{get_af_model(:id => params[:id])}_validation".to_sym
         if self.respond_to?(validation_method) and self.send(validation_method) === false
@@ -29,7 +29,11 @@ module Hydra::SubmissionWorkflow
   end
   
   def workflow_partial_for_step(step)
-    model_config.find{|config| config[:name] == step.to_s}[:partial]
+    find_workflow_step_by_name(step)[:partial]
+  end
+  
+  def find_workflow_step_by_name(name)
+    model_config.find{|config| config[:name] == name.to_s} unless model_config.nil?
   end
   
   def model_config(options={})
