@@ -42,8 +42,8 @@ describe Hydra::SubmissionWorkflow do
       config.each do |c|
         c.is_a?(Hash).should be_true
         c.has_key?(:name).should be_true
-        c.has_key?(:partial).should be_true
-        partial_is_mods << c[:partial].include?("mods_assets")
+        c.has_key?(:edit_partial).should be_true
+        partial_is_mods << c[:edit_partial].include?("mods_assets")
       end
       partial_is_mods.include?(true).should be_true
     end
@@ -58,8 +58,8 @@ describe Hydra::SubmissionWorkflow do
       config.each do |c|
         c.is_a?(Hash).should be_true
         c.has_key?(:name).should be_true
-        c.has_key?(:partial).should be_true
-        partial_is_generic << c[:partial].include?("generic_content")
+        c.has_key?(:edit_partial).should be_true
+        partial_is_generic << c[:edit_partial].include?("generic_content")
       end
       partial_is_generic.include?(true).should be_true
     end
@@ -73,7 +73,7 @@ describe Hydra::SubmissionWorkflow do
       config.each do |c|
         c.is_a?(Hash).should be_true
         c.has_key?(:name).should be_true
-        c.has_key?(:partial).should be_true
+        c.has_key?(:edit_partial).should be_true
       end
     end
     it "should return the configuration for non mods assets (generic_content)" do
@@ -87,8 +87,8 @@ describe Hydra::SubmissionWorkflow do
       config.each do |c|
         c.is_a?(Hash).should be_true
         c.has_key?(:name).should be_true
-        c.has_key?(:partial).should be_true
-        partial_is_generic << c[:partial].include?("generic_content")
+        c.has_key?(:edit_partial).should be_true
+        partial_is_generic << c[:edit_partial].include?("generic_content")
       end
       partial_is_generic.include?(true).should be_true
     end

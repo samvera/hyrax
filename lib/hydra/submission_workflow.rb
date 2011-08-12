@@ -32,7 +32,7 @@ module Hydra::SubmissionWorkflow
   end
   
   def workflow_partial_for_step(step)
-    find_workflow_step_by_name(step)[:partial]
+    find_workflow_step_by_name(step)[:edit_partial]
   end
   
   def find_workflow_step_by_name(name)
@@ -76,16 +76,16 @@ module Hydra::SubmissionWorkflow
 
   def workflow_config
     {
-      :mods_assets =>      [{:name => "contributor",     :partial => "contributors/contributor_form"},
-                            {:name => "publication",     :partial => "mods_assets/publication_form"},
-                            {:name => "additional_info", :partial => "mods_assets/additional_info_form"},
-                            {:name => "files",           :partial => "file_assets/file_assets_form"},
-                            {:name => "permissions",     :partial => "permissions/permissions_form"}
+      :mods_assets =>      [{:name => "contributor",     :edit_partial => "contributors/contributor_form"},
+                            {:name => "publication",     :edit_partial => "mods_assets/publication_form"},
+                            {:name => "additional_info", :edit_partial => "mods_assets/additional_info_form"},
+                            {:name => "files",           :edit_partial => "file_assets/file_assets_form"},
+                            {:name => "permissions",     :edit_partial => "permissions/permissions_form"}
                            ],
-      :generic_contents => [{:name => "description", :partial => "generic_content_objects/description_form"},
-                            {:name => "files",       :partial => "file_assets/file_assets_form"},
-                            {:name => "permissions", :partial => "permissions/permissions_form"},
-                            {:name => "contributor", :partial => "contributors/contributor_form"}
+      :generic_contents => [{:name => "description", :edit_partial => "generic_content_objects/description_form"},
+                            {:name => "files",       :edit_partial => "file_assets/file_assets_form"},
+                            {:name => "permissions", :edit_partial => "permissions/permissions_form"},
+                            {:name => "contributor", :edit_partial => "contributors/contributor_form"}
                            ]
     }    
   end
