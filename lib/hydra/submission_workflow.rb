@@ -6,7 +6,7 @@ module Hydra::SubmissionWorkflow
   def validate_workflow_step
     unless model_config.nil?
       # we may want to use the workflow name instead of or in addition to the action in the validation naming convention.
-      validation_method = "#{get_af_model(:id => params[:id])}_#{params[:action]}_validation".to_sym
+      validation_method = "#{get_af_model_from_params}_#{params[:action]}_validation".to_sym
       if self.respond_to?(validation_method) and self.send(validation_method) === false
         redirect_to :back
       end
@@ -16,7 +16,7 @@ module Hydra::SubmissionWorkflow
   def next_step_in_workflow(current_step)
     unless model_config.nil?
       if current_step.blank?
-        # This first edit step won't have a wf_step param so we will need to know and pass it off to the 2nd step.
+        # The first edit step won't have a wf_step param so we will need to pass it off to the 2nd step.
         return next_step_in_workflow(first_step_in_workflow)
       else
         model_config.each_with_index do |step,i|
@@ -39,46 +39,41 @@ module Hydra::SubmissionWorkflow
     model_config.find{|config| config[:name] == name.to_s} unless model_config.nil?
   end
   
-  def model_config(options={})
-    if !@document.nil?
-      # If we have a document instance variable we can be fairly confident that is the object we are talking about.
-      _model = get_af_model
+  def model_config
+    # If we  can get it directly from solr get it there.
+    if !@document.nil? and @document.is_a?(SolrDocument)
+      _model = get_af_model_from_solr
       return workflow_config[_model] if !_model.nil? and workflow_config.has_key?(_model)
-    elsif options.has_key?(:model)
-      # If we directly provide a model just return that configuration.
-      return workflow_config[options[:model]] if workflow_config.has_key?(options[:model].to_sym)
-    elsif options.has_key?(:id) or params.has_key?(:id)
-      # If we are providing the ID of an object (or there is an ID in the params hash) load the model from solr.
-      # This will only be used in the case where we need to know the workflow of an item that we aren't actually looking at.
-      options[:id] = params[:id] if params.has_key?(:id) and !options.has_key?(:id)
-      _model = get_af_model(:id => options[:id])
-      return workflow_config[_model] if !_model.nil? and workflow_config.has_key?(_model)
+    
+    # If we can get the model from the params get it there.
+    elsif params.has_key?(:content_type) or params.has_key?(:id)
+      _model = get_af_model_from_params
+      return workflow_config[_model] if workflow_config.has_key?(_model) and !_model.nil?
     else 
-      # don't know if we even want to do this.  Just having something to fall back on for now.
-#      workflow_config
       return nil
     end
     nil
   end
   
-  def get_af_model(options={})
-    if !@document.nil?
-      # I'm a little suspicious about this.  Can I count on this naming convention?
-      if @document.is_a?(SolrDocument)
-        return @document[:has_model_s].first.gsub("info:fedora/afmodel:","").underscore.pluralize.to_sym
-      else
-        return @document.class.to_s.underscore.pluralize.to_sym
-      end
-    elsif options.has_key?(:id)
+  def get_af_model_from_params
+    if params.has_key?(:content_type)
+      return params[:content_type].pluralize.to_sym
+    else
       begin
-        af = ActiveFedora::Base.load_instance_from_solr(options[:id])
+        af = ActiveFedora::Base.load_instance_from_solr(params[:id])
         return "#{ActiveFedora::ContentModel.known_models_for( af ).first}".underscore.pluralize.to_sym
       rescue
-        return nil
+        nil
       end
     end
   end
   
+  def get_af_model_from_solr
+    @document[:has_model_s].first.gsub("info:fedora/afmodel:","").underscore.pluralize.to_sym
+  end
+
+
+
   def workflow_config
     {
       :mods_assets =>      [{:name => "contributor",     :partial => "contributors/contributor_form"},

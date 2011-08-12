@@ -42,8 +42,6 @@ describe PermissionsController do
       
       ActiveFedora::Base.expects(:load_instance).with("_pid_").returns(mock_object)
 
-      controller.expects(:get_af_model).at_least_once.with(:id => "_pid_").returns(:mods_assets)
-
       post :create, :id=>"_pid_", :permission => {"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}      
       # post :create, :asset_id=>"_pid_", :permission => {"person"=>"_person_id_","level"=>"read"}
     end
@@ -70,7 +68,6 @@ describe PermissionsController do
       
       # this is what currently works 
       # post :update, :asset_id=>"_pid_", :actor_type=>"group", :actor_id=>"_group_id_", :permission => {"group"=>"_group_id_","level"=>"discover"}
-      controller.expects(:get_af_model).at_least_once.with(:id => "_pid_").returns(:mods_assets)
       
       post :update, :id=>"_pid_", :permission => {"group"=>{"_group_id_"=>"discover"}}
     end

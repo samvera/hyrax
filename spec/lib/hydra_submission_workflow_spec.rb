@@ -47,28 +47,21 @@ describe Hydra::SubmissionWorkflow do
       end
       partial_is_mods.include?(true).should be_true
     end
-    it "should return the appropriate config when a model is provided directly" do
-      config = model_config(:model => :mods_assets)
-      config.is_a?(Array).should be_true
-      config.length.should == 5
-      config.each do |c|
-        c.is_a?(Hash).should be_true
-        c.has_key?(:name).should be_true
-        c.has_key?(:partial).should be_true
-      end
-    end
-    it "should return the appropriate config when the ID of an object is provided" do
+    it "should return the appropriate config when a model is available in the params hash" do
       @document = nil
       to = SubmissionWorkflowObject.new
-      to.stubs(:params).returns({})
-      config = to.model_config(:id => "hydrangea:fixture_mods_article1")
+      to.stubs(:params).returns({:content_type => "generic_content"})
+      config = to.model_config
       config.is_a?(Array).should be_true
-      config.length.should == 5
+      config.length.should == 4
+      partial_is_generic = []
       config.each do |c|
         c.is_a?(Hash).should be_true
         c.has_key?(:name).should be_true
         c.has_key?(:partial).should be_true
+        partial_is_generic << c[:partial].include?("generic_content")
       end
+      partial_is_generic.include?(true).should be_true
     end
     it "should return the appropriate config when the ID of an object is available in the params hash" do
       @document = nil
@@ -98,6 +91,12 @@ describe Hydra::SubmissionWorkflow do
         partial_is_generic << c[:partial].include?("generic_content")
       end
       partial_is_generic.include?(true).should be_true
+    end
+    it "should return nil if an ID is the only context available and it is not a valid object" do
+      @document = nil
+      to = SubmissionWorkflowObject.new
+      to.stubs(:params).returns(:id=>"hydra:not_an_actual_record")
+      to.model_config.should be_nil
     end
   end
   describe "before_filter validation" do
