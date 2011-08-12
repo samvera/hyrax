@@ -5,13 +5,11 @@ module Hydra::SubmissionWorkflow
   
   def validate_workflow_step
     unless model_config.nil?
-      #unless find_workflow_step_by_name(params[:action]).nil?
-      #if workflow_config.has_key?(params[:action].to_sym)
-        validation_method = "#{get_af_model(:id => params[:id])}_#{params[:action]}_validation".to_sym
-        if self.respond_to?(validation_method) and self.send(validation_method) === false
-          redirect_to :back
-        end
-      #end
+      # we may want to use the workflow name instead of or in addition to the action in the validation naming convention.
+      validation_method = "#{get_af_model(:id => params[:id])}_#{params[:action]}_validation".to_sym
+      if self.respond_to?(validation_method) and self.send(validation_method) === false
+        redirect_to :back
+      end
     end
   end
   
