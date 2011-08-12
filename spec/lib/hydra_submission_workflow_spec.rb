@@ -104,14 +104,14 @@ describe Hydra::SubmissionWorkflow do
     it "should redirect back when the validation method returns false." do
       @document = nil
       to = SubmissionWorkflowObject.new
-      to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"contributor"})
+      to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"create"})
       to.expects(:redirect_to).with(:back)
       to.validate_workflow_step
     end
     it "should not redirect when the validation method returns true." do
       @document = nil
       to = SubmissionWorkflowObject.new
-      to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"additional_info"})
+      to.stubs(:params).returns({:id=>"hydrangea:fixture_mods_article1",:action=>"update"})
       to.expects(:redirect_to).never
       to.validate_workflow_step
     end
@@ -119,10 +119,10 @@ describe Hydra::SubmissionWorkflow do
 end
 class SubmissionWorkflowObject
   include Hydra::SubmissionWorkflow
-  def contributor_mods_assets_validation
+  def mods_assets_create_validation
     return false
   end
-  def additional_info_mods_assets_validation
+  def mods_assets_update_validation
     return true
   end
 end
