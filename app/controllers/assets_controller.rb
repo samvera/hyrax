@@ -65,7 +65,7 @@ class AssetsController < ApplicationController
       flash[:notice] = "Your changes have been saved."
       
       logger.debug("returning #{response.inspect}")
-    
+      
       respond_to do |want| 
         want.html {
           redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(params[:wf_step])})
@@ -122,8 +122,7 @@ class AssetsController < ApplicationController
     
     def mods_assets_update_validation
       rights_metadata = params[:asset][:rightsMetadata]
-      
-      if rights_metadata.has_key?(:embargo_embargo_release_date)
+      if !rights_metadata.nil? and rights_metadata.has_key?(:embargo_embargo_release_date)
         unless rights_metadata[:embargo_embargo_release_date]["0"].blank?
           begin
             parsed_date = Date.parse(rights_metadata[:embargo_embargo_release_date]["0"]).to_s
