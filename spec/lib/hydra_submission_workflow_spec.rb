@@ -21,9 +21,9 @@ describe Hydra::SubmissionWorkflow do
     it "should return nil if there is no step (denoting the last step)" do
       next_step_in_workflow(:permissions).should be_nil
     end
-    it "should return the first step if the a blank current step is provided" do
-      next_step_in_workflow(nil).should == "contributor"
-      next_step_in_workflow("").should == "contributor"
+    it "should return the step after the first if a blank current step is provided (e.g. started from the first step so no wf_step param)" do
+      next_step_in_workflow(nil).should == "publication"
+      next_step_in_workflow("").should == "publication"
     end
   end
 

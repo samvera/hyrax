@@ -16,11 +16,12 @@ module Hydra::SubmissionWorkflow
   def next_step_in_workflow(current_step)
     unless model_config.nil?
       if current_step.blank?
-        return first_step_in_workflow
+        # This first edit step won't have a wf_step param so we will need to know and pass it off to the 2nd step.
+        return next_step_in_workflow(first_step_in_workflow)
       else
-      model_config.each_with_index do |step,i|
-        return model_config[i+1][:name] if step[:name] == current_step.to_s and step != model_config.last
-      end
+        model_config.each_with_index do |step,i|
+          return model_config[i+1][:name] if step[:name] == current_step.to_s and step != model_config.last
+        end
       end
     end
     nil
@@ -89,7 +90,7 @@ module Hydra::SubmissionWorkflow
       :generic_contents => [{:name => "description", :partial => "generic_content_objects/description_form"},
                             {:name => "files",       :partial => "file_assets/file_assets_form"},
                             {:name => "permissions", :partial => "permissions/permissions_form"},
-                            {:name => "contributor", :partial => "contributors/contributors_form"}
+                            {:name => "contributor", :partial => "contributors/contributor_form"}
                            ]
     }    
   end
