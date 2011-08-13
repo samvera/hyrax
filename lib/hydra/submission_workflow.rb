@@ -39,6 +39,17 @@ module Hydra::SubmissionWorkflow
     model_config.find{|config| config[:name] == name.to_s} unless model_config.nil?
   end
   
+  def previous_show_partials(current_step)
+    previous_partials = []
+    unless model_config.nil?
+      model_config.each do |config|
+        break if config[:name] == current_step.to_s
+        previous_partials << config[:show_partial]
+      end
+    end
+    previous_partials
+  end
+  
   def model_config
     # If we  can get it directly from solr get it there.
     if !@document.nil? and @document.is_a?(SolrDocument)
@@ -76,16 +87,16 @@ module Hydra::SubmissionWorkflow
 
   def workflow_config
     {
-      :mods_assets =>      [{:name => "contributor",     :edit_partial => "contributors/contributor_form"},
-                            {:name => "publication",     :edit_partial => "mods_assets/publication_form"},
-                            {:name => "additional_info", :edit_partial => "mods_assets/additional_info_form"},
-                            {:name => "files",           :edit_partial => "file_assets/file_assets_form"},
-                            {:name => "permissions",     :edit_partial => "permissions/permissions_form"}
+      :mods_assets =>      [{:name => "contributor",     :edit_partial => "contributors/contributor_form",    :show_partial => "mods_assets/show_contributors"},
+                            {:name => "publication",     :edit_partial => "mods_assets/publication_form",     :show_partial => "mods_assets/show_publication"},
+                            {:name => "additional_info", :edit_partial => "mods_assets/additional_info_form", :show_partial => "mods_assets/show_additional_info"},
+                            {:name => "files",           :edit_partial => "file_assets/file_assets_form",     :show_partial => "files_assets/index"},
+                            {:name => "permissions",     :edit_partial => "permissions/permissions_form",     :show_partial => "mods_assets/show_permissions"}
                            ],
-      :generic_contents => [{:name => "description", :edit_partial => "generic_content_objects/description_form"},
-                            {:name => "files",       :edit_partial => "file_assets/file_assets_form"},
-                            {:name => "permissions", :edit_partial => "permissions/permissions_form"},
-                            {:name => "contributor", :edit_partial => "contributors/contributor_form"}
+      :generic_contents => [{:name => "description", :edit_partial => "generic_content_objects/description_form", :show_partial => "generic_contents/show_description"},
+                            {:name => "files",       :edit_partial => "file_assets/file_assets_form",             :show_partial => "file_assets/index"},
+                            {:name => "permissions", :edit_partial => "permissions/permissions_form",             :show_partial => "generic_contents/show_permissions"},
+                            {:name => "contributor", :edit_partial => "contributors/contributor_form",            :show_partial => "generic_Contents/show_contributors"}
                            ]
     }    
   end

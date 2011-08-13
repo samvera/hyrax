@@ -33,6 +33,19 @@ describe Hydra::SubmissionWorkflow do
     end
   end
 
+  describe "previous show partials" do
+    it "should return all of the previous show partials for display in the HTML-only workflow" do
+      prev_partials = previous_show_partials(:permissions)
+      prev_partials.is_a?(Array).should be_true
+      prev_partials.length.should == 4
+      prev_partials.first.should match(/mods.*contributors/)
+      prev_partials.last.should match(/file.*index/)
+    end
+    it "should return an empty array for the first step in the workflow" do
+      previous_show_partials(:contributor).should == []
+    end
+  end
+
   describe "model specific configurations" do
     it "should return the appropriate configuration when an @document object is available" do
       config = model_config
