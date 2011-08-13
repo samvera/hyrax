@@ -41,6 +41,8 @@ module Hydra::SubmissionWorkflow
   
   def previous_show_partials(current_step)
     previous_partials = []
+    # if there is no step then we are on the first step of the workflow and don't need to display anything.
+    return previous_partials if current_step.blank?
     unless model_config.nil?
       model_config.each do |config|
         break if config[:name] == current_step.to_s

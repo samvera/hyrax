@@ -43,6 +43,7 @@ describe Hydra::SubmissionWorkflow do
     end
     it "should return an empty array for the first step in the workflow" do
       previous_show_partials(:contributor).should == []
+      previous_show_partials("").should == []
     end
   end
 
