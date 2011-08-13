@@ -39,7 +39,7 @@ describe Hydra::SubmissionWorkflow do
       prev_partials.is_a?(Array).should be_true
       prev_partials.length.should == 4
       prev_partials.first.should match(/mods.*contributors/)
-      prev_partials.last.should match(/file.*index/)
+      prev_partials.last.should match(/mods.*file_assets/)
     end
     it "should return an empty array for the first step in the workflow" do
       previous_show_partials(:contributor).should == []
