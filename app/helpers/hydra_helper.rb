@@ -152,6 +152,10 @@ module HydraHelper
        end
     end
   
+  def render_previous_workflow_steps
+    "#{previous_show_partials(params[:wf_step]).map{|partial| render partial}}"
+  end
+  
   def render_submission_workflow_step
     if params.has_key?(:wf_step)
       render workflow_partial_for_step(params[:wf_step])
