@@ -1,0 +1,22 @@
+<% unless @document_fedora.file_objects(:response_format=>:solr).hits.empty? %>
+  <h2 class="section-title">Files</h2>
+  <div class="uploads" id="uploads_<%= format_pid(params[:id]) %>">	
+    <table id="file_assets" class="multipleEdit">
+	    <tr>
+	      <th>File Name</th>
+	      <th>Size</th>
+	      <th>Uploaded</th>
+	    </tr>
+		<% @document_fedora.file_objects(:response_format=>:solr).each do |result| %>
+			<tr class="file_asset" >
+			  <td><%= link_to result[solr_name("title", :text)], file_asset_path(result["id"]) %></td>
+			  <td><%= result[solr_name("extent", :text)] %></td>
+			  <td>
+			    <% dt = DateTime.parse(result[ solr_name("system_create", :date)] ) -%>
+			    <%= format_date dt %>
+			  </td>
+			</tr>
+		<% end %>		
+	  </table>
+	</div>
+<% end %>

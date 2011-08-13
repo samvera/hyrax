@@ -1,0 +1,8 @@
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => 0}, :title_info, :main_title]).first.empty? %>
+	<fieldset>
+	  <legend>Published</legend>
+  	<div id="journal" class="browse_value">
+  	  <%= render :partial=>"mods_assets/show_journal", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:journal) %>
+  	</div>
+	</fieldset>
+<% end %>

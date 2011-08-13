@@ -1,0 +1,17 @@
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).first.empty? %>
+  <fieldset>
+    <legend>Keywords</legend>
+  	<div class="browse_value">
+  	  <%= get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).join(', ') %>
+  	</div>
+  </fieldset>
+<% end %>
+
+<% unless get_values_from_datastream(@document_fedora,"descMetadata", [:abstract]).first.empty? %>
+  <fieldset>
+    <legend>Abstract</legend>
+    <div id="abstract" class="browse_value">
+    	<%= white_list( RedCloth.new(get_values_from_datastream(@document_fedora,"descMetadata", [:abstract]).first, [:sanitize_html]).to_html) %>
+    </div>
+  </fieldset>
+<% end %>
