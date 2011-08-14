@@ -18,14 +18,14 @@
 
   <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter}, :issn]).first.empty? %>
     <div class="issn">
-	  <%= fedora_field_label("descMetadata", [{:journal => journal_counter}, :issn], "ISSN:") %>
+	  <%#= fedora_field_label("descMetadata", [{:journal => journal_counter}, :issn], "ISSN:") %>
       <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter}, :issn]) %>
     </div>
   <% end %>
 
     <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:start_page]).first.empty? %>
 	<div class="citation">
-        <%= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:start_page], "Pages:") %>
+        <%#= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:start_page], "Pages:") %>
         <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:start_page]) %>
 	    <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:end_page]).first.empty? %>
 	        - <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:end_page]) %>
@@ -35,7 +35,7 @@
     <% journal_issue_values =  get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:level]).inspect %>
     <% unless journal_issue_values.empty? || journal_issue_values.first.empty? %>
 	<div class="issue">
-        <%= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:level], "Issue:") %>
+        <%#= fedora_field_label("descMetadata", [{:journal => journal_counter},:issue,:level], "Issue:") %>
         <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => journal_counter},:issue,:level]) %>
 	</div>
     <% end %>
