@@ -28,7 +28,7 @@
 <% sidebar_items << capture do %>
   <%# = render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
   <%# = render :partial=>'facets' %>
-  <%= delete_asset_link(params[:id], "dataset").html_safe %>
+  <%= delete_asset_link(params[:id], "article").html_safe %>
 <% end %>
 
 <%= async_load_tag(asset_file_assets_path(params[:id]), 'uploads') %>
