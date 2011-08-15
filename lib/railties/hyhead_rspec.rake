@@ -28,7 +28,7 @@ begin
   namespace :hyhead do
     
     desc "Run all specs in spec directory (excluding plugin specs)"
-    RSpec::Core::RakeTask.new(:rspec => spec_prereq) do |t|
+    RSpec::Core::RakeTask.new(:spec => spec_prereq) do |t|
       # the user might not have run rspec generator because they don't
       # actually need it, but without an ./.rspec they won't get color,
       # let's insist. 
@@ -41,7 +41,7 @@ begin
     # Don't understand what this does or how to make it use our remote stats_directory
     #task :stats => "spec:statsetup"
     
-    namespace :rspec do
+    namespace :spec do
       [:requests, :models, :controllers, :views, :helpers, :mailers, :lib, :routing, :generators, :utilities].each do |sub|
         desc "Run the code examples in spec/#{sub}"
         RSpec::Core::RakeTask.new(sub => spec_prereq) do |t|
@@ -58,8 +58,8 @@ begin
       desc "Run all specs"
 			task :run => spec_prereq do
       	[:models, :controllers, :helpers, :lib, :generators, :utilities].each do |sub|
-					puts "invoking: hyhead:rspec:#{sub}"
-					Rake::Task["hyhead:rspec:#{sub}"].invoke
+					puts "invoking: hyhead:spec:#{sub}"
+					Rake::Task["hyhead:spec:#{sub}"].invoke
 				end
 			end
     
@@ -97,7 +97,7 @@ begin
         JettySolrServer.new(
           :jetty_home => File.expand_path(jetty_path, Rails.root), 
           :sleep_after_start => 2).wrap do          
-            Rake::Task["hyhead:rspec"].invoke 
+            Rake::Task["hyhead:spec"].invoke 
         end             
       end
       

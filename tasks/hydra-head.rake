@@ -43,7 +43,7 @@ namespace :hyhead do
     desc "Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded."
     task :run => :use_test_app do
 			puts "Running rspec tests"
-			puts  %x[rake hyhead:rspec:run]
+			puts  %x[rake hyhead:spec:run]
       FileUtils.cd('../../')
     end
     
@@ -225,12 +225,10 @@ namespace :hyhead do
   task :test => [:use_test_app]  do
     
     puts "Running rspec tests"
-    # TODO bundle exec
-    puts %x[rake hyhead:rspec:rcov]
+    puts %x[rake hyhead:spec:rcov]
     rspec_success = $?.success?
 
     puts "Running cucumber tests"
-    # TODO bundle exec
     puts %x[rake hyhead:cucumber]
     cucumber_success = $?.success?
 
