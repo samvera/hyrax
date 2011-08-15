@@ -7,13 +7,13 @@ Feature: Edit a document
   Scenario: Visit Document Edit Page
     Given I am logged in as "archivist1@example.com" 
     And I am on the edit document page for hydrangea:fixture_mods_article1 
-    Then I should see "ARTICLE TITLE" within "#title_fieldset"    
+    Then the "title_info_main_title" field should contain "ARTICLE TITLE" 
     And I should see a "Save Description" button
 
   Scenario: Visit Document Edit Page and see the file assets
      Given I am logged in as "archivist1@example.com" 
      And I am on the edit document page for libra-oa:1
-     Then I should see "The Smallest Victims of the " within "#title_fieldset"
+     Then the "title_info_main_title" field should contain "The Smallest Victims of the " 
 		 Then I should see "gibson.pdf" within "tr.file_asset"
 		 And I should see a delete button for "libra-oa:1"      
 

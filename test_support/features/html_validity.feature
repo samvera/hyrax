@@ -14,6 +14,7 @@ Feature: HTML validity
     
   Scenario: Search Results (unauthenticated)
     Given I am on the home page
+    Then show me the page
     When I follow "Article"
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
@@ -39,6 +40,7 @@ Feature: HTML validity
   Scenario: Record view edit (authenticated)
     Given I am logged in as "archivist1@example.com" 
     When I am on the edit document page for hydrangea:fixture_mods_article2
-    Then I should see "TITLE OF HOST JOURNAL"
+    Then show me the page
+    Then the "journal_0_title_info_main_title" field should contain "TITLE OF HOST JOURNAL" 
     Then show me the page
     And the page should be HTML5 valid

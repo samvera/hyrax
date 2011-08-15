@@ -18,18 +18,18 @@ Feature: Edit Article Contributors
     # And the "Last Name" field for "person_1" should contain "Lacks"
     # And the "Role" field for "person_1" should contain "Contributor"
     # And the "Institution" field for "person_1" should contain "Baltimore"
-    Then I should see "Henrietta"
-    And I should see "Lacks"
+    Then the "First Name" field within "#person_1" should contain "Henrietta"
+    And the "Last Name" field within "#person_1" should contain "Lacks"
     # And I should see "Contributor" within "select[rel=person_1_role_text]" # Author roles are implicit
-    And I should see "Baltimore"
+    And the "Institution" field within "#person_1" should contain "Baltimore"
     And I should see a delete contributor button for "the 2nd person entry in hydrangea:fixture_mods_article1"
     
-    Then I should see "NSF"
-    And I should see "Funder" within "select[rel=organization_0_role_text]"    
+    Then the "Organization" field should contain "NSF"
+    And I should see "Funder" within "#organization_0_role_text"    
     And I should see a delete contributor button for "the 1st organization entry in hydrangea:fixture_mods_article1"
     
-    Then I should see "some conference"
-    And I should see "Host" within "select[rel=conference_0_role_text]"    
+    Then the "conference_0_namePart" field should contain "some conference"
+    And I should see "Host" within "#conference_0_role_text"    
     And I should see a delete contributor button for "the 1st conference entry in hydrangea:fixture_mods_article1"
 
   @local
@@ -60,7 +60,7 @@ Feature: Edit Article Contributors
     And I should see "Baltimore"
     And I should not see a delete contributor button for "the 2nd person entry in hydrangea:fixture_mods_article1"
 
-    Then I should see "NSF"
+    Then the "organization_0_namePart" field should contain "NSF"
     And I should see "Funder" within "#organization_0"    
     And I should not see a delete contributor button for "the 1st organization entry in hydrangea:fixture_mods_article1"
 
