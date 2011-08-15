@@ -16,6 +16,26 @@ This is a Ruby on Rails 3 gem.
 
 h2. Installation/Setup
 
+h3. Use RVM (for your own Sanity)
+
+This isn't absolutely required, but working without RVM makes life really difficult.
+
+See "https://rvm.beginrescueend.com/rvm/install/":https://rvm.beginrescueend.com/rvm/install/ for instructions on installing and running RVM.  
+
+After installing RVM, set it up to use "rvmrc":http://beginrescueend.com/workflow/rvmrc/ files when they're available.  This will cause RVM to automatically switch Ruby versions and gemsets when you cd into different code bases.  Currently all Hydra software uses Ruby Enterprise Edition 1.8.7 (ree-1.8.7) and each component or Hydra Head uses its own gemsets (ie. hydra-head uses a gemset called hyhead,  hypatia uses a gemset called hypatia so that you can install a different set of dependencies for each. ) 
+
+For information about using and setting up RVM to use .rvmrc files, see "http://beginrescueend.com/workflow/rvmrc/":http://beginrescueend.com/workflow/rvmrc/
+
+h3. Make sure you have the right version of Ruby
+
+Currently all Hydra software uses Ruby Enterprise Edition 1.8.7 (ree-1.8.7) 
+
+If you are using RVM, you can install ree-1.8.7 with the following call:
+
+<pre>rvm install ree-1.8.7</pre>
+
+If you are not using RVM, consult the appropriate online documentation for installing Ruby on your operating system.
+
 h3. Install Rails, Bundler and Devise
 
 <pre>
@@ -43,9 +63,9 @@ Now init the git repository and add the initial set of files
   git commit -m"Initial Commit: empty rails app"
 </pre>
 
-h3. Add the blacklight and hydra-head gems:
+h3. Install Dependencies
 
-First, add them to the Gemfile of your application:
+First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your application:
 
 <pre>
   source 'http://rubygems.org'
@@ -70,12 +90,9 @@ First, add them to the Gemfile of your application:
          gem 'rspec'
          gem 'rspec-rails', '>=2.5.0'
          gem 'mocha'
-         #gem 'generator_spec'
          gem 'cucumber-rails'
          gem 'database_cleaner'
          gem 'capybara'
-         #gem 'webrat'
-         #gem 'aruba'
          gem 'bcrypt-ruby'
   end
 </pre>
@@ -86,7 +103,9 @@ To install all of the dependencies, run:
 bundle install
 </pre>
 
-This will take a _very_ long time the first time you run it.  IF you become impatient, hit Ctl+C then enter this:
+On some systems, you will have to install system libraries that various gems rely on.  For example, in order to install the curl gem on ubuntu you have to first install libcurl4-openssl-dev and then re-run bundler.
+
+Even if all of the dependencies are satisfied, this will take a _very_ long time the first time you run it.  IF you become impatient, hit Ctl+C then enter this:
 
 <pre>
   gem install blacklight
@@ -95,6 +114,24 @@ This will take a _very_ long time the first time you run it.  IF you become impa
 
 Then re-run bundle install and it will run slightly faster.
 
+h3. Advanced usage: Running against the freshest version of the hydra-head code from Github
+
+*We don't recommend this for new users or for production applications*, but it is very useful during active development.
+
+If you are in a position where you want/need to run your application with the very latest hydra-head code from Github, this is easy to do.  Simply update the line in your Gemfile that lists hydra-head as a dependency and enter this instead:
+
+<pre>
+  gem "hydra-head", :git => "git://github.com/projecthydra/hydra-head.git", :branch=>'rails3'
+</pre> 
+
+After updating the Gemfile, re-run 'bundle install'.
+
+You can also do this with other gems.  For example, if you want to force your app to use the latest active-fedora code from the "HYDRA-721" branch on GitHub, you can put this in your Gemfile:
+
+<pre>
+gem "active-fedora", :git=>'git://github.com/mediashelf/active_fedora.git', :branch=>'HYDRA-721'
+</pre>
+  
 h3. Run the generators and migrations:
 
 Run the blacklight generator
@@ -111,10 +148,6 @@ Run the database migrations
 rake db:migrate
 rake db:migrate RAILS_ENV=test
 </pre>
-  
-If you will be writing cucumber tests, run the cucumber generator
-
-<pre>rails g cucumber:install</pre>
 
 h3. Add all the generated code to the Git repository
 
@@ -122,6 +155,14 @@ h3. Add all the generated code to the Git repository
   git add .
   git commit -m"Ran Blacklight, Hydra-Head, and Cucumber Generators"
 </pre>
+
+h3. You're done.
+
+Congratulations.  You've set up the code for your Hydra Head.  
+
+Read the next section on Tools for Developing and Testing, then read "How to Get Started":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.HOW_TO_GET_STARTED.html to get a sense of what you can do with your Hydra Head.
+
+h2. Tools to Help You Develop and Test your Application
 
 h3. The Hydra Jetty
 
@@ -148,11 +189,41 @@ git submodule init
 git submodule update
 </pre>
 
-h2. Run tests to make sure everything is installed properly
+h3.  RSpec and Cucumber for Testing
 
-*TODO*
+We STRONGLY recommend that you write tests for every local change you make.  This will allow you to ensure that upgrading the core code doesn't break any local changes you have made.
 
-h2. Modifying and Testing the Gem 
+(when should it be a feature rather than a spec)
+very basic rule:  if it's testing something created with view, use a cucumber feature to test.  If it's not created by view code, use a spec to test. 
+
+h4. RSpec for Functional Tests
+
+Most Ruby projects use either RSpec or Shoulda to write and run their Functional Tests.  We use RSpec for all of the Hydra software.
+
+To set up all the files you need to use rspec to test your Rails application, simply run the rspec generator.  This will create a directory called "spec" and put all of the necessary files into it.
+
+<pre>
+    rails g rspec:install
+</pre>
+
+h4. Cucumber to Test User Experience 
+
+If you will be writing cucumber tests, run the cucumber generator.  This will create a directory called "features" and populate it with all the basic parts you need to run Cucumber tests on your Rails application.
+
+<pre>rails g cucumber:install</pre>
+
+h4.  (optional) Move everything into the test_support Directory
+
+Within the blacklight and hydra-head code bases, we have started putting all of our test-related code into a directory called test_support.  If you want to follow this convention, move the generated spec and features directories into test_support, so that you have:
+
+<pre>
+test_support/
+  features/
+  fixtures/
+  spec/
+</pre>
+
+h2. Modifying and Testing the hydra-head Gem 
 
 For those developers who want to or need to work on the hydra-head gem itself, see the "Instructions for Contributors":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.TESTING.html
 

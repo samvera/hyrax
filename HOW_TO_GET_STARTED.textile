@@ -1,12 +1,23 @@
 h1. Getting Started Building Your Own Hydra Application
 
+h2. Before You Begin 
 
 *!!! This is a WORK IN PROGRESS !!!*
 
-h3. What you will learn from this document:
+This tutorial is a work in progress.  We are actively seeking feedback.  If you run into _anything_ that is incorrect or confusing, please email the "hydra-tech":http://groups.google.com/group/hydra-tech mailing list and let us know.
 
-Set up a Hydra application (a rails app that uses the hydra-head plugin) and run it
-Define a new Content Type called JournalArticle
+*Apologies for the dust*
+
+The HTML and CSS for hydra-head are currently being overhauled in anticipation of the 3.0.0 release.  The Hydra UI group is working hard on brand new information architecture with corresponding brand-new HTML and CSS.  This work is being carried out in another branch of the hydra-head code on Github and will be merged into the prereleases of the gem as the work approaches completion.  In the meantime, if you use the pre-release versions of hydra-head, you will encounter odd HTML with broken styling.  We are aware of this.   You might think of it as a tour through a construction site where the electricity, plumbing, walls and windows are finished but the drywall, carpet, and furnishings are still being worked on.
+
+This means that the server-side code in hydra-head (Models, Controllers, Modules, and underlying libraries) is stable and ready for you to explore, but the View-level code is still in flux.
+
+If you want to use the UI infrastructure that the hydra-head gem provides, you should wait for the official 3.0.0 release before putting a lot of work into customizing and styling the HTML in your views.  In contrast, if you plan to write all of the UI for your Hydra Head from scratch and simply use the underlying infrastructure to interact with Fedora & Solr, then it's safe to proceed with development.  
+
+h2. What you will learn from this document
+
+Set up a Hydra Head (a Rails app that uses the hydra-head plugin) and run it.
+Define a new Content Type called JournalArticle.
 # Define the ActiveFedora Model for JournalArticles
 # Index JournalArticles into solr
 # Customize how JournalArticles appear in search results
@@ -15,17 +26,21 @@ Define a new Content Type called JournalArticle
 
 h2. Set up a new Hydra Head
 
-See "README":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html for instructions on creating a new Hydra Head
+See the "README":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html for instructions on creating a new Hydra Head
+
+We will be using both RSpec and Cucumber in this Tutorial., so make sure to follow the instructions in the "README":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.README.html under "RSpec and Cucumber for Testing".  
 
 h3. Starting the App out of the Box
 
 h4. (1) Migrate the development databases.
 
-From the rails application root directory:
+From the rails application root directory, run
 
 <pre>
   rake db:migrate
 </pre>  
+
+Don't worry if you've already run the migrations.  It's safe to re-run rake db:migrate.
 
 h4. (2) Start Jetty, pre-configured with Fedora and Solr
 
@@ -39,11 +54,9 @@ _Stop any copies of jetty (or anything else using port 8983) before running this
 
 This will start up a pre-configured jetty instance running Fedora and Solr on port 8983.
 
-Ensure Solr is running:  "http://localhost:8983/solr/development/admin":http://localhost:8983/solr/development/admin should show the Solr admin page.  You should be able to click on the Statistics link (or go to "http://localhost:8983/solr/development/admin/stats.jsp":http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.  Or look for documents in "http://localhost:8983/solr/development/select?q={!defType=dismax}*:*"http://localhost:8983/solr/development/select?q={!defType=dismax}*:*
+Ensure Solr is running:  "http://localhost:8983/solr/development/admin/":http://localhost:8983/solr/development/admin/ should show the Solr admin page.  You should be able to click on the Statistics link (or go to "http://localhost:8983/solr/development/admin/stats.jsp":http://localhost:8983/solr/development/admin/stats.jsp) and there should be more than 0 documents in the index if you loaded the features properly.  Or look for documents in "http://localhost:8983/solr/development/select?q={!defType=dismax}*:*"http://localhost:8983/solr/development/select?q={!defType=dismax}*:*
 
 Ensure Fedora is running:  "http://127.0.0.1:8983/fedora/describe":http://127.0.0.1:8983/fedora/describe should show the Fedora Repository Information View.  The following query should return objects:  "http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20":http://localhost:8983/fedora/objects?pid=true&title=true&terms=&query=&maxResults=20
-
-h4. (2.5) Import some Sample Content (other than fixtures??)
 
 h4. (3) Start the Rails Application
 
@@ -53,16 +66,21 @@ h4. (3) Start the Rails Application
 
 To ensure the rails app is running, go to "http://localhost:3000/":http://localhost:3000/
 
-h3. Ensure your Hydra App is set up properly
+On some systems, the http://localhost:3000 address will be broken because WEBrick binds to 0.0.0.0 rather than 127.0.0.1.  To get around this, you can tell the server which address to bind to using the -b flag.  ie. "rails server -b 127.0.0.1"  
 
-Run cucumber tests ... except they are for test, not development environment ...
+If Rails still does not seem to be working properly, consult the output on the command line to see if there are any errors.
 
-h4. Import the Fixture/Test Objects
+h3. Ensure your Hydra App is set up properly: Import Sample Content and Run Tests!
 
-Grab the test/fixture objects that the hydra-head gem's tests rely on.  These objects are useful for getting a sense of how hydra works, but you will want to delete them later and create your own 
-fixtures to run your application's tests against.
+h4. (1) Import some Sample Content
 
-First, use the hydra:hyhead_fixtures generator to put the fixture xml files into test_support/fixtures
+At some point, we hope to create actual Sample objects for hydra-head.  In the meantime, we're re-using the Fixture objects that we use to test the hydra-head gem.  These fixture objects are not designed to look nice.  Instead, they are designed to exercise various aspects of the hydra-head code.
+
+If you're interested in creating and contributing some sample objects for us to distribute with the hdyra-head code and use in this tutorial. Please email the "hydra-tech":http://groups.google.com/group/hydra-tech mailing list and let us know.
+
+The hydra-head fixture objects are useful for getting a sense of how hydra works and they will allow you to run the hydra-head gem's test suite in order to make sure that everything was set up properly.  You will want to delete these fixture objects later and create your own fixtures to run your application's tests against.
+
+First, use the hydra:hyhead_fixtures generator to copy the fixture xml files into test_support/fixtures
 
 <pre>
   rails g hydra:hyhead_fixtures
@@ -71,16 +89,20 @@ First, use the hydra:hyhead_fixtures generator to put the fixture xml files into
 Now use the hydra:fixtures:refresh rake task to import the fixtures into Fedora and Solr
 
 <pre>
-  rake hydra:fixtures:refresh RAILS_ENV=test
-</pre>
-
-If you want to see the fixture objects in your development environment, run the rake task again without RAILS_ENV set.
-
-<pre>
   rake hydra:fixtures:refresh 
 </pre>
 
-h4. Run the Hydra-Head gem's RSpec Tests
+You must run this a second time to load the fixtures into the copies of Fedora & Solr that your tests use.
+
+<pre>
+  rake hydra:fixtures:refresh RAILS_ENV=test
+</pre>
+
+*IMPORTANT*  If you look in config/fedora.yml and config/solr.yml, you will see that these files point to different urls for development, test, and production.  This allows you to keep test data, development data, and production data separate by setting the _Rails environment_ accordingly.  Rails defaults to using the _test_ environment when you run tests and using the _development_ environment when you run the app using "rails server".  
+
+We want these fixture objects to be available in both environments because we want to run tests against them and we want to poke through them in our browser.  That's why we imported the fixtures once without RAILS_ENV set (defaults to 'development') and once with RAILS_ENV set to test.
+
+h4. (2) Run the Hydra-Head gem's RSpec Tests
 
 <pre>
   rake hyhead:spec
@@ -94,7 +116,7 @@ This will print out a lot of information while the tests run.  If all the tests 
   240 examples, 0 failures, 19 pending
 </pre>
 
-h4. Run the Hydra-Head gem's Cucumber Tests
+h4. (3) Run the Hydra-Head gem's Cucumber Tests
 
 Before running the cucumber tests, you have to remove the default index.html file that Rails provides
 
@@ -118,15 +140,22 @@ This will print out a lot of information while the tests run.  If all the tests 
 
 h3. Exploring what comes out of the box
 
-* log in, create sample account
-* use facets
-* run a search
-* look at one of the sample objects
-* edit one of the sample objects
-* create a new MODS article …
-* upload a file …
-* change the permissions on the new article, making it visible to the public (before setting permissions, prove that you can’t see it when logged out, then change permissions, log out again & prove that it’s visible)
+h4. (1) Create a User Account and Log into the Hydra Head  
 
+Blacklight & the hydra-head plugin provide a basic user authentication that is meant to be replaced by code that connects to your institutional authentication system like LDAP or Shibboleth.  While setting up this sample hydra-head, you need to create user accounts in that system.  To do this, run the application, visit http://localhost:3000 and click on "login" then click on "create an account" below the login form.  
+
+In many of the hydra-head fixtures and in some of the examples below, we gave "edit" permissions to a user called "archivist1@example.com", so create an account with that login id.  Choose whatever email & password you want.  Now you can log in as that user when you want to use features that require you to be logged into the hydra head.
+
+h4. (2) Explore the Application
+
+* Create sample account & log in: _use archivist1@example.com as the email address.  This user has access to read and edit most of the fixtures you loaded when you ran 'rake hydra:fixtures:refresh'_
+* Use facets to browse the content: example: Drill down to all of the assets associated with "TOPIC 1"
+* Run a search. Example: search for "article"
+* Look at one of the sample objects
+* Edit one of the sample objects: some of the objects will display an "edit" link.  Click on that to edit the document.  Edit some of the Descriptive Metadata and then click "Save Description", then Edit the Permissions and click "Save Permissions"
+* Create a new MODS article by clicking "Add a Basic MODS Asset"
+* Upload a file …
+* Change the permissions on the new article, making it visible to the public (before setting permissions, prove that you can’t see it when logged out, then change permissions, log out again & prove that it’s visible)
 
 h2. Making local changes to your Hydra Application
 
@@ -175,7 +204,7 @@ The first thing to do when adding a new content type is to create the ActiveFedo
 
 The model we create can be used in any application with ActiveFedora and OM (Opinionated Metadata), not just in a Hydra Head.  For example, ActiveFedora models can be used in batch scripts, command line utilities, and robots that perform automated actions on your fedora objects based on information and behaviors stored in their ActiveFedora models.
 
-h4. Where to find the full tutorial on defining ActiveFedora Models
+h3. Where to find the full tutorial on defining ActiveFedora Models
 
 This tutorial will only cover the very basics of defining an ActiveFedora Model and defining OM terminologies for its XML datastreams.  For a complete introduction to those topics, see the  "ActiveFedora Console Tour":http://hudson.projecthydra.org/job/active_fedora/Documentation/file.CONSOLE_GETTING_STARTED.html and the tutorials included in the "OM documentation":http://hudson.projecthydra.org/job/om/Documentation/.
 
@@ -193,7 +222,7 @@ A Fedora object is made up of any number of _datastreams_.  Datastreams can have
 
 For our JournalArticle model, we're particularly interested datastreams with XML content because a JournalArticle object is basically a container for XML metadata.  The actual content of the Article (PDF,text,whatever.) will be stored in a separate Fedora object, a _primitive_, with the RDF isPartOf relationship connecting the JournalArticle (primarily metadata) to its content (any number of primitives with files in them).  For more information about datastreams, primitives, and where the actual content of an object lives, see the Reference links at the end of this tutorial.
 
-h3. descMetadata -- the Descriptive Metadata Datastream
+h4. descMetadata -- the Descriptive Metadata Datastream
 
 Our MODS xml will go into a datastream with the datastream id of _descMetadata_.  Technically, we could give it any name we want but the Hydra community has come up with some conventions to make things simpler.  One of these conventions is to always put descriptive metadata in a datastream called descMetadata.
 
@@ -238,11 +267,11 @@ Example of the MODS XML we will be creating:
 
 The constraints of a metadata schema sometimes force us to put information into structures that don't map directly to the vocabulary that we use when talking about that information.  The "title" has ended up in a spot that you might call the "mods titleInfo title" and the "start page" has ended up in a spot that you might call the <pre>"mods host-relatedItem part pages-extent start"</pre> or <pre>"//mods/relatedItem[@type=host]/part/extent[@unit='pages']/start"</pre> ... quite the mouthful, isn't it?  This is where OM comes in.  OM lets us define a Terminology that will allow us to access values in the xml based on our natural vocabulary (title, start page, etc.) while also allowing us to access those same values using the more cumbersome XML-speak when necessary.
 
-h4. WRITE TESTS HERE!  (for the expected behaviors of a descMetadata datastream model?)
+h5. WRITE TESTS HERE!  (for the expected behaviors of a descMetadata datastream model?)
 
 specs to test model?  features?
 
-h4. Coding the descMetadata Datastream model
+h5. Coding the descMetadata Datastream model
 
 Here's how we define the datastream class for the descMetadata.  Notice that we use set_terminology which defines its OM Terminology.  
 
@@ -303,7 +332,7 @@ This will allow you to access the metadata values like this when dealing with a 
 
 <b>(CAN WE DO TESTING NOW?  OR DO WE NEED TO DEAL WITH THE ENTIRE FEDORA OBJECT BEFORE TESTING?)</b>
 
-h3. rightsMetadata -- The Hydra Rights Metadata Datastream
+h4. rightsMetadata -- The Hydra Rights Metadata Datastream
 
 The hydra-head plugin provides a class definition for the rightsMetadata datastream, so you won't have to define the OM Terminology yourself.  The definition is in the hydra-head plugin code in "lib/hydra/rights_metadata.rb":https://github.com/projecthydra/hydra-head/blob/master/lib/hydra/rights_metadata.rb.
 
@@ -348,11 +377,11 @@ Here's an example of what rightsMetadata XML looks like:
   </rightsMetadata>
 </pre>
 
-h3. RELS-EXT & DC Datastreams (Fedora defaults)
+h4. RELS-EXT & DC Datastreams (Fedora defaults)
 
 There are two special datastreams that Fedora creates for you -- the DC datastream and the RELS-EXT datastream.  We don't really use the DC datastream.  It contains simple Dublin Core metadata that mainly exists for Fedora's internal use.  The RELS-EXT datastream contains RDF representing the relationships between the objects in a Fedora repository.  ActiveFedora and Hydra both use these RDF relationships in a number of ways.  For more information about how to work with RDF relationships in ActiveFedora, see the ActiveFedora documentation links at the end of this tutorial.
 
-h2. Defining the Model and adding the Datastreams to it
+h3. Defining the Model and adding the Datastreams to it
 
 <b><i>Create a file in app/models called journal_article.rb</i></b> and put these lines into it:
 
@@ -369,27 +398,31 @@ end
 <b>(CAN WE DO TESTING NOW?)</b>
 
 
-h2. Test Your Work
+h3. Test Your Work
 
 <b>THE TESTS WE WROTE ABOVE SHOULD PASS NOW ...</b>
 
 (specs?  if features ... jetty must be running?)
 
-h2. Loading your new Model in the Rails App
+h3. Loading your new Model in the Rails App
 
-If you have put the new files you've created into app/models and/or the lib directory, then they will be automatically loaded by the application when you run it using script/server or script/console.
+If you have put the new files you've created into app/models and/or the lib directory, then they will be automatically loaded by the application when you run it using 'rails server' or 'rails console'.
 
-h2. Creating new JournalArticle Objects
+h2. Play with JournalArticle objects in the Rails Console
 
-Start up Fedora and Solr on port 8983, assuming they are not already running:
+First, rather than using the UI of the Rails app, let's interact directly with the code for a bit.
+
+If they are not already running, start up Fedora and Solr on port 8983:
 
 <pre>rake hydra:jetty:start</pre>
 
-Create a JournalArticle object using the console (rather than from the UI of the rails app)
+Now bring up the Rails console (command line interface for interacting with your Rails app)
 
-<pre>script/console</pre>
+<pre>rails console</pre>
 
-Type these lines at the console command line:
+h3. (1) Create a new JournalArticle Object
+
+In the console, create a JournalArticle object by entering these lines:
 
 <pre>
   article = JournalArticle.new
@@ -402,9 +435,34 @@ Type these lines at the console command line:
   article.relationships
 </pre>
 
-h2.  Getting metadata into JournalArticle Objects
+h3. (2) Set Basic Access Controls on the JournalArticle Object
 
-h2. Index JournalArticles into Solr
+The access controls in the hydra-head plugin work on the assumption that you will put your access controls information into a datastream called rightsMetadata and then index the values from that datastream into Solr.  The plugin provides all the tools that you need in order to do this.  Most of the work is handled for you by this line in your model:
+
+<pre>
+  has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
+</pre>
+
+The plugin defaults to *denying access* when the permissions are unclear.  This means that in cases where there is no rightsMetadata datastream or the information in the datastream is unclear or incomplete, the Hydra head will act like the object does not exist.  _The object will not show up in search results and you will not be able to view it._
+
+To give yourself permission to view and edit an object, you need to set those permissions.  For example, if we want the object to show up in search results for everyone but we only want a user called archivist1@example.com to edit it, we can do the following:
+
+<pre>
+  article = JournalArticle.load_instance("changeme:30")
+  article.permissions({"group"=>"public"}, "read")
+  article.permissions({"person"=>"archivist1"}, "edit")
+  article.save
+</pre>
+
+hydra-head provides you with tools to expose a permissions editor to your end-users.  This allows them to control who can discover/read/download/edit the objects they create.
+
+h2. (3) Explicitly Save the Changes into Fedora
+
+Any time you change an object, you must tell the application when to save those changes to Fedora by calling .save
+
+<pre>article.save</pre>
+
+h3. (3) Explicitly Index the JournalArticle into Solr
 
 By default, ActiveFedora automatically updates Solr whenever you save an object to Fedora.  If you want to re-index it, all you have to do is load an instance of the object and call its update_index method.  For example, if you wanted to update an object that has a pid "changeme:30", you could do it like this:
 
@@ -421,34 +479,7 @@ In reality, when you want to re-index an object in Solr, you should use Solrizer
 
 Solrizer is able to figure out how to index XML based on the OM Terminologies you've defined.  It defaults to indexing nearly everything in generic ways, but there are many ways to customize this behavior. See the "Solrizer Documentation":http://hudson.projecthydra.org/job/solrizer/Documentation/ for more information about how it works.
 
-h2. Basic Access Controls
-
-The access controls in the hydra-head plugin work on the assumption that you will put your access controls information into a datastream called rightsMetadata and then index the values from that datastream into Solr.  The plugin provides all the tools that you need in order to do this.  Most of the work is handled for you by this line in your model:
-
-<pre>
-  has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
-</pre>
-
-The plugin defaults to *denying access* when the permissions are unclear.  This means that in cases where there is no rightsMetadata datastream or the information in the datastream is unclear or incomplete, the Hydra head will act like the object does not exist.  _The object will not show up in search results and you will not be able to view it._
-
-To give yourself permission to view and edit an object, you need to set those permissions.  For example, if we want the object to show up in search results for everyone but we only want a user called archivist1 to edit it, we can do the following:
-
-<pre>
-  article = JournalArticle.load_instance("changeme:30")
-  article.permissions({"group"=>"public"}, "read")
-  article.permissions({"person"=>"archivist1"}, "edit")
-  article.save
-</pre>
-
-hydra-head provides you with tools to expose a permissions editor to your end-users.  This allows them to control who can discover/read/download/edit the objects they create.
-
-h2. Logging into the Hydra Head and creating a User Account
-
-Blacklight & the hydra-head plugin provide a basic user authentication that is meant to be replaced by code that connects to your institutional authentication system like LDAP or Shibboleth.  While setting up this sample hydra-head, you need to create user accounts in that system.  To do this, run the application, visit http://localhost:3000 and click on "login" then click on "create an account" below the login form.  
-
-In thes sample above, we gave "edit" permissions to a user called "archivist1", so create an account with that login id.  Choose whatever email & password you want.  Now you can log in as that user when you want to test features that require you to be logged into the hydra head.
-
-h2. Defining Custom Views
+h2. Defining Custom Views for JournalArticles
 
 Now that you've created a couple objects and indexed them, you can view them in the application.  Remember, _objects will not show up in search results unless the permissions are set properly in rightsMetadata_.
 
@@ -507,18 +538,11 @@ rendering file uploader
 
 h3. The File List
 
-
 -- show & edit
-
-h2. Access Controls (Example)
-
-
-Create an object, edit permissions, see that permissions have changed.
 
 h2. Miscellaneous
 
 
-* Adding a Facet
 * Link to info on overriding styling
 * Overriding Helpers
 
