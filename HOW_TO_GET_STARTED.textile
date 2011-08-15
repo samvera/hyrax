@@ -456,13 +456,13 @@ To give yourself permission to view and edit an object, you need to set those pe
 
 hydra-head provides you with tools to expose a permissions editor to your end-users.  This allows them to control who can discover/read/download/edit the objects they create.
 
-h2. (3) Explicitly Save the Changes into Fedora
+h3. (3) Explicitly Save the Changes into Fedora
 
 Any time you change an object, you must tell the application when to save those changes to Fedora by calling .save
 
 <pre>article.save</pre>
 
-h3. (3) Explicitly Index the JournalArticle into Solr
+h3. (4) Explicitly Index the JournalArticle into Solr
 
 By default, ActiveFedora automatically updates Solr whenever you save an object to Fedora.  If you want to re-index it, all you have to do is load an instance of the object and call its update_index method.  For example, if you wanted to update an object that has a pid "changeme:30", you could do it like this:
 
