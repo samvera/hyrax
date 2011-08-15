@@ -53,4 +53,3 @@ DatabaseCleaner.strategy = :transaction
 # warning: regexp match /.../n against to UTF-8 string
 $VERBOSE = nil
 
-

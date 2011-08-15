@@ -104,10 +104,6 @@ begin
       end      
       
     end
-    
-    desc 'Alias for hyhead:cucumber:ok'
-    task :cucumber => 'hyhead:cucumber:ok'
-        
   end
 
 

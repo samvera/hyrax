@@ -51,7 +51,6 @@ module HydraFedoraMetadataHelper
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
       processed_field_value = Sanitize.clean( RedCloth.new(current_value, [:sanitize_html]).to_html, Sanitize::Config::BASIC)
-      body << "CURRENT VALUE: #{current_value} <br/><br/>".html_safe
       
       body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">".html_safe
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.

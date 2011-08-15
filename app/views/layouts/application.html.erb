@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 
 <!--[if lt IE 7 ]> <html class="ie6"> <![endif]--> 
@@ -12,13 +11,13 @@
     <meta charset="utf-8" />
 
     <title><%= h(@page_title || application_name) %></title>
-    <link href="<%= opensearch_catalog_url(:format => 'xml') %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
+    <link href="<%= url_for :controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
     
     <%= render_head_content %>
 
 		<!--[if IE]>
-    	<%= stylesheet_link_tag('hydra/ie-styles', {:media=>'all'}) %>
-    	<%= stylesheet_link_tag('progressBox-ie6.css', {:media=>'all'}) %>
+    	<%= stylesheet_link_tag('hydra/ie-styles', {:plugin=>"hydra-head", :media=>'all'}) %>
+    	<%= stylesheet_link_tag('progressBox-ie6.css', {:plugin=>"hydra-head", :media=>'all'}) %>
 		<![endif]-->
 	</head>
   
@@ -36,7 +35,7 @@
         <%= render :partial=>'/flash_msg' %>
         <%= yield %>
       </div>
-      <div class="yui-b sidebar"><%= sidebar_items.join('').html_safe %></div>	
+      <div class="yui-b sidebar"><%= sidebar_items.join('') %></div>	
 	  </div>
 	    
 	    
@@ -46,7 +45,7 @@
 			    <div class="aux_links"> </div>
 				<div id="footer_notices">
 					<div id="bottom_text">
-						<div id="hydra_logo"><%= image_tag('powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
+						<div id="hydra_logo"><%= image_tag('powered_by_hydra.png', :plugin=>"hydra-head", :width => 80, :height => 50, :alt => "Hydra logo") %></div>
 					</div>
 				</div>
 			</div>
@@ -56,17 +55,3 @@
   </body>
 
 </html>
-=======
-
-<% content_for :content do %>
-
-  <%= stylesheet_link_tag("hydra-head") %>
-  
-  <div class="red_border">
-    <%= yield %>
-  </div>
-
-<% end -%>
-
-<%= render :file => 'layouts/application' %>
->>>>>>> rails3

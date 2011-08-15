@@ -35,8 +35,6 @@ module Hydra::Catalog
     klass.helper :article_metadata
   end
   
-  
-
   def edit
     show
     render "show"
