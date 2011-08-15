@@ -4,7 +4,31 @@ h2. General Introduction/Tutorial
 
 The "HOW_TO_GET_STARTED":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.HOW_TO_GET_STARTED.html tutorial includes a detailed section on defining a JournalArticle model.  Read that to get a sense of how to create a working Hydra Model.
 
-h2. Depositor/Owner Permissions
+h2. Steps to Defining Your Model
+
+# Pick xml schema(s)
+# Create "fixture" XML
+# Define or reuse OM Terminologies & Datastream Classes for your XML
+# Write rspec tests for your Datastream classes
+# Define the Model
+# Write rspec tests for your Model 
+# Decide what relationships your Model will have & which predicates to use
+# Add relationship methods to your Model
+
+Set up rightsMetadata and Depositor/Owner Permissions 
+# make sure objects have a rightsMetadata datastream
+# include Hydra::ModelMethods in your model
+
+OM Topics:
+
+* namespaces
+* Indexing
+** index_as
+** suppressing fields
+** advanced indexing with custom solr schemas (:displayable and :searchable)
+* retrieving Terms & Values
+
+h2. rightsMetadata and Depositor/Owner Permissions
 
 Two steps are necessary in order to ensure that your controllers will be able to set the permissions on your Assets.  If you don't follow these steps, users will be able to create objects but won't be able to edit them.
 

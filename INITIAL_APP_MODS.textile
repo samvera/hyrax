@@ -2,13 +2,14 @@ h1. Initial Modifications to Your Own Hydra Application
 
 This document explains how to make two basic changes to your hydra rails application and how to write the appropriate tests for them.
 
-h3. What you will learn from this document:
+h2. What you will learn from this document:
 
 # How to Write a Simple Spec (an RSpec test)
 # How to Change the Rails Application Name of Your Hydra Application
 # How to Write a Simple Cucumber Feature
 # How to Change the Home Page Text for Your Hydra Application
-
+# How to Change the Facets displayed for Limiting your Search
+# How to Override a Helper Method
 
 h2. Making local changes to your Hydra Application
 
@@ -25,87 +26,7 @@ The two key points:
 # always change code at the app level, and never change anything in vendor/plugins.
 </b>
 
-h3.  tests tests tests
-
-We STRONGLY recommend that you write tests for every local change you make.  This will allow you to ensure that upgrading the core code doesn't break any local changes you have made.
-
-(when should it be a feature rather than a spec)
-very basic rule:  if it's testing something created with view, use a cucumber feature to test.  If it's not created by view code, use a spec to test. 
-
-h4. Run generator for specs
-
-To create the infrastructure pieces to write specs:
-
-<pre>
-  ./script/generate rspec
-</pre>
-
-h4. Run generator for features
-
-To create the infrastructure pieces to write cucumber features:
-
-<pre>
-  ./script/generate cucumber
-</pre>
-
-
 h3. Easy Changes for Practice.
-
-h3. Changing the Facets
-
-h4. Write the cucumber tests for the facets you want
-
-Create a file in your features directory called homepage_facets.feature and put the following feature description in it.  Note that this cucumber test is assuming you have imported the Hydra sample/fixture objects.
-
-<pre>
-  Feature: Homepage Facets
-  I want the home page to include the facets I chose
-
-  Scenario: home page facets
-    When I am on the home page
-    Then I should see "Fedora Model"
-    And I should see "info:fedora/afmodel:ModsAsset"
-    Then I should see "Topic"
-    Then I should see "Journal"
-    And I should see "The Journal of Mock Object"
-    And I should see "Pediatric Nursing"
-    Then I should see "Conference"
-    And I should see "some conference Host"
-</pre>
-
-Now run the test and watch it fail
-
-<pre>
-  cucumber features
-</pre> 
-
-h4. Modify blacklight_config.rb to use the facets you want
-
-In config/initializers/blacklight_config.rb, find the section that begins "config[:facet] =" (around line 45) and replace it with this:
-
-<pre>
-  config[:facet] = {
-    :field_names => (facet_fields = [
-      "has_model_s",
-      "subject_topic_facet",
-      "journal_title_info_main_title_facet",
-      "conference_facet"
-    ]),
-    :labels => {
-      "has_model_s" => "Fedora Model",
-      "subject_topic_facet" => "Topic",
-      "journal_title_info_main_title_facet" => "Journal",
-      "conference_facet" => "Conference"
-    },
-</pre>
-
-Now run the test and watch it pass!
-
-<pre>
-  cucumber features
-</pre>
-
-To see the changes for yourself, restart the application.
 
 h3. Changing the Home Text (also Demonstrates Writing a Feature)
 
@@ -167,6 +88,69 @@ h4. (4) Run the test - it should now pass
 
 Now when you run the feature, it should pass.  If it doesn't, iterate until it does.
 
+h3. Changing the Facets
+
+h4. (1) Write the test.
+
+Write the cucumber tests for the facets you want
+
+Create a file in your features directory called homepage_facets.feature and put the following feature description in it.  Note that this cucumber test is assuming you have imported the Hydra sample/fixture objects.
+
+<pre>
+  Feature: Homepage Facets
+  I want the home page to include the facets I chose
+
+  Scenario: home page facets
+    When I am on the home page
+    Then I should see "Fedora Model"
+    And I should see "info:fedora/afmodel:ModsAsset"
+    Then I should see "Topic"
+    Then I should see "Journal"
+    And I should see "The Journal of Mock Object"
+    And I should see "Pediatric Nursing"
+    Then I should see "Conference"
+    And I should see "some conference Host"
+</pre>
+
+h4. (2) Run the test - it should fail
+
+Now run the test and watch it fail
+
+<pre>
+  cucumber features
+</pre> 
+
+h4. (3) Change the code
+
+Modify blacklight_config.rb to use the facets you want.
+
+In config/initializers/blacklight_config.rb, find the section that begins "config[:facet] =" (around line 45) and replace it with this:
+
+<pre>
+  config[:facet] = {
+    :field_names => (facet_fields = [
+      "has_model_s",
+      "subject_topic_facet",
+      "journal_title_info_main_title_facet",
+      "conference_facet"
+    ]),
+    :labels => {
+      "has_model_s" => "Fedora Model",
+      "subject_topic_facet" => "Topic",
+      "journal_title_info_main_title_facet" => "Journal",
+      "conference_facet" => "Conference"
+    },
+</pre>
+
+h4. (4) Run the test - it should now pass
+
+Now run the test and watch it pass!
+
+<pre>
+  cucumber features
+</pre>
+
+To see the changes for yourself, restart the application.
 
 h3. Overriding a Helper Method (also Demonstrates Writing a Spec)
 
