@@ -23,71 +23,47 @@ describe HydraFedoraMetadataHelper do
   describe "fedora_text_field" do
     it "should generate a text field input with values from the given datastream" do
       generated_html = helper.fedora_text_field(@resource,"ng_ds",[:title, :main_title])
-      generated_html.should have_selector "#title_main_title_0-container.editable-container" do |container|
-        container.should have_selector "span#title_main_title_0-text.editable-text.text", "My Title"
-        container.should have_selector "input#title_main_title_0.editable-edit.edit" do |input|
-          input.should have_selector "[value=?]", "My Title"
-          input.should have_selector "[name=?]", "asset[ng_ds][title_main_title][0]"
-          input.should have_selector "[data-datastream-name=?]", "ng_ds" 
-          input.should have_selector "[rel=?]", "title_main_title"
-        end
+      generated_html.should have_selector "input.fieldselector" do |tag|
+        tag.should have_selector "[value=?]", "title"
+        tag.should have_selector "[value=?]", "main_title"
+      end
+      generated_html.should have_selector "input#title_main_title_0.editable-edit.edit" do |tag|
+        tag.should have_selector "[value=?]", "My Title"
+        tag.should have_selector "[name=?]","asset[ng_ds][title_main_title][0]"
+        tag.should have_selector "[data-datastream-name=?]", "ng_ds" 
       end
     end
     it "should generate an ordered list of text field inputs" do
       generated_html = helper.fedora_text_field(@resource,"simple_ds","subject")
-      generated_html.should have_selector "ol[rel=subject]" do |tag|
-        tag.should have_selector "li#subject_0-container.editable-container.field" do |tag|
-          tag.should have_selector "a.destructive.field"
-          tag.should have_selector "span#subject_0-text.editable-text.text", "topic1"
-          tag.should have_selector "input#subject_0.editable-edit.edit" do |tag|
-            tag.should have_selector "[value=?]", "topic1"
-            tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
-          end
-        end
-        tag.should have_selector "li#subject_1-container.editable-container.field" do |tag|
-          tag.should have_selector "a.destructive.field"
-          tag.should have_selector "span#subject_1-text.editable-text.text", "topic2"
-          tag.should have_selector "input#subject_1.editable-edit.edit" do |tag|
-            tag.should have_selector "[value=?]", "topic2"
-            tag.should have_selector "[name=?]", "asset[simple_ds][subject][1]"
-          end
-        end
+      generated_html.should have_selector "input#subject_0.editable-edit.edit" do |tag|
+        tag.should have_selector "[value=?]", "topic1"
+        tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
       end
+      generated_html.should have_selector "input#subject_1.editable-edit.edit" do |tag|
+        tag.should have_selector "[value=?]", "topic2"
+        tag.should have_selector "[name=?]", "asset[simple_ds][subject][1]"
+      end
+      generated_html.should have_selector "a.destructive.field"
       generated_html.should have_selector "input", :class=>"editable-edit", :id=>"subject_1", :name=>"asset[simple_ds][subject_1]", :value=>"topic9"                                                                                        
       generated_html.should be_html_safe
     end
     it "should render an empty control if the field has no values" do
-      helper.fedora_text_field(@resource,"empty_ds","something").should have_selector "li#something_0-container.editable-container" do |tag|
-        tag.should have_selector "#something_0-text.editable-text.text", ""
-      end
+      helper.fedora_text_field(@resource,"empty_ds","something").should have_selector "#something_0.editable-edit.edit", :value=>''
     end
     it "should limit to single-value output with no ordered list if :multiple=>false" do
       generated_html = helper.fedora_text_field(@resource,"simple_ds","subject", :multiple=>false)
-      generated_html.should_not have_selector "ol"
-      generated_html.should_not have_selector "li"
-      
-      generated_html.should have_selector "span#subject-container.editable-container.field" do |tag|
-        tag.should have_selector "span#subject-text.editable-text.text", "topic1"
-        tag.should have_selector "input#subject.editable-edit.edit[value=topic1]" do |tag|
-          tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
-        end
+      generated_html.should have_selector "input#subject.editable-edit.edit[value=topic1]" do |tag|
+        tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
       end
     end
   end
   
   describe "fedora_text_area" do
     it "should generate an ordered list of textile-enabled text area with values from the given datastream" do
-      helper.fedora_text_area(@resource,"simple_ds","subject").should have_selector "ol[rel=subject]" do |tag|
-        tag.should have_selector "li#subject_0-container.field" do |tag|
-          tag.should_not have_selector "a.destructive.field"
-          tag.should have_selector "span#subject_0-text.editable-text.text[style=display:none;]", "topic1"
-          tag.should have_selector "textarea#subject_0.editable-edit.edit", "topic1"
-        end 
-        tag.should have_selector "li#subject_1-container.field" do |tag|
-          tag.should have_selector "span#subject_1-text.editable-text.text[style=display:none;]","topic2"
-          tag.should have_selector "textarea#subject_1.editable-edit.edit", "topic2"
-        end 
-      end
+      generated_html = helper.fedora_text_area(@resource,"simple_ds","subject")
+      generated_html.should have_selector "textarea#subject_0.editable-edit.edit", :value=>"topic1"
+      generated_html.should have_selector "textarea#subject_1.editable-edit.edit", :value=>"topic2"
+      generated_html.should have_selector "a.destructive.field"
     end
     it "should render an empty control if the field has no values" do      
       helper.fedora_text_area(@resource,"empty_ds","something").should have_selector "li#something_0-container.field" do |tag|

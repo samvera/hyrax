@@ -43,7 +43,7 @@ namespace :hyhead do
     desc "Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded."
     task :run => :use_test_app do
 			puts "Running rspec tests"
-			puts  %x[rake hyhead:spec:run]
+			puts  %x[rake hyhead:rspec:run]
       FileUtils.cd('../../')
     end
     

@@ -10,31 +10,21 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key)
     field_values = get_values_from_datastream(resource, datastream_name, field_key, opts)
     field_values = [""] if field_values.empty?
-    if opts.fetch(:multiple, true)
-      container_tag_type = :li
-    else
-      field_values = [field_values.first]
-      container_tag_type = :span
-    end
+    field_values = [field_values.first] unless opts.fetch(:multiple, true)
     
+    required = opts.fetch(:required, true) ? "required" : ""
+
     body = ""
     
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
-      body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">"
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" name=\"#{name}\" value=\"#{h(current_value.strip)}\" #{required} type=\"text\" />"
         body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" if opts.fetch(:multiple, true) && !current_value.empty?
-        body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{h(current_value.lstrip)}</span>"
-        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" value=\"#{h(current_value.lstrip)}\"/>"
-      body << "</#{container_tag_type}>"
-    end
-    result = field_selectors_for(datastream_name, field_key)
-    if opts.fetch(:multiple, true)
-      result << content_tag(:ol, body.html_safe, :rel=>field_name)
-    else
-      result << body
     end
     
+    result = field_selectors_for(datastream_name, field_key)
+    result << body
     result.html_safe
   end
   
@@ -61,19 +51,20 @@ module HydraFedoraMetadataHelper
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
       processed_field_value = Sanitize.clean( RedCloth.new(current_value, [:sanitize_html]).to_html, Sanitize::Config::BASIC)
+      body << "CURRENT VALUE: #{current_value} <br/><br/>".html_safe
       
       body << "<#{container_tag_type.to_s} class=\"editable-container field\" id=\"#{base_id}-container\">".html_safe
         # Not sure why there is we're not allowing the for the first textile to be deleted, but this was in the original helper.
         body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>".html_safe unless z == 0
         body << "<span class=\"editable-text text\" id=\"#{base_id}-text\" style=\"display:none;\">#{processed_field_value}</span>".html_safe
-        body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" name=\"#{name}\" rows=\"10\" cols=\"25\">#{h(current_value)}</textarea>".html_safe
+        body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" name=\"#{name}\" rows=\"10\" cols=\"25\">#{h(current_value)}</textarea>".html_safe
       body << "</#{container_tag_type}>".html_safe
     end
     
     result = field_selectors_for(datastream_name, field_key)
     
     if opts.fetch(:multiple, true)
-      result << content_tag(:ol, body.html_safe, :rel=>field_name)
+      result << content_tag(:ol, body.html_safe)
     else
       result << body
     end
@@ -94,11 +85,11 @@ module HydraFedoraMetadataHelper
       body = ""
       z = 0
       base_id = generate_base_id(field_name, field_values.first, field_values, opts.merge({:multiple=>false}))
-      name = "asset[#{datastream_name}][#{field_name}][#{z}]".html_safe
+      name = "asset[#{datastream_name}][#{field_name}][#{z}]"
 
-      body << "<select name=\"#{name}\" class=\"metadata-dd select-edit\" id=\"#{field_name}\" rel=\"#{field_name}\">".html_safe
+      body << "<select name=\"#{name}\" class=\"metadata-dd select-edit\" id=\"#{field_name}\">"
         body << options_for_select(choices, field_values)
-      body << "</select>".html_safe
+      body << "</select>"
       
       result = field_selectors_for(datastream_name, field_key)
       result << body.html_safe
@@ -130,18 +121,18 @@ module HydraFedoraMetadataHelper
     year_options.insert(0, ["Year", "-1"])
     
     body = ""
-    body << "<div class=\"date-select\" name=\"#{name}\" rel=\"#{field_name}\">".html_safe
-      body << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{base_id}-sel-y\" name=\"#{base_id}-sel-y\" maxlength=\"4\" value=\"#{year}\" />".html_safe
-      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-mm\" name=\"#{base_id}-sel-mm\">".html_safe
-        body << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
-                                      ["April", "04"],["May", "05"],["June", "06"],["July", "07"],["August", "08"],
-                                      ["September", "09"],["October", "10"],["November", "11"],["December", "12"]
-                                      ], month)
-      body << "</select> / ".html_safe
-      body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-dd\" name=\"#{base_id}-sel-dd\">".html_safe
-      body << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
-      body << "</select>".html_safe
-    body << "</div>".html_safe
+    body << "<div class=\"date-select\" name=\"#{name}\" >"
+    body << "<input class=\"controlled-date-part w4em\" style=\"width:4em;\" type=\"text\" id=\"#{base_id}-sel-y\" name=\"#{base_id}-sel-y\" maxlength=\"4\" value=\"#{year}\" />"
+    body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-mm\" name=\"#{base_id}-sel-mm\">"
+    body << options_for_select([["Month","-1"],["January", "01"],["February", "02"],["March", "03"],
+                                  ["April", "04"],["May", "05"],["June", "06"],["July", "07"],["August", "08"],
+                                  ["September", "09"],["October", "10"],["November", "11"],["December", "12"]
+                                  ], month)
+    body << "</select> / "
+    body << "<select class=\"controlled-date-part\" id=\"#{base_id}-sel-dd\" name=\"#{base_id}-sel-dd\">"
+    body << options_for_select([["Day","-1"],"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"], day)
+    body << "</select>"
+    body << "</div>"
 
     script = <<-EOF
     <script type="text/javascript">
@@ -153,7 +144,7 @@ module HydraFedoraMetadataHelper
     // ]]>
     </script>
     EOF
-    body << script.html_safe
+    body << script
 
     
     result = field_selectors_for(datastream_name, field_key)
@@ -165,7 +156,7 @@ module HydraFedoraMetadataHelper
     result = ""
     h_name = OM::XML::Terminology.term_hierarchical_name(*field_key)    
     field_key.each do |pointer|
-      result << tag(:input, :type=>"submit", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value => field_key.to_s.capitalize)
+      result << tag(:input, :type=>"submit", :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value => field_key.to_s.capitalize)
     end
     return result
   end
@@ -189,9 +180,9 @@ module HydraFedoraMetadataHelper
     result << tag(:input, :type=>"hidden", :id=>"#{h_name}_unchecked_value", :value=>unchecked_value )
     
     if field_values.first.downcase == "yes"
-      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>checked_value, :checked=>"checked")
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>checked_value, :checked=>"checked")
     else
-      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>unchecked_value)
+      result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>unchecked_value)
     end
     return result
   end
@@ -222,9 +213,9 @@ module HydraFedoraMetadataHelper
       result = field_selectors_for(datastream_name, field_key)
       choices.sort.each do |choice,label|
         if choice == selected_value
-          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase, :checked=>true)
+          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase, :checked=>true)
         else
-          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :rel=>h_name, :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase)
+          result << tag(:input, :type=>"radio", :id=>"availability_#{choice}", :class=>"fedora-radio-button", :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>choice.downcase)
         end
         result << " <label>#{label}</label> ".html_safe
       end
@@ -238,13 +229,13 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key) || field_key
     field_type = field_name == "person" ? "person" : "textfield"    
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
-    "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>".html_safe
+    "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>".html_safe
   end
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}".html_safe
-    "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" rel=\"#{field_name}\" title='#{link_text}'>#{link_text}</a>".html_safe
+    "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>".html_safe
   end
   
   def fedora_field_label(datastream_name, field_key, label=nil)
@@ -271,10 +262,9 @@ module HydraFedoraMetadataHelper
         if pointer.kind_of?(Hash)
           k = pointer.keys.first
           v = pointer.values.first
-          # result << "<input type=\"hidden\", rel=\"#{h_name}\" name=\"field_selectors[#{datastream_name}][#{h_name}][][#{k}]\" value=\"#{v}\"/>"
-          result << tag(:input, :type=>"hidden", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][][#{k}]", :value=>v)
+          result << tag(:input, :type=>"hidden", :class=>"fieldselector", :name=>"field_selectors[#{datastream_name}][#{h_name}][][#{k}]", :value=>v)
         else
-          result << tag(:input, :type=>"hidden", :class=>"fieldselector", :rel=>h_name, :name=>"field_selectors[#{datastream_name}][#{h_name}][]", :value=>pointer.to_s)
+          result << tag(:input, :type=>"hidden", :class=>"fieldselector", :name=>"field_selectors[#{datastream_name}][#{h_name}][]", :value=>pointer.to_s)
         end
       end
     end

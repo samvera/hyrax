@@ -160,12 +160,12 @@ module BlacklightHelper
   end
 
   def render_extra_head_content_without_unapi
-    remove_unapi 
+    remove_unapi! 
     render_extra_head_content
   end 
 
   # rel="unapi-server" is not HTML5 valid.  Need to see if there is a way to do that properly while still validating.
-  def remove_unapi
+  def remove_unapi!
     extra_head_content.delete_if do |ehc|
       ehc.include?("unapi-server")
     end

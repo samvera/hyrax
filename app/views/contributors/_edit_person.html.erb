@@ -34,8 +34,10 @@
         </li>
 
       <% if ( (person_counter > 0) && (params[:action] == "edit" || params[:action] == "create") && !person_name.strip.empty? ) %>
-        <%= field_selectors_for("descMetadata", [{:person=>person_counter}]).html_safe %>
-        <a class="destructive destroy_contributor" href="<%= asset_contributor_path(@document_fedora.pid, "person", person_counter) %>" title="Delete '<%= person_name %>'"> Delete</a>
+        <li>
+          <%= field_selectors_for("descMetadata", [{:person=>person_counter}]).html_safe %>
+          <a class="destructive destroy_contributor" href="<%= asset_contributor_path(@document_fedora.pid, "person", person_counter) %>" title="Delete '<%= person_name %>'"> Delete</a>
+        </li>
       <% end %>
 	</ul>
     </dd>
