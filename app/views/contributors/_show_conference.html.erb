@@ -3,20 +3,10 @@
 <% conference_name = get_values_from_datastream(@document_fedora,'descMetadata', [{:conference=>conference_counter}, :namePart]).first %>
 <% base_id = "conference_#{conference_counter}" %>
 <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:conference=>conference_counter}, :namePart]).first.empty? %>
-  <li>
-    <dl class="conference contributor" id="<%= base_id %>">
-      <dt>
-        <%= fedora_field_label("descMetadata", [{:conference=>conference_counter}, :role, :text], "Conference's Role:").html_safe %>
-        <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:conference=>conference_counter}, :role, :text]) %>
-      </dt>
-      <dd class="organization">
-        <ul>
-          <li>
-            <%= fedora_field_label("descMetadata", [{:conference=>conference_counter}, :namePart], "Conference:").html_safe %>
-            <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:conference=>conference_counter}, :namePart]) %>
-          </li>
-        </ul>
-      </dd>
-    </dl>
+  <li id="<%= base_id %>">
+    <span class="contributor_role">
+      <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:conference=>conference_counter}, :role, :text]) %>
+    </span>
+    <%= get_values_from_datastream(@document_fedora,"descMetadata", [{:conference=>conference_counter}, :namePart]).first %>        
   </li>
 <% end %>
