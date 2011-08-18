@@ -1,11 +1,11 @@
 <div id="search" class="search">
-  <%= form_tag catalog_index_path, :method => :get do %>
+  <% form_tag catalog_index_path, :method => :get do %>
     <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
     <%= text_field_tag :q, params[:q], :class => "q"  %>
     
     <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt]) %>        
     
-    <%= image_submit_tag('search_button.png', :id => "submit", :alt=>"Search") %>
+    <%= submit_tag("Search", :id => "submit") %>
   <% end %>
 
   <hr/>
