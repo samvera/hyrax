@@ -22,6 +22,7 @@ Feature: Add a Contributor
     And I fill in "person_2_institution" with "Academy for Aspiring Young Actors and Actresses"
     And I press "Continue"
     Then I should see "Your changes have been saved."
+    And I should see "Breckenridge"
 #    Then I should see "The First and Last names are required for all authors."
     #    Then I should be on the edit document page for hydrus:test_object1
     #    And the following should contain:
