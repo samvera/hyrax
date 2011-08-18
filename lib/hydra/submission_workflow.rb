@@ -101,7 +101,7 @@ module Hydra::SubmissionWorkflow
   # The configuration hash.  This should probably live somewhere else and get read in so it can be properly configured at the application level.  But for now it's here.
   def workflow_config
     {
-      :mods_assets =>      [{:name => "contributor",     :edit_partial => "contributors/contributor_form",    :show_partial => "mods_assets/show_contributors"},
+      :mods_assets =>      [{:name => "contributor",     :edit_partial => "mods_assets/contributor_form",    :show_partial => "mods_assets/show_contributors"},
                             {:name => "publication",     :edit_partial => "mods_assets/publication_form",     :show_partial => "mods_assets/show_publication"},
                             {:name => "additional_info", :edit_partial => "mods_assets/additional_info_form", :show_partial => "mods_assets/show_additional_info"},
                             {:name => "files",           :edit_partial => "file_assets/file_assets_form",     :show_partial => "mods_assets/show_file_assets"},

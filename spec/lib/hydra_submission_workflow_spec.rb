@@ -29,7 +29,7 @@ describe Hydra::SubmissionWorkflow do
 
   describe "partial for step" do
     it "should return the partial for the given step" do
-      workflow_partial_for_step(:contributor).should == "contributors/contributor_form"
+      workflow_partial_for_step(:contributor).should match(/contributor_form/)
     end
   end
 
