@@ -13,9 +13,8 @@ Feature: Add a Contributor
     #When I am on the edit document page for hydrangea:fixture_mods_article1
     When I am on the edit contributor page for hydrangea:fixture_mods_article1
     And I press "Add Another Author"
-    Then I should see "Your changes have been saved."
 #    When I fill in the following:
-    When I fill in "person_2_computing_id" with "098556"
+    Then I fill in "person_2_computing_id" with "098556"
     And I fill in "person_2_first_name" with "Myra"
     And I fill in "person_2_last_name" with "Breckenridge"
     And I fill in "person_2_description" with "Posture and Empathy"
