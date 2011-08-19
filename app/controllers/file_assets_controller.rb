@@ -78,6 +78,12 @@ From file_assets/_new.html.haml
   # * the File Asset will use RELS-EXT to assert that it's a part of the specified container
   # * the method will redirect to the container object's edit view after saving
   def create
+    if params.has_key?(:number_of_files) and params[:number_of_files] != "0"
+      return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :files, :number_of_files => params[:number_of_files]})
+    elsif params.has_key?(:number_of_files) and params[:number_of_files] == "0"
+      return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:files)})
+    end
+    
     if params.has_key?(:Filedata)
       @file_assets = create_and_save_file_assets_from_params
       notice = []
