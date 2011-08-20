@@ -121,6 +121,7 @@ class AssetsController < ApplicationController
     protected
     
     def mods_assets_update_validation
+      desc_metadata = params[:asset][:descMetadata]
       rights_metadata = params[:asset][:rightsMetadata]
       if !rights_metadata.nil? and rights_metadata.has_key?(:embargo_embargo_release_date)
         unless rights_metadata[:embargo_embargo_release_date]["0"].blank?
@@ -133,6 +134,14 @@ class AssetsController < ApplicationController
           end
         end
       end
+      
+      if !desc_metadata.nil? and desc_metadata.has_key?(:title_info_main_title) and desc_metadata.has_key?(:journal_0_title_info_main_title)
+        if desc_metadata[:title_info_main_title]["0"].blank? or desc_metadata[:journal_0_title_info_main_title]["0"].blank?
+          flash[:error] = "The title fields are required."
+          return false
+        end
+      end
+      
       return true
     end
 end
