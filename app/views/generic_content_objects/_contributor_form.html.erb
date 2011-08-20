@@ -1,0 +1,11 @@
+<%- form_tag(url_for(:controller=>"contributors",:action=>"update", :id=>params[:id])) do -%>
+  <fieldset id="contributors_fields">
+		<legend>Authors</legend>
+	  <p class="legend-caption">An individual or organizational author of work.</p>	
+		<%= render "contributors/index" %>
+    <%= hidden_field_tag(:wf_step, params[:wf_step]) %>
+    <%= hidden_field_tag(:content_type,"generic_content") %>
+		<%= submit_tag("Add Another Author", :name=>"add_another_author") %>
+		<%= submit_tag("Continue", :name=>"continue") %>
+	</fieldset>
+<%- end -%>
