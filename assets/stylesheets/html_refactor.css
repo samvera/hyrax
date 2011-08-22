@@ -51,8 +51,8 @@
 #bd #search {background-color: #EEE; padding: 12px 20px; background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #DDD), color-stop(1, #EEE));
 background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 #bd .home-text #search { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
-#bd #search #q {margin: 0 15px 0 0; padding: 0.2em; width: 440px;}
-#bd #search #submit {font-size: 16px;}
+#bd #search #q {margin: 0 15px 0 0; padding: 0.2em; width: 420px;}
+#bd #search #submit {font-size: 16px; margin: 0; width: 75px;}
 
 /* =RESULTS
 -------------------------------------------------------------- */
