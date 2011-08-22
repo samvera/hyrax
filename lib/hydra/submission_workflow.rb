@@ -60,6 +60,17 @@ module Hydra::SubmissionWorkflow
     previous_partials
   end
   
+  # Returns an array of all edit partials for the current content type.
+  def all_edit_partials
+    edit_partials = []
+    unless model_config.nil?
+      model_config.each do |config|
+        edit_partials << config[:edit_partial]
+      end
+    end
+    edit_partials
+  end
+  
   # Will return the entire workflow configuration for the current model.
   # We determing model first by seeing the @document object is a SolrDocument.  If it is we will determing from the has_model_s field.
   # Otherwise we will attemtp to determine by the parameters (content_type directly passed or the id of an object).

@@ -164,4 +164,9 @@ module HydraHelper
     end
   end
   
+
+  def render_all_workflow_steps
+    "#{all_edit_partials.map{|partial| render partial}}"
+  end
+  
 end
