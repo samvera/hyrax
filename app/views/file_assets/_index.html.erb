@@ -10,16 +10,17 @@
 
 <% if !@document.nil? && editor? %>
   <%- container_content_type_param = defined?(container_content_type) ? "?container_content_type=#{container_content_type}" : "" %>
-  <div id='uploader'>
+  <fieldset id='uploader'>
+    <legend>File Upload</legend>
     <!-- This form will be progressively enhanced by the Fluid Uploader component. -->
     <%- form_tag(upload_url,:method=>"post",:enctype=>"multipart/form-data", :class=>"uploader-form") do -%>
       <input type="hidden" name="container_id" value="<%=h container_id %>"/>
-      <%= hidden_field_tag("container_content_type", container_content_type) if defined?(container_content_type) %>
+      <%= hidden_field_tag("container_content_type", container_content_type, :id => "file_upload_content_type") if defined?(container_content_type) %>
       <%- params[:number_of_files].to_i.times do -%>
         <%= render :partial=>"file_assets/new"%>
       <%- end -%>
-      <%= hidden_field_tag("id",params[:id]) if params[:id] %>
+      <%= hidden_field_tag("id",params[:id], :id => "file_upload_id") if params[:id] %>
       <p><%= submit_tag("Upload File", :name=>"upload_file")%></p>
     <%- end -%>
-  </div>
+  </fieldset>
 <% end %>
