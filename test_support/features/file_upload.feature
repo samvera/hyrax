@@ -14,7 +14,7 @@ Feature: Upload file into a document
     And I press "Upload File"
     Then I should see "The file image.jp2 has been saved"
     # we shouldn't have to have the step below once we're displaying the contents of the previous steps.
-    When I follow "Browse"
+    When I follow "Switch to browse view"
     Then I should see a link to "image.jp2" in the file assets list
     
   Scenario: Upload files on article edit page
@@ -26,7 +26,7 @@ Feature: Upload file into a document
     And I press "Upload File"
     Then I should see "The file image.jp2 has been saved"
     # we shouldn't have to have the step below once we're displaying the contents of the previous steps.
-    When I follow "Browse"
+    When I follow "Switch to browse view"
     Then I should see a link to "image.jp2" in the file assets list
   
   Scenario: html5 valid uploading files on edit page

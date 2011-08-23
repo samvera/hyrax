@@ -39,14 +39,10 @@ module HydraHelper
   def edit_and_browse_links
     result = ""
     if params[:action] == "edit"
-      result << "<a href=\"#{catalog_path(@document[:id], :viewing_context=>"browse")}\" class=\"browse toggle\">Browse</a>"
-      result << "<span class=\"edit toggle active\">Edit</span>"
+      result << "<a href=\"#{catalog_path(@document[:id], :viewing_context=>"browse")}\" class=\"browse toggle\">Switch to browse view</a>"
     else
-      result << "<span class=\"browse toggle active\">Browse</span>"
-      result << "<a href=\"#{edit_catalog_path(@document[:id])}\" class=\"edit toggle\">Edit</a>"
+      result << "<a href=\"#{edit_catalog_path(@document[:id], :viewing_context=>"edit")}\" class=\"edit toggle\">Switch to edit view</a>"
     end
-    # result << link_to "Browse", "#", :class=>"browse"
-    # result << link_to "Edit", edit_document_path(@document[:id]), :class=>"edit"
     return result.html_safe
   end
   
