@@ -11,6 +11,6 @@
     <%= render :partial => "permissions/index" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission")%>
-    <%= submit_tag("Continue", :name=>"continue") %>
+    <%= submit_tag(submit_name, :name=>"continue") %>
   <%- end -%>
 <%- end -%>

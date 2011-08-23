@@ -165,4 +165,8 @@ module HydraHelper
     "#{all_edit_partials.map{|partial| render partial}}"
   end
   
+  def submit_name
+    session[:scripts] ? "Save" : "Continue"
+  end
+  
 end

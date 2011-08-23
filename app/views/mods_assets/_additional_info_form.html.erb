@@ -1,5 +1,5 @@
 <%- form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id])) do -%>
-  <%= hidden_field_tag("_method","put") %>
+  <%= hidden_field_tag("_method","put", :id=>"assets_method") %>
   <p id="abstract_field" class="fedora-text-area">
     <%= fedora_field_label("descMetadata", [:abstract], "Abstract") %>
     <span class="field-caption">Provide the abstract of the work, or if none exists, a short summary.</span>
@@ -36,5 +36,5 @@
   </p>
   <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "additional_wf_step") %>
   <%= hidden_field_tag(:content_type,"mods_asset", :id => "additional_content_type") %>
-  <%= submit_tag("Continue", :name=>"continue") %>
+  <%= submit_tag(submit_name, :name=>"continue") %>
 <%- end -%>

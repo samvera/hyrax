@@ -31,7 +31,7 @@
 
 #select-item-box {background: url('/plugin_assets/hydra-head/images/search-button.png') no-repeat scroll 95% 5px #f5f5f5; border: 1px solid #BBB; float: left; line-height: 20px; margin-top: -3px; padding: 2px 6px; position: relative; text-align: left; width: 170px; z-index: 300; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
 #select-item-box > a {border-bottom: none; vertical-align: text-bottom;}
-#select-item-list {background: #f2f2f2; border-bottom: 1px solid #BBB; border-left: 1px solid #BBB; border-right: 1px solid #BBB; border-top: 1px solid #DDD; display: none; list-style: none; margin: 0; position: absolute; top: 24px; left: 0; width: 180px; z-index: 999; -webkit-box-shadow: 1px 1px 4px rgba(80, 80, 80, 0.2); -moz-box-shadow: 1px 1px 4px rgba(80, 80, 80, 0.2); box-shadow: 1px 1px 4px rgba(80, 80, 80, 0.2); -webkit-border-radius: 0 0 4px 4px; -moz-border-radius:    0 0 4px 4px; border-radius:         0 0 4px 4px; }
+#select-item-list {background: #f2f2f2; border-bottom: 1px solid #BBB; border-left: 1px solid #BBB; border-right: 1px solid #BBB; border-top: 1px solid #DDD; display: none; list-style: none; margin: 0; position: absolute; top: 24px; left: 0; width: 180px; z-index: 999; -webkit-box-shadow: 0 3px 4px rgba(120, 120, 120, 0.1); -moz-box-shadow: 0 3px 4px rgba(120, 120, 120, 0.1); box-shadow: 0 3px 4px rgba(120, 120, 120, 0.1); -webkit-border-radius: 0 0 4px 4px; -moz-border-radius:    0 0 4px 4px; border-radius:         0 0 4px 4px; }
 #select-item-list li {list-style: none; margin: 0; }
 #select-item-list li a {border-bottom: 1px solid #DDD; border-top: 1px solid #FAFAFA; display: block; font-size: 12px; padding: 0.5em 0.25em;}
 #select-item-list li a:hover {background: #FAFAFA;}
@@ -99,6 +99,7 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 #document.document_edit .required-note {color: #C00; font-size: 13px; font-style: italic; font-variant: normal; position: absolute; left: 35%; text-transform: lowercase;}
 .field-caption, .legend-caption {color: #777; display: block; font-style: italic; padding-bottom: 0.5em;}
 .fedora-text-field {position: relative;}
-.fedora-text-field input[type='text'] {width: 45%;}
+.fedora-text-field input[type='text'] {padding: 0.25em; width: 45%;}
 #document #peer_reviewed_fieldset label {display: inline;padding-left: 0.67em;}
-
+.invalid-input-notice {color: #444444; font-weight: bold; padding: 0 1em;}
+input.invalid-input {border: 3px solid #C55;}
