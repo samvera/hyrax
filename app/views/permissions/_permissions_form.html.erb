@@ -2,14 +2,14 @@
   <%#= render :partial=>"permissions/new.html", :locals=>{:asset_id=>asset_id} %>
   <%- form_tag({:controller=>"permissions", :action=> "create"}) do -%>
     <%= render :partial=>"permissions/new.html" %>
-    <%= hidden_field_tag("id", params[:id]) if params[:id] %>
+    <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission") %>
     <%= submit_tag("Continue", :name=>"continue") %>
   <%- end -%>
 <%- else -%>
   <%- form_tag({:controller=>"permissions", :action => "update"}, :id => "permissions_metadata") do -%>
     <%= render :partial => "permissions/index" %>
-    <%= hidden_field_tag("id", params[:id]) if params[:id] %>
+    <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission")%>
     <%= submit_tag("Continue", :name=>"continue") %>
   <%- end -%>
