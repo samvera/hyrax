@@ -41,18 +41,35 @@ $(document).ready(function() {
     all_forms.submit(function(e) {
       // Only submit the forms if they pass validation
       if(formValidation()){
+        formPreSave();
         all_forms.each(function(index) {
           $(this).ajaxSubmit();
         });
-        formRedirect(); 
+        formPostSave(); 
       }
       return false;
     });
     
   };
   
+  formPreSave = function() {
+    var opts = {
+      lines: 12, // The number of lines to draw
+      length: 14, // The length of each line
+      width: 4, // The line thickness
+      radius: 12, // The radius of the inner circle
+      color: '#000', // #rbg or #rrggbb
+      speed: 0.5, // Rounds per second
+      trail: 50, // Afterglow percentage
+      shadow: false // Whether to render a shadow
+    };
+    
+    var target = document.getElementById('document');
+    var spinner = new Spinner(opts).spin(target);
+  };
+  
   // Redirect the edit page after the user saves
-  formRedirect = function() {
+  formPostSave = function() {
     
     // Wait for all saving calls to finish
     $("#document").ajaxStop(function(){
