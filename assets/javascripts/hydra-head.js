@@ -33,8 +33,12 @@ $(document).ready(function() {
   
   // Enable Ajax save functionality on edit pages
   HydraHead.enable_form_save = function() {
+    HydraHead.target = null;
     var all_forms = $('.document_edit form');
-    all_forms.submit(function() {
+    $('input[type="submit"]').click(function() {
+      HydraHead.target = $(this);
+    });
+    all_forms.submit(function(e) {
       // Only submit the forms if they pass validation
       if(formValidation()){
         all_forms.each(function(index) {
@@ -50,13 +54,20 @@ $(document).ready(function() {
   // Redirect the edit page after the user saves
   formRedirect = function() {
     
+    // Wait for all saving calls to finish
     $("#document").ajaxStop(function(){
-      redirect_url = window.location.pathname + "?saved=true"
+      var redirect_url = window.location.pathname + "?saved=true";
+      
+      // Add parameter if we're adding files
       if($('#number_of_files option:selected').length) {
-        redirect_url += "&number_of_files=" + $('#number_of_files option:selected').val() + "#uploader";
-      } else {
-        redirect_url = window.location.pathname + "#document"
-      }        
+        redirect_url += "&number_of_files=" + $('#number_of_files option:selected').val();
+      }
+      
+      // Add parameter if we're adding a contributor
+      if(HydraHead.target.attr("name") == "add_another_author") {
+        redirect_url += "&add_contributor=true";
+      }
+      
       window.location = redirect_url;
     });
     
