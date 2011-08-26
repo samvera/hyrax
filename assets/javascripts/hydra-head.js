@@ -64,7 +64,8 @@ $(document).ready(function() {
       shadow: false // Whether to render a shadow
     };
     
-    var target = document.getElementById('document');
+    $('#document').prepend('<div id="saving-notice"><h1>Saving...</h1></div>');
+    var target = document.getElementById('saving-notice');
     var spinner = new Spinner(opts).spin(target);
   };
   

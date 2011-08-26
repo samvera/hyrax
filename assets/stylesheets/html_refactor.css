@@ -104,3 +104,5 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 #document #peer_reviewed_fieldset label {display: inline;padding-left: 0.67em;}
 .invalid-input-notice {color: #444444; font-weight: bold; padding: 0 1em;}
 input.invalid-input {border: 3px solid #C55;}
+#saving-notice {background: #EEE; color: #000; height: 100%; width: 100%; opacity: 0.8; position: fixed; top: 0; left: 0; z-index: 999;}
+#saving-notice h1 {font-size: 32px !important;  margin-top: 6em; text-align: center;}
