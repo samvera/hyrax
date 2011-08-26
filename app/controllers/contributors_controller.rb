@@ -76,10 +76,6 @@ class ContributorsController < ApplicationController
     desc_metadata = params[:asset][:descMetadata]
     unless desc_metadata.nil?
       while desc_metadata.has_key? "person_#{i}_computing_id".to_sym
-        if i == 0 and desc_metadata[:person_0_computing_id]["0"].blank?
-          #flash[:error] = "The ID for the first author must be filled in."
-          #return false 
-        end
         if desc_metadata["person_#{i}_first_name".to_sym]["0"].blank? or desc_metadata["person_#{i}_last_name".to_sym]["0"].blank?
           flash[:error] = "The First and Last names are required for all authors."
           return false
