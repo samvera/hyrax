@@ -19,6 +19,7 @@ HydraHead = {};
 $(document).ready(function() {
   HydraHead.add_asset_links();
   HydraHead.enable_form_save();
+  HydraHead.add_keywords();
 });
 
 // Define Hydra-Head methods for HydraHead object
@@ -26,7 +27,7 @@ $(document).ready(function() {
   
   // Take Javascript-enabled users to the combined view
   HydraHead.add_asset_links = function() {
-    $('.create_asset').each(function() {
+    $('.create_asset, .edit-browse .edit').each(function() {
       $(this).attr('href', $(this).attr('href') + "&combined=true");
     });
   };
@@ -51,6 +52,17 @@ $(document).ready(function() {
     });
     
   };
+  
+  HydraHead.add_keywords = function() {
+    $('.fedora-text-field-add a').click(function() {
+      var keyword_count = $(this).parent().siblings('.fedora-text-field').length;
+      $(this).parent().before( '<p class="fedora-text-field">' + 
+      '<input type="hidden" value="subject" name="field_selectors[descMetadata][subject_topic][]" class="fieldselector">' +
+      '<input type="hidden" value="topic" name="field_selectors[descMetadata][subject_topic][]" class="fieldselector">' + 
+      '<input type="text" value="" name="asset[descMetadata][subject_topic][' + keyword_count + ']" data-datastream-name="descMetadata" id="subject_topic_' + keyword_count + '" class="editable-edit edit" href="undefined&amp;combined=true"></p>');
+      return false;
+    });
+  }
   
   formPreSave = function() {
     var opts = {
@@ -84,6 +96,8 @@ $(document).ready(function() {
       // Add parameter if we're adding a contributor
       if(HydraHead.target.attr("name") == "add_another_author") {
         redirect_url += "&add_contributor=true";
+      } else if(HydraHead.target.attr("name") == "add_permission") {
+        redirect_url += "&add_permission=true&wf_step=permissions";
       }
       
       window.location = redirect_url;

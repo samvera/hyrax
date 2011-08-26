@@ -10,7 +10,7 @@
     	<% else %>
     		<% file_asset_url = asset_file_asset_path(@container.pid, result["id"]) %>
     	<% end %>
-      <%= delete_asset_link(result["id"], result["active_fedora_model_s"].first ).html_safe %>
+    	<%= link_to("Delete", "/file_assets/" + result["id"] + "?container_id=" + @document[:id], :method => :delete, :confirm => "Are you sure you want to delete this file?") %>
    <% end %>
   </td>
 </tr>
