@@ -56,10 +56,14 @@ class ContributorsController < ApplicationController
   
   def destroy
     af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
-    @document_fedora = af_model.find(params[:asset_id])
+    @document_fedora = af_model.find(params[:id])
     @document_fedora.remove_contributor(params[:contributor_type], params[:index])
     result = @document_fedora.save
-    render :text=>result.inspect
+    if request.xhr?
+      render :text=>result.inspect
+    else
+      redirect_to :back
+    end
   end
   
   protected 

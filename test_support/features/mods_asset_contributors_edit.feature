@@ -76,5 +76,20 @@ Feature: Edit Article Contributors
     And I should see "Author" within ".contributor_role"
     And I should see "University of Virginia" within "#contributors_list"
     And I should not see a delete contributor button for "the 1st person entry in libra-oa:1"
-
- 
+    
+  Scenario: Deleting contributors
+    Given I am logged in as "archivist1"
+    When I am on the edit contributor page for libra-oa:1
+    And I press "Add Another Author"
+    When I fill in "person_1_computing_id" with "012345"
+    And I fill in "person_1_first_name" with "Jane"
+    And I fill in "person_1_last_name" with "Dough"
+    Then the "person_1_last_name" field within "#person_1" should contain "Dough"
+    And I fill in "person_1_description" with "Pizza Chef"
+    And I fill in "person_1_institution" with "Academy for Aspiring Young Pizza Chefs"
+    When I press "Continue"
+    And I am on the edit contributor page for libra-oa:1
+    Then the "person_1_last_name" field within "#person_1" should contain "Dough"
+    When I follow "Delete"
+    And I press "Continue"
+    Then I should not see "Dough"
