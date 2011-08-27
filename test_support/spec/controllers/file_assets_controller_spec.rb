@@ -121,7 +121,7 @@ describe FileAssetsController do
     end
     it "should display a message that you need to select a file to upload if no Filedata is provided" do
       xhr :post, :create
-      response.flash[:notice].should == "You must specify a file to upload."
+      response.flash[:notice].include?("You must specify a file to upload.").should be_true
     end
     
   end
