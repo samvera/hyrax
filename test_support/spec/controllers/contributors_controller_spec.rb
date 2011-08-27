@@ -35,14 +35,12 @@ describe ContributorsController do
   
   describe "destroy" do
     it "should delete the contributor corresponding to contributor_type and index" do
-      request.env["HTTP_REFERER"] = "http://example.com"
       mock_dataset = mock("Dataset")
       mock_dataset.expects(:remove_contributor).with("conference", "3")
       mock_dataset.expects(:save)
       ModsAsset.expects(:find).with("_PID_").returns(mock_dataset)
       
       delete :destroy, :id=>"_PID_", :content_type => "mods_asset", :contributor_type=>"conference", :index=>"3"
-      response.should redirect_to("http://example.com")
     end
   end
   

@@ -44,14 +44,17 @@ class ContributorsController < ApplicationController
   
   # Not sure how the #create method was intended to work, but this seems like it works and takes a hybrid approach to how the contributors were handled between this and the AssetsController work.
   def update
-    return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor, :add_contributor => true}) if params.has_key? :add_another_author
     @document = load_document_from_params
     # generates sanatized params from params hash to update the doc with
     sanitize_update_params
     @response = update_document(@document,@sanitized_params)
     @document.save
     flash[:notice] = "Your changes have been saved."
-    redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:contributor)})
+    if params.has_key? :add_another_author
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor, :add_contributor => true}) 
+    else
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:contributor)})
+    end
   end
   
   def destroy
@@ -62,7 +65,7 @@ class ContributorsController < ApplicationController
     if request.xhr?
       render :text=>result.inspect
     else
-      redirect_to :back
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor})
     end
   end
   
