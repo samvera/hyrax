@@ -115,7 +115,7 @@ describe FileAssetsController do
     end
     it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
       controller.expects(:model_config).at_least_once.returns(controller.workflow_config[:mods_assets])
-      xhr :post, :create, :container_id=>"_PID_"
+      xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
       response.should redirect_to(:controller=>"catalog", :id=>"_PID_", :action => 'edit', :wf_step=>"permissions")
       response.flash[:notice].should == "You must specify a file to upload."
     end

@@ -93,7 +93,8 @@ Removed from permissions/_new.html.erb
         if params.has_key?(:add_permission)
           redirect_to :back
         else
-          redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => next_step_in_workflow(:permissions)
+          #redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => next_step_in_workflow(:permissions)
+          redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
         end
         
       end
@@ -141,7 +142,7 @@ Removed from permissions/_new.html.erb
         if params.has_key?(:add_permission)
           redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => :permissions, :add_permission => true
         else
-          redirect_to :controller=>"catalog", :action=>"edit", :id => params[:id], :wf_step => next_step_in_workflow(:permissions)
+          redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
         end
       end
       format.inline do

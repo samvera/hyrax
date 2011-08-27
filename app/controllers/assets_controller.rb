@@ -68,8 +68,7 @@ class AssetsController < ApplicationController
       
       respond_to do |want| 
         want.html {
-          redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(params[:wf_step])})
-          #redirect_to :controller=>"catalog", :action=>"edit"
+          redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
         }
         want.js {
           render :json=> tidy_response_from_update(@response)  

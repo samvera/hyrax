@@ -33,7 +33,21 @@ module Hydra::SubmissionWorkflow
   
   # Convenience method to return the first step of a models workflow.
   def first_step_in_workflow
-    model_config.first[:name]
+    model_config.first[:name] unless model_config.nil?
+  end
+  
+  # Convenience method to return the last step of a models workflow.
+  def last_step_in_workflow
+    model_config.last[:name] unless model_config.nil?
+  end
+  
+  def params_for_next_step_in_wokflow
+    return_params = {:wf_step=>next_step_in_workflow(params[:wf_step])}
+    if params[:wf_step] == last_step_in_workflow
+      return_params[:viewing_context] = "browse"
+      return_params[:action] = "show" 
+    end
+    return return_params
   end
   
   # Convenience method to return the partial for any given step by name.

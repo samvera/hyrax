@@ -53,7 +53,7 @@ class ContributorsController < ApplicationController
     if params.has_key? :add_another_author
       redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor, :add_contributor => true}) 
     else
-      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:contributor)})
+      redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
     end
   end
   

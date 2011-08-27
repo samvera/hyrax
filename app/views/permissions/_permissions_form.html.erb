@@ -3,6 +3,7 @@
   <%- form_tag({:controller=>"permissions", :action=> "create"}) do -%>
     <%= render :partial=>"permissions/new.html" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
+    <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission") %>
     <%= submit_tag("Continue", :name=>"continue") %>
   <%- end -%>
@@ -10,6 +11,7 @@
   <%- form_tag({:controller=>"permissions", :action => "update"}, :id => "permissions_metadata") do -%>
     <%= render :partial => "permissions/index" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
+    <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission")%>
     <%= submit_tag(submit_name, :name=>"continue") %>
   <%- end -%>

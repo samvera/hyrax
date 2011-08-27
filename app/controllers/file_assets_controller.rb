@@ -81,7 +81,7 @@ From file_assets/_new.html.haml
     if params.has_key?(:number_of_files) and params[:number_of_files] != "0"
       return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :files, :number_of_files => params[:number_of_files]})
     elsif params.has_key?(:number_of_files) and params[:number_of_files] == "0"
-      return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => next_step_in_workflow(:files)})
+      return redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
     end
     
     if params.has_key?(:Filedata)
@@ -110,10 +110,9 @@ From file_assets/_new.html.haml
     end
     
     if !params[:container_id].nil?
-      redirect_params = {:controller => "catalog", :id => params[:container_id], :action => :edit, :wf_step => next_step_in_workflow(:files)}
+      redirect_params = {:controller => "catalog", :action => "edit", :id => params[:container_id]}.merge(params_for_next_step_in_wokflow)
     end
-    
-    redirect_params ||= {:controller => "catalog", :id => params[:id], :action => :edit,  :wf_step => next_step_in_workflow(:files)}
+    redirect_params ||= {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow)
     
     redirect_to redirect_params
   end

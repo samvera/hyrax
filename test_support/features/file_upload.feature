@@ -28,6 +28,13 @@ Feature: Upload file into a document
     # we shouldn't have to have the step below once we're displaying the contents of the previous steps.
     When I follow "Switch to browse view"
     Then I should see a link to "image.jp2" in the file assets list
+    
+  Scenario: Not uploading files
+    Given I am logged in as "archivist1"
+    When I am on the edit files page for hydrangea:fixture_mods_article1
+    Then I select "0" from "number_of_files"
+    And I press "Continue"
+    Then I should see "Group Permissions"
   
   Scenario: html5 valid uploading files on edit page
     Given I am logged in as "archivist1@example.com"
