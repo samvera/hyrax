@@ -38,4 +38,5 @@
   <%= hidden_field_tag(:new_asset, true, :id => "additional_new_asset") if params[:new_asset] %>
   <%= hidden_field_tag(:content_type,"mods_asset", :id => "additional_content_type") %>
   <%= submit_tag(submit_name, :name=>"continue") %>
+  <%= submit_tag("Save and Finish", :name=>"finish") unless params[:new_asset] %>
 <%- end -%>

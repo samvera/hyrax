@@ -45,6 +45,13 @@ Feature: Edit a ModsAsset object
     Then I fill in "embargo_embargo_release_date" with ""
     And I press "Continue"
 
+  Scenario: Save and Finish
+    Given I am logged in as "archivist1" 
+    When I am on the edit additional_info page for hydrangea:fixture_mods_article1
+    When I press "Save and Finish"
+    Then I should see "Switch to edit view"
+    And I should see "Your object has been saved"
+
   Scenario: html5 valid
     Given I am logged in as "archivist1"
     When I am on the edit document page for hydrangea:fixture_mods_article1 
