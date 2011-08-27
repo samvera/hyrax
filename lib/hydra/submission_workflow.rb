@@ -43,6 +43,9 @@ module Hydra::SubmissionWorkflow
   
   def params_for_next_step_in_wokflow
     return_params = {:wf_step=>next_step_in_workflow(params[:wf_step])}
+    if params[:new_asset]
+      return_params[:new_asset] = true
+    end
     if params[:wf_step] == last_step_in_workflow
       return_params[:viewing_context] = "browse"
       return_params[:action] = "show" 

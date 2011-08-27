@@ -4,6 +4,7 @@
     <%= render :partial=>"permissions/new.html" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
+    <%= hidden_field_tag(:new_asset, true, :id => "permission_new_asset") if params[:new_asset] %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission") %>
     <%= submit_tag("Continue", :name=>"continue") %>
   <%- end -%>
@@ -12,6 +13,7 @@
     <%= render :partial => "permissions/index" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
+    <%= hidden_field_tag(:new_asset, true, :id => "permission_new_asset") if params[:new_asset] %>
     <%= submit_tag("Add Additional Permissions", :name=>"add_permission")%>
     <%= submit_tag(submit_name, :name=>"continue") %>
   <%- end -%>

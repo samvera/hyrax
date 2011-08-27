@@ -94,7 +94,7 @@ class AssetsController < ApplicationController
         flash[:notice]= msg
       end
       session[:scripts] = params[:combined] == "true"
-      redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid)
+      redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid, :new_asset=>true)
     end
     
     def destroy
