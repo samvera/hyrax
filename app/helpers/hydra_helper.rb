@@ -166,7 +166,13 @@ module HydraHelper
   end
   
   def submit_name
-    session[:scripts] ? "Save" : "Continue"
+    if session[:scripts]
+      return "Save"
+    elsif params[:new_asset]
+      return "Continue"
+    else
+      return "Save and Continue"
+    end
   end
   
 end
