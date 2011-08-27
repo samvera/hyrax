@@ -224,8 +224,11 @@ module Hydra
     
     # Remove the contributor entry identified by @contributor_type and @index
     def remove_contributor(contributor_type, index)
-      self.find_by_terms( {contributor_type.to_sym => index.to_i} ).first.remove
-      self.dirty = true
+      contributor = self.find_by_terms( {contributor_type.to_sym => index.to_i} ).first
+      unless contributor.nil?
+        contributor.remove
+        self.dirty = true
+      end
     end
     
     def self.common_relator_terms
