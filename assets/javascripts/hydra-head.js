@@ -13,11 +13,13 @@ Blacklight.do_folder_toggle_behavior = function(){};
 
 Blacklight.do_facet_expand_contract_behavior = function(){};
 
-HydraHead = {};
+HydraHead = {validation: true, combinedEdit: true};
 
 // Load appropriate Hydra-Head functions when document is ready
 $(document).ready(function() {
-  HydraHead.add_asset_links();
+  if(HydraHead.combinedEdit){
+    HydraHead.add_asset_links();
+  }
   HydraHead.enable_form_save();
   HydraHead.add_keywords();
 });
@@ -36,18 +38,25 @@ $(document).ready(function() {
   HydraHead.enable_form_save = function() {
     HydraHead.target = null;
     var all_forms = $('.document_edit form');
-    $('input[type="submit"]').click(function() {
+    
+    $('input[type="submit"], .all-steps-actions button').click(function() {
       HydraHead.target = $(this);
+      all_forms.first().submit();
+      return false;
     });
+    
     all_forms.submit(function(e) {
       // Only submit the forms if they pass validation
-      if(formValidation()){
+      // and validation is enabled.
+      if(!HydraHead.validation || formValidation()){
         formPreSave();
         all_forms.each(function(index) {
           $(this).ajaxSubmit();
         });
         formPostSave(); 
       }
+      
+      // Don't continue to submit or we'll loop infinitely
       return false;
     });
     
@@ -59,11 +68,12 @@ $(document).ready(function() {
       $(this).parent().before( '<p class="fedora-text-field">' + 
       '<input type="hidden" value="subject" name="field_selectors[descMetadata][subject_topic][]" class="fieldselector">' +
       '<input type="hidden" value="topic" name="field_selectors[descMetadata][subject_topic][]" class="fieldselector">' + 
-      '<input type="text" value="" name="asset[descMetadata][subject_topic][' + keyword_count + ']" data-datastream-name="descMetadata" id="subject_topic_' + keyword_count + '" class="editable-edit edit" href="undefined&amp;combined=true"></p>');
+      '<input type="text" value="" name="asset[descMetadata][subject_topic][' + keyword_count + ']" data-datastream-name="descMetadata" id="subject_topic_' + keyword_count + '" class="editable-edit edit"></p>');
       return false;
     });
   }
   
+  // Display a saving notice and spinner that takes up the whole screen.
   formPreSave = function() {
     var opts = {
       lines: 12, // The number of lines to draw
@@ -81,28 +91,45 @@ $(document).ready(function() {
     var spinner = new Spinner(opts).spin(target);
   };
   
-  // Redirect the edit page after the user saves
+  // Redirect to the appropriate page after the user saves
   formPostSave = function() {
     
     // Wait for all saving calls to finish
     $("#document").ajaxStop(function(){
       var redirect_url = window.location.pathname + "?saved=true";
       
-      // Add parameter if we're adding files
-      if($('#number_of_files option:selected').length) {
-        redirect_url += "&number_of_files=" + $('#number_of_files option:selected').val();
-      }
-      
-      // Add parameter if we're adding a contributor
-      if(HydraHead.target.attr("name") == "add_another_author") {
-        redirect_url += "&add_contributor=true";
-      } else if(HydraHead.target.attr("name") == "add_permission") {
-        redirect_url += "&add_permission=true&wf_step=permissions";
-      }
+      //add additional parameters based on input and submission
+      redirect_url = addRedirectParams(redirect_url);
       
       window.location = redirect_url;
     });
     
+  };
+  
+  addRedirectParams = function(redirect_url) {
+    
+    // Add parameter if we're adding files
+    if($('#number_of_files option:selected').length) {
+      redirect_url += "&number_of_files=" + $('#number_of_files option:selected').val();
+    }
+    
+    // Add parameters based on submission button, e.g.
+    // adding an author, individual permission, or finishing
+    // and switching to browse view.
+    switch(HydraHead.target.attr("name")) {
+      case "add_another_author":
+        redirect_url += "&add_contributor=true";
+        break;
+      case "add_permission":
+        redirect_url += "&add_permission=true&wf_step=permissions";
+        break;
+      case "all_save_finish":
+        redirect_url = redirect_url.replace("/edit","");
+        redirect_url += "&viewing_context=browse";
+        break;
+    }
+    
+    return redirect_url;    
   };
   
   // Ensure all fields with an attribute of "required" have some value  
@@ -126,12 +153,18 @@ $(document).ready(function() {
     
     // Add a top-level message if there are any invalid fields, and scroll there
     if(!valid) {
-      $('#document h1').after('<div id="invalid_notice" class="error ui-state-error">Some required fields are incomplete.</div>');
-      var new_position = $('#invalid_notice').offset();
-      window.scrollTo(new_position.left, new_position.top - 40);
+      printValidationError();
     }
     
     return valid;
+  };
+  
+  
+  // Print notice at top of page of invalid input
+  printValidationError = function() {
+    $('#document h1').after('<div id="invalid_notice" class="error ui-state-error">Some required fields are incomplete.</div>');
+    var new_position = $('#invalid_notice').offset();
+    window.scrollTo(new_position.left, new_position.top - 40);
   };
     
 })(jQuery);

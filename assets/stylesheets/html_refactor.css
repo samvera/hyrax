@@ -66,6 +66,8 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 -------------------------------------------------------------- */
 
 #document h1.document-heading {color: #222; font-size: 18px; font-weight: bold; padding: 0.33em 0 0.67em;}
+.edit-browse {float: right; padding: 0;}
+.result-num {padding: 0 3em;}
 #document .section-title {
   color: #3f3f3f;
   font-family: Georgia, "Times New Roman", Times, serif;
@@ -92,8 +94,6 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 .document_edit .document {padding: 0.5em 0;}
 .document_edit form {padding-bottom: 2em;}
 #document.document_edit h1 {color: #333; font-size: 18px; font-weight: bold; padding: 0.33em 0 0.67em;}
-.edit-browse {float: right; padding: 1em 0.1em;}
-.edit-browse .browse {margin-right: 1em;}
 #document.document_edit label {border-bottom: 1px dotted #D4D4D4; color: #444; display: block; font-size: 14px; font-variant: small-caps; font-weight: normal; padding: 1em 0 0.2em; margin-bottom: 0.8em; width: 45%;}
 #document.document_edit fieldset label {border-bottom: none; font-size: 13px; font-variant: normal; margin-bottom: 0; padding: 0.2em 0 0.5em; width: 33%;}
 
@@ -104,5 +104,9 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 #document #peer_reviewed_fieldset label {display: inline;padding-left: 0.67em;}
 .invalid-input-notice {color: #444444; font-weight: bold; padding: 0 1em;}
 input.invalid-input {border: 3px solid #C55;}
+.combined_document_view .step .save-submit {display: none;}
+/* Save notification */
 #saving-notice {background: #EEE; color: #000; height: 100%; width: 100%; opacity: 0.8; position: fixed; top: 0; left: 0; z-index: 999;}
-#saving-notice h1 {font-size: 32px !important;  margin-top: 6em; text-align: center;}
+#saving-notice h1 {font-size: 32px !important;  margin-top: 4em; text-align: center;}
+.all-steps-actions {margin: 2em 0 1em;}
+.all-steps-actions button {font-size: 16px; margin-right: 20px;}

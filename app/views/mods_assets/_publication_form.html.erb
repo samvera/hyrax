@@ -1,4 +1,4 @@
-<%- form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id])) do -%>
+<%- form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id]), :class => "step") do -%>
   <%= hidden_field_tag("_method","put") %>
   <p id="title_field" class="fedora-text-field">
     <%= fedora_field_label("descMetadata", [:title_info,:main_title], "Title<span class=\"required-note\">Required</span>") %>
@@ -8,6 +8,6 @@
   <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "publisher_wf_step") %>
   <%= hidden_field_tag(:new_asset, true, :id => "publisher_new_asset") if params[:new_asset] %>
   <%= hidden_field_tag(:content_type,"mods_asset", :id => "publisher_content_type") %>
-  <%= submit_tag(submit_name, :name=>"continue") %>
-  <%= submit_tag("Save and Finish", :name=>"finish") unless params[:new_asset] %>
+  <%= submit_tag(submit_name, :name=>"continue", :class=>"save-submit") %>
+  <%= submit_tag("Save and Finish", :name=>"finish", :class=>"save-submit") unless params[:new_asset] %>
 <%- end -%>

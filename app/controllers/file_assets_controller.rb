@@ -128,7 +128,16 @@ From file_assets/_new.html.haml
     
     # The dirty implementation (leaves relationship in container object, deletes regardless of whether the file object has other containers)
     ActiveFedora::Base.load_instance(params[:id]).delete 
-    render :text => "Deleted #{params[:id]} from #{params[:asset_id]}."
+
+    flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."
+    
+    if !params[:container_id].nil?
+      redirect_params = {:controller => "catalog", :action => "edit", :id => params[:container_id], :anchor => "file_assets"}
+    end
+    redirect_params ||= {:action => 'index', :q => nil , :f => nil}
+    
+    redirect_to redirect_params
+    
   end
   
   

@@ -1,6 +1,7 @@
 require 'mediashelf/active_fedora_helper'
 class PermissionsController < ApplicationController
   include MediaShelf::ActiveFedoraHelper
+  include Hydra::AssetsControllerHelper
   
   before_filter :require_solr, :require_fedora
   # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
