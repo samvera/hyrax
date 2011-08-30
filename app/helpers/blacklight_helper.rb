@@ -85,13 +85,6 @@ module BlacklightHelper
     end
   end
 
-  # Removing the [remove] link from the default selected facet display
-  def render_selected_facet_value(facet_solr_field, item)
-    '<span class="selected">' +
-    render_facet_value(facet_solr_field, item, :suppress_link => true) +
-    '</span>'
-  end
-
   def render_complex_facet_value(facet_solr_field, item, options ={})    
     link_to_unless(options[:suppress_link], format_item_value(item.value), add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" 
   end
