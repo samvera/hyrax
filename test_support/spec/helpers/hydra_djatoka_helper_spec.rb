@@ -25,7 +25,7 @@ describe HydraDjatokaHelper do
       mock_doc.expects(:kind_of?).with(SolrDocument).returns(true)
       mock_doc.expects(:id).returns("myPid")
 
-      hydra_djatoka_url_for(mock_doc, :scale=>"90").should == "/get/myPid.jp2?image_server[scale]=90"
+      hydra_djatoka_url_for(mock_doc, :scale=>"90").should == "/get/myPid.jp2?image_server%5Bscale%5D=90"
     end
   end
   
