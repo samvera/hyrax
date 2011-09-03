@@ -160,7 +160,7 @@ namespace :hyhead do
       system("source ./test_app/.rvmrc")
       
       puts "Installing rails, bundler and devise"
-      %x[gem install --no-rdoc --no-ri 'rails']
+      %x[gem install --no-rdoc --no-ri 'rails' --version '~> 3.0.4']
       %x[gem install --no-rdoc --no-ri 'bundler']
       %x[gem install --no-rdoc --no-ri 'devise']
       

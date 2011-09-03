@@ -38,8 +38,10 @@ If you are not using RVM, consult the appropriate online documentation for insta
 
 h3. Install Rails, Bundler and Devise
 
+Currently hydra-head is compatible with Rails 3.0.x and incompatible with Rails 3.1
+
 <pre>
-gem install 'rails'
+gem install 'rails' --version '~> 3.0.4'
 gem install 'bundler'
 gem install 'devise'
 </pre>
