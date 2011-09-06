@@ -1,3 +1,4 @@
+require "hydra/submission_workflow"
 module HydraHelper
   include Hydra::SubmissionWorkflow
   

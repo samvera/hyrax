@@ -3,5 +3,6 @@ module Hydra::Controller
   def self.included(base)
     base.helper :hydra_assets
     base.helper :hydra_fedora_metadata
+    base.helper :generic_content_objects
   end
 end
