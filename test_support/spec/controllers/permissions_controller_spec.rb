@@ -42,7 +42,7 @@ describe PermissionsController do
       
       ActiveFedora::Base.expects(:load_instance).with("_pid_").returns(mock_object)
 
-      post :create, :id=>"_pid_", :permission => {"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}      
+      post :create, :asset_id=>"_pid_", :permission => {"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}      
       # post :create, :asset_id=>"_pid_", :permission => {"person"=>"_person_id_","level"=>"read"}
     end
     it "should rely on .update method"
@@ -69,7 +69,7 @@ describe PermissionsController do
       # this is what currently works 
       # post :update, :asset_id=>"_pid_", :actor_type=>"group", :actor_id=>"_group_id_", :permission => {"group"=>"_group_id_","level"=>"discover"}
       
-      post :update, :id=>"_pid_", :permission => {"group"=>{"_group_id_"=>"discover"}}
+      post :update, :asset_id=>"_pid_", :permission => {"group"=>{"_group_id_"=>"discover"}}
     end
     it "should add a rightsMetadata datastream if it doesn't exist"
     it "should not cause the metadata to be indexed twice" do

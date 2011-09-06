@@ -44,6 +44,9 @@ class ContributorsController < ApplicationController
   
   # Not sure how the #create method was intended to work, but this seems like it works and takes a hybrid approach to how the contributors were handled between this and the AssetsController work.
   def update
+    if params[:id].nil?  
+      params[:id] = params[:asset_id]
+    end
     @document = load_document_from_params
     # generates sanatized params from params hash to update the doc with
     sanitize_update_params
@@ -51,21 +54,21 @@ class ContributorsController < ApplicationController
     @document.save
     flash[:notice] = "Your changes have been saved."
     if params.has_key? :add_another_author
-      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor, :add_contributor => true}) 
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:asset_id], :wf_step => :contributor, :add_contributor => true}) 
     else
-      redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
+      redirect_to( {:controller => "catalog", :action => "edit", :id => params[:asset_id]}.merge(params_for_next_step_in_wokflow) )
     end
   end
   
   def destroy
     af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
-    @document_fedora = af_model.find(params[:id])
+    @document_fedora = af_model.find(params[:asset_id])
     @document_fedora.remove_contributor(params[:contributor_type], params[:index])
     result = @document_fedora.save
     if request.xhr?
       render :text=>result.inspect
     else
-      redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :contributor})
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:asset_id], :wf_step => :contributor})
     end
   end
   

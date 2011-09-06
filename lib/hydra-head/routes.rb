@@ -25,7 +25,7 @@ module HydraHead
 
     def default_route_sets
       #[:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :superuser,:catalog, :get]
-      [:get, :catalog, :superuser, :assets_with_all_nested_routes]
+      [:get, :catalog, :superuser, :permissions, :assets_with_all_nested_routes]
     end
 
     module RouteSets
@@ -38,6 +38,7 @@ module HydraHead
           resources :assets do 
             # this is to remove documents from SOLR but not from Fedora.
             resources :contributors, :only=>[:new,:create]
+            match '/contributors', :to => 'contributors#update', :as => 'update_contributors'
             match 'contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'contributor', :via => 'get'
             match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
             resources :file_assets
@@ -47,6 +48,12 @@ module HydraHead
             # Allow updates to assets/:asset_id/permissions (no :id necessary)
             match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'
           end
+        end
+      end
+      
+      def permissions
+        add_routes do |options|
+          resources :permissions
         end
       end
 

@@ -40,7 +40,7 @@ describe ContributorsController do
       mock_dataset.expects(:save)
       ModsAsset.expects(:find).with("_PID_").returns(mock_dataset)
       
-      delete :destroy, :id=>"_PID_", :content_type => "mods_asset", :contributor_type=>"conference", :index=>"3"
+      delete :destroy, :asset_id=>"_PID_", :content_type => "mods_asset", :contributor_type=>"conference", :index=>"3"
     end
   end
   
