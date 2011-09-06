@@ -50,7 +50,7 @@ module HydraFedoraMetadataHelper
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
-      processed_field_value = white_list( RedCloth.new(current_value, [:sanitize_html]).to_html)
+      processed_field_value = Sanitize.clean( RedCloth.new(current_value, [:sanitize_html]).to_html, Sanitize::Config::BASIC)
         body << "<textarea class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" name=\"#{name}\" rows=\"10\" cols=\"25\">#{h(current_value.strip)}</textarea>"
         body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" unless z == 0
     end
