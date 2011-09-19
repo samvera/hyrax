@@ -80,6 +80,7 @@ describe HydraHelper do
       submit_name.should == "Continue"
     end
     it "should return 'Save and Continue' if all else fails" do
+      stubs(:params).returns({})
       submit_name.should == "Save and Continue"
     end
   end
