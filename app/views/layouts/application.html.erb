@@ -27,7 +27,7 @@
 
   	<div id="hd">
   		<%= render :partial => '/user_util_links.html' %>
-  		<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>" : "" %>
+  		<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %>
   	</div>
   
     <div id="bd">

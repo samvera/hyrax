@@ -25,7 +25,7 @@ module HydraFedoraMetadataHelper
     result = field_selectors_for(datastream_name, field_key)
     result << body
     
-    return result
+    return result.html_safe
   end
   
   def fedora_text_area(resource, datastream_name, field_key, opts={})
@@ -58,7 +58,7 @@ module HydraFedoraMetadataHelper
     result = field_selectors_for(datastream_name, field_key)
     result << body
 
-    return result
+    return result.html_safe
     
   end
   
@@ -84,7 +84,7 @@ module HydraFedoraMetadataHelper
       result = field_selectors_for(datastream_name, field_key)
       result << body
     end
-    return result
+    return result.html_safe
   end
   
   def fedora_date_select(resource, datastream_name, field_key, opts={})
@@ -136,7 +136,7 @@ module HydraFedoraMetadataHelper
     
     result = field_selectors_for(datastream_name, field_key)
     result << body
-    return result
+    return result.html_safe
   end
 
   def fedora_submit(resource, datastream_name, field_key, opts={})
@@ -145,7 +145,7 @@ module HydraFedoraMetadataHelper
     field_key.each do |pointer|
       result << tag(:input, :type=>"submit", :name=>"field_selectors[#{datastream_name}][#{h_name}]", :value => field_key.to_s.capitalize)
     end
-    return result
+    return result.html_safe
   end
   
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
@@ -171,7 +171,7 @@ module HydraFedoraMetadataHelper
     else
       result << tag(:input, :type=>"checkbox", :id=>h_name, :class=>"fedora-checkbox", :name=>"asset[#{datastream_name}][#{h_name}][0]", :value=>unchecked_value)
     end
-    return result
+    return result.html_safe
   end
   
   # Expects :choices option. 
@@ -208,7 +208,7 @@ module HydraFedoraMetadataHelper
       end
       result
     end
-    return result
+    return result.html_safe
   end
   
   
@@ -216,13 +216,15 @@ module HydraFedoraMetadataHelper
     field_name = field_name_for(field_key) || field_key
     field_type = field_name == "person" ? "person" : "textfield"    
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
-    "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>"
+    result = "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>"
+    return result.html_safe
   end
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
     link_text = "Add #{(opts[:label] || field_key.last || field_key).to_s.camelize.titlecase}"
-    "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>"    
+    result = "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>"    
+    return result.html_safe
   end
   
   def fedora_field_label(datastream_name, field_key, label=nil)
@@ -231,9 +233,9 @@ module HydraFedoraMetadataHelper
       label = field_name
     end
     if params and params[:action] == "show"
-      return content_tag :span, label 
+      return content_tag(:span, label).html_safe
     else
-      return content_tag "label", label, :for=>field_name
+      return content_tag("label", label, :for=>field_name).html_safe
     end
   end
   

@@ -46,8 +46,9 @@ module HydraHead
             resources :grants, :only=>[:new,:create]
             resources :permissions
             # Allow updates to assets/:asset_id/permissions (no :id necessary)
-            match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'
+            match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'            
           end
+          match "generic_contents_object/content/:container_id", :to=>"generic_content_objects#create", :as=>'generic_content_object',  :via => 'post'            
         end
       end
       
