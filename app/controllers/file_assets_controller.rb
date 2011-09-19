@@ -109,10 +109,10 @@ From file_assets/_new.html.haml
       flash[:notice] = "You must specify a file to upload."
     end
     
-    if !params[:container_id].nil?
+    unless params[:container_id].nil?
       redirect_params = {:controller => "catalog", :action => "edit", :id => params[:container_id]}.merge(params_for_next_step_in_wokflow)
     end
-    redirect_params ||= {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow)
+    redirect_params ||= {:controller => "catalog", :action => "index"}
     
     redirect_to redirect_params
   end
