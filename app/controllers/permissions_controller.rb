@@ -107,13 +107,16 @@ Removed from permissions/_new.html.erb
   # Updates the permissions for all actors in a hash.  Can specify as many groups and persons as you want
   # ie. :permission => {"group"=>{"group1"=>"discover","group2"=>"edit"}, {"person"=>{"person1"=>"read"}}}
   def update
-    #pid = params[:asset_id]
-    pid = params[:asset_id]
+    if params[:id].nil?  
+      pid = params[:asset_id]
+    else
+      pid = params[:id]
+    end
     
     dsid = "rightsMetadata"
     # xml_content = Fedora::Repository.instance.fetch_custom(pid, "datastreams/#{dsid}/content")
     #@document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
-    @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
+    @document_fedora=ActiveFedora::Base.load_instance(pid)
     xml_content = @document_fedora.datastreams_in_memory[dsid].content
     ds = Hydra::RightsMetadata.from_xml(xml_content)
     ds.pid = pid
@@ -141,9 +144,9 @@ Removed from permissions/_new.html.erb
       #format.html { redirect_to :controller=>"catalog", :action=>"edit", :id=>params[:asset_id] }
       format.html do
         if params.has_key?(:add_permission)
-          redirect_to :controller=>"catalog", :action=>"edit", :id => params[:asset_id], :wf_step => :permissions, :add_permission => true
+          redirect_to :controller=>"catalog", :action=>"edit", :id => pid, :wf_step => :permissions, :add_permission => true
         else
-          redirect_to( {:controller => "catalog", :action => "edit", :id => params[:asset_id]}.merge(params_for_next_step_in_wokflow) )
+          redirect_to( {:controller => "catalog", :action => "edit", :id => pid}.merge(params_for_next_step_in_wokflow) )
         end
       end
       format.inline do
