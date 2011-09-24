@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'launchy'
   s.add_dependency 'linecache'
   s.add_dependency 'mime-types'
+  s.add_dependency 'mediashelf-loggable', "=0.4.7" # Solrizer defines this dependency but its' gemspec needs to be updated.  Until then we'll require 0.4.7.
   s.add_dependency 'multipart-post'
   s.add_dependency 'nokogiri' # Default to using the version required by Blacklight
   s.add_dependency 'om', '>=1.2.3'
@@ -52,6 +53,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'ruby-debug-base'
   s.add_development_dependency 'rspec', '>= 2.0.0'  
   s.add_development_dependency 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
+  s.add_development_dependency 'rest-client'
   s.add_development_dependency 'sqlite3-ruby', '1.2.5'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'mocha'
