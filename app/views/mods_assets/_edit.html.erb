@@ -1,5 +1,5 @@
 <% if !session[:scripts] %>
-  <%= render_previous_workflow_steps %>
+  <%= render_previous_workflow_steps.html_safe %>
   <%= render_submission_workflow_step -%>
 <% else %>
   <%= render_all_workflow_steps %>

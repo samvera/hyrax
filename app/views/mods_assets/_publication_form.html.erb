@@ -1,7 +1,7 @@
 <%- form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id]), :class => "step") do -%>
   <%= hidden_field_tag("_method","put") %>
   <p id="title_field" class="fedora-text-field">
-    <%= fedora_field_label("descMetadata", [:title_info,:main_title], "Title<span class=\"required-note\">Required</span>") %>
+    <%= fedora_field_label("descMetadata", [:title_info,:main_title], "Title<span class=\"required-note\">Required</span>".html_safe) %>
     <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false, :required=>true) %>
   </p>
   <%= render :partial=>"mods_assets/edit_journal", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:journal) %>
