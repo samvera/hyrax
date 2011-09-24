@@ -1,4 +1,4 @@
-<%= if params.has_key?(:add_permission) -%>
+<%- if params.has_key?(:add_permission) -%>
   <%#= render :partial=>"permissions/new.html", :locals=>{:asset_id=>asset_id} %>
   <%- form_tag({:controller=>"permissions", :action=> "create", :asset_id=>params[:id]}, :class => "step") do -%>
     <%= render :partial=>"permissions/new.html" %>

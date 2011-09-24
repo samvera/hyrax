@@ -22,11 +22,11 @@
             <% choice_name = choice.values.first %>
             <% if role_permissions == choice_name %>
               <option value="<%=h choice_name %>" selected="selected">
-                 <%= choice_label %>
+                 <%= choice_label.html_safe %>
               </option>
             <% else %>
               <option value="<%=h choice_name %>">
-                 <%= choice_label %>
+                 <%= choice_label.html_safe %>
               </option>
             <% end %>
           <% end %>
