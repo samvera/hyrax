@@ -60,13 +60,14 @@ Feature: Edit Article Contributors
     And I should see "Baltimore"
     And I should not see a delete contributor button for "the 2nd person entry in hydrangea:fixture_mods_article1"
 
-    Then the "organization_0_namePart" field should contain "NSF"
-    And I should see "Funder" within "#organization_0"    
-    And I should not see a delete contributor button for "the 1st organization entry in hydrangea:fixture_mods_article1"
+    # The following 6 lines are commented out due to the organization being removed from the contributors forms in the Mods Asset Workflow document
+    #Then the "organization_0_namePart" field should contain "NSF"
+    #And I should see "Funder" within "#organization_0"    
+    #And I should not see a delete contributor button for "the 1st organization entry in hydrangea:fixture_mods_article1"
 
-    Then I should see "some conference"
-    And I should see "Host" within "#conference_0"    
-    And I should not see a delete contributor button for "the 1st conference entry in hydrangea:fixture_mods_article1"
+    #Then I should see "some conference"
+    #And I should see "Host" within "#conference_0"    
+    #And I should not see a delete contributor button for "the 1st conference entry in hydrangea:fixture_mods_article1"
 
   @local
   Scenario: Viewing contributors in browse mode
@@ -78,7 +79,7 @@ Feature: Edit Article Contributors
     And I should not see a delete contributor button for "the 1st person entry in libra-oa:1"
     
   Scenario: Deleting contributors
-    Given I am logged in as "archivist1"
+    Given I am logged in as "archivist1@example.com"
     When I am on the edit contributor page for libra-oa:1
     And I press "Add Another Author"
     When I fill in "person_1_computing_id" with "012345"

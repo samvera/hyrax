@@ -39,7 +39,7 @@ Feature: HTML validity
     
   Scenario: Record view edit (authenticated)
     Given I am logged in as "archivist1@example.com" 
-    When I am on the edit document page for hydrangea:fixture_mods_article2
+    When I am on the edit publication page for hydrangea:fixture_mods_article1
     Then show me the page
     Then the "journal_0_title_info_main_title" field should contain "TITLE OF HOST JOURNAL" 
     Then show me the page
