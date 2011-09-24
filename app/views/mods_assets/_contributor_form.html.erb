@@ -1,4 +1,4 @@
-<%= form_tag(url_for(:controller=>"contributors",:action=>"update", :asset_id=>params[:id]), :class => "step") do -%>
+<%= form_tag(asset_update_contributors_path(:asset_id=>params[:id]), :method => "GET", :class => "step") do -%>
   <fieldset id="contributors_fields">
 		<legend>Authors</legend>
 	  <p class="legend-caption">An individual or organizational author of work.</p>	
