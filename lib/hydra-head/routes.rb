@@ -39,8 +39,11 @@ module HydraHead
             # this is to remove documents from SOLR but not from Fedora.
             resources :contributors, :only=>[:new,:create]
             match '/contributors', :to => 'contributors#update', :as => 'update_contributors'
+            # We would need to include the rails JS files (or implement our own) if we want this to work w/ DELETE because we delete from a link not a button.
+            #match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
+            match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect'
+            # There is no ContributorsController#show
             match 'contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'contributor', :via => 'get'
-            match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
             resources :file_assets
             resources :downloads, :only=>[:index]
             resources :grants, :only=>[:new,:create]

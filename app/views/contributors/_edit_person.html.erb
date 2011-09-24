@@ -33,8 +33,7 @@
 
       <% if ( (person_counter > 0) && (params[:action] == "edit" || params[:action] == "create")) %>
         <p class="delete-person"><%#= field_selectors_for("descMetadata", [{:person=>person_counter}]) %>
-          <%= link_to("Delete", url_for({:controller=>"contributors", :action=>"destroy", :asset_id=>@document_fedora.pid, :contributor_type=>"person", :index=>person_counter, :content_type=>af_model}), :title=>"Delete #{person_name}", :class=>"destructive destroy_contributor") %>
-          <!--<a class="destructive destroy_contributor" href="<%= asset_contributor_path(@document_fedora.pid, "person", person_counter) %>" title="Delete '<%= person_name %>'"> Delete</a>-->
+          <%= link_to("Delete", asset_connect_path(:asset_id=>@document_fedora.pid, :contributor_type=>"person", :index=>person_counter, :content_type=>af_model), :title=>"Delete #{person_name}", :class=>"destructive destroy_contributor") %>
         </p>
       <% end %>
   </fieldset>
