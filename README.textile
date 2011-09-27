@@ -41,9 +41,8 @@ h3. Install Rails, Bundler and Devise
 _Important_ The Rails3 version of hydra-head currently only works with the 3.0.x range of rails.  It does not yet work with Rails 3.1.
 
 <pre>
-gem install 'rails' -v"3.0.4"
+gem install 'rails' -v"3.0.10"
 gem install 'bundler'
-gem install 'devise'
 </pre>
   
 h3. Generate a new rails application:
