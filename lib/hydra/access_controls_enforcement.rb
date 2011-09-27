@@ -189,10 +189,11 @@ module Hydra::AccessControlsEnforcement
   def build_lucene_query(user_query)
     q = ""
     # start query of with user supplied query term
-      q << "_query_:\"{!dismax qf=$qf_dismax pf=$pf_dismax}#{user_query}\""
+      q << "_query_:\"{!dismax qf=$qf_dismax pf=$pf_dismax}#{user_query}\" AND " if user_query
+
 
     # Append the exclusion of FileAssets
-      q << " AND NOT _query_:\"info\\\\:fedora/afmodel\\\\:FileAsset\""
+      q << "NOT _query_:\"info\\\\:fedora/afmodel\\\\:FileAsset\""
 
     # Append the query responsible for adding the users discovery level
       permission_types = ["edit","discover","read"]

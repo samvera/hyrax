@@ -1,4 +1,3 @@
-#require 'rake/testtask'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'thor/core_ext/file_binary_read'
@@ -162,7 +161,7 @@ namespace :hyhead do
       puts "Installing rails, bundler and devise"
       %x[gem install --no-rdoc --no-ri 'rails' -v "<3.1"]
       %x[gem install --no-rdoc --no-ri 'bundler']
-      %x[gem install --no-rdoc --no-ri 'devise']
+#      %x[gem install --no-rdoc --no-ri 'devise']
       
       puts "Generating new rails app"
       %x[rails new test_app]
