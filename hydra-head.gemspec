@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mediashelf-loggable', '>=0.4.7' ##This can be removed once this dependency is declared in solrizer
   s.add_dependency 'solrizer', '>=1.1.0'
   s.add_dependency 'solrizer-fedora', '>=1.1.0'
-  s.add_dependency 'sqlite3-ruby', '>=1.3.1'
+  s.add_dependency 'sqlite3-ruby', '>=1.2.5'
   s.add_dependency 'term-ansicolor'
   s.add_dependency 'trollop'
   s.add_dependency 'will_paginate'
