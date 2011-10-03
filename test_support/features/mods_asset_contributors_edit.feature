@@ -23,14 +23,6 @@ Feature: Edit Article Contributors
     # And I should see "Contributor" within "select[rel=person_1_role_text]" # Author roles are implicit
     And the "Institution" field within "#person_1" should contain "Baltimore"
     And I should see a delete contributor button for "the 2nd person entry in hydrangea:fixture_mods_article1"
-    
-    Then the "Organization" field should contain "NSF"
-    And I should see "Funder" within "#organization_0_role_text"    
-    And I should see a delete contributor button for "the 1st organization entry in hydrangea:fixture_mods_article1"
-    
-    Then the "conference_0_namePart" field should contain "some conference"
-    And I should see "Host" within "#conference_0_role_text"    
-    And I should see a delete contributor button for "the 1st conference entry in hydrangea:fixture_mods_article1"
 
   @local
   Scenario: Viewing contributors in edit mode
