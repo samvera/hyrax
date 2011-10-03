@@ -3,7 +3,7 @@ Feature: Objects Without Models - Show View
 
   Scenario: In Show View for Object Without a Model
 # FIXME: you can't get to show view for object with no model ... not even with edit permissions
-#    Given I am logged in as "archivist1" 
+#    Given I am logged in as "archivist1@example.com" 
 #    And I am on the show document page for hydra:test_no_model
 #    Then I should see "test object for default partials"
 
@@ -14,14 +14,14 @@ Feature: Objects Without Models - Show View
 
   Scenario: html5 valid - authenticated (read)
 # FIXME: you can't get to show view for object with no model ... not even with edit permissions
-#    Given I am logged in as "public" 
+#    Given I am logged in as "public@nopermissions.com" 
 #    And I am on the show document page for hydra:test_no_model
 #    Then I should see "test object for default partials"
 #    And the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated (edit)
 # FIXME: you can't get to show view for object with no model ... not even with edit permissions
-#    Given I am logged in as "archivist1" 
+#    Given I am logged in as "archivist1@example.com" 
 #    And I am on the show document page for hydra:test_no_model
 #    Then I should see "test object for default partials"
 #    And the page should be HTML5 valid

@@ -14,7 +14,7 @@ Feature: Default Partials in Search Results
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated 
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the home page
     And I fill in "q" with "default"
     When I press "submit"

@@ -3,14 +3,16 @@
 
 <div class="document_viewer" id="cover_container">
   <dl class="defList">
-    <%= get_data_with_label(document, "ID:", 'id') %>
+    <dt>ID: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"id") %></dd>
     <dt>Download:</dt>
     <dd id="downloads">
 	  <ul>
         <% %>
       </ul>
     </dd>
-    <%= get_data_with_label(document, "Copyright:", 'rights_t') %>
+    <dt>Copyright: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"rights_t") %></dd>
   </dl>
 </div>
 <div class="<%= params[:action]%>_details">

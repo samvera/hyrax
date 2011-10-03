@@ -17,7 +17,7 @@ Feature: ModsAsset Search Result
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated 
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the home page
     And I follow "Article"
     Then the page should be HTML5 valid

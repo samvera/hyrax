@@ -1,7 +1,7 @@
 # @example
-#   I log in as "archivist1"
+#   I log in as "archivist1@example.com"
 # @example
-#   I am logged in as "archivist1"
+#   I am logged in as "archivist1@example.com"
 Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |email|
   # Given %{a User exists with a Login of "#{login}"}
   user = User.create(:email => email, :password => "password", :password_confirmation => "password")

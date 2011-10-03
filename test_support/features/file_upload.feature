@@ -50,7 +50,7 @@ Feature: Upload file into a document
   # Not sure if the file asset list is valid.  Will the user ever actually be here?  
   # @nojs
   # Scenario: Upload files on file assets list page
-  #   Given I am logged in as "archivist1"
+  #   Given I am logged in as "archivist1@example.com"
   #   And I am on the file asset list page for hydrangea:fixture_mods_dataset1
   #   And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
   #   When I press "Upload File"
@@ -58,7 +58,7 @@ Feature: Upload file into a document
   #   And I should see a link to "image.jp2" in the file assets list
   # 
   # Scenario: Upload files on file asset creation page
-  #   Given I am logged in as "archivist1"
+  #   Given I am logged in as "archivist1@example.com"
   #   And I am on the file asset creation page for hydrangea:fixture_mods_dataset1
   #   And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
   #   When I press "Upload File"
@@ -66,7 +66,7 @@ Feature: Upload file into a document
   #   And I should see a link to "image.jp2" in the file assets list
   # 
   # Scenario: html5 valid uploading files on file assets list page
-  #   Given I am logged in as "archivist1"
+  #   Given I am logged in as "archivist1@example.com"
   #   And I am on the file asset creation page for hydrangea:fixture_mods_article1
   #   And I attach the file "spec/fixtures/image.jp2" to "Filedata[]"
   #   When I press "Upload File"

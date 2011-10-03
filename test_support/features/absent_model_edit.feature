@@ -3,7 +3,7 @@ Feature: Objects Without Models - Edit View
 
   Scenario: In Edit View for Object Without a Model
 # FIXME: you can't get to edit view for object with no model ... not even with edit permissions
-#    Given I am logged in as "archivist1" 
+#    Given I am logged in as "archivist1@example.com" 
 #    And I am on the edit document page for hydra:test_no_model
 #    Then I should see "hydra test object without a model"
 
@@ -13,14 +13,14 @@ Feature: Objects Without Models - Edit View
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated (read)
-    Given I am logged in as "public" 
+    Given I am logged in as "public@nopermissions.com" 
     And I am on the edit document page for hydra:test_no_model
     Then I should see "do not have sufficient access privileges"
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated (edit)
 # FIXME:  you can't get to edit view for object with no model ... not even with edit permissions
-#    Given I am logged in as "archivist1" 
+#    Given I am logged in as "archivist1@example.com" 
 #    And I am on the edit document page for hydra:test_no_model
 #    Then I should see "hydra test object without a model"
 #    Then the page should be HTML5 valid

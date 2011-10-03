@@ -12,13 +12,13 @@ Feature: Default Partials - Show View
     And the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated (read)
-    Given I am logged in as "public" 
+    Given I am logged in as "public@nopermissions.com" 
     When I am on the show document page for hydra:test_default_partials
     Then I should see "Download"
     And the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated (edit)
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the show document page for hydra:test_default_partials
     Then I should see "Download"
     And the page should be HTML5 valid

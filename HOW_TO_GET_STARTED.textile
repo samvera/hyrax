@@ -450,7 +450,7 @@ To give yourself permission to view and edit an object, you need to set those pe
 <pre>
   article = JournalArticle.load_instance("changeme:30")
   article.permissions({"group"=>"public"}, "read")
-  article.permissions({"person"=>"archivist1"}, "edit")
+  article.permissions({"person"=>"archivist1@example.com"}, "edit")
   article.save
 </pre>
 
@@ -494,7 +494,7 @@ First, we need to add a link to the Hydra Head that lets you create Journal Arti
     I want to see a button for adding articles
 
     Scenario: button to add articles on home page
-      Given I am logged in as "archivist1"
+      Given I am logged in as "archivist1@example.com"
       When I am on the home page
       Then I should not see "Add a MODS Asset"
       And I should see "Add an Article"

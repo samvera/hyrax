@@ -1,12 +1,15 @@
 <%# default partial to display solr document fields in catalog show view -%>
 <div>
   <dl class="defList">
-	  <%= get_data_with_label(document, "Title:", 'title_t') %>
-	  <%= get_data_with_label(document, "Author:", 'creator_t') %>
-	  <%= get_textile_data_with_label(document, "Links:", 'relation_t') %>
-	  <%= show_formats(document['format']) %>
-
-      <%= get_data_with_label(document, "Date:", 'date_t') %>  
-      <%= get_data_with_label(document, "Type:", 'medium_t') %>
+    <dt>Date: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"date_t") %></dd>
+    <dt>Title: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"title_t") %></dd>
+    <dt>Document Type: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"medium_t") %></dd>
+    <dt>Location: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"location_t") %></dd>
+    <dt>Date: </dt>
+    <dd><%= render_document_show_field_value(:document=>document, :field=>"date_t") %></dd>
   </dl>
 </div>

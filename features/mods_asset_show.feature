@@ -46,7 +46,7 @@ Feature: ModsAsset Show View
   
   @overwritten
   Scenario: Archivist visits Show Page for Restricted Document
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the show document page for hydrangea:fixture_archivist_only_mods_article
     Then I should see "Article for Archivist Eyes Only"
     And I should see "Sally"
@@ -58,7 +58,7 @@ Feature: ModsAsset Show View
   
   @local
   Scenario: Archivist visits Show Page for Restricted Document
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     And I am on the show document page for libra-oa:7
     Then I should see "Khadzhi-Murat's Silence"
     And I should see "David Herman"
@@ -74,7 +74,7 @@ Feature: ModsAsset Show View
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the show document page for hydrangea:fixture_mods_article1
     Then the page should be HTML5 valid
 
@@ -84,7 +84,7 @@ Feature: ModsAsset Show View
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated for restricted document
-    Given I am logged in as "archivist1" 
+    Given I am logged in as "archivist1@example.com" 
     When I am on the show document page for hydrangea:fixture_archivist_only_mods_article
     Then the page should be HTML5 valid
 
