@@ -1,4 +1,4 @@
-<%- form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id]), :class => "step") do -%>
+<%= form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id]), :class => "step") do -%>
   <%= hidden_field_tag("_method","put") %>
   <p id="title_field" class="fedora-text-field">
     <%= fedora_field_label("descMetadata", [:title_info,:main_title], "Title<span class=\"required-note\">Required</span>".html_safe) %>
