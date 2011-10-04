@@ -21,8 +21,8 @@ Given /^I am logged in as "([^\"]*)" with "([^\"]*)" permissions$/ do |login,per
 end
 
 Given /^I am a superuser$/ do
-  Given %{I am logged in as "BigWig"}
-  bigwig_id = User.find_by_email("BigWig@BigWig.com").id
+  Given %{I am logged in as "bigwig@example.com"}
+  bigwig_id = User.find_by_email("bigwig@example.com").id
   superuser = Superuser.create(:id => 20, :user_id => bigwig_id)
   visit superuser_path
 end
