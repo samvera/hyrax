@@ -11,6 +11,7 @@ describe Hydra::Controller do
     HydraControllerTest.expects(:helper).with(:hydra_assets)
     HydraControllerTest.expects(:helper).with(:hydra_fedora_metadata)
     HydraControllerTest.expects(:helper).with(:generic_content_objects)
+    HydraControllerTest.stubs(:before_filter)
     HydraControllerTest.send(:include, Hydra::Controller)
   end
 end
