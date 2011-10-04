@@ -39,7 +39,7 @@ $(document).ready(function() {
     HydraHead.target = null;
     var all_forms = $('.document_edit form');
     
-    $('input[type="submit"], .all-steps-actions button').click(function() {
+    $('.document_edit input[type="submit"], .all-steps-actions button').click(function() {
       HydraHead.target = $(this);
       all_forms.first().submit();
       return false;
