@@ -62,5 +62,4 @@ Feature: Edit a ModsAsset object
   Scenario: Delete Confirmation on Edit Page
     Given I am logged in as "archivist1@example.com" 
     When I am on the edit document page for hydrangea:fixture_mods_article1 
-    Then I should see a "div" tag with an "id" attribute of "delete_dialog_container"
-    And I should see "Permanently delete"
+    Then I should see a "div" tag with a "class" attribute of "delete-asset"

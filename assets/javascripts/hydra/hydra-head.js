@@ -27,10 +27,13 @@ $(document).ready(function() {
 // Define Hydra-Head methods for HydraHead object
 (function($) {
   
-  // Take Javascript-enabled users to the combined view
+  // Take Javascript-enabled users to the combined view by 
+  // adding a parameter to necessary URLs.
   HydraHead.add_asset_links = function() {
-    $('.create_asset, .edit-browse .edit').each(function() {
-      $(this).attr('href', $(this).attr('href') + "&combined=true");
+    $('.create_asset, .edit-browse .edit, .document .document_title a').each(function() {
+      var url = $(this).attr('href');
+      // Check to see if there are already URL encoded params before adding our new param
+      $(this).attr('href', url + ((url).indexOf('?') != -1 ? "&combined=true" : "?combined=true"));    
     });
   };
   

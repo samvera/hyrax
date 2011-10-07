@@ -33,3 +33,8 @@
     </div>
   </div>
 </div>
+<% if controller.action_name == "edit" %>
+  <div class="delete-asset">
+    <%= button_to("Delete This Item", {:action => :destroy, :controller => :assets, :id => @document_fedora.pid}, :confirm => 'Are you sure?', :method => :delete )%>
+  </div>
+<% end %>
