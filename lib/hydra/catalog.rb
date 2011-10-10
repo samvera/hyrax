@@ -24,7 +24,7 @@ module Hydra::Catalog
     
     # Controller filters
     # Also see the generator (or generated CatalogController) to see more before_filters in action
-    klass.before_filter :require_solr, :require_fedora
+    klass.before_filter :require_solr, :require_fedora, :check_scripts
     klass.before_filter :load_fedora_document, :only=>[:show,:edit]
     
     # View Helpers
@@ -55,5 +55,9 @@ module Hydra::Catalog
     end
     @file_assets = @document_fedora.file_objects(:response_format=>:solr)
   end
-
+  
+  
+  def check_scripts
+    session[:scripts] ||= (params[:combined] and params[:combined] == "true")
+  end
 end

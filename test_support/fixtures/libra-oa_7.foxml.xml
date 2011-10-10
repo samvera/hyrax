@@ -1662,7 +1662,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
   <access type="edit">
     <human></human>
     <machine>
-      <person>archivist1</person>
+      <person>archivist1@example.com</person>
     </machine>
   </access>
   <embargo>
@@ -1692,7 +1692,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
   <access type="edit">
     <human></human>
     <machine>
-      <person>archivist1</person>
+      <person>archivist1@example.com</person>
     </machine>
   </access>
   <embargo>
