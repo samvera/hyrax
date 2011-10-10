@@ -15,6 +15,7 @@
 #   
 # end
 #
+require 'active_fedora/version'
 module MediaShelf
   module ActiveFedoraHelper
 
@@ -42,7 +43,12 @@ module MediaShelf
     private
   
     def require_fedora
-      Fedora::Repository.register(ActiveFedora.fedora_config[:url],  session[:user])
+      if ActiveFedora::VERSION < "3.1.0"
+        
+        Fedora::Repository.register(ActiveFedora.fedora_config[:url],  session[:user])
+      else
+        ActiveSupport::Deprecation.warn("ActiveFedoraHelper.require_fedora has been deprecated and no longer has any effect.")
+      end
       return true
     end
   
