@@ -4,6 +4,7 @@
 # development environment upon cd'ing into the directory
 
 ruby_string="ree-1.8.7"
+rubygems_version="1.6.2"
 gemset_name="hyhead-rails3"
 
 # Install rubies when used instead of only displaying a warning and exiting
@@ -23,6 +24,11 @@ if [[ -d "${rvm_path:-$HOME/.rvm}/environments" \
 else
   # If the environment file has not yet been created, use the RVM CLI to select.
   rvm --create "$environment_id"
+fi
+
+# Use the specified rubygems_version
+if [[ -n "${rubygems_version}" && ("$(gem --version)" != ${rubygems_version}) ]] ; then
+  rvm rubygems "${rubygems_version}"
 fi
 
 # Ensure that Bundler is installed, install it if it is not.
