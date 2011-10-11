@@ -13,19 +13,30 @@ Blacklight.do_folder_toggle_behavior = function(){};
 
 Blacklight.do_facet_expand_contract_behavior = function(){};
 
-HydraHead = {validation: true, combinedEdit: true};
+HydraHead = {validation: true, combinedEdit: true, autoSave: true};
 
 // Load appropriate Hydra-Head functions when document is ready
 $(document).ready(function() {
-  if(HydraHead.combinedEdit){
-    HydraHead.add_asset_links();
-  }
-  HydraHead.enable_form_save();
-  HydraHead.add_keywords();
+  HydraHead.init();
 });
 
 // Define Hydra-Head methods for HydraHead object
 (function($) {
+  
+  /*************************
+   * PUBLIC METHODS        *
+   *************************/
+  
+  HydraHead.init = function() {
+    if(this.combinedEdit){
+      this.add_asset_links();
+    }
+    if(this.autoSave){
+      this.auto_save();
+    }
+    this.enable_form_save();
+    this.add_keywords();
+  }
   
   // Take Javascript-enabled users to the combined view by 
   // adding a parameter to necessary URLs.
@@ -75,6 +86,18 @@ $(document).ready(function() {
       return false;
     });
   }
+  
+  // When an input changes (using blur for IE consistency), 
+  // submit the containing form.
+  HydraHead.auto_save = function() {
+    $('.document_edit input, .document_edit textarea, .document_edit select').blur(function() {
+      $(this).closest('form').ajaxSubmit();
+    });
+  };
+  
+  /*************************
+   * PRIVATE METHODS       *
+   *************************/
   
   // Display a saving notice and spinner that takes up the whole screen.
   formPreSave = function() {
@@ -160,8 +183,7 @@ $(document).ready(function() {
     }
     
     return valid;
-  };
-  
+  };  
   
   // Print notice at top of page of invalid input
   printValidationError = function() {
