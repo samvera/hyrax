@@ -75,7 +75,7 @@ module Hydra::ModelMethods
     return result
   end
   
-  # Call to remove file obects
+  # Call to remove file objects
   def destroy_child_assets
     destroyable_child_assets.each.inject([]) do |destroyed,fo|
         destroyed << fo.pid

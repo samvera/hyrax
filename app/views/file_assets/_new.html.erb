@@ -1,2 +1,6 @@
-<%=render :partial=>"fluid_infusion/uploader" %>
-<%#=render :partial=>"fluid_infusion/uploader_js" %>
+<%- field_tag_options = defined?(uploader_options) ? uploader_options : {:id => nil} %>
+<div class="uploader-contents">
+  <p>Browse to upload a file.</p>
+  <!-- <input name="Filedata-orig" type="file" /> -->
+  <%= file_field_tag "Filedata[]", field_tag_options %>
+</div>

@@ -40,12 +40,14 @@
 require 'hydra'
 
 class GenericImage < ActiveFedora::Base
-  include Hydra::GenericImage
+
+  # adds helpful methods for basic hydra objects
   include Hydra::ModelMethods
   
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata 
 
+  include Hydra::GenericImage
   has_metadata :name => "descMetadata", :type => Hydra::ModsImage
   
   # A place to put extra metadata values

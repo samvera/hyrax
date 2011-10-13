@@ -1,5 +1,5 @@
 require 'mediashelf/active_fedora_helper'
-
+require 'sanitize'
 module HydraAssetsHelper
   include MediaShelf::ActiveFedoraHelper
 
@@ -18,11 +18,14 @@ module HydraAssetsHelper
   # Render a link to delete the given asset from the repository.
   # Includes a confirmation message. 
   def delete_asset_link(pid, asset_type_display="asset")
-    "<a href=\"#{ url_for(:action=>:delete, :controller=>:catalog, :id=>pid)}\" class=\"delete_asset\" >Delete this #{asset_type_display}</a>".html_safe
+    "<a href=\"#{ url_for(:action=>:delete, :controller=>:catalog, :id=>pid)}\" class=\"delete_asset_link\" >Delete this #{asset_type_display}</a>".html_safe
   end
 
   def document_type(document)
-    document.fetch( Blacklight.config[:show][:display_type],[""]).first.gsub("info:fedora/afmodel:","")
+    if (document[Blacklight.config[:show][:display_type]]) 
+      document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","")
+    else ""
+    end
   end
 
   def get_person_from_role(doc,role,opts={})  
@@ -60,16 +63,4 @@ module HydraAssetsHelper
     short_description = desc.capitalize
   end
   
-  def datastream_disseminator_url pid, datastream_name
-    begin
-      base_url = Fedora::Repository.instance.send(:connection).site.to_s
-    rescue
-      base_url = "http://localhost:8983/fedora"
-    end
-    "#{base_url}/get/#{pid}/#{datastream_name}"
-  end
-  
-  def disseminator_link pid, datastream_name
-    "<a class=\"fbImage\" href=\"#{ datastream_disseminator_url(pid, datastream_name) }\">view</a>"
-  end
 end

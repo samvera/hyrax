@@ -23,95 +23,116 @@ describe HydraFedoraMetadataHelper do
   describe "fedora_text_field" do
     it "should generate a text field input with values from the given datastream" do
       generated_html = helper.fedora_text_field(@resource,"ng_ds",[:title, :main_title])
-      generated_html.should have_selector "#title_main_title_0-container.editable-container" do |container|
-        container.should have_selector "span#title_main_title_0-text.editable-text.text", "My Title"
-        container.should have_selector "input#title_main_title_0.editable-edit.edit" do |input|
-          input.should have_selector "[value=?]", "My Title"
-          input.should have_selector "[name=?]", "asset[ng_ds][title_main_title][0]"
-          input.should have_selector "[data-datastream-name=?]", "ng_ds" 
-          input.should have_selector "[rel=?]", "title_main_title"
-        end
+      # For Rails3:
+      # generated_html.should have_selector "input.fieldselector" do |tag|
+      #   tag.should have_selector "[value=?]", "title"
+      #   tag.should have_selector "[value=?]", "main_title"
+      # end
+      # generated_html.should have_selector "input#title_main_title_0.editable-edit.edit" do |tag|
+      #   tag.should have_selector "[value=?]", "My Title"
+      #   tag.should have_selector "[name=?]","asset[ng_ds][title_main_title][0]"
+      #   tag.should have_selector "[data-datastream-name=?]", "ng_ds" 
+      generated_html.should have_selector "input.fieldselector" do |input|
+        with_tag "[value=?]", "title"
+        with_tag "[value=?]", "main_title"
+      end
+      generated_html.should have_selector "input#title_main_title_0.editable-edit.edit" do
+        input.should have_selector "[value=?]", "My Title"
+        input.should have_selector "[name=?]","asset[ng_ds][title_main_title][0]"
+        input.should have_selector "[data-datastream-name=?]", "ng_ds" 
       end
     end
     it "should generate an ordered list of text field inputs" do
       generated_html = helper.fedora_text_field(@resource,"simple_ds","subject")
-      generated_html.should have_selector "ol[rel=subject]" do |tag|
-        tag.should have_selector "li#subject_0-container.editable-container.field" do |tag|
-          tag.should have_selector "a.destructive.field"
-          tag.should have_selector "span#subject_0-text.editable-text.text", "topic1"
-          tag.should have_selector "input#subject_0.editable-edit.edit" do |tag|
-            tag.should have_selector "[value=?]", "topic1"
-            tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
-          end
-        end
-        tag.should have_selector "li#subject_1-container.editable-container.field" do |tag|
-          tag.should have_selector "a.destructive.field"
-          tag.should have_selector "span#subject_1-text.editable-text.text", "topic2"
-          tag.should have_selector "input#subject_1.editable-edit.edit" do |tag|
-            tag.should have_selector "[value=?]", "topic2"
-            tag.should have_selector "[name=?]", "asset[simple_ds][subject][1]"
-          end
-        end
+  # For Rails3
+    #   generated_html.should have_selector "input#subject_0.editable-edit.edit" do |tag|
+    #     tag.should have_selector "[value=?]", "topic1"
+    #     tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
+    #   end
+    #   generated_html.should have_selector "input#subject_1.editable-edit.edit" do |tag|
+    #     tag.should have_selector "[value=?]", "topic2"
+    #     tag.should have_selector "[name=?]", "asset[simple_ds][subject][1]"
+    #   end
+    #   generated_html.should have_selector "a.destructive.field"
+    #   generated_html.should have_selector "input", :class=>"editable-edit", :id=>"subject_1", :name=>"asset[simple_ds][subject_1]", :value=>"topic9"                                                                                        
+    #   generated_html.should be_html_safe
+    # end
+    # it "should render an empty control if the field has no values" do
+    #   helper.fedora_text_field(@resource,"empty_ds","something").should have_selector "#something_0.editable-edit.edit", :value=>''
+    # end
+    # it "should limit to single-value output with no ordered list if :multiple=>false" do
+    #   generated_html = helper.fedora_text_field(@resource,"simple_ds","subject", :multiple=>false)
+    #   generated_html.should have_selector "input#subject.editable-edit.edit[value=topic1]" do |tag|
+    #     tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
+    #   end
+      generated_html.should have_selector "input#subject_0.editable-edit.edit" do |input|
+        input.should have_selector "[value=?]", "topic1"
+        input.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
+      end      
+      generated_html.should have_selector "input#subject_1.editable-edit.edit" do |input|
+        input.should have_selector "[value=?]", "topic2"
+        input.should have_selector "[name=?]", "asset[simple_ds][subject][1]"
       end
+      generated_html.should have_selector "a.destructive.field"
       generated_html.should have_selector "input", :class=>"editable-edit", :id=>"subject_1", :name=>"asset[simple_ds][subject_1]", :value=>"topic9"                                                                                        
-      generated_html.should be_html_safe
     end
     it "should render an empty control if the field has no values" do
-      helper.fedora_text_field(@resource,"empty_ds","something").should have_selector "li#something_0-container.editable-container" do |tag|
-        tag.should have_selector "#something_0-text.editable-text.text", ""
-      end
+      helper.fedora_text_field(@resource,"empty_ds","something").should have_selector "#something_0.editable-edit.edit", :value => ""
     end
     it "should limit to single-value output with no ordered list if :multiple=>false" do
-      generated_html = helper.fedora_text_field(@resource,"simple_ds","subject", :multiple=>false)
-      generated_html.should_not have_selector "ol"
-      generated_html.should_not have_selector "li"
-      
-      generated_html.should have_selector "span#subject-container.editable-container.field" do |tag|
-        tag.should have_selector "span#subject-text.editable-text.text", "topic1"
-        tag.should have_selector "input#subject.editable-edit.edit[value=topic1]" do |tag|
-          tag.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
-        end
-      end
+      generated_html = helper.fedora_text_field(@resource,"simple_ds","subject", :multiple=>false)      
+      generated_html.should have_selector "input#subject.editable-edit.edit[value=topic1]" do |input|
+        input.should have_selector "[name=?]", "asset[simple_ds][subject][0]"
+      end                                                                                                                                                                                                
     end
   end
   
   describe "fedora_text_area" do
     it "should generate an ordered list of textile-enabled text area with values from the given datastream" do
-      helper.fedora_text_area(@resource,"simple_ds","subject").should have_selector "ol[rel=subject]" do |tag|
-        tag.should have_selector "li#subject_0-container.field" do |tag|
-          tag.should_not have_selector "a.destructive.field"
-          tag.should have_selector "span#subject_0-text.editable-text.text[style=display:none;]", "topic1"
-          tag.should have_selector "textarea#subject_0.editable-edit.edit", "topic1"
-        end 
-        tag.should have_selector "li#subject_1-container.field" do |tag|
-          tag.should have_selector "span#subject_1-text.editable-text.text[style=display:none;]","topic2"
-          tag.should have_selector "textarea#subject_1.editable-edit.edit", "topic2"
-        end 
-      end
+      generated_html = helper.fedora_text_area(@resource,"simple_ds","subject")
+    # Rails3:
+    #   generated_html.should have_selector "textarea#subject_0.editable-edit.edit", :value=>"topic1"
+    #   generated_html.should have_selector "textarea#subject_1.editable-edit.edit", :value=>"topic2"
+    #   generated_html.should have_selector "a.destructive.field"
+    # end
+    # it "should render an empty control if the field has no values" do      
+    #   helper.fedora_text_area(@resource,"empty_ds","something").should have_selector "li#something_0-container.field" do |tag|
+    #     tag.should have_selector "span#something_0-text.editable-text.text[style=display:none;]", ""
+    #     tag.should have_selector "textarea#something_0.editable-edit.edit", ""
+    #   end
+    # end
+    # it "should limit to single-value output if :multiple=>false" do
+    #   generated_html = helper.fedora_text_area(@resource,"simple_ds","subject", :multiple=>false)
+    #   generated_html.should_not have_selector "ol"
+    #   generated_html.should_not have_selector "li"
+    #   generated_html.should have_selector "span#subject-container.field" do |tag|
+    #     tag.should have_selector "span#subject-text.editable-text.text[style=display:none;]", "topic1"
+    #     tag.should have_selector "textarea#subject.editable-edit.edit", "topic1"
+    #   end
+    #   generated_html.should be_html_safe
+      generated_html.should have_selector "textarea#subject_0.editable-edit.edit", :value => "topic1"
+      generated_html.should have_selector "textarea#subject_1.editable-edit.edit", :value => "topic2"
+      generated_html.should have_selector "a.destructive.field"
     end
     it "should render an empty control if the field has no values" do      
-      helper.fedora_text_area(@resource,"empty_ds","something").should have_selector "li#something_0-container.field" do |tag|
-        tag.should have_selector "span#something_0-text.editable-text.text[style=display:none;]", ""
-        tag.should have_selector "textarea#something_0.editable-edit.edit", ""
-      end
+      helper.fedora_text_area(@resource,"empty_ds","something").should have_selector "textarea#something_0.editable-edit.edit", :value => ""
     end
     it "should limit to single-value output if :multiple=>false" do
       generated_html = helper.fedora_text_area(@resource,"simple_ds","subject", :multiple=>false)
-      generated_html.should_not have_selector "ol"
-      generated_html.should_not have_selector "li"
-      generated_html.should have_selector "span#subject-container.field" do |tag|
-        tag.should have_selector "span#subject-text.editable-text.text[style=display:none;]", "topic1"
-        tag.should have_selector "textarea#subject.editable-edit.edit", "topic1"
-      end
-      generated_html.should be_html_safe
+      generated_html.should have_selector "textarea#subject.editable-edit.edit", :value => "topic1"
     end
   end
   
   describe "fedora_select" do
     it "should generate a select with values from the given datastream" do
       generated_html = helper.fedora_select(@resource,"simple_ds","subject", :choices=>["topic1","topic2", "topic3"])
+      # Rails3:
+      # generated_html.should have_selector "select.metadata-dd[name='asset[simple_ds][subject][0]']" do |tag|
+      #   tag.should have_selector "[rel=?]", "subject" 
+      #   tag.should have_selector "option[value=topic1][selected=selected]"
+      #   tag.should have_selector "option[value=topic2][selected=selected]"
+      #   tag.should have_selector "option[value=topic3]"
       generated_html.should have_selector "select.metadata-dd[name='asset[simple_ds][subject][0]']" do |tag|
-        tag.should have_selector "[rel=?]", "subject" 
         tag.should have_selector "option[value=topic1][selected=selected]"
         tag.should have_selector "option[value=topic2][selected=selected]"
         tag.should have_selector "option[value=topic3]"
@@ -127,8 +148,14 @@ describe HydraFedoraMetadataHelper do
   describe "fedora_date_select" do
     it "should generate a date picker with values from the given datastream" do
       generated_html = helper.fedora_date_select(@resource,"simple_ds","subject")
+      # Rails3
+      # generated_html.should have_selector ".date-select[name='asset[simple_ds][subject]']" do |tag|
+      #   tag.should have_selector "[rel=?]", "subject" 
+      #   tag.should have_selector "input#subject-sel-y.controlled-date-part.w4em"
+      #   tag.should have_selector "select#subject-sel-mm.controlled-date-part" do |tag|
+      #     tag.should have_selector "option[value=01]", "January"
+      #     tag.should have_selector "option[value=12]", "December"
       generated_html.should have_selector ".date-select[name='asset[simple_ds][subject]']" do |tag|
-        tag.should have_selector "[rel=?]", "subject" 
         tag.should have_selector "input#subject-sel-y.controlled-date-part.w4em"
         tag.should have_selector "select#subject-sel-mm.controlled-date-part" do |tag|
           tag.should have_selector "option[value=01]", "January"
@@ -184,13 +211,19 @@ describe HydraFedoraMetadataHelper do
   describe "field_selectors_for" do
     it "should generate any necessary field_selector values for the given field" do
       generated_html = helper.field_selectors_for("myDsName", [{:name => 3}, :name_part])
-      generated_html.should have_selector "input.fieldselector[type=hidden][name='field_selectors[myDsName][name_3_name_part][][name]']" do |tag|
-        tag.should have_selector "[rel=name_3_name_part]"
-        tag.should have_selector "[value=3]"
+      # Rails3
+      # generated_html.should have_selector "input.fieldselector[type=hidden][name='field_selectors[myDsName][name_3_name_part][][name]']" do |tag|
+      #   tag.should have_selector "[rel=name_3_name_part]"
+      #   tag.should have_selector "[value=3]"
+      # end
+      # generated_html.should have_selector "input.fieldselector[type=hidden][name='field_selectors[myDsName][name_3_name_part][]']" do |tag|
+      #   tag.should have_selector "[rel=name_3_name_part]"
+      #   tag.should have_selector "[value=name_part]"
+      generated_html.should have_selector "input.fieldselector[type=hidden][name='field_selectors[myDsName][name_3_name_part][][name]']" do |input|
+        input.should have_selector "[value=3]"
       end
-      generated_html.should have_selector "input.fieldselector[type=hidden][name='field_selectors[myDsName][name_3_name_part][]']" do |tag|
-        tag.should have_selector "[rel=name_3_name_part]"
-        tag.should have_selector "[value=name_part]"
+      generated_html.should have_selector "input.fieldselector[type=hidden][name='field_selectors[myDsName][name_3_name_part][]']" do |input|
+        input.should have_selector "[value=name_part]"
       end
       # ordering is important.  this next line makes sure that the inputs are in the correct order
       # (tried using CSS3 nth-of-type selectors in have_selector but it didn't work)

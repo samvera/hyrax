@@ -67,7 +67,7 @@ describe CatalogController do
       it "should only return public documents if role does not have permissions" do
         controller.stubs(:current_user).returns(nil)
         get :index
-        assigns("response").docs.count.should == @public_only_results.docs.count
+        assigns(:document_list).count.should == @public_only_results.docs.count
       end
       it "should return all documents if role does have permissions" do
 	User.any_instance.stubs(:login).returns("BigWig")
@@ -75,7 +75,7 @@ describe CatalogController do
         session[:superuser_mode] = true
         controller.stubs(:current_user).returns(mock_user)
         get :index
-        assigns["response"].docs.count.should > @public_only_results.docs.count
+        assigns(:document_list).count.should > @public_only_results.docs.count
       end
     end
   end

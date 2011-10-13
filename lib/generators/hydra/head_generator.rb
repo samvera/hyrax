@@ -69,6 +69,15 @@ EOF
   end
   
   #
+  # Static Assets
+  #
+  # Call external generator in AssetsGenerator, which copies static assets like stylesheets, javascript and images 
+  # into the app's public directory
+  def copy_public_assets 
+    generate "hydra:assets"
+  end
+  
+  #
   # Migrations
   #
   
@@ -125,10 +134,20 @@ EOF
   end
   
   # Add Hydra to the application controller
-  def inject_blacklight_controller_behavior    
-    inject_into_class "app/controllers/application_controller.rb", "ApplicationController" do
-      "  # Adds Hydra behaviors into the application controller \n " +        
-        "  include Hydra::Controller\n"
+  def inject_hydra_controller_behavior    
+    puts "Adding Hydra behaviors to ApplicationController"
+    controller_name = "ApplicationController"
+    file_path = "app/controllers/#{controller_name.underscore}.rb"
+    if File.exists?(file_path) 
+      insert_into_file file_path, :after => 'include Blacklight::Controller' do 
+        "  \n# Adds Hydra behaviors into the application controller \n" +        
+        "  include Hydra::Controller\n" +
+        "  def layout_name\n" +
+        "   'hydra-head'\n" +
+        "  end\n"     
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller module in the Controller class definition.  See the Hydra::Controller section in the Hydra API Docs for more info." 
     end
   end
   

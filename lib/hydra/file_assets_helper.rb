@@ -3,12 +3,17 @@ module Hydra::FileAssetsHelper
   # Creates a File Asset, adding the posted blob to the File Asset's datastreams and saves the File Asset
   #
   # @return [FileAsset] the File Asset  
-  def create_and_save_file_asset_from_params
+  def create_and_save_file_assets_from_params
     if params.has_key?(:Filedata)
-      @file_asset = create_asset_from_params
-      add_posted_blob_to_asset
-      @file_asset.save
-      return @file_asset
+      @file_assets = []
+      params[:Filedata].each do |file|
+        #@file_asset = create_asset_from_params
+        @file_asset = create_asset_from_file(file)
+        add_posted_blob_to_asset(@file_asset,file)
+        @file_asset.save
+        @file_assets << @file_asset
+      end
+      return @file_assets
     else
       render :text => "400 Bad Request", :status => 400
     end
@@ -19,9 +24,11 @@ module Hydra::FileAssetsHelper
   #
   # @param [FileAsset] the File Asset to add the blob to
   # @return [FileAsset] the File Asset  
-  def add_posted_blob_to_asset(asset=@file_asset)
-    file_name = filename_from_params
-    asset.add_file_datastream(posted_file, :label=>file_name, :mimeType=>mime_type(file_name))
+  def add_posted_blob_to_asset(asset,file)
+    #file_name = filename_from_params
+    file_name = file.original_filename
+    
+    asset.add_file_datastream(file, :label=>file_name, :mimeType=>mime_type(file_name))
     asset.set_title_and_label( file_name, :only_if_blank=>true )
   end
   
@@ -69,6 +76,16 @@ module Hydra::FileAssetsHelper
     file_asset = FileAsset.new
     file_asset.label = params[:Filename]
     
+    return file_asset
+  end
+  
+  # Creates a File Asset and sets its label from filename
+  #
+  # @return [FileAsset] the File Asset
+  def create_asset_from_file(file)
+    file_asset = FileAsset.new
+    file_asset.label = file.original_filename
+
     return file_asset
   end
   

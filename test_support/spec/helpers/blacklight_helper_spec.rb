@@ -17,9 +17,11 @@ describe BlacklightHelper do
     describe "render_head_content" do
       before (:each) do
         helper.expects(:content_for).with(:head).returns("My added content")
+        head_stuff = ["Something extra", "Stuff for unapi-server"]
+        helper.expects(:extra_head_content).twice().returns(head_stuff)
       end
       it "adds the content of content_for(:head) to the output" do
-        helper.render_head_content.should == "My added content"
+        helper.render_head_content.should == "Something extraMy added content"
       end
     end
     describe "link_to_document" do

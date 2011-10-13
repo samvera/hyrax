@@ -1,50 +1,23 @@
-<%= form_tag url_for(:action=>"update", :controller=>"assets", :content_type=>"mods_asset"), :id=>"descriptive_metadata", "data-resourceType"=>"mods_asset", "accept-charset"=>"utf-8" do %>
   <input type="hidden" name="_method" value="put"/>
-  <fieldset id="title_fields">
-    <legend>Title</legend>
-    <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
-    <dl>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:title_info, :main_title], "Title:").html_safe %>
-      </dt>
-      <dd class="title">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false).html_safe %>
-      </dd>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:title_info, :language], "Language:").html_safe %>
-      </dt>
-      <dd class="language">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :language], :multiple=>false).html_safe %>
-      </dd>
-    </dl>
-  </fieldset>
+  <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
+  
+  <p id="title_field" class="fedora-text-field"><%= fedora_field_label("descMetadata", [:title_info, :main_title], "Title:") %>
+    <%= fedora_text_field(@document_fedora,"descMetadata", [:title_info, :main_title], :multiple=>false, :required=>true) %></p>
+  <p id="language_field" class="fedora-text-field"><%= fedora_field_label("descMetadata", [:title_info, :language], "Language:") %>
+    <%= fedora_text_field(@document_fedora, "descMetadata", [:title_info, :language], :multiple=>false, :required=>false ) %></p>  
+    
   <fieldset id="contributor_fields">
     <legend>Contributors</legend>
+    <p class="legend-caption">An individual or organizational contributor to the work.</p>
     <%= render :partial => "contributors/index" %>
   </fieldset>
 
-  <fieldset id="abstract_fields">
-    <legend>Abstract</legend>
-    <dl>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:abstract], "Abstract:").html_safe %>
-      </dt>
-      <dd class="abstract">
-        <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false).html_safe %>
-      </dd>
-    </dl>
-  </fieldset>
+  <p id="abstract_field" class="fedora-text-area"><%= fedora_field_label("descMetadata", [:abstract], "Abstract:") %>
+    <%= fedora_text_area(@document_fedora,"descMetadata", [:abstract], :multiple=>false, :required=>false) %></p>
+    
   <fieldset id="topic_fields">
     <legend>Topics</legend>
-    <dl>
-      <dt>
-        <%= fedora_field_label("descMetadata", [:subject, :topic], "Topic(s):").html_safe %>
-        <%= fedora_text_field_insert_link "descMetadata", [:subject, :topic] %>
-      </dt>
-      <dd id="topic_tag" class="topic_tag">
-        <%= fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic], :multiple=>true).html_safe %>
-      </dd>
-    </dl>
+    <p class="legend-caption">Add topics that describe the work.</p>
+      <p class="fedora-text-field"><%= fedora_text_field(@document_fedora,"descMetadata", [:subject, :topic], :multiple=>true, :required=>false) %></p>
+      <p class="fedora-text-field-add"><%= fedora_text_field_insert_link "descMetadata", [:subject, :topic] %></p>
   </fieldset>
-  <%= submit_tag 'Save Description', {:id => "submitDescription"} %>
-<% end %>

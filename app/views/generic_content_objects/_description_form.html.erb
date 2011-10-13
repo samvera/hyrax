@@ -1,0 +1,7 @@
+<%= form_tag(url_for(:controller=>"assets", :action=>"update", :id=>params[:id]), :id=>"descriptive-metadata", :"data-resourceType"=>"mods_asset", :"accept-charset"=>"utf-8") do -%>
+  <%= hidden_field_tag("_method","put") %>
+  <%= render "generic_content_objects/edit_description" %>
+  <%= hidden_field_tag(:wf_step, params[:wf_step]) %>
+  <%= hidden_field_tag(:content_type,"generic_content") %>
+  <%= submit_tag("Continue", :name=>"continue") %>
+<%- end -%>

@@ -42,7 +42,7 @@ begin
     #task :stats => "spec:statsetup"
     
     namespace :spec do
-      [:requests, :models, :controllers, :views, :helpers, :mailers, :lib, :routing, :generators, :utilities].each do |sub|
+      [:controllers, :generators, :helpers, :integration, :lib, :mailers, :models, :requests, :routing, :unit, :utilities, :utilities, :views].each do |sub|
         desc "Run the code examples in spec/#{sub}"
         RSpec::Core::RakeTask.new(sub => spec_prereq) do |t|
           # the user might not have run rspec generator because they don't
@@ -56,13 +56,13 @@ begin
       end
 
       desc "Run all specs"
-			task :run => spec_prereq do
-      	[:models, :controllers, :helpers, :lib, :generators, :utilities].each do |sub|
-					puts "invoking: hyhead:spec:#{sub}"
-					Rake::Task["hyhead:spec:#{sub}"].invoke
-				end
+      RSpec::Core::RakeTask.new(:run => spec_prereq) do |t|
+        t.rcov = true
+        # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
+        t.pattern = File.join(hyhead_spec, "/**/*_spec.rb")
+        t.rspec_opts = "--colour"
 			end
-    
+			
       desc "Run all specs with rcov"
       RSpec::Core::RakeTask.new(:rcov => spec_prereq) do |t|
         t.rcov = true

@@ -1,3 +1,4 @@
+<%# copied div below to show_contributor partial %>
 <div id="contributors_list">
 <ol> 
 	<%= render :partial=>"contributors/show_person", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:person) %>
@@ -6,6 +7,7 @@
 </ol>
 </div>
 
+<%# copied fieldset to show_publication partial %>
 <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:journal => 0}, :title_info, :main_title]).first.empty? %>
 	<fieldset><legend>Published</legend>
 	<div id="journal" class="browse_value">
@@ -14,6 +16,7 @@
 	</fieldset>
 	<% end %>
 
+<%# copied fieldsets to show_additional_info partial %>
 <% unless get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).first.empty? %>
 <fieldset><legend>Keywords</legend>
 	<div class="browse_value">
@@ -29,16 +32,3 @@
 </div>
 </fieldset>
 <% end %>
-
-<% unless get_values_from_datastream(@document_fedora,"descMetadata", [:subject, :topic]).first.empty? %>
-<fieldset><legend>License</legend>
-	<div class="browse_value">
-		<ol>
-      <%# unless get_values_from_datastream(@document_fedora, "rightsMetadata", [:copyright, :uvalicense]).first.match('no') %> 
-				<li>UVA Libra Contributor's License</li> 
-      <%# end %>  
-		</ol>
-	</div>
-</fieldset>
-<% end %>
-

@@ -14,6 +14,10 @@ class AssetsController < ApplicationController
     
     before_filter :search_session, :history_session
     before_filter :require_solr, :require_fedora
+
+    # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
+    include Hydra::SubmissionWorkflow
+    
     
     prepend_before_filter :sanitize_update_params, :only=>:update
     before_filter :check_embargo_date_format, :only=>:update
@@ -61,10 +65,10 @@ class AssetsController < ApplicationController
       flash[:notice] = "Your changes have been saved."
       
       logger.debug("returning #{response.inspect}")
-    
+      
       respond_to do |want| 
         want.html {
-          redirect_to :controller=>"catalog", :action=>"edit"
+          redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
         }
         want.js {
           render :json=> tidy_response_from_update(@response)  
@@ -89,7 +93,8 @@ class AssetsController < ApplicationController
         msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
         flash[:notice]= msg
       end
-      redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid)
+      session[:scripts] = params[:combined] == "true"
+      redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid, :new_asset=>true)
     end
     
     def destroy
@@ -113,5 +118,30 @@ class AssetsController < ApplicationController
     #def withdraw
     #  
     #end
+    protected
     
+    def mods_assets_update_validation
+      desc_metadata = params[:asset][:descMetadata]
+      rights_metadata = params[:asset][:rightsMetadata]
+      if !rights_metadata.nil? and rights_metadata.has_key?(:embargo_embargo_release_date)
+        unless rights_metadata[:embargo_embargo_release_date]["0"].blank?
+          begin
+            parsed_date = Date.parse(rights_metadata[:embargo_embargo_release_date]["0"]).to_s
+            params[:asset][:rightsMetadata][:embargo_embargo_release_date]["0"] = parsed_date
+          rescue
+            flash[:error] = "You must enter a valid release date."
+            return false
+          end
+        end
+      end
+      
+      if !desc_metadata.nil? and desc_metadata.has_key?(:title_info_main_title) and desc_metadata.has_key?(:journal_0_title_info_main_title)
+        if desc_metadata[:title_info_main_title]["0"].blank? or desc_metadata[:journal_0_title_info_main_title]["0"].blank?
+          flash[:error] = "The title fields are required."
+          return false
+        end
+      end
+      
+      return true
+    end
 end

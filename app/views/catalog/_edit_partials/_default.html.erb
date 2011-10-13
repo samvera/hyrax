@@ -3,7 +3,7 @@
 <%- stylesheet_links << "../plugin_assets/hydra-head/javascripts/date-picker/css/datepicker" %>
 <%- stylesheet_links << "../plugin_assets/hydra-head/javascripts/fancybox/jquery.fancybox-1.3.1.css" %>
 <%- stylesheet_links << ["../plugin_assets/hydra-head/javascripts/select_to_ui_slider/css/ui.slider.extras.css"] %>
-<%- stylesheet_links << ["slider", {:plugin=>"hydra-head"}] %>
+<%- stylesheet_links << ["../plugin_assets/hydra-head/stylesheets/slider.css"] %>
 
 
 
@@ -40,10 +40,10 @@
                       <div id='<%=dsid%>'>
                         <h1><%=dsid%></h1>
                         <dl>
-                            <%= ("<dt>label:</dt><dd>" + @datastreams[dsid].label + "</dd>") unless @datastreams[dsid].label.blank? %>
-                            <%= ("<dt>last modified:</dt><dd>" + @datastreams[dsid].last_modified + "</dd>") unless @datastreams[dsid].last_modified.blank? %>
-                            <%= ("<dt>mimetype:</dt><dd>" + @datastreams[dsid].mime_type + "</dd>") unless @datastreams[dsid].mime_type.blank? %>
-                            <%= ("<dt>control group:</dt><dd>" + @datastreams[dsid].control_group + "</dd>") unless @datastreams[dsid].control_group.blank? %>
+                            <%= ("<dt>label:</dt><dd>" + @datastreams[dsid].label + "</dd>").html_safe unless @datastreams[dsid].label.blank? %>
+                            <%= ("<dt>last modified:</dt><dd>" + @datastreams[dsid].last_modified + "</dd>").html_safe unless @datastreams[dsid].last_modified.blank? %>
+                            <%= ("<dt>mimetype:</dt><dd>" + @datastreams[dsid].mime_type + "</dd>").html_safe unless @datastreams[dsid].mime_type.blank? %>
+                            <%= ("<dt>control group:</dt><dd>" + @datastreams[dsid].control_group + "</dd>").html_safe unless @datastreams[dsid].control_group.blank? %>
                         </dl>
                       </div>
                     </div></li>

@@ -10,7 +10,7 @@ Feature: Edit Permissions
 
   Scenario: Viewing group & individual permissions
     Given I am logged in as "archivist1@example.com" 
-    Given I am on the edit document page for hydrangea:fixture_mods_article1 
+    Given I am on the edit permissions page for hydrangea:fixture_mods_article1 
     Then the following should be selected within "form#permissions_metadata"
       |Archivist | Edit & Upload |
       |Researcher | No Access |
@@ -20,7 +20,7 @@ Feature: Edit Permissions
       
   Scenario: Editing group permissions on article edit page
     Given I am logged in as "archivist1@example.com" 
-    And I am on the edit document page for hydrangea:fixture_mods_article1 
+    When I am on the edit permissions page for hydrangea:fixture_mods_article1 
     And the following should be selected within "form#permissions_metadata"
       |Archivist | Edit & Upload |
       |researcher1 | Edit & Upload |
@@ -30,9 +30,10 @@ Feature: Edit Permissions
       |Archivist | Edit & Upload |
       |Admin_policy_object_editor | Discover |
       |Patron | Edit |
-    And I press "Save Permissions"
+    And I press "Continue"
     Then I should see "The permissions have been updated."
-    And the following should be selected within "form#permissions_metadata"
+    When I am on the edit permissions page for hydrangea:fixture_mods_article1 
+    Then the following should be selected within "form#permissions_metadata"
       |Archivist | Edit & Upload |
       |Admin_policy_object_editor | Discover |
       |Patron | Edit |
@@ -40,14 +41,15 @@ Feature: Edit Permissions
   
   Scenario: Editing group permissions on permissions index page
     Given I am logged in as "archivist1@example.com" 
-    And I am on the permissions page for hydrangea:fixture_mods_dataset1 
+    And I am on the edit permissions page for hydrangea:fixture_mods_dataset1 
     When I select the following within "form#permissions_metadata"
       |Archivist | Edit & Upload |
       |Admin_policy_object_editor | Discover |
       |Patron | Edit |
-    And I press "Save Permissions"
+    And I press "Continue"
     Then I should see "The permissions have been updated."
-    And the following should be selected within "form#permissions_metadata"
+    When I am on the edit permissions page for hydrangea:fixture_mods_dataset1 
+    Then the following should be selected within "form#permissions_metadata"
       |Archivist | Edit & Upload |
       |Admin_policy_object_editor | Discover |
       |Patron | Edit |

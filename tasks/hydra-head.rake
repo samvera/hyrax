@@ -161,7 +161,6 @@ namespace :hyhead do
       puts "Installing rails, bundler and devise"
       %x[gem install --no-rdoc --no-ri 'rails' -v "<3.1"]
       %x[gem install --no-rdoc --no-ri 'bundler']
-#      %x[gem install --no-rdoc --no-ri 'devise']
       
       puts "Generating new rails app"
       %x[rails new test_app]
@@ -224,7 +223,7 @@ namespace :hyhead do
   task :test => [:use_test_app]  do
     
     puts "Running rspec tests"
-    puts  %x[rake hyhead:spec:rcov]
+    puts %x[rake hyhead:spec:rcov]
     rspec_success = $?.success?
 
     puts "Running cucumber tests"

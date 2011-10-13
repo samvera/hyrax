@@ -61,7 +61,10 @@ module NavigationHelpers
       
     when /the (\d+)(?:st|nd|rd|th) (person|organization|conference) entry in (.*)$/i
       # contributor_id = "#{$2}_#{$1.to_i-1}"
-      asset_contributor_path($3, $2, $1.to_i-1)
+      asset_contributor_path($3, $2, $1.to_i-1, :content_type=>"mods_asset")
+    
+    when /the edit (.*) page for (.*)$/i
+      edit_catalog_path($2,:wf_step=>$1)
     else
       begin
         page_name =~ /the (.*) page/

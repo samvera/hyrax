@@ -88,8 +88,8 @@ describe AssetsController do
     it "should delete the asset identified by pid" do
       mock_obj = mock("asset", :delete)
       mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
-      ActiveFedora::ContentModel.expects(:known_models_for).with(mock_obj).returns([ModsAsset])
+      ActiveFedora::Base.expects(:load_instance_from_solr).at_least_once.with("__PID__").returns(mock_obj)
+      ActiveFedora::ContentModel.expects(:known_models_for).at_least_once.with(mock_obj).returns([ModsAsset])
       ModsAsset.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
@@ -101,8 +101,9 @@ describe AssetsController do
     it "should withdraw the asset identified by pid" do
       mock_obj = mock("asset", :delete)
       mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
-      ActiveFedora::ContentModel.expects(:known_models_for).with(mock_obj).returns([ModsAsset])
+      ActiveFedora::Base.expects(:load_instance_from_solr).at_least_once.with("__PID__").returns(mock_obj)
+      ActiveFedora::Base
+      ActiveFedora::ContentModel.expects(:known_models_for).at_least_once.with(mock_obj).returns([ModsAsset])
       ModsAsset.expects(:load_instance_from_solr).with("__PID__").returns(mock_obj)
       delete(:withdraw, :id => "__PID__")
     end

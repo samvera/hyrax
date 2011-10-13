@@ -1,0 +1,87 @@
+h1. Tracking Plugins with Git Subtree
+
+We are now tracking all of the Hydra plugins in their own Git repositories.  We are doing this with the git subtree tool.  This allows each hydra head to have a full copy of each plugin in its working copy.  When you want to commit plugin changes back to the shared plugin git repository, use the git subtree tool to "split" that plugin's code and commit log into its own branch, then merge your changes into the shared plugin repository.
+
+h2. Getting the git subtree tool
+
+You can checkout the git subtree tool from https://github.com/apenwarr/git-subtree
+
+The tool itself is just a single-file shell script that you need to install into where the rest of your git scripts are stored.  See the "INSTALL instructions":https://github.com/apenwarr/git-subtree/blob/master/INSTALL
+
+Once you've got it installed, refer to  "git-subtree.txt":https://github.com/apenwarr/git-subtree/blob/master/git-subtree.txt for details on how to use the script.  For our purposes, you can mostly rely on the info below.
+
+h2. Using the git subtree tool 
+
+Say I'm working on the HyHull project and I need to commit changes from my head back to the shared hydrangea_articles plugin
+
+First, add the hydrangea_articles git repository to your remote repositories
+
+<pre>
+git remote add articles-repo git@github.com:projecthydra/hydrangea_articles.git
+</pre>
+  
+Then, use git subtree to split your copy of the plugin into a new branch in your local git repository.  Include the name of your hydra head in the --annotate value. This will be appended to all of your commits.
+
+<pre>
+git subtree split --prefix=vendor/plugins/hydrangea_articles --annotate="(HyHull) " -b articles
+</pre>
+  
+This will create a new branch called "articles"
+
+Now checkout your articles branch, rebase to the master branch of the shared plugin, and then push your changes to the shared plugin
+
+<pre>
+git checkout articles
+git rebase articles-repo/master
+git push articles-repo articles:master
+</pre>
+  
+If you don't want to push your updates directly into the master branch of the shared plugin, push to a new remote branch with the name of the ticket you're working on and ask another committer to review your changes and/or apply them.
+
+<pre>
+git push articles-repo articles:my-ticket-number
+</pre>
+
+If you just want to share a replica of your copy of the plugin without rebasing, you can use git subtree push to post a copy of your work as a branch on the shared plugin's git repo:
+
+Ex:
+</pre>
+git subtree push --prefix=vendor/plugins/hydrangea_books --annotate="(HyHull) " -b HYHULL-219
+<pre>
+  
+Complete example with shell outputs:
+
+In this example, I 
+
+* split the plugin subtree into its own branch
+* checkout the new plugin branch
+* rebase the plugin branch against the plugin repository's master branch
+* push my updates into the plugin repository's master branch
+
+<pre>
+hydrangea matt$ git subtree split --prefix=vendor/plugins/hydrangea_datasets --annotate="(hydrangea)  " -b datasets
+Created branch 'datasets'
+f2d9407ada9744f3b8bcabac83ddb1cd3fb47e28
+
+hydrangea matt$ git checkout datasets
+warning: unable to rmdir jetty: Directory not empty
+Checking out files: 100% (4723/4723), done.
+Switched to branch 'datasets'
+
+hydrangea matt$ git fetch datasets-remote
+From github.com:projecthydra/hydrangea_datasets
+ * [new branch]      master     -> datasets-remote/master
+
+hydrangea matt$ git rebase datasets-remote/master
+First, rewinding head to replay your work on top of it...
+Applying: (hydrangea)  fixing licenses in plugins
+
+hydrangea matt$ git push datasets datasets-remote:master
+Counting objects: 4, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 708 bytes, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To git@github.com:projecthydra/hydrangea_datasets.git
+   656bf34..20ba2ba  datasets -> master
+</pre>

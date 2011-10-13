@@ -3,7 +3,12 @@ require 'mediashelf/active_fedora_helper'
 class ContributorsController < ApplicationController
   
   include MediaShelf::ActiveFedoraHelper
+  include Hydra::RepositoryController
+  include Hydra::AssetsControllerHelper
   before_filter :require_solr, :require_fedora
+  
+  # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
+  include Hydra::SubmissionWorkflow
   
   # Display form for adding a new Contributor
   # If contributor_type is provided, renders the appropriate "new" form
@@ -37,12 +42,54 @@ class ContributorsController < ApplicationController
     
   end
   
+  # Not sure how the #create method was intended to work, but this seems like it works and takes a hybrid approach to how the contributors were handled between this and the AssetsController work.
+  def update
+    if params[:id].nil?  
+      params[:id] = params[:asset_id]
+    end
+    @document = load_document_from_params
+    # generates sanatized params from params hash to update the doc with
+    sanitize_update_params
+    @response = update_document(@document,@sanitized_params)
+    @document.save
+    flash[:notice] = "Your changes have been saved."
+    if params.has_key? :add_another_author
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:asset_id], :wf_step => :contributor, :add_contributor => true}) 
+    else
+      redirect_to( {:controller => "catalog", :action => "edit", :id => params[:asset_id]}.merge(params_for_next_step_in_wokflow) )
+    end
+  end
+  
   def destroy
     af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
     @document_fedora = af_model.find(params[:asset_id])
     @document_fedora.remove_contributor(params[:contributor_type], params[:index])
     result = @document_fedora.save
-    render :text=>result.inspect
+    if request.xhr?
+      render :text=>result.inspect
+    else
+      redirect_to({:controller => "catalog", :action => "edit", :id => params[:asset_id], :wf_step => :contributor})
+    end
+  end
+  
+  protected 
+  
+  # validate the mods assets when they are sumbitted
+  # The first author requires an ID field.
+  # All authors require a First & Last name.
+  def mods_assets_update_validation
+    i = 0
+    desc_metadata = params[:asset][:descMetadata]
+    unless desc_metadata.nil?
+      while desc_metadata.has_key? "person_#{i}_computing_id".to_sym
+        if desc_metadata["person_#{i}_first_name".to_sym]["0"].blank? or desc_metadata["person_#{i}_last_name".to_sym]["0"].blank?
+          flash[:error] = "The First and Last names are required for all authors."
+          return false
+        end
+        i += 1
+      end
+    end
+    return true
   end
   
   private
@@ -51,4 +98,5 @@ class ContributorsController < ApplicationController
     af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
     af_model.find(asset_id)
   end
+  
 end

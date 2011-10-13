@@ -1,0 +1,76 @@
+h2. How to Get Facets to Display on Home Page and in Search Results
+
+(note - contribute this to blacklight project and then just link to it in HOW_DO_I doc)
+
+1.  Determine which indexed Solr fields you want to as facets.  
+
+If you have declared them with OM terminology in your datastream models, then they will be the fields in Solr named (something)_facet.
+To see what fields are in Solr, go to:
+
+<pre>
+  http://localhost:8983/solr/development/admin/schema.jsp
+</pre>
+
+where "http://localhost:8983/solr/development" is the base url for your Solr instance.  Click on the "fields" link in the left navigation bar.  You will see a list of all your Solr fields.  Use the "find" function in your web browser to locate all the fields ending with _facet.
+
+Let's say my Solr index has these facet fields:  object_type_facet, set_type_facet, genre_facet
+"tag_facet"
+
+
+2.  Write a test
+
+e.g. features/facets.feature
+
+<pre>
+  Feature: Facets on Home Page and Search Results
+    I want facets to display and work properly
+
+    Scenario: home page facets
+      When I am on the home page
+      Then I should see "Format"
+      And I should see "Book"
+
+    Scenario: search results facets
+      When I am on the home page
+      And I fill in "q" with "dor"
+      And I press "Search"
+      Then I should see "Format"
+      And I should see "Book"
+</pre>  
+
+3.  Ensure test fails
+
+4.  Indicate the facet fields in a Rails initializer.
+
+Facet fields are initially configured by config/initializers/blacklight_config.rb in your Rails app.  You override these configurations by creating a new file in config/initializers  that MUST sort later alphabetically than blacklight_config.  Your hydra_app_config.rb might look something like this:
+
+<pre>
+  # overrides of blacklight_config.rb
+  Blacklight.configure(:shared) do |config|
+  
+    ... 
+
+    # solr fields that will be treated as facets by the blacklight application
+    #   The ordering of the field names is the order of the display
+    config[:facet] = {
+       :field_names => (facet_fields = [
+         "object_type_facet",
+         "set_type_facet",
+         "genre_facet"
+         ]),
+       :labels => {
+         "object_type_facet"=>"Object Type",
+         "set_type_facet"=>"Set Type",
+         "genre_facet"=>"Genre"
+       }   
+    }
+
+    # Have BL send all facet field names to Solr. 
+    config[:default_solr_params] ||= {}
+    config[:default_solr_params][:"facet.field"] = facet_fields
+
+    ...
+</pre>
+
+5.  Ensure test passes.
+

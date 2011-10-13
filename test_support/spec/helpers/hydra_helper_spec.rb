@@ -70,4 +70,19 @@ describe HydraHelper do
     end
   end
   
+  describe "submit_name" do
+    it "should return 'Save' when the scripts session variable is set" do
+      stubs(:session).returns({:scripts=>true})
+      submit_name.should == "Save"
+    end
+    it "should return 'Continue' when the new_asset param is set" do
+      stubs(:params).returns({:new_asset=>true})
+      submit_name.should == "Continue"
+    end
+    it "should return 'Save and Continue' if all else fails" do
+      stubs(:params).returns({})
+      submit_name.should == "Save and Continue"
+    end
+  end
+  
 end

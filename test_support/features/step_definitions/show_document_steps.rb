@@ -58,7 +58,7 @@ end
 Then /^I (should|should not) see a delete (field|contributor) button for "([^\"]*)"$/ do |bool,type,target|
   if bool == "should"
     # page.should have_selector("a, :class=>"destructive #{type}", :href=>path_to(target))
-    page.should have_xpath(".//a[@href=\"#{path_to(target)}\" and contains(@class, \"destructive\") and contains(@class, \"#{type}\")]")
+    page.should have_xpath(".//a[@href=\"#{path_to(target)}\" and contains(@class, \"destructive\") and contains(@class, \"destroy_#{type}\")]")
   else
     # page.should_not have_selector("a", :class=>"destructive #{type}", :href=>path_to(target))
     page.should_not have_xpath(".//a[@href=\"#{path_to(target)}\" and contains(@class, \"destructive\") and contains(@class, \"#{type}\")]")    

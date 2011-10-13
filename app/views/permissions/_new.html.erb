@@ -1,18 +1,14 @@
-<% unless defined?(asset_id) %>
-  <% asset_id = params[:asset_id] %>
-<% end %>
-<div id="add_permissions" class="slider">
-  <h2>Add Individual Permissions</h2>
-  <%= form_tag url_for(:action=>"create", :controller=>"permissions", :asset_id=>asset_id), :id=>"new_permissions", :method=>"post" do %>
+  <fieldset id="permissions_fields">
+    <legend>Add Individual Permissions</legend>
     <input id="permission_actor_type" type="hidden" name="permission[actor_type]" value="person" />
-    <label for="permission_actor_id">User ID</label>
-    <input id="permission_actor_id" name="permission[actor_id]" />
-    <label for="permission_level">Permission Level</label>
-    <select id="permission_level" name="permission[access_level]">
-      <option value="discover">Discover</option>
-      <option value="read">Read &amp; Download</option>
-      <option value="edit">Edit &amp; Upload</option>
-    </select>
-    <input type="submit" value="Add Permissions" />
-  <% end %>
-</div>
+    <p class="permission-field"><label for="permission_actor_id">User ID</label>
+    <input id="permission_actor_id" name="permission[actor_id]" type="text" /></p>
+    <p class="permission-field">
+      <label for="permission_level">Permission Level</label>
+      <select id="permission_level" name="permission[access_level]">
+        <option value="discover">Discover</option>
+        <option value="read">Read &amp; Download</option>
+        <option value="edit">Edit &amp; Upload</option>
+      </select>
+    </p>
+  </fieldset>      

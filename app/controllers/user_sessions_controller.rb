@@ -10,5 +10,4 @@ class UserSessionsController < ApplicationController
     redirect_to :back
   end
 
-
 end

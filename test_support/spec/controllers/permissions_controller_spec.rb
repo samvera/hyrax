@@ -68,7 +68,7 @@ describe PermissionsController do
       
       # this is what currently works 
       # post :update, :asset_id=>"_pid_", :actor_type=>"group", :actor_id=>"_group_id_", :permission => {"group"=>"_group_id_","level"=>"discover"}
-
+      
       post :update, :asset_id=>"_pid_", :permission => {"group"=>{"_group_id_"=>"discover"}}
     end
     it "should add a rightsMetadata datastream if it doesn't exist"

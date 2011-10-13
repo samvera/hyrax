@@ -1,0 +1,107 @@
+h2. Getting info about the rake tasks from the command line
+
+<pre>rake -T</pre>
+
+To narrow down the output, use grep. For example:
+
+<pre>rake -T | grep hy</pre>
+
+
+h2. hydra:jetty Tasks
+
+h3. The main tasks: load, start, stop
+
+<pre>
+  rake hydra:jetty:load                       # Copies the default SOLR config files and starts up the fedora instance.
+  rake hydra:jetty:restart                    # Restarts the bundled Hydra Testing Server
+  rake hydra:jetty:start                      # Starts the bundled Hydra Testing Server
+  rake hydra:jetty:status                     # Returns the status of the Hydra::TestingServer.
+  rake hydra:jetty:stop                       # Stops the bundled Hydra Testing Server
+</pre>
+
+h3. Subtasks: config, config_fedora, config_solr
+
+<pre>
+  rake hydra:jetty:config                     # Copies the default Solr & Fedora configs into the bundled Hydra Testing Server
+  rake hydra:jetty:config_fedora              # Copies a custom fedora config for the bundled Hydra Testing Server
+  rake hydra:jetty:config_solr                # Copies the default SOLR config for the bundled Hydra Testing Server
+</pre>
+  
+h2. hyhead Continuous Integration Tasks
+
+h3. hyhead Full Continuous Integration Build: ci
+
+<pre>
+  rake hyhead:ci                              # Execute Continuous Integration build (docs, tests with coverage)
+</pre>
+
+h2. hyhead Test Host Setup: setup_test_host
+
+Many of the other tasks call this for you.
+
+<pre>
+  rake hyhead:setup_test_host                 # Copy all of the necessary code into the test host
+</pre>
+
+h3. Subtasks for setting up test host
+
+These are the tasks used by setup_test_host
+
+<pre>
+  rake hyhead:copy_plugin_to_host             # Copy the current plugin code into hydra-plugin_test_host/vendor/plugins/hydra-head
+  rake hyhead:remove_plugin_from_host         # Remove hydra-plugin_test_host/vendor/plugins/hydra-head
+  rake hyhead:copy_features_to_host           # Copy current contents of the features directory into hydra-plugin_test_host/features
+  rake hyhead:remove_features_from_host       # Remove hydra-plugin_test_host/features
+  rake hyhead:copy_fixtures_to_host           # Copy current contents of the spec/fixtures directory into hydra-plugin_test_host/spec/fixtures
+  rake hyhead:remove_fixtures_from_host       # Remove hydra-plugin_test_host/spec/fixtures
+</pre>
+  
+h2. hyhead RSpec Tasks
+
+h3. The main RSpec task: spec
+
+<pre>
+  rake hyhead:spec                            # Easiest way to run rspec tests.
+</pre> 
+
+This is the same as calling 
+
+<pre>
+  rake hyhead:rspec:setup_and_run             # Sets up test host, loads fixtures, then runs specs - need to have jetty running.
+</pre>
+
+h4. Rspec subtasks
+
+To run the rspec tests without any setup, use 
+
+<pre>
+  rake hyhead:rspec:run                       # Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded.
+</pre>
+
+h2. hyhead Cucumber Tasks
+
+h3. The main Cucumber task: cucumber
+
+<pre>
+  rake hyhead:cucumber                        # Easieset way to run cucumber tests.
+</pre>  
+
+This is the same as calling
+
+<pre>
+  rake hyhead:cucumber:setup_and_run          # Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running.
+</pre>
+
+h3. Cucumber subtasks
+
+To run the cucumber tests without any setup, use 
+
+<pre>
+  rake hyhead:cucumber:run                    # Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded.
+</pre>
+
+h3. Generating RDocs
+
+<pre>
+  rake hyhead:doc                             # Generate YARD Documentation
+</pre>

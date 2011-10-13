@@ -1,0 +1,92 @@
+h2. Installation/Setup
+
+h3. (1) Grab the code
+
+<pre>
+git clone git@github.com:projecthydra/hydra-head.git
+</pre>
+
+h3. (2) Grab jetty and the test host application
+
+The git repository includes references to git submodules containing hydra-jetty and a sample Blacklight app that you can install the hydra-head plugin into.
+
+<pre>
+cd hydra-head
+git submodule init
+git submodule update
+bundle install
+</pre>
+
+
+h3. (3) IMPORTANT: Put a copy of the plugin into the host app
+
+*If you don't run this, you will not be able to run the test host app or its rake tasks*
+
+The host application needs a copy of the plugin in its vendor/plugins directory.  We provide a rake task for this.  The rake task will copy all of the plugin code into hydra-plugin_test_host/vendor/plugins
+
+<pre>
+rake hyhead:copy_to_host_plugins_dir
+</pre>
+
+
+h3. (4) Migrate the host app's databases
+
+<pre>
+cd hydra-plugin_test_host
+rake db:drop:all
+rake db:migrate
+rake db:migrate RAILS_ENV=test  
+cd ..
+</pre>
+
+h2. Running the full Continuous Integration build
+
+_Stop any copies of jetty that you have running before running this._
+
+This will spin up jetty, import your fixtures into it run the tests, and stop jetty.
+
+<pre>
+rake hyhead:ci RAILS_ENV=test 
+</pre>
+
+h2. Running the Tests Manually
+
+h3. Start Jetty and load the fixtures
+
+<pre>
+rake hydra:jetty:load RAILS_ENV=test
+rake hydra:default_fixtures:refresh environment=test
+</pre>
+
+h3. Run the RSpec Tests
+
+<pre>
+rake hyhead:spec
+</pre>
+
+OR
+
+<pre>
+rake hyhead:remove_from_host_plugins_dir
+rake hyhead:copy_to_host_plugins_dir
+rake hyhead:rspec
+</pre>
+
+
+h2. Running the App
+
+The test host app is a regular Rails app with Blacklight installed.  Its configured with the assumption that the hydra-head plugin is installed into vendor/plugins/hydra-head.
+
+Before starting the app, make sure that you have the latest copy of the plugin code copied into its plugins directory.
+
+<pre>
+rake hyhead:remove_from_host_plugin
+rake hyhead:copy_to_host_plugins_dir
+</pre>
+
+After copying the plugin code, cd into the root of the test app and start it like you normally start any rails app.
+
+<pre>
+cd hydra-plugin_test_host
+script/server
+</pre>

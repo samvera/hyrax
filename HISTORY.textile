@@ -1,0 +1,7 @@
+h3. 0.0.1
+
+Pulled plugin code from Hydrus 
+* Javascript disabled, progressive enhancement set up
+* Better Cucumber Coverage
+
+h3. 0.0.0

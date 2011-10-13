@@ -1,7 +1,7 @@
 # @example
-#   I log in as "archivist1"
+#   I log in as "archivist1@example.com"
 # @example
-#   I am logged in as "archivist1"
+#   I am logged in as "archivist1@example.com"
 Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |email|
   # Given %{a User exists with a Login of "#{login}"}
   user = User.create(:email => email, :password => "password", :password_confirmation => "password")
@@ -21,8 +21,8 @@ Given /^I am logged in as "([^\"]*)" with "([^\"]*)" permissions$/ do |login,per
 end
 
 Given /^I am a superuser$/ do
-  Given %{I am logged in as "BigWig"}
-  bigwig_id = User.find_by_email("BigWig@BigWig.com").id
+  Given %{I am logged in as "bigwig@example.com"}
+  bigwig_id = User.find_by_email("bigwig@example.com").id
   superuser = Superuser.create(:id => 20, :user_id => bigwig_id)
   visit superuser_path
 end

@@ -72,18 +72,16 @@ module JavascriptIncludesHelper
     javascript_includes << ["jquery.notice.js", {:plugin=>"hydra-head"}]
     
     javascript_includes << ["jquery.jeditable.mini.js", "date-picker/js/datepicker", "jquery.form.js", 'custom', "catalog/edit", "jquery.hydraMetadata.js", "jquery.notice.js", {:plugin=>"hydra-head"}]
-    javascript_includes << ["../infusion/components/undo/js/Undo.js", {:plugin=>:"fluid-infusion"}]
-
     # For DatePicker
     javascript_includes << ["jquery.ui.widget.js","jquery.ui.datepicker.js", "mediashelf.datepicker.js", {:plugin=>"hydra-head" }]
     
     # For Fancybox
     javascript_includes << ["fancybox/jquery.fancybox-1.3.1.pack.js", {:plugin=>"hydra-head"}] 
-    stylesheet_links << ["../javascripts/fancybox/jquery.fancybox-1.3.1.css", {:plugin=>"hydra-head"}] 
+    stylesheet_links << ["/javascripts/fancybox/jquery.fancybox-1.3.1.css", {:plugin=>"hydra-head"}] 
 
     # For slider controls 
     javascript_includes << ["select_to_ui_slider/selectToUISlider.jQuery.js", {:plugin=>"hydra-head"}] 
-    stylesheet_links << ["../javascripts/select_to_ui_slider/css/ui.slider.extras.css", {:plugin=>"hydra-head"}] 
+    stylesheet_links << ["/javascripts/select_to_ui_slider/css/ui.slider.extras.css", {:plugin=>"hydra-head"}] 
     stylesheet_links << ["slider", {:plugin=>"hydra-head"}] 
     
     # This file contains the page initialization scripts for catalog edit views

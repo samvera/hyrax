@@ -17,6 +17,6 @@ Feature: Create Asset or Dataset Split Button
   # Need to build this out more
   Scenario: Non-editor views the search results page and sees the buttons to add assets which link to login then create an asset
    Given I am on the base search page
-   Then I should see "Add a Basic MODS Asset" within "a.create_asset" 
-   Then I should see "Add an Image"
+   Then I should see "Add a Basic MODS Asset"
+   Then I should see "Add an Image" 
    Then I should see "Add Generic Content" 

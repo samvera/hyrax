@@ -1,0 +1,11 @@
+<%- if params.has_key?(:number_of_files) or !@file_assets.hits.empty? -%>
+  <%= render :partial => "file_assets/index", :locals => { :file_assets => @file_assets } %>
+<%- end -%>
+<%= form_tag(upload_url, :class => "step") do -%>
+  <%= label_tag "number_of_files", "Number of files add" %>
+  <%= select_tag("number_of_files", options_for_select((0...11).to_a) ) -%>
+  <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "num_files_wf_step") %>
+  <%= hidden_field_tag(:new_asset, true, :id => "num_files_new_asset") if params[:new_asset] %>
+  <%= hidden_field_tag("id",params[:id], :id => "file_assets_id")%>
+  <%= submit_tag(submit_name, :name=>"continue")%>
+<%- end -%>

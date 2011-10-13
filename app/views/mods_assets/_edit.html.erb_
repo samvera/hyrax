@@ -1,0 +1,63 @@
+<!--  ###
+
+  Divide the mods_assets partials into the following:
+  
+  1.) Author (mods_assets/_edit_description and contributors/index)
+  2.) Title and Journal Info (mods_assets/_edit_description and mods_assets/_edit_journal)
+  3.) Additional Work Info (mods_assets/_edit_description)
+  4.) File Count Selection (NEW)
+  5.) File Upload (file_assets/index)
+  6.) Permissions (permissions/index)
+  7.) Review and Submit (NEW)
+  
+  N.B.: information from show partials are also included in the new workflow
+  
+      ### -->
+
+<div class="document_viewer" id="cover_container">
+  <div class="multipleEdit">
+    
+    <h2 class="section-title">Describe the Asset</h2>
+    <div id="description_editor">
+      <%= render :partial => 'mods_assets/edit_description' %>
+    </div>
+    
+<!-- ### Begin file upload (step 5) ### -->
+    <h2 class="section-title">Upload Files</h2>
+    <div id="uploads">  			
+      <%= render :partial => "file_assets/index", :locals => { :file_assets => @file_assets} %>
+    </div>
+<!-- ### End file upload (step 5) ### -->
+
+
+<!-- ### Begin permissions (step 6) ### -->
+    <h2 class="section-title">Set permissions</h2>
+    <div id="permissions_editor">
+      <%= render :partial => "permissions/index", :locals => {:document => document, :asset_id=>params[:id]} %>
+    </div> 
+<!-- ### End permissions (step 6) ### -->
+
+
+<!-- ### Append to step 1 ### -->
+    <form id="new_contributor" action="<%=url_for(:action=>"create", :controller=>"contributors", :asset_id=>params[:id]) %>" method="post">
+      <input class="content_type" type="hidden" name="content_type" value="mods_asset" />
+      <p><label for="contributor_type">Contributor Type</label>
+      <select id="contributor_type" name="contributor_type">
+        <option value="person">Person</option>
+        <option value="organization">Organization</option>
+        <option value="conference">Conference</option>
+      </select></p>
+      <p><input type="submit" value="Add Contributor" /></p>
+    </form>
+<!-- ### End append to step 1 ### -->
+      
+  </div>
+</div>
+
+<% sidebar_items << capture do %>
+  <%# = render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
+  <%# = render :partial=>'facets' %>
+  <%= delete_asset_link(params[:id], "dataset") %>
+<% end %>
+
+<%= async_load_tag(asset_file_assets_path(params[:id]), 'uploads') %>
