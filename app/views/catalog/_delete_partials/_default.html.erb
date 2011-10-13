@@ -13,14 +13,14 @@
 			
 				
 				<div>
-	        <span>Permanently delete <%= @document_fedora.pid %> and its assets from the repository?</span><br/>
+	        <span>Permanently delete <%= @document['id'] %> and its assets from the repository?</span><br/>
 	        <div id="deletable_assets"></div>
 	      </div>
 				
 					<div>
-					<%= button_to("Delete", {:action => :destroy, :controller => :assets, :id => @document_fedora.pid}, :confirm => 'Are you sure?', :method => :delete )%>
-					 <%= button_to("Withdraw", :action=>"withdraw", :controller => :assets, :id => @document_fedora.pid) %>
-					 <%= button_to("Cancel", :action=>:edit, :controller => :catalog, :id => @document_fedora.pid) %>
+					<%= button_to("Delete", {:action => :destroy, :controller => :assets, :id => @document['id'] }, :confirm => 'Are you sure?', :method => :delete )%>
+					 <%= button_to("Withdraw", :action=>"withdraw", :controller => :assets, :id => @document['id'] ) %>
+					 <%= button_to("Cancel", :action=>:edit, :controller => :catalog, :id => @document['id'] ) %>
 					
 	      </div>
 	      		 
