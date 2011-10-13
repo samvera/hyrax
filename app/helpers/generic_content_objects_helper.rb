@@ -10,7 +10,7 @@ module GenericContentObjectsHelper
   end
   
   def disseminator_link pid, datastream_name
-    "<a class=\"fbImage\" href=\"#{ datastream_disseminator_url(pid, datastream_name) }\">view</a>"
+    link_to 'view', datastream_disseminator_url(pid, datastream_name), :class=>"fbImage"
   end
   
 end
