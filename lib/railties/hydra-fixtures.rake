@@ -16,11 +16,11 @@ namespace :hydra do
       raise "You must specify a valid pid.  Example: rake hydra:refresh_fixture pid=demo:12"
     end
     begin
-      Hydra::FixtureLoader.new('test_support/fixtures').reload(ENV["pid"])
+      ActiveFedora::FixtureLoader.new('test_support/fixtures').reload(ENV["pid"])
     rescue Errno::ECONNREFUSED => e
       puts "Can't connect to Fedora! Are you sure jetty is running?"
-    rescue Fedora::ServerError => e
-        logger.error("Received a Fedora error while deleting #{pid}")
+    rescue Exception => e
+        logger.error("Received a Fedora error while loading #{pid}\n#{e}")
     end
   end
   
@@ -35,15 +35,15 @@ namespace :hydra do
       raise "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
       pid = ENV["pid"]
-      puts "Deleting '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      puts "Deleting '#{pid}' from #{ActiveFedora::RubydoraConnection.instance.options[:url]}"
       begin
-        Hydra::FixtureLoader.delete(pid)
+        ActiveFedora::FixtureLoader.delete(pid)
       rescue Errno::ECONNREFUSED => e
         puts "Can't connect to Fedora! Are you sure jetty is running?"
-      rescue Fedora::ServerError => e
-          logger.error("Received a Fedora error while deleting #{pid}")
+      rescue Exception => e
+        logger.error("Received a Fedora error while deleting #{pid}\n#{e}")
       end
-      logger.info "Deleted '#{pid}' from #{Fedora::Repository.instance.fedora_url}"
+      logger.info "Deleted '#{pid}' from #{ActiveFedora::RubydoraConnection.instance.options[:url]}"
     end
   end
   
@@ -100,16 +100,16 @@ namespace :hydra do
   end
   
   desc "Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
-  task :import_fixture => [:init, :environment] do
+  task :import_fixture => [:init] do
     
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]
       Fedora::Repository.register(ENV["destination"])
     end
     if !ENV["fixture"].nil? 
-      body = Hydra::FixtureLoader.import_to_fedora(ENV["fixture"])
+      body = ActiveFedora::FixtureLoader.import_to_fedora(ENV["fixture"])
     elsif !ENV["pid"].nil?
-      body = Hydra::FixtureLoader.new('test_support/fixtures').import_and_index(ENV["pid"])
+      body = ActiveFedora::FixtureLoader.new('test_support/fixtures').import_and_index(ENV["pid"])
     else
       raise "You must specify a path to the fixture or provide its pid.  Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
     end
@@ -118,12 +118,8 @@ namespace :hydra do
   end
   
   desc "Init Hydra configuration" 
-  task :init do
-    if !ENV["environment"].nil? 
-      Rails.env = ENV["environment"]
-    end
-    # If Fedora Repository connection is not already initialized, initialize it using ActiveFedora defaults
-    ActiveFedora.init unless Thread.current[:repo]  
+  task :init => [:environment] do
+    # We need to just start rails so that all the models are loaded
   end
 
   desc "Load hydra-head models"

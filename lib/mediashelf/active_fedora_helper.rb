@@ -42,16 +42,6 @@ module MediaShelf
 
     private
   
-    def require_fedora
-      if ActiveFedora::VERSION < "3.1.0"
-        
-        Fedora::Repository.register(ActiveFedora.fedora_config[:url],  session[:user])
-      else
-        ActiveSupport::Deprecation.warn("ActiveFedoraHelper.require_fedora has been deprecated and no longer has any effect.")
-      end
-      return true
-    end
-  
     def require_solr
       ActiveFedora::SolrService.register(ActiveFedora.solr_config[:url])
     end

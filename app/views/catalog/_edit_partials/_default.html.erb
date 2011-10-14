@@ -22,7 +22,7 @@
     <dt>state:</dt>
         <dd><%= @fedora_object.state %></dd>
     <dt>owner id:</dt>
-        <dd><%= @fedora_object.owner_id %></dd>
+        <dd><%= @fedora_object.inner_object.ownerId %></dd>
   </dl>
   <dl>
     <dt>created:</dt>
@@ -40,10 +40,10 @@
                       <div id='<%=dsid%>'>
                         <h1><%=dsid%></h1>
                         <dl>
-                            <%= ("<dt>label:</dt><dd>" + @datastreams[dsid].label + "</dd>").html_safe unless @datastreams[dsid].label.blank? %>
-                            <%= ("<dt>last modified:</dt><dd>" + @datastreams[dsid].last_modified + "</dd>").html_safe unless @datastreams[dsid].last_modified.blank? %>
-                            <%= ("<dt>mimetype:</dt><dd>" + @datastreams[dsid].mime_type + "</dd>").html_safe unless @datastreams[dsid].mime_type.blank? %>
-                            <%= ("<dt>control group:</dt><dd>" + @datastreams[dsid].control_group + "</dd>").html_safe unless @datastreams[dsid].control_group.blank? %>
+                            <%= ("<dt>label:</dt><dd>" + @datastreams[dsid].dsLabel + "</dd>").html_safe unless @datastreams[dsid].dsLabel.blank? %>
+                            <%= ("<dt>last modified:</dt><dd>" + @datastreams[dsid].lastModifiedDate + "</dd>").html_safe unless @datastreams[dsid].lastModifiedDate.blank? %>
+                            <%= ("<dt>mimetype:</dt><dd>" + @datastreams[dsid].mimeType + "</dd>").html_safe unless @datastreams[dsid].mimeType.blank? %>
+                            <%= ("<dt>control group:</dt><dd>" + @datastreams[dsid].controlGroup + "</dd>").html_safe unless @datastreams[dsid].controlGroup.blank? %>
                         </dl>
                       </div>
                     </div></li>

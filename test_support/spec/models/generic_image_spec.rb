@@ -4,7 +4,7 @@ require "active_fedora"
 describe GenericImage do
   
   before(:each) do
-    Fedora::Repository.stubs(:instance).returns(stub_everything())
+#    Fedora::Repository.stubs(:instance).returns(stub_everything())
     @hydra_image = GenericImage.new
 
   end

@@ -91,11 +91,12 @@ module Hydra::GenericContent
   
   # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in mods:physicaldescription/mods:extent 
   def add_file_datastream(file, opts={})
-    label = opts.has_key?(:label) ? opts[:label] : ""
-    mimeType = opts.has_key?(:mimeType) ? opts[:mimeType] : ""
-    ds = ActiveFedora::Datastream.new(:dsLabel => label, :controlGroup => 'M', :blob => file, :mimeType => mimeType)
-    opts.has_key?(:dsid) ? ds.dsid=(opts[:dsid]) : nil
-    add_datastream(ds)
+    # label = opts.has_key?(:label) ? opts[:label] : ""
+    # mimeType = opts.has_key?(:mimeType) ? opts[:mimeType] : ""
+    # ds = ActiveFedora::Datastream.new(:dsLabel => label, :controlGroup => 'M', :blob => file, :mimeType => mimeType)
+    # opts.has_key?(:dsid) ? ds.dsid=(opts[:dsid]) : nil
+    # add_datastream(ds)
+    super
     if file.respond_to?(:size)
       size = bits_to_human_readable(file.size)
     elsif file.kind_of?(File)
@@ -103,7 +104,7 @@ module Hydra::GenericContent
     else
       size = ""
     end
-    datastreams_in_memory["descMetadata"].update_indexed_attributes( [:physical_description, :extent] => size )
+    descMetadata.update_indexed_attributes( [:physical_description, :extent] => size )
   end
   
   def mime_type file_name

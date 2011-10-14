@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", '~> 3.0.10'
   s.add_dependency "blacklight", '3.0.0'  
-  s.add_dependency "active-fedora", '~>3.0.7'
+  s.add_dependency "active-fedora", '3.1.0.pre7'
   s.add_dependency 'builder'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'solr-ruby' 
   s.add_dependency 'mediashelf-loggable', '>=0.4.7' ##This can be removed once this dependency is declared in solrizer
   s.add_dependency 'solrizer', '>=1.1.0'
-  s.add_dependency 'solrizer-fedora', '>=1.1.0'
+  s.add_dependency 'solrizer-fedora', '>=1.1.3'
   s.add_dependency 'term-ansicolor'
   s.add_dependency 'trollop'
   s.add_dependency 'will_paginate'
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
   
-  s.add_development_dependency 'jettywrapper', "~> 0.0.10"
+  s.add_development_dependency 'jettywrapper', ">=1.0.0"
   s.add_development_dependency 'ruby-debug'
   s.add_development_dependency 'ruby-debug-base'
   s.add_development_dependency 'rspec', '>= 2.0.0'  
