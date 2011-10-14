@@ -4,7 +4,7 @@ require "active_fedora"
 describe AudioAsset do
   
   before(:each) do
-    Fedora::Repository.stubs(:instance).returns(stub_everything())
+#    Fedora::Repository.stubs(:instance).returns(stub_everything())
     @asset = AudioAsset.new
     @asset.stubs(:create_date).returns("2008-07-02T05:09:42.015Z")
     @asset.stubs(:modified_date).returns("2008-09-29T21:21:52.892Z")
@@ -17,7 +17,7 @@ describe AudioAsset do
   end
   
   it "should have a conforms_to relationship pointing to FileAsset" do
-    @asset.relationships[:self][:has_model].should include("info:fedora/afmodel:FileAsset")
+    @asset.ids_for_outbound(:has_model).should include("afmodel:FileAsset")
   end
   
 end

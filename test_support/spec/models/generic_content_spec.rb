@@ -4,7 +4,6 @@ require "active_fedora"
 describe GenericContent do
   
   before(:each) do
-    Fedora::Repository.stubs(:instance).returns(stub_everything())
     @hydra_content = GenericContent.new
   end
   

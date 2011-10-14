@@ -4,8 +4,6 @@ class GetController < ApplicationController
     include Hydra::RepositoryController
     helper :downloads
     
-    before_filter :require_fedora
-    
     def show
       fedora_object = ActiveFedora::Base.load_instance(params[:id])
       

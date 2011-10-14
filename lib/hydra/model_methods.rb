@@ -5,8 +5,8 @@ module Hydra::ModelMethods
   # Most important behavior: if the asset has a rightsMetadata datastream, this method will add +depositor_id+ to its individual edit permissions.
   #
   def apply_depositor_metadata(depositor_id)
-    prop_ds = self.datastreams_in_memory["properties"]
-    rights_ds = self.datastreams_in_memory["rightsMetadata"]
+    prop_ds = self.datastreams["properties"]
+    rights_ds = self.datastreams["rightsMetadata"]
   
     if !prop_ds.nil? && prop_ds.respond_to?(:depositor_values)
       prop_ds.depositor_values = depositor_id unless prop_ds.nil?
@@ -19,7 +19,7 @@ module Hydra::ModelMethods
   # Set the collection type (e.g. hydrangea_article) for the asset
   #
   def set_collection_type(collection)
-    prop_ds = self.datastreams_in_memory["properties"]
+    prop_ds = self.datastreams["properties"]
     if !prop_ds.nil? && prop_ds.respond_to?(:collection_values)
       prop_ds.collection_values = collection
     end
@@ -63,14 +63,14 @@ module Hydra::ModelMethods
 
   # Call insert_contributor on the descMetadata datastream
   def insert_contributor(type, opts={})
-    ds = self.datastreams_in_memory["descMetadata"]
+    ds = self.datastreams["descMetadata"]
     node, index = ds.insert_contributor(type,opts)
     return node, index
   end
   
   # Call remove_contributor on the descMetadata datastream
   def remove_contributor(type, index)
-    ds = self.datastreams_in_memory["descMetadata"]
+    ds = self.datastreams["descMetadata"]
     result = ds.remove_contributor(type,index)
     return result
   end
@@ -88,7 +88,8 @@ module Hydra::ModelMethods
   def destroyable_child_assets
     return [] unless self.file_objects
     self.file_objects.each.inject([]) do |file_assets, fo|
-      if fo.relationships[:self].has_key?(:is_part_of) && fo.relationships[:self][:is_part_of].length == 1 && fo.relationships[:self][:is_part_of][0].match(/#{self.pid}$/)
+      parents = fo.ids_for_outbound(:is_part_of)
+      if parents.length == 1 && parents.first.match(/#{self.pid}$/)
         file_assets << fo
       end
       file_assets

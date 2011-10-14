@@ -36,7 +36,7 @@ class FileAsset < ActiveFedora::Base
       
   def label=(label)
     super
-    datastreams_in_memory["descMetadata"].title_values = label
+    descMetadata.title_values = label
   end    
   
   # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in dc:extent 
@@ -49,7 +49,7 @@ class FileAsset < ActiveFedora::Base
     else
       size = ""
     end
-    datastreams_in_memory["descMetadata"].extent_values = size
+    datastreams["descMetadata"].extent_values = size
   end
 
   # Mimic the relationship accessor that would be created if a containers relationship existed

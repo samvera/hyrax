@@ -3,8 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe ModsAsset do
   
   before(:each) do
-    Fedora::Repository.stubs(:instance).returns(stub_everything())
-    @asset = ModsAsset.new
+#    Fedora::Repository.stubs(:instance).returns(stub_everything())
+    @asset = ModsAsset.new nil
     # @asset.stubs(:create_date).returns("2008-07-02T05:09:42.015Z")
     # @asset.stubs(:modified_date).returns("2008-09-29T21:21:52.892Z")
   end

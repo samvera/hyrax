@@ -39,7 +39,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
       t.embargo_release_date(:proxy => [:machine, :date])
     }    
   end
-    
+
   # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
   def self.xml_template
     builder = Nokogiri::XML::Builder.new do |xml|
@@ -86,7 +86,6 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   # permissions({:person=>"person123"})
   # => {"person123"=>"read"}
   def permissions(selector, new_access_level=nil)
-    
     type = selector.keys.first.to_sym
     actor = selector.values.first
     if new_access_level.nil?
@@ -178,6 +177,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   private
   # Purge all access given group/person 
   def remove_all_permissions(selector)
+    return unless ng_xml
     type = selector.keys.first.to_sym
     actor = selector.values.first
     xpath = self.class.terminology.xpath_for(:access, type, actor)
