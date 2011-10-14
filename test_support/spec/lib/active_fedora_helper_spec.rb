@@ -48,7 +48,7 @@ describe MediaShelf::ActiveFedoraHelper do
       solr_af_obj = helper.load_af_instance_from_solr(solr_doc)
       fed_af_obj = ActiveFedora::Base.load_instance(pid)
       #check both inbound and outbound match
-      fed_af_obj.outbound_relationships.should == solr_af_obj.outbound_relationships
+      fed_af_obj.outbound_relationships.to_hash.should == solr_af_obj.outbound_relationships.to_hash
       fed_af_obj.inbound_relationships.should == solr_af_obj.inbound_relationships
     end
   end

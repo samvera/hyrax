@@ -1,4 +1,4 @@
-<%- person_collection = @document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:person).to_a -%>
+<%- person_collection = @document_fedora.datastreams["descMetadata"].find_by_terms(:person).to_a -%>
 <%- person_collection << [] if params[:add_contributor] -%>
 
 <%= render :partial=>"contributors/edit_person", :collection=>person_collection, :locals=>{:af_model => "mods_asset"} %>

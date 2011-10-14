@@ -3,7 +3,7 @@ class PermissionsController < ApplicationController
   include MediaShelf::ActiveFedoraHelper
   include Hydra::AssetsControllerHelper
   
-  before_filter :require_solr, :require_fedora
+  before_filter :require_solr
   # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
   include Hydra::SubmissionWorkflow
   
@@ -60,11 +60,11 @@ Removed from permissions/_new.html.erb
     # xml_content = Fedora::Repository.instance.fetch_custom(pid, "datastreams/#{dsid}/content")
     #@document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
     @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
-    xml_content = @document_fedora.datastreams_in_memory[dsid].content
-    ds = Hydra::RightsMetadata.from_xml(xml_content)
-    ds.pid = pid
-    ds.dsid = dsid
-    @document_fedora.datastreams_in_memory[dsid] = ds
+    xml_content = @document_fedora.datastreams[dsid].content
+    ds = Hydra::RightsMetadata.new(@document_fedora.inner_object, dsid)
+    Hydra::RightsMetadata.from_xml(xml_content, ds)
+
+    @document_fedora.datastreams[dsid] = ds
     
     access_actor_type = params["permission"]["actor_type"]
     actor_id = params["permission"]["actor_id"]
@@ -73,13 +73,7 @@ Removed from permissions/_new.html.erb
     # update the datastream's values
     result = ds.permissions({access_actor_type => actor_id}, access_level)
       
-    # Replace the object's datastream with the new updated ds
-    # !! Careful when re-working this.  If you init the object, replace the datastream, and call object.save, the datastream might get indexed twice!
-    # FUTURE: ActiveFedora::Base will support this soon:
-    # ActiveFedora::Base.replace_datastream("changeme:25","rightsMetadata", ds).
-    # base_object.replace_datastream("rightsMetadata", ds)
-    ds.pid = pid
-    ds.dsid = dsid
+    ds.serialize!
     ds.save
     
     # Re-index the object
@@ -114,25 +108,17 @@ Removed from permissions/_new.html.erb
     end
     
     dsid = "rightsMetadata"
-    # xml_content = Fedora::Repository.instance.fetch_custom(pid, "datastreams/#{dsid}/content")
-    #@document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
     @document_fedora=ActiveFedora::Base.load_instance(pid)
-    xml_content = @document_fedora.datastreams_in_memory[dsid].content
-    ds = Hydra::RightsMetadata.from_xml(xml_content)
-    ds.pid = pid
-    ds.dsid = dsid
-    @document_fedora.datastreams_in_memory[dsid] = ds
-    
+    xml_content = @document_fedora.datastreams[dsid].content
+    ds = Hydra::RightsMetadata.new(@document_fedora.inner_object, dsid)
+    Hydra::RightsMetadata.from_xml(xml_content, ds)
+    @document_fedora.datastreams[dsid] = ds
+
+     
     # update the datastream's values
     result = ds.update_permissions(params[:permission])
     
-    # Replace the object's datastream with the new updated ds
-    # !! Careful when re-working this.  If you init the object, replace the datastream, and call object.save, the datastream might get indexed twice!
-    # FUTURE: ActiveFedora::Base will support this soon:
-    # ActiveFedora::Base.replace_datastream("changeme:25","rightsMetadata", ds).
-    # base_object.replace_datastream("rightsMetadata", ds)
-    ds.pid = pid
-    ds.dsid = dsid
+    ds.serialize!
     ds.save
     
     # Re-index the object
