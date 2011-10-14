@@ -5,8 +5,8 @@ require "nokogiri"
 describe Hydra::RightsMetadata do
   
   before(:each) do
-    Fedora::Repository.stubs(:instance).returns(stub_everything())
-    @sample = Hydra::RightsMetadata.new
+    ActiveFedora::RubydoraConnection.stubs(:instance).returns(stub_everything())
+    @sample = Hydra::RightsMetadata.new(nil, nil)
   end
   
   describe "permissions" do

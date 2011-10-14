@@ -65,12 +65,7 @@ describe FileAssetsController do
   end
 
   describe "index" do
-    before(:each) do
-      Fedora::Repository.stubs(:instance).returns(stub_everything)
-    end
-
     it "should be refined further!"
-    
   end
   describe "new" do
     it "should return the file uploader view"
@@ -117,11 +112,11 @@ describe FileAssetsController do
       controller.expects(:model_config).at_least_once.returns(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
       response.should redirect_to(:controller=>"catalog", :id=>"_PID_", :action => 'edit', :wf_step=>"permissions")
-      response.flash[:notice].should == "You must specify a file to upload."
+      request.flash[:notice].should == "You must specify a file to upload."
     end
     it "should display a message that you need to select a file to upload if no Filedata is provided" do
       xhr :post, :create
-      response.flash[:notice].include?("You must specify a file to upload.").should be_true
+      request.flash[:notice].include?("You must specify a file to upload.").should be_true
     end
     
   end
@@ -144,7 +139,6 @@ describe FileAssetsController do
   
   describe "integration tests - " do
     before(:all) do
-      Fedora::Repository.register(ActiveFedora.fedora_config[:url])
       ActiveFedora::SolrService.register(ActiveFedora.solr_config[:url])
       @test_container = ActiveFedora::Base.new
       @test_container.add_relationship(:is_member_of, "foo:1")
@@ -182,13 +176,12 @@ describe FileAssetsController do
       end
 
       it "should set is_part_of relationship on the new File Asset pointing back at the container" do
-        
-        test_file = fixture("empty_file.txt")
+        test_file = fixture("small_file.txt")
         filename = "My File Name"
         test_file.expects(:original_filename).twice.returns("My File Name")
         post :create, {:Filedata=>[test_file], :Filename=>filename, :container_id=>@test_container.pid}
-        assigns(:file_asset).relationships[:self][:is_part_of].should == ["info:fedora/#{@test_container.pid}"] 
-        retrieved_fa = FileAsset.load_instance(@test_fa.pid).relationships[:self][:is_part_of].should == ["info:fedora/#{@test_container.pid}"]
+        assigns(:file_asset).ids_for_outbound(:is_part_of).should == [@test_container.pid] 
+        retrieved_fa = FileAsset.load_instance(@test_fa.pid).ids_for_outbound(:is_part_of).should == [@test_container.pid]
       end
     end
   end

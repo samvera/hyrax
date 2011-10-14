@@ -48,7 +48,7 @@ Then /^I should see a "([^"]*)" button(?: within "([^"]*)")?$/ do |button_locato
 end
 
 Given /^that "([^"]*)" has been loaded into fedora$/ do |pid|
-  Hydra::FixtureLoader.new('test_support/fixtures').reload(pid)
+  ActiveFedora::FixtureLoader.new('test_support/fixtures').reload(pid)
   
 end
 

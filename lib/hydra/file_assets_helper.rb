@@ -7,7 +7,6 @@ module Hydra::FileAssetsHelper
     if params.has_key?(:Filedata)
       @file_assets = []
       params[:Filedata].each do |file|
-        #@file_asset = create_asset_from_params
         @file_asset = create_asset_from_file(file)
         add_posted_blob_to_asset(@file_asset,file)
         @file_asset.save

@@ -10,7 +10,7 @@ describe Hydra::ModelMethods do
       prop_ds.expects(:depositor_values=).with("foouser")
       rights_ds.expects(:update_indexed_attributes).with([:edit_access, :person]=>"foouser")
 
-      helper.stubs(:datastreams_in_memory).returns({"rightsMetadata"=>rights_ds,"properties"=>prop_ds})
+      helper.stubs(:datastreams).returns({"rightsMetadata"=>rights_ds,"properties"=>prop_ds})
       helper.apply_depositor_metadata("foouser")
     end
   end
@@ -36,13 +36,13 @@ describe Hydra::ModelMethods do
   
   describe "set_title" do
     it "should set the title if the descMetadata is a NokogiriDatastream that responds to :title term" do
-      dm = Hydra::ModsArticle.new
+      dm = Hydra::ModsArticle.new nil,nil
       helper.stubs(:datastreams).returns("descMetadata"=>dm)
       helper.set_title("My title")
       dm.term_values(:title).should == ["My title"]
     end
     it "should set the title if the descMetadata is a MetadataDatastream with a title field defined" do
-      dm = ActiveFedora::QualifiedDublinCoreDatastream.new
+      dm = ActiveFedora::QualifiedDublinCoreDatastream.new  nil, nil 
       helper.stubs(:datastreams).returns("descMetadata"=>dm)
       helper.set_title("My title")
       dm.title_values.should == ["My title"]
@@ -55,7 +55,7 @@ describe Hydra::ModelMethods do
       prop_ds.expects(:respond_to?).with(:collection_values).returns(true)
       prop_ds.expects(:collection_values=).with("mods_asset")
 
-      helper.stubs(:datastreams_in_memory).returns({"properties"=>prop_ds})
+      helper.stubs(:datastreams).returns({"properties"=>prop_ds})
       helper.set_collection_type("mods_asset")
     end
   end
