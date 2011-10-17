@@ -16,7 +16,7 @@ Feature: Edit a ModsAsset object
      And I press "Continue"
 #     Then the "title_info_main_title" field should contain "The Smallest Victims of the "
 		 Then I should see "gibson.pdf" within "tr.file_asset"
-		 And I should see "Delete" in the file assets list
+		 And I should see a "Delete" button
 
   Scenario: Viewing browse/edit buttons
     Given I am logged in as "archivist1@example.com" 

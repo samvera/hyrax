@@ -94,6 +94,7 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 -------------------------------------------------------------- */
 .document_edit .document {padding: 0.5em 0;}
 .document_edit form {padding-bottom: 2em;}
+.document_edit form.button_to {padding-bottom: 0;}
 #document.document_edit h1 {color: #333; font-size: 18px; font-weight: bold; padding: 0.33em 0 0.67em;}
 #document.document_edit label {border-bottom: 1px dotted #D4D4D4; color: #444; display: block; font-size: 15px; font-variant: small-caps; font-weight: normal; padding: 1em 0 0.2em; margin-bottom: 0.8em; width: 45%;}
 #document.document_edit fieldset label {border-bottom: none; font-size: 13px; font-variant: normal; margin-bottom: 0; padding: 0.2em 0 0.5em; width: 33%;}

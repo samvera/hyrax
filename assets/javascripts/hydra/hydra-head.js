@@ -51,9 +51,9 @@ $(document).ready(function() {
   // Enable Ajax save functionality on edit pages
   HydraHead.enable_form_save = function() {
     HydraHead.target = null;
-    var all_forms = $('.document_edit form');
+    var all_forms = $('.document_edit form.step');
     
-    $('.document_edit input[type="submit"], .all-steps-actions button').click(function() {
+    $('.document_edit input[type="submit"], .all-steps-actions button').not('.delete-button').click(function() {
       HydraHead.target = $(this);
       all_forms.first().submit();
       return false;
@@ -90,7 +90,7 @@ $(document).ready(function() {
   // When an input changes (using blur for IE consistency), 
   // submit the containing form.
   HydraHead.auto_save = function() {
-    $('.document_edit input, .document_edit textarea, .document_edit select').blur(function() {
+    $('.document_edit input.edit, .document_edit textarea, .document_edit select').blur(function() {
       $(this).closest('form').ajaxSubmit();
     });
   };
