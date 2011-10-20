@@ -3,7 +3,7 @@ PATH
   specs:
     hydra-head (3.0.0.rc2)
       RedCloth (= 4.2.3)
-      active-fedora (= 3.1.0.pre7)
+      active-fedora (= 3.1.0.pre9)
       blacklight (= 3.0.0)
       block_helpers
       builder
@@ -56,7 +56,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.1.0.pre7)
+    active-fedora (3.1.0.pre9)
       activeresource (~> 3.0.0)
       activesupport (~> 3.0.0)
       equivalent-xml
@@ -65,10 +65,10 @@ GEM
       mime-types (>= 1.16)
       multipart-post (= 1.1.2)
       nokogiri
-      om (>= 1.0)
+      om (>= 1.4.3)
       rdf
       rdf-rdfxml
-      rubydora (~> 0.1.7)
+      rubydora (~> 0.1.9)
       solr-ruby (>= 0.0.6)
       solrizer (> 1.0.0)
       xml-simple (>= 1.0.12)
