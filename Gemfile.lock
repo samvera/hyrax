@@ -3,7 +3,7 @@ PATH
   specs:
     hydra-head (3.0.0pre4)
       RedCloth (= 4.2.3)
-      active-fedora (= 3.1.0.pre7)
+      active-fedora (= 3.1.0.pre9)
       blacklight (= 3.0.0)
       block_helpers
       builder
@@ -57,7 +57,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.1.0.pre7)
+    active-fedora (3.1.0.pre9)
       activeresource (~> 3.0.0)
       activesupport (~> 3.0.0)
       equivalent-xml
@@ -66,10 +66,10 @@ GEM
       mime-types (>= 1.16)
       multipart-post (= 1.1.2)
       nokogiri
-      om (>= 1.0)
+      om (>= 1.4.3)
       rdf
       rdf-rdfxml
-      rubydora (~> 0.1.7)
+      rubydora (~> 0.1.9)
       solr-ruby (>= 0.0.6)
       solrizer (> 1.0.0)
       xml-simple (>= 1.0.12)
@@ -177,7 +177,7 @@ GEM
     multipart-post (1.1.2)
     nokogiri (1.5.0)
     nori (1.0.2)
-    om (1.4.2)
+    om (1.4.3)
       mediashelf-loggable
       nokogiri (>= 1.4.2)
     polyglot (0.3.2)
@@ -234,7 +234,7 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    rubydora (0.1.7)
+    rubydora (0.1.9)
       activemodel
       activesupport
       fastercsv
@@ -287,7 +287,7 @@ GEM
     xml-simple (1.1.1)
     xpath (0.1.4)
       nokogiri (~> 1.3)
-    yard (0.7.2)
+    yard (0.7.3)
 
 PLATFORMS
   ruby
