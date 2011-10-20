@@ -6,13 +6,6 @@ h2. Before You Begin
 
 This tutorial is a work in progress.  We are actively seeking feedback.  If you run into _anything_ that is incorrect or confusing, please email the "hydra-tech":http://groups.google.com/group/hydra-tech mailing list and let us know.
 
-*Apologies for the dust*
-
-The HTML and CSS for hydra-head are currently being overhauled in anticipation of the 3.0.0 release.  The Hydra UI group is working hard on brand new information architecture with corresponding brand-new HTML and CSS.  This work is being carried out in another branch of the hydra-head code on Github and will be merged into the prereleases of the gem as the work approaches completion.  In the meantime, if you use the pre-release versions of hydra-head, you will encounter odd HTML with broken styling.  We are aware of this.   You might think of it as a tour through a construction site where the electricity, plumbing, walls and windows are finished but the drywall, carpet, and furnishings are still being worked on.
-
-This means that the server-side code in hydra-head (Models, Controllers, Modules, and underlying libraries) is stable and ready for you to explore, but the View-level code is still in flux.
-
-If you want to use the UI infrastructure that the hydra-head gem provides, you should wait for the official 3.0.0 release before putting a lot of work into customizing and styling the HTML in your views.  In contrast, if you plan to write all of the UI for your Hydra Head from scratch and simply use the underlying infrastructure to interact with Fedora & Solr, then it's safe to proceed with development.  
 
 h2. What you will learn from this document
 
