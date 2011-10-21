@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", '~> 3.0.10'
   s.add_dependency "blacklight", '3.0.0'  
-  s.add_dependency "active-fedora", '3.1.0.pre9'
+  s.add_dependency "active-fedora", '~>3.1.0.pre11'
   s.add_dependency 'builder'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
@@ -35,7 +35,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack'
   s.add_dependency 'rack-test'
   s.add_dependency 'rake'
-  s.add_dependency 'rcov'
   s.add_dependency 'RedCloth', '=4.2.3'
   s.add_dependency 'solr-ruby' 
   s.add_dependency 'mediashelf-loggable', '>=0.4.7' ##This can be removed once this dependency is declared in solrizer

@@ -36,13 +36,18 @@ describe Hydra::ModelMethods do
   
   describe "set_title" do
     it "should set the title if the descMetadata is a NokogiriDatastream that responds to :title term" do
-      dm = Hydra::ModsArticle.new nil,nil
+      obj = ActiveFedora::Base.new
+      dm = Hydra::ModsArticle.new(obj.inner_object, nil)
+      dm.stubs(:content).returns('')
       helper.stubs(:datastreams).returns("descMetadata"=>dm)
       helper.set_title("My title")
       dm.term_values(:title).should == ["My title"]
     end
     it "should set the title if the descMetadata is a MetadataDatastream with a title field defined" do
-      dm = ActiveFedora::QualifiedDublinCoreDatastream.new  nil, nil 
+      obj = ActiveFedora::Base.new
+      dm = ActiveFedora::QualifiedDublinCoreDatastream.new(obj.inner_object, nil)
+      dm.stubs(:content).returns('')
+      #dm = ActiveFedora::QualifiedDublinCoreDatastream.new  nil, nil 
       helper.stubs(:datastreams).returns("descMetadata"=>dm)
       helper.set_title("My title")
       dm.title_values.should == ["My title"]
