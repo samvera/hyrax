@@ -147,7 +147,7 @@ Run the database migrations
 
 <pre>
 rake db:migrate
-rake db:migrate RAILS_ENV=test
+rake db:test:prepare
 </pre>
 
 h3. Add all the generated code to the Git repository
