@@ -45,10 +45,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'trollop'
   s.add_dependency 'will_paginate'
   s.add_dependency 'xml-simple'
-  s.add_dependency 'yard'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
   
+  s.add_development_dependency 'yard'
   s.add_development_dependency 'jettywrapper', "~> 0.0.10"
   s.add_development_dependency 'ruby-debug'
   s.add_development_dependency 'ruby-debug-base'

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hydra-head (3.0.0.rc1)
+    hydra-head (3.0.0.rc2)
       RedCloth (= 4.2.3)
       active-fedora (~> 3.0.7)
       blacklight (= 3.0.0)
@@ -37,7 +37,6 @@ PATH
       trollop
       will_paginate
       xml-simple
-      yard
 
 GEM
   remote: http://rubygems.org/
@@ -270,3 +269,4 @@ DEPENDENCIES
   rspec-rails (>= 2.0.0)
   ruby-debug
   ruby-debug-base
+  yard

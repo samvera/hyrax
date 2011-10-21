@@ -67,7 +67,7 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
-      readme_filename = 'README.textile'
+      readme_filename = File.join(project_root,'README.textile')
       textile_docs = []
       Dir[File.join(project_root, "*.textile")].each_with_index do |f, index| 
         unless f.include?("/#{readme_filename}") # Skip readme, which is already built by the --readme option
