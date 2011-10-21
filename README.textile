@@ -95,6 +95,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
          gem 'database_cleaner'
          gem 'capybara'
          gem 'bcrypt-ruby'
+         gem "jettywrapper"
   end
 </pre>
 
@@ -189,6 +190,34 @@ Now that you've added the submodule to your git repository, whenever you grab a 
 git submodule init
 git submodule update
 </pre>
+
+*Important*: To apply the your application's solrconfig.xml and schema.xml to the copy of solr in hydra-jetty, run this:
+
+<pre>
+  rake hydra:jetty:config
+</pre>
+
+Now you're ready to start jetty.  We've written a useful gem that gives you rake tasks for starting and stopping jetty.  Make sure you have jettywrapper in your Gemfile
+
+<pre>
+  gem "jettywrapper"
+</pre>
+
+Then run <pre>  bundle install <pre>
+
+Now that you have jettywrapper installed, to start jetty use
+
+<pre>
+  rake jetty:start
+</pre>
+
+To stop jetty
+
+<pre>
+  rake jetty:stop
+</pre>
+
+For more information about using jettywrapper, see http://hudson.projecthydra.org/job/jettywrapper/Documentation/
 
 h3.  RSpec and Cucumber for Testing
 
