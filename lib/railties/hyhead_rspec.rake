@@ -57,21 +57,11 @@ begin
 
       desc "Run all specs"
       RSpec::Core::RakeTask.new(:run => spec_prereq) do |t|
-        t.rcov = true
         # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
         t.pattern = File.join(hyhead_spec, "/**/*_spec.rb")
         t.rspec_opts = "--colour"
 			end
 			
-      desc "Run all specs with rcov"
-      RSpec::Core::RakeTask.new(:rcov => spec_prereq) do |t|
-        t.rcov = true
-        # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
-        t.pattern = File.join(hyhead_spec, "/**/*_spec.rb")
-          t.rspec_opts = "--colour"
-        t.rcov_opts = '-o "' + HydraHead.root + '/coverage" --exclude /gems/,/Library/,/usr/,test_support,lib/tasks,.bundle,config,/lib/rspec/,/lib/rspec-'
-      end
-      
       # Blacklight. Solr wrapper. for now just for blacklight:spec, plan to
       # provide it for all variants eventually.
       # if you would like to see solr startup messages on STDERR

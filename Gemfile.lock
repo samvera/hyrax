@@ -3,7 +3,7 @@ PATH
   specs:
     hydra-head (3.0.0.rc2)
       RedCloth (= 4.2.3)
-      active-fedora (= 3.1.0.pre9)
+      active-fedora (= 3.1.0.pre10)
       blacklight (= 3.0.0)
       block_helpers
       builder
@@ -28,7 +28,6 @@ PATH
       rack-test
       rails (~> 3.0.10)
       rake
-      rcov
       sanitize
       solr-ruby
       solrizer (>= 1.1.0)
@@ -56,7 +55,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.1.0.pre9)
+    active-fedora (3.1.0.pre10)
       activeresource (~> 3.0.0)
       activesupport (~> 3.0.0)
       equivalent-xml
@@ -201,7 +200,6 @@ GEM
       thor (~> 0.14.4)
     rake (0.9.2)
     rbx-require-relative (0.0.5)
-    rcov (0.9.11)
     rdf (0.3.4.1)
       addressable (>= 2.2.6)
     rdf-rdfxml (0.3.5)

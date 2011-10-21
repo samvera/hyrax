@@ -6,7 +6,9 @@ describe Hydra::RightsMetadata do
   
   before(:each) do
     ActiveFedora::RubydoraConnection.stubs(:instance).returns(stub_everything())
-    @sample = Hydra::RightsMetadata.new(nil, nil)
+    obj = ActiveFedora::Base.new
+    @sample = Hydra::RightsMetadata.new(obj.inner_object, nil)
+    @sample.stubs(:content).returns('')
   end
   
   describe "permissions" do
