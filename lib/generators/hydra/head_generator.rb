@@ -31,6 +31,7 @@ class HeadGenerator < Rails::Generators::Base
    copy_file "config/initializers/fedora_config.rb", "config/initializers/fedora_config.rb"
    copy_file "config/initializers/hydra_config.rb", "config/initializers/hydra_config.rb"
    copy_file "config/initializers/blacklight_config.rb", "config/initializers/blacklight_config.rb"
+   copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
 
    # Role Mappings
    copy_file "config/role_map_cucumber.yml", "config/role_map_cucumber.yml"
