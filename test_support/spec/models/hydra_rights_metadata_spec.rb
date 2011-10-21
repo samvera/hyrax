@@ -127,7 +127,10 @@ describe Hydra::RightsMetadata do
     it "should solrize fixture content correctly" do
       fixture_xml = Nokogiri::XML::Document.parse( File.new(File.join( File.dirname(__FILE__), "../../fixtures/hydrangea_fixture_mods_article1.foxml.xml") ))
       fixture_rights = fixture_xml.xpath("//foxml:datastream[@ID='rightsMetadata']/foxml:datastreamVersion[last()]/foxml:xmlContent", {'foxml'=>"info:fedora/fedora-system:def/foxml#"}).first.to_xml
-      lsample = Hydra::RightsMetadata.from_xml(fixture_rights)
+      lsample = Hydra::RightsMetadata.new(nil, nil)
+      lsample.content = fixture_rights
+#      lsample.expects(:content).returns('')
+      lsample = Hydra::RightsMetadata.from_xml(fixture_rights, lsample)
       solr_doc = lsample.to_solr
       solr_doc["edit_access_person_t"].should == ["researcher1"]
       solr_doc["edit_access_group_t"].should == ["archivist"]

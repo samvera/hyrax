@@ -180,19 +180,19 @@ namespace :hyhead do
       FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
       
       puts "Executing bundle install --local"
-      %x[bundle install --local]
+      puts %x[bundle install --local]
       errors << 'Error running bundle install in test app' unless $?.success?
 
       puts "Installing cucumber in test app"
-      %x[rails g cucumber:install]
+      puts %x[rails g cucumber:install]
       errors << 'Error installing cucumber in test app' unless $?.success?
 
       puts "generating default blacklight install"
-      %x[rails generate blacklight --devise]
+      puts %x[rails generate blacklight --devise]
       errors << 'Error generating default blacklight install' unless $?.success?
       
       puts "generating default hydra-head install"
-      %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
+      puts %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
       errors << 'Error generating default hydra-head install' unless $?.success?
 
       # set log_level to :warn in the test app's test environment. (:debug is too verbose)
@@ -201,7 +201,7 @@ namespace :hyhead do
 
       puts "Running rake db:migrate"
       %x[rake db:migrate]
-      %x[rake db:migrate RAILS_ENV=test]
+      %x[rake db:test:prepare]
       raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
 
@@ -223,7 +223,7 @@ namespace :hyhead do
   task :test => [:use_test_app]  do
     
     puts "Running rspec tests"
-    puts %x[rake hyhead:spec:rcov]
+    puts %x[rake hyhead:spec]
     rspec_success = $?.success?
 
     puts "Running cucumber tests"

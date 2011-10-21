@@ -32,7 +32,6 @@ module Hydra::CommonModsIndexMethods
   # An array of Solr::Field objects
   #
   def extract_person_organizations
-    # self.find_by_terms(:person,:affiliation).map { |org| Solr::Field.new({:mods_organization_facet=>org.text}) }
     orgs = {}
     self.find_by_terms(:person,:affiliation).each do |org| 
       ::Solrizer::Extractor.insert_solr_field_value(orgs, "mods_organization_facet", org.text) 
