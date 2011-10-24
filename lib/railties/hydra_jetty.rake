@@ -39,13 +39,12 @@ namespace :hydra do
       Rake::Task["hydra:jetty:config_solr"].invoke
     end
     
-    desc "Copies the default SOLR config for the bundled Hydra Testing Server"
+    desc "Copies the contents of solr_conf into the Solr development-core and test-core of Testing Server"
     task :config_solr do
-      FileList['solr_conf/conf/*'].each do |f|  
-        cp("#{f}", 'jetty/solr/development-core/conf/', :verbose => true)
-        cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
-    end
-
+      FileList['solr_conf/*'].each do |f|  
+        cp_r("#{f}", 'jetty/solr/development-core/', :verbose => true)
+        cp_r("#{f}", 'jetty/solr/test-core/', :verbose => true)
+      end
     end
 
     desc "Copies a custom fedora config for the bundled Hydra Testing Server"
