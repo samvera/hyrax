@@ -13,6 +13,14 @@ JETTY_PARAMS = {
 }
 
 #:jetty_port => ENV['HYDRA_JETTY_PORT'],
+
+namespace :jetty do
+  desc "Apply all configs to Testing Server (relies on hydra:jetty:config tasks unless you override it)"
+  task :config
+    Rake::Task["hydra:jetty:config"].invoke
+  end
+end
+
 namespace :hydra do
   namespace :jetty do
     desc "Starts the bundled Hydra Testing Server"
