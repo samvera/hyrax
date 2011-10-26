@@ -29,22 +29,6 @@ module ApplicationHelper
   def linked_label(field, field_string)
     link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
   end
-  def link_to_document(doc, opts={:label=>Blacklight.config[:index][:show_link].to_sym, :counter => nil,:title => nil})
-    label = case opts[:label]
-      when Symbol
-        doc.get(opts[:label])
-      when String
-        opts[:label]
-      else
-        raise 'Invalid label argument'
-      end
-
-    if label.blank?
-      label = doc[:id]
-    end
-    
-    link_to_with_data(label, catalog_path(doc[:id]), {:method => :put, :data => {:counter => opts[:counter]},:title=>opts[:title]})
-  end
 
   # currently only used by the render_document_partial helper method (below)
   def document_partial_name(document)
