@@ -16,7 +16,7 @@ JETTY_PARAMS = {
 
 namespace :jetty do
   desc "Apply all configs to Testing Server (relies on hydra:jetty:config tasks unless you override it)"
-  task :config
+  task :config do
     Rake::Task["hydra:jetty:config"].invoke
   end
 end
