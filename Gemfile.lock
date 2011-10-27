@@ -3,7 +3,7 @@ PATH
   specs:
     hydra-head (3.0.0.rc2)
       RedCloth (= 4.2.3)
-      active-fedora (~> 3.1.0.pre14)
+      active-fedora (~> 3.1.0.rc1)
       blacklight (= 3.0.0)
       block_helpers
       builder
@@ -55,7 +55,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.1.0.pre14)
+    active-fedora (3.1.0.rc1)
       activeresource (~> 3.0.0)
       activesupport (~> 3.0.0)
       equivalent-xml
