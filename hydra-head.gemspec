@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", '~> 3.0.10'
   s.add_dependency "blacklight", '3.0.0'  
-  s.add_dependency "active-fedora", '~>3.1.0.pre12'
+  s.add_dependency "active-fedora", '~>3.1.0.pre14'
   s.add_dependency 'builder'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
