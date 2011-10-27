@@ -35,8 +35,9 @@ describe FileAsset do
     end
   end
   
-  describe ".add_file" do
-    it "should call super.add_file"
-    it "should set the FileAsset's title and label to the file datastream's filename if they are currently empty"
+  describe 'label' do
+    asset = FileAsset.new
+    asset.label = 'image.jp2'
+    asset.label.should == 'image.jp2'
   end
 end
