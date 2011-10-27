@@ -33,6 +33,10 @@ class FileAsset < ActiveFedora::Base
   
   has_metadata :name => "descMetadata", :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
   end
+
+  def label
+    descMetadata.title_values.first
+  end
       
   def label=(label)
     super

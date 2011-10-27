@@ -141,8 +141,8 @@ describe FileAssetsController do
     before(:all) do
       ActiveFedora::SolrService.register(ActiveFedora.solr_config[:url])
       @test_container = ActiveFedora::Base.new
-      @test_container.add_relationship(:is_member_of, "foo:1")
-      @test_container.add_relationship(:has_collection_member, "foo:2")
+      @test_container.add_relationship(:is_member_of, "info:fedora/foo:1")
+      @test_container.add_relationship(:has_collection_member, "info:fedora/foo:2")
       @test_container.save
       
       @test_fa = FileAsset.new
