@@ -90,8 +90,6 @@ From file_assets/_new.html.haml
 
         notice << "The file #{file_asset.label} has been saved in <a href=\"#{asset_url(file_asset.pid)}\">#{file_asset.pid}</a>."
           
-#### TODO - jcoyne I think this is not working
-#debugger
         if !params[:container_id].nil?
           associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
         end
