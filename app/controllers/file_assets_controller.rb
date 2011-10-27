@@ -87,7 +87,7 @@ From file_assets/_new.html.haml
       notice = []
       @file_assets.each do |file_asset|
         apply_depositor_metadata(file_asset)
-        
+
         notice << "The file #{file_asset.label} has been saved in <a href=\"#{asset_url(file_asset.pid)}\">#{file_asset.pid}</a>."
           
         if !params[:container_id].nil?
