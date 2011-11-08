@@ -25,7 +25,7 @@ namespace :hydra do
   end
   
   desc "Delete the object identified by pid. Example: rake hydra:delete pid=demo:12"
-  task :delete => :init do
+  task :delete => :environment do
     # If a destination url has been provided, attampt to export from the fedora repository there.
     if ENV["destination"]
       Fedora::Repository.register(ENV["destination"])
