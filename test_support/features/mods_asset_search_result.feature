@@ -13,12 +13,12 @@ Feature: ModsAsset Search Result
 
   Scenario: html5 valid - unauthenticated 
     Given I am on the home page
-    When I follow "Article"
+    When I follow "ModsAsset"
     Then the page should be HTML5 valid
 
   Scenario: html5 valid - authenticated 
     Given I am logged in as "archivist1@example.com" 
     When I am on the home page
-    And I follow "Article"
+    And I follow "ModsAsset"
     Then the page should be HTML5 valid
 

@@ -14,14 +14,15 @@ Feature: HTML validity
     
   Scenario: Search Results (unauthenticated)
     Given I am on the home page
-    When I follow "Article"
+    When I follow "ModsAsset"
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
   Scenario: Search Results (authenticated)
     Given I am logged in as "archivist1@example.com" 
     When I am on the home page
-    And I follow "Article"
+    And I follow "ModsAsset"
+    Then show me the page
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
