@@ -118,5 +118,7 @@ This copy of the solr schema is only used in the context of testing hydra-head. 
  <defaultSearchField>text</defaultSearchField>
  <solrQueryParser defaultOperator="AND" />
  <copyField source="*_facet" dest="text" />
+ <copyField source="*_t" dest="text" />
+ <copyField source="*_s" dest="text" />
 
 </schema>

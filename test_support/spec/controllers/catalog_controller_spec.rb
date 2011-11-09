@@ -60,8 +60,10 @@ describe CatalogController do
     
     describe "access controls" do
       before(:all) do
-        @public_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"public"}]
-        @private_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"private"}]
+        @public_only_results = Blacklight.solr.find Hash[:fq=>"access_t:public"]
+        # @public_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"public"}]
+        # @private_only_results = Blacklight.solr.find Hash[:phrases=>{:access_t=>"private"}]
+        @private_only_results = Blacklight.solr.find Hash[:fq=>"access_t:private"]
       end
 
       it "should only return public documents if role does not have permissions" do
@@ -72,7 +74,8 @@ describe CatalogController do
       it "should return all documents if role does have permissions" do
 	User.any_instance.stubs(:login).returns("BigWig")
         mock_user =  User.new
-        session[:superuser_mode] = true
+        # session[:superuser_mode] = true
+        mock_user.stubs(:is_being_superuser?).returns(true)
         controller.stubs(:current_user).returns(mock_user)
         get :index
         assigns(:document_list).count.should > @public_only_results.docs.count

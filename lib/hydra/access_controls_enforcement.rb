@@ -172,12 +172,45 @@ module Hydra::AccessControlsEnforcement
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
   def apply_gated_discovery(solr_parameters, user_parameters)
-    # solr_parameters[:q] ||= []
-    solr_parameters[:q] = build_lucene_query(params[:q])
-    # @extra_controller_params ||= {}
-    # @extra_controller_params.merge!(:q=>build_lucene_query(params[:q]))
-    logger.debug("Solr query: #{ solr_parameters[:q] }")
+    solr_parameters[:fq] ||= []
+    # Grant access to public content
+    permission_types = ["edit","discover","read"]
+    user_access_filters = []
+    
+    permission_types.each do |type|
+      user_access_filters << "#{type}_access_group_t:public"
+    end
+    
+    # Grant access based on user id & role
+    unless current_user.nil?
+      # for roles
+      RoleMapper.roles(current_user.login).each_with_index do |role, i|
+        permission_types.each do |type|
+          user_access_filters << "#{type}_access_group_t:#{role}"
+        end
+      end
+      # for individual person access
+      permission_types.each do |type|
+        user_access_filters << "#{type}_access_person_t:#{current_user.login}"        
+      end
+      if current_user.is_being_superuser?(session)
+        permission_types.each do |type|
+          user_access_filters << "#{type}_access_person_t:[* TO *]"        
+        end
+      end
+      
+      # Enforcing Embargo at Query time has been disabled.  
+      # If you want to do this, set up your own solr_search_params before_filter that injects the appropriate :fq constraints for a field that expresses your objects' embargo status.
+      #
+      # include docs in results if the embargo date is NOT in the future OR if the current user is depositor
+      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{current_user.login}"
+      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR (embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{current_user.login}) AND NOT (NOT depositor_t:#{current_user.login} AND embargo_release_date_dt:[NOW TO *])"
+      # solr_parameters[:fq] << embargo_query         
+    end
+    solr_parameters[:fq] << user_access_filters.join(" OR ")
+    logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
+  
   
   # proxy for {enforce_index_permissions}
   def enforce_search_permissions
@@ -188,10 +221,19 @@ module Hydra::AccessControlsEnforcement
   def enforce_read_permissions
     enforce_show_permissions
   end
+  
+  # This filters out objects that you want to exclude from search results.  By default it only excludes FileAssets
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
+  def exclude_unwanted_models(solr_parameters, user_parameters)
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << "-has_model_s:\"info:fedora/afmodel:FileAsset\""
+  end
 
   # Build the lucene query that performs gated discovery based on Hydra rightsMetadata information in Solr
   # @param [String] user_query the user's original query request that will be wrapped in access controls
   def build_lucene_query(user_query)
+    logger.warn("DEPRECATED: build_lucene_query has been deprecated.  Recommended convention is to use blacklight's dismax search requestHandler (not lucene) and filter queries with :fq solr parameters.  See Hydra::AccessControlsEnforcement#apply_gated_discovery and Hydra::AccessControlsEnforcement#exclude_unwanted_models")
     q = ""
     # start query of with user supplied query term
       q << "_query_:\"{!dismax qf=$qf_dismax pf=$pf_dismax}#{user_query}\" AND " if user_query

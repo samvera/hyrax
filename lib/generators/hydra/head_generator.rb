@@ -119,7 +119,9 @@ EOF
         "\n  before_filter :enforce_access_controls" +
         "\n  before_filter :enforce_viewing_context_for_show_requests, :only=>:show" +
         "\n  # This applies appropriate access controls to all solr queries" +  
-        "\n  CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params"         
+        "\n  CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params" +  
+        "\n  # This filters out objects that you want to exclude from search results, like FileAssets" +  
+        "\n  CatalogController.solr_search_params_logic << :exclude_unwanted_models"   
       end
     else
       puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller module in the Controller class definition.  See the Hydra::Controller section in the Hydra API Docs for more info." 
