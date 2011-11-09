@@ -22,7 +22,6 @@ Feature: HTML validity
     Given I am logged in as "archivist1@example.com" 
     When I am on the home page
     And I follow "ModsAsset"
-    Then show me the page
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
