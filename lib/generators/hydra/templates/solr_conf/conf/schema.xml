@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+IMPORTANT
+This copy of the solr schema is only used in the context of testing hydra-head.  If you want to make changes available to individual hydra heads, you must apply them to the template in lib/generators/hydra/templates/solr_config
+-->
 <schema name="Hydra" version="1.1">
   <!-- For complete comments from the Solr project example schema.xml:
       http://svn.apache.org/viewvc/lucene/dev/trunk/solr/example/solr/conf/schema.xml?view=markup
@@ -91,7 +95,7 @@
    <field name="format" type="string" indexed="true" stored="true"/>
    <!-- pub_date is assumed by Blacklight's default configuration, so we must define it here to avoid errors -->
    <field name="pub_date" type="string" indexed="true" stored="true" multiValued="true"/>
-       
+   
    <dynamicField name="*_i"  type="sint"    indexed="true"  stored="true"/>
    <dynamicField name="*_s"  type="string"  indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_l"  type="slong"   indexed="true"  stored="true"/>
@@ -114,5 +118,7 @@
  <defaultSearchField>text</defaultSearchField>
  <solrQueryParser defaultOperator="AND" />
  <copyField source="*_facet" dest="text" />
+ <copyField source="*_t" dest="text" />
+ <copyField source="*_s" dest="text" />
 
 </schema>
