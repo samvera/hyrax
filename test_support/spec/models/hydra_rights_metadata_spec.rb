@@ -5,7 +5,8 @@ require "nokogiri"
 describe Hydra::RightsMetadata do
   
   before(:each) do
-    ActiveFedora::RubydoraConnection.stubs(:instance).returns(stub_everything())
+    # The way RubyDora loads objects prevents us from stubbing the fedora connection :(
+    # ActiveFedora::RubydoraConnection.stubs(:instance).returns(stub_everything())
     obj = ActiveFedora::Base.new
     @sample = Hydra::RightsMetadata.new(obj.inner_object, nil)
     @sample.stubs(:content).returns('')
