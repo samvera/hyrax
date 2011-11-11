@@ -48,12 +48,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'sanitize'
   
   s.add_development_dependency 'yard'
-  s.add_development_dependency 'jettywrapper', ">=1.0.0"
+  s.add_development_dependency 'jettywrapper', ">=1.0.3"
   s.add_development_dependency 'ruby-debug'
   s.add_development_dependency 'ruby-debug-base'
-  s.add_development_dependency 'rspec', '>= 2.0.0'  
-  s.add_development_dependency 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
-  s.add_development_dependency 'rest-client'
+#  s.add_development_dependency 'rspec', '>= 2.0.0'  
+  s.add_development_dependency 'rspec-rails', '>= 2.7.0'
+#  s.add_development_dependency 'rest-client'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'cucumber', '>=0.8.5'
   s.add_development_dependency 'cucumber-rails', '>=1.0.0'

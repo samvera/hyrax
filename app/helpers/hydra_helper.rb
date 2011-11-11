@@ -175,5 +175,10 @@ module HydraHelper
       return "Save and Continue"
     end
   end
-  
+
+  ### TODO this method is also in Hydra::Controller -- DRY it out
+  def user_key
+    current_user.send(Devise.authentication_keys.first)
+  end
+
 end

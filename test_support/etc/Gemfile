@@ -12,6 +12,7 @@ gem 'sqlite3-ruby', '~>1.2.5', :require => 'sqlite3'
 gem 'blacklight', '3.0.0'
 gem 'hydra-head', :path => '../../'
 gem 'devise'
+gem 'jettywrapper'
 
 # For testing
 group :development, :test do 

@@ -31,4 +31,9 @@ module Hydra::Controller
     javascript_includes << ['jquery.form.js']
     javascript_includes << ['spin.min.js' ]
   end
+
+  def user_key
+    current_user.send(Devise.authentication_keys.first)
+  end
+  
 end

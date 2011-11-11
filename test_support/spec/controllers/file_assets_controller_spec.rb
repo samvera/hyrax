@@ -64,11 +64,7 @@ describe FileAssetsController do
     end
   end
 
-  describe "index" do
-    it "should be refined further!"
-  end
   describe "new" do
-    it "should return the file uploader view"
     it "should set :container_id to value of :container_id if available" do
       xhr :get, :new, :asset_id=>"_PID_"
       @controller.params[:asset_id].should == "_PID_"
@@ -78,7 +74,7 @@ describe FileAssetsController do
   describe "show" do
     it "should redirect to index view if current_user does not have read or edit permissions" do
       mock_user = mock("User")
-      mock_user.stubs(:login).returns("fake_user")
+      mock_user.stubs(:email).returns("fake_user@example.com")
       mock_user.stubs(:is_being_superuser?).returns(false)
       controller.stubs(:current_user).returns(mock_user)
       get(:show, :id=>"hydrangea:fixture_file_asset1")
@@ -170,6 +166,7 @@ describe FileAssetsController do
     describe "create" do
       before :each do
         mock_user = mock("User")
+        mock_user.stubs(:email).returns('user@example.com')
         mock_warden = mock("Warden")
         mock_warden.stubs(:authenticate).returns(mock_user)
         request.env['warden'] = mock_warden

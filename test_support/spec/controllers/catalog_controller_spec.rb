@@ -72,7 +72,7 @@ describe CatalogController do
         assigns(:document_list).count.should == @public_only_results.docs.count
       end
       it "should return all documents if role does have permissions" do
-	User.any_instance.stubs(:login).returns("BigWig")
+       	User.any_instance.stubs(:email).returns("BigWig@example.com")
         mock_user =  User.new
         # session[:superuser_mode] = true
         mock_user.stubs(:is_being_superuser?).returns(true)

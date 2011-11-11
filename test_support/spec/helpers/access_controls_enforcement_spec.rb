@@ -7,8 +7,7 @@ describe Hydra::AccessControlsEnforcement do
     before(:each) do
       @stub_user = User.new :email=>'archivist1@example.com'
       @stub_user.stubs(:is_being_superuser?).returns false
-      @stub_user.stubs(:login).returns "fred"
-      RoleMapper.stubs(:roles).with(@stub_user.login).returns(["archivist","researcher"])
+      RoleMapper.stubs(:roles).with(@stub_user.email).returns(["archivist","researcher"])
       helper.stubs(:current_user).returns(@stub_user)
       @solr_parameters = {}
       @user_parameters = {}
@@ -16,7 +15,7 @@ describe Hydra::AccessControlsEnforcement do
     it "should set query fields for the user id checking against the discover, access, read fields" do
       helper.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@stub_user.login}/)      
+        @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@stub_user.email}/)      
       end
     end
     it "should set query fields for all roles the user is a member of checking against the discover, access, read fields" do
@@ -33,17 +32,16 @@ describe Hydra::AccessControlsEnforcement do
     it "should allow content owners access to their embargoed content" do
       pending
       helper.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
-      @solr_parameters[:fq].should include("(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{@stub_user.login}")
+      @solr_parameters[:fq].should include("(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{@stub_user.email}")
       
-      # @solr_parameters[:fq].should include("embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{current_user.login}) AND NOT (NOT depositor_t:#{current_user.login} AND embargo_release_date_dt:[NOW TO *]")
+      # @solr_parameters[:fq].should include("embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{current_user.email}) AND NOT (NOT depositor_t:#{current_user.email} AND embargo_release_date_dt:[NOW TO *]")
     end
     
     describe "for superusers" do
       it "should return superuser access level" do
-        stub_user = User.new
-        stub_user.stubs(:login).returns "suzie"
+        stub_user = User.new(:email=>'suzie@example.com')
         stub_user.stubs(:is_being_superuser?).returns true
-        RoleMapper.stubs(:roles).with(stub_user.login).returns(["archivist","researcher"])
+        RoleMapper.stubs(:roles).with(stub_user.email).returns(["archivist","researcher"])
         helper.stubs(:current_user).returns(stub_user)
         helper.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
         ["discover","edit","read"].each do |type|    
@@ -51,10 +49,9 @@ describe Hydra::AccessControlsEnforcement do
         end
       end
       it "should not return superuser access to non-superusers" do
-        stub_user = User.new
-        stub_user.stubs(:login).returns "suzie"
+        stub_user = User.new(:email=>'suzie@example.com')
         stub_user.stubs(:is_being_superuser?).returns false
-        RoleMapper.stubs(:roles).with(stub_user.login).returns(["archivist","researcher"])
+        RoleMapper.stubs(:roles).with(stub_user.email).returns(["archivist","researcher"])
         helper.stubs(:current_user).returns(stub_user)
         helper.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
         ["discover","edit","read"].each do |type|
@@ -87,9 +84,9 @@ describe Hydra::AccessControlsEnforcement do
      helper.stubs(:current_user).returns(stub_user)
      # This example assumes that archivist1 is in the archivist and researcher groups.
      # Tried stubbing RoleMapper.roles instead, but that broke 26 other tests because mocha fails to release the expectation.
-     # RoleMapper.stubs(:roles).with(stub_user.login).returns(["archivist", "researcher"])
+     # RoleMapper.stubs(:roles).with(stub_user.email).returns(["archivist", "researcher"])
      query = helper.send(:build_lucene_query, "query_string")
-     # RoleMapper.stubs(:roles).with(stub_user.login).returns(["archivist", "researcher"])
+     # RoleMapper.stubs(:roles).with(stub_user.email).returns(["archivist", "researcher"])
      # query = helper.send(:build_lucene_query, "string")
      
      ["discover","edit","read"].each do |type|
@@ -112,7 +109,7 @@ describe Hydra::AccessControlsEnforcement do
      helper.stubs(:current_user).returns(stub_user)
      query = helper.send(:build_lucene_query, "string")
      ["discover","edit","read"].each do |type|
-       query.should match(/_query_\:\"#{type}_access_person_t\:#{stub_user.login}/)
+       query.should match(/_query_\:\"#{type}_access_person_t\:#{stub_user.email}/)
      end
    end
    describe "for superusers" do
