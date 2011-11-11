@@ -6,8 +6,7 @@ namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
-    # Docs are broken
-    #Rake::Task["hyhead:doc"].invoke
+    Rake::Task["hyhead:doc"].invoke
     Rake::Task["hydra:jetty:config"].invoke
     
     require 'jettywrapper'
