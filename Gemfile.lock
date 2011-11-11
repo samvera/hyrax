@@ -144,7 +144,7 @@ GEM
     httpi (0.9.5)
       rack
     i18n (0.5.0)
-    jettywrapper (1.0.3)
+    jettywrapper (1.0.4)
       activesupport (>= 3.0.0)
       childprocess
       i18n
@@ -295,7 +295,7 @@ DEPENDENCIES
   factory_girl
   gherkin
   hydra-head!
-  jettywrapper (>= 1.0.3)
+  jettywrapper (>= 1.0.4)
   mocha
   rake
   rspec-rails (>= 2.7.0)
