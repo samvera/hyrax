@@ -17,9 +17,9 @@ namespace :hydra do
     
     desc "Copies the contents of solr_conf into the Solr development-core and test-core of Testing Server"
     task :config_solr do
-      FileList['solr_conf/*'].each do |f|  
-        cp("#{f}", 'jetty/solr/development-core/', :verbose => true)
-        cp("#{f}", 'jetty/solr/test-core/', :verbose => true)
+      FileList['solr_conf/conf/*'].each do |f|  
+        cp("#{f}", 'jetty/solr/development-core/config/', :verbose => true)
+        cp("#{f}", 'jetty/solr/test-core/config/', :verbose => true)
       end
     end
 
