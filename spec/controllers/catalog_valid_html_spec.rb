@@ -55,7 +55,6 @@ describe CatalogController do
         mock_user.stubs(:email).returns("archivist1@example.com")
         mock_user.stubs(:can_be_superuser?).returns(true)
         mock_user.stubs(:is_being_superuser?).returns(true)
-        mock_user.stubs(:last_search_url).returns(nil)
 
         controller.stubs(:current_user).returns(mock_user)
         get("index", "controller"=>"catalog")
@@ -70,7 +69,6 @@ describe CatalogController do
         mock_user.stubs(:email).returns("archivist1@example.com")
         mock_user.stubs(:can_be_superuser?).returns(true)
         mock_user.stubs(:is_being_superuser?).returns(true)
-        mock_user.stubs(:last_search_url).returns(nil)
         controller.stubs(:current_user).returns(mock_user)
     end
     
