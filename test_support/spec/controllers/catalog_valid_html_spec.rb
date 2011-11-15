@@ -1,10 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'mocha'
 
-
-
-
-
 # This uses nokogiri to check formedness. It's slightly less strict than the markup_validit
 # currently not being used. 
 def well_formed(html)
@@ -37,14 +33,10 @@ end
 
 
 describe CatalogController do
-  
-  integrate_views
-  
-  
-  
   describe "Home Page" do
     
     it "Should have Valid HTML when not logged in" do
+      controller.stubs(:current_user).returns(nil)
       get("index", "controller"=>"catalog")
       document_check(response.body)
     end

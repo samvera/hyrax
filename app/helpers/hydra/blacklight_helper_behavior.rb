@@ -50,11 +50,8 @@ module Hydra
 
     # currently only used by the render_document_partial helper method (below)
     def document_partial_name(document)
-      if !document[Blacklight.config[:show][:display_type]].nil?
-        return document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","").underscore.pluralize
-      else
-        return nil
-      end
+      return if document[Blacklight.config[:show][:display_type]].nil?
+      document[Blacklight.config[:show][:display_type]].first.gsub(/^[^\/]+\/[^:]+:/,"").underscore.pluralize
     end
     
     # Overriding Blacklight's render_document_partial
@@ -70,14 +67,6 @@ module Hydra
       rescue ActionView::MissingTemplate
         Rails.logger.debug("rendering default partial catalog/_#{action_name}_partials/default")
         render :partial=>"catalog/_#{action_name}_partials/default", :locals=>{:document=>doc}.merge(locals)
-      end
-    end
-    # currently only used by the render_document_partial helper method (below)
-    def document_partial_name(document)
-      if !document[Blacklight.config[:show][:display_type]].nil?
-        return document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","").underscore.pluralize
-      else
-        return nil
       end
     end
     

@@ -12,6 +12,12 @@ describe BlacklightHelper do
   end
   
   describe "Overridden blacklight methods" do
+    describe "document_partial_name" do
+      it "Should lop off everything before the first colin after the slash" do
+        helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:Presentation"]).should == "presentations"
+        helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"]).should == "generic_contents" 
+      end
+    end
     describe "render_head_content" do
       before (:each) do
         helper.expects(:content_for).with(:head).returns("My added content")

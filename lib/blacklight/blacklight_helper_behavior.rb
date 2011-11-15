@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 # -*- coding: utf-8 -*-
-# Copied from blacklight 3.0.  Do not change this file inside hydra.  
+# Copied from blacklight 3.0.  Do not change this file inside hydra. Override in app/helpers/hydra/blacklight_helper_behavior.rb
 # When Blacklight 3.2 comes out, remove this file.
 #
 # Methods added to this helper will be available to all templates in the hosting application
