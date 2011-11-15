@@ -4,6 +4,8 @@ h3. 3.1.0
 * Don't fork processes to run tests
 * Refactor helpers, so that applications can easily override them
 * Remove Djatoka support
+* Fixed login error messages
+* Fixed documentation rake task
 
 h3. 3.0.1
 
