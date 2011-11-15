@@ -72,6 +72,22 @@ module Hydra
         render :partial=>"catalog/_#{action_name}_partials/default", :locals=>{:document=>doc}.merge(locals)
       end
     end
+    # currently only used by the render_document_partial helper method (below)
+    def document_partial_name(document)
+      if !document[Blacklight.config[:show][:display_type]].nil?
+        return document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","").underscore.pluralize
+      else
+        return nil
+      end
+    end
+    
+    # Removing the [remove] link from the default selected facet display
+    def render_selected_facet_value(facet_solr_field, item)
+      '<span class="selected">' +
+      render_facet_value(facet_solr_field, item, :suppress_link => true) +
+      '</span>'
+    end
+
     
     ###
     ### Overrides pulled in from Libra
