@@ -3,6 +3,7 @@ h3. 3.1.0
 * Update rake tasks to leverage jettywrapper
 * Don't fork processes to run tests
 * Refactor helpers, so that applications can easily override them
+* Remove Djatoka support
 
 h3. 3.0.1
 
