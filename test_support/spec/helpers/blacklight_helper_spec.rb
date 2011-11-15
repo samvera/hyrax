@@ -1,8 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe BlacklightHelper do
-  # include ApplicationHelper
-  
   it "should include HydraHelper" do
     BlacklightHelper.included_modules.should include(HydraHelper)
   end

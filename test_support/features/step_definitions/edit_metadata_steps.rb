@@ -1,4 +1,3 @@
-require "hydra/fixture_loader"
 # This is the post-submission complement to "I fill in the following" from web_steps.rb
 Then /^the following (should contain|contain|should not contain|do not contain):$/ do |bool,table|
   # table is a Cucumber::Ast::Table
