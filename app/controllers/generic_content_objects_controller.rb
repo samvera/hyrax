@@ -6,7 +6,6 @@ class GenericContentObjectsController < ApplicationController
   include MediaShelf::ActiveFedoraHelper
   include Blacklight::SolrHelper
   
-  before_filter :require_fedora
   before_filter :require_solr
 
 

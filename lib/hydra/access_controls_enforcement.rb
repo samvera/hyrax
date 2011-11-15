@@ -96,8 +96,9 @@ module Hydra::AccessControlsEnforcement
       if @permissions_solr_document["embargo_release_date_dt"] 
         embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
-          # check for depositor raise "#{@document["depositor_t"].first} --- #{current_user.login}"
-          unless current_user && current_user.login == @permissions_solr_document["depositor_t"].first
+          # check for depositor raise "#{@document["depositor_t"].first} --- #{user_key}"
+          ### Assuming we're using devise and have only one authentication key
+          unless current_user && user_key == @permissions_solr_document["depositor_t"].first
             flash[:notice] = "This item is under embargo.  You do not have sufficient access privileges to read this document."
             redirect_to(:action=>'index', :q=>nil, :f=>nil) and return false
           end
@@ -184,14 +185,14 @@ module Hydra::AccessControlsEnforcement
     # Grant access based on user id & role
     unless current_user.nil?
       # for roles
-      RoleMapper.roles(current_user.login).each_with_index do |role, i|
+      RoleMapper.roles(user_key).each_with_index do |role, i|
         permission_types.each do |type|
           user_access_filters << "#{type}_access_group_t:#{role}"
         end
       end
       # for individual person access
       permission_types.each do |type|
-        user_access_filters << "#{type}_access_person_t:#{current_user.login}"        
+        user_access_filters << "#{type}_access_person_t:#{user_key}"        
       end
       if current_user.is_being_superuser?(session)
         permission_types.each do |type|
@@ -203,8 +204,8 @@ module Hydra::AccessControlsEnforcement
       # If you want to do this, set up your own solr_search_params before_filter that injects the appropriate :fq constraints for a field that expresses your objects' embargo status.
       #
       # include docs in results if the embargo date is NOT in the future OR if the current user is depositor
-      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{current_user.login}"
-      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR (embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{current_user.login}) AND NOT (NOT depositor_t:#{current_user.login} AND embargo_release_date_dt:[NOW TO *])"
+      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{user_key}"
+      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR (embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{user_key}) AND NOT (NOT depositor_t:#{user_key} AND embargo_release_date_dt:[NOW TO *])"
       # solr_parameters[:fq] << embargo_query         
     end
     solr_parameters[:fq] << user_access_filters.join(" OR ")
@@ -252,14 +253,14 @@ module Hydra::AccessControlsEnforcement
 
       unless current_user.nil?
         # for roles
-        RoleMapper.roles(current_user.login).each do |role|
+        RoleMapper.roles(user_key).each do |role|
           permission_types.each do |type|
             field_queries << "_query_:\"#{type}_access_group_t:#{role}\""
           end
         end
         # for individual person access
         permission_types.each do |type|
-          field_queries << "_query_:\"#{type}_access_person_t:#{current_user.login}\""
+          field_queries << "_query_:\"#{type}_access_person_t:#{user_key}\""
         end
         if current_user.is_being_superuser?(session)
           permission_types.each do |type|
@@ -269,7 +270,7 @@ module Hydra::AccessControlsEnforcement
 
         # if it is the depositor and it is under embargo, that is ok
         # otherwise if it not the depositor and it is under embargo, don't show it
-        embargo_query = " OR  ((_query_:\"embargo_release_date_dt:[NOW TO *]\" AND  _query_:\"depositor_t:#{current_user.login}\") AND NOT (NOT _query_:\"depositor_t:#{current_user.login}\" AND _query_:\"embargo_release_date_dt:[NOW TO *]\"))"
+        embargo_query = " OR  ((_query_:\"embargo_release_date_dt:[NOW TO *]\" AND  _query_:\"depositor_t:#{user_key}\") AND NOT (NOT _query_:\"depositor_t:#{user_key}\" AND _query_:\"embargo_release_date_dt:[NOW TO *]\"))"
       end
       
       # remove anything with an embargo release date in the future  
@@ -280,5 +281,6 @@ module Hydra::AccessControlsEnforcement
       q << embargo_query 
     return q
   end
+
 
 end

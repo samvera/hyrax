@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    hydra-head (3.0.0.rc2)
+    hydra-head (3.1.0.pre2)
       RedCloth (= 4.2.3)
-      active-fedora (~> 3.0.7)
+      active-fedora (~> 3.1.1)
       blacklight (= 3.0.0)
       block_helpers
       builder
@@ -28,11 +28,10 @@ PATH
       rack-test
       rails (~> 3.0.10)
       rake
-      rcov
       sanitize
       solr-ruby
       solrizer (>= 1.1.0)
-      solrizer-fedora (>= 1.1.0)
+      solrizer-fedora (>= 1.1.3)
       term-ansicolor
       trollop
       will_paginate
@@ -56,7 +55,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.0.7)
+    active-fedora (3.1.1)
       activeresource (~> 3.0.0)
       activesupport (~> 3.0.0)
       equivalent-xml
@@ -66,6 +65,9 @@ GEM
       multipart-post (= 1.1.2)
       nokogiri
       om (>= 1.4.3)
+      rdf
+      rdf-rdfxml
+      rubydora (= 0.2.3)
       solr-ruby (>= 0.0.6)
       solrizer (> 1.0.0)
       xml-simple (>= 1.0.12)
@@ -83,6 +85,8 @@ GEM
       activesupport (= 3.0.10)
     activesupport (3.0.10)
     addressable (2.2.6)
+    akami (1.0.0)
+      gyoku (>= 0.4.0)
     arel (2.0.10)
     blacklight (3.0.0)
       kaminari
@@ -116,7 +120,7 @@ GEM
       capybara (>= 1.1.1)
       cucumber (>= 1.1.0)
       nokogiri (>= 1.5.0)
-    curb (0.7.15)
+    curb (0.7.16)
     daemons (1.1.4)
     database_cleaner (0.6.7)
     diff-lcs (1.1.3)
@@ -131,12 +135,19 @@ GEM
     ffi (1.0.9)
     gherkin (2.5.2)
       json (>= 1.4.6)
+    gyoku (0.4.4)
+      builder (>= 2.1.2)
     haml (3.1.3)
     httparty (0.8.1)
       multi_json
       multi_xml
+    httpi (0.9.5)
+      rack
     i18n (0.5.0)
-    jettywrapper (0.0.10)
+    jettywrapper (1.0.4)
+      activesupport (>= 3.0.0)
+      childprocess
+      i18n
       logger
       mediashelf-loggable
     json (1.6.1)
@@ -163,10 +174,11 @@ GEM
     multi_xml (0.4.1)
     multipart-post (1.1.2)
     nokogiri (1.5.0)
+    nori (1.0.2)
     om (1.4.3)
       mediashelf-loggable
       nokogiri (>= 1.4.2)
-    polyglot (0.3.2)
+    polyglot (0.3.3)
     rack (1.2.4)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
@@ -188,7 +200,11 @@ GEM
       thor (~> 0.14.4)
     rake (0.9.2)
     rbx-require-relative (0.0.5)
-    rcov (0.9.11)
+    rdf (0.3.4.1)
+      addressable (>= 2.2.6)
+    rdf-rdfxml (0.3.5)
+      nokogiri (>= 1.4.4)
+      rdf (>= 0.3.4)
     rdoc (3.10)
       json (~> 1.4)
     rest-client (1.6.7)
@@ -197,27 +213,43 @@ GEM
       builder (>= 2.1.2)
     rsolr-ext (1.0.3)
       rsolr (>= 1.0.2)
-    rspec (2.6.0)
-      rspec-core (~> 2.6.0)
-      rspec-expectations (~> 2.6.0)
-      rspec-mocks (~> 2.6.0)
-    rspec-core (2.6.4)
-    rspec-expectations (2.6.0)
+    rspec (2.7.0)
+      rspec-core (~> 2.7.0)
+      rspec-expectations (~> 2.7.0)
+      rspec-mocks (~> 2.7.0)
+    rspec-core (2.7.1)
+    rspec-expectations (2.7.0)
       diff-lcs (~> 1.1.2)
-    rspec-mocks (2.6.0)
-    rspec-rails (2.6.1)
+    rspec-mocks (2.7.0)
+    rspec-rails (2.7.0)
       actionpack (~> 3.0)
       activesupport (~> 3.0)
       railties (~> 3.0)
-      rspec (~> 2.6.0)
+      rspec (~> 2.7.0)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
+    rubydora (0.2.3)
+      activemodel
+      activesupport
+      fastercsv
+      mime-types
+      nokogiri
+      rest-client
+      savon
     rubyzip (0.9.4)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
+    savon (0.9.7)
+      akami (~> 1.0)
+      builder (>= 2.1.2)
+      gyoku (>= 0.4.0)
+      httpi (~> 0.9)
+      nokogiri (>= 1.4.0)
+      nori (~> 1.0)
+      wasabi (~> 2.0)
     selenium-webdriver (2.8.0)
       childprocess (>= 0.2.1)
       ffi (>= 1.0.7)
@@ -237,7 +269,7 @@ GEM
       rsolr
       solr-ruby (>= 0.0.6)
       solrizer (>= 1.0.0)
-    stomp (1.1.9)
+    stomp (1.1.10)
     term-ansicolor (1.0.7)
     thor (0.14.6)
     treetop (1.4.10)
@@ -246,6 +278,8 @@ GEM
     trollop (1.16.2)
     tzinfo (0.3.30)
     unicode (0.4.0)
+    wasabi (2.0.0)
+      nokogiri (>= 1.4.0)
     will_paginate (3.0.2)
     xml-simple (1.1.1)
     xpath (0.1.4)
@@ -261,12 +295,10 @@ DEPENDENCIES
   factory_girl
   gherkin
   hydra-head!
-  jettywrapper (~> 0.0.10)
+  jettywrapper (>= 1.0.4)
   mocha
   rake
-  rest-client
-  rspec (>= 2.0.0)
-  rspec-rails (>= 2.0.0)
+  rspec-rails (>= 2.7.0)
   ruby-debug
   ruby-debug-base
   yard

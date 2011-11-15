@@ -6,31 +6,18 @@ namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
-    if ( ENV['environment'] == 'test' )
-      Rake::Task["hyhead:doc"].invoke
-      Rake::Task["hydra:jetty:config"].invoke
-      
-      require 'jettywrapper'
-      jetty_params = {
-        :jetty_home => File.expand_path(File.dirname(__FILE__) + '/../jetty'),
-        :quiet => false,
-        :jetty_port => 8983,
-        :solr_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/solr'),
-        :fedora_home => File.expand_path(File.dirname(__FILE__) + '/../jetty/fedora/default'),
-        :startup_wait => 30
-        }
-
-      # does this make jetty run in TEST environment???
-      error = Jettywrapper.wrap(jetty_params) do
-        Rake::Task['hyhead:setup_test_app'].invoke
-        puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test] # calling hydra:fixtures:refresh from the root of the test app
+    Rake::Task["hyhead:doc"].invoke
+    Rake::Task["hydra:jetty:config"].invoke
+    
+    require 'jettywrapper'
+    jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(File.dirname(__FILE__) + '/../jetty')})
+    
+    error = nil
+    error = Jettywrapper.wrap(jetty_params) do
         Rake::Task['hyhead:test'].invoke
-      end
-      raise "test failures: #{error}" if error
-    else
-      system("rake hyhead:ci environment=test")
-      fail unless $?.success?
+        Rake::Task['hyhead:cucumber'].invoke
     end
+    raise "test failures: #{error}" if error
   end
 
   
@@ -40,16 +27,19 @@ namespace :hyhead do
   namespace :rspec do
       
     desc "Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded."
-    task :run => :use_test_app do
-			puts "Running rspec tests"
-			puts  %x[rake hyhead:spec:run]
-      FileUtils.cd('../../')
+    ENV['RAILS_ROOT'] = File.join(File.expand_path(File.dirname(__FILE__)),'..','tmp','test_app')
+    RSpec::Core::RakeTask.new(:run) do |t|
+      t.rspec_opts = "--colour"
+      
+      # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
+      t.pattern = File.join(File.expand_path(File.dirname(__FILE__)),'..','test_support','spec')
     end
+    
     
     desc "Sets up test host, loads fixtures, then runs specs - need to have jetty running."
     task :setup_and_run => ["hyhead:setup_test_app"] do
 			puts "Reloading fixtures"
-      puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test] # calling hydra:fixtures:refresh from the root of the test app
+      puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test]
       Rake::Task["hyhead:rspec:run"].invoke
     end
         
@@ -67,19 +57,13 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
-      readme_filename = File.join(project_root,'README.textile')
-      textile_docs = []
-      Dir[File.join(project_root, "*.textile")].each_with_index do |f, index| 
-        unless f.include?("/#{readme_filename}") # Skip readme, which is already built by the --readme option
-          textile_docs << '-'
-          textile_docs << f
-        end
-      end
-      yt.files   = Dir.glob(File.join(project_root, '*.rb')) + 
-                   Dir.glob(File.join(project_root, 'app', '**', '*.rb')) + 
-                   Dir.glob(File.join(project_root, 'lib', '**', '*.rb')) + 
-                   textile_docs
-      yt.options = ['--output-dir', doc_destination, '--readme', readme_filename]
+      yt.files   = ['lib/**/*', project_root+"*", 'app/**/*', 'README.textile']
+
+      yt.options << "-m" << "textile"
+      yt.options << "--protected"
+      yt.options << "--no-private"
+      yt.options << "-r" << "README.textile"
+      yt.options << "-o" << "doc"
     end
   rescue LoadError
     desc "Generate YARD Documentation"
@@ -99,16 +83,21 @@ namespace :hyhead do
   
 
   namespace :cucumber do
+
+    require 'cucumber/rake/task'
+
+    ### Don't call this directly, use hyhead:cucumber:run
+    Cucumber::Rake::Task.new(:cmd) do |t|
+      t.cucumber_opts = "../../test_support/features --format pretty"
+    end
    
-   desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
-   task :run => :set_test_host_path do
-     Dir.chdir(TEST_HOST_PATH)
-     puts "Running cucumber features in test host app"
-     puts %x[rake hyhead:cucumber]
-     # puts %x[cucumber --color --tags ~@pending --tags ~@overwritten features]
-     raise "Cucumber tests failed" unless $?.success?
-     FileUtils.cd('../../')
-   end
+    desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
+    task :run => :set_test_host_path do
+      Dir.chdir(TEST_HOST_PATH)
+      puts "Running cucumber features in test host app"
+      Rake::Task["hyhead:cucumber:cmd"].invoke
+      FileUtils.cd('../../')
+    end
  
    # desc "Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running."
    # task :setup_and_run => ["hyhead:setup_test_app", "hyhead:remove_features_from_host", "hyhead:copy_features_to_host"] do
@@ -180,19 +169,19 @@ namespace :hyhead do
       FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
       
       puts "Executing bundle install --local"
-      %x[bundle install --local]
+      puts %x[bundle install --local]
       errors << 'Error running bundle install in test app' unless $?.success?
 
       puts "Installing cucumber in test app"
-      %x[rails g cucumber:install]
+      puts %x[rails g cucumber:install]
       errors << 'Error installing cucumber in test app' unless $?.success?
 
       puts "generating default blacklight install"
-      %x[rails generate blacklight --devise]
+      puts %x[rails generate blacklight --devise]
       errors << 'Error generating default blacklight install' unless $?.success?
       
       puts "generating default hydra-head install"
-      %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
+      puts %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
       errors << 'Error generating default hydra-head install' unless $?.success?
 
       # set log_level to :warn in the test app's test environment. (:debug is too verbose)
@@ -201,7 +190,7 @@ namespace :hyhead do
 
       puts "Running rake db:migrate"
       %x[rake db:migrate]
-      %x[rake db:migrate RAILS_ENV=test]
+      %x[rake db:test:prepare]
       raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
 
@@ -218,26 +207,30 @@ namespace :hyhead do
   #
   # Test
   #
-
   desc "Run tests against test app"
-  task :test => [:use_test_app]  do
+  task :test => [:spec, :cucumber]  do
     
-    puts "Running rspec tests"
-    puts %x[rake hyhead:spec:rcov]
-    rspec_success = $?.success?
-
-    puts "Running cucumber tests"
-    puts %x[rake hyhead:cucumber]
-    cucumber_success = $?.success?
-
-    FileUtils.cd('../../')
-    if rspec_success && cucumber_success
-      puts "Completed test suite with no errors"
-    else
-      puts "Test suite encountered failures... check console output for details."
-      fail
-    end
   end
+
+  # desc "Run tests against test app"
+  # task :test => [:use_test_app]  do
+  #   
+  #   puts "Running rspec tests"
+  #   puts %x[rake hyhead:spec]
+  #   rspec_success = $?.success?
+
+  #   puts "Running cucumber tests"
+  #   puts %x[rake hyhead:cucumber]
+  #   cucumber_success = $?.success?
+
+  #   FileUtils.cd('../../')
+  #   if rspec_success && cucumber_success
+  #     puts "Completed test suite with no errors"
+  #   else
+  #     puts "Test suite encountered failures... check console output for details."
+  #     fail
+  #   end
+  # end
   
   desc "Make sure the test app is installed, then run the tasks from its root directory"
   task :use_test_app => [:set_test_host_path] do

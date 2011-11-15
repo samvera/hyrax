@@ -1,10 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'mocha'
 
-
-
-
-
 # This uses nokogiri to check formedness. It's slightly less strict than the markup_validit
 # currently not being used. 
 def well_formed(html)
@@ -37,14 +33,10 @@ end
 
 
 describe CatalogController do
-  
-  integrate_views
-  
-  
-  
   describe "Home Page" do
     
     it "Should have Valid HTML when not logged in" do
+      controller.stubs(:current_user).returns(nil)
       get("index", "controller"=>"catalog")
       document_check(response.body)
     end
@@ -52,10 +44,9 @@ describe CatalogController do
     it "Should have Valid HTML when I'm logged in" do
         
         mock_user = mock("User")
-        mock_user.stubs(:login).returns("archivist1@example.com")
+        mock_user.stubs(:email).returns("archivist1@example.com")
         mock_user.stubs(:can_be_superuser?).returns(true)
         mock_user.stubs(:is_being_superuser?).returns(true)
-        mock_user.stubs(:last_search_url).returns(nil)
 
         controller.stubs(:current_user).returns(mock_user)
         get("index", "controller"=>"catalog")
@@ -67,10 +58,9 @@ describe CatalogController do
     
     before(:each)  do
         mock_user = mock("User")
-        mock_user.stubs(:login).returns("archivist1@example.com")
+        mock_user.stubs(:email).returns("archivist1@example.com")
         mock_user.stubs(:can_be_superuser?).returns(true)
         mock_user.stubs(:is_being_superuser?).returns(true)
-        mock_user.stubs(:last_search_url).returns(nil)
         controller.stubs(:current_user).returns(mock_user)
     end
     

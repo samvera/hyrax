@@ -25,7 +25,7 @@ module Hydra::AccessControlsEvaluation
         user = "public"
         logger.debug("current_user is nil, assigning public")
       else
-        user = current_user.login
+        user = user_key
       end
       
       user_groups = RoleMapper.roles(user)

@@ -7,8 +7,6 @@ class FileAssetsController < ApplicationController
   include MediaShelf::ActiveFedoraHelper
   include Blacklight::SolrHelper
   
-  
-  before_filter :require_fedora
   before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
 
   # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
@@ -89,11 +87,11 @@ From file_assets/_new.html.haml
       notice = []
       @file_assets.each do |file_asset|
         apply_depositor_metadata(file_asset)
-        
+
         notice << "The file #{file_asset.label} has been saved in <a href=\"#{asset_url(file_asset.pid)}\">#{file_asset.pid}</a>."
           
         if !params[:container_id].nil?
-          associate_file_asset_with_container(file_asset,params[:container_id])
+          associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
         end
   
         ## Apply any posted file metadata

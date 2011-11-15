@@ -5,7 +5,6 @@ class AssetsController < ApplicationController
     include Blacklight::SolrHelper
     include Hydra::RepositoryController
     include Hydra::AssetsControllerHelper
-#    include WhiteListHelper
     include ReleaseProcessHelper
     
     
@@ -13,7 +12,8 @@ class AssetsController < ApplicationController
     helper :hydra
     
     before_filter :search_session, :history_session
-    before_filter :require_solr, :require_fedora
+    before_filter :load_document, :only => :update # allows other filters to operate on the document before the update method is called
+    before_filter :require_solr
 
     # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
     include Hydra::SubmissionWorkflow
@@ -55,8 +55,6 @@ class AssetsController < ApplicationController
     # @example Sets the 1st and 2nd "medium" values on the descMetadata datastream in the _PID_ document, overwriting any existing values.
     #   put :update, :id=>"_PID_", "asset"=>{"descMetadata"=>{"medium"=>{"0"=>"Paper Document", "1"=>"Image"}}
     def update
-      @document = load_document_from_params
-      
       logger.debug("attributes submitted: #{@sanitized_params.inspect}")
            
       @response = update_document(@document, @sanitized_params)
@@ -115,10 +113,12 @@ class AssetsController < ApplicationController
     # This is a method to simply remove the item from SOLR but keep the object in fedora. 
     alias_method :withdraw, :destroy
     
-    #def withdraw
-    #  
-    #end
     protected
+
+    def load_document
+      @document = load_document_from_params
+    end
+
     
     def mods_assets_update_validation
       desc_metadata = params[:asset][:descMetadata]
