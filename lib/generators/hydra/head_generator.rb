@@ -15,9 +15,8 @@ class HeadGenerator < Rails::Generators::Base
     1. Creates a database migration for superusers if they do not exist in /db/migrate
     2. Adds additional mime types to you application in the file '/config/initializers/mime_types.rb'   
     3. Creates config/initializers/hydra_config.rb 
-    4. Creates config/initializers/fedora_config.rb 
-    5. Creates config/fedora.yml and config/solr.yml which you may need to modify to tell the hydra head where to find fedora & solr
-    6. Creates a number of role_map config files that are used in the placeholder user roles implementation 
+    4. Creates config/fedora.yml and config/solr.yml which you may need to modify to tell the hydra head where to find fedora & solr
+    5. Creates a number of role_map config files that are used in the placeholder user roles implementation 
   Enjoy building your Hydra Head!
          """
   
@@ -28,7 +27,6 @@ class HeadGenerator < Rails::Generators::Base
   # Copy all files in templates/config directory to host config
   def create_configuration_files
     # Initializers
-   copy_file "config/initializers/fedora_config.rb", "config/initializers/fedora_config.rb"
    copy_file "config/initializers/hydra_config.rb", "config/initializers/hydra_config.rb"
    copy_file "config/initializers/blacklight_config.rb", "config/initializers/blacklight_config.rb"
    copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
