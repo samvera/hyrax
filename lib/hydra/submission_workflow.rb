@@ -48,7 +48,6 @@ module Hydra::SubmissionWorkflow
       return_params[:new_asset] = true
     end
     if params[:wf_step] == last_step_in_workflow or params.has_key?(:finish)
-      flash[:notice] << "<br/>Your object has been saved and you have been redirected to the display view."
       return_params[:viewing_context] = "browse"
       return_params[:action] = "show" 
       return_params[:wf_step] = nil

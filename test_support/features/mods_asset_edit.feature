@@ -50,7 +50,7 @@ Feature: Edit a ModsAsset object
     When I am on the edit additional_info page for hydrangea:fixture_mods_article1
     When I press "Save and Finish"
     Then I should see "Switch to edit view"
-    And I should see "Your object has been saved"
+    And I should see "Your changes have been saved"
 
   Scenario: html5 valid
     Given I am logged in as "archivist1@example.com"

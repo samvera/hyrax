@@ -72,9 +72,7 @@ module Hydra
     
     # Removing the [remove] link from the default selected facet display
     def render_selected_facet_value(facet_solr_field, item)
-      '<span class="selected">' +
-      render_facet_value(facet_solr_field, item, :suppress_link => true) +
-      '</span>'
+      content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected")
     end
 
     

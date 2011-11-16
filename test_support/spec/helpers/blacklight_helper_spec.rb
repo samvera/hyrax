@@ -18,6 +18,15 @@ describe BlacklightHelper do
         helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"]).should == "generic_contents" 
       end
     end
+    describe "render_selected_facet_value" do
+      it "should be html_safe and not have the remove link" do
+        item = stub("item", :value=>'two', :hits=>9)
+
+        ret_val = helper.render_selected_facet_value("one", item)
+        ret_val.should == "<span class=\"selected\">two (9)</span>"
+        ret_val.should be_html_safe
+      end
+    end
     describe "render_head_content" do
       before (:each) do
         helper.expects(:content_for).with(:head).returns("My added content")
