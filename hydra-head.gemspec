@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'builder'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
-  s.add_dependency 'curb'
+  s.add_dependency 'curb', '0.7.15' ##Locked here because centos 5.2 (Hudson) doesn't support curl 7.16
   s.add_dependency 'database_cleaner'
   s.add_dependency 'diff-lcs'
   s.add_dependency 'facets', '2.8.4'
