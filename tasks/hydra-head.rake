@@ -46,7 +46,6 @@ namespace :hyhead do
   end
 
   
-  # The following is a task named :doc which generates documentation using yard
   begin
     require 'yard'
     require 'yard/rake/yardoc_task'
@@ -57,13 +56,14 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
-      yt.files   = ['lib/**/*', project_root+"*", 'app/**/*', 'README.textile']
+      yt.files   = ['lib/**/*', project_root+"*", 'app/**/*']
 
       yt.options << "-m" << "textile"
       yt.options << "--protected"
       yt.options << "--no-private"
       yt.options << "-r" << "README.textile"
       yt.options << "-o" << "doc"
+      yt.options << "--files" << "*.textile"
     end
   rescue LoadError
     desc "Generate YARD Documentation"
@@ -99,30 +99,8 @@ namespace :hyhead do
       FileUtils.cd('../../')
     end
  
-   # desc "Sets up test host, loads fixtures, then runs cucumber features - need to have jetty running."
-   # task :setup_and_run => ["hyhead:setup_test_app", "hyhead:remove_features_from_host", "hyhead:copy_features_to_host"] do
-   #   system("rake hydra:fixtures:refresh environment=test")
-   #   Rake::Task["hyhead:cucumber:run"].invoke
-   # end    
   end
    
-# Not sure if these are necessary - MZ 09Jul2011 
-  # desc "Copy current contents of the features directory into TEST_HOST_PATH/test_support/features"
-  # task :copy_features_to_host => [:set_test_host_path] do
-  #   features_dir = "#{TEST_HOST_PATH}/test_support/features"
-  #   excluded = [".", ".."]
-  #   FileUtils.mkdir_p(features_dir)
-  #   puts "Copying features to #{features_dir}"
-  #   # puts %x[ls -l test_support/features/mods_asset_search_result.feature]
-  #   %x[cp -R test_support/features/* #{features_dir}]
-  # end
-  # 
-  # desc "Remove TEST_HOST_PATH/test_support/features"
-  # task :remove_features_from_host => [:set_test_host_path] do
-  #   features_dir = "#{TEST_HOST_PATH}/test_support/features"
-  #   puts "Emptying out #{features_dir}"
-  #   %x[rm -rf #{features_dir}]
-  # end
   
   
   #
