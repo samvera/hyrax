@@ -1,7 +1,7 @@
 h3. 3.1.1
-* Fixed bug where selected facet was not html_safe
-* Fixed document_list, called when sorting by object_type_facet
-* Don't issue two notice messags when saving document.
+* Selected facet was not html_safe
+* document_list was attempting to call Mash#get, when sorting by object_type_facet
+* Don't issue two notice messages when saving document.
 
 
 h3. 3.1.0
