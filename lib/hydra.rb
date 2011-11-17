@@ -1,8 +1,10 @@
 require "blacklight"
 # Hydra libraries
 module Hydra
-  autoload :Configurable, 'blacklight/configurable'
   extend Blacklight::Configurable
+  extend ActiveSupport::Autoload
+  autoload :Configurable, 'blacklight/configurable'
+  autoload :Assets
 end
 
 

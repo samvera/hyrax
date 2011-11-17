@@ -1,3 +1,7 @@
+h3. 3.1.2
+* Make asset controller easily overridden
+
+
 h3. 3.1.1
 * Selected facet was not html_safe
 * document_list was attempting to call Mash#get, when sorting by object_type_facet

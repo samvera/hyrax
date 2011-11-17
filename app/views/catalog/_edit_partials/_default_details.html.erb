@@ -4,8 +4,6 @@
 <%= form_tag url_for(:action=>"update", :controller=>"assets"), :id=>"document_metadata"  "accept-charset"=>"utf-8" do %>
 
   <div id="multipleEdit">
-    <div id="loading" style="display:none;"><img src="/plugin_assets/hydra-head/images/ajax-loader.gif" width="32" height="32" alt="Saving"/> Saving...</div>
-    <div>
       <dl class="defList fl-theme-mist">
       <%= editable_metadata_field(@document_fedora, "descMetadata", :title, :label => "Title:") %>
       </dl>
