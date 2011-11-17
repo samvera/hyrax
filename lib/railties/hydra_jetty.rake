@@ -1,5 +1,3 @@
-require 'jettywrapper'
-
 namespace :jetty do
   desc "Apply all configs to Testing Server (relies on hydra:jetty:config tasks unless you override it)"
   task :config do
