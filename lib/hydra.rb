@@ -5,6 +5,7 @@ module Hydra
   extend ActiveSupport::Autoload
   autoload :Configurable, 'blacklight/configurable'
   autoload :Assets
+  autoload :FileAssets
 end
 
 

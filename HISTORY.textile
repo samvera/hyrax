@@ -1,5 +1,9 @@
+h3. 3.1.3
+* Make FileAssetController easily overridden
+* Update hydra-jetty, to support test and development fedora
+
 h3. 3.1.2
-* Make asset controller easily overridden
+* Make AssetController easily overridden
 
 
 h3. 3.1.1
