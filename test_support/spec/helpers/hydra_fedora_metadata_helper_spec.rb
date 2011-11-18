@@ -3,15 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe HydraFedoraMetadataHelper do
   
   before(:all) do
-    # @mock_ng_ds = mock("nokogiri datastream")
-    # @mock_ng_ds.stubs(:kind_of?).with(ActiveFedora::NokogiriDatastream).returns(true)
-    # @mock_ng_ds.stubs(:class).returns(ActiveFedora::NokogiriDatastream)
-    # @mock_md_ds = stub(:stream_values=>"value")
-    # datastreams = {"ng_ds"=>@mock_ng_ds,"simple_ds"=>@mock_md_ds}
     @resource = mock("fedora object")
-    # @resource.stubs(:datastreams).returns(datastreams)
-    # @resource.stubs(:datastreams_in_memory).returns(datastreams)
-        
     @resource.stubs(:get_values_from_datastream).with("simple_ds", "subject", "").returns( ["topic1","topic2"] )
 
     @resource.stubs(:get_values_from_datastream).with("ng_ds", [:title, :main_title], "").returns( ["My Title"] )
@@ -228,6 +220,7 @@ describe HydraFedoraMetadataHelper do
       # ordering is important.  this next line makes sure that the inputs are in the correct order
       # (tried using CSS3 nth-of-type selectors in have_selector but it didn't work)
       generated_html.should match(/<input.*name="field_selectors\[myDsName\]\[name_3_name_part\]\[\]\[name\]".*\/><input.*name="field_selectors\[myDsName\]\[name_3_name_part\]\[\].*value="name_part" .*\/>/)
+      generated_html.should be_html_safe
     end
     it "should not generate any field selectors if the field key is not an array" do
       helper.field_selectors_for("myDsName", :description).should == ""

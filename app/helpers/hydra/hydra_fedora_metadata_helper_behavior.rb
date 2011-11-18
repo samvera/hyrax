@@ -18,14 +18,14 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     field_values.each_with_index do |current_value, z|
       base_id = generate_base_id(field_name, current_value, field_values, opts)
       name = "asset[#{datastream_name}][#{field_name}][#{z}]"
-        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" name=\"#{name}\" value=\"#{h(current_value.strip)}\" #{required} type=\"text\" />"
-        body << "<a href=\"\" title=\"Delete '#{h(current_value)}'\" class=\"destructive field\">Delete</a>" if opts.fetch(:multiple, true) && !current_value.empty?
+        body << "<input class=\"editable-edit edit\" id=\"#{base_id}\" data-datastream-name=\"#{datastream_name}\" name=\"#{name}\" value=\"#{sanitize(current_value.strip)}\" #{required} type=\"text\" />"
+        body << "<a href=\"\" title=\"Delete '#{sanitize(current_value)}'\" class=\"destructive field\">Delete</a>" if opts.fetch(:multiple, true) && !current_value.empty?
     end
     
     result = field_selectors_for(datastream_name, field_key)
-    result << body
+    result << body.html_safe
     
-    return result.html_safe
+    result
   end
   
   def fedora_text_area(resource, datastream_name, field_key, opts={})
@@ -56,10 +56,8 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     
     result = field_selectors_for(datastream_name, field_key)
-    result << body
-
-    return result.html_safe
-    
+    result << body.html_safe
+    result
   end
   
   # Expects :choices option.  Option tags for the select are generated from the :choices option using Rails "options_for_select":http://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/options_for_select helper
@@ -82,9 +80,9 @@ module Hydra::HydraFedoraMetadataHelperBehavior
       body << "</select>"
       
       result = field_selectors_for(datastream_name, field_key)
-      result << body
+      result << body.html_safe
     end
-    return result.html_safe
+    result
   end
   
   def fedora_date_select(resource, datastream_name, field_key, opts={})
@@ -135,8 +133,8 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     EOF
     
     result = field_selectors_for(datastream_name, field_key)
-    result << body
-    return result.html_safe
+    result << body.html_safe
+    result
   end
 
   def fedora_submit(resource, datastream_name, field_key, opts={})
@@ -258,7 +256,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
         end
       end
     end
-    return result
+    result.html_safe
   end
   
   # hydra_form_for block helper 
