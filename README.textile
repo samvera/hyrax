@@ -96,7 +96,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
          gem 'capybara'
          gem 'bcrypt-ruby'
          gem "jettywrapper"
-  end
+  end # (leave this comment here to catch a stray line inserted by blacklight!)
 </pre>
 
 To install all of the dependencies, run:
