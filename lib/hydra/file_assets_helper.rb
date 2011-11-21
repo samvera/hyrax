@@ -26,9 +26,16 @@ module Hydra::FileAssetsHelper
   def add_posted_blob_to_asset(asset,file)
     #file_name = filename_from_params
     file_name = file.original_filename
-    
-    asset.add_file_datastream(file, :label=>file_name, :mimeType=>mime_type(file_name))
+    options = {:label=>file_name, :mimeType=>mime_type(file_name)}
+    dsid = datastream_id #Only call this once so that it could be a sequence
+    options[:dsid] = dsid if dsid
+    asset.add_file_datastream(file, options)
     asset.set_title_and_label( file_name, :only_if_blank=>true )
+  end
+
+  #Override this if you want to specify the datastream_id (dsID) for the created blob
+  def datastream_id
+    #nop
   end
   
   # Associate the new file asset with its container

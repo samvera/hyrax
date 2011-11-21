@@ -1,6 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Hydra::FileAssetsHelper do
+
+  it "should respond to datastream_id" do
+    helper.should respond_to :datastream_id  ### API method, test that it's there to be overridden
+  end
+
   describe "create_and_save_file_asset_from_params" do
     it "should create the file asset, add posted blob to it and save the file asset" do
       mock_fa = mock("file asset")
@@ -19,7 +24,8 @@ describe Hydra::FileAssetsHelper do
       helper.stubs(:params).returns( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
       mock_fa = mock("file asset")
       mock_file.expects(:original_filename).returns(file_name)
-      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype")
+      helper.stubs(:datastream_id).returns('bar')
+      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :ds_id=>'bar')
       mock_fa.expects(:set_title_and_label).with( file_name, :only_if_blank=>true )
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
       helper.add_posted_blob_to_asset(mock_fa,mock_file)

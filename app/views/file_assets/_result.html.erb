@@ -5,12 +5,8 @@
   <td>
 	
    <% if editor? %>
-    	<% if @container.nil? %>
-    		<% file_asset_url = file_asset_path(result["id"]) %>
-    	<% else %>
-    		<% file_asset_url = asset_file_asset_path(@container.pid, result["id"]) %>
-    	<% end %>
     	<%= button_to("Delete", "/file_assets/" + result["id"] + "?container_id=" + @document[:id], :confirm => "Are you sure you want to delete this file?", :method => :delete, :class => "delete-button") %>
+
    <% end %>
   </td>
 </tr>

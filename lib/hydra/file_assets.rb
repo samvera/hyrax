@@ -59,26 +59,7 @@ module Hydra::FileAssets
     end
     
     if params.has_key?(:Filedata)
-      @file_assets = create_and_save_file_assets_from_params
-      notice = []
-      @file_assets.each do |file_asset|
-        apply_depositor_metadata(file_asset)
-
-        notice << render_to_string(:partial=>'file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
-#        notice << "The file #{file_asset.label} has been saved in " + link_to(file_asset.pid, asset_url(file_asset.pid)) +"."
-          
-        if !params[:container_id].nil?
-          associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
-        end
-  
-        ## Apply any posted file metadata
-        unless params[:asset].nil?
-          logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
-          apply_file_metadata
-        end
-        # If redirect_params has not been set, use {:action=>:index}
-        logger.debug "Created #{file_asset.pid}."
-      end
+      notice = process_files
       flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
     else
       flash[:notice] = "You must specify a file to upload."
@@ -90,6 +71,29 @@ module Hydra::FileAssets
     redirect_params ||= {:controller => "catalog", :action => "index"}
     
     redirect_to redirect_params
+  end
+
+  def process_files
+    @file_assets = create_and_save_file_assets_from_params
+    notice = []
+    @file_assets.each do |file_asset|
+      apply_depositor_metadata(file_asset)
+
+      notice << render_to_string(:partial=>'file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
+        
+      if !params[:container_id].nil?
+        associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
+      end
+
+      ## Apply any posted file metadata
+      unless params[:asset].nil?
+        logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
+        apply_file_metadata
+      end
+      # If redirect_params has not been set, use {:action=>:index}
+      logger.debug "Created #{file_asset.pid}."
+    end
+    notice
   end
   
   # Common destroy method for all AssetsControllers 
