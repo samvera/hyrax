@@ -90,7 +90,6 @@ describe FileAssetsController do
     it "should create and save a file asset from the given params" do
       mock_fa = mock("FileAsset")
       mock_file = mock("File")
-      mock_fa.expects(:label).returns("Foo File")
       mock_fa.stubs(:pid).returns("foo:pid")
       controller.expects(:create_and_save_file_assets_from_params).returns([mock_fa])
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File"

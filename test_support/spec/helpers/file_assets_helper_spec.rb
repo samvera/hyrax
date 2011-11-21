@@ -25,7 +25,7 @@ describe Hydra::FileAssetsHelper do
       mock_fa = mock("file asset")
       mock_file.expects(:original_filename).returns(file_name)
       helper.stubs(:datastream_id).returns('bar')
-      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :ds_id=>'bar')
+      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :dsid=>'bar')
       mock_fa.expects(:set_title_and_label).with( file_name, :only_if_blank=>true )
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
       helper.add_posted_blob_to_asset(mock_fa,mock_file)
