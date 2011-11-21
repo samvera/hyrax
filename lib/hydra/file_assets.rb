@@ -64,7 +64,7 @@ module Hydra::FileAssets
       @file_assets.each do |file_asset|
         apply_depositor_metadata(file_asset)
 
-        notice << "The file #{file_asset.label} has been saved in <a href=\"#{asset_url(file_asset.pid)}\">#{file_asset.pid}</a>."
+        notice << "The file #{file_asset.label} has been saved in " + link_to(file_asset.pid, asset_url(file_asset.pid)) +"."
           
         if !params[:container_id].nil?
           associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
@@ -78,7 +78,7 @@ module Hydra::FileAssets
         # If redirect_params has not been set, use {:action=>:index}
         logger.debug "Created #{file_asset.pid}."
       end
-      flash[:notice] = notice.join("<br/>") unless notice.blank?
+      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
     else
       flash[:notice] = "You must specify a file to upload."
     end

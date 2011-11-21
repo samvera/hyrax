@@ -11,7 +11,6 @@
   <%- container_content_type_param = defined?(container_content_type) ? "?container_content_type=#{container_content_type}" : "" %>
   <fieldset id='uploader'>
     <legend>File Upload</legend>
-    <!-- This form will be progressively enhanced by the Fluid Uploader component. -->
     <%= form_tag(upload_url,:method=>"post",:enctype=>"multipart/form-data", :class=>"uploader-form step") do -%>
       <input type="hidden" name="container_id" value="<%=h container_id %>"/>
       <%= hidden_field_tag("container_content_type", container_content_type, :id => "file_upload_content_type") if defined?(container_content_type) %>
