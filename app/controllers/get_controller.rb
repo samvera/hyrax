@@ -2,6 +2,7 @@ require 'mediashelf/active_fedora_helper'
 class GetController < ApplicationController
     include MediaShelf::ActiveFedoraHelper
     include Hydra::RepositoryController
+    include Hydra::AssetsControllerHelper
     helper :downloads
     
     def show
@@ -17,11 +18,6 @@ class GetController < ApplicationController
         end
       end
       
-    end
-    
-    private
-    def send_datastream(datastream)
-      send_data datastream.content, :filename=>datastream.label, :type=>datastream.attributes["mimeType"]
     end
     
 end

@@ -7,9 +7,6 @@ module Hydra
       datastreams.each_value do |ds|
         result << "<li>"
         result << link_to(ds.label, asset_downloads_path(ds.pid, :download_id=>ds.dsid))
-        # if editor?
-        #   result << " <span>#{ds.attributes["mimeType"]}</span>"
-        # end
         result << "</li>"     
       end
           

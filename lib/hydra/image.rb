@@ -146,7 +146,7 @@ class Image < ActiveFedora::Base
 
   def derivation_url ds_name, opts={}
     source_ds_name = ds_name == :max ? "MASTER" : "MAX"
-    if ds_name == :max && datastreams["MASTER"].attributes["mimeType"] == "image/jpeg"
+    if ds_name == :max && datastreams["MASTER"].mimeType == "image/jpeg"
       url = datastream_url(source_ds_name)
     else
       opts_array=[]

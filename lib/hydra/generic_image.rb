@@ -75,7 +75,7 @@ module Hydra::GenericImage
   def derivation_url ds_name, opts={}
     source_ds_name = ds_name == :max ? "content" : "max"
     raise "Oops! Cannot find source datastream." unless datastreams.keys.include? source_ds_name
-    if ds_name == :max && datastreams["content"].attributes["mimeType"] == "image/jpeg"
+    if ds_name == :max && datastreams["content"].mimeType == "image/jpeg"
       url = datastream_url(source_ds_name)
     else
       opts_array=[]

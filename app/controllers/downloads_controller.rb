@@ -2,6 +2,7 @@ require 'mediashelf/active_fedora_helper'
 class DownloadsController < ApplicationController
     include MediaShelf::ActiveFedoraHelper
     include Hydra::RepositoryController
+    include Hydra::AssetsControllerHelper
     helper :downloads
     
     # Note: Actual downloads are handled by the index method insead of the show method
@@ -11,7 +12,7 @@ class DownloadsController < ApplicationController
       fedora_object = ActiveFedora::Base.load_instance(params[:asset_id])
       if params[:download_id]
         @datastream = fedora_object.datastreams[params[:download_id]]
-        send_data @datastream.content, :filename=>@datastream.label, :type=>@datastream.attributes["mimeType"]
+        send_datastream @datastream
         #send_data( Fedora::Repository.instance.fetch_custom(params[:document_id], "datastreams/#{datastream_id}/content") )
       else
         @datastreams = downloadables( fedora_object )
