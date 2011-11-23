@@ -35,7 +35,7 @@ module Hydra::FileAssetsHelper
 
   #Override this if you want to specify the datastream_id (dsID) for the created blob
   def datastream_id
-    #nop
+    "content"
   end
   
   # Associate the new file asset with its container

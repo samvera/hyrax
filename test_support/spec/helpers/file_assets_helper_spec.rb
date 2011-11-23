@@ -18,7 +18,7 @@ describe Hydra::FileAssetsHelper do
   end
   
   describe "add_posted_blob_to_asset" do
-    it "should set object title and label" do
+    it "should set object title and label, relying on datastream_id to set dsId" do
       mock_file = mock("File")
       file_name = "Posted Filename.foo"
       helper.stubs(:params).returns( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
@@ -37,12 +37,12 @@ describe Hydra::FileAssetsHelper do
       helper.stubs(:params).returns( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
       mock_fa = mock("file asset")
       mock_file.expects(:original_filename).returns(file_name)
-      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype")
+      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :dsid => 'content')
       mock_fa.stubs(:set_title_and_label)
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
       helper.add_posted_blob_to_asset(mock_fa,mock_file)
     end
-    it "should support submissions from single-file uploader" do
+    it "should support submissions from single-file uploader, defaulting to dsId of content" do
       mock_file = mock("File")
       file_name = "Posted Filename.foo"
 #      helper.expects(:filename_from_params).returns(file_name)
@@ -50,7 +50,7 @@ describe Hydra::FileAssetsHelper do
       mock_file.expects(:original_filename).returns(file_name)
       mock_fa = mock("file asset")
       helper.expects(:mime_type).with(file_name).returns("mymimetype")
-      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype")
+      mock_fa.expects(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :dsid => 'content')
       mock_fa.stubs(:set_title_and_label)
       helper.add_posted_blob_to_asset(mock_fa,mock_file)
     end
