@@ -25,7 +25,7 @@
       <foxml:xmlContent>
         <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rel="info:fedora/fedora-system:def/relations-external#" xmlns:hydra="http://projecthydra.org/ns/relations#">
           <rdf:Description rdf:about="info:fedora/hydra:test_default_partials">
-            <hasModel xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/afmodel:UsesDefaultPartials"></hasModel>
+            <hasModel xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/afmodel:CommonMetadataAsset"></hasModel>
           </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>
