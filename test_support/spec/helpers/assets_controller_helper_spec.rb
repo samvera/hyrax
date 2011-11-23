@@ -68,4 +68,12 @@ describe Hydra::AssetsControllerHelper do
     end
   end
   
+  describe "send_datastream" do
+    it "should return the requested datastream with content disposition & mime type set from datastream attributes" do
+      test_ds = ModsAsset.find("hydrangea:fixture_file_asset1").datastreams["DS1"]
+      helper.expects(:send_data).with(test_ds.content, :filename=>"bali.jpg", :type=>"image/jpeg")
+      helper.send(:send_datastream, test_ds)
+    end
+  end
+  
 end

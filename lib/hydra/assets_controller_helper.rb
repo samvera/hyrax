@@ -124,9 +124,10 @@ module Hydra::AssetsControllerHelper
   # Note: OM now handles destringifying params internally.  You probably don't have to do it!
   
   private
-    
+  
+  
   def send_datastream(datastream)
-    send_data datastream.content, :filename=>datastream.label, :type=>datastream.attributes["mimeType"]
+    self.send_data datastream.content, :filename=>datastream.dsLabel, :type=>datastream.mimeType
   end
   
   #underscores are escaped w/ + signs, which are unescaped by rails to spaces
