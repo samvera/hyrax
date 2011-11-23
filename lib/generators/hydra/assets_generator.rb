@@ -13,7 +13,7 @@
 require 'rails/generators'
 require 'rails/generators/base'
 module Hydra
-  class Assets < Rails::Generators::Base
+  class AssetsGenerator < Rails::Generators::Base
     source_root File.expand_path('../templates', __FILE__)
   
     def assets
