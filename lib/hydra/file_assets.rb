@@ -140,11 +140,14 @@ module Hydra::FileAssets
       end
 
       if @downloadable
-        if @file_asset.datastreams.include?("DS1")
+        # First try to use datastream_id value (set in FileAssetsHelper)
+        if @file_asset.datastreams.include?(datastream_id)
+          send_datastream @file_asset.datastreams[datastream_id]
+        elsif @file_asset.datastreams.include?("DS1")
           send_datastream @file_asset.datastreams["DS1"]
         end
       else
-        flash[:notice]= "You do not have sufficient access privileges to download this document, which has been marked private."
+        flash[:notice]= "You do not have sufficient access privileges to download this file."
         redirect_to(:action => 'index', :q => nil , :f => nil)
       end
     end
