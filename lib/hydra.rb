@@ -6,13 +6,14 @@ module Hydra
   autoload :Configurable, 'blacklight/configurable'
   autoload :Assets
   autoload :FileAssets
+  autoload :AccessControlsEvaluation
+  autoload :AccessControlsEnforcement
 end
 
 
 require 'mediashelf/active_fedora_helper'
 
 require 'hydra/repository_controller'
-require 'hydra/access_controls_enforcement'
 require 'hydra/assets_controller_helper'
 require 'hydra/file_assets_helper'
 

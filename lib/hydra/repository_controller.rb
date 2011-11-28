@@ -68,7 +68,7 @@ module Hydra::RepositoryController
         result = Hash[]
         fedora_object.datastreams.each_pair do |dsid,ds|
           if !ds.new_object?
-            mime_type = ds.attributes["mimeType"] ? ds.attributes["mimeType"] : ""
+            mime_type = ds.mimeType ? ds.mimeType : ""
             if mime_type.include?("pdf") || ds.label.include?("_TEXT.xml") || ds.label.include?("_METS.xml")
              result[dsid] = ds
             end 
@@ -78,7 +78,7 @@ module Hydra::RepositoryController
     else
       result = Hash[]
       fedora_object.datastreams.each_pair do |dsid,ds|
-         if ds.attributes["mimeType"].include?("pdf")
+         if ds.mimeType.include?("pdf")
            result[dsid] = ds
          end  
        end
@@ -92,7 +92,7 @@ module Hydra::RepositoryController
   def filter_datastreams_for_mime_type(datastreams_hash, mime_type)
     result = Hash[]
     datastreams_hash.each_pair do |dsid,ds|
-      ds_mime_type = ds.attributes["mimeType"] ? ds.attributes["mimeType"] : ""
+      ds_mime_type = ds.mimeType ? ds.mimeType : ""
       if ds_mime_type == mime_type
        result[dsid] = ds
       end  

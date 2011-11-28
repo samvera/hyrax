@@ -28,6 +28,7 @@ PATH
       rack-test
       rails (~> 3.0.10)
       rake
+      rsolr (= 1.0.6)
       sanitize
       solr-ruby
       solrizer (>= 1.1.0)

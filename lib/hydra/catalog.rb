@@ -1,4 +1,4 @@
-require "hydra/access_controls_enforcement"
+#require "hydra/access_controls_enforcement"
 # Include this module into any of your Blacklight Catalog classes (ie. CatalogController) to add Hydra functionality
 #
 # The primary function of this module is to mix in a number of other Hydra Modules, including 
