@@ -1,5 +1,7 @@
 h3. 3.1.5
 * Update to ActiveFedora 3.1.4
+* Update to solrizer-fedora 1.2.0
+* Fix problems where Datastreamr#attributes["mimeType"] was being called (changed to Datastream#mimeType)
 
 
 h3. 3.1.4
