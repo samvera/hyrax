@@ -1,3 +1,7 @@
+h3. 3.1.5
+* Update to ActiveFedora 3.1.4
+
+
 h3. 3.1.4
 * Removed unnecessary require of jettywrapper
 
