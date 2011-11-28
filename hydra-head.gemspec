@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rsolr", '1.0.2' ## version 1.0.6 breaks when using blacklight 3.0.0
   s.add_dependency "blacklight", '3.0.0'  
   s.add_dependency "active-fedora", '~>3.1.4'
-  s.add_dependency 'builder'
+  s.add_dependency 'builder', '2.1.2'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
   s.add_dependency 'curb', '0.7.15' ##Locked here because centos 5.2 (Hudson) doesn't support curl 7.16

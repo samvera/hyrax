@@ -6,7 +6,7 @@ PATH
       active-fedora (~> 3.1.4)
       blacklight (= 3.0.0)
       block_helpers
-      builder
+      builder (= 2.1.2)
       columnize
       crack
       curb (= 0.7.15)
