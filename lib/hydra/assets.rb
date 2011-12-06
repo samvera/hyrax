@@ -62,7 +62,7 @@ module Hydra::Assets
     @document.save
     flash[:notice] = "Your changes have been saved."
     
-    logger.debug("returning #{response.inspect}")
+    logger.debug("returning #{@response.inspect}")
     
     respond_to do |want| 
       want.html {

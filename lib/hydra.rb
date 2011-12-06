@@ -3,6 +3,7 @@ require "blacklight"
 module Hydra
   extend Blacklight::Configurable
   extend ActiveSupport::Autoload
+  ## Matz says that autoload is going away, so we ought to discontinue this.
   autoload :Configurable, 'blacklight/configurable'
   autoload :Assets
   autoload :FileAssets
@@ -21,5 +22,6 @@ require 'hydra/rights_metadata'
 require 'hydra/common_mods_index_methods'
 require 'hydra/mods_article'
 require 'hydra/model_methods'
+require 'hydra/models/file_asset'
 
 Dir[File.join(File.dirname(__FILE__), "hydra", "*.rb")].each {|f| require f}

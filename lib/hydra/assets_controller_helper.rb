@@ -110,6 +110,7 @@ module Hydra::AssetsControllerHelper
   
   
   # Updates the document based on the provided parameters
+  # This method can be overridden to perform additional update work in the hydra head.
   # @param [ActiveFedora::Base] document
   # @param [Hash] params should be the type expected by ActiveFedora::Base.update_datastream_attributes
   def update_document(document, params)
