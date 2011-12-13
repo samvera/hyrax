@@ -7,6 +7,24 @@ gem 'rails', '3.0.11'
 
 gem 'sqlite3'
 
+gem 'blacklight', '~>3.0.0'
+gem 'hydra-head', '~>3.1.0'
+
+gem 'devise'
+
+group :development, :test do
+  gem 'solrizer-fedora', '>=1.0.1'
+  gem 'ruby-debug'
+  gem 'rspec'
+  gem 'rspec-rails', '>=2.5.0'
+  gem 'mocha'
+  gem 'cucumber-rails'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'bcrypt-ruby'
+  gem "jettywrapper"
+end # (leave this comment here to catch a stray line inserted by blacklight!)
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
