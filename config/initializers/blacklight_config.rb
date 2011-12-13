@@ -26,15 +26,15 @@ Blacklight.configure(:shared) do |config|
  
   # solr field values given special treatment in the show (single result) view
   config[:show] = {
-    :html_title => "title_display",
-    :heading => "title_display",
-    :display_type => "format"
+    :html_title => "title_t",
+    :heading => "title_t",
+    :display_type => "has_model_s"
   }
 
   # solr fld values given special treatment in the index (search results) view
   config[:index] = {
-    :show_link => "title_display",
-    :record_display_type => "format"
+    :show_link => "title_t",
+    :record_display_type => "id"
   }
 
   # solr fields that will be treated as facets by the blacklight application
@@ -42,9 +42,16 @@ Blacklight.configure(:shared) do |config|
   # TODO: Reorganize facet data structures supplied in config to make simpler
   # for human reading/writing, kind of like search_fields. Eg,
   # config[:facet] << {:field_name => "format", :label => "Format", :limit => 10}
+  #
+  # Hydra uses active_fedora_model_s by default for displaying Format because that field is automatically 
+  # populated by active-fedora from your RELS-EXT.  You can change this to anything you want to use though.
+  # for example, the sample Hydra::ModsAsset Datastream Class adds object_type_facet = "Article" in its to_solr method.\
+  # You could use that as the format field instead of active_fedora_model_s to have a more nicer value displayed.
+  # 
+  #
   config[:facet] = {
     :field_names => (facet_fields = [
-      "format",
+      "object_type_facet",
       "pub_date",
       "subject_topic_facet",
       "language_facet",
@@ -53,7 +60,7 @@ Blacklight.configure(:shared) do |config|
       "subject_era_facet"
     ]),
     :labels => {
-      "format"              => "Format",
+      "object_type_facet"   => "Format",
       "pub_date"            => "Publication Year",
       "subject_topic_facet" => "Topic",
       "language_facet"      => "Language",
