@@ -90,16 +90,23 @@ describe HydraAssetsHelper do
       @asset_object2.collection_members_append(@file_object2)
       @asset_object2.add_relationship(:has_part,@file_object3)
 
+      @asset_object3.save
       @asset_object3.collection_members_append(@file_object1)
       @asset_object3.collection_members_append(@file_object2)
       @asset_object3.add_relationship(:has_part,@file_object3)
       @file_object4.part_of_append(@asset_object3)
 
       @asset_object4.add_relationship(:has_part,@file_object1)
+      @asset_object5.save
       @asset_object5.add_relationship(:has_part,@file_object1)
       @file_object2.part_of_append(@asset_object5)
+      @asset_object6.save
       @file_object1.part_of_append(@asset_object6)
      
+      @file_object1.save
+      @file_object2.save
+      @file_object3.save 
+      @file_object4.save
       @asset_object1.save
       @asset_object2.save
       @asset_object3.save
@@ -107,10 +114,6 @@ describe HydraAssetsHelper do
       @asset_object5.save
       @asset_object6.save
       @asset_object7.save
-      @file_object1.save
-      @file_object2.save
-      @file_object3.save 
-      @file_object4.save
     end
 
     after(:each) do
