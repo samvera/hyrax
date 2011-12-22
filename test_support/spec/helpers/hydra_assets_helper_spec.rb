@@ -64,37 +64,18 @@ describe HydraAssetsHelper do
     before(:each) do
       #setup objects for following cases
       #
-      #outbound has_collection_member
-      #outbound has_collection_member + inbound is_part_of
-      #outbound has_collection_member + outbound has_part + inbound is_part_of
       #outbound has_part
       #outbound has_part + inbound is_part_of
       #inbound is_part_of
       #none      
-      @asset_object1 = ActiveFedora::Base.new
-      @asset_object2 = ActiveFedora::Base.new
-      @asset_object3 = ActiveFedora::Base.new
       @asset_object4 = ActiveFedora::Base.new
       @asset_object5 = ActiveFedora::Base.new
       @asset_object6 = ActiveFedora::Base.new
       @asset_object7 = ActiveFedora::Base.new
       @file_object1 = ActiveFedora::Base.new
       @file_object2 = ActiveFedora::Base.new
-      @file_object3 = ActiveFedora::Base.new
-      @file_object4 = ActiveFedora::Base.new
 
-      @asset_object1.collection_members_append(@file_object1)
-      @asset_object1.collection_members_append(@file_object2)
 
-      @asset_object2.collection_members_append(@file_object1)
-      @asset_object2.collection_members_append(@file_object2)
-      @asset_object2.add_relationship(:has_part,@file_object3)
-
-      @asset_object3.save
-      @asset_object3.collection_members_append(@file_object1)
-      @asset_object3.collection_members_append(@file_object2)
-      @asset_object3.add_relationship(:has_part,@file_object3)
-      @file_object4.part_of_append(@asset_object3)
 
       @asset_object4.add_relationship(:has_part,@file_object1)
       @asset_object5.save
@@ -105,11 +86,6 @@ describe HydraAssetsHelper do
      
       @file_object1.save
       @file_object2.save
-      @file_object3.save 
-      @file_object4.save
-      @asset_object1.save
-      @asset_object2.save
-      @asset_object3.save
       @asset_object4.save
       @asset_object5.save
       @asset_object6.save
@@ -117,18 +93,6 @@ describe HydraAssetsHelper do
     end
 
     after(:each) do
-      begin
-        @asset_object1.delete
-      rescue
-      end
-      begin
-        @asset_object2.delete
-      rescue
-      end
-      begin
-        @asset_object3.delete
-      rescue
-      end
       begin
         @asset_object4.delete
       rescue
@@ -153,36 +117,17 @@ describe HydraAssetsHelper do
         @file_object2.delete
       rescue
       end
-      begin
-        @file_object3.delete
-      rescue
-      end
-      begin
-        @file_object4.delete
-      rescue
-      end
     end
 
     it "should return the correct number of assets with either has_collection_member file assets or parts" do
       
       #cases are
-      #outbound has_collection_member
-      #outbound has_collection_member + inbound is_part_of
-      #outbound has_collection_member + outbound has_part + inbound is_part_of
       #outbound has_part
       #outbound has_part + inbound is_part_of
       #inbound is_part_of
       #none      
 
-      result = ActiveFedora::Base.find_by_solr(@asset_object1.pid)
-      doc = result.hits.first
-      get_file_asset_count(doc).should == 2
-      result = ActiveFedora::Base.find_by_solr(@asset_object2.pid)
-      doc = result.hits.first
-      get_file_asset_count(doc).should == 3
-      result = ActiveFedora::Base.find_by_solr(@asset_object3.pid)
-      doc = result.hits.first
-      get_file_asset_count(doc).should == 4
+
       result = ActiveFedora::Base.find_by_solr(@asset_object4.pid)
       doc = result.hits.first
       get_file_asset_count(doc).should == 1

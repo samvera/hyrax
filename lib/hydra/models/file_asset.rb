@@ -5,7 +5,7 @@ module Hydra
       included do
         include Hydra::ModelMethods
         
-        has_relationship "is_member_of_collection", :has_collection_member, :inbound => true
+        #has_relationship "is_member_of_collection", :has_collection_member, :inbound => true
         has_bidirectional_relationship "part_of", :is_part_of, :has_part
         has_metadata :name => "descMetadata", :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
         end
@@ -67,23 +67,7 @@ module Hydra
       # @param [Hash] opts The options hash that can contain a :response_format value of :id_array, :solr, or :load_from_solr
       # @return [Array] Objects found through inbound has_collection_member and part_of relationships
       def containers(opts={})
-        is_member_array = is_member_of_collection(:response_format=>:id_array)
-          
-        if !is_member_array.empty?
-          logger.warn "This object has inbound collection member assertions.  hasCollectionMember will no longer be used to track file_object relationships after active_fedora 1.3.  Use isPartOf assertions in the RELS-EXT of child objects instead."
-          if opts[:response_format] == :solr || opts[:response_format] == :load_from_solr
-            logger.warn ":solr and :load_from_solr response formats for containers search only uses parts relationships (usage of hasCollectionMember is no longer supported)"
-            result = part_of(opts)
-          else
-            con_result = is_member_of_collection(opts)
-            part_of_result = part_of(opts)
-            ary = con_result+part_of_result
-            result = ary.uniq
-          end
-        else
-          result = part_of(opts)
-        end
-        return result
+         part_of(opts)
       end
 
       # Calls +containers+ with the :id_array option to return a list of pids for containers found.
