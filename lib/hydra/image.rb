@@ -28,6 +28,8 @@ require "httparty"
 
 module Hydra
 class Image < ActiveFedora::Base
+=begin
+  TODO This doesn't seem to be used anywhere. Commenting out until I hear back. Justin 2011-12-21
   include Hydra::ModelMethods
   include HTTParty
 
@@ -173,5 +175,6 @@ class Image < ActiveFedora::Base
     "#{admin_site}fedora/objects/#{pid}/datastreams/#{ds_name}/content"
   end
 
+=end
 end
 end
