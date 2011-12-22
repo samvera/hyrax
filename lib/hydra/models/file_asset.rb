@@ -49,7 +49,6 @@ module Hydra
         datastreams["descMetadata"].extent_values = size
       end
 
-      # Override ActiveFedora::Base.to_solr to...
       # Check if we are dealing with a child of FileAsset and if so when calling to_solr from Solrizer indexer we want to skip loading parent metadata again 
       #
       # if known models greater than one (without ActiveFedora::Base) and
