@@ -21,11 +21,38 @@ describe FileAsset do
   describe "with parts" do
     before(:each) do
       @asset1 = ActiveFedora::Base.new
+      @asset2 = ActiveFedora::Base.new
       @asset1.save
+      @asset2.save
     end
 
     after(:each) do
+      begin
       @asset1.delete
+      rescue
+      end
+      begin
+      @asset2.delete
+      rescue
+      end
+    end
+
+    describe ".containers" do    
+      it "should return asset container objects via either inbound has_collection_member, inbound has_part, or outbound is_part_of relationships" do
+        #test all possible combinations...
+        #none
+        @file_asset.containers(:response_format=>:id_array).should == []
+        #is_part_of
+        @file_asset.part_of_append(@asset1)
+        @file_asset.containers(:response_format=>:id_array).should == [@asset1.pid]
+        #has_part + is_part_of
+        @asset2.parts_append(@file_asset)
+        @asset2.save
+        @file_asset.containers(:response_format=>:id_array).should == [@asset2.pid,@asset1.pid]
+        #has_part
+        @file_asset.part_of_remove(@asset1)
+        @file_asset.containers(:response_format=>:id_array).should == [@asset2.pid]      
+      end
     end
 
     describe ".container_id" do    
