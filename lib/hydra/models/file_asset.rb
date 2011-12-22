@@ -49,31 +49,7 @@ module Hydra
         datastreams["descMetadata"].extent_values = size
       end
 
-<<<<<<< HEAD
-=======
-      # Mimic the relationship accessor that would be created if a containers relationship existed
-      # Decided to create this method instead because it combines more than one relationship list
-      # from is_member_of_collection and part_of
-      # @param [Hash] opts The options hash that can contain a :response_format value of :id_array, :solr, or :load_from_solr
-      # @return [Array] Objects found through inbound has_collection_member and part_of relationships
-      def containers(opts={})
-         part_of(opts)
-      end
-
-      # Calls +containers+ with the :id_array option to return a list of pids for containers found.
-      # @return [Array] Container ids (via is_member_of_collection and part_of relationships)
-      def containers_ids
-        containers(:response_format => :id_array)
-      end
-      
-      # Calls +containers+ with the option to load objects found from solr instead of Fedora.      
-      # @return [Array] ActiveFedora::Base objects populated via solr
-      def containers_from_solr
-        containers(:response_format => :load_from_solr)
-      end
-
->>>>>>> Removed has_collection_member relationship, was previously deprecated
-       # Override ActiveFedora::Base.to_solr to...
+      # Override ActiveFedora::Base.to_solr to...
       # Check if we are dealing with a child of FileAsset and if so when calling to_solr from Solrizer indexer we want to skip loading parent metadata again 
       #
       # if known models greater than one (without ActiveFedora::Base) and
