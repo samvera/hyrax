@@ -98,14 +98,6 @@ module Hydra::FileAssets
   
   # Common destroy method for all AssetsControllers 
   def destroy
-    # The correct implementation, with garbage collection:
-    # if params.has_key?(:container_id)
-    #   container = ActiveFedora::Base.load_instance(params[:container_id]) 
-    #   container.file_objects_remove(params[:id])
-    #   FileAsset.garbage_collect(params[:id])
-    # else
-    
-    # The dirty implementation (leaves relationship in container object, deletes regardless of whether the file object has other containers)
     ActiveFedora::Base.load_instance(params[:id]).delete 
 
     flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."
@@ -127,17 +119,14 @@ module Hydra::FileAssets
       flash[:notice]= "No such file asset."
       redirect_to(:action => 'index', :q => nil , :f => nil)
     else
-      # get array of parent (container) objects for this FileAsset
-      @id_array = @file_asset.containers(:response_format => :id_array)
+      # get containing object for this FileAsset
+      pid = @file_asset.container_id
       @downloadable = false
       # A FileAsset is downloadable iff the user has read or higher access to a parent
-      @id_array.each do |pid|
-        @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
-        if reader?
-          @downloadable = true
-          break
-        end
-      end
+      @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
+      if reader?
+        @downloadable = true
+     end
 
       if @downloadable
         # First try to use datastream_id value (set in FileAssetsHelper)
