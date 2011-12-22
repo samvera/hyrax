@@ -6,25 +6,13 @@ module Hydra
         include Hydra::ModelMethods
         
         #has_relationship "is_member_of_collection", :has_collection_member, :inbound => true
-        has_bidirectional_relationship "part_of", :is_part_of, :has_part
+        #has_bidirectional_relationship "part_of", :is_part_of, :has_part
+        belongs_to :container, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
         has_metadata :name => "descMetadata", :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
         end
       end
 
 
-      module ClassMethods
-        # deletes the object identified by pid if it does not have any objects asserting has_collection_member
-        def garbage_collect(pid)
-          begin 
-            obj = self.load_instance(pid)
-            if obj.containers.empty?
-              obj.delete
-            end
-          rescue
-          end
-        end
-      end
-      
       # Returns a human readable filesize appropriate for the given number of bytes (ie. automatically chooses 'bytes','KB','MB','GB','TB')
       # Based on a bit of python code posted here: http://blogmag.net/blog/read/38/Print_human_readable_file_size
       # @param [Numeric] file size in bits
@@ -59,27 +47,6 @@ module Hydra
           size = ""
         end
         datastreams["descMetadata"].extent_values = size
-      end
-
-      # Mimic the relationship accessor that would be created if a containers relationship existed
-      # Decided to create this method instead because it combines more than one relationship list
-      # from is_member_of_collection and part_of
-      # @param [Hash] opts The options hash that can contain a :response_format value of :id_array, :solr, or :load_from_solr
-      # @return [Array] Objects found through inbound has_collection_member and part_of relationships
-      def containers(opts={})
-         part_of(opts)
-      end
-
-      # Calls +containers+ with the :id_array option to return a list of pids for containers found.
-      # @return [Array] Container ids (via is_member_of_collection and part_of relationships)
-      def containers_ids
-        containers(:response_format => :id_array)
-      end
-      
-      # Calls +containers+ with the option to load objects found from solr instead of Fedora.      
-      # @return [Array] ActiveFedora::Base objects populated via solr
-      def containers_from_solr
-        containers(:response_format => :load_from_solr)
       end
 
        # Override ActiveFedora::Base.to_solr to...
