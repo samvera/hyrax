@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", '~> 3.0.10'
   s.add_dependency "rsolr", '1.0.2' ## version 1.0.6 breaks when using blacklight 3.0.0
   s.add_dependency "blacklight", '3.0.0'  
-  s.add_dependency "active-fedora", '>=3.1.4'
+  s.add_dependency "active-fedora", '>=3.2.0.pre1' #TODO >=3.1.4
   s.add_dependency 'builder', '2.1.2'
   s.add_dependency 'columnize'
   s.add_dependency 'crack'
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'solr-ruby' 
   s.add_dependency 'mediashelf-loggable', '>=0.4.7' ##This can be removed once this dependency is declared in solrizer
   s.add_dependency 'solrizer', '>=1.1.0'
-  s.add_dependency 'solrizer-fedora', '>=1.2.0'
+  s.add_dependency 'solrizer-fedora', '>=1.2.2'
   s.add_dependency 'term-ansicolor'
   s.add_dependency 'trollop'
   s.add_dependency 'will_paginate'
