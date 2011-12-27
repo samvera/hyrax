@@ -47,7 +47,7 @@ namespace :hydra do
     end
 
     desc "Copies the default SOLR config files and starts up the fedora instance."
-    task :load => [:config, :start]
+    task :load => [:config, 'jetty:start']
 
   end
 end
