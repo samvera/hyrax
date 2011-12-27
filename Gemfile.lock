@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    hydra-head (3.1.5)
+    hydra-head (3.2.0.pre1)
       RedCloth (= 4.2.3)
-      active-fedora (>= 3.2.0.pre1)
+      active-fedora (>= 3.2.0.pre2)
       blacklight (= 3.0.0)
       block_helpers
       builder (= 2.1.2)
@@ -56,7 +56,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.2.0.pre1)
+    active-fedora (3.2.0.pre2)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml

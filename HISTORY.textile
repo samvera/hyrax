@@ -1,3 +1,9 @@
+h3. 3.2.0
+* Update to ActiveFedora 3.2.0
+* Update to solrizer-fedora 1.2.2
+* Remove calls to has_relationship 
+* File assets no longer check collection_member relationship (for container)
+
 h3. 3.1.5
 * Update to ActiveFedora 3.1.4
 * Update to solrizer-fedora 1.2.0
