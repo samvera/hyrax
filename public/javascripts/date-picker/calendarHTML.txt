@@ -1,0 +1,84 @@
+The following HTML is created by the script for each datePicker instance...
+
+<div id="fd-date-2" class="datePicker drag-enabled weeks-displayed datepicker-focus" aria-labelledby="date-2_label" aria-hidden="false" role="grid">
+        <table class="datePickerTable" summary="">
+		<tfoot>
+			<tr class="">
+				<th class="date-picker-statusbar drag-enabled" colspan="8">Tuesday, 17<sup>th</sup> March 2009</th>
+			</tr>
+		</tfoot>
+		<thead>
+			<tr role="presentation">
+				<th class="date-picker-title drag-enabled" colspan="8"><span class="month-display drag-enabled">March </span><span class="year-display drag-enabled">2009</span></th>
+			</tr>
+			<tr role="presentation">
+				<th><span class="prev-but prev-year" id="date-2-prev-year-but" title="Previous year">«</span></th><th><span class="prev-but prev-month" id="date-2-prev-month-but" title="Previous month">‹</span></th><th colspan="4"><span class="today-but fd-disabled" id="date-2-today-but" title="">Today</span></th><th><span class="next-but next-month" id="date-2-next-month-but" title="Next month">›</span></th><th><span class="next-but next-year" id="date-2-next-year-but" title="Next year">»</span></th>
+			</tr>
+			<tr>
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-0" title="Week">wk</th><th class="date-picker-day-header" scope="col" role="columnheader" id="date-2-col-1" title="Monday">Mon</th><th class="date-picker-day-header" scope="col" role="columnheader" id="date-2-col-2" title="Tuesday"><span class="fd-day-header day-1" title="Tuesday">Tue</span></th><th class="date-picker-day-header" scope="col" role="columnheader" id="date-2-col-3" title="Wednesday"><span class="fd-day-header day-2" title="Wednesday">Wed</span></th><th class="date-picker-day-header" scope="col" role="columnheader" id="date-2-col-4" title="Thursday"><span class="fd-day-header day-3" title="Thursday">Thu</span></th><th class="date-picker-day-header" scope="col" role="columnheader" id="date-2-col-5" title="Friday"><span class="fd-day-header day-4" title="Friday">Fri</span></th><th class="date-picker-day-header date-picker-highlight" scope="col" role="columnheader" id="date-2-col-6" title="Saturday"><span class="fd-day-header day-5" title="Saturday">Sat</span></th><th class="date-picker-day-header date-picker-highlight" scope="col" role="columnheader" id="date-2-col-7" title="Sunday"><span class="fd-day-header day-6" title="Sunday">Sun</span></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr role="row" class="">
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-1">9</th>
+				<td aria-describedby="date-2-col-1 date-2-row-1" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-2 date-2-row-1" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-3 date-2-row-1" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-4 date-2-row-1" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-5 date-2-row-1" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-6 date-2-row-1" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-7 date-2-row-1" aria-selected="false" role="gridcell" title="March 01, 2009" class="day-sun cd-20090301 yyyymm-200903 mmdd-0301 date-picker-highlight" id="" tabindex="-1">1<span class="fd-screen-reader"> March 2009</span></td>
+			</tr>
+			<tr role="row" class="">
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-2">10</th>
+				<td aria-describedby="date-2-col-1 date-2-row-2" aria-selected="false" role="gridcell" title="March 02, 2009" class="day-mon cd-20090302 yyyymm-200903 mmdd-0302">2<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-2 date-2-row-2" aria-selected="false" role="gridcell" title="March 03, 2009" class="day-tue cd-20090303 yyyymm-200903 mmdd-0303">3<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-3 date-2-row-2" aria-selected="false" role="gridcell" title="March 04, 2009" class="day-wed cd-20090304 yyyymm-200903 mmdd-0304">4<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-4 date-2-row-2" aria-selected="false" role="gridcell" title="March 05, 2009" class="day-thu cd-20090305 yyyymm-200903 mmdd-0305">5<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-5 date-2-row-2" aria-selected="false" role="gridcell" title="March 06, 2009" class="day-fri cd-20090306 yyyymm-200903 mmdd-0306">6<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-6 date-2-row-2" aria-selected="false" role="gridcell" title="March 07, 2009" class="day-sat cd-20090307 yyyymm-200903 mmdd-0307 date-picker-highlight" id="" tabindex="-1">7<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-7 date-2-row-2" aria-selected="false" role="gridcell" title="March 08, 2009" class="day-sun cd-20090308 yyyymm-200903 mmdd-0308 date-picker-highlight">8<span class="fd-screen-reader"> March 2009</span></td>
+			</tr>
+			<tr role="row" class="">
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-3">11</th>
+				<td aria-describedby="date-2-col-1 date-2-row-3" aria-selected="false" role="gridcell" title="March 09, 2009" class="day-mon cd-20090309 yyyymm-200903 mmdd-0309">9<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-2 date-2-row-3" aria-selected="false" role="gridcell" title="March 10, 2009" class="day-tue cd-20090310 yyyymm-200903 mmdd-0310">10<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-3 date-2-row-3" aria-selected="false" role="gridcell" title="March 11, 2009" class="day-wed cd-20090311 yyyymm-200903 mmdd-0311">11<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-4 date-2-row-3" aria-selected="false" role="gridcell" title="March 12, 2009" class="day-thu cd-20090312 yyyymm-200903 mmdd-0312">12<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-5 date-2-row-3" aria-selected="false" role="gridcell" title="March 13, 2009" class="day-fri cd-20090313 yyyymm-200903 mmdd-0313" id="" tabindex="-1">13<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-6 date-2-row-3" aria-selected="false" role="gridcell" title="March 14, 2009" class="day-sat cd-20090314 yyyymm-200903 mmdd-0314 date-picker-highlight">14<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-7 date-2-row-3" aria-selected="false" role="gridcell" title="March 15, 2009" class="day-sun cd-20090315 yyyymm-200903 mmdd-0315 date-picker-highlight">15<span class="fd-screen-reader"> March 2009</span></td>
+			</tr>
+			<tr role="row" class="">
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-4">12</th>
+				<td aria-describedby="date-2-col-1 date-2-row-4" aria-selected="false" role="gridcell" title="March 16, 2009" class="day-mon cd-20090316 yyyymm-200903 mmdd-0316">16<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-2 date-2-row-4" aria-selected="false" role="gridcell" title="March 17, 2009" id="date-2-date-picker-hover" class="day-tue cd-20090317 yyyymm-200903 mmdd-0317 date-picker-today date-picker-hover" tabindex="0">17<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-3 date-2-row-4" aria-selected="false" role="gridcell" title="March 18, 2009" class="day-wed cd-20090318 yyyymm-200903 mmdd-0318">18<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-4 date-2-row-4" aria-selected="false" role="gridcell" title="March 19, 2009" class="day-thu cd-20090319 yyyymm-200903 mmdd-0319">19<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-5 date-2-row-4" aria-selected="false" role="gridcell" title="March 20, 2009" class="day-fri cd-20090320 yyyymm-200903 mmdd-0320" id="" tabindex="-1">20<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-6 date-2-row-4" aria-selected="false" role="gridcell" title="March 21, 2009" class="day-sat cd-20090321 yyyymm-200903 mmdd-0321 date-picker-highlight">21<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-7 date-2-row-4" aria-selected="false" role="gridcell" title="March 22, 2009" class="day-sun cd-20090322 yyyymm-200903 mmdd-0322 date-picker-highlight">22<span class="fd-screen-reader"> March 2009</span></td>
+			</tr>
+			<tr role="row" class="">
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-5">13</th>
+				<td aria-describedby="date-2-col-1 date-2-row-5" aria-selected="false" role="gridcell" title="March 23, 2009" class="day-mon cd-20090323 yyyymm-200903 mmdd-0323" id="" tabindex="-1">23<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-2 date-2-row-5" aria-selected="false" role="gridcell" title="March 24, 2009" class="day-tue cd-20090324 yyyymm-200903 mmdd-0324">24<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-3 date-2-row-5" aria-selected="false" role="gridcell" title="March 25, 2009" class="day-wed cd-20090325 yyyymm-200903 mmdd-0325">25<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-4 date-2-row-5" aria-selected="false" role="gridcell" title="March 26, 2009" class="day-thu cd-20090326 yyyymm-200903 mmdd-0326" id="" tabindex="-1">26<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-5 date-2-row-5" aria-selected="false" role="gridcell" title="March 27, 2009" class="day-fri cd-20090327 yyyymm-200903 mmdd-0327">27<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-6 date-2-row-5" aria-selected="false" role="gridcell" title="March 28, 2009" class="day-sat cd-20090328 yyyymm-200903 mmdd-0328 date-picker-highlight">28<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-7 date-2-row-5" aria-selected="false" role="gridcell" title="March 29, 2009" class="day-sun cd-20090329 yyyymm-200903 mmdd-0329 date-picker-highlight">29<span class="fd-screen-reader"> March 2009</span></td>
+			</tr>
+			<tr role="row" class="">
+				<th class="date-picker-week-header" scope="row" role="rowheader" id="date-2-row-6">14</th>
+				<td aria-describedby="date-2-col-1 date-2-row-6" aria-selected="false" role="gridcell" title="March 30, 2009" class="day-mon cd-20090330 yyyymm-200903 mmdd-0330" id="" tabindex="-1">30<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-2 date-2-row-6" aria-selected="false" role="gridcell" title="March 31, 2009" class="day-tue cd-20090331 yyyymm-200903 mmdd-0331">31<span class="fd-screen-reader"> March 2009</span></td>
+				<td aria-describedby="date-2-col-3 date-2-row-6" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-4 date-2-row-6" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-5 date-2-row-6" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-6 date-2-row-6" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+				<td aria-describedby="date-2-col-7 date-2-row-6" aria-selected="false" role="gridcell" class="date-picker-unused" title=""> </td>
+			</tr>
+		</tbody>
+	</table>
+</div>

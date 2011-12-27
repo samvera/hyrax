@@ -1,0 +1,116 @@
+/* This is the CSS that Jessie is creating to put some CSS tweaks necessary to get the app looking like Blacklight again
+   I fully expect this CSS to either be moved to a more appropriate name or removed all together */
+/* The search results width was behaving wonky */
+#yui-main {
+	width:75%;
+}
+#documents table {
+	width:100%;
+}
+
+
+/* The hydra provided search button was miss-aligned w/ the form field */
+#search #submit {
+	margin-bottom:-12px;
+}
+
+/* Record view next/previous links */
+#previousNextDocument {
+	text-align:center;
+}
+#previousNextDocument .previous {
+	float:left;
+}
+
+/* JFG: to be sorted */
+
+/* =HEADER
+-------------------------------------------------------------- */
+
+#doc4 #hd {font-size: 12px; text-align: right;}
+
+#select-item-box {background: url('/images/hydra/search-button.png') no-repeat scroll 95% 5px #f5f5f5; border: 1px solid #BBB; float: left; line-height: 20px; margin-top: -3px; padding: 2px 6px; position: relative; text-align: left; width: 170px; z-index: 300; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
+#select-item-box > a {border-bottom: none; vertical-align: text-bottom;}
+#select-item-list {background: #f2f2f2; border-bottom: 1px solid #BBB; border-left: 1px solid #BBB; border-right: 1px solid #BBB; border-top: 1px solid #DDD; display: none; list-style: none; margin: 0; position: absolute; top: 24px; left: 0; width: 180px; z-index: 999; -webkit-box-shadow: 1px 1px 4px rgba(80, 80, 80, 0.2); -moz-box-shadow: 1px 1px 4px rgba(80, 80, 80, 0.2); box-shadow: 1px 1px 4px rgba(80, 80, 80, 0.2); -webkit-border-radius: 0 0 4px 4px; -moz-border-radius:    0 0 4px 4px; border-radius:         0 0 4px 4px; }
+#select-item-list li {list-style: none; margin: 0; }
+#select-item-list li a {border-bottom: 1px solid #DDD; border-top: 1px solid #FAFAFA; display: block; font-size: 12px; padding: 0.5em 0.25em;}
+#select-item-list li a:hover {background: #FAFAFA;}
+#select-item-box:hover #select-item-list, #select-item-list:hover {display: block;}
+
+/* =FACETS
+-------------------------------------------------------------- */
+
+#bd #facets h3 {font-size: 14px; font-weight: bold; margin-bottom: 1.2em;}
+#bd #facets ul, #bd #facets h3 + div {border-bottom: none;}
+
+
+/* =SEARCH
+-------------------------------------------------------------- */
+
+#doc4 #bd { font-size: 13px;}
+#bd #search {background-color: #EEE; padding: 12px 20px; background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #DDD), color-stop(1, #EEE));
+background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
+#bd .home-text #search { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
+#bd #search #q {margin: 0 15px 0 0; padding: 0.2em; width: 420px;}
+#bd #search #submit {background: #f3f3f3; border: 1px solid #AAA; font-size: 16px; margin: 0; padding: 4px 6px; width: 75px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
+#bd #search #submit:hover {background: #f7f7f7; cursor: pointer;}
+
+/* =RESULTS
+-------------------------------------------------------------- */
+
+#bd #appliedParams {border-top: 1px solid #FFF;}
+#documents th, #file_assets th {color: #555;   text-align: left;}
+.pageEntriesInfo, #sortAndPerPage {font-size: 12px;}
+
+
+/* =ITEM DISPLAY
+-------------------------------------------------------------- */
+
+#document h1.document-heading {color: #222; font-size: 18px; font-weight: bold; padding: 0.33em 0 0.67em;}
+.edit-browse {float: right; padding: 0;}
+.result-num {padding: 0 3em;}
+#document .section-title {
+  color: #3f3f3f;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 18px;
+  font-weight: normal; }
+#document fieldset legend {
+  border-bottom: 1px dotted #D4D4D4;
+  color: #555;
+  font-size: 15px;
+  font-variant: small-caps;
+  margin-bottom: 0.8em;
+  padding: 1em 0 0.2em;
+  width: 45%; }
+#contributors_list ol, #contributors_list ul {list-style: none; margin: 0;}
+#contributors_list li {list-style: none; margin: 0 0 1em 0;}
+.contributor_role {border-bottom: 1px dotted #D4D4D4; color: #555; display: block; font-size: 15px; font-variant: small-caps; margin-bottom: 0.8em; padding-bottom: 0.2em; width: 45%;}
+#file_assets {width: 80%;}
+#file_assets td, #file_assets th {padding-left: 0;}
+#file_assets th {background: #F2F2F2; font-size: 11px; font-weight: normal; padding: 6px 4px; text-transform: uppercase;}
+
+
+/* =ITEM EDIT
+-------------------------------------------------------------- */
+.document_edit .document {padding: 0.5em 0;}
+.document_edit form {padding-bottom: 2em;}
+.document_edit form.button_to {padding-bottom: 0;}
+#document.document_edit h1 {color: #333; font-size: 18px; font-weight: bold; padding: 0.33em 0 0.67em;}
+#document.document_edit label {border-bottom: 1px dotted #D4D4D4; color: #444; display: block; font-size: 15px; font-variant: small-caps; font-weight: normal; padding: 1em 0 0.2em; margin-bottom: 0.8em; width: 45%;}
+#document.document_edit fieldset label {border-bottom: none; font-size: 13px; font-variant: normal; margin-bottom: 0; padding: 0.2em 0 0.5em; width: 33%;}
+
+#document.document_edit .required-note {color: #C00; font-size: 13px; font-style: italic; font-variant: normal; position: absolute; left: 35%; text-transform: lowercase;}
+.field-caption, .legend-caption {color: #777; display: block; font-style: italic; padding-bottom: 0.5em;}
+.fedora-text-field {position: relative;}
+.fedora-text-field input[type='text'] {padding: 0.25em; width: 45%;}
+#document #peer_reviewed_fieldset label {display: inline;padding-left: 0.67em;}
+.invalid-input-notice {color: #444444; font-weight: bold; padding: 0 1em;}
+input.invalid-input {border: 3px solid #C55;}
+.combined_document_view .step .save-submit {display: none;}
+.delete-asset input[type='submit'] {background: #fff2f2; border: 1px solid #CA8; color: #410; cursor: pointer; display: block; font-size: 13px; margin: 1em 0; padding: 6px;}
+.delete-asset input[type='submit']:hover { background: #FDD;}
+/* Save notification */
+#saving-notice {background: #EEE; color: #000; height: 100%; width: 100%; opacity: 0.8; position: fixed; top: 0; left: 0; z-index: 999;}
+#saving-notice h1 {font-size: 32px !important;  margin-top: 4em; text-align: center;}
+.all-steps-actions {margin: 2em 0 1em;}
+.all-steps-actions button {font-size: 16px; margin-right: 20px;}

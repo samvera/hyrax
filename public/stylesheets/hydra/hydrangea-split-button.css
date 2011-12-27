@@ -1,0 +1,18 @@
+div#create-asset-box .ui-widget {font-size: 1em;}
+div#create-asset-box {position:relative; margin-top: 15px; color:#333;}
+div#create-asset-box input, div#create-asset-box button {color:#333;}
+input#re-run-action{margin-right: -0.5em;}
+
+ul#create-asset-menu {display: none; overflow: auto; background: #f6f6f6 url('/plugin_assets/blacklight/stylesheets/jquery/ui-lightness/images/ui-bg_glass_100_f6f6f6_1x400.png') repeat-x scroll 50% 50%; position: absolute; border: 1px solid #ccc; z-index: 500; padding: 0; margin: 0; cursor: pointer; top: 2.3em; right: 2em;}
+ul#create-asset-menu li {padding: 5px 12px; margin:0; list-style: none;}
+ul#create-asset-menu li:hover {background-color: #666; color: #fff;}
+
+div#add-contributor-box .ui-widget {font-size: .9em;}
+div#add-contributor-box .ui-button {padding: 0;}
+div#add-contributor-box {position:relative; margin-top: 15px; color:#333; margin: 5px 0 0 20px;}
+div#add-contributor-box input,  div#add-contributor-box button {color:#333; height: 2.2em;}
+div#add-contributor-box button {padding: 0 0;}
+input#re-run-add-contributor-action {margin-right: -0.5em; padding: 0 0.6em !important;}
+ul#add-contributor-menu {display: none; overflow: auto; background: #f6f6f6 url('/plugin_assets/blacklight/stylesheets/jquery/ui-lightness/images/ui-bg_glass_100_f6f6f6_1x400.png') repeat-x scroll 50% 50%; position: absolute; border: 1px solid #ccc; z-index: 500; padding: 0; margin: 0; cursor: pointer; left: 0; }
+ul#add-contributor-menu li {padding: 5px 12px; margin:0; list-style: none;}
+ul#add-contributor-menu li:hover {background-color: #666; color: #fff;}

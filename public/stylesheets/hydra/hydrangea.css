@@ -1,0 +1,292 @@
+@charset "UTF-8";
+/* CSS Document */
+
+h1.site_title {
+background:url("/plugin_assets/hydra-head/images/hydrangea_logo.png") no-repeat scroll left top transparent;
+	height:42px;
+	margin:0 0 0 0;
+	width:120px;
+}
+
+
+/* zebra striped search results */
+
+#documents .odd .documentHeader {
+	background-color:white;
+}
+#documents .even, #documents .even .documentHeader {
+	background-color:#f6f6f6;
+}
+
+
+/* Results navigation */
+
+#sortAndPerPage  {
+	padding:3px;
+}
+
+.yui-t2 #yui-main .yui-b {
+	padding-top: 1em !important;
+}
+
+#showUtils {
+	text-align: center;
+	}
+
+#showUtils .back_to_cat {
+	float: left;
+}
+#showUtils #previousNextDocument {
+	display: inline;
+	}
+
+#showUtils .edit-browse {
+	float: right;
+	}
+
+.edit-browse .toggle {
+	margin: 0px 5px;}
+
+
+/* Search results table view */
+
+#documents {
+	background-color: #ffffff;
+	}
+
+#documents table {
+	width: 100%;
+	background-color: #ffffff;
+	}
+	
+#documents table th {
+	text-align: left;
+	font-size: .9em;
+	border-top: 1px dotted #CCCCCC;
+	border-bottom: 1px dotted #CCCCCC;
+}
+
+
+/* Side-by-side definition list label-value pairs */
+
+
+dl {
+	overflow:hidden;
+	margin-top:0;
+	padding-top:0;
+}
+
+dl dt {
+	clear: left; 
+	float:left;
+	width:10em;
+	text-align: left;
+	font-weight: bold;
+	font-size: .9em;
+	margin-top: 1.7em;
+	}
+
+dl dd {
+	float: left;
+	width: 30em;
+	margin-top: 1.5em;
+	margin-right: 25px;
+	position: relative;
+	}
+
+dd ol, dd ul {
+	margin: 0px; padding: 0px;
+	}
+
+dd ol li, dd ul li {
+	list-style-type: none;
+}
+
+dd li {
+	width: 175px;
+}
+
+dl#index_list dt {
+  margin-top: 0;
+}
+
+dl#index_list dd {
+  margin-top: 0;
+}
+/* Multiple fields in one line */
+
+.multi_inline ul, fieldset ol {
+	margin: 0px; padding: 0px;
+}
+
+
+.multi_inline ul li, .multi_inline ol li {
+	display:inline-block;
+	list-style-type:none;
+	position: relative;
+	height: 3em;
+}
+
+
+.multi_inline label {
+	color: #999999;
+	position: absolute;
+	font-weight: normal;
+	top: -1.3em;
+	left: 0;
+	font-size:0.8em;
+	white-space: nowrap;
+}
+
+/* File asset table */
+
+table#file_assets {
+	width: 100%;
+	background-color: #ffffff;
+	}
+
+table#file_assets  th {
+	text-align: left;
+	font-size: .9em;
+	border: 1px solid #eeeeee;
+	background-color: #f6f6f6;
+}
+
+table#file_assets  td {
+	text-align: left;
+	border: 1px solid #eeeeee;
+}
+
+table#file_assets > col {width: auto;}
+
+
+
+/*
+	LAYOUT TOOLS
+*/
+.floatLeft 			{ float: left; }
+.floatRight			{ float: right; }
+.clear					{ clear: both; }
+.layoutCenter		{ margin: 0 auto; }
+.textCenter			{ text-align: center; }
+.textRight			{ text-align: right; }
+.textLeft				{ text-align: left; }
+/*
+	PRINT TOOLS
+*/
+.page-break 			{ page-break-before: always; }
+/*
+	TYPOGRAPHIC TOOLS
+*/
+.error					{ border: 1px solid #fb4343; padding: 3px; color: #fb4343; }
+.warning				{ border: 1px solid #d4ac0a; padding: 3px; color: #d4ac0a; }
+.success				{ border: 1px solid #149b0d; padding: 3px; color: #149b0d; }
+.callOut				{ font-size: 125%; font-weight: bold; }
+.strikeOut			{ text-decoration: line-through; }
+.underline			{ text-decoration: underline; }
+.resetTypeStyle			{ font-weight: normal; font-style: normal; font-size: 100%;
+					  text-decoration: none; background-color: none; word-spacing: normal;
+					  letter-spacing: 0px; text-transform: none; text-indent: 0px; }
+/*
+	DISPLAY VALUES
+*/
+.hide				{ display: none; }
+.show				{ display: block; }
+.invisible	{ visibility: hidden; }
+
+
+
+
+/* Adjust the jquery split button */
+
+.ui-widget {font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;}
+div#create-asset-box .ui-widget {font-size: 1em; margin-top: 1em;}
+div#add-contributor-box .ui-widget {font-size: .9em;}
+.ui-buttonset .ui-button {margin-right:-0.5em;}
+
+
+
+/* Delete multiple-value field */
+
+.editable-container, .textile-container {position: relative;}
+
+
+a.destructive {
+  background-image:url("/plugin_assets/hydra-head/images/icons/delete-blue.png");
+	background-position: 0 0;
+	background-repeat:no-repeat;
+	color: transparent;
+	overflow:hidden;
+	border-bottom: none;
+  position: absolute;
+	top: 0px;
+	right: 0px;	
+	width: 20px;
+} 
+
+a.destroy_grant {
+  background-image:url("/plugin_assets/hydra-head/images/icons/delete-blue.png");
+	background-position: 0 0;
+	background-repeat:no-repeat;
+	color: transparent;
+	border-bottom: none;
+	top: -12px;
+	right: 20px;	
+	width: 20px;
+}
+
+dl.grant {
+   margin-top: -22px;
+   margin-left: -10px;
+}
+
+
+td a.destructive {
+	margin-left: 0px;
+	padding-left: 8px;
+	} 
+
+a:hover.destructive {
+    background-image:url("/plugin_assets/hydra-head/images/icons/delete-red.png");
+	}
+
+a.addval {
+	display: inline-block;
+	font-weight: normal;
+	}
+	
+a:hover.addval {
+	color: #00cc00;
+}
+
+
+.destructive img
+{
+ display: none;
+}
+
+a#inline {
+	top:5em;
+	position:absolute;
+	}
+
+
+
+/* Footer */
+
+
+
+div#ft {
+	text-align: center;
+	margin: 20px;
+	padding: 5px;
+	border-top: 1px dotted #cccccc;
+	}
+
+div.powered_by {
+	background:url("/plugin_assets/images/hydra_logo_h50_white_bg.png") no-repeat scroll center 15px transparent;
+	font-size:0.9em;
+	font-weight:bold;
+	height:70px;
+	}
+	

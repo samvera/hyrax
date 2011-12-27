@@ -1,0 +1,149 @@
+.error, .notice, .errorExplanation {
+  margin: 0;
+  width: 600px;
+}
+
+#bd h1.about_head, .about_text, .about_toc {
+	width: 960px;
+}
+
+#bd legend label {
+	line-height: 1.2em;
+	width: 515px;
+}
+
+#globalUtilNav ul > li.util_menu {
+	list-style: none outside none;
+	width: 185px;
+}
+
+
+#bd .multi_inline ul li {
+	float: left;
+}
+
+.about_head h1, .about_text h2, .about_text h3, 
+.about_text p, .about_text ul {
+	width: 600px;
+}
+
+.about_text .example_license {
+	width: 480px;
+}
+
+.document {
+	width: 960px;
+}
+
+
+.libra_buttons {
+	width: 275px;
+	z-index: 80;
+}
+
+.libra_buttons div.add_work,
+.libra_buttons a.learn_more {
+	display: block;
+	float: left;
+	height: 28px;
+	line-height: 28px;
+	margin-right: 0;
+}
+
+.libra_buttons img {
+	float: left;
+}
+
+.libra_buttons ul {
+	top: 10px;
+	right: 0;
+}
+
+.libra_buttons div.add_work ul li {
+	line-height: 1.1em;
+}
+
+fieldset#contributors_fieldset {
+	width: 600px;
+}
+
+fieldset#citation_fieldset ul li fieldset legend {
+	line-height: 1.2em;
+}
+
+.step fieldset fieldset legend {
+	margin-bottom: 0.25em;
+}
+
+#uploader-contents {
+	margin-top: 15px;
+}
+
+dl.person {
+	clear: both;
+}
+
+.person .department {
+	margin-bottom: 2em;
+}
+
+/* IE 7 */
+
+.ie7 body .libra_buttons ul {
+	top: 10px;
+	right: 0px;
+}
+
+.ie7 .person .department {
+	margin-bottom: 0;
+}
+
+.ie7 #globalUtilNav {
+	width: 200px;
+}
+
+.ie7 #globalUtilNav .NetbadgeLogin .login .button {
+	background: #A5BDE4;
+}
+
+.ie7 #globalUtilNav .NetbadgeLogin .login .util_menu {
+	height: 0;
+}
+
+.ie7 #globalUtilNav .NetbadgeLogin .login .util_menu ul {
+	height: 1em;
+}
+
+.ie7 #cover_container .multipleEdit h1 {
+	margin-left: 90px;
+}
+
+.ie7 .document_show fieldset legend,
+.ie7 #bd .document_edit fieldset legend {
+	position: relative;
+	left: -8px;
+}
+
+.ie7 #showUtils {
+	clear: both;
+}
+
+.ie7 .libra_buttons ul li {
+	font-size: 12px;
+}
+
+.ie7 .document_edit ul li {
+	list-style: none outside none;
+}
+
+html.ie7 .step_label.progressItem {
+	clear: both;
+	display: block;
+	float: none;
+	margin-left: -8px !important;
+	position: relative;
+	right: 0;
+	top: 40px;
+	width: 90px;
+}
+

@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+        <title>frequency decoder ~ Unobtrusive JavaScript datePicker (calendar) widgit demo</title>         
+        <script type="text/javascript" src="../js/lang/en.js"></script>
+        <script type="text/javascript" src="../js/datepicker.js"></script>
+        <link href="../css/demo.css"       rel="stylesheet" type="text/css" />
+        <link href="../css/datepicker.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.englishDate
+        {
+        display:block;
+        font:lighter oblique 12px/12px helvetica, arial, sans-serif;
+        text-align:left;
+        color:#555;
+        margin:0 0 0 0.5em;
+        }
+.schedsearchtable label
+        {
+        font:bold 12px/12px helvetica, arial, sans-serif;
+        text-align:right;
+        color:#666;
+        text-transform:none;
+        display:block;
+        margin-bottom:0.2em;         
+        }
+h1
+        {
+        font:normal 42px/42px helvetica, arial, sans-serif;
+        text-align:center;
+        color:#555;
+        text-transform:none;
+        display:block;
+        margin-bottom:1.2em;
+        }
+form
+        {
+        text-align:left;
+        }
+</style>
+        
+<script type="text/javascript">
+// <![CDATA[  
+
+
+// An object that ties the two datePickers together 
+var bookingPod = window.bookingPod = {
+        // Default departure cursor date : todays date + 7
+        "OUTWARD_CURSOR"    : 7,
+        // Default return cursor date : departure date + 7
+        "RETURN_CURSOR"     : 7, 
+        // Min days between departure and return dates      
+        "MIN_DAYS_BETWEEN"  : 0,                     
+        // Default messages
+        "MESSAGES"          : { "MD1" : "Please select a departure date", "MD2" : " Please select a return date" },
+        // Maximum days ahead that a flight can be booked
+        "MAX_DATE_LIMIT"    : 360,
+        // Minimum days ahead that a flight can be booked
+        "MIN_DATE_LIMIT"    : 0,
+                        
+        createYYYYMMDDString: function(dt) {
+                return dt ? dt.getFullYear() + String(dt.getMonth() + 1 < 10 ? "0" + (dt.getMonth() + 1) : dt.getMonth() + 1) + (dt.getDate() < 10 ? "0" + dt.getDate() : dt.getDate()) : "";                                                             
+        },
+        checkOutwardDate: function(cbObj) {              
+                // Show the date 
+                bookingPod.showEnglishDate(cbObj);                
+                
+                // An invalid or no outward date was entered
+                if(!cbObj.date) {                                            
+                        // Set the default cursor dates on the return element
+                        var today       = new Date(),
+                            defaultOut  = new Date(today.getFullYear(), today.getMonth(), today.getDate() + bookingPod.OUTWARD_CURSOR),
+                            defaultRet  = new Date(defaultOut.getFullYear(), defaultOut.getMonth(), defaultOut.getDate() + bookingPod.RETURN_CURSOR),                                                                           
+                            rangeHigh   = new Date(today.getFullYear(), today.getMonth(), today.getDate() + bookingPod.MAX_DATE_LIMIT),                
+                            rangeLow    = new Date(today.getFullYear(), today.getMonth(), today.getDate() + bookingPod.MIN_DATE_LIMIT);                
+                        
+                        // Reset the outward default ranges        
+                        datePickerController.setRangeHigh("MD2", bookingPod.createYYYYMMDDString(rangeHigh));
+                        datePickerController.setRangeLow("MD2", bookingPod.createYYYYMMDDString(rangeLow));  
+                         
+                        // Set the outward cursor to be the default value : today's date + OUTWARD_CURSOR     
+                        datePickerController.setCursorDate("MD1", bookingPod.createYYYYMMDDString(defaultOut)); 
+                                                 
+                        // If no return date set then reset the cursor position to be today's date + OUTWARD_CURSOR + RETURN_CURSOR  
+                        if(!datePickerController.getSelectedDate("MD2")) {                                                                                                                                               
+                                datePickerController.setCursorDate("MD2", bookingPod.createYYYYMMDDString(defaultRet)); 
+                        };                                             
+                        
+                        return;
+                };                                           
+                
+                // Set the rangeLow of the return to be the outward date + MIN_DAYS_BETWEEN                                               
+                datePickerController.setRangeLow("MD2", bookingPod.createYYYYMMDDString(new Date(cbObj.yyyy, +cbObj.mm - 1, (+cbObj.dd + bookingPod.MIN_DAYS_BETWEEN), 5, 0, 0, 0)));  
+                
+                // If no valid return date set 
+                if(!datePickerController.getSelectedDate("MD2")) {                         
+                        // Set the return date to be departure date + RETURN_CURSOR                        
+                        datePickerController.setSelectedDate("MD2", bookingPod.createYYYYMMDDString(new Date(cbObj.yyyy, +cbObj.mm - 1, (+cbObj.dd + bookingPod.RETURN_CURSOR), 5, 0, 0, 0)));  
+                };
+        },
+        
+        checkReturnDate: function(cbObj) {
+                // Set the return cursor date if none set
+                if(!cbObj.date) {                          
+                        var depDate     = datePickerController.getSelectedDate("MD1") || new Date();                                              
+                        // Set the outward cursor to be the default value : todays date + OUTWARD_CURSOR     
+                        datePickerController.setCursorDate("MD2", bookingPod.createYYYYMMDDString(new Date(depDate.getFullYear(), depDate.getMonth(), depDate.getDate() + bookingPod.RETURN_CURSOR)));                   
+                }; 
+                
+                // Show the date                 
+                bookingPod.showEnglishDate(cbObj);                
+        },
+        
+        showEnglishDate : function(argObj) {                
+                // Grab the span & get a more English-ised version of the selected date
+                var spn = document.getElementById(argObj.id + "-EnglishDate"),
+                    formattedDate = !(argObj.date == null) ? datePickerController.printFormattedDate(argObj.date, "l-cc-sp-d-S-sp-F-sp-Y", false) || bookingPod.MESSAGES[argObj.id] : bookingPod.MESSAGES[argObj.id];
+                                
+                while(spn.firstChild) spn.removeChild(spn.firstChild);
+                      
+                // Note: The 3rd argument to printFormattedDate is a Boolean value that 
+                // instructs the script to use the imported locale (true) or not (false)
+                // when creating the dates. In this case, I'm not using the imported locale
+                // as I've used the "S" format mask, which returns the English ordinal
+                // suffix for a date e.g. "st", "nd", "rd" or "th" and using an
+                // imported locale would look strange if an English suffix was included        
+                
+                // Add a new text node containing our formatted date
+                spn.appendChild(document.createTextNode(formattedDate));
+        }
+}
+
+// ]]>
+</script>
+
+</head>
+<body>
+<form id="testform" method="post" action="">
+  <h1>Booking form test</h1> 
+       
+      <table cellspacing="0" cellpadding="2" class="schedsearchtable">
+        <tbody>
+        <tr>
+          <td><label for="DD1">Departing</label></td>
+          <td><select id="TD1" name="TD1">
+                <option selected="selected">Anytime</option>
+                <option>Morning</option>
+                <option>Midday</option>
+                <option>Evening</option>
+                <option>Night</option>
+                <option>0100</option>
+                <option>0200</option>
+                <option>0300</option>
+                <option>0400</option>
+                <option>0500</option>
+                <option>0600</option>
+                <option>0700</option>
+                <option>0800</option>
+                <option>0900</option>
+                <option>1000</option>
+                <option>1100</option>
+                <option>1200</option>
+                <option>1300</option>
+                <option>1400</option>
+                <option>1500</option>
+                <option>1600</option>
+                <option>1700</option>
+                <option>1800</option>
+                <option>1900</option>
+                <option>2000</option>
+                <option>2100</option>
+                <option>2200</option>
+                <option>2300</option>
+              </select>
+              <!-- Departure Date -->
+              <select name="DD1" id="DD1">
+
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+              <!-- Departure Month -->
+              <select id="MD1" name="MD1">
+<option value="082009">August 2009</option>
+<option value="092009">September 2009</option>
+<option value="102009">October 2009</option>
+<option value="112009">November 2009</option>
+<option value="122009">December 2009</option>
+<option value="012010">January 2010</option>
+<option value="022010">February 2010</option>
+<option value="032010">March 2010</option>
+<option value="042010">April 2010</option>
+<option value="052010">May 2010</option>
+<option value="062010">June 2010</option>
+<option value="072010">July 2010</option>
+
+</select>
+</td>
+          <td><span id="MD1-EnglishDate" class="englishDate"></span></td>
+        </tr>
+        <tr>
+          <td><label for="DD2">Returning</label></td>
+          <td><select id="TD2" name="TD2">
+                <option selected="selected">Anytime</option>
+                <option>Morning</option>
+                <option>Midday</option>
+                <option>Evening</option>
+                <option>Night</option>
+                <option>0100</option>
+                <option>0200</option>
+                <option>0300</option>
+                <option>0400</option>
+                <option>0500</option>
+                <option>0600</option>
+                <option>0700</option>
+                <option>0800</option>
+                <option>0900</option>
+                <option>1000</option>
+                <option>1100</option>
+                <option>1200</option>
+                <option>1300</option>
+                <option>1400</option>
+                <option>1500</option>
+                <option>1600</option>
+                <option>1700</option>
+                <option>1800</option>
+                <option>1900</option>
+                <option>2000</option>
+                <option>2100</option>
+                <option>2200</option>
+                <option>2300</option>
+              </select>
+              <!-- Return Date -->
+              <select id="DD2" name="DD2">
+
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+
+<select id="MD2" name="MD2">
+<option value="082009">August 2009</option>
+<option value="092009">September 2009</option>
+<option value="102009">October 2009</option>
+<option value="112009">November 2009</option>
+<option value="122009">December 2009</option>
+<option value="012010">January 2010</option>
+<option value="022010">February 2010</option>
+<option value="032010">March 2010</option>
+<option value="042010">April 2010</option>
+<option value="052010">May 2010</option>
+<option value="062010">June 2010</option>
+<option value="072010">July 2010</option>
+
+</select>
+</td>
+<td><span id="MD2-EnglishDate" class="englishDate"></span></td>
+        </tr>       
+      </tbody>
+     </table>
+    </div>
+  </div
+</form>
+
+<script type="text/javascript">
+// <![CDATA[         
+        var today       = new Date();        
+        
+        // START: Just for the demo to reset the departure date to todays date
+        // This would always be done server side in reality...                       
+        document.getElementById("DD1").selectedIndex = today.getDate();
+        
+        var depElem = document.getElementById("MD1"),
+            opts = depElem.options,
+            dt = ((today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1) : (today.getMonth() + 1)) + "" + today.getFullYear();
+            
+        for(var i = 0, opt; opt = opts[i]; i++) {
+                if(opt.value == dt) {
+                        opt.selected = true;
+                        break;
+                };
+        }
+        // END: just for the demo...
+        
+        // Default options
+        var opts = {                             
+                splitDate:true, 
+                staticPos:false,
+                fillGrid:true,
+                constrainSelection:false,                
+                noTodayButton:true,
+                // You would most probably calculate both the high and low ranges server side...
+                rangeLow:bookingPod.createYYYYMMDDString(new Date(today.getFullYear(), today.getMonth(), today.getDate() + bookingPod.MIN_DATE_LIMIT)),
+                rangeHigh:bookingPod.createYYYYMMDDString(new Date(today.getFullYear(), today.getMonth(), today.getDate() + bookingPod.MAX_DATE_LIMIT)),                       
+                callbackFunctions:{"create":[bookingPod.checkReturnDate],"dateset":[bookingPod.checkReturnDate]},                                                   
+                statusFormat:"l-cc-sp-d-S-sp-F-sp-Y"      
+        };  
+        
+        // Create Slave first
+        opts.formElements = { "MD2":"m-Y", "DD2":"j" };                        
+        datePickerController.createDatePicker(opts);
+        
+        // Master second
+        opts.formElements = { "MD1":"m-Y", "DD1":"j" };   
+        opts.callbackFunctions = {"create":[bookingPod.checkOutwardDate],"dateset":[bookingPod.checkOutwardDate]};
+                         
+        datePickerController.createDatePicker(opts);
+// ]]>
+</script>
+</body>
+</html>
+

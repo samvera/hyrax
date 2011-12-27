@@ -1,0 +1,798 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+        <title>frequency decoder ~ Unobtrusive JavaScript datePicker v5 demo</title>   
+         
+        <!-- Add the datepicker script and set the ARIA describedby property to
+             point to to the table that explains keyboard control. Don't worry
+             you don't have to set the describedby parameter, I'm just showing
+             you how it can be done! -->
+        <script type="text/javascript" src="./js/datepicker.js">{"describedby":"fd-dp-aria-describedby"}</script>
+        <link href="./css/demo.css"       rel="stylesheet" type="text/css" />
+        
+        <!-- Add the datepicker's stylesheet -->
+        <link href="./css/datepicker.css" rel="stylesheet" type="text/css" />
+    
+
+<script type="text/javascript">
+// <![CDATA[ 
+
+// Utility function - not needed by the datepicker script but used by a few of the demos below   
+function pad(value, length) { 
+        length = length || 2; 
+        return "0000".substr(0,length - Math.min(String(value).length, length)) + value; 
+};
+
+// ]]>
+</script>
+</head>
+<body>
+<form id="testform" method="post" action="">
+  <h1>Unobtrusive JavaScript date-picker widgit v5</h1>  
+  <h2>Keyboard access</h2>
+  <!-- The ARIA describedby property points to the following table (which explains
+       the keyboard control) -->  
+  <table cellpadding="0" cellspacing="0" border="0" id="fd-dp-aria-describedby">
+      <thead>
+        <tr>
+
+          <th class="firstup">Key&#160;Combination</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd></td>
+          <td>Day navigation</td> 
+        </tr>
+        <tr>
+          <td><kbd>page up</kbd></td>
+          <td>Previous month</td>
+        </tr>
+        <tr>
+          <td><kbd>page down</kbd></td> 
+          <td>Next month</td>
+        </tr>
+        <tr>
+          <td><kbd>Ctrl</kbd> + <kbd>page up</kbd></td>
+          <td>Previous year</td>
+        </tr>
+        <tr>
+          <td><kbd>Ctrl</kbd> + <kbd>page down</kbd></td>
+          <td>Next year</td>
+        </tr>          
+        <tr>
+          <td><kbd>Space</kbd></td>
+          <td>Todays date</td>
+        </tr>
+        <tr>
+          <td><kbd>Esc</kbd></td>
+          <td>Close date-picker (no date selected)</td>
+        </tr>
+        <tr>
+          <td><kbd>Return</kbd></td>
+          <td>Select highlighted date and close date-picker</td>
+        </tr>
+        <tr>
+          <td><kbd>2</kbd> - <kbd>7</kbd></td>
+          <td>Select the corresponding day as the first day of the week</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <h2>Various DatePicker Demos</h2>
+    
+    <fieldset>
+      <legend>Single Input DatePickers</legend>
+      
+      <!-- DEMO #1 -->
+      <p>A simple datePicker using a dd/mm/yyyy date format and whose associated input value is set to "13/03/2009".</p>
+
+      <p><label for="dp-1">Demo 1</label> : <input type="text" class="w16em" id="dp-1" name="dp-1" value="13/03/2009" /></p>
+      <script type="text/javascript">
+      // <![CDATA[       
+        var opts = {     
+                // Attach input with an id of "dp-1" and give it a "d-sl-m-sl-Y" date format (e.g. 13/03/1990)                        
+                formElements:{"dp-1":"d-sl-m-sl-Y"}                  
+        };        
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #2 -->
+      <p class="fauxhr">Now let&#8217;s show some week numbers and change the date format slightly in order to display two figure years.</p>      
+      <p><label for="dp-2">Demo 2</label> : <input type="text" class="w16em" id="dp-2" name="dp-2" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[       
+        var opts = {                      
+                // Attach input with an id of "dp-2" and give it a "d-sl-m-sl-y" date format (e.g. 13/03/90)         
+                formElements:{"dp-2":"d-sl-m-sl-y"},
+                // Show week numbers
+                showWeeks:true                    
+        };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #3 -->
+      <p class="fauxhr">Add a status bar and change the date format to use a four figure year and dashes as the date dividor.</p>     
+      <p><label for="dp-3">Demo 3</label> : <input type="text" class="w16em" id="dp-3" name="dp-3" value="" /></p>
+      <script type="text/javascript">
+      // <![CDATA[       
+        var opts = {                            
+                formElements:{"dp-3":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                // Show a status bar and use the format "l-cc-sp-d-sp-F-sp-Y" (e.g. Friday, 25 September 2009)
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y"                    
+        };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #4 -->
+
+      <p class="fauxhr">Let&#8217;s highlight Monday &amp; Tuesday.</p>      
+      <p><label for="dp-4">Demo 4</label> : <input type="text" class="w16em" id="dp-4" name="dp-4" value="" /></p>
+      <script type="text/javascript">
+      // <![CDATA[       
+        var opts = {                            
+                formElements:{"dp-4":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Highlight Monday (index = 0) and Tuesday (index = 1)
+                highlightDays:[1,1,0,0,0,0,0]                    
+        };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #5 -->
+      <p class="fauxhr">Let&#8217;s set a top range of one year from today and a bottom range of 35 days before todays date.</p>      
+      <p><label for="dp-5">Demo 5</label> : <input type="text" class="w16em" id="dp-5" name="dp-5" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[ 
+       
+        var today     = new Date(),
+            // low range, 35 days before today's date
+            rangeLow  = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 35),
+            // high range, one year after today's date
+            rangeHigh = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())
+             
+        var opts = {                            
+                formElements:{"dp-5":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Set some dynamically calculated ranges
+                rangeLow:rangeLow.getFullYear() + "" + pad(rangeLow.getMonth()+1) + pad(rangeLow.getDate()),
+                rangeHigh:rangeHigh.getFullYear() + "" + pad(rangeHigh.getMonth()+1) + pad(rangeHigh.getDate())                
+        };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #6 -->
+      <p class="fauxhr">Let&#8217;s fill the entire grid with selectable dates.</p>      
+      <p><label for="dp-6">Demo 6</label> : <input type="text" class="w16em" id="dp-6" name="dp-6" value="" /></p>
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-6":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Fill the grid...
+                fillGrid:true,
+                // ... and make all displayed dates selectable
+                constrainSelection:false        
+                };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #7 -->
+
+      <p class="fauxhr">Let&#8217;s fill the entire grid again but we&#8217;ll disable the selection of the extra dates.</p>      
+      <p><label for="dp-7">Demo 7</label> : <input type="text" class="w16em" id="dp-7" name="dp-7" value="" /></p>
+      <script type="text/javascript">
+      // <![CDATA[ 
+        var opts = {                            
+                formElements:{"dp-7":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Fill the grid...
+                fillGrid:true,
+                // ...but constrain the selection to the in-view month ony
+                constrainSelection:true        
+                };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #8 -->
+      <p class="fauxhr">Let&#8217;s set a bespoke final opacity of 80%.</p>      
+      <p><label for="dp-8">Demo 8</label> : <input type="text" class="w16em" id="dp-8" name="dp-8" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-8":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                fillGrid:true,
+                constrainSelection:false,
+                // Set a final Opacity of 80%
+                finalOpacity:80        
+                };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script> 
+      
+      <!-- DEMO #9 -->     
+      <p class="fauxhr">Let&#8217;s now disable the fade in/out animation and the selection of Saturday &amp; Sunday.</p>      
+      <p><label for="dp-9">Demo 9</label> : <input type="text" class="w16em" id="dp-9" name="dp-9" value="" /></p>
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-9":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                fillGrid:true,
+                constrainSelection:false,
+                // No fade in/out animation, just popup the datepicker immediately
+                noFadeEffect:true,
+                // Disable Saturday (index = 5) and Sunday (index = 6)
+                disabledDays:[0,0,0,0,0,1,1]       
+                };      
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script> 
+      
+      <!-- DEMO #10 --> 
+      <p class="fauxhr">Let&#8217;s now disable some specific dates using wildcards (the 1<sup>st</sup> to the 22<sup>nd</sup> of this month and the 25<sup>th</sup> of December for all years).</p>
+
+      <p><label for="dp-10">Demo 10</label> : <input type="text" class="w16em" id="dp-10" name="dp-10" value="" /></p>
+      <script type="text/javascript">
+      // <![CDATA[  
+        var today               = new Date(),
+            thisMonthYYYYMM     = today.getFullYear() + pad(today.getMonth()+1),
+            opts      = {                            
+                formElements:{"dp-10":"d-ds-m-ds-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                disabledDates:{}      
+                }; 
+                
+        // Disable from the 01st to the 22nd of this month 
+        opts.disabledDates[thisMonthYYYYMM+"01"] = thisMonthYYYYMM+"22";        
+        // Disable December the 25th for all years
+        opts.disabledDates["****1225"] = 1;    
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script> 
+      
+      <!-- DEMO #11 -->      
+      <p class="fauxhr">Now we&#8217;ll set a more complicated dateformat (which you probably wouldn&#8217;t use in a real life situation but it will at least test the script&#8217;s ability to parse complicated dates) and enable only the 1<sup>st</sup> to the 18<sup>th</sup> and 26<sup>th</sup> to the 28<sup>th</sup>of this month and the 10<sup>th</sup> to the 20<sup>th</sup> of next month. We&#8217;ll also set a wildcard enabled date that enables the 2<sup>nd</sup> day of all months for all years ("******02").</p>      
+      <p><label for="dp-11">Demo 11</label> : <input type="text" class="w16em" id="dp-11" name="dp-11" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var today               = new Date(),
+            nextMonth           = new Date(today.getFullYear(), today.getMonth()+1, 1),
+            thisMonthYYYYMM     = today.getFullYear() + pad(today.getMonth()+1),
+            nextMonthYYYYMM     = nextMonth.getFullYear() + pad(nextMonth.getMonth()+1),            
+            opts = {                            
+                formElements:{"dp-11":"l-cc-sp-d-sp-F-sp-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                enabledDates:{},
+                // Set a low and high range as these are not calculated for you
+                // when using enabledDates
+                rangeLow:thisMonthYYYYMM + "01",
+                rangeHigh:nextMonthYYYYMM + "28"     
+                };      
+                
+        // Start adding enabled dates...
+        
+        // The 1st to the 18th of this month
+        opts.enabledDates[thisMonthYYYYMM+"01"] = thisMonthYYYYMM+"18";
+        // The 26h to the 28th of this month
+        opts.enabledDates[thisMonthYYYYMM+"26"] = thisMonthYYYYMM+"28";
+        // The 10th to the 20h of next month
+        opts.enabledDates[nextMonthYYYYMM+"10"] = nextMonthYYYYMM+"20";
+        // The 2nd of all months for all years
+        opts.enabledDates["******02"]           = 1;    
+             
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>  
+    </fieldset>
+    
+    <fieldset>
+      <legend>Split Input DatePickers</legend>
+      
+      <!-- DEMO #12 --> 
+      <p><strong>Demo 12:</strong> Using three text inputs and removing the today button from the <abbr title="User Interface">U.I</abbr>.</p>   
+      <table class="split-date-wrap" cellpadding="0" cellspacing="0" border="0">
+
+        <tbody>
+          <tr>
+            <td><input type="text" class="w2em" id="date-1-dd" name="date-1-dd" value="" maxlength="2" />/<label for="date-1-dd">DD</label></td>
+            <td><input type="text" class="w2em" id="date-1-mm" name="date-1-mm" value="" maxlength="2" />/<label for="date-1-mm">MM</label></td>
+            <td class="lastTD"><input type="text" class="w4em" id="date-1" name="date-1" value="" maxlength="4" /><label for="date-1">YYYY</label></td>
+          </tr>
+
+        </tbody>
+      </table> 
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"date-1":"Y","date-1-mm":"m","date-1-dd":"d"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y", 
+                // Remove the "Today" button
+                noTodayButton:true
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script> 
+      
+      <!-- DEMO #13 -->   
+      <p class="fauxhr"><strong>Demo 13:</strong> Using three text inputs &amp; positioning the button within a wrapper span.</p>
+      <table class="split-date-wrap" cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+
+          <tr>
+            <td><input type="text" class="w4em" id="date-2" name="date-2" value="" maxlength="4" />/<label for="date-2">YYYY</label></td>
+            <td><input type="text" class="w2em" id="date-2-mm" name="date-2-mm" value="" maxlength="2" />/<label for="date-2-mm">MM</label></td>
+            <td><input type="text" class="w2em" id="date-2-dd" name="date-2-dd" value="" maxlength="2" style="margin-right:0" /><span id="button-wrapper"></span><label for="date-2-dd">DD</label></td>
+          </tr>
+        </tbody>
+
+      </table>  
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"date-2":"Y","date-2-mm":"m","date-2-dd":"d"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Position the button within a wrapper span with an id of "button-wrapper"
+                positioned:"button-wrapper"
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script> 
+      
+      <!-- DEMO #14 -->      
+      <p class="fauxhr"><strong>Demo 14:</strong> Using 3 selectLists and disabling Monday and Tuesday. Note: the high &amp; low ranges will be automatically calculated by the script when selectLists are used to represent the year so there&#8217;s no need to set the rangeLow and rangeHigh variables.</p>
+      <p>
+        <select id="date-sel-dd" name="date-sel-dd">
+          <option value="-1">Day</option>
+
+          <option value="1">1st</option>
+          <option value="2">2nd</option>
+          <option value="3">3rd</option>
+          <option value="4">4th</option>
+          <option value="5">5th</option>
+          <option value="6">6th</option>
+
+          <option value="7">7th</option>
+          <option value="8">8th</option>
+          <option value="9">9th</option>
+          <option value="10">10th</option>
+          <option value="11">11th</option>
+          <option value="12">12th</option>
+
+          <option value="13">13th</option>
+          <option value="14">14th</option>
+          <option value="15">15th</option>
+          <option value="16">16th</option>
+          <option value="17">17th</option>
+          <option value="18">18th</option>
+
+          <option value="19">19th</option>
+          <option value="20">20th</option>
+          <option value="21">21st</option>
+          <option value="22">22nd</option>
+          <option value="23">23rd</option>
+          <option value="24">24th</option>
+
+          <option value="25">25th</option>
+          <option value="26">26th</option>
+          <option value="27">27th</option>
+          <option value="28">28th</option>
+          <option value="29">29th</option>
+          <option value="30">30th</option>
+
+          <option value="31">31st</option>
+        </select>
+        <select id="date-sel-mm" name="date-sel-mm">
+          <option value="-1">Month</option>
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+        <select id="date-sel" name="date-sel">
+          <option value="-1">Year</option>
+          <option value="1970">1970</option>
+
+          <option value="1971">1971</option>
+          <option value="1972">1972</option>
+          <option value="1973">1973</option>
+          <option value="1974">1974</option>
+          <option value="1975">1975</option>
+          <option value="1976">1976</option>
+
+          <option value="1977">1977</option>
+          <option value="1978">1978</option>
+          <option value="1979">1979</option>
+          <option value="1980">1980</option>
+          <option value="1981">1981</option>
+          <option value="1982">1982</option>
+
+          <option value="1983">1983</option>
+          <option value="1984">1984</option>
+          <option value="1985">1985</option>
+          <option value="1986">1986</option>
+          <option value="1987">1987</option>
+          <option value="1988">1988</option>
+
+          <option value="1989">1989</option>
+          <option value="1990">1990</option>
+        </select>
+      </p>
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"date-sel":"Y","date-sel-mm":"n","date-sel-dd":"j"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Disable Monday (index =0) and Tuesday (index = 1)
+                disabledDays:[1,1,0,0,0,0,0]                
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script> 
+      
+      <!-- DEMO #15 --> 
+      <p><strong>Demo 15:</strong> Using a mixture of text input and selectLists.</p>      
+      <p>
+
+        <select id="date-sel2-dd" name="date-sel2-dd">
+          <option value="day">Day</option>
+          <option value="1">1st</option>
+          <option value="2">2nd</option>
+          <option value="3">3rd</option>
+          <option value="4">4th</option>
+
+          <option value="5">5th</option>
+          <option value="6">6th</option>
+          <option value="7">7th</option>
+          <option value="8">8th</option>
+          <option value="9">9th</option>
+          <option value="10">10th</option>
+
+          <option value="11">11th</option>
+          <option value="12">12th</option>
+          <option value="13">13th</option>
+          <option value="14">14th</option>
+          <option value="15">15th</option>
+          <option value="16">16th</option>
+
+          <option value="17">17th</option>
+          <option value="18">18th</option>
+          <option value="19">19th</option>
+          <option value="20">20th</option>
+          <option value="21">21st</option>
+          <option value="22">22nd</option>
+
+          <option value="23">23rd</option>
+          <option value="24">24th</option>
+          <option value="25">25th</option>
+          <option value="26">26th</option>
+          <option value="27">27th</option>
+          <option value="28">28th</option>
+
+          <option value="29">29th</option>
+          <option value="30">30th</option>
+          <option value="31">31st</option>
+        </select>
+        <select id="date-sel2-mm" name="date-sel2-mm">
+          <option value="-1">Month</option>
+          <option value="1">January</option>
+
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+
+        <input type="text" class="w3em" id="date-sel2" name="date-sel2" />
+      </p>
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"date-sel2":"Y","date-sel2-mm":"n","date-sel2-dd":"j"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y"       
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #16 --> 
+      <p><strong>Demo 16:</strong> Using a selectList to represent both month and year date parts. Again, you shouldn&#8217;t have to set the ranges as they are calculated for you whenever selectLists are used to represent the year.</p>      
+      <p> 
+       <input type="text" class="w3em" id="date-cbnd-1" name="date-cbnd-1" maxlength="2" />
+       <select id="date-cbnd-2" name="date-cbnd-2">
+
+          <option value="-1">Month &amp; Year</option>
+          <option value="012008">January 2008</option>
+          <option value="022008">February 2008</option>
+          <option value="032008">March 2008</option>
+          <option value="042008">April 2008</option>
+
+          <option value="052008">May 2008</option>
+          <option value="062008">June 2008</option>
+          <option value="072008">July 2008</option>
+          <option value="082008">August 2008</option>
+          <option value="092008">September 2008</option>
+          <option value="102008">October 2008</option>
+
+          <option value="112008">November 2008</option>
+          <option value="122008">December 2008</option>
+        </select>          
+      </p>
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"date-cbnd-2":"m-Y","date-cbnd-1":"d"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y"       
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+    </fieldset>
+    <fieldset>
+      <legend>Inline DatePickers</legend>   
+
+      <!-- DEMO #17 -->            
+      <div><label for="dp-s1">Demo 17</label> : <input type="text" class="w18em" id="dp-s1" name="dp-s1" value="" /></div>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-s1":"d-sl-m-sl-Y"},                
+                staticPos:true,
+                fillGrid:true,
+                constrainSelection:false,
+                disabledDays:[1,1,0,0,0,0,0],
+                finalOpacity:100         
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #18 --> 
+      <p class="fauxhr">OK, the same datepicker as above but now let&#8217;s show some week numbers, add a status bar and set a top and bottom range (the 1<sup>st</sup> of last month to the 10<sup>th</sup> of next month).</p>      
+      <div><label for="dp-s2">Demo 18</label> : <input type="text" class="w18em" id="dp-s2" name="dp-s2" value="" /></div>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var today = new Date(),
+            lastMonth = new Date(today.getFullYear(), today.getMonth(), 1),
+            nextMonth = new Date(today.getFullYear(), today.getMonth()+1, 1),
+            opts = {                            
+                formElements:{"dp-s2":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                staticPos:true,
+                rangeHigh:nextMonth.getFullYear() + "" + pad(nextMonth.getMonth()+1) + "10",
+                rangeLow:lastMonth.getFullYear() + "" + pad(lastMonth.getMonth()) + "01"       
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+    </fieldset>
+    <fieldset>
+      <legend>Disable/enable demos</legend>       
+
+      <!-- DEMO #19 --> 
+      <p>Testing to see if the activation button has been automatically disabled (as the associated form element is disabled):</p>
+      <p><label for="dp-de1">Demo 19</label> : <input type="text" disabled="disabled" class="w16em" id="dp-de1" name="dp-de1" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-de1":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y"                  
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <!-- DEMO #20 --> 
+      <p class="fauxhr">Testing to see how an inline/static datePicker reacts to dynamic disabling/enabling:</p>    
+      <p><label for="dp-de2">Demo 20</label> : <input type="text" class="w16em" id="dp-de2" name="dp-de2" value="" /></p> 
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-de2":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                staticPos:true,
+                finalOpacity:90                  
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <button onclick="datePickerController.disable('dp-de2'); return false;">Disable</button>
+      <button onclick="datePickerController.enable('dp-de2'); return false;">Enable</button>           
+
+      <!-- DEMO #21 --> 
+      <p class="fauxhr">Testing to see how a popup datePicker reacts to dynamic disabling/enabling:</p>      
+      <p><label for="dp-de3">Demo 21</label> : <input type="text" class="w16em" id="dp-de3" name="dp-de3" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-de3":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y"                               
+                };           
+        datePickerController.createDatePicker(opts);
+      // ]]>
+      </script>
+      
+      <button onclick="datePickerController.disable('dp-de3'); return false;">Disable</button>
+      <button onclick="datePickerController.enable('dp-de3'); return false;">Enable</button>           
+
+    </fieldset> 
+    <fieldset>
+      <legend>Callback function demos</legend>       
+      
+      <!-- DEMO #22 --> 
+      <p>A simple datePicker with a callback function <code>disableEasterMonday</code> defined for the &#8220;redraw&#8221; event that dynamicaly calculates Easter Monday for the given year, disables the date and sets a bespoke title "Easter Monday" for the date in question.</p>      
+      <p><label for="dp-cb1">Demo 22</label> : <input type="text" class="w16em" id="dp-cb1" name="dp-cb1" value="" /></p>
+
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-cb1":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                bespokeTitles:{"****1225":"Christmas Day", "****1231":"New Years Eve", "****0101":"New Years Day"},
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // Set a callback function for the redraw event
+                callbackFunctions:{"redraw":[function(argObj) { 
+                
+                        // Dynamically calculate Easter Monday - I've forgotten where this code 
+                        // was originally found and I don't even know if it returns a valid
+                        // result...
+                        var y = argObj.yyyy,
+                            a=y%4,
+                            b=y%7,
+                            c=y%19,
+                            d=(19*c+15)%30,
+                            e=(2*a+4*b-d+34)%7,
+                            m=Math.floor((d+e+114)/31),
+                            g=(d+e+114)%31+1,            
+                            yyyymmdd = y + "0" + m + String(g < 10 ? "0" + g : g),
+                            ret = {},
+                            titles = {};          
+                        
+                        // Disable the date
+                        ret[yyyymmdd] = 1;
+                        datePickerController.addDisabledDates(argObj.id, ret);
+                        
+                        // Just for fun, also set an "Easter Monday" status bar title for this date
+                        ret[yyyymmdd] = "Easter Monday"; 
+                        
+                        datePickerController.addBespokeTitles(argObj.id, ret);
+                       
+                        }]}                               
+                };           
+        datePickerController.createDatePicker(opts);
+        
+      // ]]>
+      </script>
+      
+      <!-- DEMO #23 --> 
+      <p class="fauxhr">A simple datePicker with a callback function <code>showEnglishDate</code> defined for both the &#8220;create&#8221; and the &#8220;dateset&#8221; events that uses the <code>datePickerController.parseDate</code> method to return a more natural English language date, which is then rewritten beside the associated input.</p>
+      <p><label for="dp-cb2">Demo 23</label> : <input type="text" class="w16em" id="dp-cb2" name="dp-cb2" value="" /></p>      
+      <script type="text/javascript">
+      // <![CDATA[  
+        var opts = {                            
+                formElements:{"dp-cb2":"d-sl-m-sl-Y"},
+                showWeeks:true,
+                statusFormat:"l-cc-sp-d-sp-F-sp-Y",
+                // The function "showEnglishDate" is declared below
+                callbackFunctions:{"create":[showEnglishDate],"dateset":[showEnglishDate]}                               
+                };           
+        datePickerController.createDatePicker(opts);
+
+/* 
+
+   The following functions update a span with an "English-ised" version of the
+   currently selected date for demo 23.
+   
+   NOTE: These functions are not needed, they are only present to show you how you
+   might use callback functions to use the selected date in other ways!
+   
+*/
+function createScaffold(argObj) {
+        // Make sure the span doesn't exist already
+        if(document.getElementById(argObj.id+"-LHDate")) return;
+
+        // Create the span node dynamically...
+        var spn = document.createElement('span');
+            p   = document.getElementById(argObj.id).parentNode;
+            
+        spn.id = argObj.id+"-LHDate";
+        spn.className = "longhand-date";
+        p.appendChild(spn);
+        
+        // Remove the bottom margin on the input's wrapper paragraph
+        p.style.marginBottom = "0";
+        
+        // Add a whitespace character to the span
+        spn.appendChild(document.createTextNode(String.fromCharCode(160)));
+};
+
+function showEnglishDate(argObj) {
+        // Grab the span & get a more English-ised version of the selected date
+        var spn = document.getElementById(argObj.id+"-LHDate"),
+            formattedDate = datePickerController.printFormattedDate(argObj.date, "l-cc-sp-d-S-sp-F-sp-Y", false);
+        
+        // Make sure the span exists before attempting to use it!
+        if(!spn) {
+                createScaffold(argObj); 
+                spn = document.getElementById(argObj.id+"-LHDate");
+        };
+        
+        // Note: The 3rd argument to printFormattedDate is a Boolean value that 
+        // instructs the script to use the imported locale (true) or not (false)
+        // when creating the dates. In this case, I'm not using the imported locale
+        // as I've used the "S" format mask, which returns the English ordinal
+        // suffix for a date e.g. "st", "nd", "rd" or "th" and using an
+        // imported locale would look strange if an English suffix was included
+        
+        // Remove the current contents of the span
+        while(spn.firstChild) spn.removeChild(spn.firstChild);
+        
+        // Add a new text node containing our formatted date
+        spn.appendChild(document.createTextNode(formattedDate));
+};
+
+
+      // ]]>
+      </script>
+
+    </fieldset>
+    
+    <p class="al-center">View the related &#8220;<a href="http://www.frequency-decoder.com/2009/09/09/unobtrusive-date-picker-widget-v5/">language in the lab</a>&#8221; post for this demo.</p>
+</form>
+</body>
+</html>
+
