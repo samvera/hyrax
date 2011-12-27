@@ -3,11 +3,7 @@ PATH
   specs:
     hydra-head (3.2.0.pre1)
       RedCloth (= 4.2.3)
-<<<<<<< HEAD
       active-fedora (>= 3.2.0.pre5)
-=======
-      active-fedora (>= 3.2.0.pre1)
->>>>>>> Bump versions
       blacklight (= 3.0.0)
       block_helpers
       builder (= 2.1.2)
@@ -61,10 +57,14 @@ GEM
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
 <<<<<<< HEAD
+<<<<<<< HEAD
     active-fedora (3.2.0.pre5)
 =======
     active-fedora (3.2.0.pre1)
 >>>>>>> Bump versions
+=======
+    active-fedora (3.2.0.pre2)
+>>>>>>> Updated for pre2
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
