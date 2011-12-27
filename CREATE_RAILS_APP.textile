@@ -318,5 +318,5 @@ Note that there are no objects pre-installed into Fedora (or Solr).
 
 h2. XII. Develop your Hydra Application with ActiveFedora and OM
 
-See "HOW_TO_GET_STARTED":https://github.com/mediashelf/om/blob/master/HOW_TO_GET_STARTED.textile.
+See "GETTING_STARTED":https://github.com/mediashelf/om/blob/master/GETTING_STARTED.textile.
 
