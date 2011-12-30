@@ -1,0 +1,20 @@
+<tr class="document <%= cycle("even","odd") %>">
+  <td>
+    <%= link_to_document(document, :label => Blacklight.config[:show][:heading].to_sym, :counter => (counter + 1 + @response.params[:start].to_i)) %>
+  </td>
+  <td>
+
+  </td>
+  <td>
+    <%= DateTime.parse(document.fetch(:system_create_dt,nil)).to_time %>
+  </td>
+  <td>
+    <%= (document.fetch(:medium_t,nil) || document_type(document)).gsub("Hydrangea","") %>
+  </td>
+  <td>
+    <%= get_file_asset_count(document)%>
+  </td>
+  <td>
+    Created
+  </td>
+</tr>
