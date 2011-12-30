@@ -37,7 +37,6 @@ coverage
 rdoc
 pkg
 /.bundle
-/.rvmrc
 db/*.sqlite3
 log/*.log
 tmp/*.log
@@ -63,7 +62,6 @@ db/schema.rb
 
 .project
 .buildpath
-.rvmrc
 
 /.bundle
 /.yardoc
