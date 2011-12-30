@@ -1,5 +1,6 @@
 module HydraHead 
   require 'hydra-head/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  require 'hydra-head/railtie' if defined? Rails
   require 'hydra-head/controller'
 
   require 'hydra-head/version'
