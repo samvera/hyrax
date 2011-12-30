@@ -11,8 +11,8 @@ Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |email|
   fill_in "Email", :with => email 
   fill_in "Password", :with => "password"
   click_button "Sign in"
-  Then %{I should see a link to "my account info" with label "#{email}"} 
-  And %{I should see a link to "logout"} 
+  step %{I should see a link to "my account info" with label "#{email}"} 
+  step %{I should see a link to "logout"} 
 end
 
 Given /^I am logged in as "([^\"]*)" with "([^\"]*)" permissions$/ do |login,permission_group|
@@ -21,14 +21,14 @@ Given /^I am logged in as "([^\"]*)" with "([^\"]*)" permissions$/ do |login,per
 end
 
 Given /^I am a superuser$/ do
-  Given %{I am logged in as "bigwig@example.com"}
+  step %{I am logged in as "bigwig@example.com"}
   bigwig_id = User.find_by_email("bigwig@example.com").id
   superuser = Superuser.create(:id => 20, :user_id => bigwig_id)
   visit superuser_path
 end
 
 Given /^I am not logged in$/ do
-  Given %{I log out}
+  step %{I log out}
 end
 
 Given /^I log out$/ do
