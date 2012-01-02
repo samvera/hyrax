@@ -1,4 +1,3 @@
-# require File.expand_path(File.dirname(__FILE__) + '/hydra_jetty.rb')
 require "active-fedora"
 require "solrizer-fedora"
 require "active_support" # This is just to load ActiveSupport::CoreExtensions::String::Inflections
