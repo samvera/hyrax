@@ -34,8 +34,6 @@ namespace :hydra do
       raise "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
       pid = ENV["pid"]
-      #### Rubydora not initialized yet
-      #puts "Deleting '#{pid}' from #{ActiveFedora::RubydoraConnection.instance.options[:url]}"
       begin
         ActiveFedora::FixtureLoader.delete(pid)
       rescue Errno::ECONNREFUSED => e

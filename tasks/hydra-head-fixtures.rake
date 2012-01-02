@@ -1,4 +1,3 @@
-#require 'rake/testtask'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 

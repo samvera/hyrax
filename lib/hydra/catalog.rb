@@ -48,11 +48,14 @@ module Hydra::Catalog
   def load_fedora_document
     af_base = ActiveFedora::Base.load_instance(params[:id])
     the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
-    if the_model.nil?
-      @document_fedora = af_base
-    else
-      @document_fedora = the_model.load_instance(params[:id])
+    unless the_model.include?(ActiveFedora::Relationships)
+      the_model.send :include, ActiveFedora::Relationships
     end
+    unless the_model.include?(ActiveFedora::FileManagement)
+      the_model.send :include, ActiveFedora::FileManagement
+    end
+    
+    @document_fedora = af_base.adapt_to(the_model)
     @file_assets = @document_fedora.file_objects(:response_format=>:solr)
   end
   
