@@ -55,7 +55,11 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
+<<<<<<< HEAD
     active-fedora (3.2.0.pre7)
+=======
+    active-fedora (3.2.0.pre5)
+>>>>>>> Include Relationships and FileManagement if they don't already exist
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
@@ -151,7 +155,19 @@ GEM
       logger
       mediashelf-loggable
     json (1.6.3)
+<<<<<<< HEAD
     json_pure (1.6.4)
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+    json_pure (1.6.4)
+=======
+    json_pure (1.6.3)
+>>>>>>> Bump versions
+=======
+    json_pure (1.6.4)
+>>>>>>> Include Relationships and FileManagement if they don't already exist
+>>>>>>> Include Relationships and FileManagement if they don't already exist
     kaminari (0.13.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
