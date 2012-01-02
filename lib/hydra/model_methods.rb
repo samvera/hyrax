@@ -1,4 +1,10 @@
 module Hydra::ModelMethods
+  extend ActiveSupport::Concern
+
+  included do
+    extend ActiveFedora::Relationships
+    extend ActiveFedora::FileManagement
+  end
   
   #
   # Adds metadata about the depositor to the asset
