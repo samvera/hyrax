@@ -34,7 +34,6 @@ namespace :hydra do
       raise "You must specify a valid pid.  Example: rake hydra:delete pid=demo:12"
     else
       pid = ENV["pid"]
-      puts "Deleting '#{pid}' from #{ActiveFedora::RubydoraConnection.instance.options[:url]}"
       begin
         ActiveFedora::FixtureLoader.delete(pid)
       rescue Errno::ECONNREFUSED => e
@@ -42,7 +41,7 @@ namespace :hydra do
       rescue Exception => e
         logger.error("Received a Fedora error while deleting #{pid}\n#{e}")
       end
-      logger.info "Deleted '#{pid}' from #{ActiveFedora::RubydoraConnection.instance.options[:url]}"
+      #logger.info "Deleted '#{pid}' from #{ActiveFedora::RubydoraConnection.instance.options[:url]}"
     end
   end
   
