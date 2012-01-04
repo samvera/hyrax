@@ -175,13 +175,6 @@ Most projects add hydra jetty to their code as a git submodule
 <pre>
   git submodule add git://github.com/projecthydra/hydra-jetty.git jetty
   git commit -m"added jetty submodule"
-  cd jetty
-  git fetch --tags
-  git checkout last_solr_multicore
-  git checkout -b last_solr_multicore
-  cd ..
-  git add jetty
-  git commit -m "Pinned jetty to last_solr_multicore"
 </pre>
 
 Now that you've added the submodule to your git repository, whenever you grab a new working copy of the code, you can get hydra-jetty by running:
