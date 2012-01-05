@@ -5,7 +5,7 @@
 #
 # Methods added to this helper will be available to all templates in the hosting application
 #
-module Blacklight::BlacklightHelperBehavior
+module Hydra::BlacklightHelperBehavior
   include HashAsHiddenFields
   include RenderConstraintsHelper
 
