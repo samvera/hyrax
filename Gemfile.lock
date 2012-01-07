@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    hydra-head (3.2.0.pre1)
+    hydra-head (3.2.0.pre2)
       RedCloth (= 4.2.3)
       active-fedora (>= 3.2.0.pre6)
-      blacklight (= 3.0.0)
+      blacklight (= 3.1.2)
       block_helpers
       builder (= 2.1.2)
       columnize
@@ -28,7 +28,6 @@ PATH
       rack-test
       rails (~> 3.0.10)
       rake
-      rsolr (= 1.0.2)
       sanitize
       solr-ruby
       solrizer (>= 1.1.0)
@@ -56,7 +55,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.2.0.pre6)
+    active-fedora (3.2.0.pre7)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
@@ -89,13 +88,13 @@ GEM
     akami (1.0.0)
       gyoku (>= 0.4.0)
     arel (2.0.10)
-    blacklight (3.0.0)
+    blacklight (3.1.2)
       kaminari
       marc (~> 0.4.3)
       nokogiri (~> 1.5)
       rails (~> 3.0)
-      rsolr (~> 1.0)
-      rsolr-ext (~> 1.0)
+      rsolr (= 1.0.2)
+      rsolr-ext (= 1.0.3)
       unicode
     block_helpers (0.3.3)
       activesupport (>= 2.0)
