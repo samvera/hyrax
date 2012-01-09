@@ -24,8 +24,7 @@ module HydraHead
     end
 
     def default_route_sets
-      #[:file_assets, :assets, :downloads, :contributors, :grants, :permissions, :superuser,:catalog, :get]
-      [:get, :catalog, :superuser, :permissions, :assets_with_all_nested_routes]
+      [:catalog, :superuser, :permissions, :assets_with_all_nested_routes]
     end
 
     module RouteSets
@@ -83,11 +82,6 @@ module HydraHead
       end
 
 
-      def get
-        add_routes do |options|
-          resources :get, :only=>:show 
-        end
-      end
 
 
     end
