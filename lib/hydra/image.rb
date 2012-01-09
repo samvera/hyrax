@@ -28,8 +28,6 @@ require "httparty"
 
 module Hydra
 class Image < ActiveFedora::Base
-=begin
-  TODO This doesn't seem to be used anywhere. Commenting out until I hear back. Justin 2011-12-21
   include Hydra::ModelMethods
   include HTTParty
 
@@ -47,6 +45,7 @@ class Image < ActiveFedora::Base
   attr_accessor :derivations, :generate_derived_images
 
   def initialize( attrs={})
+    ActiveSupport::Deprecation.warn("Hydra:Image will be removed in the next version")
     existing_image = true if attrs[:pid]
     @generate_derived_images = attrs[:derivatives] ? attrs[:derivatives] : false
     super
@@ -175,6 +174,5 @@ class Image < ActiveFedora::Base
     "#{admin_site}fedora/objects/#{pid}/datastreams/#{ds_name}/content"
   end
 
-=end
 end
 end
