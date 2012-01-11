@@ -16,32 +16,12 @@ This is a Ruby on Rails 3 gem.
 
 h2. Installation/Setup
 
-h3. Use RVM (for your own Sanity)
-
-This isn't absolutely required, but working without RVM makes life really difficult.
-
-See "https://rvm.beginrescueend.com/rvm/install/":https://rvm.beginrescueend.com/rvm/install/ for instructions on installing and running RVM.  
-
-After installing RVM, set it up to use "rvmrc":http://beginrescueend.com/workflow/rvmrc/ files when they're available.  This will cause RVM to automatically switch Ruby versions and gemsets when you cd into different code bases.  Currently all Hydra software uses Ruby Enterprise Edition 1.8.7 (ree-1.8.7) and each component or Hydra Head uses its own gemsets (ie. hydra-head uses a gemset called hyhead,  hypatia uses a gemset called hypatia so that you can install a different set of dependencies for each. ) 
-
-For information about using and setting up RVM to use .rvmrc files, see "http://beginrescueend.com/workflow/rvmrc/":http://beginrescueend.com/workflow/rvmrc/
-
-h3. Make sure you have the right version of Ruby
-
-Currently all Hydra software uses Ruby Enterprise Edition 1.8.7 (ree-1.8.7) 
-
-If you are using RVM, you can install ree-1.8.7 with the following call:
-
-<pre>rvm install ree-1.8.7</pre>
-
-If you are not using RVM, consult the appropriate online documentation for installing Ruby on your operating system.
-
 h3. Install Rails, Bundler and Devise
 
 Currently hydra-head is compatible with Rails 3.0.x and incompatible with Rails 3.1
 
 <pre>
-gem install 'rails' --version '~>3.0.10'
+gem install 'rails' --version '~>3.0.11'
 gem install 'bundler'
 </pre>
   
@@ -52,18 +32,6 @@ rails new my_hydra_head
 cd my_hydra_head
 </pre>
 
-h3. Init the git Repository
-
-First, put a .gitignore file into the root of your project to keep your repository clean.  You could start with the ".gitignore file from the hydra-head gem":https://github.com/projecthydra/hydra-head/blob/master/.gitignore
-
-Now init the git repository and add the initial set of files
-
-<pre>
-  git init
-  git add .
-  git commit -m"Initial Commit: empty rails app"
-</pre>
-
 h3. Install Dependencies
 
 First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your application:
@@ -71,10 +39,10 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 <pre>
   source 'http://rubygems.org'
 
-  gem 'rails', '~>3.0.10'
+  gem 'rails', '~>3.0.11'
 
-  gem 'blacklight', '~> 3.0.0'
-  gem 'hydra-head', '~> 3.1.0'
+  gem 'blacklight', '~> 3.1.2'
+  gem 'hydra-head', '~> 3.2.0'
 
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
@@ -111,7 +79,7 @@ Even if all of the dependencies are satisfied, this will take a _very_ long time
 
 <pre>
   gem install blacklight
-  gem install hydra-head -v 3.1.4
+  gem install hydra-head -v 3.2.0
 </pre>
 
 Then re-run bundle install and it will run slightly faster.
@@ -123,7 +91,7 @@ h3. Advanced usage: Running against the freshest version of the hydra-head code 
 If you are in a position where you want/need to run your application with the very latest hydra-head code from Github, this is easy to do.  Simply update the line in your Gemfile that lists hydra-head as a dependency and enter this instead:
 
 <pre>
-  gem "hydra-head", :git => "git://github.com/projecthydra/hydra-head.git", :branch=>'rails3'
+  gem "hydra-head", :git => "git://github.com/projecthydra/hydra-head.git"
 </pre> 
 
 After updating the Gemfile, re-run 'bundle install'.
@@ -131,7 +99,7 @@ After updating the Gemfile, re-run 'bundle install'.
 You can also do this with other gems.  For example, if you want to force your app to use the latest active-fedora code from the "HYDRA-721" branch on GitHub, you can put this in your Gemfile:
 
 <pre>
-gem "active-fedora", :git=>'git://github.com/mediashelf/active_fedora.git', :branch=>'HYDRA-721'
+gem "active-fedora", :git=>'git://github.com/mediashelf/active_fedora.git'
 </pre>
   
 h3. Run the generators and migrations:
@@ -149,13 +117,6 @@ Run the database migrations
 <pre>
 rake db:migrate
 rake db:test:prepare
-</pre>
-
-h3. Add all the generated code to the Git repository
-
-<pre>
-  git add .
-  git commit -m"Ran Blacklight, Hydra-Head, and Cucumber Generators"
 </pre>
 
 h3. You're done.
@@ -196,7 +157,7 @@ Now you're ready to start jetty.  We've written a useful gem that gives you rake
   gem "jettywrapper"
 </pre>
 
-Then run <pre>  bundle install <pre>
+Then run <pre>bundle install<pre>
 
 Now that you have jettywrapper installed, to start jetty use
 
@@ -234,17 +195,6 @@ h4. Cucumber to Test User Experience
 If you will be writing cucumber tests, run the cucumber generator.  This will create a directory called "features" and populate it with all the basic parts you need to run Cucumber tests on your Rails application.
 
 <pre>rails g cucumber:install</pre>
-
-h4.  (optional) Move everything into the test_support Directory
-
-Within the blacklight and hydra-head code bases, we have started putting all of our test-related code into a directory called test_support.  If you want to follow this convention, move the generated spec and features directories into test_support, so that you have:
-
-<pre>
-test_support/
-  features/
-  fixtures/
-  spec/
-</pre>
 
 h2. Modifying and Testing the hydra-head Gem 
 
