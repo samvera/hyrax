@@ -16,6 +16,7 @@ module Hydra
   autoload :ModelMixins
   autoload :ModsGenericContent
   autoload :ModsImage
+  autoload :SubmissionWorkflow
   autoload :SuperuserAttributes
   autoload :User
 end
