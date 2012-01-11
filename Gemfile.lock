@@ -16,19 +16,19 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.1.5)
-      activeresource (~> 3.0.0)
-      activesupport (~> 3.0.0)
+    active-fedora (3.2.0)
+      activeresource (>= 3.0.0)
+      activesupport (>= 3.0.0)
       equivalent-xml
       facets
       mediashelf-loggable
       mime-types (>= 1.16)
       multipart-post (= 1.1.2)
       nokogiri
-      om (>= 1.4.3)
+      om (>= 1.4.4)
       rdf
       rdf-rdfxml
-      rubydora (~> 0.2.6)
+      rubydora (~> 0.3.0)
       solr-ruby (>= 0.0.6)
       solrizer (> 1.0.0)
       xml-simple (>= 1.0.12)
@@ -50,13 +50,13 @@ GEM
       gyoku (>= 0.4.0)
     arel (2.0.10)
     bcrypt-ruby (3.0.1)
-    blacklight (3.0.0)
+    blacklight (3.1.2)
       kaminari
       marc (~> 0.4.3)
       nokogiri (~> 1.5)
       rails (~> 3.0)
-      rsolr (~> 1.0)
-      rsolr-ext (~> 1.0)
+      rsolr (= 1.0.2)
+      rsolr-ext (= 1.0.3)
       unicode
     block_helpers (0.3.3)
       activesupport (>= 2.0)
@@ -107,10 +107,10 @@ GEM
       multi_xml
     httpi (0.9.5)
       rack
-    hydra-head (3.1.5)
+    hydra-head (3.2.0)
       RedCloth (= 4.2.3)
-      active-fedora (~> 3.1.4)
-      blacklight (= 3.0.0)
+      active-fedora (>= 3.2.0)
+      blacklight (~> 3.1.2)
       block_helpers
       builder (= 2.1.2)
       columnize
@@ -134,11 +134,10 @@ GEM
       rack-test
       rails (~> 3.0.10)
       rake
-      rsolr (= 1.0.2)
       sanitize
       solr-ruby
       solrizer (>= 1.1.0)
-      solrizer-fedora (>= 1.2.0)
+      solrizer-fedora (>= 1.2.2)
       term-ansicolor
       trollop
       will_paginate
@@ -182,7 +181,7 @@ GEM
       nokogiri (>= 1.4.2)
     orm_adapter (0.0.5)
     polyglot (0.3.3)
-    rack (1.2.4)
+    rack (1.2.5)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
     rack-test (0.5.7)
@@ -234,7 +233,7 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    rubydora (0.2.6)
+    rubydora (0.3.1)
       activemodel
       activesupport
       fastercsv
@@ -297,19 +296,19 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active-fedora (~> 3.1.5)
+  active-fedora (>= 3.2.0)
   bcrypt-ruby
-  blacklight (~> 3.0.0)
+  blacklight (~> 3.1.2)
   capybara
   cucumber-rails
   database_cleaner
   devise
-  hydra-head (~> 3.1.5)
+  hydra-head (~> 3.2.0)
   jettywrapper
   mocha
-  rails (= 3.0.11)
+  rails (~> 3.0.10)
   rspec
   rspec-rails (>= 2.5.0)
   ruby-debug
-  solrizer-fedora (>= 1.0.1)
+  solrizer-fedora (>= 1.2.2)
   sqlite3
