@@ -1,4 +1,5 @@
 h1. Using a checkout from git as your hydra-head or active-fedora gem:
+
 h2. Advanced usage: Running against the freshest version of the hydra-head code from Github
 
 *We don't recommend this for new users or for production applications*, but it is very useful during active development.
