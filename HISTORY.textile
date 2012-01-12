@@ -1,3 +1,6 @@
+h3. 3.2.1
+* Removed JettyCleaner (broken and unused)
+
 h3. 3.2.0
 * Update to Blacklight 3.1.2
 * Update to ActiveFedora 3.2.0
