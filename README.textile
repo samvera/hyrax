@@ -46,7 +46,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
-  gem 'sqlite3-ruby', :require => 'sqlite3'
+  gem 'sqlite3'
 
   #  We will assume you're using devise in tutorials/documentation. 
   # You are free to implement your own User/Authentication solution in its place.
@@ -84,24 +84,6 @@ Even if all of the dependencies are satisfied, this will take a _very_ long time
 
 Then re-run bundle install and it will run slightly faster.
 
-h3. Advanced usage: Running against the freshest version of the hydra-head code from Github
-
-*We don't recommend this for new users or for production applications*, but it is very useful during active development.
-
-If you are in a position where you want/need to run your application with the very latest hydra-head code from Github, this is easy to do.  Simply update the line in your Gemfile that lists hydra-head as a dependency and enter this instead:
-
-<pre>
-  gem "hydra-head", :git => "git://github.com/projecthydra/hydra-head.git"
-</pre> 
-
-After updating the Gemfile, re-run 'bundle install'.
-
-You can also do this with other gems.  For example, if you want to force your app to use the latest active-fedora code from the "HYDRA-721" branch on GitHub, you can put this in your Gemfile:
-
-<pre>
-gem "active-fedora", :git=>'git://github.com/mediashelf/active_fedora.git'
-</pre>
-  
 h3. Run the generators and migrations:
 
 Run the blacklight generator
