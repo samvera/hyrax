@@ -22,7 +22,7 @@ See below to reset jetty when re-running tests, or when running a simultaneous d
 
 _Stop any copies of jetty (or anything else using port 8983) before running this command._
 
-You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the hydra-plugin_test_host directory.
+You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the tmp/test_app_ directory.
 
 Note that java 1.6 must be invoked by the "java" command or Fedora won't work.
 
@@ -34,7 +34,7 @@ This will start up jetty on port 8983.
 
 h4. (2) Load test fixtures into Fedora/Solr.
 
-You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the hydra-plugin_test_host directory.
+You must do this at the root of the <b><i>hydra-head plugin</i> directory</b>, not within the tmp/test_app directory.
 
 NOTE: to ensure that the tests do not rely on non-test data, do this first: 
 
@@ -57,9 +57,8 @@ h4. (3) Run specs.
 OR
 
 <pre>
-  rake hyhead:remove_plugin_from_host
-  rake hyhead:copy_plugin_to_host
-  rake hyhead:rspec
+  rake hyhead:setup_test_app
+  rake hyhead:spec
 </pre>
 
 
@@ -87,7 +86,7 @@ To stop jetty:
 From the rails application directory  (my-hydra-head-test-app)
 
 <pre>
-  rake hydra:jetty:stop
+  rake jetty:stop
 </pre>
 
 Use ps to ensure the java process has stopped.  If not, kill it manually.
@@ -97,7 +96,7 @@ h4. Clean out and reload the fixtures:
 1. Stop jetty
 
 <pre>
-  rake hydra:jetty:stop
+  rake jetty:stop
 </pre>
 
 Use ps to ensure the java process has stopped.  If not, kill it manually.

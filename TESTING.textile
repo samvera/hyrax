@@ -4,7 +4,6 @@ h2. For the Impatient
 
 # clone the hydra-head code (to a fresh working copy) <pre>git clone git@github.com:projecthydra/hydra-head.git</pre>
 # switch tot he hydra-head directory <pre>cd hydra-head</pre>
-# checkout the rails3 branch <pre>git checkout rails3</pre>
 # install bundler gem <pre>gem install bundler</pre>
 # Get the project dependencies <pre>bundle install</pre>
 # grab the jetty submodule <pre>git submodule init; git submodule update</pre>
@@ -13,6 +12,7 @@ h2. For the Impatient
 ## spins up jetty (in jettywrapper)
 ## imports fixtures
 ## runs rspec & cucumber tests
+## kills jetty (in jettywrapper)
 
 h2. More Detailed Instructions & Notes
 
@@ -29,7 +29,7 @@ git submodule update
 To start the jetty:
 
 <pre>
-rake hydra:jetty:start
+rake jetty:start
 </pre>
 
 Note: the first time you start the jetty, you must use the following command in order to properly configure the jetty:
