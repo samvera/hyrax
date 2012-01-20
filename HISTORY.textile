@@ -1,3 +1,7 @@
+h3. 3.2.2
+* Update to ActiveFedora 3.2.2 to fix severe error
+* HYDRA-661: deprecated tasks and made them call AF repo tasks
+
 h3. 3.2.1
 * SubmissionWorkflow was not being required
 * Removed JettyCleaner (broken and unused)
