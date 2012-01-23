@@ -8,6 +8,8 @@
 
         <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 
+
+
 	<%= render :partial => 'search_form' %>
 	
 	<%= render :partial => 'did_you_mean' %>
@@ -16,7 +18,7 @@
   
   <div class="pageEntriesInfo">
     <%= render_pagination_info @response, :entry_name=>'item' %>
-    <%=link_to "start over", catalog_index_path, :id=>"startOverLink" %>
+    <%=link_to "start over", catalog_index_path, :id=>"startOverLink" , :class=>'btn primary'%>
   </div>
   
 	<%= render 'sort_and_per_page' %>

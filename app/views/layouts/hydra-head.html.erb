@@ -1,12 +1,5 @@
 <!DOCTYPE html>
-
-<!--[if lt IE 7 ]> <html class="ie6"> <![endif]--> 
-<!--[if IE 7 ]>    <html class="ie7"> <![endif]--> 
-<!--[if IE 8 ]>    <html class="ie8"> <![endif]--> 
-<!--[if IE 9 ]>    <html class="ie9"> <![endif]--> 
-<!--[if gt IE 9]>  <html> <![endif]-->
-<!--[if !IE]><!--> <html> <!--<![endif]-->
-
+<html>
   <head>
     <meta charset="utf-8" />
 
@@ -14,28 +7,29 @@
     <link href="<%= opensearch_catalog_url(:format => 'xml') %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
     
     <%= render_head_content %>
+    <%= stylesheet_link_tag 'psu', :media => 'all' %> 
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <%= stylesheet_link_tag 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', :media => 'all' %> 
+    <%= stylesheet_link_tag 'blacklight/blacklight', :media => 'all' %> 
+    <%= javascript_include_tag 'jquery-1.4.2.min.js', 'jquery-ui-1.8.1.custom.min.js', 'blacklight/blacklight' %> 
 
-		<!--[if IE]>
-    	<%= stylesheet_link_tag('hydra/ie-styles', {:media=>'all'}) %>
-    	<%= stylesheet_link_tag('progressBox-ie6.css', {:media=>'all'}) %>
-		<![endif]-->
 	</head>
   
     <body class="<%= render_body_class %>">
 
 	  <div id="doc4" class="yui-t2">
 		
-		<div id="hd">
+		<div id="hd" class="row">
 			<%= render :partial => '/user_util_links.html' %>
 			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %>
 		</div>
 	    
-	  <div id="bd">
-			<div id="yui-main">
+	  <div id="bd" class="row">
+      <div class="yui-b sidebar span4"><%= sidebar_items.join('').html_safe %></div>	
+			<div id="yui-main" class="span12">
         <%= render :partial=>'/flash_msg' %>
         <%= yield %>
       </div>
-      <div class="yui-b sidebar"><%= sidebar_items.join('').html_safe %></div>	
 	  </div>
 	    
 	    
