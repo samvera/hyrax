@@ -7,7 +7,7 @@ gem 'rails', '~> 3.0.10'
 
 gem 'sqlite3'
 
-gem 'active-fedora', '>=3.2.0'
+gem 'active-fedora', '~>3.2.2'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.2.0'
