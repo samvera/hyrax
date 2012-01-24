@@ -7,7 +7,7 @@ gem 'rails', '~> 3.0.10'
 
 gem 'sqlite3'
 
-gem 'active-fedora', '~>3.2.2'
+gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'be5aa63'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.2.0'
@@ -16,14 +16,14 @@ gem 'devise'
 
 group :development, :test do
   gem 'ruby-debug'
-  gem 'rspec'
-  gem 'rspec-rails', '>=2.5.0'
+  gem 'rspec-rails', '>=2.4.0'
   gem 'mocha'
   gem 'cucumber-rails'
   gem 'database_cleaner'
   gem 'capybara'
   gem 'bcrypt-ruby'
   gem "jettywrapper"
+  gem "factory_girl_rails"
 end # (leave this comment here to catch a stray line inserted by blacklight!)
 
 # Use unicorn as the web server

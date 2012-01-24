@@ -30,4 +30,15 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
+
+  config.include Devise::TestHelpers, :type => :controller
+
+end
+
+
+#Monkey patch UploadedFile so that it responds to read (same as ActionDispatch::Http::UploadedFile). Required by RestClient when posting to fedora.
+class Rack::Test::UploadedFile
+  def read(*args)
+    @tempfile.read(*args)
+  end
 end
