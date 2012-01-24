@@ -15,7 +15,6 @@ class FileAssetsController < ApplicationController
   # @param [FileAsset] the File Asset to add the blob to
   # @return [FileAsset] the File Asset  
   def add_posted_blob_to_asset(asset,file)
-    #file_name = filename_from_params
     file_name = file.original_filename
     options = {:label=>file_name, :mimeType=>mime_type(file_name), :checksumType=>'MD5' }
     dsid = datastream_id #Only call this once so that it could be a sequence
