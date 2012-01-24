@@ -3,5 +3,5 @@ class GenericFile < ActiveFedora::Base
   include Hydra::ModelMethods
 
   has_metadata :name => "characterization", :type => FitsDatastream
-
+  has_metadata :name => "descMetadata", :type => Psu::DcDatastream
 end
