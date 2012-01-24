@@ -17,7 +17,7 @@ describe FileAssetsController do
       GenericFile.count.should == @file_count + 1 
       saved_file = GenericFile.find('test:123')
       saved_file.label.should == 'world.png'
-#      saved_file.checksum.should == 'abcdef1234'
+#      saved_file.content.checksum.should == 'abcdef1234'
     end
   end
 
