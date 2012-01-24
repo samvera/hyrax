@@ -10,5 +10,8 @@ describe GenericFile do
     file.apply_depositor_metadata('jcoyne')
     file.rightsMetadata.edit_access.should == ['jcoyne']
   end
-
+  it "should have a characterization datastream" do
+    file = GenericFile.new
+    file.characterization.should be_kind_of FitsDatastream
+  end 
 end
