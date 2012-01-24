@@ -11,13 +11,4 @@ describe GenericFile do
     file.rightsMetadata.edit_access.should == ['jcoyne']
   end
 
-  # it "should have a content datastream" do
-  #   file = GenericFile.new
-  #   file.content = File.open('spec/fixtures/world.png').read
-  #   file.save
-
-  #   file.mimeType.should == 'image/png'
-  #   
-  # end
-
 end
