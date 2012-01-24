@@ -1,0 +1,8 @@
+<dc xmlns="http://purl.org/dc/terms/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpf="urn:isbn:1-931666-33-4" xmlns:ical= 'http://www.w3.org/2002/12/cal#'> 
+  <title xml:lang="tib" cpf:scriptCode="Tibt"></title> 
+  <title xml:lang="tib" cpf:scriptCode="Latn" cpf:transliteration='wylie'></title>
+  <title xml:lang="tib" cpf:scriptCode="Latn" cpf:transliteration='marpa'></title>
+  <title xml:lang="skt" cpf:scriptCode="Latn" cpf:transliteration='marpa'></title>
+  <title xml:lang="skt" cpf:scriptCode="Latn"></title>
+</dc>
+
