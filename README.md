@@ -15,3 +15,18 @@ Baseline Application Features
 * Assign objects to collections 
 * Publish an object for public search and display
 
+
+Installation Instructions
+-------------------------
+
+Install gems & migrate database
+
+ bundle install
+ rake db:migrate
+ 
+Get jetty & start it
+
+ git submodule init
+ git submodule update
+ rake jetty:config
+ rake jetty:start
