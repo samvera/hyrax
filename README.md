@@ -21,12 +21,12 @@ Installation Instructions
 
 Install gems & migrate database
 
- bundle install
- rake db:migrate
+    bundle install
+    rake db:migrate
  
 Get jetty & start it
 
- git submodule init
- git submodule update
- rake jetty:config
- rake jetty:start
+    git submodule init
+    git submodule update
+    rake jetty:config
+    rake jetty:start
