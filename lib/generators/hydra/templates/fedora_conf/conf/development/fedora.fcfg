@@ -8,7 +8,7 @@
     <comment>Defines one or more email addresses for server administrators; 
 		list is space delimited.</comment>
   </param>
-  <param name="fedoraServerPort" value="8080">
+  <param name="fedoraServerPort" value="8983">
     <comment>Defines the port number on which the Fedora server runs; 
 		default is 8080.</comment>
   </param>
@@ -156,7 +156,7 @@
     	context-appropriate DOReaders and DOWriters for reflecting on and 
     	writing to the objects stored in the repository. It also provides 
     	methods for reflecting on the contents of the repository as a whole..</comment>
-    <param name="pidNamespace" value="hydrangea">
+    <param name="pidNamespace" value="changeme">
       <comment>This is the namespace id for pids of newly-created objects. 
 	    	This should be unique for a repository. It can be from 1 to 17 
 	    	characters, and may only contain A-Z, a-z, 0-9, &apos;.&apos;, or &apos;-&apos; (dash).</comment>
@@ -181,7 +181,7 @@
             RELS-INT datastreams where these are not already present when
             adding relationships via addRelationship.  Must be &quot;X&quot; or &quot;M&quot;.</comment>
     </param>
-    <param name="gSearchRESTURL" value="http://localhost:8080/fedoragsearch/rest">
+    <param name="gSearchRESTURL" value="http://localhost:8983/fedoragsearch/rest">
       <comment>The REST endpoint of the Fedora Generic Search service.
             This parameter is only required if GSearchDOManager is 
             used.</comment>
@@ -417,7 +417,7 @@
     <comment>Fedora's Java Messaging Service (JMS) Module</comment>
     <param name="enabled" value="false"/>
     <param name="java.naming.factory.initial" value="org.apache.activemq.jndi.ActiveMQInitialContextFactory"/>
-    <param name="java.naming.provider.url" value="vm:(broker:(tcp://localhost:61616))"/>
+    <param name="java.naming.provider.url" value="vm:(broker:(tcp://localhost:61616,stomp://localhost:61613))"/>
     <param name="datastore1" value="apimUpdateMessages">
       <comment>A datastore representing a JMS Destination for APIM events which update the repository</comment>
     </param>
