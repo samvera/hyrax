@@ -4,7 +4,7 @@
 # development environment upon cd'ing into the directory
 
 ruby_string="ree-1.8.7"
-rubygems_version="1.6.2"
+rubygems_version="1.8.15"
 gemset_name="hyhead-rails3"
 
 # Install rubies when used instead of only displaying a warning and exiting

@@ -57,12 +57,10 @@ module Hydra::ModelMethods
   def set_title(new_title, opts={})
     if self.datastreams.has_key?("descMetadata")
       desc_metadata_ds = self.datastreams["descMetadata"]
-      if desc_metadata_ds.kind_of?(ActiveFedora::NokogiriDatastream)
-        if desc_metadata_ds.class.terminology.has_term?(:title)
-          desc_metadata_ds.update_values([:title]=>new_title)
-        end
-      elsif desc_metadata_ds.respond_to?(:title_values)
+      if desc_metadata_ds.respond_to?(:title_values)
         desc_metadata_ds.title_values = new_title
+      else
+        desc_metadata_ds.title = new_title
       end
     end
   end

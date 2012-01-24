@@ -146,7 +146,7 @@ namespace :hyhead do
       FileUtils.mkdir_p( File.join('.','test_support') )
       FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
       
-      puts "Executing bundle install --local"
+      puts "Executing bundle install --local in the test app"
       puts %x[bundle install --local]
       errors << 'Error running bundle install in test app' unless $?.success?
 
