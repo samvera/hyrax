@@ -7,6 +7,7 @@ class GenericFile < ActiveFedora::Base
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => Psu::DcDatastream
+  has_file_datastream :type=>FileContentDatastream
 
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata

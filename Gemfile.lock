@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/mediashelf/active_fedora.git
-  revision: 8b1e5253a75c0f384280f348affdcb091d28b00e
-  ref: 8b1e525
+  revision: f552f733d526009c6081f6aaeaf132b4aa8fe933
+  ref: f552f73
   specs:
     active-fedora (3.2.2)
       activeresource (>= 3.0.0)
