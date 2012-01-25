@@ -5,16 +5,16 @@ Feature: Uploading files via web form
 
   Scenario: Getting to the ingest screen
     Given I am logged in as "contentauthor@psu.edu"
-#    When I click "Upload" 
-#    Then I should see "Ingest tool"
-#    And I should see "upload files"
-#    And I should see "metadata"
-#    And I should see a button with label "choose file"
-#    And I should see a button with label "Upload"
-#
-#  Scenario: Upload a file, no metadata
-#    Given I am logged in as "contentauthor@psu.edu"
-#    When I am on the "Ingest" page 
+    When I follow "Upload" 
+    Then I should see "Ingest Tool"
+    And I should see "Upload Files"
+    And I should see "Metadata"
+    And I should see a file chooser button 
+    And I should see a "Upload" button 
+
+  Scenario: Upload a file, no metadata
+    Given I am logged in as "contentauthor@psu.edu"
+    When I am on the "ingest" page 
 #    And I attach the file "test_support/fixtures/world.png" to "Filedata[]"
 #    And I press "Upload"
 #    Then I should see "The file world.png has been saved"

@@ -1,3 +1,4 @@
+<h1>Ingest Tool</h1>
 <%= form_for @file_asset do |f| %>
 <h2>Upload Files</h2>
 <div class="uploader-contents">
@@ -10,6 +11,5 @@
 <%= f.label :contributor%> <%= f.text_field :contributor %> <br />
 <%= f.label :creator%> <%= f.text_field :creator %> <br />
 <%= f.label :title%> <%= f.text_field :title %> <br />
-
-<input type="submit"/ >
+<%= f.submit "Upload" %>
 <% end %>
