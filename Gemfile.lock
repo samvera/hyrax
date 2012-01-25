@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/mediashelf/active_fedora.git
-  revision: 7891313595e8094f78fb00a940f8001e29f760e5
-  ref: 7891313
+  revision: 8b1e5253a75c0f384280f348affdcb091d28b00e
+  ref: 8b1e525
   specs:
     active-fedora (3.2.2)
       activeresource (>= 3.0.0)
@@ -91,6 +91,11 @@ GEM
     curb (0.7.15)
     daemons (1.1.6)
     database_cleaner (0.7.1)
+    delayed_job (3.0.1)
+      activesupport (~> 3.0)
+    delayed_job_active_record (0.3.1)
+      activerecord (> 2.1.0)
+      delayed_job (~> 3.0.0)
     devise (1.5.3)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
@@ -313,6 +318,7 @@ DEPENDENCIES
   capybara
   cucumber-rails
   database_cleaner
+  delayed_job_active_record
   devise
   factory_girl_rails
   hydra-head (~> 3.2.0)

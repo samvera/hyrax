@@ -18,4 +18,9 @@ describe GenericFile do
   it "should have a dc desc metadata" do
     @file.descMetadata.should be_kind_of Psu::DcDatastream
   end
+
+  it "should have content datastream" do
+    @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+    @file.content.should be_kind_of FileContentDatastream
+  end
 end

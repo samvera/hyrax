@@ -7,12 +7,13 @@ gem 'rails', '~> 3.0.10'
 
 gem 'sqlite3'
 
-gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'7891313'
+gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'8b1e525'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.2.0'
 
 gem 'devise'
+gem 'delayed_job_active_record'
 
 group :development, :test do
   gem 'ruby-debug'
