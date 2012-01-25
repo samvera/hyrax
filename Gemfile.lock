@@ -55,6 +55,7 @@ GEM
     akami (1.0.0)
       gyoku (>= 0.4.0)
     arel (2.0.10)
+    backports (2.3.0)
     bcrypt-ruby (3.0.1)
     blacklight (3.1.2)
       kaminari
@@ -190,6 +191,8 @@ GEM
     multi_json (1.0.4)
     multi_xml (0.4.1)
     multipart-post (1.1.2)
+    noid (0.5.2)
+      backports
     nokogiri (1.5.0)
     nori (1.0.2)
     om (1.4.4)
@@ -324,6 +327,7 @@ DEPENDENCIES
   hydra-head (~> 3.2.0)
   jettywrapper
   mocha
+  noid
   rails (~> 3.0.10)
   rspec-rails (>= 2.4.0)
   ruby-debug

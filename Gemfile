@@ -11,6 +11,7 @@ gem 'hydra-head', '~>3.2.0'
 
 gem 'devise'
 gem 'delayed_job_active_record'
+gem 'noid'
 
 group :development, :test do
   gem 'ruby-debug'
