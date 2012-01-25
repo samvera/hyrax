@@ -3,7 +3,7 @@ class FileContentDatastream < ActiveFedora::Datastream
   def audit
     passing = self.dsChecksumValid
     prune_history if passing
-    ChecksumAuditLog.create!(:pass=>passing, :dsid=>dsid, :pid=>pid)
+    ChecksumAuditLog.create!(:pass=>passing, :dsid=>dsid, :pid=>pid, :version=>dsVersionID)
   end
 
   def logs
