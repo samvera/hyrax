@@ -6,6 +6,12 @@ Hylion::Application.routes.draw do
 
   devise_for :users
 
+  resources :generic_files do
+    member do
+      post 'audit'
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
