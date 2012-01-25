@@ -6,6 +6,10 @@ class FileContentDatastream < ActiveFedora::Datastream
     ChecksumAuditLog.create!(:pass=>passing, :dsid=>dsid, :pid=>pid, :version=>dsVersionID)
   end
 
+  def characterize
+    "<xml/>"
+  end
+
   def logs
     ChecksumAuditLog.where(:dsid=>dsid, :pid=>pid).order('created_at desc')
   end

@@ -7,6 +7,13 @@ describe FileContentDatastream do
     @subject.stubs(:dsVersionID=>'content.7')
   end
 
+  describe "characterize" do
+    it "should run when the datastream is created"
+    it "should return an xml document" do
+      @subject.characterize.should be_equivalent_to "<xml/>"
+    end
+  end
+
   describe "logs" do
     before do
       @old = ChecksumAuditLog.create(:pid=>'my_pid', :dsid=>'content', :version=>'content.0', :pass=>true, :created_at=>2.minutes.ago)
