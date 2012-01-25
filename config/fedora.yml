@@ -1,11 +1,11 @@
 development:
-  fedora:
-    url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
+  url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
+  validateChecksum: true
 test: &TEST  
-  fedora:
-    url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora-test
+  url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora-test
+  validateChecksum: true
 production:
-  fedora:
-    url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
+  url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
+  validateChecksum: true
 cucumber:
   <<: *TEST

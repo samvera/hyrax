@@ -11,4 +11,5 @@ describe GenericFile do
     file.rightsMetadata.edit_access.should == ['jcoyne']
   end
 
+
 end

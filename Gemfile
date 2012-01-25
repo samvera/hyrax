@@ -7,7 +7,7 @@ gem 'rails', '~> 3.0.10'
 
 gem 'sqlite3'
 
-gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'f8b7c35'
+gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'7891313'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.2.0'

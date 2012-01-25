@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/mediashelf/active_fedora.git
-  revision: f8b7c35ba21662b00ade163e71a458500aaaa446
-  ref: f8b7c35
+  revision: 7891313595e8094f78fb00a940f8001e29f760e5
+  ref: 7891313
   specs:
     active-fedora (3.2.2)
       activeresource (>= 3.0.0)
@@ -15,7 +15,7 @@ GIT
       om (>= 1.4.4)
       rdf
       rdf-rdfxml
-      rubydora (~> 0.4.1)
+      rubydora (~> 0.5.1)
       solr-ruby (>= 0.0.6)
       solrizer (> 1.0.0)
       xml-simple (>= 1.0.12)
@@ -244,7 +244,7 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    rubydora (0.4.1)
+    rubydora (0.5.1)
       activemodel
       activesupport
       fastercsv
