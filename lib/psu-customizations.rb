@@ -1,8 +1,8 @@
 require 'active_fedora'
-require 'PSU/id_service'
+require 'psu/id_service'
 
-module PSU
-  class Base < ActiveFedora::Base
+module ActiveFedora
+  class Base
     def initialize(attrs={})
       unless attrs[:pid]
         attrs = attrs.merge!({:pid => PSU::IdService.mint})

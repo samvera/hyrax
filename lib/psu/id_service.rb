@@ -3,10 +3,8 @@ require 'noid'
 module PSU
   class IdService    
     def self.mint
-      label = "ark"
-      authority = "42409"
-      id = Noid::Minter.new(:template => '.reeddeeddk').mint
-      return "#{label}:/#{authority}/#{id}"
+      minter = Noid::Minter.new(:template => '.reeddeeddk')
+      return "ark:/42409/#{minter.mint}"
     end    
   end
 end
