@@ -13,6 +13,11 @@ class GenericFilesController < ApplicationController
       flash[:error] = "Unable to save."
       render :action=>"new"
     end
+  end
 
+  def audit
+    @file_asset = GenericFile.find(params[:id])
+    render :json=>@file_asset.content.audit
+    
   end
 end

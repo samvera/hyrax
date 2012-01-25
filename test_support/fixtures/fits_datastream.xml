@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.6.0" timestamp="1/25/12 11:04 AM">
+  <identification>
+    <identity format="Portable Document Format" mimetype="application/pdf" toolname="FITS" toolversion="0.6.0">
+      <tool toolname="Jhove" toolversion="1.5" />
+      <tool toolname="file utility" toolversion="5.04" />
+      <tool toolname="Exiftool" toolversion="7.74" />
+      <tool toolname="Droid" toolversion="3.0" />
+      <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" />
+      <tool toolname="ffident" toolversion="0.2" />
+      <version toolname="Jhove" toolversion="1.5">1.3</version>
+      <externalIdentifier toolname="Droid" toolversion="3.0" type="puid">fmt/17</externalIdentifier>
+    </identity>
+  </identification>
+  <fileinfo>
+    <size toolname="Jhove" toolversion="1.5">63019</size>
+    <creatingApplicationName toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">Mac OS X 10.6.2 Quartz PDFContext/Safari</creatingApplicationName>
+    <lastmodified toolname="Exiftool" toolversion="7.74" status="SINGLE_RESULT">2010:02:23 16:13:40-05:00</lastmodified>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/Downloads/C4L-survey.pdf</filepath>
+    <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/Downloads/C4L-survey.pdf</filename>
+    <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">61ab9e435458b0eb78b1055b52f70c79</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">1266959620000</fslastmodified>
+  </fileinfo>
+  <filestatus>
+    <well-formed toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</well-formed>
+    <valid toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</valid>
+  </filestatus>
+  <metadata>
+    <document>
+      <title toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">LimeSurvey - Code4Lib 2010 Feedback</title>
+      <author toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">Eric Celeste</author>
+      <pageCount toolname="Jhove" toolversion="1.5">6</pageCount>
+      <isTagged toolname="Jhove" toolversion="1.5">no</isTagged>
+      <hasOutline toolname="Jhove" toolversion="1.5">no</hasOutline>
+      <hasAnnotations toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">no</hasAnnotations>
+      <isRightsManaged toolname="Exiftool" toolversion="7.74" status="SINGLE_RESULT">no</isRightsManaged>
+      <isProtected toolname="Exiftool" toolversion="7.74">no</isProtected>
+      <hasForms toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">no</hasForms>
+    </document>
+  </metadata>
+</fits>
+

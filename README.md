@@ -30,3 +30,7 @@ Get jetty & start it
     git submodule update
     rake jetty:config
     rake jetty:start
+  
+Run the app
+  
+    rails server

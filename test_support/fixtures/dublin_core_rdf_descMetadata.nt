@@ -1,0 +1,13 @@
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/description> "This is a work by JD in the field of biology." .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/publisher> "Penn State" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/contributor> "Department of Bioinformatics" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/created> "2010-12-31"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/title> "Title of work" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/subject> "Biology" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/language> "en" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/date> "2009-12-31"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/rights> "insert rights statement here" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/type> <http://purl.org/dc/dcmitype/Image> .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/format> "image/jpeg" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/creator> "John Doe" .
+<http://id.psu.edu/object42> <http://purl.org/dc/terms/identifier> "old:identifier:7779" .

@@ -2,12 +2,9 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.0.10'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
 gem 'sqlite3'
 
-gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'8b1e525'
+gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'f552f73'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.2.0'
