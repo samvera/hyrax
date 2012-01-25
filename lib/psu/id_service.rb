@@ -5,7 +5,7 @@ module PSU
     def self.mint
       label = "ark"
       authority = "42409"
-      id = Noid::Minter.new(:template => '.reeddeeddk')
+      id = Noid::Minter.new(:template => '.reeddeeddk').mint
       return "#{label}:/#{authority}/#{id}"
     end    
   end
