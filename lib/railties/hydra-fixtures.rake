@@ -1,6 +1,44 @@
 require "active-fedora"
 require "solrizer-fedora"
 require "active_support" # This is just to load ActiveSupport::CoreExtensions::String::Inflections
+
+Rake::TaskManager.class_eval do
+  def alias_task(fq_name)
+    new_name = "#{fq_name}:original"
+    @tasks[new_name] = @tasks.delete(fq_name)
+  end
+end
+
+def alias_task(fq_name)
+  Rake.application.alias_task(fq_name)
+end
+
+# Rake does chaining by default, not overriding
+def override_task(*args, &block)
+  name, params, deps = Rake.application.resolve_args(args.dup)
+  fq_name = Rake.application.instance_variable_get(:@scope).dup.push(name).join(':')
+  alias_task(fq_name)
+  Rake::Task.define_task(*args, &block)
+end
+
+namespace :repo do
+  desc "Load the object located at the provided path or identified by pid."
+  override_task :load => :environment do
+    ### override the AF provided task to use the correct fixture directory
+    if ENV["pid"].nil? 
+      raise "You must specify a valid pid.  Example: rake repo:load pid=demo:12"
+    end
+puts "loading #{ENV['pid']}" 
+      
+    begin
+      ActiveFedora::FixtureLoader.new('test_support/fixtures').reload(ENV["pid"])
+    rescue Errno::ECONNREFUSED => e
+      puts "Can't connect to Fedora! Are you sure jetty is running?"
+    rescue Exception => e
+      logger.error("Received a Fedora error while loading #{pid}\n#{e}")
+    end
+  end
+end
 namespace :hydra do
   
   desc "[DEPRECATED] Delete and re-import the fixture identified by pid" 
@@ -60,6 +98,7 @@ namespace :hydra do
       Rake::Task["hydra:fixtures:refresh"].invoke	
     end
   end
+
   
   desc "Init Hydra configuration" 
   task :init => [:environment] do
@@ -93,7 +132,7 @@ namespace :hydra do
     desc "Load default Hydra fixtures"
     task :load do
       FIXTURES.each do |fixture|
-        ENV["path"] = File.join("test_support","fixtures","#{fixture.gsub(":","_")}.foxml.xml")
+        ENV["pid"] = fixture
         Rake::Task["repo:load"].reenable
         Rake::Task["repo:load"].invoke
       end
@@ -112,5 +151,5 @@ namespace :hydra do
     task :refresh => [:delete, :load]
 
   end
-  
 end
+  

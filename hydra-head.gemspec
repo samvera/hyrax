@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", '~> 3.0.10'
   s.add_dependency "blacklight", '~>3.1.2'  
+  s.add_dependency "devise"
+  s.add_dependency 'sqlite3-ruby', '~>1.2.5'  #Locked here because centos 5.2 (Hudson) won't support a modern version
   s.add_dependency "active-fedora", '>=3.2.2'
   s.add_dependency 'builder', '2.1.2'
   s.add_dependency 'columnize'
