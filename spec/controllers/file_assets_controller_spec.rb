@@ -18,6 +18,7 @@ describe FileAssetsController do
       saved_file = GenericFile.find('test:123')
       saved_file.label.should == 'world.png'
       saved_file.content.checksum.should == '28da6259ae5707c68708192a40b3e85c'
+      saved_file.content.dsChecksumValid.should be_true
     end
   end
 
