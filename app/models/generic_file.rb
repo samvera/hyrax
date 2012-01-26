@@ -1,6 +1,3 @@
-require "datastreams/fits_datastream"
-require "datastreams/psu_dc_datastream"
-require "datastreams/file_content_datastream"
 require "psu-customizations"
 
 class GenericFile < ActiveFedora::Base

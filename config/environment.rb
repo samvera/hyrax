@@ -5,5 +5,5 @@ require File.expand_path('../application', __FILE__)
 Gamma::Application.initialize!
 
 Gamma::Application.configure do
-  config.fits_path = '/home/mjg/Downloads/fits/fits.sh'
+  config.fits_path = 'fits.sh'
 end
