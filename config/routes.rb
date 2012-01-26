@@ -5,6 +5,7 @@ Hylion::Application.routes.draw do
   root :to => "catalog#index"
 
   devise_for :users
+  resources :generic_files
 
   resources :generic_files do
     member do
