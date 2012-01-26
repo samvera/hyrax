@@ -14,7 +14,6 @@ begin
   
   spec_prereq = Rails.configuration.generators.options[:rails][:orm] == :active_record ?  "db:test:prepare" : :noop
   task :noop do; end
-  #task :default => :spec
   
   hyhead_spec = File.expand_path("./test_support/spec", HydraHead.root)
   
@@ -62,56 +61,6 @@ begin
         t.rspec_opts = "--colour"
 			end
 			
-      # Blacklight. Solr wrapper. for now just for blacklight:spec, plan to
-      # provide it for all variants eventually.
-      # if you would like to see solr startup messages on STDERR
-      # when starting solr test server during functional tests use:
-      # 
-      #    rake SOLR_CONSOLE=true      
-      require File.expand_path('../jetty_solr_server.rb', __FILE__)
-      desc "hyhead:solr with jetty/solr launch"
-      task :with_solr do    
-        # wrap tests with a test-specific Solr server
-        # Need to look  up where the test jetty is located
-        # from solr.yml, we don't hardcode it anymore. 
-
-        solr_yml_path = locate_path("config", "solr.yml")
-        jetty_path = if ( File.exists?( solr_yml_path ))
-            solr_config = YAML::load(File.open(solr_yml_path))
-            solr_config["test"]["jetty_path"] if solr_config["test"]
-        end   
-        raise Exception.new("Can't find jetty path to start test jetty. Expect a jetty_path key in config/solr.yml for test environment.") unless jetty_path 
-
-        
-        # wrap tests with a test-specific Solr server
-        JettySolrServer.new(
-          :jetty_home => File.expand_path(jetty_path, Rails.root), 
-          :sleep_after_start => 2).wrap do          
-            Rake::Task["hyhead:spec"].invoke 
-        end             
-      end
-      
-    
-      # Don't understand what this does or how to make it use our remote stats_directory.
-      # task :statsetup do
-        # require 'rails/code_statistics'
-        # ::STATS_DIRECTORIES << %w(Model\ specs spec/models) if File.exist?('spec/models')
-        # ::STATS_DIRECTORIES << %w(View\ specs spec/views) if File.exist?('spec/views')
-        # ::STATS_DIRECTORIES << %w(Controller\ specs spec/controllers) if File.exist?('spec/controllers')
-        # ::STATS_DIRECTORIES << %w(Helper\ specs spec/helpers) if File.exist?('spec/helpers')
-        # ::STATS_DIRECTORIES << %w(Library\ specs spec/lib) if File.exist?('spec/lib')
-        # ::STATS_DIRECTORIES << %w(Mailer\ specs spec/mailers) if File.exist?('spec/mailers')
-        # ::STATS_DIRECTORIES << %w(Routing\ specs spec/routing) if File.exist?('spec/routing')
-        # ::STATS_DIRECTORIES << %w(Request\ specs spec/requests) if File.exist?('spec/requests')
-        # ::CodeStatistics::TEST_TYPES << "Model specs" if File.exist?('spec/models')
-        # ::CodeStatistics::TEST_TYPES << "View specs" if File.exist?('spec/views')
-        # ::CodeStatistics::TEST_TYPES << "Controller specs" if File.exist?('spec/controllers')
-        # ::CodeStatistics::TEST_TYPES << "Helper specs" if File.exist?('spec/helpers')
-        # ::CodeStatistics::TEST_TYPES << "Library specs" if File.exist?('spec/lib')
-        # ::CodeStatistics::TEST_TYPES << "Mailer specs" if File.exist?('spec/mailers')
-        # ::CodeStatistics::TEST_TYPES << "Routing specs" if File.exist?('spec/routing')
-        # ::CodeStatistics::TEST_TYPES << "Request specs" if File.exist?('spec/requests')
-      # end
     end
   end  
 rescue LoadError
