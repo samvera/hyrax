@@ -1,15 +1,13 @@
 require 'spec_helper'
 
-xdigits = Noid::XDIGIT.join
-
 describe ActiveFedora::UnsavedDigitalObject do
   it "should have an ARK-style pid" do    
     @obj = ActiveFedora::UnsavedDigitalObject.new(self.class, '')
     @obj.save
-    @obj.pid.should match /^id:[#{xdigits}]{2}\d{2}[#{xdigits}]{2}\d{2}[#{xdigits}]$/
+    PSU::IdService.valid?(@obj.pid).should be_true
   end
-  it "should not have a Fedora-style pid" do
-    ActiveFedora::RubydoraConnection.any_instance.expects(:nextid).returns('test:123').never
+  it "should not use Fedora's pid service" do
+    ActiveFedora::RubydoraConnection.any_instance.expects(:nextid).returns("test:123").never
     @obj = ActiveFedora::UnsavedDigitalObject.new(self.class, '')
     @obj.save
     @obj.pid.should_not == "test:123"
