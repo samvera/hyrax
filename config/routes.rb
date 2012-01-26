@@ -1,4 +1,4 @@
-Hylion::Application.routes.draw do
+Gamma::Application.routes.draw do
   Blacklight.add_routes(self)
   HydraHead.add_routes(self)
 

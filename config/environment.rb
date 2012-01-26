@@ -2,8 +2,8 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application
-Hylion::Application.initialize!
+Gamma::Application.initialize!
 
-Hylion::Application.configure do
+Gamma::Application.configure do
   config.fits_path = '/home/mjg/Downloads/fits/fits.sh'
 end

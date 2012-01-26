@@ -4,5 +4,5 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-Hylion::Application.load_tasks
+Gamma::Application.load_tasks
 Dir.glob('tasks/*.rake').each { |r| import r }
