@@ -23,6 +23,10 @@ Install gems & migrate database
 
     bundle install
     rake db:migrate
+
+Install fits and put it in your path
+  You could add something like this to your .bash\_profile
+  export PATH=$PATH:/home/mjg/Downloads/fits
  
 Get jetty & start it
 
