@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'noid'
 
 describe GenericFile do
   before(:each) do 
@@ -21,12 +20,6 @@ describe GenericFile do
   it "should have content datastream" do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.content.should be_kind_of FileContentDatastream
-  end
-  it "should have an ARK-style identifier" do    
-    # required to generate the actual pid
-    @file.save
-    xdigit = Noid::XDIGIT.join
-    @file.pid.should match /^id:[#{xdigit}]{2}\d{2}[#{xdigit}]{2}\d{2}[#{xdigit}]$/
   end
   describe "characterize" do
     it "should run when the content datastream is created" do
