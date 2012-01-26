@@ -1,5 +1,3 @@
-require 'noid'
-
 module PSU
   class IdService    
     def self.mint
