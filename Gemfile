@@ -7,7 +7,7 @@ gem 'sqlite3'
 gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'f552f73'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
-gem 'hydra-head', '~>3.2.0'
+gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :ref=>'8f488a8'
 
 gem 'devise'
 gem 'delayed_job_active_record'

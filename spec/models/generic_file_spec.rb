@@ -29,7 +29,12 @@ describe GenericFile do
       @file.expects(:characterize)
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
-      
+    end
+    it "should run when the content datastream is created" do
+      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.characterize
+      doc = Nokogiri::XML.parse(@file.characterization.content)
+      doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
   end
 end
