@@ -7,10 +7,9 @@ describe ActiveFedora::UnsavedDigitalObject do
     PSU::IdService.valid?(@obj.pid).should be_true
   end
   it "should not use Fedora's pid service" do
-    ActiveFedora::RubydoraConnection.any_instance.expects(:nextid).returns("test:123").never
+    ActiveFedora::RubydoraConnection.any_instance.expects(:nextid).never
     @obj = ActiveFedora::UnsavedDigitalObject.new(self.class, '')
     @obj.save
-    @obj.pid.should_not == "test:123"
   end
   it "should allow objects to override ARK-style pid generation" do
     mock_pid = 'id:ef12ef12f'
