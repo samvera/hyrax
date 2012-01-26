@@ -5,5 +5,5 @@ require File.expand_path('../application', __FILE__)
 Hylion::Application.initialize!
 
 Hylion::Application.configure do
-  config.fits_path = 'fits.sh'
+  config.fits_path = '/home/mjg/Downloads/fits/fits.sh'
 end
