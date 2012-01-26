@@ -1,0 +1,9 @@
+<h1><%= @generic_file.title %></h1>
+<div class="viewing_context">
+  <%= link_to "Edit view", edit_generic_file_path %>
+</div>
+<dl>
+  <dt>Title<dt><dd><%= @generic_file.title %></dd>
+  <dt>Creator<dt><dd><%= @generic_file.creator %></dd>
+  <dt>Contributor<dt><dd><%= @generic_file.contributor %></dd>
+</dl>

@@ -1,23 +1,31 @@
 class GenericFilesController < ApplicationController
 
   def new
-    @file_asset = GenericFile.new 
+    @generic_file = GenericFile.new 
   end
 
   def create
-    @file_asset = GenericFile.new(params[:generic_file])
-    if (@generic_asset.save)
-      flash[:success] = "You saved #{@generic_asset.title}"
-      render :action=>"edit"
+    @generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+    
+    if (@generic_file.save)
+      flash[:success] = "You saved #{@generic_file.title}"
+      redirect_to :action=>"edit", :id=>@generic_file.pid
     else 
       flash[:error] = "Unable to save."
       render :action=>"new"
     end
   end
+  
+  def edit
+    @generic_file = GenericFile.find(params[:id])
+  end
+
+  def show
+    @generic_file = GenericFile.find(params[:id])
+  end
 
   def audit
-    @file_asset = GenericFile.find(params[:id])
-    render :json=>@file_asset.content.audit
-    
+    @generic_file = GenericFile.find(params[:id])
+    render :json=>@generic_file.content.audit
   end
 end

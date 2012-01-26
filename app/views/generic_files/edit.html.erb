@@ -1,4 +1,7 @@
-<h1>Ingest Tool</h1>
+<h1>Edit <%= @generic_file.title %></h1>
+<div class="viewing_context">
+  <%= link_to "Browse view", generic_file_path %>
+</div>
 <%= form_for @generic_file do |f| %>
 <h2>Upload Files</h2>
 <div class="uploader-contents">
@@ -11,5 +14,5 @@
 <%= f.label :contributor%> <%= f.text_field :contributor %> <br />
 <%= f.label :creator%> <%= f.text_field :creator %> <br />
 <%= f.label :title%> <%= f.text_field :title %> <br />
-<%= f.submit "Upload" %>
+<%= f.submit "Save Changes" %>
 <% end %>
