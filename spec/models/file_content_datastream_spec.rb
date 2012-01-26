@@ -7,10 +7,17 @@ describe FileContentDatastream do
     @subject.stubs(:dsVersionID=>'content.7')
   end
 
-  describe "characterize" do
-    it "should run when the datastream is created"
+  describe "extract_metadata" do
     it "should return an xml document" do
-      @subject.characterize.should be_equivalent_to "<xml/>"
+      repo = mock("repo")
+      repo.stubs(:config=>{})
+      @subject.expects(:content).returns(File.new(Rails.root + 'spec/fixtures/world.png').read)
+      xml = @subject.extract_metadata
+      doc = Nokogiri::XML.parse(xml)
+      doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
+    end
+    it "should have the path" do
+      @subject.fits_path.should == 'fits.sh'
     end
   end
 

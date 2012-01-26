@@ -1,13 +1,34 @@
+require 'open3'
 class FileContentDatastream < ActiveFedora::Datastream
+  include Open3
+
   # Verify that the checksum for this datastream is valid and record a ChecksumAuditLog
   def audit
     passing = self.dsChecksumValid
     prune_history if passing
     ChecksumAuditLog.create!(:pass=>passing, :dsid=>dsid, :pid=>pid, :version=>dsVersionID)
   end
+  
 
-  def characterize
-    "<xml/>"
+  def extract_metadata
+    f = Tempfile.new("#{pid}-#{dsVersionID}")
+    f.puts content
+    f.close
+    command = "#{fits_path} -i #{f.path}"
+    stdin, stdout, stderr = popen3(command)
+    stdin.close
+    out = stdout.read
+    stdout.close
+    err = stderr.read
+    stderr.close
+    raise "Unable to execute command \"#{command}\"\n#{err}" unless err.empty?
+    f.unlink
+    out
+  end
+
+
+  def fits_path
+    Rails.application.config.fits_path
   end
 
   def logs

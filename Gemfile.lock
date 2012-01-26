@@ -320,13 +320,11 @@ DEPENDENCIES
   database_cleaner
   delayed_job_active_record
   devise
-  equivalent-xml
   factory_girl_rails
   hydra-head (~> 3.2.0)
   jettywrapper
   mocha
   rails (~> 3.0.10)
-  rspec-expectations
   rspec-rails (>= 2.4.0)
   ruby-debug
   solrizer-fedora (>= 1.2.2)

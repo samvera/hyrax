@@ -10,4 +10,13 @@ class GenericFile < ActiveFedora::Base
   delegate :creator, :to => :descMetadata
   delegate :title, :to => :descMetadata
 
+  before_save :characterize
+
+  ## Extract the metadata from the content datastream and record it in the characterization datastream
+  def characterize
+    if content.changed?
+      characterization.content = content.extract_metadata
+    end
+  end
+
 end

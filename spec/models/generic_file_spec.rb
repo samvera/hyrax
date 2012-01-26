@@ -23,4 +23,13 @@ describe GenericFile do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.content.should be_kind_of FileContentDatastream
   end
+
+  describe "characterize" do
+    it "should run when the content datastream is created" do
+      @file.expects(:characterize)
+      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.save
+      
+    end
+  end
 end
