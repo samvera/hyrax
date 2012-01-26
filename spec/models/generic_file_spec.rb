@@ -5,9 +5,6 @@ describe GenericFile do
   before(:each) do 
     @file = GenericFile.new
   end 
-  after(:each) do
-    @file.delete
-  end
   it "should have rightsMetadata" do
     @file.rightsMetadata.should be_instance_of Hydra::RightsMetadata
   end
@@ -37,4 +34,5 @@ describe GenericFile do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
     end
+  end
 end
