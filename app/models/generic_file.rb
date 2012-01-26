@@ -23,5 +23,4 @@ class GenericFile < ActiveFedora::Base
       characterization.content = content.extract_metadata
     end
   end
-
 end

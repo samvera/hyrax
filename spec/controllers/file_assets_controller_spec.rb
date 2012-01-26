@@ -5,10 +5,11 @@ describe FileAssetsController do
     before do
       sign_in FactoryGirl.create(:user)
       @file_count = GenericFile.count
-      ActiveFedora::RubydoraConnection.any_instance.expects(:nextid).returns('test:123')
+      @mock = GenericFile.new({:pid => 'test:123'})
+      GenericFile.expects(:new).returns(@mock)
     end
     after do
-      GenericFile.find('test:123').delete
+      @mock.delete
     end
     it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
