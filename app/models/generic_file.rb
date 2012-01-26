@@ -1,10 +1,12 @@
+require "psu-customizations"
+
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => Psu::DcDatastream
-  has_file_datastream :type=>FileContentDatastream
+  has_file_datastream :type => FileContentDatastream
 
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata
@@ -18,5 +20,4 @@ class GenericFile < ActiveFedora::Base
       characterization.content = content.extract_metadata
     end
   end
-
 end

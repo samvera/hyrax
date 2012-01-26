@@ -15,8 +15,8 @@ Feature: Uploading files via web form
   Scenario: Upload a file, no metadata
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
-#    And I attach the file "test_support/fixtures/world.png" to "Filedata[]"
-#    And I press "Upload"
+    And I attach the file "test_support/fixtures/image.jp2" to "generic_file_Filedata[]"
+    And I press "Upload"
 #    Then I should see "The file world.png has been saved"
 #
 #  Scenario: Upload a file, with metadata

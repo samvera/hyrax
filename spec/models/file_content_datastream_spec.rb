@@ -17,7 +17,8 @@ describe FileContentDatastream do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should have the path" do
-      @subject.fits_path.should == 'fits.sh'
+      @subject.fits_path.should_not be_nil
+      @subject.fits_path.should_not == ''
     end
   end
 
