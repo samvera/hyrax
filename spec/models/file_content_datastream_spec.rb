@@ -7,6 +7,20 @@ describe FileContentDatastream do
     @subject.stubs(:dsVersionID=>'content.7')
   end
 
+  describe "extract_metadata" do
+    it "should return an xml document" do
+      repo = mock("repo")
+      repo.stubs(:config=>{})
+      @subject.expects(:content).returns(File.new(Rails.root + 'spec/fixtures/world.png').read)
+      xml = @subject.extract_metadata
+      doc = Nokogiri::XML.parse(xml)
+      doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
+    end
+    it "should have the path" do
+      @subject.fits_path.should == 'fits.sh'
+    end
+  end
+
   describe "logs" do
     before do
       @old = ChecksumAuditLog.create(:pid=>'my_pid', :dsid=>'content', :version=>'content.0', :pass=>true, :created_at=>2.minutes.ago)
