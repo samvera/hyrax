@@ -1,7 +1,8 @@
 <tr class="document <%= cycle("even","odd") %>">
   <td>
-    <%= link_to document[:title_t], generic_file_path(document[:id]) %> 
-    <!-- document.inspect -->
+    <%#= link_to document[:title_t], generic_file_path(document[:id]) %> 
+    <%= link_to document[:label_t], generic_file_path(document[:id]) %> 
+    <%#= document.inspect %>
   </td>
   <td>
 
@@ -17,5 +18,23 @@
   </td>
   <td>
     Created
+  </td>
+</tr>
+<tr class="document detail">
+  <td colspan="6">
+    <dl>
+      <dt>Title</dd>
+      <dd>
+        <%= link_to document[:title_t], generic_file_path(document[:id]) %> 
+      </dd>
+      <dt>Creator</dd>
+      <dd>
+        <%= document[:creator_t] %> 
+      </dd>
+      <dt>Contributor</dd>
+      <dd>
+        <%= document[:contributor_t] %> 
+      </dd>
+    </dl>
   </td>
 </tr>

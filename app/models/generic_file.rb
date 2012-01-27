@@ -47,4 +47,18 @@ class GenericFile < ActiveFedora::Base
       characterization.content = content.extract_metadata
     end
   end
+  
+  def to_solr(solr_doc={})
+    super(solr_doc)
+    solr_doc["label_t"] = self.label
+    return solr_doc
+  end
+  
+  def label=(new_label)
+    @inner_object.label = new_label
+    if self.title.empty?
+      title = new_label
+    end
+  end
+  
 end

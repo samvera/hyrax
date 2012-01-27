@@ -81,4 +81,19 @@ describe GenericFile do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
   end
+  
+  describe "label" do
+    it "should set the inner label" do
+      @file.label = "My New Label"
+      @file.inner_object.label.should == "My New Label"
+    end
+    it "should set the title IF it is not already set" do
+      pending
+      @file.label = "My New Label"
+      @file.title.should == "My New Label"
+      @file.label = "My Newest Label!"
+      @file.inner_object.label.should == "My Newest Label!"
+      @file.title.should == "My New Label"
+    end
+  end
 end
