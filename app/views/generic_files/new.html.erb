@@ -1,10 +1,10 @@
 <h1>Ingest Tool</h1>
-<%= form_for @generic_file do |f| %>
+<%= form_for(@generic_file, :html => {:multipart => true}) do |f| %>
 <h2>Upload Files</h2>
 <div class="uploader-contents">
   <p>Browse to upload a file.</p>
   <!-- <input name="Filedata-orig" type="file" /> -->
-  <%= f.file_field "Filedata[]" %>
+  <%= file_field_tag "Filedata[]" %>
 </div>
 
 <h2>Metadata</h2>
