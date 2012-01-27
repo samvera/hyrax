@@ -1,10 +1,10 @@
 class GenericFilesController < ApplicationController
   
   include Hydra::Controller
-  
-  # before_filter :enforce_access_controls, :only=>[:edit, :update]
-  
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
+
+  before_filter :authenticate_user!
+  before_filter :enforce_access_controls, :only=>[:edit, :update]
   
   def new
     @generic_file = GenericFile.new 
@@ -12,7 +12,7 @@ class GenericFilesController < ApplicationController
 
   def create
     @generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
-    # apply_depositor_metadata(@generic_file)
+    apply_depositor_metadata(@generic_file)
     
     if (@generic_file.save)
       flash[:success] = "You saved #{@generic_file.title}"
