@@ -1,12 +1,14 @@
 module PSU
-  class IdService    
-    @@xdigits = Noid::XDIGIT.join
+  class IdService
+    @@minter = Noid::Minter.new(:template => '.reeddeeddk')
+    @@namespace = "id:"
     def self.valid?(identifier)
-      identifier =~ /^id:[#@@xdigits]{2}\d{2}[#@@xdigits]{2}\d{2}[#@@xdigits]$/
+      # remove the fedora namespace since it's not part of the noid
+      identifier.slice!(@@namespace)
+      @@minter.valid? identifier
     end
     def self.mint
-      minter = Noid::Minter.new(:template => '.reeddeeddk')
-      return "id:#{minter.mint}"
+      "#{@@namespace}#{@@minter.mint}"
     end    
   end
 end

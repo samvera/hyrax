@@ -11,7 +11,7 @@ gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :ref=>'8
 
 gem 'devise'
 gem 'delayed_job_active_record'
-gem 'noid'
+gem 'noid', '>0.5.2'
 
 group :development, :test do
   gem 'ruby-debug'
