@@ -34,7 +34,13 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
     render :json=>@generic_file.content.audit
   end
-  
+ 
+  def update
+    @generic_file = GenericFile.find(params[:id])
+
+  end
+
+
   protected
   # takes form file inputs and assigns meta data individually 
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields
