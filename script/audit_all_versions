@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+
+require File.expand_path(File.join(File.dirname(__FILE__), '../config/environment.rb'))
+
+#1 find all objects
+#2 for each object find all datastreams
+#3 for each datastream find all versions
+#3 for each version, see if their last audit was within the threshold, if not audit
+
+
+#ActiveFedora::RubydoraConnection.instance.connection.search(nil)
+
+def audit_everything
+  GenericFile.find(:all).each do |gf|
+    gf.datastreams.each do |dsid, ds|
+      ds.versions.each do |ver|
+        audit(ver) if needs_audit?(ver)
+      end
+    end
+  end
+end
+
+## stub method, return true if the last audit for this version is beyond the threshold, else false
+def needs_audit?(version)
+  true
+end
+
+def audit(version)
+  if version.dsChecksumValid
+    puts "Audit passed for #{version.pid} #{version.dsVersionID}"
+  else
+    puts "Audit failed for #{version.pid} #{version.dsVersionID}"
+  end
+end
+
+
+audit_everything

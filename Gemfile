@@ -4,10 +4,11 @@ gem 'rails', '~> 3.0.10'
 
 gem 'sqlite3'
 
-gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'3f37e26'
+gem 'active-fedora', :git=>'git://github.com/mediashelf/active_fedora.git', :ref=>'3a05784' #this will be released as 3.3.0
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
-gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :ref=>'8f488a8'
+gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :ref=>'8f488a8' 
+gem 'rubydora', :git=>'git://github.com/cbeer/rubydora.git', :ref=>'af1547d' # this will be released as rubydora 0.5.3
 
 gem 'devise'
 gem 'delayed_job_active_record'

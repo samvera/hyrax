@@ -38,3 +38,8 @@ Get jetty & start it
 Run the app
   
     rails server
+
+Auditing All Datastreams
+------------------------
+
+RAILS\_ENV=production script/audit\_all\_versions
