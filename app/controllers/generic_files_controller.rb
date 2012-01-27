@@ -46,6 +46,7 @@ class GenericFilesController < ApplicationController
         generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
         
         add_posted_blob_to_asset(generic_file,file)
+        apply_depositor_metadata(generic_file)
         generic_file.label = file.original_filename
         generic_file.save
         @generic_files << generic_file
@@ -56,26 +57,4 @@ class GenericFilesController < ApplicationController
     end
   end
 
-  def process_files
-    @file_assets = create_and_save_file_assets_from_params
-    notice = []
-    @file_assets.each do |file_asset|
-      apply_depositor_metadata(file_asset)
-
-      notice << render_to_string(:partial=>'file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
-        
-      if !params[:container_id].nil?
-        associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
-      end
-
-      ## Apply any posted file metadata
-      unless params[:asset].nil?
-        logger.debug("applying submitted file metadata: #{@sanitized_params.inspect}")
-        apply_file_metadata
-      end
-      # If redirect_params has not been set, use {:action=>:index}
-      logger.debug "Created #{file_asset.pid}."
-    end
-    notice
-  end
 end

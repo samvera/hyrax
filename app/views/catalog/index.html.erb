@@ -1,8 +1,4 @@
 
-<% unless has_search_parameters? %>
-	<%# if there are no input/search related params, display the "home" partial -%>
-	<%= render 'home' %>
-<% else %>
 
 	<% @page_title = application_name + " Search Results" %>
 
@@ -32,6 +28,3 @@
 	<% end %>
 
   <%= render 'results_pagination' %>
-
-<% end %>
-
