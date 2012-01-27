@@ -48,6 +48,8 @@ class GenericFilesController < ApplicationController
         add_posted_blob_to_asset(generic_file,file)
         apply_depositor_metadata(generic_file)
         generic_file.label = file.original_filename
+        # Delete this next line when GenericFile.label no longer wipes out the title
+        if params[:generic_file].has_key?(:title) then generic_file.title = params[:generic_file][:title] end
         generic_file.save
         @generic_files << generic_file
       end
