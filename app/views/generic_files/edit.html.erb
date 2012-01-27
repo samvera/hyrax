@@ -3,12 +3,15 @@
   <%= link_to "Browse view", generic_file_path %>
 </div>
 <%= form_for @generic_file do |f| %>
-<h2>Upload Files</h2>
+<h2>Upload File</h2>
 <div class="uploader-contents">
   <p>Browse to upload a file.</p>
   <!-- <input name="Filedata-orig" type="file" /> -->
   <%= f.file_field "Filedata[]" %>
 </div>
+
+<h2>Audit</h2>
+Audit status:   <%= @generic_file.content.audit.pass  %>
 
 <h2>Metadata</h2>
 <%= f.label :contributor%> <%= f.text_field :contributor %> <br />
