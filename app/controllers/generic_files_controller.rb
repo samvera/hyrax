@@ -37,15 +37,33 @@ class GenericFilesController < ApplicationController
  
   def update
     @generic_file = GenericFile.find(params[:id])
-
+    @generic_file.update_attributes(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+    flash[:notice] = "Successfully updated." 
+    if params.has_key?(:Filedata) 
+        add_posted_blob_to_asset(generic_file,params[:Filedata])
+    end 
+    render :edit 
   end
+  
+  def edit
+    @generic_file = GenericFile.find(params[:id])
+  end
+
+  def show
+    @generic_file = GenericFile.find(params[:id])
+  end
+
+  def audit
+    @generic_file = GenericFile.find(params[:id])
+    render :json=>@generic_file.content.audit
+  end
+ 
 
 
   protected
   # takes form file inputs and assigns meta data individually 
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields
   def create_and_save_generic_files_from_params
-    
     if params.has_key?(:Filedata)
       @generic_files = []
       params[:Filedata].each do |file|
