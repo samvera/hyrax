@@ -57,7 +57,7 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    active-fedora (3.2.2)
+    active-fedora (3.3.0)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
@@ -66,12 +66,12 @@ GEM
       mime-types (>= 1.16)
       multipart-post (= 1.1.2)
       nokogiri
-      om (>= 1.4.4)
+      om (>= 1.5.1)
       rdf
       rdf-rdfxml
-      rubydora (~> 0.4.1)
+      rubydora (~> 0.5.1)
       solr-ruby (>= 0.0.6)
-      solrizer (> 1.0.0)
+      solrizer (~> 1.2.0)
       xml-simple (>= 1.0.12)
     activemodel (3.0.11)
       activesupport (= 3.0.11)
@@ -184,7 +184,7 @@ GEM
     multipart-post (1.1.2)
     nokogiri (1.5.0)
     nori (1.0.2)
-    om (1.5.0)
+    om (1.5.1)
       mediashelf-loggable
       nokogiri (>= 1.4.2)
     orm_adapter (0.0.6)
@@ -241,7 +241,7 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    rubydora (0.4.1)
+    rubydora (0.5.1)
       activemodel
       activesupport
       fastercsv
@@ -266,14 +266,14 @@ GEM
       multi_json (~> 1.0.4)
       rubyzip
     solr-ruby (0.0.8)
-    solrizer (1.1.2)
+    solrizer (1.2.0)
       daemons
-      mediashelf-loggable
+      mediashelf-loggable (~> 0.4.7)
       nokogiri
-      om (>= 1.4.0)
+      om (>= 1.5.0)
       stomp
       xml-simple
-    solrizer-fedora (1.2.2)
+    solrizer-fedora (1.2.3)
       active-fedora (>= 3.1.0)
       activesupport
       fastercsv
