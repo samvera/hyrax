@@ -1,18 +1,10 @@
-#require "hydra/access_controls_enforcement"
-# Include this module into any of your Blacklight Catalog classes (ie. CatalogController) to add Hydra functionality
+# *Using this Module is not necessary if you're writing Controllers in Rails3.*  
+# In a Rails3 app, simply define regular Rails Controllers to expose the Resources & Actions you need and use Hydra::Controller to add Hydra support.
+# For search & discovery in those apps, use Blacklight and customize the "index" partials for each type of content to include links to the show/edit actions of the corresponding Controllers.
 #
-# The primary function of this module is to mix in a number of other Hydra Modules, including 
-#   Hydra::AccessControlsEnforcement
+# This Module extends Blacklight Catalog behaviors to give you a "Hydra" Catalog with edit and show behaviors on top of the Blacklight search behaviors.
+# Include this module into any of your Blacklight Catalog classes (ie. CatalogController) to add Hydra functionality.
 #
-# This module will only work if you also include Blacklight::Catalog in the Controller you're extending.
-# The hydra head rails generator will create the CatalogController for you in app/controllers/catalog_controller.rb
-# @example 
-#  require 'blacklight/catalog'
-#  require 'hydra/catalog'
-#  class CustomCatalogController < ApplicationController  
-#    include Blacklight::Catalog
-#    include Hydra::Catalog
-#  end
 module Hydra::Catalog
   
   def self.included(klass)
@@ -39,20 +31,6 @@ module Hydra::Catalog
   def delete
     show
     render "show"
-  end
-  
-  def load_fedora_document
-    af_base = ActiveFedora::Base.load_instance(params[:id])
-    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
-    unless the_model.include?(ActiveFedora::Relationships)
-      the_model.send :include, ActiveFedora::Relationships
-    end
-    unless the_model.include?(ActiveFedora::FileManagement)
-      the_model.send :include, ActiveFedora::FileManagement
-    end
-    
-    @document_fedora = af_base.adapt_to(the_model)
-    @file_assets = @document_fedora.file_objects(:response_format=>:solr)
   end
 
 end
