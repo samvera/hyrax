@@ -9,12 +9,12 @@ module Hydra::Assets
 
   included do
     helper :hydra
-    
+    include Hydra::UI::Controller
     before_filter :search_session, :history_session
     before_filter :require_solr
     before_filter :load_document, :only => :update # allows other filters to operate on the document before the update method is called
 
-    # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
+    # need to include this after the :require_solr before filters because of the before filter that the workflow provides.
     include Hydra::SubmissionWorkflow
     
     

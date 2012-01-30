@@ -19,6 +19,8 @@ module Hydra
   autoload :SubmissionWorkflow
   autoload :SuperuserAttributes
   autoload :User
+  autoload :UI
+  autoload :Workflow
 end
 
 
@@ -33,4 +35,5 @@ require 'hydra/common_mods_index_methods'
 require 'hydra/mods_article'
 require 'hydra/model_methods'
 require 'hydra/models/file_asset'
+
 

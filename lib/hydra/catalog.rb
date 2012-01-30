@@ -20,6 +20,7 @@ module Hydra::Catalog
     klass.send(:include, Hydra::AccessControlsEnforcement)
     klass.send(:include, MediaShelf::ActiveFedoraHelper)
     klass.send(:include, Hydra::RepositoryController)
+    klass.send(:include, Hydra::UI::Controller)
     
     
     # Controller filters

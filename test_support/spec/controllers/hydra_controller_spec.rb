@@ -8,9 +8,8 @@ describe Hydra::Controller do
   end
   
   it "should add the necessary helpers to classes that include it" do
+    HydraControllerTest.expects(:helper).with(:hydra)
     HydraControllerTest.expects(:helper).with(:hydra_assets)
-    HydraControllerTest.expects(:helper).with(:hydra_fedora_metadata)
-    HydraControllerTest.expects(:helper).with(:generic_content_objects)
     HydraControllerTest.stubs(:before_filter)
     HydraControllerTest.send(:include, Hydra::Controller)
   end
