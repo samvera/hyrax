@@ -6,6 +6,9 @@ describe Hydra::Controller do
     class HydraControllerTest
     end
   end
+  after :all do
+    Object.send(:remove_const, :HydraControllerTest)
+  end
 
   it "should add the necessary helpers to classes that include it" do
     HydraControllerTest.expects(:helper).with(:hydra_fedora_metadata)
