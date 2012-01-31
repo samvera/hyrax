@@ -1,3 +1,8 @@
+h3. 3.3.0
+* HYDRA-737: fixes to work with Ruby Enterprise Edition 2011.12 and ruby-1.8.7-p357.
+* Update ActiveFedora to 3.3.0
+* Separating Hydra::Controller from Hydra::UI::Controller
+
 h3. 3.2.3
 * HYDRA-736: hydra-head should not define a rake task called 'spec'
 

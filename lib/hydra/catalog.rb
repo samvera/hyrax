@@ -6,20 +6,21 @@
 # Include this module into any of your Blacklight Catalog classes (ie. CatalogController) to add Hydra functionality.
 #
 module Hydra::Catalog
+  extend ActiveSupport::Concern
   
-  def self.included(klass)
+  
+  included do
     # Other modules to auto-include
-    klass.send(:include, Hydra::Controller)
-    klass.send(:include, Hydra::UI::Controller)
-    
+    include Hydra::Controller
+    include Hydra::UI::Controller
     
     # Controller filters
     # Also see the generator (or generated CatalogController) to see more before_filters in action
-    klass.before_filter :load_fedora_document, :only=>[:show,:edit]
+    before_filter :load_fedora_document, :only=>[:show,:edit]
     
     # View Helpers
-    klass.helper :hydra_uploader
-    klass.helper :article_metadata
+    helper :hydra_uploader
+    helper :article_metadata
   end
   
   def edit
