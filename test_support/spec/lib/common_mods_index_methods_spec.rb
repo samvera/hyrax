@@ -8,10 +8,8 @@ describe Hydra::CommonModsIndexMethods do
       ma = ModsAsset.find("hydrangea:fixture_mods_article1")
       full_names = ma.datastreams["descMetadata"].extract_person_full_names
       full_names.should be_kind_of Hash
-      full_names["person_full_name_facet"].should be_kind_of Array
-      full_names["person_full_name_facet"].length.should == 2
-      full_names["person_full_name_facet"].first.should == "FAMILY NAME, GIVEN NAMES"
-      full_names["person_full_name_facet"].last.should == "Lacks, Henrietta"
+puts "Full Names: #{full_names.inspect}"
+      full_names["person_full_name_facet"].should == ["FAMILY NAME, GIVEN NAMES", "Lacks, Hennrietta"]
     end
   end
   describe "extract_person_organizations" do 
