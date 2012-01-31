@@ -19,40 +19,6 @@ module Hydra::AssetsControllerHelper
     end
   end
   
-  # 
-  # parses your params hash, massaging them into an appropriate set of params and opts to pass into ActiveFedora::Base.update_indexed_attributes
-  #
-  def prep_updater_method_args
-    logger.warn "DEPRECATED: Hydra::AssetsControllerHelper.prep_updater_method_args is deprecated.  Use/override sanitize_update_params instead."
-    args = {:params=>{}, :opts=>{}}
-    
-    params["asset"].each_pair do |datastream_name,fields|
-      
-      args[:opts][:datastreams] = datastream_name
-      
-      # TEMPORARY HACK: special case for supporting textile 
-      if params["field_id"]=="abstract_0" 
-        params[:field_selectors] = {"descMetadata" => {"abstract" => [:abstract]}}
-      end
-      
-      if params.fetch("field_selectors",false) && params["field_selectors"].fetch(datastream_name, false)
-        # If there is an entry in field_selectors for the datastream (implying a nokogiri datastream), retrieve the field_selector for this field.
-        # if no field selector, exists, use the field name
-        fields.each_pair do |field_name,field_values|
-          parent_select = OM.destringify( params["field_selectors"][datastream_name].fetch(field_name, field_name) )
-          args[:params][parent_select] = field_values       
-        end        
-      else
-        args[:params] = unescape_keys(params[:asset][datastream_name])
-      end
-    end
-    
-    @sanitized_params = args
-    return args
-     
-  end
-
-  
   # Builds a Hash that you can feed into ActiveFedora::Base.update_datstream_attributes
   # If params[:asset] is empty, returns an empty Hash
   # @return [Hash] a Hash that you can feed into ActiveFedora::Base.update_datstream_attributes
