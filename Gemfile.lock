@@ -3,7 +3,7 @@ PATH
   specs:
     hydra-head (3.2.2)
       RedCloth (= 4.2.3)
-      active-fedora (>= 3.2.2)
+      active-fedora (>= 3.3.0)
       blacklight (~> 3.1.2)
       block_helpers
       builder (= 2.1.2)

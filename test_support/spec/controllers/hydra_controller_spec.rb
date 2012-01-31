@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Hydra::Controller do
   before(:all) do
-    class HydraControllerTest
+    class HydraControllerTest < ApplicationController
     end
   end
   
@@ -30,8 +30,8 @@ describe Hydra::Controller do
       # ModsAsset.stubs(:load_instance).with("foo:id").returns( stub_mods_asset )
       # Fedora::Repository.instance.expects(:find_model).with("foo:id", ActiveFedora::Base).returns( stub_base_object )
       # Fedora::Repository.instance.expects(:find_model).with("foo:id", ModsAsset).returns( stub_mods_asset )
-      
-      controller.params[:id]='hydrangea:fixture_mods_article1'
+      controller = HydraControllerTest.new 
+      controller.expects(:params).returns({:id=>'hydrangea:fixture_mods_article1'})
       controller.load_fedora_document
       
       assigns[:document_fedora].class.should == ModsAsset 

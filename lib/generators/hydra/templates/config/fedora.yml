@@ -1,17 +1,8 @@
 development:
-  fedora:
-    url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
-  solr:
-    url: http://localhost:8983/solr/development
+  url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
 test: &TEST  
-  fedora:
-    url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
-  solr:
-    url: http://localhost:8983/solr/test
+  url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
 production:
-  fedora:
-    url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
-  solr:
-    url: http://your.production.server:8080/solr 
+  url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
 cucumber:
   <<: *TEST
