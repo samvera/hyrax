@@ -5,7 +5,10 @@ require File.expand_path( File.join( File.dirname(__FILE__),'..','spec_helper') 
 describe Hydra::CommonModsIndexMethods do
   describe "extract_person_full_names" do
     it "should return an array of Solr::Field objects for :person_full_name_facet" do
-      full_names = ModsAsset.find("hydrangea:fixture_mods_article1").datastreams["descMetadata"].extract_person_full_names
+      ma = ModsAsset.find("hydrangea:fixture_mods_article1")
+      full_names = ma.datastreams["descMetadata"].extract_person_full_names
+      puts "Full Names: #{full_names.inspect}"
+      puts "XML:  #{ma.datastreams["descMetadata"]}"
       full_names.should be_kind_of Hash
       full_names["person_full_name_facet"].should be_kind_of Array
       full_names["person_full_name_facet"].length.should == 2
