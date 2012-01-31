@@ -20,7 +20,7 @@ module Hydra::CommonModsIndexMethods
         hash[child.get_attribute(:type)] = child.text if ["family","given"].include? child.get_attribute(:type)
         hash
       end
-      ::Solrizer::Extractor.insert_solr_field_value(names,  "person_full_name_facet", [name_parts["family"], name_parts["given"]].join(", ") ) if name_parts.keys == ["family","given"]
+      ::Solrizer::Extractor.insert_solr_field_value(names,  "person_full_name_facet", [name_parts["family"], name_parts["given"]].join(", ") ) if name_parts.keys.sort == ["family","given"]
       names
     end
     return names
