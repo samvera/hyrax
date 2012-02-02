@@ -46,7 +46,7 @@ ActionController::Base.allow_rescue = false
 
 # Remove this line if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
-DatabaseCleaner.strategy = :transaction
+#DatabaseCleaner.strategy = :transaction
 
 # Stop endless errors like
 # ~/.rvm/gems/ruby-1.9.2-p0@global/gems/rack-1.2.1/lib/rack/utils.rb:16: 

@@ -1,6 +1,6 @@
-require "hydra"
-require "httparty"
-require "mime/types"
+# require "hydra"
+# require "httparty"
+# require "mime/types"
 
 module Hydra::GenericContent
   

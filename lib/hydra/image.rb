@@ -23,8 +23,8 @@
 # hi.send(:generate_derivatives)
 #
 
-require "hydra"
-require "httparty"
+# require "hydra"
+# require "httparty"
 
 module Hydra
 class Image < ActiveFedora::Base

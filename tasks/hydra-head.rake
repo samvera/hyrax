@@ -6,7 +6,6 @@ namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
-    Rake::Task["hyhead:doc"].invoke
     Rake::Task["hydra:jetty:config"].invoke
     
     require 'jettywrapper'
@@ -18,6 +17,7 @@ namespace :hyhead do
         Rake::Task['hyhead:cucumber'].invoke
     end
     raise "test failures: #{error}" if error
+    Rake::Task["hyhead:doc"].invoke
   end
 
   
