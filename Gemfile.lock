@@ -347,7 +347,7 @@ DEPENDENCIES
   rails (~> 3.0.10)
   rspec-rails (>= 2.4.0)
   ruby-debug
-  rubydora!
   ruby-prof
+  rubydora!
   solrizer-fedora (>= 1.2.2)
   sqlite3
