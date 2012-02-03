@@ -27,7 +27,7 @@ describe GenericFile do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
     end
-    it "should run when the content datastream is created" do
+    it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.characterize
       doc = Nokogiri::XML.parse(@file.characterization.content)
