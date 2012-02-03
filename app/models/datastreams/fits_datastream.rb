@@ -18,7 +18,7 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
       t.original_checksum(:path=>"md5checksum")
     }
     t.filestatus { 
-     t.well_formed(:path=>"well-formed")
+      t.well_formed(:path=>"well-formed")
       t.valid(:path=>"valid")
     }
     t.metadata {
@@ -28,6 +28,17 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
         t.page_count(:path=>"pageCount")
       }
     }
+    t.format_label(:proxy=>[:identification, :identity, :format_label])
+    t.mime_type(:proxy=>[:identification, :identity, :mime_type])
+    t.file_size(:proxy=>[:fileinfo, :file_size])
+    t.last_modified(:proxy=>[:fileinfo, :last_modified])
+    t.filename(:proxy=>[:fileinfo, :filename])
+    t.original_checksum(:proxy=>[:fileinfo, :original_checksum])
+    t.well_formed(:proxy=>[:filestatus, :well_formed])
+    t.valid(:proxy=>[:filestatus, :valid])
+    t.file_title(:proxy=>[:metadata, :document, :file_title])
+    t.file_author(:proxy=>[:metadata, :document, :file_author])
+    t.page_count(:proxy=>[:metadata, :document, :page_count])
   end
 
   def self.xml_template
