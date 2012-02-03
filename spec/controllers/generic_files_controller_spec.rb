@@ -4,6 +4,11 @@ describe GenericFilesController do
 
   describe "audit" do
     before do
+      @user = User.create(:login => "testuser", 
+                          :email => "testuser@example.com", 
+                          :password => "password",
+                          :password_confirmation => "password")
+      sign_in @user
       @generic_file = GenericFile.new
       @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @generic_file.save
