@@ -17,6 +17,7 @@ gem 'noid', '>0.5.2'
 group :development, :test do
   gem 'ruby-debug'
   gem 'rspec-rails', '>=2.4.0'
+  gem 'ruby-prof'
   gem 'mocha'
   gem 'cucumber-rails'
   gem 'database_cleaner'

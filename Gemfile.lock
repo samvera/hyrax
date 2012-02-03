@@ -274,6 +274,7 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
+    ruby-prof (0.10.8)
     rubyzip (0.9.5)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
@@ -347,5 +348,6 @@ DEPENDENCIES
   rspec-rails (>= 2.4.0)
   ruby-debug
   rubydora!
+  ruby-prof
   solrizer-fedora (>= 1.2.2)
   sqlite3
