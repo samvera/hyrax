@@ -21,6 +21,16 @@ class GenericFile < ActiveFedora::Base
   delegate :type, :to => :descMetadata
   delegate :format, :to => :descMetadata
   delegate :identifier, :to => :descMetadata
+  delegate :format_label, :to => :characterization
+  delegate :mime_type, :to => :characterization
+  delegate :file_size, :to => :characterization
+  delegate :last_modified, :to => :characterization
+  delegate :filename, :to => :characterization
+  delegate :original_checksum, :to => :characterization
+  delegate :well_formed, :to => :characterization
+  delegate :file_title, :to => :characterization
+  delegate :file_author, :to => :characterization
+  delegate :page_count, :to => :characterization
 
   before_save :characterize
 
