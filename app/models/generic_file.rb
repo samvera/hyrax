@@ -8,6 +8,8 @@ class GenericFile < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => ActiveFedora::DCRDFDatastream
   has_file_datastream :type => FileContentDatastream
 
+  belongs_to :collection, :property => "is_part_of"
+
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :title, :to => :descMetadata
