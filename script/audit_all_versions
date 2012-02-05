@@ -12,6 +12,19 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../config/environmen
 
 #ActiveFedora::RubydoraConnection.instance.connection.search(nil)
 
+@@audit_log = nil
+
+def get_or_create_audit_log(version)
+  begin
+    @@audit_log = ChecksumAuditLog.find_by_pid(version.pid).
+      find_by_dsid(version.dsid).find_by_version(version.versionID)
+  rescue NoMethodError
+    @@audit_log = ChecksumAuditLog.new(:pid => version.pid,
+                                     :dsid => version.dsid,
+                                     :version => version.versionID)
+  end
+end
+
 def audit_everything
   GenericFile.find(:all).each do |gf|
     gf.datastreams.each do |dsid, ds|
@@ -24,15 +37,24 @@ end
 
 ## stub method, return true if the last audit for this version is beyond the threshold, else false
 def needs_audit?(version)
+  if @@audit_log and @@audit_log.updated_at
+    # TODO:  compare updated_at to current time & make a call
+    #return false
+    true
+  end
   true
 end
 
 def audit(version)
+  get_or_create_audit_log(version)
   if version.dsChecksumValid
     puts "Audit passed for #{version.pid} #{version.dsVersionID}"
+    @@audit_log.pass = true
   else
     puts "Audit failed for #{version.pid} #{version.dsVersionID}"
+    @@audit_log.pass = false
   end
+  @@audit_log.save
 end
 
 
