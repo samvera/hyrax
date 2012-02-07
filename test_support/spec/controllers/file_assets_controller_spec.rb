@@ -172,9 +172,8 @@ describe FileAssetsController do
       end
 
       it "should set is_part_of relationship on the new File Asset pointing back at the container" do
-        test_file = fixture("small_file.txt")
+        test_file = fixture_file_upload('/small_file.txt', 'text/plain')
         filename = "My File Name"
-        test_file.expects(:original_filename).twice.returns("My File Name")
         post :create, {:Filedata=>[test_file], :Filename=>filename, :container_id=>@test_container.pid}
         assigns(:file_asset).ids_for_outbound(:is_part_of).should == [@test_container.pid] 
         retrieved_fa = FileAsset.load_instance(@test_fa.pid).ids_for_outbound(:is_part_of).should == [@test_container.pid]

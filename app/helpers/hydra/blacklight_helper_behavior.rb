@@ -45,7 +45,7 @@ module Hydra
         label = doc[:id]
       end
       
-      link_to_with_data(label, catalog_path(doc[:id]), {:method => :put, :data => {:counter => opts[:counter]},:title=>opts[:title]})
+      link_to(label, catalog_path(doc[:id]), :method => :put, :'data-counter' => opts[:counter], :title=>opts[:title])
     end
 
     # currently only used by the render_document_partial helper method (below)
