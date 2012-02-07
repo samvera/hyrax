@@ -1,13 +1,12 @@
 require "blacklight"
 # Hydra libraries
 module Hydra
-  extend Blacklight::Configurable
+  extend Blacklight::GlobalConfigurable
   extend ActiveSupport::Autoload
   autoload :AccessControlsEvaluation
   autoload :AccessControlsEnforcement
   autoload :Assets
   autoload :Catalog
-  autoload :Configurable, 'blacklight/configurable'
   autoload :Controller
   autoload :FileAssets
   autoload :GenericContent
