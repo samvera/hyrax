@@ -1,7 +1,6 @@
 <%- if params.has_key?(:add_permission) -%>
-  <%#= render :partial=>"permissions/new.html", :locals=>{:asset_id=>asset_id} %>
   <%= form_tag({:controller=>"permissions", :action=> "create", :asset_id=>params[:id]}, :class => "step") do -%>
-    <%= render :partial=>"permissions/new.html" %>
+    <%= render :partial=>"permissions/new" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
     <%= hidden_field_tag(:new_asset, true, :id => "permission_new_asset") if params[:new_asset] %>

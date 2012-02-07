@@ -42,5 +42,5 @@
           <% choice_name = choice.values.first %>
           <% individual_permissions[choice_name] = get_values_from_datastream(@document_fedora,"rightsMetadata", ["#{choice_name}_access".to_sym, :person]) %>
         <% end %>
-        <%= render :partial=>"permissions/edit_person_permissions.html", :collection=>@document_fedora.datastreams["rightsMetadata"].find_by_terms(:access, :person) %>
+        <%= render :partial=>"permissions/edit_person_permissions", :collection=>@document_fedora.datastreams["rightsMetadata"].find_by_terms(:access, :person) %>
   </fieldset>
