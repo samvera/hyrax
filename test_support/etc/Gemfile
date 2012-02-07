@@ -3,13 +3,13 @@
 
 source 'http://rubygems.org'
 
-gem "rails", '< 3.1'
+gem "rails", '~> 3.2.1'
 
-gem 'sqlite3-ruby', '~>1.2.5', :require => 'sqlite3'
-#gem 'sqlite3-ruby', :require => 'sqlite3'
+#gem 'sqlite3-ruby', '~>1.2.5', :require => 'sqlite3'
+gem 'sqlite3-ruby', :require => 'sqlite3'
 #gem 'sqlite3'
 
-gem 'blacklight', '~>3.1.2'
+gem 'blacklight', '~> 3.2.2'
 gem 'hydra-head', :path => '../../'
 gem 'devise'
 gem 'jettywrapper'
@@ -17,14 +17,21 @@ gem 'jettywrapper'
 # For testing
 group :development, :test do 
        gem 'solrizer-fedora', '>=1.2.0'
-       gem 'ruby-debug'
        gem 'rspec'
-       gem 'rspec-rails', '>=2.5.0'
+       gem 'rspec-rails', '>=2.8.0'
        gem 'mocha'
        gem 'cucumber-rails'
        gem 'capybara'
        gem 'factory_girl'
-       gem 'bcrypt-ruby'
+#       gem 'bcrypt-ruby'
        gem 'rest-client'
+end
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~> 3.2.4'
+  gem 'coffee-rails', '~> 3.2.2'
+  gem 'uglifier', '>= 1.2.3'
 end
 
