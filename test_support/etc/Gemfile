@@ -12,7 +12,6 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 #gem 'blacklight'#, '~> 3.2.2'
 gem 'blacklight', :git=>'git://github.com/projectblacklight/blacklight.git'
 
-
 gem 'hydra-head', :path => '../../'
 gem 'devise'
 gem 'jettywrapper'
