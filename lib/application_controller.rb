@@ -8,18 +8,17 @@ module HydraHead
       before_filter :method_for_before_filtering
     end
 
-    module InstanceMethods
-      def method_for_before_filtering
-        #puts "Filtering before" 
-      end
+    def method_for_before_filtering
+      #puts "Filtering before" 
+    end
 
-      def method_not_a_filter
-        puts "not used as a filter"
-      end
+    def method_not_a_filter
+      puts "not used as a filter"
     end
   end
 end
 
+#TODO this seems bad
 ::ActionController::Base.send :include, HydraHead::Controller
 
 
