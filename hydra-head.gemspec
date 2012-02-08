@@ -20,6 +20,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'solrizer-fedora', '>=1.2.2'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
+  s.add_dependency 'om', '=1.5.2' #TODO put this in ActiveFedora & solrizer-fedora
+
   
   s.add_development_dependency 'sqlite3-ruby'
 
