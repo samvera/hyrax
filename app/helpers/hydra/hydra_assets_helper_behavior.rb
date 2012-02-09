@@ -9,7 +9,7 @@ module Hydra::HydraAssetsHelperBehavior
   # @param [String] content_type 
   def link_to_create_asset(link_label, content_type)
     if current_user
-      link_to link_label, {:action => 'new', :controller => 'assets', :content_type => content_type}, :class=>"create_asset"
+      link_to link_label, new_hydra_asset_path( :content_type => content_type), :class=>"create_asset"
     else      
       link_to link_label, new_user_session_path(:redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}), :class=>"create_asset"
     end

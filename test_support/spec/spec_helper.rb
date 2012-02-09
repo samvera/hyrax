@@ -11,6 +11,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../../../tmp/test_app", __FILE__))
 require 'rspec/rails'
 
+require File.expand_path(File.dirname(__FILE__) +'/factories')
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 # Blacklight, again, make sure we're looking in the right place for em. 
@@ -28,6 +30,8 @@ RSpec.configure do |config|
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = File.expand_path(File.dirname(__FILE__) + '/../fixtures')
+
+  config.include Devise::TestHelpers, :type => :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

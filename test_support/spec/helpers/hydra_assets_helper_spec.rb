@@ -6,7 +6,7 @@ describe HydraAssetsHelper do
   describe "link_to_create_asset" do
     it "should generate login links with redirect params if user is not logged in" do
       helper.expects(:current_user).returns User.new
-      helper.link_to_create_asset("Create a foo", "foo_model").should == "<a href=\"/assets/new?content_type=foo_model\" class=\"create_asset\">Create a foo</a>"
+      helper.link_to_create_asset("Create a foo", "foo_model").should == "<a href=\"/hydra/assets/new?content_type=foo_model\" class=\"create_asset\">Create a foo</a>"
     end
     it "should generate login links with redirect params if user is not logged in" do
       helper.expects(:current_user).returns false

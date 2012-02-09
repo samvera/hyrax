@@ -1,6 +1,6 @@
 <div id="delete_dialog_container" style="display:none;">
 	<div id="delete_dialog">
-    <%= form_tag(url_for(:action => "destroy", :controller => "assets", :id => pid, :method => "delete")) %>
+    <%= form_tag(url_for(:action => "destroy", :controller => "hydra/assets", :id => pid, :method => "delete")) %>
       <div>
         <span>Permanently delete <%= title %> and its assets from the repository?</span><br/>
         <div id="deletable_assets"></div>

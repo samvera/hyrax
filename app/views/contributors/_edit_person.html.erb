@@ -33,7 +33,7 @@
 
       <% if ( (person_counter > 0) && (params[:action] == "edit" || params[:action] == "create")) %>
         <p class="delete-person"><%#= field_selectors_for("descMetadata", [{:person=>person_counter}]) %>
-          <%= link_to("Delete", asset_connect_path(:asset_id=>@document_fedora.pid, :contributor_type=>"person", :index=>person_counter, :content_type=>af_model), :title=>"Delete #{person_name}", :class=>"destructive destroy_contributor") %>
+          <%= link_to("Delete", hydra_asset_connect_path(:asset_id=>@document_fedora.pid, :contributor_type=>"person", :index=>person_counter, :content_type=>af_model), :title=>"Delete #{person_name}", :class=>"destructive destroy_contributor") %>
         </p>
       <% end %>
   </fieldset>

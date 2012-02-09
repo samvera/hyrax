@@ -82,17 +82,18 @@ module Hydra::Assets
   
   def new
     af_model = retrieve_af_model(params[:content_type])
-    if af_model
-      @asset = af_model.new
-      apply_depositor_metadata(@asset)
-      set_collection_type(@asset, params[:content_type])
-      @asset.save
-      model_display_name = af_model.to_s.camelize.scan(/[A-Z][^A-Z]*/).join(" ")
-      msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
-      flash[:notice]= msg
-    end
+    raise "Can't find a model for #{params[:content_type]}" unless af_model
+    @asset = af_model.new
+    apply_depositor_metadata(@asset)
+    set_collection_type(@asset, params[:content_type])
+    @asset.save
+    model_display_name = af_model.to_s.camelize.scan(/[A-Z][^A-Z]*/).join(" ")
+    msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
+    flash[:notice]= msg
     session[:scripts] = params[:combined] == "true"
-    redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid, :new_asset=>true)
+puts "FLASH BEFORE" + flash.inspect
+
+    redirect_to edit_catalog_path(@asset.pid, :new_asset=>true)
   end
   
   def destroy
