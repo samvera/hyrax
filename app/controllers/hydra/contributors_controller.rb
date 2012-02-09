@@ -1,6 +1,6 @@
 require 'mediashelf/active_fedora_helper'
 
-class ContributorsController < ApplicationController
+class Hydra::ContributorsController < ApplicationController
   
   include MediaShelf::ActiveFedoraHelper
   include Hydra::RepositoryController

@@ -8,14 +8,28 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 # or
 # rake cucumber
 
-describe AssetsController do
+describe Hydra::AssetsController do
   
   before do
     request.env['WEBAUTH_USER']='bob'
   end
   
   it "should use DocumentController" do
-    controller.should be_an_instance_of(AssetsController)
+    controller.should be_an_instance_of(Hydra::AssetsController)
+  end
+
+  describe "new" do
+    before do
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      @asset = ModsAsset.new
+      ModsAsset.stubs(:new).returns(@asset)
+    end
+    it "should create and redirect with a flash message" do
+      get :new, :content_type=>'mods_asset'
+      response.should redirect_to edit_catalog_path(@asset, :new_asset=>true)
+      flash[:notice].should == "Created a Mods Asset with pid #{@asset.pid}. Now it's ready to be edited."
+    end
   end
   
   describe "update" do

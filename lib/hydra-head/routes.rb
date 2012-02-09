@@ -34,21 +34,23 @@ module HydraHead
         add_routes do |options|
           resources :file_assets
           match "withdraw", :to => "assets#withdraw", :as => "withdraw"   
-          resources :assets do 
-            # this is to remove documents from SOLR but not from Fedora.
-            resources :contributors, :only=>[:new,:create]
-            match '/contributors', :to => 'contributors#update', :as => 'update_contributors'
-            # We would need to include the rails JS files (or implement our own) if we want this to work w/ DELETE because we delete from a link not a button.
-            #match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
-            match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect'
-            # There is no ContributorsController#show
-            match 'contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'contributor', :via => 'get'
-            resources :file_assets
-            resources :downloads, :only=>[:index]
-            resources :grants, :only=>[:new,:create]
-            resources :permissions
-            # Allow updates to assets/:asset_id/permissions (no :id necessary)
-            match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'            
+          namespace :hydra do
+            resources :assets do 
+              # this is to remove documents from SOLR but not from Fedora.
+              resources :contributors, :only=>[:new,:create]
+              match '/contributors', :to => 'contributors#update', :as => 'update_contributors'
+              # We would need to include the rails JS files (or implement our own) if we want this to work w/ DELETE because we delete from a link not a button.
+              #match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
+              match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect'
+              # There is no ContributorsController#show
+              match 'contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'contributor', :via => 'get'
+              resources :file_assets
+              resources :downloads, :only=>[:index]
+              resources :grants, :only=>[:new,:create]
+              resources :permissions
+              # Allow updates to assets/:asset_id/permissions (no :id necessary)
+              match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'            
+            end
           end
           match "generic_contents_object/content/:container_id", :to=>"generic_content_objects#create", :as=>'generic_content_object',  :via => 'post'            
         end
