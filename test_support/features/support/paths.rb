@@ -39,29 +39,29 @@ module NavigationHelpers
       delete_catalog_path($1)
       
     when /the file (?:asset )?list page for (.*)$/i
-      asset_file_assets_path($1)
+      hydra_asset_file_assets_path($1)
     when /the file asset creation page for (.*)$/i
-      asset_file_assets_path($1)
+      hydra_asset_file_assets_path($1)
     when /the deletable file list page for (.*)/i
-      asset_file_assets_path($1, :deletable=>"true",:layout=>"false")
+      hydra_asset_file_assets_path($1, :deletable=>"true",:layout=>"false")
     when /the file asset (.*) with (.*) as its container$/i
-      asset_file_asset_path($2, $1)
+      hydra_asset_file_asset_path($2, $1)
     when /the file asset (.*)$/i
       file_asset_path($1)
     when /the permissions page for (.*)$/i
-      asset_permissions_path($1)
+      hydra_asset_permissions_path($1)
     
     when /new (.*) page$/i
-      new_asset_path(:content_type => $1)
+      new_hydra_asset_path(:content_type => $1)
     when /the asset (.*)$/i
-      asset_path($1)
+      hydra_asset_path($1)
     when /show asset page for (.*)$/i
-      asset_path($1)
+      hydra_asset_path($1)
 
       
     when /the (\d+)(?:st|nd|rd|th) (person|organization|conference) entry in (.*)$/i
       # contributor_id = "#{$2}_#{$1.to_i-1}"
-      asset_contributor_path($3, $2, $1.to_i-1, :content_type=>"mods_asset")
+      hydra_asset_contributor_path($3, $2, $1.to_i-1, :content_type=>"mods_asset")
     
     when /the edit (.*) page for (.*)$/i
       edit_catalog_path($2,:wf_step=>$1)

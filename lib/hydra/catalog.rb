@@ -24,6 +24,7 @@ module Hydra::Catalog
   end
   
   def edit
+puts "FLASH " + flash.inspect
     show
     render "show"
   end
