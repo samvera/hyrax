@@ -56,9 +56,9 @@ module Hydra::FileAssets
   # * the method will redirect to the container object's edit view after saving
   def create
     if params.has_key?(:number_of_files) and params[:number_of_files] != "0"
-      return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :files, :number_of_files => params[:number_of_files]})
+      return redirect_to edit_catalog_path(params[:id], :wf_step => :files, :number_of_files => params[:number_of_files])
     elsif params.has_key?(:number_of_files) and params[:number_of_files] == "0"
-      return redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
+      return redirect_to edit_catalog_path(params[:id], params_for_next_step_in_wokflow)
     end
     
     if params.has_key?(:Filedata)
@@ -68,12 +68,12 @@ module Hydra::FileAssets
       flash[:notice] = "You must specify a file to upload."
     end
     
-    unless params[:container_id].nil?
-      redirect_params = {:controller => "catalog", :action => "edit", :id => params[:container_id]}.merge(params_for_next_step_in_wokflow)
+    if params[:container_id]
+      redirect_to edit_catalog_path(params[:container_id], params_for_next_step_in_wokflow)
+    else
+      redirect_to catalog_index_path
     end
-    redirect_params ||= {:controller => "catalog", :action => "index"}
-    
-    redirect_to redirect_params
+
   end
 
   def process_files

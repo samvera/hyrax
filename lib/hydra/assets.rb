@@ -42,7 +42,7 @@ module Hydra::Assets
         format.textile  { render :text=> RedCloth.new(result, [:sanitize_html]).to_html  }
       end
     else
-      redirect_to :controller=>"catalog", :action=>"show"
+      redirect_to show_catalog_path(params[:id])
     end
   end
   
@@ -62,11 +62,12 @@ module Hydra::Assets
     @document.save
     flash[:notice] = "Your changes have been saved."
     
-    logger.debug("returning #{@response.inspect}")
+    #logger.debug("returning #{@response.inspect}")
     
     respond_to do |want| 
       want.html {
-        redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
+puts "redirecting to #{ edit_catalog_path(params[:id], params_for_next_step_in_wokflow)}"
+        redirect_to edit_catalog_path(params[:id], params_for_next_step_in_wokflow)
       }
       want.js {
         render :json=> tidy_response_from_update(@response)  
@@ -107,7 +108,7 @@ puts "FLASH BEFORE" + flash.inspect
     msg = "Deleted #{params[:id]}"
     msg.concat(" and associated file_asset(s): #{assets.join(", ")}") unless assets.empty?
     flash[:notice]= msg
-    redirect_to url_for(:action => 'index', :controller => "catalog", :q => nil , :f => nil)
+    redirect_to catalog_index_path()
   end
 
   
