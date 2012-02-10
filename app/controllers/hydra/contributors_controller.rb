@@ -36,7 +36,9 @@ class Hydra::ContributorsController < ApplicationController
     @document_fedora.save
     partial_name = "contributors/edit_#{ct}.html"
     respond_to do |format|
-      format.html { redirect_to( url_for(:controller=>"catalog", :action=>"edit", :id=>params[:asset_id] )+"##{params[:contributor_type]}_#{new_node_index}" ) }
+      format.html { 
+        redirect_to edit_catalog_path(params[:asset_id], :anchor=>"##{params[:contributor_type]}_#{new_node_index}")
+      }
       format.inline { render :partial=>partial_name, :locals=>{"edit_#{ct}".to_sym =>inserted_node, "edit_#{ct}_counter".to_sym =>new_node_index}, :layout=>false }
     end
     
@@ -54,9 +56,9 @@ class Hydra::ContributorsController < ApplicationController
     @document.save
     flash[:notice] = "Your changes have been saved."
     if params.has_key? :add_another_author
-      redirect_to({:controller => "catalog", :action => "edit", :id => params[:asset_id], :wf_step => :contributor, :add_contributor => true}) 
+      redirect_to edit_catalog_path(params[:asset_id], :wf_step => :contributor, :add_contributor => true)
     else
-      redirect_to( {:controller => "catalog", :action => "edit", :id => params[:asset_id]}.merge(params_for_next_step_in_wokflow) )
+      redirect_to edit_catalog_path(params[:asset_id], params_for_next_step_in_wokflow)
     end
   end
   
@@ -68,7 +70,7 @@ class Hydra::ContributorsController < ApplicationController
     if request.xhr?
       render :text=>result.inspect
     else
-      redirect_to({:controller => "catalog", :action => "edit", :id => params[:asset_id], :wf_step => :contributor})
+      redirect_to edit_catalog_path(params[:asset_id], :wf_step => :contributor)
     end
   end
   
