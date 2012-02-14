@@ -7,18 +7,14 @@ describe Hydra::FileAssetsController do
     session[:user]='bob'
   end
 
-  ## Plugin Tests
-  it "should use FileAssetsController" do
-    controller.should be_an_instance_of(FileAssetsController)
-  end
   it "should be restful" do
-    { :get => "/file_assets" }.should route_to(:controller=>'file_assets', :action=>'index')
-    { :get => "/file_assets/3" }.should route_to(:controller=>'file_assets', :action=>'show', :id=>"3")
-    { :delete=> "/file_assets/3" }.should route_to(:controller=>'file_assets', :action=>'destroy', :id=>"3")
-    { :put=>"/file_assets/3" }.should route_to(:controller=>'file_assets', :action=>'update', :id=>"3")
-    { :get => "/file_assets/3/edit" }.should route_to(:controller=>'file_assets', :action=>'edit', :id=>"3")
-    { :get =>"/file_assets/new" }.should route_to(:controller=>'file_assets', :action=>'new')
-    { :post => "/file_assets" }.should route_to(:controller=>'file_assets', :action=>'create')
+    { :get => "/hydra/file_assets" }.should route_to(:controller=>'hydra/file_assets', :action=>'index')
+    { :get => "/hydra/file_assets/3" }.should route_to(:controller=>'hydra/file_assets', :action=>'show', :id=>"3")
+    { :delete=> "/hydra/file_assets/3" }.should route_to(:controller=>'hydra/file_assets', :action=>'destroy', :id=>"3")
+    { :put=>"/hydra/file_assets/3" }.should route_to(:controller=>'hydra/file_assets', :action=>'update', :id=>"3")
+    { :get => "/hydra/file_assets/3/edit" }.should route_to(:controller=>'hydra/file_assets', :action=>'edit', :id=>"3")
+    { :get =>"/hydra/file_assets/new" }.should route_to(:controller=>'hydra/file_assets', :action=>'new')
+    { :post => "/hydra/file_assets" }.should route_to(:controller=>'hydra/file_assets', :action=>'create')
     
   end
   
@@ -106,7 +102,7 @@ describe Hydra::FileAssetsController do
     it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
       controller.expects(:model_config).at_least_once.returns(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
-      response.should redirect_to(:controller=>"catalog", :id=>"_PID_", :action => 'edit', :wf_step=>"permissions")
+      response.should redirect_to edit_catalog_path("_PID_", :wf_step=>"permissions")
       request.flash[:notice].should == "You must specify a file to upload."
     end
     it "should display a message that you need to select a file to upload if no Filedata is provided" do
