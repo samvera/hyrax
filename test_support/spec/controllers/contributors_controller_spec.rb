@@ -8,7 +8,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 # or
 # rake cucumber
 
-describe ContributorsController do
+describe Hydra::ContributorsController do
   
   describe "create" do
     it "should support adding new person / contributor / organization nodes" do
