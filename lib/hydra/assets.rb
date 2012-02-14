@@ -92,7 +92,6 @@ puts "redirecting to #{ edit_catalog_path(params[:id], params_for_next_step_in_w
     msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
     flash[:notice]= msg
     session[:scripts] = params[:combined] == "true"
-puts "FLASH BEFORE" + flash.inspect
 
     redirect_to edit_catalog_path(@asset.pid, :new_asset=>true)
   end

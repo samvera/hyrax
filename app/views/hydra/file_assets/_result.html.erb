@@ -1,6 +1,6 @@
 <tr class="file_asset" id ="assets_<%= format_pid(result["id"]) %>" >  
   <td>
-    <%= link_to result[solr_name("title", :text)], file_asset_path(result["id"]) %>
+    <%= link_to result[solr_name("title", :text)], hydra_file_asset_path(result["id"]) %>
   </td>
   <td>
 	
