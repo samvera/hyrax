@@ -37,7 +37,7 @@ class Hydra::ContributorsController < ApplicationController
     partial_name = "contributors/edit_#{ct}.html"
     respond_to do |format|
       format.html { 
-        redirect_to edit_catalog_path(params[:asset_id], :anchor=>"##{params[:contributor_type]}_#{new_node_index}")
+        redirect_to edit_catalog_path(params[:asset_id], :anchor=>"#{params[:contributor_type]}_#{new_node_index}")
       }
       format.inline { render :partial=>partial_name, :locals=>{"edit_#{ct}".to_sym =>inserted_node, "edit_#{ct}_counter".to_sym =>new_node_index}, :layout=>false }
     end

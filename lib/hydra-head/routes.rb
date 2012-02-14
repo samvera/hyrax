@@ -32,9 +32,9 @@ module HydraHead
 
       def assets_with_all_nested_routes
         add_routes do |options|
-          resources :file_assets
           match "withdraw", :to => "assets#withdraw", :as => "withdraw"   
           namespace :hydra do
+            resources :file_assets
             resources :assets do 
               # this is to remove documents from SOLR but not from Fedora.
               resources :contributors, :only=>[:new,:create]
