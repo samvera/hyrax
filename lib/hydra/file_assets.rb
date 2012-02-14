@@ -82,7 +82,7 @@ module Hydra::FileAssets
     @file_assets.each do |file_asset|
       apply_depositor_metadata(file_asset)
 
-      notice << render_to_string(:partial=>'file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
+      notice << render_to_string(:partial=>'hydra/file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
         
       if !params[:container_id].nil?
         associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
