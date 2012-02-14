@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe FileAssetsController do
+describe Hydra::FileAssetsController do
   include Devise::TestHelpers
 
   before do
