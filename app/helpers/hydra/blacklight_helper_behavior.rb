@@ -34,29 +34,20 @@ module Hydra
 
     # currently only used by the render_document_partial helper method (below)
     def document_partial_name(document)
-      return if document[Blacklight.config[:show][:display_type]].nil?
-      document[Blacklight.config[:show][:display_type]].first.gsub(/^[^\/]+\/[^:]+:/,"").underscore.pluralize
+      display_type = document[blacklight_config.show.display_type]
+
+      return 'default' unless display_type 
+
+      display_type.first.gsub(/^[^\/]+\/[^:]+:/,"").underscore.pluralize
     end
-    
-    # Overriding Blacklight's render_document_partial
-    # given a doc and action_name, this method attempts to render a partial template
-    # based on the value of doc[:format]
-    # if this value is blank (nil/empty) the "default" is used
-    # if the partial is not found, the "default" partial is rendered instead
-    def render_document_partial(doc, action_name, locals={})
-      format = document_partial_name(doc)
-      begin
-        Rails.logger.debug("attempting to render #{format}/_#{action_name}")
-        render :partial=>"#{format}/#{action_name}", :locals=>{:document=>doc}.merge(locals)
-      rescue ActionView::MissingTemplate
-        Rails.logger.debug("rendering default partial catalog/_#{action_name}_partials/default")
-        render :partial=>"catalog/_#{action_name}_partials/default", :locals=>{:document=>doc}.merge(locals)
-      end
+
+    def document_partial_path_templates
+      ["%2$s/%1$s"] + super
     end
     
     # Removing the [remove] link from the default selected facet display
     def render_selected_facet_value(facet_solr_field, item)
-      content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected")
+      content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected label")
     end
 
     
@@ -66,10 +57,10 @@ module Hydra
     
     def render_facet_value(facet_solr_field, item, options ={})
       if item.is_a? Array
-        link_to_unless(options[:suppress_link], item[0], add_facet_params_and_redirect(facet_solr_field, item[0]), :class=>"facet_select") + " (" + format_num(item[1]) + ")" 
-      else
-        link_to_unless(options[:suppress_link], item.value, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" 
+        return link_to_unless(options[:suppress_link], item[0], add_facet_params_and_redirect(facet_solr_field, item[0]), :class=>"facet_select") + " (" + format_num(item[1]) + ")" 
       end
+
+      super
     end
 
     def render_complex_facet_value(facet_solr_field, item, options ={})    
@@ -160,23 +151,10 @@ module Hydra
     # Change the action to 'index' to send them back to
     # catalog/index with their new facet choice. 
     def add_facet_params_and_redirect(field, value)
-      new_params = add_facet_params(field, value)
-
-      # Delete page, if needed. 
-      new_params.delete(:page)
+      new_params = super
 
       # Delete :qt, if needed - added to resolve NPE errors
       new_params.delete(:qt)
-
-      # Delete any request params from facet-specific action, needed
-      # to redir to index action properly. 
-      Blacklight::Solr::FacetPaginator.request_keys.values.each do |paginator_key| 
-        new_params.delete(paginator_key)
-      end
-      new_params.delete(:id)
-
-      # Force action to be index. 
-      new_params[:action] = "index"
 
       new_params
     end
