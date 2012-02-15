@@ -22,8 +22,8 @@ module Hydra::HydraAssetsHelperBehavior
   end
 
   def document_type(document)
-    if (document[Blacklight.config[:show][:display_type]]) 
-      document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","")
+    if (document[blacklight_config.show.display_type]) 
+      document[blacklight_config.show.display_type].first.gsub("info:fedora/afmodel:","")
     else ""
     end
   end
