@@ -1,14 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-
-# See cucumber tests (ie. /features/edit_document.feature) for more tests, including ones that test the edit method & view
-# You can run the cucumber tests with 
-#
-# cucumber --tags @edit
-# or
-# rake cucumber
-
-describe PermissionsController do
+describe Hydra::PermissionsController do
   describe "create" do
     it "should create a new permissions entry" do
       stub_solrizer = stub("solrizer", :solrize)
