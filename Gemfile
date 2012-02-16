@@ -8,11 +8,10 @@ gem 'active-fedora', '~>3.3.0'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.3.0'
-gem 'rubydora', :git=>'git://github.com/cbeer/rubydora.git', :ref=>'af1547d' 
+#gem 'rubydora', :git=>'git://github.com/cbeer/rubydora.git', :ref=>'af1547d' 
 # this will be released as rubydora 0.5.3, available by 2/13, at which
 # time, replace with the following line
-#gem 'rubydora', '~>0.5.3'
-
+gem 'rubydora', '~>0.5.2'
 
 gem 'devise'
 gem 'delayed_job_active_record'

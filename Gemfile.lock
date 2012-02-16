@@ -1,17 +1,3 @@
-GIT
-  remote: git://github.com/cbeer/rubydora.git
-  revision: af1547d98e5ad80da1e7252447ec423da598b7f5
-  ref: af1547d
-  specs:
-    rubydora (0.5.1)
-      activemodel
-      activesupport
-      fastercsv
-      mime-types
-      nokogiri
-      rest-client
-      savon
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -263,10 +249,18 @@ GEM
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
     ruby-prof (0.10.8)
+    rubydora (0.5.2)
+      activemodel
+      activesupport
+      fastercsv
+      mime-types
+      nokogiri
+      rest-client
+      savon
     rubyzip (0.9.5)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
-    savon (0.9.7)
+    savon (0.9.8)
       akami (~> 1.0)
       builder (>= 2.1.2)
       gyoku (>= 0.4.0)
@@ -336,6 +330,6 @@ DEPENDENCIES
   rspec-rails (>= 2.4.0)
   ruby-debug
   ruby-prof
-  rubydora!
+  rubydora (~> 0.5.2)
   solrizer-fedora (>= 1.2.2)
   sqlite3
