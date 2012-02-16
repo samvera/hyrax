@@ -26,29 +26,29 @@ class HeadGenerator < Rails::Generators::Base
          
   # Copy all files in templates/config directory to host config
   def create_configuration_files
+    #CatalogController
+    copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
+
     # Initializers
-   copy_file "config/initializers/hydra_config.rb", "config/initializers/hydra_config.rb"
-   copy_file "config/initializers/blacklight_config.rb", "config/initializers/blacklight_config.rb"
-   copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
+    copy_file "config/initializers/hydra_config.rb", "config/initializers/hydra_config.rb"
+    copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
 
-   # Role Mappings
-   copy_file "config/role_map_cucumber.yml", "config/role_map_cucumber.yml"
-   copy_file "config/role_map_development.yml", "config/role_map_development.yml"
-   copy_file "config/role_map_production.yml", "config/role_map_production.yml"
-   copy_file "config/role_map_test.yml", "config/role_map_test.yml"
+    # Role Mappings
+    copy_file "config/role_map_cucumber.yml", "config/role_map_cucumber.yml"
+    copy_file "config/role_map_development.yml", "config/role_map_development.yml"
+    copy_file "config/role_map_production.yml", "config/role_map_production.yml"
+    copy_file "config/role_map_test.yml", "config/role_map_test.yml"
    
-   # Solr Mappings
-   copy_file "config/solr_mappings.yml", "config/solr_mappings.yml"
+    # Solr Mappings
+    copy_file "config/solr_mappings.yml", "config/solr_mappings.yml"
 
-   # Fedora & Solr YAML files
-   copy_file "config/fedora.yml", "config/fedora.yml"
-   copy_file "config/solr.yml", "config/solr.yml"
+    # Fedora & Solr YAML files
+    copy_file "config/fedora.yml", "config/fedora.yml"
+    copy_file "config/solr.yml", "config/solr.yml"
    
-   # Fedora & Solr Config files
-   directory "fedora_conf"
-   directory "solr_conf"
-   # directory "../../../../fedora_conf", "fedora_conf"
-   # directory "../../../../solr_conf", "solr_conf"
+    # Fedora & Solr Config files
+    directory "fedora_conf"
+    directory "solr_conf"
   end
   
   # Register mimetypes required by hydra-head

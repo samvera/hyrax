@@ -1,6 +1,6 @@
 <%- if params.has_key?(:add_permission) -%>
-  <%= form_tag({:controller=>"permissions", :action=> "create", :asset_id=>params[:id]}, :class => "step") do -%>
-    <%= render :partial=>"permissions/new" %>
+  <%= form_tag({:controller=>"hydra/permissions", :action=> "create", :asset_id=>params[:id]}, :class => "step") do -%>
+    <%= render :partial=>"hydra/permissions/new" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
     <%= hidden_field_tag(:new_asset, true, :id => "permission_new_asset") if params[:new_asset] %>
@@ -11,8 +11,8 @@
     <% end %>
   <%- end -%>
 <%- else -%>
-  <%= form_tag({:controller=>"permissions", :action => "update"}, :id => "permissions_metadata", :class => "step") do -%>
-    <%= render :partial => "permissions/index" %>
+  <%= form_tag({:controller=>"hydra/permissions", :action => "update"}, :id => "permissions_metadata", :class => "step") do -%>
+    <%= render :partial => "hydra/permissions/index" %>
     <%= hidden_field_tag("id", params[:id], :id => "permissions_id") if params[:id] %>
     <%= hidden_field_tag(:wf_step, params[:wf_step], :id => "permissions_wf_step") %>
     <%= hidden_field_tag(:new_asset, true, :id => "permission_new_asset") if params[:new_asset] %>
