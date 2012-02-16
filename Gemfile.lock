@@ -1,3 +1,18 @@
+GIT
+  remote: git://github.com/projectblacklight/blacklight.git
+  revision: dc4267178250407aa566cb28c50072365ff7aa41
+  specs:
+    blacklight (3.2.2)
+      compass (>= 0.12.alpha.2)
+      kaminari
+      marc (~> 0.4.3)
+      nokogiri (~> 1.5)
+      rails (~> 3.1)
+      rsolr (~> 1.0.6)
+      rsolr-ext (~> 1.0.3)
+      sass-rails (~> 3.1)
+      unicode
+
 PATH
   remote: .
   specs:
@@ -63,16 +78,6 @@ GEM
       gyoku (>= 0.4.0)
     arel (3.0.0)
     bcrypt-ruby (3.0.1)
-    blacklight (3.2.2)
-      compass (>= 0.12.alpha.2)
-      kaminari
-      marc (~> 0.4.3)
-      nokogiri (~> 1.5)
-      rails (~> 3.1)
-      rsolr (~> 1.0.6)
-      rsolr-ext (~> 1.0.3)
-      sass-rails (~> 3.1)
-      unicode
     block_helpers (0.3.3)
       activesupport (>= 2.0)
     builder (3.0.0)
@@ -215,7 +220,7 @@ GEM
     rubyzip (0.9.5)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
-    sass (3.1.14)
+    sass (3.1.15)
     sass-rails (3.2.4)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -278,6 +283,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  blacklight!
   cucumber-rails (>= 1.2.0)
   factory_girl
   hydra-head!
