@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/projectblacklight/blacklight.git
-  revision: dc4267178250407aa566cb28c50072365ff7aa41
+  revision: d8d42b32c31cb90a274910b29433c87ddc5ff272
   specs:
     blacklight (3.2.2)
       compass (>= 0.12.alpha.2)
@@ -192,7 +192,7 @@ GEM
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rsolr (1.0.6)
+    rsolr (1.0.7)
       builder (>= 2.1.2)
     rsolr-ext (1.0.3)
       rsolr (>= 1.0.2)

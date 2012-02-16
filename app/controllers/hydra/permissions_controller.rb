@@ -1,5 +1,5 @@
 require 'mediashelf/active_fedora_helper'
-class PermissionsController < ApplicationController
+class Hydra::PermissionsController < ApplicationController
   include MediaShelf::ActiveFedoraHelper
   include Hydra::AssetsControllerHelper
   
@@ -19,19 +19,14 @@ class PermissionsController < ApplicationController
     
     respond_to do |format|
       format.html 
-      format.inline { render :partial=>"permissions/index.html", :format=>"html" }
+      format.inline { render :partial=>"hydra/permissions/index", :format=>"html" }
     end
   end
   
   def new
-=begin
-HYDRA-150
-Removed from permissions/_new.html.erb
-<% javascript_includes << ["jquery.form.js", {:plugin=>"hydra-head"}] %>
-=end
     respond_to do |format|
       format.html 
-      format.inline { render :partial=>"permissions/new.html" }
+      format.inline { render :partial=>"hydra/permissions/new" }
     end
   end
   
@@ -79,21 +74,18 @@ Removed from permissions/_new.html.erb
     # Re-index the object
     Solrizer::Fedora::Solrizer.new.solrize(pid)
     
-    #flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
     flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
     
     respond_to do |format|
-      #format.html { redirect_to :controller=>"permissions", :action=>"index" }
       format.html do 
         if params.has_key?(:add_permission)
           redirect_to :back
         else
-          #redirect_to :controller=>"catalog", :action=>"edit", :id => params[:asset_id], :wf_step => next_step_in_workflow(:permissions)
-          redirect_to( {:controller => "catalog", :action => "edit", :id => params[:asset_id]}.merge(params_for_next_step_in_wokflow) )
+          redirect_to edit_catalog_path(params[:asset_id], params_for_next_step_in_wokflow)
         end
         
       end
-      format.inline { render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}}
+      format.inline { render :partial=>"hydra/permissions/edit_person_permissions", :locals=>{:person_id=>actor_id}}
     end
 
   end
@@ -127,12 +119,11 @@ Removed from permissions/_new.html.erb
     flash[:notice] = "The permissions have been updated."
     
     respond_to do |format|
-      #format.html { redirect_to :controller=>"catalog", :action=>"edit", :id=>params[:asset_id] }
       format.html do
         if params.has_key?(:add_permission)
-          redirect_to :controller=>"catalog", :action=>"edit", :id => pid, :wf_step => :permissions, :add_permission => true
+          redirect_to edit_catalog_path(pid, :wf_step => :permissions, :add_permission => true)
         else
-          redirect_to( {:controller => "catalog", :action => "edit", :id => pid}.merge(params_for_next_step_in_wokflow) )
+          redirect_to edit_catalog_path(pid, params_for_next_step_in_wokflow) 
         end
       end
       format.inline do
@@ -143,7 +134,7 @@ Removed from permissions/_new.html.erb
           access_actor_type = "person"
         end
         actor_id = params["permission"][access_actor_type].first[0]
-        render :partial=>"permissions/edit_person_permissions", :locals=>{:person_id=>actor_id} 
+        render :partial=>"hydra/permissions/edit_person_permissions", :locals=>{:person_id=>actor_id} 
       end
     end
     
