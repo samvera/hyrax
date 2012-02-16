@@ -33,7 +33,7 @@ Feature: Edit a ModsAsset object
   Scenario: Entering different date formats for embargo
     Given I am logged in as "archivist1@example.com" 
     When I am on the edit additional_info page for hydrangea:fixture_mods_article1
-    And I fill in "embargo_embargo_release_date" with "11/1/2010"
+    And I fill in "embargo_embargo_release_date" with "2010-11-01"
     When I press "Continue"
     And I am on the edit additional_info page for hydrangea:fixture_mods_article1
     Then the "embargo_embargo_release_date" field within "#release_date_field" should contain "2010-11-01"
