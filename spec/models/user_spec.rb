@@ -8,7 +8,7 @@ describe User do
                         :password_confirmation => "password")
   end
   it "should have a login and email" do
-    @user.login.should == "testuser"
+    @user.login.should == "testuser@example.com"
     @user.email.should == "testuser@example.com"
   end
   it "should have zero folders by default" do

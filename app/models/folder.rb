@@ -7,9 +7,9 @@ class Folder < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => ActiveFedora::DCRDFDatastream
 
   belongs_to :user, :property => "creator"
-  has_many :generic_files, :property => "has_part"
+  has_many :generic_files, :property => "hasPart"
 
   delegate :title, :to => :descMetadata
   delegate :creator, :to => :descMetadata
-  delegate :has_part, :to => :descMetadata
+  delegate :hasPart, :to => :descMetadata
 end

@@ -7,9 +7,14 @@ describe Folder do
                         :password => "password", 
                         :password_confirmation => "password")
     @file = GenericFile.create
-    @folder = Folder.create(:title => "test collection",
-                            :creator => @user.email,
-                            :has_part => @file.pid)
+    # Attempted to do this in a .create one-liner, but that throws:
+    #      Failure/Error: @folder = Folder.create(:title => "test collection",
+    #      ActiveFedora::UnregisteredPredicateError: Unregistered predicate: nil
+    @folder = Folder.new
+    @folder.title = "test collection"
+    @folder.creator = @user.login
+    @folder.hasPart = @file.pid
+    @folder.save
   end
   after do
     @user.delete
@@ -32,11 +37,13 @@ describe Folder do
   it "should be titled 'test collection'" do
     @folder.title.should == ["test collection"]
   end
-  it "should contain one generic file" do
+  it "should have generic_files defined" do
     @folder.should respond_to(:generic_files)
-    @folder.has_part << @file
-    @folder.has_part.should == [@file.pid]
-    #@file.is_part_of.should == [@folder]
   end
+  it "should contain one generic file" do
+    @folder.hasPart << @file
+    @folder.hasPart.should == [@file.pid]
+  end
+  it "should be accessible via file object?" 
   it "should be accessible via user object?"
 end
