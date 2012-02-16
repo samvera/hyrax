@@ -43,7 +43,7 @@ def needs_audit?(version)
   get_or_create_audit_log(version)
   if $audit_log and $audit_log.updated_at
     time_since_last_audit = $now - $audit_log.updated_at.to_date
-    if time_since_last_audit.to_i < 14 
+    if time_since_last_audit.to_i < $max_days_between_audits
       puts "No audit needed for #{version.pid} #{version.versionID} (#{$audit_log.updated_at})"
       return false
     end
