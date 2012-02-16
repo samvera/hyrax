@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-
 require File.expand_path(File.join(File.dirname(__FILE__), '../config/environment.rb'))
 
 #1 find all objects
@@ -9,19 +8,24 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../config/environmen
 #3 for each datastream find all versions
 #3 for each version, see if their last audit was within the threshold, if not audit
 
+$audit_log = nil
+$now = DateTime.now
+$max_days_between_audits = Rails.application.config.max_days_between_audits
 
-#ActiveFedora::RubydoraConnection.instance.connection.search(nil)
-
-@@audit_log = nil
 
 def get_or_create_audit_log(version)
-  begin
-    @@audit_log = ChecksumAuditLog.find_by_pid(version.pid).
-      find_by_dsid(version.dsid).find_by_version(version.versionID)
-  rescue NoMethodError
-    @@audit_log = ChecksumAuditLog.new(:pid => version.pid,
-                                     :dsid => version.dsid,
-                                     :version => version.versionID)
+  $audit_log = ChecksumAuditLog.where(:pid => version.pid,
+                                      :dsid => version.dsid,
+                                      :version => version.versionID)
+  if $audit_log.empty?
+    $audit_log = ChecksumAuditLog.new(:pid => version.pid,
+                                      :dsid => version.dsid,
+                                      :version => version.versionID) 
+  elsif $audit_log.count == 1
+    $audit_log = $audit_log[0]
+  elsif $audit_log.count > 1
+    puts "more than one audit log?  Hrmmm..."
+    $audit_log = $audit_log.first
   end
 end
 
@@ -35,26 +39,28 @@ def audit_everything
   end
 end
 
-## stub method, return true if the last audit for this version is beyond the threshold, else false
 def needs_audit?(version)
-  if @@audit_log and @@audit_log.updated_at
-    # TODO:  compare updated_at to current time & make a call
-    #return false
-    true
+  get_or_create_audit_log(version)
+  if $audit_log and $audit_log.updated_at
+    time_since_last_audit = $now - $audit_log.updated_at.to_date
+    if time_since_last_audit.to_i < 14 
+      puts "No audit needed for #{version.pid} #{version.versionID} (#{$audit_log.updated_at})"
+      return false
+    end
   end
+  puts "Audit needed for #{version.pid} #{version.versionID}"
   true
 end
 
 def audit(version)
-  get_or_create_audit_log(version)
   if version.dsChecksumValid
-    puts "Audit passed for #{version.pid} #{version.dsVersionID}"
-    @@audit_log.pass = true
+    puts "Audit passed for #{version.pid} #{version.versionID}"
+    $audit_log.pass = true
   else
-    puts "Audit failed for #{version.pid} #{version.dsVersionID}"
-    @@audit_log.pass = false
+    puts "Audit failed for #{version.pid} #{version.versionID}"
+    $audit_log.pass = false
   end
-  @@audit_log.save
+  $audit_log.save
 end
 
 
