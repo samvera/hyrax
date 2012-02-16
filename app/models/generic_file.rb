@@ -10,6 +10,7 @@ class GenericFile < ActiveFedora::Base
 
   belongs_to :collection, :property => "is_part_of"
 
+  delegate :is_part_of, :to => :descMetadata
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :title, :to => :descMetadata

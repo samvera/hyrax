@@ -21,22 +21,6 @@ describe GenericFile do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.content.should be_kind_of FileContentDatastream
   end
-  describe "collection" do
-    before(:each) do 
-      @user = User.create(:login => "testuser", 
-                          :email => "testuser@example.com", 
-                          :password => "password", 
-                          :password_confirmation => "password")
-      @collection = Collection.create(:name => "my_collection",
-                                      :user => @user)
-    end
-    it "should contain one file" do
-      @collection.should respond_to(:generic_files)
-      @collection << @file
-      @collection.should include(@file)
-      @file.collection.should == @collection
-    end
-  end
   describe "characterize" do
     it "should run when the content datastream is created" do
       @file.expects(:characterize)
