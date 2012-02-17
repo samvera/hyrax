@@ -85,6 +85,11 @@ class Hydra::PermissionsController < ApplicationController
     
     @document_fedora.save
     
+<<<<<<< HEAD
+=======
+    # # Re-index the object
+    # Solrizer::Fedora::Solrizer.new.solrize(pid)
+>>>>>>> Remove unnecessay solrize call. Fixed redirect
     
     flash[:notice] = "The permissions have been updated."
     
