@@ -71,8 +71,8 @@ class Hydra::PermissionsController < ApplicationController
     ds.serialize!
     ds.save
     
-    # Re-index the object
-    Solrizer::Fedora::Solrizer.new.solrize(pid)
+    # # Re-index the object
+    # Solrizer::Fedora::Solrizer.new.solrize(pid)
     
     flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
     
@@ -113,8 +113,8 @@ class Hydra::PermissionsController < ApplicationController
     ds.serialize!
     ds.save
     
-    # Re-index the object
-    Solrizer::Fedora::Solrizer.new.solrize(pid)
+    # # Re-index the object
+    # Solrizer::Fedora::Solrizer.new.solrize(pid)
     
     flash[:notice] = "The permissions have been updated."
     

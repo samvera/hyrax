@@ -42,7 +42,7 @@ module Hydra::Assets
         format.textile  { render :text=> RedCloth.new(result, [:sanitize_html]).to_html  }
       end
     else
-      redirect_to show_catalog_path(params[:id])
+      redirect_to catalog_path(params[:id])
     end
   end
   
