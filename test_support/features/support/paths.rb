@@ -20,9 +20,9 @@ module NavigationHelpers
     when /the base search page/
       '/catalog?q=&search_field=search&action=index&controller=catalog&commit=search'
     when /the document page for id (.+)/ 
-      catalog_path($1)
+      catalog_path(CGI.escape($1))
     when /the edit page for id (.+)/ 
-      edit_catalog_path($1)
+      edit_catalog_path(CGI.escape($1))
     when /the catalog index page/
       catalog_index_path
     # Add more mappings here.
@@ -32,9 +32,9 @@ module NavigationHelpers
     #     user_profile_path(User.find_by_login($1))
 
     when /the edit document page for (.*)$/i
-      edit_catalog_path($1)
+      edit_catalog_path(CGI.escape $1)
     when /the show document page for (.*)$/i
-      catalog_path($1)
+      catalog_path(CGI.escape $1)
     when /the delete confirmation page for (.*)$/i
       delete_catalog_path($1)
       
