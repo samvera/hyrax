@@ -4,18 +4,13 @@ class Hydra::PermissionsController < ApplicationController
   include Hydra::AssetsControllerHelper
   
   before_filter :require_solr
-  # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
+  # need to include this after the :require_solr before_filter because of the before filter that the workflow provides.
   include Hydra::SubmissionWorkflow
   
   def index
-    @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
-    pid = params[:asset_id]
-    dsid = "rightsMetadata"
-    xml_content = @document_fedora.datastreams_in_memory[dsid].content
-    ds = Hydra::RightsMetadata.from_xml(xml_content)
-    ds.pid = pid
-    ds.dsid = dsid
-    @document_fedora.datastreams_in_memory[dsid] = ds
+    af_base=ActiveFedora::Base.load_instance(params[:asset_id])
+    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
+    @document_fedora = af_base.adapt_to(the_model)
     
     respond_to do |format|
       format.html 
@@ -31,14 +26,9 @@ class Hydra::PermissionsController < ApplicationController
   end
   
   def edit
-    @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
-    pid = params[:asset_id]
-    dsid = "rightsMetadata"
-    xml_content = @document_fedora.datastreams_in_memory[dsid].content
-    ds = Hydra::RightsMetadata.from_xml(xml_content)
-    ds.pid = pid
-    ds.dsid = dsid
-    @document_fedora.datastreams_in_memory[dsid] = ds
+    af_base=ActiveFedora::Base.load_instance(params[:asset_id])
+    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
+    @document_fedora = af_base.adapt_to(the_model)
     
     respond_to do |format|
       format.html 
@@ -49,30 +39,17 @@ class Hydra::PermissionsController < ApplicationController
   # Create a new permissions entry
   # expects permission["actor_id"], permission["actor_type"] and permission["access_level"] as params. ie.   :permission=>{"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}
   def create
-    #pid = params[:asset_id]
-    pid = params[:asset_id]
-    dsid = "rightsMetadata"
-    # xml_content = Fedora::Repository.instance.fetch_custom(pid, "datastreams/#{dsid}/content")
-    #@document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
-    @document_fedora=ActiveFedora::Base.load_instance(params[:asset_id])
-    xml_content = @document_fedora.datastreams[dsid].content
-    ds = Hydra::RightsMetadata.new(@document_fedora.inner_object, dsid)
-    Hydra::RightsMetadata.from_xml(xml_content, ds)
+    af_base=ActiveFedora::Base.load_instance(params[:asset_id])
+    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
+    @document_fedora = af_base.adapt_to(the_model)
 
-    @document_fedora.datastreams[dsid] = ds
-    
     access_actor_type = params["permission"]["actor_type"]
     actor_id = params["permission"]["actor_id"]
     access_level = params["permission"]["access_level"]
   
     # update the datastream's values
-    result = ds.permissions({access_actor_type => actor_id}, access_level)
-      
-    ds.serialize!
-    ds.save
-    
-    # # Re-index the object
-    # Solrizer::Fedora::Solrizer.new.solrize(pid)
+    result = @document_fedora.rightsMetadata.permissions({access_actor_type => actor_id}, access_level)
+    @document_fedora.save
     
     flash[:notice] = "#{actor_id} has been granted #{access_level} permissions for #{params[:asset_id]}"
     
@@ -99,22 +76,14 @@ class Hydra::PermissionsController < ApplicationController
       pid = params[:id]
     end
     
-    dsid = "rightsMetadata"
-    @document_fedora=ActiveFedora::Base.load_instance(pid)
-    xml_content = @document_fedora.datastreams[dsid].content
-    ds = Hydra::RightsMetadata.new(@document_fedora.inner_object, dsid)
-    Hydra::RightsMetadata.from_xml(xml_content, ds)
-    @document_fedora.datastreams[dsid] = ds
+    af_base=ActiveFedora::Base.load_instance(pid)
+    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
+    @document_fedora = af_base.adapt_to(the_model)
 
-     
     # update the datastream's values
-    result = ds.update_permissions(params[:permission])
+    result = @document_fedora.rightsMetadata.update_permissions(params[:permission])
     
-    ds.serialize!
-    ds.save
-    
-    # # Re-index the object
-    # Solrizer::Fedora::Solrizer.new.solrize(pid)
+    @document_fedora.save
     
     flash[:notice] = "The permissions have been updated."
     
