@@ -96,10 +96,10 @@ module Hydra::Assets
   end
   
   def destroy
-    af = ActiveFedora::Base.load_instance_from_solr(params[:id])
+    af = ActiveFedora::Base.load_instance(params[:id])
     the_model = ActiveFedora::ContentModel.known_models_for( af ).first
     unless the_model.nil?
-      af = the_model.load_instance_from_solr(params[:id])
+      af = the_model.load_instance(params[:id])
       assets = af.destroy_child_assets
     end
     af.delete
