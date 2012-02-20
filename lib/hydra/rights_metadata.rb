@@ -155,7 +155,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   end
   def embargo_release_date(opts={})
     embargo_release_date = self.find_by_terms(*[:embargo,:machine,:date]).first ? self.find_by_terms(*[:embargo,:machine,:date]).first.text : nil
-    if opts[:format] && opts[:format] == :solr_date
+    if embargo_release_date.present? && opts[:format] && opts[:format] == :solr_date
       embargo_release_date << "T23:59:59Z"
     end
     embargo_release_date
