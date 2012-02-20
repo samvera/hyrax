@@ -1,6 +1,6 @@
 h1. Hydra Installation Prerequisites
 
-* "ruby":http://www.ruby-lang.org/en/    NOTE: version 1.8.7 or higher
+* "ruby":http://www.ruby-lang.org/en/    NOTE: version 1.8.7
 * "rubygems":http://rubygems.org/pages/download
 * these ruby gems:
 ** "bundler":http://gembundler.com/
