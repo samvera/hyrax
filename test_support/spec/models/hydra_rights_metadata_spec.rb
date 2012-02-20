@@ -149,7 +149,13 @@ describe Hydra::RightsMetadata do
     end
   end
   describe "embargo_release_date" do
-    it "should return the value as specified in the appropriate node" do
+    it "should return solr formatted date" do
+      @sample.embargo_release_date=("2010-12-01")
+      @sample.embargo_release_date(:format=>:solr_date).should == "2010-12-01T23:59:59Z"
+    end
+    it "should not return anything if the date is empty string" do
+      @sample.update_values({[:embargo,:machine,:date]=>''})
+      @sample.embargo_release_date(:format=>:solr_date).should == ''
     end
   end
   describe "under_embargo?" do
