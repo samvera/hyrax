@@ -85,6 +85,7 @@ class Hydra::PermissionsController < ApplicationController
     
     @document_fedora.save
     
+    
     flash[:notice] = "The permissions have been updated."
     
     respond_to do |format|

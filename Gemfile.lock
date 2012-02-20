@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/projectblacklight/blacklight.git
-  revision: d8d42b32c31cb90a274910b29433c87ddc5ff272
+  revision: 2544e13a3984d7a1b4989e5e479642fd6b94224a
   specs:
     blacklight (3.2.2)
       compass (>= 0.12.alpha.2)
@@ -136,6 +136,7 @@ GEM
       mediashelf-loggable
     journey (1.0.3)
     json (1.6.5)
+    json_pure (1.6.5)
     kaminari (0.13.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
