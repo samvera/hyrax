@@ -5,11 +5,13 @@ class GenericFile < ActiveFedora::Base
   include Hydra::ModelMethods
 
   has_metadata :name => "characterization", :type => FitsDatastream
-  has_metadata :name => "descMetadata", :type => ActiveFedora::DCRDFDatastream
+  has_metadata :name => "descMetadata", :type => NtriplesMetadataDatastream
   has_file_datastream :type => FileContentDatastream
 
   belongs_to :folder, :property => "isPartOf"
 
+  delegate :seeAlso, :to => :descMetadata
+  delegate :based_near, :to => :descMetadata
   delegate :isPartOf, :to => :descMetadata
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata
@@ -17,6 +19,8 @@ class GenericFile < ActiveFedora::Base
   delegate :description, :to => :descMetadata
   delegate :publisher, :to => :descMetadata
   delegate :created, :to => :descMetadata
+  delegate :dateSubmitted, :to => :descMetadata
+  delegate :modified, :to => :descMetadata
   delegate :subject, :to => :descMetadata
   delegate :language, :to => :descMetadata
   delegate :date, :to => :descMetadata

@@ -15,7 +15,7 @@ describe GenericFile do
     @file.characterization.should be_kind_of FitsDatastream
   end 
   it "should have a dc desc metadata" do
-    @file.descMetadata.should be_kind_of ActiveFedora::DCRDFDatastream
+    @file.descMetadata.should be_kind_of NtriplesMetadataDatastream
   end
   it "should have content datastream" do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
