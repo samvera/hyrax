@@ -20,5 +20,10 @@ Feature: Uploading files via web form
 #    Then I should see "The file world.png has been saved"
 #
 #  Scenario: Upload a file, with metadata
-#
 #  Scenario: Submit metadata, no file
+#  Scenario: Add more files
+#  Scenario: Upload multiple files 
+#  Scenario: After upload I see
+#  Scenario: Fill in metadata
+#  Scenario: Add More metadata
+#  Scenario: Click selectbox on metadata fields.
