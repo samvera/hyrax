@@ -58,7 +58,7 @@ class Hydra::ContributorsController < ApplicationController
     if params.has_key? :add_another_author
       redirect_to edit_catalog_path(params[:asset_id], :wf_step => :contributor, :add_contributor => true)
     else
-      redirect_to edit_catalog_path(params[:asset_id], params_for_next_step_in_wokflow)
+      redirect_to next_step(params[:asset_id])
     end
   end
   

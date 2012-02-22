@@ -58,7 +58,7 @@ class Hydra::PermissionsController < ApplicationController
         if params.has_key?(:add_permission)
           redirect_to :back
         else
-          redirect_to edit_catalog_path(params[:asset_id], params_for_next_step_in_wokflow)
+          redirect_to next_step(params[:asset_id])
         end
         
       end
@@ -93,7 +93,7 @@ class Hydra::PermissionsController < ApplicationController
         if params.has_key?(:add_permission)
           redirect_to edit_catalog_path(pid, :wf_step => :permissions, :add_permission => true)
         else
-          redirect_to edit_catalog_path(pid, params_for_next_step_in_wokflow) 
+          redirect_to next_step(pid)
         end
       end
       format.inline do
