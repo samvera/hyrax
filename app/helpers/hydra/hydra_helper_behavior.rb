@@ -150,7 +150,7 @@ module Hydra::HydraHelperBehavior
     end
   
   def render_previous_workflow_steps
-    "#{previous_show_partials(params[:wf_step]).map{|partial| render partial}}"
+    previous_show_partials(params[:wf_step]).map{|partial| render partial}.join
   end
   
   def render_submission_workflow_step
