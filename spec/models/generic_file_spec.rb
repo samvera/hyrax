@@ -21,6 +21,40 @@ describe GenericFile do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.content.should be_kind_of FileContentDatastream
   end
+  describe "delegations" do
+    it "should delegate methods to descriptive metadata" do
+      @file.should respond_to(:related_url)
+      @file.should respond_to(:based_near)
+      @file.should respond_to(:part_of)
+      @file.should respond_to(:contributor)
+      @file.should respond_to(:creator)
+      @file.should respond_to(:title)
+      @file.should respond_to(:description)
+      @file.should respond_to(:publisher)
+      @file.should respond_to(:date_created)
+      @file.should respond_to(:date_uploaded)
+      @file.should respond_to(:date_modified)
+      @file.should respond_to(:subject)
+      @file.should respond_to(:language)
+      @file.should respond_to(:date)
+      @file.should respond_to(:rights)
+      @file.should respond_to(:resource_type)
+      @file.should respond_to(:format)
+      @file.should respond_to(:identifier)
+    end
+    it "should delegate methods to characterization metadata" do
+      @file.should respond_to(:format_label)
+      @file.should respond_to(:mime_type)
+      @file.should respond_to(:file_size)
+      @file.should respond_to(:last_modified)
+      @file.should respond_to(:filename)
+      @file.should respond_to(:original_checksum)
+      @file.should respond_to(:well_formed)
+      @file.should respond_to(:file_title)
+      @file.should respond_to(:file_author)
+      @file.should respond_to(:page_count)
+    end
+  end
   describe "characterize" do
     it "should run when the content datastream is created" do
       @file.expects(:characterize)

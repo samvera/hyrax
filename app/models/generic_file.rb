@@ -10,22 +10,22 @@ class GenericFile < ActiveFedora::Base
 
   belongs_to :folder, :property => "isPartOf"
 
-  delegate :seeAlso, :to => :descMetadata
+  delegate :related_url, :to => :descMetadata
   delegate :based_near, :to => :descMetadata
-  delegate :isPartOf, :to => :descMetadata
+  delegate :part_of, :to => :descMetadata
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :title, :to => :descMetadata
   delegate :description, :to => :descMetadata
   delegate :publisher, :to => :descMetadata
-  delegate :created, :to => :descMetadata
-  delegate :dateSubmitted, :to => :descMetadata
-  delegate :modified, :to => :descMetadata
+  delegate :date_created, :to => :descMetadata
+  delegate :date_uploaded, :to => :descMetadata
+  delegate :date_modified, :to => :descMetadata
   delegate :subject, :to => :descMetadata
   delegate :language, :to => :descMetadata
   delegate :date, :to => :descMetadata
   delegate :rights, :to => :descMetadata
-  delegate :type, :to => :descMetadata
+  delegate :resource_type, :to => :descMetadata
   delegate :format, :to => :descMetadata
   delegate :identifier, :to => :descMetadata
   delegate :format_label, :to => :characterization

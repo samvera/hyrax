@@ -9,7 +9,7 @@ class NtriplesMetadataDatastream < ActiveFedora::NtriplesRDFDatastream
     map.description(:to => "description", :in => RDF::DC)
     map.publisher(:to => "publisher", :in => RDF::DC)
     map.date_created(:to => "created", :in => RDF::DC)
-    map.date_submitted(:to => "dateSubmitted", :in => RDF::DC)
+    map.date_uploaded(:to => "dateSubmitted", :in => RDF::DC)
     map.date_modified(:to => "modified", :in => RDF::DC)
     map.subject(:to => "subject", :in => RDF::DC)
     map.language(:to => "language", :in => RDF::DC)
