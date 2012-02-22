@@ -66,8 +66,7 @@ module Hydra::Assets
     
     respond_to do |want| 
       want.html {
-puts "redirecting to #{ edit_catalog_path(params[:id], params_for_next_step_in_wokflow)}"
-        redirect_to edit_catalog_path(params[:id], params_for_next_step_in_wokflow)
+        redirect_to next_step(params[:id])
       }
       want.js {
         render :json=> tidy_response_from_update(@response)  

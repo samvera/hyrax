@@ -58,7 +58,7 @@ module Hydra::FileAssets
     if params.has_key?(:number_of_files) and params[:number_of_files] != "0"
       return redirect_to edit_catalog_path(params[:id], :wf_step => :files, :number_of_files => params[:number_of_files])
     elsif params.has_key?(:number_of_files) and params[:number_of_files] == "0"
-      return redirect_to edit_catalog_path(params[:id], params_for_next_step_in_wokflow)
+      return redirect_to next_step(params[:id])
     end
     
     if params.has_key?(:Filedata)
@@ -69,7 +69,7 @@ module Hydra::FileAssets
     end
     
     if params[:container_id]
-      redirect_to edit_catalog_path(params[:container_id], params_for_next_step_in_wokflow)
+      redirect_to next_step(params[:container_id])
     else
       redirect_to catalog_index_path
     end
