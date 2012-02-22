@@ -5,7 +5,7 @@ class GenericFile < ActiveFedora::Base
   include Hydra::ModelMethods
 
   has_metadata :name => "characterization", :type => FitsDatastream
-  has_metadata :name => "descMetadata", :type => NtriplesMetadataDatastream
+  has_metadata :name => "descMetadata", :type => GammaRDFDatastream
   has_file_datastream :type => FileContentDatastream
 
   belongs_to :folder, :property => "isPartOf"

@@ -1,4 +1,4 @@
-class NtriplesMetadataDatastream < ActiveFedora::NtriplesRDFDatastream
+class GammaRDFDatastream < ActiveFedora::NtriplesRDFDatastream
   include ActiveFedora::RDFDatastream::ModelMethods
   register_vocabularies RDF::DC, RDF::FOAF, RDF::RDFS
   map_predicates do |map|
