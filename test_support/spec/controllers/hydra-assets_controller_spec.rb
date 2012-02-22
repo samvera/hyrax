@@ -34,7 +34,8 @@ describe Hydra::AssetsController do
   
   describe "update" do
     it "should update the object with the attributes provided" do
-      mock_document = mock("document")
+      mock_document = ModsAsset.new
+      mock_document.stubs(:pid => '_PID_')
       mock_document.stubs(:update_from_computing_id).returns(nil)
       controller.expects(:check_embargo_date_format).returns(nil)
 
@@ -51,10 +52,14 @@ describe Hydra::AssetsController do
       mock_document.expects(:save)
       controller.stubs(:display_release_status_notice)
       put :update, {:id=>"_PID_"}.merge(simple_request_params)
+
+      response.should redirect_to catalog_path(mock_document.pid, :viewing_context=>"browse")
+
     end
     
     it "should support updating OM::XML datastreams" do
-      mock_document = mock("document")
+      mock_document = ModsAsset.new
+      mock_document.stubs(:pid => '_PID_')
       mock_document.stubs(:update_from_computing_id).returns(nil)
       ModsAsset.expects(:find).with("_PID_").returns(mock_document)
       
@@ -80,6 +85,7 @@ describe Hydra::AssetsController do
       controller.stubs(:display_release_status_notice)
       put :update, nokogiri_request_params
       # put :update, :id=>"_PID_", "content_type"=>"mods_asset", "datastream"=>"descMetadata", "field_name"=>"person_0_last_name","parent_select"=>[{":person"=>"0"}, ":last_name"], "child_index"=>"0", "value"=>"Sample New Value"
+      response.should redirect_to edit_catalog_path(mock_document.pid, :wf_step=>"publication")
     end
     
     it "should handle complete updates of many fields in many datastreams" do
