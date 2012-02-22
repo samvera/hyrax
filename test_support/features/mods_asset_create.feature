@@ -7,7 +7,6 @@ Feature: ModsAsset Create View
   Scenario: Create Workflow for New ModsAsset Object
     Given I am logged in as "archivist1@example.com"
     When I create a new mods_asset
-    Then show me the page
     Then I should see "Created a Mods Asset"
     And I should see "Now it's ready to be edited."
     And the "person_0_first_name" field should contain ""
