@@ -21,7 +21,7 @@ rake db:migrate
 
 echo "=-=-=-=-= $0 rake --trace gamma:ci"
 rake --trace gamma:ci
-retval=?!
+retval=$?
 
 echo "=-=-=-=-= $0 finished $retval"
 exit $retval
