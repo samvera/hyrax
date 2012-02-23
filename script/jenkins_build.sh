@@ -21,11 +21,10 @@ rake db:migrate
 
 echo "=-=-=-=-= $0 rake --trace gamma:ci"
 rake --trace gamma:ci
+retval=?!
 
-echo "=-=-=-=-= $0 finished"
+echo "=-=-=-=-= $0 finished $retval"
+exit $retval
 
-
-# historical note, these were the original commands:
-# bash -l -c "source /etc/profile.d/rvm.sh"
-# #bash -l -c "echo EEEEE; env; echo EEEEE; cat $0; echo EEEEE"
-# bash -l -c "source .rvmrc;bundle install;rake db:migrate; rake --trace gamma:ci"
+#
+# end
