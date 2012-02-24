@@ -2,8 +2,8 @@ require 'yaml'
 class RoleMapper
   @@map = YAML.load(File.open(File.join(Rails.root, "config/role_map_#{Rails.env}.yml")))
   m = Hash.new{|h,k| h[k]=[]}
-  @@byname = @@map.inject(m) do|memo, k| 
-    k.last.each { |x| memo[x]<<k.first}
+  @@byname = @@map.inject(m) do|memo, (role,usernames)| 
+    ((usernames if usernames.respond_to?(:each)) || [usernames]).each { |x| memo[x]<<role}
     memo
   end
   class << self
