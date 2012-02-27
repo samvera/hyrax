@@ -5,7 +5,7 @@ gem 'rails', '~> 3.0.10'
 gem 'sqlite3'
 
 #gem 'active-fedora', '~>3.3.0'
-gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'3.3.x-RDF_refactor', :ref=>'603f99f'
+gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'3.3.x-RDF_refactor'
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.3.0'

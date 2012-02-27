@@ -42,6 +42,15 @@ describe GenericFile do
       @file.should respond_to(:format)
       @file.should respond_to(:identifier)
     end
+    it "should be able to set values via delegated methods" do
+      @file.related_url = "http://example.org/"
+      @file.creator = "John Doe"
+      @file.title = "New work"
+      @file.save
+      @file.related_url.should == "http://example.org/"
+      @file.creator.should == "John Doe"
+      @file.title.should == "New work"
+    end
     it "should delegate methods to characterization metadata" do
       @file.should respond_to(:format_label)
       @file.should respond_to(:mime_type)

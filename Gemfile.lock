@@ -1,7 +1,6 @@
 GIT
   remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: 603f99f4a8c78511730e251044f138d4dee96860
-  ref: 603f99f
+  revision: 28a0c792ffca1bc2cb37dffdd5f49807e36f8024
   branch: 3.3.x-RDF_refactor
   specs:
     active-fedora (3.3.1)
