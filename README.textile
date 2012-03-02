@@ -18,7 +18,8 @@ h2. Installation/Setup
 
 h3. Install Rails, Bundler and Devise
 
-Currently hydra-head is compatible with Rails 3.0.x and incompatible with Rails 3.1
+Currently hydra-head is compatible with Rails 3.0.x and incompatible with Rails 3.1. Currently all Hydra software is compatible with ruby 1.8.7 (and not 1.9)
+
 
 <pre>
 gem install 'rails' --version '~>3.0.11'
