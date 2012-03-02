@@ -7,16 +7,12 @@ describe Folder do
                         :password => "password", 
                         :password_confirmation => "password")
     @file = GenericFile.create
-    # Attempted to do this in a .create one-liner, but that throws:
-    #      Failure/Error: @folder = Folder.create(:title => "test collection",
-    #      ActiveFedora::UnregisteredPredicateError: Unregistered predicate: nil
-    f = Folder.create(:title => "test collection",
-                      :creator => @user.login,
-                      :has_part => @file.pid)
-    @gf = GenericFile.create
-    f.has_part = @gf
-    f.save
-    @folder = Folder.find(f.pid)
+    folder = Folder.create(:title => "test collection",
+                           :creator => @user.login,
+                           :part => @file.pid)
+    # not sure why, but the obj returned by the prior call doesn't
+    # seem to have values for title, creator, has_part
+    @folder = Folder.find(folder.pid)
   end
   after(:all) do
     @user.delete
@@ -25,10 +21,6 @@ describe Folder do
   end
   it "should have rightsMetadata" do
     @folder.rightsMetadata.should be_instance_of Hydra::RightsMetadata
-  end
-  it "should have apply_depositor_metadata" do
-    @folder.apply_depositor_metadata(@user.login)
-    @folder.rightsMetadata.edit_access.should == [@user.login]
   end
   it "should have dc desc metadata" do
     @folder.descMetadata.should be_kind_of FolderRDFDatastream
@@ -43,11 +35,16 @@ describe Folder do
     @folder.should respond_to(:generic_files)
   end
   it "should contain one generic file" do
-    @folder.has_part.should == [@file.pid]
+    @folder.part.should == [@file.pid]
   end
-  it "should be able to 'have' more than one file" do
-    @folder.has_part.should include(@file.pid)
-    @folder.has_part.should include(@gf.pid)
+  it "should be able to have more than one file" do
+    gf = GenericFile.create
+    @folder.part = @folder.part.push(gf.pid)
+    @folder.save
+    # TODO: should not have to do this, I don't think.
+    f = Folder.find(@folder.pid)
+    f.part.should include(@file.pid)
+    f.part.should include(gf.pid)
   end
   it "should be accessible via file object?" 
   it "should be accessible via user object?"
