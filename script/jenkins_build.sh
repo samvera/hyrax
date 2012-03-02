@@ -9,6 +9,9 @@
 echo "=-=-=-=-= $0 begin"
 cd ${JENKINS_HOME}/jobs/gamma/workspace
 
+echo "=-=-=-=-= $0 source .bashrc"
+source /opt/heracles/.bashrc
+
 echo "=-=-=-=-= $0 source rvm.sh/.rvmrc"
 source /etc/profile.d/rvm.sh
 source .rvmrc
