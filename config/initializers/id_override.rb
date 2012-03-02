@@ -2,10 +2,10 @@ module ActiveFedora
   class UnsavedDigitalObject 
     def assign_pid
       return @pid if @pid
-      unique = false
-      until unique
+      bound = false
+      until bound
         @pid = PSU::IdService.mint
-        unique = ActiveFedora::Base.find(@pid).nil?
+        bound = ActiveFedora::Base.find(@pid).new_object?
       end
       @pid
     end

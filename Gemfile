@@ -9,7 +9,7 @@ gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git',
 gem 'solrizer-fedora', '>=1.2.2'
 gem 'blacklight', '~>3.1.2'
 gem 'hydra-head', '~>3.3.0'
-gem 'rubydora', '~>0.5.2'
+gem 'rubydora', '~>0.5.3'
 
 gem 'devise'
 gem 'delayed_job_active_record'

@@ -26,8 +26,8 @@ describe ActiveFedora::UnsavedDigitalObject do
     mock_pid = 'id:ef12ef12f'
     unique_pid = 'id:bb22bb22b'
     PSU::IdService.stubs(:mint).returns(mock_pid, unique_pid)
-    ActiveFedora::Base.stubs(:find).with(mock_pid).returns(true)
-    ActiveFedora::Base.stubs(:find).with(unique_pid).returns(nil)
+    ActiveFedora::Base.stubs(:find).with(mock_pid).returns(stub(:new_object? => false))
+    ActiveFedora::Base.stubs(:find).with(unique_pid).returns(stub(:new_object? => true))
     @obj = ActiveFedora::UnsavedDigitalObject.new(self.class, '')
     pid = @obj.assign_pid
     @obj.pid.should == unique_pid
