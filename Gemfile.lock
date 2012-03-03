@@ -1,7 +1,7 @@
 GIT
-  remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: 21cadbb3c210b5ab9d6a9af481b0f28ce30c255f
-  branch: 3.3.x-RDF_refactor
+  remote: git://github.com/mediashelf/active_fedora.git
+  revision: e057b6527db51b3a0b6bbbe9e0be06d9c072bb4a
+  branch: 3.3.x
   specs:
     active-fedora (3.3.2)
       activeresource (>= 3.0.0)
@@ -254,7 +254,7 @@ GEM
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
     ruby-prof (0.10.8)
-    rubydora (0.5.3)
+    rubydora (0.5.4)
       activemodel
       activesupport
       fastercsv
@@ -335,6 +335,6 @@ DEPENDENCIES
   rspec-rails (>= 2.4.0)
   ruby-debug
   ruby-prof
-  rubydora (~> 0.5.3)
+  rubydora (~> 0.5.4)
   solrizer-fedora (>= 1.2.2)
   sqlite3

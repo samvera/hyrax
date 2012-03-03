@@ -7,12 +7,9 @@ describe Folder do
                         :password => "password", 
                         :password_confirmation => "password")
     @file = GenericFile.create
-    folder = Folder.create(:title => "test collection",
+    @folder = Folder.create(:title => "test collection",
                            :creator => @user.login,
                            :part => @file.pid)
-    # not sure why, but the obj returned by the prior call doesn't
-    # seem to have values for title, creator, has_part
-    @folder = Folder.find(folder.pid)
   end
   after(:all) do
     @user.delete
@@ -39,12 +36,10 @@ describe Folder do
   end
   it "should be able to have more than one file" do
     gf = GenericFile.create
-    @folder.part = @folder.part.push(gf.pid)
+    @folder.part << gf.pid
     @folder.save
-    # TODO: should not have to do this, I don't think.
-    f = Folder.find(@folder.pid)
-    f.part.should include(@file.pid)
-    f.part.should include(gf.pid)
+    @folder.part.should include(@file.pid)
+    @folder.part.should include(gf.pid)
   end
   it "should be accessible via file object?" 
   it "should be accessible via user object?"
