@@ -1,4 +1,25 @@
 GIT
+  remote: git://github.com/mediashelf/active_fedora.git
+  revision: 2c32a458d37fee959d5d130d622cbf67acbb9eb8
+  ref: 2c32a45
+  specs:
+    active-fedora (4.0.0.rc1)
+      activeresource (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      equivalent-xml
+      mediashelf-loggable
+      mime-types (>= 1.16)
+      multipart-post (= 1.1.2)
+      nokogiri
+      om (>= 1.5.1)
+      rdf
+      rdf-rdfxml
+      rubydora (~> 0.5.4)
+      solr-ruby (>= 0.0.6)
+      solrizer (~> 1.2.0)
+      xml-simple (>= 1.0.12)
+
+GIT
   remote: git://github.com/projectblacklight/blacklight.git
   revision: 2544e13a3984d7a1b4989e5e479642fd6b94224a
   specs:
@@ -18,7 +39,7 @@ PATH
   specs:
     hydra-head (3.3.0)
       RedCloth (= 4.2.9)
-      active-fedora (>= 3.3.0)
+      active-fedora (= 4.0.0.rc1)
       blacklight (~> 3.2.2)
       block_helpers
       devise
@@ -44,21 +65,6 @@ GEM
       rack-cache (~> 1.1)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (3.3.1)
-      activeresource (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      equivalent-xml
-      mediashelf-loggable
-      mime-types (>= 1.16)
-      multipart-post (= 1.1.2)
-      nokogiri
-      om (>= 1.5.1)
-      rdf
-      rdf-rdfxml
-      rubydora (~> 0.5.2)
-      solr-ruby (>= 0.0.6)
-      solrizer (~> 1.2.0)
-      xml-simple (>= 1.0.12)
     activemodel (3.2.1)
       activesupport (= 3.2.1)
       builder (~> 3.0.0)
@@ -125,7 +131,7 @@ GEM
     gyoku (0.4.4)
       builder (>= 2.1.2)
     hike (1.2.1)
-    httpi (0.9.5)
+    httpi (0.9.6)
       rack
     i18n (0.6.0)
     jettywrapper (1.2.1)
@@ -210,7 +216,7 @@ GEM
       activesupport (>= 3.0)
       railties (>= 3.0)
       rspec (~> 2.8.0)
-    rubydora (0.5.2)
+    rubydora (0.5.4)
       activemodel
       activesupport
       fastercsv
@@ -284,6 +290,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active-fedora!
   blacklight!
   cucumber-rails (>= 1.2.0)
   factory_girl
