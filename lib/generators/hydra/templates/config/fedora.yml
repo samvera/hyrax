@@ -1,8 +1,14 @@
 development:
-  url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
+  user: fedoraAdmin
+  password: fedoraAdmin
+  url: http://127.0.0.1:8983/fedora
 test: &TEST  
-  url: http://fedoraAdmin:fedoraAdmin@127.0.0.1:8983/fedora
+  user: fedoraAdmin
+  password: fedoraAdmin
+  url: http://127.0.0.1:8983/fedora
 production:
-  url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
+  user: fedoraAdmin
+  password: fedoraAdmin
+  url: http://your.production.server:8080/fedora
 cucumber:
   <<: *TEST
