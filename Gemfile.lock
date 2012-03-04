@@ -1,4 +1,25 @@
 GIT
+  remote: git://github.com/mediashelf/active_fedora.git
+  revision: 2c32a458d37fee959d5d130d622cbf67acbb9eb8
+  ref: 2c32a45
+  specs:
+    active-fedora (4.0.0.rc1)
+      activeresource (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      equivalent-xml
+      mediashelf-loggable
+      mime-types (>= 1.16)
+      multipart-post (= 1.1.2)
+      nokogiri
+      om (>= 1.5.1)
+      rdf
+      rdf-rdfxml
+      rubydora (~> 0.5.4)
+      solr-ruby (>= 0.0.6)
+      solrizer (~> 1.2.0)
+      xml-simple (>= 1.0.12)
+
+GIT
   remote: git://github.com/projectblacklight/blacklight.git
   revision: 2544e13a3984d7a1b4989e5e479642fd6b94224a
   specs:
@@ -283,6 +304,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active-fedora!
   blacklight!
   cucumber-rails (>= 1.2.0)
   factory_girl
