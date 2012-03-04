@@ -9,8 +9,8 @@ gem "rails", '~> 3.2.2'
 gem 'sqlite3-ruby', :require => 'sqlite3'
 #gem 'sqlite3'
 
-gem 'blacklight'#, '~> 3.2.2'
-#gem 'blacklight', :git=>'git://github.com/projectblacklight/blacklight.git'
+#gem 'blacklight'#, '~> 3.2.2'
+gem 'blacklight', :git=>'git://github.com/projectblacklight/blacklight.git'
 
 
 gem 'hydra-head', :path => '../../'
