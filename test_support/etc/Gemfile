@@ -20,7 +20,7 @@ gem 'jettywrapper'
 
 # For testing
 group :development, :test do 
-       gem 'solrizer-fedora', '>=1.2.0'
+       gem 'solrizer-fedora', '>=1.2.5'
        gem 'rspec'
        gem 'rspec-rails', '>=2.8.0'
        gem 'mocha'

@@ -140,7 +140,7 @@ GEM
       i18n
       logger
       mediashelf-loggable
-    journey (1.0.1)
+    journey (1.0.3)
     json (1.6.5)
     json_pure (1.6.5)
     kaminari (0.13.0)
@@ -203,19 +203,19 @@ GEM
       builder (>= 2.1.2)
     rsolr-ext (1.0.3)
       rsolr (>= 1.0.2)
-    rspec (2.8.0)
-      rspec-core (~> 2.8.0)
-      rspec-expectations (~> 2.8.0)
-      rspec-mocks (~> 2.8.0)
-    rspec-core (2.8.0)
-    rspec-expectations (2.8.0)
+    rspec (2.6.0)
+      rspec-core (~> 2.6.0)
+      rspec-expectations (~> 2.6.0)
+      rspec-mocks (~> 2.6.0)
+    rspec-core (2.6.4)
+    rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
-    rspec-mocks (2.8.0)
-    rspec-rails (2.8.1)
-      actionpack (>= 3.0)
-      activesupport (>= 3.0)
-      railties (>= 3.0)
-      rspec (~> 2.8.0)
+    rspec-mocks (2.6.0)
+    rspec-rails (2.6.1)
+      actionpack (~> 3.0)
+      activesupport (~> 3.0)
+      railties (~> 3.0)
+      rspec (~> 2.6.0)
     rubydora (0.5.4)
       activemodel
       activesupport
@@ -297,6 +297,6 @@ DEPENDENCIES
   hydra-head!
   jettywrapper (>= 1.0.4)
   mocha
-  rspec-rails (>= 2.8.0)
+  rspec-rails (~> 2.6.0)
   sqlite3-ruby
   yard
