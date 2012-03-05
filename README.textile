@@ -47,6 +47,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 
   gem 'blacklight', '~> 3.1.2'
   gem 'hydra-head', '~> 3.2.0'
+  gem 'solrizer-fedora', '>=1.0.1'
 
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
@@ -58,7 +59,6 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 
   # For testing.  You will probably want to use all of these to run the tests you write for your hydra head
   group :development, :test do 
-         gem 'solrizer-fedora', '>=1.0.1'
          gem 'ruby-debug'
          gem 'rspec'
          gem 'rspec-rails', '>=2.5.0'
