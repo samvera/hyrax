@@ -21,6 +21,9 @@ describe GenericFile do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.content.should be_kind_of FileContentDatastream
   end
+  it "should support to_solr" do
+    @file.to_solr.should_not be_nil
+  end
   describe "delegations" do
     it "should delegate methods to descriptive metadata" do
       @file.should respond_to(:related_url)

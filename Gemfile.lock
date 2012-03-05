@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/mediashelf/active_fedora.git
-  revision: e057b6527db51b3a0b6bbbe9e0be06d9c072bb4a
+  remote: git://github.com/psu-stewardship/active_fedora.git
+  revision: a698d7b2c69e91423051ac2ae0f06f7fdbb03cc8
   branch: 3.3.x
   specs:
     active-fedora (3.3.2)

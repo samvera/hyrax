@@ -41,6 +41,9 @@ describe Folder do
     @folder.part.should include(@file.pid)
     @folder.part.should include(gf.pid)
   end
+  it "should support to_solr" do
+    @folder.to_solr.should_not be_nil
+  end
   it "should be accessible via file object?" 
   it "should be accessible via user object?"
 end
