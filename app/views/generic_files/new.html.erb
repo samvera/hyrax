@@ -1,16 +1,23 @@
-<h1>Ingest Tool</h1>
+<h1>Upload Files</h1>
 <%= form_for(@generic_file, :html => {:multipart => true}) do |f| %>
-<h2>Upload Files</h2>
+<%= hidden_field_tag(:file_count, "1") %>
+<h2>Choose File(s)</h2>
 <div class="uploader-contents">
-  <p>Browse to upload a file.</p>
-  <!-- <input name="Filedata-orig" type="file" /> -->
+
+  <p id="upload_field_1">
+  <label>Select a file to upload from your computer.  Click the <strong>Add Files</strong> button to upload more than one file.</label><br />
   <%= file_field_tag "Filedata[]" %>
-  <%= file_field_tag "Filedata[]" %>
+  </p>
+  <div id="additional_files"></div>
+  <%= f.submit :value =>"Add More Files", :name=>"additional_files_submit", :id => "additional_files_submit"  %><br />
+
 </div>
 
-<h2>Metadata</h2>
+<h2>Description(s)</h2>
 <%= f.label :contributor%> <%= f.text_field :contributor %> <br />
 <%= f.label :creator%> <%= f.text_field :creator %> <br />
 <%= f.label :title%> <%= f.text_field :title %> <br />
+<div id="more_descriptions"></div>
+<%= f.submit "Add More Descriptions"  %><br />
 <%= f.submit "Upload" %>
 <% end %>

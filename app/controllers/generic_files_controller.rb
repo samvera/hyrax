@@ -70,8 +70,12 @@ class GenericFilesController < ApplicationController
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields
   def create_and_save_generic_files_from_params
     @generic_files = []
+    puts "obj is #{@generic_files.inspect}"
+    puts "passed parms #{params[:generic_file]}"
     if params.has_key?(:Filedata)
+      puts "okay so there is a Filedata param"
       params[:Filedata].each do |file|
+        puts "file"
         generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
         
         add_posted_blob_to_asset(generic_file,file)
@@ -82,6 +86,8 @@ class GenericFilesController < ApplicationController
         generic_file.save
         @generic_files << generic_file
       end
+    else
+      puts "no key"
     end
     @generic_files
   end
