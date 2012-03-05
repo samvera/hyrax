@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: a698d7b2c69e91423051ac2ae0f06f7fdbb03cc8
+  revision: 57926b75d72e58bde4161f3bdddd2de36b71b39e
   branch: 3.3.x
   specs:
     active-fedora (3.3.2)
