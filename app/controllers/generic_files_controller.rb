@@ -9,6 +9,7 @@ class GenericFilesController < ApplicationController
   
   def new
     @generic_file = GenericFile.new 
+    @dc_metadata = [['Title', 'title'], ['Creator', 'creator'], ['Publisher', 'publisher'], ['Description', 'description']]
   end
 
   def edit
@@ -82,6 +83,9 @@ class GenericFilesController < ApplicationController
         generic_file.label = file.original_filename
         # Delete this next line when GenericFile.label no longer wipes out the title
         generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
+        generic_file.creator = params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
+        generic_file.contributor = params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
+        generic_file.publisher = params[:generic_file][:publisher] if params[:generic_file].has_key?(:publisher)
         generic_file.save
         @generic_files << generic_file
       end

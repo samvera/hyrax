@@ -1,6 +1,8 @@
 <h1>Upload Files</h1>
 <%= form_for(@generic_file, :html => {:multipart => true}) do |f| %>
 <%= hidden_field_tag(:file_count, "1") %>
+<%= hidden_field_tag(:extra_description_count, "1") %>
+
 <h2>Choose File(s)</h2>
 <div class="uploader-contents">
 
@@ -9,7 +11,7 @@
   <%= file_field_tag "Filedata[]" %>
   </p>
   <div id="additional_files"></div>
-  <%= f.submit :value =>"Add More Files", :name=>"additional_files_submit", :id => "additional_files_submit"  %><br />
+  <%= f.submit :value => "Add More Files", :name=> "additional_files_submit", :id => "additional_files_submit"  %><br />
 
 </div>
 
@@ -17,7 +19,12 @@
 <%= f.label :contributor%> <%= f.text_field :contributor %> <br />
 <%= f.label :creator%> <%= f.text_field :creator %> <br />
 <%= f.label :title%> <%= f.text_field :title %> <br />
-<div id="more_descriptions"></div>
-<%= f.submit "Add More Descriptions"  %><br />
-<%= f.submit "Upload" %>
+<div id="more_descriptions">
+  <div id="extra_description_1">
+  <%= select_tag(:metadata_key_1, options_for_select(([['More Descriptions', '0']] | @dc_metadata))) %>
+  <%= text_field_tag(:metadata_value_1) %><br />
+  </div>
+</div>
+<%= f.submit :value => "Add More Descriptions", :name=> "additional_md_submit", :id => "additional_md_submit"  %><br />
+<%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit"  %>
 <% end %>
