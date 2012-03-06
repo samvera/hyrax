@@ -12,12 +12,12 @@ Feature: Uploading files via web form
 #    And I should see a file chooser button 
 #    And I should see a "Upload" button 
 #
-#  Scenario: Upload a file, no metadata
-#    Given I am logged in as "contentauthor@psu.edu"
-#    When I am on the "ingest" page 
-#    And I attach the file "test_support/fixtures/image.jp2" to "Filedata[]"
-#    And I press "Upload"
-#    Then I should see "The file image.jp2 has been saved"
+  Scenario: Upload a file, no metadata
+    Given I am logged in as "contentauthor@psu.edu"
+    When I am on the "ingest" page 
+    And I attach the file "test_support/fixtures/image.jp2" to "Filedata[]"
+    And I press "Upload"
+    Then I should see "You must include a title."
 
 #  Scenario: Upload a file, with metadata
 #    Given I am logged in as "contentauthor@psu.edu"
