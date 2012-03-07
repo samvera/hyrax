@@ -17,7 +17,6 @@ class GenericFilesController < ApplicationController
   end
 
   def create
-    
     create_and_save_generic_files_from_params
 
     if @generic_files.empty? 

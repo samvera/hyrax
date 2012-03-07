@@ -63,8 +63,10 @@ Feature: Uploading files via web form
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
     And I press "additional_files_submit"
-    And I attach a file "/Users/dmc186/workspace/rb/gamma/test_support/fixtures/image.jp2" to the dynamically created "#Filedata_"
-    And I attach a file "/Users/dmc186/workspace/rb/gamma/test_support/fixtures/small_file.txt" to the dynamically created "#Filedata_2"
+    #And I attach a file "/Users/dmc186/workspace/rb/gamma/test_support/fixtures/image.jp2" to the dynamically created "#Filedata_"
+    #And I attach a file "/Users/dmc186/workspace/rb/gamma/test_support/fixtures/small_file.txt" to the dynamically created "#Filedata_2"
+    And I attach a file "../../../test_support/fixtures/image.jp2" to the dynamically created "#Filedata_"
+    And I attach a file "../../../test_support/fixtures/small_file.txt" to the dynamically created "#Filedata_2"
     And I fill in "Mike Motorcycle" for "generic_file_contributor" 
     And I fill in "Dan Ran" for "generic_file_creator"
     And I fill in "Dan's Book" for "generic_file_title"
