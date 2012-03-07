@@ -1,23 +1,25 @@
 <tr class="document <%= cycle("even","odd") %>">
   <td>
-    <%#= link_to document[:title_t], generic_file_path(document[:id]) %> 
-    <%= link_to document[:label_t], generic_file_path(document[:id]) %> 
+    <%= check_box_tag :generic_file, document[:id] %>
+  </td>
+  <td>
+    <%#= link_to document[:label_t], generic_file_path(document[:id]) %> 
+    <%= link_to document[:title_t], generic_file_path(document[:id]) %> 
     <%#= document.inspect %>
   </td>
   <td>
-
+    <%= document[:id] %>
   </td>
   <td>
     <%= DateTime.parse(document.fetch(:system_create_dt,nil)).to_time %>
-  </td>
-  <td>
-    <%= (document.fetch(:medium_t,nil) || document_type(document)).gsub("Hydrangea","") %>
+    <%# DateTime.strptime(document.fetch(:system_create_dt,nil),"%m %d, %Y %I:%M %p").to_time %>
+    <%# (document.fetch(:medium_t,nil) || document_type(document)).gsub("Hydrangea","") %>
   </td>
   <td>
     <%= get_file_asset_count(document)%>
   </td>
   <td>
-    Created
+    icons 
   </td>
 </tr>
 <tr class="document detail">
