@@ -19,14 +19,13 @@ gem 'jettywrapper'
 
 # For testing
 group :development, :test do 
-       gem 'solrizer-fedora', '>=1.2.5'
-       gem 'rspec'
+       #gem 'solrizer-fedora', '>=1.2.5'
+       #gem 'rspec'
        gem 'rspec-rails', '>=2.8.0'
        gem 'mocha'
        gem 'cucumber-rails'
        gem 'capybara'
        gem 'factory_girl'
-#       gem 'bcrypt-ruby'
        gem 'rest-client'
 end
 

@@ -26,10 +26,7 @@ module Hydra::Assets
     if params.has_key?("field")
       
       @response, @document = get_solr_response_for_doc_id
-      # @document = SolrDocument.new(@response.docs.first)
       result = @document["#{params["field"]}_t"]
-      # document_fedora = SaltDocument.load_instance(params[:id])
-      # result = document_fedora.datastreams_in_memory[params["datastream"]].send("#{params[:field]}_values")
       unless result.nil?
         if params.has_key?("field_index")
           result = result[params["field_index"].to_i-1]
@@ -96,12 +93,8 @@ module Hydra::Assets
   end
   
   def destroy
-    af = ActiveFedora::Base.load_instance(params[:id])
-    the_model = ActiveFedora::ContentModel.known_models_for( af ).first
-    unless the_model.nil?
-      af = the_model.load_instance(params[:id])
-      assets = af.destroy_child_assets
-    end
+    af = ActiveFedora::Base.find(params[:id])
+    assets = af.destroy_child_assets
     af.delete
     msg = "Deleted #{params[:id]}"
     msg.concat(" and associated file_asset(s): #{assets.join(", ")}") unless assets.empty?

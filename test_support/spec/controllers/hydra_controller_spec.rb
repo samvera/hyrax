@@ -25,9 +25,8 @@ describe HydraControllerTest do
       
       assigns[:document_fedora].class.should == ModsAsset 
       assigns[:document_fedora].pid.should == 'hydrangea:fixture_mods_article1' 
-      assigns[:file_assets].class.should == Solr::Response::Standard
-      assigns[:file_assets].hits.size.should == 1
-      assigns[:file_assets].hits.first["id"].should == "hydrangea:fixture_uploaded_svg1"
+      assigns[:file_assets].size.should == 1
+      assigns[:file_assets].first["id"].should == "hydrangea:fixture_uploaded_svg1"
     end
   end
 end

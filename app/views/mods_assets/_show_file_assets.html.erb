@@ -1,4 +1,4 @@
-<% unless @document_fedora.file_objects(:response_format=>:solr).hits.empty? %>
+<% unless @document_fedora.file_objects(:response_format=>:solr).empty? %>
   <h2 class="section-title">Files</h2>
   <div class="uploads" id="uploads_<%= format_pid(params[:id]) %>">	
     <table id="file_assets" class="multipleEdit">
