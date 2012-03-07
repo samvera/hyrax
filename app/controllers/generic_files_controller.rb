@@ -18,12 +18,13 @@ class GenericFilesController < ApplicationController
 
   def create
     
-    @generic_files = create_and_save_generic_files_from_params
+    create_and_save_generic_files_from_params
+
     if @generic_files.empty? 
       flash[:notice] = "You must specify a file to upload" 
       redirect_params = {:controller => "generic_files", :action => "new"} 
-    elsif params[:generic_file][:title].empty?
-      flash[:notice] = "You must include a title."
+    elsif params[:generic_file][:creator].empty?
+      flash[:notice] = "You must include a creator."
       redirect_params = {:controller => "generic_files", :action => "new"} 
     else
       notice = []

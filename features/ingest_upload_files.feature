@@ -18,8 +18,11 @@ Feature: Uploading files via web form
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
     And I attach the file "test_support/fixtures/image.jp2" to "Filedata[]"
+    And I fill in "" for "generic_file_contributor" 
+    And I fill in "" for "generic_file_creator"
+    And I fill in "" for "generic_file_title"
     And I press "Upload"
-    Then I should see "You must include a title."
+    Then I should see "You must include a creator."
 
   Scenario: Upload a file, with metadata
     Given I am logged in as "contentauthor@psu.edu"
