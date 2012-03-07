@@ -36,7 +36,7 @@ module Hydra::FileAssets
       @container_response, @document = get_solr_response_for_doc_id(params[:asset_id])
       
       # Including these lines for backwards compatibility (until we can use Rails3 callbacks)
-      @container =  ActiveFedora::Base.load_instance(params[:asset_id])
+      @container =  ActiveFedora::Base.find(params[:asset_id])
       @solr_result = @container.file_objects(:response_format=>:solr)
     end
     
@@ -101,7 +101,7 @@ module Hydra::FileAssets
   
   # Common destroy method for all AssetsControllers 
   def destroy
-    ActiveFedora::Base.load_instance(params[:id]).delete 
+    ActiveFedora::Base.find(params[:id]).delete 
 
     flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."
     
@@ -116,35 +116,36 @@ module Hydra::FileAssets
   
   
   def show
-    @file_asset = FileAsset.find(params[:id])
-    if (@file_asset.nil?)
+    begin
+      @file_asset = FileAsset.find(params[:id])
+    rescue ActiveFedora::ObjectNotFoundError
       logger.warn("No such file asset: " + params[:id])
       flash[:notice]= "No such file asset."
       redirect_to(:action => 'index', :q => nil , :f => nil)
-    else
-      # get containing object for this FileAsset
-      pid = @file_asset.container_id
-      @downloadable = false
-      # A FileAsset is downloadable iff the user has read or higher access to a parent
-      begin
-        @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
-      rescue Blacklight::Exceptions::InvalidSolrID
-      end
-      if reader?
-        @downloadable = true
-      end
+      return
+    end
+    # get containing object for this FileAsset
+    pid = @file_asset.container_id
+    @downloadable = false
+    # A FileAsset is downloadable iff the user has read or higher access to a parent
+    begin
+      @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
+    rescue Blacklight::Exceptions::InvalidSolrID
+    end
+    if reader?
+      @downloadable = true
+    end
 
-      if @downloadable
-        # First try to use datastream_id value (set in FileAssetsHelper)
-        if @file_asset.datastreams.include?(datastream_id)
-          send_datastream @file_asset.datastreams[datastream_id]
-        elsif @file_asset.datastreams.include?("DS1")
-          send_datastream @file_asset.datastreams["DS1"]
-        end
-      else
-        flash[:notice]= "You do not have sufficient access privileges to download this file."
-        redirect_to(:action => 'index', :q => nil , :f => nil)
+    if @downloadable
+      # First try to use datastream_id value (set in FileAssetsHelper)
+      if @file_asset.datastreams.include?(datastream_id)
+        send_datastream @file_asset.datastreams[datastream_id]
+      elsif @file_asset.datastreams.include?("DS1")
+        send_datastream @file_asset.datastreams["DS1"]
       end
+    else
+      flash[:notice]= "You do not have sufficient access privileges to download this file."
+      redirect_to(:action => 'index', :q => nil , :f => nil)
     end
   end
 end

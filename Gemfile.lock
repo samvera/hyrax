@@ -1,9 +1,24 @@
+GIT
+  remote: git://github.com/projectblacklight/blacklight.git
+  revision: 14d3ab3654245f13348389f4b94cf551034ef725
+  specs:
+    blacklight (3.2.2)
+      compass (>= 0.12.alpha.2)
+      kaminari
+      marc (~> 0.4.3)
+      nokogiri (~> 1.5)
+      rails (~> 3.1)
+      rsolr (~> 1.0.6)
+      rsolr-ext (~> 1.0.3)
+      sass-rails (~> 3.1)
+      unicode
+
 PATH
   remote: .
   specs:
     hydra-head (3.3.0)
       RedCloth (= 4.2.9)
-      active-fedora (= 4.0.0.rc1)
+      active-fedora (= 4.0.0.rc6)
       blacklight (~> 3.2.2)
       block_helpers
       devise
@@ -29,7 +44,7 @@ GEM
       rack-cache (~> 1.1)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (4.0.0.rc1)
+    active-fedora (4.0.0.rc6)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
@@ -40,8 +55,8 @@ GEM
       om (>= 1.5.3)
       rdf
       rdf-rdfxml
+      rsolr
       rubydora (~> 0.5.4)
-      solr-ruby (>= 0.0.6)
       solrizer (~> 1.2.0)
       xml-simple (>= 1.0.12)
     activemodel (3.2.2)
@@ -63,16 +78,6 @@ GEM
       gyoku (>= 0.4.0)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
-    blacklight (3.2.2)
-      compass (>= 0.12.alpha.2)
-      kaminari
-      marc (~> 0.4.3)
-      nokogiri (~> 1.5)
-      rails (~> 3.1)
-      rsolr (~> 1.0.6)
-      rsolr-ext (~> 1.0.3)
-      sass-rails (~> 3.1)
-      unicode
     block_helpers (0.3.3)
       activesupport (>= 2.0)
     builder (3.0.0)
@@ -136,11 +141,11 @@ GEM
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
     logger (1.2.8)
-    mail (2.4.1)
+    mail (2.4.3)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    marc (0.4.3)
+    marc (0.4.4)
     mediashelf-loggable (0.4.9)
     metaclass (0.0.1)
     mime-types (1.17.2)
@@ -262,7 +267,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.31)
+    tzinfo (0.3.32)
     unicode (0.4.2)
     warden (1.1.1)
       rack (>= 1.0)
@@ -277,6 +282,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  blacklight!
   cucumber-rails (>= 1.2.0)
   factory_girl
   hydra-head!

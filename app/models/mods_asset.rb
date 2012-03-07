@@ -13,5 +13,9 @@ class ModsAsset < ActiveFedora::Base
   
   # adds helpful methods for basic hydra objects
   include Hydra::ModelMethods
+
+  # adds file_objects methods
+  include ActiveFedora::FileManagement
+
   
 end

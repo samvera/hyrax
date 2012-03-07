@@ -129,17 +129,17 @@ describe HydraAssetsHelper do
 
 
       result = ActiveFedora::Base.find_by_solr(@asset_object4.pid)
-      doc = result.hits.first
+      doc = result.first
       get_file_asset_count(doc).should == 1
       result = ActiveFedora::Base.find_by_solr(@asset_object5.pid)
-      doc = result.hits.first
+      doc = result.first
       get_file_asset_count(doc).should == 2
       result = ActiveFedora::Base.find_by_solr(@asset_object6.pid)
-      doc = result.hits.first
+      doc = result.first
       get_file_asset_count(doc).should == 1
 
       result = ActiveFedora::Base.find_by_solr(@asset_object7.pid)
-      doc = result.hits.first
+      doc = result.first
       get_file_asset_count(doc).should == 0
     end
   end

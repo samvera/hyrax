@@ -23,8 +23,8 @@ class Hydra::ContributorsController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { render :file=>"contributors/new.html" , :layout=>true}
-      format.inline { render :partial=>"contributors/new.html", :layout=>false }
+      format.html { render :file=>"contributors/new" , :layout=>true}
+      format.inline { render :partial=>"contributors/new", :layout=>false }
     end
   end
   
@@ -34,12 +34,12 @@ class Hydra::ContributorsController < ApplicationController
     ct = params[:contributor_type]
     inserted_node, new_node_index = @document_fedora.insert_contributor(ct)
     @document_fedora.save
-    partial_name = "contributors/edit_#{ct}.html"
+    partial_name = "contributors/edit_#{ct}"
     respond_to do |format|
       format.html { 
         redirect_to edit_catalog_path(params[:asset_id], :anchor=>"#{params[:contributor_type]}_#{new_node_index}")
       }
-      format.inline { render :partial=>partial_name, :locals=>{"edit_#{ct}".to_sym =>inserted_node, "edit_#{ct}_counter".to_sym =>new_node_index}, :layout=>false }
+      format.inline { render :partial=>partial_name, :formats=>[:html], :locals=>{"edit_#{ct}".to_sym =>inserted_node, "edit_#{ct}_counter".to_sym =>new_node_index}, :layout=>false }
     end
     
   end

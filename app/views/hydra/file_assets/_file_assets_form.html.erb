@@ -1,4 +1,4 @@
-<%- if params.has_key?(:number_of_files) or !@file_assets.hits.empty? -%>
+<%- if params.has_key?(:number_of_files) or !@file_assets.empty? -%>
   <%= render :partial => "hydra/file_assets/index", :locals => { :file_assets => @file_assets } %>
 <%- end -%>
 <%= form_tag(upload_url, :class => "step") do -%>

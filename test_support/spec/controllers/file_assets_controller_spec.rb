@@ -21,9 +21,7 @@ describe Hydra::FileAssetsController do
   describe "index" do
     
     it "should find all file assets in the repo if no container_id is provided" do
-      #FileAsset.expects(:find_by_solr).with(:all, {}).returns("solr result")
-      # Solr::Connection.any_instance.expects(:query).with('conforms_to_field:info\:fedora/afmodel\:FileAsset', {}).returns("solr result")
-      Solr::Connection.any_instance.expects(:query).with('active_fedora_model_s:FileAsset', {}).returns("solr result")
+      ActiveFedora::SolrService.expects(:query).with('active_fedora_model_s:FileAsset', {}).returns("solr result")
       controller.stubs(:load_permissions_from_solr)
       ActiveFedora::Base.expects(:new).never
       xhr :get, :index
@@ -36,7 +34,7 @@ describe Hydra::FileAssetsController do
       controller.expects(:get_solr_response_for_doc_id).with('_PID_').returns(["container solr response","container solr doc"])
       controller.stubs(:load_permissions_from_solr)
       
-      ActiveFedora::Base.expects(:load_instance).with("_PID_").returns(mock_container)
+      ActiveFedora::Base.expects(:find).with("_PID_").returns(mock_container)
       xhr :get, :index, :asset_id=>"_PID_"
       assigns[:response].should == "assets solr response"
       assigns[:document_list].should == "assets solr list"
@@ -53,7 +51,7 @@ describe Hydra::FileAssetsController do
       mock_solr_hash = {"has_collection_member_field"=>["info:fedora/foo:id"]}
       mock_container = mock("container")
       mock_container.expects(:collection_members).with(:response_format=>:solr).returns("solr result")
-      ActiveFedora::Base.expects(:load_instance).with("_PID_").returns(mock_container)
+      ActiveFedora::Base.expects(:find).with("_PID_").returns(mock_container)
       xhr :get, :index, :asset_id=>"_PID_"
       assigns[:solr_result].should == "solr result"
       assigns[:container].should == mock_container
@@ -115,7 +113,7 @@ describe Hydra::FileAssetsController do
   describe "destroy" do
     it "should delete the asset identified by pid" do
       mock_obj = mock("asset", :delete)
-      ActiveFedora::Base.expects(:load_instance).with("__PID__").returns(mock_obj)
+      ActiveFedora::Base.expects(:find).with("__PID__").returns(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
     it "should remove container relationship and perform proper garbage collection" do
@@ -123,15 +121,19 @@ describe Hydra::FileAssetsController do
       mock_container = mock("asset")
       mock_container.expects(:file_objects_remove).with("_file_asset_pid_")
       FileAsset.expects(:garbage_collect).with("_file_asset_pid_")
-      ActiveFedora::Base.expects(:load_instance).with("_container_pid_").returns(mock_container)
+      ActiveFedora::Base.expects(:find).with("_container_pid_").returns(mock_container)
       delete(:destroy, :id => "_file_asset_pid_", :asset_id=>"_container_pid_")
     end
   end
   
   describe "integration tests - " do
     before(:all) do
+      class TestObj < ActiveFedora::Base
+        include ActiveFedora::FileManagement
+      end
+
       ActiveFedora::SolrService.register(ActiveFedora.solr_config[:url])
-      @test_container = ActiveFedora::Base.new
+      @test_container = TestObj.new
       @test_container.add_relationship(:is_member_of, "info:fedora/foo:1")
       @test_container.add_relationship(:has_collection_member, "info:fedora/foo:2")
       @test_container.save
@@ -144,6 +146,7 @@ describe Hydra::FileAssetsController do
     after(:all) do
      @test_container.delete
      @test_fa.delete
+     Object.send(:remove_const, :TestObj)
     end
 
     describe "index" do
@@ -172,7 +175,7 @@ describe Hydra::FileAssetsController do
         filename = "My File Name"
         post :create, {:Filedata=>[test_file], :Filename=>filename, :container_id=>@test_container.pid}
         assigns(:file_asset).ids_for_outbound(:is_part_of).should == [@test_container.pid] 
-        retrieved_fa = FileAsset.load_instance(@test_fa.pid).ids_for_outbound(:is_part_of).should == [@test_container.pid]
+        retrieved_fa = FileAsset.find(@test_fa.pid).ids_for_outbound(:is_part_of).should == [@test_container.pid]
       end
     end
   end

@@ -1,9 +1,9 @@
-<% unless file_assets.hits.empty? %>
+<% unless file_assets.empty? %>
     <table class='multipleEdit' id='file_assets'>
       <tr>
         <th colspan="2">File</th>
       </tr>
-      <%= render :partial=>'hydra/file_assets/result', :collection=> file_assets.hits %>
+      <%= render :partial=>'hydra/file_assets/result', :collection=> file_assets%>
 			</table>
 <% end %>
 
