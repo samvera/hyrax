@@ -118,6 +118,7 @@ GEM
     gyoku (0.4.4)
       builder (>= 2.1.2)
     haml (3.1.4)
+    headless (0.2.2)
     httparty (0.8.1)
       multi_json
       multi_xml
@@ -327,6 +328,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   factory_girl_rails
+  headless
   hydra-head (~> 3.3.0)
   jettywrapper
   mocha
@@ -336,5 +338,6 @@ DEPENDENCIES
   ruby-debug
   ruby-prof
   rubydora (~> 0.5.4)
+  selenium-webdriver
   solrizer-fedora (>= 1.2.2)
   sqlite3

@@ -15,6 +15,8 @@ gem 'delayed_job_active_record'
 gem 'noid'
 
 group :development, :test do
+  gem 'selenium-webdriver'
+  gem 'headless'
   gem 'ruby-debug'
   gem 'rspec-rails', '>=2.4.0'
   gem 'ruby-prof'
