@@ -1,30 +1,54 @@
-<h1>Upload Files</h1>
-<%= form_for(@generic_file, :html => {:multipart => true}) do |f| %>
+<div class="page-header">
+  <h1>Upload Files</h1>
+  <p> When you have completed your upload you will automatically be redirected to the <%= link_to("dashboard", catalog_index_path) %>.</p>
+</div>
+<%= form_for(@generic_file, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 <%= hidden_field_tag(:file_count, "1") %>
 <%= hidden_field_tag(:extra_description_count, "1") %>
 
-<h2>Choose File(s)</h2>
 <div class="uploader-contents">
+  <div class="row">
+    <div class="span3">
+      <h2>Choose File(s)</h2>
+    </div>
+    <div class="span9">
+      <p>Select a file to upload from your computer.  Click the <strong>Add Files</strong> button to upload more than one file.</p>
+      <p id="upload_field_1">
+      <%= file_field_tag "Filedata[]" %>
+      </p>
+      <div id="additional_files"></div>
+      <%= f.submit :value => "+Add More Files", :name=> "additional_files_submit", :id => "additional_files_submit", :class=> "btn-info btn-small"  %>
+    </div> <!-- close .span9 -->
+  </div><!-- close .row choose file section-->
 
-  <p id="upload_field_1">
-  <label>Select a file to upload from your computer.  Click the <strong>Add Files</strong> button to upload more than one file.</label><br />
-  <%= file_field_tag "Filedata[]" %>
-  </p>
-  <div id="additional_files"></div>
-  <%= f.submit :value => "Add More Files", :name=> "additional_files_submit", :id => "additional_files_submit"  %><br />
+  <div class="row">
+    <div class="span3">
+        <h2>Description(s)</h2>
+    </div>
+    <div class="span9">
+      <div class="control-group">
+        <%= f.label :title, :class=>"control-label" %> <%= f.text_field :title, :class=>"controls" %>  
+      </div>
+      <div class="control-group">
+        <%= f.label :creator, :class=>"control-label" %> <%= f.text_field :creator, :class=>"controls" %>
+      </div>
+      <div class="control-group">
+        <%= f.label :contributor, :class=>"control-label" %> <%= f.text_field :contributor, :class=>"controls"  %> 
+      </div>
+      <div id="more_descriptions">
+        <div class="control-group" id="extra_description_1">
+          <%= select_tag(:metadata_key_1, options_for_select(([['More Descriptions', '0']] | @dc_metadata))) %>
+          <%= text_field_tag(:metadata_value_1) %>
+        </div><!-- close #extra_description_1 -->
+      </div><!-- close #more_descriptions -->
+      <div class="control-group">
+        <%= f.submit :value => "+Add More Descriptions", :name=> "additional_md_submit", :id => "additional_md_submit", :class => "btn-info btn-small"  %>
+      </div>
+    </div> <!-- close .span9 -->
+  </div><!-- close .row description section -->
 
+<div class="form-actions">
+  <%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
 </div>
-
-<h2>Description(s)</h2>
-<%= f.label :contributor%> <%= f.text_field :contributor %> <br />
-<%= f.label :creator%> <%= f.text_field :creator %> <br />
-<%= f.label :title%> <%= f.text_field :title %> <br />
-<div id="more_descriptions">
-  <div id="extra_description_1">
-  <%= select_tag(:metadata_key_1, options_for_select(([['More Descriptions', '0']] | @dc_metadata))) %>
-  <%= text_field_tag(:metadata_value_1) %><br />
-  </div>
-</div>
-<%= f.submit :value => "Add More Descriptions", :name=> "additional_md_submit", :id => "additional_md_submit"  %><br />
-<%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit"  %>
+</div><!-- close .uploader-contents -->
 <% end %>

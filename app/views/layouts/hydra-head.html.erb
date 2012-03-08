@@ -6,9 +6,9 @@
     <title><%= h(@page_title || application_name) %></title>
     <link href="<%= opensearch_catalog_url(:format => 'xml') %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
     
-    <%= render_head_content %>
+    <%# render_head_content %>
     <%= stylesheet_link_tag 'psu', :media => 'all' %> 
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %> 
     <%= stylesheet_link_tag 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', :media => 'all' %> 
     <%= stylesheet_link_tag 'blacklight/blacklight', :media => 'all' %> 
     <%= javascript_include_tag 'jquery-1.4.2.min.js', 'jquery-ui-1.8.1.custom.min.js', 'blacklight/blacklight' %> 
