@@ -18,7 +18,7 @@ PATH
   specs:
     hydra-head (4.0.0.rc1)
       RedCloth (= 4.2.9)
-      active-fedora (~> 4.0.0.rc8)
+      active-fedora (~> 4.0.0.rc9)
       blacklight (~> 3.2.2)
       block_helpers
       devise
@@ -44,7 +44,7 @@ GEM
       rack-cache (~> 1.1)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (4.0.0.rc8)
+    active-fedora (4.0.0.rc9)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
