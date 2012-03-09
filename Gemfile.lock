@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: 10d22fed9688573a6697608ad7d310b68bc241f2
+  revision: 94a8736c4c5940838ebd7ef773f067a5a199d2e8
   branch: 3.3.x
   specs:
     active-fedora (3.3.2)
@@ -195,7 +195,7 @@ GEM
     multipart-post (1.1.2)
     noid (0.5.3)
       backports
-    nokogiri (1.5.0)
+    nokogiri (1.5.1)
     nori (1.1.0)
     om (1.5.3)
       mediashelf-loggable
