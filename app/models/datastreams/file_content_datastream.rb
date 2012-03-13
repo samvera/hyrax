@@ -12,6 +12,7 @@ class FileContentDatastream < ActiveFedora::Datastream
 
   def extract_metadata
     f = Tempfile.new("#{pid}-#{dsVersionID}")
+    f.binmode
     f.puts content
     f.close
     command = "#{fits_path} -i #{f.path}"
