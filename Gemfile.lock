@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: 94a8736c4c5940838ebd7ef773f067a5a199d2e8
+  revision: 59796486c72f830b884b82230dc7c7b3e2785267
   branch: 3.3.x
   specs:
     active-fedora (3.3.2)
@@ -195,7 +195,7 @@ GEM
     multipart-post (1.1.2)
     noid (0.5.3)
       backports
-    nokogiri (1.5.1)
+    nokogiri (1.5.2)
     nori (1.1.0)
     om (1.5.3)
       mediashelf-loggable
@@ -225,8 +225,11 @@ GEM
     rbx-require-relative (0.0.5)
     rdf (0.3.5)
       addressable (>= 2.2.6)
-    rdf-rdfxml (0.3.5)
-      nokogiri (>= 1.4.4)
+    rdf-rdfxml (0.3.6)
+      rdf (>= 0.3.4)
+      rdf-xsd (>= 0.3.5)
+    rdf-xsd (0.3.5)
+      nokogiri (>= 1.5.0)
       rdf (>= 0.3.4)
     rdoc (3.12)
       json (~> 1.4)
