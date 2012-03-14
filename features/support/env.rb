@@ -54,3 +54,11 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+# Headless for Jenkins CI builds
+ Before("@javascript") do
+	Capybara.current_driver == :selenium
+  	require 'headless'
+
+  	headless = Headless.new
+  	headless.start
+end
