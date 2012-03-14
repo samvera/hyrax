@@ -53,4 +53,23 @@ $(function() {
     
   })
 
+
+  $('.icon-plus').click(function() {
+    //this.id format: "expand_id:NNNNNNNNNN"
+    var a = this.id.split("expand_id_");
+    if (a.length > 1)
+    {
+      docId = a[1]
+      $("#detail_id_"+docId).toggle();
+      if( $("#detail_id_"+docId).is(":hidden") ) 
+      {
+        $("#expand_id_"+docId).attr("class", "icon-plus");
+      }
+      else
+      {
+        $("#expand_id_"+docId).attr("class", "icon-minus");
+      }
+    }
+  })
+
 });

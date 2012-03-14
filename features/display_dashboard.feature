@@ -2,9 +2,13 @@ Feature: As an authenticate and authorized
   user when viewing my dashboard I see all 
   the objects I have access to 
 
+  Scenario: I am on the homepage and want to upload
+    Given I am logged in as "contentauthor@psu.edu"
+    And I press "upload_file"
+    Then I should see "Upload Files"
+
   Scenario: I am on the homepage
     Given I am logged in as "contentauthor@psu.edu"
-    And I should see "UPLOAD FILE(S)"
     Then I should see "Browse"
     And I should see "Language"
     And I should see "Subject"

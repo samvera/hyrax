@@ -2,7 +2,8 @@ Gamma::Application.routes.draw do
   Blacklight.add_routes(self)
   HydraHead.add_routes(self)
 
-  root :to => "catalog#index"
+  #root :to => "catalog#index"
+  root :to => "dashboard#index"
 
   devise_for :users
   resources :generic_files

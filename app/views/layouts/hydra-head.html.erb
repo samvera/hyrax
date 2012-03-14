@@ -25,7 +25,9 @@
 		</div>
 	    
 	  <div id="bd" class="row">
-      <div class="yui-b sidebar span4"><%= sidebar_items.join('').html_safe %></div>	
+      <div class="yui-b sidebar span4">
+        <%= sidebar_items.join('').html_safe %>
+      </div>	
 			<div id="yui-main" class="span12">
         <%= render :partial=>'/flash_msg' %>
         <%= yield %>

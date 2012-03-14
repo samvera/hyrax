@@ -1,0 +1,14 @@
+    <% # container for a single doc -%>
+    <div class="document <%= render_document_class document %>">
+      
+      <% # header bar for doc items in index view -%>
+      <div class="documentHeader">
+        
+        <% # bookmark/folder functions for items/docs -%>
+        
+      </div>
+      
+      <% # main container for doc partial view -%>
+      <%= render_document_partial document, :index %>
+
+    </div>
