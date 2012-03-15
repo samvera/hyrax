@@ -19,20 +19,26 @@ class DashboardController < ApplicationController
   before_filter :enforce_access_controls, :only=>[:edit, :update]
   
   def index
-    pp response
+
     #puts facets_display_heading
     #puts facet_field_names.inspect
     extra_head_content << view_context.auto_discovery_link_tag(:rss, url_for(params.merge(:format => 'rss')), :title => "RSS for results")
     extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => "Atom for results")
   
     (@response, @document_list) = get_search_results
+    pp @response
+    puts "------------DONE WITH @RESPONSE-----"
+    #pp @document_list
+    puts "-----"
     @filters = params[:f] || []
-  
-    respond_to do |format|
-      format.html { save_current_search_params }
-      format.rss  { render :layout => false }
-      format.atom { render :layout => false }
-    end 
+    pp @filters 
+    puts "--DONE WITH FILTERS---"
+
+    #respond_to do |format|
+    #  format.html { save_current_search_params }
+    #  format.rss  { render :layout => false }
+    #  format.atom { render :layout => false }
+    #end 
 
   end
 

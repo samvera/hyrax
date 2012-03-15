@@ -51,22 +51,14 @@ Blacklight.configure(:shared) do |config|
   #
   config[:facet] = {
     :field_names => (facet_fields = [
-      "object_type_facet",
-      "pub_date",
-      "subject_topic_facet",
-      "language_facet",
-      "lc_1letter_facet",
-      "subject_geo_facet",
-      "subject_era_facet"
+      "creator_facet",
+      "contributor_facet",
+      "title_facet"
     ]),
     :labels => {
-      "object_type_facet"   => "Format",
-      "pub_date"            => "Publication Year",
-      "subject_topic_facet" => "Topic",
-      "language_facet"      => "Language",
-      "lc_1letter_facet"    => "Call Number",
-      "subject_era_facet"   => "Era",
-      "subject_geo_facet"   => "Region"
+      "creator_facet"   => "Creator",
+      "contributor_facet" => "Contributor",
+      "title_facet" => "Title"
     },
     # Setting a limit will trigger Blacklight's 'more' facet values link.
     # * If left unset, then all facet values returned by solr will be displayed.
@@ -97,26 +89,14 @@ Blacklight.configure(:shared) do |config|
   #   The ordering of the field names is the order of the display 
   config[:index_fields] = {
     :field_names => [
-      "title_display",
-      "title_vern_display",
-      "author_display",
-      "author_vern_display",
-      "format",
-      "language_facet",
-      "published_display",
-      "published_vern_display",
-      "lc_callnum_display"
+      "creator_display",
+      "contributor_display",
+      "title_display"
     ],
     :labels => {
+      "creator_display"         => "Creator:",
+      "contributor_display"     => "Contributor:",
       "title_display"           => "Title:",
-      "title_vern_display"      => "Title:",
-      "author_display"          => "Author:",
-      "author_vern_display"     => "Author:",
-      "format"                  => "Format:",
-      "language_facet"          => "Language:",
-      "published_display"       => "Published:",
-      "published_vern_display"  => "Published:",
-      "lc_callnum_display"      => "Call number:"
     }
   }
 
@@ -124,38 +104,14 @@ Blacklight.configure(:shared) do |config|
   #   The ordering of the field names is the order of the display 
   config[:show_fields] = {
     :field_names => [
-      "title_display",
-      "title_vern_display",
-      "subtitle_display",
-      "subtitle_vern_display",
-      "author_display",
-      "author_vern_display",
-      "format",
-      "url_fulltext_display",
-      "url_suppl_display",
-      "material_type_display",
-      "language_facet",
-      "published_display",
-      "published_vern_display",
-      "lc_callnum_display",
-      "isbn_t"
+      "creator_display",
+      "contributor_display",
+      "title_display"
     ],
     :labels => {
+      "creator_display"         => "Creator:",
+      "contributor_display"     => "Contributor:",
       "title_display"           => "Title:",
-      "title_vern_display"      => "Title:",
-      "subtitle_display"        => "Subtitle:",
-      "subtitle_vern_display"   => "Subtitle:",
-      "author_display"          => "Author:",
-      "author_vern_display"     => "Author:",
-      "format"                  => "Format:",
-      "url_fulltext_display"    => "URL:",
-      "url_suppl_display"       => "More Information:",
-      "material_type_display"   => "Physical description:",
-      "language_facet"          => "Language:",
-      "published_display"       => "Published:",
-      "published_vern_display"  => "Published:",
-      "lc_callnum_display"      => "Call number:",
-      "isbn_t"                  => "ISBN:"
     }
   }
 

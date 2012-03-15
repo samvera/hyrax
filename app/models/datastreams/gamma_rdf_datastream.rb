@@ -2,9 +2,16 @@ class GammaRDFDatastream < ActiveFedora::NtriplesRDFDatastream
   register_vocabularies RDF::DC, RDF::FOAF, RDF::RDFS
   map_predicates do |map|
     map.part_of(:to => "isPartOf", :in => RDF::DC)
-    map.contributor(:in => RDF::DC)
-    map.creator(:in => RDF::DC)
-    map.title(:in => RDF::DC, :type => :text)
+    map.contributor(:in => RDF::DC) do |index|
+      index.as :sortable, :searchable, :facetable, :displayable
+    end
+    map.creator(:in => RDF::DC) do |index|
+      index.as :sortable, :searchable, :facetable, :displayable
+    end
+    map.title(:in => RDF::DC) do |index|
+      index.type :text
+      index.as :sortable, :searchable, :facetable, :displayable
+    end
     map.description(:in => RDF::DC, :type => :text)
     map.publisher(:in => RDF::DC)
     map.date_created(:to => "created", :in => RDF::DC, :type => :date)
