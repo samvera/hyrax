@@ -2,10 +2,10 @@ module ActiveFedora
   class UnsavedDigitalObject 
     def assign_pid
       return @pid if @pid
-      bound = false
-      until bound
+      taken = true
+      while taken
         @pid = PSU::IdService.mint
-        bound = ActiveFedora::Base.find(@pid).new_object?
+        taken = ActiveFedora::Base.exists?(@pid)
       end
       @pid
     end

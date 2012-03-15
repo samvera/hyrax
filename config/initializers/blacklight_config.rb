@@ -21,7 +21,7 @@ Blacklight.configure(:shared) do |config|
 
   config[:default_solr_params] = {
     :qt => "search",
-    :per_page => 10 
+    :rows => 10 
   }
  
   # solr field values given special treatment in the show (single result) view

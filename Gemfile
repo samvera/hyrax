@@ -1,13 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.0.10'
+gem 'rails', '~> 3.2.0'
 
 gem 'sqlite3'
-
-gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'3.3.x'
-gem 'solrizer-fedora', '>=1.2.2'
-gem 'blacklight', '~>3.1.2'
-gem 'hydra-head', '~>3.3.0'
+gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'master'
+gem 'blacklight', '~>3.2.2'
+#gem 'hydra-head', '~>3.3.0'
+gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'4.0.x'
 gem 'rubydora', '~>0.5.4'
 
 gem 'devise'

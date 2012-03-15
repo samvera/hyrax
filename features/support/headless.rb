@@ -2,7 +2,7 @@
 Before("@javascript") do
   if ENV['HEADLESS'] == 'true'
     Capybara.current_driver = :selenium
-    require 'headless'   
+    require 'headless'
     headless = Headless.new
     headless.start
     at_exit do

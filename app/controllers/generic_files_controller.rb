@@ -22,7 +22,7 @@ class GenericFilesController < ApplicationController
     if @generic_files.empty? 
       flash[:notice] = "You must specify a file to upload" 
       redirect_params = {:controller => "generic_files", :action => "new"} 
-    elsif params[:generic_file][:creator].empty?
+    elsif params[:generic_file].has_key? :creator and params[:generic_file][:creator].empty?
       flash[:notice] = "You must include a creator."
       redirect_params = {:controller => "generic_files", :action => "new"} 
     else
@@ -76,6 +76,7 @@ class GenericFilesController < ApplicationController
     @generic_files = []
     if params.has_key?(:Filedata)
       params[:Filedata].each do |file|
+        params[:generic_file] = {} unless params.has_key? :generic_file
         generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
         
         add_posted_blob_to_asset(generic_file,file)
