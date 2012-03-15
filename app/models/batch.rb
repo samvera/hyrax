@@ -1,10 +1,10 @@
 require "psu-customizations"
 
-class Folder < ActiveFedora::Base
+class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
 
-  has_metadata :name => "descMetadata", :type => FolderRDFDatastream
+  has_metadata :name => "descMetadata", :type => BatchRDFDatastream
 
   belongs_to :user, :property => "creator"
   has_many :generic_files, :property => "part"

@@ -1,4 +1,4 @@
-class GammaRDFDatastream < ActiveFedora::NtriplesRDFDatastream
+class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
   register_vocabularies RDF::DC, RDF::FOAF, RDF::RDFS
   map_predicates do |map|
     map.part_of(:to => "isPartOf", :in => RDF::DC)
