@@ -1,5 +1,3 @@
-# Stanford SolrHelper is a controller layer mixin. It is in the controller scope: request params, session etc.
-# 
 # NOTE: Be careful when creating variables here as they may be overriding something that already exists.
 # The ActionController docs: http://api.rubyonrails.org/classes/ActionController/Base.html
 #
@@ -15,7 +13,6 @@
 #   
 # end
 #
-require 'active_fedora/version'
 module MediaShelf
   module ActiveFedoraHelper
 
@@ -25,7 +22,6 @@ module MediaShelf
       else
         klass = nil
       end
-      #klass.included_modules.include?(ActiveFedora::Model)  
       if klass.is_a?(Class) && klass.superclass == ActiveFedora::Base
         return klass
       else
@@ -40,29 +36,5 @@ module MediaShelf
       pid ? ActiveFedora::Base.load_instance_from_solr(pid,doc) : nil
     end
 
-    private
-  
-    def require_solr
-      ActiveFedora::SolrService.register(ActiveFedora.solr_config[:url])
-    end
-    
-    #underscores are escaped w/ + signs, which are unescaped by rails to spaces
-    def unescape_keys(attrs)
-      h=Hash.new
-      attrs.each do |k,v|
-        h[k.gsub(/ /, '_')]=v
-
-      end
-      h
-    end
-    def escape_keys(attrs)
-      h=Hash.new
-      attrs.each do |k,v|
-        h[k.gsub(/_/, '+')]=v
-
-      end
-      h
-    end
-    
   end
 end
