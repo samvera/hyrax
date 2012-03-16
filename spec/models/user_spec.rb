@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe User do
   before do
-    @user = User.create(:login => "testuser", 
-                        :email => "testuser@example.com", 
+    @user = User.create(:email => "testuser@example.com", 
                         :password => "password", 
                         :password_confirmation => "password")
   end
@@ -18,7 +17,7 @@ describe User do
     Batch.find(:all, :query => {:creator => @user.email}).count.should == 0
   end
   it "should now have one batch" do
-    f = Batch.create(:batch_creator => @user.email)
+    f = Batch.create(:creator => @user.email)
     Batch.find(:all, :query => {:creator => @user.email}).count.should == 1
     f.delete
   end

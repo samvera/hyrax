@@ -26,14 +26,14 @@ Blacklight.configure(:shared) do |config|
  
   # solr field values given special treatment in the show (single result) view
   config[:show] = {
-    :html_title => "title_t",
-    :heading => "title_t",
+    :html_title => "generic_file__title_t",
+    :heading => "generic_file__title_t",
     :display_type => "has_model_s"
   }
 
   # solr fld values given special treatment in the index (search results) view
   config[:index] = {
-    :show_link => "title_t",
+    :show_link => "generic_file__title_t",
     :record_display_type => "id"
   }
 

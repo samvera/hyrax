@@ -16,10 +16,10 @@ GIT
 
 GIT
   remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: 35213f7b1e6cbdbc01595478d660b9abd15aa45c
+  revision: 1e4c9510955dd58c204224d175591073b04f0321
   branch: master
   specs:
-    active-fedora (4.0.0.rc11)
+    active-fedora (4.0.0.rc12)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
