@@ -43,6 +43,9 @@ describe Batch do
   end
   it "should support to_solr" do
     @batch.to_solr.should_not be_nil
+    @batch.to_solr.keys.select {|k| k.to_s.start_with? "part_"}.should == []
+    @batch.to_solr.keys.select {|k| k.to_s.start_with? "title_"}.should == []
+    @batch.to_solr.keys.select {|k| k.to_s.start_with? "creator_"}.should == []
   end
   it "should be accessible via file object?" 
   it "should be accessible via user object?"

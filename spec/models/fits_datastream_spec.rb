@@ -13,7 +13,7 @@ describe FitsDatastream do
     @file.mime_type.should include("image/png")
   end
   it "should have a file size" do
-    @file.file_size.should include("4219")
+    @file.file_size.should include("4218")
   end
   it "should have a last modified timestamp" do
     @file.last_modified.should_not include("")
@@ -22,7 +22,7 @@ describe FitsDatastream do
     @file.filename.should_not include("")
   end
   it "should have a checksum" do
-    @file.original_checksum.should include("a14d8a19ad0f91bf0f03a7e43c1170a8")
+    @file.original_checksum.should include("28da6259ae5707c68708192a40b3e85c")
   end
 end
 
