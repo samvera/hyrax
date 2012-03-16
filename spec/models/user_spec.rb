@@ -18,7 +18,7 @@ describe User do
     Batch.find(:all, :query => {:creator => @user.email}).count.should == 0
   end
   it "should now have one batch" do
-    f = Batch.create(:creator => @user.email)
+    f = Batch.create(:batch_creator => @user.email)
     Batch.find(:all, :query => {:creator => @user.email}).count.should == 1
     f.delete
   end

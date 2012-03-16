@@ -7,8 +7,8 @@ describe Batch do
                         :password => "password", 
                         :password_confirmation => "password")
     @file = GenericFile.create
-    @batch = Batch.create(:title => "test collection",
-                          :creator => @user.login,
+    @batch = Batch.create(:batch_title => "test collection",
+                          :batch_creator => @user.login,
                           :part => @file.pid)
   end
   after(:all) do
@@ -23,10 +23,10 @@ describe Batch do
     @batch.descMetadata.should be_kind_of BatchRDFDatastream
   end
   it "should belong to testuser" do
-    @batch.creator.should == [@user.email]
+    @batch.batch_creator.should == [@user.email]
   end
   it "should be titled 'test collection'" do
-    @batch.title.should == ["test collection"]
+    @batch.batch_title.should == ["test collection"]
   end
   it "should have generic_files defined" do
     @batch.should respond_to(:generic_files)
@@ -44,8 +44,8 @@ describe Batch do
   it "should support to_solr" do
     @batch.to_solr.should_not be_nil
     @batch.to_solr.keys.select {|k| k.to_s.start_with? "part_"}.should == []
-    @batch.to_solr.keys.select {|k| k.to_s.start_with? "title_"}.should == []
-    @batch.to_solr.keys.select {|k| k.to_s.start_with? "creator_"}.should == []
+    @batch.to_solr.keys.select {|k| k.to_s.start_with? "batch_title_"}.should == []
+    @batch.to_solr.keys.select {|k| k.to_s.start_with? "batch_creator_"}.should == []
   end
   it "should be accessible via file object?" 
   it "should be accessible via user object?"

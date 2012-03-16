@@ -6,10 +6,10 @@ class Batch < ActiveFedora::Base
 
   has_metadata :name => "descMetadata", :type => BatchRDFDatastream
 
-  belongs_to :user, :property => "creator"
+  belongs_to :user, :property => "batch_creator"
   has_many :generic_files, :property => "part"
 
-  delegate :title, :to => :descMetadata
-  delegate :creator, :to => :descMetadata
+  delegate :batch_title, :to => :descMetadata
+  delegate :batch_creator, :to => :descMetadata
   delegate :part, :to => :descMetadata
 end
