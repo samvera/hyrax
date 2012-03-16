@@ -56,7 +56,7 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
-      yt.files   = ['lib/**/*', project_root+"*", 'app/**/*']
+      yt.files   = ['lib/**/*.rb', project_root+"*", 'app/**/*.rb']
 
       yt.options << "-m" << "textile"
       yt.options << "--protected"
