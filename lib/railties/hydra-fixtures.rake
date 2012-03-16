@@ -1,104 +1,7 @@
 require "active-fedora"
 require "solrizer-fedora"
 require "active_support" # This is just to load ActiveSupport::CoreExtensions::String::Inflections
-
-Rake::TaskManager.class_eval do
-  def alias_task(fq_name)
-    new_name = "#{fq_name}:original"
-    @tasks[new_name] = @tasks.delete(fq_name)
-  end
-end
-
-def alias_task(fq_name)
-  Rake.application.alias_task(fq_name)
-end
-
-# Rake does chaining by default, not overriding
-def override_task(*args, &block)
-  name, params, deps = Rake.application.resolve_args(args.dup)
-  fq_name = Rake.application.instance_variable_get(:@scope).dup.push(name).join(':')
-  alias_task(fq_name)
-  Rake::Task.define_task(*args, &block)
-end
-
-namespace :repo do
-  desc "Load the object located at the provided path or identified by pid."
-  override_task :load => :environment do
-    ### override the AF provided task to use the correct fixture directory
-    if ENV["pid"].nil? 
-      raise "You must specify a valid pid.  Example: rake repo:load pid=demo:12"
-    end
-puts "loading #{ENV['pid']}" 
-      
-    begin
-      ActiveFedora::FixtureLoader.new('test_support/fixtures').reload(ENV["pid"])
-    rescue Errno::ECONNREFUSED => e
-      puts "Can't connect to Fedora! Are you sure jetty is running?"
-    rescue Exception => e
-      logger.error("Received a Fedora error while loading #{pid}\n#{e}")
-    end
-  end
-end
 namespace :hydra do
-  
-  desc "[DEPRECATED] Delete and re-import the fixture identified by pid" 
-  task :refresh_fixture do
-    STDERR.puts "DEPRECATED: hydra:refresh_fixture is deprecated.  Use/override repo:refresh instead."
-    Rake::Task["repo:refresh"].invoke
-  end
-  
-  desc "[DEPRECATED] Delete the object identified by pid. Example: rake hydra:delete pid=demo:12"
-  task :delete do
-    STDERR.puts "DEPRECATED: hydra:delete is deprecated.  Use/override repo:delete instead."
-    Rake::Task["repo:delete"].invoke
-  end
-  
-  desc "[DEPRECATED] Delete a range of objects in a given namespace.  ie 'rake hydra:purge_range[demo, 22, 50]' will delete demo:22 through demo:50"
-  task :purge_range do |t, args|
-    STDERR.puts "DEPRECATED: hydra:purge_range is deprecated.  Use/override repo:delete_range instead."
-    Rake::Task["repo:delete_range"].invoke
-  end
-
-  desc "[DEPRECATED] Export the object identified by pid into test_support/fixtures. Example:rake hydra:harvest_fixture pid=druid:sb733gr4073 source=http://fedoraAdmin:fedoraAdmin@127.0.0.1:8080/fedora"
-  task :harvest_fixture do
-    STDERR.puts "DEPRECATED: hydra:harvest_fixture is deprecated.  Use/override repo:export instead."
-    if ENV["path"].nil?
-      ENV["path"] = File.join("test_support","fixtures")
-    end
-    Rake::Task["repo:export"].invoke
-  end
-  
-  desc "[DEPRECATED] Import the fixture located at the provided path. Example: rake hydra:import_fixture fixture=test_support/fixtures/demo_12.foxml.xml"
-  task :import_fixture do
-    STDERR.puts "DEPRECATED: hydra:import_fixture is deprecated.  Use/override repo:load instead."
-    if !ENV["pid"].nil?
-      pid = ENV["pid"]
-      ENV["pid"] = nil
-      ENV["path"] = File.join("test_support","fixtures","#{pid.gsub(":","_")}.foxml.xml")
-     end
-     Rake::Task["repo:load"].invoke
-  end
-
-  namespace :default_fixtures do
-    desc "[DEPRECATED] Load default Hydra fixtures"
-    task :load do
-      STDERR.puts "DEPRECATED: hydra:default_fixtures:load is deprecated.  Use/override hydra:fixtures:load instead."
-      Rake::Task["hydra:fixtures:load"].invoke	
-    end
-
-    desc "[DEPRECATED] Remove default Hydra fixtures"
-    task :delete do
-      STDERR.puts "DEPRECATED: hydra:default_fixtures:delete is deprecated.  Use/override hydra:fixtures:delete instead."
-      Rake::Task["hydra:fixtures:delete"].invoke	
-    end
-
-    desc "[DEPRECATED] Refresh default Hydra fixtures"
-    task :refresh do
-      STDERR.puts "DEPRECATED: hydra:default_fixtures:refresh is deprecated.  Use/override hydra:fixtures:refresh instead."
-      Rake::Task["hydra:fixtures:refresh"].invoke	
-    end
-  end
-
   
   desc "Init Hydra configuration" 
   task :init => [:environment] do
@@ -131,6 +34,7 @@ namespace :hydra do
     ]
     desc "Load default Hydra fixtures"
     task :load do
+      ENV["dir"] = File.join("test_support", "fixtures")
       FIXTURES.each do |fixture|
         ENV["pid"] = fixture
         Rake::Task["repo:load"].reenable
@@ -140,6 +44,7 @@ namespace :hydra do
 
     desc "Remove default Hydra fixtures"
     task :delete do
+      ENV["dir"] = File.join("test_support", "fixtures")
       FIXTURES.each do |fixture|
         ENV["pid"] = fixture
         Rake::Task["repo:delete"].reenable
