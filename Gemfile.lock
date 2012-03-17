@@ -16,7 +16,7 @@ GIT
 PATH
   remote: .
   specs:
-    hydra-head (4.0.0.rc1)
+    hydra-head (4.0.0.rc2)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.0.0.rc13)
       blacklight (~> 3.2.2)
