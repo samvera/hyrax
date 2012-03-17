@@ -61,86 +61,74 @@ describe HydraAssetsHelper do
   end
 
   describe "get_file_asset_count" do
-    before(:each) do
-      #setup objects for following cases
-      #
-      #outbound has_part
-      #outbound has_part + inbound is_part_of
-      #inbound is_part_of
-      #none      
-      @asset_object4 = ActiveFedora::Base.new
-      @asset_object5 = ActiveFedora::Base.new
-      @asset_object6 = ActiveFedora::Base.new
-      @asset_object7 = ActiveFedora::Base.new
-      @file_object1 = ActiveFedora::Base.new
-      @file_object2 = ActiveFedora::Base.new
-
-
-
-      @asset_object4.add_relationship(:has_part,@file_object1)
-      @asset_object5.save
-      @asset_object5.add_relationship(:has_part,@file_object1)
-      @file_object2.part_of_append(@asset_object5)
-      @asset_object6.save
-      @file_object1.part_of_append(@asset_object6)
-     
-      @file_object1.save
-      @file_object2.save
-      @asset_object4.save
-      @asset_object5.save
-      @asset_object6.save
-      @asset_object7.save
-    end
-
-    after(:each) do
-      begin
+    describe "with outbound has_part" do
+      before do
+        @asset_object4 =ActiveFedora::Base.new
+        @file_object1 = ActiveFedora::Base.create
+        @asset_object4.add_relationship(:has_part,@file_object1)
+        @asset_object4.save
+      end
+      after do
         @asset_object4.delete
-      rescue
-      end
-      begin
-        @asset_object5.delete
-      rescue
-      end
-      begin
-        @asset_object6.delete
-      rescue
-      end
-      begin
-        @asset_object7.delete
-      rescue
-      end
-      begin
         @file_object1.delete
-      rescue
       end
-      begin
-        @file_object2.delete
-      rescue
+      it "should find one" do
+        #outbound has_part
+        doc = ActiveFedora::Base.find_by_solr(@asset_object4.pid).first
+        get_file_asset_count(doc).should == 1
       end
     end
 
-    it "should return the correct number of assets with either has_collection_member file assets or parts" do
-      
-      #cases are
-      #outbound has_part
-      #outbound has_part + inbound is_part_of
-      #inbound is_part_of
-      #none      
+    describe "with has_part and inbound is_part_of" do
+      before do
+        @asset_object5 =ActiveFedora::Base.create
+        @file_object1 = ActiveFedora::Base.create
+        @file_object2 = ActiveFedora::Base.create
+        @file_object2.part_of_append(@asset_object5)
+        @asset_object5.add_relationship(:has_part,@file_object1)
+        @asset_object5.save
+        @file_object2.save
+      end
+      after do
+        @asset_object5.delete
+        @file_object1.delete
+        @file_object2.delete
+      end
+      it "should find two" do
+        doc = ActiveFedora::Base.find_by_solr(@asset_object5.pid).first
+        get_file_asset_count(doc).should == 2
+      end
+    end
 
+    describe "with inbound is_part_of" do
+      before do
+        @asset_object6 =ActiveFedora::Base.create
+        @file_object1 = ActiveFedora::Base.create
+        @file_object1.part_of_append(@asset_object6)
+        @asset_object6.save
+        @file_object1.save
+      end
+      after do
+        @asset_object6.delete
+        @file_object1.delete
+      end
+      it "should find one" do
+        doc = ActiveFedora::Base.find_by_solr(@asset_object6.pid).first
+        get_file_asset_count(doc).should == 1
+      end
+    end
 
-      result = ActiveFedora::Base.find_by_solr(@asset_object4.pid)
-      doc = result.first
-      get_file_asset_count(doc).should == 1
-      result = ActiveFedora::Base.find_by_solr(@asset_object5.pid)
-      doc = result.first
-      get_file_asset_count(doc).should == 2
-      result = ActiveFedora::Base.find_by_solr(@asset_object6.pid)
-      doc = result.first
-      get_file_asset_count(doc).should == 1
-
-      result = ActiveFedora::Base.find_by_solr(@asset_object7.pid)
-      doc = result.first
-      get_file_asset_count(doc).should == 0
+    describe "with inbound is_part_of" do
+      before do
+        @asset_object7 =ActiveFedora::Base.create
+      end
+      after do
+        @asset_object7.delete
+      end
+      it "should find zero" do
+        doc = ActiveFedora::Base.find_by_solr(@asset_object7.pid).first
+        get_file_asset_count(doc).should == 0
+      end
     end
   end
 

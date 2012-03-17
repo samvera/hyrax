@@ -1,7 +1,5 @@
-require 'mediashelf/active_fedora_helper'
 require 'sanitize'
 module Hydra::HydraAssetsHelperBehavior
-  include MediaShelf::ActiveFedoraHelper
 
   # Create a link for creating a new asset of the specified content_type
   # If user is not logged in, the link leads to the login page with appropriate redirect params for creating the asset after logging in
@@ -41,7 +39,8 @@ module Hydra::HydraAssetsHelperBehavior
 
   def get_file_asset_count(document)
     count = 0
-    obj = load_af_instance_from_solr(document)
+    obj = ActiveFedora::Base.load_instance_from_solr(document['id'], document)
+    #obj = load_af_instance_from_solr(document)
     count += obj.file_objects.length unless obj.nil?
     count
   end

@@ -1,4 +1,3 @@
-require "mediashelf/active_fedora_helper"
 # Hydra-repository Contoller is a controller layer mixin. It is in the controller scope: request params, session etc.
 # 
 # NOTE: Be careful when creating variables here as they may be overriding something that already exists.
@@ -17,11 +16,6 @@ require "mediashelf/active_fedora_helper"
 # end
 #
 module Hydra::RepositoryController
-  
-  include MediaShelf::ActiveFedoraHelper
-      
-      
-  
   
   def self.included(c)
     if c.respond_to?(:helper_method)
@@ -85,6 +79,28 @@ module Hydra::RepositoryController
     end 
     # puts "downloadables result: #{result}"
     return result    
+  end
+
+  protected 
+  
+  def retrieve_af_model(class_name, opts={})
+    if !class_name.nil?
+      klass = Module.const_get(class_name.camelcase)
+    else
+      klass = nil
+    end
+    if klass.is_a?(Class) && klass.superclass == ActiveFedora::Base
+      return klass
+    else
+      return opts.fetch(:default, false)
+    end
+    rescue NameError
+      return false
+  end
+
+  def load_af_instance_from_solr(doc)
+    pid = doc[:id] ? doc[:id] : doc[:id.to_s]
+    pid ? ActiveFedora::Base.load_instance_from_solr(pid,doc) : nil
   end
   
   private

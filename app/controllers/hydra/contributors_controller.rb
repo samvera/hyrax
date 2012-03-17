@@ -1,13 +1,6 @@
-require 'mediashelf/active_fedora_helper'
-
 class Hydra::ContributorsController < ApplicationController
-  
-  include MediaShelf::ActiveFedoraHelper
   include Hydra::RepositoryController
   include Hydra::AssetsControllerHelper
-  before_filter :require_solr
-  
-  # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
   include Hydra::SubmissionWorkflow
   
   # Display form for adding a new Contributor

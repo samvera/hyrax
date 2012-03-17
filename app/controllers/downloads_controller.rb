@@ -1,6 +1,4 @@
-require 'mediashelf/active_fedora_helper'
 class DownloadsController < ApplicationController
-    include MediaShelf::ActiveFedoraHelper
     include Hydra::RepositoryController
     include Hydra::AssetsControllerHelper
     helper :downloads
@@ -13,23 +11,9 @@ class DownloadsController < ApplicationController
       if params[:download_id]
         @datastream = fedora_object.datastreams[params[:download_id]]
         send_datastream @datastream
-        #send_data( Fedora::Repository.instance.fetch_custom(params[:document_id], "datastreams/#{datastream_id}/content") )
       else
         @datastreams = downloadables( fedora_object )
       end
     end
-    
-    # def show
-    #   puts "params: #{params.inspect}"
-    #   puts "Request: #{request.inspect}"
-    #   puts "Path: #{request.path}"
-    #   
-    #   datastream_id = File.basename(request.path)
-    #   respond_to do |format|
-    #     format.html { send_data( Fedora::Repository.instance.fetch_custom(params[:document_id], "datastreams/#{datastream_id}/content") ) }
-    #     format.pdf { send_data( Fedora::Repository.instance.fetch_custom(params[:document_id], "datastreams/#{datastream_id}/content") ) }
-    #   end
-    #   
-    # end        
     
 end
