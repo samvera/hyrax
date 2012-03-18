@@ -7,7 +7,7 @@
 
 
 
-<% @fedora_object = ActiveFedora::Base.load_instance(params[:id])
+<% @fedora_object = ActiveFedora::Base.find(params[:id])
    @datastreams = @fedora_object.datastreams
 %>
 

@@ -5,8 +5,6 @@ module Hydra::ModelMethods
     unless self.class ==  Module
         self.has_many :parts, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
     end
-    extend ActiveFedora::Relationships
-#    extend ActiveFedora::FileManagement
   end
   
   #
