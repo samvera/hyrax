@@ -63,7 +63,8 @@ class Image < ActiveFedora::Base
     end
   end
 
-  has_relationship "parts", :is_part_of, :inbound => true
+ # has_relationship "parts", :is_part_of, :inbound => true
+  belongs_to :container, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
   
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata 

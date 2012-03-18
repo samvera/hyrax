@@ -45,17 +45,6 @@ describe Hydra::FileAssetsController do
       assigns[:container].should == mock_container
     end
     
-    it "should find all file assets belonging to a given container object if container_id or container_id is provided" do
-      pending
-      # this was testing a hacked version
-      mock_solr_hash = {"has_collection_member_field"=>["info:fedora/foo:id"]}
-      mock_container = mock("container")
-      mock_container.expects(:collection_members).with(:response_format=>:solr).returns("solr result")
-      ActiveFedora::Base.expects(:find).with("_PID_").returns(mock_container)
-      xhr :get, :index, :asset_id=>"_PID_"
-      assigns[:solr_result].should == "solr result"
-      assigns[:container].should == mock_container
-    end
   end
 
   describe "new" do

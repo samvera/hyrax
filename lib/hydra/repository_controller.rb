@@ -98,11 +98,6 @@ module Hydra::RepositoryController
       return false
   end
 
-  def load_af_instance_from_solr(doc)
-    pid = doc[:id] ? doc[:id] : doc[:id.to_s]
-    pid ? ActiveFedora::Base.load_instance_from_solr(pid,doc) : nil
-  end
-  
   private
   
   def filter_datastreams_for_mime_type(datastreams_hash, mime_type)

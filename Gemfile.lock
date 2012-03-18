@@ -18,7 +18,7 @@ PATH
   specs:
     hydra-head (4.0.0.rc2)
       RedCloth (= 4.2.9)
-      active-fedora (~> 4.0.0.rc13)
+      active-fedora (~> 4.0.0.rc15)
       blacklight (~> 3.2.2)
       block_helpers
       devise
@@ -44,7 +44,7 @@ GEM
       rack-cache (~> 1.1)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (4.0.0.rc13)
+    active-fedora (4.0.0.rc15)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
@@ -76,6 +76,7 @@ GEM
     addressable (2.2.7)
     akami (1.0.0)
       gyoku (>= 0.4.0)
+    archive-tar-minitar (0.5.2)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     block_helpers (0.3.3)
@@ -91,6 +92,7 @@ GEM
     childprocess (0.3.1)
       ffi (~> 1.0.6)
     chunky_png (1.2.5)
+    columnize (0.3.6)
     compass (0.12.rc.1)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
@@ -140,6 +142,8 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
+    linecache19 (0.5.13)
+      ruby_core_source (>= 0.1.4)
     logger (1.2.8)
     mail (2.4.3)
       i18n (>= 0.4.0)
@@ -209,6 +213,16 @@ GEM
       activesupport (~> 3.0)
       railties (~> 3.0)
       rspec (~> 2.6.0)
+    ruby-debug-base19 (0.11.26)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby_core_source (>= 0.1.4)
+    ruby-debug19 (0.11.6)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby-debug-base19 (>= 0.11.19)
+    ruby_core_source (0.1.5)
+      archive-tar-minitar (>= 0.5.2)
     rubydora (0.5.7)
       activemodel
       activesupport
@@ -287,7 +301,10 @@ DEPENDENCIES
   factory_girl
   hydra-head!
   jettywrapper (>= 1.0.4)
+  linecache19 (>= 0.5.13)
   mocha
   rspec-rails (~> 2.6.0)
+  ruby-debug-base19 (>= 0.11.26)
+  ruby-debug19
   sqlite3-ruby
   yard

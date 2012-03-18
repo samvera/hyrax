@@ -1,7 +1,6 @@
 module Hydra::FileAssets
   extend ActiveSupport::Concern
   
-  
   included do
     include Hydra::AccessControlsEnforcement
     include Hydra::AssetsControllerHelper

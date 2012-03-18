@@ -63,8 +63,8 @@ describe HydraAssetsHelper do
   describe "get_file_asset_count" do
     describe "with outbound has_part" do
       before do
-        @asset_object4 =ActiveFedora::Base.new
-        @file_object1 = ActiveFedora::Base.create
+        @asset_object4 =ModsAsset.new
+        @file_object1 = ModsAsset.create
         @asset_object4.add_relationship(:has_part,@file_object1)
         @asset_object4.save
       end
@@ -74,17 +74,17 @@ describe HydraAssetsHelper do
       end
       it "should find one" do
         #outbound has_part
-        doc = ActiveFedora::Base.find_by_solr(@asset_object4.pid).first
+        doc = ModsAsset.find_by_solr(@asset_object4.pid).first
         get_file_asset_count(doc).should == 1
       end
     end
 
     describe "with has_part and inbound is_part_of" do
       before do
-        @asset_object5 =ActiveFedora::Base.create
-        @file_object1 = ActiveFedora::Base.create
-        @file_object2 = ActiveFedora::Base.create
-        @file_object2.part_of_append(@asset_object5)
+        @asset_object5 =ModsAsset.create
+        @file_object1 = FileAsset.create
+        @file_object2 = FileAsset.create
+        @file_object2.container = @asset_object5
         @asset_object5.add_relationship(:has_part,@file_object1)
         @asset_object5.save
         @file_object2.save
@@ -102,9 +102,9 @@ describe HydraAssetsHelper do
 
     describe "with inbound is_part_of" do
       before do
-        @asset_object6 =ActiveFedora::Base.create
-        @file_object1 = ActiveFedora::Base.create
-        @file_object1.part_of_append(@asset_object6)
+        @asset_object6 =ModsAsset.create
+        @file_object1 = FileAsset.create
+        @file_object1.container = @asset_object6
         @asset_object6.save
         @file_object1.save
       end
@@ -120,7 +120,7 @@ describe HydraAssetsHelper do
 
     describe "with inbound is_part_of" do
       before do
-        @asset_object7 =ActiveFedora::Base.create
+        @asset_object7 =ModsAsset.create
       end
       after do
         @asset_object7.delete

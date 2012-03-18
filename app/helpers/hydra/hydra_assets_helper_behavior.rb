@@ -39,14 +39,15 @@ module Hydra::HydraAssetsHelperBehavior
 
   def get_file_asset_count(document)
     count = 0
+    ### TODO switch to AF::Base.count
     obj = ActiveFedora::Base.load_instance_from_solr(document['id'], document)
-    #obj = load_af_instance_from_solr(document)
-    count += obj.file_objects.length unless obj.nil?
+    count += obj.parts.length unless obj.nil?
     count
   end
   
   def get_file_asset_description(document)
-    obj = load_af_instance_from_solr(document)
+    #TODO need test coverage
+    obj = ActiveFedora::Base.load_instance_from_solr(document['id'], document)
     if obj.nil? || obj.file_objects.empty?
       return ""
     else

@@ -118,7 +118,7 @@ module Hydra::SubmissionWorkflow
       begin
         af = ActiveFedora::Base.load_instance_from_solr(params[:id])
         return "#{ActiveFedora::ContentModel.known_models_for( af ).first}".underscore.pluralize.to_sym
-      rescue
+      rescue Exception => e #TODO this should be ActiveFedora::ObjectNotFoundError
         nil
       end
     end
