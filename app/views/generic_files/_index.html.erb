@@ -1,16 +1,12 @@
+<!-- gamma over ride -->
 <!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':' 
-  on element ids -->
+on element ids -->
 <tr id="document_<%= document[:id].gsub(":", "_") %>"> <!--  class="document <%= cycle("even","odd") %>"> -->
-  <td><%= check_box_tag :generic_file, document[:id] %></td>
+  <!-- <td><%# check_box_tag :generic_file, document[:id] %></td> -->
   <td>
     <i id="expand_<%= document[:id].gsub(":", "_") %>" class="icon-plus"></i>&nbsp;<%= link_to document[:title_t], generic_file_path(document[:id]) %> </td>
   <td><%= document[:id] %></td>
-  <td>
-    <%# DateTime.parse(document.fetch(:system_create_dt,nil)).to_time %>
-    <%= document.fetch(:system_create_dt,nil).to_time.strftime("%c") %>
-    <%# (document.fetch(:medium_t,nil) || document_type(document)).gsub("Hydrangea","") %>
-  </td>
-  <!-- <td><%= get_file_asset_count(document)%></td> -->
+  <td> <%= document.fetch(:system_create_dt,nil).to_time.strftime("%c") %> </td>
   <td><%= document[:creator_t] %> </td>
   <td>
     <i class="icon-eye-open"></i>&nbsp;

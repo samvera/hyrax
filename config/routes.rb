@@ -2,8 +2,7 @@ Gamma::Application.routes.draw do
   Blacklight.add_routes(self)
   HydraHead.add_routes(self)
 
-  #root :to => "catalog#index"
-  root :to => "dashboard#index"
+  root :to => "catalog#index"
 
   devise_for :users
   resources :generic_files
@@ -13,6 +12,8 @@ Gamma::Application.routes.draw do
       post 'audit'
     end
   end
+
+  match 'dashboard' => 'dashboard#index', :as => :dashboard
 
   match 'authorities/:model/:term' => 'authorities#query'
 

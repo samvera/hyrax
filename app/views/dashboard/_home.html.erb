@@ -1,0 +1,7 @@
+<%= render :partial=>'search_form' %>
+<%# render :partial=>'home_text' %>
+<%= render :partial=>'dashboard/document_list'  %>  
+
+<% sidebar_items << capture do %>
+  <%= render :partial=>'facets' %>
+<% end %>

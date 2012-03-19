@@ -1,31 +1,34 @@
+<%# users are always logged in...  %>
+  <div class="navbar alert alert-info">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="#">PSU Repo</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
 <% if current_user %>
-
-    <%= render :partial=>"/add_assets_links" %>
-  
-    <% if current_user.can_be_superuser? %>
-      <% if current_user.is_being_superuser?(session) %>
-        <%= link_to "Stop being superuser", superuser_path %>
-      <% else %>
-        <%= link_to "Become superuser", superuser_path %>
-      <% end %>
-    <% end %>
-    <%= link_to "Log Out", destroy_user_session_path %>
-    [
-    <%= link_to current_user.to_s, edit_user_registration_path %>
-    ]
-    | 
-    <%= link_to 'Your Bookmarks', bookmarks_path %>
-    |
-    <%= link_to "Saved Searches", saved_searches_path %>
-<% else %>
-
-    <%= render :partial=>"/add_assets_links" %>
-    
-    <%= link_to 'Login', new_user_session_path %>
-
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Preferences<b class="caret"></b></a> 
+              <ul class="dropdown-menu">
+                <li><%= link_to current_user.to_s, edit_user_registration_path %></li>
+                <li> <%= link_to 'My Dashboard', dashboard_path  %> </li>
+                <li> <%= link_to 'Upload', new_generic_file_path  %> </li>
+                <li> <%= link_to 'Your Bookmarks', bookmarks_path %> </li>
+                <li> <%= link_to "Saved Searches", saved_searches_path %> </li>
+                <li><%= link_to "Selected Items", folder_index_path %>(<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li>
+                <li><%= link_to "Search History", search_history_path %></li>
+                <li><%= link_to "Log Out", destroy_user_session_path %></li>
+              </ul>
+            </li>
+          </ul>
 <% end %>
-
-| 
-<%= link_to "Selected Items", folder_index_path %> (<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)
-|
-<%= link_to "Search History", search_history_path %>
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->

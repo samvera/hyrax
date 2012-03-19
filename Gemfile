@@ -25,4 +25,5 @@ group :development, :test do
   gem 'bcrypt-ruby'
   gem "jettywrapper"
   gem "factory_girl_rails"
+  gem 'launchy'
 end # (leave this comment here to catch a stray line inserted by blacklight!)
