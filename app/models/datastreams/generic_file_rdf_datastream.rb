@@ -23,7 +23,13 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
     end      
     map.date_uploaded(:to => "dateSubmitted", :in => RDF::DC)
     map.date_modified(:to => "modified", :in => RDF::DC)
-    map.subject(:in => RDF::DC) do |index|
+    map.subject(:in => RDF::DC, :authorities =>
+                ["http://lcsubjects.org/subjects/sh85118553.nt", 
+                 "http://lcsubjects.org/subjects/sh85062913.nt",
+                 "http://lcsubjects.org/subjects/sh85100849.nt",
+                 "http://lcsubjects.org/subjects/sh85082139.nt",
+                 "http://lcsubjects.org/subjects/sh85029027.nt",
+                 "http://lcsubjects.org/subjects/sh98003200.nt"]) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
     end
     map.language(:in => RDF::DC) do |index|

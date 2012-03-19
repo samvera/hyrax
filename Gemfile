@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '~> 3.2.0'
 
 gem 'sqlite3'
-gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'master'
+gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'LDCX3-AuthorityControl'
 gem 'blacklight', '~>3.2.2'
 gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'4.0.x'
 gem 'rubydora', '~>0.5.4'
