@@ -1,0 +1,35 @@
+
+<% unless has_search_parameters? %>
+	<%# if there are no input/search related params, display the "home" partial -%>
+	<%= render 'home' %>
+<% else %>
+
+	<% @page_title = application_name + " Search Results" %>
+
+        <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+
+	<%= render :partial => 'search_form' %>
+	
+	<%= render :partial => 'did_you_mean' %>
+
+	<%= render 'constraints', :localized_params=>params %>
+  
+  <div class="pageEntriesInfo">
+    <%= render_pagination_info @response, :entry_name=>'item' %>
+    <%=link_to "start over", catalog_index_path, :id=>"startOverLink" %>
+  </div>
+  
+	<%= render 'sort_and_per_page' %>
+  
+        <%= render 'results_pagination' %>
+  
+	<%= render :partial => 'document_list' %>
+
+	<% sidebar_items << capture do %>
+	  <%= render :partial=>'facets' %>
+	<% end %>
+
+  <%= render 'results_pagination' %>
+
+<% end %>
+

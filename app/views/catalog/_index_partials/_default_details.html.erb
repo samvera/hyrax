@@ -1,0 +1,14 @@
+<%# default partial to display solr document fields in catalog index view -%>
+<dl class="defList">
+  <%#= get_relevance_bar(document[:score],"Relevance:") %>
+  <dt>Date: </dt>
+  <dd><%= render_document_show_field_value(:document=>document, :field=>"date_t") %></dd>
+  <dt>Title: </dt>
+  <dd><%= render_document_show_field_value(:document=>document, :field=>"title_t") %></dd>
+  <dt>Document Type: </dt>
+  <dd><%= render_document_show_field_value(:document=>document, :field=>"medium_t") %></dd>
+  <dt>Location: </dt>
+  <dd><%= render_document_show_field_value(:document=>document, :field=>"location_t") %></dd>
+  <dt>Date: </dt>
+  <dd><%= render_document_show_field_value(:document=>document, :field=>"date_t") %></dd>
+</dl>
