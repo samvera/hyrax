@@ -9,7 +9,18 @@ class GenericFilesController < ApplicationController
   
   def new
     @generic_file = GenericFile.new 
-    @dc_metadata = [['Title', 'title'], ['Creator', 'creator'], ['Publisher', 'publisher'], ['Description', 'description']]
+    @dc_metadata = [
+      ['Contributor', 'contributor'],
+      ['Creator', 'creator'], 
+      ['Title', 'title'], 
+      ['Description', 'description'],
+      ['Publisher', 'publisher'], 
+      ['Date Created', 'date_created'], 
+      ['Subject', 'subject'], 
+      ['Language', 'language'], 
+      ['Rights', 'rights'], 
+      ['Rights', 'rights'], 
+    ]
   end
 
   def edit
