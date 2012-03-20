@@ -71,5 +71,60 @@ $(function() {
       }
     }
   })
+var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+/*
+    $( "#generic_file_subject" ).autocomplete({
+      source: availableTags
+    });
+*/
+  $("input#generic_file_subject")
+        // don't navigate away from the field on tab when selecting an item
+        .bind( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                    $( this ).data( "autocomplete" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+          minLength: 1,
+            source: function( request, response ) {
+                $.getJSON( "/authorities/generic_files/subject", {
+                    //term: extractLast( request.term )
+                  q: request.term 
+                }, response );
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            }/*,
+            select: function( event, ui ) {
+             $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");                
+             $(this).val("");
+             return false;
+            }*/
+        });
 
 });
