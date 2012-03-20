@@ -10,16 +10,16 @@ class GenericFilesController < ApplicationController
   def new
     @generic_file = GenericFile.new 
     @dc_metadata = [
+      ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],
       ['Creator', 'creator'], 
-      ['Title', 'title'], 
-      ['Description', 'description'],
-      ['Publisher', 'publisher'], 
       ['Date Created', 'date_created'], 
-      ['Subject', 'subject'], 
+      ['Description', 'description'],
       ['Language', 'language'], 
-      ['Rights', 'rights'], 
-      ['Rights', 'rights'], 
+      ['Publisher', 'publisher'], 
+      ['Rights', 'rights'],
+      ['Subject', 'subject'], 
+      ['Title', 'title'], 
     ]
   end
 

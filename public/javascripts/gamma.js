@@ -71,35 +71,7 @@ $(function() {
       }
     }
   })
-var availableTags = [
-      "ActionScript",
-      "AppleScript",
-      "Asp",
-      "BASIC",
-      "C",
-      "C++",
-      "Clojure",
-      "COBOL",
-      "ColdFusion",
-      "Erlang",
-      "Fortran",
-      "Groovy",
-      "Haskell",
-      "Java",
-      "JavaScript",
-      "Lisp",
-      "Perl",
-      "PHP",
-      "Python",
-      "Ruby",
-      "Scala",
-      "Scheme"
-    ];
-/*
-    $( "#generic_file_subject" ).autocomplete({
-      source: availableTags
-    });
-*/
+
   $("input#generic_file_subject")
         // don't navigate away from the field on tab when selecting an item
         .bind( "keydown", function( event ) {
