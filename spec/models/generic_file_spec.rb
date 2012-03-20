@@ -85,11 +85,11 @@ describe GenericFile do
     @file.related_url = "http://example.org/TheWork/"
     @file.save
     @file.to_solr.should_not be_nil
-    @file.to_solr.keys.select {|k| k.to_s.start_with? "generic_file__part_of_"}.should == []
-    @file.to_solr.keys.select {|k| k.to_s.start_with? "generic_file__date_uploaded_"}.should == []
-    @file.to_solr.keys.select {|k| k.to_s.start_with? "generic_file__date_modified_"}.should == []
-    @file.to_solr.keys.select {|k| k.to_s.start_with? "generic_file__rights_"}.should == []
-    @file.to_solr.keys.select {|k| k.to_s.start_with? "generic_file__related_url_"}.should == []
+    @file.to_solr["generic_file__part_of_t"].should be_nil
+    @file.to_solr["generic_file__date_uploaded_t"].should be_nil
+    @file.to_solr["generic_file__date_modified_t"].should be_nil
+    @file.to_solr["generic_file__rights_t"].should be_nil
+    @file.to_solr["generic_file__related_url_t"].should be_nil
     @file.to_solr["generic_file__contributor_t"].should == ["Mohammad"]
     @file.to_solr["generic_file__creator_t"].should == ["Allah"]
     @file.to_solr["generic_file__title_t"].should == ["The Work"]

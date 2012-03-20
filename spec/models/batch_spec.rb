@@ -37,15 +37,12 @@ describe Batch do
     gf = GenericFile.create
     @batch.part << gf.pid
     @batch.save
-    @batch.part.should include(@file.pid)
-    @batch.part.should include(gf.pid)
+    @batch.part.should == [@file.pid, gf.pid]
   end
   it "should support to_solr" do
     @batch.to_solr.should_not be_nil
-    @batch.to_solr.keys.select {|k| k.to_s.start_with? "batch__part_"}.should == []
-    @batch.to_solr.keys.select {|k| k.to_s.start_with? "batch__title_"}.should == []
-    @batch.to_solr.keys.select {|k| k.to_s.start_with? "batch__creator_"}.should == []
+    @batch.to_solr["batch__part_t"].should be_nil
+    @batch.to_solr["batch__title_t"].should be_nil
+    @batch.to_solr["batch__creator_t"].should be_nil
   end
-  it "should be accessible via file object?" 
-  it "should be accessible via user object?"
 end
