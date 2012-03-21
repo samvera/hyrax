@@ -1,0 +1,14 @@
+#facets li a.label {
+  /* background-color: #fcfeda; */
+  background-color: #ddd;
+  font-weight: normal;
+  color: #2e4f81;
+}
+/*
+#facets li a:link, #facets li a:visited, #facets li a:active {
+   border-color: #ffcc00; 
+}*/
+#facets li a:hover {
+  color: #0088cc;
+  /*text-decoration: underline; */
+}

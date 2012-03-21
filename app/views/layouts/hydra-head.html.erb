@@ -10,6 +10,7 @@
     <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %> 
     <%= stylesheet_link_tag 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', :media => 'all' %> 
     <%= stylesheet_link_tag 'blacklight/blacklight', :media => 'all' %> 
+    <%= stylesheet_link_tag 'gamma', :media => 'all' %> 
     <%= javascript_include_tag 'blacklight/blacklight' %> 
     <%= javascript_include_tag 'jquery-1.7.1.js' %>
     <%# javascript_include_tag 'jquery-ui-1.8.1.custom.min.js' %>
@@ -25,13 +26,10 @@
 
       <div id="doc4" class="yui-t2">
 
-      <!-- <div id="hd" class="row"> -->
       <%= render :partial => '/user_util_links', :formats => [:html] %>
 			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %>
-      <!-- </div> -->
 	    
 	  <div id="bd" class="row">
-      <!-- <div class="yui-b sidebar"> -->
       <div class="span3">
         <%= sidebar_items.join('').html_safe %>
       </div>	
