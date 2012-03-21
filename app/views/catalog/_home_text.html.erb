@@ -1,10 +1,20 @@
 <div id="results" class="home-text">
 	
-	<%= render :partial=>'search_form' %>
-	
-	<div class="home_text">
-		<h1>Welcome to Hydra</h1>
-		<p>Edit or override this page (vendor/plugins/hydra-head/views/catalog/_home_text.html.erb)</p>
-	</div>
+  <div class="row">
 
-</div>
+    <div class="span6 well">
+		  <h4>Getting Started</h4>
+      <img src="/images/video-still.png" alt="" title="" width="535" height="325" />
+    </div><!-- /.well -->
+
+    <div class="span2 well">
+      <h4>About The Site</h4>
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tincidunt mauris a arcu lobortis et pharetra lectus consequat. Sed vulputate felis ut ligula feugiat et fermentum sem molestie. Curabitur vel erat id nunc vulputate laoreet sit amet ut justo. Etiam fermentum adipiscing congue. <br />
+      <%= link_to "Read More", catalog_index_path %>
+      </p>
+    </div>
+
+  </div><!-- /.row -->
+
+</div><!-- /#results -->

@@ -1,7 +1,6 @@
-<!-- gamma over ride -->
 <div> 
-  <%= form_tag dashboard_path, :method => :get, :class => "well form-search" do %>
-    <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
+    <%= form_tag dashboard_path, :method => :get, :class => "well form-search" do %>
+      <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
     <%= text_field_tag :q, params[:q], :class => "q" %>
     <% unless search_fields.empty? %>
       <%= label_tag(:search_field, " in ") %>

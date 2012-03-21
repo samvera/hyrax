@@ -1,12 +1,13 @@
-<div id="search" class="search">
-  <%= form_tag catalog_index_path, :method => :get do %>
-    <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
-    <%= text_field_tag :q, params[:q], :class => "q"  %>
+<div> 
+    <%= form_tag catalog_index_path, :method => :get, :class => "well form-search" do %>
+      <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
+    <%= text_field_tag :q, params[:q], :class => "q" %>
+    <% unless search_fields.empty? %>
+      <%= label_tag(:search_field, " in ") %>
+      <%= select_tag(:search_field, options_for_select(search_fields, h(params[:search_field])), :title => "Targeted search options", :class=>"search_field") %>
+    <% end %>
+    <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>        
     
-    <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt]) %>        
-    
-    <%= submit_tag("Search", :id => "submit") %>
+    <%= submit_tag 'Search', :class=>'btn btn-primary' %>
   <% end %>
-
-  <hr/>
 </div>
