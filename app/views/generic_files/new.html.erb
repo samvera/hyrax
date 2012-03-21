@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1>Upload Files</h1>
-  <p> When you have completed your upload you will automatically be redirected to the <%= link_to("dashboard", catalog_index_path) %>.</p>
+  <p> When you have completed your upload you will automatically be redirected to the <%= link_to("dashboard", dashboard_path) %>.</p>
 </div>
 <%= form_for(@generic_file, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 <%= hidden_field_tag(:file_count, "1") %>
