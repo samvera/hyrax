@@ -38,6 +38,9 @@
       <div class="control-group">
         <%= f.label :contributor, :class=>"control-label" %> <%= f.text_field :contributor, :class=>"controls"  %> 
       </div>
+      <div class="control-group">
+        <%= f.label :based_near, :class=>"control-label" %> <%= f.text_field :based_near, :class=>"controls"  %> 
+      </div>
       <div id="more_descriptions">
         <div class="control-group" id="extra_description_1">
           <%= select_tag(:metadata_key_1, options_for_select(([['More Descriptions', '0']] | @dc_metadata))) %>
