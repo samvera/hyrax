@@ -8,15 +8,12 @@
 
 	<%= render 'constraints', :localized_params=>params %>
   
-  <div class="pageEntriesInfo"> 
-    <%= render_pagination_info @response, :entry_name=>'item' %>
-    <%=link_to "start over", dashboard_path, :id=>"startOverLink" %>
-  </div>
-  
-	<%= render 'sort_and_per_page' %>
-  
-        <%= render 'results_pagination' %>
-  
+  <%= render_pagination_info @response, :entry_name=>'item' %><br />
+  <%=link_to "&lt; new search".html_safe, dashboard_path %>
+
+  <%= render 'sort_and_per_page' %>
+  <%= render 'results_pagination' %>
+
   <%= render :partial=>'dashboard/document_list'  %>  
 	<% sidebar_items << capture do %>
 	  <%= render :partial=>'facets' %>

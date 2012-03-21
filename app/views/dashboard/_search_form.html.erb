@@ -1,5 +1,5 @@
 <!-- gamma over ride -->
-<!-- <div id="search" class="search"> -->
+<div> 
   <%= form_tag dashboard_path, :method => :get, :class => "well form-search" do %>
     <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
     <%= text_field_tag :q, params[:q], :class => "q" %>
@@ -11,6 +11,4 @@
     
     <%= submit_tag 'Search', :class=>'btn btn-primary' %>
   <% end %>
-
-  <hr/>
-  <!-- </div> -->
+</div>
