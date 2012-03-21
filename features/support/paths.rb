@@ -32,6 +32,8 @@ module NavigationHelpers
     #
     #   when /^(.*)'s profile page$/i
     #     user_profile_path(User.find_by_login($1))
+    when /dashboard/
+      dashboard_path
 
     when /the edit document page for (.*)$/i
       edit_catalog_path($1)

@@ -5,7 +5,7 @@ Feature: Uploading files via web form
 
   Scenario: Getting to the ingest screen
     Given I am logged in as "contentauthor@psu.edu"
-    When I follow "Upload" 
+    When I follow "upload" 
     Then I should see "Upload Files"
     And I should see "Choose File(s)"
     And I should see "Description(s)"
