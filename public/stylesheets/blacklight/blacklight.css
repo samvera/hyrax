@@ -134,34 +134,6 @@ ul.facet_extended_list li {list-style:none; margin: 0.5em 0;}
 /* Page Navigation */
 .constraints {margin: 0px; padding: 0px;}
 
-.pagination {
-  padding: 0.66em;
-  background-color:#F0F0F0;
-  border-style: solid;
-  border-color: #AAAAAA;
-  border-width: 0 1px 1px 1px;  
-  border-radius: 0 0 4px 4px;
-  -moz-border-radius: 0 0 4px 4px;
-  -webkit-border-radius: 0 0 4px 4px;
-  position: relative; /* to allow abs positioning of buttons inside */
-  line-height: 2em;
-}
-
-.pagination h2 {display: none;}
-
-.pagination .prev_page {
-  position: absolute;
-  left: 0;
-  margin-left: 0.66em;
-  border-bottom: none;  
-}
-.pagination .next_page {
-  position: absolute;
-  right: 0;
-  margin-right: 0.66em;
-  border-bottom: none;
-  
-}
 #results_text {display: none;}
 
 
