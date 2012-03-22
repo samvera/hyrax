@@ -4,7 +4,7 @@
   </td>
   <td>
 	
-   <% if editor? %>
+   <% if can? :edit, @document[:id] %>
     	<%= button_to("Delete", "/file_assets/" + result["id"] + "?container_id=" + @document[:id], :confirm => "Are you sure you want to delete this file?", :method => :delete, :class => "delete-button") %>
 
    <% end %>
