@@ -16,7 +16,7 @@ namespace :gamma do
     error = nil
     error = Jettywrapper.wrap(jetty_params) do
         Rake::Task['spec'].invoke
-        Rake::Task['cucumber'].invoke
+        Rake::Task['cucumber:ok'].invoke
     end
     raise "test failures: #{error}" if error
   end
