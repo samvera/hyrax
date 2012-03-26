@@ -6,7 +6,7 @@ class GenericContent < ActiveFedora::Base
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata 
 
   include Hydra::GenericContent
-  has_metadata :name => "descMetadata", :type => Hydra::ModsGenericContent
+  has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
 
   # A place to put extra metadata values
   has_metadata :name => "properties", :type => ActiveFedora::MetadataDatastream do |m|

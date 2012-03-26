@@ -4,7 +4,7 @@
 # a Fedora object for the Hypatia SET hydra content type
 class UsesDefaultPartials < ActiveFedora::Base
   
-  has_metadata :name => "descMetadata", :type => Hydra::ModsGenericContent
+  has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
   
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
 

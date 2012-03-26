@@ -48,7 +48,7 @@ class GenericImage < ActiveFedora::Base
   has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata 
 
   include Hydra::GenericImage
-  has_metadata :name => "descMetadata", :type => Hydra::ModsImage
+  has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsImage
   
   # A place to put extra metadata values
   has_metadata :name => "properties", :type => ActiveFedora::MetadataDatastream do |m|

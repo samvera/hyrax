@@ -13,7 +13,7 @@ module Hydra
   autoload :GenericImage
   autoload :GenericUserAttributes
   autoload :ModelMixins
-  autoload :ModsGenericContent
+#  autoload :ModsGenericContent
   autoload :ModsImage
   autoload :RepositoryController
   autoload :SubmissionWorkflow
