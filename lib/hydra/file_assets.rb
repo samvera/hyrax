@@ -128,7 +128,7 @@ module Hydra::FileAssets
     #  @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
     #rescue Blacklight::Exceptions::InvalidSolrID
     #end
-    if can? :read, pid
+    if can? :read, @file_asset
       @downloadable = true
     end
 
