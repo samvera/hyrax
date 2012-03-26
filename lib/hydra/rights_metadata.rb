@@ -1,7 +1,11 @@
-require "active-fedora"
 module Hydra
 class RightsMetadata < ActiveFedora::NokogiriDatastream       
   
+  def initialize(digital_object, dsid, options={})
+    ActiveSupport::Deprecation.warn("Hydra::RightsMetadata has been deprecated. Use Hydra::Datastream::RightsMetadata instead")
+    super
+  end
+
   set_terminology do |t|
     t.root(:path=>"rightsMetadata", :xmlns=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
     t.copyright {

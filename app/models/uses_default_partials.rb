@@ -6,7 +6,7 @@ class UsesDefaultPartials < ActiveFedora::Base
   
   has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
   
-  has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
+  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
 
   # adds helpful methods for basic hydra objects.  
   include Hydra::ModelMethods

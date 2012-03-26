@@ -14,7 +14,7 @@ describe ModsAsset do
     @asset.datastreams.should have_key("descMetadata")
     @asset.datastreams["descMetadata"].should be_instance_of(Hydra::Datastream::ModsArticle)
     @asset.datastreams.should have_key("rightsMetadata")
-    @asset.datastreams["rightsMetadata"].should be_instance_of(Hydra::RightsMetadata)
+    @asset.datastreams["rightsMetadata"].should be_instance_of(Hydra::Datastream::RightsMetadata)
   end
   
 end

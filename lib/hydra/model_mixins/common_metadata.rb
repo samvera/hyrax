@@ -15,7 +15,7 @@ module Hydra::ModelMixins
   
     def self.included(klazz)
       # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
-      klazz.has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata
+      klazz.has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
     
       # Ensure that objects assert the commonMetadata cModel
       # klazz.relationships << :has_model => "info:fedora/hydra-cModel:commonMetadata"

@@ -1,4 +1,5 @@
 require "blacklight"
+require 'active-fedora'
 # Hydra libraries
 module Hydra
   extend Blacklight::GlobalConfigurable
@@ -13,7 +14,7 @@ module Hydra
   autoload :GenericImage
   autoload :GenericUserAttributes
   autoload :ModelMixins
-#  autoload :ModsGenericContent
+  autoload :ModsGenericContent
   autoload :ModsImage
   autoload :RepositoryController
   autoload :SubmissionWorkflow
