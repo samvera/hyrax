@@ -1,7 +1,7 @@
 module Hydra
   module Datastream
     class ModsImage < ActiveFedora::NokogiriDatastream       
-      include Hydra::CommonModsIndexMethods
+      include Hydra::Datastream::CommonModsIndexMethods
 
       set_terminology do |t|
         t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")

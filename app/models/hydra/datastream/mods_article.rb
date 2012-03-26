@@ -1,7 +1,7 @@
 module Hydra
   module Datastream
     class ModsArticle < ActiveFedora::NokogiriDatastream       
-      include Hydra::CommonModsIndexMethods
+      include Hydra::Datastream::CommonModsIndexMethods
       include Uva::ModsIndexMethods
 
       set_terminology do |t|

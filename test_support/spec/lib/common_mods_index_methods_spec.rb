@@ -2,7 +2,7 @@
 require File.expand_path( File.join( File.dirname(__FILE__),'..','spec_helper') )
 
 
-describe Hydra::CommonModsIndexMethods do
+describe Hydra::Datastream::CommonModsIndexMethods do
   describe "extract_person_full_names" do
     it "should return an array of Solr::Field objects for :person_full_name_facet" do
       ma = ModsAsset.find("hydrangea:fixture_mods_article1")
