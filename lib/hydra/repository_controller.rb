@@ -55,7 +55,7 @@ module Hydra::RepositoryController
     if opts[:canonical]
       mime_type = opts[:mime_type] ? opts[:mime_type] : "application/pdf"
       result = filter_datastreams_for_mime_type(fedora_object.datastreams, mime_type).sort.first[1]
-    elsif can? :edit, fedora_object.pid
+    elsif can? :edit, fedora_object
       if params["mime_type"] == "all"
         result = fedora_object.datastreams
       else
