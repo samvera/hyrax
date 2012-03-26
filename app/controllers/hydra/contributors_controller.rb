@@ -2,6 +2,8 @@ class Hydra::ContributorsController < ApplicationController
   include Hydra::RepositoryController
   include Hydra::AssetsControllerHelper
   include Hydra::SubmissionWorkflow
+
+  before_filter :load_document, :only => :update 
   
   # Display form for adding a new Contributor
   # If contributor_type is provided, renders the appropriate "new" form
@@ -42,7 +44,6 @@ class Hydra::ContributorsController < ApplicationController
     if params[:id].nil?  
       params[:id] = params[:asset_id]
     end
-    @document = load_document_from_params
     # generates sanatized params from params hash to update the doc with
     sanitize_update_params
     @response = update_document(@document,@sanitized_params)

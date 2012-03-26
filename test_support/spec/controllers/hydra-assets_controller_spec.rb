@@ -108,7 +108,7 @@ describe Hydra::AssetsController do
     it "should delete the asset identified by pid" do
       mock_obj = mock("asset", :delete)
       mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:find).with("__PID__").returns(mock_obj)
+      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
   end
@@ -119,7 +119,7 @@ describe Hydra::AssetsController do
     it "should withdraw the asset identified by pid" do
       mock_obj = mock("asset", :delete)
       mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:find).with("__PID__").returns(mock_obj)
+      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
       delete(:withdraw, :id => "__PID__")
     end
   end

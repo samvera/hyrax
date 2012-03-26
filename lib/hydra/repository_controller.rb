@@ -38,15 +38,6 @@ module Hydra::RepositoryController
     ::ActiveFedora::SolrService.solr_name(field_name, field_type)
   end
   
-  # Uses submitted params Hash to figure out what Model to load
-  # params should contain :content_type and :id
-  def load_document_from_params
-    af_model = retrieve_af_model(params[:content_type])
-    unless af_model 
-      af_model = ModsAsset
-    end
-    return af_model.find(params[:id])
-  end
   
   # Returns a list of datastreams for download.
   # Uses user's roles and "mime_type" value in submitted params to decide what to return.
@@ -82,6 +73,19 @@ module Hydra::RepositoryController
   end
 
   protected 
+  def load_document
+    @document = load_document_from_params
+  end
+
+  # Uses submitted params Hash to figure out what Model to load
+  # params should contain :content_type and :id
+  def load_document_from_params
+    af_model = retrieve_af_model(params[:content_type])
+    unless af_model 
+      af_model = ModsAsset
+    end
+    return af_model.find(params[:id])
+  end
   
   def retrieve_af_model(class_name, opts={})
     if !class_name.nil?
