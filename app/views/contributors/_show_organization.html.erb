@@ -5,7 +5,7 @@
 <% if @document_fedora.class.respond_to?(:organization_relator_terms) %>
   <% choices = @document_fedora.class.organization_relator_terms %>
 <% else %>
-  <% choices = Hydra::ModsArticle.organization_relator_terms %>
+  <% choices = Hydra::Datastream::ModsArticle.organization_relator_terms %>
 <% end %>
 <% unless get_values_from_datastream(@document_fedora,"descMetadata", [{:organization => organization_counter}, :namePart]).first.empty? %>
   <li id="<%= base_id %>">
