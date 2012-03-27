@@ -21,8 +21,7 @@ Feature: HTML validity
   Scenario: Search Results (authenticated)
     Given I am logged in as "archivist1@example.com" 
     When I am on the home page
-    And I follow "Article"
-#This may fail if there are a lot of articles in fedora and the expected article is not on the first page
+    And I follow "TOPIC 1"
     Then I should see "TITLE OF HOST JOURNAL"
     And the page should be HTML5 valid
     
