@@ -20,7 +20,7 @@ module Hydra::AccessControlsEnforcement
     controller_action = params[:action].to_s
     controller_action = "edit" if params[:action] == "destroy" 
     delegate_method = "enforce_#{controller_action}_permissions"
-    if self.respond_to?(delegate_method)
+    if self.respond_to?(delegate_method.to_sym, true)
       self.send(delegate_method.to_sym)
     else
       true
