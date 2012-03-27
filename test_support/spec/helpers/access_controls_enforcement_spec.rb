@@ -2,6 +2,20 @@
 require File.expand_path( File.join( File.dirname(__FILE__),'..','spec_helper') )
 
 describe Hydra::AccessControlsEnforcement do
+  describe "enforce_access_controls" do
+    describe "when the method exists" do
+      it "should call the method" do
+        params[:action] = :index
+        helper.enforce_access_controls.should be_true
+      end
+    end
+    describe "when the method doesn't exist" do
+      it "should not call the method, but should return true" do
+        params[:action] = :facet
+        helper.enforce_access_controls.should be_true
+      end
+    end
+  end
 
   describe "apply_gated_discovery" do
     before(:each) do
