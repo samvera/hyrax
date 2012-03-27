@@ -2,7 +2,7 @@ require "uva/mods_index_methods"
 module Hydra
   
   class ModsArticle < ActiveFedora::NokogiriDatastream       
-    include Hydra::CommonModsIndexMethods
+    include Hydra::Datastream::CommonModsIndexMethods
     include Uva::ModsIndexMethods
 
     def initialize(digital_object, dsid, options={})
