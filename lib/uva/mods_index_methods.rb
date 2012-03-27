@@ -1,5 +1,10 @@
 module Uva
   module ModsIndexMethods
+
+  def self.included(base)
+    ActiveSupport::Deprecation.warn("Uva::ModsIndexMethods has been deprecated and its functionality has been encorporated into Hydra::Datastream::ModsArticle")
+  end
+
   # extracts the last_name##full_name##computing_id to be used by home view
   def extract_person_full_names_and_computing_ids
     names = {}
