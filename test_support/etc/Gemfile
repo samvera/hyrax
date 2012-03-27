@@ -9,7 +9,7 @@ gem "rails", '~> 3.2.2'
 gem 'sqlite3-ruby', :require => 'sqlite3'
 #gem 'sqlite3'
 
-gem 'blacklight', :git=>'git://github.com/projectblacklight/blacklight.git'
+gem 'blacklight', '~>3.3.0'
 
 
 gem 'hydra-head', :path => '../../'
@@ -19,7 +19,7 @@ gem 'cancan'
 
 # For testing
 group :development, :test do 
-       gem 'rspec-rails', '>=2.8.0'
+       gem 'rspec-rails'
        gem 'mocha'
        gem 'cucumber-rails'
        gem 'capybara'

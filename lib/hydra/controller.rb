@@ -24,7 +24,7 @@ module Hydra::Controller
   # Sets @document_fedora with the loaded object
   # Sets @file_assets with file objects that are children of the loaded object
   def load_fedora_document
-    @document_fedora = ActiveFedora::Base.find(params[:id])
+    @document_fedora = ActiveFedora::Base.find(params[:id], :cast=>true)
     unless @document_fedora.class.include?(Hydra::ModelMethods)
       @document_fedora.class.send :include, Hydra::ModelMethods
     end

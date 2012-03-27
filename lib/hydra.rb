@@ -1,4 +1,5 @@
 require "blacklight"
+require 'active-fedora'
 # Hydra libraries
 module Hydra
   extend Blacklight::GlobalConfigurable

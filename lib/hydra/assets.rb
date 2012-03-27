@@ -90,7 +90,7 @@ module Hydra::Assets
   end
   
   def destroy
-    af = ActiveFedora::Base.find(params[:id])
+    af = ActiveFedora::Base.find(params[:id], :cast=>true)
     assets = af.destroy_child_assets
     af.delete
     msg = "Deleted #{params[:id]}"
@@ -105,9 +105,6 @@ module Hydra::Assets
   
   protected
 
-  def load_document
-    @document = load_document_from_params
-  end
 
   
   def mods_assets_update_validation

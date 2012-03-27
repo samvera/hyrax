@@ -32,7 +32,7 @@ module Hydra::FileAssets
       @container_response, @document = get_solr_response_for_doc_id(params[:asset_id])
       
       # Including these lines for backwards compatibility (until we can use Rails3 callbacks)
-      @container =  ActiveFedora::Base.find(params[:asset_id])
+      @container =  ActiveFedora::Base.find(params[:asset_id], :cast=>true)
       @solr_result = @container.file_objects(:response_format=>:solr)
     end
     
@@ -97,7 +97,7 @@ module Hydra::FileAssets
   
   # Common destroy method for all AssetsControllers 
   def destroy
-    ActiveFedora::Base.find(params[:id]).delete 
+    ActiveFedora::Base.find(params[:id], :cast=>true).delete 
 
     flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."
     

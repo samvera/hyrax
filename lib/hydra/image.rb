@@ -67,7 +67,7 @@ class Image < ActiveFedora::Base
   belongs_to :container, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
   
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
-  has_metadata :name => "rightsMetadata", :type => Hydra::RightsMetadata 
+  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata 
 
   # A place to put extra metadata values
   has_metadata :name => "properties", :type => ActiveFedora::MetadataDatastream do |m|

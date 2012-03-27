@@ -34,7 +34,7 @@ describe Hydra::FileAssetsController do
       controller.expects(:get_solr_response_for_doc_id).with('_PID_').returns(["container solr response","container solr doc"])
       controller.stubs(:load_permissions_from_solr)
       
-      ActiveFedora::Base.expects(:find).with("_PID_").returns(mock_container)
+      ActiveFedora::Base.expects(:find).with("_PID_", :cast=>true).returns(mock_container)
       xhr :get, :index, :asset_id=>"_PID_"
       assigns[:response].should == "assets solr response"
       assigns[:document_list].should == "assets solr list"
@@ -102,7 +102,7 @@ describe Hydra::FileAssetsController do
   describe "destroy" do
     it "should delete the asset identified by pid" do
       mock_obj = mock("asset", :delete)
-      ActiveFedora::Base.expects(:find).with("__PID__").returns(mock_obj)
+      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
     it "should remove container relationship and perform proper garbage collection" do
@@ -110,7 +110,7 @@ describe Hydra::FileAssetsController do
       mock_container = mock("asset")
       mock_container.expects(:file_objects_remove).with("_file_asset_pid_")
       FileAsset.expects(:garbage_collect).with("_file_asset_pid_")
-      ActiveFedora::Base.expects(:find).with("_container_pid_").returns(mock_container)
+      ActiveFedora::Base.expects(:find).with("_container_pid_", :cast=>true).returns(mock_container)
       delete(:destroy, :id => "_file_asset_pid_", :asset_id=>"_container_pid_")
     end
   end
