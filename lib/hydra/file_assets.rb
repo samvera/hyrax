@@ -124,10 +124,6 @@ module Hydra::FileAssets
     pid = @file_asset.container_id
     @downloadable = false
     # A FileAsset is downloadable iff the user has read or higher access to a parent
-    #begin
-    #  @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
-    #rescue Blacklight::Exceptions::InvalidSolrID
-    #end
     if can? :read, @file_asset
       @downloadable = true
     end

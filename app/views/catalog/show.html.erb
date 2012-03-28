@@ -18,7 +18,7 @@
 	    <span class="next"><%= link_to_next_document(@next_document)%></span>	
       </div>
     <%- end -%>
-    <%- if can?(:edit, @document[:id]) && controller.action_name != "delete" -%>
+    <%- if can?(:edit, @document) && controller.action_name != "delete" -%>
     	<span class="edit-browse">
     		<%= edit_and_browse_links %>
     	</span>

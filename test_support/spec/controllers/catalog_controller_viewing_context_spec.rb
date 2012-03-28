@@ -16,16 +16,13 @@ describe CatalogController do
 
   describe "show" do
     it "should redirect to edit view if session is in edit context and user has edit permission" do
-      #controller.stubs(:reader?).returns(true)            
-      #controller.expects(:editor?).returns(true)
-      
-      controller.expects(:can?).times(2).returns(true)
+      controller.stubs(:can?).returns(true)
       controller.session[:viewing_context] = "edit"
       get(:show, {:id=>"hydrangea:fixture_mods_article1"})
       response.should redirect_to(:action => 'edit')
     end
     it "should allow you to reset the session context to browse using :viewing_context param" do
-      #controller.stubs(:reader?).returns(true)            
+      controller.stubs(:can?).returns(true)
       controller.session[:viewing_context] = "edit"
       get(:show, :id=>"hydrangea:fixture_mods_article1", :viewing_context=>"browse")
       session[:viewing_context].should == "browse"
@@ -33,8 +30,8 @@ describe CatalogController do
     end
     
     it "should quietly switch session state to browse if user does not have edit permissions" do
-      #controller.expects(:reader?).returns(true)
-      #controller.expects(:editor?).returns(false)
+      controller.stubs(:can?).with(:edit, anything()).returns(false)
+      controller.stubs(:can?).with(:read, anything()).returns(true)
       controller.session[:viewing_context] = "edit"
       get(:show, {:id=>"hydrangea:fixture_mods_article1"})
       session[:viewing_context].should == "browse"
@@ -54,8 +51,7 @@ describe CatalogController do
       flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
     end
     it "should render normally if user has edit permissions" do
-      #controller.expects(:editor?).returns(true)
-      controller.expects(:can?).returns(true)
+      controller.expects(:can?).with(:edit, anything()).returns(true)
       get :edit, :id=>"hydrangea:fixture_mods_article1"
       response.should_not redirect_to(:action => 'show')
     end

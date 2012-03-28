@@ -2,58 +2,65 @@ class Ability
   include CanCan::Ability
   include Hydra::AccessControlsEnforcement
 
-  def initialize(user, session)
-    # user = args[0]
-    # session = nil
-    # if args.size == 2
-    #   session = args[1]
-    # end
-    
+  attr_reader :user, :user_groups
+
+  def initialize(user, session=nil)
     user ||= User.new # guest user (not logged in)
-    user_groups = RoleMapper.roles(user.email)
+    @user = user
+    @user_groups = RoleMapper.roles(@user.email)
     # everyone is automatically a member of the group 'public'
-    user_groups.push 'public' unless user_groups.include?('public')
+    @user_groups.push 'public' unless @user_groups.include?('public')
     # logged-in users are automatically members of the group "registered"
-    user_groups.push 'registered' unless (user == "public" || user_groups.include?('registered') )
+    @user_groups.push 'registered' unless (@user.email == '' || @user == "public" || @user_groups.include?('registered') )
     
-    logger.debug("Usergroups is " + user_groups.inspect)
+    logger.debug("Usergroups is " + @user_groups.inspect)
     
-    if user.is_being_superuser?(session)
+    if @user.is_being_superuser?(session)
       can :manage, :all
     else
       can :edit, String do |pid|
-        test_edit(pid, user, user_groups)
+        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
+        test_edit
       end 
 
       can :edit, ActiveFedora::Base do |obj|
-        test_edit(obj.pid, user, user_groups)
-      end 
+        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
+        test_edit
+      end
+ 
+      can :edit, SolrDocument do |obj|
+        test_edit
+      end       
 
       can :read, String do |pid|
-        test_read(pid, user, user_groups)
+        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
+        test_read
       end
 
       can :read, ActiveFedora::Base do |obj|
-        test_read(obj.pid, user, user_groups)
+        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
+        test_read
+      end 
+      
+      can :read, SolrDocument do |obj|
+        test_read
       end 
     end
   end
   
   private
-  def test_edit (pid, user, user_groups)
-    @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-    logger.debug("CANCAN Checking edit permissions for user: #{user}")
-    group_intersection = user_groups & edit_groups
-    result = !group_intersection.empty? || edit_persons.include?(user.email)
+  def test_edit
+    logger.debug("CANCAN Checking edit permissions for user: #{@user}")
+    group_intersection = @user_groups & edit_groups
+    result = !group_intersection.empty? || edit_persons.include?(@user.email)
     logger.debug("CANCAN decision: #{result}")
     result
   end   
   
-  def test_read(pid, user, user_groups)
-    @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-    logger.debug("CANCAN Checking edit permissions for user: #{user}")
-    group_intersection = user_groups & read_groups
-    result = !group_intersection.empty? || read_persons.include?(user.email)
+  def test_read
+    logger.debug("CANCAN Checking edit permissions for user: #{@user}")
+    group_intersection = @user_groups & read_groups
+    result = !group_intersection.empty? || read_persons.include?(@user.email)
     logger.debug("CANCAN decision: #{result}")
     result
   end 
