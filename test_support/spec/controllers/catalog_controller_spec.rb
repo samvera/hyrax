@@ -109,6 +109,7 @@ describe CatalogController do
     end
     describe "show" do
       it "should trigger enforce_show_permissions and load_fedora_document" do
+        controller.stubs(:current_user).returns(nil)
         controller.expects(:load_fedora_document)
         controller.expects(:enforce_show_permissions)
         get :show, :id=>'test:3'
@@ -116,6 +117,7 @@ describe CatalogController do
     end
     describe "edit" do
       it "should trigger enforce_edit_permissions and load_fedora_document" do
+        controller.stubs(:current_user).returns(nil)
         controller.expects(:load_fedora_document)
         controller.expects(:enforce_edit_permissions)
         get :edit, :id=>'test:3'

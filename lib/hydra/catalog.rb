@@ -21,6 +21,7 @@ module Hydra::Catalog
     # View Helpers
     helper :hydra_uploader
     helper :article_metadata
+    rescue_from Blacklight::Exceptions::InvalidSolrID, :with => :nonexistent_document
   end
   
   def edit
@@ -33,5 +34,19 @@ module Hydra::Catalog
     show
     render "show"
   end
-
+  
+  def enforce_opensearch_permissions
+    return enforce_index_permissions
+  end
+  
+  def nonexistent_document
+    if Rails.env == "development"
+      render
+    else
+      flash[:notice] = "Sorry, you have requested a record that doesn't exist."
+      params.delete(:id)
+      index
+      render "index", :status => 404
+    end
+  end
 end
