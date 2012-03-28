@@ -15,6 +15,7 @@ gem 'blacklight', '~>3.3.0'
 gem 'hydra-head', :path => '../../'
 gem 'devise'
 gem 'jettywrapper'
+gem 'cancan'
 
 # For testing
 group :development, :test do 
