@@ -1,7 +1,9 @@
 h3. 4.0.0
 * Upgrade to active fedora 4.0.0
+* Upgrade to blacklight 3.3.0 
 * Removed railtie to configure active-fedora
 * Register solr happens automatically
+* Using CanCan gem for authorization
 
 h3. 3.3.0
 * HYDRA-737: fixes to work with Ruby Enterprise Edition 2011.12 and ruby-1.8.7-p357.
