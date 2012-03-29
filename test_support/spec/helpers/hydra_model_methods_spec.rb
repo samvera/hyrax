@@ -50,7 +50,7 @@ describe Hydra::ModelMethods do
       #dm = ActiveFedora::QualifiedDublinCoreDatastream.new  nil, nil 
       helper.stubs(:datastreams).returns("descMetadata"=>dm)
       helper.set_title("My title")
-      dm.title_values.should == ["My title"]
+      dm.title.should == ["My title"]
     end
   end
   

@@ -34,7 +34,7 @@ class Hydra::PermissionsController < ApplicationController
   # Create a new permissions entry
   # expects permission["actor_id"], permission["actor_type"] and permission["access_level"] as params. ie.   :permission=>{"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}
   def create
-    @document_fedora=ActiveFedora::Base.find(params[:asset_id])
+    @document_fedora=ActiveFedora::Base.find(params[:asset_id], :cast=>true)
 
     access_actor_type = params["permission"]["actor_type"]
     actor_id = params["permission"]["actor_id"]
@@ -69,7 +69,7 @@ class Hydra::PermissionsController < ApplicationController
       pid = params[:id]
     end
     
-    @document_fedora=ActiveFedora::Base.find(pid)
+    @document_fedora=ActiveFedora::Base.find(pid, :cast=>true)
 
     # update the datastream's values
     result = @document_fedora.rightsMetadata.update_permissions(params[:permission])
