@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'solrizer-fedora', '>=1.2.5'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
-
+  s.add_dependency 'cancan'
   
   s.add_development_dependency 'sqlite3-ruby'
 

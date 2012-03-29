@@ -7,7 +7,7 @@
 			</table>
 <% end %>
 
-<% if !@document.nil? && editor? && params[:number_of_files].to_i > 0 %>
+<% if !@document.nil? && can?(:edit, @document) && params[:number_of_files].to_i > 0 %>
   <%- container_content_type_param = defined?(container_content_type) ? "?container_content_type=#{container_content_type}" : "" %>
   <fieldset id='uploader'>
     <legend>File Upload</legend>
