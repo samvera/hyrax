@@ -7,10 +7,7 @@ class GenericContent < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
 
   # A place to put extra metadata values
-  has_metadata :name => "properties", :type => ActiveFedora::MetadataDatastream do |m|
-    m.field 'collection', :string
-    m.field 'depositor', :string
-  end
+  has_metadata :name => "properties", :type => Hydra::Datastream::Properties
   
   # adds helpful methods for basic hydra objects.  
   # FIXME:  redundate with  GenericContent include above??

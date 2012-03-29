@@ -51,11 +51,7 @@ class GenericImage < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsImage
   
   # A place to put extra metadata values
-  has_metadata :name => "properties", :type => ActiveFedora::MetadataDatastream do |m|
-    m.field 'collection', :string
-    m.field 'depositor', :string
-    m.field 'title', :string
-  end
+  has_metadata :name => "properties", :type => Hydra::Datastream::Properties
   
   def initialize( attrs={} )
     super
