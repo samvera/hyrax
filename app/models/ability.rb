@@ -18,34 +18,38 @@ class Ability
     if @user.is_being_superuser?(session)
       can :manage, :all
     else
-      can :edit, String do |pid|
-        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-        test_edit
-      end 
-
-      can :edit, ActiveFedora::Base do |obj|
-        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
-        test_edit
-      end
- 
-      can :edit, SolrDocument do |obj|
-        test_edit
-      end       
-
-      can :read, String do |pid|
-        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-        test_read
-      end
-
-      can :read, ActiveFedora::Base do |obj|
-        @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
-        test_read
-      end 
-      
-      can :read, SolrDocument do |obj|
-        test_read
-      end 
+      hydra_default_permissions
     end
+  end
+
+  def hydra_default_permissions
+    can :edit, String do |pid|
+      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
+      test_edit
+    end 
+
+    can :edit, ActiveFedora::Base do |obj|
+      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
+      test_edit
+    end
+
+    can :edit, SolrDocument do |obj|
+      test_edit
+    end       
+
+    can :read, String do |pid|
+      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
+      test_read
+    end
+
+    can :read, ActiveFedora::Base do |obj|
+      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
+      test_read
+    end 
+    
+    can :read, SolrDocument do |obj|
+      test_read
+    end 
   end
   
   private

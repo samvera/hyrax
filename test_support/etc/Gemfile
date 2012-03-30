@@ -5,9 +5,7 @@ source 'http://rubygems.org'
 
 gem "rails", '~> 3.2.2'
 
-#gem 'sqlite3-ruby', '~>1.2.5', :require => 'sqlite3'
-gem 'sqlite3-ruby', :require => 'sqlite3'
-#gem 'sqlite3'
+gem 'sqlite3'
 
 gem 'blacklight', '~>3.3.0'
 
@@ -21,10 +19,11 @@ gem 'cancan'
 group :development, :test do 
        gem 'rspec-rails'
        gem 'mocha'
-       gem 'cucumber-rails'
+       gem 'cucumber-rails', :require => false
        gem 'capybara'
        gem 'factory_girl'
        gem 'rest-client'
+       gem 'solrizer-fedora', '>=1.2.5'
 end
 
 # Gems used only for assets and not required

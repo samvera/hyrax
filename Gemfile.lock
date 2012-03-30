@@ -3,14 +3,13 @@ PATH
   specs:
     hydra-head (4.0.0.rc3)
       RedCloth (= 4.2.9)
-      active-fedora (~> 4.0.0.rc18)
+      active-fedora (~> 4.0.0.rc19)
       blacklight (~> 3.3.1)
       block_helpers
       cancan
       devise
       rails (~> 3.2.1)
       sanitize
-      solrizer-fedora (>= 1.2.5)
 
 GEM
   remote: http://rubygems.org/
@@ -29,7 +28,7 @@ GEM
       rack-cache (~> 1.1)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (4.0.0.rc18)
+    active-fedora (4.0.0.rc19)
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
       equivalent-xml
@@ -193,7 +192,7 @@ GEM
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rsolr (1.0.6)
+    rsolr (1.0.7)
       builder (>= 2.1.2)
     rsolr-ext (1.0.3)
       rsolr (>= 1.0.2)
@@ -239,7 +238,6 @@ GEM
       ffi (~> 1.0)
       multi_json (~> 1.0)
       rubyzip
-    solr-ruby (0.0.8)
     solrizer (1.2.0)
       daemons
       mediashelf-loggable (~> 0.4.7)
@@ -247,13 +245,6 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
-    solrizer-fedora (1.2.5)
-      active-fedora (>= 3.2.0)
-      activesupport (>= 3.0.11)
-      fastercsv
-      rsolr (= 1.0.6)
-      solr-ruby (>= 0.0.6)
-      solrizer (>= 1.0.0)
     sprockets (2.1.2)
       hike (~> 1.2)
       rack (~> 1.0)

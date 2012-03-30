@@ -9,5 +9,6 @@ group :test do
 #  gem 'linecache19',       '>= 0.5.13'
 #  gem 'ruby-debug-base19', '>= 0.11.26'
 #  gem 'ruby-debug19'
+   gem 'cucumber-rails', '>=1.2.0', :require=>false
 
 end

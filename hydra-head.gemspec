@@ -15,14 +15,14 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", '~> 3.2.1'
   s.add_dependency "blacklight", '~>3.3.1'  
   s.add_dependency "devise"
-  s.add_dependency "active-fedora", '~>4.0.0.rc18'
+  s.add_dependency "active-fedora", '~>4.0.0.rc19'
   s.add_dependency 'RedCloth', '=4.2.9'
-  s.add_dependency 'solrizer-fedora', '>=1.2.5'
+  s.add_development_dependency 'solrizer-fedora', '>=1.2.5'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
   s.add_dependency 'cancan'
   
-  s.add_development_dependency 'sqlite3-ruby'
+  s.add_development_dependency 'sqlite3'
 
   s.add_development_dependency 'yard'
   s.add_development_dependency 'jettywrapper', ">=1.0.4"
