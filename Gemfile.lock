@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hydra-head (4.0.0.rc3)
+    hydra-head (4.0.0.rc4)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.0.0.rc19)
       blacklight (~> 3.3.1)
@@ -192,7 +192,7 @@ GEM
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rsolr (1.0.7)
+    rsolr (1.0.6)
       builder (>= 2.1.2)
     rsolr-ext (1.0.3)
       rsolr (>= 1.0.2)
@@ -238,6 +238,7 @@ GEM
       ffi (~> 1.0)
       multi_json (~> 1.0)
       rubyzip
+    solr-ruby (0.0.8)
     solrizer (1.2.0)
       daemons
       mediashelf-loggable (~> 0.4.7)
@@ -245,13 +246,18 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
+    solrizer-fedora (1.2.5)
+      active-fedora (>= 3.2.0)
+      activesupport (>= 3.0.11)
+      fastercsv
+      rsolr (= 1.0.6)
+      solr-ruby (>= 0.0.6)
+      solrizer (>= 1.0.0)
     sprockets (2.1.2)
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.5)
-    sqlite3-ruby (1.3.3)
-      sqlite3 (>= 1.3.3)
     stomp (1.2.2)
     term-ansicolor (1.0.7)
     thor (0.14.6)
@@ -280,5 +286,6 @@ DEPENDENCIES
   jettywrapper (>= 1.0.4)
   mocha
   rspec-rails
-  sqlite3-ruby
+  solrizer-fedora (>= 1.2.5)
+  sqlite3
   yard
