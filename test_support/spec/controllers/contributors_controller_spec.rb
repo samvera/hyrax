@@ -8,7 +8,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 # or
 # rake cucumber
 
-describe ContributorsController do
+describe Hydra::ContributorsController do
   
   describe "create" do
     it "should support adding new person / contributor / organization nodes" do
@@ -18,7 +18,7 @@ describe ContributorsController do
         mock_document.expects(:save)
         ModsAsset.expects(:find).with("_PID_").returns(mock_document)
         post :create, :asset_id=>"_PID_", :controller => "contributors", :content_type => "mods_asset", :contributor_type=>type
-        response.should redirect_to "http://test.host/catalog/_PID_/edit##{type}_989"
+        response.should redirect_to edit_catalog_path('_PID_', :anchor=>"#{type}_989")
       end
     end
     it "should return inline html if format is inline" do

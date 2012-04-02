@@ -18,9 +18,13 @@ module Hydra::AccessControlsEnforcement
   #   end
   def enforce_access_controls(opts={})
     controller_action = params[:action].to_s
-    if params[:action] == "destroy" then controller_action = "edit" end
+    controller_action = "edit" if params[:action] == "destroy" 
     delegate_method = "enforce_#{controller_action}_permissions"
-    self.send(delegate_method.to_sym)
+    if self.respond_to?(delegate_method.to_sym, true)
+      self.send(delegate_method.to_sym)
+    else
+      true
+    end
   end
   
   
@@ -71,7 +75,7 @@ module Hydra::AccessControlsEnforcement
     if params[:viewing_context] == "browse"
       session[:viewing_context] = params[:viewing_context]
     elsif session[:viewing_context] == "edit"
-      if editor?
+      if can? :edit, params[:id]
         logger.debug("enforce_viewing_context_for_show_requests redirecting to edit")
         if params[:files]
           redirect_to :action=>:edit, :files=>true
@@ -104,7 +108,7 @@ module Hydra::AccessControlsEnforcement
           end
         end
       end
-      unless reader?
+      unless can? :read, params[:id] 
         flash[:notice]= "You do not have sufficient access privileges to read this document, which has been marked private."
         redirect_to(:action => 'index', :q => nil , :f => nil) and return false
       end
@@ -116,7 +120,7 @@ module Hydra::AccessControlsEnforcement
   def enforce_edit_permissions(opts={})
     logger.debug("Enforcing edit permissions")
     load_permissions_from_solr
-    if !editor?
+    if !can? :edit, params[:id]
       session[:viewing_context] = "browse"
       flash[:notice] = "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
       redirect_to :action=>:show
@@ -164,7 +168,7 @@ module Hydra::AccessControlsEnforcement
   #   end
   def add_access_controls_to_solr_params(solr_parameters, user_parameters)
     apply_gated_discovery(solr_parameters, user_parameters)
-    if !reader? 
+    if !can? :read, params[:id]
       solr_parameters[:qt] = Blacklight.config[:public_qt]
     end
   end

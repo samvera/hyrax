@@ -32,23 +32,25 @@ module HydraHead
 
       def assets_with_all_nested_routes
         add_routes do |options|
-          resources :file_assets
           match "withdraw", :to => "assets#withdraw", :as => "withdraw"   
-          resources :assets do 
-            # this is to remove documents from SOLR but not from Fedora.
-            resources :contributors, :only=>[:new,:create]
-            match '/contributors', :to => 'contributors#update', :as => 'update_contributors'
-            # We would need to include the rails JS files (or implement our own) if we want this to work w/ DELETE because we delete from a link not a button.
-            #match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
-            match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect'
-            # There is no ContributorsController#show
-            match 'contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'contributor', :via => 'get'
+          namespace :hydra do
             resources :file_assets
-            resources :downloads, :only=>[:index]
-            resources :grants, :only=>[:new,:create]
-            resources :permissions
-            # Allow updates to assets/:asset_id/permissions (no :id necessary)
-            match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'            
+            resources :assets do 
+              # this is to remove documents from SOLR but not from Fedora.
+              resources :contributors, :only=>[:new,:create]
+              match '/contributors', :to => 'contributors#update', :as => 'update_contributors'
+              # We would need to include the rails JS files (or implement our own) if we want this to work w/ DELETE because we delete from a link not a button.
+              #match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect',  :via => 'delete'
+              match 'contributors/:contributor_type/:index', :to => 'contributors#destroy', :as => 'connect'
+              # There is no ContributorsController#show
+              match 'contributors/:contributor_type/:index', :to => 'contributors#show', :as => 'contributor', :via => 'get'
+              resources :file_assets
+              resources :downloads, :only=>[:index]
+              resources :grants, :only=>[:new,:create]
+              resources :permissions
+              # Allow updates to assets/:asset_id/permissions (no :id necessary)
+              match '/permissions', :to => 'permissions#update', :as => 'update_group_permissions'            
+            end
           end
           match "generic_contents_object/content/:container_id", :to=>"generic_content_objects#create", :as=>'generic_content_object',  :via => 'post'            
         end
@@ -56,7 +58,9 @@ module HydraHead
       
       def permissions
         add_routes do |options|
-          resources :permissions
+          namespace :hydra do
+            resources :permissions
+          end
         end
       end
 
@@ -72,12 +76,6 @@ module HydraHead
           match 'catalog/:id/edit', :to => 'catalog#edit', :as => 'edit_catalog'
           # The delete method renders a confirmation page with a button to submit actual destroy request
           match 'catalog/:id/delete', :to => 'catalog#delete', :as => 'delete_catalog'
-	  ### The rest of these routes are defined in blacklight
-          #resources :catalog, :id=> /.+/
-         # resources :catalog, :only => [:index, :show], :controller => "hydra_head/catalog", :path_prefix => HydraHead::Engine.config.mount_at, :as => "hydra_head", :id=> /.+/
-          #match 'catalog/:id', :to => "hydra_head/catalog#show", :path_prefix => HydraHead::Engine.config.mount_at, :as => "catalog", :id => /.+/
-          #match 'catalog/:id', :to => "hydra_head/catalog#show", :id => /.+/
-          # match 'about', :to => 'catalog#about', :as => 'about'
         end
       end
 

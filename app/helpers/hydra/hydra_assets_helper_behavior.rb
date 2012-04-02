@@ -1,7 +1,5 @@
-require 'mediashelf/active_fedora_helper'
 require 'sanitize'
 module Hydra::HydraAssetsHelperBehavior
-  include MediaShelf::ActiveFedoraHelper
 
   # Create a link for creating a new asset of the specified content_type
   # If user is not logged in, the link leads to the login page with appropriate redirect params for creating the asset after logging in
@@ -9,7 +7,7 @@ module Hydra::HydraAssetsHelperBehavior
   # @param [String] content_type 
   def link_to_create_asset(link_label, content_type)
     if current_user
-      link_to link_label, {:action => 'new', :controller => 'assets', :content_type => content_type}, :class=>"create_asset"
+      link_to link_label, new_hydra_asset_path( :content_type => content_type), :class=>"create_asset"
     else      
       link_to link_label, new_user_session_path(:redirect_params => {:action => "new", :controller=> "assets", :content_type => content_type}), :class=>"create_asset"
     end
@@ -22,8 +20,8 @@ module Hydra::HydraAssetsHelperBehavior
   end
 
   def document_type(document)
-    if (document[Blacklight.config[:show][:display_type]]) 
-      document[Blacklight.config[:show][:display_type]].first.gsub("info:fedora/afmodel:","")
+    if (document[blacklight_config.show.display_type]) 
+      document[blacklight_config.show.display_type].first.gsub("info:fedora/afmodel:","")
     else ""
     end
   end
@@ -41,13 +39,15 @@ module Hydra::HydraAssetsHelperBehavior
 
   def get_file_asset_count(document)
     count = 0
-    obj = load_af_instance_from_solr(document)
-    count += obj.file_objects.length unless obj.nil?
+    ### TODO switch to AF::Base.count
+    obj = ActiveFedora::Base.load_instance_from_solr(document['id'], document)
+    count += obj.parts.length unless obj.nil?
     count
   end
   
   def get_file_asset_description(document)
-    obj = load_af_instance_from_solr(document)
+    #TODO need test coverage
+    obj = ActiveFedora::Base.load_instance_from_solr(document['id'], document)
     if obj.nil? || obj.file_objects.empty?
       return ""
     else

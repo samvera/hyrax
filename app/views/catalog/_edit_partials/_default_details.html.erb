@@ -1,7 +1,7 @@
 
 
 <%# this should imitate the stuff in catalog/_show_partials/_default_details -%>
-<%= form_tag url_for(:action=>"update", :controller=>"assets"), :id=>"document_metadata"  "accept-charset"=>"utf-8" do %>
+<%= form_tag hydra_update_url_for(:action=>"update", :controller=>"hydra/assets"), :id=>"document_metadata"  "accept-charset"=>"utf-8" do %>
 
   <div id="multipleEdit">
       <dl class="defList fl-theme-mist">

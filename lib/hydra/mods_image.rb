@@ -2,6 +2,11 @@ module Hydra
 class ModsImage < ActiveFedora::NokogiriDatastream       
   include Hydra::CommonModsIndexMethods
 
+  def initialize(digital_object, dsid, options={})
+    ActiveSupport::Deprecation.warn("Hydra::ModsImage has been deprecated. Use Hydra::Datastream::ModsImage instead")
+    super
+  end
+
   set_terminology do |t|
     t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 

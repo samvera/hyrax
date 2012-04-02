@@ -1,0 +1,12 @@
+<tr class="file_asset" id ="assets_<%= format_pid(result["id"]) %>" >  
+  <td>
+    <%= link_to result[solr_name("title", :text)], hydra_file_asset_path(result["id"]) %>
+  </td>
+  <td>
+	
+   <% if can? :edit, @document %>
+    	<%= button_to("Delete", "/file_assets/" + result["id"] + "?container_id=" + @document[:id], :confirm => "Are you sure you want to delete this file?", :method => :delete, :class => "delete-button") %>
+
+   <% end %>
+  </td>
+</tr>

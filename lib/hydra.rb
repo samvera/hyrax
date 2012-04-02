@@ -1,13 +1,15 @@
 require "blacklight"
+require 'active-fedora'
+require 'cancan'
+
 # Hydra libraries
 module Hydra
-  extend Blacklight::Configurable
+  extend Blacklight::GlobalConfigurable
   extend ActiveSupport::Autoload
   autoload :AccessControlsEvaluation
   autoload :AccessControlsEnforcement
   autoload :Assets
   autoload :Catalog
-  autoload :Configurable, 'blacklight/configurable'
   autoload :Controller
   autoload :FileAssets
   autoload :GenericContent
@@ -16,6 +18,7 @@ module Hydra
   autoload :ModelMixins
   autoload :ModsGenericContent
   autoload :ModsImage
+  autoload :RepositoryController
   autoload :SubmissionWorkflow
   autoload :SuperuserAttributes
   autoload :User
@@ -24,9 +27,7 @@ module Hydra
 end
 
 
-require 'mediashelf/active_fedora_helper'
 
-require 'hydra/repository_controller'
 require 'hydra/assets_controller_helper'
 require 'hydra/file_assets_helper'
 

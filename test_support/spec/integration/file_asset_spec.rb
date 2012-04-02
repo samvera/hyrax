@@ -1,5 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require "active_fedora"
 
 class DummyFileAsset < ActiveFedora::Base
   def initialize(attr={})
@@ -74,17 +73,18 @@ describe FileAsset do
         @image_asset.update_indexed_attributes({:title=>{0=>"testing"}})
         #call Solrizer::Indexer.create_document since that produces the problem
         @image_asset.save
-        solr_doc = ImageAsset.find_by_solr(@image_asset.pid).hits.first
+        solr_doc = ImageAsset.find_by_solr(@image_asset.pid).first
         solr_doc["title_t"].should == ["testing"]
         @audio_asset.update_indexed_attributes({:title=>{0=>"testing"}})
         #call Solrizer::Indexer.create_document since that produces the problem
         @audio_asset.save
-        solr_doc = AudioAsset.find_by_solr(@audio_asset.pid).hits.first
+        solr_doc = AudioAsset.find_by_solr(@audio_asset.pid).first
+        #puts "has_model_s: #{solr_doc['has_model_s'].inspect}"
         solr_doc["title_t"].should == ["testing"]
         @video_asset.update_indexed_attributes({:title=>{0=>"testing"}})
         #call Solrizer::Indexer.create_document since that produces the problem
         @video_asset.save
-        solr_doc = VideoAsset.find_by_solr(@video_asset.pid).hits.first
+        solr_doc = VideoAsset.find_by_solr(@video_asset.pid).first
         solr_doc["title_t"].should == ["testing"]
       end
     end
@@ -92,7 +92,7 @@ describe FileAsset do
       pending "I'm unconvinced as to the usefullness of this test. Why create as one type then reload as another? - Justin"
       @dummy_file_asset = DummyFileAsset.new
       @dummy_file_asset.save
-      file_asset = FileAsset.load_instance(@dummy_file_asset.pid)
+      file_asset = FileAsset.find(@dummy_file_asset.pid)
       ENABLE_SOLR_UPDATES = false
       #it should save change to Fedora, but not solr
       file_asset.update_indexed_attributes({:title=>{0=>"testing"}})

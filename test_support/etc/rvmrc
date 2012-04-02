@@ -3,7 +3,7 @@
 # This is an RVM Project .rvmrc file, used to automatically load the ruby
 # development environment upon cd'ing into the directory
 
-ruby_string="ree-1.8.7"
+ruby_string="1.9.3"
 gemset_name="hyhead-testapp"
 
 # Install rubies when used instead of only displaying a warning and exiting

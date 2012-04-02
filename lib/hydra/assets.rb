@@ -1,6 +1,5 @@
 module Hydra::Assets
   extend ActiveSupport::Concern
-  include MediaShelf::ActiveFedoraHelper
   include Blacklight::SolrHelper
   include Hydra::RepositoryController
   include Hydra::AssetsControllerHelper
@@ -11,10 +10,8 @@ module Hydra::Assets
     helper :hydra
     include Hydra::UI::Controller
     before_filter :search_session, :history_session
-    before_filter :require_solr
     before_filter :load_document, :only => :update # allows other filters to operate on the document before the update method is called
 
-    # need to include this after the :require_solr before filters because of the before filter that the workflow provides.
     include Hydra::SubmissionWorkflow
     
     
@@ -26,10 +23,7 @@ module Hydra::Assets
     if params.has_key?("field")
       
       @response, @document = get_solr_response_for_doc_id
-      # @document = SolrDocument.new(@response.docs.first)
       result = @document["#{params["field"]}_t"]
-      # document_fedora = SaltDocument.load_instance(params[:id])
-      # result = document_fedora.datastreams_in_memory[params["datastream"]].send("#{params[:field]}_values")
       unless result.nil?
         if params.has_key?("field_index")
           result = result[params["field_index"].to_i-1]
@@ -42,7 +36,7 @@ module Hydra::Assets
         format.textile  { render :text=> RedCloth.new(result, [:sanitize_html]).to_html  }
       end
     else
-      redirect_to :controller=>"catalog", :action=>"show"
+      redirect_to catalog_path(params[:id])
     end
   end
   
@@ -62,11 +56,11 @@ module Hydra::Assets
     @document.save
     flash[:notice] = "Your changes have been saved."
     
-    logger.debug("returning #{@response.inspect}")
+    #logger.debug("returning #{@response.inspect}")
     
     respond_to do |want| 
       want.html {
-        redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
+        redirect_to next_step(params[:id])
       }
       want.js {
         render :json=> tidy_response_from_update(@response)  
@@ -82,31 +76,27 @@ module Hydra::Assets
   
   def new
     af_model = retrieve_af_model(params[:content_type])
-    if af_model
-      @asset = af_model.new
-      apply_depositor_metadata(@asset)
-      set_collection_type(@asset, params[:content_type])
-      @asset.save
-      model_display_name = af_model.to_s.camelize.scan(/[A-Z][^A-Z]*/).join(" ")
-      msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
-      flash[:notice]= msg
-    end
+    raise "Can't find a model for #{params[:content_type]}" unless af_model
+    @asset = af_model.new
+    apply_depositor_metadata(@asset)
+    set_collection_type(@asset, params[:content_type])
+    @asset.save
+    model_display_name = af_model.to_s.camelize.scan(/[A-Z][^A-Z]*/).join(" ")
+    msg = "Created a #{model_display_name} with pid #{@asset.pid}. Now it's ready to be edited."
+    flash[:notice]= msg
     session[:scripts] = params[:combined] == "true"
-    redirect_to url_for(:action=>"edit", :controller=>"catalog", :id=>@asset.pid, :new_asset=>true)
+
+    redirect_to edit_catalog_path(@asset.pid, :new_asset=>true)
   end
   
   def destroy
-    af = ActiveFedora::Base.load_instance(params[:id])
-    the_model = ActiveFedora::ContentModel.known_models_for( af ).first
-    unless the_model.nil?
-      af = the_model.load_instance(params[:id])
-      assets = af.destroy_child_assets
-    end
+    af = ActiveFedora::Base.find(params[:id], :cast=>true)
+    assets = af.destroy_child_assets
     af.delete
     msg = "Deleted #{params[:id]}"
     msg.concat(" and associated file_asset(s): #{assets.join(", ")}") unless assets.empty?
     flash[:notice]= msg
-    redirect_to url_for(:action => 'index', :controller => "catalog", :q => nil , :f => nil)
+    redirect_to catalog_index_path()
   end
 
   
@@ -115,9 +105,6 @@ module Hydra::Assets
   
   protected
 
-  def load_document
-    @document = load_document_from_params
-  end
 
   
   def mods_assets_update_validation

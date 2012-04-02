@@ -1,7 +1,11 @@
-require "active-fedora"
 module Hydra
 class RightsMetadata < ActiveFedora::NokogiriDatastream       
   
+  def initialize(digital_object, dsid, options={})
+    ActiveSupport::Deprecation.warn("Hydra::RightsMetadata has been deprecated. Use Hydra::Datastream::RightsMetadata instead")
+    super
+  end
+
   set_terminology do |t|
     t.root(:path=>"rightsMetadata", :xmlns=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
     t.copyright {
@@ -155,7 +159,7 @@ class RightsMetadata < ActiveFedora::NokogiriDatastream
   end
   def embargo_release_date(opts={})
     embargo_release_date = self.find_by_terms(*[:embargo,:machine,:date]).first ? self.find_by_terms(*[:embargo,:machine,:date]).first.text : nil
-    if opts[:format] && opts[:format] == :solr_date
+    if embargo_release_date.present? && opts[:format] && opts[:format] == :solr_date
       embargo_release_date << "T23:59:59Z"
     end
     embargo_release_date

@@ -3,9 +3,9 @@
 
 <%= render :partial=>"contributors/edit_person", :collection=>person_collection, :locals=>{:af_model => "mods_asset"} %>
 
-<p id="add_author" class="add-multi"><%#= link_to "Add a Person", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"person") %></p>
+<p id="add_author" class="add-multi"><%#= link_to "Add a Person", new_hydra_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"person") %></p>
 
 <%#= render :partial=>"contributors/edit_organization", :collection=>@document_fedora.datastreams_in_memory["descMetadata"].find_by_terms(:organization) %>
 
-<!--<p id="add_organization" class="add-multi"><%#= link_to "Add an Organization", new_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"organization") %></p>-->
+<!--<p id="add_organization" class="add-multi"><%#= link_to "Add an Organization", new_hydra_asset_contributor_path(:asset_id=>params[:id], :contributor_type=>"organization") %></p>-->
 

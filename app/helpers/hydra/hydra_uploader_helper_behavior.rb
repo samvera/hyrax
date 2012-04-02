@@ -3,7 +3,7 @@ module Hydra::HydraUploaderHelperBehavior
   # Generate the appropriate url for posting uploads to
   # Uses the +container_id+ method to figure out what container uploads should go into
   def upload_url
-    upload_url = asset_file_assets_path(:asset_id=>container_id)
+    upload_url = hydra_asset_file_assets_path(:asset_id=>container_id)
   end
   
   # The id of the container that uploads should be posted into

@@ -56,7 +56,7 @@ namespace :hyhead do
     end
 
     YARD::Rake::YardocTask.new(:doc) do |yt|
-      yt.files   = ['lib/**/*', project_root+"*", 'app/**/*']
+      yt.files   = ['lib/**/*.rb', project_root+"*", 'app/**/*.rb']
 
       yt.options << "-m" << "textile"
       yt.options << "--protected"
@@ -147,7 +147,8 @@ namespace :hyhead do
       FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
       
       puts "Executing bundle install --local in the test app"
-      puts %x[bundle install --local]
+      #puts %x[bundle install --local]
+      puts %x[bundle install]
       errors << 'Error running bundle install in test app' unless $?.success?
 
       puts "Installing cucumber in test app"

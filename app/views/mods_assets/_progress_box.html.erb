@@ -39,7 +39,7 @@
     <hr size="1" />
     <!-- <p class="progressItem progressItemChecked bold">Released</p> -->
     <!-- <div class="progressInfoBox"><%#= formatTimestamp(@ds_properties.submit_date_values.first) %></div> -->
-      <%= form_tag url_for( :action=>"update", :controller=>"assets", :content_type=>"mods_asset"), "data-resourceType"=>"mods_asset", "accept-charset"=>"utf-8"  do %>
+      <%= form_tag url_for( :action=>"update", :controller=>"hydra/assets", :content_type=>"mods_asset"), "data-resourceType"=>"mods_asset", "accept-charset"=>"utf-8"  do %>
             <input name="_method" type="hidden" value="put" />
       	<div>  
             <p class="progressItem progressItemChecked bold">
@@ -58,7 +58,7 @@
 <% else %>
   <li class="progressBoxSubmit noIndent" id="submitToRegistrarDiv">
     <hr size="1" />
-      <%= form_tag url_for( :action=>"update", :controller=>"assets", :content_type=>"mods_asset"), "data-resourceType"=>"mods_asset", "accept-charset"=>"utf-8"  do %>
+      <%= form_tag url_for( :action=>"update", :controller=>"hydra/assets", :content_type=>"mods_asset"), "data-resourceType"=>"mods_asset", "accept-charset"=>"utf-8"  do %>
         <input name="_method" type="hidden" value="put" />
       	<div>  
         			<%= fedora_field_label("properties", [:release_to], "Release to") %>

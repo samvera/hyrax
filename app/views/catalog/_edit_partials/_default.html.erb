@@ -7,7 +7,7 @@
 
 
 
-<% @fedora_object = ActiveFedora::Base.load_instance(params[:id])
+<% @fedora_object = ActiveFedora::Base.find(params[:id])
    @datastreams = @fedora_object.datastreams
 %>
 
@@ -52,7 +52,7 @@
         </dd>
   </dl>
 
-  <%= render :partial => "permissions/index", :locals => {:document => document, :asset_id=>params[:id]}%>
+  <%= render :partial => "hydra/permissions/index", :locals => {:document => document, :asset_id=>params[:id]}%>
 
 </div>
 

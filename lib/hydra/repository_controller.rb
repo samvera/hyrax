@@ -1,4 +1,3 @@
-require "mediashelf/active_fedora_helper"
 # Hydra-repository Contoller is a controller layer mixin. It is in the controller scope: request params, session etc.
 # 
 # NOTE: Be careful when creating variables here as they may be overriding something that already exists.
@@ -17,11 +16,6 @@ require "mediashelf/active_fedora_helper"
 # end
 #
 module Hydra::RepositoryController
-  
-  include MediaShelf::ActiveFedoraHelper
-      
-      
-  
   
   def self.included(c)
     if c.respond_to?(:helper_method)
@@ -44,15 +38,6 @@ module Hydra::RepositoryController
     ::ActiveFedora::SolrService.solr_name(field_name, field_type)
   end
   
-  # Uses submitted params Hash to figure out what Model to load
-  # params should contain :content_type and :id
-  def load_document_from_params
-    af_model = retrieve_af_model(params[:content_type])
-    unless af_model 
-      af_model = ModsAsset
-    end
-    return af_model.find(params[:id])
-  end
   
   # Returns a list of datastreams for download.
   # Uses user's roles and "mime_type" value in submitted params to decide what to return.
@@ -61,7 +46,7 @@ module Hydra::RepositoryController
     if opts[:canonical]
       mime_type = opts[:mime_type] ? opts[:mime_type] : "application/pdf"
       result = filter_datastreams_for_mime_type(fedora_object.datastreams, mime_type).sort.first[1]
-    elsif editor? 
+    elsif can? :edit, fedora_object
       if params["mime_type"] == "all"
         result = fedora_object.datastreams
       else
@@ -86,7 +71,37 @@ module Hydra::RepositoryController
     # puts "downloadables result: #{result}"
     return result    
   end
+
+  protected 
+  def load_document
+    @document = load_document_from_params
+  end
+
+  # Uses submitted params Hash to figure out what Model to load
+  # params should contain :content_type and :id
+  def load_document_from_params
+    af_model = retrieve_af_model(params[:content_type])
+    unless af_model 
+      af_model = ModsAsset
+    end
+    return af_model.find(params[:id])
+  end
   
+  def retrieve_af_model(class_name, opts={})
+    if !class_name.nil?
+      klass = Module.const_get(class_name.camelcase)
+    else
+      klass = nil
+    end
+    if klass.is_a?(Class) && klass.superclass == ActiveFedora::Base
+      return klass
+    else
+      return opts.fetch(:default, false)
+    end
+    rescue NameError
+      return false
+  end
+
   private
   
   def filter_datastreams_for_mime_type(datastreams_hash, mime_type)

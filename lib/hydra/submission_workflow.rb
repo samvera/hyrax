@@ -42,7 +42,7 @@ module Hydra::SubmissionWorkflow
     model_config.last[:name] unless model_config.nil?
   end
   
-  def params_for_next_step_in_wokflow
+  def next_step(id)
     return_params = {:wf_step=>next_step_in_workflow(params[:wf_step])}
     if params[:new_asset]
       return_params[:new_asset] = true
@@ -50,9 +50,10 @@ module Hydra::SubmissionWorkflow
     if params[:wf_step] == last_step_in_workflow or params.has_key?(:finish)
       return_params[:viewing_context] = "browse"
       return_params[:action] = "show" 
-      return_params[:wf_step] = nil
+      return_params.delete(:wf_step)
+      return catalog_path(id, return_params)
     end
-    return return_params
+    return edit_catalog_path(id,return_params)
   end
   
   # Convenience method to return the partial for any given step by name.
@@ -117,7 +118,7 @@ module Hydra::SubmissionWorkflow
       begin
         af = ActiveFedora::Base.load_instance_from_solr(params[:id])
         return "#{ActiveFedora::ContentModel.known_models_for( af ).first}".underscore.pluralize.to_sym
-      rescue
+      rescue Exception => e #TODO this should be ActiveFedora::ObjectNotFoundError
         nil
       end
     end

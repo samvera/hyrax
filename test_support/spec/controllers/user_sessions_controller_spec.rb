@@ -27,9 +27,9 @@ describe UserSessionsController do
   
   it "should redirect to the referer" do
     controller.stubs(:current_user).returns(@user)
-    request.env["HTTP_REFERER"] = file_assets_path
+    request.env["HTTP_REFERER"] = hydra_file_assets_path
     get :superuser
-    response.should redirect_to(file_assets_path)
+    response.should redirect_to(hydra_file_assets_path)
   end
   
 end

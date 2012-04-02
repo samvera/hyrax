@@ -1,14 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require "active_fedora"
 require "nokogiri"
 
-describe Hydra::RightsMetadata do
+describe Hydra::Datastream::RightsMetadata do
   
   before(:each) do
     # The way RubyDora loads objects prevents us from stubbing the fedora connection :(
     # ActiveFedora::RubydoraConnection.stubs(:instance).returns(stub_everything())
     obj = ActiveFedora::Base.new
-    @sample = Hydra::RightsMetadata.new(obj.inner_object, nil)
+    @sample = Hydra::Datastream::RightsMetadata.new(obj.inner_object, nil)
     @sample.stubs(:content).returns('')
   end
   
@@ -128,10 +127,10 @@ describe Hydra::RightsMetadata do
     it "should solrize fixture content correctly" do
       fixture_xml = Nokogiri::XML::Document.parse( File.new(File.join( File.dirname(__FILE__), "../../fixtures/hydrangea_fixture_mods_article1.foxml.xml") ))
       fixture_rights = fixture_xml.xpath("//foxml:datastream[@ID='rightsMetadata']/foxml:datastreamVersion[last()]/foxml:xmlContent", {'foxml'=>"info:fedora/fedora-system:def/foxml#"}).first.to_xml
-      lsample = Hydra::RightsMetadata.new(nil, nil)
+      lsample = Hydra::Datastream::RightsMetadata.new(nil, nil)
       lsample.content = fixture_rights
 #      lsample.expects(:content).returns('')
-      lsample = Hydra::RightsMetadata.from_xml(fixture_rights, lsample)
+      lsample = Hydra::Datastream::RightsMetadata.from_xml(fixture_rights, lsample)
       solr_doc = lsample.to_solr
       solr_doc["edit_access_person_t"].should == ["researcher1"]
       solr_doc["edit_access_group_t"].should == ["archivist"]
@@ -149,7 +148,13 @@ describe Hydra::RightsMetadata do
     end
   end
   describe "embargo_release_date" do
-    it "should return the value as specified in the appropriate node" do
+    it "should return solr formatted date" do
+      @sample.embargo_release_date=("2010-12-01")
+      @sample.embargo_release_date(:format=>:solr_date).should == "2010-12-01T23:59:59Z"
+    end
+    it "should not return anything if the date is empty string" do
+      @sample.update_values({[:embargo,:machine,:date]=>''})
+      @sample.embargo_release_date(:format=>:solr_date).should == ''
     end
   end
   describe "under_embargo?" do

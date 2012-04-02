@@ -5,7 +5,7 @@
 <% if @document_fedora.class.respond_to?(:conference_relator_terms) %>
   <% choices = @document_fedora.class.conference_relator_terms %>
 <% else %>
-  <% choices = Hydra::ModsArticle.conference_relator_terms %>
+  <% choices = Hydra::Datastream::ModsArticle.conference_relator_terms %>
 <% end %>
 <li>
   <dl class="conference contributor" id="<%= base_id %>">
@@ -22,7 +22,7 @@
       </ul>
       <% if params[:action] == "edit" && !conference_name.empty? %>
         <%= field_selectors_for("descMetadata", [{:person=>conference_counter}]).html_safe %>
-        <a class="destructive destroy_contributor" href="<%= asset_contributor_path(@document_fedora.pid, "conference", conference_counter) %>" title="Delete '<%= conference_name %>"> Delete</a>
+        <a class="destructive destroy_contributor" href="<%= hydra_asset_contributor_path(@document_fedora.pid, "conference", conference_counter) %>" title="Delete '<%= conference_name %>"> Delete</a>
       <% end %>
     </dd>
   </dl>

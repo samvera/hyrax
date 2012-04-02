@@ -1,18 +1,16 @@
 module Hydra::FileAssets
   extend ActiveSupport::Concern
   
-  
   included do
     include Hydra::AccessControlsEnforcement
     include Hydra::AssetsControllerHelper
     include Hydra::FileAssetsHelper  
     include Hydra::RepositoryController  
-    include MediaShelf::ActiveFedoraHelper
     include Hydra::UI::Controller
     include Blacklight::SolrHelper
-    before_filter :require_solr, :only=>[:index, :create, :show, :destroy]
-    # need to include this after the :require_solr/fedora before filters because of the before filter that the workflow provides.
     include Hydra::SubmissionWorkflow
+    include Blacklight::Configurable
+    copy_blacklight_config_from(CatalogController)
     prepend_before_filter :sanitize_update_params
     helper :hydra_uploader
   end
@@ -34,7 +32,7 @@ module Hydra::FileAssets
       @container_response, @document = get_solr_response_for_doc_id(params[:asset_id])
       
       # Including these lines for backwards compatibility (until we can use Rails3 callbacks)
-      @container =  ActiveFedora::Base.load_instance(params[:asset_id])
+      @container =  ActiveFedora::Base.find(params[:asset_id], :cast=>true)
       @solr_result = @container.file_objects(:response_format=>:solr)
     end
     
@@ -54,9 +52,9 @@ module Hydra::FileAssets
   # * the method will redirect to the container object's edit view after saving
   def create
     if params.has_key?(:number_of_files) and params[:number_of_files] != "0"
-      return redirect_to({:controller => "catalog", :action => "edit", :id => params[:id], :wf_step => :files, :number_of_files => params[:number_of_files]})
+      return redirect_to edit_catalog_path(params[:id], :wf_step => :files, :number_of_files => params[:number_of_files])
     elsif params.has_key?(:number_of_files) and params[:number_of_files] == "0"
-      return redirect_to( {:controller => "catalog", :action => "edit", :id => params[:id]}.merge(params_for_next_step_in_wokflow) )
+      return redirect_to next_step(params[:id])
     end
     
     if params.has_key?(:Filedata)
@@ -66,12 +64,12 @@ module Hydra::FileAssets
       flash[:notice] = "You must specify a file to upload."
     end
     
-    unless params[:container_id].nil?
-      redirect_params = {:controller => "catalog", :action => "edit", :id => params[:container_id]}.merge(params_for_next_step_in_wokflow)
+    if params[:container_id]
+      redirect_to next_step(params[:container_id])
+    else
+      redirect_to catalog_index_path
     end
-    redirect_params ||= {:controller => "catalog", :action => "index"}
-    
-    redirect_to redirect_params
+
   end
 
   def process_files
@@ -80,7 +78,7 @@ module Hydra::FileAssets
     @file_assets.each do |file_asset|
       apply_depositor_metadata(file_asset)
 
-      notice << render_to_string(:partial=>'file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
+      notice << render_to_string(:partial=>'hydra/file_assets/asset_saved_flash', :locals => { :file_asset => file_asset })
         
       if !params[:container_id].nil?
         associate_file_asset_with_container(file_asset,'info:fedora/' + params[:container_id])
@@ -99,7 +97,7 @@ module Hydra::FileAssets
   
   # Common destroy method for all AssetsControllers 
   def destroy
-    ActiveFedora::Base.load_instance(params[:id]).delete 
+    ActiveFedora::Base.find(params[:id], :cast=>true).delete 
 
     flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."
     
@@ -114,32 +112,32 @@ module Hydra::FileAssets
   
   
   def show
-    @file_asset = FileAsset.find(params[:id])
-    if (@file_asset.nil?)
+    begin
+      @file_asset = FileAsset.find(params[:id])
+    rescue ActiveFedora::ObjectNotFoundError
       logger.warn("No such file asset: " + params[:id])
       flash[:notice]= "No such file asset."
       redirect_to(:action => 'index', :q => nil , :f => nil)
-    else
-      # get containing object for this FileAsset
-      pid = @file_asset.container_id
-      @downloadable = false
-      # A FileAsset is downloadable iff the user has read or higher access to a parent
-      @response, @permissions_solr_document = get_solr_response_for_doc_id(pid)
-      if reader?
-        @downloadable = true
-     end
+      return
+    end
+    # get containing object for this FileAsset
+    pid = @file_asset.container_id
+    @downloadable = false
+    # A FileAsset is downloadable iff the user has read or higher access to a parent
+    if can? :read, @file_asset
+      @downloadable = true
+    end
 
-      if @downloadable
-        # First try to use datastream_id value (set in FileAssetsHelper)
-        if @file_asset.datastreams.include?(datastream_id)
-          send_datastream @file_asset.datastreams[datastream_id]
-        elsif @file_asset.datastreams.include?("DS1")
-          send_datastream @file_asset.datastreams["DS1"]
-        end
-      else
-        flash[:notice]= "You do not have sufficient access privileges to download this file."
-        redirect_to(:action => 'index', :q => nil , :f => nil)
+    if @downloadable
+      # First try to use datastream_id value (set in FileAssetsHelper)
+      if @file_asset.datastreams.include?(datastream_id)
+        send_datastream @file_asset.datastreams[datastream_id]
+      elsif @file_asset.datastreams.include?("DS1")
+        send_datastream @file_asset.datastreams["DS1"]
       end
+    else
+      flash[:notice]= "You do not have sufficient access privileges to download this file."
+      redirect_to(:action => 'index', :q => nil , :f => nil)
     end
   end
 end

@@ -28,12 +28,12 @@ module Hydra
       
 
       def label
-        descMetadata.title_values.first
+        descMetadata.title.first
       end
           
       def label=(label)
         super
-        descMetadata.title_values = label
+        descMetadata.title = label
       end    
       
       # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in dc:extent 
@@ -46,7 +46,7 @@ module Hydra
         else
           size = ""
         end
-        datastreams["descMetadata"].extent_values = size
+        datastreams["descMetadata"].extent = size
       end
 
       # Override ActiveFedora::Base.to_solr to...

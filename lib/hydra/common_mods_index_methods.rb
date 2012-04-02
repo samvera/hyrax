@@ -8,6 +8,11 @@
 #   This method returns a Hash of person_full_name_facet values which extract the persons affiliation and puts it in an mods_organization_facet
 
 module Hydra::CommonModsIndexMethods
+
+  def self.included(base)
+    ActiveSupport::Deprecation.warn("Hydra::CommonModsIndexMethods has been deprecated. Use Hydra::Datastream::CommonModsIndexMethods instead")
+  end
+
   # Extracts the first and last names of persons and creates Solr::Field objects with for person_full_name_facet
   #
   # == Returns:

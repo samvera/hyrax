@@ -13,7 +13,12 @@ describe BlacklightHelper do
   
   describe "Overridden blacklight methods" do
     describe "document_partial_name" do
+
       it "Should lop off everything before the first colin after the slash" do
+    @config = Blacklight::Configuration.new.configure do |config|
+      config.show.display_type = 'has_model_s'
+    end
+        helper.stubs(:blacklight_config).returns(@config)
         helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:Presentation"]).should == "presentations"
         helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"]).should == "generic_contents" 
       end
@@ -23,7 +28,7 @@ describe BlacklightHelper do
         item = stub("item", :value=>'two', :hits=>9)
 
         ret_val = helper.render_selected_facet_value("one", item)
-        ret_val.should == "<span class=\"selected\">two (9)</span>"
+        ret_val.should == "<span class=\"selected label\">two <span class=\"count\">(9)</span></span>"
         ret_val.should be_html_safe
       end
     end
@@ -35,18 +40,6 @@ describe BlacklightHelper do
       end
       it "adds the content of content_for(:head) to the output" do
         helper.render_head_content.should == "Something extraMy added content"
-      end
-    end
-    describe "link_to_document" do
-      before(:each)do
-        @mock_doc = mock('mock doc')
-        @mock_doc.expects(:[]).with(:id).returns("123456")
-      end
-      it "passes on the title attribute to the link_to_with_data method" do
-        helper.link_to_document(@mock_doc,:label=>"Some crazy long label...",:title=>"Some crazy longer label").should match(/title=\"Some crazy longer label\"/)
-      end
-      it "doesn't add an erroneous title attribute if one isn't provided" do
-        helper.link_to_document(@mock_doc,:label=>"Some crazy long label...").should_not match(/title=/)
       end
     end
     

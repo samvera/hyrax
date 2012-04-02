@@ -18,6 +18,9 @@
 require 'active_fedora/version'
 module MediaShelf
   module ActiveFedoraHelper
+    def self.included(base)
+      ActiveSupport::Deprecation.warn("ActiveFedoraHelper is deprecated for removal")
+    end
 
     def retrieve_af_model(class_name, opts={})
       if !class_name.nil?

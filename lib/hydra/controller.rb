@@ -13,14 +13,7 @@ module Hydra::Controller
   def self.included(klass)
     # Other modules to auto-include
     klass.send(:include, Hydra::AccessControlsEnforcement)
-    klass.send(:include, MediaShelf::ActiveFedoraHelper)
     klass.send(:include, Hydra::RepositoryController)
-  
-  
-    # Controller filters
-    # Also see the generator (or generated CatalogController) to see more before_filters in action
-    klass.before_filter :require_solr
-    # klass.before_filter :load_fedora_document, :only=>[:show,:edit]
   
     # View Helpers
     klass.helper :hydra
@@ -31,17 +24,12 @@ module Hydra::Controller
   # Sets @document_fedora with the loaded object
   # Sets @file_assets with file objects that are children of the loaded object
   def load_fedora_document
-    af_base = ActiveFedora::Base.load_instance(params[:id])
-    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
-    unless the_model.include?(ActiveFedora::Relationships)
-      the_model.send :include, ActiveFedora::Relationships
-    end
-    unless the_model.include?(ActiveFedora::FileManagement)
-      the_model.send :include, ActiveFedora::FileManagement
+    @document_fedora = ActiveFedora::Base.find(params[:id], :cast=>true)
+    unless @document_fedora.class.include?(Hydra::ModelMethods)
+      @document_fedora.class.send :include, Hydra::ModelMethods
     end
     
-    @document_fedora = af_base.adapt_to(the_model)
-    @file_assets = @document_fedora.file_objects(:response_format=>:solr)
+    @file_assets = @document_fedora.parts(:response_format=>:solr)
   end
   
   

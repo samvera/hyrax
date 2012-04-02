@@ -33,33 +33,6 @@ namespace :hyhead do
       FileUtils.cd('../../')
     end
 
-  namespace :fixture do
-    desc "[DEPRECATED] Call hydra:delete"
-    task :delete do
-      STDERR.puts "DEPRECATED: hyhead:fixture:delete is deprecated.  Use/override hyhead:delete instead."
-      Rake::Task["hyhead:delete"].invoke
-    end
-    
-    desc "[DEPRECATED] Call hydra:harvest_fixture"
-    task :harvest => ["hyhead:use_test_app"] do
-      STDERR.puts "DEPRECATED: hyhead:fixture:harvest is deprecated.  Use/override hyhead:export instead."
-      Rake::Task["hyhead:export"].invoke
-    end
-    
-    desc "[DEPRECATED] Call hydra:import_fixture from within the test app"
-    task :import => ["hyhead:use_test_app"] do
-      STDERR.puts "DEPRECATED: hyhead:fixture:import is deprecated.  Use/override hyhead:load instead."
-      Rake::Task["hyhead:load"].invoke
-    end
-    
-    
-    desc "[DEPRECATED] Call hydra:refresh_fixture from within the test app"
-    task :refresh => ["hyhead:use_test_app"] do
-      STDERR.puts "DEPRECATED: hyhead:fixture:refresh is deprecated.  Use/override hyhead:refresh instead."
-      Rake::Task["hyhead:refresh"].invoke
-    end
-  end
-  
   namespace :fixtures do
     
     desc "Call hydra:fixtures:refresh from within the test app"
@@ -76,13 +49,6 @@ namespace :hyhead do
     task :delete => ["hyhead:use_test_app"] do
       puts %x[rake hydra:fixtures:delete]
       FileUtils.cd('../../')
-    end
-    
-    
-    desc "[DEPRECATED] Call hydra:purge_range"
-    task :purge_range => ["hyhead:use_test_app"] do
-      STDERR.puts "DEPRECATED: hyhead:fixtures:purge_range is deprecated.  Use/override hyhead:delete_range instead."
-      Rake::Task["hyhead:delete_range"].invoke
     end
   end
 end

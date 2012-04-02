@@ -1,6 +1,5 @@
 require "inline_editable_metadata_helper"
 require "block_helpers"
-require "active_support"
 require "redcloth" # Provides textile parsing support for textile_area method
 
 module Hydra::HydraFedoraMetadataHelperBehavior

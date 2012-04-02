@@ -1,7 +1,15 @@
 require "uva/mods_index_methods"
 module Hydra
+
   class ModsDataset < ActiveFedora::NokogiriDatastream
     include Hydra::CommonModsIndexMethods
+
+    def initialize(digital_object, dsid, options={})
+      ActiveSupport::Deprecation.warn("Hydra::ModsDataset has been deprecated. Use Hydra::Datastream::ModsDataset instead")
+      super
+
+    end
+
     set_terminology do |t|
       t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 
