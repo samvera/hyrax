@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.summary     = %q{Hydra-Head Rails Engine (requires Rails3) }
   s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
 
-  s.add_dependency "rails", '~> 3.2.1'
+  s.add_dependency "rails", '3.2.2' # 3.2.3 needs an updated version of BL(>3.3.1)
   s.add_dependency "blacklight", '~>3.3.1'  
   s.add_dependency "devise"
-  s.add_dependency "active-fedora", '~>4.0.0.rc19'
+  s.add_dependency "active-fedora", '~>4.0.0.rc20'
   s.add_dependency 'RedCloth', '=4.2.9'
   s.add_development_dependency 'solrizer-fedora', '>=1.2.5'
   s.add_dependency 'block_helpers'

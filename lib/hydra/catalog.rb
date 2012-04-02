@@ -35,10 +35,6 @@ module Hydra::Catalog
     render "show"
   end
   
-  def enforce_opensearch_permissions
-    return enforce_index_permissions
-  end
-  
   def nonexistent_document
     if Rails.env == "development"
       render

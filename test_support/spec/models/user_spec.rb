@@ -8,7 +8,10 @@ describe User do
       @user = User.create(:email=> "testuser@example.com", :password=> "password", :password_confirmation => "password")
     end
     it "should know if a user can be a superuser" do
-      superuser = Superuser.create(:id => 20, :user_id => @user.id)
+      superuser = Superuser.new()
+      superuser.id = 20
+      superuser.user_id = @user.id
+      superuser.save!
       @user.extend(Hydra::SuperuserAttributes)
       @user.can_be_superuser?.should be_true
     end
@@ -19,7 +22,10 @@ describe User do
     end
 
     it "should know if the user is being a superuser" do
-      superuser = Superuser.create(:id => 50, :user_id => @user.id)
+      superuser = Superuser.new()
+      superuser.id = 50
+      superuser.user_id = @user.id
+      superuser.save!
       @user.extend(Hydra::SuperuserAttributes)
       session = { :superuser_mode => true }
       @user.is_being_superuser?(session).should be_true
@@ -32,7 +38,10 @@ describe User do
     end
 
     it "should know if the user is not being a superuser even if the user can be a superuser" do
-      superuser = Superuser.create(:id => 60, :user_id => @user.id)
+      superuser = Superuser.new()
+      superuser.id = 60
+      superuser.user_id = @user.id
+      superuser.save!
       @user.extend(Hydra::SuperuserAttributes)
       @user.can_be_superuser?.should be_true
       session = {}
