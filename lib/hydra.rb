@@ -36,5 +36,6 @@ require 'hydra/common_mods_index_methods'
 require 'hydra/mods_article'
 require 'hydra/model_methods'
 require 'hydra/models/file_asset'
+require 'mediashelf/active_fedora_helper' #deprecated
 
 
