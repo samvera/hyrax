@@ -21,7 +21,7 @@ module Hydra::Catalog
     # View Helpers
     helper :hydra_uploader
     helper :article_metadata
-    rescue_from Blacklight::Exceptions::InvalidSolrID, :with => :nonexistent_document
+    rescue_from ActiveFedora::ObjectNotFoundError, :with => :nonexistent_document
   end
   
   def edit
