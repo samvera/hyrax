@@ -16,7 +16,7 @@ describe Batch do
     @batch.delete
   end
   it "should have rightsMetadata" do
-    @batch.rightsMetadata.should be_instance_of Hydra::RightsMetadata
+    @batch.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
   end
   it "should have dc desc metadata" do
     @batch.descMetadata.should be_kind_of BatchRDFDatastream

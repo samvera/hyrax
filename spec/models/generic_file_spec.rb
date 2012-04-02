@@ -5,7 +5,7 @@ describe GenericFile do
     @file = GenericFile.new
   end 
   it "should have rightsMetadata" do
-    @file.rightsMetadata.should be_instance_of Hydra::RightsMetadata
+    @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
   end
   it "should have apply_depositor_metadata" do
     @file.apply_depositor_metadata('jcoyne')
