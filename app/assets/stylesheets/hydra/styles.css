@@ -167,10 +167,10 @@ button.ui-button-icon-only {
 	margin-left: 90px;
 }
 
-.error, .notice, .errorExplanation {
+.msg.error, .msg.notice {
     margin: 0;
     width: 907px;
-	font-size: 14px;
+  	font-size: 14px;
 }
 
 #abstract-text {
@@ -223,15 +223,6 @@ a.destructive:hover {
 #uvalicense_read_all,
 #uvalicense p {
     margin-left: 16px;
-}
-
-button {
-    min-height: 10px;
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-    font-size: 11px;
-    height: 26px;
-    width: 60px;
-    right: 5px;
 }
 
 #appliedParams a#startOverLink {
@@ -975,15 +966,15 @@ table#file_assets tr.file_asset td {
 	width: 40%;
 }
 
-.error, .alert, .notice, .success, .info {padding:0.8em;margin:0 auto 1em;border:2px solid #ddd;width: 50%;}
-.error, .alert {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4;}
-.notice {background:#fff6bf;color:#514721;border-color:#ffd324;}
-.success {background:#e6efc2;color:#264409;border-color:#c6d880;}
-.info {background:#d5edf8;color:#205791;border-color:#92cae4;}
-.error a, .alert a {color:#8a1f11;}
-.notice a {color:#514721;}
-.success a {color:#264409;}
-.info a {color:#205791;}
+.msg.error, .msg.alert, .msg.notice, .msg.success, .msg.info {padding:0.8em;margin:0 auto 1em;border:2px solid #ddd;width: 50%;}
+.msg.error, .msg.alert {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4;}
+.msg.notice {background:#fff6bf;color:#514721;border-color:#ffd324;}
+.msg.success {background:#e6efc2;color:#264409;border-color:#c6d880;}
+.msg.info {background:#d5edf8;color:#205791;border-color:#92cae4;}
+.msg.error a, .msg.alert a {color:#8a1f11;}
+.msg.notice a {color:#514721;}
+.msg.success a {color:#264409;}
+.msg.info a {color:#205791;}
 
 div#delete_dialog div {
     display: block;
