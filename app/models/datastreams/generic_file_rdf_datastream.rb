@@ -29,13 +29,7 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
       index.type :date
       index.as :facetable, :displayable, :sortable
     end
-    map.subject(:in => RDF::DC, :authorities =>
-                ["http://lcsubjects.org/subjects/sh85118553.nt", 
-                 "http://lcsubjects.org/subjects/sh85062913.nt",
-                 "http://lcsubjects.org/subjects/sh85100849.nt",
-                 "http://lcsubjects.org/subjects/sh85082139.nt",
-                 "http://lcsubjects.org/subjects/sh85029027.nt",
-                 "http://lcsubjects.org/subjects/sh98003200.nt"]) do |index|
+    map.subject(:in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
     end
     map.language(:in => RDF::DC) do |index|
@@ -61,4 +55,6 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
     end
     map.related_url(:to => "seeAlso", :in => RDF::RDFS)
   end
+  DomainTerm.find_or_create_by_model_and_term(:model => "generic_files", 
+                                              :term => "subject").local_authorities << LocalAuthority.where(:name => "lcsubjects")
 end
