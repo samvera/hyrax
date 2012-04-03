@@ -409,7 +409,7 @@ table#file_assets {
     margin-left: 15px;
 }
 
-#hd, #doc4 {
+#hd {
 	background-image: none;
 	background-color: transparent;
     border: none;
@@ -420,21 +420,6 @@ table#file_assets {
     text-align: center;
 }
 
-#doc4 {
-  position: absolute;
-  top: 0;
-  left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-}
-
-
-#bd {
-    width: 960px;
-    margin: 0 auto;
-	padding: 0;
-}
 
 #container_login {
     margin-top: 8px;
@@ -569,44 +554,6 @@ body .ui-widget {
 	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 	font-size: 13px;
 }
-
-#search {
-    height: 42px;
-    left: 0px;
-    position: static;
-    top: 0px;
-    width: 100%;
-    text-align: right;
-		border-radius: 0;
-		font-size: 100%;
-		padding: 0;
-}
-
-#search #form1 {
-    height: 25px;
-    width: 615px;
-    margin-left: 12px;
-    background-color: white;
-    margin-top: 7px;
-    border: none;
-}
-
-#search form {
-    padding: 5px;
-}
-
-#search form #q {
-    width: 590px;
-    float: left;
-}
-
-#search form input[type=image] {
-    padding: 0 6px;
-    float: right;
-    width: 77px;
-    height: 30px;
-}
-
 
 #content {
     width: 720px;
@@ -1328,10 +1275,6 @@ dd.person ul input.editable-edit.edit {
     font-weight: normal;
     white-space: nowrap;
     background-color: white;
-}
-
-input[type="text"] {
-    display: block;
 }
 
 input[type="submit"] {
