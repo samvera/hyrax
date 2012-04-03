@@ -1,27 +1,17 @@
 <!DOCTYPE html>
-
-<!--[if lt IE 7 ]> <html class="ie6"> <![endif]--> 
-<!--[if IE 7 ]>    <html class="ie7"> <![endif]--> 
-<!--[if IE 8 ]>    <html class="ie8"> <![endif]--> 
-<!--[if IE 9 ]>    <html class="ie9"> <![endif]--> 
-<!--[if gt IE 9]>  <html> <![endif]-->
-<!--[if !IE]><!--> <html> <!--<![endif]-->
-
+<html>
   <head>
     <meta charset="utf-8" />
-
     <title><%= h(@page_title || application_name) %></title>
     <link href="<%= opensearch_catalog_url(:format => 'xml') %>" title="<%= application_name%>" type="application/opensearchdescription+xml" rel="search"/>
-    
-    <%= render_head_content %>
-
-		<!--[if IE]>
-    	<%= stylesheet_link_tag('hydra/ie-styles', {:media=>'all'}) %>
-    	<%= stylesheet_link_tag('progressBox-ie6.css', {:media=>'all'}) %>
-		<![endif]-->
+    <%= favicon_link_tag asset_path('favicon.ico') %>
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <%= raw(render_head_content) %>
 	</head>
   
-    <body class="<%= render_body_class %>">
+  <body class="<%= render_body_class %>">
 
 	  <div id="doc4" class="yui-t2">
 		
