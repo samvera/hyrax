@@ -14,36 +14,29 @@ namespace :hydra do
   end
 
   namespace :fixtures do
-    FIXTURES = [
-        "hydrangea:fixture_mods_article1",
-        "hydrangea:fixture_mods_article3",
-        "hydrangea:fixture_file_asset1",
-        "hydrangea:fixture_mods_article2",
-        "hydrangea:fixture_uploaded_svg1",
-        "hydrangea:fixture_archivist_only_mods_article",
-        "hydrangea:fixture_mods_dataset1",
-        "libra-oa:1", "libra-oa:2", "libra-oa:7",
-        "hydrus:admin_class1",
-        "hydra:test_generic_content",
-        "hydra:test_generic_image",
-        "hydra:test_default_partials",
-        "hydra:test_no_model"
-    ]
-    desc "Load default Hydra fixtures"
     task :load do
-      ENV["dir"] = File.join("test_support", "fixtures")
-      FIXTURES.each do |fixture|
-        ENV["pid"] = fixture
-        Rake::Task["repo:load"].reenable
-        Rake::Task["repo:load"].invoke
+      ENV["dir"] ||= File.join("spec", "fixtures")
+      loader = ActiveFedora::FixtureLoader.new(ENV['dir'])
+      Dir.glob("#{ENV['dir']}/*.foxml.xml").each do |fixture_path|
+        pid = File.basename(fixture_path, ".foxml.xml").sub("_",":")
+        begin
+          foo = loader.reload(pid)
+          puts "Updated #{pid}"
+        rescue Errno::ECONNREFUSED => e
+          puts "Can't connect to Fedora! Are you sure jetty is running?"
+        rescue Exception => e
+          puts("Received a Fedora error while loading #{pid}\n#{e}")
+          logger.error("Received a Fedora error while loading #{pid}\n#{e}")
+        end
       end
     end
 
     desc "Remove default Hydra fixtures"
     task :delete do
-      ENV["dir"] = File.join("test_support", "fixtures")
-      FIXTURES.each do |fixture|
-        ENV["pid"] = fixture
+      ENV["dir"] ||= File.join("spec", "fixtures")
+      loader = ActiveFedora::FixtureLoader.new(ENV['dir'])
+      Dir.glob("#{ENV['dir']}/*.foxml.xml").each do |fixture_path|
+        ENV["pid"] = File.basename(fixture_path, ".foxml.xml").sub("_",":")
         Rake::Task["repo:delete"].reenable
         Rake::Task["repo:delete"].invoke
       end

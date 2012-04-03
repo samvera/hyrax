@@ -10,24 +10,33 @@
 begin
   require 'rspec/core'
   require 'rspec/core/rake_task'
-  Rake.application.instance_variable_get('@tasks')['default'].prerequisites.delete('test')
+  #Rake.application.instance_variable_get('@tasks')['default'].prerequisites.delete('test')
   
-  spec_prereq = Rails.configuration.generators.options[:rails][:orm] == :active_record ?  "db:test:prepare" : :noop
-  task :noop do; end
+  #spec_prereq = Rails.configuration.generators.options[:rails][:orm] == :active_record ?  "db:test:prepare" : :noop
+  #task :noop do; end
+  spec_prereq = "hyhead:test:prepare" 
   
-  hyhead_spec = File.expand_path("./test_support/spec", HydraHead.root)
+  hyhead_spec = File.expand_path("../test_support/spec",File.dirname(__FILE__))
   
   # Set env variable to tell our spec/spec_helper.rb where we really are,
   # so it doesn't have to guess with relative path, which will be wrong
   # since we allow spec_dir to be in a remote location. spec_helper.rb
   # needs it before Rails.root is defined there, even though we can
   # oddly get it here, i dunno. 
-  ENV['RAILS_ROOT'] = Rails.root.to_s
+  #ENV['RAILS_ROOT'] = Rails.root.to_s
   
   namespace :hyhead do
+    namespace :test do
+      desc "run db:test:prepare in the test app"
+      task :prepare => :use_test_app do
+          %x[rake db:test:prepare]
+          FileUtils.cd('../../')
+      end
+    end
     
     desc "Run all specs in spec directory (excluding plugin specs)"
     RSpec::Core::RakeTask.new(:spec => spec_prereq) do |t|
+    #RSpec::Core::RakeTask.new(:spec) do |t|
       # the user might not have run rspec generator because they don't
       # actually need it, but without an ./.rspec they won't get color,
       # let's insist. 
@@ -44,6 +53,7 @@ begin
       [:controllers, :generators, :helpers, :integration, :lib, :mailers, :models, :requests, :routing, :unit, :utilities, :utilities, :views].each do |sub|
         desc "Run the code examples in spec/#{sub}"
         RSpec::Core::RakeTask.new(sub => spec_prereq) do |t|
+        #RSpec::Core::RakeTask.new(sub) do |t|
           # the user might not have run rspec generator because they don't
           # actually need it, but without an ./.rspec they won't get color,
           # let's insist. 
@@ -56,6 +66,7 @@ begin
 
       desc "Run all specs"
       RSpec::Core::RakeTask.new(:run => spec_prereq) do |t|
+      #RSpec::Core::RakeTask.new(:run) do |t|
         # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
         t.pattern = File.join(hyhead_spec, "/**/*_spec.rb")
         t.rspec_opts = "--colour"

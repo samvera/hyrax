@@ -28,7 +28,7 @@ namespace :hyhead do
       
     desc "Run the hydra-head specs - need to have jetty running, test host set up and fixtures loaded."
     ENV['RAILS_ROOT'] = File.join(File.expand_path(File.dirname(__FILE__)),'..','tmp','test_app')
-    RSpec::Core::RakeTask.new(:run) do |t|
+    RSpec::Core::RakeTask.new(:run=>"hyhead:test:prepare") do |t|
       t.rspec_opts = "--colour"
       
       # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
@@ -143,8 +143,8 @@ namespace :hyhead do
       FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
       
       puts "Copying fixtures into test app spec/fixtures directory"
-      FileUtils.mkdir_p( File.join('.','test_support') )
-      FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','test_support','fixtures'))
+      FileUtils.mkdir_p( File.join('.','spec') )
+      FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','spec','fixtures'))
       
       puts "Executing bundle install --local in the test app"
       #puts %x[bundle install --local]
@@ -169,12 +169,11 @@ namespace :hyhead do
 
       puts "Running rake db:migrate"
       %x[rake db:migrate]
-      %x[rake db:test:prepare]
       raise "Errors: #{errors.join("; ")}" unless errors.empty?
 
 
     
-    FileUtils.cd('../../')
+      FileUtils.cd('../../')
     
 
   end

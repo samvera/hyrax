@@ -7,16 +7,16 @@
 # Blacklight customization, trick Cucumber into looking in our current
 # location for Rails.root, even though we're going to give it features
 # from elsewhere. 
-ENV['RAILS_ROOT'] = Rails.root.to_s
+#ENV['RAILS_ROOT'] = Rails.root.to_s
 
 # hyhead_features, where to find features inside hyhead source?
-hyhead_features = File.expand_path("./test_support/features",HydraHead.root)
+hyhead_features = File.expand_path("../test_support/features",File.dirname(__FILE__))
 
-unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:* tasks
-
-vendored_cucumber_bin = Dir["#{Rails.root}/vendor/{gems,plugins}/cucumber*/bin/cucumber"].first
-$LOAD_PATH.unshift(File.dirname(vendored_cucumber_bin) + '/../lib') unless vendored_cucumber_bin.nil?
-
+# unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:* tasks
+# 
+# vendored_cucumber_bin = Dir["#{Rails.root}/vendor/{gems,plugins}/cucumber*/bin/cucumber"].first
+# $LOAD_PATH.unshift(File.dirname(vendored_cucumber_bin) + '/../lib') unless vendored_cucumber_bin.nil?
+# 
 begin
   require 'cucumber/rake/task'
 
@@ -30,7 +30,7 @@ begin
         # in feature location wtih cucumber_opts, yeah it's weird but that's how.
         t.cucumber_opts = hyhead_features
         
-        t.binary = vendored_cucumber_bin # If nil, the gem's binary is used.
+        #t.binary = vendored_cucumber_bin # If nil, the gem's binary is used.
         t.fork = true # You may get faster startup if you set this to false
         t.profile = 'default'
       end
@@ -41,7 +41,7 @@ begin
         t.cucumber_opts = hyhead_features
         
         
-        t.binary = vendored_cucumber_bin
+        #t.binary = vendored_cucumber_bin
         t.fork = true # You may get faster startup if you set this to false
         t.profile = 'wip'
       end
@@ -51,7 +51,7 @@ begin
         # in feature location wtih cucumber_opts, yeah it's weird but that's how.
         t.cucumber_opts = hyhead_features
         
-        t.binary = vendored_cucumber_bin
+        #t.binary = vendored_cucumber_bin
         t.fork = true # You may get faster startup if you set this to false
         t.profile = 'rerun'
       end
@@ -63,7 +63,7 @@ begin
         t.cucumber_opts = hyhead_features
       
         
-        t.binary = vendored_cucumber_bin # If nil, the gem's binary is used.
+        #t.binary = vendored_cucumber_bin # If nil, the gem's binary is used.
         t.fork = true # You may get faster startup if you set this to false
         t.profile = 'default'
         t.rcov = true
@@ -123,4 +123,4 @@ rescue LoadError
   end
 end
 
-end
+#end

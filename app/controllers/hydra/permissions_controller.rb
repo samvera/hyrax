@@ -3,9 +3,7 @@ class Hydra::PermissionsController < ApplicationController
   include Hydra::SubmissionWorkflow
   
   def index
-    af_base=ActiveFedora::Base.load_instance(params[:asset_id])
-    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
-    @document_fedora = af_base.adapt_to(the_model)
+    @document_fedora=ActiveFedora::Base.find(params[:asset_id], :cast=>true)
     
     respond_to do |format|
       format.html 
@@ -21,9 +19,7 @@ class Hydra::PermissionsController < ApplicationController
   end
   
   def edit
-    af_base=ActiveFedora::Base.load_instance(params[:asset_id])
-    the_model = ActiveFedora::ContentModel.known_models_for( af_base ).first
-    @document_fedora = af_base.adapt_to(the_model)
+    @document_fedora=ActiveFedora::Base.find(params[:asset_id], :cast=>true)
     
     respond_to do |format|
       format.html 

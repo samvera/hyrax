@@ -441,7 +441,7 @@ The plugin defaults to *denying access* when the permissions are unclear.  This 
 To give yourself permission to view and edit an object, you need to set those permissions.  For example, if we want the object to show up in search results for everyone but we only want a user called archivist1@example.com to edit it, we can do the following:
 
 <pre>
-  article = JournalArticle.load_instance("changeme:30")
+  article = JournalArticle.find("changeme:30")
   article.permissions({"group"=>"public"}, "read")
   article.permissions({"person"=>"archivist1@example.com"}, "edit")
   article.save
@@ -460,7 +460,7 @@ h3. How to Explicitly (re)Index the JournalArticle in Solr
 By default, ActiveFedora automatically updates Solr whenever you save an object to Fedora.  If you want to re-index it, all you have to do is load an instance of the object and call its update_index method.  For example, if you wanted to update an object that has a pid "changeme:30", you could do it like this:
 
 <pre>
-  article = JournalArticle.load_instance("changeme:30")
+  article = JournalArticle.find("changeme:30")
   article.update_index
 </pre>
 
