@@ -23,10 +23,13 @@ end
 Given /^I am a superuser$/ do
   step %{I am logged in as "bigwig@example.com"}
   bigwig_id = User.find_by_email("bigwig@example.com").id
-  superuser = Superuser.new()
-  superuser.id = 20
-  superuser.user_id = bigwig_id
-  superuser.save!
+  superuser = Superuser.find_by_user_id(bigwig_id)
+  unless superuser
+    superuser = Superuser.new()
+    superuser.id = 20
+    superuser.user_id = bigwig_id
+    superuser.save!
+  end
   visit superuser_path
 end
 

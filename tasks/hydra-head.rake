@@ -77,28 +77,22 @@ namespace :hyhead do
   #
   
   
-  # desc "Easieset way to run cucumber tests. Sets up test host, refreshes fixtures and runs cucumber tests"
-  # task :cucumber => "cucumber:setup_and_run"
-  task :cucumber => "cucumber:run"
+  desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
+  task :cucumber => "hyhead:cucumber:cmd" do
+    Dir.chdir(TEST_HOST_PATH)
+    puts "Running cucumber features in test host app"
+    Rake::Task["hyhead:cucumber:cmd"].invoke
+    FileUtils.cd('../../')
+  end
   
 
   namespace :cucumber do
-
     require 'cucumber/rake/task'
 
-    ### Don't call this directly, use hyhead:cucumber:run
+    ### Don't call this directly, use hyhead:cucumber
     Cucumber::Rake::Task.new(:cmd) do |t|
       t.cucumber_opts = "../../test_support/features --format pretty"
     end
-   
-    desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
-    task :run => :set_test_host_path do
-      Dir.chdir(TEST_HOST_PATH)
-      puts "Running cucumber features in test host app"
-      Rake::Task["hyhead:cucumber:cmd"].invoke
-      FileUtils.cd('../../')
-    end
- 
   end
    
   
@@ -109,9 +103,6 @@ namespace :hyhead do
   
   desc "Creates a new test app"
   task :setup_test_app => [:set_test_host_path] do
-    # Thor::Util.load_thorfile('tasks/test_app_builder.thor', nil, nil)
-    # klass, task = Thor::Util.find_class_and_task_by_namespace("hydra:test_app_builder:build")
-    # klass.start([task])
       path = TEST_HOST_PATH
       errors = []
       puts "Cleaning out test app path"
@@ -146,7 +137,7 @@ namespace :hyhead do
       FileUtils.mkdir_p( File.join('.','spec') )
       FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','spec','fixtures'))
       
-      puts "Executing bundle install --local in the test app"
+      puts "Executing bundle install in the test app"
       #puts %x[bundle install --local]
       puts %x[bundle install]
       errors << 'Error running bundle install in test app' unless $?.success?
@@ -190,26 +181,6 @@ namespace :hyhead do
     
   end
 
-  # desc "Run tests against test app"
-  # task :test => [:use_test_app]  do
-  #   
-  #   puts "Running rspec tests"
-  #   puts %x[rake hyhead:spec]
-  #   rspec_success = $?.success?
-
-  #   puts "Running cucumber tests"
-  #   puts %x[rake hyhead:cucumber]
-  #   cucumber_success = $?.success?
-
-  #   FileUtils.cd('../../')
-  #   if rspec_success && cucumber_success
-  #     puts "Completed test suite with no errors"
-  #   else
-  #     puts "Test suite encountered failures... check console output for details."
-  #     fail
-  #   end
-  # end
-  
   desc "Make sure the test app is installed, then run the tasks from its root directory"
   task :use_test_app => [:set_test_host_path] do
     Rake::Task['hyhead:setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
