@@ -1,5 +1,49 @@
 $(function() {
 
+  var subject_autocomplete_opts = {
+    minLength: 1,
+    source: function( request, response ) {
+      $.getJSON( "/authorities/generic_files/subject", {
+        //term: extractLast( request.term )
+        q: request.term 
+      }, response );
+    },
+    focus: function() {
+      // prevent value inserted on focus
+      return false;
+    }
+    /*,
+    select: function( event, ui ) {
+      $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");                
+      $(this).val("");
+      return false;
+    }*/
+  }
+
+  var cities_autocomplete_opts = {
+    source: function( request, response ) {
+      $.ajax( {
+        url: "http://ws.geonames.org/searchJSON",
+        dataType: "jsonp",
+        data: {
+          featureClass: "P",
+          style: "full",
+          maxRows: 12,
+          name_startsWith: request.term
+        },
+        success: function( data ) {
+          response( $.map( data.geonames, function( item ) {
+            return {
+              label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+              value: item.name
+            }
+          }));
+        }
+      });
+    },
+    minLength: 2,
+  }
+
   /* 
    * adds a new file input for ingest
    */
@@ -15,44 +59,34 @@ $(function() {
     return false; 
   })
 
-  /*
-   * adds a dropdown to include more metadata 
-   * on ingest
-   */
-  $('#additional_md_submit').click(function() {
-    var md_inputs = $('#extra_description_1').clone();
-    var currentIdNum = $('#extra_description_count').attr("value");
-    var nextIdNum = parseInt(currentIdNum)+1;
-    md_inputs.attr("id", "extra_description_" + nextIdNum); 
-    var newSelect = md_inputs.find('#metadata_key_1');
-    var newInput = md_inputs.find('#metadata_value_1');
-    newSelect.attr("id", "metadata_key_"+nextIdNum);
-    newSelect.attr("name", "metadata_key_"+nextIdNum);
-    newInput.attr("id", "metadata_value_"+nextIdNum);
-    newInput.attr("name", "metadata_value_"+nextIdNum);
-    newInput.attr("value", "");
-    $('#more_descriptions').append(md_inputs);
-    $('#extra_description_count').attr("value", nextIdNum);
-    return false;
-  })
+  $('.adder').click(function() {
+    //this.id = additional_N_submit
+    //id for element to clone = additional_N_clone
+    //id for element to append to = additional_N_elements
+    var cloneId = this.id.replace("submit", "clone");
+    var newId = this.id.replace("submit", "elements");
+    var cloneElem = $('#'+cloneId).clone();
 
-  $('#upload_submit').click(function() {
-    //loop over additional metadata elements and create new 
-    //form elements
-    var addedElements = parseInt( $('#extra_description_count').attr("value") );
-    for(var i=1; i <= addedElements; i++) 
-    {
-      var k = $("#metadata_key_"+i).val();
-      var v = $("#metadata_value_"+i).val();
-      $('<input>').attr({
-        'type': 'hidden',
-        'name': 'generic['+k+']',
-        'value': v,
-      }).appendTo('form');
+    //remove the button before adding the input
+    //we don't want a button on each element being appended
+    cloneElem.find('#'+this.id).remove();
+
+    //clear out the value for the element being appended
+    //so the new element has a blank value
+    cloneElem.find('input[type=text]').attr("value", "");
+
+    // should we attach an auto complete based on the input
+    if (this.id == 'additional_based_near_submit') {
+      cloneElem.find('input[type=text]').autocomplete(cities_autocomplete_opts);
     }
-    
-  })
+    else if (this.id == 'additional_subject_submit') {
+      cloneElem.find('input[type=text]').autocomplete(subject_autocomplete_opts);
+    }
 
+    $('#'+newId).append(cloneElem);
+    cloneElem.find('input[type=text]').focus();
+    return false;
+  });
 
   $('.icon-plus').click(function() {
     //this.id format: "expand_id:NNNNNNNNNN"
@@ -61,18 +95,17 @@ $(function() {
     {
       docId = a[1]
       $("#detail_id_"+docId).toggle();
-      if( $("#detail_id_"+docId).is(":hidden") ) 
-      {
+      if( $("#detail_id_"+docId).is(":hidden") ) {
         $("#expand_id_"+docId).attr("class", "icon-plus");
       }
-      else
-      {
+      else {
         $("#expand_id_"+docId).attr("class", "icon-minus");
       }
     }
   })
 
-  $("input#generic_file_subject")
+  // autocompletes
+  $("#generic_file_subject")
         // don't navigate away from the field on tab when selecting an item
         .bind( "keydown", function( event ) {
             if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -80,47 +113,9 @@ $(function() {
                 event.preventDefault();
             }
         })
-        .autocomplete({
-          minLength: 1,
-            source: function( request, response ) {
-                $.getJSON( "/authorities/generic_files/subject", {
-                    //term: extractLast( request.term )
-                  q: request.term 
-                }, response );
-            },
-            focus: function() {
-                // prevent value inserted on focus
-                return false;
-            }/*,
-            select: function( event, ui ) {
-             $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");                
-             $(this).val("");
-             return false;
-            }*/
-        });
-    $( "#generic_file_based_near" ).autocomplete({
-      source: function( request, response ) {
-        $.ajax({
-          url: "http://ws.geonames.org/searchJSON",
-          dataType: "jsonp",
-          data: {
-            featureClass: "P",
-            style: "full",
-            maxRows: 12,
-            name_startsWith: request.term
-          },
-          success: function( data ) {
-            response( $.map( data.geonames, function( item ) {
-              return {
-                label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-                value: item.name
-              }
-            }));
-          }
-        });
-      },
-      minLength: 2,
-    });
+        .autocomplete(subject_autocomplete_opts);
+
+  $("#generic_file_based_near").autocomplete(cities_autocomplete_opts);
 
 
 });

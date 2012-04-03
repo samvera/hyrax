@@ -16,6 +16,7 @@ class GenericFile < ActiveFedora::Base
   delegate :contributor, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :title, :to => :descMetadata
+  delegate :tag, :to => :descMetadata
   delegate :description, :to => :descMetadata
   delegate :publisher, :to => :descMetadata
   delegate :date_created, :to => :descMetadata

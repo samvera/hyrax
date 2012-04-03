@@ -51,14 +51,29 @@ Blacklight.configure(:shared) do |config|
   #
   config[:facet] = {
     :field_names => (facet_fields = [
-      "creator_facet",
-      "contributor_facet",
-      "title_facet"
+      "generic_file__contributor_facet",
+      "generic_file__publisher_facet",
+      "generic_file__date_created_facet",
+      "generic_file__date_uploaded_facet",
+      "generic_file__date_modified_facet",
+      "generic_file__subject_facet",
+      "generic_file__resource_type_facet",
+      "generic_file__format_facet",
+      "generic_file__based_near_facet",
+      "generic_file__tag_facet"
+
     ]),
     :labels => {
-      "creator_facet"   => "Creator",
-      "contributor_facet" => "Contributor",
-      "title_facet" => "Title"
+      "generic_file__contributor_facet"     => "Contributor",
+      "generic_file__publisher_facet"       => "Publisher",
+      "generic_file__date_created_facet"    => "Date Created",
+      "generic_file__date_uploaded_facet"   => "Date Uploaded",
+      "generic_file__date_modified_facet"   => "Date Modified", 
+      "generic_file__subject_facet"         => "Subject",
+      "generic_file__resource_type_facet"   => "Resource Type",
+      "generic_file__format_facet"          => "Format",
+      "generic_file__based_near_facet"      => "Based Near",
+      "generic_file__tag_facet"             => "Tag"
     },
     # Setting a limit will trigger Blacklight's 'more' facet values link.
     # * If left unset, then all facet values returned by solr will be displayed.
@@ -89,14 +104,40 @@ Blacklight.configure(:shared) do |config|
   #   The ordering of the field names is the order of the display 
   config[:index_fields] = {
     :field_names => [
-      "creator_display",
-      "contributor_display",
-      "title_display"
+      "generic_file__contributor_display", 
+      "generic_file__creator_display", 
+      "generic_file__title_display", 
+      "generic_file__description_display", 
+      "generic_file__publisher_display", 
+      "generic_file__date_created_display", 
+      "generic_file__date_uploaded_display", 
+      "generic_file__date_modified_display", 
+      "generic_file__subject_display", 
+      "generic_file__language_display", 
+      "generic_file__rights_display", 
+      "generic_file__resource_type_display", 
+      "generic_file__format_display", 
+      "generic_file__identifier_display", 
+      "generic_file__based_near_display", 
+      "generic_file__tag_display" 
     ],
     :labels => {
-      "creator_display"         => "Creator:",
-      "contributor_display"     => "Contributor:",
-      "title_display"           => "Title:",
+      "generic_file__contributor_display"     => "Contributor", 
+      "generic_file__creator_display"         => "Creator", 
+      "generic_file__title_display"           => "Title", 
+      "generic_file__description_display"     => "Description", 
+      "generic_file__publisher_display"       => "Publisher", 
+      "generic_file__date_created_display"    => "Date Created", 
+      "generic_file__date_uploaded_display"   => "Date Uploaded", 
+      "generic_file__date_modified_display"   => "Date Modified", 
+      "generic_file__subject_display"         => "Subject", 
+      "generic_file__language_display"        => "Language", 
+      "generic_file__rights_display"          => "Rights", 
+      "generic_file__resource_type_display"   => "Resource Type", 
+      "generic_file__format_display"          => "Format", 
+      "generic_file__identifier_display"      => "Identifier", 
+      "generic_file__based_near_display"      => "Based Near", 
+      "generic_file__tag_display"             => "Tag"
     }
   }
 
@@ -104,14 +145,40 @@ Blacklight.configure(:shared) do |config|
   #   The ordering of the field names is the order of the display 
   config[:show_fields] = {
     :field_names => [
-      "creator_display",
-      "contributor_display",
-      "title_display"
+      "generic_file__contributor_display", 
+      "generic_file__creator_display", 
+      "generic_file__title_display", 
+      "generic_file__description_display", 
+      "generic_file__publisher_display", 
+      "generic_file__date_created_display", 
+      "generic_file__date_uploaded_display", 
+      "generic_file__date_modified_display", 
+      "generic_file__subject_display", 
+      "generic_file__language_display", 
+      "generic_file__rights_display", 
+      "generic_file__resource_type_display", 
+      "generic_file__format_display", 
+      "generic_file__identifier_display", 
+      "generic_file__based_near_display", 
+      "generic_file__tag_display" 
     ],
     :labels => {
-      "creator_display"         => "Creator:",
-      "contributor_display"     => "Contributor:",
-      "title_display"           => "Title:",
+      "generic_file__contributor_display"     => "Contributor", 
+      "generic_file__creator_display"         => "Creator", 
+      "generic_file__title_display"           => "Title", 
+      "generic_file__description_display"     => "Description", 
+      "generic_file__publisher_display"       => "Publisher", 
+      "generic_file__date_created_display"    => "Date Created", 
+      "generic_file__date_uploaded_display"   => "Date Uploaded", 
+      "generic_file__date_modified_display"   => "Date Modified", 
+      "generic_file__subject_display"         => "Subject", 
+      "generic_file__language_display"        => "Language", 
+      "generic_file__rights_display"          => "Rights", 
+      "generic_file__resource_type_display"   => "Resource Type", 
+      "generic_file__format_display"          => "Format", 
+      "generic_file__identifier_display"      => "Identifier", 
+      "generic_file__based_near_display"      => "Based Near", 
+      "generic_file__tag_display"             => "Tag"
     }
   }
 
@@ -189,11 +256,17 @@ Blacklight.configure(:shared) do |config|
   # except in the relevancy case).
   # label is key, solr field is value
   config[:sort_fields] ||= []
-  config[:sort_fields] << ['relevance', 'score desc, pub_date_sort desc, title_sort asc']
-  config[:sort_fields] << ['year', 'pub_date_sort desc, title_sort asc']
-  config[:sort_fields] << ['author', 'author_sort asc, title_sort asc']
-  config[:sort_fields] << ['title', 'title_sort asc, pub_date_sort desc']
-  
+  config[:sort_fields] << ['relevance', 'score desc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['publisher', 'generic_file__publisher_sort asc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['date created', 'generic_file__date_created_sort desc']
+  config[:sort_fields] << ['date uploaded', 'generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['date modified', 'generic_file__date_modified_sort desc']
+  config[:sort_fields] << ['subject', 'generic_file__subject_sort asc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['language', 'generic_file__language_sort asc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['resource_type', 'generic_file__resource_type_sort asc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['format', 'generic_file__format_sort asc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['tag', 'generic_file__tag_sort asc, generic_file__date_uploaded_sort desc']
+
   # If there are more than this many search results, no spelling ("did you 
   # mean") suggestion is offered.
   config[:spell_max] = 5

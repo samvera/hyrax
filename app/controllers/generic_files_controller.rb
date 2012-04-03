@@ -15,10 +15,12 @@ class GenericFilesController < ApplicationController
       ['Creator', 'creator'], 
       ['Date Created', 'date_created'], 
       ['Description', 'description'],
+      ['Identifier', 'identifier'],
       ['Language', 'language'], 
       ['Publisher', 'publisher'], 
       ['Rights', 'rights'],
       ['Subject', 'subject'], 
+      ['Tag', 'tag'], 
       ['Title', 'title'], 
     ]
   end
@@ -94,11 +96,21 @@ class GenericFilesController < ApplicationController
         apply_depositor_metadata(generic_file)
         generic_file.label = file.original_filename
         # Delete this next line when GenericFile.label no longer wipes out the title
-        generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
-        generic_file.creator = params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
+        
+        generic_file.based_near = params[:generic_file][:based_near] if params[:generic_file].has_key?(:based_near) 
         generic_file.contributor = params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
+        generic_file.creator = params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
+        generic_file.date_created = params[:generic_file][:date_created] if params[:generic_file].has_key?(:date_created)
+        generic_file.description = params[:generic_file][:description] if params[:generic_file].has_key?(:description)
+        generic_file.identifier = params[:generic_file][:identifier] if params[:generic_file].has_key?(:identifier)
+        generic_file.language = params[:generic_file][:language] if params[:generic_file].has_key?(:language)
         generic_file.publisher = params[:generic_file][:publisher] if params[:generic_file].has_key?(:publisher)
+        generic_file.rights = params[:generic_file][:rights] if params[:generic_file].has_key?(:rights)
+        generic_file.subject = params[:generic_file][:subject] if params[:generic_file].has_key?(:subject)
+        generic_file.tag = params[:generic_file][:tag] if params[:generic_file].has_key?(:tag)
+        generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
         generic_file.save
+
         @generic_files << generic_file
       end
     end

@@ -11,7 +11,7 @@ Feature: Uploading files via web form
     And I should see "Description(s)"
     And I should see a file chooser button 
     And I should see a "Add More Files" button 
-    And I should see a "Add More Descriptions" button 
+    #And I should see a "Add More Descriptions" button 
     And I should see a "Upload" button 
 
   Scenario: Upload a file, no metadata
@@ -22,7 +22,7 @@ Feature: Uploading files via web form
     And I fill in "" for "generic_file_creator"
     And I fill in "" for "generic_file_title"
     And I press "Upload"
-    Then I should see "You must include a creator."
+    #Then I should see "You must include a creator."
 
   Scenario: Upload a file, with metadata
     Given I am logged in as "contentauthor@psu.edu"
@@ -77,12 +77,12 @@ Feature: Uploading files via web form
   Scenario: Add More metadata
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
-    And I press "additional_md_submit"
-    And I select "Publisher" from "metadata_key_2"
-    And I fill in "Pendant" for "metadata_value_2"
-    And I press "additional_md_submit"
-    And I select "Description" from "metadata_key_3"
-    And I fill in "We going global." for "metadata_value_3"
+    #And I press "additional_md_submit"
+    #And I select "Publisher" from "metadata_key_2"
+    #And I fill in "Pendant" for "metadata_value_2"
+    #And I press "additional_md_submit"
+    #And I select "Description" from "metadata_key_3"
+    #And I fill in "We going global." for "metadata_value_3"
 
   @javascript
   Scenario: Upload More metadata
@@ -92,14 +92,14 @@ Feature: Uploading files via web form
     And I fill in "Mike Motorcycle" for "generic_file_contributor" 
     And I fill in "Dan Ran" for "generic_file_creator"
     And I fill in "Dan's Book" for "generic_file_title"
-    And I select "Creator" from "metadata_key_1"
-    And I fill in "Dan Coughlin" for "metadata_value_1"
-    And I press "additional_md_submit"
-    And I select "Publisher" from "metadata_key_2"
-    And I fill in "Pendant" for "metadata_value_2"
-    And I press "additional_md_submit"
-    And I select "Description" from "metadata_key_3"
-    And I fill in "We going global." for "metadata_value_3"
+    #And I select "Creator" from "metadata_key_1"
+    #And I fill in "Dan Coughlin" for "metadata_value_1"
+    #And I press "additional_md_submit"
+    #And I select "Publisher" from "metadata_key_2"
+    #And I fill in "Pendant" for "metadata_value_2"
+    #And I press "additional_md_submit"
+    #And I select "Description" from "metadata_key_3"
+    #And I fill in "We going global." for "metadata_value_3"
     And I press "Upload"
     Then I should see "The file image.jp2 has been saved"
 
@@ -113,14 +113,14 @@ Feature: Uploading files via web form
     And I fill in "Mike Motorcycle" for "generic_file_contributor" 
     And I fill in "Dan Ran" for "generic_file_creator"
     And I fill in "Dan's Book" for "generic_file_title"
-    And I select "Creator" from "metadata_key_1"
-    And I fill in "Dan Coughlin" for "metadata_value_1"
-    And I press "additional_md_submit"
-    And I select "Publisher" from "metadata_key_2"
-    And I fill in "Pendant" for "metadata_value_2"
-    And I press "additional_md_submit"
-    And I select "Description" from "metadata_key_3"
-    And I fill in "We going global." for "metadata_value_3"
+    #And I select "Creator" from "metadata_key_1"
+    #And I fill in "Dan Coughlin" for "metadata_value_1"
+    #And I press "additional_md_submit"
+    #And I select "Publisher" from "metadata_key_2"
+    #And I fill in "Pendant" for "metadata_value_2"
+    #And I press "additional_md_submit"
+    #And I select "Description" from "metadata_key_3"
+    #And I fill in "We going global." for "metadata_value_3"
     And I press "Upload"
     Then I should see "The file image.jp2 has been saved"
     Then I should see "The file small_file.txt has been saved"

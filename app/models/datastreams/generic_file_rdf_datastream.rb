@@ -6,7 +6,7 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :searchable, :facetable, :displayable
     end
     map.creator(:in => RDF::DC) do |index|
-      index.as :searchable, :facetable, :displayable
+      index.as :searchable, :displayable
     end
     map.title(:in => RDF::DC) do |index|
       index.as :searchable, :displayable
@@ -16,13 +16,19 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :searchable, :displayable
     end
     map.publisher(:in => RDF::DC) do |index|
-      index.as :searchable, :facetable, :displayable
+      index.as :searchable, :facetable, :displayable, :sortable
     end
     map.date_created(:to => "created", :in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
     end      
-    map.date_uploaded(:to => "dateSubmitted", :in => RDF::DC)
-    map.date_modified(:to => "modified", :in => RDF::DC)
+    map.date_uploaded(:to => "dateSubmitted", :in => RDF::DC) do |index|
+      index.type :date
+      index.as :facetable, :displayable, :sortable
+    end
+    map.date_modified(:to => "modified", :in => RDF::DC) do |index|
+      index.type :date
+      index.as :facetable, :displayable, :sortable
+    end
     map.subject(:in => RDF::DC, :authorities =>
                 ["http://lcsubjects.org/subjects/sh85118553.nt", 
                  "http://lcsubjects.org/subjects/sh85062913.nt",
@@ -35,7 +41,9 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
     map.language(:in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
     end
-    map.rights(:in => RDF::DC)
+    map.rights(:in => RDF::DC) do |index|
+      index.as :displayable
+    end
     map.resource_type(:to => "type", :in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
     end
@@ -43,9 +51,12 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :searchable, :facetable, :displayable, :sortable
     end
     map.identifier(:in => RDF::DC) do |index|
-      index.defaults
+      index.as :searchable, :displayable
     end
     map.based_near(:in => RDF::FOAF) do |index|
+      index.as :searchable, :facetable, :displayable
+    end
+    map.tag(:to => "relation", :in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
     end
     map.related_url(:to => "seeAlso", :in => RDF::RDFS)

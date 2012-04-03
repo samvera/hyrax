@@ -16,17 +16,9 @@ class DashboardController < ApplicationController
   
   def index
 
-    #puts facets_display_heading
-    #puts facet_field_names.inspect
     extra_head_content << view_context.auto_discovery_link_tag(:rss, url_for(params.merge(:format => 'rss')), :title => "RSS for results")
     extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => "Atom for results")
     (@response, @document_list) = get_search_results
-#      ({"commit"=>"search",
-#      "search_field"=>"all_fields",
-#      "utf8"=>"✓",
-#      "action"=>"index",
-#      "f"=>"Val",
-#      "controller"=>"dashboard"})
           
     @filters = params[:f] || []
 
