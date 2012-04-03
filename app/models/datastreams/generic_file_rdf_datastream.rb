@@ -55,6 +55,5 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
     end
     map.related_url(:to => "seeAlso", :in => RDF::RDFS)
   end
-  DomainTerm.find_or_create_by_model_and_term(:model => "generic_files", 
-                                              :term => "subject").local_authorities << LocalAuthority.where(:name => "lcsubjects")
+  LocalAuthority.register_vocabulary(:model => self, :term => "subject", :name => "lcsubjects")
 end
