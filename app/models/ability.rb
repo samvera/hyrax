@@ -29,6 +29,7 @@ class Ability
       end
  
       can :edit, SolrDocument do |obj|
+        @permissions_solr_document = obj
         test_edit
       end       
 
@@ -43,6 +44,7 @@ class Ability
       end 
       
       can :read, SolrDocument do |obj|
+        @permissions_solr_document = obj
         test_read
       end 
     end
