@@ -37,7 +37,6 @@
 /* =FACETS
 -------------------------------------------------------------- */
 
-#bd #facets h3 {font-size: 14px; font-weight: bold; margin-bottom: 1.2em;}
 #bd #facets ul, #bd #facets h3 + div {border-bottom: none;}
 
 

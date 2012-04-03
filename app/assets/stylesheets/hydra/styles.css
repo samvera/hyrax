@@ -747,12 +747,7 @@ tr.document {
 }
 
 #results {
-    float: left;
-    min-height: 720px;
-    text-align: left;
 	border: 1px solid #C8C8C8;
-	width: 720px;
-	padding-bottom: 15px;
 }
 
 .document_show #cover_container h1 {
