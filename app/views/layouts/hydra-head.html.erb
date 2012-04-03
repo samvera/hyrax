@@ -13,35 +13,32 @@
   
   <body class="<%= render_body_class %>">
 
-	  <div id="doc4" class="yui-t2">
-		
 		<div id="hd">
 			<%= render :partial => '/user_util_links' %>
 			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %>
 		</div>
 	    
-	  <div id="bd">
-			<div id="yui-main">
-        <%= render :partial=>'/flash_msg' %>
-        <%= yield %>
+    <div id="bd">
+      <div id="main">
+        <div id="main_container">
+          <%= render :partial=>'/flash_msg' %>
+          <%= yield %>
+        </div>
+        <div id="sidebar"><%= sidebar_items.join('').html_safe %></div>	
       </div>
-      <div class="yui-b sidebar"><%= sidebar_items.join('').html_safe %></div>	
 	  </div>
 	    
 	    
-		<div id="footer">
-			<div id="container3">
-				<div class="contact_info"></div> 
-			    <div class="aux_links"> </div>
-				<div id="footer_notices">
-					<div id="bottom_text">
-						<div id="hydra_logo"><%= image_tag('hydra/powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
-					</div>
-				</div>
-			</div>
+		<div id="ft">
+      <div class="contact_info"></div> 
+        <div class="aux_links"> </div>
+      <div id="footer_notices">
+        <div id="bottom_text">
+          <div id="hydra_logo"><%= image_tag('hydra/powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
+        </div>
+      </div>
 		</div>
 		
-	  </div>
   </body>
 
 </html>

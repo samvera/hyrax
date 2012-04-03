@@ -198,10 +198,6 @@ a:link, a:visited, a:active, #uvalicense_read_all {
     color: #E7C584 !important;
 }
 
-.yui-t2 .yui-b p {
-    padding-top: 0;
-}
-
 a:hover, a:hover.addval, #uvalicense_read_all:hover {
     color: blue
 }
@@ -218,16 +214,6 @@ a.destructive {
 a.destructive:hover {
     background-image: none;
     width: 40px;
-}
-
-.yui-u a, .yui-u a:active, .yui-u a:visited {
-    font-size: 11px;
-    color: #EDAF3D;
-
-}
-
-.yui-u a:hover {
-    color: #E7C584;
 }
 
 #uvalicense_read_all {
@@ -379,21 +365,6 @@ dl dd {
 	border-top: 1px solid red;
 }
 
-.yui-g .yui-u {
-    width: 250px;
-    position: absolute;
-    right: 0;
-}
-
-.yui-u div#create-asset-box {
-    margin: 0;
-    width: 140px;
-    float: right;
-    padding: 0;
-}
-
-.yui-u div#create-asset-box img {
-}
 
 li.computing_id {
     display: block;
@@ -476,28 +447,9 @@ table#file_assets {
 
 #hd {
 	margin: 30px auto 0;
+  overflow: visible; /* override blacklight */
 }
 
-.yui-g {
-    height: 78px;
-    width: 100%;
-    background-repeat: repeat-x;
-    color: #F3A729;
-    text-align: left;
-}
-
-#hd .yui-g {
-    text-align: left;
-}
-
-#hd div.yui-g div.yui-u {
-    text-align: right;
-    margin-top: 5px;
-    margin-right: 20px;
-    display: inline;
-    float: right;
-    z-index: 0;
-}
 
 #submitForRelease {
 	background: #DFEFFC;
@@ -546,14 +498,6 @@ table#file_assets {
     margin: 10px;
     border: none;
     text-align: left;
-}
-
-#frame, .yui-t2 #yui-main {
-    width: 960px;
-    margin-right: auto;
-    margin-left: auto; /*	margin-top: 35px;*/
-    margin-top: 0;
-    margin-bottom: 35px;
 }
 
 #bd .sidebar {
@@ -663,14 +607,6 @@ body .ui-widget {
     height: 30px;
 }
 
-.yui-t2 #yui-main .yui-b {
-    border: none;
-    padding: 0;
-    margin-left: -15px;
-    left: 115px;
-    top: 0px;
-    width: 90%;
-}
 
 #content {
     width: 720px;
