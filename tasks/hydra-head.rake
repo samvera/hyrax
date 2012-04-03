@@ -5,16 +5,15 @@ require 'thor/core_ext/file_binary_read'
 namespace :hyhead do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
-  task :ci do
+  task :ci => :setup_test_app do
     Rake::Task["hydra:jetty:config"].invoke
-    
+
     require 'jettywrapper'
     jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(File.dirname(__FILE__) + '/../jetty')})
     
     error = nil
     error = Jettywrapper.wrap(jetty_params) do
         Rake::Task['hyhead:test'].invoke
-        Rake::Task['hyhead:cucumber'].invoke
     end
     raise "test failures: #{error}" if error
     Rake::Task["hyhead:doc"].invoke
@@ -37,7 +36,7 @@ namespace :hyhead do
     
     
     desc "Sets up test host, loads fixtures, then runs specs - need to have jetty running."
-    task :setup_and_run => ["hyhead:setup_test_app"] do
+    task :setup_and_run => :test_app_exists do
 			puts "Reloading fixtures"
       puts %x[rake hyhead:fixtures:refresh RAILS_ENV=test]
       Rake::Task["hyhead:rspec:run"].invoke
@@ -78,11 +77,11 @@ namespace :hyhead do
   
   
   desc "Run cucumber tests for hyhead - need to have jetty running, test host set up and fixtures loaded."
-  task :cucumber => "hyhead:cucumber:cmd" do
-    Dir.chdir(TEST_HOST_PATH)
-    puts "Running cucumber features in test host app"
-    Rake::Task["hyhead:cucumber:cmd"].invoke
-    FileUtils.cd('../../')
+  task :cucumber => ['test:prepare'] do
+    puts "Running cucumber features in test host app #{Dir.pwd}"
+    within_test_app do
+      Rake::Task["hyhead:cucumber:cmd"].invoke
+    end
   end
   
 
@@ -180,19 +179,32 @@ namespace :hyhead do
   task :test => [:spec, :cucumber]  do
     
   end
+  namespace :test do
+    desc "run db:test:prepare in the test app"
+    task :prepare => :test_app_exists do
+      within_test_app do
+        %x[rake db:test:prepare]
+      end
+    end
+  end
 
-  desc "Make sure the test app is installed, then run the tasks from its root directory"
-  task :use_test_app => [:set_test_host_path] do
+  desc "Make sure the test app is installed"
+  task :test_app_exists => [:set_test_host_path] do
     Rake::Task['hyhead:setup_test_app'].invoke unless File.exist?(TEST_HOST_PATH)
-    FileUtils.cd(TEST_HOST_PATH)
   end
 end
 
 
-        # Adds the content to the file.
-        #
-        def replace!(destination, regexp, string)
-          content = File.binread(destination)
-          content.gsub!(regexp, string)
-          File.open(destination, 'wb') { |file| file.write(content) }
-        end
+  # Adds the content to the file.
+  #
+  def replace!(destination, regexp, string)
+    content = File.binread(destination)
+    content.gsub!(regexp, string)
+    File.open(destination, 'wb') { |file| file.write(content) }
+  end
+
+  def within_test_app
+    FileUtils.cd(TEST_HOST_PATH)
+    yield
+    FileUtils.cd('../../')
+  end

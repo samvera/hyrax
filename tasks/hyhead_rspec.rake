@@ -26,28 +26,6 @@ begin
   #ENV['RAILS_ROOT'] = Rails.root.to_s
   
   namespace :hyhead do
-    namespace :test do
-      desc "run db:test:prepare in the test app"
-      task :prepare => :use_test_app do
-          %x[rake db:test:prepare]
-          FileUtils.cd('../../')
-      end
-    end
-    
-    desc "Run all specs in spec directory (excluding plugin specs)"
-    RSpec::Core::RakeTask.new(:spec => spec_prereq) do |t|
-    #RSpec::Core::RakeTask.new(:spec) do |t|
-      # the user might not have run rspec generator because they don't
-      # actually need it, but without an ./.rspec they won't get color,
-      # let's insist. 
-      t.rspec_opts = "--colour"
-      
-      # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
-      t.pattern = "#{hyhead_spec}"      
-    end
-    
-    # Don't understand what this does or how to make it use our remote stats_directory
-    #task :stats => "spec:statsetup"
     
     namespace :spec do
       [:controllers, :generators, :helpers, :integration, :lib, :mailers, :models, :requests, :routing, :unit, :utilities, :utilities, :views].each do |sub|
@@ -64,14 +42,6 @@ begin
         end
       end
 
-      desc "Run all specs"
-      RSpec::Core::RakeTask.new(:run => spec_prereq) do |t|
-      #RSpec::Core::RakeTask.new(:run) do |t|
-        # pattern directory name defaults to ./**/*_spec.rb, but has a more concise command line echo
-        t.pattern = File.join(hyhead_spec, "/**/*_spec.rb")
-        t.rspec_opts = "--colour"
-			end
-			
     end
   end  
 rescue LoadError
