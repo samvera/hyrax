@@ -12,6 +12,8 @@ h1. Hydra Installation Prerequisites
 * "RVM":http://rvm.beginrescueend.com/  (Ruby Version Manager)
 ** We strongly suggest using RVM as a means of keeping your different ruby applications with their specific gem requirements from having version clashes. 
 ** If you don't have the desired ruby version in RVM, e.g. ree-1.8.7, then install it. The following instructions assume the use of RVM.
+*** NOTE: OS X 10.7 users; XCode no longer has a real gcc, and ruby 1.8.7 needs the real deal.  If you are using homebrew, you can get gcc with this command
+*** <code>brew install https://raw.github.com/Homebrew/homebrew-dupes/master/apple-gcc42.rb</code>
 ** See "https://rvm.beginrescueend.com/rvm/install/":https://rvm.beginrescueend.com/rvm/install/ for instructions on installing and running RVM.  
 ** After installing RVM, set it up to use "rvmrc":http://beginrescueend.com/workflow/rvmrc/ files when they're available.  This will cause RVM to automatically switch Ruby versions and gemsets when you cd into different code bases.  Currently all Hydra software uses Ruby Enterprise Edition 1.8.7 (ree-1.8.7) and each component or Hydra Head uses its own gemsets (ie. hydra-head uses a gemset called hyhead,  hypatia uses a gemset called hypatia so that you can install a different set of dependencies for each. ) 
 ** For information about using and setting up RVM to use .rvmrc files, see "http://beginrescueend.com/workflow/rvmrc/":http://beginrescueend.com/workflow/rvmrc/
