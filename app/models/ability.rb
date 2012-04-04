@@ -32,6 +32,11 @@ class Ability
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
       test_edit
     end
+ 
+    can :edit, SolrDocument do |obj|
+      @permissions_solr_document = obj
+      test_edit
+    end       
 
     can :edit, SolrDocument do |obj|
       test_edit
@@ -48,6 +53,7 @@ class Ability
     end 
     
     can :read, SolrDocument do |obj|
+      @permissions_solr_document = obj
       test_read
     end 
   end
