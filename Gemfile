@@ -13,6 +13,7 @@ gem 'delayed_job_active_record'
 gem 'noid'
 
 group :development, :test do
+  gem 'yaml_db'
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'ruby-debug'

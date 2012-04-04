@@ -21,16 +21,58 @@ namespace :gamma do
   end
 
   namespace :harvest do
-    desc "Harvest and map LCSH"
-    task :lcsubjects do
-      Rake::Task[:environment].invoke
-      vocabs = ["http://lcsubjects.org/subjects/sh85118553.nt", 
-                "http://lcsubjects.org/subjects/sh85062913.nt", 
-                "http://lcsubjects.org/subjects/sh85100849.nt", 
-                "http://lcsubjects.org/subjects/sh85082139.nt",
-                "http://lcsubjects.org/subjects/sh85029027.nt", 
-                "http://lcsubjects.org/subjects/sh98003200.nt"]
-      LocalAuthority.harvest_rdf("lcsubjects", vocabs)
+    desc "Harvest LC subjects"
+    task :lc_subjects => :environment do |cmd, args|
+      vocabs = ["/tmp/authoritiessubjects.nt.skos"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs)
+    end
+
+    desc "Harvest DBpedia titles"
+    task :dbpedia_titles => :environment do |cmd, args|
+      vocabs = ["/tmp/labels_en.nt"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs, :predicate => RDF::RDFS.label)
+    end
+
+    desc "Harvest DBpedia categories"
+    task :dbpedia_categories => :environment do |cmd, args|
+      vocabs = ["/tmp/category_labels_en.nt"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs, :predicate => RDF::RDFS.label)
+    end
+
+    desc "Harvest LC MARC geographic areas"
+    task :lc_geographic => :environment do |cmd, args|
+      vocabs = ["/tmp/vocabularygeographicAreas.nt"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs)
+    end
+
+    desc "Harvest Geonames cities"
+    task :geonames_cities => :environment do |cmd, args|
+      vocabs = ["/tmp/cities1000.txt"]
+      LocalAuthority.harvest_tsv(cmd.to_s.split(":").last, vocabs, :prefix => 'http://sws.geonames.org/')
+    end
+
+    desc "Harvest Lexvo languages"
+    task :lexvo_languages => :environment do |cmd, args|
+      vocabs = ["/tmp/lexvo_2012-03-04.rdf"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs, :format => 'rdfxml')
+    end
+
+    desc "Harvest LC genres"
+    task :lc_genres => :environment do |cmd, args|
+      vocabs = ["/tmp/authoritiesgenreForms.nt"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs)
+    end
+
+    desc "Harvest LC name authorities"
+    task :lc_names => :environment do |cmd, args|
+      vocabs = ["/tmp/authoritiesnames.nt.skos"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs)
+    end
+
+    desc "Harvest LC thesaurus of graphic materials"
+    task :lc_graphics => :environment do |cmd, args|
+      vocabs = ["/tmp/vocabularygraphicMaterials.nt"]
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs)
     end
   end
 end
