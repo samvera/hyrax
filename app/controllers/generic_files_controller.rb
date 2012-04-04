@@ -4,8 +4,8 @@ class GenericFilesController < ApplicationController
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
   include Hydra::FileAssetsHelper
 
-  before_filter :authenticate_user!
-  before_filter :enforce_access_controls, :only=>[:edit, :update]
+  before_filter :authenticate_user!, :only=>[:new, :create]
+  before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit]
   
   def new
     @generic_file = GenericFile.new 
@@ -68,19 +68,6 @@ class GenericFilesController < ApplicationController
     render :edit 
   end
 
-  def edit
-    @generic_file = GenericFile.find(params[:id])
-  end
-
-  def show
-    @generic_file = GenericFile.find(params[:id]) 
-  end
-
-  def audit
-    @generic_file = GenericFile.find(params[:id])
-    render :json=>@generic_file.content.audit
-  end
-
 
   protected
   # takes form file inputs and assigns meta data individually 
@@ -94,9 +81,10 @@ class GenericFilesController < ApplicationController
         
         add_posted_blob_to_asset(generic_file,file)
         apply_depositor_metadata(generic_file)
+        generic_file.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
         generic_file.label = file.original_filename
         # Delete this next line when GenericFile.label no longer wipes out the title
-        
+
         generic_file.based_near = params[:generic_file][:based_near] if params[:generic_file].has_key?(:based_near) 
         generic_file.contributor = params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
         generic_file.creator = params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
