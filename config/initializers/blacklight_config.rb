@@ -209,46 +209,170 @@ Blacklight.configure(:shared) do |config|
   # Now we see how to over-ride Solr request handler defaults, in this
   # case for a BL "search field", which is really a dismax aggregate
   # of Solr search fields. 
+  # creator, title, description, publisher, date_created,
+  # subject, language, resource_type, format, identifier, based_near,
   config[:search_fields] << {
-    :key => 'title',     
+    :key => 'contributor',     
     # solr_parameters hash are sent to Solr as ordinary url query params. 
     :solr_parameters => {
-      :"spellcheck.dictionary" => "title"
+      :"spellcheck.dictionary" => "contributor"
     },
     # :solr_local_parameters will be sent using Solr LocalParams
     # syntax, as eg {! qf=$title_qf }. This is neccesary to use
     # Solr parameter de-referencing like $title_qf.
     # See: http://wiki.apache.org/solr/LocalParams
     :solr_local_parameters => {
+      :qf => "$contributor_qf",
+      :pf => "$contributor_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'creator',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "creator" 
+    },
+    :solr_local_parameters => {
+      :qf => "$creator_qf",
+      :pf => "$creator_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'title',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "title" 
+    },
+    :solr_local_parameters => {
       :qf => "$title_qf",
       :pf => "$title_pf"
     }
   }
+
   config[:search_fields] << {
-    :key =>'author',     
+    :key =>'description',     
     :solr_parameters => {
-      :"spellcheck.dictionary" => "author" 
+      :"spellcheck.dictionary" => "description" 
     },
     :solr_local_parameters => {
-      :qf => "$author_qf",
-      :pf => "$author_pf"
+      :qf => "$description_qf",
+      :pf => "$description_pf"
     }
   }
 
-  # Specifying a :qt only to show it's possible, and so our internal automated
-  # tests can test it. In this case it's the same as 
-  # config[:default_solr_parameters][:qt], so isn't actually neccesary. 
   config[:search_fields] << {
-    :key => 'subject', 
-    :qt=> 'search',
+    :key =>'publisher',     
     :solr_parameters => {
-      :"spellcheck.dictionary" => "subject"
+      :"spellcheck.dictionary" => "publisher" 
+    },
+    :solr_local_parameters => {
+      :qf => "$publisher_qf",
+      :pf => "$publisher_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'date_created',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "date_created" 
+    },
+    :solr_local_parameters => {
+      :qf => "$date_created_qf",
+      :pf => "$date_created_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'subject',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "subject" 
     },
     :solr_local_parameters => {
       :qf => "$subject_qf",
       :pf => "$subject_pf"
     }
   }
+
+  config[:search_fields] << {
+    :key =>'language',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "language" 
+    },
+    :solr_local_parameters => {
+      :qf => "$language_qf",
+      :pf => "$language_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'resource_type',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "resource_type" 
+    },
+    :solr_local_parameters => {
+      :qf => "$resource_type_qf",
+      :pf => "$resource_type_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'format',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "format" 
+    },
+    :solr_local_parameters => {
+      :qf => "$format_qf",
+      :pf => "$format_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'identifier',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "identifier" 
+    },
+    :solr_local_parameters => {
+      :qf => "$identifier_qf",
+      :pf => "$identifier_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key =>'based_near',     
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "based_near" 
+    },
+    :solr_local_parameters => {
+      :qf => "$based_near_qf",
+      :pf => "$based_near_pf"
+    }
+  }
+
+  config[:search_fields] << {
+    :key => 'tag', 
+    :solr_parameters => {
+      :"spellcheck.dictionary" => "tag"
+    },
+    :solr_local_parameters => {
+      :qf => "$tag_qf",
+      :pf => "$tag_pf"
+    }
+  }
+
+  # Specifying a :qt only to show it's possible, and so our internal automated
+  # tests can test it. In this case it's the same as 
+  # config[:default_solr_parameters][:qt], so isn't actually neccesary. 
+#  config[:search_fields] << {
+#    :key => 'subject', 
+#    :qt=> 'search',
+#    :solr_parameters => {
+#      :"spellcheck.dictionary" => "subject"
+#    },
+#    :solr_local_parameters => {
+#      :qf => "$subject_qf",
+#      :pf => "$subject_pf"
+#    }
+#  }
   
   # "sort results by" select (pulldown)
   # label in pulldown is followed by the name of the SOLR field to sort by and
