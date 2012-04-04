@@ -26,55 +26,6 @@ body td, body ul, body p, body ol {
 	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
-div.notice-wrap {
-	display: none;
-}
-
-#uva_lib_banner {
-	background: #051f38;
-    height: 37px;
-	width: 100%;
-}
-
-#uva_lib_banner #container1 {
-    width: 960px;
-    margin-right: auto;
-    margin-left: auto;
-    font-size: 12px;
-    color: #A8CCE8;
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-    height: 36px;
-}
-
-#container1_uva_lib_logo {
-    height: 15px;
-    width: 200px;
-    float: left;
-    padding-top: 10px;
-}
-
-#container1_links {
-    height: 18px;
-    margin-top: -9px;
-    float: left;
-    padding-top: 20px;
-    padding-left: 20px;
-}
-
-#container1_links ul {
-    list-style-type: none;
-}
-
-#container1_links li {
-    float: left;
-    margin-right: 7px;
-    margin-left: 7px;
-}
-
-#container1_links a {
-    color: #CCDFFF;
-    text-decoration: none;
-}
 
 #hd ul {
 	margin: 5px;
@@ -87,45 +38,6 @@ div.notice-wrap {
 	color: blue;
 	cursor: pointer;
 	margin-left: 10px;
-}
-
-#container1_login {
-    height: 26px;
-    float: right;
-		margin-right: 40px;
-    padding-top: 7px;
-}
-
-#libra_banner_container {
-	height: 78px;
-	width: 100%;
-}
-
-#libra_banner {
-    width: 960px;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 38px;
-    color: #F3A729;
-    margin-right: auto;
-    margin-left: auto; /* [disabled]margin-bottom: 30px; */
-    clear: both;
-}
-
-.libra_logo {
-	float: left;
-}
-
-.libra_buttons {
-	float: right;
-	width: 274px;
-	margin-top: 25px;
-}
-
-.libra_buttons .learn_more,
-.libra_buttons .add_work {
-	display: block;
-	float: left;
-	margin: 0 0 0 25px;
 }
 
 button.ui-button-icon-only {
@@ -216,14 +128,6 @@ a.destructive:hover {
     width: 40px;
 }
 
-#uvalicense_read_all {
-    cursor: pointer;
-}
-
-#uvalicense_read_all,
-#uvalicense p {
-    margin-left: 16px;
-}
 
 #appliedParams a#startOverLink {
     font-size: 13px;
@@ -273,90 +177,6 @@ dl dd {
 	margin: 0 0 0.67em 0;
 }
 
-.home_buttons {
-	float: left;
-	width: 170px;
-	margin-top: 30px;
-	position: relative;
-}
-
-.libra_buttons {
-	position: relative;
-}
-
-.home_buttons a {
-	display: block;
-	margin-bottom: 1em;
-}
-
-.home_buttons img,
-.libra_buttons img {
-	cursor: pointer;
-	position: relative;
-	z-index: 40;
-}
-
-.home_buttons ul,
-.libra_buttons ul {
-	background: #CCD9F2;
-	border: 2px solid #7998c4;
-	display: none;
-	margin: -25px 2px 0 2px;
-	padding: 25px 0 5px 0;
-	position: absolute;
-	width: 141px;
-	z-index: 20;
-	-webkit-border-radius: 0 0 4px 4px;
-	-moz-border-radius:    0 0 4px 4px;
-	border-radius:         0 0 4px 4px;
-	-webkit-background-clip: padding-box;
-	-webkit-box-shadow: 0px 1px 3px #999;
-	-moz-box-shadow:    0px 1px 3px #999;
-	box-shadow:         0px 1px 3px #999;
-}
-
-.home_buttons ul {
-	top: 160px;
-	left: 0;
-}
-
-.libra_buttons ul {
-	top: 10px;
-	right: 0;
-}
-
-.libra_buttons ul.add_sub_menu {
-	width: 116px;
-	margin: 0 2px 0 2px;
-}
-
-/* .libra_buttons .add_work needs margin-top: 10px in IE7 */
-/* "    " AND .libra_buttons .learn_more needs 10px in IE8/9.  New strategy? */
-
-.home_buttons ul li,
-.libra_buttons ul li {
-	border-top: 1px solid #b6c8de;
-	color: blue
-	cursor: pointer;
-	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-weight: bold;
-	list-style: none;
-	margin: 0 8px;
-	padding: 8px 4px;
-}
-
-.home_buttons ul li:hover, 
-.libra_buttons ul li:hover {
-	background: #FEF7E5;
-}
-
-.home_buttons ul a,
-.libra_buttons ul a {
-	border-top: 1px solid red;
-}
-
-
 li.computing_id {
     display: block;
     width: 100%;
@@ -373,15 +193,6 @@ li.computing_id {
     line-height: 160%;
 }
 
-.uvafield {
-    margin-left: 50px;
-    width: 500px;
-    margin-bottom: 20px;
-}
-
-.uvafield .editable-text {
-    font-size: 108%;
-}
 
 div #add-contributor-box {
     margin-bottom: 20px;
@@ -400,17 +211,6 @@ table#file_assets {
     margin-left: 15px;
 }
 
-#hd {
-	background-image: none;
-	background-color: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    min-width: 1000px;
-    text-align: center;
-}
-
 
 #container_login {
     margin-top: 8px;
@@ -422,7 +222,6 @@ table#file_assets {
 }
 
 #hd {
-	margin: 30px auto 0;
   overflow: visible; /* override blacklight */
 }
 
@@ -456,23 +255,6 @@ table#file_assets {
 }
 
 #login {
-    text-align: left;
-}
-
-#libra_banner {
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 38px;
-}
-
-#container2 {
-    width: 300px;
-    margin-left: 20px;
-    float: left;
-}
-
-#container2 a {
-    margin: 10px;
-    border: none;
     text-align: left;
 }
 
@@ -789,19 +571,6 @@ tr.document {
 	background-color: white;
 }
 
-#footer #container3 {
-	height: 160px;
-  width: 960px;
-  margin-right: auto;
-  margin-left: auto;
-  text-align: right;
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  color: #FFF;
-  line-height: 21px;
-  padding-top: 15px;
-}
-
 #footer .contact_info {
 	float: left;
 	margin-bottom: 1.5em;
@@ -819,32 +588,6 @@ tr.document {
 	width: 100%;
 }
 
-#footer #container3 #federal_lib_logo {
-    float: left;
-    height: 50px;
-    width: 5%;
-	text-align: left;
-}
-
-#footer #container3 #hydra_logo {
-    float: left;
-    height: 50px;
-    width: 10%;
-}
-
-#footer #container3 #bottom_text {
-	float: left;
-	font-size: 11px;
-	font-weight: bold;
-	color: #B9CAE6;
-	height: 50px;
-	width: 85%;
-}
-
-#footer #container3 #bottom_text #federal_lib{
-    text-align: left;
-    line-height: 15px;
-}
 
 /* FOOTER */ 
 #footer p{margin:0;}
@@ -922,10 +665,6 @@ div #tertiary_action {
 
 li div .license {
     width: 100%;
-}
-
-#uvalicense dl {
-    margin-top: -15px;
 }
 
 table#file_assets td {
@@ -1086,7 +825,6 @@ fieldset#citation_fieldset ul li fieldset legend {
 	width: auto;
 }
 
-.step #uvalicense,
 .step #peer_reviewed {
 	margin-left: 5px;
 	margin-top: 15px;
@@ -1100,7 +838,6 @@ fieldset#citation_fieldset ul li fieldset legend {
 	margin-left: 5px;
 }
 
-.step #uvalicense label,
 .step #peer_reviewed_fieldset label,
 .step #availability_fieldset label {
 	font-size: 14px;
@@ -1312,49 +1049,8 @@ fieldset#publication_fieldset label {
     display: block;
 }
 
-#uvalicense_read_all {
-    font-size: 13px;
-}
-
 .fl-uploader-footer-buttons {
     width: 200px;
-}
-
-#globalUtilNav {
-    float: left;
-    width: auto;
-    margin: 0;
-}
-
-#globalUtilNav em.small {
-    font-size: .85em;
-    font-weight: bold;
-    color: #CADCF3;
-}
-
-#globalUtilNav * {
-    clear: both;
-}
-
-#globalUtilNav li {
-    overflow: hidden;
-}
-
-#globalUtilNav em.small {
-    font-size: .85em;
-    font-weight: bold;
-    color: #CADCF3;
-}
-
-div.NetbadgeLogin {
-    position: relative;
-    z-index: 5000;
-}
-
-div.NetbadgeLogin .login {
-    display: block;
-    font-style: normal;
-    margin: 0;
 }
 
 .login .button {
@@ -1410,27 +1106,6 @@ div.NetbadgeLogin .login {
     padding: 0;
 }
 
-.librar_login ul li:hover {
-}
-
-div.NetbadgeLogin .login ul a:link,
-div.NetbadgeLogin .login ul a:visited {
-    min-width: 135px;
-    display: block;
-    width: 100%;
-    padding: 4px 10px;
-    color: #FFF;
-    text-decoration: none;
-    border-bottom: 1px solid #132242;
-    border-top: 1px solid #1B305C;
-}
-
-div.NetbadgeLogin .login ul a:hover {
-    background: #24426E;
-    border-bottom: 1px solid #0C162B;
-    border-top: 1px solid #51688A;
-}
-
 .login ul li, .login li {
     text-align: left;
 }
@@ -1443,125 +1118,3 @@ div.NetbadgeLogin .login ul a:hover {
     background: #FFF;
     padding: 1em;
 }
-
-h1.about_head {
-	font-family: Georgia, "Times New Roman", Times, serif;
-	text-align: left;
-	font-size: 26px;
-    margin-bottom: 8px;
-    color: #5B4418;
-    display: block;
-    font-weight: normal;
-	line-height: 1.2em;
-	margin-bottom: 1em;
-	width: 600px;
-}
-
-.about_toc {
-	text-align: left;
-}
-
-.about_toc ul,
-.about_toc li {
-	font-size: 14px;
-	line-height: 1.3em;
-	list-style: disc inside none;
-	margin-left: 0;
-	padding-left: 0;
-	padding-bottom: 0.5em;
-}
-
-.about_text {
-	line-height: 1.33em;
-	text-align: left;
-	width: 600px;
-}
-
-.about_text h2 {
-	font-family: Georgia, "Times New Roman", Times, serif;
-	text-align: left;
-	font-size: 20px;
-    color: #444;
-    display: block;
-    font-weight: normal;
-	line-height: 1.2em;
-	margin-bottom: 0;
-	margin-top: 1.5em;
-	text-transform: none;
-}
-
-.about_text h3 {
-	font-size: 15px;
-	font-weight: bold;
-	line-height: 1.2em;
-	margin: 1.2em 0 0.25em 0;
-	text-transform: none;
-}
-
-.about_text li {
-	padding-bottom: 0.5em;
-}
-
-.about_text .example_license {
-	font-style: italic;
-	margin: 0 5em 1em;
-}
-
-/* ---------------------------------------------------------- */
-/* LIGHTBOXES
-/* ---------------------------------------------------------- */
-#lightboxes {
-width: 100%;
-height: 100%;
-margin: 0;
-padding: 0;
-list-style-type: none;
-text-align: left;
-overflow: hidden;}
-
-#lightboxes li {
-width: 100%;
-height: 9999px;
-position: relative;
-background: rgba(0,0,0,.5);}
-
-#lightboxes .box {
-position: absolute;
-width: 400px;
-height: 400px;
-left: 50%;
-top: 50px;
-border: 10px solid #999;
-margin-left: -230px;
-background-color: #fff;
-padding: 20px;}
-
-#lightboxes h3 {
-font-weight: normal;
-font-size: 1.8461em;
-margin: 0 0 0.4583em 0;}
-
-#lightboxes a.close {
-position: absolute;
-top: 20px;
-right: 20px;
-display: block;
-width: 20px;
-line-height: 20px;
-text-align: center;
-background-color: #ddd;
-text-decoration: none;
-font-weight: bold;
-color: #999;
-font-size: 1.2em;}
-
-#lightboxes a.close:hover {
-background-color: #999;
-color: #fff;}
-
-#lightboxes #close {
-background-color: transparent;
-z-index: -1;}
-/* ---------------------------------------------------------- */
-/* LIGHTBOXES
-/* ---------------------------------------------------------- */
