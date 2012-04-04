@@ -33,8 +33,6 @@
   </div>
 </div>
 <% sidebar_items << capture do %>
-  <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
-  <%#= render :partial=>'facets' %>
   <%= delete_asset_link(params[:id], "GenericImage") %>
 <% end %>
 <%= async_load_tag(generic_content_object_path(params[:id], :layout=>"false", :method => ":get"), 'uploads') %>
