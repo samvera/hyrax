@@ -23,6 +23,12 @@ class Ability
   end
 
   def hydra_default_permissions
+    edit_permissions
+    read_permissions
+    custom_permissions
+  end
+
+  def edit_permissions
     can :edit, String do |pid|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
       test_edit
@@ -41,7 +47,9 @@ class Ability
     can :edit, SolrDocument do |obj|
       test_edit
     end       
+  end
 
+  def read_permissions
     can :read, String do |pid|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
       test_read
@@ -56,6 +64,11 @@ class Ability
       @permissions_solr_document = obj
       test_read
     end 
+  end
+
+
+  ## Override custom permissions in your own app to add more permissions beyond what is defined by default.
+  def custom_permissions
   end
   
   private

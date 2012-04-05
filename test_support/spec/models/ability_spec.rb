@@ -13,4 +13,10 @@ describe Ability do
       ability.user_groups.should include 'registered'
     end
   end
+
+  it "should call custom_permissions" do
+      Ability.any_instance.expects(:custom_permissions)
+      ability = Ability.new(nil)
+      ability.can?(:delete, 7)
+  end
 end
