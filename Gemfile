@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '~> 3.2.0'
 
 gem 'sqlite3'
+gem 'mysql'
 gem 'active-fedora', :git=>'git://github.com/projecthydra/active_fedora.git', :branch=>'master'
 gem 'blacklight', '~> 3.3.1'
 gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'master'
@@ -13,6 +14,7 @@ gem 'delayed_job_active_record'
 gem 'noid'
 
 group :development, :test do
+  gem 'activerecord-import'
   gem 'yaml_db'
   gem 'selenium-webdriver'
   gem 'headless'

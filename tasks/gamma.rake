@@ -23,7 +23,7 @@ namespace :gamma do
   namespace :harvest do
     desc "Harvest LC subjects"
     task :lc_subjects => :environment do |cmd, args|
-      vocabs = ["/tmp/authoritiessubjects.nt.skos"]
+      vocabs = ["/tmp/subjects-skos.nt"]
       LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs)
     end
 
@@ -54,7 +54,9 @@ namespace :gamma do
     desc "Harvest Lexvo languages"
     task :lexvo_languages => :environment do |cmd, args|
       vocabs = ["/tmp/lexvo_2012-03-04.rdf"]
-      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs, :format => 'rdfxml')
+      LocalAuthority.harvest_rdf(cmd.to_s.split(":").last, vocabs,
+                                 :format => 'rdfxml', 
+                                 :predicate => RDF::URI("http://www.w3.org/2008/05/skos#prefLabel"))
     end
 
     desc "Harvest LC genres"

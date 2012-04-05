@@ -1,3 +1,6 @@
+# this should be copied from the database.yml.sample and tweaked per local env
+config/database.yml
+
 ## MAC OS
 .DS_Store
 

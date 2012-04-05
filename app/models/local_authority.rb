@@ -1,4 +1,5 @@
 require 'rdf'
+require 'rdf/rdfxml'
 
 class LocalAuthority < ActiveRecord::Base
   has_and_belongs_to_many :domain_terms
@@ -9,33 +10,39 @@ class LocalAuthority < ActiveRecord::Base
     authority = self.create(:name => name)
     format = opts.fetch(:format, :ntriples)
     predicate = opts.fetch(:predicate, RDF::SKOS.prefLabel)
+    entries = []
     sources.each do |uri|
       puts "harvesting #{uri}"
       RDF::Reader.open(uri, :format => format) do |reader|
         reader.each_statement do |statement|
           if statement.predicate == predicate
-            authority.local_authority_entries.create(:label => statement.object.to_s,
-                                                     :uri => statement.subject.to_s)
+            entries << LocalAuthorityEntry.new(:local_authority => authority,
+                                               :label => statement.object.to_s,
+                                               :uri => statement.subject.to_s)
           end
         end
       end
     end
+    LocalAuthorityEntry.import entries
   end
 
   def self.harvest_tsv(name, sources, opts = {})
     return unless self.where(:name => name).empty?
     authority = self.create(:name => name)
     prefix = opts.fetch(:prefix, "")
+    entries = []
     sources.each do |uri|
       puts "harvesting #{uri}"
       open(uri) do |f|
         f.each_line do |tsv|
           fields = tsv.split(/\t/)
-          authority.local_authority_entries.create(:uri => "#{prefix}#{fields[0]}/",
-                                                   :label => fields[2])
+          entries << LocalAuthorityEntry.new(:local_authority => authority,
+                                             :uri => "#{prefix}#{fields[0]}/",
+                                             :label => fields[2])
         end
       end
     end
+    LocalAuthorityEntry.import entries
   end
 
   def self.register_vocabulary(model, term, name)

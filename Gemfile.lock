@@ -59,6 +59,9 @@ GEM
       activesupport (= 3.2.2)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-import (0.2.9)
+      activerecord (~> 3.0)
+      activerecord (~> 3.0)
     activeresource (3.2.2)
       activemodel (= 3.2.2)
       activesupport (= 3.2.2)
@@ -177,6 +180,7 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.2.0)
     multipart-post (1.1.2)
+    mysql (2.8.1)
     noid (0.5.4)
       backports
     nokogiri (1.5.2)
@@ -306,6 +310,7 @@ PLATFORMS
 
 DEPENDENCIES
   active-fedora!
+  activerecord-import
   bcrypt-ruby
   blacklight (~> 3.3.1)
   capybara
@@ -319,6 +324,7 @@ DEPENDENCIES
   jettywrapper
   launchy
   mocha
+  mysql
   noid
   rails (~> 3.2.0)
   rspec-rails (>= 2.4.0)
