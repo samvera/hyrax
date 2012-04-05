@@ -17,17 +17,17 @@ module Hydra::Ability
     if @user.is_being_superuser?(session)
       can :manage, :all
     else
-      hydra_default_permissions
+      hydra_default_permissions(user, session)
     end
   end
 
-  def hydra_default_permissions
-    edit_permissions
-    read_permissions
-    custom_permissions
+  def hydra_default_permissions(user, session)
+    edit_permissions(user, session)
+    read_permissions(user, session)
+    custom_permissions(user, session)
   end
 
-  def edit_permissions
+  def edit_permissions(user, session)
     can :edit, String do |pid|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
       test_edit
@@ -48,7 +48,7 @@ module Hydra::Ability
     end       
   end
 
-  def read_permissions
+  def read_permissions(user, session)
     can :read, String do |pid|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
       test_read
@@ -67,7 +67,7 @@ module Hydra::Ability
 
 
   ## Override custom permissions in your own app to add more permissions beyond what is defined by default.
-  def custom_permissions
+  def custom_permissions(user, session)
   end
   
   private
