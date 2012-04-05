@@ -1,18 +1,10 @@
 h1. Hydra-Head
 
-Hydra-Head is a Rails Engines plugin containing the core code for a Hydra application.  The full hydra stack includes the following:
+See the github wikis for information targeted to developers: "https://github.com/projecthydra/hydra-head/wiki":https://github.com/projecthydra/hydra-head/wiki
+See the duraspace hydra wikis for information at the architecture level: "http://wiki.duraspace.org/display/hydra/":http://wiki.duraspace.org/display/hydra/
+Additionally, new adopters and potential adopters may find the pages here useful: "http://projecthydra.org/":http://projecthydra.org/
 
-- "Blacklight":http://projectblacklight.org/  (a rails engines plugin) for the User Interface
-- "Solr":http://lucene.apache.org/solr/ (a java application, also ported to other languages) for the Search Engine 
-- "ActiveFedora":https://github.com/mediashelf/active_fedora (a ruby gem) to let the rails application talk to fedora 
-- "OM (Opinionated Metadata)":https://github.com/mediashelf/om (a ruby gem) to streamline the metadata configuration
-- "Solrizer":https://github.com/projecthydra/solrizer (a ruby gem) to write content to the Solr index
-- "SolrizerFedora":https://github.com/projecthydra/solrizer-fedora (a ruby gem) to write Fedora content to the Solr index.
-- Hydra-Head (a rails engines plugin) to glue it all together 
-
-For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":https://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile.  If you're looking to develop an application based on Hydra-Head, you might also be interested in "install prerequisites":https://github.com/projecthydra/hydra-head/blob/master/INSTALL_PREREQ.textile
-
-This is a Ruby on Rails 3 gem.
+Hydra-Head is a Ruby-on-Rails 3 gem containing the core code for a web application using the full stack of hydra building blocks.
 
 h2. Installation/Setup
 
