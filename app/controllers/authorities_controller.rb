@@ -7,7 +7,7 @@ class AuthoritiesController < ApplicationController
     hits = []
     if term
       authorities = term.local_authorities.collect(&:id).uniq      
-      sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "%#{s}%").select("label, uri").to_sql
+      sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "#{s}%").select("label, uri").limit(25).to_sql
       LocalAuthorityEntry.find_by_sql(sql).each do |hit|
         hits << {:uri => hit.uri, :label => hit.label}
       end
