@@ -15,7 +15,7 @@ gem 'noid'
 
 group :development, :test do
   gem 'activerecord-import'
-  gem 'yaml_db'
+  gem 'yaml_db', :git=>'git://github.com/lostapathy/yaml_db.git', :branch=>'master'
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'ruby-debug'

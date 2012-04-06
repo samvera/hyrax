@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/lostapathy/yaml_db.git
+  revision: 98e9a5dca43e3fedd3268c76a73af40d1bdf1dfd
+  branch: master
+  specs:
+    yaml_db (0.2.2)
+
+GIT
   remote: git://github.com/projecthydra/active_fedora.git
   revision: ec62c99cb821bd50714fdf79c7607ee0a4b0068c
   branch: master
@@ -303,7 +310,6 @@ GEM
     xml-simple (1.1.1)
     xpath (0.1.4)
       nokogiri (~> 1.3)
-    yaml_db (0.2.2)
 
 PLATFORMS
   ruby
@@ -333,4 +339,4 @@ DEPENDENCIES
   rubydora (~> 0.5.4)
   selenium-webdriver
   sqlite3
-  yaml_db
+  yaml_db!
