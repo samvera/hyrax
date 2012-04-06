@@ -12,7 +12,7 @@ class LocalAuthority < ActiveRecord::Base
     predicate = opts.fetch(:predicate, RDF::SKOS.prefLabel)
     entries = []
     sources.each do |uri|
-      puts "harvesting #{uri}"
+      #puts "harvesting #{uri}"
       RDF::Reader.open(uri, :format => format) do |reader|
         reader.each_statement do |statement|
           if statement.predicate == predicate
@@ -32,7 +32,7 @@ class LocalAuthority < ActiveRecord::Base
     prefix = opts.fetch(:prefix, "")
     entries = []
     sources.each do |uri|
-      puts "harvesting #{uri}"
+      #puts "harvesting #{uri}"
       open(uri) do |f|
         f.each_line do |tsv|
           fields = tsv.split(/\t/)
@@ -52,5 +52,19 @@ class LocalAuthority < ActiveRecord::Base
     domain_term = DomainTerm.find_or_create_by_model_and_term(:model => model, :term => term)
     return if domain_term.local_authorities.include? authority
     domain_term.local_authorities << authority
+  end
+
+  def self.entries_by_term(model, term, query)
+    return if query.empty?
+    hits = []
+    term = DomainTerm.where(:model => model, :term => term).first
+    if term
+      authorities = term.local_authorities.collect(&:id).uniq      
+      sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "#{query}%").select("label, uri").limit(25).to_sql
+      LocalAuthorityEntry.find_by_sql(sql).each do |hit|
+        hits << {:uri => hit.uri, :label => hit.label}
+      end
+    end
+    hits
   end
 end

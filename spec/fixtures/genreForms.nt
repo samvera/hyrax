@@ -1,0 +1,471 @@
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Abstract films"@en .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid1 .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid1 <http://www.loc.gov/mads/rdf/v1#elementValue> "Abstract films"@en .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid2 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026235> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasReciprocalAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026049> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid3 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Abstract animation films"@en .
+_:genid5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid4 .
+_:genid4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid4 <http://www.loc.gov/mads/rdf/v1#elementValue> "Abstract animation films"@en .
+_:genid5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid3 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid5 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid3 .
+_:genid6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid6 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Abstract live action films"@en .
+_:genid8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid7 .
+_:genid7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid7 <http://www.loc.gov/mads/rdf/v1#elementValue> "Abstract live action films"@en .
+_:genid8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid6 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid8 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid6 .
+_:genid9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid9 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Concrete films"@en .
+_:genid11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid10 .
+_:genid10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid10 <http://www.loc.gov/mads/rdf/v1#elementValue> "Concrete films"@en .
+_:genid11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid9 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid11 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid9 .
+_:genid12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid12 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Nonobjective films"@en .
+_:genid14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid13 .
+_:genid13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid13 <http://www.loc.gov/mads/rdf/v1#elementValue> "Nonobjective films"@en .
+_:genid14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid12 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid14 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid12 .
+_:genid15 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid15 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid15 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Nonrepresentational films"@en .
+_:genid17 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid16 .
+_:genid16 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid16 <http://www.loc.gov/mads/rdf/v1#elementValue> "Nonrepresentational films"@en .
+_:genid17 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid15 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid17 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid15 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#note> "This heading is used as a genre/form heading for nonrepresentational films that avoid narrative and instead convey impressions and emotions by way of color, rhythm and movement." .
+_:genid18 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid18 <http://www.loc.gov/mads/rdf/v1#citation-source> "Moving image genre-form guide online, June 4, 2008" .
+_:genid18 <http://www.loc.gov/mads/rdf/v1#citation-note> "(Abstract live action: work that fragments or otherwise presents live objects so they appear to be abstract; Abstract animation: type of animation without narrative, concentrating on abstract visuals)"@en .
+_:genid18 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid18 .
+_:genid19 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid19 <http://www.loc.gov/mads/rdf/v1#citation-source> "Lopez, D. Films by genre, 1993:" .
+_:genid19 <http://www.loc.gov/mads/rdf/v1#citation-note> "p. 2 (Abstract films; Concrete films; Nonobjective films: abstract films avoid narrative and instead convey sensitive impressions and emotions by way of color, rhythm and movement...They include animated films consisting of drawings, splashes of color, lines and shapes...computer films...abstraction [is] also achieved by working on the film itself by scratching, drawing, or painting on its surface. Abstract films are also made by photographing objects in the usual manner...also refers to any nonrepresentational film)"@en .
+_:genid19 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid19 .
+_:genid20 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid20 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-04-22T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid20 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid20 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid20 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid20 .
+_:genid21 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid21 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-04-22T12:45:26"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid21 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "revised"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid21 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid21 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid21 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#prefLabel> "Abstract films"@en .
+_:genid22 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid22 <http://www.w3.org/2008/05/skos-xl#literalForm> "Abstract animation films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid22 .
+_:genid23 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid23 <http://www.w3.org/2008/05/skos-xl#literalForm> "Abstract live action films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid23 .
+_:genid24 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid24 <http://www.w3.org/2008/05/skos-xl#literalForm> "Concrete films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid24 .
+_:genid25 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid25 <http://www.w3.org/2008/05/skos-xl#literalForm> "Nonobjective films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid25 .
+_:genid26 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid26 <http://www.w3.org/2008/05/skos-xl#literalForm> "Nonrepresentational films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid26 .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026235> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#related> <http://id.loc.gov/authorities/genreForms/gf2011026049> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#note> "This heading is used as a genre/form heading for nonrepresentational films that avoid narrative and instead convey impressions and emotions by way of color, rhythm and movement." .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#inScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#altLabel> "Abstract animation films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#altLabel> "Abstract live action films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#altLabel> "Concrete films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#altLabel> "Nonobjective films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#altLabel> "Nonrepresentational films"@en .
+_:genid27 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid27 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2008025611> .
+_:genid27 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid27 <http://purl.org/vocab/changeset/schema#createdDate> "2011-04-22T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid27 <http://purl.org/vocab/changeset/schema#changeReason> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid27 .
+_:genid28 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid28 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2008025611> .
+_:genid28 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid28 <http://purl.org/vocab/changeset/schema#createdDate> "2011-04-22T12:45:26"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid28 <http://purl.org/vocab/changeset/schema#changeReason> "revised"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2008025611> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid28 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Actualities (Motion pictures)"@en .
+_:genid30 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid29 .
+_:genid29 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid29 <http://www.loc.gov/mads/rdf/v1#elementValue> "Actualities (Motion pictures)"@en .
+_:genid30 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid30 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026570> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026575> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026423> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasReciprocalAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026420> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasReciprocalAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026205> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid31 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid31 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid31 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Actualit\u00E9s (Motion pictures)"@en .
+_:genid33 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid32 .
+_:genid32 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid32 <http://www.loc.gov/mads/rdf/v1#elementValue> "Actualit\u00E9s (Motion pictures)"@en .
+_:genid33 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid31 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid33 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid31 .
+_:genid34 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid34 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid34 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Actuality films"@en .
+_:genid36 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid35 .
+_:genid35 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid35 <http://www.loc.gov/mads/rdf/v1#elementValue> "Actuality films"@en .
+_:genid36 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid34 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid36 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid34 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#note> "This heading is used as a genre/form heading for short, unedited, silent films, primarily from the period of early cinema, that portray daily life or specific events or occurrences as filmed by a camera in a fixed location without commentary." .
+_:genid37 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid37 <http://www.loc.gov/mads/rdf/v1#citation-source> "Yee, M.M. Moving image materials, 1988 (Actualities; use for early, usually short silent films in which the cameria was positioned to record events or everyday life)" .
+_:genid37 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid37 .
+_:genid38 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid38 <http://www.loc.gov/mads/rdf/v1#citation-source> "Lopez, D. Films by genre, c1993" .
+_:genid38 <http://www.loc.gov/mads/rdf/v1#citation-note> "(Actuality (Actualite, Actualities, Actuality film, Documentaire, Educational, Interest film, News film, News item, Topical) the filming of \"actual\" events or the normal activities of people at work or at leisure; the actuality film is an early form of the documentary film; an actuality shows something that happened at the time of filming; a topical film records an event that is newsworthy; an interest film implies some measure of interpretation of its subject by the maker of the film)"@en .
+_:genid38 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid38 .
+_:genid39 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid39 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-05-02T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid39 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid39 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid39 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid39 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#prefLabel> "Actualities (Motion pictures)"@en .
+_:genid40 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid40 <http://www.w3.org/2008/05/skos-xl#literalForm> "Actualit\u00E9s (Motion pictures)"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid40 .
+_:genid41 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid41 <http://www.w3.org/2008/05/skos-xl#literalForm> "Actuality films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid41 .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026570> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026575> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026423> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#related> <http://id.loc.gov/authorities/genreForms/gf2011026420> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#related> <http://id.loc.gov/authorities/genreForms/gf2011026205> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#note> "This heading is used as a genre/form heading for short, unedited, silent films, primarily from the period of early cinema, that portray daily life or specific events or occurrences as filmed by a camera in a fixed location without commentary." .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#inScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#altLabel> "Actualit\u00E9s (Motion pictures)"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#altLabel> "Actuality films"@en .
+_:genid42 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid42 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2011026007> .
+_:genid42 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid42 <http://purl.org/vocab/changeset/schema#createdDate> "2011-05-02T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid42 <http://purl.org/vocab/changeset/schema#changeReason> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2011026007> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid42 .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Adventure radio programs"@en .
+_:genid44 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid43 .
+_:genid43 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid43 <http://www.loc.gov/mads/rdf/v1#elementValue> "Adventure radio programs"@en .
+_:genid44 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid44 .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026506> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid45 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid45 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid45 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Radio adventure programs"@en .
+_:genid47 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid46 .
+_:genid46 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid46 <http://www.loc.gov/mads/rdf/v1#elementValue> "Radio adventure programs"@en .
+_:genid47 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid45 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid47 .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid45 .
+_:genid48 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid48 <http://www.loc.gov/mads/rdf/v1#citation-source> "Radio form/genre terms guide, 1998" .
+_:genid48 <http://www.loc.gov/mads/rdf/v1#citation-note> "(Adventures: Fictional programs that dramatize the exciting and usually hazardous exploits of a person or persons; sometimes set in a particular historical period. Examples: The count of Monte Cristo, Superman)"@en .
+_:genid48 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid48 .
+_:genid49 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid49 <http://www.loc.gov/mads/rdf/v1#citation-source> "GSAFD via WWW, Nov. 20, 2007" .
+_:genid49 <http://www.loc.gov/mads/rdf/v1#citation-note> "(Adventure radio programs; UF Swashbucklers, Thrillers)"@en .
+_:genid49 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid49 .
+_:genid50 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid50 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid50 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid50 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid50 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid50 .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/2004/02/skos/core#prefLabel> "Adventure radio programs"@en .
+_:genid51 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid51 <http://www.w3.org/2008/05/skos-xl#literalForm> "Radio adventure programs"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid51 .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026506> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/2004/02/skos/core#inScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/2004/02/skos/core#altLabel> "Radio adventure programs"@en .
+_:genid52 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid52 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2011026031> .
+_:genid52 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid52 <http://purl.org/vocab/changeset/schema#createdDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid52 <http://purl.org/vocab/changeset/schema#changeReason> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2011026031> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid52 .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Affidavits"@en .
+_:genid54 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid53 .
+_:genid53 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid53 <http://www.loc.gov/mads/rdf/v1#elementValue> "Affidavits"@en .
+_:genid54 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid54 .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026355> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid55 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid55 <http://www.loc.gov/mads/rdf/v1#citation-source> "Genre/form terms for law materials [report prepared by the Technical Services Special Interest Section of AALL], 2010:" .
+_:genid55 <http://www.loc.gov/mads/rdf/v1#citation-note> "Affidavits (This heading is used as a genre/form heading for voluntary declarations of facts written down and sworn to before an officer authorized to administer oaths, such as a notary public.)"@en .
+_:genid55 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid55 .
+_:genid56 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid56 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid56 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid56 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid56 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid56 .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/2004/02/skos/core#prefLabel> "Affidavits"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026355> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/2004/02/skos/core#inScheme> <http://id.loc.gov/authorities/genreForms> .
+_:genid57 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid57 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2011026035> .
+_:genid57 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid57 <http://purl.org/vocab/changeset/schema#createdDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid57 <http://purl.org/vocab/changeset/schema#changeReason> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2011026035> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid57 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Ambient sounds"@en .
+_:genid59 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid58 .
+_:genid58 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid58 <http://www.loc.gov/mads/rdf/v1#elementValue> "Ambient sounds"@en .
+_:genid59 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid59 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026594> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid60 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid60 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid60 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Ambience (Sound recordings)"@en .
+_:genid62 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid61 .
+_:genid61 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid61 <http://www.loc.gov/mads/rdf/v1#elementValue> "Ambience (Sound recordings)"@en .
+_:genid62 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid60 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid62 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid60 .
+_:genid63 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid63 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid63 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Ambient audio (Sound recordings)"@en .
+_:genid65 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid64 .
+_:genid64 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid64 <http://www.loc.gov/mads/rdf/v1#elementValue> "Ambient audio (Sound recordings)"@en .
+_:genid65 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid63 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid65 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid63 .
+_:genid66 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid66 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid66 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Background sounds"@en .
+_:genid68 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid67 .
+_:genid67 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid67 <http://www.loc.gov/mads/rdf/v1#elementValue> "Background sounds"@en .
+_:genid68 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid66 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid68 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid66 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#note> "This heading is used as a genre/form heading for recordings of sounds of the surrounding environment external to an audio system that are often recorded separately and mixed into other recordings to enhance live effect." .
+_:genid69 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid69 <http://www.loc.gov/mads/rdf/v1#citation-source> "LCSH, Apr. 4, 2010" .
+_:genid69 <http://www.loc.gov/mads/rdf/v1#citation-note> "(hdg: Ambient sounds)"@en .
+_:genid69 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid69 .
+_:genid70 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid70 <http://www.loc.gov/mads/rdf/v1#citation-source> "Marco, G.A. Encyc. of recorded sound in the U.S., 1993" .
+_:genid70 <http://www.loc.gov/mads/rdf/v1#citation-note> "(ambient sounds, sounds external to an audio system that are not part of a recorded or broadcast program, but audible to listener along with the program; ambience, environment in a recording studio or hall, acoustic conditions in a playback room, may be incorporated into a recorded program)"@en .
+_:genid70 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid70 .
+_:genid71 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid71 <http://www.loc.gov/mads/rdf/v1#citation-source> "Media college.com, Apr. 4, 2010:" .
+_:genid71 <http://www.loc.gov/mads/rdf/v1#citation-note> "ambient sound (ambient sound; ambient audio; the background sounds which are present in a scene or location)"@en .
+_:genid71 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid71 .
+_:genid72 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid72 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid72 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid72 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid72 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid72 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#prefLabel> "Ambient sounds"@en .
+_:genid73 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid73 <http://www.w3.org/2008/05/skos-xl#literalForm> "Ambience (Sound recordings)"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid73 .
+_:genid74 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid74 <http://www.w3.org/2008/05/skos-xl#literalForm> "Ambient audio (Sound recordings)"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid74 .
+_:genid75 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2008/05/skos-xl#Label> .
+_:genid75 <http://www.w3.org/2008/05/skos-xl#literalForm> "Background sounds"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2008/05/skos-xl#altLabel> _:genid75 .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026594> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#note> "This heading is used as a genre/form heading for recordings of sounds of the surrounding environment external to an audio system that are often recorded separately and mixed into other recordings to enhance live effect." .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#inScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#altLabel> "Ambience (Sound recordings)"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#altLabel> "Ambient audio (Sound recordings)"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#altLabel> "Background sounds"@en .
+_:genid76 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid76 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2011026039> .
+_:genid76 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid76 <http://purl.org/vocab/changeset/schema#createdDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid76 <http://purl.org/vocab/changeset/schema#changeReason> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2011026039> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid76 .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Angel films"@en .
+_:genid78 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid77 .
+_:genid77 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid77 <http://www.loc.gov/mads/rdf/v1#elementValue> "Angel films"@en .
+_:genid78 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid78 .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026242> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid79 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid79 <http://www.loc.gov/mads/rdf/v1#citation-source> "Work cat.: Angels in the outfield [VR] 1994" .
+_:genid79 <http://www.loc.gov/mads/rdf/v1#citation-note> "(summary note: Heavenly angels join the Pittsburgh Pirates on the field for a wild race to the World Series)"@en .
+_:genid79 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid79 .
+_:genid80 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid80 <http://www.loc.gov/mads/rdf/v1#citation-source> "Himmel \u00FCber Berlin (Motion picture). Wings of desire [VR] 2003" .
+_:genid80 <http://www.loc.gov/mads/rdf/v1#citation-note> "(summary note: A romantic fantasy about an angel who wishes he were mortal and is willing to fall from the sky if it means a chance to fall in love)"@en .
+_:genid80 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid80 .
+_:genid81 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid81 <http://www.loc.gov/mads/rdf/v1#citation-source> "Fowkes, K.A. Giving up the ghost : spirits, ghosts, and angels in mainstream comedy films, c1998." .
+_:genid81 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid81 .
+_:genid82 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid82 <http://www.loc.gov/mads/rdf/v1#citation-source> "How to find angel movies, via eHow Web site, Aug. 29, 2008" .
+_:genid82 <http://www.loc.gov/mads/rdf/v1#citation-note> "(angel movies: It's a Wonderful Life; Michael; Angel-A; Date With an Angel; Heaven Only Knows; A Guy Named Joe; Almost an Angel; City of Angels; I Married an Angel; Forever Darling; Wings of Desire; The Bishop's Wife)"@en .
+_:genid82 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid82 .
+_:genid83 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid83 <http://www.loc.gov/mads/rdf/v1#citation-source> "The greatest films Web site, Aug. 29, 2008:" .
+_:genid83 <http://www.loc.gov/mads/rdf/v1#citation-note> "genres/Fantasy films (Fantasy Films with Angels: Angels, not surprisingly, have been featured in many fantasy or supernatural films over the years. Hollywood has responded to the interest in the existence of heavenly beings with a long list of \"angel\" films)"@en .
+_:genid83 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid83 .
+_:genid84 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid84 <http://www.loc.gov/mads/rdf/v1#citation-source> "Lopez, D. Films by genre, c1993" .
+_:genid84 <http://www.loc.gov/mads/rdf/v1#citation-note> "(under Fantasy film: \"Films dealing with the wonders of magic and magicians, with the doings of gods, demigods, angels, elves, sprites, fairies, gnomes, and similar creatures are better and properly classified as fantasy films.\")"@en .
+_:genid84 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid84 .
+_:genid85 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid85 <http://www.loc.gov/mads/rdf/v1#citation-source> "Taves, B. The moving image genre-form guide, via WWW, viewed Aug. 29, 2008;Konigsberg, I. The complete film dictionary, 1997" .
+_:genid85 <http://www.loc.gov/mads/rdf/v1#citation-status> "notfound" .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid85 .
+_:genid86 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/RecordInfo#RecordInfo> .
+_:genid86 <http://id.loc.gov/ontologies/RecordInfo#recordChangeDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid86 <http://id.loc.gov/ontologies/RecordInfo#recordStatus> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+_:genid86 <http://id.loc.gov/ontologies/RecordInfo#recordContentSource> <http://id.loc.gov/vocabulary/organizations/dlc> .
+_:genid86 <http://id.loc.gov/ontologies/RecordInfo#languageOfCataloging> <http://id.loc.gov/vocabulary/iso639-2/eng> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.loc.gov/mads/rdf/v1#adminMetadata> _:genid86 .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/2004/02/skos/core#prefLabel> "Angel films"@en .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/2004/02/skos/core#broader> <http://id.loc.gov/authorities/genreForms/gf2011026242> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/2004/02/skos/core#inScheme> <http://id.loc.gov/authorities/genreForms> .
+_:genid87 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/vocab/changeset/schema#ChangeSet> .
+_:genid87 <http://purl.org/vocab/changeset/schema#subjectOfChange> <http://id.loc.gov/authorities/genreForms/gf2011026045> .
+_:genid87 <http://purl.org/vocab/changeset/schema#creatorName> "Library of Congress, Network Development and MARC Standards Office" .
+_:genid87 <http://purl.org/vocab/changeset/schema#createdDate> "2011-05-04T00:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+_:genid87 <http://purl.org/vocab/changeset/schema#changeReason> "new"^^<http://www.w3.org/2001/XMLSchema#string> .
+<http://id.loc.gov/authorities/genreForms/gf2011026045> <http://www.w3.org/2004/02/skos/core#changeNote> _:genid87 .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Authority> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Animated films"@en .
+_:genid89 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid88 .
+_:genid88 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid88 <http://www.loc.gov/mads/rdf/v1#elementValue> "Animated films"@en .
+_:genid89 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#elementList> _:genid89 .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026406> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasReciprocalAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026004> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026615> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026696> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026181> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026465> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026576> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026159> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026379> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026107> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026446> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasReciprocalAuthority> <http://id.loc.gov/authorities/genreForms/gf2008025611> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority> <http://id.loc.gov/authorities/genreForms/gf2011026370> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> <http://id.loc.gov/authorities/genreForms> .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection> <http://id.loc.gov/authorities/genreForms/collection_LCGFT_General> .
+_:genid90 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid90 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid90 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Animated cartoons (Motion pictures)"@en .
+_:genid92 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid91 .
+_:genid91 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid91 <http://www.loc.gov/mads/rdf/v1#elementValue> "Animated cartoons (Motion pictures)"@en .
+_:genid92 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid90 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid92 .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid90 .
+_:genid93 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid93 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid93 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Cartoons, Animated (Motion pictures)"@en .
+_:genid95 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid94 .
+_:genid94 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid94 <http://www.loc.gov/mads/rdf/v1#elementValue> "Cartoons, Animated (Motion pictures)"@en .
+_:genid95 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid93 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid95 .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid93 .
+_:genid96 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreForm> .
+_:genid96 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Variant> .
+_:genid96 <http://www.loc.gov/mads/rdf/v1#variantLabel> "Motion picture cartoons"@en .
+_:genid98 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:genid97 .
+_:genid97 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#GenreFormElement> .
+_:genid97 <http://www.loc.gov/mads/rdf/v1#elementValue> "Motion picture cartoons"@en .
+_:genid98 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:genid96 <http://www.loc.gov/mads/rdf/v1#elementList> _:genid98 .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasVariant> _:genid96 .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#note> "This heading is used as a genre/form heading for films that create the illusion of movement in drawings, clay, inanimate objects, or the like, through an animation technique." .
+_:genid99 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Source> .
+_:genid99 <http://www.loc.gov/mads/rdf/v1#citation-source> "Films by genre, 1993:" .
+_:genid99 <http://www.loc.gov/mads/rdf/v1#citation-note> "p. 12 (animated film (animation): An animated film is one which, by the use of some animation technique, creates the illusion of movement in inanimated objects, drawings, photographs, paper or cardboard cut-outs, puppets, plasticien, and the like)"@en .
+_:genid99 <http://www.loc.gov/mads/rdf/v1#citation-status> "found" .
+<http://id.loc.gov/authorities/genreForms/gf2011026049> <http://www.loc.gov/mads/rdf/v1#hasSource> _:genid99 .
