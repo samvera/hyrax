@@ -15,7 +15,6 @@ body {
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 13px;
   color: #121212;
-  text-align: center; /* for IE */
 }
 
 #document h1 {
