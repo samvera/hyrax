@@ -6,11 +6,11 @@ module Hydra::Ability
   def initialize(user, session=nil)
     user ||= User.new # guest user (not logged in)
     @user = user
-    @user_groups = RoleMapper.roles(@user.email)
-    # everyone is automatically a member of the group 'public'
-    @user_groups.push 'public' unless @user_groups.include?('public')
-    # logged-in users are automatically members of the group "registered"
-    @user_groups.push 'registered' unless (@user.email == '' || @user == "public" || @user_groups.include?('registered') )
+    @user_groups = RoleMapper.roles(user_key)
+    # # everyone is automatically a member of the group 'public'
+    # @user_groups.push 'public' unless @user_groups.include?('public')
+    # # logged-in users are automatically members of the group "registered"
+    # @user_groups.push 'registered' unless (@user.email == '' || @user == "public" || @user_groups.include?('registered') )
     
     logger.debug("Usergroups is " + @user_groups.inspect)
     
@@ -70,7 +70,7 @@ module Hydra::Ability
   def custom_permissions(user, session)
   end
   
-  private
+  protected
   def test_edit
     logger.debug("CANCAN Checking edit permissions for user: #{@user}")
     group_intersection = @user_groups & edit_groups
@@ -115,6 +115,13 @@ module Hydra::Ability
     rp = edit_persons | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_individual_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_individual_field,nil))
     logger.debug("read_persons: #{rp.inspect}")
     return rp
+  end
+
+  
+  # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)
+  # defaults to using whatever you have set as the Devise authentication_key
+  def user_key
+    @user.send(Devise.authentication_keys.first)
   end
 
 
