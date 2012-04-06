@@ -1,8 +1,0 @@
-h2. 3.0.0
-
-If you have been testing out the Release Candidates, you need to add this line to your CatalogController:
-
-<pre>
-  # This filters out objects that you want to exclude from search results.  By default, it filters out FileAssets  
-  CatalogController.solr_search_params_logic << :exclude_unwanted_models
-</pre>

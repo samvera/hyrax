@@ -1,24 +1,21 @@
 h1. Hydra-Head
 
-Hydra-Head is a Rails Engines plugin containing the core code for a Hydra application.  The full hydra stack includes the following:
+Hydra-Head is a Ruby-on-Rails 3 gem containing the core code for a web application using the full stack of hydra building blocks.
 
-- "Blacklight":http://projectblacklight.org/  (a rails engines plugin) for the User Interface
-- "Solr":http://lucene.apache.org/solr/ (a java application, also ported to other languages) for the Search Engine 
-- "ActiveFedora":https://github.com/mediashelf/active_fedora (a ruby gem) to let the rails application talk to fedora 
-- "OM (Opinionated Metadata)":https://github.com/mediashelf/om (a ruby gem) to streamline the metadata configuration
-- "Solrizer":https://github.com/projecthydra/solrizer (a ruby gem) to write content to the Solr index
-- "SolrizerFedora":https://github.com/projecthydra/solrizer-fedora (a ruby gem) to write Fedora content to the Solr index.
-- Hydra-Head (a rails engines plugin) to glue it all together 
+See the github wikis for information targeted to developers: "http://github.com/projecthydra/hydra-head/wiki":http://github.com/projecthydra/hydra-head/wiki
+See the duraspace hydra wikis for information at the architecture level: "http://wiki.duraspace.org/display/hydra/":http://wiki.duraspace.org/display/hydra/
+Additionally, new adopters and potential adopters may find the pages here useful: "http://projecthydra.org/":http://projecthydra.org/
 
-For a more thorough overview of the Hydra framework, see "HYDRA_OVERVIEW.textile":https://github.com/projecthydra/hydrangea/blob/master/HYDRA_OVERVIEW.textile.  If you're looking to develop an application based on Hydra-Head, you might also be interested in "install prerequisites":https://github.com/projecthydra/hydra-head/blob/master/INSTALL_PREREQ.textile
+Further questions?  Ask the "hydra-tech list":http://groups.google.com/group/hydra-tech or join the freenode #projecthydra IRC channel.
 
-This is a Ruby on Rails 3 gem.
 
 h2. Installation/Setup
 
-h3. Ruby
+h3. Installation Prerequisites
 
-Currently all Hydra software uses Ruby 1.8.7 (and not 1.9). 
+See "http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites":http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites
+
+Ruby 1.9.3 is required by Hydra-Head release 4.0; RVM is strongly suggested.
 
 h3. Install Rails, Bundler and Devise
 
@@ -26,7 +23,6 @@ Currently hydra-head is compatible with Rails 3.0.x and incompatible with Rails 
 
 <pre>
 gem install 'rails' --version '~>3.0.11'
-gem install 'bundler'
 </pre>
   
 h3. Generate a new rails application:
@@ -53,7 +49,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
   # but in a production setup you probably want to use a real sql database like mysql or postgres
   gem 'sqlite3'
 
-  #  We will assume you're using devise in tutorials/documentation. 
+  # We will assume you're using devise in tutorials/documentation. 
   # You are free to implement your own User/Authentication solution in its place.
   gem 'devise'
 
@@ -109,11 +105,11 @@ h3. You're done.
 
 Congratulations.  You've set up the code for your Hydra Head.  
 
-Read "Tools for Developing and Testing":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.Tools.html, then read "How to Get Started":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.HOW_TO_GET_STARTED.html to get a sense of what you can do with your Hydra Head.
+Read "Tools for Developing and Testing your Application":http://github.com/projecthydra/hydra-head/wiki/Tools-for-Developing-and-Testing-your-Application, then read "How to Get Started":http://github.com/projecthydra/hydra-head/wiki/How-to-Get-Started to get a sense of what you can do with your Hydra Head.
 
 h2. Modifying and Testing the hydra-head Gem 
 
-For those developers who want to or need to work on the hydra-head gem itself, see the "Instructions for Contributors":http://hudson.projecthydra.org/job/hydra-head-rails3-plugin/Documentation/file.TESTING.html
+For those developers who want to or need to work on the hydra-head gem itself, see the "Instructions for Contributors":http://github.com/projecthydra/hydra-head/wiki/For-Contributors
 
 h2. Acknowledgements
 
