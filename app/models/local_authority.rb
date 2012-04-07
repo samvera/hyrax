@@ -12,7 +12,6 @@ class LocalAuthority < ActiveRecord::Base
     predicate = opts.fetch(:predicate, RDF::SKOS.prefLabel)
     entries = []
     sources.each do |uri|
-      #puts "harvesting #{uri}"
       RDF::Reader.open(uri, :format => format) do |reader|
         reader.each_statement do |statement|
           if statement.predicate == predicate
@@ -32,7 +31,6 @@ class LocalAuthority < ActiveRecord::Base
     prefix = opts.fetch(:prefix, "")
     entries = []
     sources.each do |uri|
-      #puts "harvesting #{uri}"
       open(uri) do |f|
         f.each_line do |tsv|
           fields = tsv.split(/\t/)
