@@ -19,6 +19,9 @@ source .rvmrc
 echo "=-=-=-=-= $0 bundle install"
 bundle install
 
+echo "=-=-=-=-= $0 cp -f config/database.yml.sample config/database.yml"
+cp -f config/database.yml.sample config/database.yml
+
 echo "=-=-=-=-= $0 rake --trace gamma:ci"
 HEADLESS=true rake --trace gamma:ci
 retval=$?
