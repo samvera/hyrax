@@ -41,10 +41,8 @@ describe CatalogController do
   
   describe "edit" do
     it "should enforce edit permissions, redirecting to show action and resetting session context if user does not have edit permissions" do
-      mock_user = mock("User")
-      mock_user.stubs(:email).returns("patron1@example.com")
-      mock_user.stubs(:is_being_superuser?).returns(false)
-      controller.stubs(:current_user).returns(mock_user)
+      mock_user = FactoryGirl.build(:user, :email => "patron1@example.com")
+      sign_in mock_user
       
       get :edit, :id=>"hydrangea:fixture_mods_article1"
       response.should redirect_to(:action => 'show')

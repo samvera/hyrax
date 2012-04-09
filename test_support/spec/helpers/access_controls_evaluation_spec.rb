@@ -4,8 +4,7 @@ describe Hydra::AccessControlsEvaluation do
   
   describe "editor?" do
     it "should return true if current_user.is_being_superuser? is true" do
-      mock_user = mock("User")
-      mock_user.stubs(:email).returns "BigWig@example.com"
+      mock_user = FactoryGirl.build(:user, :email => "BigWig@example.com")
       mock_user.stubs(:is_being_superuser?).returns true
       controller.stubs(:current_user).returns mock_user
       helper.editor?.should be_true
@@ -18,6 +17,7 @@ describe Hydra::AccessControlsEvaluation do
       mock_user = mock("User")
       mock_user.stubs(:email).returns "nobody_special@example.com"
       mock_user.stubs(:is_being_superuser?).returns(false)
+      mock_user.stubs(:new_record?).returns(false)
       controller.stubs(:current_user).returns(mock_user)
       helper.editor?.should be_false
     end

@@ -42,13 +42,11 @@ describe CatalogController do
     end
     
     it "Should have Valid HTML when I'm logged in" do
-        
-        mock_user = mock("User")
-        mock_user.stubs(:email).returns("archivist1@example.com")
+        mock_user = FactoryGirl.build(:user, :email=>"archivist1@example.com")
         mock_user.stubs(:can_be_superuser?).returns(true)
         mock_user.stubs(:is_being_superuser?).returns(true)
 
-        controller.stubs(:current_user).returns(mock_user)
+        sign_in mock_user
         get("index", "controller"=>"catalog")
         document_check(response.body)
     end
@@ -57,11 +55,10 @@ describe CatalogController do
   describe "Document Pages" do 
     
     before(:each)  do
-        mock_user = mock("User")
-        mock_user.stubs(:email).returns("archivist1@example.com")
+        mock_user = FactoryGirl.build(:user, :email=>"archivist1@example.com")
         mock_user.stubs(:can_be_superuser?).returns(true)
         mock_user.stubs(:is_being_superuser?).returns(true)
-        controller.stubs(:current_user).returns(mock_user)
+        sign_in mock_user
     end
     
     #Article Data Type

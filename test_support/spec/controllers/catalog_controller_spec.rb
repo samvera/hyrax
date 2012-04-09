@@ -72,12 +72,14 @@ describe CatalogController do
         assigns(:document_list).count.should == @public_only_results.docs.count
       end
       it "should return all documents if role does have permissions" do
-       	User.any_instance.stubs(:email).returns("BigWig@example.com")
-        mock_user =  User.new
+        mock_user =  FactoryGirl.create(:user, :email=>"BigWig@example.com")
         # session[:superuser_mode] = true
         mock_user.stubs(:is_being_superuser?).returns(true)
+        #sign_in mock_user
         controller.stubs(:current_user).returns(mock_user)
         get :index
+        ### This fails when there are more than 10 public documents in the solr index
+        ### TODO: instead, expect a certain query(especially the :fq component) to solr
         assigns(:document_list).count.should > @public_only_results.docs.count
       end
     end

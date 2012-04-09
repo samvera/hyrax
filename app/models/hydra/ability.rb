@@ -1,67 +1,71 @@
 module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 
-  attr_reader :user, :user_groups
-
   def initialize(user, session=nil)
     user ||= User.new # guest user (not logged in)
-    @user = user
-    @user_groups = RoleMapper.roles(user_key)
-    # # everyone is automatically a member of the group 'public'
-    # @user_groups.push 'public' unless @user_groups.include?('public')
-    # # logged-in users are automatically members of the group "registered"
-    # @user_groups.push 'registered' unless (@user.email == '' || @user == "public" || @user_groups.include?('registered') )
-    
-    logger.debug("Usergroups is " + @user_groups.inspect)
-    
-    if @user.is_being_superuser?(session)
-      can :manage, :all
-    else
-      hydra_default_permissions(user, session)
-    end
+    hydra_default_permissions(user, session)
   end
 
+  ## You can override this method if you are using a different AuthZ (such as LDAP)
+  def user_groups(user, session)
+    return @user_groups if @user_groups
+    @user_groups = RoleMapper.roles(user_key(user)) + default_user_groups
+    @user_groups << 'registered' unless user.new_record?
+    @user_groups
+  end
+
+  def default_user_groups
+    # # everyone is automatically a member of the group 'public'
+    ['public']
+  end
+  
+
   def hydra_default_permissions(user, session)
-    edit_permissions(user, session)
-    read_permissions(user, session)
-    custom_permissions(user, session)
+    logger.debug("Usergroups are " + user_groups(user, session).inspect)
+    if user.is_being_superuser?(session)
+      can :manage, :all
+    else
+      edit_permissions(user, session)
+      read_permissions(user, session)
+      custom_permissions(user, session)
+    end
   end
 
   def edit_permissions(user, session)
     can :edit, String do |pid|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-      test_edit
+      test_edit(user, session)
     end 
 
     can :edit, ActiveFedora::Base do |obj|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
-      test_edit
+      test_edit(user, session)
     end
  
     can :edit, SolrDocument do |obj|
       @permissions_solr_document = obj
-      test_edit
+      test_edit(user, session)
     end       
 
     can :edit, SolrDocument do |obj|
-      test_edit
+      test_edit(user, session)
     end       
   end
 
   def read_permissions(user, session)
     can :read, String do |pid|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-      test_read
+      test_read(user, session)
     end
 
     can :read, ActiveFedora::Base do |obj|
       @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
-      test_read
+      test_read(user, session)
     end 
     
     can :read, SolrDocument do |obj|
       @permissions_solr_document = obj
-      test_read
+      test_read(user, session)
     end 
   end
 
@@ -71,18 +75,18 @@ module Hydra::Ability
   end
   
   protected
-  def test_edit
-    logger.debug("CANCAN Checking edit permissions for user: #{@user}")
-    group_intersection = @user_groups & edit_groups
-    result = !group_intersection.empty? || edit_persons.include?(@user.email)
+  def test_edit(user, session)
+    logger.debug("CANCAN Checking edit permissions for user: #{user}")
+    group_intersection = user_groups(user, session) & edit_groups
+    result = !group_intersection.empty? || edit_persons.include?(user.email)
     logger.debug("CANCAN decision: #{result}")
     result
   end   
   
-  def test_read
-    logger.debug("CANCAN Checking edit permissions for user: #{@user}")
-    group_intersection = @user_groups & read_groups
-    result = !group_intersection.empty? || read_persons.include?(@user.email)
+  def test_read(user, session)
+    logger.debug("CANCAN Checking edit permissions for user: #{user}")
+    group_intersection = user_groups(user, session) & read_groups
+    result = !group_intersection.empty? || read_persons.include?(user.email)
     logger.debug("CANCAN decision: #{result}")
     result
   end 
@@ -120,8 +124,8 @@ module Hydra::Ability
   
   # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)
   # defaults to using whatever you have set as the Devise authentication_key
-  def user_key
-    @user.send(Devise.authentication_keys.first)
+  def user_key(user)
+    user.send(Devise.authentication_keys.first)
   end
 
 
