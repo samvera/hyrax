@@ -44,7 +44,7 @@ class GenericFilesController < ApplicationController
         notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
       end
       flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
-      redirect_params = {:controller => "catalog", :action => "index"} 
+      redirect_params = {:controller => "dashboard", :action => "index"} 
     end
     redirect_to redirect_params 
   end
@@ -97,8 +97,8 @@ class GenericFilesController < ApplicationController
         generic_file.subject = params[:generic_file][:subject] if params[:generic_file].has_key?(:subject)
         generic_file.tag = params[:generic_file][:tag] if params[:generic_file].has_key?(:tag)
         generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
-        generic_file.save
-
+        #generic_file.save
+        generic_file.delay.save
         @generic_files << generic_file
       end
     end
