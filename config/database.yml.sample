@@ -1,5 +1,6 @@
-# SQLite version 3.x
-#   gem install sqlite3
+############################
+# If using MySQL, comment out this block
+############################
 development:
   adapter: sqlite3
   database: db/development.sqlite3
@@ -21,5 +22,48 @@ production:
   pool: 5
   timeout: 5000
 
+############################
+# If using SQLite, comment out this block
+############################
+development:
+  adapter: mysql
+  encoding: utf8
+  pool: 5
+  timeout: 5000
+  reconnect: false
+  database: gamma_development
+  username: user
+  password: pass
+  socket: /path/to/mysql.sock
+
+# Warning: The database defined as 'test' will be erased and
+# re-generated from your development database when you run 'rake'.
+# Do not set this db to the same as development or production.
+test: &test
+  adapter: mysql
+  encoding: utf8
+  pool: 5
+  timeout: 5000
+  reconnect: false
+  database: gamma_test
+  username: user
+  password: pass
+  socket: /path/to/mysql.sock
+
+production:
+  adapter: mysql
+  encoding: utf8
+  pool: 5
+  timeout: 5000
+  reconnect: false
+  database: gamma_production
+  username: user
+  password: pass
+  socket: /path/to/mysql.sock
+
+###################################
+# This should work for both SQLite and MySQL
+###################################
 cucumber:
   <<: *test
+
