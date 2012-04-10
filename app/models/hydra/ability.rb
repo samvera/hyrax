@@ -78,7 +78,7 @@ module Hydra::Ability
   def test_edit(user, session)
     logger.debug("CANCAN Checking edit permissions for user: #{user}")
     group_intersection = user_groups(user, session) & edit_groups
-    result = !group_intersection.empty? || edit_persons.include?(user.email)
+    result = !group_intersection.empty? || edit_persons.include?(user_key(user))
     logger.debug("CANCAN decision: #{result}")
     result
   end   
@@ -86,7 +86,7 @@ module Hydra::Ability
   def test_read(user, session)
     logger.debug("CANCAN Checking edit permissions for user: #{user}")
     group_intersection = user_groups(user, session) & read_groups
-    result = !group_intersection.empty? || read_persons.include?(user.email)
+    result = !group_intersection.empty? || read_persons.include?(user_key(user))
     logger.debug("CANCAN decision: #{result}")
     result
   end 
