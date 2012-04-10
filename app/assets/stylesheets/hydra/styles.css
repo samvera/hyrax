@@ -127,15 +127,6 @@ a.destructive:hover {
     width: 40px;
 }
 
-
-#appliedParams a#startOverLink {
-    font-size: 13px;
-    height: 22px;
-    margin-top: -12px;
-    padding-top: 0 10px 1px 10px;
-	right: 5px;
-}
-
 h2 {
     font-weight: bold;
     text-transform: uppercase;
@@ -355,46 +346,12 @@ tr.document {
     border-left: none;
 }
 
-#appliedParams {
-    width: 100%;
-		margin-left: 10px;
-    margin-top: 10px;
-		background-color: transparent;
-		border: none;
-		border-radius: 0;
-		margin-bottom: 0;
-		padding: 0;
-}
-
-#appliedParams h3 {
-    background-color: #FFF7E5;
-    border: 1px solid #E0D9CA;
-    color: #333;
-    display: block;
-    font-size: 15px;
-    padding: 5px 5px 5px 27px;
-    margin: 0 0 3px 0;
-    width: 671px;
-}
-
-#appliedParams div {
-    padding: 6px;
-    background-color: #C9D484;
-    height: 20px;
-    margin: 0;
-    width: 690px;
-}
-
-.pagination, #sortAndPerPage {
-/*	background-color: #F1F1F1;*/
+.pagination {
     background-color: white;
 		border-color: white;
 		border-style: solid;
 		border-width: 0;
 		border-radius: 0;
-}
-
-.pagination {
     width: 100%;
 		line-height: 2em;
 		padding: 0;
@@ -433,31 +390,6 @@ tr.document {
     background-color: #D1DFFD;
 }
 
-.appliedFilter {
-    background-color: #E2EDFE;
-    border: 1px solid #C4DAFE;
-    display: block;
-    height: 20px;
-    margin: 0 0 3px 0;
-    padding: 5px 5px 5px 25px;
-    width: 645px;
-}
-
-.filterName, .filterValue {
-    font-style: normal;
-    background-color: none;
-}
-
-#sortAndPerPage {
-	clear: both;
-    height: 20px;
-    margin: 0 15px;
-    padding: 10px 0;
-}
-
-#sortAndPerPage label {
-    font-weight: bold;
-}
 
 #documents {
 	width: 700px;

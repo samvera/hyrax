@@ -54,7 +54,6 @@ background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
 /* =RESULTS
 -------------------------------------------------------------- */
 
-#bd #appliedParams {border-top: 1px solid #FFF;}
 #documents th, #file_assets th {color: #555;   text-align: left;}
 .pageEntriesInfo, #sortAndPerPage {font-size: 12px;}
 
