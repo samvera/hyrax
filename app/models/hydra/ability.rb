@@ -33,39 +33,32 @@ module Hydra::Ability
 
   def edit_permissions(user, session)
     can :edit, String do |pid|
-      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-      test_edit(user, session)
+      test_edit(pid, user, session)
     end 
 
     can :edit, ActiveFedora::Base do |obj|
-      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
-      test_edit(user, session)
+      test_edit(obj.pid, user, session)
     end
  
     can :edit, SolrDocument do |obj|
       @permissions_solr_document = obj
-      test_edit(user, session)
+      test_edit(pid, user, session)
     end       
 
-    can :edit, SolrDocument do |obj|
-      test_edit(user, session)
-    end       
   end
 
   def read_permissions(user, session)
     can :read, String do |pid|
-      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-      test_read(user, session)
+      test_read(pid, user, session)
     end
 
     can :read, ActiveFedora::Base do |obj|
-      @response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(obj.pid)
-      test_read(user, session)
+      test_read(obj.pid, user, session)
     end 
     
     can :read, SolrDocument do |obj|
       @permissions_solr_document = obj
-      test_read(user, session)
+      test_read(obj.pid, user, session)
     end 
   end
 
@@ -75,7 +68,16 @@ module Hydra::Ability
   end
   
   protected
-  def test_edit(user, session)
+
+  def permissions_doc(pid)
+    return @permissions_solr_document if @permissions_solr_document
+    response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
+    @permissions_solr_document
+  end
+
+
+  def test_edit(pid, user, session)
+    permissions_doc(pid)
     logger.debug("CANCAN Checking edit permissions for user: #{user}")
     group_intersection = user_groups(user, session) & edit_groups
     result = !group_intersection.empty? || edit_persons.include?(user_key(user))
@@ -83,7 +85,8 @@ module Hydra::Ability
     result
   end   
   
-  def test_read(user, session)
+  def test_read(pid, user, session)
+    permissions_doc(pid)
     logger.debug("CANCAN Checking edit permissions for user: #{user}")
     group_intersection = user_groups(user, session) & read_groups
     result = !group_intersection.empty? || read_persons.include?(user_key(user))
