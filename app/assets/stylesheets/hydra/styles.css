@@ -248,66 +248,27 @@ table#file_assets {
     text-align: left;
 }
 
-#bd .sidebar {
-  margin: 0;
-	padding: 0;
-  text-align: right;
-  float: left;
-	width: 238px;
-}
-
 #facets {
-  text-align: left;
-  background-color: white;
 	padding: 0;
-	font-size: 12px;
-}
-
-.side_bar_heading, #facets div h3 {
-    background-color: white;
-    height: 50px;
-}
-
-#facets h2 {
-  color: blue;
-  font: normal normal normal 10px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
-  padding: 1em 0px 1em 10px;
-	margin: 0;
-	border-top: 1px solid #dddddd;
-  text-transform: uppercase;
 }
 
 #facets div h3 {
-    margin-top: 0;
-    margin-left: 0;
-    color: black;
     font-size: 13px;
     font-weight: bold;
-    line-height: 20px;
-    padding: 1.2em 10px;
-    height: 20px;
 }
 
 #facets div h3:hover {
     cursor: default;
 }
 
-#facets li span.selected {
-	color: #000000;
-}
-
-.side_bar_content, #facets div ul {
-    background-color: #ffffff;
-    padding: 0.5em 0;
+#facets div ul {
 	border-bottom: none;
 }
 
-.side_bar_content, #facets div ul li {
-    padding: 0.5em 12px;
-	margin: 0;
-    line-height: 20px;
-    display: block;
+#facets li span.selected {
+	color: black;
 }
+
 
 body .ui-widget {
 	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;

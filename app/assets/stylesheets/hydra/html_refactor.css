@@ -34,11 +34,6 @@
 #select-item-list li a:hover {background: #FAFAFA;}
 #select-item-box:hover #select-item-list, #select-item-list:hover {display: block;}
 
-/* =FACETS
--------------------------------------------------------------- */
-
-#bd #facets ul, #bd #facets h3 + div {border-bottom: none;}
-
 
 /* =SEARCH
 -------------------------------------------------------------- */
