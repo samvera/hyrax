@@ -11,6 +11,7 @@ module Hydra
     end
     
     def get_data_with_linked_label(doc, label, field_string, opts={})
+      ActiveSupport::Deprecation.warn("get_data_with_linked_label is deprecated and will be removed in the next release")
      
       (opts[:default] and !doc[field_string]) ? field = opts[:default] : field = doc[field_string]
       delim = opts[:delimiter] ? opts[:delimiter] : "<br/>"
@@ -29,6 +30,7 @@ module Hydra
     end
     
     def linked_label(field, field_string)
+      ActiveSupport::Deprecation.warn("linked_label is deprecated and will be removed in the next release")
       link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
     end
 
@@ -45,35 +47,20 @@ module Hydra
       ["%2$s/%1$s"] + super
     end
     
-    # Removing the [remove] link from the default selected facet display
-    def render_selected_facet_value(facet_solr_field, item)
-      content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected label")
-    end
-
-    
-    ###
-    ### Overrides pulled in from Libra
-    ###
-    
-    def render_facet_value(facet_solr_field, item, options ={})
-      if item.is_a? Array
-        return link_to_unless(options[:suppress_link], item[0], add_facet_params_and_redirect(facet_solr_field, item[0]), :class=>"facet_select") + " (" + format_num(item[1]) + ")" 
-      end
-
-      super
-    end
-
     def render_complex_facet_value(facet_solr_field, item, options ={})    
+      ActiveSupport::Deprecation.warn("render_complex_facet_value is deprecated and will be removed in the next release")
       link_to_unless(options[:suppress_link], format_item_value(item.value), add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" 
     end
 
     def render_journal_facet_value(facet_solr_field, item, options ={})
+      ActiveSupport::Deprecation.warn("render_journal_facet_value is deprecated and will be removed in the next release")
 
       val = item.value.strip.length > 12 ? item.value.strip[0..12].concat("...") : item.value.strip
       link_to_unless(options[:suppress_link], val, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" 
     end
 
     def render_complex_facet_image(facet_solr_field, item, options = {})
+      ActiveSupport::Deprecation.warn("render_complex_facet_image is deprecated and will be removed in the next release")
       computing_id = extract_computing_id(item.value)
       if File.exists?("#{Rails.root}/public/images/faculty_images/#{computing_id}.jpg")
         img = image_tag "/images/faculty_images/#{computing_id}.jpg", :width=> "100", :alt=>"#{item.value}"
@@ -84,6 +71,7 @@ module Hydra
     end
 
     def render_journal_image(facet_solr_field, item, options = {})
+      ActiveSupport::Deprecation.warn("render_journal_image is deprecated and will be removed in the next release")
       if File.exists?("#{Rails.root}/public/images/journal_images/#{item.value.strip.downcase.gsub(/\s+/,'_')}.jpg")
         img = image_tag "/images/journal_images/#{item.value.strip.downcase.gsub(/\s+/,'_')}.jpg", :width => "100"
       else
@@ -94,6 +82,7 @@ module Hydra
     end
 
     def get_randomized_display_items items
+      ActiveSupport::Deprecation.warn("get_randomized_display_items is deprecated and will be removed in the next release")
       clean_items = items.each.inject([]) do |array, item|
         array << item unless item.value.strip.blank?
         array
@@ -109,11 +98,13 @@ module Hydra
     end
 
     def extract_computing_id val
+      ActiveSupport::Deprecation.warn("extract_computing_id is deprecated and will be removed in the next release")
       cid = val.split(" ")[-1]
       cid[1..cid.length-2]
     end
 
     def format_item_value val
+      ActiveSupport::Deprecation.warn("format_item_value is deprecated and will be removed in the next release")
       begin
         last, f_c = val.split(", ")
         first = f_c.split(" (")[0]
@@ -121,25 +112,6 @@ module Hydra
         return val.nil? ? "" : val
       end
       [last, "#{first[0..0]}."].join(", ")
-    end
-
-    def render_head_content
-      render_stylesheet_includes +
-      render_js_includes +
-      render_extra_head_content_without_unapi +
-      content_for(:head)
-    end
-
-    def render_extra_head_content_without_unapi
-      remove_unapi! 
-      render_extra_head_content
-    end 
-
-    # rel="unapi-server" is not HTML5 valid.  Need to see if there is a way to do that properly while still validating.
-    def remove_unapi!
-      extra_head_content.delete_if do |ehc|
-        ehc.include?("unapi-server")
-      end
     end
 
   #   COPIED from vendor/plugins/blacklight/app/helpers/application_helper.rb

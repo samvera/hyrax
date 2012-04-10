@@ -28,18 +28,8 @@ describe BlacklightHelper do
         item = stub("item", :value=>'two', :hits=>9)
 
         ret_val = helper.render_selected_facet_value("one", item)
-        ret_val.should == "<span class=\"selected label\">two <span class=\"count\">(9)</span></span>"
+        ret_val.should == "<span class=\"selected\">two <span class=\"count\">(9)</span></span>"
         ret_val.should be_html_safe
-      end
-    end
-    describe "render_head_content" do
-      before (:each) do
-        helper.expects(:content_for).with(:head).returns("My added content")
-        head_stuff = ["Something extra", "Stuff for unapi-server"]
-        helper.expects(:extra_head_content).twice().returns(head_stuff)
-      end
-      it "adds the content of content_for(:head) to the output" do
-        helper.render_head_content.should == "Something extraMy added content"
       end
     end
     
