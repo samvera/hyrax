@@ -8,6 +8,7 @@ Development on Gamma began as part of the prototype
 [CAPS project](http://stewardship.psu.edu/2011/02/caps-a-curation-platform-prototype.html). Code
 and documentation are freely available via [Github](http://github.com/psu-stewardship/gamma).
 
+For more information, read the [Gamma docs](https://github.com/psu-stewardship/gamma/wiki).
 
 Installation Instructions
 -------------------------
