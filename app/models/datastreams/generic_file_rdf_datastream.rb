@@ -57,5 +57,5 @@ class GenericFileRDFDatastream < ActiveFedora::NtriplesRDFDatastream
   end
   LocalAuthority.register_vocabulary(self, "subject", "lc_subjects")
   LocalAuthority.register_vocabulary(self, "language", "lexvo_languages")
-  LocalAuthority.register_vocabulary(self, "resource_type", "lc_genres")
+  LocalAuthority.register_vocabulary(self, "tag", "lc_genres")
 end

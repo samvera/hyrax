@@ -1,33 +1,41 @@
 Gamma Project
 =============
-Gamma extends work done on a prototype to implement a reliable, scalable, and performant platform on which to develop curatorial, archival, and publishing applications. The focus of Gamma will be on developing a web application for basic ingest, curation, search, and display of digital assets atop a publishing & curation platform. Ingest and curation services will be piloted by select University stakeholders during the project; search and display functions will be available as a new beta service to the University community and the general public. 
-
-Gamma is being developed as part of [Penn State's Digital Stewardship Program](http://stewardship.psu.edu/).  Development on Gamma began as part of the prototype [CAPS project](http://stewardship.psu.edu/2011/02/caps-a-curation-platform-prototype.html). Code is freely available via [Github](http://github.com/psu-stewardship/gamma).
-
 Gamma is a Ruby on Rails application utilizing the Blacklight and Hydra-head gems for integration with the search & indexing system, Solr, and the digital asset management platform, Fedora Commons.
 
-Baseline Application Features
-----------------------------
-* Upload files to archival storage 
-* Describe an object with metadata
-* Assign controls to authorize access by classes of users  
-* Verify the integrity of an object 
-* Assign objects to collections 
-* Publish an object for public search and display
+Gamma is being developed as part of
+[Penn State's Digital Stewardship Program](http://stewardship.psu.edu/).
+Development on Gamma began as part of the prototype
+[CAPS project](http://stewardship.psu.edu/2011/02/caps-a-curation-platform-prototype.html). Code
+and documentation are freely available via [Github](http://github.com/psu-stewardship/gamma).
 
+For more information, read the [Gamma docs](https://github.com/psu-stewardship/gamma/wiki).
 
 Installation Instructions
 -------------------------
 
+Copy and edit local DB, Fedora, and Solr configs
+
+    cp config/database.yml.sample config/database.yml
+    cp config/fedora.yml.sample config/fedora.yml
+    cp config/database.yml.sample config/database.yml
+
+TODO: Hint on how to tweak your configs (link to protected wikispaces page)
+
 Install gems & migrate database
 
     bundle install
+    rake db:create
     rake db:migrate
 
-Install fits and put it in your path
-  You could add something like this to your .bash\_profile
-  export PATH=$PATH:/home/mjg/Downloads/fits
- 
+Setup test dbs and load fixtures
+
+    RAILS_ENV=test rake db:create
+    RAILS_ENV=test rake db:migrate
+    rake db:data:load
+
+Install [FITS](http://code.google.com/p/fits/) and put it in a
+  directory on your PATH.
+
 Get jetty & start it
 
     git submodule init
@@ -42,4 +50,15 @@ Run the app
 Auditing All Datastreams
 ------------------------
 
-RAILS\_ENV=production script/audit\_all\_versions
+RAILS\_ENV=production script/audit\_all_versions
+
+Harvesting Authorities Locally
+------------------------------
+
+TODO: Flesh this out more
+
+1. Harvest the authority
+2. (OPTIONAL) Generate fixtures so other instances don't need to re-harvest
+3. Register the vocabulary with a domain term in generic\_file\_rdf\_datastream.rb
+
+
