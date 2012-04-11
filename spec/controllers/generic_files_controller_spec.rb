@@ -16,7 +16,7 @@ describe GenericFilesController do
     it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :Filedata=>[file], :Filename=>"The world", :permission=>{"group"=>{"public"=>"discover"}}
-      response.should redirect_to(catalog_index_path)
+      response.should redirect_to(dashboard_path)
       GenericFile.count.should == @file_count + 1 
       saved_file = GenericFile.find('test:123')
       saved_file.label.should == 'world.png'

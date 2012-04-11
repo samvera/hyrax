@@ -81,7 +81,11 @@ class GenericFilesController < ApplicationController
         
         add_posted_blob_to_asset(generic_file,file)
         apply_depositor_metadata(generic_file)
-        generic_file.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
+        if params.has_key?(:permission)
+          generic_file.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
+        else
+          generic_file.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+        end
         generic_file.label = file.original_filename
         # Delete this next line when GenericFile.label no longer wipes out the title
 
@@ -97,8 +101,8 @@ class GenericFilesController < ApplicationController
         generic_file.subject = params[:generic_file][:subject] if params[:generic_file].has_key?(:subject)
         generic_file.tag = params[:generic_file][:tag] if params[:generic_file].has_key?(:tag)
         generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
-        #generic_file.save
-        generic_file.delay.save
+        generic_file.save
+        #generic_file.delay.save
         @generic_files << generic_file
       end
     end
