@@ -19,7 +19,7 @@ describe Batch do
     @batch.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
   end
   it "should have dc desc metadata" do
-    @batch.descMetadata.should be_kind_of BatchRDFDatastream
+    @batch.descMetadata.should be_kind_of BatchRdfDatastream
   end
   it "should belong to testuser" do
     @batch.creator.should == [@user.email]

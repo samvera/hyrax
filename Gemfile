@@ -15,6 +15,7 @@ gem 'noid'
 
 group :development, :test do
   gem 'activerecord-import'
+  gem "rails_indexes", :git => "https://github.com/warpc/rails_indexes"
   gem 'yaml_db', :git=>'git://github.com/lostapathy/yaml_db.git', :branch=>'master'
   gem 'selenium-webdriver'
   gem 'headless'

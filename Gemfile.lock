@@ -41,6 +41,15 @@ GIT
       rails (= 3.2.2)
       sanitize
 
+GIT
+  remote: https://github.com/warpc/rails_indexes
+  revision: 4a550270989d0b74546b18fd0ff09e12492f2c3a
+  specs:
+    rails_indexes (1.1.2)
+      actionpack
+      activerecord (>= 2.3.0)
+      railties
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -333,6 +342,7 @@ DEPENDENCIES
   mysql
   noid
   rails (~> 3.2.0)
+  rails_indexes!
   rspec-rails (>= 2.4.0)
   ruby-debug
   ruby-prof

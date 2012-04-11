@@ -34,7 +34,7 @@ describe LocalAuthority do
   end
   describe "when vocabs are harvested" do
     before(:all) do
-      class MyTestRDFDatastream; end
+      class MyTestRdfDatastream; end
       LocalAuthority.harvest_rdf("genres", @nt)
       LocalAuthority.harvest_tsv("geo", @tsv, :prefix => 'http://sws.geonames.org/')
       DomainTerm.count.should == 0
@@ -45,7 +45,7 @@ describe LocalAuthority do
       DomainTerm.all.each(&:delete)
       LocalAuthority.all.each(&:delete)
       LocalAuthorityEntry.all.each(&:delete)
-      Object.send(:remove_const, :MyTestRDFDatastream)
+      Object.send(:remove_const, :MyTestRdfDatastream)
     end
     it "should not harvest an RDF vocab twice" do
       LocalAuthority.harvest_rdf("genres", @nt)
@@ -58,16 +58,16 @@ describe LocalAuthority do
       LocalAuthorityEntry.count.should == @num_entries
     end
     it "should register a vocab" do
-      LocalAuthority.register_vocabulary(MyTestRDFDatastream, "geographic", "geo")
+      LocalAuthority.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
       DomainTerm.count.should == 1
     end
     describe "when vocabs are registered" do
       before(:all) do
         LocalAuthority.harvest_rdf("genres", @nt)
         LocalAuthority.harvest_tsv("geo", @tsv, :prefix => 'http://sws.geonames.org/')
-        class TestRDFDatastream; end
-        LocalAuthority.register_vocabulary(MyTestRDFDatastream, "geographic", "geo")
-        LocalAuthority.register_vocabulary(MyTestRDFDatastream, "genre", "genres")
+        class TestRdfDatastream; end
+        LocalAuthority.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
+        LocalAuthority.register_vocabulary(MyTestRdfDatastream, "genre", "genres")
         DomainTerm.count.should == 2
       end
       after(:all) do
