@@ -1,5 +1,7 @@
 require 'rspec/core'
 require 'rspec/core/rake_task'
+require 'rdf'
+require 'rdf/rdfxml'
 
 namespace :gamma do
 
@@ -18,6 +20,30 @@ namespace :gamma do
         Rake::Task['cucumber:ok'].invoke
     end
     raise "test failures: #{error}" if error
+  end
+
+  namespace :export do
+    desc "Dump metadata as RDF/XML for e.g. Summon integration"
+    task :rdfxml => :environment do 
+      raise "rake gamma:export:rdfxml output=FILE" unless ENV['output']
+      export_file = ENV['output']
+      triples = RDF::Repository.new
+      rows = GenericFile.count
+      GenericFile.find(:all, :rows => rows).each do |gf|
+        next unless ["read", "discover"].include? gf.rightsMetadata.groups["public"] 
+        next unless gf.descMetadata.content
+        RDF::Reader.for(:ntriples).new(gf.descMetadata.content) do |reader|
+          reader.each_statement do |statement|
+            triples << statement
+          end
+        end
+      end
+      unless triples.empty?
+        RDF::Writer.for(:rdfxml).open(export_file) do |writer|
+          writer << triples
+        end
+      end
+    end
   end
 
   namespace :harvest do
