@@ -103,13 +103,13 @@ module Hydra::AccessControlsEnforcement
           # check for depositor raise "#{@document["depositor_t"].first} --- #{user_key}"
           ### Assuming we're using devise and have only one authentication key
           unless current_user && user_key == @permissions_solr_document["depositor_t"].first
-            flash[:notice] = "This item is under embargo.  You do not have sufficient access privileges to read this document."
+            flash[:alert] = "This item is under embargo.  You do not have sufficient access privileges to read this document."
             redirect_to(:action=>'index', :q=>nil, :f=>nil) and return false
           end
         end
       end
       unless can? :read, params[:id] 
-        flash[:notice]= "You do not have sufficient access privileges to read this document, which has been marked private."
+        flash[:alert]= "You do not have sufficient access privileges to read this document, which has been marked private."
         redirect_to(:action => 'index', :q => nil , :f => nil) and return false
       end
     end

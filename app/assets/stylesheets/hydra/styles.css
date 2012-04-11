@@ -888,10 +888,6 @@ dd.person ul input.editable-edit.edit {
     background-color: white;
 }
 
-input[type="submit"] {
-    font-size: 18px;
-}
-
 input.textile-edit {
     width: 350px;
     height: 220px;

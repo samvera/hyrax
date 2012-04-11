@@ -30,7 +30,7 @@ Feature: ModsAsset Show View
   Scenario: Public visit Document Show Page for a private document  
     Given I am on the show document page for hydrangea:fixture_archivist_only_mods_article
     Then I should be on the search page
-    And I should see "You do not have sufficient access privileges to read this document, which has been marked private" within ".notice"
+    And I should see "You do not have sufficient access privileges to read this document, which has been marked private" within ".alert"
   
   @overwritten
   Scenario: Superuser visits Document Show Page for a private document

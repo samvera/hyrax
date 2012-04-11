@@ -42,7 +42,7 @@ module Hydra::Ability
  
     can :edit, SolrDocument do |obj|
       @permissions_solr_document = obj
-      test_edit(pid, user, session)
+      test_edit(obj.id, user, session)
     end       
 
   end
@@ -58,7 +58,7 @@ module Hydra::Ability
     
     can :read, SolrDocument do |obj|
       @permissions_solr_document = obj
-      test_read(obj.pid, user, session)
+      test_read(obj.id, user, session)
     end 
   end
 
