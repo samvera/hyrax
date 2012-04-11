@@ -72,3 +72,6 @@ db/schema.rb
 /.yardoc
 /doc
 ## PROJECT::SPECIFIC
+
+## generates foxml
+test_support/fixtures/gamma/*.foxml.xml
