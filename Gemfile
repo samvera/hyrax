@@ -4,7 +4,7 @@ gem 'rails', '~> 3.2.0'
 
 gem 'sqlite3'
 gem 'mysql'
-gem 'active-fedora', :git=>'git://github.com/projecthydra/active_fedora.git', :branch=>'master'
+gem 'active-fedora', :git=>'git://github.com/psu-stewardship/active_fedora.git', :branch=>'master'
 gem 'blacklight', '~> 3.3.1'
 gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'master'
 gem 'rubydora', '~> 0.5.4'
@@ -15,6 +15,7 @@ gem 'noid'
 
 group :development, :test do
   gem 'activerecord-import'
+  gem "rails_indexes", :git => "https://github.com/warpc/rails_indexes"
   gem 'yaml_db', :git=>'git://github.com/lostapathy/yaml_db.git', :branch=>'master'
   gem 'selenium-webdriver'
   gem 'headless'
@@ -22,7 +23,7 @@ group :development, :test do
   gem 'rspec-rails', '>= 2.4.0'
   gem 'ruby-prof'
   gem 'mocha'
-  gem 'cucumber-rails'
+  gem 'cucumber-rails', '~> 1.0', :require=>false
   gem 'database_cleaner'
   gem 'capybara'
   gem 'bcrypt-ruby'
