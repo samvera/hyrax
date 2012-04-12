@@ -19,10 +19,10 @@ Ruby 1.9.3 is required by Hydra-Head release 4.0; RVM is strongly suggested.
 
 h3. Install Rails, Bundler and Devise
 
-Currently hydra-head is compatible with Rails 3.0.x and incompatible with Rails 3.1.
+Currently hydra-head is compatible with Rails 3.2
 
 <pre>
-gem install 'rails' --version '~>3.0.11'
+gem install 'rails' --version '~>3.2.2'
 </pre>
   
 h3. Generate a new rails application:
@@ -39,11 +39,10 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 <pre>
   source 'http://rubygems.org'
 
-  gem 'rails', '~>3.0.11'
+  gem 'rails', '~>3.2.2'
 
-  gem 'blacklight', '~> 3.1.2'
-  gem 'hydra-head', '~> 3.2.0'
-  gem 'solrizer-fedora', '>=1.0.1'
+  gem 'blacklight', '~> 3.3.1'
+  gem 'hydra-head', '~> 4.0.0'
 
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
@@ -53,16 +52,9 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
   # You are free to implement your own User/Authentication solution in its place.
   gem 'devise'
 
-  # For testing.  You will probably want to use all of these to run the tests you write for your hydra head
+  # For testing.  You will probably want to use these to run the tests you write for your hydra head
   group :development, :test do 
-         gem 'ruby-debug'
-         gem 'rspec'
-         gem 'rspec-rails', '>=2.5.0'
-         gem 'mocha'
-         gem 'cucumber-rails'
-         gem 'database_cleaner'
-         gem 'capybara'
-         gem 'bcrypt-ruby'
+         gem 'rspec-rails', '>=2.9.0'
          gem "jettywrapper"
   end # (leave this comment here to catch a stray line inserted by blacklight!)
 </pre>
@@ -79,7 +71,7 @@ Even if all of the dependencies are satisfied, this will take a _very_ long time
 
 <pre>
   gem install blacklight
-  gem install hydra-head -v 3.2.0
+  gem install hydra-head -v 4.0.0
 </pre>
 
 Then re-run bundle install and it will run slightly faster.
