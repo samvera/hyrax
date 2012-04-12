@@ -46,7 +46,7 @@ class LocalAuthority < ActiveRecord::Base
   def self.register_vocabulary(model, term, name)
     authority = self.where(:name => name)
     return if authority.empty?
-    model = model.to_s.sub(/RDFDatastream$/, '').underscore.pluralize
+    model = model.to_s.sub(/RdfDatastream$/, '').underscore.pluralize
     domain_term = DomainTerm.find_or_create_by_model_and_term(:model => model, :term => term)
     return if domain_term.local_authorities.include? authority
     domain_term.local_authorities << authority

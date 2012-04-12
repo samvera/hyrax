@@ -1,4 +1,4 @@
-class BatchRDFDatastream < ActiveFedora::NtriplesRDFDatastream
+class BatchRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   register_vocabularies RDF::DC
   map_predicates do |map|
     map.part(:to => "hasPart", :in => RDF::DC)

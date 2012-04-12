@@ -6,8 +6,23 @@ GIT
     yaml_db (0.2.2)
 
 GIT
-  remote: git://github.com/projecthydra/active_fedora.git
-  revision: ec62c99cb821bd50714fdf79c7607ee0a4b0068c
+  remote: git://github.com/projecthydra/hydra-head.git
+  revision: 7bd31f23edda5f4f2e08ee22ba0d3a7e4628bfdc
+  branch: master
+  specs:
+    hydra-head (4.0.0.rc5)
+      RedCloth (= 4.2.9)
+      active-fedora (~> 4.0.0.rc20)
+      blacklight (~> 3.3.1)
+      block_helpers
+      cancan
+      devise
+      rails (= 3.2.2)
+      sanitize
+
+GIT
+  remote: git://github.com/psu-stewardship/active_fedora.git
+  revision: b64dcc516a05292a9c776b552b8381ada40d6a49
   branch: master
   specs:
     active-fedora (4.0.0.rc20)
@@ -27,19 +42,13 @@ GIT
       xml-simple (>= 1.0.12)
 
 GIT
-  remote: git://github.com/projecthydra/hydra-head.git
-  revision: 7bd31f23edda5f4f2e08ee22ba0d3a7e4628bfdc
-  branch: master
+  remote: https://github.com/warpc/rails_indexes
+  revision: 4a550270989d0b74546b18fd0ff09e12492f2c3a
   specs:
-    hydra-head (4.0.0.rc5)
-      RedCloth (= 4.2.9)
-      active-fedora (~> 4.0.0.rc20)
-      blacklight (~> 3.3.1)
-      block_helpers
-      cancan
-      devise
-      rails (= 3.2.2)
-      sanitize
+    rails_indexes (1.1.2)
+      actionpack
+      activerecord (>= 2.3.0)
+      railties
 
 GEM
   remote: http://rubygems.org/
@@ -221,7 +230,7 @@ GEM
       thor (~> 0.14.6)
     rake (0.9.2.2)
     rbx-require-relative (0.0.9)
-    rdf (0.3.5.1)
+    rdf (0.3.5.2)
       addressable (>= 2.2.6)
     rdf-rdfxml (0.3.5)
       nokogiri (>= 1.4.4)
@@ -333,6 +342,7 @@ DEPENDENCIES
   mysql
   noid
   rails (~> 3.2.0)
+  rails_indexes!
   rspec-rails (>= 2.4.0)
   ruby-debug
   ruby-prof
