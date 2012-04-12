@@ -1,14 +1,14 @@
-Gamma Project
+ScholarSphere
 =============
-Gamma is a Ruby on Rails application utilizing the Blacklight and Hydra-head gems for integration with the search & indexing system, Solr, and the digital asset management platform, Fedora Commons.
+ScholarSphere is a Ruby on Rails application utilizing the Blacklight and Hydra-head gems for integration with the search & indexing system, Solr, and the digital asset management platform, Fedora Commons.
 
-Gamma is being developed as part of
+ScholarSphere is being developed as part of
 [Penn State's Digital Stewardship Program](http://stewardship.psu.edu/).
-Development on Gamma began as part of the prototype
+Development on ScholarSphere began as part of the prototype
 [CAPS project](http://stewardship.psu.edu/2011/02/caps-a-curation-platform-prototype.html). Code
-and documentation are freely available via [Github](http://github.com/psu-stewardship/gamma).
+and documentation are freely available via [Github](http://github.com/psu-stewardship/scholarsphere).
 
-For more information, read the [Gamma docs](https://github.com/psu-stewardship/gamma/wiki).
+For more information, read the [ScholarSphere development docs](https://github.com/psu-stewardship/scholarsphere/wiki).
 
 Installation Instructions
 -------------------------
@@ -50,7 +50,7 @@ Run the app
 Auditing All Datastreams
 ------------------------
 
-RAILS\_ENV=production script/audit\_all_versions
+RAILS_ENV=production script/audit_all_versions
 
 Harvesting Authorities Locally
 ------------------------------
@@ -59,6 +59,6 @@ TODO: Flesh this out more
 
 1. Harvest the authority
 2. (OPTIONAL) Generate fixtures so other instances don't need to re-harvest
-3. Register the vocabulary with a domain term in generic\_file\_rdf\_datastream.rb
+3. Register the vocabulary with a domain term in generic_file_rdf_datastream.rb
 
 

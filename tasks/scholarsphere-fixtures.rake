@@ -1,59 +1,59 @@
-# gamma-fixtures
+# scholarsphere-fixtures
 #
 # This was extracted from the original Hydra version in 
-#                      ~/rvm/gems/<rails version>@gamma/bundler/gems/lib/railties
+#                      ~/rvm/gems/<rails version>@scholarsphere/bundler/gems/lib/railties
 # It has been changed to read all files out of a directory and pass those as fixtures.
 # Any _ in the file name will be modified to a : for the id, since colons are not valid in a file name. 
 # The files should be named id_[fixture id] which should relates to the id within the foxml id:[fixture id] where 
 # [fixture id] is some alpha numeric id ('test1')
 #
-# There are 2 sets of data needed to attach to a Gamma fixture, 1 the data file, and 2 the metadata.
+# There are 2 sets of data needed to attach to a ScholarSphere fixture, 1 the data file, and 2 the metadata.
 # It is important that the meta-data contains the appropriate id, or solor will not index it!
 #
-# Usage: rake gamma:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
+# Usage: rake scholarsphere:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
 #              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
-#                      DEFAULT: gamma
+#                      DEFAULT: scholarsphere
 #              <fixture id> is the id given to this fixture with fedora and solr.   
 #                            This must be unique and any old files will be overwritten. 
-#                      DEFAULT: gamma1
+#                      DEFAULT: scholarsphere1
 #              <fixture title> is the title given to the fixture in fedora and solor, 
 #                            along with being put in the description and subject by default.
-#                      DEFAULT: gamma test
+#                      DEFAULT: scholarsphere test
 #              <fixture user> is the user given to the fixture in fedora and solor, 
 #                            along with being put in the contributor and rights.
 #                      DEFAULT: archivist1
 #           
 #          
-#               Creates new fixture files including the erb, descMeta, and text for loading into Gamma.  
+#               Creates new fixture files including the erb, descMeta, and text for loading into ScholarSphere.  
 #               The Files are named based on the id: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
 #               The foxml.erb file references the descMeta.txt and .txt file.  You can edit the erb to point to other data and/or edit the 
 #               .descMeta.txt  and/or .txt file to contain the data you wish.  
 #
 #            *** Please note that the id must be changed in the file name, foxml.erb, and descMeta.txt if you change it after creation. ***
 #
-#        rake gamma:fixtures:generate [DIR=<fixture dir>]
+#        rake scholarsphere:fixtures:generate [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
-#                      DEFAULT: gamma
+#                      DEFAULT: scholarsphere
 #
 #               Creates foxml.xml files from the foxml.erb files doing any erb substitutions within the erb file.
 #               This task is mostly used to put the appropriate Rails.root into the foxml.xml file so that 
 #               the data and meta-data files can be located on load. 
 #
-#        rake gamma:fixtures:delete [DIR=<fixture dir>]
+#        rake scholarsphere:fixtures:delete [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
-#                      DEFAULT: gamma
+#                      DEFAULT: scholarsphere
 #
 #               Remove any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> from fedora and solr. 
 #
-#        rake gamma:fixtures:load [DIR=<fixture dir>]
+#        rake scholarsphere:fixtures:load [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
-#                      DEFAULT: gamma
+#                      DEFAULT: scholarsphere
 #
 #               load any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> into fedora and solr. 
 #
-#        rake gamma:fixtures:refresh [DIR=<fixture dir>]
+#        rake scholarsphere:fixtures:refresh [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
-#                      DEFAULT: gamma
+#                      DEFAULT: scholarsphere
 #
 #               delete then load any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> into fedora and solr. 
 #
@@ -169,7 +169,7 @@
 #
 #
 #
-namespace :gamma do
+namespace :scholarsphere do
   
   desc "Init Hydra configuration" 
   task :init => [:environment] do
@@ -182,26 +182,26 @@ namespace :gamma do
     if ENV["FIXTURE_DIR"]
           @dir= ENV["FIXTURE_DIR"]
     else
-          @dir= 'gamma'
+          @dir= 'scholarsphere'
     end
 
     @fixtures = [
         "not-changed"
     ]
 
-    desc "Create Gamma Hydra fixtures for generation and loading"
+    desc "Create ScholarSphere Hydra fixtures for generation and loading"
     task :create do
 
       if ENV["FIXTURE_ID"]
          @id= ENV["FIXTURE_ID"]
       else
-         @id= 'gamma1'
+         @id= 'scholarsphere1'
       end
 
       if ENV["FIXTURE_TITLE"]
          @title= ENV["FIXTURE_TITLE"]
       else
-         @title= 'gamma test'
+         @title= 'scholarsphere test'
       end
 
       if ENV["FIXTURE_USER"]
@@ -227,7 +227,7 @@ namespace :gamma do
     end
 
 
-    desc "Generate default Gamma Hydra fixtures"
+    desc "Generate default ScholarSphere Hydra fixtures"
     task :generate do
       ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
       find_fixtures_erb @dir
@@ -244,7 +244,7 @@ namespace :gamma do
     end
 
    
-    desc "Load default Gamma Hydra fixtures"
+    desc "Load default ScholarSphere Hydra fixtures"
     task :load do
       ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
       find_fixtures @dir
@@ -257,11 +257,11 @@ namespace :gamma do
         @noFixtures = false;
       end
       if @noFixtures
-          print "No fixtures found you may need to generate from erb use:\n     rake gamma:fixtures:generate\n"
+          print "No fixtures found you may need to generate from erb use:\n     rake scholarsphere:fixtures:generate\n"
       end
     end
 
-    desc "Remove default Gamma Hydra fixtures"
+    desc "Remove default ScholarSphere Hydra fixtures"
     task :delete do
       ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
       find_fixtures @dir
@@ -273,7 +273,7 @@ namespace :gamma do
       end
     end
 
-    desc "Refresh default Gamma Hydra fixtures"
+    desc "Refresh default ScholarSphere Hydra fixtures"
     task :refresh => [:delete, :load]
 
     private

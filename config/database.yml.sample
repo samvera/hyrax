@@ -31,7 +31,7 @@ production:
 #  pool: 5
 #  timeout: 5000
 #  reconnect: false
-#  database: gamma_development
+#  database: scholarsphere_development
 #  username: user
 #  password: pass
 #  socket: /path/to/mysql.sock
@@ -45,7 +45,7 @@ production:
 #  pool: 5
 #  timeout: 5000
 #  reconnect: false
-#  database: gamma_test
+#  database: scholarsphere_test
 #  username: user
 #  password: pass
 #  socket: /path/to/mysql.sock
@@ -56,7 +56,7 @@ production:
 #  pool: 5
 #  timeout: 5000
 #  reconnect: false
-#  database: gamma_production
+#  database: scholarsphere_production
 #  username: user
 #  password: pass
 #  socket: /path/to/mysql.sock

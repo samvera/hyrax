@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<foxml:digitalObject PID="id:test4" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+<foxml:digitalObject PID="id:test2" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
   <foxml:objectProperties>
     <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Test Data PDF"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Test Data 2"/>
     <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
   </foxml:objectProperties>
   <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
@@ -13,15 +13,15 @@
         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>Test Data PDF</dc:title>
-          <dc:identifier>id:test4</dc:identifier>
+          <dc:title>Test Document Word DocX</dc:title>
+          <dc:identifier>id:test2</dc:identifier>
         </oai_dc:dc>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="descMetadata" STATE="A" VERSIONABLE="true">
     <foxml:datastreamVersion ID="descMetadata.0" LABEL="" MIMETYPE="text/plain">
-      <foxml:contentLocation REF="file:<%=Rails.root%>/test_support/fixtures/gamma/id_test4.descMeta.txt" TYPE="URL"/>
+      <foxml:contentLocation REF="file:<%=Rails.root%>/test_support/fixtures/scholarsphere/id_test2.descMeta.txt" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
@@ -29,7 +29,7 @@
       LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="application/rdf+xml" SIZE="286">
       <foxml:xmlContent>
         <rdf:RDF xmlns:ns0="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/id:test4">
+          <rdf:Description rdf:about="info:fedora/id:test2">
             <ns0:hasModel rdf:resource="info:fedora/afmodel:GenericFile"/>
           </rdf:Description>
         </rdf:RDF>
@@ -37,9 +37,9 @@
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="content" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion ID="content.0" LABEL="Test Data PDF"
-      MIMETYPE="application/pdf" SIZE="25">
-      <foxml:contentLocation REF="file:<%=Rails.root%>/test_support/fixtures/gamma/id_test4.pdf" TYPE="URL"/>
+    <foxml:datastreamVersion ID="content.0" LABEL="Test Data 1"
+      MIMETYPE="text/plain" SIZE="25">
+      <foxml:contentLocation REF="file:<%=Rails.root%>/test_support/fixtures/scholarsphere/id_test2.docx" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="rightsMetadata" STATE="A" VERSIONABLE="true">
@@ -59,9 +59,7 @@
           </access>
           <access type="read">
             <human/>
-            <machine>
-                <group>public</group>
-            </machine>
+            <machine/>
           </access>
           <access type="edit">
             <human/>

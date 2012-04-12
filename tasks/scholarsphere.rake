@@ -3,7 +3,7 @@ require 'rspec/core/rake_task'
 require 'rdf'
 require 'rdf/rdfxml'
 
-namespace :gamma do
+namespace :scholarsphere do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci do
@@ -25,7 +25,7 @@ namespace :gamma do
   namespace :export do
     desc "Dump metadata as RDF/XML for e.g. Summon integration"
     task :rdfxml => :environment do 
-      raise "rake gamma:export:rdfxml output=FILE" unless ENV['output']
+      raise "rake scholarsphere:export:rdfxml output=FILE" unless ENV['output']
       export_file = ENV['output']
       triples = RDF::Repository.new
       rows = GenericFile.count

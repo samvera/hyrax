@@ -74,4 +74,4 @@ db/schema.rb
 ## PROJECT::SPECIFIC
 
 ## generates foxml
-test_support/fixtures/gamma/*.foxml.xml
+test_support/fixtures/scholarsphere/*.foxml.xml

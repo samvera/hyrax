@@ -4,7 +4,7 @@
 # development environment upon cd'ing into the directory
 
 # First we specify our desired <ruby>[@<gemset>], the @gemset name is optional.
-environment_id="ree-1.8.7-2011.03@gamma"
+environment_id="ree-1.8.7-2011.03@scholarsphere"
 rubygems_version="1.8.15"
 
 # Install rubies when used instead of only displaying a warning and exiting
