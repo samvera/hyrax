@@ -4,30 +4,77 @@
 #                      ~/rvm/gems/<rails version>@gamma/bundler/gems/lib/railties
 # It has been changed to read all files out of a directory and pass those as fixtures.
 # Any _ in the file name will be modified to a : for the id, since colons are not valid in a file name. 
-# The files should be named id_[id name] which should relates to the id within the foxml id:[id name] where 
-# [id name] is some alpha numeric id ('test1')
+# The files should be named id_[fixture id] which should relates to the id within the foxml id:[fixture id] where 
+# [fixture id] is some alpha numeric id ('test1')
 #
 # There are 2 sets of data needed to attach to a Gamma fixture, 1 the data file, and 2 the metadata.
 # It is important that the meta-data contains the appropriate id, or solor will not index it!
 #
+# Usage: rake gamma:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
+#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#                      DEFAULT: gamma
+#              <fixture id> is the id given to this fixture with fedora and solr.   
+#                            This must be unique and any old files will be overwritten. 
+#                      DEFAULT: gamma1
+#              <fixture title> is the title given to the fixture in fedora and solor, 
+#                            along with being put in the description and subject by default.
+#                      DEFAULT: gamma test
+#              <fixture user> is the user given to the fixture in fedora and solor, 
+#                            along with being put in the contributor and rights.
+#                      DEFAULT: archivist1
+#           
+#          
+#               Creates new fixture files including the erb, descMeta, and text for loading into Gamma.  
+#               The Files are named based on the id: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
+#               The foxml.erb file references the descMeta.txt and .txt file.  You can edit the erb to point to other data and/or edit the 
+#               .descMeta.txt  and/or .txt file to contain the data you wish.  
+#
+#            *** Please note that the id must be changed in the file name, foxml.erb, and descMeta.txt if you change it after creation. ***
+#
+#        rake gamma:fixtures:generate [DIR=<fixture dir>]
+#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#                      DEFAULT: gamma
+#
+#               Creates foxml.xml files from the foxml.erb files doing any erb substitutions within the erb file.
+#               This task is mostly used to put the appropriate Rails.root into the foxml.xml file so that 
+#               the data and meta-data files can be located on load. 
+#
+#        rake gamma:fixtures:delete [DIR=<fixture dir>]
+#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#                      DEFAULT: gamma
+#
+#               Remove any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> from fedora and solr. 
+#
+#        rake gamma:fixtures:load [DIR=<fixture dir>]
+#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#                      DEFAULT: gamma
+#
+#               load any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> into fedora and solr. 
+#
+#        rake gamma:fixtures:refresh [DIR=<fixture dir>]
+#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#                      DEFAULT: gamma
+#
+#               delete then load any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> into fedora and solr. 
+#
 # Example meta-data:
 #
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/publisher> "CAC" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/description> "Test Fixture 2" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/created> "4/6/2012" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/contributor> "CAC" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/title> "Test Fixture 2 (Title)" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/relation> "test" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/subject> "Testing Fixture 2" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/language> "En" .
-#    <info:fedora/id:[id name]> <http://xmlns.com/foaf/0.1/based_near> "State College" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/rights> "cac" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/creator> "CAC" .
-#    <info:fedora/id:[id name]> <http://purl.org/dc/terms/identifier> "fixture" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/publisher> "archivist1" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/description> "MP3 Description" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/created> "04/12/2012" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/contributor> "archivist1" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/title> "MP3" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/relation> "test" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/subject> "MP3 Test" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/language> "En" .
+#    <info:fedora/id:[fixture id]> <http://xmlns.com/foaf/0.1/based_near> "State College" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/rights> "archivist1" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/creator> "archivist1" .
+#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/identifier> "Test" .
 #
 # Example foxml:  (note the ID needs to be unique) (the binary data in the xml below was generated using base64 on the text)
 #    <?xml version="1.0" encoding="UTF-8"?>
-#    <foxml:digitalObject PID="id:[id name]" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+#    <foxml:digitalObject PID="id:[fixture id]" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
 #      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
 #      <foxml:objectProperties>
 #        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
@@ -42,7 +89,7 @@
 #              xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
 #              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
 #              <dc:title>testFixture2.txt</dc:title>
-#              <dc:identifier>id:[id name]</dc:identifier>
+#              <dc:identifier>id:[fixture id]</dc:identifier>
 #            </oai_dc:dc>
 #          </foxml:xmlContent>
 #        </foxml:datastreamVersion>
@@ -73,7 +120,7 @@
 #          LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="application/rdf+xml" SIZE="286">
 #          <foxml:xmlContent>
 #            <rdf:RDF xmlns:ns0="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-#              <rdf:Description rdf:about="info:fedora/id:[id name]">
+#              <rdf:Description rdf:about="info:fedora/id:[fixture id]">
 #                <ns0:hasModel rdf:resource="info:fedora/afmodel:GenericFile"/>
 #              </rdf:Description>
 #            </rdf:RDF>
@@ -121,11 +168,7 @@
 #    </foxml:digitalObject>
 #
 #
-# Usage: rake gamma:fixtures:delete [DIR=<fixture dir>]
-#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
-#                            it defaults to gamma
-#                                  (seed/develop was a convention I grabbed from some other fixture 
-#                                    code and seemed reasonable so that you could have seed/prod ect.)
+#
 namespace :gamma do
   
   desc "Init Hydra configuration" 
@@ -146,7 +189,7 @@ namespace :gamma do
         "not-changed"
     ]
 
-    desc "Generate default Gamma Hydra fixtures"
+    desc "Create Gamma Hydra fixtures for generation and loading"
     task :create do
 
       if ENV["FIXTURE_ID"]
@@ -164,7 +207,7 @@ namespace :gamma do
       if ENV["FIXTURE_USER"]
          @user= ENV["FIXTURE_USER"]
       else
-         @user= 'gamma'
+         @user= 'archivist1'
       end
 
       @root ='<%=Rails.root%>'
