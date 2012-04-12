@@ -6,10 +6,6 @@ module Hydra
     include Blacklight::BlacklightHelperBehavior
     include HydraHelper
     
-    def application_name
-      'A Hydra Head'
-    end
-    
     def get_data_with_linked_label(doc, label, field_string, opts={})
       ActiveSupport::Deprecation.warn("get_data_with_linked_label is deprecated and will be removed in the next release")
      
