@@ -4,8 +4,8 @@
 # development environment upon cd'ing into the directory
 
 ruby_string="1.9.3"
-rubygems_version="1.8.15"
-gemset_name="hyhead-rails3"
+rubygems_version="1.8.21"
+gemset_name="hyhead-4.0"
 
 # Install rubies when used instead of only displaying a warning and exiting
 rvm_install_on_use_flag=1
