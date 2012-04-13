@@ -4,5 +4,5 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-Gamma::Application.load_tasks
+ScholarSphere::Application.load_tasks
 Dir.glob('tasks/*.rake').each { |r| import r }

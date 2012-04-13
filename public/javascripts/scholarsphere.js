@@ -20,7 +20,7 @@ $(function() {
           response( $.map( data.geonames, function( item ) {
             return {
               label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-              value: item.name
+              value: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
             }
           }));
         }
@@ -54,17 +54,17 @@ $(function() {
   }
 
   var autocomplete_vocab = new Object();
-  // the url variable to pass to determine the vocab to attach to
-  autocomplete_vocab.url_var =      ['subject', 'language', 'tag'];
-  // the form name to attach the event for autocomplete
-  autocomplete_vocab.field_name =   ['generic_file_subject', 'generic_file_language', 'generic_file_tag'];
-  // the id of the button pressed when adding an additional form element that has an autocomplete vocab
-  autocomplete_vocab.add_btn_id =   ['additional_subject_submit', 'additional_language_submit', 'additional_tag_submit'];
+  
+  autocomplete_vocab.url_var =      ['subject', 'language', 'tag'];   // the url variable to pass to determine the vocab to attach to
+  autocomplete_vocab.field_name = new Array(); // the form name to attach the event for autocomplete
+  autocomplete_vocab.add_btn_id = new Array(); // the id of the button pressed when adding an additional form element 
 
   // loop over the autocomplete fields and attach the 
-  // events for autocomplete
+  // events for autocomplete and create other array values for autocomplete
   for (var i=0; i < autocomplete_vocab.url_var.length; i++) 
   {
+    autocomplete_vocab.field_name.push('generic_file_' + autocomplete_vocab.url_var[i]);
+    autocomplete_vocab.add_btn_id.push('additional_' + autocomplete_vocab.url_var[i] + '_submit');
     // autocompletes
     $("#" + autocomplete_vocab.field_name[i])
         // don't navigate away from the field on tab when selecting an item
