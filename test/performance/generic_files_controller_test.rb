@@ -1,4 +1,4 @@
-require 'test_helper'
+Brequire 'test_helper'
 require 'rails/performance_test_help'
 require 'capybara/rails'
 
@@ -19,10 +19,10 @@ class GenericFilesControllerTest < ActionDispatch::PerformanceTest
     user
   end
   def test_upload_page
-    get '/works/new'
+    get new_generic_file_path
   end
   def upload_file
     file = fixture_file_upload('/world.png','image/png')
-    post '/works', :post => {:Filedata=>[file], :Filename=>"The world"}
+    post generic_file_path, :post => {:Filedata=>[file], :Filename=>"The world"}
   end
 end

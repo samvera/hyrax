@@ -6,7 +6,7 @@ ScholarSphere::Application.routes.draw do
 
   devise_for :users
 
-  resources :generic_files, :path => :works do
+  resources :generic_files, :path => :files do
     member do
       post 'audit'
     end
