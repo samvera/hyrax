@@ -1,4 +1,4 @@
-Brequire 'test_helper'
+require 'test_helper'
 require 'rails/performance_test_help'
 require 'capybara/rails'
 
