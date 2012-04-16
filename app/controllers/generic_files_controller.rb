@@ -4,9 +4,11 @@ class GenericFilesController < ApplicationController
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
   include Hydra::FileAssetsHelper
 
-  before_filter :authenticate_user!, :only=>[:new, :create]
-  before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit]
-  
+  # actions: audit, index, create, new, edit, show, update, destroy
+  before_filter :authenticate_user!, :only=>[:create, :new]
+  before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy]
+  before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
+
   def new
     @generic_file = GenericFile.new 
     @dc_metadata = [
@@ -75,6 +77,10 @@ class GenericFilesController < ApplicationController
 
 
   protected
+  def normalize_identifier
+    # TODO
+  end
+
   # takes form file inputs and assigns meta data individually 
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields
   def create_and_save_generic_files_from_params
