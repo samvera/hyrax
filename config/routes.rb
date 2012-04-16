@@ -5,15 +5,12 @@ ScholarSphere::Application.routes.draw do
   root :to => "catalog#index"
 
   devise_for :users
-  resources :generic_files
 
-  resources :generic_files do
+  resources :generic_files, :path => :works do
     member do
       post 'audit'
     end
   end
-
-  resources :generic_files, :path => :works, :as => :works
 
   match 'dashboard' => 'dashboard#index', :as => :dashboard
 
