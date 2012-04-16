@@ -6,23 +6,8 @@ GIT
     yaml_db (0.2.2)
 
 GIT
-  remote: git://github.com/projecthydra/hydra-head.git
-  revision: dca91b9dcbf314e3c43c2c98af435313650625d5
-  branch: master
-  specs:
-    hydra-head (4.0.0.rc6)
-      RedCloth (= 4.2.9)
-      active-fedora (~> 4.0.0.rc20)
-      blacklight (~> 3.3.1)
-      block_helpers
-      cancan
-      devise
-      rails (= 3.2.2)
-      sanitize
-
-GIT
-  remote: git://github.com/psu-stewardship/active_fedora.git
-  revision: b64dcc516a05292a9c776b552b8381ada40d6a49
+  remote: git://github.com/projecthydra/active_fedora.git
+  revision: 42e66b7cf6a5a975bf4941c5c3ebc220e00fa158
   branch: master
   specs:
     active-fedora (4.0.0.rc20)
@@ -40,6 +25,21 @@ GIT
       rubydora (~> 0.5.7)
       solrizer (~> 1.2.0)
       xml-simple (>= 1.0.12)
+
+GIT
+  remote: git://github.com/projecthydra/hydra-head.git
+  revision: dca91b9dcbf314e3c43c2c98af435313650625d5
+  branch: master
+  specs:
+    hydra-head (4.0.0.rc6)
+      RedCloth (= 4.2.9)
+      active-fedora (~> 4.0.0.rc20)
+      blacklight (~> 3.3.1)
+      block_helpers
+      cancan
+      devise
+      rails (= 3.2.2)
+      sanitize
 
 GIT
   remote: https://github.com/warpc/rails_indexes
