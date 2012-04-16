@@ -4,7 +4,7 @@ on element ids -->
 <tr id="document_<%= document[:id].gsub(":", "_") %>"> <!--  class="document <%= cycle("even","odd") %>"> -->
   <!-- <td><%# check_box_tag :generic_file, document[:id] %></td> -->
   <td>
-    <i id="expand_<%= document[:id].gsub(":", "_") %>" class="icon-plus"></i>&nbsp;<%= link_to document[:label_t], generic_file_path(document[:id]) %> </td>
+    <i id="expand_<%= document[:id].gsub(":", "_") %>" class="icon-plus"></i>&nbsp;<%= link_to document[:label_t], work_path(document[:id]) %> </td>
   <td><%= document[:id] %></td>
   <td><%= document.fetch(:system_create_dt,nil).to_time.strftime("%c") %> </td>
   <td><%= document[:creator_t] %> </td>
@@ -18,7 +18,7 @@ on element ids -->
   <td colspan="6">
     <dl>
       <dt>Title</dd>
-      <dd> <%= link_to document[:generic_file__title_t], generic_file_path(document[:id]) %> </dd>
+      <dd> <%= link_to document[:generic_file__title_t], work_path(document[:id]) %> </dd>
 
       <dt>Contributor</dd>
       <dd><%= render_document_show_field_value(:document=>document, :field=>"generic_file__contributor_t") %></dd>

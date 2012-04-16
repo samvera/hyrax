@@ -19,10 +19,10 @@ class GenericFilesControllerTest < ActionDispatch::PerformanceTest
     user
   end
   def test_upload_page
-    get '/generic_files/new'
+    get '/works/new'
   end
   def upload_file
     file = fixture_file_upload('/world.png','image/png')
-    post '/generic_files', :post => {:Filedata=>[file], :Filename=>"The world"}
+    post '/works', :post => {:Filedata=>[file], :Filename=>"The world"}
   end
 end

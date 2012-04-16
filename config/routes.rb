@@ -13,6 +13,8 @@ ScholarSphere::Application.routes.draw do
     end
   end
 
+  resources :generic_files, :path => :works, :as => :works
+
   match 'dashboard' => 'dashboard#index', :as => :dashboard
 
   match 'authorities/:model/:term' => 'authorities#query'

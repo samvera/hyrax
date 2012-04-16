@@ -37,7 +37,7 @@ class GenericFilesController < ApplicationController
       redirect_params = {:controller => "generic_files", :action => "new"} 
     elsif params[:generic_file].has_key? :creator and params[:generic_file][:creator].empty?
       flash[:notice] = "You must include a creator."
-      redirect_params = {:controller => "generic_files", :action => "new"} 
+      redirect_params = {:controller => "works", :action => "new"} 
     else
       notice = []
       @generic_files.each do |gf|
