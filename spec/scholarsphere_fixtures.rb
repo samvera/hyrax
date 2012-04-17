@@ -26,11 +26,6 @@ describe "scholarsphere:fixtures:*" do
       $stdout = STDOUT
     end
     
-    def gem_lib
-       gemPath = ENV['GEM_HOME']
-       return gemPath.to_s+"/bundler/gems/active_fedora-b64dcc516a05"
-    end
-
     # this routine is in essence doing the following require without hard coding the path and fedora version
     #Rake.application.rake_require( "lib/tasks/active_fedora", "/home/carolyn/.rvm/gems/ree-1.8.7-2011.03@scholarsphere/bundler/gems/active_fedora-b64dcc516a05",
     def require_fedora
