@@ -1,5 +1,5 @@
 require 'yaml'
-module Hydra::RoleMapper
+module Hydra::RoleMapperBehavior
   extend ActiveSupport::Concern
 
   module ClassMethods

@@ -5,12 +5,6 @@ describe BlacklightHelper do
     BlacklightHelper.included_modules.should include(HydraHelper)
   end
   
-  describe "Application Name Sanity Check" do
-    it "should have the application correct name" do 
-      helper.application_name.should == "A Hydra Head"
-    end 
-  end
-  
   describe "Overridden blacklight methods" do
     describe "document_partial_name" do
 

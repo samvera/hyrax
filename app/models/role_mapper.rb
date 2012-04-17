@@ -1,3 +1,3 @@
 class RoleMapper
-  include Hydra::RoleMapper
+  include Hydra::RoleMapperBehavior
 end
