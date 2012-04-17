@@ -28,7 +28,7 @@ class GenericFilesController < ApplicationController
   end
 
   def edit
-    @generic_file = GenericFile.find(params[:id])
+    @generic_file = GenericFile.find(@id)
   end
 
   def create
@@ -52,16 +52,16 @@ class GenericFilesController < ApplicationController
   end
 
   def show
-    @generic_file = GenericFile.find(params[:id])
+    @generic_file = GenericFile.find(@id)
   end
 
   def audit
-    @generic_file = GenericFile.find(params[:id])
+    @generic_file = GenericFile.find(@id)
     render :json=>@generic_file.content.audit
   end
  
   def update
-    @generic_file = GenericFile.find(params[:id])
+    @generic_file = GenericFile.find(@id)
     @generic_file.update_attributes(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
     @generic_file.date_modified = [Time.now.ctime]
 
@@ -78,7 +78,7 @@ class GenericFilesController < ApplicationController
 
   protected
   def normalize_identifier
-    # TODO
+    @id = "#{Rails.application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? Rails.application.config.id_namespace
   end
 
   # takes form file inputs and assigns meta data individually 
