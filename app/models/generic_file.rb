@@ -52,6 +52,7 @@ class GenericFile < ActiveFedora::Base
   def to_solr(solr_doc={})
     super(solr_doc)
     solr_doc["label_t"] = self.label
+    solr_doc["noid_s"] = self.pid.split(":").last
     return solr_doc
   end
   

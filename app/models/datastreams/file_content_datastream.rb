@@ -29,7 +29,7 @@ class FileContentDatastream < ActiveFedora::Datastream
 
 
   def fits_path
-    Rails.application.config.fits_path
+    ScholarSphere::Application.config.fits_path
   end
 
   def logs

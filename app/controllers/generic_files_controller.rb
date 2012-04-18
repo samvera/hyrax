@@ -7,8 +7,9 @@ class GenericFilesController < ApplicationController
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
   before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy]
-  before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
+  prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
 
+  # routed to /files/new
   def new
     @generic_file = GenericFile.new 
     @dc_metadata = [
@@ -27,10 +28,12 @@ class GenericFilesController < ApplicationController
     ]
   end
 
+  # routed to /files/:id/edit
   def edit
-    @generic_file = GenericFile.find(@id)
+    @generic_file = GenericFile.find(params[:id])
   end
 
+  # routed to /files (POST)
   def create
     create_and_save_generic_files_from_params
 
@@ -51,34 +54,35 @@ class GenericFilesController < ApplicationController
     redirect_to redirect_params 
   end
 
+  # routed to /files/:id
   def show
-    @generic_file = GenericFile.find(@id)
+    @generic_file = GenericFile.find(params[:id])
   end
 
+  # routed to /files/:id/audit (POST)
   def audit
-    @generic_file = GenericFile.find(@id)
+    @generic_file = GenericFile.find(params[:id])
     render :json=>@generic_file.content.audit
   end
  
+  # routed to /files/:id (PUT)
   def update
-    @generic_file = GenericFile.find(@id)
-    @generic_file.update_attributes(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+    @generic_file = GenericFile.find(params[:id])
+    @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
     @generic_file.date_modified = [Time.now.ctime]
 
     #added to cause solr to re-index facets
     @generic_file.update_index
     
     flash[:notice] = "Successfully updated." 
-    if params.has_key?(:Filedata) 
-        add_posted_blob_to_asset(generic_file,params[:Filedata])
-    end 
+    add_posted_blob_to_asset(generic_file, params[:Filedata]) if params.has_key?(:Filedata) 
     render :edit 
   end
 
 
   protected
   def normalize_identifier
-    @id = "#{Rails.application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? Rails.application.config.id_namespace
+    params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
   end
 
   # takes form file inputs and assigns meta data individually 

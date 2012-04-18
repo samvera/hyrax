@@ -10,7 +10,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../config/environmen
 
 $audit_log = nil
 $now = DateTime.now
-$max_days_between_audits = Rails.application.config.max_days_between_audits
+$max_days_between_audits = ScholarSphere::Application.config.max_days_between_audits
 
 
 def get_or_create_audit_log(version)

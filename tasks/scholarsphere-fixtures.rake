@@ -5,7 +5,7 @@ require 'lib/active_fedora'
 #                      ~/rvm/gems/<rails version>@scholarsphere/bundler/gems/lib/railties
 # It has been changed to read all files out of a directory and pass those as fixtures.
 # Any _ in the file name will be modified to a : for the id, since colons are not valid in a file name. 
-# The files should be named id_[fixture id] which should relates to the id within the foxml id:[fixture id] where 
+# The files should be named id_[fixture id] which should relates to the id within the foxml scholarsphere:[fixture id] where 
 # [fixture id] is some alpha numeric id ('test1')
 #
 # There are 2 sets of data needed to attach to a ScholarSphere fixture, 1 the data file, and 2 the metadata.
@@ -26,7 +26,7 @@ require 'lib/active_fedora'
 #           
 #          
 #               Creates new fixture files including the erb, descMeta, and text for loading into ScholarSphere.  
-#               The Files are named based on the id: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
+#               The Files are named based on the scholarsphere: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
 #               The foxml.erb file references the descMeta.txt and .txt file.  You can edit the erb to point to other data and/or edit the 
 #               .descMeta.txt  and/or .txt file to contain the data you wish.  
 #
@@ -60,22 +60,22 @@ require 'lib/active_fedora'
 #
 # Example meta-data:
 #
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/publisher> "archivist1" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/description> "MP3 Description" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/created> "04/12/2012" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/contributor> "archivist1" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/title> "MP3" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/relation> "test" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/subject> "MP3 Test" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/language> "En" .
-#    <info:fedora/id:[fixture id]> <http://xmlns.com/foaf/0.1/based_near> "State College" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/rights> "archivist1" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/creator> "archivist1" .
-#    <info:fedora/id:[fixture id]> <http://purl.org/dc/terms/identifier> "Test" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/publisher> "archivist1" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/description> "MP3 Description" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/created> "04/12/2012" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/contributor> "archivist1" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/title> "MP3" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/relation> "test" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/subject> "MP3 Test" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/language> "En" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://xmlns.com/foaf/0.1/based_near> "State College" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/rights> "archivist1" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/creator> "archivist1" .
+#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/identifier> "Test" .
 #
 # Example foxml:  (note the ID needs to be unique) (the binary data in the xml below was generated using base64 on the text)
 #    <?xml version="1.0" encoding="UTF-8"?>
-#    <foxml:digitalObject PID="id:[fixture id]" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+#    <foxml:digitalObject PID="scholarsphere:[fixture id]" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
 #      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
 #      <foxml:objectProperties>
 #        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
@@ -90,7 +90,7 @@ require 'lib/active_fedora'
 #              xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
 #              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
 #              <dc:title>testFixture2.txt</dc:title>
-#              <dc:identifier>id:[fixture id]</dc:identifier>
+#              <dc:identifier>scholarsphere:[fixture id]</dc:identifier>
 #            </oai_dc:dc>
 #          </foxml:xmlContent>
 #        </foxml:datastreamVersion>
@@ -121,7 +121,7 @@ require 'lib/active_fedora'
 #          LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="application/rdf+xml" SIZE="286">
 #          <foxml:xmlContent>
 #            <rdf:RDF xmlns:ns0="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-#              <rdf:Description rdf:about="info:fedora/id:[fixture id]">
+#              <rdf:Description rdf:about="info:fedora/scholarsphere:[fixture id]">
 #                <ns0:hasModel rdf:resource="info:fedora/afmodel:GenericFile"/>
 #              </rdf:Description>
 #            </rdf:RDF>

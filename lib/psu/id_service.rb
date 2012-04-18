@@ -1,7 +1,7 @@
 module PSU
   class IdService
     @@minter = Noid::Minter.new(:template => '.reeddeeddk')
-    @@namespace = Rails.application.config.id_namespace
+    @@namespace = ScholarSphere::Application.config.id_namespace
     def self.valid?(identifier)
       # remove the fedora namespace since it's not part of the noid
       noid = identifier.split(":").last

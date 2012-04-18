@@ -34,7 +34,6 @@ describe "scholarsphere:fixtures:*" do
        @file = File.open(@tmpName, "r") 
        @fedoraGem = @file.read.lstrip.rstrip
        File.delete(@tmpName)
-       print "\n",@fedoraGem,"\n" 
        Rake.application.rake_require( "lib/tasks/active_fedora", @fedoraGem, loaded_files_excluding_current_rake_file)      
     end
     

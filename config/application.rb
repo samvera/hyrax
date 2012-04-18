@@ -11,6 +11,10 @@ module ScholarSphere
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    config.fits_path = 'fits.sh'
+    config.max_days_between_audits = 7
+    config.id_namespace = "scholarsphere"
+    config.application_name = "ScholarSphere"
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/app/models/datastreams)
