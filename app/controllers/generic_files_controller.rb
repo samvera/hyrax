@@ -61,6 +61,11 @@ class GenericFilesController < ApplicationController
   def update
     @generic_file = GenericFile.find(params[:id])
     @generic_file.update_attributes(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
+    @generic_file.date_modified = [Time.now.ctime]
+
+    #added to cause solr to re-index facets
+    @generic_file.update_index
+    
     flash[:notice] = "Successfully updated." 
     if params.has_key?(:Filedata) 
         add_posted_blob_to_asset(generic_file,params[:Filedata])
@@ -101,6 +106,10 @@ class GenericFilesController < ApplicationController
         generic_file.subject = params[:generic_file][:subject] if params[:generic_file].has_key?(:subject)
         generic_file.tag = params[:generic_file][:tag] if params[:generic_file].has_key?(:tag)
         generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
+
+        generic_file.date_uploaded  << Time.now.ctime
+        generic_file.date_modified  << Time.now.ctime
+
         generic_file.save
         #generic_file.delay.save
         @generic_files << generic_file

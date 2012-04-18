@@ -22,6 +22,8 @@ describe GenericFilesController do
       saved_file.label.should == 'world.png'
       saved_file.content.checksum.should == '28da6259ae5707c68708192a40b3e85c'
       saved_file.content.dsChecksumValid.should be_true
+      saved_file.date_uploaded.should have_at_least(1).items
+      saved_file.date_modified.should have_at_least(1).items
     end
   end
 
