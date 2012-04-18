@@ -62,9 +62,9 @@ describe "scholarsphere:fixtures:*" do
       o = capture_stdout do
         @rake['scholarsphere:fixtures:create'].invoke      
       end
-      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "id_rspecTestFixture.txt")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "id_rspecTestFixture.foxml.erb")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "id_rspecTestFixture.descMeta.txt")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.txt")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt")).length.should == 1
       
     end    
   end
@@ -72,12 +72,12 @@ describe "scholarsphere:fixtures:*" do
 
   describe 'scholarsphere:fixtures:generate' do        
     
-    it 'should genrate an xml file' do
+    it 'should generate an xml file' do
       
       o = capture_stdout do
         @rake['scholarsphere:fixtures:generate'].invoke      
       end
-      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "id_rspecTestFixture.foxml.xml")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml")).length.should == 1
       
     end    
   end
@@ -92,7 +92,7 @@ describe "scholarsphere:fixtures:*" do
         @rake['scholarsphere:fixtures:load'].invoke      
       end
       
-     o.should include "Loaded 'id:rspecTestFixture'"
+     o.should include "Loaded 'scholarsphere:rspecTestFixture'"
       
     end    
   end
@@ -106,7 +106,7 @@ describe "scholarsphere:fixtures:*" do
         @rake['scholarsphere:fixtures:delete'].invoke      
       end
       
-     o.should include "Deleted 'id:rspecTestFixture'"
+     o.should include "Deleted 'scholarsphere:rspecTestFixture'"
       
     end    
   end
@@ -120,8 +120,8 @@ describe "scholarsphere:fixtures:*" do
         @rake['scholarsphere:fixtures:refresh'].invoke      
       end
       
-     o.should include "Deleted 'id:rspecTestFixture'"
-     o.should include "Loaded 'id:rspecTestFixture'"
+     o.should include "Deleted 'scholarsphere:rspecTestFixture'"
+     o.should include "Loaded 'scholarsphere:rspecTestFixture'"
       
     end    
   end

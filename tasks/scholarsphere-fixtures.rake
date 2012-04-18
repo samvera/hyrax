@@ -213,13 +213,13 @@ namespace :scholarsphere do
 
       @root ='<%=Rails.root%>'
 
-      @inputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'id_generic_stub.foxml.erb')
-      @inputDescFile = File.join(Rails.root, @localDir, @dir, 'id_generic_stub.descMeta.txt')
-      @inputTxtFile = File.join(Rails.root, @localDir, @dir, 'id_generic_stub.txt')
+      @inputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_generic_stub.foxml.erb')
+      @inputDescFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_generic_stub.descMeta.txt')
+      @inputTxtFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_generic_stub.txt')
 
-      @outputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'id_'+@id+'.foxml.erb')
-      @outputDescFile = File.join(Rails.root, @localDir, @dir, 'id_'+@id+'.descMeta.txt')
-      @outputTxtFile = File.join(Rails.root, @localDir, @dir, 'id_'+@id+'.txt')
+      @outputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.foxml.erb')
+      @outputDescFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.descMeta.txt')
+      @outputTxtFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.txt')
 
       run_erb_stub @inputFoxmlFile, @outputFoxmlFile
       run_erb_stub @inputDescFile, @outputDescFile
