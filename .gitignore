@@ -1,5 +1,8 @@
-# this should be copied from the database.yml.sample and tweaked per local env
+# These files should be copied from the $file.yml.sample and tweaked
+# per environment.
 config/database.yml
+config/fedora.yml
+config/solr.yml
 
 ## MAC OS
 .DS_Store

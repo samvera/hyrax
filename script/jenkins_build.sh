@@ -1,31 +1,37 @@
 #!/bin/bash
 #
 # Currently a stub for jenkins as called from
-# https://gamma-ci.dlt.psu.edu/jenkins/job/gamma/configure
+# https://gamma-ci.dlt.psu.edu/jenkins/job/scholarsphere/configure
 #	Build -> Execute Shell Command == 
 #	test -x $WORKSPACE/script/jenkins_build.sh && $WORKSPACE/script/jenkins_build.sh
 # to run CI testing.
 
-echo "=-=-=-=-= $0 begin"
-cd ${JENKINS_HOME}/jobs/gamma/workspace
+HHOME=/opt/heracles
+WORKSPACE=${JENKINS_HOME}/jobs/scholarsphere/workspace
+#WORKSPACE=/opt/heracles/scholarsphere-jgm
 
-echo "=-=-=-=-= $0 source .bashrc"
-source /opt/heracles/.bashrc
 
-echo "=-=-=-=-= $0 source rvm.sh/.rvmrc"
+echo "=-=-=-=-= $0 source ${HHOME}/.bashrc"
+source ${HHOME}/.bashrc
+
+echo "=-=-=-=-= $0 source /etc/profile.d/rvm.sh"
 source /etc/profile.d/rvm.sh
-source .rvmrc
+
+echo "=-=-=-=-= $0 cd ${WORKSPACE}"
+cd ${WORKSPACE}
+
+echo "=-=-=-=-= $0 source ${WORKSPACE}/.rvmrc"
+source ${WORKSPACE}/.rvmrc
 
 echo "=-=-=-=-= $0 bundle install"
 bundle install
 
-echo "=-=-=-=-= $0 cp -f config/database.yml.sample config/database.yml"
-cp -f config/database.yml.sample config/database.yml
+echo "=-=-=-=-= $0 cp -f ${HHOME}/config/{database,fedora,solr}.yml ${WORKSPACE}/config"
+cp -f ${HHOME}/config/{database,fedora,solr}.yml ${WORKSPACE}/config
 
-echo "=-=-=-=-= $0 rake --trace gamma:ci"
+echo "=-=-=-=-= $0 HEADLESS=true rake --trace scholarsphere:ci"
 HEADLESS=true rake --trace scholarsphere:ci
 retval=$?
-
 echo "=-=-=-=-= $0 finished $retval"
 exit $retval
 

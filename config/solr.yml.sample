@@ -6,5 +6,7 @@ test: &TEST
   url: http://127.0.0.1:8983/solr/test
 cucumber:
   <<: *TEST
+integration:
+  url: http:/_HOST_:_PORT_/_solar_integration_instance_
 production:
-  url: http://your.production.server:8080/bl_solr/core0 
+  url: http:/_HOST_:_PORT_/_solar_production_instance_

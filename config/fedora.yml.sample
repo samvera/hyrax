@@ -8,10 +8,14 @@ test: &TEST
   user: fedoraAdmin
   password: fedoraAdmin
   validateChecksum: true
+integration:
+  url: http://_USER_:_PASSWORD_@_HOST_:_PORT_/_fedora_integration_instance_
+  user: _USER_
+  password: _PASSWORD_
 production:
-  url: http://fedoraAdmin:fedoraAdmin@your.production.server:8080/fedora
-  user: fedoraAdmin
-  password: fedoraAdmin
+  url: http://_USER_:_PASSWORD_@_HOST_:_PORT_/_fedora_production_instance_
+  user: _USER_
+  password: _PASSWORD_
   validateChecksum: true
 cucumber:
   <<: *TEST
