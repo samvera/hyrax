@@ -63,9 +63,13 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
-  def audit
+  def audit!
+    audit(true)
+  end
+
+  def audit(force = false)
     self.per_version do |ver| 
-      GenericFile.audit(ver)
+      GenericFile.audit(ver, force)
     end
   end
 

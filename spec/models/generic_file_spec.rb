@@ -103,6 +103,15 @@ describe GenericFile do
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
   end
+  describe "audit" do
+    it "should support a forced audit on an instance"
+    it "should support a checked audit on an instance"
+    it "should iterate of versions of an instance"
+    it "should force an audit given a version"
+    it "should audit a given version"
+    it "should check if a version needs an audit"
+    it "should support auditing the entire repo"
+  end
   describe "characterize" do
     it "should run when the content datastream is created" do
       @file.expects(:characterize)
