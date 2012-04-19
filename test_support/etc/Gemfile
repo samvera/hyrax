@@ -9,6 +9,7 @@ gem 'sqlite3'
 
 gem 'blacklight', '~>3.3.0'
 
+gem 'therubyracer' # For compiling js - needed on the ci server
 
 gem 'hydra-head', :path => '../../'
 gem 'devise'
