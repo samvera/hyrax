@@ -19,8 +19,6 @@ Copy and edit local DB, Fedora, and Solr configs
     cp config/fedora.yml.sample config/fedora.yml
     cp config/database.yml.sample config/database.yml
 
-TODO: Hint on how to tweak your configs (link to protected wikispaces page)
-
 Install gems & migrate database
 
     bundle install
@@ -31,7 +29,6 @@ Setup test dbs and load fixtures
 
     RAILS_ENV=test rake db:create
     RAILS_ENV=test rake db:migrate
-    rake db:data:load
 
 Install [FITS](http://code.google.com/p/fits/) and put it in a
   directory on your PATH.
@@ -55,7 +52,12 @@ RAILS_ENV=production script/audit_all_versions
 Harvesting Authorities Locally
 ------------------------------
 
-TODO: Flesh this out more
+The easiest way to pull in authorities is to load the pre-generated
+set that are serialized as fixtures.
+
+    rake db:data:load
+
+To harvest more authorities:
 
 1. Harvest the authority
 2. (OPTIONAL) Generate fixtures so other instances don't need to re-harvest

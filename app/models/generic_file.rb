@@ -59,8 +59,66 @@ class GenericFile < ActiveFedora::Base
   def label=(new_label)
     @inner_object.label = new_label
     if self.title.empty?
-      title = new_label
+      self.title = new_label
     end
   end
-  
+
+  def GenericFile.audit!(version)
+    GenericFile.audit(version, true)
+  end
+
+  def GenericFile.audit(version, force = false)
+    logger.debug "***AUDIT*** log for #{version.inspect}"
+    audit_log = ChecksumAuditLog.get_audit_log(version)
+    unless force
+      return unless GenericFile.needs_audit?(version, audit_log)
+    end
+    if version.dsChecksumValid
+      logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
+      audit_log.pass = true
+    else
+      logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
+      audit_log.pass = false
+    end
+    audit_log.save
+  end
+
+  def GenericFile.needs_audit?(version, audit_log)
+    if audit_log and audit_log.updated_at
+      logger.debug "***AUDIT*** audit log properly configured"
+      logger.debug "***AUDIT*** last audit = #{audit_log.updated_at.to_date}"
+      days_since_last_audit = (DateTime.now - audit_log.updated_at.to_date).to_i
+      logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
+      if days_since_last_audit < Rails.application.config.max_days_between_audits
+        logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{audit_log.updated_at})"
+        return false
+      end
+    else
+      logger.warn "***AUDIT*** problem with audit log!"
+    end
+    logger.info "***AUDIT*** Audit needed for #{version.pid} #{version.versionID}"
+    true
+  end
+
+  def per_version(&block)
+    self.datastreams.each do |dsid, ds|
+      ds.versions.each do |ver|
+        yield block.call(ver)
+      end
+    end
+  end
+
+  def audit
+    self.per_version do |ver| 
+      GenericFile.audit!
+    end
+  end
+
+  def GenericFile.audit_everything
+    GenericFile.find(:all).each do |gf|
+      gf.per_version do |ver|
+        GenericFile.audit
+      end
+    end
+  end
 end
