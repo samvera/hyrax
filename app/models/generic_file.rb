@@ -63,6 +63,20 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
+  def audit
+    self.per_version do |ver| 
+      GenericFile.audit(ver)
+    end
+  end
+
+  def per_version(&block)
+    self.datastreams.each do |dsid, ds|
+      ds.versions.each do |ver|
+        block.call(ver)
+      end
+    end
+  end
+
   def GenericFile.audit!(version)
     GenericFile.audit(version, true)
   end
@@ -76,6 +90,7 @@ class GenericFile < ActiveFedora::Base
     if version.dsChecksumValid
       logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
       audit_log.pass = true
+      ChecksumAuditLog.prune_history(version)
     else
       logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
       audit_log.pass = false
@@ -85,7 +100,6 @@ class GenericFile < ActiveFedora::Base
 
   def GenericFile.needs_audit?(version, audit_log)
     if audit_log and audit_log.updated_at
-      logger.debug "***AUDIT*** audit log properly configured"
       logger.debug "***AUDIT*** last audit = #{audit_log.updated_at.to_date}"
       days_since_last_audit = (DateTime.now - audit_log.updated_at.to_date).to_i
       logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
@@ -100,25 +114,15 @@ class GenericFile < ActiveFedora::Base
     true
   end
 
-  def per_version(&block)
-    self.datastreams.each do |dsid, ds|
-      ds.versions.each do |ver|
-        yield block.call(ver)
-      end
-    end
-  end
-
-  def audit
-    self.per_version do |ver| 
-      GenericFile.audit!
-    end
-  end
-
-  def GenericFile.audit_everything
+  def GenericFile.audit_everything(force = false)
     GenericFile.find(:all).each do |gf|
       gf.per_version do |ver|
-        GenericFile.audit
+        GenericFile.audit(ver, force)
       end
     end
+  end
+
+  def GenericFile.audit_everything!
+    GenericFile.audit_everything(true)
   end
 end
