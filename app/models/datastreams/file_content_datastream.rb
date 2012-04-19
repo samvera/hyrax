@@ -13,9 +13,13 @@ class FileContentDatastream < ActiveFedora::Datastream
   def extract_metadata
     f = Tempfile.new("#{pid}-#{dsVersionID}")
     f.binmode
-    f.write(content.read)
+    if content.respond_to? :read
+      f.write(content.read)
+    else
+      f.write(content)
+    end
     f.close
-    content.rewind
+    content.rewind if content.respond_to? :rewind
     command = "#{fits_path} -i #{f.path}"
     stdin, stdout, stderr = popen3(command)
     stdin.close
