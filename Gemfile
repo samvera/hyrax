@@ -1,17 +1,17 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.2.0'
+gem 'rails', '3.2.2'
 
-gem 'sqlite3'
-gem 'mysql'
+gem 'sqlite3', '1.3.6'
+gem 'mysql', '2.8.1'
 gem 'active-fedora', :git=>'git://github.com/projecthydra/active_fedora.git', :branch=>'master'
-gem 'blacklight', '~> 3.3.1'
+gem 'blacklight', '3.3.2'
 gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'master'
-gem 'rubydora', '~> 0.5.4'
+gem 'rubydora', '0.5.8'
 
-gem 'devise'
-gem 'delayed_job_active_record'
-gem 'noid'
+gem 'devise', '2.0.4'
+gem 'delayed_job_active_record', '0.3.2'
+gem 'noid', '0.5.4'
 
 group :development, :test do
   gem 'activerecord-import'
