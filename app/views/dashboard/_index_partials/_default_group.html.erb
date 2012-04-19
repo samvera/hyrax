@@ -1,5 +1,5 @@
 <table class="table table-border table-striped">
-	<% unless params[:display_type] == 'list' %>
+<% unless params[:display_type] == 'list' %>
   <tr>
     <th class="title">Title</th>
     <th class="creator">Id</th>
@@ -9,6 +9,6 @@
   </tr>
   <% end %>
   <% docs.each_with_index do |document,counter| %>
-   <%= render_document_partial document, 'index'  %>
+    <%= render_document_partial document, 'index', :counter => counter %>
   <% end %>
 </table>

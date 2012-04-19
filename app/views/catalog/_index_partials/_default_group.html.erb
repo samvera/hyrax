@@ -9,6 +9,6 @@
   </tr>
   <% end %>
   <% docs.each_with_index do |document,counter| %>
-   <%= render_document_partial document, 'index'  %>
+    <%= render_document_partial document, 'index', :counter => counter %>
   <% end %>
 </table>

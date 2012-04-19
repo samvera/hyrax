@@ -5,7 +5,7 @@ gem 'rails', '3.2.2'
 gem 'sqlite3', '1.3.6'
 gem 'mysql', '2.8.1'
 gem 'active-fedora', :git=>'git://github.com/projecthydra/active_fedora.git', :branch=>'master'
-gem 'blacklight', '3.3.2'
+gem 'blacklight', '3.3.1'
 gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'master'
 gem 'rubydora', '0.5.8'
 
