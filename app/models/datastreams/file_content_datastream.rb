@@ -13,8 +13,9 @@ class FileContentDatastream < ActiveFedora::Datastream
   def extract_metadata
     f = Tempfile.new("#{pid}-#{dsVersionID}")
     f.binmode
-    f.write(content)
+    f.write(content.read)
     f.close
+    content.rewind
     command = "#{fits_path} -i #{f.path}"
     stdin, stdout, stderr = popen3(command)
     stdin.close
@@ -22,7 +23,7 @@ class FileContentDatastream < ActiveFedora::Datastream
     stdout.close
     err = stderr.read
     stderr.close
-    raise "Unable to execute command \"#{command}\"\n#{err}" unless err.empty?
+    raise "Unable to execute command \"#{command}\"\n#{err}" unless err.empty? or err.include? "Error parsing Exiftool XML Output"
     f.unlink
     out
   end
