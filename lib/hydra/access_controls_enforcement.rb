@@ -164,9 +164,6 @@ module Hydra::AccessControlsEnforcement
   #   end
   def add_access_controls_to_solr_params(solr_parameters, user_parameters)
     apply_gated_discovery(solr_parameters, user_parameters)
-    if !can? :read, params[:id]
-      solr_parameters[:qt] = Blacklight.config[:public_qt]
-    end
   end
   
   # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
