@@ -29,7 +29,6 @@ module Hydra
         insert_into_file "app/assets/javascripts/application.js", :after => "//= require jquery_ujs" do
 %q{
 // Required by Hydra
-//= require 'jquery.hydraMetadata.js'         
 //= require 'jquery.ui.datepicker.js'      
 }          
         end
