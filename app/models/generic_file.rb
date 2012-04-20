@@ -63,14 +63,20 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
+  def logs(dsid)
+    ChecksumAuditLog.where(:dsid=>dsid, :pid=>self.pid).order('created_at desc')
+  end
+
   def audit!
     audit(true)
   end
 
   def audit(force = false)
+    logs = []
     self.per_version do |ver| 
-      GenericFile.audit(ver, force)
+      logs << GenericFile.audit(ver, force)
     end
+    logs
   end
 
   def per_version(&block)
@@ -87,28 +93,29 @@ class GenericFile < ActiveFedora::Base
 
   def GenericFile.audit(version, force = false)
     logger.debug "***AUDIT*** log for #{version.inspect}"
-    audit_log = ChecksumAuditLog.get_audit_log(version)
+    latest_audit = self.find(version.pid).logs(version.dsid).first
     unless force
-      return unless GenericFile.needs_audit?(version, audit_log)
+      return unless GenericFile.needs_audit?(version, latest_audit)
     end
     if version.dsChecksumValid
       logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
-      audit_log.pass = true
+      passing = true
       ChecksumAuditLog.prune_history(version)
     else
       logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
-      audit_log.pass = false
+      passing = false
     end
-    audit_log.save
+    ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
+                             :dsid=>version.dsid, :version=>version.versionID)
   end
 
-  def GenericFile.needs_audit?(version, audit_log)
-    if audit_log and audit_log.updated_at
-      logger.debug "***AUDIT*** last audit = #{audit_log.updated_at.to_date}"
-      days_since_last_audit = (DateTime.now - audit_log.updated_at.to_date).to_i
+  def GenericFile.needs_audit?(version, latest_audit)
+    if latest_audit and latest_audit.updated_at
+      logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
+      days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
       logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
       if days_since_last_audit < Rails.application.config.max_days_between_audits
-        logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{audit_log.updated_at})"
+        logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{latest_audit.updated_at})"
         return false
       end
     else

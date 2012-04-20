@@ -62,7 +62,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id/audit (POST)
   def audit
     @generic_file = GenericFile.find(params[:id])
-    render :json=>@generic_file.content.audit
+    render :json=>@generic_file.audit
   end
  
   # routed to /files/:id (PUT)

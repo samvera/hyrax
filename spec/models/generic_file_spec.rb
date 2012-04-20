@@ -103,15 +103,34 @@ describe GenericFile do
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
   end
+
   describe "audit" do
-    it "should support a forced audit on an instance"
-    it "should support a checked audit on an instance"
-    it "should iterate of versions of an instance"
-    it "should force an audit given a version"
-    it "should audit a given version"
-    it "should check if a version needs an audit"
-    it "should support auditing the entire repo"
+    before(:each) do
+      @f = GenericFile.new
+      @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @f.save
+    end
+    after(:each) do
+      @f.delete
+    end
+    it "should log a failing audit" do
+      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
+      FitsDatastream.any_instance.expects(:dsChecksumValid).returns(false)
+      ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
+      @f.audit!
+    end
+    it "should log a passing audit" do
+      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
+      @f.audit!
+    end
   end
+
   describe "characterize" do
     it "should run when the content datastream is created" do
       @file.expects(:characterize)

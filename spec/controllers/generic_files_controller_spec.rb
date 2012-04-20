@@ -39,7 +39,9 @@ describe GenericFilesController do
     it "should return json with the result" do
       xhr :post, :audit, :id=>@generic_file.pid
       response.should be_success
-      JSON.parse(response.body)["checksum_audit_log"]["pass"].should be_true
+      lambda { JSON.parse(response.body) }.should_not raise_error
+      audit_results = JSON.parse(response.body).collect { |result| result["checksum_audit_log"]["pass"] }
+      audit_results.reduce(true) { |sum, value| sum && value }.should be_true
     end
   end
 
