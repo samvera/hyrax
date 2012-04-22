@@ -63,6 +63,18 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
+  def to_jq_upload
+    {
+      "name" => self.title,
+      "size" => self.file_size,
+      "url" => "/generic_file/" + self.pid,
+      "thumbnail_url" => self.pid,
+      "delete_url" => "deleteme", # generic_file_path(:id => id),
+      "delete_type" => "DELETE" 
+    }
+  end
+   
+
   def logs(dsid)
     ChecksumAuditLog.where(:dsid=>dsid, :pid=>self.pid).order('created_at desc')
   end

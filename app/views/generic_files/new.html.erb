@@ -1,147 +1,127 @@
-<div class="page-header">
-  <h1>Upload Files</h1>
-  <p> When you have completed your upload you will automatically be redirected to the <%= link_to("dashboard", dashboard_path) %>.</p>
+<div class="alert alert-info hide" id="success">
+  You have successfully uploaded files with the assigned metadata.
+  <p>
+  <a class="btn" href="/dashboard/">My Files </a>
+  <a class="btn" href="/generic_files/new/">New Upload</a>
+  <a class="btn" href="/batch/<%= @batch.id %>/edit">Add Descriptions</a>
+  <!-- <a class="btn" href="/generic_file/">Continue Upload</a>  -->
+  </p>
 </div>
-<%= form_for(@generic_file, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
-<%= hidden_field_tag(:file_count, "1") %>
-<%= hidden_field_tag(:extra_description_count, "1") %>
-
-<div class="uploader-contents">
-  <div class="row">
-    <div class="span3">
-      <h2>Choose File(s)</h2>
-    </div>
-    <div class="span9">
-      <p>Select a file to upload from your computer.  Click the <strong>Add Files</strong> button to upload more than one file.</p>
-      <p id="upload_field_1">
-      <%# file_field_tag "Filedata[]",  :webkitdirectory=>"", :directory=>"", :mozdirectory=>"" %>
-      <%= file_field_tag "Filedata[]"  %>
-      </p>
-      <div id="additional_files"></div>
-      <%= f.submit :value => "+Add More Files", :name=> "additional_files_submit", :id => "additional_files_submit", :class=> "btn-info btn-small" %>
-    </div> <!-- close .span9 -->
-  </div><!-- close .row choose file section-->
-
-  <div class="row">
-    <div class="span3">
-        <h2>Description(s)</h2>
-    </div>
-    <div class="span9">
-      <div class="control-group" id="public_permissions">
-        <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
-        <select id="generic_file_public_group_access" name="permission[group][public]" class="controls span2">
-        <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read" }] %>
-          <% choices.each do |choice| %>
-            <% choice_label = choice.keys.first %>
-            <% choice_name = choice.values.first %>
-              <option value="<%=h choice_name %>">
-                 <%= choice_label.html_safe %>
-              </option>
-          <% end %>
-        </select>
-      </div><!-- close public_permissions -->
-
-      <div class="control-group" id="additional_based_near_clone">
-        <%= f.label :based_near, :class=>"control-label" %> 
-        <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_based_near_elements"></div>
-
-      <div class="control-group" id="additional_contributor_clone">
-        <%= f.label :contributor, :class=>"control-label" %> 
-        <%= f.text_field :contributor, :class=>"controls", :name=>"generic_file[contributor][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_contributor_elements"></div>
-
-      <div class="control-group" id="additional_creator_clone">
-        <%= f.label :creator, :class=>"control-label" %> 
-        <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]" %>
-        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_creator_elements"></div>
-
-      <div class="control-group" id="additional_date_created_clone">
-        <%= f.label :date_created, :class=>"control-label" %> 
-        <%= f.text_field :date_created, :class=>"controls", :name=>"generic_file[date_created][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_date_created_elements"></div>
-
-      <div class="control-group" id="additional_description_clone">
-        <%= f.label :description, :class=>"control-label" %> 
-        <%= f.text_area :description, :class=>"controls", :name=>"generic_file[description][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_description_elements"></div>
-
-      <div class="control-group" id="additional_identifier_clone">
-        <%= f.label :identifier, :class=>"control-label" %> 
-        <%= f.text_field :identifier, :class=>"controls", :name=>"generic_file[identifier][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_identifier_elements"></div>
-
-      <div class="control-group" id="additional_language_clone">
-        <%= f.label :language, :class=>"control-label" %> 
-        <%= f.text_field :language, :class=>"controls", :name=>"generic_file[language][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_language_elements"></div>
-
-      <div class="control-group" id="additional_publisher_clone">
-        <%= f.label :publisher, :class=>"control-label" %> 
-        <%= f.text_field :publisher, :class=>"controls", :name=>"generic_file[publisher][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_publisher_elements"></div>
-
-      <div class="control-group" id="additional_rights_clone">
-        <%= f.label :rights, :class=>"control-label" %> 
-        <%= f.text_field :rights, :class=>"controls", :name=>"generic_file[rights][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_rights_elements"></div>
-
-      <div class="control-group" id="additional_subject_clone">
-        <%= f.label :subject, :class=>"control-label" %> 
-        <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]" %>  
-        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_subject_elements"></div>
-
-      <div class="control-group" id="additional_tag_clone">
-        <%= f.label :tag, :class=>"control-label" %> 
-        <%= f.text_field :tag, :class=>"controls", :name=>"generic_file[tag][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_tag_elements"></div>
-
-      <div class="control-group" id="additional_title_clone">
-        <%= f.label :title, :class=>"control-label" %> 
-        <%= f.text_field :title, :class=>"controls", :name=>"generic_file[title][]" %>  
-        <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_title_elements"></div>
+<div class="alert hide" id="fail">
+  There was a problem during upload. Please click the &quot;Start Upload&quot; button or <a href="/generic_files/new//">start over</a>
+</div>
+    <!-- The file upload form used as target for the file upload widget -->
+    <!--     <form id="fileupload" action="/" method="POST" enctype="multipart/form-data"> -->
+      <%= form_for(@generic_file, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'}) do |f| %>
+      <%= hidden_field_tag(:batch_id, @batch.id) %>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="span7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="icon-plus icon-white"></i>
+                    <span>Add files...</span>
+                    <input type="file" name="files[]" multiple>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="icon-ban-circle icon-white"></i>
+                    <span>Cancel upload</span>
+                </button>
 <!--
-      <div id="more_descriptions">
-        <div class="control-group" id="extra_description_1">
-          <%# select_tag(:metadata_key_1, options_for_select(([['More Descriptions', '0']] | @dc_metadata))) %>
-          <%# text_field_tag(:metadata_value_1) %>
-          <%# select_tag(:'metadata_key[]', options_for_select(([['More Descriptions', '0']] | @dc_metadata)), :id=>'metadata_key_1') %>
-          <%# text_field_tag(:'metadata_value[]', nil, :id=>'metadata_value_1') %>
-        </div>
-      </div>
-      <div class="control-group">
-        <%# f.submit :value => "+Add More Descriptions", :name=> "additional_md_submit", :id => "additional_md_submit", :class => "adder btn-info btn-small"  %>
-      </div>
+                <button type="button" class="btn btn-danger delete">
+                    <i class="icon-trash icon-white"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">
 -->
-    </div> <!-- close .span9 -->
-  </div><!-- close .row description section -->
+            </div>
+            <div class="span5">
+                <!-- The global progress bar -->
+                <div class="progress progress-success progress-striped active fade">
+                    <div class="bar" style="width:0%;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- The loading indicator is shown during image processing -->
+        <div class="fileupload-loading"></div>
+        <br>
+        <!-- The table listing the files available for upload/download -->
+        <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+    </form>
+  <% end %>
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-jquery-tmpl">
+ {% for (var i=0, file; file=o.files[i]; i++) { %}
 
-<div class="form-actions">
-  <%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
-</div>
-</div><!-- close .uploader-contents -->
-<% end %>
+    <tr class="template-upload fade">
+        <td class="preview"><span class="fade"></span></td>
+        <td class="name"><span>{%=file.name%}</span></td>
+        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        {% if (file.error) { %}
+            <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else if (o.files.valid && !i) { %}
+            <td>
+                <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
+            </td>
+            <td class="start">{% if (!o.options.autoUpload) { %}
+                <button class="btn btn-primary">
+                    <i class="icon-upload icon-white"></i>
+                    <span>{%=locale.fileupload.start%}</span>
+                </button>
+            {% } %}</td>
+        {% } else { %}
+            <td colspan="2"></td>
+        {% } %}
+        <td class="cancel">{% if (!i) { %}
+            <button class="btn btn-warning">
+                <i class="icon-ban-circle icon-white"></i>
+                <span>{%=locale.fileupload.cancel%}</span>
+            </button>
+        {% } %}</td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-jquery-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        {% if (file.error) { %}
+            <td><spa/p</td>
+            <td class="name"><span>{%=file.name%}</span></td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else { %}
+            <td class="preview">
+              {% if (file.thumbnail_url) { %} <span class="label label-success">Success</span> {% } %}
+            </td>
+            <td class="name">
+                <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+            </td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td colspan="2"></td>
+        {% } %}
+<!--
+        <td class="delete">
+            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                <i class="icon-trash icon-white"></i>
+                <span>{%=locale.fileupload.destroy%}</span>
+            </button>
+            <input type="checkbox" name="delete" value="1"> 
+        </td>
+-->
+    </tr>
+{% } %}
+</script>
+
+<script src="/javascripts/fileupload/jquery-ui-1.8.14.custom.min.js"></script>
+<script src="/javascripts/tmpl.min.js"></script>
+<script src="/javascripts/fileupload/jquery.iframe-transport.js"></script>
+<script src="/javascripts/fileupload/jquery.fileupload.js"></script>
+<script src="/javascripts/fileupload/jquery.fileupload-ui.js"></script>
+<script src="/javascripts/fileupload/application.js"></script>
+<script src="/javascripts/fileupload/locale.js"></script>
+<script src="/javascripts/fileupload/main.js"></script>

@@ -12,6 +12,8 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new 
+    @batch = Batch.new
+    @batch.save
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],
@@ -33,25 +35,48 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
   end
 
+
+  def index
+    @generic_files = GenericFile.all
+    render :json => @generic_files.collect { |p| p.to_jq_upload }.to_json
+  end
+
+
   # routed to /files (POST)
   def create
-    create_and_save_generic_files_from_params
-
-    if @generic_files.empty? 
-      flash[:notice] = "You must specify a file to upload" 
-      redirect_params = {:controller => "generic_files", :action => "new"} 
-    elsif params[:generic_file].has_key? :creator and params[:generic_file][:creator].empty?
-      flash[:notice] = "You must include a creator."
-      redirect_params = {:controller => "generic_files", :action => "new"} 
-    else
-      notice = []
-      @generic_files.each do |gf|
-        notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
+    create_and_save_generic_file 
+    if @generic_file
+      respond_to do |format|
+        format.html {
+          render :json => [@generic_file.to_jq_upload].to_json,
+            :content_type => 'text/html',
+            :layout => false
+        }
+        format.json {
+          render :json => [@generic_file.to_jq_upload].to_json
+        }
       end
-      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
-      redirect_params = {:controller => "dashboard", :action => "index"} 
+    else
+      puts "respond bad"
+      render :json => [{:error => "custom_failure"}], :status => 304
     end
-    redirect_to redirect_params 
+#    create_and_save_generic_files_from_params
+#
+#    if @generic_files.empty? 
+#      flash[:notice] = "You must specify a file to upload" 
+#      redirect_params = {:controller => "generic_files", :action => "new"} 
+#    elsif params[:generic_file].has_key? :creator and params[:generic_file][:creator].empty?
+#      flash[:notice] = "You must include a creator."
+#      redirect_params = {:controller => "generic_files", :action => "new"} 
+#    else
+#      notice = []
+#      @generic_files.each do |gf|
+#        notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
+#      end
+#      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
+#      redirect_params = {:controller => "dashboard", :action => "index"} 
+#    end
+#    redirect_to redirect_params 
   end
 
   # routed to /files/:id
@@ -62,7 +87,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id/audit (POST)
   def audit
     @generic_file = GenericFile.find(params[:id])
-    render :json=>@generic_file.audit
+    render :json=>@generic_file.content.audit
   end
  
   # routed to /files/:id (PUT)
@@ -84,6 +109,30 @@ class GenericFilesController < ApplicationController
   def normalize_identifier
     params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
   end
+
+  def create_and_save_generic_file
+      
+    if params.has_key?(:files)
+      @generic_file = GenericFile.new
+      file = params[:files][0]
+      add_posted_blob_to_asset(@generic_file,file)
+      apply_depositor_metadata(@generic_file)
+      # Delete this next line when GenericFile.label no longer wipes out the title
+      @generic_file.label = file.original_filename
+      @generic_file.save
+      if params.has_key?(:batch_id)
+        @batch = Batch.find(params[:batch_id])
+        @batch.part << @generic_file.pid
+        @batch.save
+      else
+        puts "unable to find batch to attach to"
+      end
+      @generic_file
+    else
+      @generic_file
+    end
+  end
+
 
   # takes form file inputs and assigns meta data individually 
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields

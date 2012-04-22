@@ -16,6 +16,9 @@ ScholarSphere::Application.routes.draw do
 
   match 'authorities/:model/:term' => 'authorities#query'
 
+  match 'batch/:id/edit' => 'batch#edit', :as => :batch_edit
+  match 'batch/:id/' => 'batch#update', :as => :batch_generic_files
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

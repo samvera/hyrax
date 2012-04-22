@@ -1,0 +1,127 @@
+<%= form_for([@batch, @generic_file], :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
+  
+<%= hidden_field_tag(:extra_description_count, "1") %>
+<div class="uploader-contents">
+  <div class="row">
+    <div class="span3">
+        <h2>Description(s)</h2>
+    </div>
+    <div class="span9">
+      <div class="control-group" id="public_permissions">
+        <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
+        <select id="generic_file_public_group_access" name="permission[group][public]" class="controls span2">
+        <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read" }] %>
+          <% choices.each do |choice| %>
+            <% choice_label = choice.keys.first %>
+            <% choice_name = choice.values.first %>
+              <option value="<%=h choice_name %>">
+                 <%= choice_label.html_safe %>
+              </option>
+          <% end %>
+        </select>
+      </div><!-- close public_permissions -->
+
+      <div class="control-group" id="additional_based_near_clone">
+        <%= f.label :based_near, :class=>"control-label" %> 
+        <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_based_near_elements"></div>
+
+      <div class="control-group" id="additional_contributor_clone">
+        <%= f.label :contributor, :class=>"control-label" %> 
+        <%= f.text_field :contributor, :class=>"controls", :name=>"generic_file[contributor][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_contributor_elements"></div>
+
+      <div class="control-group" id="additional_creator_clone">
+        <%= f.label :creator, :class=>"control-label" %> 
+        <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]" %>
+        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_creator_elements"></div>
+
+      <div class="control-group" id="additional_date_created_clone">
+        <%= f.label :date_created, :class=>"control-label" %> 
+        <%= f.text_field :date_created, :class=>"controls", :name=>"generic_file[date_created][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_date_created_elements"></div>
+
+      <div class="control-group" id="additional_description_clone">
+        <%= f.label :description, :class=>"control-label" %> 
+        <%= f.text_area :description, :class=>"controls", :name=>"generic_file[description][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_description_elements"></div>
+
+      <div class="control-group" id="additional_identifier_clone">
+        <%= f.label :identifier, :class=>"control-label" %> 
+        <%= f.text_field :identifier, :class=>"controls", :name=>"generic_file[identifier][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_identifier_elements"></div>
+
+      <div class="control-group" id="additional_language_clone">
+        <%= f.label :language, :class=>"control-label" %> 
+        <%= f.text_field :language, :class=>"controls", :name=>"generic_file[language][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_language_elements"></div>
+
+      <div class="control-group" id="additional_publisher_clone">
+        <%= f.label :publisher, :class=>"control-label" %> 
+        <%= f.text_field :publisher, :class=>"controls", :name=>"generic_file[publisher][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_publisher_elements"></div>
+
+      <div class="control-group" id="additional_rights_clone">
+        <%= f.label :rights, :class=>"control-label" %> 
+        <%= f.text_field :rights, :class=>"controls", :name=>"generic_file[rights][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_rights_elements"></div>
+
+      <div class="control-group" id="additional_subject_clone">
+        <%= f.label :subject, :class=>"control-label" %> 
+        <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]" %>  
+        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_subject_elements"></div>
+
+      <div class="control-group" id="additional_tag_clone">
+        <%= f.label :tag, :class=>"control-label" %> 
+        <%= f.text_field :tag, :class=>"controls", :name=>"generic_file[tag][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_tag_elements"></div>
+
+      <div class="control-group" id="additional_title_clone">
+        <%= f.label :title, :class=>"control-label" %> 
+        <%= f.text_field :title, :class=>"controls", :name=>"generic_file[title][]" %>  
+        <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_title_elements"></div>
+<!--
+      <div id="more_descriptions">
+        <div class="control-group" id="extra_description_1">
+          <%# select_tag(:metadata_key_1, options_for_select(([['More Descriptions', '0']] | @dc_metadata))) %>
+          <%# text_field_tag(:metadata_value_1) %>
+          <%# select_tag(:'metadata_key[]', options_for_select(([['More Descriptions', '0']] | @dc_metadata)), :id=>'metadata_key_1') %>
+          <%# text_field_tag(:'metadata_value[]', nil, :id=>'metadata_value_1') %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%# f.submit :value => "+Add More Descriptions", :name=> "additional_md_submit", :id => "additional_md_submit", :class => "adder btn-info btn-small"  %>
+      </div>
+-->
+    </div> <!-- close .span9 -->
+  </div><!-- close .row description section -->
+
+<div class="form-actions">
+  <%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+</div>
+</div><!-- close .uploader-contents -->
+<% end %>

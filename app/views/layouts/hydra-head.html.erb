@@ -4,21 +4,23 @@
     <meta charset="utf-8" />
 
     <title><%= h(@page_title || application_name) %></title>
-    
     <%# render_head_content %>
     <%= stylesheet_link_tag 'psu', :media => 'all' %> 
-    <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %> 
-    <%= stylesheet_link_tag 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', :media => 'all' %> 
+    <%# stylesheet_link_tag 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', :media => 'all' %> 
     <%= stylesheet_link_tag 'blacklight/blacklight', :media => 'all' %> 
     <%= stylesheet_link_tag 'scholarsphere', :media => 'all' %> 
-    <%= javascript_include_tag 'blacklight/blacklight' %> 
-    <%= javascript_include_tag 'jquery-1.7.1.js' %>
-    <%# javascript_include_tag 'jquery-ui-1.8.1.custom.min.js' %>
+    <%= stylesheet_link_tag 'fileupload/style' %>>
+    <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %> 
+    <%= stylesheet_link_tag 'fileupload/jquery.fileupload-ui' %>>
+
+    <%= javascript_include_tag 'jquery-1.7.2.min.js' %>
     <%= javascript_include_tag 'bootstrap-dropdown.js' %>
+    <%= javascript_include_tag 'bootstrap-button.js' %>
     <%= javascript_include_tag 'jquery.ui.core.js' %>
     <%= javascript_include_tag 'jquery.ui.widget.js' %>
     <%= javascript_include_tag 'jquery.ui.position.js' %>
     <%= javascript_include_tag 'jquery.ui.autocomplete.js' %>
+    <%= javascript_include_tag 'blacklight/blacklight' %> 
     <%= javascript_include_tag 'scholarsphere.js' %>
 	</head>
   
