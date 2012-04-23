@@ -11,7 +11,7 @@ Feature: Catalog Index
   Scenario: Executing a search
     Given I am on the catalog index page
     And I fill in "q" with "hydrangea"
-    And I press "submit"
+    And I press "search"
     Then I should see "Title"
     And I should see "Author"
     And I should see "Work"

@@ -19,12 +19,22 @@ def response_is_html_valid?(resp)
   rescue SocketError, RestClient::BadGateway #meaning we're either not connected to the internet or we were throttled by the validator.
     puts "WARNING: No connection to W3C validator.  Page may not be HTML5 valid!"
     return true
+  rescue RestClient::RequestTimeout
+    puts "WARNING: Timeout connecting to W3C validator.  Page may not be HTML5 valid!"
+    return true
   end
   
   xml = Nokogiri::XML(validator_response)
 
   #removing namespaces because we really don't care
   xml.remove_namespaces!
+
+  fault = xml.xpath("//Fault/Code/Subcode/Value").text
+  if fault.present?
+    puts "WARNING: There was an error with the W3C validator.  Page may not be HTML5 valid!"
+    puts "FAULT: #{fault}"
+    return true
+  end
 
   # "true" or "false"
   valid = xml.xpath("//validity").text

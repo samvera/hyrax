@@ -6,7 +6,7 @@ Feature: ModsAsset Search Result
   Scenario: Search Results have ModsAsset info
     Given I am on the home page
     And I fill in "q" with "1234-5678"
-    When I press "submit"
+    When I press "search"
     Then I should see a link to "the show document page for hydrangea:fixture_mods_article3"
     And I should see "Test Article"
     And I should see "Aug. 1, 1998"
