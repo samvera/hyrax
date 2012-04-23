@@ -11,6 +11,9 @@ describe ChecksumAuditLog do
     @different_ds = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>'descMetadata', :version=>'descMetadata.0', :pass=>false)
     @different_pid = ChecksumAuditLog.create(:pid=>"other_pid", :dsid=>'content', :version=>'content.0', :pass=>false)
   end
+  after(:all) do
+    @f.delete
+  end
   it "should return a list of logs for this datastream sorted by date descending" do
     @f.logs(@version.dsid).should == [@new, @old]
   end

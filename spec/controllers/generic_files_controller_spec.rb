@@ -9,15 +9,18 @@ describe GenericFilesController do
       @file_count = GenericFile.count
       @mock = GenericFile.new({:pid => 'test:123'})
       GenericFile.expects(:new).returns(@mock)
+      @batch = Batch.create
     end
     after do
       @mock.delete
+      @batch.delete
     end
     it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
       #xhr :post, :create, :Filedata=>[file], :Filename=>"The world", :permission=>{"group"=>{"public"=>"discover"}}
       #response.should redirect_to(dashboard_path)
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :permission=>{"group"=>{"public"=>"discover"}}
+
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => @batch.pid, :permission=>{"group"=>{"public"=>"discover"} }
       GenericFile.count.should == @file_count + 1 
       saved_file = GenericFile.find('test:123')
       saved_file.label.should == 'world.png'

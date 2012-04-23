@@ -8,8 +8,8 @@
 
 	<%= render 'constraints', :localized_params=>params %>
   
-  <%= render_pagination_info @response, :entry_name=>'item' %><br />
-  <%=link_to "&lt; new search".html_safe, dashboard_path %>
+  <% render_pagination_info @response, :entry_name=>'item' %><br />
+  <%= link_to "&lt; new search".html_safe, dashboard_path %>
 
   <%= render 'sort_and_per_page' %>
   <%= render 'results_pagination' %>

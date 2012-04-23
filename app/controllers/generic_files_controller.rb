@@ -60,23 +60,6 @@ class GenericFilesController < ApplicationController
       puts "respond bad"
       render :json => [{:error => "custom_failure"}], :status => 304
     end
-#    create_and_save_generic_files_from_params
-#
-#    if @generic_files.empty? 
-#      flash[:notice] = "You must specify a file to upload" 
-#      redirect_params = {:controller => "generic_files", :action => "new"} 
-#    elsif params[:generic_file].has_key? :creator and params[:generic_file][:creator].empty?
-#      flash[:notice] = "You must include a creator."
-#      redirect_params = {:controller => "generic_files", :action => "new"} 
-#    else
-#      notice = []
-#      @generic_files.each do |gf|
-#        notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
-#      end
-#      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
-#      redirect_params = {:controller => "dashboard", :action => "index"} 
-#    end
-#    redirect_to redirect_params 
   end
 
   # routed to /files/:id
@@ -87,7 +70,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id/audit (POST)
   def audit
     @generic_file = GenericFile.find(params[:id])
-    render :json=>@generic_file.content.audit
+    render :json=>@generic_file.audit
   end
  
   # routed to /files/:id (PUT)
@@ -119,6 +102,8 @@ class GenericFilesController < ApplicationController
       apply_depositor_metadata(@generic_file)
       # Delete this next line when GenericFile.label no longer wipes out the title
       @generic_file.label = file.original_filename
+      @generic_file.date_uploaded  << Time.now.ctime
+      @generic_file.date_modified  << Time.now.ctime
       @generic_file.save
       if params.has_key?(:batch_id)
         @batch = Batch.find(params[:batch_id])

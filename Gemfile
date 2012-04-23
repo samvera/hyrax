@@ -1,11 +1,11 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.2'
+gem 'rails', '~>3.2.2'
 
 gem 'sqlite3', '1.3.6'
 gem 'mysql', '2.8.1'
 gem 'active-fedora', :git=>'git://github.com/projecthydra/active_fedora.git', :branch=>'master'
-gem 'blacklight', '3.3.1'
+gem 'blacklight', '~>3.3.1'
 gem 'hydra-head', :git=>'git://github.com/projecthydra/hydra-head.git', :branch=>'master'
 gem 'rubydora', '0.5.8'
 
@@ -31,3 +31,6 @@ group :development, :test do
   gem "factory_girl_rails", "~> 1.7.0"
   gem 'launchy'
 end # (leave this comment here to catch a stray line inserted by blacklight!)
+
+gem "compass-rails", "~> 1.0.0", :group => :assets
+gem "compass-susy-plugin", "~> 0.9.0", :group => :assets
