@@ -180,6 +180,7 @@ namespace :scholarsphere do
 
   namespace :fixtures do
     @localDir = 'test_support/fixtures'
+    @rakeDir = 'tasks'
     if ENV["FIXTURE_DIR"]
           @dir= ENV["FIXTURE_DIR"]
     else
@@ -191,8 +192,8 @@ namespace :scholarsphere do
     ]
 
     desc "Create ScholarSphere Hydra fixtures for generation and loading"
-    task :create do
-
+    task :create => :environment do
+      
       if ENV["FIXTURE_ID"]
          @id= ENV["FIXTURE_ID"]
       else
@@ -213,9 +214,9 @@ namespace :scholarsphere do
 
       @root ='<%=Rails.root%>'
 
-      @inputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_generic_stub.foxml.erb')
-      @inputDescFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_generic_stub.descMeta.txt')
-      @inputTxtFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_generic_stub.txt')
+      @inputFoxmlFile = File.join(Rails.root, @rakeDir, 'scholarsphere_generic_stub.foxml.erb')
+      @inputDescFile = File.join(Rails.root, @rakeDir,  'scholarsphere_generic_stub.descMeta.txt')
+      @inputTxtFile = File.join(Rails.root, @rakeDir,  'scholarsphere_generic_stub.txt')
 
       @outputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.foxml.erb')
       @outputDescFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.descMeta.txt')
