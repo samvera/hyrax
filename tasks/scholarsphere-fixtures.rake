@@ -1,4 +1,3 @@
-require 'lib/active_fedora'
 # scholarsphere-fixtures
 #
 # This was extracted from the original Hydra version in 
