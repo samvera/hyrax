@@ -11,7 +11,7 @@ gem 'rubydora', '~> 0.5.8'
 
 gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
-gem 'noid', '~> 0.5.4'
+gem 'noid', '~> 0.5.5'
 
 group :assets do
   gem "compass-rails", "~> 1.0.0"
