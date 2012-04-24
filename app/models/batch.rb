@@ -12,4 +12,11 @@ class Batch < ActiveFedora::Base
   delegate :title, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :part, :to => :descMetadata
+  
+  def to_solr(solr_doc={})
+    super(solr_doc)
+    solr_doc["noid_s"] = self.pid.split(":").last
+    return solr_doc
+  end
+
 end
