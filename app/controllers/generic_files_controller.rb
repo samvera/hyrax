@@ -1,5 +1,6 @@
+require "pp"
+
 class GenericFilesController < ApplicationController
-  
   include Hydra::Controller
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
   include Hydra::FileAssetsHelper
@@ -14,6 +15,7 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.new 
     @batch = Batch.new
     @batch.save
+    @noid_s = @batch.id.split(":").last
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],

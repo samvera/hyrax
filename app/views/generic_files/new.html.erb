@@ -3,7 +3,8 @@
   <p>
   <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
   <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
-  <%= link_to 'Add Descriptions', batch_edit_path(@batch.id), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', batch_edit_path(@noid_s), :class=>'btn' %>
+
   </p>
 </div>
 <div class="alert hide" id="fail">

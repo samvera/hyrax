@@ -70,7 +70,7 @@ class GenericFile < ActiveFedora::Base
     {
       "name" => self.title,
       "size" => self.file_size,
-      "url" => "/generic_file/" + self.pid,
+      "url" => "/files/" + self.pid.split(":").last,
       "thumbnail_url" => self.pid,
       "delete_url" => "deleteme", # generic_file_path(:id => id),
       "delete_type" => "DELETE" 
