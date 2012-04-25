@@ -18,6 +18,11 @@ group :assets do
   gem "compass-susy-plugin", "~> 0.9.0"
 end
 
+group :integration do
+  gem 'yaml_db', :git=>'git://github.com/lostapathy/yaml_db.git'
+end
+
+
 group :development, :test do
   gem 'activerecord-import'
   gem "rails_indexes", :git => "https://github.com/warpc/rails_indexes"
