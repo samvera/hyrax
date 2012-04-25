@@ -37,7 +37,7 @@ class GenericFilesController < ApplicationController
 
 
   def index
-    @generic_files = GenericFile.all
+    @generic_files = GenericFile.find(:all, :count=>GenericFile.count)
     render :json => @generic_files.collect { |p| p.to_jq_upload }.to_json
   end
 
