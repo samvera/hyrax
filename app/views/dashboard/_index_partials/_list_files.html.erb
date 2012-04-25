@@ -18,13 +18,13 @@ on element ids -->
   <td colspan="6">
     <dl>
       <dt>Title</dd>
-      <dd><%= document[:generic_file__title_t] %> <%= link_to document[:generic_file__title_t], generic_file_path(document[:noid_s].first) %> </dd>
+      <dd><%= link_to render_document_show_field_value(:document=>document, :field=>"generic_file__title_t"), generic_file_path(document[:noid_s].first) %> </dd>
 
       <dt>Contributor</dd>
       <dd><%= render_document_show_field_value(:document=>document, :field=>"generic_file__contributor_t") %></dd>
 
       <dt>Format</dt>
-      <dd><%= document[:format_label_t] %></dd>
+      <dd><%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %></dd>
 
       <dt>Date Modified</dt>
       <dd><%= document[:system_modified_dt] %></dd>
