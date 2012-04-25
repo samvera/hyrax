@@ -1,8 +1,4 @@
 # -*- encoding : utf-8 -*-
-# This file has been deprecated and replaced by per-controller configuration
-# See CatalogController
-# 
-# -*- encoding : utf-8 -*-
 # You can configure Blacklight from here. 
 #   
 #   Blacklight.configure(:environment) do |config| end
