@@ -124,17 +124,17 @@ $(function() {
   });
 
   $('.icon-plus').click(function() {
-    //this.id format: "expand_id:NNNNNNNNNN"
-    var a = this.id.split("expand_id_");
+    //this.id format: "expand_NNNNNNNNNN"
+    var a = this.id.split("expand_");
     if (a.length > 1)
     {
       docId = a[1]
-      $("#detail_id_"+docId).toggle();
-      if( $("#detail_id_"+docId).is(":hidden") ) {
-        $("#expand_id_"+docId).attr("class", "icon-plus");
+      $("#detail_"+docId).toggle();
+      if( $("#detail_"+docId).is(":hidden") ) {
+        $("#expand_"+docId).attr("class", "icon-plus");
       }
       else {
-        $("#expand_id_"+docId).attr("class", "icon-minus");
+        $("#expand_"+docId).attr("class", "icon-minus");
       }
     }
   })
