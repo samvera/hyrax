@@ -8,6 +8,9 @@ class GenericFile < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
   has_file_datastream :type => FileContentDatastream
 
+
+  #handle_asynchronously :to_solr 
+
   belongs_to :batch, :property => "isPartOf"
 
   delegate :related_url, :to => :descMetadata
@@ -81,6 +84,19 @@ class GenericFile < ActiveFedora::Base
 
   def audit!
     audit(true)
+  end
+
+  def audit_stat
+      logs = audit(true)
+      logger.info "*****"
+      logger.info logs.inspect
+      logger.info "*****"
+      audit_results = logs.collect { |result| result["pass"] }
+      logger.info "!*****"
+      logger.info audit_results.inspect
+      logger.info "!*****"
+      result =audit_results.reduce(true) { |sum, value| sum && value }
+      result
   end
 
   def audit(force = false)

@@ -103,7 +103,6 @@ describe GenericFile do
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
   end
-
   describe "audit" do
     before(:each) do
       @f = GenericFile.new
@@ -128,6 +127,9 @@ describe GenericFile do
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
+    end
+    it "should return true on audit_status" do
+      @f.audit_stat.should be_true 
     end
   end
 
