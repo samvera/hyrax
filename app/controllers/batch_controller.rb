@@ -16,17 +16,9 @@ class BatchController < ApplicationController
   def update
     #render :edit 
     @batch = Batch.find(params[:id])
-    puts "params"
-    pp params
-    puts "batch"
-    pp @batch
     @generic_files = []
-    puts "params generic file"
-    pp params[:generic_file]
     @batch.part.each do |gf_pid|
       gf = GenericFile.find(gf_pid)
-      puts "gf"
-      pp gf
       if params.has_key?(:permission)
         gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
       else
@@ -50,12 +42,9 @@ class BatchController < ApplicationController
       @generic_files << gf
     end
     notice = []
-    puts "flashing"
     @generic_files.each do |gf|
       notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
-      puts "noticing"
     end
-    puts "ready to redirect"
     flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
     redirect_params = {:controller => "dashboard", :action => "index"} 
     redirect_to redirect_params

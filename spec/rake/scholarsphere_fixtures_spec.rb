@@ -1,6 +1,6 @@
 # Used to test the scholarsphere-fixtures rake task
 #
-require "spec/spec_helper"
+require "spec_helper"
 require "rake"
 
 
@@ -34,14 +34,14 @@ describe "scholarsphere:fixtures:*" do
        @file = File.open(@tmpName, "r") 
        @fedoraGem = @file.read.lstrip.rstrip
        File.delete(@tmpName)
-       Rake.application.rake_require( "lib/tasks/active_fedora", @fedoraGem, loaded_files_excluding_current_rake_file)      
+       Rake.application.rake_require( "lib/tasks/active_fedora", [@fedoraGem], loaded_files_excluding_current_rake_file)      
     end
     
     #load the required rake tasks before each test
    before (:each) do
      @rake = Rake::Application.new 
      Rake.application = @rake
-     Rake.application.rake_require( "tasks/scholarsphere-fixtures", ".", loaded_files_excluding_current_rake_file)
+     Rake.application.rake_require( "tasks/scholarsphere-fixtures", ["."], loaded_files_excluding_current_rake_file)
      require_fedora
      Rake::Task.define_task(:environment)
    end
