@@ -21,6 +21,13 @@
         </select>
       </div><!-- close public_permissions -->
 
+      <div class="control-group" id="additional_related_url_clone">
+        <%= f.label :related_url, :class=>"control-label" %> 
+        <%= f.text_field :related_url, :class=>"controls", :name=>"generic_file[related_url][]"  %> 
+        <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder btn-info btn-mini"  %>
+      </div>
+      <div id="additional_related_url_elements"></div>
+
       <div class="control-group" id="additional_based_near_clone">
         <%= f.label :based_near, :class=>"control-label" %> 
         <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]"  %> 

@@ -1,4 +1,14 @@
  <link href="/stylesheets/jquery/ui-lightness/jquery-ui-1.8.1.custom.css?1327597589" media="all" rel="stylesheet" type="text/css" /> 
-<h1>Edit <%= @batch.pid %></h1>
+<h1>Add Descriptions</h1>
+<h3>Batch</h3>
+Title<br />
+Description <br />
 
-<%= render :partial => '/generic_files/metadata', :formats => [:html] %>
+<h3>Individual</h3>
+Title <br />
+Tag <br />
+Contributor <br />
+Creator <br />
+Description <br />
+More Metadata
+<%= render :partial => 'metadata', :formats => [:html] %>
