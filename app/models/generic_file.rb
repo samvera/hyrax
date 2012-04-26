@@ -38,17 +38,74 @@ class GenericFile < ActiveFedora::Base
   delegate :last_modified, :to => :characterization
   delegate :filename, :to => :characterization
   delegate :original_checksum, :to => :characterization
+  delegate :rights_basis, :to => :characterization
+  delegate :copyright_basis, :to => :characterization
+  delegate :copyright_note, :to => :characterization
   delegate :well_formed, :to => :characterization
+  delegate :valid, :to => :characterization
+  delegate :status_message, :to => :characterization
   delegate :file_title, :to => :characterization
   delegate :file_author, :to => :characterization
   delegate :page_count, :to => :characterization
+  delegate :file_language, :to => :characterization
+  delegate :word_count, :to => :characterization
+  delegate :character_count, :to => :characterization
+  delegate :paragraph_count, :to => :characterization
+  delegate :line_count, :to => :characterization
+  delegate :table_count, :to => :characterization
+  delegate :graphics_count, :to => :characterization
+  delegate :byte_order, :to => :characterization
+  delegate :compression, :to => :characterization
+  delegate :width, :to => :characterization
+  delegate :height, :to => :characterization
+  delegate :color_space, :to => :characterization
+  delegate :profile_name, :to => :characterization
+  delegate :profile_version, :to => :characterization
+  delegate :orientation, :to => :characterization
+  delegate :color_map, :to => :characterization
+  delegate :image_producer, :to => :characterization
+  delegate :capture_device, :to => :characterization
+  delegate :scanning_software, :to => :characterization
+  delegate :exif_version, :to => :characterization
+  delegate :gps_timestamp, :to => :characterization
+  delegate :latitude, :to => :characterization
+  delegate :longitude, :to => :characterization
+  delegate :character_set, :to => :characterization
+  delegate :markup_basis, :to => :characterization
+  delegate :markup_language, :to => :characterization
+  delegate :duration, :to => :characterization
+  delegate :bit_depth, :to => :characterization
+  delegate :sample_rate, :to => :characterization
+  delegate :channels, :to => :characterization
+  delegate :data_format, :to => :characterization
+  delegate :offset, :to => :characterization
 
-  before_save :characterize
+  before_save :fudge
+
+  def fudge
+    puts "2 #{self.descMetadata.graph.inspect}"
+  end
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
   def characterize
-    if content.changed?
-      characterization.content = content.extract_metadata
+    puts "2 #{self.descMetadata.graph.inspect}"
+    return nil
+    if self.content.changed?
+      puts "3 #{self.descMetadata.graph.inspect}"
+      self.characterization.content = self.content.extract_metadata
+      self.append_metadata
+    end
+  end
+
+  def append_metadata
+    terms = self.characterization_terms
+    ScholarSphere::Application.config.fits_to_desc_mapping.each_pair do |k, v|
+      if terms.has_key?(k)
+        proxy_term = self.send(v)
+        terms[k].each do |term_value|
+          proxy_term << term_value unless proxy_term.include?(term_value)
+        end
+      end
     end
   end
   
@@ -90,6 +147,21 @@ class GenericFile < ActiveFedora::Base
 
   def set_public_access(access_level)
     self.datastreams["rightsMetadata"].permissions({:group=>"public"}, access_level)
+  end
+
+  def characterization_terms
+    h = {}
+    self.characterization.class.terminology.terms.each_pair do |k, v|
+      next unless v.respond_to? :proxied_term
+      term = v.proxied_term
+      begin
+        value = self.send(term.name)
+        h[term.name] = value unless value.empty?
+      rescue NoMethodError
+        next
+      end
+    end
+    h
   end
 
   def logs(dsid)

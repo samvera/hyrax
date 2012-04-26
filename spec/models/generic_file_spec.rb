@@ -83,7 +83,9 @@ describe GenericFile do
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
+    puts "1 #{@file.descMetadata.graph.inspect}"
     @file.save
+    puts "4 #{@file.descMetadata.graph.inspect}"
     @file.to_solr.should_not be_nil
     @file.to_solr["generic_file__part_of_t"].should be_nil
     @file.to_solr["generic_file__date_uploaded_t"].should be_nil
@@ -150,6 +152,28 @@ describe GenericFile do
       @file.save
       @file.file_size.should == ['4218']
       @file.original_checksum.should == ['28da6259ae5707c68708192a40b3e85c']
+    end
+    it "should return a hash of all populated values from the characterization terminology" do
+      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.save
+      @file.characterization_terms[:format_label].should == ["Portable Network Graphics"]
+      @file.characterization_terms[:mime_type].should == ["image/png"]
+      @file.characterization_terms[:file_size].should == ["4218"]
+      @file.characterization_terms[:original_checksum].should == ["28da6259ae5707c68708192a40b3e85c"]
+      @file.characterization_terms.keys.should include(:last_modified)
+      @file.characterization_terms.keys.should include(:filename)
+    end
+    it "should append metadata from the characterization" do
+      @file.resource_type.should == []
+      @file.format.should == []
+      @file.identifier.should == []
+      @file.date_modified.empty?.should be_true
+      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.save
+      @file.resource_type.should == ["Portable Network Graphics"]
+      @file.format.should == ["image/png"]
+      @file.identifier.should == ["28da6259ae5707c68708192a40b3e85c"]
+      @file.date_modified.empty?.should be_false
     end
   end
   describe "label" do

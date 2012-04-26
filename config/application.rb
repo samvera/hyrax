@@ -15,6 +15,18 @@ module ScholarSphere
     config.max_days_between_audits = 7
     config.id_namespace = "scholarsphere"
     config.application_name = "ScholarSphere"
+    config.fits_to_desc_mapping = {
+      :format_label => :resource_type,
+      :mime_type => :format,
+      :last_modified => :date_modified,
+      :original_checksum => :identifier,
+      :rights_basis => :rights,
+      :copyright_basis => :rights,
+      :copyright_note => :rights,
+      :file_title => :title,
+      :file_author => :creator,
+      :file_language => :language
+    }
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/app/models/datastreams)

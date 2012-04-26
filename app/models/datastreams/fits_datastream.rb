@@ -29,7 +29,7 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
       t.document {
         t.file_title(:path=>"title")
         t.file_author(:path=>"author")
-        t.language(:path=>"language")
+        t.file_language(:path=>"language")
         t.page_count(:path=>"pageCount")
         t.word_count(:path=>"wordCount")
         t.character_count(:path=>"characterCount")
@@ -88,7 +88,7 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
     t.file_title(:proxy=>[:metadata, :document, :file_title])
     t.file_author(:proxy=>[:metadata, :document, :file_author])
     t.page_count(:proxy=>[:metadata, :document, :page_count])
-    t.language(:proxy=>[:metadata, :document, :language])
+    t.file_language(:proxy=>[:metadata, :document, :file_language])
     t.word_count(:proxy=>[:metadata, :document, :word_count])
     t.character_count(:proxy=>[:metadata, :document, :character_count])
     t.paragraph_count(:proxy=>[:metadata, :document, :paragraph_count])
