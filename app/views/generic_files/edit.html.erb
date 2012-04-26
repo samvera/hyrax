@@ -1,64 +1,22 @@
-<h1>Edit <%= @generic_file.title %></h1>
+<h1>Edit <%= @generic_file.title.first %></h1>
 <div class="viewing_context">
   <%= link_to "Browse view", url_for(@generic_file) %>
 </div>
+
+
 <%= form_for @generic_file do |f| %>
 
-  <% @generic_file.title.each_with_index do |t, i| %> 
-    <div class="control-group" <% if i == 1%> id="additional_title_clone" <% end %>>
-      <%= f.label :title, :class=>"control-label" %> 
-      <%= f.text_field :title, :class=>"controls", :name=>"generic_file[title][]", :value=>t %> 
-      <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn-info btn-mini"  %>
-    </div>
-    <div id="additional_title_elements"></div>
-  <% end %>
-
-  <% @generic_file.contributor.each_with_index do |t, i| %> 
-  <div class="control-group" <% if i == 0%> id="additional_contributor_clone" <% end %>>
-      <%= f.label :contributor, :class=>"control-label" %> 
-      <%= f.text_field :contributor, :class=>"controls", :name=>"generic_file[contributor][]", :value=>t %> 
-      <% if  i == 0 %>
-        <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder btn-info btn-mini"  %>
-      <% end %>
-    </div>
-  <% end %>
-    <div id="additional_contributor_elements"></div>
-
-
-<h2>Audit</h2>
-Audit status:   <%= @generic_file.audit_stat  %>
-<% if 0 %>
-<h2>Metadata</h2>
-<%= f.label :title%> <%= f.text_field :title %> <br />
-<%= f.label :contributor%> <%= f.text_field :contributor %> <br />
-<%= f.label :creator%> <%= f.text_field :creator %> <br />
-<%= f.label :filename%> <%= f.text_field :filename %> <br />
-
-<%= f.label :related_url%> <%= f.text_field :related_url %> <br />
-<%= f.label :based_near%> <%= f.text_field :based_near %> <br />
-<%= f.label :part_of%> <%= f.text_field :part_of %> <br />
-<%= f.label :tag%> <%= f.text_field :tag %> <br />
-<%= f.label :description%> <%= f.text_field :description %> <br />
-<%= f.label :publisher%> <%= f.text_field :publisher %> <br />
-
-<%= f.label :date_created%> <%= f.text_field :date_created %><br />
-
-<% @generic_file.date_uploaded.each do |date_uploaded| %>
-    <%= f.label :date_uploaded%> <%= date_uploaded %>  <br />
-<% end %>
-<% @generic_file.date_modified.each do |date_modified| %>
-   <%= f.label :date_modified%> <%= date_modified %> <br />
-<% end %>
-<%= f.label :subject%> <%= f.text_field :subject %> <br />
-<%= f.label :language%> <%= f.text_field :language %> <br />
-<%= f.label :rights%> <%= f.text_field :rights %> <br />
-<%= f.label :resource_type%> <%= f.text_field :resource_type %> <br />
-<%= f.label :format%> <%= f.text_field :format %> <br />
-
-
-<%= f.submit "Save Changes" %>
-<% end %>
 <div class="uploader-contents">
+  <div class="row">
+    <div class="span3">
+      <h2>Audit</h2>
+    </div>
+    <div class="span9">
+      Audit status: <%= @generic_file.audit_stat  %><br />
+      Date Uploaded: <%= @generic_file.date_uploaded.first %> <br />
+      Date Modified: <%= @generic_file.date_modified.first %> <br />
+    </div>
+  </div>
   <div class="row">
     <div class="span3">
         <h2>Description(s)</h2>
@@ -74,92 +32,31 @@ Audit status:   <%= @generic_file.audit_stat  %>
               <option value="<%=h choice_name %>">
                  <%= choice_label.html_safe %>
               </option>
-          <% end %>
-        </select>
+        <% end %>
+        </select> 
       </div><!-- close public_permissions -->
-
-      <div class="control-group" id="additional_related_url_clone">
-        <%= f.label :related_url, :class=>"control-label" %> 
-        <%= f.text_field :related_url, :class=>"controls", :name=>"generic_file[related_url][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder btn-info btn-mini"  %>
+  <!-- loop over each term and output form vals -->
+  <% @terms.each_with_index do |t| %>
+    <% key = t.to_s.split("generic_file__").last %>
+    <% vals = eval "@generic_file." +  t.to_s.split("generic_file__").last %><br />
+    <% vals.each_with_index do |v, index| %>
+      <div class="control-group" <% if index == 0%> id="additional_<%=key%>_clone" <% end %>>
+        <%= f.label key, :class=>"control-label" %> 
+        <%= f.text_field :title, :class=>"controls", :name=>"generic_file["+key+"][]", :value=>v %> 
+        <% if index == 0 %>
+          <%= f.submit :value => "+", :name=> "additional_"+key, :id => "additional_"+key+"_submit", :class => "adder btn-info btn-mini"  %>
+        <% end %>
       </div>
-      <div id="additional_related_url_elements"></div>
+    <% end %>
+    <div id="additional_<%=key%>_elements"></div>
+  <% end %>
 
-      <div class="control-group" id="additional_based_near_clone">
-        <%= f.label :based_near, :class=>"control-label" %> 
-        <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_based_near_elements"></div>
-
-      <div class="control-group" id="additional_creator_clone">
-        <%= f.label :creator, :class=>"control-label" %> 
-        <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]" %>
-        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_creator_elements"></div>
-
-      <div class="control-group" id="additional_date_created_clone">
-        <%= f.label :date_created, :class=>"control-label" %> 
-        <%= f.text_field :date_created, :class=>"controls", :name=>"generic_file[date_created][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_date_created_elements"></div>
-
-      <div class="control-group" id="additional_description_clone">
-        <%= f.label :description, :class=>"control-label" %> 
-        <%= f.text_area :description, :class=>"controls", :name=>"generic_file[description][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_description_elements"></div>
-
-      <div class="control-group" id="additional_identifier_clone">
-        <%= f.label :identifier, :class=>"control-label" %> 
-        <%= f.text_field :identifier, :class=>"controls", :name=>"generic_file[identifier][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_identifier_elements"></div>
-
-      <div class="control-group" id="additional_language_clone">
-        <%= f.label :language, :class=>"control-label" %> 
-        <%= f.text_field :language, :class=>"controls", :name=>"generic_file[language][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_language_elements"></div>
-
-      <div class="control-group" id="additional_publisher_clone">
-        <%= f.label :publisher, :class=>"control-label" %> 
-        <%= f.text_field :publisher, :class=>"controls", :name=>"generic_file[publisher][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_publisher_elements"></div>
-
-      <div class="control-group" id="additional_rights_clone">
-        <%= f.label :rights, :class=>"control-label" %> 
-        <%= f.text_field :rights, :class=>"controls", :name=>"generic_file[rights][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_rights_elements"></div>
-
-      <div class="control-group" id="additional_subject_clone">
-        <%= f.label :subject, :class=>"control-label" %> 
-        <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]" %>  
-        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_subject_elements"></div>
-
-      <div class="control-group" id="additional_tag_clone">
-        <%= f.label :tag, :class=>"control-label" %> 
-        <%= f.text_field :tag, :class=>"controls", :name=>"generic_file[tag][]"  %> 
-        <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn-info btn-mini"  %>
-      </div>
-      <div id="additional_tag_elements"></div>
 
     </div> <!-- close .span9 -->
   </div><!-- close .row description section -->
 
-<div class="form-actions">
-  <%= f.submit :value => "Save Changes", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
-</div>
+  <div class="form-actions">
+    <%= f.submit :value => "Save Changes", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+  </div>
 </div><!-- close .uploader-contents -->
 <% end %>

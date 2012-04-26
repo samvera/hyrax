@@ -28,13 +28,15 @@ class GenericFilesController < ApplicationController
       ['Rights', 'rights'],
       ['Subject', 'subject'], 
       ['Tag', 'tag'], 
-      ['Title', 'title'], 
+      ['Title', 'title'],
+      ['Relative Url', 'relative_url']
     ]
   end
 
   # routed to /files/:id/edit
   def edit
     @generic_file = GenericFile.find(params[:id])
+    @terms = @generic_file.get_terms
   end
 
 
@@ -112,12 +114,14 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
     @generic_file.date_modified = [Time.now.ctime]
-
+    @generic_file.set_public_access(params[:permission][:group][:public])
     #added to cause solr to re-index facets
     @generic_file.update_index
-    
+    @terms = @generic_file.get_terms
+ 
     flash[:notice] = "Successfully updated." 
-    add_posted_blob_to_asset(generic_file, params[:Filedata]) if params.has_key?(:Filedata) 
+    # we are not currently allow files to be added
+    # add_posted_blob_to_asset(generic_file, params[:Filedata]) if params.has_key?(:Filedata) 
     render :edit 
   end
 
@@ -142,6 +146,7 @@ class GenericFilesController < ApplicationController
       @generic_file.label = file.original_filename
       @generic_file.date_uploaded  << Time.now.ctime
       @generic_file.date_modified  << Time.now.ctime
+      @generic_file.set_public_access("none")
       @generic_file.save
       if params.has_key?(:batch_id)
         @batch = Batch.find(params[:batch_id])
@@ -170,9 +175,9 @@ class GenericFilesController < ApplicationController
         apply_depositor_metadata(generic_file)
         
         if params.has_key?(:permission)
-          generic_file.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
+          generic_file.set_public_access(params[:permission][:group][:public])
         else
-          generic_file.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+          generic_file.set_public_access("none")
         end
         generic_file.date_uploaded  << Time.now.ctime
         generic_file.date_modified  << Time.now.ctime

@@ -5,6 +5,26 @@ GIT
     yaml_db (0.2.2)
 
 GIT
+  remote: git://github.com/psu-stewardship/active_fedora.git
+  revision: d5fd289029103538ab001f94810763b9d12fb1d0
+  specs:
+    active-fedora (4.0.0)
+      activeresource (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      equivalent-xml
+      mediashelf-loggable
+      mime-types (>= 1.16)
+      multipart-post (= 1.1.2)
+      nokogiri
+      om (~> 1.6.0)
+      rdf
+      rdf-rdfxml (= 0.3.5)
+      rsolr
+      rubydora (~> 0.5.8)
+      solrizer (~> 1.2.0)
+      xml-simple (>= 1.0.12)
+
+GIT
   remote: https://github.com/warpc/rails_indexes
   revision: 4a550270989d0b74546b18fd0ff09e12492f2c3a
   specs:
@@ -30,21 +50,6 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (4.0.0)
-      activeresource (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      equivalent-xml
-      mediashelf-loggable
-      mime-types (>= 1.16)
-      multipart-post (= 1.1.2)
-      nokogiri
-      om (~> 1.6.0)
-      rdf
-      rdf-rdfxml (= 0.3.5)
-      rsolr
-      rubydora (~> 0.5.8)
-      solrizer (~> 1.2.0)
-      xml-simple (>= 1.0.12)
     activemodel (3.2.3)
       activesupport (= 3.2.3)
       builder (~> 3.0.0)
@@ -315,7 +320,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active-fedora (~> 4.0.0)
+  active-fedora!
   activerecord-import
   bcrypt-ruby
   blacklight (~> 3.3.2)

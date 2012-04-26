@@ -76,7 +76,20 @@ class GenericFile < ActiveFedora::Base
       "delete_type" => "DELETE" 
     }
   end
-   
+  
+  def get_terms
+    @terms = []
+    self.descMetadata.class.config[:predicate_mapping].each do |uri, mappings|
+      mappings.keys.each do |term|
+        @terms << term if term.to_s.start_with? "generic_file__" and not ['solrtype', 'solrbehaviors'].include? term.to_s.split('__').last
+      end 
+    end 
+    @terms
+  end
+
+  def set_public_access(access_level)
+    self.datastreams["rightsMetadata"].permissions({:group=>"public"}, access_level)
+  end
 
   def logs(dsid)
     ChecksumAuditLog.where(:dsid=>dsid, :pid=>self.pid).order('created_at desc, id desc')
