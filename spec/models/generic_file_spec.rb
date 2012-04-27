@@ -64,6 +64,20 @@ describe GenericFile do
       f.creator.should == ["John Doe"]
       f.title.should == ["New work"]
     end
+    it "should be able to be added to w/o unexpected graph behavior" do
+      @file.creator = "John Doe"
+      @file.title = "New work"
+      @file.save
+      f = GenericFile.find(@file.pid)
+      f.creator.should == ["John Doe"]
+      f.title.should == ["New work"]
+      f.creator = "Jane Doe"
+      f.title << "Newer work"
+      f.save
+      f = GenericFile.find(@file.pid)
+      f.creator.should == ["Jane Doe"]
+      f.title.should == ["New work", "Newer work"]
+    end
   end
   it "should support to_solr" do
     @file.part_of = "Arabiana"
