@@ -81,6 +81,7 @@ class GenericFile < ActiveFedora::Base
     @terms = []
     self.descMetadata.class.config[:predicate_mapping].each do |uri, mappings|
       mappings.keys.each do |term|
+        puts term
         @terms << term if term.to_s.start_with? "generic_file__" and not ['solrtype', 'solrbehaviors'].include? term.to_s.split('__').last
       end 
     end 

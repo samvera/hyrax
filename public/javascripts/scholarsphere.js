@@ -78,7 +78,6 @@ $(function() {
     
   }
 
-
   /* 
    * adds a new file input for ingest
    */
@@ -139,5 +138,8 @@ $(function() {
     }
   })
 
+  $('#add_descriptions').click(function() {
+      $('#more_descriptions').show();
+  });
 
 });

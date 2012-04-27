@@ -35,19 +35,23 @@
         <% end %>
         </select> 
       </div><!-- close public_permissions -->
-  <!-- loop over each term and output form vals -->
+      <!-- loop over each term and output form vals -->
   <% @terms.each_with_index do |t| %>
     <% key = t.to_s.split("generic_file__").last %>
     <% vals = eval "@generic_file." +  t.to_s.split("generic_file__").last %><br />
-    <% vals.each_with_index do |v, index| %>
-      <div class="control-group" <% if index == 0%> id="additional_<%=key%>_clone" <% end %>>
-        <%= f.label key, :class=>"control-label" %> 
-        <%= f.text_field :title, :class=>"controls", :name=>"generic_file["+key+"][]", :value=>v %> 
-        <% if index == 0 %>
-          <%= f.submit :value => "+", :name=> "additional_"+key, :id => "additional_"+key+"_submit", :class => "adder btn-info btn-mini"  %>
-        <% end %>
-      </div>
+    <%# if vals is zero we create an empty array to loop over for output %>
+    <% if vals.count == 0 %>
+      <% vals = [''] %>
     <% end %>
+      <% vals.each_with_index do |v, index| %>
+        <div class="control-group" <% if index == 0%> id="additional_<%=key%>_clone" <% end %>>
+          <%= f.label key, :class=>"control-label" %> 
+          <%= f.text_field :title, :class=>"controls", :name=>"generic_file["+key+"][]", :value=>v %> 
+          <% if index == 0 %>
+            <%= f.submit :value => "+", :name=> "additional_"+key, :id => "additional_"+key+"_submit", :class => "adder btn-info btn-mini"  %>
+          <% end %>
+        </div>
+      <% end %>
     <div id="additional_<%=key%>_elements"></div>
   <% end %>
 
