@@ -14,6 +14,7 @@ class GenericFilesController < ApplicationController
   def new
     @generic_file = GenericFile.new 
     @batch = Batch.new
+    @batch.title = [Time.now.ctime]
     @batch.save
     @noid_s = @batch.id.split(":").last
     @dc_metadata = [
