@@ -166,12 +166,14 @@ describe GenericFile do
       @file.format.should == []
       @file.identifier.should == []
       @file.date_modified.empty?.should be_true
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.title.should == []
+      @file.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
       @file.save
-      @file.resource_type.should == ["Portable Network Graphics"]
-      @file.format.should == ["image/png"]
-      @file.identifier.should == ["28da6259ae5707c68708192a40b3e85c"]
+      @file.resource_type.should == ["Portable Document Format"]
+      @file.format.should == ["application/pdf"]
+      @file.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
       @file.date_modified.empty?.should be_false
+      @file.title.should == ["Microsoft Word - sample.pdf.docx"]
     end
   end
   describe "label" do
