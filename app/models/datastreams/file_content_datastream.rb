@@ -3,6 +3,7 @@ class FileContentDatastream < ActiveFedora::Datastream
   include Open3
 
   def extract_metadata
+    return if content.nil?
     f = Tempfile.new("#{pid}-#{dsVersionID}")
     f.binmode
     if content.respond_to? :read
@@ -24,9 +25,7 @@ class FileContentDatastream < ActiveFedora::Datastream
     out
   end
 
-
   def fits_path
     ScholarSphere::Application.config.fits_path
   end
-
 end

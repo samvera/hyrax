@@ -19,7 +19,7 @@ describe FileContentDatastream do
       content = mock("file")
       content.stubs(:read=>f.read)
       content.stubs(:rewind=>f.rewind)
-      @subject.expects(:content).times(4).returns(f)
+      @subject.expects(:content).times(5).returns(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
@@ -32,7 +32,7 @@ describe FileContentDatastream do
       content = mock("file")
       content.stubs(:read=>f.read)
       content.stubs(:rewind=>f.rewind)
-      @subject.expects(:content).times(4).returns(f)
+      @subject.expects(:content).times(5).returns(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:identity/@mimetype', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).first.value.should == 'image/png'

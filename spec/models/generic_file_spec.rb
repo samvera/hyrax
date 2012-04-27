@@ -83,9 +83,7 @@ describe GenericFile do
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
-    puts "1 #{@file.descMetadata.graph.inspect}"
     @file.save
-    puts "4 #{@file.descMetadata.graph.inspect}"
     @file.to_solr.should_not be_nil
     @file.to_solr["generic_file__part_of_t"].should be_nil
     @file.to_solr["generic_file__date_uploaded_t"].should be_nil

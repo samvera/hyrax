@@ -80,18 +80,11 @@ class GenericFile < ActiveFedora::Base
   delegate :data_format, :to => :characterization
   delegate :offset, :to => :characterization
 
-  before_save :fudge
-
-  def fudge
-    puts "2 #{self.descMetadata.graph.inspect}"
-  end
+  before_save :characterize
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
   def characterize
-    puts "2 #{self.descMetadata.graph.inspect}"
-    return nil
     if self.content.changed?
-      puts "3 #{self.descMetadata.graph.inspect}"
       self.characterization.content = self.content.extract_metadata
       self.append_metadata
     end
