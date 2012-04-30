@@ -4,7 +4,9 @@ on element ids -->
 <tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  class="document <%= cycle("even","odd") %>"> -->
   <!-- <td><%# check_box_tag :generic_file, document[:id] %></td> -->
   <td>
-    <i id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="icon-plus"></i>&nbsp;<%= link_to document[:label_t].first, generic_file_path(document[:noid_s].first) %> </td>
+    <i id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="icon-plus"></i>&nbsp;
+    <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
+    <%= link_to document[:label_t].first, generic_file_path(document[:noid_s].first) %> </td>
   <td><%= document[:noid_s].first %></td>
   <td><%= document.fetch(:system_create_dt,nil).to_time.strftime("%c") %> </td>
   <td><%= document[:creator_t] %> </td>

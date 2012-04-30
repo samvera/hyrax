@@ -28,4 +28,9 @@ class FileContentDatastream < ActiveFedora::Datastream
   def fits_path
     ScholarSphere::Application.config.fits_path
   end
+
+  def delivery_url
+    return "#{ActiveFedora.fedora_config.credentials[:url]}/#{self.url}"
+  end
+
 end

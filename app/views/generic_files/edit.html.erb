@@ -1,4 +1,7 @@
 <h1>Edit <%= @generic_file.title.first %></h1>
+
+<%= render :partial => 'media_display' %>
+
 <div class="viewing_context">
   <%= link_to "Browse view", url_for(@generic_file) %>
 </div>
