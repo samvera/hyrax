@@ -163,7 +163,7 @@ module Hydra::HydraHelperBehavior
   
 
   def render_all_workflow_steps
-    "#{all_edit_partials.map{|partial| render partial}}"
+    all_edit_partials.map{|partial| render partial}.join
   end
   
   def submit_name
