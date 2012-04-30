@@ -118,6 +118,7 @@ GEM
       capybara (>= 1.1.2)
       cucumber (>= 1.1.8)
       nokogiri (>= 1.5.0)
+    daemon_controller (1.0.0)
     daemons (1.1.8)
     database_cleaner (0.7.2)
     delayed_job (3.0.2)
@@ -140,6 +141,7 @@ GEM
       factory_girl (~> 2.6.0)
       railties (>= 3.0.0)
     fastercsv (1.5.4)
+    fastthread (1.0.7)
     ffi (1.0.11)
     fssm (0.2.9)
     gherkin (2.9.3)
@@ -201,6 +203,11 @@ GEM
       mediashelf-loggable
       nokogiri (>= 1.4.2)
     orm_adapter (0.0.7)
+    passenger (3.0.12)
+      daemon_controller (>= 0.2.5)
+      fastthread (>= 1.0.1)
+      rack
+      rake (>= 0.8.1)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -348,6 +355,7 @@ DEPENDENCIES
   mocha
   mysql (~> 2.8.1)
   noid (~> 0.5.5)
+  passenger
   rails (~> 3.2.3)
   rails_indexes!
   rspec-rails (>= 2.4.0)

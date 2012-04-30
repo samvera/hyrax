@@ -20,8 +20,8 @@ end
 
 group :integration do
   gem 'yaml_db', :git=>'git://github.com/lostapathy/yaml_db.git'
+  gem 'passenger'
 end
-
 
 group :development, :test do
   gem 'unicorn-rails'
