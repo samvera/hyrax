@@ -1,5 +1,9 @@
 <h1><%= @generic_file.title.join("<br />") %></h1>
 
+<% unless (@generic_file.mime_type & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg']).empty? %>
+  Display tho images
+<% end %>
+
 <div class="viewing_context">
   <%= link_to "Edit view", edit_generic_file_path %>
 </div>
