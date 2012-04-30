@@ -15,7 +15,7 @@ Installation Instructions
 
 Copy and edit local DB, Fedora, and Solr configs
 
-    cp config/database.yml.sample config/database.yml
+    cp config/solr.yml.sample config/solr.yml
     cp config/fedora.yml.sample config/fedora.yml
     cp config/database.yml.sample config/database.yml
 
