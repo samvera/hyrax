@@ -6,13 +6,13 @@ require 'rdf/rdfxml'
 namespace :scholarsphere do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
-  task :ci do
+  task :ci => :environment do
     #Rake::Task["hyhead:doc"].invoke
     Rake::Task["jetty:config"].invoke
     Rake::Task["db:migrate"].invoke
     
     require 'jettywrapper'
-    jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(Rails.root + '/jetty')})
+    jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(File.join(Rails.root, 'jetty'))})
     
     error = nil
     error = Jettywrapper.wrap(jetty_params) do
