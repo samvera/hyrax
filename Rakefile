@@ -5,4 +5,3 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
 ScholarSphere::Application.load_tasks
-Dir.glob('tasks/*.rake').each { |r| import r }

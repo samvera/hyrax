@@ -179,7 +179,6 @@ namespace :scholarsphere do
 
   namespace :fixtures do
     @localDir = 'test_support/fixtures'
-    @rakeDir = 'tasks'
     if ENV["FIXTURE_DIR"]
           @dir= ENV["FIXTURE_DIR"]
     else
@@ -213,9 +212,9 @@ namespace :scholarsphere do
 
       @root ='<%=Rails.root%>'
 
-      @inputFoxmlFile = File.join(Rails.root, @rakeDir, 'scholarsphere_generic_stub.foxml.erb')
-      @inputDescFile = File.join(Rails.root, @rakeDir,  'scholarsphere_generic_stub.descMeta.txt')
-      @inputTxtFile = File.join(Rails.root, @rakeDir,  'scholarsphere_generic_stub.txt')
+      @inputFoxmlFile = File.join(Rails.root, 'spec', 'fixtures', 'scholarsphere_generic_stub.foxml.erb')
+      @inputDescFile = File.join(Rails.root, 'spec', 'fixtures',  'scholarsphere_generic_stub.descMeta.txt')
+      @inputTxtFile = File.join(Rails.root, 'spec', 'fixtures',  'scholarsphere_generic_stub.txt')
 
       @outputFoxmlFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.foxml.erb')
       @outputDescFile = File.join(Rails.root, @localDir, @dir, 'scholarsphere_'+@id+'.descMeta.txt')
