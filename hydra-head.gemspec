@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
   s.add_dependency 'cancan'
+  s.add_dependency 'jquery-rails'
   
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'yard'
