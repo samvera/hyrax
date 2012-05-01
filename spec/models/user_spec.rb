@@ -13,18 +13,5 @@ describe User do
     @user.login.should == "testuser@example.com"
     @user.email.should == "testuser@example.com"
   end
-  it "should have zero batches by default" do
-    #b = Batch.find(:all, :query => {:creator => @user.email})
-    Batch.find(:all, :query => {:creator => @user.email}).count.should == 0
-  end
-  it "should now have one batch" do
-    #batch = Batch.find(:all, :query => {:creator => @user.email})
-    #batch.each do |b|
-    #  puts b
-    #  b.delete
-    #end
-    f = Batch.create(:creator => @user.email)
-    Batch.find(:all, :query => {:creator => @user.email}).count.should == 1
-    f.delete
-  end
+  
 end
