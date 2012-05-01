@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Batch do
   before(:all) do
-    @user = User.create(:email => "testuser@example.com", 
-                        :password => "password", 
-                        :password_confirmation => "password")
+    @user = FactoryGirl.create(:user)
     @file = GenericFile.create
     @batch = Batch.create(:title => "test collection",
                           :creator => @user.login,
@@ -22,7 +20,7 @@ describe Batch do
     @batch.descMetadata.should be_kind_of BatchRdfDatastream
   end
   it "should belong to testuser" do
-    @batch.creator.should == [@user.email]
+    @batch.creator.should == [@user.login]
   end
   it "should be titled 'test collection'" do
     @batch.title.should == ["test collection"]

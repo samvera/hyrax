@@ -29,6 +29,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'rspec-rails', '>= 2.4.0'
+  gem 'debugger'
   gem 'ruby-prof'
   gem 'mocha'
   gem 'cucumber-rails', '~> 1.0', :require => false

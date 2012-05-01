@@ -21,7 +21,7 @@
                 -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.to_s %> <b class="caret"></b></a> 
               <ul class="dropdown-menu">
-                <li><%= link_to 'my account info', edit_user_registration_path %></li>
+                <!--<li><%#= link_to 'my account info', edit_user_registration_path %></li>-->
                 <li><%= link_to 'my dashboard', dashboard_path  %></li>
                 <li><%= link_to 'upload', new_generic_file_path  %></li>
                 <li><%= link_to 'your bookmarks', bookmarks_path %></li>
@@ -29,10 +29,10 @@
                 <!--<li><%# link_to "Selected Items", folder_index_path %>(<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li>-->
                 <li><%= link_to "selected items", folder_index_path %></li>
                 <li><%= link_to "search history", search_history_path %></li>
-                <li><%= link_to "log out", destroy_user_session_path %></li>
+                <li><%= link_to "log out", 'https://webaccess.psu.edu' %></li>
               </ul>
 <% else %>
-                <li><%= link_to "Login", new_user_session_path %></li>
+                <li><%= link_to "Login", 'https://webaccess.psu.edu' %></li>
 <% end %>
             </li>
           </ul>
