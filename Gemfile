@@ -4,10 +4,8 @@ gem 'rails', '~> 3.2.3'
 
 gem 'sqlite3', '~> 1.3.6'
 gem 'mysql', '~> 2.8.1'
-gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
 gem 'blacklight', '~> 3.3.2'
 gem 'hydra-head', '~> 4.0.0'
-gem 'rubydora', '~> 0.5.8'
 
 gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
@@ -30,7 +28,6 @@ group :development, :test do
   gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
   gem 'selenium-webdriver'
   gem 'headless'
-  gem 'ruby-debug-base19'
   gem 'rspec-rails', '>= 2.4.0'
   gem 'ruby-prof'
   gem 'mocha'
