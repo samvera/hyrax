@@ -4,6 +4,8 @@ describe GenericFile do
   before(:each) do 
     @file = GenericFile.new
   end 
+
+
   it "should have rightsMetadata" do
     @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
   end
@@ -194,6 +196,38 @@ describe GenericFile do
     it "should set the inner label" do
       @file.label = "My New Label"
       @file.inner_object.label.should == "My New Label"
+    end
+  end
+
+  context "with rightsMetadata" do
+    subject do
+      m = GenericFile.new()
+      m.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
+      m.save
+      m
+    end
+    it "should have read groups accessor" do
+      subject.read_groups.should == ['group-6', 'group-7']
+    end
+    it "should have read groups string accessor" do
+      subject.read_groups_string.should == 'group-6, group-7'
+    end
+    it "should have read groups writer" do
+      subject.read_groups = ['group-2', 'group-3']
+      subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
+    end
+
+    it "should have read groups string writer" do
+      subject.read_groups_string = 'umg/up.dlt.staff, group-3'
+      subject.rightsMetadata.groups.should == {'umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
+    end
+    it "should only revoke eligible groups" do
+      subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
+      # 'group-7' is not eligible to be revoked
+      subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
     end
   end
 end

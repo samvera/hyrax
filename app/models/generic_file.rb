@@ -1,9 +1,10 @@
 require "psu-customizations"
-
+require 'dil/rights_metadata'
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
   include PSU::Noid
+  include Dil::RightsMetadata
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
