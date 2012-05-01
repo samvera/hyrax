@@ -78,3 +78,6 @@ db/schema.rb
 
 ## generates foxml
 test_support/fixtures/scholarsphere/*.foxml.xml
+test_support/fixtures/scholarsphere/scholarsphere_rspecTestFixture.descMeta.txt
+test_support/fixtures/scholarsphere/scholarsphere_rspecTestFixture.foxml.erb
+test_support/fixtures/scholarsphere/scholarsphere_rspecTestFixture.txt
