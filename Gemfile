@@ -11,6 +11,8 @@ gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
 gem 'noid', '~> 0.5.5'
 
+gem 'net-ldap'
+
 group :assets do
   gem "compass-rails", "~> 1.0.0"
   gem "compass-susy-plugin", "~> 0.9.0"
