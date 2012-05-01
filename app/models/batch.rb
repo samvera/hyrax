@@ -3,6 +3,7 @@ require "psu-customizations"
 class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
+  include PSU::Noid
 
   has_metadata :name => "descMetadata", :type => BatchRdfDatastream
 
@@ -15,7 +16,7 @@ class Batch < ActiveFedora::Base
   
   def to_solr(solr_doc={})
     super(solr_doc)
-    solr_doc["noid_s"] = self.pid.split(":").last
+    solr_doc["noid_s"] = noid
     return solr_doc
   end
 

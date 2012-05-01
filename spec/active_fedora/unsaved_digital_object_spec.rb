@@ -25,7 +25,7 @@ describe ActiveFedora::UnsavedDigitalObject do
   it "should not assign a pid that already exists in Fedora" do
     mock_pid = 'scholarsphere:ef12ef12f'
     unique_pid = 'scholarsphere:bb22bb22b'
-    PSU::IdService.stubs(:mint).returns(mock_pid, unique_pid)
+    PSU::IdService.stubs(:next_id).returns(mock_pid, unique_pid)
     ActiveFedora::Base.stubs(:exists?).with(mock_pid).returns(true)
     ActiveFedora::Base.stubs(:exists?).with(unique_pid).returns(false)
     @obj = ActiveFedora::UnsavedDigitalObject.new(ActiveFedora::Base, 'id')

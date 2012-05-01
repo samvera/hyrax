@@ -3,13 +3,11 @@ require "psu-customizations"
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
+  include PSU::Noid
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-  has_file_datastream :type => FileContentDatastream
-
-
-  #handle_asynchronously :to_solr 
+  has_file_datastream :name => "content", :type => FileContentDatastream
 
   belongs_to :batch, :property => "isPartOf"
 
@@ -105,7 +103,7 @@ class GenericFile < ActiveFedora::Base
   def to_solr(solr_doc={})
     super(solr_doc)
     solr_doc["label_t"] = self.label
-    solr_doc["noid_s"] = self.pid.split(":").last
+    solr_doc["noid_s"] = noid
     return solr_doc
   end
   
@@ -120,7 +118,7 @@ class GenericFile < ActiveFedora::Base
     {
       "name" => self.title,
       "size" => self.file_size,
-      "url" => "/files/" + self.pid.split(":").last,
+      "url" => "/files/#{noid}",
       "thumbnail_url" => self.pid,
       "delete_url" => "deleteme", # generic_file_path(:id => id),
       "delete_type" => "DELETE" 

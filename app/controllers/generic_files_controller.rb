@@ -16,7 +16,7 @@ class GenericFilesController < ApplicationController
     @batch = Batch.new
     @batch.title = [Time.now.ctime]
     @batch.save
-    @noid_s = @batch.id.split(":").last
+    @noid_s = @batch.noid
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],

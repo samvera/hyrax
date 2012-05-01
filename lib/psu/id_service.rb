@@ -5,10 +5,19 @@ module PSU
     def self.valid?(identifier)
       # remove the fedora namespace since it's not part of the noid
       noid = identifier.split(":").last
-      @@minter.valid? noid
+      return @@minter.valid? noid
     end
     def self.mint
-      "#{@@namespace}:#{@@minter.mint}"
+      taken = true
+      while taken
+        pid = self.next_id
+        taken = ActiveFedora::Base.exists?(pid)
+      end
+      return pid
     end    
+    protected
+    def self.next_id
+      return "#{@@namespace}:#{@@minter.mint}"
+    end
   end
 end
