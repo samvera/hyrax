@@ -30,7 +30,7 @@ class GenericFilesController < ApplicationController
       ['Subject', 'subject'], 
       ['Tag', 'tag'], 
       ['Title', 'title'],
-      ['Relative Url', 'relative_url']
+      ['Related URL', 'related_url']
     ]
   end
 
@@ -114,7 +114,7 @@ class GenericFilesController < ApplicationController
   def update
     @generic_file = GenericFile.find(params[:id])
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
-    @generic_file.date_modified = [Time.now.ctime]
+    @generic_file.date_modified = Time.now.ctime
     @generic_file.set_public_access(params[:permission][:group][:public])
     #added to cause solr to re-index facets
     @generic_file.update_index
@@ -136,8 +136,7 @@ class GenericFilesController < ApplicationController
     params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
   end
 
-  def create_and_save_generic_file
-      
+  def create_and_save_generic_file      
     if params.has_key?(:files)
       @generic_file = GenericFile.new
       file = params[:files][0]
@@ -145,8 +144,8 @@ class GenericFilesController < ApplicationController
       apply_depositor_metadata(@generic_file)
       # Delete this next line when GenericFile.label no longer wipes out the title
       @generic_file.label = file.original_filename
-      @generic_file.date_uploaded  << Time.now.ctime
-      @generic_file.date_modified  << Time.now.ctime
+      @generic_file.date_uploaded = Time.now.ctime
+      @generic_file.date_modified = Time.now.ctime
       @generic_file.set_public_access("none")
       @generic_file.save
       if params.has_key?(:batch_id)

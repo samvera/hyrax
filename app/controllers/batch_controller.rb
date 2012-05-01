@@ -15,34 +15,23 @@ class BatchController < ApplicationController
 
   def update
     #render :edit 
-    @batch = Batch.find(params[:id])
-    @generic_files = []
-    @batch.part.each do |gf_pid|
+    batch = Batch.find(params[:id])
+    notice = []
+    batch.part.each do |gf_pid|
       gf = GenericFile.find(gf_pid)
       if params.has_key?(:permission)
         gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
       else
         gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
       end
-
-      gf.based_near << params[:generic_file][:based_near] if params[:generic_file].has_key?(:based_near) 
-      gf.contributor << params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
-      gf.creator << params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
-      gf.date_created << params[:generic_file][:date_created] if params[:generic_file].has_key?(:date_created)
-      gf.description << params[:generic_file][:description] if params[:generic_file].has_key?(:description)
-      gf.identifier << params[:generic_file][:identifier] if params[:generic_file].has_key?(:identifier)
-      gf.language << params[:generic_file][:language] if params[:generic_file].has_key?(:language)
-      gf.publisher << params[:generic_file][:publisher] if params[:generic_file].has_key?(:publisher)
-      gf.rights << params[:generic_file][:rights] if params[:generic_file].has_key?(:rights)
-      gf.subject << params[:generic_file][:subject] if params[:generic_file].has_key?(:subject)
-      gf.tag << params[:generic_file][:tag] if params[:generic_file].has_key?(:tag)
-      gf.title << params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
+      params[:generic_file].each_pair do |term, values|
+        next if values == [""]
+        proxy_term = gf.send(term)
+        values.each do |v|
+          proxy_term << v unless proxy_term.include?(v)
+        end
+      end
       gf.save
-      #gf.delay.save
-      @generic_files << gf
-    end
-    notice = []
-    @generic_files.each do |gf|
       notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
     end
     flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
