@@ -25,7 +25,7 @@ module Hydra::FileAssets
     else
       container_uri = "info:fedora/#{params[:asset_id]}"
       escaped_uri = container_uri.gsub(/(:)/, '\\:')
-      extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}"}
+      extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}", :qt=>'standard'}
       @response, @document_list = get_search_results( extra_controller_params )
       
       # Including this line so permissions tests can be run against the container

@@ -3,7 +3,7 @@ module Hydra::ModelMethods
 
   included do
     unless self.class ==  Module
-        self.has_many :parts, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
+      self.has_many :parts, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
     end
   end
   

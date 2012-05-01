@@ -27,22 +27,16 @@ describe Hydra::FileAssetsController do
       xhr :get, :index
       assigns[:solr_result].should == "solr result"
     end
-    it "should find all file assets belonging to a given container object if container_id or container_id is provided" do
-      mock_container = mock("container")
-      mock_container.expects(:file_objects).with(:response_format => :solr).returns("solr result")
-      controller.expects(:get_search_results).with(:q=>'is_part_of_s:info\:fedora/_PID_').returns(["assets solr response","assets solr list"])
-      controller.expects(:get_solr_response_for_doc_id).with('_PID_').returns(["container solr response","container solr doc"])
-      controller.stubs(:load_permissions_from_solr)
+    it "should find all file assets belonging to a given container object if asset_id is provided" do
+      pid = 'hydrangea:fixture_mods_article3'
+      xhr :get, :index, :asset_id=>pid
+      assigns[:response][:response][:docs].first["id"].should == "hydrangea:fixture_file_asset1"
+      assigns[:document_list].first.id.should == "hydrangea:fixture_file_asset1"
       
-      ActiveFedora::Base.expects(:find).with("_PID_", :cast=>true).returns(mock_container)
-      xhr :get, :index, :asset_id=>"_PID_"
-      assigns[:response].should == "assets solr response"
-      assigns[:document_list].should == "assets solr list"
-      
-      assigns[:container_response].should == "container solr response"
-      assigns[:document].should == "container solr doc"
-      assigns[:solr_result].should == "solr result"
-      assigns[:container].should == mock_container
+      assigns[:container_response][:response][:docs].first["id"].should == "hydrangea:fixture_mods_article3"
+      assigns[:document].id.should == "hydrangea:fixture_mods_article3"
+      assigns[:solr_result].first["id"].should == "hydrangea:fixture_file_asset1"
+      assigns[:container].should == ModsAsset.find('hydrangea:fixture_mods_article3')
     end
     
   end
