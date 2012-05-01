@@ -12,7 +12,7 @@ namespace :scholarsphere do
     Rake::Task["db:migrate"].invoke
     
     require 'jettywrapper'
-    jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(File.dirname(__FILE__) + '/../jetty')})
+    jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(Rails.root + '/jetty')})
     
     error = nil
     error = Jettywrapper.wrap(jetty_params) do
