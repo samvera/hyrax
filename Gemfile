@@ -27,6 +27,7 @@ end
 
 group :development, :test do
   gem 'unicorn-rails'
+  gem "debugger"
   gem 'activerecord-import'
   gem "rails_indexes", :git => "https://github.com/warpc/rails_indexes"
   gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'

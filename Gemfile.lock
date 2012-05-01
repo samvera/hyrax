@@ -98,6 +98,7 @@ GEM
     childprocess (0.3.2)
       ffi (~> 1.0.6)
     chunky_png (1.2.5)
+    columnize (0.3.6)
     compass (0.12.1)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
@@ -119,6 +120,13 @@ GEM
     daemon_controller (1.0.0)
     daemons (1.1.8)
     database_cleaner (0.7.2)
+    debugger (1.1.3)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.1.1)
+      debugger-ruby_core_source (~> 1.1.2)
+    debugger-linecache (1.1.1)
+      debugger-ruby_core_source (>= 1.1.1)
+    debugger-ruby_core_source (1.1.2)
     delayed_job (3.0.2)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.2)
@@ -170,7 +178,7 @@ GEM
       logger
       mediashelf-loggable
     journey (1.0.3)
-    json (1.6.6)
+    json (1.7.0)
     kaminari (0.13.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -189,9 +197,9 @@ GEM
     mediashelf-loggable (0.4.9)
     metaclass (0.0.1)
     mime-types (1.18)
-    mocha (0.11.1)
+    mocha (0.11.3)
       metaclass (~> 0.0.1)
-    multi_json (1.3.2)
+    multi_json (1.3.4)
     multipart-post (1.1.2)
     mysql (2.8.1)
     net-ldap (0.3.1)
@@ -268,7 +276,7 @@ GEM
       nokogiri
       rest-client
       savon
-    rubyzip (0.9.7)
+    rubyzip (0.9.8)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
     sass (3.1.16)
@@ -297,7 +305,7 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
-    sprockets (2.1.2)
+    sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
@@ -340,6 +348,7 @@ DEPENDENCIES
   cucumber-rails (~> 1.0)
   daemons
   database_cleaner
+  debugger
   delayed_job_active_record (~> 0.3.2)
   devise (~> 2.0.4)
   factory_girl_rails (~> 1.7.0)
