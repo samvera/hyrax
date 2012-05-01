@@ -33,7 +33,7 @@ module Hydra::FileAssets
       
       # Including these lines for backwards compatibility (until we can use Rails3 callbacks)
       @container =  ActiveFedora::Base.find(params[:asset_id], :cast=>true)
-      @solr_result = @container.file_objects(:response_format=>:solr)
+      @solr_result = @container.parts(:response_format=>:solr)
     end
     
     # Load permissions_solr_doc based on params[:asset_id]

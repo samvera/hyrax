@@ -91,8 +91,8 @@ module Hydra::ModelMethods
   end
 
   def destroyable_child_assets
-    return [] unless self.file_objects
-    self.file_objects.each.inject([]) do |file_assets, fo|
+    return [] unless self.parts
+    self.parts.each.inject([]) do |file_assets, fo|
       parents = fo.ids_for_outbound(:is_part_of)
       if parents.length == 1 && parents.first.match(/#{self.pid}$/)
         file_assets << fo
