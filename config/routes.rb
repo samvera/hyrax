@@ -13,8 +13,7 @@ ScholarSphere::Application.routes.draw do
   end
   
   
-  resources :downloads, :only=>"show" do
-  end
+  resources :downloads, :only=>"show" 
 
   match 'dashboard' => 'dashboard#index', :as => :dashboard
 
