@@ -13,18 +13,7 @@ User.send(:include, Hydra::GenericUserAttributes)
 
 if Hydra.respond_to?(:configure)
   Hydra.configure(:shared) do |config|
-  
-    # This is used as a reference by choose_model_by_filename in FileAssetsHelper
-    config[:file_asset_types] = {
-      # MZ -This can only be enabled if/when we adopt replacements for ImageAsset, AudioAsset, etc. as default primitives.
-      # :default => FileAsset, 
-      # :extension_mappings => {
-      #   AudioAsset => [".wav", ".mp3", ".aiff"] ,
-      #   VideoAsset => [".mov", ".flv", ".mp4", ".m4v"] ,
-      #   ImageAsset => [".jpeg", ".jpg", ".gif", ".png"] 
-      # }
-    }
-    
+
     config[:submission_workflow] = {
         :mods_assets =>      [{:name => "contributor",     :edit_partial => "mods_assets/contributor_form",     :show_partial => "mods_assets/show_contributors"},
                               {:name => "publication",     :edit_partial => "mods_assets/publication_form",     :show_partial => "mods_assets/show_publication"},

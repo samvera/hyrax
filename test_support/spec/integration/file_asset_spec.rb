@@ -44,50 +44,6 @@ describe FileAsset do
       solr_doc = @file_asset.to_solr
       solr_doc["title_t"].should == ["testing"]
     end
-
-    describe "with many kinds of assets" do
-      before(:each) do
-        @image_asset = ImageAsset.new
-        @audio_asset = AudioAsset.new
-        @video_asset = VideoAsset.new
-        @image_asset.save
-        @audio_asset.save
-        @video_asset.save
-      end
-      after do
-        begin
-        @image_asset.delete
-        rescue
-        end
-        begin
-        @audio_asset.delete
-        rescue
-        end
-        begin
-        @video_asset.delete
-        rescue
-        end
-      end 
-      it "should not load base fields twice for FileAsset if active_fedora_model is a class that is child of FileAsset" do
-  ## It's updating DC and descMetadata, because both have title.
-        @image_asset.update_indexed_attributes({:title=>{0=>"testing"}})
-        #call Solrizer::Indexer.create_document since that produces the problem
-        @image_asset.save
-        solr_doc = ImageAsset.find_by_solr(@image_asset.pid).first
-        solr_doc["title_t"].should == ["testing"]
-        @audio_asset.update_indexed_attributes({:title=>{0=>"testing"}})
-        #call Solrizer::Indexer.create_document since that produces the problem
-        @audio_asset.save
-        solr_doc = AudioAsset.find_by_solr(@audio_asset.pid).first
-        #puts "has_model_s: #{solr_doc['has_model_s'].inspect}"
-        solr_doc["title_t"].should == ["testing"]
-        @video_asset.update_indexed_attributes({:title=>{0=>"testing"}})
-        #call Solrizer::Indexer.create_document since that produces the problem
-        @video_asset.save
-        solr_doc = VideoAsset.find_by_solr(@video_asset.pid).first
-        solr_doc["title_t"].should == ["testing"]
-      end
-    end
     it "should load base fields for FileAsset for model_only if active_fedora_model is not FileAsset but is not child of FileAsset" do
       pending "I'm unconvinced as to the usefullness of this test. Why create as one type then reload as another? - Justin"
       @dummy_file_asset = DummyFileAsset.new

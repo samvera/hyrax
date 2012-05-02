@@ -74,7 +74,7 @@ module Hydra::FileAssetsHelper
       params[:Filename] = file_name
     end
   end
-  
+
   # Creates a File Asset and sets its label from params[:Filename]
   #
   # @return [FileAsset] the File Asset
@@ -95,10 +95,11 @@ module Hydra::FileAssetsHelper
     return file_asset
   end
   
+  
   # This is pre-Hydra code that created an AudioAsset, VideoAsset or ImageAsset based on the
   # current params in the controller.
   #
-  # @return [Constant] the recommended Asset class
+  # @return [Constant] the recommended Asset class 
   def asset_class_from_params
     if params.has_key?(:type)
       chosen_type = case params[:type]
@@ -124,36 +125,6 @@ module Hydra::FileAssetsHelper
     choose_model_by_filename_extension( File.extname(filename) )
   end
   
-  # Rudimentary method to choose an Asset class based on a filename extension
-  #
-  # @param [String] extension
-  # @return [Constant] the recommended Asset class.  Default: FileAsset
-  #
-  # Recognized extensions: 
-  # AudioAsset => ".wav", ".mp3", ".aiff"
-  # VideoAsset => ".mov", ".flv", ".mp4"
-  # ImageAsset => ".jpeg", ".jpg", ".gif", ".png"
-  def choose_model_by_filename_extension(extension)
-    
-    Hydra.config[:file_asset_types][:extension_mappings].each_pair do |klass, extensions|
-      if extensions.include?(extension)
-        return klass
-      end
-    end
-    
-    return Hydra.config[:file_asset_types][:default]
-    
-    # case extension
-    # when ".wav", ".mp3", ".aiff"
-    #   AudioAsset
-    # when ".mov", ".flv", ".mp4", ".m4v"
-    #   VideoAsset
-    # when ".jpeg", ".jpg", ".gif", ".png"
-    #   ImageAsset
-    # else
-    #  FileAsset
-    # end
-  end
 
   private
   # Return the mimeType for a given file name
