@@ -7,7 +7,7 @@ on element ids -->
   <td>
     <i id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="icon-plus"></i>&nbsp;
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <%= link_to document[:label_t].first, generic_file_path(document[:noid_s].first) %> </td>
+    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> </td>
   <td><%= document[:noid_s].first %></td>
   <td><%= document.fetch(:system_create_dt,'').to_time.strftime("%c") %> </td>
   <td><%= document[:creator_t] %> </td>
