@@ -29,7 +29,15 @@
           <%= f.text_field :read_groups_string %>
           <p class="help-block">Use a comma separated list</p>
         </div>
-      </div><!-- close public_permissions -->
+      </div>
+
+      <div class="control-group" id="read_groups">
+        <%= f.label :read_users_string, "Users With Read Access", :class=>"control-label" %>
+        <div class="controls">
+          <%= f.text_field :read_users_string %>
+          <p class="help-block">Use a comma separated list</p>
+        </div>
+      </div>
 
       <div class="control-group" id="additional_tag_clone">
         <%= f.label :tag, :class=>"control-label" %> 

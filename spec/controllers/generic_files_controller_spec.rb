@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe GenericFilesController do
   before do
-    sign_in FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:user)
+    sign_in @user
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
   describe "#upload" do
@@ -58,19 +59,31 @@ describe GenericFilesController do
     end
   end
 
+  describe "new" do
+    it "should create a batch with access controls" do
+      get :new
+      assigns[:batch].edit_users.should == [@user.login]
+    end
+  end
+
 
   describe "update" do
     before do
-      @generic_file = GenericFile.create
+      @generic_file = GenericFile.new
+      @generic_file.apply_depositor_metadata(@user.login)
+      @generic_file.save
     end
     after do
       @generic_file.delete
     end
     
-    it "should allow updating of access controls" do
-      pending
+    it "should allow setting umgs as groups with read access" do
       post :update, :id=>@generic_file.pid, :generic_file=>{:read_groups_string=>'umg/up.dlt.gamma-ci,umg/up.dlt.redmine'}
       assigns[:generic_file].read_groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
+    end
+    it "should allow setting users with read access" do
+      post :update, :id=>@generic_file.pid, :generic_file=>{:read_users_string=>'updlt1,updlt2 updlt3'}
+      assigns[:generic_file].read_users.should == ['updlt1', 'updlt2', 'updlt3']
     end
   end
 

@@ -14,6 +14,7 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.new 
     @batch = Batch.new
     @batch.title = Time.now.ctime
+    @batch.apply_depositor_metadata(current_user.login)
     @batch.save
     @noid_s = @batch.noid
     @dc_metadata = [
@@ -110,7 +111,7 @@ class GenericFilesController < ApplicationController
     apply_depositor_metadata(@generic_file)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
     @generic_file.date_modified = Time.now.ctime
-    @generic_file.set_public_access(params[:permission][:group][:public])
+    @generic_file.set_public_access(params[:permission][:group][:public]) if params.has_key?(:permission)
     @generic_file.save
     notice = render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => @generic_file })
     flash[:notice] = "Successfully updated." 
