@@ -14,7 +14,9 @@ class ApplicationController < ActionController::Base
   end
 
   ## Force the session to be restarted on every request.  The ensures that when the REMOTE_USER header is not set, the user will be logged out.
-  before_filter do
+  before_filter :clear_session_user
+
+  def clear_session_user
     request.env['warden'].logout
   end
 

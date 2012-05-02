@@ -3,6 +3,7 @@ require 'spec_helper'
 describe GenericFilesController do
   before do
     sign_in FactoryGirl.find_or_create(:user)
+    controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
   describe "#upload" do
     before do
@@ -21,6 +22,7 @@ describe GenericFilesController do
       #response.should redirect_to(dashboard_path)
 
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => @batch.pid, :permission=>{"group"=>{"public"=>"discover"} }
+      response.should be_success
       GenericFile.count.should == @file_count + 1 
       saved_file = GenericFile.find('test:123')
       saved_file.label.should == 'world.png'
@@ -46,6 +48,22 @@ describe GenericFilesController do
       lambda { JSON.parse(response.body) }.should_not raise_error
       audit_results = JSON.parse(response.body).collect { |result| result["checksum_audit_log"]["pass"] }
       audit_results.reduce(true) { |sum, value| sum && value }.should be_true
+    end
+  end
+
+
+  describe "update" do
+    before do
+      @generic_file = GenericFile.create
+    end
+    after do
+      @generic_file.delete
+    end
+    
+    it "should allow updating of access controls" do
+      pending
+      post :update, :id=>@generic_file.pid, :generic_file=>{:read_groups_string=>'umg/up.dlt.gamma-ci,umg/up.dlt.redmine'}
+      assigns[:generic_file].read_groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
     end
   end
 
