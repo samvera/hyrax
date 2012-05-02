@@ -6,7 +6,7 @@
 
   </td>
   <td>
-    <%= DateTime.parse(document.fetch(:system_create_dt,'')).to_time %>
+    <%= DateTime.parse(document[:system_create_dt]).to_time if document[:system_create_dt] %>
   </td>
   <td>
     <%= (document.fetch(:medium_t,'') || document_type(document)).gsub("Hydrangea","") %>
