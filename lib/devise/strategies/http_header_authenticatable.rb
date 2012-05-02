@@ -2,9 +2,12 @@
 module Devise
   module Strategies
     class HttpHeaderAuthenticatable < ::Devise::Strategies::Base
+
+      # Called if the user doesn't already have a rails session cookie
       def valid?
          request.headers["REMOTE_USER"].present?
       end
+
       def authenticate!
         if request.headers["REMOTE_USER"].present?
           u = User.find_or_create_by_login(request.headers["REMOTE_USER"])
