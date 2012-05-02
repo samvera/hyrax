@@ -156,7 +156,7 @@
     	context-appropriate DOReaders and DOWriters for reflecting on and 
     	writing to the objects stored in the repository. It also provides 
     	methods for reflecting on the contents of the repository as a whole..</comment>
-    <param name="pidNamespace" value="hydrangea">
+    <param name="pidNamespace" value="hydra">
       <comment>This is the namespace id for pids of newly-created objects. 
 	    	This should be unique for a repository. It can be from 1 to 17 
 	    	characters, and may only contain A-Z, a-z, 0-9, &apos;.&apos;, or &apos;-&apos; (dash).</comment>
