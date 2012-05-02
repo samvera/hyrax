@@ -96,7 +96,7 @@ class GenericFile < ActiveFedora::Base
   def characterize
     self.characterization.content = self.content.extract_metadata
     self.append_metadata
-    logger.info "!!!!Label #{self.label}"
+    self.filename = [self.label]
     if (!self.new_object?)
       save
     end

@@ -17,8 +17,8 @@ describe GenericFilesController do
       @batch.delete
     end
     it "should create and save a file asset from the given params" do
-      file = fixture_file_upload('/world.png','image/png')
-      #xhr :post, :create, :Filedata=>[file], :Filename=>"The world", :permission=>{"group"=>{"public"=>"discover"}}
+     file = fixture_file_upload('/world.png','image/png')
+       #xhr :post, :create, :Filedata=>[file], :Filename=>"The world", :permission=>{"group"=>{"public"=>"discover"}}
       #response.should redirect_to(dashboard_path)
 
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => @batch.pid, :permission=>{"group"=>{"public"=>"discover"} }
@@ -36,6 +36,7 @@ describe GenericFilesController do
       saved_file = GenericFile.find('test:123')
       saved_file.format_label[0].should == 'Portable Network Graphics'
       saved_file.mime_type[0].should == 'image/png'
+      saved_file.filename[0].should == saved_file.label
       
     end
   end

@@ -206,36 +206,16 @@ describe GenericFile do
       @file.characterization_terms.keys.should include(:filename)
       @file.delete
     end
-    it "should return a hash of all populated values from the characterization terminology 2" do
-      @file.title.should == []
+
+    it "should append metadata from the characterization" do
       @file.resource_type.should == []
       @file.format.should == []
       @file.identifier.should == []
       @file.date_modified.empty?.should be_true
       @file.title.should == []
-      @file.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
-      @file.save
-      Delayed::Job.count.should == @job_count+1
-      Delayed::Worker.new.work_off 
-      Delayed::Job.count.should == @job_count
-      @file = GenericFile.find(@file.pid)    
-      @file.format_label.should == ["Portable Document Format"]
-      @file.format_label.should == ["Portable Document Format"]
-      @file.mime_type.should == ["application/pdf"]
-      @file.file_size.should == ["218882"]
-      #@file.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
-      #@file.date_modified.empty?.should be_false
-      @file.title.should == ["Microsoft Word - sample.pdf.docx"]
-      @file.delete
-    end
-
-    it "should append metadata from the characterization" do
-      #@file.resource_type.should == []
-      #@file.format.should == []
-      #@file.identifier.should == []
-      #@file.date_modified.empty?.should be_true
-      #@file.title.should == []
-      @file.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+      f = File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf')
+      @file.add_file_datastream(f, :dsid=>'content')
+      @file.label='123'
       @file.save
       Delayed::Job.count.should == @job_count+1
       Delayed::Worker.new.work_off 
@@ -247,7 +227,8 @@ describe GenericFile do
       @file.format.should == ["application/pdf"]
       @file.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
       @file.date_modified.empty?.should be_false
-      @file.title.should == ["Microsoft Word - sample.pdf.docx"]
+      @file.title.should include("Microsoft Word - sample.pdf.docx")
+      @file.filename[0].should == @file.label
       @file.delete
     end
   end
