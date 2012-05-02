@@ -34,8 +34,10 @@ bundle install
 echo "=-=-=-=-= $0 passenger-install-apache2-module -a"
 passenger-install-apache2-module -a
 
-#echo "=-=-=-=-= $0 rake db:migrate"
-#RAILS_ENV=integration rake db:migrate
+echo "=-=-=-=-= $0 rake db:drop/create/migrate"
+RAILS_ENV=integration rake db:drop
+RAILS_ENV=integration rake db:create
+RAILS_ENV=integration rake db:migrate
 retval=$?
 
 echo "=-=-=-=-= $0 finished $retval"
