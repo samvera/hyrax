@@ -12,14 +12,58 @@
 /*jslint nomen: true */
 /*global $ */
 
+var filestoupload =0;      
+var files_done =0;      
+var error_string ='';      
+
 $(function () {
     'use strict';
 
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload();
     $('#fileupload').bind("fileuploadstop", function(){ 
-      $("#success").fadeIn('slow')
+      if ((files_done == filestoupload)&&(files_done >0)){
+         var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
+         $(location).attr('href',loc);
+      // some error occured       
+      } else if (error_string.length > 0){
+         if (files_done == 0) {
+            $("#fail").fadeIn('slow')
+         } else {
+            $("#partial_fail").fadeIn('slow')
+         }          
+         $("#errmsg").html(error_string)
+         $("#errmsg").fadeIn('slow')
+      }
     });
+    
+    // count the number of uploaded files to send to edit
+    $('#fileupload').bind("fileuploadadd", function(e, data){
+      filestoupload++;
+    });
+
+    // count the number of files completed and ready to send to edit                          
+    $('#fileupload').bind("fileuploaddone", function(){
+      files_done++;
+    });
+
+    // on fail if abort (aka cancel) decrease the number of uploaded files to send
+    $('#fileupload').bind("fileuploadfail", function(e, data){ 
+      if (data.errorThrown == 'abort') {
+         filestoupload--;
+         if ((files_done == filestoupload)&&(files_done >0)){
+             var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
+             $(location).attr('href',loc);
+         }
+      } else {
+       if (error_string.length > 0) {
+          error_string +='<br/>';
+       }
+       error_string +=data.errorThrown+": "+data.textStatus;
+      }
+    });
+    
+    
     // Load existing files:
     $.getJSON($('#fileupload form').prop('action'), function (files) {
         var fu = $('#fileupload').data('fileupload');

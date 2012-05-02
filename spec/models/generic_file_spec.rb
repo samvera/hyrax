@@ -65,6 +65,7 @@ describe GenericFile do
       f.related_url.should == ["http://example.org/"]
       f.creator.should == ["John Doe"]
       f.title.should == ["New work"]
+      @file.delete     
     end
     it "should be able to be added to w/o unexpected graph behavior" do
       @file.creator = "John Doe"
@@ -79,6 +80,7 @@ describe GenericFile do
       f = GenericFile.find(@file.pid)
       f.creator.should == ["Jane Doe"]
       f.title.should == ["New work", "Newer work"]
+      @file.delete
     end
   end
   it "should support to_solr" do
@@ -118,12 +120,16 @@ describe GenericFile do
     @file.to_solr["generic_file__format_t"].should == ["application/pdf"]
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
+    @file.delete
   end
   describe "audit" do
     before(:each) do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @f.save
+      Delayed::Worker.new.work_off 
+      @f = GenericFile.find(@f.pid)    
+           
     end
     after(:each) do
       @f.delete
@@ -132,6 +138,11 @@ describe GenericFile do
       FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       FitsDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
+      ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)
+      GenericFileRdfDatastream.any_instance.expects(:dsChecksumValid).returns(false) #<AnyInstance:>.dsChecksumValid()
+      
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'descMetadata.0', :dsid => 'descMetadata')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
@@ -139,6 +150,8 @@ describe GenericFile do
     end
     it "should log a passing audit" do
       FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'descMetadata.0', :dsid => 'descMetadata')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
@@ -150,10 +163,16 @@ describe GenericFile do
   end
 
   describe "characterize" do
+    before(:each) do 
+      @job_count = Delayed::Job.count
+    end 
     it "should run when the content datastream is created" do
-      @file.expects(:characterize)
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
+      Delayed::Job.count.should == @job_count+1
+      Delayed::Worker.new.work_off 
+      Delayed::Job.count.should == @job_count
+      @file.delete
     end
     it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
@@ -164,20 +183,31 @@ describe GenericFile do
     it "should return expected results after a save" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
+      Delayed::Job.count.should == @job_count+1
+      Delayed::Worker.new.work_off 
+      Delayed::Job.count.should == @job_count
+      @file = GenericFile.find(@file.pid)    
       @file.file_size.should == ['4218']
       @file.original_checksum.should == ['28da6259ae5707c68708192a40b3e85c']
+      @file.delete
     end
     it "should return a hash of all populated values from the characterization terminology" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
+      Delayed::Job.count.should == @job_count+1
+      Delayed::Worker.new.work_off 
+      Delayed::Job.count.should == @job_count
+      @file = GenericFile.find(@file.pid)    
       @file.characterization_terms[:format_label].should == ["Portable Network Graphics"]
       @file.characterization_terms[:mime_type].should == ["image/png"]
       @file.characterization_terms[:file_size].should == ["4218"]
       @file.characterization_terms[:original_checksum].should == ["28da6259ae5707c68708192a40b3e85c"]
       @file.characterization_terms.keys.should include(:last_modified)
       @file.characterization_terms.keys.should include(:filename)
+      @file.delete
     end
-    it "should append metadata from the characterization" do
+    it "should return a hash of all populated values from the characterization terminology 2" do
+      @file.title.should == []
       @file.resource_type.should == []
       @file.format.should == []
       @file.identifier.should == []
@@ -185,11 +215,40 @@ describe GenericFile do
       @file.title.should == []
       @file.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
       @file.save
+      Delayed::Job.count.should == @job_count+1
+      Delayed::Worker.new.work_off 
+      Delayed::Job.count.should == @job_count
+      @file = GenericFile.find(@file.pid)    
+      @file.format_label.should == ["Portable Document Format"]
+      @file.format_label.should == ["Portable Document Format"]
+      @file.mime_type.should == ["application/pdf"]
+      @file.file_size.should == ["218882"]
+      #@file.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
+      #@file.date_modified.empty?.should be_false
+      @file.title.should == ["Microsoft Word - sample.pdf.docx"]
+      @file.delete
+    end
+
+    it "should append metadata from the characterization" do
+      #@file.resource_type.should == []
+      #@file.format.should == []
+      #@file.identifier.should == []
+      #@file.date_modified.empty?.should be_true
+      #@file.title.should == []
+      @file.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+      @file.save
+      Delayed::Job.count.should == @job_count+1
+      Delayed::Worker.new.work_off 
+      Delayed::Job.count.should == @job_count
+      @file = GenericFile.find(@file.pid) 
+      logger.info "File: #{@file.inspect}"   
+      @file.format_label.should == ["Portable Document Format"]
       @file.resource_type.should == ["Portable Document Format"]
       @file.format.should == ["application/pdf"]
       @file.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
       @file.date_modified.empty?.should be_false
       @file.title.should == ["Microsoft Word - sample.pdf.docx"]
+      @file.delete
     end
   end
   describe "label" do

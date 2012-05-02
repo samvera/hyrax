@@ -20,6 +20,15 @@ Feature: Uploading files via web form
     And I attach the file "test_support/fixtures/image.jp2" to "files[]"
     And I press "Start upload"
 
+   @javascript
+   Scenario: Upload a file, multiple files
+    Given I am logged in as "contentauthor@psu.edu"
+    When I am on the "ingest" page 
+    And I attach the file "test_support/fixtures/image.jp2" to "files[]"
+    And I attach the file "test_support/fixtures/libra-oa_11.foxml.xml" to "files[]"
+    And I press "Start upload"
+    #this really should check to make sure we forward eventually
+
 #  Scenario: Upload a file, with metadata
 #    Given I am logged in as "contentauthor@psu.edu"
 #    When I am on the "ingest" page 

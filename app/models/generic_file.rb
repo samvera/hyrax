@@ -79,13 +79,26 @@ class GenericFile < ActiveFedora::Base
   delegate :data_format, :to => :characterization
   delegate :offset, :to => :characterization
 
-  before_save :characterize
 
+  def save
+     content_changed = self.content.changed?
+     #characterize
+     super
+     if (content_changed)
+        logger.info self.inspect
+        job = CharacterizeJob.new(self.pid)
+        Delayed::Job.enqueue job
+        #job.perform    
+     end  
+  end
+  
   ## Extract the metadata from the content datastream and record it in the characterization datastream
   def characterize
-    if self.content.changed?
-      self.characterization.content = self.content.extract_metadata
-      self.append_metadata
+    self.characterization.content = self.content.extract_metadata
+    self.append_metadata
+    logger.info "!!!!Label #{self.label}"
+    if (!self.new_object?)
+      save
     end
   end
 

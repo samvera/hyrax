@@ -22,6 +22,7 @@ Copy and edit local DB, Fedora, and Solr configs
 Install gems & migrate database
 
     bundle install
+    rails generate delayed_job:active_record
     rake db:create
     rake db:migrate
 
@@ -29,6 +30,8 @@ Setup test dbs and load fixtures
 
     RAILS_ENV=test rake db:create
     RAILS_ENV=test rake db:migrate
+    RAILS_ENV=test rake scholarsphere:fixtures:create
+    RAILS_ENV=test rake scholarsphere:fixtures:refresh
 
 Install [FITS](http://code.google.com/p/fits/) and put it in a
   directory on your PATH.
@@ -39,6 +42,11 @@ Get jetty & start it
     git submodule update
     rake jetty:config
     rake jetty:start
+
+Run delayed jobs
+
+    script/delayed_job start (or stop)
+
   
 Run the app
   

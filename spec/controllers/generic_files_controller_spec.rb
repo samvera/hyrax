@@ -30,6 +30,13 @@ describe GenericFilesController do
       saved_file.content.dsChecksumValid.should be_true
       saved_file.date_uploaded.should have_at_least(1).items
       saved_file.date_modified.should have_at_least(1).items
+      saved_file = GenericFile.find('test:123')
+      saved_file.format_label[0].should == ''
+      Delayed::Worker.new.work_off
+      saved_file = GenericFile.find('test:123')
+      saved_file.format_label[0].should == 'Portable Network Graphics'
+      saved_file.mime_type[0].should == 'image/png'
+      
     end
   end
 

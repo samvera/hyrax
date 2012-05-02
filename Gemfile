@@ -11,6 +11,7 @@ gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git
 gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
 gem 'noid', '~> 0.5.5'
+gem 'daemons'
 
 gem 'hydra-ldap', '0.0.2'
 
@@ -32,7 +33,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'rspec-rails', '>= 2.4.0'
-  gem 'debugger'
+#  gem 'debugger'
   gem 'ruby-prof'
   gem 'mocha'
   gem 'cucumber-rails', '~> 1.0', :require => false

@@ -1,5 +1,9 @@
+<div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
+  <%=batch_edit_path(@noid_s)%>
+</div>
+
 <div class="alert alert-info hide" id="success">
-  You have successfully uploaded files with the assigned metadata.
+  You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
   <p>
   <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
   <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
@@ -9,6 +13,15 @@
 </div>
 <div class="alert hide" id="fail">
   There was a problem during upload. Please click the &quot;Start Upload&quot; button or <%= link_to 'start over', new_generic_file_path %>
+</div>
+<div class="alert hide" id="partial_fail">
+  One or more files did not upload successfully. To continue using the files uploaded use one of the links below.
+  <p>
+  <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
+  <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
+  <%= link_to 'Add Descriptions', batch_edit_path(@noid_s), :class=>'btn' %>
+</div>
+<div class="alert hide" id="errmsg">
 </div>
     <!-- The file upload form used as target for the file upload widget -->
       <%= form_for(@generic_file, :url => generic_files_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'}) do |f| %>
@@ -47,9 +60,10 @@
         <div class="fileupload-loading"></div>
         <br>
         <!-- The table listing the files available for upload/download -->
-        <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+        <table id="file-table" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
     </form>
   <% end %>
+
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-jquery-tmpl">
  {% for (var i=0, file; file=o.files[i]; i++) { %}
