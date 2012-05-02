@@ -16,7 +16,7 @@ test:
   uid: uid
 integration:
   host: dirapps.aset.psu.edu
-  port: 3899
+  port: 389
   group_base: dc=psu,dc=edu
   uid: uid
 production:  
