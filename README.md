@@ -22,7 +22,6 @@ Copy and edit local DB, Fedora, and Solr configs
 Install gems & migrate database
 
     bundle install
-    rails generate delayed_job:active_record
     rake db:create
     rake db:migrate
 
@@ -46,7 +45,6 @@ Get jetty & start it
 Run delayed jobs
 
     script/delayed_job start (or stop)
-
   
 Run the app
   
