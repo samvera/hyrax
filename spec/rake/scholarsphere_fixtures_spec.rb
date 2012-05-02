@@ -48,8 +48,18 @@ describe "scholarsphere:fixtures:*" do
    
     # unload the rake tests after each test
     after (:each) do
+      @rake['scholarsphere:fixtures:delete'].invoke      
       @rake = nil
       Rake.application = nil
+    end
+
+
+    after (:all) do
+      #remove fixtures creates by scholarsphere:fixtures:create
+      File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.txt"))
+      File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt"))
+      File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb"))
+      File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml"))
     end
 
   describe 'scholarsphere:fixtures:create' do        
