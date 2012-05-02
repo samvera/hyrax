@@ -13,7 +13,7 @@ class GenericFilesController < ApplicationController
   def new
     @generic_file = GenericFile.new 
     @batch = Batch.new
-    @batch.title = [Time.now.ctime]
+    @batch.title = Time.now.ctime
     @batch.save
     @noid_s = @batch.noid
     @dc_metadata = [
@@ -121,7 +121,6 @@ class GenericFilesController < ApplicationController
     create_and_save_generic_files_from_params_delayed(generic_file, params, file)
   end
   
-
   protected
   def find_by_id
     @generic_file = GenericFile.find(params[:id])
@@ -153,7 +152,6 @@ class GenericFilesController < ApplicationController
       @generic_file
     end
   end
-
 
   # takes form file inputs and assigns meta data individually 
   # to each generic file asset and saves generic file assets # @param [Hash] of form fields

@@ -5,13 +5,12 @@ class BatchController < ApplicationController
   include Hydra::FileAssetsHelper
 
   prepend_before_filter :normalize_identifier, :only=>[:edit, :show, :update, :destroy] 
-  #before_filter :enforce_access_controls, :only=>[:edit, :update]
+  before_filter :enforce_access_controls, :only=>[:edit, :update]
   
   def edit
     @batch = Batch.find(params[:id])
     @generic_file = GenericFile.new 
   end
-
 
   def update
     #render :edit 
@@ -26,6 +25,7 @@ class BatchController < ApplicationController
       end
       params[:generic_file].each_pair do |term, values|
         next if values == [""]
+        next if term == "read_groups_string"
         proxy_term = gf.send(term)
         values.each do |v|
           proxy_term << v unless proxy_term.include?(v)
