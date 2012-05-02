@@ -4,11 +4,12 @@ class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
   include PSU::Noid
+  include Dil::RightsMetadata
 
   has_metadata :name => "descMetadata", :type => BatchRdfDatastream
 
   belongs_to :user, :property => "creator"
-  has_many :generic_files, :property => "part"
+  has_many :generic_files, :property => :is_part_of
 
   delegate :title, :to => :descMetadata
   delegate :creator, :to => :descMetadata

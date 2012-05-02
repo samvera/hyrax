@@ -56,3 +56,5 @@ module ScholarSphere
     config.filter_parameters += [:password]
   end
 end
+require 'dil/rights_metadata'
+

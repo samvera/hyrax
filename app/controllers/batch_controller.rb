@@ -13,30 +13,20 @@ class BatchController < ApplicationController
   end
 
   def update
-    #render :edit 
     batch = Batch.find(params[:id])
     notice = []
-    batch.part.each do |gf_pid|
-      gf = GenericFile.find(gf_pid)
+    batch.generic_files.each do |gf|
       if params.has_key?(:permission)
         gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
       else
         gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
       end
-      params[:generic_file].each_pair do |term, values|
-        next if values == [""]
-        next if term == "read_groups_string"
-        proxy_term = gf.send(term)
-        values.each do |v|
-          proxy_term << v unless proxy_term.include?(v)
-        end
-      end
+      gf.update_attributes(params[:generic_file])
       gf.save
       notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
     end
     flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
-    redirect_params = {:controller => "dashboard", :action => "index"} 
-    redirect_to redirect_params
+    redirect_to dashboard_path
   end
  
   protected

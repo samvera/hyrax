@@ -1,5 +1,4 @@
 require "psu-customizations"
-require 'dil/rights_metadata'
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
@@ -10,7 +9,7 @@ class GenericFile < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
   has_file_datastream :name => "content", :type => FileContentDatastream
 
-  belongs_to :batch, :property => "isPartOf"
+  belongs_to :batch, :property => :is_part_of
 
   delegate :related_url, :to => :descMetadata
   delegate :based_near, :to => :descMetadata

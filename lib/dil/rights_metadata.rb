@@ -54,7 +54,7 @@ module Dil
       rightsMetadata.individuals.map {|k, v| k if v == 'read'}.compact
     end
 
-    # Grant read permissions to the groups specified. Revokes read permission for all other groups.
+    # Grant read permissions to the users specified. Revokes read permission for all other users.
     # @param[Array] users a list of usernames
     # @example
     #  r.read_users= ['one', 'two', 'three']
@@ -63,6 +63,22 @@ module Dil
     #
     def read_users=(users)
       set_read_users(users, read_users)
+    end
+
+    # Grant read permissions to the groups specified. Revokes read permission for all other users.
+    # @param[String] groups a list of usernames
+    # @example
+    #  r.read_users_string= 'one, two, three'
+    #  r.read_users 
+    #  => ['one', 'two', 'three']
+    #
+    def read_users_string=(users)
+      self.read_users=users.split(/[\s,]+/)
+    end
+
+    # Display the users as a comma delimeted string
+    def read_users_string
+      self.read_users.join(', ')
     end
 
     # Grant read permissions to the users specified. Revokes read permission for
