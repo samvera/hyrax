@@ -1,5 +1,3 @@
-require "pp"
-
 class GenericFilesController < ApplicationController
   include Hydra::Controller
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
@@ -8,6 +6,7 @@ class GenericFilesController < ApplicationController
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
   before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy]
+  before_filter :find_by_id, :only=>[:audit, :edit, :show, :update]
   prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
 
   # routed to /files/new
@@ -36,16 +35,13 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id/edit
   def edit
-    @generic_file = GenericFile.find(params[:id])
     @terms = @generic_file.get_terms
   end
 
-
   def index
-    @generic_files = GenericFile.find(:all, :count=>GenericFile.count)
+    @generic_files = GenericFile.find(:all, :rows => GenericFile.count)
     render :json => @generic_files.collect { |p| p.to_jq_upload }.to_json
   end
-
 
   # routed to /files (POST)
   def create
@@ -101,29 +97,24 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id
   def show
-    @generic_file = GenericFile.find(params[:id])
   end
 
   # routed to /files/:id/audit (POST)
   def audit
-    @generic_file = GenericFile.find(params[:id])
     render :json=>@generic_file.audit
   end
  
   # routed to /files/:id (PUT)
   def update
-    @generic_file = GenericFile.find(params[:id])
+    add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata) 
+    apply_depositor_metadata(@generic_file)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
     @generic_file.date_modified = Time.now.ctime
     @generic_file.set_public_access(params[:permission][:group][:public])
-    #added to cause solr to re-index facets
-    @generic_file.update_index
-    @terms = @generic_file.get_terms
- 
+    @generic_file.save
+    notice = render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => @generic_file })
     flash[:notice] = "Successfully updated." 
-    # we are not currently allow files to be added
-    # add_posted_blob_to_asset(generic_file, params[:Filedata]) if params.has_key?(:Filedata) 
-    render :edit 
+    redirect_to dashboard_path
   end
 
   def delayed_create(generic_file, params, file)
@@ -132,6 +123,10 @@ class GenericFilesController < ApplicationController
   
 
   protected
+  def find_by_id
+    @generic_file = GenericFile.find(params[:id])
+  end
+
   def normalize_identifier
     params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
   end
@@ -142,8 +137,6 @@ class GenericFilesController < ApplicationController
       file = params[:files][0]
       add_posted_blob_to_asset(@generic_file,file)
       apply_depositor_metadata(@generic_file)
-      # Delete this next line when GenericFile.label no longer wipes out the title
-      @generic_file.label = file.original_filename
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
       @generic_file.set_public_access("none")
@@ -179,8 +172,8 @@ class GenericFilesController < ApplicationController
         else
           generic_file.set_public_access("none")
         end
-        generic_file.date_uploaded  << Time.now.ctime
-        generic_file.date_modified  << Time.now.ctime
+        generic_file.date_uploaded = Time.now.ctime
+        generic_file.date_modified = Time.now.ctime
 
 
         # call save on what we have store so far and then delay the rest

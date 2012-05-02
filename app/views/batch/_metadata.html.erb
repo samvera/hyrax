@@ -1,4 +1,4 @@
-<%= form_for([@batch, @generic_file], :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
+<%= form_for([@batch, @generic_file], :url => batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
   
 <%= hidden_field_tag(:extra_description_count, "1") %>
 <div class="uploader-contents">
