@@ -14,6 +14,11 @@ test:
   group_base: dc=psu,dc=edu
   base: dc=example,dc=com
   uid: uid
+integration:
+  host: dirapps.aset.psu.edu
+  port: 3899
+  group_base: dc=psu,dc=edu
+  uid: uid
 production:  
   host: dirapps.aset.psu.edu
   port: 389
