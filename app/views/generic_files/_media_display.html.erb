@@ -1,12 +1,12 @@
 <% if !(@generic_file.mime_type & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg']).empty? %>
-  <img src="<%= @generic_file.content.delivery_url %>" />
+  <img src="<%= download_path(@generic_file) %>" />
 <% elsif !(@generic_file.mime_type & ['video/mp4']).empty? %>
   <video controls="controls">
-    <source src="<%= @generic_file.content.delivery_url %>" type="<%= @generic_file.mime_type.first %>" />
+    <source src="<%= download_path(@generic_file) %>" type="<%= @generic_file.mime_type.first %>" />
   </video>
 <% elsif !(@generic_file.mime_type & ['audio/mp3', 'audio/mpeg']).empty? %>
   <audio controls="controls">
-  <source src="<%= @generic_file.content.delivery_url %>" type="<%= @generic_file.mime_type.first %>" />
+  <source src="<%= download_path(@generic_file) %>" type="<%= @generic_file.mime_type.first %>" />
   Your browser does not support the audio tag.  :'(
   </audio>
 <% else %>
