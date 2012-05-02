@@ -11,6 +11,10 @@ ScholarSphere::Application.routes.draw do
       post 'audit'
     end
   end
+  
+  
+  resources :downloads, :only=>"show" do
+  end
 
   match 'dashboard' => 'dashboard#index', :as => :dashboard
 
