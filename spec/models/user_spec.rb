@@ -8,7 +8,7 @@ describe User do
     @user.delete
   end
   it "should have a login" do
-    @user.login.should == "testuser"
+    @user.login.should == "jilluser"
   end
 
   describe "#groups" do
