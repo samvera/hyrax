@@ -1,6 +1,7 @@
 <!-- scholarsphere over ride -->
 <!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':' 
 on element ids -->
+<% if document.has_key?(:noid_s) %>
 <tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  class="document <%= cycle("even","odd") %>"> -->
   <!-- <td><%# check_box_tag :generic_file, document[:id] %></td> -->
   <td>
@@ -8,7 +9,7 @@ on element ids -->
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <%= link_to document[:label_t].first, generic_file_path(document[:noid_s].first) %> </td>
   <td><%= document[:noid_s].first %></td>
-  <td><%= document.fetch(:system_create_dt,nil).to_time.strftime("%c") %> </td>
+  <td><%= document.fetch(:system_create_dt,'').to_time.strftime("%c") %> </td>
   <td><%= document[:creator_t] %> </td>
   <td>
     <i class="icon-eye-open"></i>&nbsp;
@@ -33,3 +34,4 @@ on element ids -->
     </dl>
   </td>
 </tr>
+<% end %>
