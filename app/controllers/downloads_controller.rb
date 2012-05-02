@@ -5,7 +5,15 @@ class DownloadsController < ApplicationController
   
   def show
     @asset = ActiveFedora::Base.find(params["id"])
-    opts = {:filename=>@asset.label}
+    opts = {}
+    if params.has_key?("filename") 
+      opts[:filename] = params["filename"]
+    else
+      opts[:filename] = @asset.label
+    end
+    if params.has_key?("disposition") 
+      opts[:disposition] = params["disposition"]
+    end
     if params.has_key?(:datastream_id)
       opts[:filename] = params[:datastream_id]
       if @asset.datastreams.has_key?(params[:datastream_id])

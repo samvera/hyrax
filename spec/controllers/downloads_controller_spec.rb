@@ -29,11 +29,18 @@ describe DownloadsController do
         get "show", :id=>"scholarsphere:test1", :datastream_id=>"descMetadata"
         response.should be_success 
       end
+      it "should support setting disposition to inline" do
+        controller.stubs(:render)
+        expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
+        controller.expects(:send_data).with(expected_content, {:filename => 'Test Data 1.txt', :type => 'text/plain', :disposition=>"inline"})
+        get "show", :id=>"scholarsphere:test1", :disposition=>"inline"
+        response.should be_success
+      end
       it "should allow you to specify filename for download" do
-        pending
-        expected_content = ActiveFedora::Base.find("scholarsphere:test1").descMetadata.content
-        controller.expects(:send_data).with(expected_content, {:filename=>"my%20dog.jpg"}) 
-        get "show", :id=>"scholarsphere:test1", "filename"=>"my%20dog.jpg"
+        controller.stubs(:render)
+        expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
+        controller.expects(:send_data).with(expected_content, {:filename=>"my%20dog.txt", :type => 'text/plain'}) 
+        get "show", :id=>"scholarsphere:test1", "filename"=>"my%20dog.txt"
       end
     end
   end
