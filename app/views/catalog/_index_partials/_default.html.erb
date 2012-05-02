@@ -6,10 +6,10 @@
 
   </td>
   <td>
-    <%= DateTime.parse(document.fetch(:system_create_dt,nil)).to_time %>
+    <%= DateTime.parse(document.fetch(:system_create_dt,'')).to_time %>
   </td>
   <td>
-    <%= (document.fetch(:medium_t,nil) || document_type(document)).gsub("Hydrangea","") %>
+    <%= (document.fetch(:medium_t,'') || document_type(document)).gsub("Hydrangea","") %>
   </td>
   <td>
     <%# get_file_asset_count(document)%>
