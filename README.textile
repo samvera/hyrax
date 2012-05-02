@@ -17,7 +17,7 @@ See "http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites":
 
 Ruby 1.9.3 is required by Hydra-Head release 4.0; RVM is strongly suggested.
 
-h3. Install Rails, Bundler and Devise
+h3. Install Rails
 
 Currently hydra-head is compatible with Rails 3.2
 
@@ -34,15 +34,15 @@ cd my_hydra_head
 
 h3. Install Dependencies
 
-First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your application:
+First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your application.  You may already have a Gemfile in the new rails application you just generated; in that case, be sure to add blacklight, hydra-head, devise and the development/test group per below:
 
 <pre>
   source 'http://rubygems.org'
 
   gem 'rails', '~>3.2.2'
 
-  gem 'blacklight', '~> 3.3.1'
   gem 'hydra-head', '~> 4.0.0'
+  gem 'blacklight', '~> 3.3.1'
 
   # We will assume that you're using sqlite3 for testing/demo, 
   # but in a production setup you probably want to use a real sql database like mysql or postgres
