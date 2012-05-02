@@ -1,9 +1,10 @@
 require "psu-customizations"
-
+require 'dil/rights_metadata'
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
   include PSU::Noid
+  include Dil::RightsMetadata
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -126,14 +127,14 @@ class GenericFile < ActiveFedora::Base
   end
   
   def get_terms
-    @terms = []
+    terms = []
     self.descMetadata.class.config[:predicate_mapping].each do |uri, mappings|
-      mappings.keys.each do |term|
-        puts term
-        @terms << term if term.to_s.start_with? "generic_file__" and not ['solrtype', 'solrbehaviors'].include? term.to_s.split('__').last
-      end 
+      new_terms = mappings.keys.map(&:to_s).select do |term|
+        term.start_with? "generic_file__" and !['solrtype', 'solrbehaviors'].include? term.split('__').last
+      end
+      terms.concat(new_terms)
     end 
-    @terms
+    terms
   end
 
   def set_public_access(access_level)

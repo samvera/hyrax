@@ -1,4 +1,4 @@
-<h1><%= @generic_file.title.join("<br />") %></h1>
+<h1><%= @generic_file.title.join(' | ') %></h1>
 
 <%= render :partial => 'media_display' %>
 
@@ -6,6 +6,12 @@
   <%= link_to "Edit view", edit_generic_file_path %>
 </div>
 <dl>
+  <dt>Versions</dt>
+  <% @generic_file.content.versions.each do |version| %>
+    <dd>(<%= version.versionID %>) insert snazzy datastream URL here
+  [<%= version.dsCreateDate %>]</dd>
+  <% end %>
+
   <dt>Permission</dt>
 
   <dt>Characterization</dt>

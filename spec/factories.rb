@@ -1,5 +1,10 @@
 FactoryGirl.define do
-  factory :user do
-    login 'archivist1'
+  factory :user, :class=>User do |u|
+    login "jilluser"
   end
+
+  factory :archivist, :class=>User do |u|
+    login "archivist1"
+  end  
 end
+

@@ -1,4 +1,4 @@
-#require 'devise/models/http_header_authenticatable'
+require 'dil/ldap'
 Devise.add_module(:http_header_authenticatable,
   :strategy => true,
   :controller => :sessions,
@@ -20,4 +20,10 @@ class User < ActiveRecord::Base
   def to_s
     read_attribute :login
   end
+
+  # Groups that user is a member of
+  def groups 
+    Dil::LDAP.groups_for_user(login + ",dc=psu,dc=edu")
+  end
+
 end

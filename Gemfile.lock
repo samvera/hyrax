@@ -5,6 +5,26 @@ GIT
     yaml_db (0.2.2)
 
 GIT
+  remote: git://github.com/psu-stewardship/active_fedora.git
+  revision: 5b4f4169dde5c1761461442daceaf3be88ee04a5
+  specs:
+    active-fedora (4.0.0)
+      activeresource (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      equivalent-xml
+      mediashelf-loggable
+      mime-types (>= 1.16)
+      multipart-post (= 1.1.2)
+      nokogiri
+      om (~> 1.6.0)
+      rdf
+      rdf-rdfxml (= 0.3.5)
+      rsolr
+      rubydora (~> 0.5.8)
+      solrizer (~> 1.2.0)
+      xml-simple (>= 1.0.12)
+
+GIT
   remote: https://github.com/warpc/rails_indexes
   revision: 4a550270989d0b74546b18fd0ff09e12492f2c3a
   specs:
@@ -30,21 +50,6 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.2)
-    active-fedora (4.0.0)
-      activeresource (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      equivalent-xml
-      mediashelf-loggable
-      mime-types (>= 1.16)
-      multipart-post (= 1.1.2)
-      nokogiri
-      om (~> 1.6.0)
-      rdf
-      rdf-rdfxml (= 0.3.5)
-      rsolr
-      rubydora (~> 0.5.8)
-      solrizer (~> 1.2.0)
-      xml-simple (>= 1.0.12)
     activemodel (3.2.3)
       activesupport (= 3.2.3)
       builder (~> 3.0.0)
@@ -194,6 +199,7 @@ GEM
     multi_json (1.3.2)
     multipart-post (1.1.2)
     mysql (2.8.1)
+    net-ldap (0.3.1)
     noid (0.5.5)
       backports
     nokogiri (1.5.2)
@@ -329,6 +335,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active-fedora!
   activerecord-import
   bcrypt-ruby
   blacklight (~> 3.3.2)
@@ -347,6 +354,7 @@ DEPENDENCIES
   launchy
   mocha
   mysql (~> 2.8.1)
+  net-ldap
   noid (~> 0.5.5)
   passenger
   rails (~> 3.2.3)

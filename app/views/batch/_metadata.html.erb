@@ -1,4 +1,4 @@
-<%= form_for([@batch, @generic_file], :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
+<%= form_for([@batch, @generic_file], :url => batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
   
 <%= hidden_field_tag(:extra_description_count, "1") %>
 <div class="uploader-contents">
@@ -9,29 +9,43 @@
     <div class="span9">
       <div class="control-group" id="public_permissions">
         <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
-        <select id="generic_file_public_group_access" name="permission[group][public]" class="controls span2">
-        <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read" }] %>
-          <% choices.each do |choice| %>
-            <% choice_label = choice.keys.first %>
-            <% choice_name = choice.values.first %>
-              <option value="<%=h choice_name %>">
-                 <%= choice_label.html_safe %>
-              </option>
-          <% end %>
-        </select>
+        <div class="controls">
+          <select id="generic_file_public_group_access" name="permission[group][public]">
+          <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read" }] %>
+            <% choices.each do |choice| %>
+              <% choice_label = choice.keys.first %>
+              <% choice_name = choice.values.first %>
+                <option value="<%=h choice_name %>">
+                   <%= choice_label.html_safe %>
+                </option>
+            <% end %>
+          </select>
+        </div>
+      </div><!-- close public_permissions -->
+
+      <div class="control-group" id="read_groups">
+        <%= f.label :read_groups_string, "Groups With Read Access", :class=>"control-label" %>
+        <div class="controls">
+          <%= f.text_field :read_groups_string %>
+          <p class="help-block">Use a comma separated list</p>
+        </div>
       </div><!-- close public_permissions -->
 
       <div class="control-group" id="additional_tag_clone">
         <%= f.label :tag, :class=>"control-label" %> 
-        <%= f.text_field :tag, :class=>"controls", :name=>"generic_file[tag][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn-info btn-mini"  %>
+        <div class="controls">
+          <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn-info btn-mini"  %>
+        </div>
       </div>
       <div id="additional_tag_elements"></div>
 
       <div class="control-group" id="additional_title_clone">
         <%= f.label :title, :class=>"control-label" %> 
-        <%= f.text_field :title, :class=>"controls", :name=>"generic_file[title][]", :value=>"" %>  
-        <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn-info btn-mini"  %>
+        <div class="controls">
+          <%= f.text_field :title, :name=>"generic_file[title][]", :value=>"" %>  
+          <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn-info btn-mini"  %>
+        </div>
       </div>
       <div id="additional_title_elements"></div>
 
