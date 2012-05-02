@@ -1,4 +1,3 @@
-require 'dil/ldap'
 Devise.add_module(:http_header_authenticatable,
   :strategy => true,
   :controller => :sessions,
@@ -23,7 +22,7 @@ class User < ActiveRecord::Base
 
   # Groups that user is a member of
   def groups 
-    Dil::LDAP.groups_for_user(login + ",dc=psu,dc=edu")
+    Hydra::LDAP.groups_for_user(login + ",dc=psu,dc=edu")
   end
 
 end

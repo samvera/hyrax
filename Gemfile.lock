@@ -167,6 +167,9 @@ GEM
       devise
       rails (= 3.2.3)
       sanitize
+    hydra-ldap (0.0.2)
+      net-ldap
+      rails
     i18n (0.6.0)
     jettywrapper (1.2.1)
       activesupport (>= 3.0.0)
@@ -350,11 +353,11 @@ DEPENDENCIES
   factory_girl_rails (~> 1.7.0)
   headless
   hydra-head (~> 4.0.0)
+  hydra-ldap (= 0.0.2)
   jettywrapper
   launchy
   mocha
   mysql (~> 2.8.1)
-  net-ldap
   noid (~> 0.5.5)
   passenger
   rails (~> 3.2.3)

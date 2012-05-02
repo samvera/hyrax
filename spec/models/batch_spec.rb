@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Batch do
   before(:all) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.create
     @batch = Batch.create(:title => "test collection",
                           :creator => @user.login,

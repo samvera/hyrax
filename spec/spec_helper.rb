@@ -34,3 +34,12 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
 
 end
+
+
+module FactoryGirl
+  def self.find_or_create(handle, by=:login)
+    tmpl = FactoryGirl.build(handle)
+    tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by)) || FactoryGirl.create(handle)
+  end
+end
+
