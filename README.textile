@@ -53,10 +53,12 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
   gem 'devise'
 
   # For testing.  You will probably want to use these to run the tests you write for your hydra head
-  group :development, :test do 
-         gem 'rspec-rails', '>=2.9.0'
-         gem "jettywrapper"
-  end # (leave this comment here to catch a stray line inserted by blacklight!)
+  group :test do 
+    gem 'rspec-rails', '>=2.9.0'
+    gem "jettywrapper"
+    gem "cucumber-rails"
+    gem "database_cleaner"
+  end
 </pre>
 
 To install all of the dependencies, run:
