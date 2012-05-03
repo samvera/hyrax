@@ -28,7 +28,7 @@ begin
   namespace :hyhead do
     
     namespace :spec do
-      [:controllers, :generators, :helpers, :integration, :lib, :mailers, :models, :requests, :routing, :unit, :utilities, :utilities, :views].each do |sub|
+      [:controllers, :generators, :helpers, :integration, :lib, :mailers, :models, :requests, :routing, :unit, :utilities, :views].each do |sub|
         desc "Run the code examples in spec/#{sub}"
         RSpec::Core::RakeTask.new(sub => spec_prereq) do |t|
         #RSpec::Core::RakeTask.new(sub) do |t|
@@ -51,7 +51,7 @@ rescue LoadError
   # these tasks) even if you don't have rspec installed. 
   desc 'rspec rake tasks not available (rspec not installed)'
   task :spec do
-    abort 'Rspec rake tasks  not available. Be sure to install rspec gems. '
+    abort 'Rspec rake tasks not available. Be sure to install rspec gems.'
   end
 end
 
