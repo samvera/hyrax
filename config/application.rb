@@ -28,6 +28,8 @@ module ScholarSphere
       :file_language => :language
     }
 
+    config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout'
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/app/models/datastreams)
     

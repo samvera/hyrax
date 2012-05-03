@@ -25,5 +25,7 @@ ScholarSphere::Application.configure do
 
   config.log_level = :debug
 
+  config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout?https://gamma-ci.dlt.psu.edu/scholarsphere-integration'
+
 end
 

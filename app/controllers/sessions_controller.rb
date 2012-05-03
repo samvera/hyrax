@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def destroy
-    cookies.delete('cosign-gamma-ci.dlt.psu.edu')# if ENV['COSIGN_SERVICE']
-    redirect_to "https://webaccess.psu.edu/cgi-bin/logout"
+    cookies.delete(request.env['COSIGN_SERVICE']) if request.env['COSIGN_SERVICE']
+    redirect_to ScholarSphere::Application.config.logout_url
   end
 end
