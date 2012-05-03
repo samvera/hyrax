@@ -1,6 +1,6 @@
 <% if (document['mime_type_t']) %>
-    <% if !(document['mime_type_t'] & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg']).empty? %>
-      <img src="<%= download_path(document["id"]) %>" height="50" width="50" />
+    <% if !(document['mime_type_t'] & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg', 'application/pdf']).empty? %>
+      <img src="<%= download_path(document["id"]) %>" /> 
     <% elsif !(document['mime_type_t'] & ['video/mp4']).empty? %>
       <video controls="controls" height="80" width="140">
         <source src="<%= download_path(document["id"]) %>"   />
@@ -17,3 +17,4 @@
 <% else %>
  <img src="/images/default.png" height="42" width="36"/>
 <% end %>
+
