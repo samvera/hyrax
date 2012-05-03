@@ -102,7 +102,7 @@ module Hydra::FileAssets
     flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."
     
     if !params[:container_id].nil?
-      redirect_params = {:controller => "catalog", :action => "edit", :id => params[:container_id], :anchor => "file_assets"}
+      redirect_params = edit_catalog_path(params[:container_id], :anchor => "file_assets")
     end
     redirect_params ||= {:action => 'index', :q => nil , :f => nil}
     

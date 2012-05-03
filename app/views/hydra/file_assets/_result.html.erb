@@ -5,8 +5,7 @@
   <td>
 	
    <% if can? :edit, @document %>
-    	<%= button_to("Delete", "/file_assets/" + result["id"] + "?container_id=" + @document[:id], :confirm => "Are you sure you want to delete this file?", :method => :delete, :class => "delete-button") %>
-
+    	<%= button_to("Delete", "/hydra/assets/#{result["id"]}/file_assets/#{result["id"]}?container_id=#{@document[:id]}", :confirm => "Are you sure you want to delete this file?", :method => :delete, :class => "delete-button") %>
    <% end %>
   </td>
 </tr>
