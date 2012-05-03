@@ -1,7 +1,9 @@
+require "psu-customizations"
 class GenericFilesController < ApplicationController
   include Hydra::Controller
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
   include Hydra::FileAssetsHelper
+  include PSU::Noid
 
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
@@ -94,10 +96,6 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
   end
 
-  def normalize_identifier
-    params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
-  end
-
   def create_and_save_generic_file      
     if params.has_key?(:files)
       @generic_file = GenericFile.new
@@ -119,6 +117,4 @@ class GenericFilesController < ApplicationController
       @generic_file
     end
   end
-
-
 end

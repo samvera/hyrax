@@ -1,4 +1,6 @@
+require "psu-customizations"
 class DownloadsController < ApplicationController
+  include PSU::Noid
 
   before_filter :deny_access_if_not_reader, :only=>[:show]
   prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
@@ -61,10 +63,5 @@ class DownloadsController < ApplicationController
       redirect_to catalog_path
       return
     end
-  end
-  
-  def normalize_identifier
-    params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
-  end
-  
+  end  
 end
