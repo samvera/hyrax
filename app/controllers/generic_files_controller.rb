@@ -1,7 +1,9 @@
+require "psu-customizations"
 class GenericFilesController < ApplicationController
   include Hydra::Controller
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
   include Hydra::FileAssetsHelper
+  include PSU::Noid
 
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
@@ -12,11 +14,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new 
-    @batch = Batch.new
-    @batch.title = Time.now.ctime
-    @batch.apply_depositor_metadata(current_user.login)
-    @batch.save
-    @noid_s = @batch.noid
+    @noid_s = PSU::IdService.mint
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],
@@ -47,6 +45,7 @@ class GenericFilesController < ApplicationController
   # routed to /files (POST)
   def create
     create_and_save_generic_file 
+    logger.info "?????? #{@generic_file.inspect} #{@generic_file.batch}"
     if @generic_file
       respond_to do |format|
         format.html {
@@ -94,10 +93,6 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
   end
 
-  def normalize_identifier
-    params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
-  end
-
   def create_and_save_generic_file      
     if params.has_key?(:files)
       @generic_file = GenericFile.new
@@ -106,19 +101,16 @@ class GenericFilesController < ApplicationController
       apply_depositor_metadata(@generic_file)
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
-      @generic_file.save
       if params.has_key?(:batch_id)
-        @batch = Batch.find(params[:batch_id])
-        @batch.part << @generic_file.pid
-        @batch.save
+        @batch = Batch.new(pid: params[:batch_id])
+        @generic_file.add_relationship("isPartOf", "info:fedora/#{@batch.pid}")
       else
         puts "unable to find batch to attach to"
       end
-      @generic_file
+      @generic_file.save      
+      return @generic_file
     else
-      @generic_file
+      return @generic_file
     end
   end
-
-
 end
