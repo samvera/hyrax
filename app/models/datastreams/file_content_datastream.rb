@@ -25,6 +25,14 @@ class FileContentDatastream < ActiveFedora::Datastream
     out
   end
 
+  def get_version(version_id)
+    self.versions.select { |v| v.versionID == version_id}.first
+  end
+
+  def latest_version
+    self.versions.first
+  end
+
   def fits_path
     ScholarSphere::Application.config.fits_path
   end

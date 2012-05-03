@@ -75,9 +75,13 @@ class GenericFilesController < ApplicationController
  
   # routed to /files/:id (PUT)
   def update
+    if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
+      revision = @generic_file.content.get_version(params[:revision])
+      @generic_file.add_file_datastream(revision.content, :dsid => 'content')
+    end
     add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata) 
     Scholarsphere::GenericFile::Permissions.parse_permissions(params)
-    @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
+    @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
     notice = render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => @generic_file })

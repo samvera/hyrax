@@ -11,9 +11,15 @@
 <div class="uploader-contents">
   <div class="row">
     <div class="span3">
-      <h2>Upload new</h2>
+      <h2>Revisions</h2>
     </div>
     <div class="span9">
+      <h3>Revision history</h3>
+      <% @generic_file.content.versions.each_with_index do |version, index| %>
+        <%= radio_button_tag(:revision, version.versionID, index == 0) %>
+        <%= label_tag("revision_#{version.versionID}".to_sym, "Restore version from #{version.dsCreateDate}") %>
+      <% end %>
+      <h3>New revision</h3>
       <p>Upload a new version of this file from your computer.</p>
       <p id="upload_field">
       <%= file_field_tag "filedata"  %>
