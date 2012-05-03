@@ -15,6 +15,8 @@ ScholarSphere::Application.routes.draw do
   
   resources :downloads, :only=>"show" 
 
+  match '/logout' => 'sessions#destroy'
+
   match 'dashboard' => 'dashboard#index', :as => :dashboard
 
   match 'authorities/:model/:term' => 'authorities#query'
