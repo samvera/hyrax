@@ -127,7 +127,6 @@ class GenericFile < ActiveFedora::Base
 
   def write_payload_to_tempfile
     f = Tempfile.new("#{self.pid}-#{self.content.dsVersionID}")
-
     f.binmode
     if self.content.content.respond_to? :read
       f.write(self.content.content.read)
