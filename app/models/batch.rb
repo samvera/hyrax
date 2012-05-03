@@ -14,6 +14,16 @@ class Batch < ActiveFedora::Base
   delegate :title, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :part, :to => :descMetadata
+
+  def self.find_or_create(pid)
+     begin
+        @batch = Batch.find(pid)
+     rescue ActiveFedora::ObjectNotFoundError
+        @batch = Batch.new({pid: batch_id.to_s})
+        @batch.apply_depositor_metadata(current_user.login)
+        @batch.save
+     end     
+  end
   
   def to_solr(solr_doc={})
     super(solr_doc)
