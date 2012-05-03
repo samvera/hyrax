@@ -149,10 +149,6 @@ class GenericFile < ActiveFedora::Base
     terms
   end
 
-  def set_public_access(access_level)
-    self.datastreams["rightsMetadata"].permissions({:group=>"public"}, access_level)
-  end
-
   def characterization_terms
     h = {}
     self.characterization.class.terminology.terms.each_pair do |k, v|

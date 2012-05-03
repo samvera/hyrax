@@ -36,15 +36,33 @@
     <div class="span9">
       <div class="control-group" id="public_permissions">
         <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
-        <select id="generic_file_public_group_access" name="permission[group][public]" class="controls span2">
-        <% choices = {"No Access"=>"none", "Discover" => "discover", "Read &amp; Download" => "read" } %>
-          <% choices.each_pair do |label, name| %>
-              <option value="<%=h name %>">
-                 <%= label.html_safe %>
-              </option>
-        <% end %>
-        </select> 
+        <div class="controls">
+          <select id="generic_file_public_group_access" name="permission[group][public]" class="span2">
+          <% choices = {"No Access"=>"none", "Discover" => "discover", "Read &amp; Download" => "read" } %>
+            <% choices.each_pair do |label, name| %>
+                <option value="<%=h name %>">
+                   <%= label.html_safe %>
+                </option>
+          <% end %>
+          </select> 
+        </div>
       </div><!-- close public_permissions -->
+
+      <div class="control-group" id="read_groups">
+        <%= f.label :read_groups_string, "Groups With Read Access", :class=>"control-label" %>
+        <div class="controls">
+          <%= f.text_field :read_groups_string %>
+          <p class="help-block">Use a comma separated list</p>
+        </div>
+      </div>
+
+      <div class="control-group" id="read_groups">
+        <%= f.label :read_users_string, "Users With Read Access", :class=>"control-label" %>
+        <div class="controls">
+          <%= f.text_field :read_users_string %>
+          <p class="help-block">Use a comma separated list</p>
+        </div>
+      </div>
       <!-- loop over each term and output form vals -->
   <% @terms.each do |t| %>
     <% next if t.empty? %>
@@ -56,11 +74,13 @@
     <% end %>
     <% vals.each_with_index do |v, index| %>
       <div class="control-group" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
-      <%= f.label key, :class=>"control-label" %> 
-      <%= f.text_field :title, :class=>"controls", :name=>"generic_file[#{key}][]", :value=>v %> 
-      <% if index == 0 %>
-        <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn-info btn-mini"  %>
-      <% end %>
+        <%= f.label key, :class=>"control-label" %> 
+        <div class="controls">
+          <%= f.text_field :title, :name=>"generic_file[#{key}][]", :value=>v %> 
+          <% if index == 0 %>
+            <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn-info btn-mini"  %>
+          <% end %>
+        </div>
       </div>
     <% end %>
     <div id="additional_<%= key %>_elements"></div>

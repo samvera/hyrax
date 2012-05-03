@@ -15,17 +15,7 @@ class BatchController < ApplicationController
   def update
     batch = Batch.find(params[:id])
     notice = []
-    if params.has_key?(:permission)
-      if params[:permission][:group][:public] == 'read'
-        if params[:generic_file][:read_groups_string].present?
-          params[:generic_file][:read_groups_string] << ', public'
-        else 
-          params[:generic_file][:read_groups_string] << 'public'
-        end
-      elsif params[:permission][:group][:public] == 'discover'
-        params[:generic_file][:discover_groups_string] = 'public'
-      end
-    end
+    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
     batch.generic_files.each do |gf|
       gf.update_attributes(params[:generic_file])
       gf.save

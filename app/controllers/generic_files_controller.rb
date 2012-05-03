@@ -63,38 +63,6 @@ class GenericFilesController < ApplicationController
       render :json => [{:error => "custom_failure"}], :status => 304
     end
   end
- 
-  def create_delayed_job
-    params[:generic_file] = {} unless params.has_key? :generic_file
-    
-    # check the meta data first before trying to create files
-    # No need to go through the create if the descriptives are not right...
-    if params[:generic_file].has_key? :creator and params[:generic_file][:creator].empty?
-      flash[:notice] = "You must include a creator."
-      redirect_params = {:controller => "generic_files", :action => "new"} 
-      
-    # valid descriptions create the file objects
-    else 
-      create_and_save_generic_files_from_params
-  
-      #verify that files have been uploaded otherwise that needs to change
-      if @generic_files.empty? 
-        flash[:notice] = "You must specify a file to upload" 
-        redirect_params = {:controller => "generic_files", :action => "new"} 
-      
-      # no errors occured!
-      else
-        notice = []
-        @generic_files.each do |gf|
-          notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
-        end
-        flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
-        redirect_params = {:controller => "dashboard", :action => "index"} 
-      end
-    end
-    logger.info redirect_params.inspect
-    redirect_to redirect_params 
-  end
 
   # routed to /files/:id
   def show
@@ -108,20 +76,15 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id (PUT)
   def update
     add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata) 
-    apply_depositor_metadata(@generic_file)
+    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| k=="Filedata" || k=="Filename"})
     @generic_file.date_modified = Time.now.ctime
-    @generic_file.set_public_access(params[:permission][:group][:public]) if params.has_key?(:permission)
     @generic_file.save
     notice = render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => @generic_file })
     flash[:notice] = "Successfully updated." 
     redirect_to dashboard_path
   end
 
-  def delayed_create(generic_file, params, file)
-    create_and_save_generic_files_from_params_delayed(generic_file, params, file)
-  end
-  
   protected
   def find_by_id
     @generic_file = GenericFile.find(params[:id])
@@ -139,7 +102,6 @@ class GenericFilesController < ApplicationController
       apply_depositor_metadata(@generic_file)
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
-      @generic_file.set_public_access("none")
       @generic_file.save
       if params.has_key?(:batch_id)
         @batch = Batch.find(params[:batch_id])
@@ -152,67 +114,6 @@ class GenericFilesController < ApplicationController
     else
       @generic_file
     end
-  end
-
-  # takes form file inputs and assigns meta data individually 
-  # to each generic file asset and saves generic file assets # @param [Hash] of form fields
-  def create_and_save_generic_files_from_params
-    @generic_files = []
-    if params.has_key?(:Filedata)
-      params[:Filedata].each do |file|
-        #Look up parameters
-        params[:generic_file] = {} unless params.has_key? :generic_file
-        generic_file = GenericFile.new(params[:generic_file].reject {|k,v| k=="Filedata" || k=="Filename"})
- 
-        apply_depositor_metadata(generic_file)
-        
-        if params.has_key?(:permission)
-          generic_file.set_public_access(params[:permission][:group][:public])
-        else
-          generic_file.set_public_access("none")
-        end
-        generic_file.date_uploaded = Time.now.ctime
-        generic_file.date_modified = Time.now.ctime
-
-
-        # call save on what we have store so far and then delay the rest
-        # need to have script/delayed_job start running to have these picked up
-        generic_file.save
-        Delayed::Job.enqueue GenericFileSaveJob.new(generic_file.id, params,  file)
-        logger.info "Delaying Job"
-
-        #no delay call the method right away
-        #create_and_save_generic_files_from_params_delayed(generic_file, params, file)
-
-        @generic_files << generic_file
-      end
-    end
-    @generic_files
-  end
-
-  def create_and_save_generic_files_from_params_delayed(generic_file, params, file)
-     logger.info "*****!!!!!**** in Delayed worker now *****!!!!!****"  
-     add_posted_blob_to_asset(generic_file,file)
-     generic_file.label = file.original_filename
-
-      # Delete this next line when GenericFile.label no longer wipes out the title
-
-      generic_file.based_near = params[:generic_file][:based_near] if params[:generic_file].has_key?(:based_near) 
-      generic_file.contributor = params[:generic_file][:contributor] if params[:generic_file].has_key?(:contributor)
-      generic_file.creator = params[:generic_file][:creator] if params[:generic_file].has_key?(:creator)
-      generic_file.date_created = params[:generic_file][:date_created] if params[:generic_file].has_key?(:date_created)
-      generic_file.description = params[:generic_file][:description] if params[:generic_file].has_key?(:description)
-      generic_file.identifier = params[:generic_file][:identifier] if params[:generic_file].has_key?(:identifier)
-      generic_file.language = params[:generic_file][:language] if params[:generic_file].has_key?(:language)
-      generic_file.publisher = params[:generic_file][:publisher] if params[:generic_file].has_key?(:publisher)
-      generic_file.rights = params[:generic_file][:rights] if params[:generic_file].has_key?(:rights)
-      generic_file.subject = params[:generic_file][:subject] if params[:generic_file].has_key?(:subject)
-      generic_file.tag = params[:generic_file][:tag] if params[:generic_file].has_key?(:tag)
-      generic_file.title = params[:generic_file][:title] if params[:generic_file].has_key?(:title) 
-
-
-      generic_file.save
-      #generic_file.delay.save
   end
 
 

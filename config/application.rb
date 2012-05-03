@@ -57,4 +57,5 @@ module ScholarSphere
   end
 end
 require 'dil/rights_metadata'
+require 'scholarsphere/permissions'
 
