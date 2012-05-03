@@ -107,11 +107,11 @@ class GenericFilesController < ApplicationController
       @generic_file.set_public_access("none")
       if params.has_key?(:batch_id)
         @batch = Batch.new(pid: params[:batch_id])
-        @generic_file.batch = @batch
+        @generic_file.add_relationship("isPartOf", "info:fedora/#{@batch.pid}")
       else
         puts "unable to find batch to attach to"
       end
-      @generic_file.save
+      @generic_file.save      
       return @generic_file
     else
       return @generic_file
