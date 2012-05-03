@@ -7,7 +7,8 @@ gem 'mysql', '~> 2.8.1'
 gem 'blacklight', '~> 3.3.2'
 gem 'hydra-head', '~> 4.0.0'
 gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
-
+gem 'rubydora', '~> 0.5.8'
+gem 'rmagick', '~> 2.13.1'
 gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
 gem 'noid', '~> 0.5.5'
@@ -34,7 +35,6 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'rspec-rails', '>= 2.4.0'
-#  gem 'debugger'
   gem 'ruby-prof'
   gem 'mocha'
   gem 'cucumber-rails', '~> 1.0', :require => false

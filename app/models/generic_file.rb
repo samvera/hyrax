@@ -7,7 +7,8 @@ class GenericFile < ActiveFedora::Base
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-  has_file_datastream :name => "content", :type => FileContentDatastream
+  has_file_datastream :type => FileContentDatastream
+  has_file_datastream :name => "thumbnail", :type => FileContentDatastream
 
   belongs_to :batch, :property => :is_part_of
 
@@ -98,6 +99,52 @@ class GenericFile < ActiveFedora::Base
     self.filename = [self.label]
     if (!self.new_object?)
       save
+    end
+  end
+
+  def create_thumbnail
+    return if self.content.content.nil?
+    f = Tempfile.new("#{self.pid}-#{self.content.dsVersionID}")
+    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
+
+    f.binmode
+    if self.content.content.respond_to? :read
+      f.write(self.content.content.read)
+    else
+      f.write(self.content.content)
+    end 
+    f.close
+    if ["application/pdf"].include? self.mime_type.first
+      puts "image pdf"
+      pdf = Magick::ImageList.new(f.path)[0]
+      thumb = pdf.scale(45, 60)
+      thumb.write tmp_thumb.path 
+      self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
+      self.save
+    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
+      puts "image thumb"
+      img = Magick::ImageList.new(f.path)
+
+      # horizontal img
+      if Integer(self.width.first) > Integer(self.height.first)
+        if Integer(self.width.first) > 50 and Integer(self.height.first) > 35 
+          thumb = img.scale(50, 35)
+        else
+          thumb = img.scale(Integer(self.width.first), Integer(self.height.first))
+        end
+      # vertical img
+      else
+        if Integer(self.width.first) > 45 and Integer(self.height.first) > 60 
+          thumb = img.scale(45, 60)
+        else
+          thumb = img.scale(Integer(self.width.first), Integer(self.height.first))
+        end
+      end
+      thumb.write tmp_thumb.path 
+      self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
+      self.save
+    # if we can figure out how to do video
+    #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
     end
   end
 
