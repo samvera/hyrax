@@ -13,6 +13,52 @@ describe GenericFile do
     @file.apply_depositor_metadata('jcoyne')
     @file.rightsMetadata.edit_access.should == ['jcoyne']
   end
+
+  it "should have a set of permissions" do
+    @file.discover_groups=['group1', 'group2']
+    @file.edit_users=['user1']
+    @file.read_users=['user2', 'user3']
+    @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
+        {:type=>"group", :access=>"discover", :name=>"group2"},
+        {:type=>"user", :access=>"read", :name=>"user2"},
+        {:type=>"user", :access=>"read", :name=>"user3"},
+        {:type=>"user", :access=>"edit", :name=>"user1"}]
+  end
+
+  describe "updating permissions" do
+    it "should create new group permissions" do
+      @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+      @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
+    end
+    it "should create new user permissions" do
+      @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+      @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+    end
+    it "should not replace existing groups" do
+      @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+      @file.permissions = {:new_group_name=>'group2', :new_group_permission=>'discover'}
+      @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
+                                   {:type=>'group', :access=>'discover', :name=>'group2'}]
+    end
+    it "should not replace existing users" do
+      @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+      @file.permissions = {:new_user_name=>'user2', :new_user_permission=>'discover'}
+      @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
+                                   {:type=>'user', :access=>'discover', :name=>'user2'}]
+    end
+    it "should update permissions on existing users" do
+      @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+      @file.permissions = {:user=>{'user1'=>'edit'}}
+      @file.permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
+    end
+    it "should update permissions on existing groups" do
+      @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+      @file.permissions = {:group=>{'group1'=>'edit'}}
+      @file.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
+    end
+
+  end
+
   it "should have a characterization datastream" do
     @file.characterization.should be_kind_of FitsDatastream
   end 

@@ -77,14 +77,20 @@ describe GenericFilesController do
       @generic_file.delete
     end
     
-    it "should allow setting umgs as groups with read access" do
-      post :update, :id=>@generic_file.pid, :generic_file=>{:read_groups_string=>'umg/up.dlt.gamma-ci,umg/up.dlt.redmine'}
-      assigns[:generic_file].read_groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
+    it "should add a new groups and users" do
+      post :update, :id=>@generic_file.pid, :generic_file=>{:permissions=>{:new_group_name=>'group1', :new_group_permission=>'discover', :new_user_name=>'user1', :new_user_permission=>'edit'}}
+
+      assigns[:generic_file].discover_groups.should == ["group1"]
+      assigns[:generic_file].edit_users.should include("user1", @user.login)
     end
-    it "should allow setting users with read access" do
-      post :update, :id=>@generic_file.pid, :generic_file=>{:read_users_string=>'updlt1,updlt2 updlt3'}
-      assigns[:generic_file].read_users.should == ['updlt1', 'updlt2', 'updlt3']
+    it "should update existing groups and users" do
+      @generic_file.read_groups = ['group3']
+      @generic_file.save
+      post :update, :id=>@generic_file.pid, :generic_file=>{:permissions=>{:new_group_name=>'', :new_group_permission=>'', :new_user_name=>'', :new_user_permission=>'', :group=>{'group3' =>'read'}}}
+
+      assigns[:generic_file].read_groups.should == ["group3"]
     end
+
   end
 
 end
