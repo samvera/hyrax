@@ -115,14 +115,12 @@ class GenericFile < ActiveFedora::Base
     end 
     f.close
     if ["application/pdf"].include? self.mime_type.first
-      puts "image pdf"
       pdf = Magick::ImageList.new(f.path)[0]
       thumb = pdf.scale(45, 60)
       thumb.write tmp_thumb.path 
       self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
       self.save
     elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
-      puts "image thumb"
       img = Magick::ImageList.new(f.path)
 
       # horizontal img
