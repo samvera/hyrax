@@ -13,6 +13,10 @@ describe GenericFilesController do
       GenericFile.expects(:new).returns(@mock)
     end
     after do
+      begin
+        Batch.find("sample:batch_id").delete
+      rescue
+      end
       @mock.delete
     end
     
