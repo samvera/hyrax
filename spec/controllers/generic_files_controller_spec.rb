@@ -17,34 +17,9 @@ describe GenericFilesController do
       @mock.delete
       @batch.delete
     end
-    it "OLD should create and save a file asset from the given params" do
-     file = fixture_file_upload('/world.png','image/png')
-       #xhr :post, :create, :Filedata=>[file], :Filename=>"The world", :permission=>{"group"=>{"public"=>"discover"}}
-      #response.should redirect_to(dashboard_path)
-
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => @batch.pid, :permission=>{"group"=>{"public"=>"discover"} }
-      response.should be_success
-      GenericFile.count.should == @file_count + 1 
-      
-      saved_file = GenericFile.find('test:123')
-      saved_file.label.should == 'world.png'
-      saved_file.content.checksum.should == '28da6259ae5707c68708192a40b3e85c'
-      saved_file.content.dsChecksumValid.should be_true
-      saved_file.date_uploaded.should have_at_least(1).items
-      saved_file.date_modified.should have_at_least(1).items
-      
-      saved_file = GenericFile.find('test:123')
-      saved_file.format_label[0].should == ''
-      Delayed::Worker.new.work_off
-      saved_file = GenericFile.find('test:123')
-      saved_file.format_label[0].should == 'Portable Network Graphics'
-      saved_file.mime_type[0].should == 'image/png'
-      saved_file.filename[0].should == saved_file.label
-      
-    end
-    it "should create and save a file asset from the given params, associating batch_id" do
+    
+    it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
-      @mock.expects(:update_attributes)
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => @batch.pid, :permission=>{"group"=>{"public"=>"discover"} }
       response.should be_success
       GenericFile.count.should == @file_count + 1 
@@ -60,11 +35,12 @@ describe GenericFilesController do
       saved_file.date_uploaded.should have_at_least(1).items
       saved_file.date_modified.should have_at_least(1).items
     end
+    
     it "should create batch associations from batch_id" do
       file = mock("file")
       controller.stubs(:add_posted_blob_to_asset)
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }
-      assigns[:batch].new_object?.should be_true
+      assigns[:batch].new_object?.should be_true # The controller shouldn't actually save the Batch
       assigns[:batch].save # saving for the sake of this test
       reloaded_batch = Batch.find(assigns[:batch].pid)
       reloaded_batch.generic_files.first.pid.should == "test:123"
