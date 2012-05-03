@@ -15,12 +15,18 @@ class BatchController < ApplicationController
   def update
     batch = Batch.find(params[:id])
     notice = []
-    batch.generic_files.each do |gf|
-      if params.has_key?(:permission)
-        gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
-      else
-        gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+    if params.has_key?(:permission)
+      if params[:permission][:group][:public] == 'read'
+        if params[:generic_file][:read_groups_string].present?
+          params[:generic_file][:read_groups_string] << ', public'
+        else 
+          params[:generic_file][:read_groups_string] << 'public'
+        end
+      elsif params[:permission][:group][:public] == 'discover'
+        params[:generic_file][:discover_groups_string] = 'public'
       end
+    end
+    batch.generic_files.each do |gf|
       gf.update_attributes(params[:generic_file])
       gf.save
       notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })

@@ -1,5 +1,105 @@
 module Dil
   module RightsMetadata
+    def discover_groups
+      rightsMetadata.groups.map {|k, v| k if v == 'discover'}.compact
+    end
+
+    # Grant discover permissions to the groups specified. Revokes discover permission for all other groups.
+    # @param[Array] groups a list of group names
+    # @example
+    #  r.discover_groups= ['one', 'two', 'three']
+    #  r.discover_groups 
+    #  => ['one', 'two', 'three']
+    #
+    def discover_groups=(groups)
+      set_discover_groups(groups, discover_groups)
+    end
+
+    # Grant discover permissions to the groups specified. Revokes discover permission for all other groups.
+    # @param[String] groups a list of group names
+    # @example
+    #  r.discover_groups_string= 'one, two, three'
+    #  r.discover_groups 
+    #  => ['one', 'two', 'three']
+    #
+    def discover_groups_string=(groups)
+      self.discover_groups=groups.split(/[\s,]+/)
+    end
+
+    # Display the groups a comma delimeted string
+    def discover_groups_string
+      self.discover_groups.join(', ')
+    end
+
+    # Grant discover permissions to the groups specified. Revokes discover permission for
+    # any of the eligible_groups that are not in groups.
+    # This may be used when different users are responsible for setting different
+    # groups.  Supply the groups the current user is responsible for as the 
+    # 'eligible_groups'
+    # @param[Array] groups a list of groups
+    # @param[Array] eligible_groups the groups that are eligible to have their discover permssion revoked. 
+    # @example
+    #  r.discover_groups = ['one', 'two', 'three']
+    #  r.discover_groups 
+    #  => ['one', 'two', 'three']
+    #  r.set_discover_groups(['one'], ['three'])
+    #  r.discover_groups
+    #  => ['one', 'two']  ## 'two' was not eligible to be removed
+    #
+    def set_discover_groups(groups, eligible_groups)
+      set_entities(:discover, :group, groups, eligible_groups)
+    end
+
+    def discover_users
+      rightsMetadata.individuals.map {|k, v| k if v == 'discover'}.compact
+    end
+
+    # Grant discover permissions to the users specified. Revokes discover permission for all other users.
+    # @param[Array] users a list of usernames
+    # @example
+    #  r.discover_users= ['one', 'two', 'three']
+    #  r.discover_users 
+    #  => ['one', 'two', 'three']
+    #
+    def discover_users=(users)
+      set_discover_users(users, discover_users)
+    end
+
+    # Grant discover permissions to the groups specified. Revokes discover permission for all other users.
+    # @param[String] groups a list of usernames
+    # @example
+    #  r.discover_users_string= 'one, two, three'
+    #  r.discover_users 
+    #  => ['one', 'two', 'three']
+    #
+    def discover_users_string=(users)
+      self.discover_users=users.split(/[\s,]+/)
+    end
+
+    # Display the users as a comma delimeted string
+    def discover_users_string
+      self.discover_users.join(', ')
+    end
+
+    # Grant discover permissions to the users specified. Revokes discover permission for
+    # any of the eligible_users that are not in users.
+    # This may be used when different users are responsible for setting different
+    # users.  Supply the users the current user is responsible for as the 
+    # 'eligible_users'
+    # @param[Array] users a list of users
+    # @param[Array] eligible_users the users that are eligible to have their discover permssion revoked. 
+    # @example
+    #  r.discover_users = ['one', 'two', 'three']
+    #  r.discover_users 
+    #  => ['one', 'two', 'three']
+    #  r.set_discover_users(['one'], ['three'])
+    #  r.discover_users
+    #  => ['one', 'two']  ## 'two' was not eligible to be removed
+    #
+    def set_discover_users(users, eligible_users)
+      set_entities(:discover, :person, users, eligible_users)
+    end
+
     def read_groups
       rightsMetadata.groups.map {|k, v| k if v == 'read'}.compact
     end

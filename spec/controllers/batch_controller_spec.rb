@@ -15,7 +15,6 @@ describe BatchController do
       @file = GenericFile.create(:batch=>@batch)
     end
 
-#"permission"=>{"group"=>{"public"=>"none"}}
     it "should set the users with read access" do
       post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]} 
       file = GenericFile.find(@file.pid)
@@ -29,6 +28,23 @@ describe BatchController do
       file = GenericFile.find(@file.pid)
       file.read_groups.should == ['group1', 'group2']
     end
+    it "should set public read access" do
+      post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"read"}}, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"", "tag"=>[""]} 
+      file = GenericFile.find(@file.pid)
+      file.read_groups.should == ['public']
+    end
+    it "should set public read access and groups at the same time" do
+      post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"read"}}, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]} 
+      file = GenericFile.find(@file.pid)
+      file.read_groups.should == ['group1', 'group2', 'public']
+    end
+    it "should set public discover access and groups at the same time" do
+      post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"discover"}}, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]} 
+      file = GenericFile.find(@file.pid)
+      file.read_groups.should == ['group1', 'group2']
+      file.discover_groups.should == ['public']
+    end
+
 
     it "should not set any tags" do
       post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]} 
