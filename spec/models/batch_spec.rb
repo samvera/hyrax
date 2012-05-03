@@ -43,4 +43,20 @@ describe Batch do
     @batch.to_solr["batch__title_t"].should be_nil
     @batch.to_solr["batch__creator_t"].should be_nil
   end
+  describe "find_or_create" do
+    describe "when the object exists" do
+      it "should find batch instead of creating" do
+        Batch.expects(:create).never
+        @b2 = Batch.find_or_create( @batch.pid)
+      end
+    end
+    describe "when the object does not exist" do
+      it "should create" do
+        lambda {Batch.find("batch:123")}.should raise_error(ActiveFedora::ObjectNotFoundError)
+        Batch.expects(:create).once.returns("the batch")
+        @b2 = Batch.find_or_create( "batch:123")
+        @b2.should == "the batch"
+      end
+    end
+  end
 end
