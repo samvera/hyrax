@@ -101,7 +101,6 @@ class GenericFilesController < ApplicationController
       apply_depositor_metadata(@generic_file)
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
-      @generic_file.set_public_access("none")
       if params.has_key?(:batch_id)
         @batch = Batch.new(pid: params[:batch_id])
         @generic_file.add_relationship("isPartOf", "info:fedora/#{@batch.pid}")
