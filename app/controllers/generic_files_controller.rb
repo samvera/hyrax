@@ -104,17 +104,17 @@ class GenericFilesController < ApplicationController
       apply_depositor_metadata(@generic_file)
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
-      @generic_file.save
+      @generic_file.set_public_access("none")
       if params.has_key?(:batch_id)
-        @batch = Batch.find(params[:batch_id])
-        @batch.part << @generic_file.pid
-        @batch.save
+        @batch = Batch.new(pid: params[:batch_id])
+        @generic_file.batch = @batch
       else
         puts "unable to find batch to attach to"
       end
-      @generic_file
+      @generic_file.save
+      return @generic_file
     else
-      @generic_file
+      return @generic_file
     end
   end
 end
