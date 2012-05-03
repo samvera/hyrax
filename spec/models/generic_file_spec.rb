@@ -181,17 +181,34 @@ describe GenericFile do
     end
   end
 
-  describe "characterize" do
+  describe "save" do
     before(:each) do 
       @job_count = Delayed::Job.count
-    end 
-    it "should run when the content datastream is created" do
+    end
+    after(:each) do
+      @file.delete
+    end
+    it "should schedule a characterization job" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
       Delayed::Job.count.should == @job_count+1
       Delayed::Worker.new.work_off 
       Delayed::Job.count.should == @job_count
-      @file.delete
+    end
+  end
+  
+  describe "characterize" do
+    before(:each) do 
+      @job_count = Delayed::Job.count
+    end 
+    after(:each) do
+      unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
+        begin
+          @file.delete
+        rescue ActiveFedora::ObjectNotFoundError
+          # do nothing
+        end
+      end
     end
     it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
@@ -202,20 +219,15 @@ describe GenericFile do
     it "should return expected results after a save" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
-      Delayed::Job.count.should == @job_count+1
       Delayed::Worker.new.work_off 
-      Delayed::Job.count.should == @job_count
       @file = GenericFile.find(@file.pid)    
       @file.file_size.should == ['4218']
       @file.original_checksum.should == ['28da6259ae5707c68708192a40b3e85c']
-      @file.delete
     end
     it "should return a hash of all populated values from the characterization terminology" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
-      Delayed::Job.count.should == @job_count+1
       Delayed::Worker.new.work_off 
-      Delayed::Job.count.should == @job_count
       @file = GenericFile.find(@file.pid)    
       @file.characterization_terms[:format_label].should == ["Portable Network Graphics"]
       @file.characterization_terms[:mime_type].should == ["image/png"]
@@ -223,7 +235,6 @@ describe GenericFile do
       @file.characterization_terms[:original_checksum].should == ["28da6259ae5707c68708192a40b3e85c"]
       @file.characterization_terms.keys.should include(:last_modified)
       @file.characterization_terms.keys.should include(:filename)
-      @file.delete
     end
 
     it "should append metadata from the characterization" do
@@ -248,7 +259,6 @@ describe GenericFile do
       @file.date_modified.empty?.should be_false
       @file.title.should include("Microsoft Word - sample.pdf.docx")
       @file.filename[0].should == @file.label
-      @file.delete
     end
   end
   describe "label" do
