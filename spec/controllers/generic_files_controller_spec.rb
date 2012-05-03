@@ -11,16 +11,14 @@ describe GenericFilesController do
       @file_count = GenericFile.count
       @mock = GenericFile.new({:pid => 'test:123'})
       GenericFile.expects(:new).returns(@mock)
-      @batch = Batch.create
     end
     after do
       @mock.delete
-      @batch.delete
     end
     
     it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => @batch.pid, :permission=>{"group"=>{"public"=>"discover"} }
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }
       response.should be_success
       GenericFile.count.should == @file_count + 1 
       
@@ -40,10 +38,9 @@ describe GenericFilesController do
       file = mock("file")
       controller.stubs(:add_posted_blob_to_asset)
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }
-      assigns[:batch].new_object?.should be_true # The controller shouldn't actually save the Batch
-      assigns[:batch].save # saving for the sake of this test
-      reloaded_batch = Batch.find(assigns[:batch].pid)
-      reloaded_batch.generic_files.first.pid.should == "test:123"
+      lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch
+      b = Batch.create(pid: "sample:batch_id")
+      b.generic_files.first.pid.should == "test:123"
     end
 
     
