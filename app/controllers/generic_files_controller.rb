@@ -14,11 +14,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new 
-    @batch = Batch.new
-    @batch.title = Time.now.ctime
-    @batch.apply_depositor_metadata(current_user.login)
-    @batch.save
-    @noid_s = @batch.noid
+    @noid_s = PSU::IdService.mint
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],
@@ -49,6 +45,7 @@ class GenericFilesController < ApplicationController
   # routed to /files (POST)
   def create
     create_and_save_generic_file 
+    logger.info "?????? #{@generic_file.inspect} #{@generic_file.batch}"
     if @generic_file
       respond_to do |format|
         format.html {
