@@ -12,7 +12,7 @@ describe SessionsController do
       ENV["COSIGN_SERVICE"] = "mock_cookie_name"
       cookies.expects(:delete).with('mock_cookie_name')
       get :destroy
-      response.should redirect_to "https://weblogin.umich.edu/cgi-bin/logout"
+      response.should redirect_to "https://webaccess.psu.edu/cgi-bin/logout"
     end
   end
 
