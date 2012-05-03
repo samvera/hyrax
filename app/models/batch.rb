@@ -19,9 +19,7 @@ class Batch < ActiveFedora::Base
      begin
         @batch = Batch.find(pid)
      rescue ActiveFedora::ObjectNotFoundError
-        @batch = Batch.new({pid: batch_id.to_s})
-        @batch.apply_depositor_metadata(current_user.login)
-        @batch.save
+        @batch = Batch.create({pid: pid})
      end     
   end
   

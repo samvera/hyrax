@@ -67,14 +67,6 @@ describe GenericFilesController do
     end
   end
 
-  describe "new" do
-    it "should create a batch with access controls" do
-      get :new
-      assigns[:batch].edit_users.should == [@user.login]
-    end
-  end
-
-
   describe "update" do
     before do
       @generic_file = GenericFile.new
