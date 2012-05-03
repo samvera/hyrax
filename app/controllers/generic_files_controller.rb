@@ -101,8 +101,7 @@ class GenericFilesController < ApplicationController
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
       if params.has_key?(:batch_id)
-        @batch = Batch.new(pid: params[:batch_id])
-        @generic_file.add_relationship("isPartOf", "info:fedora/#{@batch.pid}")
+        @generic_file.add_relationship("isPartOf", "info:fedora/#{params[:batch_id]}")
       else
         puts "unable to find batch to attach to"
       end
