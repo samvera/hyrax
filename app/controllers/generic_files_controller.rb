@@ -45,8 +45,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id (DELETE)
   def destroy
     @generic_file.delete
-    flash[:notice] = render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
-    redirect_to dashboard_path
+    redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
   end
 
   # routed to /files (POST)
