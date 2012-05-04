@@ -237,8 +237,15 @@ describe GenericFile do
     end
   end
   
-  
   describe "characterize" do
+    it "should not be triggered unless the content ds is changed" do
+      Delayed::Job.expects(:enqueue)
+      @file.content.content = "hey"
+      @file.save
+      @file.related_url = 'http://example.com' 
+      Delayed::Job.expects(:enqueue).never
+      @file.save
+    end
     it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.characterize
