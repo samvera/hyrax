@@ -7,7 +7,6 @@
 </div>
 
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
-
 <div class="uploader-contents">
   <div class="row">
     <div class="span3">
@@ -104,7 +103,10 @@
   </div><!-- close .row description section -->
 
   <div class="form-actions">
-    <%= f.submit :value => "Save Changes", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+    <%= f.submit "Save Changes", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+  </div>
+<% end %>
+  <div class="form-actions">
+    <%= button_to "Delete File", generic_file_path(@generic_file), :confirm => "Do you really want to delete this file from ScholarSphere? This action is irreversible.", :method => :delete, :class => "btn-primary btn-large" %>
   </div>
 </div><!-- close .uploader-contents -->
-<% end %>
