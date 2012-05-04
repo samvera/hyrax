@@ -5,23 +5,69 @@ describe GenericFile do
     @file = GenericFile.new
   end 
 
-
-  it "should have rightsMetadata" do
-    @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
-  end
-  it "should have apply_depositor_metadata" do
-    @file.apply_depositor_metadata('jcoyne')
-    @file.rightsMetadata.edit_access.should == ['jcoyne']
-  end
-  it "should have a characterization datastream" do
-    @file.characterization.should be_kind_of FitsDatastream
-  end 
-  it "should have a dc desc metadata" do
-    @file.descMetadata.should be_kind_of GenericFileRdfDatastream
-  end
-  it "should have content datastream" do
-    @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-    @file.content.should be_kind_of FileContentDatastream
+  describe "attrubutes" do
+    it "should have rightsMetadata" do
+      @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
+    end
+    it "should have apply_depositor_metadata" do
+      @file.apply_depositor_metadata('jcoyne')
+      @file.rightsMetadata.edit_access.should == ['jcoyne']
+    end
+  
+    it "should have a set of permissions" do
+      @file.discover_groups=['group1', 'group2']
+      @file.edit_users=['user1']
+      @file.read_users=['user2', 'user3']
+      @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
+          {:type=>"group", :access=>"discover", :name=>"group2"},
+          {:type=>"user", :access=>"read", :name=>"user2"},
+          {:type=>"user", :access=>"read", :name=>"user3"},
+          {:type=>"user", :access=>"edit", :name=>"user1"}]
+    end
+  
+    describe "updating permissions" do
+      it "should create new group permissions" do
+        @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+        @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
+      end
+      it "should create new user permissions" do
+        @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+        @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+      end
+      it "should not replace existing groups" do
+        @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+        @file.permissions = {:new_group_name=>'group2', :new_group_permission=>'discover'}
+        @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
+                                     {:type=>'group', :access=>'discover', :name=>'group2'}]
+      end
+      it "should not replace existing users" do
+        @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+        @file.permissions = {:new_user_name=>'user2', :new_user_permission=>'discover'}
+        @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
+                                     {:type=>'user', :access=>'discover', :name=>'user2'}]
+      end
+      it "should update permissions on existing users" do
+        @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+        @file.permissions = {:user=>{'user1'=>'edit'}}
+        @file.permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
+      end
+      it "should update permissions on existing groups" do
+        @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+        @file.permissions = {:group=>{'group1'=>'edit'}}
+        @file.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
+      end
+  
+    end
+    it "should have a characterization datastream" do
+      @file.characterization.should be_kind_of FitsDatastream
+    end 
+    it "should have a dc desc metadata" do
+      @file.descMetadata.should be_kind_of GenericFileRdfDatastream
+    end
+    it "should have content datastream" do
+      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.content.should be_kind_of FileContentDatastream
+    end
   end
   describe "delegations" do
     it "should delegate methods to descriptive metadata" do
@@ -56,31 +102,44 @@ describe GenericFile do
       @file.should respond_to(:file_author)
       @file.should respond_to(:page_count)
     end
-    it "should be able to set values via delegated methods" do
-      @file.related_url = "http://example.org/"
-      @file.creator = "John Doe"
-      @file.title = "New work"
-      @file.save
-      f = GenericFile.find(@file.pid)
-      f.related_url.should == ["http://example.org/"]
-      f.creator.should == ["John Doe"]
-      f.title.should == ["New work"]
-      @file.delete     
-    end
-    it "should be able to be added to w/o unexpected graph behavior" do
-      @file.creator = "John Doe"
-      @file.title = "New work"
-      @file.save
-      f = GenericFile.find(@file.pid)
-      f.creator.should == ["John Doe"]
-      f.title.should == ["New work"]
-      f.creator = "Jane Doe"
-      f.title << "Newer work"
-      f.save
-      f = GenericFile.find(@file.pid)
-      f.creator.should == ["Jane Doe"]
-      f.title.should == ["New work", "Newer work"]
-      @file.delete
+    describe "that have been saved" do
+      before (:each) do
+         Delayed::Job.expects(:enqueue).once.returns("the job")      
+      end
+      after(:each) do
+        unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
+          begin
+            @file.delete
+          rescue ActiveFedora::ObjectNotFoundError
+            # do nothing
+          end
+        end
+      end
+    
+      it "should be able to set values via delegated methods" do
+        @file.related_url = "http://example.org/"
+        @file.creator = "John Doe"
+        @file.title = "New work"
+        @file.save
+        f = GenericFile.find(@file.pid)
+        f.related_url.should == ["http://example.org/"]
+        f.creator.should == ["John Doe"]
+        f.title.should == ["New work"]
+      end
+      it "should be able to be added to w/o unexpected graph behavior" do
+        @file.creator = "John Doe"
+        @file.title = "New work"
+        @file.save
+        f = GenericFile.find(@file.pid)
+        f.creator.should == ["John Doe"]
+        f.title.should == ["New work"]
+        f.creator = "Jane Doe"
+        f.title << "Newer work"
+        f.save
+        f = GenericFile.find(@file.pid)
+        f.creator.should == ["Jane Doe"]
+        f.title.should == ["New work", "Newer work"]
+      end
     end
   end
   it "should support to_solr" do
@@ -101,7 +160,8 @@ describe GenericFile do
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
-    @file.save
+    # not needed
+    #@file.save
     @file.to_solr.should_not be_nil
     @file.to_solr["generic_file__part_of_t"].should be_nil
     @file.to_solr["generic_file__date_uploaded_t"].should be_nil
@@ -120,18 +180,17 @@ describe GenericFile do
     @file.to_solr["generic_file__format_t"].should == ["application/pdf"]
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
-    @file.delete
+    #@file.delete
   end
   describe "audit" do
-    before(:each) do
+    before(:all) do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @f.save
-      Delayed::Worker.new.work_off 
-      @f = GenericFile.find(@f.pid)    
-           
+      Delayed::Worker.new.work_off       
+      @f = GenericFile.find(@f.pid)             
     end
-    after(:each) do
+    after(:all) do
       @f.delete
     end
     it "should log a failing audit" do
@@ -178,68 +237,55 @@ describe GenericFile do
     end
   end
   
+  
   describe "characterize" do
-    before(:each) do 
-      @job_count = Delayed::Job.count
-    end 
-    after(:each) do
-      unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
-        begin
-          @file.delete
-        rescue ActiveFedora::ObjectNotFoundError
-          # do nothing
-        end
-      end
-    end
     it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.characterize
       doc = Nokogiri::XML.parse(@file.characterization.content)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
-    it "should return expected results after a save" do
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      @file.save
-      Delayed::Worker.new.work_off 
-      @file = GenericFile.find(@file.pid)    
-      @file.file_size.should == ['4218']
-      @file.original_checksum.should == ['28da6259ae5707c68708192a40b3e85c']
-    end
-    it "should return a hash of all populated values from the characterization terminology" do
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      @file.save
-      Delayed::Worker.new.work_off 
-      @file = GenericFile.find(@file.pid)    
-      @file.characterization_terms[:format_label].should == ["Portable Network Graphics"]
-      @file.characterization_terms[:mime_type].should == ["image/png"]
-      @file.characterization_terms[:file_size].should == ["4218"]
-      @file.characterization_terms[:original_checksum].should == ["28da6259ae5707c68708192a40b3e85c"]
-      @file.characterization_terms.keys.should include(:last_modified)
-      @file.characterization_terms.keys.should include(:filename)
-    end
-
-    it "should append metadata from the characterization" do
-      @file.resource_type.should == []
-      @file.format.should == []
-      @file.identifier.should == []
-      @file.date_modified.empty?.should be_true
-      @file.title.should == []
-      f = File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf')
-      @file.add_file_datastream(f, :dsid=>'content')
-      @file.label='123'
-      @file.save
-      Delayed::Job.count.should == @job_count+1
-      Delayed::Worker.new.work_off 
-      Delayed::Job.count.should == @job_count
-      @file = GenericFile.find(@file.pid) 
-      logger.info "File: #{@file.inspect}"   
-      @file.format_label.should == ["Portable Document Format"]
-      @file.resource_type.should == ["Portable Document Format"]
-      @file.format.should == ["application/pdf"]
-      @file.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
-      @file.date_modified.empty?.should be_false
-      @file.title.should include("Microsoft Word - sample.pdf.docx")
-      @file.filename[0].should == @file.label
+    describe "after job runs" do
+      before(:all) do 
+        @myfile = GenericFile.new
+        @myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+        @myfile.label = 'label123'
+        @myfile.save
+        Delayed::Worker.new.work_off 
+        @myfile = GenericFile.find(@myfile.pid)    
+      end 
+      after(:all) do
+        unless @myfile.inner_object.class == ActiveFedora::UnsavedDigitalObject
+          begin
+            @myfile.delete
+          rescue ActiveFedora::ObjectNotFoundError
+            # do nothing
+          end
+        end
+      end
+    
+      it "should return expected results after a save" do
+        @myfile.file_size.should == ['218882']
+        @myfile.original_checksum.should == ['5a2d761cab7c15b2b3bb3465ce64586d']
+      end
+      it "should return a hash of all populated values from the characterization terminology" do
+        @myfile.characterization_terms[:format_label].should == ["Portable Document Format"]
+        @myfile.characterization_terms[:mime_type].should == ["application/pdf"]
+        @myfile.characterization_terms[:file_size].should == ["218882"]
+        @myfile.characterization_terms[:original_checksum].should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
+        @myfile.characterization_terms.keys.should include(:last_modified)
+        @myfile.characterization_terms.keys.should include(:filename)
+      end
+      it "should append metadata from the characterization" do
+        logger.info "File: #{@myfile.inspect}"   
+        @myfile.format_label.should == ["Portable Document Format"]
+        @myfile.resource_type.should == ["Portable Document Format"]
+        @myfile.format.should == ["application/pdf"]
+        @myfile.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
+        @myfile.date_modified.empty?.should be_false
+        @myfile.title.should include("Microsoft Word - sample.pdf.docx")
+        @myfile.filename[0].should == @myfile.label
+      end
     end
   end
   describe "label" do
@@ -253,7 +299,7 @@ describe GenericFile do
     subject do
       m = GenericFile.new()
       m.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
-      m.save
+      #m.save
       m
     end
     it "should have read groups accessor" do

@@ -9,6 +9,8 @@ ScholarSphere::Application.routes.draw do
   resources :generic_files, :path => :files do
     member do
       post 'audit'
+      get :add_user_permission
+      get :add_group_permission
     end
   end
   

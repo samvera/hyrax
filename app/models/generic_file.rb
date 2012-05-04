@@ -1,4 +1,3 @@
-require "psu-customizations"
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
@@ -78,6 +77,19 @@ class GenericFile < ActiveFedora::Base
   delegate :channels, :to => :characterization
   delegate :data_format, :to => :characterization
   delegate :offset, :to => :characterization
+
+
+  ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
+  def permissions=(params)
+    perm_hash = permission_hash
+    perm_hash['person'][params[:new_user_name]] = params[:new_user_permission] if params[:new_user_name].present?
+    perm_hash['group'][params[:new_group_name]] = params[:new_group_permission] if params[:new_group_name].present?
+
+    params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
+    params[:group].each { |name, access| perm_hash['group'][name] = access} if params[:group]
+    
+    rightsMetadata.update_permissions(perm_hash)
+  end
 
 
   def save
@@ -184,7 +196,7 @@ class GenericFile < ActiveFedora::Base
       "delete_type" => "DELETE" 
     }
   end
-  
+
   def get_terms
     terms = []
     self.descMetadata.class.config[:predicate_mapping].each do |uri, mappings|
@@ -297,4 +309,21 @@ class GenericFile < ActiveFedora::Base
   def GenericFile.audit_everything!
     GenericFile.audit_everything(true)
   end
+
+  private 
+
+  def permission_hash
+    old_perms = self.permissions
+    user_perms =  {}
+    old_perms.select{|r| r[:type] == 'user'}.each do |r|
+      user_perms[r[:name]] = r[:access]
+    end
+    user_perms
+    group_perms =  {}
+    old_perms.select{|r| r[:type] == 'group'}.each do |r|
+      group_perms[r[:name]] = r[:access]
+    end
+    {'person'=>user_perms, 'group'=>group_perms}
+  end
+
 end

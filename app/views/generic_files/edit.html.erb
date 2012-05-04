@@ -7,7 +7,6 @@
 </div>
 
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
-
 <div class="uploader-contents">
   <div class="row">
     <div class="span3">
@@ -54,21 +53,28 @@
         </div>
       </div><!-- close public_permissions -->
 
-      <div class="control-group" id="read_groups">
-        <%= f.label :read_groups_string, "Groups With Read Access", :class=>"control-label" %>
-        <div class="controls">
-          <%= f.text_field :read_groups_string %>
-          <p class="help-block">Use a comma separated list</p>
-        </div>
-      </div>
 
-      <div class="control-group" id="read_groups">
-        <%= f.label :read_users_string, "Users With Read Access", :class=>"control-label" %>
-        <div class="controls">
-          <%= f.text_field :read_users_string %>
-          <p class="help-block">Use a comma separated list</p>
-        </div>
-      </div>
+      <fieldset>
+        <legend>Share with...</legend>
+        <div class="control-group" id="new-group"> 
+          <%= label_tag 'generic_file[permissions][new_group_name]', "Group", :class=>"control-label" %>
+          <div class="controls">
+            <%= text_field_tag 'generic_file[permissions][new_group_name]' %>
+            <%= select_tag 'generic_file[permissions][new_group_permission]', options_for_select([['Discover', 'discover'], ['Read', 'read'], ['Edit', 'edit']]) %>
+          </div>
+        <div>
+        <div class="control-group" id="new-user"> 
+          <%= label_tag 'generic_file[permissions][new_user_name]', "User", :class=>"control-label" %>
+          <div class="controls">
+            <%= text_field_tag 'generic_file[permissions][new_user_name]' %>
+            <%= select_tag 'generic_file[permissions][new_user_permission]', options_for_select([['Discover', 'discover'], ['Read', 'read'], ['Edit', 'edit']]) %>
+          </div>
+        <div>
+        <ul id="permissions">
+          <%=render :partial=>"permission", :collection=>@generic_file.permissions%>
+        </ul>
+      </fieldset>
+
       <!-- loop over each term and output form vals -->
   <% @terms.each do |t| %>
     <% next if t.empty? %>
@@ -97,7 +103,10 @@
   </div><!-- close .row description section -->
 
   <div class="form-actions">
-    <%= f.submit :value => "Save Changes", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+    <%= f.submit "Save Changes", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+  </div>
+<% end %>
+  <div class="form-actions">
+    <%= button_to "Delete File", generic_file_path(@generic_file), :confirm => "Do you really want to delete this file from ScholarSphere? This action is irreversible.", :method => :delete, :class => "btn-primary btn-large" %>
   </div>
 </div><!-- close .uploader-contents -->
-<% end %>

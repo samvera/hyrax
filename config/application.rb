@@ -29,9 +29,11 @@ module ScholarSphere
     }
 
     config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout'
+    config.login_url = 'https://webaccess.psu.edu?cosign-gamma-ci.dlt.psu.edu&https://gamma-ci.dlt.psu.edu/scholarsphere-integration'
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{config.root}/app/models/datastreams)
+    config.autoload_paths += Dir["#{config.root}/app/models/**/"] 
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
     
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -60,4 +62,5 @@ module ScholarSphere
 end
 require 'dil/rights_metadata'
 require 'scholarsphere/permissions'
-
+require 'psu/id_service'
+require 'psu/noidify'
