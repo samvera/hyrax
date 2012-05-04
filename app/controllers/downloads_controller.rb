@@ -1,4 +1,3 @@
-require "psu-customizations"
 class DownloadsController < ApplicationController
   include PSU::Noid
 
