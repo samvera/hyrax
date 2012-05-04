@@ -206,4 +206,7 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(:scope => :user).unshift :http_header_authenticatable
   # end
+  config.warden do |manager|
+    manager.failure_app = RedirectToWebAccessFailure
+  end
 end
