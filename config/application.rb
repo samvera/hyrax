@@ -60,4 +60,5 @@ module ScholarSphere
 end
 require 'dil/rights_metadata'
 require 'scholarsphere/permissions'
-
+require 'psu/id_service'
+require 'psu/noidify'

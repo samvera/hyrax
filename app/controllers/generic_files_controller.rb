@@ -1,6 +1,3 @@
-#require 'thread'
-#$semiphore = Mutex.new
-
 class GenericFilesController < ApplicationController
   include Hydra::Controller
   include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method

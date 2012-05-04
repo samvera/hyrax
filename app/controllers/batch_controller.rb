@@ -1,4 +1,3 @@
-require "psu-customizations"
 class BatchController < ApplicationController
   
   include Hydra::Controller
@@ -40,10 +39,6 @@ class BatchController < ApplicationController
   end
  
   protected
-  def normalize_identifier
-    params[:id] = "#{ScholarSphere::Application.config.id_namespace}:#{params[:id]}" unless params[:id].start_with? ScholarSphere::Application.config.id_namespace
-  end
-  
   # Returns the solr permissions document for the given id
   # @return solr permissions document  
   # @example This is the document that you can pass into permissions enforcement methods like 'can?'

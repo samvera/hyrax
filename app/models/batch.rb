@@ -1,5 +1,3 @@
-require "psu-customizations"
-
 class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
