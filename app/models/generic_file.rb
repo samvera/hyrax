@@ -92,22 +92,22 @@ class GenericFile < ActiveFedora::Base
     rightsMetadata.update_permissions(perm_hash)
   end
 
-  
-
   def characterize_if_changed
      content_changed = self.content.changed?
      yield
      Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
   end
-  
+
   ## Extract the metadata from the content datastream and record it in the characterization datastream
   def characterize
     self.characterization.content = self.content.extract_metadata
     self.append_metadata
-    self.filename = [self.label]
-    if (!self.new_object?)
-      save
-    end
+    self.filename = self.label
+    save unless self.new_object?
+  end
+
+  def related_files
+    self.batch.parts.reject { |gf| gf.pid == self.pid }
   end
 
   # Create thumbnail requires that the characterization has already been run (so mime_type, width and height is available)
@@ -203,7 +203,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def to_jq_upload
-    {
+    return {
       "name" => self.title,
       "size" => self.file_size,
       "url" => "/files/#{noid}",
@@ -341,5 +341,4 @@ class GenericFile < ActiveFedora::Base
     end
     {'person'=>user_perms, 'group'=>group_perms}
   end
-
 end

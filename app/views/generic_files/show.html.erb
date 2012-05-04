@@ -6,46 +6,28 @@
   <%= link_to "Edit view", edit_generic_file_path %>
 </div>
 <dl>
+  <% unless @generic_file.related_files.empty? %>
+    <dt>Related Files</dt>
+    <% @generic_file.related_files.each do |f| %>
+      <dd><%= link_to(f.label, generic_file_url(f.noid)) %></dd>
+    <% end %>
+  <% end %>
+
   <dt>Versions</dt>
   <% @generic_file.content.versions.each do |version| %>
-    <dd>(<%= version.versionID %>) insert snazzy datastream URL here
-  [<%= version.dsCreateDate %>]</dd>
+    <dd>(<%= version.versionID %>) insert snazzy datastream URL here [<%= version.dsCreateDate %>]</dd>
   <% end %>
 
   <dt>Permission</dt>
+  <dd>TODO?</dd>
 
   <dt>Characterization</dt>
-  <% @generic_file.mime_type.each do |c| %>
-    <dd>file type:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.filename.each do |c| %>
-    <dd>file name:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.format_label.each do |c| %>
-    <dd>format label:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.file_size.each do |c| %>
-    <dd>file size:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.well_formed.each do |c| %>
-    <dd>well formed:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.file_title.each do |c| %>
-    <dd>file title:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.file_author.each do |c| %>
-    <dd>file author:<%= c %></dd>
-  <% end %>
-
-  <% @generic_file.page_count.each do |c| %>
-    <dd>page count:<%= c %></dd>
-  <% end %>
+  <% @generic_file.characterization_terms.each_pair do |term, values| %>
+    <% values.each do |value| %>
+      <% next if value.empty? %>
+      <dd><%= "#{term.to_s.humanize}: #{value}" %>
+    <% end %>
+ <% end %>
 
   <dt>Title<dt>
   <% @generic_file.title.each do |title| %>
