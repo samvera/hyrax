@@ -7,7 +7,7 @@ class GenericFilesController < ApplicationController
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
   before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy]
-  before_filter :find_by_id, :only=>[:audit, :edit, :show, :update]
+  before_filter :find_by_id, :only=>[:audit, :edit, :show, :update, :destroy]
   prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
 
   # routed to /files/new
@@ -36,9 +36,17 @@ class GenericFilesController < ApplicationController
     @terms = @generic_file.get_terms
   end
 
+  # routed to /files/:id
   def index
     @generic_files = GenericFile.find(:all, :rows => GenericFile.count)
     render :json => @generic_files.collect { |p| p.to_jq_upload }.to_json
+  end
+
+  # routed to /files/:id (DELETE)
+  def destroy
+    @generic_file.delete
+    flash[:notice] = render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
+    redirect_to dashboard_path
   end
 
   # routed to /files (POST)
@@ -81,7 +89,7 @@ class GenericFilesController < ApplicationController
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
-    redirect_to dashboard_path, :notice => "Successfully updated."
+    redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
 
   protected
