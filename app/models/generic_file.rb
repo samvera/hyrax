@@ -78,6 +78,7 @@ class GenericFile < ActiveFedora::Base
   delegate :data_format, :to => :characterization
   delegate :offset, :to => :characterization
 
+  around_save :characterize_if_changed
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -91,18 +92,12 @@ class GenericFile < ActiveFedora::Base
     rightsMetadata.update_permissions(perm_hash)
   end
 
+  
 
-  def save
+  def characterize_if_changed
      content_changed = self.content.changed?
-     #characterize
-     super
-     if (content_changed)
-        logger.info self.inspect
-        job = CharacterizeJob.new(self.pid)
-        logger.debug "DOING CHARACTERIZE ON #{self.pid}"
-        Delayed::Job.enqueue job
-        #job.perform    
-     end  
+     yield
+     Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
   end
   
   ## Extract the metadata from the content datastream and record it in the characterization datastream
