@@ -194,7 +194,7 @@ describe GenericFile do
       @f.delete
     end
     it "should log a failing audit" do
-      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
+      FileContentDatastream.any_instance.expects(:dsChecksumValid).twice.returns(false)
       FitsDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)
@@ -204,16 +204,18 @@ describe GenericFile do
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'thumbnail.0', :dsid => 'thumbnail')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
     end
     it "should log a passing audit" do
-      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
+      FileContentDatastream.any_instance.expects(:dsChecksumValid).twice.returns(true)
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'descMetadata.0', :dsid => 'descMetadata')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'characterization.0', :dsid => 'characterization')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'thumbnail.0', :dsid => 'thumbnail')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
     end
     it "should return true on audit_status" do
