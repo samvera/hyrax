@@ -255,6 +255,22 @@ describe GenericFile do
       Delayed::Job.count.should == @job_count
     end
   end
+
+  describe "a zip file" do
+    before do
+      @file.mime_type = 'application/zip'
+      @file.save
+      @file = GenericFile.find(@file.pid)
+    end
+    it "should have a manifest" do
+      @file.manifest.should == 'one burbon, one scotch, one beer'
+    end
+  end
+  describe "a non-zip file" do
+    it "should not-have a manifest" do
+      @file.should_not respond_to(:manifest)
+    end
+  end
   
   describe "characterize" do
     it "should not be triggered unless the content ds is changed" do
@@ -296,7 +312,7 @@ describe GenericFile do
       end
       it "should return a hash of all populated values from the characterization terminology" do
         @myfile.characterization_terms[:format_label].should == ["Portable Document Format"]
-        @myfile.characterization_terms[:mime_type].should == ["application/pdf"]
+        @myfile.characterization_terms[:mime_type].should == "application/pdf"
         @myfile.characterization_terms[:file_size].should == ["218882"]
         @myfile.characterization_terms[:original_checksum].should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
         @myfile.characterization_terms.keys.should include(:last_modified)

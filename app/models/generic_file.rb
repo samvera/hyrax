@@ -31,7 +31,7 @@ class GenericFile < ActiveFedora::Base
   delegate :format, :to => :descMetadata
   delegate :identifier, :to => :descMetadata
   delegate :format_label, :to => :characterization
-  delegate :mime_type, :to => :characterization
+  delegate :mime_type, :to => :characterization, :unique=>true
   delegate :file_size, :to => :characterization
   delegate :last_modified, :to => :characterization
   delegate :filename, :to => :characterization
@@ -79,6 +79,12 @@ class GenericFile < ActiveFedora::Base
   delegate :offset, :to => :characterization
 
   around_save :characterize_if_changed
+  after_initialize :add_zip_behaviors
+
+
+  def add_zip_behaviors
+    self.extend PSU::ZipBehavior if zip_file?
+  end
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -176,13 +182,21 @@ class GenericFile < ActiveFedora::Base
     File.unlink(tmp_thumb.path)
   end
 
+  def zip_file?
+    mime_type == 'application/zip'
+  end
+
   def append_metadata
     terms = self.characterization_terms
     ScholarSphere::Application.config.fits_to_desc_mapping.each_pair do |k, v|
       if terms.has_key?(k)
         proxy_term = self.send(v)
-        terms[k].each do |term_value|
-          proxy_term << term_value unless proxy_term.include?(term_value)
+        if terms[k].is_a? Array
+          terms[k].each do |term_value|
+            proxy_term << term_value unless proxy_term.include?(term_value)
+          end
+        else
+          proxy_term << terms[k]
         end
       end
     end
