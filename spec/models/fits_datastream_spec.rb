@@ -12,7 +12,7 @@ describe FitsDatastream do
     @file.format_label.should == ["Portable Network Graphics"]
   end
   it "should have a mime type" do
-    @file.mime_type.should == ["image/png"]
+    @file.mime_type.should == "image/png"
   end
   it "should have a file size" do
     @file.file_size.should == ["4218"]

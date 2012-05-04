@@ -23,9 +23,13 @@
 
   <dt>Characterization</dt>
   <% @generic_file.characterization_terms.each_pair do |term, values| %>
-    <% values.each do |value| %>
-      <% next if value.empty? %>
-      <dd><%= "#{term.to_s.humanize}: #{value}" %>
+    <% if values.is_a? Array %>
+      <% values.each do |value| %>
+        <% next if value.empty? %>
+        <dd><%= "#{term.to_s.humanize}: #{value}" %></dd>
+      <% end %>
+    <% else %>
+        <dd><%= "#{term.to_s.humanize}: #{values}" %></dd>
     <% end %>
  <% end %>
 
