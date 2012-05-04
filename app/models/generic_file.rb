@@ -78,6 +78,7 @@ class GenericFile < ActiveFedora::Base
   delegate :data_format, :to => :characterization
   delegate :offset, :to => :characterization
 
+  around_save :characterize_if_changed
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -91,27 +92,22 @@ class GenericFile < ActiveFedora::Base
     rightsMetadata.update_permissions(perm_hash)
   end
 
-
-  def save
+  def characterize_if_changed
      content_changed = self.content.changed?
-     #characterize
-     super
-     if (content_changed)
-        logger.info self.inspect
-        job = CharacterizeJob.new(self.pid)
-        Delayed::Job.enqueue job
-        #job.perform    
-     end  
+     yield
+     Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
   end
-  
+
   ## Extract the metadata from the content datastream and record it in the characterization datastream
   def characterize
     self.characterization.content = self.content.extract_metadata
     self.append_metadata
-    self.filename = [self.label]
-    if (!self.new_object?)
-      save
-    end
+    self.filename = self.label
+    save unless self.new_object?
+  end
+
+  def related_files
+    self.batch.parts.reject { |gf| gf.pid == self.pid }
   end
 
   def create_thumbnail
@@ -187,7 +183,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def to_jq_upload
-    {
+    return {
       "name" => self.title,
       "size" => self.file_size,
       "url" => "/files/#{noid}",
@@ -325,5 +321,4 @@ class GenericFile < ActiveFedora::Base
     end
     {'person'=>user_perms, 'group'=>group_perms}
   end
-
 end
