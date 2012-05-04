@@ -152,6 +152,7 @@ class GenericFile < ActiveFedora::Base
     # if we can figure out how to do video
     #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
     end
+    File.unlink(tmp_thumb.path)
   end
 
   def append_metadata
