@@ -49,14 +49,15 @@ describe Hydra::FileAssetsController do
   end
 
   describe "show" do
-    it "should redirect to index view if current_user does not have read or edit permissions" do
+    it "should redirect back if current_user does not have read or edit permissions" do
       mock_user = mock("User")
       mock_user.stubs(:email).returns("fake_user@example.com")
       mock_user.stubs(:is_being_superuser?).returns(false)
       mock_user.stubs(:new_record?).returns(false)
       controller.stubs(:current_user).returns(mock_user)
+      request.env["HTTP_REFERER"] = "http://example.com/?q=search"
       get(:show, :id=>"hydrangea:fixture_file_asset1")
-      response.should redirect_to(:action => 'index')
+      response.should redirect_to("http://example.com/?q=search")
     end
     it "should redirect to index view if the file does not exist" do
       get(:show, :id=>"example:invalid_object")

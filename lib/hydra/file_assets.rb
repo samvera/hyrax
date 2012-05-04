@@ -122,9 +122,10 @@ module Hydra::FileAssets
     end
     # get containing object for this FileAsset
     pid = @file_asset.container_id
+    parent = ActiveFedora::Base.find(pid, :cast=>true)
     @downloadable = false
     # A FileAsset is downloadable iff the user has read or higher access to a parent
-    if can? :read, @file_asset
+    if can? :read, parent
       @downloadable = true
     end
 
@@ -137,7 +138,7 @@ module Hydra::FileAssets
       end
     else
       flash[:notice]= "You do not have sufficient access privileges to download this file."
-      redirect_to(:action => 'index', :q => nil , :f => nil)
+      redirect_to :back
     end
   end
 end
