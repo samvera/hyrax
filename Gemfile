@@ -14,6 +14,7 @@ gem 'noid', '~> 0.5.5'
 gem 'daemons'
 
 gem 'hydra-ldap', '0.0.2'
+gem 'zipruby'
 
 group :assets do
   gem "compass-rails", "~> 1.0.0"

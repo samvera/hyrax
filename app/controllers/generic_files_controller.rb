@@ -98,6 +98,7 @@ class GenericFilesController < ApplicationController
 
   def create_and_save_generic_file      
     if params.has_key?(:files)
+
       @generic_file = GenericFile.new
       file = params[:files][0]
       add_posted_blob_to_asset(@generic_file,file)
@@ -107,11 +108,12 @@ class GenericFilesController < ApplicationController
       if params.has_key?(:batch_id)
         @generic_file.add_relationship("isPartOf", "info:fedora/#{params[:batch_id]}")
       else
-        puts "unable to find batch to attach to"
+        raise RuntimeError, "unable to find batch to attach to"
       end
       @generic_file.save      
-      return @generic_file
-    else
+      if file.content_type == 'application/zip'
+        Delayed::Job.enqueue(UnzipJob.new(@generic_file.pid))
+      end
       return @generic_file
     end
   end
