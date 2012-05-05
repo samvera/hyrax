@@ -79,12 +79,6 @@ class GenericFile < ActiveFedora::Base
   delegate :offset, :to => :characterization
 
   around_save :characterize_if_changed
-  after_initialize :add_zip_behaviors
-
-
-  def add_zip_behaviors
-    self.extend PSU::ZipBehavior if zip_file?
-  end
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
