@@ -5,6 +5,9 @@ class ModsAsset < ActiveFedora::Base
   #  basically, it is another expression of
   #  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
   include Hydra::ModelMixins::CommonMetadata
+
+  ## Convenience methods for manipulating the rights metadata datastream
+  include Hydra::ModelMixins::RightsMetadata
   
   # declares a descMetadata datastream with type Hydra::Datastream::ModsArticle
   #  basically, it is another expression of

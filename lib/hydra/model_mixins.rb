@@ -1,3 +1,8 @@
-# will be changed in 5.x so all the model code is autoload-ed
-module Hydra::ModelMixins;end
-Dir[File.join(File.dirname(__FILE__), "model_mixins", "*.rb")].each {|f| require f}
+module Hydra::ModelMixins
+  extend ActiveSupport::Autoload
+  eager_autoload do
+    autoload :ModsObject
+    autoload :CommonMetadata
+    autoload :RightsMetadata
+  end
+end
