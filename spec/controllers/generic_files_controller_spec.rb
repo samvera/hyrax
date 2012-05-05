@@ -6,7 +6,7 @@ describe GenericFilesController do
     sign_in @user
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
-  describe "#upload" do
+  describe "#create" do
     before do
       @file_count = GenericFile.count
       @mock = GenericFile.new({:pid => 'test:123'})
@@ -18,6 +18,13 @@ describe GenericFilesController do
       rescue
       end
       @mock.delete
+    end
+
+    it "should expand zip files" do
+      file = fixture_file_upload('/world.png','application/zip')
+      Delayed::Job.expects(:enqueue).with {|job| job.kind_of? CharacterizeJob}
+      Delayed::Job.expects(:enqueue).with {|job| job.kind_of? UnzipJob}
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }
     end
     
     it "should create and save a file asset from the given params" do
@@ -39,7 +46,7 @@ describe GenericFilesController do
     end
     
     it "should create batch associations from batch_id" do
-      file = mock("file")
+      file = fixture_file_upload('/world.png','image/png')
       controller.stubs(:add_posted_blob_to_asset)
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }
       lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch

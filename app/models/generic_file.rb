@@ -79,12 +79,6 @@ class GenericFile < ActiveFedora::Base
   delegate :offset, :to => :characterization
 
   around_save :characterize_if_changed
-  after_initialize :add_zip_behaviors
-
-
-  def add_zip_behaviors
-    self.extend PSU::ZipBehavior if zip_file?
-  end
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -113,7 +107,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def related_files
-    self.batch.parts.reject { |gf| gf.pid == self.pid }
+    self.batch.generic_files.reject { |gf| gf.pid == self.pid }
   end
 
   # Create thumbnail requires that the characterization has already been run (so mime_type, width and height is available)

@@ -256,22 +256,6 @@ describe GenericFile do
     end
   end
 
-  describe "a zip file" do
-    before do
-      @file.mime_type = 'application/zip'
-      @file.save
-      @file = GenericFile.find(@file.pid)
-    end
-    it "should have a manifest" do
-      @file.manifest.should == 'one burbon, one scotch, one beer'
-    end
-  end
-  describe "a non-zip file" do
-    it "should not-have a manifest" do
-      @file.should_not respond_to(:manifest)
-    end
-  end
-  
   describe "characterize" do
     it "should not be triggered unless the content ds is changed" do
       Delayed::Job.expects(:enqueue)
