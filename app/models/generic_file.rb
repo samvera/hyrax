@@ -115,44 +115,28 @@ class GenericFile < ActiveFedora::Base
   # and that the object is already has a pid set
   def create_thumbnail
     return if self.content.content.nil?
-    image_path = write_payload_to_tempfile
-
     if ["application/pdf"].include? self.mime_type
-      create_pdf_thumbnail(image_path)
+      create_pdf_thumbnail
     elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type
-      create_image_thumbnail(image_path)
+      create_image_thumbnail
     # if we can figure out how to do video
     #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
     # TODO
     end
   end
 
-  def write_payload_to_tempfile
-    f = Tempfile.new("#{self.pid}-#{self.content.dsVersionID}")
-    f.binmode
-    if self.content.content.respond_to? :read
-      f.write(self.content.content.read)
-    else
-      f.write(self.content.content)
-    end 
-    f.close
-    f.path
-  end
-
-  def create_pdf_thumbnail(image_path)
-    pdf = Magick::ImageList.new(image_path)[0]
+  def create_pdf_thumbnail
+    pdf = Magick::ImageList.new
+    pdf.from_blob(content.content)
     thumb = pdf.scale(45, 60)
-    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
-    thumb.write tmp_thumb.path 
-    self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
+    self.thumbnail.content = thumb.to_blob
     logger.debug "Has the content changed before saving? #{self.content.changed?}"
     self.save
-    File.unlink(tmp_thumb.path)
   end
 
-  def create_image_thumbnail(image_path)
-    img = Magick::ImageList.new(image_path)
-
+  def create_image_thumbnail
+    img = Magick::ImageList.new
+    img.from_blob(content.content)
     # horizontal img
     height = self.height.first.to_i
     width = self.width.first.to_i
@@ -170,16 +154,9 @@ class GenericFile < ActiveFedora::Base
         thumb = img.scale(width, height)
       end
     end
-    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
-    thumb.write tmp_thumb.path 
-    self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
-    logger.debug "Has the content changed before saving? #{self.content.changed?}"
+    self.thumbnail.content = thumb.to_blob
+    logger.debug "Has the content before saving? #{self.content.changed?}"
     self.save
-    File.unlink(tmp_thumb.path)
-  end
-
-  def zip_file?
-    mime_type == 'application/zip'
   end
 
   def append_metadata
@@ -286,11 +263,11 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
-  def GenericFile.audit!(version)
+  def self.audit!(version)
     GenericFile.audit(version, true)
   end
 
-  def GenericFile.audit(version, force = false)
+  def self.audit(version, force = false)
     logger.debug "***AUDIT*** log for #{version.inspect}"
     latest_audit = self.find(version.pid).logs(version.dsid).first
     unless force
@@ -308,7 +285,7 @@ class GenericFile < ActiveFedora::Base
                              :dsid=>version.dsid, :version=>version.versionID)
   end
 
-  def GenericFile.needs_audit?(version, latest_audit)
+  def self.needs_audit?(version, latest_audit)
     if latest_audit and latest_audit.updated_at
       logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
       days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
@@ -324,7 +301,7 @@ class GenericFile < ActiveFedora::Base
     true
   end
 
-  def GenericFile.audit_everything(force = false)
+  def self.audit_everything(force = false)
     GenericFile.find(:all).each do |gf|
       gf.per_version do |ver|
         GenericFile.audit(ver, force)
@@ -332,7 +309,7 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
-  def GenericFile.audit_everything!
+  def self.audit_everything!
     GenericFile.audit_everything(true)
   end
 
