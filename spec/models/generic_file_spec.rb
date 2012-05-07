@@ -191,7 +191,7 @@ describe GenericFile do
         @f.save
         @f.create_thumbnail
       end
-      it "should create a resized thumnail" do
+      it "should create a resized thumbnail" do
         @f.thumbnail.size.should == 4361 #even though it resized to the original dimensions, the file size changes a bit.
         @f.content.changed?.should be_false
       end
