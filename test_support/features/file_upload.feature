@@ -47,6 +47,13 @@ Feature: Upload file into a document
     When I press "Upload File"
     Then the page should be HTML5 valid
   
+  Scenario: Downloading files
+    Given I am logged in as "archivist1@example.com"
+    When I am on the edit files page for hydrangea:fixture_mods_article1
+    Then I should see "image.jp2"
+    When I follow "image.jp2"
+    Then I should receive an "image/jp2" file named "image.jp2"
+  
   # Not sure if the file asset list is valid.  Will the user ever actually be here?  
   # @nojs
   # Scenario: Upload files on file assets list page

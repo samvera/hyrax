@@ -26,3 +26,11 @@ Then /^I (should|should not) see a link to "([^"]*)" with label "([^"]*)" in the
     end
   end
 end
+
+Then /^I should receive an? "([^"]*)" file named "([^"]*)"$/ do |content_type, file|
+  result = page.response_headers['Content-Type'].should == content_type
+  if result
+    result = page.response_headers['Content-Disposition'].should =~ /filename="#{file}"/
+  end
+  result
+end
