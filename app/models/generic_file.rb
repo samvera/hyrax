@@ -110,10 +110,23 @@ class GenericFile < ActiveFedora::Base
     self.batch.generic_files.reject { |gf| gf.pid == self.pid }
   end
 
+  # Create thumbnail requires that the characterization has already been run (so mime_type, width and height is available)
+  # and that the object is already has a pid set
   def create_thumbnail
     return if self.content.content.nil?
+    image_path = write_payload_to_tempfile
+
+    if ["application/pdf"].include? self.mime_type.first
+      create_pdf_thumnail(image_path)
+    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
+      create_image_thumnail(image_path)
+    end
+    # if we can figure out how to do video
+    #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
+  end
+
+  def write_payload_to_tempfile
     f = Tempfile.new("#{self.pid}-#{self.content.dsVersionID}")
-    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
 
     f.binmode
     if self.content.content.respond_to? :read
@@ -122,36 +135,44 @@ class GenericFile < ActiveFedora::Base
       f.write(self.content.content)
     end 
     f.close
-    if ["application/pdf"].include? self.mime_type.first
-      pdf = Magick::ImageList.new(f.path)[0]
-      thumb = pdf.scale(45, 60)
-      thumb.write tmp_thumb.path 
-      self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
-      self.save
-    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
-      img = Magick::ImageList.new(f.path)
+    f.path
+  end
 
-      # horizontal img
-      if Integer(self.width.first) > Integer(self.height.first)
-        if Integer(self.width.first) > 50 and Integer(self.height.first) > 35 
-          thumb = img.scale(50, 35)
-        else
-          thumb = img.scale(Integer(self.width.first), Integer(self.height.first))
-        end
-      # vertical img
-      else
-        if Integer(self.width.first) > 45 and Integer(self.height.first) > 60 
-          thumb = img.scale(45, 60)
-        else
-          thumb = img.scale(Integer(self.width.first), Integer(self.height.first))
-        end
-      end
+  def create_pdf_thumnail(image_path)
+      pdf = Magick::ImageList.new(image_path)[0]
+      thumb = pdf.scale(45, 60)
+      tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
       thumb.write tmp_thumb.path 
       self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
       self.save
-    # if we can figure out how to do video
-    #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
+      File.unlink(tmp_thumb.path)
+  end
+
+  def create_image_thumnail(image_path)
+    img = Magick::ImageList.new(image_path)
+
+    # horizontal img
+    height = self.height.first.to_i
+    width = self.width.first.to_i
+    if width > height
+      if width > 50 and height > 35 
+        thumb = img.scale(50, 35)
+      else
+        thumb = img.scale(width, height)
+      end
+    # vertical img
+    else
+      if width > 45 and height > 60 
+        thumb = img.scale(45, 60)
+      else
+        thumb = img.scale(width, height)
+      end
     end
+    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
+    thumb.write tmp_thumb.path 
+    self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
+    logger.debug "Has the content before saving? #{self.content.changed?}"
+    self.save
     File.unlink(tmp_thumb.path)
   end
 
