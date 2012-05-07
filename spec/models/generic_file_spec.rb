@@ -189,11 +189,15 @@ describe GenericFile do
         @f.stubs(:mime_type=>['image/png'], :width=>['50'], :height=>['50'])  #Would get set by the characterization job
         @f.add_file_datastream(File.new("#{Rails.root}/spec/fixtures/world.png"), :dsid=>'content')
         @f.save
-        @f.create_thumbnail
+        
+        @mock_image = mock("image")
+        Magick::ImageList.expects(:new).returns(@mock_image)
       end
-      it "should create a resized thumbnail" do
-        @f.thumbnail.size.should == 4361 #even though it resized to the original dimensions, the file size changes a bit.
+      it "should scale the thumnail to original size" do
+        @mock_image.expects(:scale).with(50, 50).returns(stub(:to_blob=>'fake content'))
+        @f.create_thumbnail
         @f.content.changed?.should be_false
+        @f.thumbnail.content.should == 'fake content'
       end
     end
 
@@ -203,7 +207,6 @@ describe GenericFile do
     before(:all) do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      Delayed::Worker.new.work_off 
       @f.save
       @f = GenericFile.find(@f.pid)    
     end
