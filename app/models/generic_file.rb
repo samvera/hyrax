@@ -115,9 +115,9 @@ class GenericFile < ActiveFedora::Base
   # and that the object is already has a pid set
   def create_thumbnail
     return if self.content.content.nil?
-    if ["application/pdf"].include? self.mime_type.first
+    if ["application/pdf"].include? self.mime_type
       create_pdf_thumbnail
-    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
+    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type
       create_image_thumbnail
     # if we can figure out how to do video
     #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
@@ -126,19 +126,17 @@ class GenericFile < ActiveFedora::Base
   end
 
   def create_pdf_thumbnail
-    pdf = Magick::Image.from_blob(content.content)
+    pdf = Magick::ImageList.new
+    pdf.from_blob(content.content)
     thumb = pdf.scale(45, 60)
-    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
-    thumb.write tmp_thumb.path 
-    self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
+    self.thumbnail.content = thumb.to_blob
     logger.debug "Has the content changed before saving? #{self.content.changed?}"
     self.save
-    File.unlink(tmp_thumb.path)
   end
 
-  def create_image_thumbnail(image_path)
-    img = Magick::Image.from_blob(content.content)
-
+  def create_image_thumbnail
+    img = Magick::ImageList.new
+    img.from_blob(content.content)
     # horizontal img
     height = self.height.first.to_i
     width = self.width.first.to_i
