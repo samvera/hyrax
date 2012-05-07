@@ -64,8 +64,3 @@ require 'dil/rights_metadata'
 require 'scholarsphere/permissions'
 require 'psu/id_service'
 require 'psu/noidify'
-begin
-  require 'RMagick'
-rescue
-  # this hack is apparently required for Linux-based systems
-end
