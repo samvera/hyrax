@@ -160,8 +160,6 @@ describe GenericFile do
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
-    # not needed
-    #@file.save
     @file.to_solr.should_not be_nil
     @file.to_solr["generic_file__part_of_t"].should be_nil
     @file.to_solr["generic_file__date_uploaded_t"].should be_nil
@@ -180,58 +178,48 @@ describe GenericFile do
     @file.to_solr["generic_file__format_t"].should == ["application/pdf"]
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
-    #@file.delete
   end
   describe "create_thumbnail" do
     describe "with an image that doesn't get resized" do
       before do
         @f = GenericFile.new
-        @f.stubs(:mime_type=>['image/png'], :width=>['50'], :height=>['50'])  #Would get set by the characterization job
+        @f.stubs(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
         @f.add_file_datastream(File.new("#{Rails.root}/spec/fixtures/world.png"), :dsid=>'content')
         @f.save
         @f.create_thumbnail
+      end
+      after do
+        @f.delete
       end
       it "should create a resized thumbnail" do
         @f.thumbnail.size.should == 4361 #even though it resized to the original dimensions, the file size changes a bit.
         @f.content.changed?.should be_false
       end
     end
-
-
   end
   describe "audit" do
     before(:all) do
-      @f = GenericFile.new
-      @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      Delayed::Worker.new.work_off 
-      @f.save
-      @f = GenericFile.find(@f.pid)    
+      f = GenericFile.new
+      f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      f.save
+      @f = GenericFile.find(f.pid)    
     end
     after(:all) do
       @f.delete
     end
     it "should log a failing audit" do
-      FileContentDatastream.any_instance.expects(:dsChecksumValid).twice.returns(false)
-      FitsDatastream.any_instance.expects(:dsChecksumValid).returns(false)
+      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-      ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)
-      GenericFileRdfDatastream.any_instance.expects(:dsChecksumValid).returns(false) #<AnyInstance:>.dsChecksumValid()
-      
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'descMetadata.0', :dsid => 'descMetadata')
+      ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)      
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'content.0', :dsid => 'content')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'characterization.0', :dsid => 'characterization')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'thumbnail.0', :dsid => 'thumbnail')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version=>'RELS-EXT.0', :dsid => 'RELS-EXT')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
     end
     it "should log a passing audit" do
-      FileContentDatastream.any_instance.expects(:dsChecksumValid).twice.returns(true)
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'descMetadata.0', :dsid => 'descMetadata')
+      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'characterization.0', :dsid => 'characterization')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'thumbnail.0', :dsid => 'thumbnail')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
     end
@@ -239,7 +227,6 @@ describe GenericFile do
       @f.audit_stat.should be_true 
     end
   end
-
   describe "save" do
     before(:each) do 
       @job_count = Delayed::Job.count
@@ -255,8 +242,13 @@ describe GenericFile do
       Delayed::Job.count.should == @job_count
     end
   end
-
   describe "characterize" do
+    it "should return expected results when called" do
+      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.characterize
+      doc = Nokogiri::XML.parse(@file.characterization.content)
+      doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
+    end
     it "should not be triggered unless the content ds is changed" do
       Delayed::Job.expects(:enqueue)
       @file.content.content = "hey"
@@ -265,31 +257,25 @@ describe GenericFile do
       Delayed::Job.expects(:enqueue).never
       @file.save
     end
-    it "should return expected results when called" do
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      @file.characterize
-      doc = Nokogiri::XML.parse(@file.characterization.content)
-      doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
-    end
     describe "after job runs" do
       before(:all) do 
-        @myfile = GenericFile.new
-        @myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
-        @myfile.label = 'label123'
-        @myfile.save
+        myfile = GenericFile.new
+        myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+        myfile.label = 'label123'
+        myfile.thumbnail.size.nil?.should be_true
+        myfile.save
         Delayed::Worker.new.work_off 
-        @myfile = GenericFile.find(@myfile.pid)    
+        @myfile = GenericFile.find(myfile.pid)    
       end 
       after(:all) do
-        unless @myfile.inner_object.class == ActiveFedora::UnsavedDigitalObject
+        unless @myfile.inner_object.kind_of? ActiveFedora::UnsavedDigitalObject
           begin
             @myfile.delete
           rescue ActiveFedora::ObjectNotFoundError
             # do nothing
           end
         end
-      end
-    
+      end    
       it "should return expected results after a save" do
         @myfile.file_size.should == ['218882']
         @myfile.original_checksum.should == ['5a2d761cab7c15b2b3bb3465ce64586d']
@@ -311,6 +297,9 @@ describe GenericFile do
         @myfile.date_modified.empty?.should be_false
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
         @myfile.filename[0].should == @myfile.label
+      end
+      it "should include thumbnail generation in characterization job" do
+        @myfile.thumbnail.size.nil?.should be_false
       end
     end
   end
