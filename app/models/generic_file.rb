@@ -6,7 +6,7 @@ class GenericFile < ActiveFedora::Base
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-  has_file_datastream :type => FileContentDatastream
+  has_file_datastream :name => "content", :type => FileContentDatastream
   has_file_datastream :name => "thumbnail", :type => FileContentDatastream
 
   belongs_to :batch, :property => :is_part_of
@@ -93,9 +93,10 @@ class GenericFile < ActiveFedora::Base
   end
 
   def characterize_if_changed
-     content_changed = self.content.changed?
-     yield
-     Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
+    content_changed = self.content.changed?
+    yield
+    logger.debug "DOING CHARACTERIZE ON #{self.pid}"
+    Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
   end
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
@@ -116,13 +117,14 @@ class GenericFile < ActiveFedora::Base
     return if self.content.content.nil?
     image_path = write_payload_to_tempfile
 
-    if ["application/pdf"].include? self.mime_type.first
-      create_pdf_thumnail(image_path)
-    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
-      create_image_thumnail(image_path)
-    end
+    if ["application/pdf"].include? self.mime_type
+      create_pdf_thumbnail(image_path)
+    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type
+      create_image_thumbnail(image_path)
     # if we can figure out how to do video
     #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
+    # TODO
+    end
   end
 
   def write_payload_to_tempfile
@@ -137,17 +139,18 @@ class GenericFile < ActiveFedora::Base
     f.path
   end
 
-  def create_pdf_thumnail(image_path)
-      pdf = Magick::ImageList.new(image_path)[0]
-      thumb = pdf.scale(45, 60)
-      tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
-      thumb.write tmp_thumb.path 
-      self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
-      self.save
-      File.unlink(tmp_thumb.path)
+  def create_pdf_thumbnail(image_path)
+    pdf = Magick::ImageList.new(image_path)[0]
+    thumb = pdf.scale(45, 60)
+    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
+    thumb.write tmp_thumb.path 
+    self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
+    logger.debug "Has the content changed before saving? #{self.content.changed?}"
+    self.save
+    File.unlink(tmp_thumb.path)
   end
 
-  def create_image_thumnail(image_path)
+  def create_image_thumbnail(image_path)
     img = Magick::ImageList.new(image_path)
 
     # horizontal img
@@ -170,7 +173,7 @@ class GenericFile < ActiveFedora::Base
     tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
     thumb.write tmp_thumb.path 
     self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
-    logger.debug "Has the content before saving? #{self.content.changed?}"
+    logger.debug "Has the content changed before saving? #{self.content.changed?}"
     self.save
     File.unlink(tmp_thumb.path)
   end
@@ -255,16 +258,16 @@ class GenericFile < ActiveFedora::Base
   end
 
   def audit_stat
-      logs = audit(true)
-      logger.info "*****"
-      logger.info logs.inspect
-      logger.info "*****"
-      audit_results = logs.collect { |result| result["pass"] }
-      logger.info "!*****"
-      logger.info audit_results.inspect
-      logger.info "!*****"
-      result =audit_results.reduce(true) { |sum, value| sum && value }
-      result
+    logs = audit(true)
+    logger.info "*****"
+    logger.info logs.inspect
+    logger.info "*****"
+    audit_results = logs.collect { |result| result["pass"] }
+    logger.info "!*****"
+    logger.info audit_results.inspect
+    logger.info "!*****"
+    result =audit_results.reduce(true) { |sum, value| sum && value }
+    result
   end
 
   def audit(force = false)
