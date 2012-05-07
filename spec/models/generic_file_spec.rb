@@ -122,12 +122,29 @@ describe GenericFile do
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
     @file.delete
   end
+  describe "create_thumbnail" do
+    describe "with an image that doesn't get resized" do
+      before do
+        @f = GenericFile.new
+        @f.stubs(:mime_type=>['image/png'], :width=>['50'], :height=>['50'])  #Would get set by the characterization job
+        @f.add_file_datastream(File.new("#{Rails.root}/spec/fixtures/world.png"), :dsid=>'content')
+        @f.save
+        @f.create_thumbnail
+      end
+      it "should create a resized thumnail" do
+        @f.thumbnail.size.should == 4361 #even though it resized to the original dimensions, the file size changes a bit.
+        @f.content.changed?.should be_false
+      end
+    end
+
+
+  end
   describe "audit" do
     before(:each) do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
-      @f.save
       Delayed::Worker.new.work_off 
+      @f.save
       @f = GenericFile.find(@f.pid)    
            
     end
