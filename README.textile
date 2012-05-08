@@ -58,6 +58,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
     gem 'sass-rails', '~> 3.2.0'
     gem 'compass-rails', '~> 1.0.0'
     gem 'compass-susy-plugin', '~> 0.9.0'
+    gem 'jquery-rails'
   end
 
   # You will probably want to use these to run the tests you write for your hydra head
@@ -71,7 +72,6 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
   group :development, :test do
     gem 'rspec-rails', '>=2.9.0'
     gem 'jettywrapper'
-    gem 'jquery-rails'
     gem 'database_cleaner'
   end
 </pre>
