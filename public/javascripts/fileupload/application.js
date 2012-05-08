@@ -23,7 +23,7 @@ $(function () {
     $('#fileupload').fileupload();
     $('#fileupload').bind("fileuploadstop", function(){ 
       if ((files_done == filestoupload)&&(files_done >0)){
-         #var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
+         //var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
          var loc = $("#redirect-loc").html()
          $(location).attr('href',loc);
       // some error occured       
