@@ -3,7 +3,7 @@ require "nokogiri"
 require 'rest_client'
 
 Then /^the page should be HTML5 valid$/ do
-  response_is_html_valid?(page.body).should be_true
+  response_is_html_valid?(page.source).should be_true
 end
 
 private
