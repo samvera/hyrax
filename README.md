@@ -13,10 +13,10 @@ For more information, read the [ScholarSphere development docs](https://github.c
 Installation Instructions
 -------------------------
 
-Install libmagic-dev (command below for ubuntu substitute your installer)
-  sudo apt-get install libmagic-dev
-  sudo apt-get install libmagickwand-dev
-
+Install system dependencies
+  
+ * libmagick-dev
+ * libmagickwand-dev
 
 Copy and edit local DB, Fedora, and Solr configs
 

@@ -1,5 +1,3 @@
-FIXNUM_MAX = (2**(0.size * 8 -2) -1)
-
 module PSU
   class IdService
     @@minter = Noid::Minter.new(:template => '.reeddeeddk')
@@ -9,12 +7,10 @@ module PSU
       noid = identifier.split(":").last
       return @@minter.valid? noid
     end
-    
     def self.mint
-      taken = true
-      while taken
+      while true
         pid = self.next_id
-        taken = ActiveFedora::Base.exists?(pid)
+        break unless ActiveFedora::Base.exists?(pid)
       end
       return pid
     end    
