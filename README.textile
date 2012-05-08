@@ -24,7 +24,7 @@ Currently hydra-head is compatible with Rails 3.2
 <pre>
 gem install 'rails' --version '~>3.2.2'
 </pre>
-  
+
 h3. Generate a new rails application:
 
 <pre>
@@ -39,25 +39,40 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 <pre>
   source 'http://rubygems.org'
 
-  gem 'rails', '~>3.2.2'
+  gem 'rails', '~>3.2.3'
 
+  gem 'blacklight', '~> 3.3.2'
   gem 'hydra-head', '~> 4.0.0'
-  gem 'blacklight', '~> 3.3.1'
 
-  # We will assume that you're using sqlite3 for testing/demo, 
+  # We will assume that you're using sqlite3 for testing/demo,
   # but in a production setup you probably want to use a real sql database like mysql or postgres
   gem 'sqlite3'
 
-  # We will assume you're using devise in tutorials/documentation. 
+  # We will assume you're using devise in tutorials/documentation.
   # You are free to implement your own User/Authentication solution in its place.
   gem 'devise'
 
-  # For testing.  You will probably want to use these to run the tests you write for your hydra head
-  group :test do 
+  # Rails uses asset pipeline.  You will need these gems for used your assets in development.
+  # However, you won't need them in production because they will be precompiled.
+  group :assets do
+    gem 'sass-rails', '~> 3.2.0'
+    gem 'compass-rails', '~> 1.0.0'
+    gem 'compass-susy-plugin', '~> 0.9.0'
+  end
+
+  # You will probably want to use these to run the tests you write for your hydra head
+  # For testing with Cucumber
+  group :cucumber do
+    gem 'cucumber'
+    gem 'cucumber-rails'
+  end
+
+  # For testing with rspec
+  group :development, :test do
     gem 'rspec-rails', '>=2.9.0'
-    gem "jettywrapper"
-    gem "cucumber-rails"
-    gem "database_cleaner"
+    gem 'jettywrapper'
+    gem 'jquery-rails'
+    gem 'database_cleaner'
   end
 </pre>
 
@@ -97,11 +112,11 @@ rake db:test:prepare
 
 h3. You're done.
 
-Congratulations.  You've set up the code for your Hydra Head.  
+Congratulations.  You've set up the code for your Hydra Head.
 
 Read "Tools for Developing and Testing your Application":http://github.com/projecthydra/hydra-head/wiki/Tools-for-Developing-and-Testing-your-Application, then read "How to Get Started":http://github.com/projecthydra/hydra-head/wiki/How-to-Get-Started to get a sense of what you can do with your Hydra Head.
 
-h2. Modifying and Testing the hydra-head Gem 
+h2. Modifying and Testing the hydra-head Gem
 
 For those developers who want to or need to work on the hydra-head gem itself, see the "Instructions for Contributors":http://github.com/projecthydra/hydra-head/wiki/For-Contributors
 
@@ -109,6 +124,6 @@ h2. Acknowledgements
 
 h3. Design & Strategic Contributions
 
-The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia, University of Hull and MediaShelf LLC.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, Chris Awre, and Matt Zumwalt.  
+The Hydra Framework would not exist without the extensive design effort undertaken by representatives of repository initiatives from Stanford University, University of Virginia, University of Hull and MediaShelf LLC.  Contributors to that effort include Tom Cramer, Lynn McRae, Martha Sites, Richard Green, Chris Awre, and Matt Zumwalt.
 
 Thorny Staples from Fedora Commons & DuraSpace deserves special thanks for putting all of these people in the same room together.
