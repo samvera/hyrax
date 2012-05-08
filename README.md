@@ -1,4 +1,4 @@
-ScholarSphere
+﻿ScholarSphere
 =============
 ScholarSphere is a Ruby on Rails application utilizing the Blacklight and Hydra-head gems for integration with the search & indexing system, Solr, and the digital asset management platform, Fedora Commons.
 
@@ -12,6 +12,11 @@ For more information, read the [ScholarSphere development docs](https://github.c
 
 Installation Instructions
 -------------------------
+
+Install libmagic-dev (command below for ubuntu substitute your installer)
+  sudo apt-get install libmagic-dev
+  sudo apt-get install libmagickwand-dev
+
 
 Copy and edit local DB, Fedora, and Solr configs
 
