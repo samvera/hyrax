@@ -32,7 +32,7 @@ module HydraHead
 
       def assets_with_all_nested_routes
         add_routes do |options|
-          match "withdraw", :to => "assets#withdraw", :as => "withdraw"   
+          match "withdraw", :to => "hydra/assets#withdraw", :as => "withdraw"   
           namespace :hydra do
             resources :file_assets
             resources :assets do 

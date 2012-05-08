@@ -12,7 +12,7 @@
 				
 					<div>
 					<%= button_to("Delete", hydra_asset_path(@document['id']), :confirm => 'Are you sure?', :method => :delete )%>
-					 <%= button_to("Withdraw", :action=>"withdraw", :controller => :assets, :id => @document['id'] ) %>
+					 <%= button_to("Withdraw", withdraw_path(:id => @document['id']) ) %>
 					 <%= button_to("Cancel", :action=>:edit, :controller => :catalog, :id => @document['id'] ) %>
 					
 	      </div>
