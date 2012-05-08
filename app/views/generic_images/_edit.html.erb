@@ -32,7 +32,5 @@
     </form>
   </div>
 </div>
-<% sidebar_items << capture do %>
-  <%= delete_asset_link(params[:id], "GenericImage") %>
-<% end %>
+
 <%= async_load_tag(generic_content_object_path(params[:id], :layout=>"false", :method => ":get"), 'uploads') %>
