@@ -165,14 +165,21 @@ module Hydra::AccessControlsEnforcement
   def add_access_controls_to_solr_params(solr_parameters, user_parameters)
     apply_gated_discovery(solr_parameters, user_parameters)
   end
+
   
+  # Which permission levels (logical OR) will grant you the ability to discover documents in a search.
+  # Override this method if you want it to be something other than the default
+  def discovery_permissions
+    ["edit","discover","read"]
+  end
+
   # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
   def apply_gated_discovery(solr_parameters, user_parameters)
     solr_parameters[:fq] ||= []
     # Grant access to public content
-    permission_types = ["edit","discover","read"]
+    permission_types = discovery_permissions
     user_access_filters = []
     
     permission_types.each do |type|
