@@ -21,7 +21,7 @@ group :development, :test do
        gem 'mocha'
        gem 'cucumber-rails', :require => false
        gem 'capybara'
-       gem 'factory_girl'
+       gem 'factory_girl', '~> 2.6.0'
        gem 'rest-client'
        gem 'solrizer-fedora', '>=1.2.5'
 end
