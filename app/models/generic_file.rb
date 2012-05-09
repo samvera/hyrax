@@ -6,7 +6,7 @@ class GenericFile < ActiveFedora::Base
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-  has_file_datastream :type => FileContentDatastream
+  has_file_datastream :name => "content", :type => FileContentDatastream
   has_file_datastream :name => "thumbnail", :type => FileContentDatastream
 
   belongs_to :batch, :property => :is_part_of
@@ -31,7 +31,7 @@ class GenericFile < ActiveFedora::Base
   delegate :format, :to => :descMetadata
   delegate :identifier, :to => :descMetadata
   delegate :format_label, :to => :characterization
-  delegate :mime_type, :to => :characterization
+  delegate :mime_type, :to => :characterization, :unique=>true
   delegate :file_size, :to => :characterization
   delegate :last_modified, :to => :characterization
   delegate :filename, :to => :characterization
@@ -93,9 +93,10 @@ class GenericFile < ActiveFedora::Base
   end
 
   def characterize_if_changed
-     content_changed = self.content.changed?
-     yield
-     Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
+    content_changed = self.content.changed?
+    yield
+    logger.debug "DOING CHARACTERIZE ON #{self.pid}"
+    Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
   end
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
@@ -107,53 +108,55 @@ class GenericFile < ActiveFedora::Base
   end
 
   def related_files
-    self.batch.parts.reject { |gf| gf.pid == self.pid }
+    self.batch.generic_files.reject { |gf| gf.pid == self.pid }
   end
 
+  # Create thumbnail requires that the characterization has already been run (so mime_type, width and height is available)
+  # and that the object is already has a pid set
   def create_thumbnail
     return if self.content.content.nil?
-    f = Tempfile.new("#{self.pid}-#{self.content.dsVersionID}")
-    tmp_thumb = File.new("/tmp/#{self.pid}-#{self.content.dsVersionID}-thumb.png", "w+")
-
-    f.binmode
-    if self.content.content.respond_to? :read
-      f.write(self.content.content.read)
-    else
-      f.write(self.content.content)
-    end 
-    f.close
-    if ["application/pdf"].include? self.mime_type.first
-      puts "image pdf"
-      pdf = Magick::ImageList.new(f.path)[0]
-      thumb = pdf.scale(45, 60)
-      thumb.write tmp_thumb.path 
-      self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
-      self.save
-    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type.first
-      puts "image thumb"
-      img = Magick::ImageList.new(f.path)
-
-      # horizontal img
-      if Integer(self.width.first) > Integer(self.height.first)
-        if Integer(self.width.first) > 50 and Integer(self.height.first) > 35 
-          thumb = img.scale(50, 35)
-        else
-          thumb = img.scale(Integer(self.width.first), Integer(self.height.first))
-        end
-      # vertical img
-      else
-        if Integer(self.width.first) > 45 and Integer(self.height.first) > 60 
-          thumb = img.scale(45, 60)
-        else
-          thumb = img.scale(Integer(self.width.first), Integer(self.height.first))
-        end
-      end
-      thumb.write tmp_thumb.path 
-      self.add_file_datastream(tmp_thumb, :dsid=>'thumbnail')
-      self.save
+    if ["application/pdf"].include? self.mime_type
+      create_pdf_thumbnail
+    elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type
+      create_image_thumbnail
     # if we can figure out how to do video
     #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
+    # TODO
     end
+  end
+
+  def create_pdf_thumbnail
+    pdf = Magick::ImageList.new
+    pdf.from_blob(content.content)
+    thumb = pdf.scale(45, 60)
+    self.thumbnail.content = thumb.to_blob
+    logger.debug "Has the content changed before saving? #{self.content.changed?}"
+    self.save
+  end
+
+  def create_image_thumbnail
+    img = Magick::ImageList.new
+    img.from_blob(content.content)
+    # horizontal img
+    height = self.height.first.to_i
+    width = self.width.first.to_i
+    if width > height
+      if width > 50 and height > 35 
+        thumb = img.scale(50, 35)
+      else
+        thumb = img.scale(width, height)
+      end
+    # vertical img
+    else
+      if width > 45 and height > 60 
+        thumb = img.scale(45, 60)
+      else
+        thumb = img.scale(width, height)
+      end
+    end
+    self.thumbnail.content = thumb.to_blob
+    logger.debug "Has the content before saving? #{self.content.changed?}"
+    self.save
   end
 
   def append_metadata
@@ -161,8 +164,12 @@ class GenericFile < ActiveFedora::Base
     ScholarSphere::Application.config.fits_to_desc_mapping.each_pair do |k, v|
       if terms.has_key?(k)
         proxy_term = self.send(v)
-        terms[k].each do |term_value|
-          proxy_term << term_value unless proxy_term.include?(term_value)
+        if terms[k].is_a? Array
+          terms[k].each do |term_value|
+            proxy_term << term_value unless proxy_term.include?(term_value)
+          end
+        else
+          proxy_term << terms[k]
         end
       end
     end
@@ -228,16 +235,16 @@ class GenericFile < ActiveFedora::Base
   end
 
   def audit_stat
-      logs = audit(true)
-      logger.info "*****"
-      logger.info logs.inspect
-      logger.info "*****"
-      audit_results = logs.collect { |result| result["pass"] }
-      logger.info "!*****"
-      logger.info audit_results.inspect
-      logger.info "!*****"
-      result =audit_results.reduce(true) { |sum, value| sum && value }
-      result
+    logs = audit(true)
+    logger.info "*****"
+    logger.info logs.inspect
+    logger.info "*****"
+    audit_results = logs.collect { |result| result["pass"] }
+    logger.info "!*****"
+    logger.info audit_results.inspect
+    logger.info "!*****"
+    result =audit_results.reduce(true) { |sum, value| sum && value }
+    result
   end
 
   def audit(force = false)
@@ -256,11 +263,11 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
-  def GenericFile.audit!(version)
+  def self.audit!(version)
     GenericFile.audit(version, true)
   end
 
-  def GenericFile.audit(version, force = false)
+  def self.audit(version, force = false)
     logger.debug "***AUDIT*** log for #{version.inspect}"
     latest_audit = self.find(version.pid).logs(version.dsid).first
     unless force
@@ -278,7 +285,7 @@ class GenericFile < ActiveFedora::Base
                              :dsid=>version.dsid, :version=>version.versionID)
   end
 
-  def GenericFile.needs_audit?(version, latest_audit)
+  def self.needs_audit?(version, latest_audit)
     if latest_audit and latest_audit.updated_at
       logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
       days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
@@ -294,7 +301,7 @@ class GenericFile < ActiveFedora::Base
     true
   end
 
-  def GenericFile.audit_everything(force = false)
+  def self.audit_everything(force = false)
     GenericFile.find(:all).each do |gf|
       gf.per_version do |ver|
         GenericFile.audit(ver, force)
@@ -302,7 +309,7 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
-  def GenericFile.audit_everything!
+  def self.audit_everything!
     GenericFile.audit_everything(true)
   end
 

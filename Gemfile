@@ -7,13 +7,16 @@ gem 'mysql', '~> 2.8.1'
 gem 'blacklight', '~> 3.3.2'
 gem 'hydra-head', '~> 4.0.0'
 gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
-gem 'rmagick', '~> 2.13.1'
+
+# the :require arg is necessary on Linux-based hosts
+gem 'rmagick', '~> 2.13.1', :require => 'RMagick'
 gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
 gem 'noid', '~> 0.5.5'
 gem 'daemons'
 
 gem 'hydra-ldap', '0.0.2'
+gem 'zipruby'
 
 group :assets do
   gem "compass-rails", "~> 1.0.0"

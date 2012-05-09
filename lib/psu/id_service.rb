@@ -8,16 +8,17 @@ module PSU
       return @@minter.valid? noid
     end
     def self.mint
-      taken = true
-      while taken
+      while true
         pid = self.next_id
-        taken = ActiveFedora::Base.exists?(pid)
+        break unless ActiveFedora::Base.exists?(pid)
       end
       return pid
     end    
     protected
     def self.next_id
-      return "#{@@namespace}:#{@@minter.mint}"
+      # seed with process id so that if two processes are running they do not come up with the same id.
+      @@minter.seed($$)
+      return  "#{@@namespace}:#{@@minter.mint}"
     end
   end
 end

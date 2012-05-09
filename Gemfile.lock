@@ -334,6 +334,7 @@ GEM
     xml-simple (1.1.1)
     xpath (0.1.4)
       nokogiri (~> 1.3)
+    zipruby (0.3.6)
 
 PLATFORMS
   ruby
@@ -371,3 +372,4 @@ DEPENDENCIES
   sqlite3 (~> 1.3.6)
   unicorn-rails
   yaml_db!
+  zipruby
