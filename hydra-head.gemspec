@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'cucumber-rails', '>=1.2.0'
-  s.add_development_dependency 'factory_girl'
+  s.add_development_dependency 'factory_girl', "~> 2.6.0"
   s.add_development_dependency 'solrizer-fedora', '>=2.0.0'
 
 

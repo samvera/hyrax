@@ -116,8 +116,8 @@ GEM
     equivalent-xml (0.2.9)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
-    factory_girl (3.1.1)
-      activesupport (>= 3.0.0)
+    factory_girl (2.6.4)
+      activesupport (>= 2.3.9)
     fastercsv (1.5.4)
     ffi (1.0.11)
     fssm (0.2.9)
@@ -282,7 +282,7 @@ PLATFORMS
 
 DEPENDENCIES
   cucumber-rails (>= 1.2.0)
-  factory_girl
+  factory_girl (~> 2.6.0)
   hydra-head!
   jettywrapper (>= 1.0.4)
   mocha
