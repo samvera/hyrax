@@ -2,15 +2,8 @@
 require 'blacklight/catalog'
 class DashboardController < ApplicationController
 
-  include Hydra::Controller
-  include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
-  include Hydra::FileAssetsHelper
-  include PSU::Noid
-
   include Blacklight::Catalog
   include Hydra::Catalog
-  include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
-  include Hydra::FileAssetsHelper
   
   before_filter :enforce_access_controls
   before_filter :enforce_viewing_context_for_show_requests, :only=>:show
@@ -20,7 +13,7 @@ class DashboardController < ApplicationController
   DashboardController.solr_search_params_logic << :exclude_unwanted_models
 
   before_filter :authenticate_user!
-  before_filter :enforce_access_controls#, :only=>[:edit]
+  before_filter :enforce_access_controls #, :only=>[:edit, :update]
   
   def index
 
@@ -28,9 +21,7 @@ class DashboardController < ApplicationController
     extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => "Atom for results")
     (@response, @document_list) = get_search_results
 
-     @filters = params[:f] || []
-    logger.info "**** Filters = #{@filters}" 
-    logger.info "**** logic = #{DashboardController.solr_search_params_logic}" 
+    @filters = params[:f] || []
 
     respond_to do |format|
       format.html { save_current_search_params }
