@@ -13,7 +13,7 @@ namespace :hyhead do
     
     error = nil
     error = Jettywrapper.wrap(jetty_params) do
-        Rake::Task['hyhead:test'].invoke
+        Rake::Task['hyhead:coverage'].invoke
     end
     raise "test failures: #{error}" if error
     Rake::Task["hyhead:doc"].invoke
