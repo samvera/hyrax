@@ -3,6 +3,7 @@
 # Explicitly declares:
 #   descMetadata datastream using Hydra::Datastream::ModsArticle Terminology
 #
+# will move to lib/hydra/model/mods_object_behavior in release 5.x
 module Hydra::ModelMixins::ModsObject
   
   def self.included(klazz)

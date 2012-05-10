@@ -1,5 +1,9 @@
+# will move to lib/hydra/model/file_asset_behavior in release 5.x
 module Hydra
   module Models
+    # Defines Behaviors for a FileAsset Model
+    # Conforms to the Hydra genericContent cModel -- the "content" is in a datastream called content
+    # TODO:   Could we just move this behavior into app/models/file_asset.rb? 
     module FileAsset
       extend ActiveSupport::Concern
       included do

@@ -1,3 +1,4 @@
+# will move to lib/hydra/access_control folder/namespace in release 5.x
 module Hydra::AccessControlsEnforcement
   
   def self.included(klass)

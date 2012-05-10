@@ -6,6 +6,8 @@
 #
 # Sample Usages:
 #   For good sample usage, see the documentation for HydraImage.
+# 
+# will move to lib/hydra/model/generic_image_behavior in release 5.x
 require "hydra"
 
 module Hydra::GenericImage

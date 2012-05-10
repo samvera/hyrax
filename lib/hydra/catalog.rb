@@ -5,6 +5,7 @@
 # This Module extends Blacklight Catalog behaviors to give you a "Hydra" Catalog with edit and show behaviors on top of the Blacklight search behaviors.
 # Include this module into any of your Blacklight Catalog classes (ie. CatalogController) to add Hydra functionality.
 #
+# will move to lib/hydra/controller/catalog_controller_behavior in release 5.x
 module Hydra::Catalog
   extend ActiveSupport::Concern
   

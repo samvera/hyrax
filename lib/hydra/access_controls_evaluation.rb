@@ -1,4 +1,5 @@
-# Provides methods for testing permissions
+# will move to lib/hydra/access_control folder/namespace in release 5.x
+# Provides methods for determining permissions
 # If you include this into a Controller, it will also make a number of these methods available as view helpers.
 module Hydra::AccessControlsEvaluation
   

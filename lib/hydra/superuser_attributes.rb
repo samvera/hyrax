@@ -1,3 +1,4 @@
+# @deprecated no longer doing permissions this way.  Will be removed no later than release 6.x
 module Hydra::SuperuserAttributes
 
   def can_be_superuser?

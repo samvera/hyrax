@@ -1,4 +1,5 @@
 module Hydra
+# @deprecated -- this will be removed in 5.x release
 class RightsMetadata < ActiveFedora::NokogiriDatastream       
   
   def initialize(digital_object, dsid, options={})

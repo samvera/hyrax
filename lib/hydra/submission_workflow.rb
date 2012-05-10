@@ -1,4 +1,5 @@
 require "hydra"
+# will move to lib/hydra/workflow/submission_workflow in release 5.x
 module Hydra::SubmissionWorkflow
   
   # When in this module is incuded in a controller (e.g. responds to :before_filter) add the validate_worflow_step method to the before filter chain.

@@ -1,3 +1,4 @@
+# @deprecated -- this will be removed in 5.x release
 module Hydra
   
   class ModsArticle < ActiveFedora::NokogiriDatastream       

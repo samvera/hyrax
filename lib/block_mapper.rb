@@ -1,3 +1,4 @@
+# @deprecated - leftover from blacklight pre-rails3 generator. Will be removed no later than 6.x release
 #
 # A generic mapping class for "collections"
 # bm = BlockMapper.new

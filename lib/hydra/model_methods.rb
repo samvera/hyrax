@@ -1,3 +1,4 @@
+# will move to lib/hydra/model/model_behavior.rb  (with appropriate namespace changes) in release 5.x
 module Hydra::ModelMethods
   extend ActiveSupport::Concern
 

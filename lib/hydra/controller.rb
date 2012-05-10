@@ -8,6 +8,7 @@
 #    include Hydra::Controller
 #  end
 #
+# will move to lib/hydra/controller/controller_behavior in release 5.x
 module Hydra::Controller
 
   def self.included(klass)

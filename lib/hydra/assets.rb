@@ -1,3 +1,6 @@
+# @deprecated  Create Model-specific Controllers instead ie. ArticlesController, ETDController, etc.
+# Also see Hydra::Controller::AssetsControllerBehavior for more info.
+# will move to lib/hydra/controller / assets_controller_behavior.rb in release 5.x
 module Hydra::Assets
   extend ActiveSupport::Concern
   include Blacklight::SolrHelper

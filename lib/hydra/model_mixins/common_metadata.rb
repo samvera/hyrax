@@ -10,6 +10,7 @@
 #   RELS-EXT datastream -- Handled by ActiveFedora::Base & ActiveFedora::RelsExtDatastream
 #   optional datastreams (contentMetadata, technicalMetadata, provenanceMetadata, sourceMetadata)
 #
+# will move to lib/hydra/model/common_metadata_behavior in release 5.x
 module Hydra::ModelMixins
   module CommonMetadata
   

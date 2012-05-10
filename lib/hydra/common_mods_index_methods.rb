@@ -6,7 +6,7 @@
 #   This method returns a Hash of person_full_name_facet values which combine Lastname, Firstname
 # extract_person_organizations
 #   This method returns a Hash of person_full_name_facet values which extract the persons affiliation and puts it in an mods_organization_facet
-
+# will be removed in release 5.x
 module Hydra::CommonModsIndexMethods
 
   def self.included(base)

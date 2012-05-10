@@ -1,3 +1,4 @@
+  # @deprecated   This code is unused / no longer useful.  It will be removed no later than release 6.x
   # This middleware is for use in development mode, when User
   # is removed/reloaded each request. This makes sure modules
   # stay loaded.

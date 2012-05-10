@@ -4,6 +4,7 @@ require 'block_mapper' # the generic mapper class
 require 'marc_record_ext.rb' # our custom methods
 require 'base64' # so we can base64 encode the marc21 record
 
+# @deprecated - leftover from blacklight pre-rails3 generator. Will be removed no later than 6.x release
 class MARCMapper
   
   # pass in a path to a marc file

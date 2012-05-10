@@ -1,4 +1,5 @@
 require "om"
+# TODO: All of this should be moved into module Hydra::Assets and this file should be eliminated.
 module Hydra::AssetsControllerHelper
   
   # This makes sure that assets have the current user marked as their depositor/owner.  

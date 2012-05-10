@@ -1,4 +1,5 @@
 module Hydra
+# @deprecated -- this will be removed in 5.x release
 class ModsImage < ActiveFedora::NokogiriDatastream       
   include Hydra::CommonModsIndexMethods
 

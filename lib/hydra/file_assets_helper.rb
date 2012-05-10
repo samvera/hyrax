@@ -1,3 +1,4 @@
+# will move to lib/hydra/controller / upload_behavior.rb in release 5.x
 module Hydra::FileAssetsHelper
   
   # Creates a File Asset, adding the posted blob to the File Asset's datastreams and saves the File Asset

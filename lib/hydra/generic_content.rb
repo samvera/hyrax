@@ -2,6 +2,7 @@
 # require "httparty"
 # require "mime/types"
 
+# will move to lib/hydra/model/generic_content_behavior in release 5.x
 module Hydra::GenericContent
   
   def self.included(klass)

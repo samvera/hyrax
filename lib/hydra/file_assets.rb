@@ -1,3 +1,4 @@
+# will move to lib/hydra/controller / file_assets_controller_behavior.rb in release 5.x
 module Hydra::FileAssets
   extend ActiveSupport::Concern
   
