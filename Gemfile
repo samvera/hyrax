@@ -7,4 +7,8 @@ gemspec
 # bundle config build.ruby-debug-base19 --with-ruby-include=$rvm_path/src/ruby-1.9.3-p0
 group :test do
   gem 'cucumber-rails', '>=1.2.0', :require=>false
+  gem 'rcov', :platform => :mri_18
+  gem 'simplecov', :platform => :mri_19
+  gem 'simplecov-rcov', :platform => :mri_19
 end
+

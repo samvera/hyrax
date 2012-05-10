@@ -5,6 +5,15 @@
 
 ENV["RAILS_ENV"] ||= 'test'
 
+
+if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
+  require 'simplecov'
+  require 'simplecov-rcov'
+
+  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+  SimpleCov.start
+end
+
 #require File.expand_path("../../config/environment", __FILE__)
 # version that works with our blacklight:spec stuff that calls specs
 # in a remote directory. 
