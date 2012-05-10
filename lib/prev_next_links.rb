@@ -1,3 +1,4 @@
+# @deprecated no longer used.  Will be removed no later than release 6.x
 # Custom pagination renderer
 # Call using will_paginate(@results, :renderer => 'PrevNextLinks')
 class PrevNextLinks < WillPaginate::LinkRenderer
