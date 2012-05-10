@@ -1,3 +1,4 @@
+# this code will be moved/renamed to Hydra::AccessControl::RoleMapperBehavior (with the appropriate namespace changes) in Hydra 5.0
 require 'yaml'
 module Hydra::RoleMapperBehavior
   extend ActiveSupport::Concern

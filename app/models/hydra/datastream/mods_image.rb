@@ -1,3 +1,4 @@
+# @deprecated Leftover app-specific code from Hydrangea or Hydra at Hull.  Please use Hydra::Datastream::ModsGenericContent instead.
 module Hydra
   module Datastream
     class ModsImage < ActiveFedora::NokogiriDatastream       

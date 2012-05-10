@@ -1,3 +1,5 @@
+# @deprecated Leftover from Hydrangea.  Please use Hydra::Datastream::ModsGenericContent instead.  This will be removed no later than release 6.x
+# this should be moved to documentation as an EXAMPLE
 module Hydra
   module Datastream
     class ModsArticle < ActiveFedora::NokogiriDatastream       

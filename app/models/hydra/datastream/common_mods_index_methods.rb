@@ -1,5 +1,7 @@
 # Provides some helper methods for indexing compound or non-standard facets
 #
+# this code will move to lib/hydra/datastream/mods_name_behavior.rb (with the appropriate namespace changes) in Hydra 5.0
+#
 # == Methods
 # 
 # extract_person_full_names

@@ -1,3 +1,5 @@
+# this code will move to lib/hydra/access_controls/ability.rb (with the appropriate namespace changes) in Hydra 5.0
+# Code for CanCan access to Hydra models
 module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 

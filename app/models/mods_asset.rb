@@ -1,4 +1,4 @@
-# A Basic Model for Assets that conform to Hydra commonMetadata cModel and have basic MODS metadata (currently "Article" is the MODS exemplar)
+# An EXAMPLE   Basic Model for Assets that conform to Hydra commonMetadata cModel and have basic MODS metadata (currently "Article" is the MODS exemplar)
 class ModsAsset < ActiveFedora::Base
   
   # declares a rightsMetadata datastream with type Hydra::Datastream::RightsMetadata

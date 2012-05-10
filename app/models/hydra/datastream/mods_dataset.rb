@@ -1,3 +1,4 @@
+# @deprecated Leftover from Hydrangea work;  this should be moved to documentation as an EXAMPLE, and will be removed no later than release 6.x
 module Hydra
   module Datastream
     class ModsDataset < ActiveFedora::NokogiriDatastream

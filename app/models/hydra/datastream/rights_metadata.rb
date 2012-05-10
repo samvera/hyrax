@@ -1,5 +1,6 @@
 module Hydra
   module Datastream
+    # Implements Hydra RightsMetadata XML terminology for asserting access permissions
     class RightsMetadata < ActiveFedora::NokogiriDatastream       
       
       set_terminology do |t|
