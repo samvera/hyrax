@@ -101,9 +101,8 @@ module Hydra::AccessControlsEnforcement
       if @permissions_solr_document["embargo_release_date_dt"] 
         embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
-          # check for depositor raise "#{@document["depositor_t"].first} --- #{user_key}"
           ### Assuming we're using devise and have only one authentication key
-          unless current_user && user_key == @permissions_solr_document["depositor_t"].first
+          unless current_user && can?(:edit, params[:id])
             flash[:alert] = "This item is under embargo.  You do not have sufficient access privileges to read this document."
             redirect_to(:action=>'index', :q=>nil, :f=>nil) and return false
           end
