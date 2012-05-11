@@ -16,7 +16,33 @@ describe Hydra::AccessControlsEnforcement do
       end
     end
   end
-
+  describe "enforce_show_permissions" do
+    it "should allow a user w/ edit permissions to view an embargoed object" do
+      user = User.new :email=>'testuser@example.com'
+      user.stubs(:is_being_superuser?).returns false
+      RoleMapper.stubs(:roles).with(user.email).returns(["archivist"])
+      helper.stubs(:current_user).returns(user)
+      helper.stubs(:load_permissions_from_solr).returns("")
+      helper.stubs(:can?).with(:edit, nil).returns(true)
+      helper.stubs(:can?).with(:read, nil).returns(true)
+      @permissions_solr_document = SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
+      helper.send(:enforce_show_permissions, {})
+      flash[:alert].should be_nil
+    end
+    it "should prevent a user w/o edit permissions from viewing an embargoed object" do
+      user = User.new :email=>'testuser@example.com'
+      user.stubs(:is_being_superuser?).returns false
+      RoleMapper.stubs(:roles).with(user.email).returns([])
+      helper.stubs(:current_user).returns(user)
+      helper.stubs(:load_permissions_from_solr).returns("")
+      helper.stubs(:can?).with(:edit, nil).returns(false)
+      helper.stubs(:can?).with(:read, nil).returns(true)
+      helper.stubs(:redirect_to)
+      @permissions_solr_document = SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
+      helper.send(:enforce_show_permissions, {})
+      flash[:alert].should == "This item is under embargo.  You do not have sufficient access privileges to read this document."
+    end
+  end
   describe "apply_gated_discovery" do
     before(:each) do
       @stub_user = User.new :email=>'archivist1@example.com'
