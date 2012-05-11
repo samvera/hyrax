@@ -52,18 +52,6 @@ namespace :hyhead do
 
     Rake::Task['hyhead:test'].invoke
   end
-
-  namespace :coverage do
-  desc "Execute ci build with coverage"
-  task :ci do 
-    # Put spec opts in a file named .rspec in root
-    ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : "ruby"
-    ENV['COVERAGE'] = 'true' unless ruby_engine == 'jruby'
-
-
-    Rake::Task['hyhead:ci'].invoke
-  end
-  end
   
   begin
     require 'yard'
