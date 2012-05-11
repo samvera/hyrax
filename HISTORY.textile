@@ -1,3 +1,9 @@
+h3. 4.1.0
+* Upgrade to active fedora 4.1.0
+* Upgrade to solrizer-fedora 2.1.0
+* Upgrade to blacklight 3.4.1 
+* Improved access controls api
+
 h3. 4.0.0
 * Upgrade to active fedora 4.0.0
 * Upgrade to blacklight 3.3.0 
