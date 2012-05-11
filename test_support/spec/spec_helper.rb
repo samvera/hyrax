@@ -11,7 +11,14 @@ if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov-rcov'
 
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter "/test_support/"
+    add_filter "/tmp/"
+
+    add_filter do |source_file|
+      source_file.lines.count < 4
+    end
+  end
 end
 
 #require File.expand_path("../../config/environment", __FILE__)
