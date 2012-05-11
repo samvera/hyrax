@@ -7,7 +7,7 @@ module Hydra
       content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected")
     end
 
-    # @override to remove the label class (easier integration with bootstrap)
+    # Override to remove the label class (easier integration with bootstrap)
     # and handles arrays
     def render_facet_value(facet_solr_field, item, options ={})    
       if item.is_a? Array
