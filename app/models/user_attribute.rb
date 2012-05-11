@@ -2,6 +2,11 @@
 class UserAttribute < ActiveRecord::Base
   belongs_to :user
 
+  def initialize
+    ActiveSupport::Deprecation.warn("UserAttribute is deprecated and will be removed in release 5 or 6;  this behavior should be implemented at the app level.")
+    super
+  end
+
 
 # Finds the user_attributes based on login
 # @param [sting] login the login of the user

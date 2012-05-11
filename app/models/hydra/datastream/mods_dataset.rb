@@ -3,6 +3,12 @@ module Hydra
   module Datastream
     class ModsDataset < ActiveFedora::NokogiriDatastream
       include Hydra::Datastream::CommonModsIndexMethods
+      
+      def initialize
+        ActiveSupport::Deprecation.warn("Hydra:Datastream:ModsDataset is deprecated and will be removed in release 5 or 6.  It has been moved into wiki documentation here:  https://github.com/projecthydra/hydra-head/wiki/Models---Some-Examples")
+        super
+      end
+      
       set_terminology do |t|
         t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3/mods-3-2.xsd")
 

@@ -4,4 +4,9 @@
 class Superuser < ActiveRecord::Base
   belongs_to :user
     
+  def initialize
+    ActiveSupport::Deprecation.warn("Superuser is deprecated and will be removed in release 5 or 6; we are moving away from this approach.")
+    super
+  end
+
 end

@@ -5,6 +5,11 @@
 # a Fedora object for the Hypatia SET hydra content type
 class UsesDefaultPartials < ActiveFedora::Base
   
+  def initialize
+    ActiveSupport::Deprecation.warn("UsesDefaultPartials is for testing only.  It will be moved into test_support")
+    super
+  end
+
   has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
   
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
