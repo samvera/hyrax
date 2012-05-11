@@ -45,6 +45,9 @@ module Hydra::AssetsControllerHelper
           # if no field selector, exists, use the field name
           fields.each_pair do |field_name,field_values|
             parent_select = OM.destringify( params["field_selectors"][datastream_name].fetch(field_name, field_name) )
+            # calling on unique because duplicate keys can be problematic for multi-valued fields. (HYDRA-785)
+            parent_select.uniq! if parent_select.respond_to?(:uniq!)
+            
             @sanitized_params[datastream_name][parent_select] = field_values       
           end        
         else
