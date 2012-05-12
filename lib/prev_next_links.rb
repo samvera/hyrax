@@ -3,6 +3,11 @@
 # Call using will_paginate(@results, :renderer => 'PrevNextLinks')
 class PrevNextLinks < WillPaginate::LinkRenderer
   
+  def initialize
+    ActiveSupport::Deprecation.warn("PrevNextLinks is deprecated and will be removed in release 5 or 6; we are no longer doing custom pagination.")
+    super
+  end
+
   def to_html
     links = []
     links << page_link_or_span(@collection.previous_page, 'disabled prev_page', @options[:previous_label])
