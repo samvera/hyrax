@@ -1,5 +1,10 @@
 module Hydra::GenericUserAttributes
 
+  def self.included(base)
+    ActiveSupport::Deprecation.warn("Hydra::GenericUserAttributes has been deprecated and will be removed no later than release 6.  Use devise or similar.")
+    super
+  end
+
   USER_ATTRIBUTES = ['first_name','last_name','full_name','affiliation','photo']
 
   attr_writer :user_attributes
