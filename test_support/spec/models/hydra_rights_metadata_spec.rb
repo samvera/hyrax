@@ -153,7 +153,7 @@ describe Hydra::Datastream::RightsMetadata do
       @sample.embargo_release_date(:format=>:solr_date).should == "2010-12-01T23:59:59Z"
     end
     
-    # this test was returning nil under 1.9 and returning '' under ree and 1.8.7
+    # this test was returning '' under 1.9 and returning nil under ree and 1.8.7
     it "should not return anything if the date is empty string" do
       @sample.update_values({[:embargo,:machine,:date]=>''})
       @sample.embargo_release_date(:format=>:solr_date).should be_blank
