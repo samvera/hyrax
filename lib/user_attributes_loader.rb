@@ -4,6 +4,7 @@
   # stay loaded.
   class UserAttributesLoader
     def initialize(app)
+      ActiveSupport::Deprecation.warn("UserAttributesLoader has been deprecated; it will be removed no later than release 6.")
       @app = app
     end
 
