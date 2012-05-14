@@ -5,11 +5,20 @@ source 'http://rubygems.org'
 
 gem "rails", '~> 3.2.2'
 
-gem 'sqlite3'
-
 gem 'blacklight', '~>3.3.0'
 
-gem 'therubyracer' # For compiling js - needed on the ci server
+platforms :jruby do
+  gem 'jruby-openssl'
+  gem 'activerecord-jdbcsqlite3-adapter'
+  gem 'jdbc-sqlite3'
+  gem 'therubyrhino'
+end
+
+platforms :ruby do
+ gem 'sqlite3'
+ gem 'execjs'
+ gem 'therubyracer'
+end
 
 gem 'hydra-head', :path => '../../'
 gem 'devise'
