@@ -5,7 +5,7 @@ describe GenericFile do
     @file = GenericFile.new
   end 
 
-  describe "attrubutes" do
+  describe "attributes" do
     it "should have rightsMetadata" do
       @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
     end
@@ -243,6 +243,60 @@ describe GenericFile do
       Delayed::Job.count.should == @job_count+1
       Delayed::Worker.new.work_off 
       Delayed::Job.count.should == @job_count
+    end
+  end
+  describe "related_files" do
+    before(:all) do
+      @batch_id = "foobar:100"
+    end
+    before(:each) do
+      @f1 = GenericFile.new(:pid => "foobar:1")
+      @f2 = GenericFile.new(:pid => "foobar:2")
+      @f3 = GenericFile.new(:pid => "foobar:3")
+    end
+    after(:each) do
+      @f1.delete if @f1.persisted?
+      @f2.delete if @f2.persisted?
+      @f3.delete if @f3.persisted?
+    end
+    it "should never return a file in its own related_files method" do
+      @f1.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f3.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f1.save
+      @f2.save
+      @f3.save
+      @f1.related_files.should_not include(@f1)
+      @f1.related_files.should include(@f2)
+      @f1.related_files.should include(@f3)
+      @f2.related_files.should_not include(@f2)
+      @f2.related_files.should include(@f1)
+      @f2.related_files.should include(@f3)
+      @f3.related_files.should_not include(@f3)
+      @f3.related_files.should include(@f1)
+      @f3.related_files.should include(@f2)
+    end
+    it "should return an empty array when there are no related files" do
+      @f1.related_files.should == []
+    end
+    it "should work when batch is defined" do
+      @f1.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f1.save
+      @f2.save
+      mock_batch = mock("batch")
+      mock_batch.stubs(:generic_files => [@f1, @f2])
+      @f1.expects(:batch).twice.returns(mock_batch)
+      @f1.related_files.should == [@f2]
+    end
+    it "should work when batch is not defined by querying solr" do
+      @f1.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f1.save
+      @f2.save
+      @f1.expects(:batch).twice.returns(nil)
+      lambda { @f1.related_files }.should_not raise_error
+      @f1.related_files.should == [@f2]
     end
   end
   describe "characterize" do

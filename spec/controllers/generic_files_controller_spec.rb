@@ -103,10 +103,8 @@ describe GenericFilesController do
   
   describe "edit" do
     describe "edit someone elses files" do
-      render_views
-      
+      render_views      
       it "should give me a flash error" do
-      
          get :edit, id:"test5"
          flash[:notice].should_not be_empty
          flash[:notice].should include("You do not have sufficient privileges to edit this document")
@@ -115,10 +113,6 @@ describe GenericFilesController do
          flash[:notice].should include("You do not have sufficient privileges to edit this document")
          logger.info "#{response.inspect}"
       end 
-
-    end
-    
-     
+    end    
   end
-
 end

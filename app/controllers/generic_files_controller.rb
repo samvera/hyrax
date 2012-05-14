@@ -56,16 +56,17 @@ class GenericFilesController < ApplicationController
        retval = render :json => [{:error => "Error! No file to save"}].to_json
     
     # check error condition empty file
-    elsif params[:files][0].tempfile.size == 0
+    elsif ((params[:files][0].respond_to?(:tempfile)) && (params[:files][0].tempfile.size == 0))
+       retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
+
+    elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
        retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
     
     # process file
     else
       create_and_save_generic_file 
       if @generic_file
-        logger.info "!!!!! before format "
         respond_to do |format|
-          logger.info "format = #{format}"
           format.html {
             retval = render :json => [@generic_file.to_jq_upload].to_json,
               :content_type => 'text/html',
@@ -75,7 +76,6 @@ class GenericFilesController < ApplicationController
             retval = render :json => [@generic_file.to_jq_upload].to_json
           }
         end
-        logger.info "!!!!! after format "
       else
         puts "respond bad"
         retval = render :json => [{:error => "Error creating generic file."}].to_json
