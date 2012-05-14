@@ -50,23 +50,39 @@ class GenericFilesController < ApplicationController
 
   # routed to /files (POST)
   def create
-    create_and_save_generic_file 
-    logger.info "?????? #{@generic_file.inspect} #{@generic_file.batch}"
-    if @generic_file
-      respond_to do |format|
-        format.html {
-          render :json => [@generic_file.to_jq_upload].to_json,
-            :content_type => 'text/html',
-            :layout => false
-        }
-        format.json {
-          render :json => [@generic_file.to_jq_upload].to_json
-        }
-      end
+    retval = " "
+    # check error condition No files
+    if !params.has_key?(:files)
+       retval = render :json => [{:error => "Error! No file to save"}].to_json
+    
+    # check error condition empty file
+    elsif params[:files][0].tempfile.size == 0
+       retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
+    
+    # process file
     else
-      puts "respond bad"
-      render :json => [{:error => "custom_failure"}], :status => 304
+      create_and_save_generic_file 
+      if @generic_file
+        logger.info "!!!!! before format "
+        respond_to do |format|
+          logger.info "format = #{format}"
+          format.html {
+            retval = render :json => [@generic_file.to_jq_upload].to_json,
+              :content_type => 'text/html',
+              :layout => false
+          }
+          format.json {
+            retval = render :json => [@generic_file.to_jq_upload].to_json
+          }
+        end
+        logger.info "!!!!! after format "
+      else
+        puts "respond bad"
+        retval = render :json => [{:error => "Error creating generic file."}].to_json
+      end
     end
+    
+    return retval
   end
 
   # routed to /files/:id
@@ -101,6 +117,15 @@ class GenericFilesController < ApplicationController
 
       @generic_file = GenericFile.new
       file = params[:files][0]
+
+      # if we want to be able to save zero length files then we can use this to make the file 1 byte instead of zero length and fedora will take it
+      #if (file.tempfile.size == 0)
+      #   logger.warn "Encountered an empty file...  Creating a new temp file with on space."
+      #   f = Tempfile.new ("emptyfile")
+      #   f.write " "
+      #   f.rewind
+      #   file.tempfile = f
+      #end
       add_posted_blob_to_asset(@generic_file,file)
       apply_depositor_metadata(@generic_file)
       @generic_file.date_uploaded = Time.now.ctime
@@ -116,5 +141,7 @@ class GenericFilesController < ApplicationController
       end
       return @generic_file
     end
+  else 
+     logger.warn "!!!! No Files !!!!"     
   end
 end
