@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hydra-head (4.0.0)
+    hydra-head (4.0.1)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.0.0)
       blacklight (~> 3.3.2)
@@ -227,7 +227,7 @@ GEM
     rubyzip (0.9.7)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
-    sass (3.1.16)
+    sass (3.1.18)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
