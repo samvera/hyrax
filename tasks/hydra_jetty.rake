@@ -6,7 +6,11 @@ namespace :hydra do
   namespace :jetty do
     desc "Copies the default Solr & Fedora configs into the bundled Hydra Testing Server"
     task :config do
+      Rake::Task["hydra:jetty:reset"].reenable
+      Rake::Task["hydra:jetty:reset"].invoke
+      Rake::Task["hydra:jetty:config_fedora"].reenable
       Rake::Task["hydra:jetty:config_fedora"].invoke
+      Rake::Task["hydra:jetty:config_solr"].reenable
       Rake::Task["hydra:jetty:config_solr"].invoke
     end
     
@@ -28,7 +32,7 @@ namespace :hydra do
         app_root = File.join(File.dirname(__FILE__),"..")
       end
        
-      fcfg = File.join(app_root,"fedora_conf","conf","fedora.fcfg")
+      fcfg = File.join(app_root,"fedora_conf","conf","test","fedora.fcfg")
       puts "PWD:: #{FileUtils.pwd}"
       if File.exists?(fcfg)
         puts "copying over fedora.fcfg"
@@ -41,5 +45,10 @@ namespace :hydra do
     desc "Copies the default SOLR config files and starts up the fedora instance."
     task :load => [:config, 'jetty:start']
 
+    desc "return development jetty to its pristine state, as pulled from git"
+    task :reset => ['jetty:stop'] do
+      system("cd jetty && git reset --hard HEAD && git clean -dfx & cd ..")
+      sleep 2
+    end
   end
 end

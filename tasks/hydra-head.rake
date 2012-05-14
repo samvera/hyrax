@@ -168,12 +168,8 @@ namespace :hyhead do
       puts "Running rake db:migrate"
       %x[rake db:migrate]
       raise "Errors: #{errors.join("; ")}" unless errors.empty?
-
-
     
       FileUtils.cd('../../')
-    
-
   end
   
   task :set_test_host_path do
