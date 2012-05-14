@@ -108,7 +108,14 @@ class GenericFile < ActiveFedora::Base
   end
 
   def related_files
-    self.batch.generic_files.reject { |gf| gf.pid == self.pid }
+    relateds = if self.batch.nil?
+                 batch_id = self.object_relations["isPartOf"].first
+                 return [] if batch_id.nil?
+                 self.class.find(:is_part_of_s => batch_id)
+               else
+                 self.batch.generic_files
+               end
+    relateds.reject { |gf| gf.pid == self.pid }
   end
 
   # Create thumbnail requires that the characterization has already been run (so mime_type, width and height is available)

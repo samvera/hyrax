@@ -12,3 +12,27 @@
   color: #0088cc;
   /*text-decoration: underline; */
 }
+
+/* added to have non striped content in a table format within a striped table */
+.nested_table {
+  display: table;
+}
+.nested_row  {
+  display: table-row;
+}
+.nested_td {
+    padding: 10px;
+    display: table-cell;
+}
+.nested_td_wide {
+    padding: 10px;
+    display: table-cell;
+    column-span: all;
+}
+
+.nested_th {
+    display: table-header-group;
+    font-weight:bold
+}
+
+
