@@ -14,6 +14,7 @@ class GenericFilesController < ApplicationController
   def new
     @generic_file = GenericFile.new 
     @noid_s = PSU::IdService.mint
+    @normal_noid = @noid_s.split(":").last if PSU::IdService.valid?(@noid_s)
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],

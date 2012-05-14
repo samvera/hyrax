@@ -1,5 +1,5 @@
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
-  <%=batch_edit_path(@noid_s)%>
+  <%=batch_edit_path(@normal_noid)%>
 </div>
 
 <div class="alert alert-info hide" id="success">
@@ -7,7 +7,7 @@
   <p>
   <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
   <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
-  <%= link_to 'Add Descriptions', batch_edit_path(@noid_s), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', batch_edit_path(@normal_noid), :class=>'btn' %>
 
   </p>
 </div>
@@ -19,7 +19,7 @@
   <p>
   <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
   <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
-  <%= link_to 'Add Descriptions', batch_edit_path(@noid_s), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', batch_edit_path(@normal_noid), :class=>'btn' %>
 </div>
 <div class="alert hide" id="errmsg">
 </div>
