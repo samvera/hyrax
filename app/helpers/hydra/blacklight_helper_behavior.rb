@@ -1,10 +1,6 @@
-require "hydra_helper"
-require 'blacklight/blacklight_helper_behavior'
-
 module Hydra
   module BlacklightHelperBehavior
     include Blacklight::BlacklightHelperBehavior
-    include HydraHelper
     
     def get_data_with_linked_label(doc, label, field_string, opts={})
       ActiveSupport::Deprecation.warn("get_data_with_linked_label is deprecated and will be removed in the next release")

@@ -1,7 +1,6 @@
 require "hydra-head"
 require "rails"
 require 'action_controller'
-require 'application_helper'
 module HydraHead
 
    class Engine < Rails::Engine
