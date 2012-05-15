@@ -1,6 +1,6 @@
 <% if ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg'].include?(@generic_file.mime_type) %>
   <img src="<%= download_path(@generic_file) %>" />
-<% elsif ['video'].include?(@generic_file.mime_type) %>
+<% elsif ['video/mp4'].include?(@generic_file.mime_type) %>
   <video controls="controls">
     <source src="<%= download_path(@generic_file) %>" type="<%= @generic_file.mime_type %>" />
   </video>
