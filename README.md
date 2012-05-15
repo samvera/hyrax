@@ -58,7 +58,9 @@ Run the app
 Auditing All Datastreams
 ------------------------
 
-RAILS_ENV=production script/audit_all_versions
+RAILS_ENV=production script/audit_repository
+
+You'll probably want to cron this in production environments.
 
 Harvesting Authorities Locally
 ------------------------------
