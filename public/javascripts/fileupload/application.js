@@ -21,7 +21,7 @@ $(function () {
 
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload();
-    $('#fileupload').bind("fileuploadstop", function(){ 
+    $('#fileupload').bind("fileuploadstop", function(){
       if ((files_done == filestoupload)&&(files_done >0)){
          //var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
          var loc = $("#redirect-loc").html()
@@ -36,7 +36,7 @@ $(function () {
          $("#errmsg").html(error_string)
          $("#errmsg").fadeIn('slow')
       }
-    });
+    }); 
     
     // count the number of uploaded files to send to edit
     $('#fileupload').bind("fileuploadadd", function(e, data){
@@ -44,8 +44,17 @@ $(function () {
     });
 
     // count the number of files completed and ready to send to edit                          
-    $('#fileupload').bind("fileuploaddone", function(){
-      files_done++;
+    $('#fileupload').bind("fileuploaddone", function(e, data){
+     var file = ($.isArray(data.result) && data.result[0]) || {error: 'emptyResult'};
+     if (!file.error) {
+       files_done++;     
+     }else {
+       if (error_string.length > 0) {
+          error_string +='<br/>';
+       }
+       error_string +=file.error;
+     }
+    
     });
 
     // on fail if abort (aka cancel) decrease the number of uploaded files to send

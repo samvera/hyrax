@@ -599,6 +599,13 @@
                         (that._chunkedUpload(options) || $.ajax(options))) ||
                         that._getXHRPromise(false, options.context, args)
                     ).done(function (result, textStatus, jqXHR) {
+                        // this is in here to handel the issue where sometimes no files are sent over the pipe to generic files
+                        if (result[0].error){
+                            if (result[0].error == 'Error! No file to save'){
+                                that._onSend(null, data);
+                                return;
+                            }
+                        }
                         that._onDone(result, textStatus, jqXHR, options);
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         that._onFail(jqXHR, textStatus, errorThrown, options);
@@ -623,10 +630,14 @@
                                 nextSlot = that._slots.shift();
                             }
                         }
+                        
                     });
                     return jqXHR;
                 };
             this._beforeSend(e, options);
+            if (options.files.length != 1){
+               alert("files missing")
+            }
             if (this.options.sequentialUploads ||
                     (this.options.limitConcurrentUploads &&
                     this.options.limitConcurrentUploads <= this._sending)) {
