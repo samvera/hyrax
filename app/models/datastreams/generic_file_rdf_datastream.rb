@@ -19,15 +19,15 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :searchable, :facetable, :displayable, :sortable
     end
     map.date_created(:to => "created", :in => RDF::DC) do |index|
-      index.as :searchable, :facetable, :displayable, :sortable
+      index.as :searchable, :displayable, :sortable
     end      
     map.date_uploaded(:to => "dateSubmitted", :in => RDF::DC) do |index|
       index.type :date
-      index.as :facetable, :displayable, :sortable
+      index.as :displayable, :sortable
     end
     map.date_modified(:to => "modified", :in => RDF::DC) do |index|
       index.type :date
-      index.as :facetable, :displayable, :sortable
+      index.as :displayable, :sortable
     end
     map.subject(:in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable, :sortable
