@@ -602,8 +602,15 @@
                         // this is in here to handel the issue where sometimes no files are sent over the pipe to generic files
                         if (result[0].error){
                             if (result[0].error == 'Error! No file to save'){
-                                that._onSend(null, data);
-                                return;
+                                // only retry 5 times prior to giving up
+                                var retryCount = 0;
+                                if (data.retryCount) { retryCount = data.retryCount;}
+                                retryCount++; 
+                                if (retryCount<5){
+                                   data.retryCount = retryCount;
+                                   that._onSend(null, data);
+                                   return;
+                                }
                             }
                         }
                         that._onDone(result, textStatus, jqXHR, options);
