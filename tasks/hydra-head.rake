@@ -137,9 +137,6 @@ namespace :hyhead do
       puts "Copying Gemfile from test_support/etc"
       FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
 
-      puts "Creating local vendor/cache dir and copying gems from hyhead-rails3 gemset"
-      FileUtils.cp_r(File.join('..','..','vendor','cache'), './vendor')
-      
       puts "Copying fixtures into test app spec/fixtures directory"
       FileUtils.mkdir_p( File.join('.','spec') )
       FileUtils.cp_r(File.join('..','..','test_support','fixtures'), File.join('.','spec','fixtures'))
