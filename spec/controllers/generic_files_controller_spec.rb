@@ -111,7 +111,6 @@ describe GenericFilesController do
          get :show, id:"test5"
          flash[:notice].should_not be_empty
          flash[:notice].should include("You do not have sufficient privileges to edit this document")
-         logger.info "#{response.inspect}"
       end 
     end    
   end
