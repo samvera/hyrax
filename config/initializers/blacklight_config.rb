@@ -53,9 +53,6 @@ Blacklight.configure(:shared) do |config|
     :field_names => (facet_fields = [
       "generic_file__contributor_facet",
       "generic_file__publisher_facet",
-      "generic_file__date_created_facet",
-      "generic_file__date_uploaded_facet",
-      "generic_file__date_modified_facet",
       "generic_file__subject_facet",
       "generic_file__resource_type_facet",
       "generic_file__format_facet",
@@ -66,9 +63,6 @@ Blacklight.configure(:shared) do |config|
     :labels => {
       "generic_file__contributor_facet"     => "Contributor",
       "generic_file__publisher_facet"       => "Publisher",
-      "generic_file__date_created_facet"    => "Date Created",
-      "generic_file__date_uploaded_facet"   => "Date Uploaded",
-      "generic_file__date_modified_facet"   => "Date Modified", 
       "generic_file__subject_facet"         => "Subject",
       "generic_file__resource_type_facet"   => "Resource Type",
       "generic_file__format_facet"          => "Format",

@@ -32,7 +32,7 @@
                 <li><%= link_to "log out", logout_path %></li>
               </ul>
 <% else %>
-                <li><%= link_to "Login", 'https://webaccess.psu.edu?cosign-gamma-ci.dlt.psu.edu&https://gamma-ci.dlt.psu.edu/scholarsphere-integration' %></li>
+                <li><%= link_to "Login", "https://webaccess.psu.edu?cosign-"+request.host+"&https://"+request.host_with_port %></li>
 <% end %>
             </li>
           </ul>

@@ -108,12 +108,12 @@ class GenericFile < ActiveFedora::Base
   end
 
   def related_files
-    relateds = if self.batch.nil?
+    relateds = begin
+                 self.batch.generic_files
+               rescue NoMethodError
                  batch_id = self.object_relations["isPartOf"].first
                  return [] if batch_id.nil?
                  self.class.find(:is_part_of_s => batch_id)
-               else
-                 self.batch.generic_files
                end
     relateds.reject { |gf| gf.pid == self.pid }
   end

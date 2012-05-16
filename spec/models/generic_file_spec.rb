@@ -286,7 +286,7 @@ describe GenericFile do
       @f2.save
       mock_batch = mock("batch")
       mock_batch.stubs(:generic_files => [@f1, @f2])
-      @f1.expects(:batch).twice.returns(mock_batch)
+      @f1.expects(:batch).returns(mock_batch)
       @f1.related_files.should == [@f2]
     end
     it "should work when batch is not defined by querying solr" do
@@ -294,7 +294,18 @@ describe GenericFile do
       @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
       @f1.save
       @f2.save
-      @f1.expects(:batch).twice.returns(nil)
+      @f1.expects(:batch).twice.raises(NoMethodError)
+      lambda { @f1.related_files }.should_not raise_error
+      @f1.related_files.should == [@f2]
+    end
+    it "should work when batch.generic_files is not defined by querying solr" do
+      @f1.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
+      @f1.save
+      @f2.save
+      mock_batch = mock("batch")
+      mock_batch.stubs(:generic_files).raises(NoMethodError)
+      @f1.expects(:batch).twice
       lambda { @f1.related_files }.should_not raise_error
       @f1.related_files.should == [@f2]
     end
