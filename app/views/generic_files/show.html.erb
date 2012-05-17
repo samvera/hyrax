@@ -21,6 +21,9 @@
   <dt>Permission</dt>
   <dd>TODO?</dd>
 
+  <dt>Audit status<dt>
+  <dd> <%= @generic_file.audit_stat(false)  %></dd>
+
   <dt>Characterization</dt>
   <% @generic_file.characterization_terms.each_pair do |term, values| %>
     <% if values.is_a? Array %>
