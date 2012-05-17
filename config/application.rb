@@ -1,7 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
-
+require 'socket'
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
@@ -28,7 +28,7 @@ module ScholarSphere
     }
 
     config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout'
-    config.login_url = 'https://webaccess.psu.edu?cosign-gamma-ci.dlt.psu.edu&https://gamma-ci.dlt.psu.edu/scholarsphere-integration'
+    config.login_url = 'https://webaccess.psu.edu?cosign-'+ Socket.gethostname + '&https://' + Socket.gethostname + '/scholarsphere-integration'
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/app/models/**/"] 
