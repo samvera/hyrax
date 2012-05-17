@@ -7,6 +7,15 @@
         <h2>Description(s)</h2>
     </div>
     <div class="span9">
+      <div class="control-group" id="resources">
+        <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
+        <div class="controls">
+          <% choices = {"Article"=>"Article", "Multimedia"=>"Multimedia", "Conference Proceeding"=>"Conference Proceeding",
+            "Data Set"=>"Data Set", "Image"=>"Image", "Thesis"=>"Thesis", "Other"=>"Other"} %>
+            <%= f.select "resource_type", choices, {}, {:multiple=>true, :size=>7} %>
+          <p class="help-block">You may select multiple types to apply to all files<p>
+        </div>
+      </div>
       <div class="control-group" id="public_permissions">
         <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
         <div class="controls">

@@ -16,8 +16,7 @@ module ScholarSphere
     config.id_namespace = "scholarsphere"
     config.application_name = "ScholarSphere"
     config.fits_to_desc_mapping = {
-      :format_label => :resource_type,
-      :mime_type => :format,
+      :format_label => :format,
       :last_modified => :date_modified,
       :original_checksum => :identifier,
       :rights_basis => :rights,
