@@ -13,9 +13,9 @@ Gem::Specification.new do |s|
   s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
 
   s.add_dependency "rails", '3.2.3' 
-  s.add_dependency "blacklight", '~>3.3.2'  
+  s.add_dependency "blacklight", '~>3.4.1'  
   s.add_dependency "devise"
-  s.add_dependency "active-fedora", '~>4.0.0'
+  s.add_dependency "active-fedora", '~>4.1.0'
   s.add_dependency 'RedCloth', '=4.2.9'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'cucumber-rails', '>=1.2.0'
   s.add_development_dependency 'factory_girl', "~> 2.6.0"
-  s.add_development_dependency 'solrizer-fedora', '>=2.0.0'
+  s.add_development_dependency 'solrizer-fedora', '>=2.1.0'
 
 
   s.files         = `git ls-files`.split("\n")
