@@ -368,10 +368,7 @@ describe GenericFile do
       it "should append metadata from the characterization" do
         logger.info "File: #{@myfile.inspect}"   
         @myfile.format_label.should == ["Portable Document Format"]
-        # This is no longer something to be characterized and format label 
-        # @myfile.resource_type.should == ["Portable Document Format"]
-        # I believe this(format) should now be == ["Portable Document Format"]
-        # @myfile.format.should == ["application/pdf"]
+        @myfile.format.should == ["Portable Document Format"]
         @myfile.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
         @myfile.date_modified.empty?.should be_false
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
