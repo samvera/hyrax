@@ -298,6 +298,15 @@ describe GenericFile do
       lambda { @f1.related_files }.should_not raise_error
       @f1.related_files.should == [@f2]
     end
+    it "should work when batch is not defined by querying solr" do
+      @f1.add_relationship(:is_part_of, "info:fedora/#{@batch_id}")
+      @f2.add_relationship(:is_part_of, "info:fedora/#{@batch_id}")
+      @f1.save
+      @f2.save
+      @f1.expects(:batch).twice.raises(NoMethodError)
+      lambda { @f1.related_files }.should_not raise_error
+      @f1.related_files.should == [@f2]
+    end
     it "should work when batch.generic_files is not defined by querying solr" do
       @f1.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
       @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
