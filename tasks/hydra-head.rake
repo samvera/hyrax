@@ -98,7 +98,7 @@ namespace :hyhead do
 
     ### Don't call this directly, use hyhead:cucumber
     Cucumber::Rake::Task.new(:cmd) do |t|
-      t.cucumber_opts = "../../test_support/features --format pretty"
+      t.cucumber_opts = "../../test_support/features --format progress"
     end
   end
    
