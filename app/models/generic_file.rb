@@ -312,7 +312,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def self.audit_everything(force = false)
-    GenericFile.find(:all).each do |gf|
+    GenericFile.find(:all, :rows => GenericFile.count).each do |gf|
       gf.per_version do |ver|
         GenericFile.audit(ver, force)
       end
