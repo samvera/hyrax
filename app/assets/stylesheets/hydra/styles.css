@@ -100,7 +100,7 @@ button.ui-button-icon-only {
 }
 
 a:link, a:visited, a:active, #uvalicense_read_all {
-    color: blue
+    color: blue;
     text-decoration: underline;
     border: none;
 }
