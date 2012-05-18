@@ -15,14 +15,18 @@ Installation Instructions
 
 Install system dependencies
   
+ * libmysqlclient-dev (if running MySQL as RDBMS)
+ * libsqlite3-dev (if running SQLite as RDBMS)
+ * [FITS](http://code.google.com/p/fits/) -- put it in a
+  directory on your PATH
  * libmagick-dev
  * libmagickwand-dev
 
-Copy and edit local DB, Fedora, and Solr configs
+Copy and *edit* database, Fedora, and Solr configs
 
-    cp config/solr.yml.sample config/solr.yml
-    cp config/fedora.yml.sample config/fedora.yml
     cp config/database.yml.sample config/database.yml
+    cp config/fedora.yml.sample config/fedora.yml
+    cp config/solr.yml.sample config/solr.yml
 
 Install gems & migrate database
 
@@ -30,15 +34,12 @@ Install gems & migrate database
     rake db:create
     rake db:migrate
 
-Setup test dbs and load fixtures
+If you'll be developing ScholarSphere, setup test dbs and load fixtures
 
     RAILS_ENV=test rake db:create
     RAILS_ENV=test rake db:migrate
     RAILS_ENV=test rake scholarsphere:fixtures:create
     RAILS_ENV=test rake scholarsphere:fixtures:refresh
-
-Install [FITS](http://code.google.com/p/fits/) and put it in a
-  directory on your PATH.
 
 Get jetty & start it
 
@@ -47,9 +48,9 @@ Get jetty & start it
     rake jetty:config
     rake jetty:start
 
-Run delayed jobs
+Run delayed jobs workers
 
-    script/delayed_job start (or stop)
+    script/delayed_job start 
   
 Run the app
   
