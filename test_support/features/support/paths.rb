@@ -12,7 +12,7 @@ module NavigationHelpers
     when /the home\s?page/
       '/'
     when /the search page/
-      '/catalog'
+      '/'
     when /logout/
       destroy_user_session_path
     when /my account info/
