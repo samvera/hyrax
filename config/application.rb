@@ -30,6 +30,28 @@ module ScholarSphere
     config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout'
     config.login_url = 'https://webaccess.psu.edu?cosign-'+ Socket.gethostname + '&https://' + Socket.gethostname + '/scholarsphere-integration'
 
+    config.resource_types = {
+      "Article"=>"Article", 
+      "Multimedia"=>"Multimedia", 
+      "Conference Proceeding"=> "Conference Proceeding",
+      "Data Set"=>"Data Set", 
+      "Image"=>"Image", 
+      "Thesis"=>"Thesis", 
+      "Other"=>"Other"
+    } 
+
+    config.public_permission_levels = {
+      "No Access"=>"none",
+      "Discover" => "discover",
+      "View" => "read" 
+    } 
+    config.permission_levels = {
+      "No Access"=>"none",
+      "Discover" => "discover",
+      "View" => "read",
+      "Edit" => "edit"
+    }
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/app/models/**/"] 
     config.autoload_paths += Dir["#{config.root}/lib/**/"]

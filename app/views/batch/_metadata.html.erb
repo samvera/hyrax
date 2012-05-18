@@ -10,25 +10,16 @@
       <div class="control-group" id="resources">
         <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
         <div class="controls">
-          <% choices = {"Article"=>"Article", "Multimedia"=>"Multimedia", "Conference Proceeding"=>"Conference Proceeding",
-            "Data Set"=>"Data Set", "Image"=>"Image", "Thesis"=>"Thesis", "Other"=>"Other"} %>
-            <%= f.select "resource_type", choices, {}, {:multiple=>true, :size=>7} %>
+            <%= f.select "resource_type", ScholarSphere::Application::config.resource_types, {}, {:multiple=>true, :size=>7} %>
           <p class="help-block">You may select multiple types to apply to all files<p>
         </div>
       </div>
+      <!-- <select id="generic_file_public_group_access" name="permission[group][public]"> -->
       <div class="control-group" id="public_permissions">
         <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
         <div class="controls">
-          <select id="generic_file_public_group_access" name="permission[group][public]">
-          <% choices = [{"No Access"=>"none"},{"Discover" => "discover"}, {"Read &amp; Download" => "read" }] %>
-            <% choices.each do |choice| %>
-              <% choice_label = choice.keys.first %>
-              <% choice_name = choice.values.first %>
-                <option value="<%=h choice_name %>">
-                   <%= choice_label.html_safe %>
-                </option>
-            <% end %>
-          </select>
+          <%= select_tag "permission_group", options_for_select(ScholarSphere::Application::config.public_permission_levels), {:name=>"permission[group][public]"} %>
+
         </div>
       </div><!-- close public_permissions -->
 

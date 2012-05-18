@@ -39,20 +39,6 @@
         <h2>Description(s)</h2>
     </div>
     <div class="span9">
-      <div class="control-group" id="public_permissions">
-        <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
-        <div class="controls">
-          <select id="generic_file_public_group_access" name="permission[group][public]" class="span2">
-          <% choices = {"No Access"=>"none", "Discover" => "discover", "Read &amp; Download" => "read" } %>
-            <% choices.each_pair do |label, name| %>
-                <option value="<%=h name %>">
-                   <%= label.html_safe %>
-                </option>
-          <% end %>
-          </select> 
-        </div>
-      </div><!-- close public_permissions -->
-
 
       <fieldset>
         <legend>Share with...</legend>
@@ -60,14 +46,14 @@
           <%= label_tag 'generic_file[permissions][new_group_name]', "Group", :class=>"control-label" %>
           <div class="controls">
             <%= text_field_tag 'generic_file[permissions][new_group_name]' %>
-            <%= select_tag 'generic_file[permissions][new_group_permission]', options_for_select([['Discover', 'discover'], ['Read', 'read'], ['Edit', 'edit']]) %>
+            <%= select_tag 'generic_file[permissions][new_group_permission]', options_for_select(ScholarSphere::Application::config.permission_levels) %>
           </div>
         <div>
         <div class="control-group" id="new-user"> 
           <%= label_tag 'generic_file[permissions][new_user_name]', "User", :class=>"control-label" %>
           <div class="controls">
             <%= text_field_tag 'generic_file[permissions][new_user_name]' %>
-            <%= select_tag 'generic_file[permissions][new_user_permission]', options_for_select([['Discover', 'discover'], ['Read', 'read'], ['Edit', 'edit']]) %>
+            <%= select_tag 'generic_file[permissions][new_user_permission]', options_for_select(ScholarSphere::Application::config.permission_levels) %>
           </div>
         <div>
         <ul id="permissions">

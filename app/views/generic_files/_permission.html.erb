@@ -2,7 +2,7 @@
   <div class="control-group"> 
     <%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %>
     <div class="controls">
-      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select([['Discover', 'discover'], ['Read', 'read'], ['Edit', 'edit']], permission[:access]), :class=>'small' %>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'small' %>
     </div>
   </div>
 
