@@ -118,15 +118,11 @@ namespace :hyhead do
 
       FileUtils.mkdir_p(path)
       
-      puts "Copying over .rvmrc file"
-      FileUtils.cp("./test_support/etc/rvmrc",File.join(path,".rvmrc"))
-      FileUtils.cd("tmp")
-      system("source ./test_app/.rvmrc")
-      
       puts "Installing rails, bundler and devise"
       %x[gem install --no-rdoc --no-ri 'rails' -v "<4"]
       %x[gem install --no-rdoc --no-ri 'bundler']
       
+      FileUtils.cd('tmp')
       puts "Generating new rails app"
       %x[rails new test_app]
       errors << 'Error generating new rails test app' unless $?.success?
