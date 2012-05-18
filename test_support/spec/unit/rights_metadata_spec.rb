@@ -6,11 +6,11 @@ describe Hydra::ModelMixins::RightsMetadata do
     subject.discover_groups=['group1', 'group2']
     subject.edit_users=['user1']
     subject.read_users=['user2', 'user3']
-    subject.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
+    subject.permissions.should include({:type=>"group", :access=>"discover", :name=>"group1"},
         {:type=>"group", :access=>"discover", :name=>"group2"},
         {:type=>"user", :access=>"read", :name=>"user2"},
         {:type=>"user", :access=>"read", :name=>"user3"},
-        {:type=>"user", :access=>"edit", :name=>"user1"}]
+        {:type=>"user", :access=>"edit", :name=>"user1"})
   end
 
   describe "updating permissions" do

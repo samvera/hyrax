@@ -346,9 +346,9 @@ module Hydra
         when :edit
           g = {}
         when :read
-          rightsMetadata.quick_search_by_type(type).select {|k, v| v == 'edit'}
+          Hash[rightsMetadata.quick_search_by_type(type).select {|k, v| v == 'edit'}]
         when :discover
-          rightsMetadata.quick_search_by_type(type).select {|k, v| v == 'discover'}
+          Hash[rightsMetadata.quick_search_by_type(type).select {|k, v| v == 'discover'}]
         end
       end
 
