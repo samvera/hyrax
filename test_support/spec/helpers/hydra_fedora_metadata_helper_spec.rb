@@ -106,6 +106,9 @@ describe HydraFedoraMetadataHelper do
       generated_html.should have_selector "textarea#subject_1.editable-edit.edit", :value => "topic2"
       generated_html.should have_selector "a.destructive.field"
     end
+    it "should make the text area required when the flag is set" do
+      helper.fedora_text_area(@resource, "simple_ds", "subject", :required => true).should have_selector "textarea#subject_0[required]"
+    end
     it "should render an empty control if the field has no values" do      
       helper.fedora_text_area(@resource,"empty_ds","something").should have_selector "textarea#something_0.editable-edit.edit", :value => ""
     end
