@@ -319,6 +319,25 @@ describe GenericFile do
       @f1.related_files.should == [@f2]
     end
   end
+  describe "noid integration" do
+    before(:all) do
+      @new_file = GenericFile.create(:pid => 'ns:123')
+    end
+    after(:all) do
+      @new_file.delete
+    end
+    it "should support the noid method" do
+      @new_file.should respond_to(:noid)
+    end
+    it "should return the expected identifier" do
+      @new_file.noid.should == '123'
+    end
+    it "should work outside of an instance" do
+      new_id = PSU::IdService.mint
+      noid = new_id.split(':').last
+      PSU::Noid.noidify(new_id).should == noid
+    end
+  end
   describe "characterize" do
     it "should return expected results when called" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')

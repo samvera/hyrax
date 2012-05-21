@@ -13,8 +13,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new 
-    @noid_s = PSU::IdService.mint
-    @normal_noid = @noid_s.split(":").last if PSU::IdService.valid?(@noid_s)
+    @batch_noid = PSU::Noid.noidify(PSU::IdService.mint)
     @dc_metadata = [
       ['Based Near', 'based_near'],
       ['Contributor', 'contributor'],
@@ -132,7 +131,8 @@ class GenericFilesController < ApplicationController
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
       if params.has_key?(:batch_id)
-        @generic_file.add_relationship("isPartOf", "info:fedora/#{params[:batch_id]}")
+        batch_id = PSU::Noid.namespaceize(params[:batch_id])
+        @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
       else
         raise RuntimeError, "unable to find batch to attach to"
       end
