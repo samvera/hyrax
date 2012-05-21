@@ -6,6 +6,47 @@ describe FileContentDatastream do
     @subject.stubs(:pid=>'my_pid')
     @subject.stubs(:dsVersionID=>'content.7')
   end
+  describe "version control" do
+    before(:all) do
+      f = GenericFile.new
+      f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      f.save
+      @file = GenericFile.find(f.pid)
+    end
+    after(:all) do
+      @file.delete
+    end
+    it "should have a list of versions with one entry" do
+      @file.content.versions.count == 1
+    end
+    it "should return the expected version ID" do
+      @file.content.versions.first.versionID.should == "content.0"
+    end
+    it "should support latest_version" do
+      @file.content.latest_version.versionID.should == "content.0"
+    end
+    it "should return the same version via get_version" do
+      @file.content.get_version("content.0").versionID.should == @file.content.latest_version.versionID
+    end
+    it "should not barf when a garbage ID is provided to get_version"  do
+      @file.content.get_version("foobar").should be_nil
+    end
+    describe "add a version" do
+      before(:all) do
+        @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+        @file.save
+      end
+      it "should return two versions" do
+        @file.content.versions.count == 2
+      end
+      it "should return the newer version via latest_version" do
+        @file.content.versions.first.versionID.should == "content.1"
+      end
+      it "should return the same version via get_version" do
+        @file.content.get_version("content.1").versionID.should == @file.content.latest_version.versionID
+      end
+    end
+  end
   describe "extract_metadata" do
     it "should have the path" do
       @subject.fits_path.should_not be_nil
