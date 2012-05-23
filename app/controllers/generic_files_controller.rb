@@ -113,36 +113,33 @@ class GenericFilesController < ApplicationController
   end
 
   def create_and_save_generic_file      
-    if params.has_key?(:files)
-
-      @generic_file = GenericFile.new
-      file = params[:files][0]
-
-      # if we want to be able to save zero length files then we can use this to make the file 1 byte instead of zero length and fedora will take it
-      #if (file.tempfile.size == 0)
-      #   logger.warn "Encountered an empty file...  Creating a new temp file with on space."
-      #   f = Tempfile.new ("emptyfile")
-      #   f.write " "
-      #   f.rewind
-      #   file.tempfile = f
-      #end
-      add_posted_blob_to_asset(@generic_file,file)
-      apply_depositor_metadata(@generic_file)
-      @generic_file.date_uploaded = Time.now.ctime
-      @generic_file.date_modified = Time.now.ctime
-      if params.has_key?(:batch_id)
-        batch_id = PSU::Noid.namespaceize(params[:batch_id])
-        @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
-      else
-        raise RuntimeError, "unable to find batch to attach to"
-      end
-      @generic_file.save      
-      if file.content_type == 'application/zip'
-        Delayed::Job.enqueue(UnzipJob.new(@generic_file.pid))
-      end
-      return @generic_file
+    unless params.has_key?(:files)
+      logger.warn "!!!! No Files !!!!"
+      return
     end
-  else 
-     logger.warn "!!!! No Files !!!!"     
+    @generic_file = GenericFile.new
+    file = params[:files][0]
+
+    # if we want to be able to save zero length files then we can use this to make the file 1 byte instead of zero length and fedora will take it
+    #if (file.tempfile.size == 0)
+    #   logger.warn "Encountered an empty file...  Creating a new temp file with on space."
+    #   f = Tempfile.new ("emptyfile")
+    #   f.write " "
+    #   f.rewind
+    #   file.tempfile = f
+    #end
+    add_posted_blob_to_asset(@generic_file,file)
+    apply_depositor_metadata(@generic_file)
+    @generic_file.date_uploaded = Time.now.ctime
+    @generic_file.date_modified = Time.now.ctime
+    if params.has_key?(:batch_id)
+      batch_id = PSU::Noid.namespaceize(params[:batch_id])
+      @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
+    else
+      logger.warn "unable to find batch to attach to"
+    end
+    @generic_file.save      
+    Delayed::Job.enqueue(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
+    return @generic_file
   end
 end
