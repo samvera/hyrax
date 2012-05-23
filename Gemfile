@@ -7,6 +7,9 @@ gem 'mysql', '~> 2.8.1'
 gem 'blacklight', '~> 3.3.2'
 gem 'hydra-head', '~> 4.0.0'
 gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
+# adding for messaging the user whn a delayed job fails
+gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git' 
+#gem 'mailboxer'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '~> 2.13.1', :require => 'RMagick'
@@ -36,6 +39,7 @@ group :development, :test do
   gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
   gem 'selenium-webdriver'
   gem 'headless'
+  gem 'rspec', '2.10.0'
   gem 'rspec-rails', '>= 2.4.0'
   gem 'ruby-prof'
   gem 'mocha'

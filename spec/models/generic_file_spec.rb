@@ -202,15 +202,31 @@ describe GenericFile do
   end
   describe "audit" do
     before(:all) do
+      @cur_delay = Delayed::Worker.delay_jobs
+      @job_count = Delayed::Job.count
+      GenericFile.any_instance.stubs(:characterize).returns(true)
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       f.save
+      Delayed::Worker.new.work_off # characterization job 
       @f = GenericFile.find(f.pid)    
     end
     after(:all) do
       @f.delete
+     Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
+    end
+    it "should schedule a audit job" do
+      FileContentDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
+      ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
+      ActiveFedora::Datastream.any_instance.stubs(:dsChecksumValid).returns(false)      
+      ChecksumAuditLog.stubs(:create!).returns(true)
+      @f.audit!
+      Delayed::Job.count.should == @job_count+3 # 3 version so a job for each
+      Delayed::Worker.new.work_off 
+      Delayed::Job.count.should == @job_count
     end
     it "should log a failing audit" do
+      Delayed::Worker.delay_jobs = false
       FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)      
@@ -220,6 +236,7 @@ describe GenericFile do
       @f.audit!
     end
     it "should log a passing audit" do
+      Delayed::Worker.delay_jobs = false
       FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'content.0', :dsid => 'content')

@@ -60,14 +60,17 @@ describe GenericFilesController do
 
   describe "audit" do
     before do
+      @cur_delay = Delayed::Worker.delay_jobs
       @generic_file = GenericFile.new
       @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @generic_file.save
     end
     after do
       @generic_file.delete
+      Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
     end
     it "should return json with the result" do
+      Delayed::Worker.delay_jobs = false
       xhr :post, :audit, :id=>@generic_file.pid
       response.should be_success
       lambda { JSON.parse(response.body) }.should_not raise_error

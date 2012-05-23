@@ -80,6 +80,8 @@ class GenericFile < ActiveFedora::Base
 
   around_save :characterize_if_changed
 
+  NO_RUNS = 'No audits run'
+
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
     perm_hash = permission_hash
@@ -96,7 +98,7 @@ class GenericFile < ActiveFedora::Base
     content_changed = self.content.changed?
     yield
     logger.debug "DOING CHARACTERIZE ON #{self.pid}"
-    Delayed::Job.enqueue(CharacterizeJob.new(self.pid)) if content_changed
+    Delayed::Job.enqueue(CharacterizeJob.new(self.pid), :queue => 'characterize') if content_changed
   end
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
@@ -250,8 +252,18 @@ class GenericFile < ActiveFedora::Base
     logger.info "!*****"
     logger.info audit_results.inspect
     logger.info "!*****"
-    result =audit_results.reduce(true) { |sum, value| sum && value }
-    result
+    
+    # check how many non runs we had
+    non_runs =audit_results.reduce(0) { |sum, value| (value == NO_RUNS) ? sum = sum+1 : sum }
+    if (non_runs == audit_results.length)
+      result =audit_results.reduce(true) { |sum, value| sum && value }
+      return result
+    elsif (non_runs > 0)
+      result =audit_results.reduce(true) { |sum, value| (value == NO_RUNS) ? sum : sum && value }
+      return 'Some audits have not been run, but the ones run where '+ (result)? 'passing' : 'failing' + '.'
+    else 
+      return 'Audits have not yet been run on this file.'
+    end
   end
 
   def audit(force = false)
@@ -259,6 +271,7 @@ class GenericFile < ActiveFedora::Base
     self.per_version do |ver| 
       logs << GenericFile.audit(ver, force)
     end
+    logger.info "logs from audit #{logs.inspect}"
     logs
   end
 
@@ -283,16 +296,14 @@ class GenericFile < ActiveFedora::Base
          return latest_audit
       end
     end
-    if version.dsChecksumValid
-      logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
-      passing = true
-      ChecksumAuditLog.prune_history(version)
-    else
-      logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
-      passing = false
-    end
-    return ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
-                             :dsid=>version.dsid, :version=>version.versionID)
+    job = AuditJob.new(User.current, version.pid, version.dsid, version.versionID)
+    #job.perform
+    Delayed::Job.enqueue(job, :queue => 'audit')
+
+    # run the find just incase the job has finished already
+    latest_audit = self.find(version.pid).logs(version.dsid).first
+    latest_audit = ChecksumAuditLog.new(:pass=>NO_RUNS, :pid=>version.pid, :dsid=>version.dsid, :version=>version.versionID) unless latest_audit
+    return latest_audit
   end
 
   def self.needs_audit?(version, latest_audit)
@@ -323,7 +334,22 @@ class GenericFile < ActiveFedora::Base
     GenericFile.audit_everything(true)
   end
 
+  def self.run_audit(version)
+    if version.dsChecksumValid
+      logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
+      passing = true
+      ChecksumAuditLog.prune_history(version)
+    else
+      logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
+      passing = false
+    end
+    return ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
+                             :dsid=>version.dsid, :version=>version.versionID)  
+  end
+
+
   private 
+  
 
   def permission_hash
     old_perms = self.permissions

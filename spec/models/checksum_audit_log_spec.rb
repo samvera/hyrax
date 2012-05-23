@@ -2,6 +2,9 @@ require 'spec_helper'
 
 describe ChecksumAuditLog do
   before(:all) do
+    @cur_delay = Delayed::Worker.delay_jobs
+    Delayed::Worker.delay_jobs = false # work jobs inline
+    GenericFile.any_instance.stubs(:characterize).returns(true) # stub out characterization so it does not get audited
     @f = GenericFile.new
     @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @f.save
@@ -13,6 +16,7 @@ describe ChecksumAuditLog do
   end
   after(:all) do
     @f.delete
+    Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
   end
   it "should return a list of logs for this datastream sorted by date descending" do
     @f.logs(@version.dsid).should == [@new, @old]
