@@ -113,8 +113,7 @@ describe GenericFilesController do
          flash[:notice].should_not be_empty
          flash[:notice].should include("You do not have sufficient privileges to edit this document")
          get :show, id:"test5"
-         flash[:notice].should_not be_empty
-         flash[:notice].should include("You do not have sufficient privileges to edit this document")
+         flash[:notice].should be_empty
       end 
     end    
   end

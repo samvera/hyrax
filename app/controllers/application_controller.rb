@@ -18,7 +18,9 @@ class ApplicationController < ActionController::Base
   before_filter :set_current_user
 
   def clear_session_user
-    request.env['warden'].logout
+    # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
+    # logout clears the entire session including flash messages
+    request.env['warden'].logout  unless ( (not env['warden'].user) || (request.env['HTTP_REMOTE_USER'])) if (env['warden'])
   end
 
   def set_current_user
@@ -40,9 +42,8 @@ class ApplicationController < ActionController::Base
             notice = notice+"<br>"+msg.last_message.body
             msg.delete()
          end
+         flash[:notice] = flash[:notice] ? flash[:notice]+notice : notice
       end
-      logger.info "Notifications: #{notice}"
-      flash[:notice] = flash[:notice] ? flash[:notice]+notice : notice
   end
   
   protect_from_forgery
