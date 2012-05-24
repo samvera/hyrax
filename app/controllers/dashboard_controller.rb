@@ -34,48 +34,9 @@ class DashboardController < ApplicationController
     
   protected
   
-  # override the normal gated to just include edit
-  #
-  # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
-  # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
-  def apply_gated_discovery(solr_parameters, user_parameters)
-    solr_parameters[:fq] ||= []
-    # Grant access to public content
-    permission_types = ["edit"]
-    user_access_filters = []
+   # show only files with edit permissions in lib/hydra/access_controls_enforcement.rb apply_gated_discovery
+   def discovery_permissions 
+     ["edit"] 
+   end 
     
-    permission_types.each do |type|
-      user_access_filters << "#{type}_access_group_t:public"
-    end
-    
-    # Grant access based on user id & role
-    unless current_user.nil?
-      # for roles
-      ::RoleMapper.roles(user_key).each_with_index do |role, i|
-        permission_types.each do |type|
-          user_access_filters << "#{type}_access_group_t:#{role}"
-        end
-      end
-      # for individual person access
-      permission_types.each do |type|
-        user_access_filters << "#{type}_access_person_t:#{user_key}"        
-      end
-      if current_user.is_being_superuser?(session)
-        permission_types.each do |type|
-          user_access_filters << "#{type}_access_person_t:[* TO *]"        
-        end
-      end
-      
-      # Enforcing Embargo at Query time has been disabled.  
-      # If you want to do this, set up your own solr_search_params before_filter that injects the appropriate :fq constraints for a field that expresses your objects' embargo status.
-      #
-      # include docs in results if the embargo date is NOT in the future OR if the current user is depositor
-      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{user_key}"
-      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR (embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{user_key}) AND NOT (NOT depositor_t:#{user_key} AND embargo_release_date_dt:[NOW TO *])"
-      # solr_parameters[:fq] << embargo_query         
-    end
-    solr_parameters[:fq] << user_access_filters.join(" OR ")
-    logger.debug("Solr parameters: #{ solr_parameters.inspect }")
-  end
 end
