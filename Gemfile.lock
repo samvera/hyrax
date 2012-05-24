@@ -355,7 +355,7 @@ DEPENDENCIES
   devise (~> 2.0.4)
   factory_girl_rails (~> 1.7.0)
   headless
-  hydra-head (~> 4.0.0)
+  hydra-head (~> 4.0.1)
   hydra-ldap (= 0.0.2)
   jettywrapper
   launchy
