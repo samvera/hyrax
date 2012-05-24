@@ -21,8 +21,8 @@ class GenericFile < ActiveFedora::Base
   delegate :description, :to => :descMetadata
   delegate :publisher, :to => :descMetadata
   delegate :date_created, :to => :descMetadata
-  delegate :date_uploaded, :to => :descMetadata
-  delegate :date_modified, :to => :descMetadata
+  delegate :date_uploaded, :to => :descMetadata, :unique => true
+  delegate :date_modified, :to => :descMetadata, :unique => true
   delegate :subject, :to => :descMetadata
   delegate :language, :to => :descMetadata
   delegate :date, :to => :descMetadata
@@ -31,7 +31,7 @@ class GenericFile < ActiveFedora::Base
   delegate :format, :to => :descMetadata
   delegate :identifier, :to => :descMetadata
   delegate :format_label, :to => :characterization
-  delegate :mime_type, :to => :characterization, :unique=>true
+  delegate :mime_type, :to => :characterization, :unique => true
   delegate :file_size, :to => :characterization
   delegate :last_modified, :to => :characterization
   delegate :filename, :to => :characterization
@@ -173,12 +173,16 @@ class GenericFile < ActiveFedora::Base
     ScholarSphere::Application.config.fits_to_desc_mapping.each_pair do |k, v|
       if terms.has_key?(k)
         proxy_term = self.send(v)
-        if terms[k].is_a? Array
-          terms[k].each do |term_value|
+        # coerce to array to remove a conditional
+        terms[k] = [terms[k]] unless terms[k].is_a? Array
+        terms[k].each do |term_value|
+          # these are single-valued terms which cannot be appended to
+          # TODO: handle this more elegantly and extensibly
+          if [:date_modified, :date_uploaded].include? v
+            proxy_term = term_value
+          else
             proxy_term << term_value unless proxy_term.include?(term_value)
           end
-        else
-          proxy_term << terms[k] unless proxy_term.include?(terms[k])
         end
       end
     end

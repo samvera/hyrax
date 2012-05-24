@@ -4,7 +4,6 @@ describe GenericFile do
   before(:each) do 
     @file = GenericFile.new
   end 
-
   describe "attributes" do
     it "should have rightsMetadata" do
       @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
@@ -104,7 +103,7 @@ describe GenericFile do
     end
     describe "that have been saved" do
       before (:each) do
-         Delayed::Job.expects(:enqueue).once.returns("the job")      
+        Delayed::Job.expects(:enqueue).once.returns("the job")      
       end
       after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
@@ -114,8 +113,7 @@ describe GenericFile do
             # do nothing
           end
         end
-      end
-    
+      end   
       it "should be able to set values via delegated methods" do
         @file.related_url = "http://example.org/"
         @file.creator = "John Doe"
@@ -178,6 +176,10 @@ describe GenericFile do
     @file.to_solr["generic_file__format_t"].should == ["application/pdf"]
     @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
+  end
+  it "should support multi-valued fields in solr" do
+    @file.tag = ["tag1", "tag2"]
+    lambda { @file.save }.should_not raise_error
   end
   describe "create_thumbnail" do
     describe "with an image that doesn't get resized" do
@@ -402,13 +404,12 @@ describe GenericFile do
         @myfile.characterization_terms.keys.should include(:filename)
       end
       it "should append metadata from the characterization" do
-        logger.info "File: #{@myfile.inspect}"   
-        @myfile.format_label.should == ["Portable Document Format"]
+        puts @myfile.descMetadata.fields
         @myfile.format.should == ["Portable Document Format"]
         @myfile.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
-        @myfile.date_modified.empty?.should be_false
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
         @myfile.filename[0].should == @myfile.label
+        @myfile.date_modified.nil?.should be_false
       end
       it "should include thumbnail generation in characterization job" do
         @myfile.thumbnail.size.nil?.should be_false
