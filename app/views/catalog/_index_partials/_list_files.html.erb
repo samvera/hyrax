@@ -3,34 +3,34 @@
 on element ids -->
 <% if document.has_key?(:noid_s) %>
 <% logger.info document[:generic_file__creator_t].inspect %>
-<tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  class="document <%= cycle("even","odd") %>"> -->
-  <td>
-  <div class="nested_table" >
-    <div class="nested_row">
-        <div class="nested_th"  >
-            <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> 
-        </div>
-        <div class="nested_td" >
-            <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-        </div>
-    
-    </div>
-    <div class="nested_row">
-      <div class="nested_th">Description</div>
-      <div class="nested_td_wide"><%= render_document_show_field_value(:document=>document, :field=>"generic_file__description_display") %></div>
-    </div>
-    <div class="nested_row">
-      <div class="nested_th">Contributor</div>
-      <div class="nested_td"><%= render_document_show_field_value(:document=>document, :field=>"generic_file__contributor_t") %></div>
-      <div class="nested_th">Tags</div>
-      <div class="nested_td"><%= render_document_show_field_value(:document=>document, :field=>"generic_file__tag_display") %></div>
-    </div>
-    <div class="nested_row">
-      <div class="nested_th">Date Modified</div>
-      <div class="nested_td"><%= document[:system_modified_dt] %></div>
-      <div class="nested_th">Date Created</div>
-      <div class="nested_td"><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_created_display") %></div>
-    </div>
-  </div>
-  <td>
+  <li>
+  <h2>
+    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> 
+  </h2>
+  <table class="verticalheadings">
+    <tr>
+      <td rowspan="5">
+    <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
+      </td>
+      <th>Description:</th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__description_display") %></th>
+    </tr>
+    <tr>
+      <th>Contributor:</div>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__contributor_t") %></td>
+    </tr>
+    <tr>
+      <th>Tags:</th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__tag_display") %></td>
+    </tr>
+    <tr>
+      <th>Date Modified:</th>
+      <td><%= document[:system_modified_dt] %></td>
+    </tr>
+    <tr>
+      <th>Date Created:</th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_created_display") %></td>
+    </tr>
+
+  </table>
 <% end %>

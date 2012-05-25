@@ -2,17 +2,18 @@
 
         <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 
-	<%= render :partial => 'search_form' %>
-	
-	<%= render :partial => 'did_you_mean' %>
+  <% if params.has_key?("q") %>
+    <p class="you-searched"><a class="itemicon itemsearch">search</a> You searched for: <%= params[:q] %></p> 
+  <% end %>
+
+  <%= render :partial => 'did_you_mean' %>
+  <%= render :partial => 'facet_selected' %>
 
 	<%= render 'constraints', :localized_params=>params %>
   
-  <% render_pagination_info @response, :entry_name=>'item' %><br />
-  <%= link_to "&lt; new search".html_safe, dashboard_path %>
+  <% render_pagination_info @response, :entry_name=>'item' %>
 
   <%= render 'sort_and_per_page' %>
-  <%= render 'results_pagination' %>
 
   <%= render :partial=>'dashboard/document_list'  %>  
 	<% sidebar_items << capture do %>

@@ -1,12 +1,12 @@
-<table class="table table-border table-striped">
+<table class="doc-list">
 <% unless params[:display_type] == 'list' %>
   <tr>
-    <th class="title">Filename</th>
-    <th class="creator">Id</th>
-    <th class="journal">Date</th>
-    <th class="deposited">Edit Access</th>
-    <th class="perms">View Access</th>
-    <th class="files">Action</th>
+    <th>&nbsp;</th>
+    <th>File Name</th>
+    <th>Date Created</th>
+    <th>Edit Access</th>
+    <th>View Access</th>
+    <th>Action</th>
   </tr>
   <% end %>
   <% docs.each_with_index do |document,counter| %>

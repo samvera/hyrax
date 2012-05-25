@@ -1,114 +1,187 @@
-<h1><%= @generic_file.title.join(' | ') %></h1>
 
-<%= render :partial => 'media_display' %>
+<h1 class="lower"><%= @generic_file.title.join(' | ') %></h1>
 
-<div class="viewing_context">
-  <%= link_to "Edit view", edit_generic_file_path %>
-</div>
-<dl>
-  <% unless @generic_file.related_files.empty? %>
-    <dt>Related Files</dt>
-    <% @generic_file.related_files.each do |f| %>
-      <dd><%= link_to(f.label, generic_file_url(f.noid)) %></dd>
-    <% end %>
-  <% end %>
+<div class="columns two-b">
+  <div class="column first">
+    <%= render :partial => 'media_display' %>
+  </div>
+  <div class="column second">
+    <h2 class="non lower">Actions</h2>
+    <p><a href="#">Cite This</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">Export to RefWorks</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="#">Export to Endnote</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">Email This</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">SMS This</a></p>
+    <p><%= link_to "Editor View", edit_generic_file_path %>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">Run Audit Now</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">View Full Audit History</a></p>
 
-  <dt>Versions</dt>
-  <% @generic_file.content.versions.each do |version| %>
-    <dd>(<%= version.versionID %>) insert snazzy datastream URL here [<%= version.dsCreateDate %>]</dd>
-  <% end %>
+    <h2 class="non lower">Metadata</h2>
+    <table class="verticalheadings">
+      <tbody>
+        <tr class="zebra">
+          <th>Title</th>
+          <td>
+            <% @generic_file.title.each do |title| %>
+              <%= title %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Creator</th>
+          <td>
+            <% @generic_file.creator.each do |creator| %>
+              <%= creator %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Contributor</th>
+          <td>
+            <% @generic_file.contributor.each do |contributor| %>
+              <%= contributor %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Related URL</th>
+          <td>
+            <% @generic_file.related_url.each do |ru| %>
+              <%= ru %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Based Near</th>
+          <td>
+            <% @generic_file.based_near.each do |bn| %>
+              <%= bn %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>
+            <% @generic_file.description.each do |desc| %>
+              <%= desc %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Language</th>
+          <td>
+            <% @generic_file.language.each do |lang| %>
+              <%= lang %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Publisher</th>
+          <td>
+            <% @generic_file.publisher.each do |pub| %>
+              <%= pub %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Rights</th>
+          <td>
+            <% @generic_file.rights.each do |r| %>
+              <%= r %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Subject</th>
+          <td>
+            <% @generic_file.subject.each do |sub| %>
+              <%= sub %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Tag</th>
+          <td>
+            <% @generic_file.tag.each do |t| %>
+              <%= t %><br />
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table> <!-- /verticalheadings -->
 
-  <dt>Permission</dt>
-  <dd>TODO?</dd>
-
-  <dt>Audit status<dt>
-  <dd> <%= @generic_file.audit_stat(false)  %></dd>
-
-  <dt>Characterization</dt>
-  <% @generic_file.characterization_terms.each_pair do |term, values| %>
-    <% if values.is_a? Array %>
-      <% values.each do |value| %>
-        <% next if value.empty? %>
-        <dd><%= "#{term.to_s.humanize}: #{value}" %></dd>
-      <% end %>
-    <% else %>
-        <dd><%= "#{term.to_s.humanize}: #{values}" %></dd>
-    <% end %>
- <% end %>
-
-  <dt>Title<dt>
-  <% @generic_file.title.each do |title| %>
-    <dd><%= title %></dd>
-  <% end %>
-
-  <dt>Creator<dt>
-  <% @generic_file.creator.each do |creator| %>
-    <dd><%= creator %></dd>
-  <% end %>
-
-  <dt>Contributor<dt>
-  <% @generic_file.contributor.each do |contributor| %>
-    <dd><%= contributor %></dd>
-  <% end %>
-
-  <dt>Related URL<dt>
-  <% @generic_file.related_url.each do |ru| %>
-    <dd><%= ru %></dd>
-  <% end %>
-
-  <dt>Based Near</dt>
-  <% @generic_file.based_near.each do |bn| %>
-    <dd><%= bn %></dd>
-  <% end %>
-
-  <dt>Description</dt>
-  <% @generic_file.description.each do |desc| %>
-    <dd><%= desc %></dd>
-  <% end %>
-
-  <dt>Date Created</dt>
-  <% @generic_file.date_created.each do |dc| %>
-    <dd><%= dc %></dd>
-  <% end %>
-
-  <dt>Date Uploaded</dt>
-  <% @generic_file.date_uploaded.each do |du| %>
-    <dd><%= du %></dd>
-  <% end %>
-
-  <dt>Date Modified</dt>
-  <% @generic_file.date_modified.each do |dm| %>
-    <dd><%= dm %></dd>
-  <% end %>
-
-  <dt>Identifier</dt>
-  <% @generic_file.identifier.each do |id| %>
-    <dd><%= id %></dd>
-  <% end %>
-
-  <dt>Language</dt>
-  <% @generic_file.language.each do |lang| %>
-    <dd><%= lang %></dd>
-  <% end %>
-
-  <dt>Publisher</dt>
-  <% @generic_file.publisher.each do |pub| %>
-    <dd><%= pub %></dd>
-  <% end %>
-
-  <dt>Rights</dt>
-  <% @generic_file.rights.each do |r| %>
-    <dd><%= r %></dd>
-  <% end %>
-
-  <dt>Subject</dt>
-  <% @generic_file.subject.each do |sub| %>
-    <dd><%= sub %></dd>
-  <% end %>
-
-  <dt>Tag</dt>
-  <% @generic_file.tag.each do |t| %>
-    <dd><%= t %></dd>
-  <% end %>
-
-</dl>
+    <h2 class="non lower">Object Details</h2>
+    <table class="verticalheadings">
+      <tbody>
+        <tr>
+          <th>ID:</th>
+          <td>
+            <% @generic_file.identifier.each do |id| %>
+              <%= id %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr class="zebra">
+          <th>Versions</th>
+          <td>
+            <% @generic_file.content.versions.each do |version| %>
+              (<%= version.versionID %>) insert snazzy datastream URL here [<%= version.dsCreateDate %>]<br />
+            <% end %>
+          </td>
+        </tr>
+<% unless @generic_file.related_files.empty? %>
+        <tr>
+          <th>Related Files</th>
+          <td>
+              <% @generic_file.related_files.each do |f| %>
+                <dd><%= link_to(f.label, generic_file_url(f.noid)) %></dd>
+              <% end %>
+          </td>
+        </tr>
+<% end %>
+        <tr class="zebra">
+          <th>Permission</th>
+          <td>TODO?</td>
+        </tr>
+        <tr>
+          <th>Audit Status</th>
+          <td><%= @generic_file.audit_stat(false)  %> </td>
+        </tr>
+        <tr class="zebra">
+          <th>Characterization</th>
+          <td>
+            <% @generic_file.characterization_terms.each_pair do |term, values| %>
+              <% if values.is_a? Array %>
+                <% values.each do |value| %>
+                  <% next if value.empty? %>
+                  <%= "#{term.to_s.humanize}: #{value}" %><br />
+                <% end %>
+              <% else %>
+                <%= "#{term.to_s.humanize}: #{values}" %><br />
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+        <tr> 
+          <th>Date Created</th>
+          <td>
+            <% @generic_file.date_created.each do |dc| %>
+              <%= dc %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr class="zebra">
+          <th>Date Modified</th>
+          <td>
+            <% @generic_file.date_modified.each do |dm| %>
+              <%= dm %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Date Uploaded</th>
+          <td>
+            <% @generic_file.date_uploaded.each do |du| %>
+              <%= du %><br />
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table> <!-- /verticalheadings -->
+  </div><!-- /columns second -->
+</div> <!-- /columns two-b -->

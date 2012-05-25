@@ -6,22 +6,21 @@
 
 	<% @page_title = application_name + " Search Results" %>
 
-        <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 
-	<%= render :partial => 'search_form' %>
-	
-	<%= render :partial => 'did_you_mean' %>
-
-	<%= render 'constraints', :localized_params=>params %>
+  <p class="you-searched"><a class="itemicon itemsearch">search</a> You searched for: <%= params[:q] %></p>	
+  <%= render :partial => 'did_you_mean' %>
+  <%= render :partial => 'facet_selected' %>
+	<%# render 'constraints', :localized_params=>params %>
   
-  <div class="pageEntriesInfo">
+  <div class="result-filter">
     <%= render_pagination_info @response, :entry_name=>'item' %>
-    <%=link_to "start over", catalog_index_path, :id=>"startOverLink" %>
+	  <%= render 'sort_and_per_page' %>
+    <%= link_to "Start Over", catalog_index_path, :id=>"startOverLink", :class=>"button3" %>
   </div>
   
-	<%= render 'sort_and_per_page' %>
   
-        <%= render 'results_pagination' %>
+  <%= render 'results_pagination' %>
   
 	<%= render :partial => 'document_list' %>
 

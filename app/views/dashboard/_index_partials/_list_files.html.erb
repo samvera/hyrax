@@ -2,49 +2,51 @@
 <!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':' 
 on element ids -->
 <% if document.has_key?(:noid_s) %>
-<tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  class="document <%= cycle("even","odd") %>"> -->
-  <!-- <td><%# check_box_tag :generic_file, document[:id] %></td> -->
-  <td>
-    <i id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="icon-plus"></i>&nbsp;
+<tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>" class="<%= cycle("","zebra") %>"> 
+  <td width="3%"><%= check_box_tag :generic_file, document[:id] %></td> 
+  <td width="42%">
+    <a href="#" id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="itemicon itemexpand">expand</a>
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> </td>
-  <td><%= document[:noid_s].first %></td>
-  <td><%= document.fetch(:system_create_dt,'').to_time.strftime("%c") %> </td>
-  <td>
+    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> <br />
+    <%= document[:noid_s].first %>
+  </td>
+  <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
+  <td width="12%">
     <% if !document[:edit_access_group_t].nil? %>
       Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %> 
       <br />
     <% end %>
       Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %> 
   </td>
-  <td>
+  <td width="5%" align="center">
     <% if document[:read_access_group_t].nil? or (document[:read_access_group_t] & ['public']).empty? %>
-      <i class="icon-eye-close"></i>&nbsp;
+      <a href="/" class="itemicon itemprivate">private</a>
     <% else %>
-      <i class="icon-eye-open"></i>&nbsp;
+      <a href="/" class="itemicon itempublic">public</a>
     <% end %>
   </td>
-  <td>
-    <i class="icon-edit" title="edit file"></i>
-    <i class="icon-share" title="copy to clipboard"></i>
-    <i class="icon-download" title="download file"></i>
+  <td width="23%">
+    <a href="/" class="itemicon itemcode">get code</a>
+    <a href="/" class="itemicon itemedit">edit</a>
+    <a href="/" class="itemicon itemdownload">download</a>
   </td>
 </tr>
-<tr class="hide" id="detail_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  document detail"> -->
+<tr class="hidden" id="detail_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  document detail"> -->
   <td colspan="6">
-    <dl>
-      <dt>Title</dd>
-      <dd><%= link_to render_document_show_field_value(:document=>document, :field=>"generic_file__title_t"), generic_file_path(document[:noid_s].first) %> </dd>
-
-      <dt>Contributor</dd>
-      <dd><%= render_document_show_field_value(:document=>document, :field=>"generic_file__contributor_t") %></dd>
-
-      <dt>Format</dt>
-      <dd><%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %></dd>
-
-      <dt>Date Modified</dt>
-      <dd><%= document[:system_modified_dt] %></dd>
-    </dl>
+    <table class="expanded-details">
+      <tr>
+        <td><strong>Title:</strong>
+          <%= link_to render_document_show_field_value(:document=>document, :field=>"generic_file__title_t"), generic_file_path(document[:noid_s].first) %> </td>
+        <td><strong>Format:</strong><%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %> </td>
+      </tr>
+      <tr>
+        <td><strong>Creator:</strong>
+        </td>
+        <td><strong>Last Audit:</strong>
+        </td>
+      </tr>
+          
+    </table>
   </td>
 </tr>
 <% end %>

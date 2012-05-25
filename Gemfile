@@ -22,6 +22,9 @@ gem 'hydra-ldap', '0.0.2'
 gem 'zipruby'
 
 group :assets do
+  gem 'sass-rails',   "~> 3.2.3"
+  gem 'coffee-rails', "~> 3.2.1"
+  gem 'uglifier',     ">= 1.0.3"
   gem "compass-rails", "~> 1.0.0"
   gem "compass-susy-plugin", "~> 0.9.0"
 end

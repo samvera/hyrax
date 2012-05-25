@@ -1,7 +1,4 @@
 <% # container for all documents in index view -%>
-    <div class="row">
-      <div class="span12">
-<div id="documents">
   <% facet_name = grouping_facet %>
   <%- if facet_name -%>
     <%- @response.docs.group_by {|d| d[facet_name]}.each do |grouping| -%>
@@ -10,6 +7,3 @@
   <%- else -%>
     <%= render :partial => 'catalog/_index_partials/default_group', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_name => nil, :facet_value => nil} %>
   <%- end -%>
-</div>
-      </div> <!-- / .span12 -->
-    </div> <!-- / .row -->
