@@ -10,6 +10,8 @@ gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git
 # adding for messaging the user whn a delayed job fails
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git' 
 #gem 'mailboxer'
+gem 'execjs'
+gem 'therubyracer'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '~> 2.13.1', :require => 'RMagick'
