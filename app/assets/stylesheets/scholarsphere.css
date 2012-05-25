@@ -415,6 +415,12 @@ h5 {
 .breadcrumbs a.active {
 	color: #838383;
 }
+.hidden {
+	display: none;
+}
+.clear {
+  clear: both;
+}
 hr {
 	height: 1px;
 	background: #ddd;
@@ -423,9 +429,6 @@ hr {
 table {
 	border: none;
 	border-collapse: collapse;
-}
-tr.hidden {
-	display: none;
 }
 table.expanded-details {
 	width: 75%;
