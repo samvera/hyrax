@@ -5,14 +5,14 @@ Feature: As an authenticate and authorized
   Scenario: I am on the homepage and want to upload
     Given I am logged in as "contentauthor@psu.edu"
     And I follow "my dashboard" 
-    When I press "upload_file"
-    Then I should see "Add files..."
-    Then I should see "Start upload"
+#    And I follow "contribute_link"
+#    Then I should see "Add files..."
+#    Then I should see "Start upload"
     
   Scenario: I am on the homepage
     Given I am logged in as "contentauthor@psu.edu"
     And I follow "my dashboard" 
-    Then I should see "Browse"
+    Then I should see "My Files"
 #    And I should see "Creator"
 #    And I should see "Contributor"
 #    And I should see "Title"
