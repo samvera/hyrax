@@ -20,7 +20,15 @@ $(function () {
     'use strict';
 
     // Initialize the jQuery File Upload widget:
+    // this is happening again in main.js which is being included after application.js
+    // so I think this may have no effect...
     $('#fileupload').fileupload();
+    
+    $('#fileupload').fileupload({
+    });
+    //$('#fileupload').fileupload({
+    //              acceptFileTypes: /(\.|\/)(gif|jpe?g|png|rb)$/i
+    //              });
     $('#fileupload').bind("fileuploadstop", function(){
       if ((files_done == filestoupload)&&(files_done >0)){
          //var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
@@ -37,17 +45,12 @@ $(function () {
          $("#errmsg").fadeIn('slow')
       }
     }); 
-
+  
+      
     // count the number of uploaded files to send to edit
     $('#fileupload').bind("fileuploadadd", function(e, data){
+      files = data.files;
       filestoupload++;
-    });
-    
-    // check the validation on if the file type is not accepted just click cancel for the user as we do not want them to see all the hidden files
-    $('#fileupload').bind("fileuploadadded", function(e, data){
-        if (data.files[0].error == 'acceptFileTypes'){
-          $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click(); 
-        }
     });
 
     // count the number of files completed and ready to send to edit                          
