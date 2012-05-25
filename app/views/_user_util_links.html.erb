@@ -1,42 +1,32 @@
-  <div class="navbar alert alert-info">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="brand" href="#">PSU Repo</a>
-        <div class="nav-collapse">
-          <ul class="nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Help</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-          <ul class="nav pull-right">
-            <li class="divider-vertical"></li>
-<%# users are always logged in...  %>
+<div id="masthead">
+    <a id="logo" href="/"><img src="/site_images/logo_psuss.png" alt="PSU Scholar Sphere" /></a>
+    <ul id="primary-menu">
+      <li><a class="active" href="/">Home</a></li>
+      <li><a href="/">About</a></li>
+      <li><a href="/">Help</a></li>
+      <li><a href="/">Contact</a></li>
 <% if current_user %>
-              <li class="dropdown">
-  <!--
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Preferences<b class="caret"></b></a> 
-              <ul class="dropdown-menu">
-                <li><%# link_to current_user.to_s, edit_user_registration_path %></li>
-                -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.to_s %> <b class="caret"></b></a> 
-              <ul class="dropdown-menu">
-                <!--<li><%#= link_to 'my account info', edit_user_registration_path %></li>-->
-                <li><%= link_to 'my dashboard', dashboard_path  %></li>
-                <li><%= link_to 'upload', new_generic_file_path  %></li>
-                <li><%= link_to 'your bookmarks', bookmarks_path %></li>
-                <li><%= link_to "saved searches", saved_searches_path %></li>
-                <!--<li><%# link_to "Selected Items", folder_index_path %>(<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li>-->
-                <li><%= link_to "selected items", folder_index_path %></li>
-                <li><%= link_to "search history", search_history_path %></li>
-                <li><%= link_to "log out", logout_path %></li>
-              </ul>
+      <li class="signin">
+        <a href="#" class="loggedin"><%= current_user.to_s %><img style="vertical-align:middle;" src="/site_images/icon_arrow_down.png" alt="more" /></a>
+        <ul class="dropdown">
+          <li><%= link_to 'my dashboard', dashboard_path  %></li>
+          <li><%= link_to 'upload', new_generic_file_path  %></li>
+          <li><%= link_to 'your bookmarks', bookmarks_path %></li>
+          <li><%= link_to "saved searches", saved_searches_path %></li>
+          <!--<li><%# link_to "Selected Items", folder_index_path %>(<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li>-->
+          <li><%= link_to "selected items", folder_index_path %></li>
+          <li><%= link_to "search history", search_history_path %></li>
+          <li><%= link_to "log out", logout_path %></li>
+        </ul>
+      </li>
 <% else %>
-                <li><%= link_to "Login", ScholarSphere::Application::config.login_url %> 
-              <% end %>
-            </li>
-          </ul>
-        </div><!-- /.nav-collapse -->
-      </div>
-    </div><!-- /navbar-inner -->
-  </div><!-- /navbar -->
+      <li class="signin"><%= link_to "Login", ScholarSphere::Application::config.login_url %> 
+<% end %>
+    </ul>
+
+    <%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
+      <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>    
+      <%= text_field_tag :q, params[:q], :class => "q", :id => "search-field-header", :placeholder => "Type keywords in here"  %>
+      <%= submit_tag 'Go', :id=>'search-submit-header' %>
+    <% end %>
+</div> <!-- /masthead -->

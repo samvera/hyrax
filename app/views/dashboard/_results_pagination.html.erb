@@ -1,5 +1,5 @@
 <% if paginate_params(@response).num_pages > 1 %>
-    <div class="pagination pagination-centered"> 
+    <div class="pager"> 
       <%= paginate_rsolr_response @response, :outer_window => 2, :theme => 'blacklight' %>
     </div>
 <% end %>

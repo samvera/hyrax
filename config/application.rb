@@ -5,6 +5,7 @@ require 'socket'
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
+Bundler.require *Rails.groups(:assets => %w(development, test))
 
 module ScholarSphere
   class Application < Rails::Application
@@ -15,6 +16,8 @@ module ScholarSphere
     config.max_days_between_audits = 7
     config.id_namespace = "scholarsphere"
     config.application_name = "ScholarSphere"
+    # turning on the new asset pipeline for handling javascript, css, and image files
+    config.assets.enabled = true
     config.fits_to_desc_mapping = {
       :format_label => :format,
       :last_modified => :date_modified,

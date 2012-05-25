@@ -1,0 +1,6 @@
+/*
+*= require_self
+*= require bootstrap.min
+*= require_directory ./fileupload
+*= require reset_body
+*/

@@ -5,56 +5,93 @@
 
     <title><%= h(@page_title || application_name) %></title>
     <%# render_head_content %>
-    <%= stylesheet_link_tag 'psu', :media => 'all' %> 
-    <%# stylesheet_link_tag 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', :media => 'all' %> 
-    <%= stylesheet_link_tag 'blacklight/blacklight', :media => 'all' %> 
-    <%= stylesheet_link_tag 'scholarsphere', :media => 'all' %> 
-    <%= stylesheet_link_tag 'fileupload/style' %>
-    <%= stylesheet_link_tag 'bootstrap.min', :media => 'all' %> 
-    <%= stylesheet_link_tag 'fileupload/jquery.fileupload-ui' %>
+    <!-- application css -->
+    <%= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=Lato:300,400,900' %>
+    <%= stylesheet_link_tag 'application' %>
+    <%# stylesheet_link_tag params[:controller] %>
+    <%= yield(:css_head) %>
 
-    <%= javascript_include_tag 'jquery-1.7.2.min.js' %>
-    <%= javascript_include_tag 'jquery_ujs.js' %>
-    <%= javascript_include_tag 'bootstrap-dropdown.js' %>
-    <%= javascript_include_tag 'bootstrap-button.js' %>
-    <%= javascript_include_tag 'jquery.ui.core.js' %>
-    <%= javascript_include_tag 'jquery.ui.widget.js' %>
-    <%= javascript_include_tag 'jquery.ui.position.js' %>
-    <%= javascript_include_tag 'jquery.ui.autocomplete.js' %>
-    <%= javascript_include_tag 'blacklight/blacklight' %> 
-    <%= javascript_include_tag 'scholarsphere.js' %>
+    <!-- application js -->
+    <%= javascript_include_tag 'application' %>
+
+    <!-- controller specific uploader -->
+    <%# javascript_include_tag params[:controller] %>
+    <%= yield(:js_head) %>
+
 	</head>
   
-    <body class="<%= render_body_class %>">
-
-      <div id="doc4" class="yui-t2">
-
+  <body> 
+<%# need a better way to determine if we are on the home page and using three col layout %>
+<% if params[:controller].eql?("catalog") and params[:action].eql?("index") and (!params.has_key?("commit") and !params.has_key?("f")) %> 
+  <% column_class = "three" %>
+<% else %>
+  <% column_class = "two" %>
+<% end %>
+  <div id="wrapper">
+  <div id="container">
       <%= render :partial => '/user_util_links', :formats => [:html] %>
-			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %>
-	    
-	  <div id="bd" class="row">
-      <div class="span3">
-        <%= sidebar_items.join('').html_safe %>
-      </div>	
-			<div id="yui-main" class="span9">
-        <%= render :partial=>'/flash_msg' %>
-        <%= yield %>
-      </div>
-    </div>
-	    
-		<div id="footer">
-			<div id="container3">
-				<div class="contact_info"></div> 
-			    <div class="aux_links"> </div>
-				<div id="footer_notices">
-					<div id="bottom_text">
-						<div id="hydra_logo"><%= image_tag('hydra/powered_by_hydra.png', :width => 80, :height => 50, :alt => "Hydra logo") %></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	  </div>
-  </body>
+      <div id="content-wrapper">
+        <div id="content">	    
+          <%#  basically everything but the show method on generic files uses the same layout, again probably a better way to handle this %>
+          <% unless params[:controller].eql?("generic_files") and (params[:action].eql?("show") or params[:action].eql?("edit")) %>
+            <div class="columns <%= column_class %>-a"> 
+              <%= sidebar_items.join('').html_safe %> 
+
+              <div class="column second"> 
+                <%= render :partial=>'/flash_msg' %>
+                <%= yield %>
+              </div>
+            <% if column_class == "three" %>
+              <div class="column third">
+                <h2 class="heading1">Contribute</h2> 
+                <%= link_to 'Submit Your Work', new_generic_file_path, :class => "button1", :id => "contribute_link" %>
+                <h2 class="heading1">Recently Added</h2>
+                <div class="item">
+                  <h3><a href="/">NINES: A federated model for integrating digital scholarship</a></h3>
+                  <span class="item-type">Article</span>
+                  <span class="item-author">Nowviskie, Bethany</span>
+                </div><!-- /item -->
+                <div class="item">
+                  <h3><a href="/">NINES: A federated model for integrating digital scholarship</a></h3>
+                  <span class="item-type">Article</span>
+                  <span class="item-author">Nowviskie, Bethany</span>
+                </div><!-- /item -->
+                <div class="item">
+                  <h3><a href="/">NINES: A federated model for integrating digital scholarship</a></h3>
+                  <span class="item-type">Article</span>
+                  <span class="item-author">Nowviskie, Bethany</span>
+              </div><!-- /column third -->
+            <% end %>
+            </div>	<!-- /columns three-a -->
+          <% else %>
+            <%= render :partial => 'generic_files/breadcrumbs' %>
+            <%= yield %>
+          <% end %>
+      </div> <!-- /content -->
+	  </div> <!-- /content-wrapper -->
+
+  </div> <!-- /container -->
+
+    <div id="footer-wrapper">
+      <div id="footer">
+        <div class="footer-logo">
+          <a href="/"><img src="/site_images/logo_psuss_footer.png" alt="PSU Scholar Sphere" /></a>
+          <p>A service of the University Libraries and Information Technology Services.</p>
+        </div>
+        <div class="footer-text">
+          <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
+          <ul>
+            <li><a href="http://psu.edu">Penn State</a></li>
+            <li><a href="http://libraries.psu.edu">University Libraries</a></li>
+            <li><a href="http://its.psu.edu">Information Technology Services</a></li>
+            <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
+          </ul>
+        </div>
+        <div class="clearfix"></div>
+      </div><!-- /footer -->
+    </div><!-- /footer-wrapper -->
+	
+  </div><!-- /wrapper -->
+</body>
 
 </html>

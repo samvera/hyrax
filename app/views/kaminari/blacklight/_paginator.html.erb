@@ -7,7 +7,6 @@
     paginator:     the paginator that renders the pagination tags inside
 -%>
 <%= paginator.render do -%> 
-  <ul>
     <%= prev_page_tag %>
     <% each_relevant_page do |page| -%> 
       <% if page.left_outer? || page.right_outer? || page.inside_window? -%> 
@@ -17,5 +16,4 @@
       <% end -%> 
     <% end -%> 
     <%= next_page_tag  %>
-  </ul>
 <% end -%> 

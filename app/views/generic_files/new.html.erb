@@ -1,3 +1,6 @@
+<% javascript 'generic_files.js' %>
+<% stylesheet 'generic_files.css' %>
+
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
   <%=batch_edit_path(@batch_noid)%>
 </div>
@@ -5,10 +8,7 @@
 <div class="alert alert-info hide" id="success">
   You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
   <p>
-  <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
-  <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
   <%= link_to 'Add Descriptions', batch_edit_path(@batch_noid), :class=>'btn' %>
-
   </p>
 </div>
 <div class="alert hide" id="fail">
@@ -17,8 +17,6 @@
 <div class="alert hide" id="partial_fail">
   One or more files did not upload successfully. To continue using the files uploaded use one of the links below.
   <p>
-  <%= link_to 'My Dashboard', dashboard_path, :class=>'btn'  %></li>
-  <%= link_to 'New Upload', new_generic_file_path, :class=>'btn'  %>
   <%= link_to 'Add Descriptions', batch_edit_path(@batch_noid), :class=>'btn' %>
 </div>
 <div class="alert hide" id="errmsg">
@@ -58,7 +56,7 @@
         </div>
         <!-- The loading indicator is shown during image processing -->
         <div class="fileupload-loading"></div>
-        <br>
+        <br />
         <!-- The table listing the files available for upload/download -->
         <table id="file-table" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
     </form>
@@ -120,11 +118,3 @@
 {% } %}
 </script>
 
-<script src="/javascripts/fileupload/jquery-ui-1.8.14.custom.min.js"></script>
-<script src="/javascripts/tmpl.min.js"></script>
-<script src="/javascripts/fileupload/jquery.iframe-transport.js"></script>
-<script src="/javascripts/fileupload/jquery.fileupload.js"></script>
-<script src="/javascripts/fileupload/jquery.fileupload-ui.js"></script>
-<script src="/javascripts/fileupload/application.js"></script>
-<script src="/javascripts/fileupload/locale.js"></script>
-<script src="/javascripts/fileupload/main.js"></script>

@@ -43,7 +43,7 @@
         <%= f.label :tag, :class=>"control-label" %> 
         <div class="controls">
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
-          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn-info btn-mini"  %>
+          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder"  %>
         </div>
       </div>
       <div id="additional_tag_elements"></div>
@@ -52,7 +52,7 @@
         <%= f.label :title, :class=>"control-label" %> 
         <div class="controls">
           <%= f.text_field :title, :name=>"generic_file[title][]", :value=>"" %>  
-          <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn-info btn-mini"  %>
+          <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder"  %>
         </div>
       </div>
       <div id="additional_title_elements"></div>
@@ -65,87 +65,83 @@
       <a href="#" id="add_descriptions">Add More Description Types</a>
     </div>
   </div>
-  <div class="row hide" id="more_descriptions">
-    <div class="span9">
-      <div class="control-group" id="additional_related_url_clone">
-        <%= f.label :related_url, :class=>"control-label" %> 
+  <div class="hidden" id="more_descriptions">
+      <%= f.label :related_url, :class=>"control-label" %> 
+      <div class="controls" id="additional_related_url_clone">
         <%= f.text_field :related_url, :class=>"controls", :name=>"generic_file[related_url][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder"  %>
       </div>
       <div id="additional_related_url_elements"></div>
 
-      <div class="control-group" id="additional_based_near_clone">
-        <%= f.label :based_near, :class=>"control-label" %> 
+      <%= f.label :based_near, :class=>"control-label" %> 
+      <div class="controls" id="additional_based_near_clone">
         <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder"  %>
       </div>
       <div id="additional_based_near_elements"></div>
 
-      <div class="control-group" id="additional_contributor_clone">
-        <%= f.label :contributor, :class=>"control-label" %> 
+      <%= f.label :contributor, :class=>"control-label" %> 
+      <div class="controls" id="additional_contributor_clone">
         <%= f.text_field :contributor, :class=>"controls", :name=>"generic_file[contributor][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder"  %>
       </div>
       <div id="additional_contributor_elements"></div>
 
-      <div class="control-group" id="additional_creator_clone">
-        <%= f.label :creator, :class=>"control-label" %> 
+      <%= f.label :creator, :class=>"control-label" %> 
+      <div class="controls" id="additional_creator_clone">
         <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]", :value=>"" %>
-        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder"  %>
       </div>
       <div id="additional_creator_elements"></div>
 
-      <div class="control-group" id="additional_date_created_clone">
-        <%= f.label :date_created, :class=>"control-label" %> 
+      <%= f.label :date_created, :class=>"control-label" %> 
+      <div class="controls" id="additional_date_created_clone">
         <%= f.text_field :date_created, :class=>"controls", :name=>"generic_file[date_created][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder"  %>
       </div>
       <div id="additional_date_created_elements"></div>
 
-      <div class="control-group" id="additional_description_clone">
-        <%= f.label :description, :class=>"control-label" %> 
+      <%= f.label :description, :class=>"control-label" %> 
+      <div class="controls" id="additional_description_clone">
         <%= f.text_area :description, :class=>"controls", :name=>"generic_file[description][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder"  %>
       </div>
       <div id="additional_description_elements"></div>
 
-      <div class="control-group" id="additional_identifier_clone">
-        <%= f.label :identifier, :class=>"control-label" %> 
+      <%= f.label :identifier, :class=>"control-label" %> 
+      <div class="controls" id="additional_identifier_clone">
         <%= f.text_field :identifier, :class=>"controls", :name=>"generic_file[identifier][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder"  %>
       </div>
       <div id="additional_identifier_elements"></div>
 
-      <div class="control-group" id="additional_language_clone">
-        <%= f.label :language, :class=>"control-label" %> 
+      <%= f.label :language, :class=>"control-label" %> 
+      <div class="controls" id="additional_language_clone">
         <%= f.text_field :language, :class=>"controls", :name=>"generic_file[language][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder"  %>
       </div>
       <div id="additional_language_elements"></div>
 
-      <div class="control-group" id="additional_publisher_clone">
-        <%= f.label :publisher, :class=>"control-label" %> 
+      <%= f.label :publisher, :class=>"control-label" %> 
+      <div class="controls" id="additional_publisher_clone">
         <%= f.text_field :publisher, :class=>"controls", :name=>"generic_file[publisher][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder"  %>
       </div>
       <div id="additional_publisher_elements"></div>
 
-      <div class="control-group" id="additional_rights_clone">
-        <%= f.label :rights, :class=>"control-label" %> 
+      <%= f.label :rights, :class=>"control-label" %> 
+      <div class="controls" id="additional_rights_clone">
         <%= f.text_field :rights, :class=>"controls", :name=>"generic_file[rights][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder"  %>
       </div>
       <div id="additional_rights_elements"></div>
 
-      <div class="control-group" id="additional_subject_clone">
-        <%= f.label :subject, :class=>"control-label" %> 
+      <%= f.label :subject, :class=>"control-label" %> 
+      <div class="controls" id="additional_subject_clone">
         <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]", :value=>"" %>  
-        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder btn-info btn-mini"  %>
+        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder"  %>
       </div>
       <div id="additional_subject_elements"></div>
-
-
-    </div> <!-- close .span9 -->
   </div><!-- close .row description section -->
 
 <div class="form-actions">

@@ -5,11 +5,13 @@ gem 'rails', '~> 3.2.3'
 gem 'sqlite3', '~> 1.3.6'
 gem 'mysql', '~> 2.8.1'
 gem 'blacklight', '~> 3.3.2'
-gem 'hydra-head', '~> 4.0.0'
+gem 'hydra-head', '~> 4.0.1'
 gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
 # adding for messaging the user whn a delayed job fails
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git' 
 #gem 'mailboxer'
+gem 'execjs'
+gem 'therubyracer'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '~> 2.13.1', :require => 'RMagick'
@@ -22,6 +24,9 @@ gem 'hydra-ldap', '0.0.2'
 gem 'zipruby'
 
 group :assets do
+  gem 'sass-rails',   "~> 3.2.3"
+  gem 'coffee-rails', "~> 3.2.1"
+  gem 'uglifier',     ">= 1.0.3"
   gem "compass-rails", "~> 1.0.0"
   gem "compass-susy-plugin", "~> 0.9.0"
 end
