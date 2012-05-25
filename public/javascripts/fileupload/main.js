@@ -29,6 +29,14 @@ $(document).ready(function() {
         )
     );
 
+    $('#fileupload').fileupload(
+        'option',
+        'acceptFileTypes',
+        /^[^\.].*$/i
+        ///^[^\.][\w\.]*$/i
+//        /(\.|\/)(gif|jpe?g|png)$/i
+    );
+
     // Load existing files:
     $('#fileupload').each(function () {
       var that = this;
