@@ -30,15 +30,16 @@
   <div id="wrapper">
   <div id="container">
       <%= render :partial => '/user_util_links', :formats => [:html] %>
+      <%= render :partial=>'/flash_msg' %>
+      
       <div id="content-wrapper">
         <div id="content">	    
           <%#  basically everything but the show method on generic files uses the same layout, again probably a better way to handle this %>
           <% unless params[:controller].eql?("generic_files") and (params[:action].eql?("show") or params[:action].eql?("edit")) %>
             <div class="columns <%= column_class %>-a"> 
               <%= sidebar_items.join('').html_safe %> 
-
+              
               <div class="column second"> 
-                <%= render :partial=>'/flash_msg' %>
                 <%= yield %>
               </div>
             <% if column_class == "three" %>

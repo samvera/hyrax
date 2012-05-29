@@ -119,14 +119,9 @@ describe GenericFilesController do
          # flash.now[:notice] = "our flash message"
          # This was my method to get around the failing rspec test because I wasn't sure what our intention
          # was
-         #get :show, id:"test5"
-         #flash[:notice].should be_empty
-      end
-      render_views
-      it "should redirect to object view" do
          get :show, id:"test5"
-         flash[:notice].should be_empty
-      end 
+         flash[:notice].should be_nil
+      end
     end    
   end
 end

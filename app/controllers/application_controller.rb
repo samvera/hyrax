@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
             notice = notice+"<br>"+msg.last_message.body
             msg.delete()
          end
-         flash[:notice] = flash[:notice] ? flash[:notice]+notice : notice
+         flash[:notice] = flash[:notice] ? flash[:notice]+notice : notice unless notice.blank?
       end
   end
   
