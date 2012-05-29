@@ -178,7 +178,7 @@ class GenericFile < ActiveFedora::Base
             proxy_term << term_value unless proxy_term.include?(term_value)
           end
         else
-          proxy_term << terms[k]
+          proxy_term << terms[k] unless proxy_term.include?(terms[k])
         end
       end
     end
