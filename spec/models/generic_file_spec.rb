@@ -404,7 +404,6 @@ describe GenericFile do
         @myfile.characterization_terms.keys.should include(:filename)
       end
       it "should append metadata from the characterization" do
-        puts @myfile.descMetadata.fields
         @myfile.format.should == ["Portable Document Format"]
         @myfile.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
