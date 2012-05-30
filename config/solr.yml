@@ -1,5 +1,4 @@
-# This is a sample config file that does not have multiple solr instances. You will also need to be sure to
-# edit the fedora.yml file to match the solr URL for active-fedora. 
+# For given rails environment, what is the Solr url?
 development:
   url: http://localhost:8983/solr/development
 test: &TEST
