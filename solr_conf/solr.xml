@@ -22,14 +22,14 @@
   persistent: Save changes made via the API to this file
   sharedLib: path to a lib directory that will be shared across all cores
 -->
-<solr persistent="false">
+<solr persistent="false" sharedLib="lib">
 
   <!--
   adminPath: RequestHandler path to manage cores.  
     If 'null' (or absent), cores will not be manageable via REST
   -->
   <cores adminPath="/admin/cores">
-    <core name="core0" instanceDir="core0" />
-    <core name="core1" instanceDir="core1" />
+    <core name="development" instanceDir="development-core" />
+    <core name="test" instanceDir="test-core" />
   </cores>
 </solr>
