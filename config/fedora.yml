@@ -1,3 +1,4 @@
+# For given rails environment, what is the fedora url, admin user and password?
 development:
   user: fedoraAdmin
   password: fedoraAdmin
