@@ -1,8 +1,10 @@
 <%# there has got to be a hipster ruby way to do this better %>
-<% params[:f].each do |k,v| %>
-  <% v.each do |selected_facet| %>
+<% if params[:f] %>
+  <% params[:f].each do |k,v| %>
+    <% v.each do |selected_facet| %>
       <% link_options = remove_facet_params(k, selected_facet, params).merge!Hash["controller" => "catalog", :action=> "index"] %>
       <p class="your-keywords"><a class="itemicon itemcheck">on</a> <%= selected_facet %><%= link_to 'X', url_for(link_options), :class=>'clearkeywords' %>
       </p>
     <% end %>
   <% end %>
+<% end %>
