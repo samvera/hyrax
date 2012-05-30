@@ -17,4 +17,35 @@ class CatalogController < ApplicationController
 
   skip_before_filter :default_html_head
 
+#####################
+# jgm testing start #
+#####################
+  if Rails.env == "integration"
+  # COPIED AND MODIFIED from:
+  #	/usr/local/rvm/gems/ree-1.8.7-2011.03@scholarsphere/gems/blacklight-3.3.2/lib/blacklight/catalog.rb
+  #
+    # when solr (RSolr) throws an error (RSolr::RequestError), this method is executed.
+    def rsolr_request_error(exception)
+      #if Rails.env == "development"
+      if ['development', 'integration'].include?(Rails.env)
+        raise exception # Rails own code will catch and give usual Rails error page with stack trace
+      else
+        flash_notice = "Sorry, I don't understand your search."
+        # Set the notice flag if the flash[:notice] is already set to the error that we are setting.
+        # This is intended to stop the redirect loop error
+        notice = flash[:notice] if flash[:notice] == flash_notice
+        unless notice
+          flash[:notice] = flash_notice
+          redirect_to root_path, :status => 500
+        else
+          render :template => "public/500.html", :layout => false, :status => 500
+        end
+      end
+    end
+  #
+  end
+###################
+# jgm testing end #
+###################
+
 end
