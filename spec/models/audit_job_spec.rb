@@ -5,10 +5,8 @@ describe AuditJob do
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.create
     @ds = @file.datastreams.first
-    puts "ds = #{@ds.inspect}"    
     @job = AuditJob.new(@user, @file.pid, @ds[0], @ds[1].versionID)
     @inbox = @user.mailbox.inbox
-    puts "inbox = #{@inbox}"
   end
   after(:all) do
     @inbox.each(&:delete) # clear any existing messages

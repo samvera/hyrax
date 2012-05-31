@@ -60,9 +60,7 @@ describe "scholarsphere:fixtures:*" do
       File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt"))
       File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb"))
       File.delete(Rails.root.join(File.expand_path("test_support/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml"))
-      p "Fixtures Spec is Restoring the Fixtures for remaining tests to rely on..."
       %x[rake scholarsphere:fixtures:refresh RAILS_ENV=test ]
-      p "... finished restoring"
     end
 
   describe 'scholarsphere:fixtures:create' do        
