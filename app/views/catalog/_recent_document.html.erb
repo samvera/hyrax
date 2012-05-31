@@ -1,0 +1,11 @@
+<%- type = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__resource_type_t") -%>
+<%- type = 'no type value' if type.empty? -%>
+<%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
+<%- title = render_document_show_field_value(:document=>recent_document, :field=>"label_t") if title.empty? -%>
+<%- contributor = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__contributor_t") -%>
+<%- contributor = 'no contributor value' if contributor.empty? -%>
+<div class="item">
+    <h3><a href=<%=generic_file_path(recent_document.fetch(:noid_s, :id))  %> ><%= title %></a></h3>
+                  <span class="item-type"><%=type  %></span>
+                  <span class="item-author"><%= contributor %></span>
+</div>
