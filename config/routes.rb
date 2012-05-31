@@ -11,6 +11,7 @@ ScholarSphere::Application.routes.draw do
       post 'audit'
       get :add_user_permission
       get :add_group_permission
+      post 'permissions'
     end
   end
   

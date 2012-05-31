@@ -90,7 +90,6 @@ class GenericFile < ActiveFedora::Base
 
     params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
     params[:group].each { |name, access| perm_hash['group'][name] = access} if params[:group]
-    
     rightsMetadata.update_permissions(perm_hash)
   end
 

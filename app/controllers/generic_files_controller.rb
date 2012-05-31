@@ -6,9 +6,9 @@ class GenericFilesController < ApplicationController
 
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
-  before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy]
-  before_filter :find_by_id, :only=>[:audit, :edit, :show, :update, :destroy]
-  prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
+  before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy, :permissions]
+  before_filter :find_by_id, :only=>[:audit, :edit, :show, :update, :destroy, :permissions]
+  prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy, :permissions] 
 
   # routed to /files/new
   def new
@@ -105,6 +105,14 @@ class GenericFilesController < ApplicationController
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+  end
+
+  # routed to /files/:id/permissions (POST)
+  def permissions
+    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
+    @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
+    @generic_file.save
+    redirect_to edit_generic_file_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
 
   protected

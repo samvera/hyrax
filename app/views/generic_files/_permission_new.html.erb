@@ -1,0 +1,36 @@
+<h2>Update Current</h2>
+<% gf.permissions.each do |permission| %>
+  <%= form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => permission[:name] + '_update_form', :class => 'form-horizontal'} do |f| %>
+    <div class="control-group"> 
+      <div class="controls">
+      <%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'small' %>
+      <%= f.submit :value => "Update", :name=> "update_permission", :id => "update_permission"  %> 
+      </div>
+    </div> 
+  <% end %>
+<% end %>
+
+<h2>Save New</h2>
+<%= form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => 'generic_file[permissions][new_group_name]_form', :class => 'form-horizontal'} do |f| %>
+  <div class="control-group" id="new-group"> 
+    <%= label_tag 'generic_file[permissions][new_group_name]', "Group", :class=>"control-label" %>
+    <div class="controls">
+      <%= text_field_tag 'generic_file[permissions][new_group_name]' %>
+      <%= select_tag 'generic_file[permissions][new_group_permission]', options_for_select(ScholarSphere::Application::config.permission_levels) %>
+      <%= f.submit :value => "Save", :name=> "new_permission", :id => "new_permission"  %>
+    </div>
+  </div>
+<% end %>
+
+<%= form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => 'generic_file[permissions][new_user_name]_form', :class => 'form-horizontal'} do |f| %>
+  <div class="control-group" id="new-user"> 
+    <%= label_tag 'generic_file[permissions][new_user_name]', "User", :class=>"control-label" %>
+    <div class="controls">
+      <%= text_field_tag 'generic_file[permissions][new_user_name]' %>
+      <%= select_tag 'generic_file[permissions][new_user_permission]', options_for_select(ScholarSphere::Application::config.permission_levels) %>
+      <%= f.submit :value => "Save", :name=> "new_permission", :id => "new_permission"  %>
+    </div>
+  </div>
+<% end %>
+
