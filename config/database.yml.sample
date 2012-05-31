@@ -32,7 +32,7 @@ production:
 # If using MySQL, uncomment this block
 ############################
 #development:
-#  adapter: mysql
+#  adapter: mysql2
 #  encoding: utf8
 #  pool: 5
 #  timeout: 5000
@@ -46,7 +46,7 @@ production:
 ## re-generated from your development database when you run 'rake'.
 ## Do not set this db to the same as development or production.
 #test: &test
-#  adapter: mysql
+#  adapter: mysql2
 #  encoding: utf8
 #  pool: 5
 #  timeout: 5000
@@ -57,7 +57,7 @@ production:
 #  socket: /path/to/mysql.sock
 #
 #production:
-#  adapter: mysql
+#  adapter: mysql2
 #  encoding: utf8
 #  pool: 5
 #  timeout: 5000

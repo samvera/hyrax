@@ -3,13 +3,11 @@ source 'http://rubygems.org'
 gem 'rails', '~> 3.2.3'
 
 gem 'sqlite3', '~> 1.3.6'
-gem 'mysql', '~> 2.8.1'
+gem 'mysql2'
 gem 'blacklight', '~> 3.3.2'
 gem 'hydra-head', '~> 4.0.1'
 gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
-# adding for messaging the user whn a delayed job fails
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git' 
-#gem 'mailboxer'
 gem 'execjs'
 gem 'therubyracer'
 

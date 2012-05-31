@@ -16,11 +16,12 @@ Installation Instructions
 Install system dependencies
   
  * libmysqlclient-dev (if running MySQL as RDBMS)
+ * libmysql-ruby (if running MySQL as RDBMS)
  * libsqlite3-dev (if running SQLite as RDBMS)
- * [FITS](http://code.google.com/p/fits/) -- put it in a
-  directory on your PATH
  * libmagick-dev
  * libmagickwand-dev
+ * [FITS](http://code.google.com/p/fits/) -- put it in a
+  directory on your PATH
 
 Copy and *edit* database, Fedora, and Solr configs
 
