@@ -151,7 +151,7 @@ namespace :hyhead do
       errors << 'Error generating default blacklight install' unless $?.success?
       
       puts "generating default hydra-head install"
-      puts %x[rails generate hydra:head -df]  # using -f to force overwriting of solr.yml
+      puts %x[rails generate hydra:head -f]  # using -f to force overwriting of solr.yml
       errors << 'Error generating default hydra-head install' unless $?.success?
 
       # set log_level to :warn in the test app's test environment. (:debug is too verbose)
