@@ -10,7 +10,30 @@ describe CatalogController do
   after do
     @user.delete
   end
-  
+  describe "#index" do
+    describe "term search" do
+      before do
+          xhr :get, :index, :q =>"pdf"        
+      end
+      it "should find pdf files" do
+        response.should be_success
+        response.should render_template('catalog/index')        
+        assigns(:document_list).count.should eql(1)
+        assigns(:document_list)[0].fetch(:generic_file__title_t)[0].should eql('Test Document PDF')
+      end
+    end
+    describe "facet search" do
+      before do
+          xhr :get, :index, :fq=>"{!raw f=generic_file__contributor_facet}Contrib1"       
+      end
+      it "should find facet files" do
+        response.should be_success
+        response.should render_template('catalog/index')        
+        assigns(:document_list).count.should eql(4)
+      end
+    end
+  end  
+
   describe "#recent" do
     before do
         @gf1 = GenericFile.create(title:'Generic File 1', contributor:'contributor 1', resource_type:'type 1', discover_groups:['public'])
