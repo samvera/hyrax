@@ -45,7 +45,6 @@ describe CatalogController do
 
   describe "#recent" do
     before do
-      GenericFile.any_instance.expects(:characterize_if_changed).at_least_once.yields
       @gf1 = GenericFile.create(title:'Generic File 1', contributor:'contributor 1', resource_type:'type 1', discover_groups:['public'])
       sleep 1 # make sure next file is not at the same time compare
       @gf2 = GenericFile.create(title:'Generic File 2', contributor:'contributor 2', resource_type:'type 2', discover_groups:['public'])
