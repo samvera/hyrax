@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CatalogController do
   before do
+    GenericFile.any_instance.stubs(:characterize_if_changed).yields
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
@@ -10,25 +11,34 @@ describe CatalogController do
     @user.delete
   end
   describe "#index" do
+    before (:all) do
+       @gf1 =  GenericFile.create(title:'Test Document PDF', filename:'test.pdf', discover_groups:['public'])
+       @gf2 =  GenericFile.create(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', discover_groups:['public'])
+    end
+    after (:all) do
+      @gf1.delete
+      @gf2.delete
+    end
     describe "term search" do
+
       before do
-          xhr :get, :index, :q =>"pdf"        
+         xhr :get, :index, :q =>"pdf"        
       end
       it "should find pdf files" do
         response.should be_success
-        response.should render_template('catalog/index')        
+        response.should render_template('catalog/index')
         assigns(:document_list).count.should eql(1)
         assigns(:document_list)[0].fetch(:generic_file__title_t)[0].should eql('Test Document PDF')
       end
     end
     describe "facet search" do
       before do
-          xhr :get, :index, :fq=>"{!raw f=generic_file__contributor_facet}Contrib1"       
+        xhr :get, :index, :fq=>"{!raw f=generic_file__contributor_facet}Contrib1"       
       end
       it "should find facet files" do
         response.should be_success
         response.should render_template('catalog/index')        
-        assigns(:document_list).count.should eql(4)
+        assigns(:document_list).count.should eql(2)
       end
     end
   end  
