@@ -16,7 +16,6 @@ Installation Instructions
 Install system dependencies
   
  * libmysqlclient-dev (if running MySQL as RDBMS)
- * libmysql-ruby (if running MySQL as RDBMS)
  * libsqlite3-dev (if running SQLite as RDBMS)
  * libmagick-dev
  * libmagickwand-dev
