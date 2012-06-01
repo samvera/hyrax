@@ -176,39 +176,15 @@ namespace :scholarsphere do
     # We need to just start rails so that all the models are loaded
   end
 
-
   namespace :fixtures do
     @localDir = 'test_support/fixtures'
-    if ENV["FIXTURE_DIR"]
-          @dir= ENV["FIXTURE_DIR"]
-    else
-          @dir= 'scholarsphere'
-    end
-
-    @fixtures = [
-        "not-changed"
-    ]
+    @dir = ENV["FIXTURE_DIR"] || 'scholarsphere'
 
     desc "Create ScholarSphere Hydra fixtures for generation and loading"
     task :create => :environment do
-      
-      if ENV["FIXTURE_ID"]
-         @id= ENV["FIXTURE_ID"]
-      else
-         @id= 'scholarsphere1'
-      end
-
-      if ENV["FIXTURE_TITLE"]
-         @title= ENV["FIXTURE_TITLE"]
-      else
-         @title= 'scholarsphere test'
-      end
-
-      if ENV["FIXTURE_USER"]
-         @user= ENV["FIXTURE_USER"]
-      else
-         @user= 'archivist1'
-      end
+      @id = ENV["FIXTURE_ID"] ||'scholarsphere1'
+      @title = ENV["FIXTURE_TITLE"] || 'scholarsphere test'
+      @user = ENV["FIXTURE_USER"] || 'archivist1'
 
       @root ='<%=Rails.root%>'
 
@@ -223,50 +199,39 @@ namespace :scholarsphere do
       run_erb_stub @inputFoxmlFile, @outputFoxmlFile
       run_erb_stub @inputDescFile, @outputDescFile
       run_erb_stub @inputTxtFile, @outputTxtFile
-
     end
-
 
     desc "Generate default ScholarSphere Hydra fixtures"
     task :generate do
       ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
-      find_fixtures_erb @dir
-      @fixtures.each do |fixture|
-        if fixture.index('generic_stub') == nil 
-            print "input file: ",fixture, "\n"
-            @outFile = fixture.sub('foxml.erb','foxml.xml')
-            print "output file: ", @outFile, "\n"
-            File.open(@outFile, "w+") do |f|
-              f.write(ERB.new(get_erb_template fixture).result())
-            end
+      fixtures = find_fixtures_erb(@dir)
+      fixtures.each do |fixture|
+        unless fixture.include?('generic_stub')
+          outFile = fixture.sub('foxml.erb','foxml.xml')
+          File.open(outFile, "w+") do |f|
+            f.write(ERB.new(get_erb_template fixture).result())
+          end
         end
       end
     end
-
    
     desc "Load default ScholarSphere Hydra fixtures"
     task :load do
       ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
-      find_fixtures @dir
-      @noFixtures = true
-      @fixtures.each do |fixture|
-        print fixture, "\n"
+      fixtures = find_fixtures(@dir)
+      fixtures.each do |fixture|
         ENV["pid"] = fixture
         Rake::Task["repo:load"].reenable
         Rake::Task["repo:load"].invoke
-        @noFixtures = false;
       end
-      if @noFixtures
-          print "No fixtures found you may need to generate from erb use:\n     rake scholarsphere:fixtures:generate\n"
-      end
+      raise "No fixtures found; you may need to generate from erb, use: rake scholarsphere:fixtures:generate" if fixtures.empty?
     end
 
     desc "Remove default ScholarSphere Hydra fixtures"
     task :delete do
       ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
-      find_fixtures @dir
-      @fixtures.each do |fixture|
-        print fixture, "\n"
+      fixtures = find_fixtures(@dir)
+      fixtures.each do |fixture|
         ENV["pid"] = fixture
         Rake::Task["repo:delete"].reenable
         Rake::Task["repo:delete"].invoke
@@ -278,35 +243,25 @@ namespace :scholarsphere do
 
     private
 
-
-    def run_erb_stub( inputFile, outputFile)
-      print "input Fixture file: ", inputFile, "\n"
-      print "output Fixture file: ", outputFile, "\n"
+    def run_erb_stub(inputFile, outputFile)
       File.open(outputFile, "w+") do |f|
-         f.write(ERB.new(get_erb_template inputFile).result())
+        f.write(ERB.new(get_erb_template inputFile).result())
       end
     end
 
     def find_fixtures(dir)
-       @fixtures = []
-       Dir.glob(File.join(Rails.root, @localDir, dir, '*.foxml.xml')).each do |fixture_file|
-          @fixtures <<  File.basename(fixture_file, '.foxml.xml').gsub('_',':')
-       end
+      Dir.glob(File.join(Rails.root, @localDir, dir, '*.foxml.xml')).map do |fixture_file|
+        File.basename(fixture_file, '.foxml.xml').gsub('_',':')
+      end
     end
     
     def find_fixtures_erb(dir)
-       @fixtures = []
-       Dir.glob(File.join(Rails.root, @localDir, dir, '*.foxml.erb')).each do |fixture_file|
-          @fixtures <<  fixture_file
-       end
+      Dir.glob(File.join(Rails.root, @localDir, dir, '*.foxml.erb'))
     end
-
-
 
     def get_erb_template(file)
       File.read(file)
     end
-
   end
 end
   

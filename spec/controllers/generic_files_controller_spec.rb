@@ -54,8 +54,6 @@ describe GenericFilesController do
       b = Batch.create(pid: "sample:batch_id")
       b.generic_files.first.pid.should == "test:123"
     end
-
-    
   end
 
   describe "audit" do
@@ -102,25 +100,32 @@ describe GenericFilesController do
 
       assigns[:generic_file].read_groups.should == ["group3"]
     end
-
   end
   
-  describe "edit" do
-    describe "edit someone elses files" do
-      render_views      
+  describe "someone elses files" do
+    before(:all) do
+      f = GenericFile.new(:pid => 'scholarsphere:test5')
+      f.apply_depositor_metadata('archivist1')
+      f.set_title_and_label('world.png')
+      f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content', :mimeType => 'image/png')
+      f.expects(:characterize_if_changed).yields
+      f.save
+    end    
+    after(:all) do
+      GenericFile.find('scholarsphere:test5').delete
+    end
+    describe "edit" do
       it "should give me a flash error" do
-         get :edit, id:"test5"
-         flash[:notice].should_not be_empty
-         flash[:notice].should include("You do not have sufficient privileges to edit this document")
-         # I am not sure what is supposed to happen with the flash message here.  From my (limited) 
-         # understanding, flash[:notice] will be cleared upon requests and since the render_views
-         # was only called once, the flash[:notice] was not being cleared.  Do we want the flash message
-         # cleared or not?  If so, from what I've read then we would want to use:
-         # flash.now[:notice] = "our flash message"
-         # This was my method to get around the failing rspec test because I wasn't sure what our intention
-         # was
-         get :show, id:"test5"
-         flash[:notice].should be_nil
+        #render_views
+        get :edit, id:"test5"
+        flash[:notice].should_not be_empty
+        flash[:notice].should include("You do not have sufficient privileges to edit this document")
+      end
+    end
+    describe "view" do
+      it "should show me the file" do
+        get :show, id:"test5"
+        flash[:notice].should be_nil
       end
     end    
   end

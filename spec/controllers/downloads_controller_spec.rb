@@ -1,10 +1,23 @@
 require 'spec_helper'
 
 describe DownloadsController do
+
+  before(:all) do
+    f = GenericFile.new(:pid => 'scholarsphere:test1')
+    f.apply_depositor_metadata('archivist1')
+    f.set_title_and_label('world.png')
+    f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content', :mimeType => 'image/png')
+    f.expects(:characterize_if_changed).yields
+    f.save
+  end
+
+  after(:all) do
+    GenericFile.find('scholarsphere:test1').delete
+  end
   
   describe "routing" do
     it "should route" do
-      assert_recognizes( {:controller=>"downloads", :action=>"show", "id"=>"scholarsphere:test1"}, "/downloads/scholarsphere:test1?filename=my%20dog.jpg" )
+      assert_recognizes( {:controller=>"downloads", :action=>"show", "id"=>"test1"}, "/downloads/test1?filename=my%20dog.jpg" )
     end
   end
   
@@ -18,29 +31,29 @@ describe DownloadsController do
         DownloadsController.default_content_dsid.should == "content"
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
-        controller.expects(:send_data).with(expected_content, {:filename => 'Test Data 1.txt', :type => 'text/plain'})
-        get "show", :id=>"scholarsphere:test1"   
+        controller.expects(:send_data).with(expected_content, {:filename => 'world.png', :type => 'image/png'})
+        get "show", :id => "test1"
         response.should be_success         
       end
       it "should return requested datastreams" do
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").descMetadata.content
-        controller.expects(:send_data).with(expected_content, {:filename => 'descMetadata',:type=>"text/plain"})
-        get "show", :id=>"scholarsphere:test1", :datastream_id=>"descMetadata"
+        controller.expects(:send_data).with(expected_content, {:filename => 'descMetadata',:type => "text/plain"})
+        get "show", :id => "test1", :datastream_id => "descMetadata"
         response.should be_success 
       end
       it "should support setting disposition to inline" do
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
-        controller.expects(:send_data).with(expected_content, {:filename => 'Test Data 1.txt', :type => 'text/plain', :disposition=>"inline"})
-        get "show", :id=>"scholarsphere:test1", :disposition=>"inline"
+        controller.expects(:send_data).with(expected_content, {:filename => 'world.png', :type => 'image/png', :disposition => "inline"})
+        get "show", :id => "test1", :disposition => "inline"
         response.should be_success
       end
       it "should allow you to specify filename for download" do
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
-        controller.expects(:send_data).with(expected_content, {:filename=>"my%20dog.txt", :type => 'text/plain'}) 
-        get "show", :id=>"scholarsphere:test1", "filename"=>"my%20dog.txt"
+        controller.expects(:send_data).with(expected_content, {:filename => "my%20dog.png", :type => 'image/png'}) 
+        get "show", :id => "test1", "filename" => "my%20dog.png"
       end
     end
   end
@@ -52,10 +65,9 @@ describe DownloadsController do
     end
     describe "show" do
       it "should deny access" do
-        get "show", :id=>"scholarsphere:test1"
+        get "show", :id => "test1"
         response.should redirect_to(catalog_path)        
       end
     end
   end
-  
 end

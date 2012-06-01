@@ -3,6 +3,7 @@ require 'spec_helper'
 describe AuditJob do
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
+    GenericFile.any_instance.expects(:characterize_if_changed).yields
     @file = GenericFile.create
     @ds = @file.datastreams.first
     @job = AuditJob.new(@user, @file.pid, @ds[0], @ds[1].versionID)

@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Batch do
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
+    GenericFile.any_instance.expects(:characterize_if_changed).yields
     @file = GenericFile.create
     @batch = Batch.create(:title => "test collection",
                           :creator => @user.login,
@@ -36,6 +37,7 @@ describe Batch do
     @batch.part << gf.pid
     @batch.save
     @batch.part.should == [@file.pid, gf.pid]
+    gf.delete
   end
   it "should support to_solr" do
     @batch.to_solr.should_not be_nil

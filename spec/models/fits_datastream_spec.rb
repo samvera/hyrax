@@ -1,12 +1,15 @@
 require 'spec_helper'
 
 describe FitsDatastream do
-  before do
+  before(:all) do
     @file = GenericFile.new
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.save
     Delayed::Worker.new.work_off
     @file = GenericFile.find(@file.pid)    
+  end
+  after(:all) do
+    @file.delete
   end
   it "should have a format label" do
     @file.format_label.should == ["Portable Network Graphics"]
