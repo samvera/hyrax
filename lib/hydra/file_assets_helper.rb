@@ -22,9 +22,9 @@ module Hydra::FileAssetsHelper
   # Puts the contents of params[:Filedata] (posted blob) into a datastream within the given @asset
   # Sets asset label and title to filename if they're empty
   #
-  # @param [FileAsset] the File Asset to add the blob to
-  # @return [FileAsset] the File Asset  
-  def add_posted_blob_to_asset(asset,file)
+  # @param [FileAsset] asset the File Asset to add the blob to
+  # @return [FileAsset] file the File Asset  
+  def add_posted_blob_to_asset(asset, file)
     #file_name = filename_from_params
     file_name = file.original_filename
     options = {:label=>file_name, :mimeType=>mime_type(file_name)}

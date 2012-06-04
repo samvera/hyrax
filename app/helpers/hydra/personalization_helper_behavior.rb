@@ -35,7 +35,7 @@ module Hydra::PersonalizationHelperBehavior
 
   # Retrieves an attribute from the user
   # @param [string] login the login of the user
-  # @param [string] the name of the attribute: out of the box values are first_name, last_name, full_name, affiliation, and photo
+  # @param [string] attribute the name of the attribute: out of the box values are first_name, last_name, full_name, affiliation, and photo
   def get_user_attribute login, attribute
     user = User.find_by_login(login) 
     user.nil? ? "" : user.send(attribute.to_sym)

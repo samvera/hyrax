@@ -102,7 +102,7 @@ module Hydra
       end
 
       # Grant discover permissions to the groups specified. Revokes discover permission for all other users.
-      # @param[String] groups a list of usernames
+      # @param[String] users a list of usernames
       # @example
       #  r.discover_users_string= 'one, two, three'
       #  r.discover_users 
@@ -203,7 +203,7 @@ module Hydra
       end
 
       # Grant read permissions to the groups specified. Revokes read permission for all other users.
-      # @param[String] groups a list of usernames
+      # @param[String] users a list of usernames
       # @example
       #  r.read_users_string= 'one, two, three'
       #  r.read_users 
@@ -330,9 +330,9 @@ module Hydra
       # @param  type either :person or :group
       # @param  values  Values to set
       # @param  changeable Values we are allowed to change
-      def set_entities(permission, type, values, changable)
+      def set_entities(permission, type, values, changeable)
         g = preserved(type, permission)
-        (changable - values).each do |entity|
+        (changeable - values).each do |entity|
           #Strip permissions from users not provided
           g[entity] = 'none'
         end
