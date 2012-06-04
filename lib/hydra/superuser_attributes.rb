@@ -1,10 +1,9 @@
 # @deprecated no longer doing permissions this way.  Will be removed no later than release 6.x
+require 'deprecation'
 module Hydra::SuperuserAttributes
+  extend Deprecation
 
-  def self.included(base)
-    ActiveSupport::Deprecation.warn("Hydra::SuperuserAttributes has been deprecated and will be removed no later than release 6.  Use devise or similar.")
-    super
-  end
+  self.deprecation_horizon = 'hydra-head 5.x'
 
   def can_be_superuser?
     Superuser.find_by_user_id(self.id) ? true : false
@@ -14,5 +13,8 @@ module Hydra::SuperuserAttributes
     return false if session.nil?
     session[:superuser_mode] ? true : false
   end
+
+  deprecation_deprecate :can_be_superuser?
+  deprecation_deprecate :is_being_superuser?
 
 end
