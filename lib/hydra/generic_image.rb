@@ -92,11 +92,11 @@ module Hydra::GenericImage
   end
 
   def admin_site
-    @admin_site ||= Fedora::Repository.instance.send(:connection).site.to_s.gsub(/fedora$/,"")
+    @admin_site ||=  ActiveFedora::Base.connection_for_pid(pid).client.url.gsub(/[^\/]+$/,"")
   end
 
   def datastream_url ds_name="content"
-    "#{admin_site}fedora/objects/#{pid}/datastreams/#{ds_name}/content"
+    ActiveFedora::Base.connection_for_pid(pid).client.url + "/objects/#{pid}/datastreams/#{ds_name}/content"
   end
 
 end
