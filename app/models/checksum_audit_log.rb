@@ -12,7 +12,7 @@ class ChecksumAuditLog < ActiveRecord::Base
     # Simple way (a little naieve): if the last 2 were passing, delete the first one
     logs = GenericFile.find(version.pid).logs(version.dsid)
     list = logs.limit(2)
-    if list.size > 1 && list[0].pass && list[1].pass
+    if list.size > 1 && (list[0].pass == 1) && (list[1].pass == 1)
       list[0].delete 
     end
   end
