@@ -1,10 +1,12 @@
+require 'deprecation'
 module Hydra
   module BlacklightHelperBehavior
+    extend Deprecation
     include Blacklight::BlacklightHelperBehavior
     
+    self.deprecation_horizon = 'hydra-head 5.x'
+    
     def get_data_with_linked_label(doc, label, field_string, opts={})
-      ActiveSupport::Deprecation.warn("get_data_with_linked_label is deprecated and will be removed in the next release")
-     
       (opts[:default] and !doc[field_string]) ? field = opts[:default] : field = doc[field_string]
       delim = opts[:delimiter] ? opts[:delimiter] : "<br/>"
       if doc[field_string]
@@ -20,11 +22,12 @@ module Hydra
         text
       end
     end
+    deprecation_deprecate :get_data_with_linked_label
     
     def linked_label(field, field_string)
-      ActiveSupport::Deprecation.warn("linked_label is deprecated and will be removed in the next release")
       link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
     end
+    deprecation_deprecate :linked_label
 
     # currently only used by the render_document_partial helper method (below)
     def document_partial_name(document)
@@ -40,19 +43,17 @@ module Hydra
     end
     
     def render_complex_facet_value(facet_solr_field, item, options ={})    
-      ActiveSupport::Deprecation.warn("render_complex_facet_value is deprecated and will be removed in the next release")
       link_to_unless(options[:suppress_link], format_item_value(item.value), add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" 
     end
+    deprecation_deprecate :render_complex_facet_value
 
     def render_journal_facet_value(facet_solr_field, item, options ={})
-      ActiveSupport::Deprecation.warn("render_journal_facet_value is deprecated and will be removed in the next release")
-
       val = item.value.strip.length > 12 ? item.value.strip[0..12].concat("...") : item.value.strip
       link_to_unless(options[:suppress_link], val, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" 
     end
+    deprecation_deprecate :render_journal_facet_value
 
     def render_complex_facet_image(facet_solr_field, item, options = {})
-      ActiveSupport::Deprecation.warn("render_complex_facet_image is deprecated and will be removed in the next release")
       computing_id = extract_computing_id(item.value)
       if File.exists?("#{Rails.root}/public/images/faculty_images/#{computing_id}.jpg")
         img = image_tag "/images/faculty_images/#{computing_id}.jpg", :width=> "100", :alt=>"#{item.value}"
@@ -61,9 +62,9 @@ module Hydra
       end
       link_to_unless(options[:suppress_link], img, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select facet_image") 
     end
+    deprecation_deprecate :render_complex_facet_image
 
     def render_journal_image(facet_solr_field, item, options = {})
-      ActiveSupport::Deprecation.warn("render_journal_image is deprecated and will be removed in the next release")
       if File.exists?("#{Rails.root}/public/images/journal_images/#{item.value.strip.downcase.gsub(/\s+/,'_')}.jpg")
         img = image_tag "/images/journal_images/#{item.value.strip.downcase.gsub(/\s+/,'_')}.jpg", :width => "100"
       else
@@ -72,9 +73,9 @@ module Hydra
 
       link_to_unless(options[:suppress_link], img, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") 
     end
+    deprecation_deprecate :render_journal_image
 
     def get_randomized_display_items items
-      ActiveSupport::Deprecation.warn("get_randomized_display_items is deprecated and will be removed in the next release")
       clean_items = items.each.inject([]) do |array, item|
         array << item unless item.value.strip.blank?
         array
@@ -86,17 +87,16 @@ module Hydra
         rdi = clean_items.sort_by {rand}.slice(0..5)
         return rdi.sort_by {|item| item.value.downcase}
       end
-
     end
+    deprecation_deprecate :get_randomized_display_items
 
     def extract_computing_id val
-      ActiveSupport::Deprecation.warn("extract_computing_id is deprecated and will be removed in the next release")
       cid = val.split(" ")[-1]
       cid[1..cid.length-2]
     end
+    deprecation_deprecate :extract_computing_id
 
     def format_item_value val
-      ActiveSupport::Deprecation.warn("format_item_value is deprecated and will be removed in the next release")
       begin
         last, f_c = val.split(", ")
         first = f_c.split(" (")[0]
@@ -105,6 +105,7 @@ module Hydra
       end
       [last, "#{first[0..0]}."].join(", ")
     end
+    deprecation_deprecate :format_item_value
 
   #   COPIED from vendor/plugins/blacklight/app/helpers/application_helper.rb
     # Used in catalog/facet action, facets.rb view, for a click

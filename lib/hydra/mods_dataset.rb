@@ -1,14 +1,17 @@
 # @deprecated -- this will be removed in 5.x release
 require "uva/mods_index_methods"
+require 'deprecation'
 module Hydra
+  extend Deprecation
+
+  self.deprecation_horizon = 'hydra-head 5.x'
 
   class ModsDataset < ActiveFedora::NokogiriDatastream
     include Hydra::CommonModsIndexMethods
 
     def initialize(digital_object, dsid, options={})
-      ActiveSupport::Deprecation.warn("Hydra::ModsDataset has been deprecated. Use Hydra::Datastream::ModsDataset instead")
+      Deprecation.warn("Hydra::ModsDataset has been deprecated. Use Hydra::Datastream::ModsDataset instead")
       super
-
     end
 
     set_terminology do |t|

@@ -2,8 +2,8 @@
 
     <%= render :partial=>"/add_assets_links" %>
   
-    <% if current_user.can_be_superuser? %>
-      <% if current_user.is_being_superuser?(session) %>
+    <% if Deprecation.silence(Hydra::SuperuserAttributes) { current_user.can_be_superuser? } %>
+      <% if Deprecation.silence(Hydra::SuperuserAttributes) { current_user.is_being_superuser?(session) } %>
         <%= link_to "Stop being superuser", superuser_path %>
       <% else %>
         <%= link_to "Become superuser", superuser_path %>

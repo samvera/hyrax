@@ -5,8 +5,8 @@ describe BlacklightHelper do
   describe "Overridden blacklight methods" do
     describe "document_partial_name" do
 
-      it "Should lop off everything before the first colin after the slash" do
-    @config = Blacklight::Configuration.new.configure do |config|
+    it "Should lop off everything before the first colin after the slash" do
+      @config = Blacklight::Configuration.new.configure do |config|
       config.show.display_type = 'has_model_s'
     end
         helper.stubs(:blacklight_config).returns(@config)
@@ -38,6 +38,13 @@ describe BlacklightHelper do
   
   describe "SALT methods" do
     describe "get_data_with_linked_label" do
+      before(:all) do
+        @orig_deprecation_behavior = Hydra::BlacklightHelperBehavior.deprecation_behavior
+        Hydra::BlacklightHelperBehavior.deprecation_behavior = :silence
+      end
+      after(:all) do
+        Hydra::BlacklightHelperBehavior.deprecation_behavior = @orig_deprecation_behavior
+      end
       before(:each) do
         @doc = {"field"=>["Item1","Item2","Item3"]}
       end

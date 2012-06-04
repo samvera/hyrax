@@ -2,8 +2,16 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require "active_fedora"
 
 describe User do
-  
+
   describe "superuser" do
+    before(:all) do
+      @orig_deprecation_behavior = Hydra::SuperuserAttributes.deprecation_behavior
+      Hydra::SuperuserAttributes.deprecation_behavior = :silence
+    end
+    after(:all) do
+      Hydra::SuperuserAttributes.deprecation_behavior = @orig_deprecation_behavior
+    end
+
     before(:each) do
       @user = User.create(:email=> "testuser@example.com", :password=> "password", :password_confirmation => "password")
     end

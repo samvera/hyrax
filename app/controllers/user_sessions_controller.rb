@@ -4,7 +4,7 @@ class UserSessionsController < ApplicationController
   def superuser
     if session[:superuser_mode]
       session[:superuser_mode] = nil
-    elsif current_user.can_be_superuser?
+    elsif Deprecation.silence(Hydra::SuperuserAttributes) { current_user.can_be_superuser? }
       session[:superuser_mode] = true
     end
     redirect_to :back

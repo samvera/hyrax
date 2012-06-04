@@ -1,11 +1,15 @@
 # @deprecated no longer used.  Will be removed no later than release 6.x
 # Custom pagination renderer
 # Call using will_paginate(@results, :renderer => 'PrevNextLinks')
+require 'deprecation'
 class PrevNextLinks < WillPaginate::LinkRenderer
+  extend Deprecation
   
-  def initialize
-    ActiveSupport::Deprecation.warn("PrevNextLinks is deprecated and will be removed in release 5 or 6; we are no longer doing custom pagination.")
-    super
+  self.deprecation_horizon = 'hydra-head 5.x'
+
+  def initialize(app)
+    Deprecation.warn("PrevNextLinks has been deprecated; it will be removed from HydraHead no later than release 6.")
+    @app = app
   end
 
   def to_html
@@ -24,5 +28,6 @@ class PrevNextLinks < WillPaginate::LinkRenderer
     html = links.join(@options[:separator])
     @options[:container] ? @template.content_tag(:div, html, html_attributes) : html
   end
+  deprecation_deprecate :to_html
   
 end

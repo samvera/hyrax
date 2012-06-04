@@ -1,9 +1,8 @@
+require 'deprecation'
 module Hydra::GenericUserAttributes
+  extend Deprecation
 
-  def self.included(base)
-    ActiveSupport::Deprecation.warn("Hydra::GenericUserAttributes has been deprecated and will be removed no later than release 6.  Use devise or similar.")
-    super
-  end
+  self.deprecation_horizon = 'hydra-head 5.x'
 
   USER_ATTRIBUTES = ['first_name','last_name','full_name','affiliation','photo']
 
@@ -15,14 +14,17 @@ module Hydra::GenericUserAttributes
       def #{m}
         get_user_attribute "#{m}"
       end
+      deprecation_deprecate :#{m}
     EOM
   end
 
+  
   # Retrieves the UserAttribute object for the user.  This defaults to the packaged ActiveRecord object, but can be overwritten with #user_attributes=
   # @return an object containing the user's attributes.  If providing a localized class, be sure to include the default attributes of first_name, last_name, full_name, affiliation and photo.
   def user_attributes
     @user_attributes ||= user_attribute
   end
+  deprecation_deprecate :user_attributes
 
   private
 
