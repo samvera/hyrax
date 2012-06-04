@@ -80,7 +80,7 @@ class GenericFile < ActiveFedora::Base
 
   around_save :characterize_if_changed
 
-  NO_RUNS = 'No audits run'
+  NO_RUNS = 999
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -246,22 +246,20 @@ class GenericFile < ActiveFedora::Base
     audit(true)
   end
   
-  def audit_stat(force = true)
+  def audit_stat!
+    audit_stat(true)
+  end
+  
+  def audit_stat(force = false)
     logs = audit(force)
-    logger.info "*****"
-    logger.info logs.inspect
-    logger.info "*****"
     audit_results = logs.collect { |result| result["pass"] }
-    logger.info "!*****"
-    logger.info audit_results.inspect
-    logger.info "!*****"
     
     # check how many non runs we had
     non_runs =audit_results.reduce(0) { |sum, value| (value == NO_RUNS) ? sum = sum+1 : sum }
-    if (non_runs == audit_results.length)
+    if (non_runs == 0)
       result =audit_results.reduce(true) { |sum, value| sum && value }
       return result
-    elsif (non_runs > 0)
+    elsif (non_runs < audit_results.length)
       result =audit_results.reduce(true) { |sum, value| (value == NO_RUNS) ? sum : sum && value }
       return 'Some audits have not been run, but the ones run where '+ (result)? 'passing' : 'failing' + '.'
     else 
@@ -274,7 +272,6 @@ class GenericFile < ActiveFedora::Base
     self.per_version do |ver| 
       logs << GenericFile.audit(ver, force)
     end
-    logger.info "logs from audit #{logs.inspect}"
     logs
   end
 
