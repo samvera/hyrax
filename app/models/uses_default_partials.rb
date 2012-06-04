@@ -12,9 +12,10 @@ class UsesDefaultPartials < ActiveFedora::Base
 
   has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
   
-  # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
-  #  FIXME:  should this have   "include Hydra::ModelMixins::CommonMetadata" instead?
-  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
+  # declares a rightsMetadata datastream with type Hydra::Datastream::RightsMetadata
+  #  basically, it is another expression of
+  #  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
+  include Hydra::ModelMixins::CommonMetadata
 
   # adds helpful methods for basic hydra objects.  
   include Hydra::ModelMethods
