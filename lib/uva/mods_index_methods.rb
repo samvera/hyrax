@@ -1,4 +1,4 @@
-# @deprecated.  Leftover from Hydrangea; will be removed in release 5.x
+# @deprecated  Leftover from Hydrangea; will be removed in release 5.x
 module Uva
   module ModsIndexMethods
 

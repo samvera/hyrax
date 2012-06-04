@@ -1,4 +1,4 @@
-# @deprecated.  Leftover from Hydrangea; will be removed in release 5.x
+# @deprecated  Leftover from Hydrangea; will be removed in release 5.x
 # 
 # Stanford SolrHelper is a controller layer mixin. It is in the controller scope: request params, session etc.
 # 
