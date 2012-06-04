@@ -1,6 +1,6 @@
 ﻿ScholarSphere
 =============
-ScholarSphere is a Ruby on Rails application utilizing the Blacklight and Hydra-head gems for integration with the search & indexing system, Solr, and the digital asset management platform, Fedora Commons.
+ScholarSphere is a Ruby on Rails application utilizing the Blacklight and Hydra-head gems for integration with the search & indexing system, Solr, and the digital asset management platform, Fedora Commons.  The application runs on Fedora 3.4.2 and Solr 3.5.0.
 
 ScholarSphere is being developed as part of
 [Penn State's Digital Stewardship Program](http://stewardship.psu.edu/).
@@ -17,10 +17,10 @@ Install system dependencies
   
  * libmysqlclient-dev (if running MySQL as RDBMS)
  * libsqlite3-dev (if running SQLite as RDBMS)
- * [FITS](http://code.google.com/p/fits/) -- put it in a
-  directory on your PATH
  * libmagick-dev
  * libmagickwand-dev
+ * [FITS](http://code.google.com/p/fits/) -- put it in a
+  directory on your PATH
 
 Copy and *edit* database, Fedora, and Solr configs
 

@@ -1,0 +1,17 @@
+<script type = "text/javascript"> 
+$(document).ready(function() { 
+   $('#recent_doc_link').click();
+   // periodically update the recent documents
+   setInterval( function() { $('#recent_doc_link').click();}, 30*1000 ); 
+}); 
+</script>
+<div>
+    <div class='hidden'>
+       <%= link_to "Recent", :catalog_recent_path, :remote => true, :id => 'recent_doc_link' %>
+    </div> 
+    
+    <div id="recent_docs">
+        <%= render :partial => "recent_document", :collection => @recent_documents %>
+    </div>
+
+</div>

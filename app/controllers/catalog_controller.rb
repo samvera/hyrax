@@ -16,6 +16,11 @@ class CatalogController < ApplicationController
   CatalogController.solr_search_params_logic << :exclude_unwanted_models
 
   skip_before_filter :default_html_head
+  
+  def recent
+      (resp, doc_list) = get_search_results(:q =>'', :sort=>"system_create_dt desc", :rows=>3)
+      @recent_documents = doc_list[0..3]
+  end
 
 #####################
 # jgm testing start #

@@ -14,7 +14,7 @@ ScholarSphere::Application.routes.draw do
       post 'permissions'
     end
   end
-  
+ 
   
   resources :downloads, :only=>"show" 
 
@@ -22,10 +22,13 @@ ScholarSphere::Application.routes.draw do
 
   match 'dashboard' => 'dashboard#index', :as => :dashboard
 
+
   match 'authorities/:model/:term' => 'authorities#query'
 
   match 'batches/:id/edit' => 'batch#edit', :as => :batch_edit
   match 'batches/:id/' => 'batch#update', :as => :batch_generic_files
+
+  match "/catalog_recent" => "catalog#recent", :as => :catalog_recent_path
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

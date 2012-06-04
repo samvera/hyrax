@@ -10,6 +10,7 @@ describe FileContentDatastream do
     before(:all) do
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      f.expects(:characterize_if_changed).yields
       f.save
       @file = GenericFile.find(f.pid)
     end
@@ -34,6 +35,7 @@ describe FileContentDatastream do
     describe "add a version" do
       before(:all) do
         @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+        @file.expects(:characterize_if_changed).yields
         @file.save
       end
       it "should return two versions" do

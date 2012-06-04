@@ -21,8 +21,8 @@ class GenericFile < ActiveFedora::Base
   delegate :description, :to => :descMetadata
   delegate :publisher, :to => :descMetadata
   delegate :date_created, :to => :descMetadata
-  delegate :date_uploaded, :to => :descMetadata
-  delegate :date_modified, :to => :descMetadata
+  delegate :date_uploaded, :to => :descMetadata, :unique => true
+  delegate :date_modified, :to => :descMetadata, :unique => true
   delegate :subject, :to => :descMetadata
   delegate :language, :to => :descMetadata
   delegate :date, :to => :descMetadata
@@ -80,7 +80,7 @@ class GenericFile < ActiveFedora::Base
 
   around_save :characterize_if_changed
 
-  NO_RUNS = 'No audits run'
+  NO_RUNS = 999
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -171,16 +171,15 @@ class GenericFile < ActiveFedora::Base
     terms = self.characterization_terms
     ScholarSphere::Application.config.fits_to_desc_mapping.each_pair do |k, v|
       if terms.has_key?(k)
-        proxy_term = self.send(v)
         # coerce to array to remove a conditional
         terms[k] = [terms[k]] unless terms[k].is_a? Array
         terms[k].each do |term_value|
           # these are single-valued terms which cannot be appended to
           # TODO: handle this more elegantly and extensibly
-          #if [:date_modified, :date_uploaded].include? v
-          if [:TODO].include? v
-            proxy_term = term_value
+          if [:date_modified, :date_uploaded].include? v
+            self.send("#{v}=", term_value)
           else
+            proxy_term = self.send(v)
             proxy_term << term_value unless proxy_term.include?(term_value)
           end
         end
@@ -247,22 +246,20 @@ class GenericFile < ActiveFedora::Base
     audit(true)
   end
   
-  def audit_stat(force = true)
+  def audit_stat!
+    audit_stat(true)
+  end
+  
+  def audit_stat(force = false)
     logs = audit(force)
-    logger.info "*****"
-    logger.info logs.inspect
-    logger.info "*****"
     audit_results = logs.collect { |result| result["pass"] }
-    logger.info "!*****"
-    logger.info audit_results.inspect
-    logger.info "!*****"
     
     # check how many non runs we had
     non_runs =audit_results.reduce(0) { |sum, value| (value == NO_RUNS) ? sum = sum+1 : sum }
-    if (non_runs == audit_results.length)
+    if (non_runs == 0)
       result =audit_results.reduce(true) { |sum, value| sum && value }
       return result
-    elsif (non_runs > 0)
+    elsif (non_runs < audit_results.length)
       result =audit_results.reduce(true) { |sum, value| (value == NO_RUNS) ? sum : sum && value }
       return 'Some audits have not been run, but the ones run where '+ (result)? 'passing' : 'failing' + '.'
     else 
@@ -275,7 +272,6 @@ class GenericFile < ActiveFedora::Base
     self.per_version do |ver| 
       logs << GenericFile.audit(ver, force)
     end
-    logger.info "logs from audit #{logs.inspect}"
     logs
   end
 

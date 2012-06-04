@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
          notice = ''
          inbox.each() do |msg|
             logger.info "Message = #{msg.messages.inspect}"
-            notice = notice+"<br>"+msg.last_message.body
+            notice = notice+"<br>"+msg.last_message.body if (msg.last_message.subject == AuditJob::FAIL)
             msg.delete()
          end
          flash[:notice] = flash[:notice] ? flash[:notice]+notice : notice unless notice.blank?

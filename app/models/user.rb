@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   end
 
   #method needed for messaging
-  def mailboxer_email( obj = nill)
+  def mailboxer_email(obj=nil)
     return nil  
   end
 
@@ -44,6 +44,6 @@ class User < ActiveRecord::Base
     Thread.current[:user]  
   end
   def self.current=(user)
-      Thread.current[:user] = user  
+    Thread.current[:user] = user  
   end
 end

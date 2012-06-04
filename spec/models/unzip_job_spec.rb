@@ -1,11 +1,17 @@
 require 'spec_helper'
 
 describe UnzipJob do
-  before do
+  before(:all) do
     @batch = Batch.create
+    GenericFile.any_instance.expects(:characterize_if_changed).at_least_once.yields
     @generic_file = GenericFile.new(:batch=>@batch)
     @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/icons.zip'), :dsid=>'content')
     @generic_file.save
+  end
+
+  after(:all) do
+    @batch.delete
+    @generic_file.delete
   end
 
   it "should create GenericFiles for each file in the zipfile" do
@@ -29,8 +35,9 @@ describe UnzipJob do
     three.content.label.should == 'spec/fixtures/hamburger-icon.png'
     three.content.mimeType.should == 'image/png'
     three.batch.should == @batch
-    
-    
-  end
 
+    one.delete
+    two.delete
+    three.delete
+  end
 end

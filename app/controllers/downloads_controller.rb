@@ -7,30 +7,16 @@ class DownloadsController < ApplicationController
   def show
     @asset = ActiveFedora::Base.find(params["id"])
     opts = {}
-    if params.has_key?("filename") 
-      opts[:filename] = params["filename"]
-    else
-      opts[:filename] = @asset.label
-    end
-    if params.has_key?("disposition") 
-      opts[:disposition] = params["disposition"]
-    end
+    ds = nil
+    opts[:filename] = params["filename"] || @asset.label
+    opts[:disposition] = params["disposition"] if params.has_key?("disposition") 
     if params.has_key?(:datastream_id)
       opts[:filename] = params[:datastream_id]
-      if @asset.datastreams.has_key?(params[:datastream_id])
-        ds = @asset.datastreams[params[:datastream_id]]
-        data = ds.content
-        opts[:type] = ds.mimeType
-      else
-        ds = default_content_ds(@asset)
-        opts[:type] = ds.mimeType
-        data = ds.content
-      end
-    else
-      ds = default_content_ds(@asset)
-      opts[:type] = ds.mimeType
-      data = ds.content    
+      ds = @asset.datastreams[params[:datastream_id]]
     end
+    ds = default_content_ds(@asset) if ds.nil?
+    data = ds.content
+    opts[:type] = ds.mimeType
     send_data data, opts
     return
   end
@@ -39,9 +25,7 @@ class DownloadsController < ApplicationController
   
   def default_content_ds(asset)
     ActiveFedora::ContentModel.known_models_for(asset).each do |model_class|
-      if model_class.respond_to?(:default_content_ds)
-        return model_class.default_content_ds
-      end
+      return model_class.default_content_ds if model_class.respond_to?(:default_content_ds)
     end
     if asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
       return asset.datastreams[DownloadsController.default_content_dsid]

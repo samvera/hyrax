@@ -54,8 +54,7 @@ describe GenericFile do
         @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
         @file.permissions = {:group=>{'group1'=>'edit'}}
         @file.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
-      end
-  
+      end  
     end
     it "should have a characterization datastream" do
       @file.characterization.should be_kind_of FitsDatastream
@@ -105,7 +104,7 @@ describe GenericFile do
       before (:each) do
         Delayed::Job.expects(:enqueue).once.returns("the job")      
       end
-      after(:each) do
+      after(:each) do        
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
           begin
             @file.delete
@@ -180,6 +179,7 @@ describe GenericFile do
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]
     lambda { @file.save }.should_not raise_error
+    @file.delete
   end
   describe "create_thumbnail" do
     describe "with an image that doesn't get resized" do
@@ -194,7 +194,7 @@ describe GenericFile do
       after do
         @f.delete
       end
-      it "should scale the thumnail to original size" do
+      it "should scale the thumbnail to original size" do
         @mock_image.expects(:scale).with(50, 50).returns(stub(:to_blob=>'fake content'))
         @f.create_thumbnail
         @f.content.changed?.should be_false
@@ -215,7 +215,7 @@ describe GenericFile do
     end
     after(:all) do
       @f.delete
-     Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
+      Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
     end
     it "should schedule a audit job" do
       FileContentDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
@@ -340,6 +340,7 @@ describe GenericFile do
   end
   describe "noid integration" do
     before(:all) do
+      GenericFile.any_instance.expects(:characterize_if_changed).yields
       @new_file = GenericFile.create(:pid => 'ns:123')
     end
     after(:all) do
@@ -371,6 +372,7 @@ describe GenericFile do
       @file.related_url = 'http://example.com' 
       Delayed::Job.expects(:enqueue).never
       @file.save
+      @file.delete
     end
     describe "after job runs" do
       before(:all) do 
@@ -427,7 +429,6 @@ describe GenericFile do
       @file.inner_object.label.should == "My New Label"
     end
   end
-
   context "with rightsMetadata" do
     subject do
       m = GenericFile.new()
