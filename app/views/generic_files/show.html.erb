@@ -160,25 +160,19 @@
         <tr> 
           <th>Date Created</th>
           <td>
-            <% @generic_file.date_created.each do |dc| %>
-              <%= dc %><br />
-            <% end %>
+            <%= @generic_file.date_created %>
           </td>
         </tr>
         <tr class="zebra">
           <th>Date Modified</th>
           <td>
-            <% @generic_file.date_modified.each do |dm| %>
-              <%= dm %><br />
-            <% end %>
+            <%= @generic_file.date_modified %>
           </td>
         </tr>
         <tr>
           <th>Date Uploaded</th>
           <td>
-            <% @generic_file.date_uploaded.each do |du| %>
-              <%= du %><br />
-            <% end %>
+            <%= @generic_file.date_uploaded %>
           </td>
         </tr>
       </tbody>
