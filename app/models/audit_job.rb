@@ -25,8 +25,8 @@ class AuditJob < Struct.new(:user_id, :genericfile_id, :ds_id, :version_id)
           #send the user a message about the audit
           # todo do we want to do this on failing only?
           message = "The audit run at #{log.created_at} for #{log.pid}:#{log.dsid}:#{log.version} was "
-          message = message + (log.pass ? "passing." : "failing.")
-          subject = (log.pass ? PASS : FAIL)
+          message = message + (log.pass == 1 ? "passing." : "failing.")
+          subject = (log.pass == 1 ? PASS : FAIL)
           logger.info "Sending message #{message} to user #{user.inspect}"
           recipt = job_user.send_message(user, message, subject)
         end
