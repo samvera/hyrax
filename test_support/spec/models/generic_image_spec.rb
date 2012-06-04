@@ -53,8 +53,8 @@ describe GenericImage do
     it "should create a max, screen and thumbnail file"
   end
 
-  its(:datastream_url) { should == 'http://127.0.0.1:8983/fedora-test/objects/test:pid/datastreams/content/content' }
-  its(:admin_site) { should == 'http://127.0.0.1:8983/' }
+  its(:datastream_url) { should match /http:\/\/127.0.0.1:\d{2,5}\/fedora-test\/objects\/test:pid\/datastreams\/content\/content$/ }
+  its(:admin_site) { match /http:\/\/127.0.0.1:\d{2,5}\// }
 
   
 end
