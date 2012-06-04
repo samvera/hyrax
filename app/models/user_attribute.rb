@@ -3,7 +3,7 @@ class UserAttribute < ActiveRecord::Base
   belongs_to :user
 
   def initialize
-    ActiveSupport::Deprecation.warn("UserAttribute is deprecated and will be removed in release 5 or 6;  this behavior should be implemented at the app level.")
+    ActiveSupport::Deprecation.warn("UserAttribute is deprecated and will be removed from HydraHead in release 5 or 6;  this behavior should be implemented at the app level.")
     super
   end
 
@@ -12,6 +12,7 @@ class UserAttribute < ActiveRecord::Base
 # @param [sting] login the login of the user
 # @return the user attribute object or nil
  def self.find_by_login(login)
+    ActiveSupport::Deprecation.warn("UserAttribute.find_by_login is deprecated and will be removed from HydraHead in release 5 or 6;  this behavior should be implemented at the app level.")
     user = User.find_by_login(login)
     if user
       UserAttribute.find_by_user_id(user.id)

@@ -3,7 +3,7 @@
 class CommonMetadataAsset < ActiveFedora::Base
   
   def initialize
-    ActiveSupport::Deprecation.warn("CommonMetadataAsset is deprecated and will be removed in release 5 or 6;  this exemplar code has been moved into wiki documentation here:  https://github.com/projecthydra/hydra-head/wiki/Models---Some-Examples")
+    ActiveSupport::Deprecation.warn("CommonMetadataAsset is deprecated and will be removed from HydraHead in release 5 or 6;  this exemplar code has been moved into wiki documentation here:  https://github.com/projecthydra/hydra-head/wiki/Models---Some-Examples")
     super
   end
   
