@@ -3,13 +3,12 @@
 		<%= form_tag params[:controller] == "folder" ? folder_index_path : catalog_index_path, :method=>:get do %>
   <div class="sorting">
       <%= label_tag(:sort, "<strong>Sort by</strong> ".html_safe) %>
-      <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>			      
-      <%= search_as_hidden_fields(:omit_keys => [:page, :sort]) %>
+      <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>
 
       <%= label_tag(:per_page) do %>
         <strong>Show</strong> <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), :title => "Number of results to display per page") %> per page
         <% end %>
-      <%= search_as_hidden_fields(:omit_keys => [:page, :per_page]) %>
+      <%= search_as_hidden_fields(:omit_keys => [:per_page, :sort]) %>
       <%= submit_tag 'update', :class=>'button2' %>
 
   </div>
