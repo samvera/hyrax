@@ -44,6 +44,7 @@ log/*.log
 tmp/*.log
 tmp/pids/
 tmp/test_app/
+console
 
 *.sqlite3
 *.log
