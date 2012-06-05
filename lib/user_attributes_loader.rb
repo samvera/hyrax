@@ -9,7 +9,7 @@ class UserAttributesLoader
   self.deprecation_horizon = 'hydra-head 5.x'
 
   def initialize(app)
-    Deprecation.warn("UserAttributesLoader has been deprecated; it will be removed from HydraHead no later than release 6.")
+    Deprecation.warn(UserAttributesLoader, "UserAttributesLoader has been deprecated; it will be removed from HydraHead no later than release 6.")
     @app = app
   end
 

@@ -8,7 +8,7 @@ class PrevNextLinks < WillPaginate::LinkRenderer
   self.deprecation_horizon = 'hydra-head 5.x'
 
   def initialize(app)
-    Deprecation.warn("PrevNextLinks has been deprecated; it will be removed from HydraHead no later than release 6.")
+    Deprecation.warn(PrevNextLinks, "PrevNextLinks has been deprecated; it will be removed from HydraHead no later than release 6.")
     @app = app
   end
 

@@ -10,7 +10,7 @@ module Hydra
     include Hydra::CommonModsIndexMethods
 
     def initialize(digital_object, dsid, options={})
-      Deprecation.warn("Hydra::ModsDataset has been deprecated. Use Hydra::Datastream::ModsDataset instead")
+      Deprecation.warn(Hydra::ModsDataset, "ModsDataset is deprecated and will be removed in release 5 or 6.  It has been moved into wiki documentation here:  https://github.com/projecthydra/hydra-head/wiki/Models---Some-Examples")
       super
     end
 
