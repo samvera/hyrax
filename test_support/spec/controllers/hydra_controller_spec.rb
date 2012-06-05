@@ -1,9 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-class HydraControllerTest < ApplicationController
-  include Hydra::Controller
+class HydraControllerTest < ActionController::Base
 end
-
 describe HydraControllerTest do
   
   after :all do
@@ -18,6 +16,10 @@ describe HydraControllerTest do
   end
   
   describe "load_fedora_document" do
+    before do
+      HydraControllerTest.send(:include, Hydra::Controller)
+    end
+
 
     it "should load @document_fedora and @file_assets" do
       controller.params[:id] = 'hydrangea:fixture_mods_article1'

@@ -103,14 +103,12 @@ module Hydra::AccessControlsEnforcement
         if embargo_date > Date.parse(Time.now.to_s)
           ### Assuming we're using devise and have only one authentication key
           unless current_user && can?(:edit, params[:id])
-            flash[:alert] = "This item is under embargo.  You do not have sufficient access privileges to read this document."
-            redirect_to(:action=>'index', :q=>nil, :f=>nil) and return false
+            raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
           end
         end
       end
       unless can? :read, params[:id] 
-        flash[:alert]= "You do not have sufficient access privileges to read this document, which has been marked private."
-        redirect_to(:action => 'index', :q => nil , :f => nil) and return false
+        raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
       end
     end
   end
@@ -122,8 +120,7 @@ module Hydra::AccessControlsEnforcement
     load_permissions_from_solr
     if !can? :edit, params[:id]
       session[:viewing_context] = "browse"
-      flash[:notice] = "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
-      redirect_to :action=>:show
+      raise Hydra::AccessDenied.new("You do not have sufficient privileges to edit this document. You have been redirected to the read-only view.", :edit, params[:id])
     else
       session[:viewing_context] = "edit"
     end

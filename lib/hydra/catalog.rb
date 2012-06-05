@@ -12,7 +12,6 @@ module Hydra::Catalog
   
   included do
     # Other modules to auto-include
-    include Hydra::Controller
     include Hydra::UI::Controller
     
     # Controller filters

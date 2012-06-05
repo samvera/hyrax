@@ -39,8 +39,7 @@ describe Hydra::AccessControlsEnforcement do
       helper.stubs(:can?).with(:read, nil).returns(true)
       helper.stubs(:redirect_to)
       @permissions_solr_document = SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
-      helper.send(:enforce_show_permissions, {})
-      flash[:alert].should == "This item is under embargo.  You do not have sufficient access privileges to read this document."
+      lambda {helper.send(:enforce_show_permissions, {})}.should raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
     end
   end
   describe "apply_gated_discovery" do

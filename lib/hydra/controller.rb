@@ -10,15 +10,25 @@
 #
 # will move to lib/hydra/controller/controller_behavior in release 5.x
 module Hydra::Controller
-
-  def self.included(klass)
-    # Other modules to auto-include
-    klass.send(:include, Hydra::AccessControlsEnforcement)
-    klass.send(:include, Hydra::RepositoryController)
+  extend ActiveSupport::Concern
   
-    # View Helpers
-    klass.helper :hydra
-    klass.helper :hydra_assets
+
+  included do
+    # Other modules to auto-include
+    include Hydra::AccessControlsEnforcement
+    include Hydra::RepositoryController
+  
+    helper :hydra
+    helper :hydra_assets
+
+    # Catch permission errors
+    rescue_from Hydra::AccessDenied do |exception|
+      if (exception.action == :edit)
+        redirect_to({:action=>'show'}, :alert => exception.message)
+      else
+        redirect_to root_url, :alert => exception.message
+      end
+    end
   end
   
   # Use params[:id] to load an object from Fedora.  Inspects the object for known models and mixes in any of those models' behaviors.

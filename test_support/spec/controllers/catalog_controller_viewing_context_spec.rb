@@ -46,7 +46,7 @@ describe CatalogController do
       
       get :edit, :id=>"hydrangea:fixture_mods_article1"
       response.should redirect_to(:action => 'show')
-      flash[:notice].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
+      flash[:alert].should == "You do not have sufficient privileges to edit this document. You have been redirected to the read-only view."
     end
     it "should render normally if user has edit permissions" do
       controller.expects(:can?).with(:edit, anything()).returns(true)
