@@ -8,7 +8,7 @@ default: searchable
 searchable: 
   default: _t
   date: _dt
-  string: _t
+  string: _s
   text: _t
   symbol: _s
   integer: _i
