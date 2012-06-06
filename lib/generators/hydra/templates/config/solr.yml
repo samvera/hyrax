@@ -3,7 +3,7 @@
 development:
   url: http://localhost:8983/solr/development
 test: &TEST
-  url: http://127.0.0.1:8983/solr/test
+  url: <%= "http://127.0.0.1:#{ENV['TEST_JETTY_PORT'] || 8888}/solr/test" %>
 cucumber:
   <<: *TEST
 production:

@@ -1,5 +1,5 @@
 default:
-  jetty_port: 8983
+  jetty_port: <%= ENV['TEST_JETTY_PORT'] || 8983 %>
   startup_wait: 30
   java_opts:
     - "-Xmx256m" 
