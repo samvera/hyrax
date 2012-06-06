@@ -374,16 +374,16 @@ Blacklight.configure(:shared) do |config|
   # except in the relevancy case).
   # label is key, solr field is value
   config[:sort_fields] ||= []
-  config[:sort_fields] << ['relevance', 'score desc, generic_file__date_uploaded_sort desc']
-  config[:sort_fields] << ['publisher', 'generic_file__publisher_sort asc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['relevance', 'score desc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['publisher', 'generic_file__publisher_sort asc, generic_file__date_uploaded_sort desc']
   config[:sort_fields] << ['date created', 'generic_file__date_created_sort desc']
   config[:sort_fields] << ['date uploaded', 'generic_file__date_uploaded_sort desc']
   config[:sort_fields] << ['date modified', 'generic_file__date_modified_sort desc']
-  config[:sort_fields] << ['subject', 'generic_file__subject_sort asc, generic_file__date_uploaded_sort desc']
-  config[:sort_fields] << ['language', 'generic_file__language_sort asc, generic_file__date_uploaded_sort desc']
-  config[:sort_fields] << ['resource_type', 'generic_file__resource_type_sort asc, generic_file__date_uploaded_sort desc']
-  config[:sort_fields] << ['format', 'generic_file__format_sort asc, generic_file__date_uploaded_sort desc']
-  config[:sort_fields] << ['tag', 'generic_file__tag_sort asc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['subject', 'generic_file__subject_sort asc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['language', 'generic_file__language_sort asc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['resource_type', 'generic_file__resource_type_sort asc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['format', 'generic_file__format_sort asc, generic_file__date_uploaded_sort desc']
+  #config[:sort_fields] << ['tag', 'generic_file__tag_sort asc, generic_file__date_uploaded_sort desc']
 
   # If there are more than this many search results, no spelling ("did you 
   # mean") suggestion is offered.

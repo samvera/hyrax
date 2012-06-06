@@ -4,7 +4,8 @@
     <div class="control-group"> 
       <div class="controls">
       <%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %>
-      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'small' %>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.public_permission_levels, permission[:access]), :class=>'small' if permission[:name].upcase == 'PUBLIC'%>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'small' unless permission[:name].upcase == 'PUBLIC' %>
       <%= f.submit :value => "Update", :name=> "update_permission", :id => "update_permission"  %> 
       </div>
     </div> 

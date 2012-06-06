@@ -34,6 +34,9 @@ class ApplicationController < ActionController::Base
 
 
   def add_notifications
+      # no where to put these notifications when doing create in generic files or java script requests
+      return if ((action_name == "create") && (controller_name == "generic_files")) || (request.format== :js)
+
       if (User.current)
          inbox = User.current.mailbox.inbox
          notice = ''

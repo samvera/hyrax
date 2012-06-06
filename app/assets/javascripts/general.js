@@ -13,4 +13,14 @@ $(document).ready(function(){
 		$(this).next("ul").slideToggle();
 		$(this).toggleClass("open");
 	});
+
+	$('#generic_file_permissions_new_group_name').change(function (){
+        var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
+	    if (this.value.toUpperCase() == 'PUBLIC') {
+	       edit_option.disabled =true;	       
+	    } else {
+           edit_option.disabled =false;         
+	    }
+	    
+	});
 });

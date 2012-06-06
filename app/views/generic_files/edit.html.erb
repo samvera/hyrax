@@ -52,13 +52,15 @@
       <tbody>
       <% @terms.each do |t| %>
         <% next if t.empty? %>
-        <tr>
           <% key = t.to_s.split("generic_file__").last %>
-          <% vals = @generic_file.send(key) %>
+          <% logger.info "!!!! Generic file has no method #{key}" unless @generic_file.respond_to?(key) %>
+          <% if @generic_file.respond_to?(key) %>
+        <tr>
+          <% vals =  @generic_file.send(key) %>
+          <% # not an arry lets just shove it in one %>
+          <% vals = [vals] unless vals.is_a?(Array) %>
           <%# if vals is zero we create an empty array to loop over for output %>
-          <% if vals.count == 0 %>
-            <% vals = [''] %>
-          <% end %>
+          <% vals = [''] if vals.count == 0 %>
           <% vals.each_with_index do |v, index| %>
           <th><%= f.label key, :class=>"control-label" %> </th>
           <td>
@@ -73,6 +75,7 @@
             <div id="additional_<%= key %>_elements"></div>
           </td>
         </tr>
+           <% end %>
         <% end %>
       <% end %>
         <tr>

@@ -1,4 +1,4 @@
-//= require fileupload/jquery-ui-1.8.14.custom.min
+//= require jquery-ui-1.8.16.custom.min
 //= require fileupload/tmpl.min
 //= require fileupload/jquery.iframe-transport
 //= require fileupload/jquery.fileupload.js

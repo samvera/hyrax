@@ -36,7 +36,7 @@ Install gems & migrate database
 
 If you'll be developing ScholarSphere, setup test dbs and load fixtures
 
-    RAILS_ENV=test rake db:create
+    RAILS_ENV=test rake db:generate
     RAILS_ENV=test rake db:migrate
     RAILS_ENV=test rake scholarsphere:fixtures:create
     RAILS_ENV=test rake scholarsphere:fixtures:refresh
