@@ -204,14 +204,13 @@ class GenericFile < ActiveFedora::Base
         # coerce to array to remove a conditional
         terms[k] = [terms[k]] unless terms[k].is_a? Array
         terms[k].each do |term_value|
-          # these are single-valued terms which cannot be appended to
-          # TODO: handle this more elegantly and extensibly
-          if [:date_modified, :date_uploaded].include? v
-            self.send("#{v}=", term_value)
-          else
-            proxy_term = self.send(v)
+          proxy_term = self.send(v)
+          if proxy_term.kind_of?(Array)
             proxy_term << term_value unless proxy_term.include?(term_value)
-          end
+          else
+            # these are single-valued terms which cannot be appended to
+            self.send("#{v}=", term_value)
+          end            
         end
       end
     end
