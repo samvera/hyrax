@@ -19,7 +19,6 @@ describe Hydra::Datastream::ModsBasic do
       subject.class.should respond_to(:person_relator_terms)
       subject.class.should respond_to(:conference_relator_terms)
       subject.class.should respond_to(:organization_relator_terms)
-      subject.class.should respond_to(:dc_relator_terms)
     end
   end
   
@@ -33,12 +32,19 @@ describe Hydra::Datastream::ModsBasic do
       empty_xml.should be_a_kind_of(Nokogiri::XML::Document)
       root = empty_xml.root
       root.namespace.href.should == MODS_NS
-      root.get_attribute("schemaLocation").end_with?("http://www.loc.gov/standards/mods/v3/mods-3-3.xsd").should be_true
-      root.get_attribute("version").should == "3.3"
-      # looking at one single descendant node; more may be indicated
-      title = root.at_xpath('mods:titleInfo/mods:title',  {'mods' => MODS_NS} )
-      title.should_not be_nil
-      title.text.should == ""
+      root.get_attribute("version").should == "3.4"
+      # Ruby 1.8.7:
+      # root.get_attribute("xsi:schemaLocation").end_with?("http://www.loc.gov/standards/mods/v3/mods-3-4.xsd").should be_true
+      # Ruby 1.9.3:
+      #root.get_attribute("schemaLocation").end_with?("http://www.loc.gov/standards/mods/v3/mods-3-4.xsd").should be_true
+      
+      # check some descendant nodes
+      title_node = root.at_xpath('mods:titleInfo/mods:title',  {'mods' => MODS_NS} )
+      title_node.should_not be_nil
+      title_node.text.should == ""
+      personal_name_node = root.at_xpath("mods:name[@type='personal']",  {'mods' => MODS_NS} )
+      personal_name_node.should_not be_nil
+      personal_name_node.text.should == ""
     end
   end
 
@@ -53,6 +59,7 @@ describe Hydra::Datastream::ModsBasic do
 
         [:abstract, 'abstract'],
 
+# FIXME: whitespace issues
 #        [[:subject, :topic],  ['topic 1', 'topic 2', 'authority controlled topic']],
 #        [:topic_tag,          ['topic 1', 'topic 2', 'authority controlled topic']],
 
@@ -65,6 +72,7 @@ describe Hydra::Datastream::ModsBasic do
         [[:person, :last_name], 'Hydra'],
         [[:name, :first_name], 'Hubert'],
         [[:person, :first_name], 'Hubert'],
+# FIXME: whitespace issues
 #        [:role, ['Creator', 'Host']],
 #        [:person, 'Hydra Hubert Project Hydra Creator'],
 #        [:conference, 'some conference Host'],

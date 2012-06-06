@@ -1,5 +1,5 @@
 <mods version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3
-http://www.loc.gov/standards/mods/v3/mods-3-0.xsd" xmlns="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+http://www.loc.gov/standards/mods/v3/mods-3-4.xsd" xmlns="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- this is meant to be a fairly simple MODS example. -->
    <titleInfo>
        <title>main title</title>
