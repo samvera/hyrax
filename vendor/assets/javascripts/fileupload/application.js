@@ -19,6 +19,29 @@ var error_string ='';
 $(function () {
     'use strict';
 
+    $("#upload_tooltip").hide();
+    $("#main_upload_start_span").mousemove(function(e){
+       if ( !$('#terms_of_service')[0].checked){
+        $("#upload_tooltip").show();
+        $("#upload_tooltip").css({
+            top: (e.clientY+5)+ "px",
+            left: (e.clientX+5) + "px"
+        });
+       } else {
+         $("#upload_tooltip").hide();
+       }
+    });
+    $("#main_upload_start_span").mouseout(function(e){
+        $("#upload_tooltip").hide();
+    });
+    $("#main_upload_start_span").mouseleave(function(e){
+        $("#upload_tooltip").hide();
+    });
+    $('#terms_of_service').click(function () {
+        $('#main_upload_start')[0].disabled = !this.checked
+        $("#upload_tooltip").hide();
+    });
+
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload();
     $('#fileupload').bind("fileuploadstop", function(){
