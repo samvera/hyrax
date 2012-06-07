@@ -21,6 +21,7 @@ platforms :ruby do
 end
 
 gem 'hydra-head', :path => '../../'
+gem 'hydra-mods', :path => '../../../hydra-mods'
 gem 'devise'
 gem 'jettywrapper'
 
