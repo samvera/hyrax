@@ -1,6 +1,5 @@
 ScholarSphere::Application.routes.draw do
   Blacklight.add_routes(self)
-  HydraHead.add_routes(self)
 
   root :to => "catalog#index"
 
@@ -14,21 +13,15 @@ ScholarSphere::Application.routes.draw do
       post 'permissions'
     end
   end
- 
-  
-  resources :downloads, :only=>"show" 
+   
+  resources :downloads, :only => "show" 
 
   match '/logout' => 'sessions#destroy'
-
   match 'dashboard' => 'dashboard#index', :as => :dashboard
-
-
   match 'authorities/:model/:term' => 'authorities#query'
-
   match 'batches/:id/edit' => 'batch#edit', :as => :batch_edit
   match 'batches/:id/' => 'batch#update', :as => :batch_generic_files
-
-  match "/catalog_recent" => "catalog#recent", :as => :catalog_recent_path
+  match "/catalog/recent" => "catalog#recent", :as => :catalog_recent_path
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
