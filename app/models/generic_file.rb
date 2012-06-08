@@ -162,8 +162,10 @@ class GenericFile < ActiveFedora::Base
   def create_pdf_thumbnail
     pdf = Magick::ImageList.new
     pdf.from_blob(content.content)
-    thumb = pdf.scale(45, 60)
-    self.thumbnail.content = thumb.to_blob
+    first = pdf.to_a[0]
+    first.format = "PNG"   
+    thumb = first.scale(45, 60)
+    self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
     logger.debug "Has the content changed before saving? #{self.content.changed?}"
     self.terms_of_service = '1'    
     self.save
