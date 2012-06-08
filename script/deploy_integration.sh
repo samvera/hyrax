@@ -39,9 +39,6 @@ RAILS_ENV=integration rake db:drop
 RAILS_ENV=integration rake db:create
 RAILS_ENV=integration rake db:migrate
 
-echo "=-=-=-=-= $0 rake scholarsphere:db:deleteAll"
-RAILS_ENV=integration rake scholarsphere:db:deleteAll
-
 echo "=-=-=-=-= $0 rake fixtures:create/refresh"
 RAILS_ENV=integration rake scholarsphere:fixtures:generate
 RAILS_ENV=integration rake scholarsphere:fixtures:refresh
