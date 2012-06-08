@@ -15,9 +15,7 @@ module Hydra
   autoload :GenericContent
   autoload :GenericImage
   autoload :GenericUserAttributes
-  autoload :ModelMixins
-  autoload :ModsGenericContent
-  autoload :ModsImage
+  require 'hydra/model_mixins'
   autoload :RepositoryController
   autoload :SubmissionWorkflow
   autoload :SuperuserAttributes
@@ -37,8 +35,7 @@ require 'hydra/assets_controller_helper'
 require 'hydra/file_assets_helper'
 
 require 'hydra/rights_metadata'
-require 'hydra/common_mods_index_methods'
-require 'hydra/mods_article'
+require 'hydra/mods'
 require 'hydra/model_methods'
 require 'hydra/models/file_asset'
 require 'mediashelf/active_fedora_helper' #deprecated
