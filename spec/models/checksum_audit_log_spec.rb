@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe ChecksumAuditLog do
   before(:all) do
+    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @cur_delay = Delayed::Worker.delay_jobs
     Delayed::Worker.delay_jobs = false # work jobs inline
     GenericFile.any_instance.stubs(:characterize).returns(true) # stub out characterization so it does not get audited

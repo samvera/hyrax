@@ -14,6 +14,7 @@
           <td>
             <h3>Revision history</h3>
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+    <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
             <% @generic_file.content.versions.each_with_index do |version, index| %>
               <%= radio_button_tag(:revision, version.versionID, index == 0) %>
               <%= label_tag("revision_#{version.versionID}".to_sym, "Restore version from #{version.dsCreateDate}") %>
@@ -48,6 +49,7 @@
     </table>
     <h2 class="non lower">Descriptions</h2>
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+    <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
     <table class="verticalheadings">
       <tbody>
       <% @terms.each do |t| %>

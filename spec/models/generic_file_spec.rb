@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe GenericFile do
   before(:each) do 
+    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @file = GenericFile.new
   end 
   describe "attributes" do
@@ -204,6 +205,7 @@ describe GenericFile do
   end
   describe "audit" do
     before(:all) do
+      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       @cur_delay = Delayed::Worker.delay_jobs
       @job_count = Delayed::Job.count
       GenericFile.any_instance.stubs(:characterize).returns(true)
@@ -340,6 +342,7 @@ describe GenericFile do
   end
   describe "noid integration" do
     before(:all) do
+      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       GenericFile.any_instance.expects(:characterize_if_changed).yields
       @new_file = GenericFile.create(:pid => 'ns:123')
     end
@@ -376,6 +379,7 @@ describe GenericFile do
     end
     describe "after job runs" do
       before(:all) do 
+        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
         myfile = GenericFile.new
         myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'

@@ -9,7 +9,7 @@ class GenericFilesController < ApplicationController
   before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy, :permissions]
   before_filter :find_by_id, :only=>[:audit, :edit, :show, :update, :destroy, :permissions]
   prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy, :permissions] 
-
+  
   # routed to /files/new
   def new
     @generic_file = GenericFile.new 
@@ -61,6 +61,9 @@ class GenericFilesController < ApplicationController
 
     elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
        retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
+    
+    elsif (params[:terms_of_service] != '1')
+       retval = render :json => [{ :name => params[:files][0].original_filename, :error => "You must accept the terms of service!"}].to_json
     
     # process file
     else
@@ -125,7 +128,8 @@ class GenericFilesController < ApplicationController
       logger.warn "!!!! No Files !!!!"
       return
     end
-    @generic_file = GenericFile.new
+    @generic_file = GenericFile.new    
+    @generic_file.terms_of_service = params[:terms_of_service]
     file = params[:files][0]
 
     # if we want to be able to save zero length files then we can use this to make the file 1 byte instead of zero length and fedora will take it

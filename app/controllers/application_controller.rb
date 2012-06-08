@@ -43,6 +43,15 @@ class ApplicationController < ActionController::Base
          inbox.each() do |msg|
             logger.info "Message = #{msg.messages.inspect}"
             notice = notice+"<br>"+msg.last_message.body if (msg.last_message.subject == AuditJob::FAIL)
+          
+            # we are cleaning up the hard way here so that we do not get a raise condition with locks.
+            # does not seem to happen on dev enviromnet but it is happening in integration
+            msg.messages.each do |notify|
+              notify.receipts.each do |receipt|
+                receipt.delete()
+              end
+              notify.delete()
+            end
             msg.delete()
          end
          flash[:notice] = flash[:notice] ? flash[:notice]+notice : notice unless notice.blank?

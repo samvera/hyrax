@@ -3,6 +3,7 @@ require 'spec_helper'
 describe DownloadsController do
 
   before(:all) do
+    GenericFile.any_instance.stubs(:terms_of_service).returns('1')  
     f = GenericFile.new(:pid => 'scholarsphere:test1')
     f.apply_depositor_metadata('archivist1')
     f.set_title_and_label('world.png')

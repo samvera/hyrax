@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CatalogController do
   before do
+    GenericFile.any_instance.stubs(:terms_of_service).returns('1')  
     GenericFile.any_instance.stubs(:characterize_if_changed).yields
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
@@ -12,6 +13,7 @@ describe CatalogController do
   end
   describe "#index" do
     before (:all) do
+       GenericFile.any_instance.stubs(:terms_of_service).returns('1')  
        @gf1 =  GenericFile.create(title:'Test Document PDF', filename:'test.pdf', discover_groups:['public'])
        @gf2 =  GenericFile.create(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', discover_groups:['public'])
     end

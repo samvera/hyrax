@@ -2,12 +2,14 @@ require 'spec_helper'
 
 describe FileContentDatastream do
   before do
+    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @subject = FileContentDatastream.new(nil, 'content')
     @subject.stubs(:pid=>'my_pid')
     @subject.stubs(:dsVersionID=>'content.7')
   end
   describe "version control" do
     before(:all) do
+      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       f.expects(:characterize_if_changed).yields

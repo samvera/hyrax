@@ -7,7 +7,7 @@
 # to run CI testing.
 
 HHOME=/opt/heracles
-WORKSPACE=/opt/heracles/scholarsphere/scholarsphere-integration
+WORKSPACE=${HHOME}/scholarsphere/scholarsphere-integration
 
 echo hello ss-integration
 echo "=-=-=-=-= $0 export RAILS_ENV=integration"
@@ -38,6 +38,17 @@ echo "=-=-=-=-= $0 rake db:drop/create/migrate"
 RAILS_ENV=integration rake db:drop
 RAILS_ENV=integration rake db:create
 RAILS_ENV=integration rake db:migrate
+
+echo "=-=-=-=-= $0 rake scholarsphere:db:deleteAll"
+RAILS_ENV=integration rake scholarsphere:db:deleteAll
+
+echo "=-=-=-=-= $0 rake fixtures:create/refresh"
+RAILS_ENV=integration rake scholarsphere:fixtures:generate
+RAILS_ENV=integration rake scholarsphere:fixtures:refresh
+
+echo "=-=-=-=-= $0 script/delayed_job restart"
+RAILS_ENV=integration script/delayed_job restart 
+
 retval=$?
 
 echo "=-=-=-=-= $0 finished $retval"
