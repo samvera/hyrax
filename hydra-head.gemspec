@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
   s.add_dependency 'cancan'
+  s.add_dependency 'hydra-mods'
   s.add_dependency 'deprecation'
   s.add_dependency 'jquery-rails'
   
