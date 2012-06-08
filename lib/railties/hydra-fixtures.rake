@@ -23,7 +23,7 @@ namespace :hydra do
           foo = loader.reload(pid)
           puts "Updated #{pid}"
         rescue Errno::ECONNREFUSED => e
-          puts "Can't connect to Fedora! Are you sure jetty is running?"
+          puts "Can't connect to Fedora! Are you sure jetty is running? (#{ActiveFedora::Base.connection_for_pid(pid).inspect})"
         rescue Exception => e
           puts("Received a Fedora error while loading #{pid}\n#{e}")
           logger.error("Received a Fedora error while loading #{pid}\n#{e}")
