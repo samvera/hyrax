@@ -1,13 +1,12 @@
 require "blacklight"
 require 'active-fedora'
 require 'cancan'
+require 'hydra-access-controls'
 
 # Hydra libraries
 module Hydra
   extend Blacklight::GlobalConfigurable
   extend ActiveSupport::Autoload
-  autoload :AccessControlsEvaluation
-  autoload :AccessControlsEnforcement
   autoload :Assets
   autoload :Catalog
   autoload :Controller
