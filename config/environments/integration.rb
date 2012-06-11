@@ -23,6 +23,9 @@ ScholarSphere::Application.configure do
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
 
+  # Enable threaded mode
+  config.threadsafe!
+
   config.log_level = :debug
 
   config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout?https://scholarsphere-integration.dlt.psu.edu:8443/'
