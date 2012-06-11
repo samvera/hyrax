@@ -18,6 +18,7 @@ describe ChecksumAuditLog do
   after(:all) do
     @f.delete
     Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
+    ChecksumAuditLog.all.each(&:delete)
   end
   it "should return a list of logs for this datastream sorted by date descending" do
     @f.logs(@version.dsid).should == [@new, @old]

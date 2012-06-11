@@ -16,9 +16,6 @@ describe AuditJob do
     @file.delete
   end
   describe "passing audit" do
-    before (:each) do
-       @inbox.each(&:delete) # clear any existing messages
-    end
     before(:all) do
       #FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
       ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(true)
@@ -28,16 +25,12 @@ describe AuditJob do
        @job.perform
        @inbox = @user.mailbox.inbox
        @inbox.count.should == 1
-       @inbox.each() do |msg|
+       @inbox.each do |msg|
           msg.last_message.subject.should == AuditJob::PASS
-          msg.delete()
        end
     end
   end
   describe "failing audit" do
-    before (:each) do
-       @inbox.each(&:delete) # clear any existing messages
-    end
     before(:all) do
       ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
       #FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
@@ -46,11 +39,9 @@ describe AuditJob do
        @job.perform
        @inbox = @user.mailbox.inbox
        @inbox.count.should == 1
-       @inbox.each() do |msg|
+       @inbox.each do |msg|
           msg.last_message.subject.should == AuditJob::FAIL
-          msg.delete()
        end
     end
   end
-
 end

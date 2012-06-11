@@ -1,8 +1,8 @@
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMethods
-  include PSU::Noid
   include Dil::RightsMetadata
+  include PSU::Noid
   
   include ActiveModel::Validations::HelperMethods 
     
