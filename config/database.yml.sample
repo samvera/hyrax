@@ -36,7 +36,7 @@ production:
 #  encoding: utf8
 #  pool: 5
 #  timeout: 5000
-#  reconnect: false
+#  reconnect: true
 #  database: scholarsphere_development
 #  username: user
 #  password: pass
@@ -50,7 +50,7 @@ production:
 #  encoding: utf8
 #  pool: 5
 #  timeout: 5000
-#  reconnect: false
+#  reconnect: true
 #  database: scholarsphere_test
 #  username: user
 #  password: pass
@@ -61,7 +61,7 @@ production:
 #  encoding: utf8
 #  pool: 5
 #  timeout: 5000
-#  reconnect: false
+#  reconnect: true
 #  database: scholarsphere_production
 #  username: user
 #  password: pass

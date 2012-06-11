@@ -19,5 +19,4 @@ describe User do
       @user.groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
     end
   end
-  
 end

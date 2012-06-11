@@ -20,6 +20,8 @@ class ApplicationController < ActionController::Base
   def clear_session_user
     # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
     # logout clears the entire session including flash messages
+    logger.warn "Request is Nil, how weird!!!" if request == nil
+    return if request == nil
     request.env['warden'].logout  unless ( (not env['warden'].user) || (request.env['HTTP_REMOTE_USER'])) if (env['warden'])
   end
 

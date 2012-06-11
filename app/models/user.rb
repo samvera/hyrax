@@ -1,19 +1,20 @@
-include Mailboxer::Models::Messageable
-
-Devise.add_module(:http_header_authenticatable,
-  :strategy => true,
-  :controller => :sessions,
-  :model => 'devise/models/http_header_authenticatable')
-
 class User < ActiveRecord::Base
-  # set this up as a messageable object
-  acts_as_messageable
-  
+  # Adds acts_as_messageable for user mailboxes
+  include Mailboxer::Models::Messageable  
   # Connects this user object to Hydra behaviors. 
   include Hydra::User
   # Connects this user object to Blacklights Bookmarks and Folders. 
   include Blacklight::User
+
+  Devise.add_module(:http_header_authenticatable,
+                    :strategy => true,
+                    :controller => :sessions,
+                    :model => 'devise/models/http_header_authenticatable')
+
   devise :http_header_authenticatable
+
+  # set this up as a messageable object
+  acts_as_messageable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :login, :email

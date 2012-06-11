@@ -17,6 +17,11 @@ class CatalogController < ApplicationController
 
   skip_before_filter :default_html_head
   
+  def index
+    super
+    recent
+  end
+  
   def recent
       (resp, doc_list) = get_search_results(:q =>'', :sort=>"system_create_dt desc", :rows=>3)
       @recent_documents = doc_list[0..3]
