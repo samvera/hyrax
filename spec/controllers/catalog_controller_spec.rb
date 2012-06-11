@@ -20,9 +20,9 @@ describe CatalogController do
     after (:all) do
       @gf1.delete
       @gf2.delete
+      Delayed::Job.destroy_all
     end
     describe "term search" do
-
       before do
          xhr :get, :index, :q =>"pdf"        
       end

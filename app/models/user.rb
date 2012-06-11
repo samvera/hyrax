@@ -38,8 +38,7 @@ class User < ActiveRecord::Base
 
   # Groups that user is a member of
   def groups 
-    #Hydra::LDAP.groups_for_user(login + ",dc=psu,dc=edu")
-    ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine", "umg/up.dlt.fixme"]
+    Hydra::LDAP.groups_for_user(login + ",dc=psu,dc=edu")
   end
 
   def self.current    
