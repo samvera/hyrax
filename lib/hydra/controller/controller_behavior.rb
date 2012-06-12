@@ -9,9 +9,11 @@
 #  end
 #
 # will move to lib/hydra/controller/controller_behavior in release 5.x
+require 'deprecation'
 module Hydra::Controller::ControllerBehavior
   extend ActiveSupport::Concern
-  
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
 
   included do
     # Other modules to auto-include
@@ -42,6 +44,7 @@ module Hydra::Controller::ControllerBehavior
     
     @file_assets = @document_fedora.parts(:response_format=>:solr)
   end
+  deprecation_deprecate :load_fedora_document
   
   
   # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)

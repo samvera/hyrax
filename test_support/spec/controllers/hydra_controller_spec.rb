@@ -16,6 +16,15 @@ describe HydraControllerTest do
   end
   
   describe "load_fedora_document" do
+    before :all do
+      @behavior = Hydra::Controller::ControllerBehavior.deprecation_behavior
+      Hydra::Controller::ControllerBehavior.deprecation_behavior = :silence
+    end
+
+    after :all do
+      Hydra::Controller::ControllerBehavior.deprecation_behavior = @behavior
+    end
+
     before do
       HydraControllerTest.send(:include, Hydra::Controller::ControllerBehavior)
     end
