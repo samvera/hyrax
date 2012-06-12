@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'RedCloth', '=4.2.9'
   s.add_dependency 'block_helpers'
   s.add_dependency 'sanitize'
-  s.add_dependency 'hydra-mods', ">= 0.0.4"
+  s.add_dependency 'hydra-mods', ">= 0.0.5"
   s.add_dependency 'deprecation'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'hydra-access-controls'
