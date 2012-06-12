@@ -40,15 +40,6 @@
         </div>
       </div>
 
-      <div class="control-group" id="additional_tag_clone">
-        <%= f.label :tag, :class=>"control-label" %> 
-        <div class="controls">
-          <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
-          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder"  %>
-        </div>
-      </div>
-      <div id="additional_tag_elements"></div>
-
       <div class="control-group" id="additional_title_clone">
         <%= f.label :title, :class=>"control-label" %> 
         <div class="controls">
@@ -57,6 +48,29 @@
         </div>
       </div>
       <div id="additional_title_elements"></div>
+
+      <div class="control-group" id="additional_tag_clone">
+        <%= f.label :tag, 'Keyword', :class=>"control-label" %> 
+        <div class="controls">
+          <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder"  %>
+        </div>
+      </div>
+      <div id="additional_tag_elements"></div>
+
+      <%= f.label :subject, :class=>"control-label" %> 
+      <div class="controls" id="additional_subject_clone">
+        <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]", :value=>"" %>  
+        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder"  %>
+      </div>
+      <div id="additional_subject_elements"></div>
+
+      <%= f.label :creator, :class=>"control-label" %> 
+      <div class="controls" id="additional_creator_clone">
+        <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]", :value=>"" %>
+        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder"  %>
+      </div>
+      <div id="additional_creator_elements"></div>
 
     </div> <!-- close .span9 -->
   </div><!-- close .row description section -->
@@ -74,7 +88,7 @@
       </div>
       <div id="additional_related_url_elements"></div>
 
-      <%= f.label :based_near, :class=>"control-label" %> 
+      <%= f.label :based_near, 'Location', :class=>"control-label" %> 
       <div class="controls" id="additional_based_near_clone">
         <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder"  %>
@@ -87,13 +101,6 @@
         <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder"  %>
       </div>
       <div id="additional_contributor_elements"></div>
-
-      <%= f.label :creator, :class=>"control-label" %> 
-      <div class="controls" id="additional_creator_clone">
-        <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]", :value=>"" %>
-        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder"  %>
-      </div>
-      <div id="additional_creator_elements"></div>
 
       <%= f.label :date_created, :class=>"control-label" %> 
       <div class="controls" id="additional_date_created_clone">
@@ -137,12 +144,6 @@
       </div>
       <div id="additional_rights_elements"></div>
 
-      <%= f.label :subject, :class=>"control-label" %> 
-      <div class="controls" id="additional_subject_clone">
-        <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]", :value=>"" %>  
-        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder"  %>
-      </div>
-      <div id="additional_subject_elements"></div>
   </div><!-- close .row description section -->
 
 <div class="form-actions">
