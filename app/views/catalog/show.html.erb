@@ -35,6 +35,6 @@
 </div>
 <% if controller.action_name == "edit" %>
   <div class="delete-asset">
-    <%= button_to("Delete This Item", {:action => :destroy, :controller => :"hydra/assets", :id => @document_fedora.pid}, :confirm => 'Are you sure?', :method => :delete )%>
+    <%= button_to("Delete This Item", {:action => :destroy, :controller => :"hydra/assets", :id => @document_fedora.pid}, :data => { :confirm => 'Are you sure?' }, :method => :delete )%>
   </div>
 <% end %>
