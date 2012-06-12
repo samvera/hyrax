@@ -7,9 +7,13 @@ describe User do
     before(:all) do
       @orig_deprecation_behavior = Hydra::SuperuserAttributes.deprecation_behavior
       Hydra::SuperuserAttributes.deprecation_behavior = :silence
+
+      @orig_su_deprecation_behavior = Superuser.deprecation_behavior
+      Superuser.deprecation_behavior = :silence
     end
     after(:all) do
       Hydra::SuperuserAttributes.deprecation_behavior = @orig_deprecation_behavior
+      Superuser.deprecation_behavior = @orig_su_deprecation_behavior
     end
 
     before(:each) do
