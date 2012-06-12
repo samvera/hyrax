@@ -15,7 +15,7 @@ module Hydra::Controller::CatalogControllerBehavior
   
   
   included do
-    Deprecation.warn(Hydra::Controller::CatalogControllerBehavior, "CatalogControllerBehavior is deprecated. You should make your own controllers using the Hydra::ControllerBehavior")
+    Deprecation.warn(Hydra::Controller::CatalogControllerBehavior, "CatalogControllerBehavior is deprecated. You should make your own controllers using the Hydra::Controller::ControllerBehavior")
     # Other modules to auto-include
     include Hydra::UI::Controller
     
