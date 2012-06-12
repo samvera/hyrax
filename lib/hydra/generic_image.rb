@@ -9,8 +9,12 @@
 # 
 # will move to lib/hydra/model/generic_image_behavior in release 5.x
 require "hydra"
+require 'deprecation'
 
 module Hydra::GenericImage
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
+
   def self.included klass
     klass.send(:include, Hydra::GenericContent)
   end
@@ -35,30 +39,36 @@ module Hydra::GenericImage
       return DERIVATION_DEFAULTS
     end
   end
+  deprecation_deprecate :derivation_options
 
   DEFAULT_IMAGE_DATASTREAMS.each do |ds_name|
     class_eval <<-EOM
       def has_#{ds_name}?
         self.datastreams.keys.include? "#{ds_name}"
       end
+      deprecation_deprecate :has_#{ds_name}?
 
       def #{ds_name}
         datastreams["#{ds_name}"].content if has_#{ds_name}?
       end
+      deprecation_deprecate :#{ds_name}
       
       def #{ds_name}=(file)
         create_or_update_datastream("#{ds_name}",file)
       end
+      deprecation_deprecate :#{ds_name}=
       
       def derive_#{ds_name}
         derive_datastream "#{ds_name}"
       end
+      deprecation_deprecate :derive_#{ds_name}
     EOM
   end
   
   def derive_all
     DEFAULT_IMAGE_DATASTREAMS.each { |ds| self.send "derive_#{ds.to_sym}" }
   end
+  deprecation_deprecate :derive_all
 
 
   private

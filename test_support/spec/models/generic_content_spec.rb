@@ -2,6 +2,17 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require "active_fedora"
 
 describe GenericContent do
+  before :all do
+    @behavior = GenericContent.deprecation_behavior
+    @h_behavior = Hydra::GenericContent.deprecation_behavior
+    GenericContent.deprecation_behavior = :silence
+    Hydra::GenericContent.deprecation_behavior = :silence
+  end
+
+  after :all do
+    GenericContent.deprecation_behavior = @behavior
+    Hydra::GenericContent.deprecation_behavior = @h_behavior
+  end
   
   before(:each) do
     @hydra_content = GenericContent.new

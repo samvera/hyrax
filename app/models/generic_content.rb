@@ -1,5 +1,7 @@
 # GenericContent:  EXAMPLE Model that conforms to the Hydra genericContent and genericMetadata cModels 
+require 'deprecation'
 class GenericContent < ActiveFedora::Base
+  extend Deprecation
 
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
   #  FIXME:  should this have   "include Hydra::ModelMixins::CommonMetadata" instead?
@@ -18,6 +20,7 @@ class GenericContent < ActiveFedora::Base
   include Hydra::ModelMethods
   
   def initialize( attrs={} )
+    Deprecation.warn(GenericContent, "GenericContent is deprecated and will be removed in hydra-head 5.x")
     super
   end
 end

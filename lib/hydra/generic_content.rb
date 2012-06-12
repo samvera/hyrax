@@ -3,7 +3,10 @@
 # require "mime/types"
 
 # will move to lib/hydra/model/generic_content_behavior in release 5.x
+require 'deprecation'
 module Hydra::GenericContent
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
   
   def self.included(klass)
    klass.send :include, Hydra::ModelMethods
@@ -27,14 +30,17 @@ module Hydra::GenericContent
       def has_#{m}?
         self.datastreams.keys.include? "#{m}"
       end
+      deprecation_deprecate :has_#{m}?
 
       def #{m}
         datastreams["#{m}"].content if has_#{m}?
       end
+      deprecation_deprecate :#{m}
 
       def #{m}=(file)
         create_or_update_datastream( "#{m}", file )
       end
+      deprecation_deprecate :#{m}=
     EOM
   end
     
@@ -46,12 +52,14 @@ module Hydra::GenericContent
     add_datastream(ds)
     save
   end
+  deprecation_deprecate :from_url
   
   def from_binary binary_info, ds_name
     file =  binary_to_file(binary_info[:blob],ds_name,binary_info[:extension])
     add_file_datastream(file,:dsid=>ds_name,:label=>ds_name)
     save
   end
+  deprecation_deprecate :from_binary
   
   def binary_to_file blob, suffix, ext=nil
     file_name = Time.now.strftime("%Y%m%d-%H%M%S")
@@ -60,6 +68,7 @@ module Hydra::GenericContent
     f.close
     return f
   end
+  deprecation_deprecate :binary_to_file
   
   def create_or_update_datastream ds_name, file
     case file
@@ -76,6 +85,7 @@ module Hydra::GenericContent
       end
     end
   end
+  deprecation_deprecate :create_or_update_datastream
   
   # Returns a human readable filesize appropriate for the given number of bytes (ie. automatically chooses 'bytes','KB','MB','GB','TB')
   # Based on a bit of python code posted here: http://blogmag.net/blog/read/38/Print_human_readable_file_size
@@ -89,6 +99,7 @@ module Hydra::GenericContent
         end
       end
   end   
+  deprecation_deprecate :bits_to_human_readable
   
   # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in mods:physicaldescription/mods:extent 
   def add_file_datastream(file, opts={})
@@ -107,9 +118,12 @@ module Hydra::GenericContent
     end
     descMetadata.update_indexed_attributes( [:physical_description, :extent] => size )
   end
+  deprecation_deprecate :add_file_datastream
   
   def mime_type file_name
     mime_types = MIME::Types.of(file_name)
     mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
   end
+  deprecation_deprecate :mime_type
+
 end

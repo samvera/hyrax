@@ -39,8 +39,10 @@
 #    gi.has_screen?
 #    gi.has_thumbnail?
 require 'hydra'
+require 'deprecation'
 
 class GenericImage < ActiveFedora::Base
+  extend Deprecation
 
   # Uses the GenericImage mixin to conform to the Hydra genericImage cModel (auto-includes on GenericContent behaviors)
   include Hydra::GenericImage
@@ -58,6 +60,7 @@ class GenericImage < ActiveFedora::Base
   has_metadata :name => "properties", :type => Hydra::Datastream::Properties
   
   def initialize( attrs={} )
+    Deprecation.warn(GenericImage, "GenericImage is deprecated and will be removed in hydra-head 5.x")
     super
   end
   

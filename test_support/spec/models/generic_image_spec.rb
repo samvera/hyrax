@@ -4,6 +4,21 @@ require "active_fedora"
 describe GenericImage do
   
   subject { GenericImage.new(:pid=>'test:pid')}
+
+  before :all do
+    @behavior = GenericImage.deprecation_behavior
+    @h_behavior = Hydra::GenericImage.deprecation_behavior
+    @hc_behavior = Hydra::GenericContent.deprecation_behavior
+    GenericImage.deprecation_behavior = :silence
+    Hydra::GenericImage.deprecation_behavior = :silence
+    Hydra::GenericContent.deprecation_behavior = :silence
+  end
+
+  after :all do
+    GenericImage.deprecation_behavior = @behavior
+    Hydra::GenericImage.deprecation_behavior = @h_behavior 
+    Hydra::GenericContent.deprecation_behavior = @hc_behavior
+  end
   
   it "Should be a kind of ActiveFedora::Base" do
     subject.should be_kind_of(ActiveFedora::Base)
