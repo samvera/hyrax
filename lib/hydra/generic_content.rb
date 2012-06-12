@@ -103,6 +103,7 @@ module Hydra::GenericContent
   
   # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in mods:physicaldescription/mods:extent 
   def add_file_datastream(file, opts={})
+    Deprecation.warn(Hydra::GenericContent, "add_file_datastream is deprecated and will be removed in hydra-head 5.x")
     # label = opts.has_key?(:label) ? opts[:label] : ""
     # mimeType = opts.has_key?(:mimeType) ? opts[:mimeType] : ""
     # ds = ActiveFedora::Datastream.new(:dsLabel => label, :controlGroup => 'M', :blob => file, :mimeType => mimeType)
@@ -118,7 +119,7 @@ module Hydra::GenericContent
     end
     descMetadata.update_indexed_attributes( [:physical_description, :extent] => size )
   end
-  deprecation_deprecate :add_file_datastream
+ # deprecation_deprecate :add_file_datastream ## 'super' call breaks under ree.. ??
   
   def mime_type file_name
     mime_types = MIME::Types.of(file_name)
