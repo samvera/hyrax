@@ -1,6 +1,17 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe HydraFedoraMetadataHelper do
+  before :all do
+    @behavior = Hydra::HydraFedoraMetadataHelperBehavior.deprecation_behavior
+    @form_behavior = Hydra::HydraFedoraMetadataHelperBehavior::HydraFormFor.deprecation_behavior
+    Hydra::HydraFedoraMetadataHelperBehavior.deprecation_behavior = :silence
+    Hydra::HydraFedoraMetadataHelperBehavior::HydraFormFor.deprecation_behavior = :silence
+  end
+
+  after :all do
+    Hydra::HydraFedoraMetadataHelperBehavior.deprecation_behavior = @behavior 
+    Hydra::HydraFedoraMetadataHelperBehavior::HydraFormFor.deprecation_behavior = @form_behavior 
+  end
   
   before(:all) do
     @resource = mock("fedora object")

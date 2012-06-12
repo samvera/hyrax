@@ -1,8 +1,11 @@
 require "inline_editable_metadata_helper"
 require "block_helpers"
 require "redcloth" # Provides textile parsing support for textile_area method
+require 'deprecation'
 
 module Hydra::HydraFedoraMetadataHelperBehavior
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
   
   def fedora_text_field(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
@@ -26,10 +29,12 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     
     result
   end
+  deprecation_deprecate :fedora_text_field
   
   def fedora_text_area(resource, datastream_name, field_key, opts={})
     fedora_textile_text_area(resource, datastream_name, field_key, opts)
   end
+  deprecation_deprecate :fedora_text_area
   
   # Textile textarea varies from the other methods in a few ways
   # Since we're using jeditable with this instead of fluid, we need to provide slightly different hooks for the javascript
@@ -60,6 +65,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     result << body.html_safe
     result
   end
+  deprecation_deprecate :fedora_textile_text_area
   
   # Expects :choices option.  Option tags for the select are generated from the :choices option using Rails "options_for_select":http://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/options_for_select helper
   # If no :choices option is provided, returns a regular fedora_text_field
@@ -85,6 +91,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     result
   end
+  deprecation_deprecate :fedora_select
   
   def fedora_date_select(resource, datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
@@ -137,6 +144,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     result << body.html_safe
     result
   end
+  deprecation_deprecate :fedora_date_select
 
   def fedora_submit(resource, datastream_name, field_key, opts={})
     result = ""
@@ -146,6 +154,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     return result.html_safe
   end
+  deprecation_deprecate :fedora_submit
   
   def fedora_checkbox(resource, datastream_name, field_key, opts={})
     result = ""
@@ -172,6 +181,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     return result.html_safe
   end
+  deprecation_deprecate :fedora_checkbox
   
   # Expects :choices option. 
   # :choices should be a hash with value/label pairs
@@ -209,6 +219,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     return result.html_safe
   end
+  deprecation_deprecate :fedora_radio_button
   
   
   def fedora_text_field_insert_link(datastream_name, field_key, opts={})
@@ -218,6 +229,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     result = "<a class='addval #{field_type}' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>"
     return result.html_safe
   end
+  deprecation_deprecate :fedora_text_field_insert_link
   
   def fedora_text_area_insert_link(datastream_name, field_key, opts={})
     field_name = field_name_for(field_key)
@@ -225,6 +237,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     result = "<a class='addval textarea' href='#' data-datastream-name=\"#{datastream_name}\" title='#{link_text}'>#{link_text}</a>"    
     return result.html_safe
   end
+  deprecation_deprecate :fedora_text_area_insert_link
   
   def fedora_field_label(datastream_name, field_key, label=nil)
     field_name = field_name_for(field_key)
@@ -237,6 +250,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
       return content_tag("label", label, :for=>field_name).html_safe
     end
   end
+  deprecation_deprecate :fedora_field_label
   
   # Generate hidden inputs to handle mapping field names to server-side metadata mappings
   # this allows us to round-trip OM metadata mappings
@@ -259,62 +273,76 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     result.html_safe
   end
+  deprecation_deprecate :field_selectors_for
   
   # hydra_form_for block helper 
   # allows you to construct an entire hydra form by passing a block into this method
   class HydraFormFor < BlockHelpers::Base
+    extend Deprecation
 
     def initialize(resource, opts={})
+      Deprecation.warn self.class.name, "HydraFormFor is deprecated and will be removed from hydra-head 5.x"
       @resource = resource
     end
     
     def fedora_label(datastream_name, field_key, opts={})
       helper.fedora_label(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_label
     
     def fedora_text_field(datastream_name, field_key, opts={})
       helper.fedora_label(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_text_field
 
     def fedora_text_area(datastream_name, field_key, opts={})
       helper.fedora_text_area(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_text_area
     
     def fedora_select(datastream_name, field_key, opts={})
       helper.fedora_select(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_select
 
     def fedora_submit(datastream_name, field_key, opts={})
       helper.fedora_submit(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_submit
     
     def fedora_checkbox(datastream_name, field_key, opts={})
       helper.fedora_checkbox(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_checkbox
     
     def fedora_radio_button(datastream_name, field_key, opts={})
       helper.fedora_radio_button(@resource, datastream_name, field_key, opts)
     end    
+    deprecation_deprecate :fedora_radio_button
     
     def fedora_text_field_insert_link(datastream_name, field_key, opts={})
       helper.fedora_text_field_insert_link(@resource, datastream_name, field_key, opts={})
     end
+    deprecation_deprecate :fedora_text_field_insert_link
     
     def fedora_field_label(datastream_name, field_key, opts={})
       helper.fedora_field_label(@resource, datastream_name, field_key, opts)
     end
+    deprecation_deprecate :fedora_field_label
 
     def display(body)
       inner_html = content_tag :input, :type=>"hidden", :name=>"content_type", :value=>@resource.class.to_s.underscore
       inner_html = inner_html << body
       content_tag :form, inner_html
     end
+    deprecation_deprecate :display
 
   end
   
   #
   # Internal helper methods
   #
+  protected
   
   # retrieve field values from datastream.
   # If :values is provided, skips accessing the datastream and returns the contents of :values instead.
@@ -328,6 +356,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
     end
     return values
   end
+  #deprecation_deprecate :get_values_from_datastream
   
   def field_name_for(field_key)
     if field_key.kind_of?(Array)
@@ -336,6 +365,7 @@ module Hydra::HydraFedoraMetadataHelperBehavior
       field_key.to_s
     end
   end
+  #deprecation_deprecate :field_name_for
   
   def generate_base_id(field_name, current_value, values, opts)
     if opts.fetch(:multiple, true)
@@ -344,5 +374,6 @@ module Hydra::HydraFedoraMetadataHelperBehavior
       return field_name
     end
   end
+  #deprecation_deprecate :generate_base_id
   
 end
