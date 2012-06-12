@@ -24,7 +24,7 @@ ScholarSphere::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # Enable threaded mode
-  config.threadsafe!
+  config.threadsafe! unless $rails_rake_task
 
   config.log_level = :debug
 
