@@ -5,10 +5,8 @@ gem 'rails', '~> 3.2.3'
 gem 'sqlite3', '~> 1.3.6'
 gem 'mysql2'
 gem 'blacklight', '~> 3.4.2'
-gem "hydra-head", :git => 'git://github.com/projecthydra/hydra-head.git',  :ref=>"25cb42c"
-gem 'active-fedora', :git=>'git://github.com/projecthydra/active_fedora.git', :ref=>'c40b25c'
-#gem 'hydra-head', '~> 4.0.1'
-#gem 'active-fedora', :git => 'git://github.com/psu-stewardship/active_fedora.git' 
+gem "hydra-head", :git => 'git://github.com/projecthydra/hydra-head.git',  :ref => "a3c9a397"
+gem 'active-fedora', :git => 'git://github.com/projecthydra/active_fedora.git', :ref => 'c40b25c'
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git' 
 gem 'execjs'
 gem 'therubyracer'
@@ -24,15 +22,15 @@ gem 'hydra-ldap', '0.0.2'
 gem 'zipruby'
 
 group :assets do
-  gem 'sass-rails',   "~> 3.2.3"
+  gem 'sass-rails', "~> 3.2.3"
   gem 'coffee-rails', "~> 3.2.1"
-  gem 'uglifier',     ">= 1.0.3"
+  gem 'uglifier', ">= 1.0.3"
   gem "compass-rails", "~> 1.0.0"
   gem "compass-susy-plugin", "~> 0.9.0"
 end
 
 group :integration do
-  gem 'yaml_db', :git=>'git://github.com/lostapathy/yaml_db.git'
+  gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
   gem 'passenger'
 end
 

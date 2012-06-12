@@ -1,18 +1,20 @@
 class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
-  include Hydra::ModelMethods
   include Dil::RightsMetadata
+  include PSU::ModelMethods
   include PSU::Noid
   
   include ActiveModel::Validations::HelperMethods 
     
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
+  has_metadata :name => "properties", :label => "Depositor", :type => Hydra::Datastream::Properties
   has_file_datastream :name => "content", :type => FileContentDatastream
   has_file_datastream :name => "thumbnail", :type => FileContentDatastream
 
   belongs_to :batch, :property => :is_part_of
 
+  delegate :depositor, :to => :properties
   delegate :related_url, :to => :descMetadata
   delegate :based_near, :to => :descMetadata
   delegate :part_of, :to => :descMetadata
@@ -245,7 +247,7 @@ class GenericFile < ActiveFedora::Base
     terms = []
     self.descMetadata.class.config[:predicate_mapping].each do |uri, mappings|
       new_terms = mappings.keys.map(&:to_s).select do |term|
-        term.start_with? "generic_file__" and !['solrtype', 'solrbehaviors'].include? term.split('__').last
+        term.start_with? "generic_file__" and !['type', 'behaviors'].include? term.split('__').last
       end
       terms.concat(new_terms)
     end 

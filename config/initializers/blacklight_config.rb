@@ -356,17 +356,17 @@ Blacklight.configure(:shared) do |config|
   # Specifying a :qt only to show it's possible, and so our internal automated
   # tests can test it. In this case it's the same as 
   # config[:default_solr_parameters][:qt], so isn't actually neccesary. 
-#  config[:search_fields] << {
-#    :key => 'subject', 
-#    :qt=> 'search',
-#    :solr_parameters => {
-#      :"spellcheck.dictionary" => "subject"
-#    },
-#    :solr_local_parameters => {
-#      :qf => "$subject_qf",
-#      :pf => "$subject_pf"
-#    }
-#  }
+  #  config[:search_fields] << {
+  #    :key => 'subject', 
+  #    :qt=> 'search',
+  #    :solr_parameters => {
+  #      :"spellcheck.dictionary" => "subject"
+  #    },
+  #    :solr_local_parameters => {
+  #      :qf => "$subject_qf",
+  #      :pf => "$subject_pf"
+  #    }
+  #  }
   
   # "sort results by" select (pulldown)
   # label in pulldown is followed by the name of the SOLR field to sort by and
@@ -374,9 +374,9 @@ Blacklight.configure(:shared) do |config|
   # except in the relevancy case).
   # label is key, solr field is value
   config[:sort_fields] ||= []
-  #config[:sort_fields] << ['relevance', 'score desc, generic_file__date_uploaded_sort desc']
+  config[:sort_fields] << ['relevance', 'score desc, generic_file__date_uploaded_sort desc']
   #config[:sort_fields] << ['publisher', 'generic_file__publisher_sort asc, generic_file__date_uploaded_sort desc']
-  config[:sort_fields] << ['date created', 'generic_file__date_created_sort desc']
+  #config[:sort_fields] << ['date created', 'generic_file__date_created_sort desc']
   config[:sort_fields] << ['date uploaded', 'generic_file__date_uploaded_sort desc']
   config[:sort_fields] << ['date modified', 'generic_file__date_modified_sort desc']
   #config[:sort_fields] << ['subject', 'generic_file__subject_sort asc, generic_file__date_uploaded_sort desc']

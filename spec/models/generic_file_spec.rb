@@ -9,11 +9,13 @@ describe GenericFile do
     it "should have rightsMetadata" do
       @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
     end
+    it "should have properties datastream for depositor" do
+      @file.properties.should be_instance_of Hydra::Datastream::Properties
+    end
     it "should have apply_depositor_metadata" do
       @file.apply_depositor_metadata('jcoyne')
       @file.rightsMetadata.edit_access.should == ['jcoyne']
-    end
-  
+    end 
     it "should have a set of permissions" do
       @file.discover_groups=['group1', 'group2']
       @file.edit_users=['user1']
