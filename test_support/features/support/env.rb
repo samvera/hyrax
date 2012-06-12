@@ -53,3 +53,5 @@ ActionController::Base.allow_rescue = false
 # warning: regexp match /.../n against to UTF-8 string
 $VERBOSE = nil
 
+require 'deprecation'
+Deprecation.default_deprecation_behavior = :silence
