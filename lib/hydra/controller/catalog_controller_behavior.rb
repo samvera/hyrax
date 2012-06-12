@@ -33,14 +33,14 @@ module Hydra::Controller::CatalogControllerBehavior
     show
     render "show"
   end
-  deprecation_deprecate :edit
+  #deprecation_deprecate :edit
   
   # This will render the "delete" confirmation page and a form to submit a destroy request to the assets controller
   def delete
     show
     render "show"
   end
-  deprecation_deprecate :delete
+  #deprecation_deprecate :delete
   
   def nonexistent_document *args
     if Rails.env == "development"
@@ -52,5 +52,5 @@ module Hydra::Controller::CatalogControllerBehavior
       render "index", :status => 404
     end
   end
-  deprecation_deprecate :nonexistent_document
+  #deprecation_deprecate :nonexistent_document
 end
