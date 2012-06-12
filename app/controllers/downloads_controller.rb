@@ -1,5 +1,5 @@
 class DownloadsController < ApplicationController
-    include Hydra::RepositoryController
+    include Hydra::Controller::RepositoryControllerBehavior
     include Hydra::AssetsControllerHelper
     helper :downloads
     

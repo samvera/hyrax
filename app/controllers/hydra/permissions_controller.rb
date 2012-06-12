@@ -1,4 +1,13 @@
+require 'deprecation'
 class Hydra::PermissionsController < ApplicationController
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
+
+  def initialize *args
+    Deprecation.warn(Hydra::PermissionsController, "Hydra::PermissionsController is deprecated and will be removed from #{self.class.deprecation_horizon}")
+    super
+  end
+
   include Hydra::AssetsControllerHelper
   include Hydra::SubmissionWorkflow
   
@@ -10,6 +19,7 @@ class Hydra::PermissionsController < ApplicationController
       format.inline { render :partial=>"hydra/permissions/index", :format=>"html" }
     end
   end
+  deprecation_deprecate :index
   
   def new
     respond_to do |format|
@@ -17,6 +27,7 @@ class Hydra::PermissionsController < ApplicationController
       format.inline { render :partial=>"hydra/permissions/new" }
     end
   end
+  deprecation_deprecate :new
   
   def edit
     @document_fedora=ActiveFedora::Base.find(params[:asset_id], :cast=>true)
@@ -26,6 +37,7 @@ class Hydra::PermissionsController < ApplicationController
       format.inline {render :action=>"edit", :layout=>false}
     end
   end
+  deprecation_deprecate :edit
   
   # Create a new permissions entry
   # expects permission["actor_id"], permission["actor_type"] and permission["access_level"] as params. ie.   :permission=>{"actor_id"=>"_person_id_","actor_type"=>"person","access_level"=>"read"}
@@ -55,6 +67,7 @@ class Hydra::PermissionsController < ApplicationController
     end
 
   end
+  deprecation_deprecate :create
   
   # Updates the permissions for all actors in a hash.  Can specify as many groups and persons as you want
   # ie. :permission => {"group"=>{"group1"=>"discover","group2"=>"edit"}, {"person"=>{"person1"=>"read"}}}
@@ -96,5 +109,6 @@ class Hydra::PermissionsController < ApplicationController
     end
     
   end
+  deprecation_deprecate :update
     
 end

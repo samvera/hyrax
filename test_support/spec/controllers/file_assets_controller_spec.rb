@@ -2,7 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Hydra::FileAssetsController do
   include Devise::TestHelpers
-
   before do
     session[:user]='bob'
   end

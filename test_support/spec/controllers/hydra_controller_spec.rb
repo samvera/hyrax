@@ -12,12 +12,12 @@ describe HydraControllerTest do
     HydraControllerTest.expects(:helper).with(:hydra)
     HydraControllerTest.expects(:helper).with(:hydra_assets)
     HydraControllerTest.stubs(:before_filter)
-    HydraControllerTest.send(:include, Hydra::Controller)
+    HydraControllerTest.send(:include, Hydra::Controller::ControllerBehavior)
   end
   
   describe "load_fedora_document" do
     before do
-      HydraControllerTest.send(:include, Hydra::Controller)
+      HydraControllerTest.send(:include, Hydra::Controller::ControllerBehavior)
     end
 
 

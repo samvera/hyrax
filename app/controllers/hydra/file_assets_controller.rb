@@ -1,3 +1,3 @@
 class Hydra::FileAssetsController < ApplicationController
-  include Hydra::FileAssets
+  include Hydra::Controller::FileAssetsBehavior
 end

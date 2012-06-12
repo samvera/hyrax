@@ -8,7 +8,7 @@ require File.expand_path( File.join( File.dirname(__FILE__),'..','spec_helper') 
 # or
 # rake cucumber
 
-describe Hydra::RepositoryController do
+describe Hydra::Controller::RepositoryControllerBehavior do
   
   describe "load_document_from_params" do
     it "should choose which model to use based on submitted params" do

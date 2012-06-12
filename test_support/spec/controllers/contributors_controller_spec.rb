@@ -9,6 +9,16 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 # rake cucumber
 
 describe Hydra::ContributorsController do
+  before :all do
+    @behavior = Hydra::ContributorsController.deprecation_behavior
+    Hydra::ContributorsController.deprecation_behavior = :silence
+
+  end
+
+  after :all do
+    Hydra::ContributorsController.deprecation_behavior = @behavior 
+
+  end
   
   describe "create" do
     it "should support adding new person / contributor / organization nodes" do

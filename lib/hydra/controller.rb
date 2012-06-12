@@ -10,44 +10,17 @@
 #
 # will move to lib/hydra/controller/controller_behavior in release 5.x
 module Hydra::Controller
+  autoload :AssetsControllerBehavior, 'hydra/controller/assets_controller_behavior'
+  autoload :CatalogControllerBehavior, 'hydra/controller/catalog_controller_behavior'
+  autoload :ControllerBehavior, 'hydra/controller/controller_behavior'
+  autoload :RepositoryControllerBehavior, 'hydra/controller/repository_controller_behavior'
+  autoload :UploadBehavior, 'hydra/controller/upload_behavior'
+  autoload :FileAssetsBehavior, 'hydra/controller/file_assets_behavior'
+
   extend ActiveSupport::Concern
   
-
   included do
-    # Other modules to auto-include
-    include Hydra::AccessControlsEnforcement
-    include Hydra::RepositoryController
-  
-    helper :hydra
-    helper :hydra_assets
-
-    # Catch permission errors
-    rescue_from Hydra::AccessDenied do |exception|
-      if (exception.action == :edit)
-        redirect_to({:action=>'show'}, :alert => exception.message)
-      else
-        redirect_to root_url, :alert => exception.message
-      end
-    end
+    ActiveSupport::Deprecation.warn("Hydra::Controller has been renamed Hydra::Controller::ControllerBehavior.")
+    include Hydra::Controller::ControllerBehavior
   end
-  
-  # Use params[:id] to load an object from Fedora.  Inspects the object for known models and mixes in any of those models' behaviors.
-  # Sets @document_fedora with the loaded object
-  # Sets @file_assets with file objects that are children of the loaded object
-  def load_fedora_document
-    @document_fedora = ActiveFedora::Base.find(params[:id], :cast=>true)
-    unless @document_fedora.class.include?(Hydra::ModelMethods)
-      @document_fedora.class.send :include, Hydra::ModelMethods
-    end
-    
-    @file_assets = @document_fedora.parts(:response_format=>:solr)
-  end
-  
-  
-  # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)
-  # defaults to using whatever you have set as the Devise authentication_key
-  def user_key
-    current_user.send(Devise.authentication_keys.first)
-  end
-  
 end

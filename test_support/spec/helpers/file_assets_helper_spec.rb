@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Hydra::FileAssetsHelper do
+describe Hydra::Controller::UploadBehavior do
 
   it "should respond to datastream_id" do
     helper.should respond_to :datastream_id  ### API method, test that it's there to be overridden

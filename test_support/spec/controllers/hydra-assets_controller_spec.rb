@@ -9,6 +9,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 # rake cucumber
 
 describe Hydra::AssetsController do
+  before :all do
+    @behavior = Hydra::AssetsController.deprecation_behavior
+    Hydra::AssetsController.deprecation_behavior = :silence
+  end
+
+  after :all do
+    Hydra::AssetsController.deprecation_behavior = @behavior 
+  end
   
   before do
     request.env['WEBAUTH_USER']='bob'

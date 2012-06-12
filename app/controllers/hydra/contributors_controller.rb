@@ -1,9 +1,18 @@
+require 'deprecation'
 class Hydra::ContributorsController < ApplicationController
-  include Hydra::RepositoryController
+  extend Deprecation
+
+  self.deprecation_horizon = 'hydra-head 5.x'
+  include Hydra::Controller::RepositoryControllerBehavior
   include Hydra::AssetsControllerHelper
   include Hydra::SubmissionWorkflow
 
   before_filter :load_document, :only => :update 
+
+  def initialize *args
+    Deprecation.warn(Hydra::ContributorsController, "Hydra::ContributorsController is deprecated and will be removed from #{self.class.deprecation_horizon}")
+    super
+  end
   
   # Display form for adding a new Contributor
   # If contributor_type is provided, renders the appropriate "new" form
@@ -22,6 +31,7 @@ class Hydra::ContributorsController < ApplicationController
       format.inline { render :partial=>"contributors/new", :layout=>false }
     end
   end
+  deprecation_deprecate :new
   
   def create
     @document_fedora = load_document_from_id(params[:asset_id])
@@ -38,6 +48,7 @@ class Hydra::ContributorsController < ApplicationController
     end
     
   end
+  deprecation_deprecate :create
   
   # Not sure how the #create method was intended to work, but this seems like it works and takes a hybrid approach to how the contributors were handled between this and the AssetsController work.
   def update
@@ -55,6 +66,7 @@ class Hydra::ContributorsController < ApplicationController
       redirect_to next_step(params[:asset_id])
     end
   end
+  deprecation_deprecate :update
   
   def destroy
     af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
@@ -67,6 +79,7 @@ class Hydra::ContributorsController < ApplicationController
       redirect_to edit_catalog_path(params[:asset_id], :wf_step => :contributor)
     end
   end
+  deprecation_deprecate :destroy
   
   protected 
   
@@ -87,6 +100,7 @@ class Hydra::ContributorsController < ApplicationController
     end
     return true
   end
+  deprecation_deprecate :mods_assets_update_validation
   
   private
   

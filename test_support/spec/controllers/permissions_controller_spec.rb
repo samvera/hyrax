@@ -1,6 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Hydra::PermissionsController do
+  before :all do
+    @behavior = Hydra::PermissionsController.deprecation_behavior
+    Hydra::PermissionsController.deprecation_behavior = :silence
+  end
+
+  after :all do
+    Hydra::PermissionsController.deprecation_behavior = @behavior 
+  end
   describe "create" do
     it "should create a new permissions entry" do
       @asset = ModsAsset.create

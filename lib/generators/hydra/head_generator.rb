@@ -112,7 +112,7 @@ EOF
     if File.exists?(file_path) 
       insert_into_file file_path, :after => 'include Blacklight::Catalog' do      
         "\n  # Extend Blacklight::Catalog with Hydra behaviors (primarily editing)." +
-        "\n  include Hydra::Catalog\n"  +
+        "\n  include Hydra::Controller::CatalogControllerBehavior\n"  +
         "\n  # These before_filters apply the hydra access controls" +
         "\n  before_filter :enforce_access_controls" +
         "\n  before_filter :enforce_viewing_context_for_show_requests, :only=>:show" +
@@ -123,7 +123,7 @@ EOF
 
       end
     else
-      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller module in the Controller class definition.  See the Hydra::Controller section in the Hydra API Docs for more info." 
+      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller::ControllerBehavior module in the Controller class definition.  See the Hydra::Controller::ControllerBehavior section in the Hydra API Docs for more info." 
     end    
   end
   
@@ -143,13 +143,13 @@ EOF
     if File.exists?(file_path) 
       insert_into_file file_path, :after => 'include Blacklight::Controller' do 
         "  \n# Adds Hydra behaviors into the application controller \n" +        
-        "  include Hydra::Controller\n" +
+        "  include Hydra::Controller::ControllerBehavior\n" +
         "  def layout_name\n" +
         "   'hydra-head'\n" +
         "  end\n"     
       end
     else
-      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller module in the Controller class definition.  See the Hydra::Controller section in the Hydra API Docs for more info." 
+      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller::ControllerBehavior module in the Controller class definition.  See the Hydra::Controller::ControllerBehavior section in the Hydra API Docs for more info." 
     end
   end
   
