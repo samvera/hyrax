@@ -67,12 +67,18 @@
           <th><%= f.label key, :class=>"control-label" %> </th>
           <td>
             <div class="control-group" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
-            <div class="controls">
-            <%= f.text_field :title, :name=>"generic_file[#{key}][]", :value=>v %> 
-            <% if index == 0 %>
-              <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder"  %>
-              <% end %>
-            </div>
+              <div class="controls">
+                <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v %> 
+                <% if index == 0 %>
+                  <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder"  %>
+                  &nbsp;
+                  <span class="formHelpContainer">
+                    <span class="formHelper" id="generic_file_<%= key %>_help">
+                    <%= ScholarSphere::Application.config.metadata_help["generic_file_" + key] %>
+                    </span>
+                  </span>
+                <% end %>
+              </div>
             </div>
             <div id="additional_<%= key %>_elements"></div>
           </td>

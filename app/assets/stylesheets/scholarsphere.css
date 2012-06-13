@@ -728,6 +728,20 @@ table.verticalheadings {
 	color: #fff;
 	font-size: 14px;
 }
+.formHelpContainer {
+  width: 250px;
+  position: relative;
+}
+.formHelper {
+  display: none; 
+  border: 1px #ffeedd solid;
+  background: #fcfeda;
+  font-size: 11px;
+  width: 250px; 
+  position: absolute;
+  padding: 3px;
+  z-index: 10;
+}
 .theme-default.horizontal #slider {
     width:779px; /* Make sure your images are the same size */
     height:525px; /* Make sure your images are the same size */

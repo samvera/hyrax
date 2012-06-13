@@ -41,19 +41,31 @@
       </div>
 
       <div class="control-group" id="additional_title_clone">
-        <%= f.label :title, :class=>"control-label" %> 
+        <%= f.label :title, "Title", :class=>"control-label" %> 
         <div class="controls">
           <%= f.text_field :title, :name=>"generic_file[title][]", :value=>"" %>  
           <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_title_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>
+            </span>
+         </span>
         </div>
       </div>
       <div id="additional_title_elements"></div>
 
       <div class="control-group" id="additional_tag_clone">
-        <%= f.label :tag, 'Keyword', :class=>"control-label" %> 
+        <%= f.label :tag, "Keyword", :class=>"control-label" %> 
         <div class="controls">
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
           <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_tag_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>
+            </span>
+         </span>
         </div>
       </div>
       <div id="additional_tag_elements"></div>
@@ -62,6 +74,12 @@
       <div class="controls" id="additional_subject_clone">
         <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]", :value=>"" %>  
         <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_subject_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_subject"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_subject_elements"></div>
 
@@ -69,6 +87,12 @@
       <div class="controls" id="additional_creator_clone">
         <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]", :value=>"" %>
         <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_creator_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_creator_elements"></div>
 
@@ -85,6 +109,12 @@
       <div class="controls" id="additional_related_url_clone">
         <%= f.text_field :related_url, :class=>"controls", :name=>"generic_file[related_url][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_related_url_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_related_url"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_related_url_elements"></div>
 
@@ -99,6 +129,12 @@
       <div class="controls" id="additional_contributor_clone">
         <%= f.text_field :contributor, :class=>"controls", :name=>"generic_file[contributor][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_contributor_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_contributor"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_contributor_elements"></div>
 
@@ -106,6 +142,12 @@
       <div class="controls" id="additional_date_created_clone">
         <%= f.text_field :date_created, :class=>"controls", :name=>"generic_file[date_created][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_date_created_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_date_created"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_date_created_elements"></div>
 
@@ -113,6 +155,12 @@
       <div class="controls" id="additional_description_clone">
         <%= f.text_area :description, :class=>"controls", :name=>"generic_file[description][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_description_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_description"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_description_elements"></div>
 
@@ -120,6 +168,12 @@
       <div class="controls" id="additional_identifier_clone">
         <%= f.text_field :identifier, :class=>"controls", :name=>"generic_file[identifier][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_identifier_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_identifier"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_identifier_elements"></div>
 
@@ -127,6 +181,12 @@
       <div class="controls" id="additional_language_clone">
         <%= f.text_field :language, :class=>"controls", :name=>"generic_file[language][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_language_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_language"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_language_elements"></div>
 
@@ -134,6 +194,12 @@
       <div class="controls" id="additional_publisher_clone">
         <%= f.text_field :publisher, :class=>"controls", :name=>"generic_file[publisher][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_publisher_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_publisher"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_publisher_elements"></div>
 
@@ -141,6 +207,12 @@
       <div class="controls" id="additional_rights_clone">
         <%= f.text_field :rights, :class=>"controls", :name=>"generic_file[rights][]", :value=>""  %> 
         <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder"  %>
+          &nbsp;
+          <span class="formHelpContainer">
+            <span class="formHelper" id="generic_file_rights_help">
+              <%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>
+            </span>
+         </span>
       </div>
       <div id="additional_rights_elements"></div>
 

@@ -87,6 +87,7 @@ $(function() {
     //remove the button before adding the input
     //we don't want a button on each element being appended
     cloneElem.find('#'+this.id).remove();
+    cloneElem.find('.formHelp').remove();
 
     //clear out the value for the element being appended
     //so the new element has a blank value
@@ -104,6 +105,19 @@ $(function() {
     cloneElem.find('input[type=text]').focus();
     return false;
   });
+
+  // this will make the help text for a form element, displayable 
+  // when focus is given, assuming there is a help element
+  // help element id must be same id as the form element with a 
+  // suffix of _help
+  $('input[type=text], textarea').focus(function() {
+       $("#"+this.id+"_help").css("display", "inline-block"); 
+    });
+
+  // hides the form help element when focus is lost
+  $('input[type=text], textarea').focusout(function() {
+       $("#"+this.id+"_help").css("display", "none"); 
+      });
 
   $('.icon-plus').click(function() {
     //this.id format: "expand_NNNNNNNNNN"

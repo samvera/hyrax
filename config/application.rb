@@ -55,6 +55,23 @@ module ScholarSphere
       "Edit" => "edit"
     }
 
+    # help text to display for form metadata elements, these will need to be updated to 
+    # reflect a field name change (should one happen) in the generic file datastream
+    config.metadata_help = {
+      "generic_file_title" => "The name of the object being uploaded to ScholarSphere.",
+      "generic_file_tag" => "Terms which describe the object. They do not need to belong to any controlled vocabulary.",
+      "generic_file_subject" => "If you would like to align the description of your object with an existing vocabulary of subject terms, enter those here. Currently we support Library of Congress Subject Headings (LCSH); we hope to add additional subject-specific vocabularies (MESH, etc.) in the future. Enter part of a term and ScholarSphere will try to predict the subject heading you are adding.",
+      "generic_file_creator" => "The name of the person or group primarily responsible for the creation of the object being uploaded.",
+      "generic_file_related_url" => "A URL about the object or the context in which it was created. Example: a link to the research project from which a data set was derived.", 
+      "generic_file_contributor" => "Any additional persons or groups responsible for the object's existence, e.g. schools, colleges, or institutes at Penn State; funding agencies responsible for funding the research which produced the object, etc.",
+      "generic_file_date_created" => "Date on which the object was created in its present form.",
+      "generic_file_description" => "An abstract, notes about relationships between this object and other objects to which it is related, etc. detailing the object and its context.",
+      "generic_file_identifier" => "A unique handle describing the resource in an external context, i.e. if it has an ISBN, OCLC number, or similar identifying numbers.",
+      "generic_file_language" => "The language (if any) in which the resource is expressed; may be repeated.",
+      "generic_file_publisher" => "The entity responsible for dissemination of the object, if it is different from the Creator. ScholarSphere assumes \"Pennsylvania State University Libraries\" if none is provided",
+      "generic_file_rights" => "Any access restrictions or licensing agreements not already covered by the Public Access Statement."
+    }
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/app/models/**/"] 
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
