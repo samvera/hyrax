@@ -2,6 +2,18 @@
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
 
+<% content_for :local_js do %>
+    audiojs.events.ready(function() {
+      var as = audiojs.createAll();
+    });
+<% end %>
+
+<% content_for :local_css do %>
+.audiojs {
+  width: 338px;
+}
+<% end %>
+
 <h1 class="lower"><%= @generic_file.title.join(' | ') %></h1>
 
 <div class="columns two-b">

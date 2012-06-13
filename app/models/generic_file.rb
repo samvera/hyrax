@@ -166,7 +166,7 @@ class GenericFile < ActiveFedora::Base
     pdf.from_blob(content.content)
     first = pdf.to_a[0]
     first.format = "PNG"   
-    thumb = first.scale(45, 60)
+    thumb = first.scale(338, 493)
     self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
     logger.debug "Has the content changed before saving? #{self.content.changed?}"
     self.terms_of_service = '1'    

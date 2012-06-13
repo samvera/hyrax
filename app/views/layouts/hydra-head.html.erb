@@ -18,6 +18,15 @@
     <%# javascript_include_tag params[:controller] %>
     <%= yield(:js_head) %>
 
+    <script>
+      $(function() {
+        <%= yield(:local_js) %>
+      });
+    </script>
+
+    <style>
+      <%= yield(:local_css) %>
+    </style>
 	</head>
   
   <body> 

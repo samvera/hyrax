@@ -2,6 +2,18 @@
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
 
+<% content_for :local_js do %>
+    audiojs.events.ready(function() {
+      var as = audiojs.createAll();
+    });
+<% end %>
+
+<% content_for :local_css do %>
+.audiojs {
+  width: 140px;
+}
+<% end %>
+
   <% @page_title = application_name + " Dashboard" %>
 
         <% extra_head_content << render_opensearch_response_metadata.html_safe %>
