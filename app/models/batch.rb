@@ -1,8 +1,8 @@
 class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
-  include Hydra::ModelMethods
-  include PSU::Noid
   include Dil::RightsMetadata
+  include PSU::ModelMethods
+  include PSU::Noid
 
   has_metadata :name => "descMetadata", :type => BatchRdfDatastream
 

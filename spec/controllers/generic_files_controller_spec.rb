@@ -56,6 +56,21 @@ describe GenericFilesController do
       b = Batch.create(pid: "sample:batch_id")
       b.generic_files.first.pid.should == "test:123"
     end
+    it "should set the depositor id" do
+      file = fixture_file_upload('/world.png','image/png')
+      xhr :post, :create, :files => [file], :Filename => "The world",
+      :batch_id => "sample:batch_id", :permission => {"group"=>{"public"=>"discover"} }, :terms_of_service => "1"
+      response.should be_success
+
+      saved_file = GenericFile.find('test:123')
+      # This is confirming that apply_depositor_metadata recorded the depositor
+      saved_file.properties.depositor.should == ['jilluser']
+      saved_file.depositor.should == ['jilluser']
+      saved_file.properties.to_solr.keys.should include('depositor_t')
+      saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
+      saved_file.to_solr.keys.should include('depositor_t')
+      saved_file.to_solr['depositor_t'].should == ['jilluser']
+    end    
   end
 
   describe "audit" do
@@ -111,7 +126,10 @@ describe GenericFilesController do
       f = GenericFile.new(:pid => 'scholarsphere:test5')
       f.apply_depositor_metadata('archivist1')
       f.set_title_and_label('world.png')
-      f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content', :mimeType => 'image/png')
+      f.add_file_datastream(File.new(Rails.root +  'spec/fixtures/world.png'))
+      # grant public read access explicitly
+      params = {:generic_file => { :read_groups_string => 'public'}}
+      f.update_attributes(params[:generic_file])
       f.expects(:characterize_if_changed).yields
       f.save
     end    
@@ -120,16 +138,16 @@ describe GenericFilesController do
     end
     describe "edit" do
       it "should give me a flash error" do
-        #render_views
         get :edit, id:"test5"
-        flash[:notice].should_not be_empty
-        flash[:notice].should include("You do not have sufficient privileges to edit this document")
+        flash[:alert].should_not be_nil
+        flash[:alert].should_not be_empty
+        flash[:alert].should include("You do not have sufficient privileges to edit this document")
       end
     end
     describe "view" do
       it "should show me the file" do
         get :show, id:"test5"
-        flash[:notice].should be_nil
+        flash[:alert].should be_nil
       end
     end    
   end

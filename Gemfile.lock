@@ -27,15 +27,16 @@ GIT
 
 GIT
   remote: git://github.com/projecthydra/hydra-head.git
-  revision: 25cb42c77d1c807e8948d678a251a358b1436352
-  ref: 25cb42c
+  revision: a3c9a3970d0ad0863882a5e5b78fa2ecb8954b46
+  ref: a3c9a397
   specs:
-    hydra-head (4.0.1)
+    hydra-head (4.0.3)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.1)
       blacklight (~> 3.4.2)
       block_helpers
       cancan
+      deprecation
       devise
       jquery-rails
       rails (~> 3.2.3)
@@ -167,6 +168,8 @@ GEM
     delayed_job_active_record (0.3.2)
       activerecord (> 2.1.0)
       delayed_job (~> 3.0.0)
+    deprecation (0.0.3)
+      activesupport
     devise (2.0.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
