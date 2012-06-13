@@ -5,8 +5,9 @@ require 'hydra-access-controls'
 
 # Hydra libraries
 module Hydra
-  extend Blacklight::GlobalConfigurable
   extend ActiveSupport::Autoload
+  autoload :GlobalConfigurable
+  extend GlobalConfigurable
   autoload :Assets
   autoload :Catalog
   autoload :Controller
