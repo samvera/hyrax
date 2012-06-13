@@ -1,4 +1,8 @@
-	<% @page_title = application_name + " Dashboard" %>
+<% javascript 'video.js' %>
+<% javascript 'audio.min.js' %>
+<% stylesheet 'video-js.css' %>
+
+  <% @page_title = application_name + " Dashboard" %>
 
         <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 

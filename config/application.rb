@@ -2,6 +2,8 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'socket'
+require 'sprockets'
+
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
@@ -18,6 +20,15 @@ module ScholarSphere
     config.application_name = "ScholarSphere"
     # turning on the new asset pipeline for handling javascript, css, and image files
     config.assets.enabled = true
+    config.assets.paths << '#{Rails.root}/app/assets/javascripts'
+    config.assets.paths << '#{Rails.root}/app/assets/stylesheets'
+    config.assets.paths << '#{Rails.root}/app/assets/images'
+    config.assets.paths << '#{Rails.root}/lib/assets/javascripts'
+    config.assets.paths << '#{Rails.root}/lib/assets/stylesheets'
+    config.assets.paths << '#{Rails.root}/lib/assets/images'
+    config.assets.paths << '#{Rails.root}/vendor/assets/javascripts'
+    config.assets.paths << '#{Rails.root}/vendor/assets/images'
+    
     config.fits_to_desc_mapping = {
       :format_label => :format,
       :last_modified => :date_modified,

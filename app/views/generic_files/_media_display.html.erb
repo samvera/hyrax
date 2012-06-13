@@ -1,13 +1,14 @@
+
 <% if ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg'].include?(@generic_file.mime_type) %>
   <img src="<%= download_path(@generic_file) %>" />
 <% elsif ['video/mp4'].include?(@generic_file.mime_type) %>
-  <video controls="controls">
+  <video controls="controls" class="video-js vjs-default-skin" data-setup="{}" preload="auto">
     <source src="<%= download_path(@generic_file) %>" type="<%= @generic_file.mime_type %>" />
+    Your browser does not support the audio tag.
   </video>
 <% elsif ['audio/mp3', 'audio/mpeg'].include?(@generic_file.mime_type) %>
-  <audio controls="controls">
-  <source src="<%= download_path(@generic_file) %>" type="<%= @generic_file.mime_type %>" />
-  Your browser does not support the audio tag.  :'(
+  <audio preload="auto" src="<%= download_path(@generic_file) %>" type="<%= @generic_file.mime_type %>" />
+    Your browser does not support the audio tag.
   </audio>
 <% else %>
   <img src="/images/default.png" alt="No preview available" width="338" height="493" />

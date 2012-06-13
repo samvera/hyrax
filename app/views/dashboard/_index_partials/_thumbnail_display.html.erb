@@ -2,15 +2,12 @@
     <% if !(document['mime_type_t'] & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg', 'application/pdf']).empty? %>
       <img src="<%= download_path(document["id"], {:datastream_id => 'thumbnail'}) %>" /> 
     <% elsif !(document['mime_type_t'] & ['video/mp4']).empty? %>
-      <video controls="controls" height="80" width="140">
-        <source src="<%= download_path(document["id"]) %>"   />
-        Your browser does not support the video tag.  :'(
-      </video>
+      <video controls="controls" height="80" width="140" class="video-js vjs-default-skin" data-setup="{}" preload="auto"> 
+        <source src="<%= download_path(document["id"]) %>"  type="<%= document['mime_type_t'].first %>"   />
+        Your browser does not support the video tag.  
+      </video> 
     <% elsif !(document['mime_type_t'] & ['audio/mp3', 'audio/mpeg']).empty? %>
-      <audio controls="controls" height="50" width="140">
-        <source src="<%= download_path(document["id"]) %>"  />
-        Your browser does not support the audio tag.  :'(
-      </audio>
+      <audio src="<%= download_path(document["id"]) %>" preload="auto"> </audio>
     <% else %>
        <img src="/images/default.png" height="42" width="36"/>
     <% end %>
