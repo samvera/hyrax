@@ -15,6 +15,12 @@
 var filestoupload =0;      
 var files_done =0;      
 var error_string ='';      
+//200 MB  max file size 
+var max_file_size = 200000000;
+var max_file_size_str = "200 MB";
+//500 MB max total upload size
+var max_total_file_size = 500000000;
+var max_total_file_size_str = "500 MB";
 
 $(function () {
     'use strict';
@@ -56,8 +62,8 @@ $(function () {
          } else {
             $("#partial_fail").fadeIn('slow')
          }          
-         $("#errmsg").html(error_string)
-         $("#errmsg").fadeIn('slow')
+         $("#errmsg").html(error_string);
+         $("#errmsg").fadeIn('slow');
       }
     }); 
 
@@ -71,6 +77,23 @@ $(function () {
         if (data.files[0].error == 'acceptFileTypes'){
           $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click(); 
         }
+        var total_sz = parseInt($('#total_upload_size').val()) + data.files[0].size;
+        // is file size too big
+        if (data.files[0].size > max_file_size) {
+          $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click(); 
+          $("#errmsg").html(data.files[0].name + " is too big. No files over " + max_file_size_str + " can be uploaded.");
+          $("#errmsg").fadeIn('slow');
+        }
+        // cumulative upload file size is too big
+        else if( total_sz > max_total_file_size) {
+          $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click(); 
+          $("#errmsg").html("All files selected from " + data.files[0].name + " and after will not be uploaded because your total upload is too big. You may not upload more than " + max_total_file_size_str + " in one upload.");
+          $("#errmsg").fadeIn('slow');
+        }
+        else {
+          $('#total_upload_size').val( parseInt($('#total_upload_size').val()) + data.files[0].size );
+        }
+              
     });
 
     // count the number of files completed and ready to send to edit                          
