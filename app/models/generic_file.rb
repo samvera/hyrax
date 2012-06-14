@@ -1,20 +1,20 @@
 class GenericFile < ActiveFedora::Base
+  include ActiveModel::Validations::HelperMethods
   include Hydra::ModelMixins::CommonMetadata
-  include Dil::RightsMetadata
   include PSU::ModelMethods
   include PSU::Noid
-  
-  include ActiveModel::Validations::HelperMethods 
-    
+  include Dil::RightsMetadata
+
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-  has_metadata :name => "properties", :label => "Depositor", :type => Hydra::Datastream::Properties
+  has_metadata :name => "properties", :type => PropertiesDatastream
   has_file_datastream :name => "content", :type => FileContentDatastream
   has_file_datastream :name => "thumbnail", :type => FileContentDatastream
 
   belongs_to :batch, :property => :is_part_of
 
   delegate :depositor, :to => :properties
+  delegate :relative_path, :to => :properties
   delegate :related_url, :to => :descMetadata
   delegate :based_near, :to => :descMetadata
   delegate :part_of, :to => :descMetadata
@@ -87,7 +87,7 @@ class GenericFile < ActiveFedora::Base
   NO_RUNS = 999
 
   #make sure the terms of service is present and set to 1 before saving
-  # note GenericFile.create will no longer save a GenericFile as the terms_of_service will not be set 
+  # note GenericFile.create will no longer save a GenericFile as the terms_of_service will not be set
   terms_of_service = nil
   validates_acceptance_of :terms_of_service, :allow_nil=>false
 
@@ -120,7 +120,7 @@ class GenericFile < ActiveFedora::Base
     self.characterization.content = self.content.extract_metadata
     self.append_metadata
     self.filename = self.label
-    self.terms_of_service = '1'    
+    self.terms_of_service = '1'
     save unless self.new_object?
   end
 
@@ -148,28 +148,28 @@ class GenericFile < ActiveFedora::Base
     # TODO
     end
   end
-  
+
   # redefine find so that it sets the terms of service
-  def self.find(args, opts={}) 
+  def self.find(args, opts={})
     gf = super
-    # use the field type to see if the retun will be one item or multiple
-    if args.class == String
+    # use the field type to see if the return will be one item or multiple
+    if args.is_a? String
       gf.terms_of_service = '1'
-    else 
+    else
       gf.each {|f| f.terms_of_service = '1'}
     end
-    return gf 
+    return gf
   end
 
   def create_pdf_thumbnail
     pdf = Magick::ImageList.new
     pdf.from_blob(content.content)
     first = pdf.to_a[0]
-    first.format = "PNG"   
+    first.format = "PNG"
     thumb = first.scale(338, 493)
     self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
     logger.debug "Has the content changed before saving? #{self.content.changed?}"
-    self.terms_of_service = '1'    
+    self.terms_of_service = '1'
     self.save
   end
 
@@ -180,21 +180,21 @@ class GenericFile < ActiveFedora::Base
     height = self.height.first.to_i
     width = self.width.first.to_i
     if width > height
-      if width > 50 and height > 35 
+      if width > 50 and height > 35
         thumb = img.scale(50, 35)
       else
         thumb = img.scale(width, height)
       end
     # vertical img
     else
-      if width > 45 and height > 60 
+      if width > 45 and height > 60
         thumb = img.scale(45, 60)
       else
         thumb = img.scale(width, height)
       end
     end
     self.thumbnail.content = thumb.to_blob
-    self.terms_of_service = '1'    
+    self.terms_of_service = '1'
     logger.debug "Has the content before saving? #{self.content.changed?}"
     self.save
   end
@@ -212,19 +212,19 @@ class GenericFile < ActiveFedora::Base
           else
             # these are single-valued terms which cannot be appended to
             self.send("#{v}=", term_value)
-          end            
+          end
         end
       end
     end
   end
-  
+
   def to_solr(solr_doc={})
     super(solr_doc)
     solr_doc["label_t"] = self.label
     solr_doc["noid_s"] = noid
     return solr_doc
   end
-  
+
   def label=(new_label)
     @inner_object.label = new_label
     if self.title.empty?
@@ -239,7 +239,7 @@ class GenericFile < ActiveFedora::Base
       "url" => "/files/#{noid}",
       "thumbnail_url" => self.pid,
       "delete_url" => "deleteme", # generic_file_path(:id => id),
-      "delete_type" => "DELETE" 
+      "delete_type" => "DELETE"
     }
   end
 
@@ -250,7 +250,7 @@ class GenericFile < ActiveFedora::Base
         term.start_with? "generic_file__" and !['type', 'behaviors'].include? term.split('__').last
       end
       terms.concat(new_terms)
-    end 
+    end
     terms
   end
 
@@ -276,15 +276,15 @@ class GenericFile < ActiveFedora::Base
   def audit!
     audit(true)
   end
-  
+
   def audit_stat!
     audit_stat(true)
   end
-  
+
   def audit_stat(force = false)
     logs = audit(force)
     audit_results = logs.collect { |result| result["pass"] }
-    
+
     # check how many non runs we had
     non_runs =audit_results.reduce(0) { |sum, value| (value == NO_RUNS) ? sum = sum+1 : sum }
     if (non_runs == 0)
@@ -293,14 +293,14 @@ class GenericFile < ActiveFedora::Base
     elsif (non_runs < audit_results.length)
       result =audit_results.reduce(true) { |sum, value| (value == NO_RUNS) ? sum : sum && value }
       return 'Some audits have not been run, but the ones run where '+ ((result)? 'passing' : 'failing') + '.'
-    else 
+    else
       return 'Audits have not yet been run on this file.'
     end
   end
 
   def audit(force = false)
     logs = []
-    self.per_version do |ver| 
+    self.per_version do |ver|
       logs << GenericFile.audit(ver, force)
     end
     logs
@@ -323,9 +323,7 @@ class GenericFile < ActiveFedora::Base
     logger.debug "***AUDIT*** log for #{version.inspect}"
     latest_audit = self.find(version.pid).logs(version.dsid).first
     unless force
-      unless GenericFile.needs_audit?(version, latest_audit)
-         return latest_audit
-      end
+      return latest_audit unless GenericFile.needs_audit?(version, latest_audit)
     end
     job = AuditJob.new(User.current, version.pid, version.dsid, version.versionID)
     #job.perform
@@ -375,12 +373,11 @@ class GenericFile < ActiveFedora::Base
       passing = false
     end
     return ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
-                             :dsid=>version.dsid, :version=>version.versionID)  
+                             :dsid=>version.dsid, :version=>version.versionID)
   end
 
 
-  private 
-  
+  private
 
   def permission_hash
     old_perms = self.permissions

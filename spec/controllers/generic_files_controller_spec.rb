@@ -128,11 +128,10 @@ describe GenericFilesController do
       f.set_title_and_label('world.png')
       f.add_file_datastream(File.new(Rails.root +  'spec/fixtures/world.png'))
       # grant public read access explicitly
-      params = {:generic_file => { :read_groups_string => 'public'}}
-      f.update_attributes(params[:generic_file])
+      f.update_attributes({:read_groups_string => 'public'})
       f.expects(:characterize_if_changed).yields
       f.save
-    end    
+    end
     after(:all) do
       GenericFile.find('scholarsphere:test5').delete
     end

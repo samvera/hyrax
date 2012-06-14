@@ -1,21 +1,22 @@
 require 'spec_helper'
 
 describe GenericFile do
-  before(:each) do 
+  before(:each) do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @file = GenericFile.new
-  end 
+  end
   describe "attributes" do
     it "should have rightsMetadata" do
       @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
     end
     it "should have properties datastream for depositor" do
-      @file.properties.should be_instance_of Hydra::Datastream::Properties
+      @file.properties.should be_instance_of PropertiesDatastream
     end
     it "should have apply_depositor_metadata" do
       @file.apply_depositor_metadata('jcoyne')
       @file.rightsMetadata.edit_access.should == ['jcoyne']
-    end 
+      @file.depositor.should == ['jcoyne']
+    end
     it "should have a set of permissions" do
       @file.discover_groups=['group1', 'group2']
       @file.edit_users=['user1']
@@ -26,7 +27,6 @@ describe GenericFile do
           {:type=>"user", :access=>"read", :name=>"user3"},
           {:type=>"user", :access=>"edit", :name=>"user1"}]
     end
-  
     describe "updating permissions" do
       it "should create new group permissions" do
         @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
@@ -57,11 +57,11 @@ describe GenericFile do
         @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
         @file.permissions = {:group=>{'group1'=>'edit'}}
         @file.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
-      end  
+      end
     end
     it "should have a characterization datastream" do
       @file.characterization.should be_kind_of FitsDatastream
-    end 
+    end
     it "should have a dc desc metadata" do
       @file.descMetadata.should be_kind_of GenericFileRdfDatastream
     end
@@ -71,6 +71,10 @@ describe GenericFile do
     end
   end
   describe "delegations" do
+    it "should delegate methods to properties metadata" do
+      @file.should respond_to(:relative_path)
+      @file.should respond_to(:depositor)
+    end
     it "should delegate methods to descriptive metadata" do
       @file.should respond_to(:related_url)
       @file.should respond_to(:based_near)
@@ -105,9 +109,9 @@ describe GenericFile do
     end
     describe "that have been saved" do
       before (:each) do
-        Delayed::Job.expects(:enqueue).once.returns("the job")      
+        Delayed::Job.expects(:enqueue).once.returns("the job")
       end
-      after(:each) do        
+      after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
           begin
             @file.delete
@@ -115,7 +119,7 @@ describe GenericFile do
             # do nothing
           end
         end
-      end   
+      end
       it "should be able to set values via delegated methods" do
         @file.related_url = "http://example.org/"
         @file.creator = "John Doe"
@@ -184,6 +188,10 @@ describe GenericFile do
     lambda { @file.save }.should_not raise_error
     @file.delete
   end
+  it "should support setting and getting the relative_path value" do
+    @file.relative_path = "documents/research/NSF/2010"
+    @file.relative_path.should == ["documents/research/NSF/2010"]
+  end
   describe "create_thumbnail" do
     describe "with an image that doesn't get resized" do
       before do
@@ -214,28 +222,28 @@ describe GenericFile do
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       f.save
-      Delayed::Worker.new.work_off # characterization job 
-      @f = GenericFile.find(f.pid)    
+      Delayed::Worker.new.work_off # characterization job
+      @f = GenericFile.find(f.pid)
     end
     after(:all) do
       @f.delete
-      Delayed::Worker.delay_jobs = @cur_delay #return to original delay state 
+      Delayed::Worker.delay_jobs = @cur_delay #return to original delay state
     end
     it "should schedule a audit job" do
       FileContentDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
       ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
-      ActiveFedora::Datastream.any_instance.stubs(:dsChecksumValid).returns(false)      
+      ActiveFedora::Datastream.any_instance.stubs(:dsChecksumValid).returns(false)
       ChecksumAuditLog.stubs(:create!).returns(true)
       @f.audit!
       Delayed::Job.count.should == @job_count+3 # 3 version so a job for each
-      Delayed::Worker.new.work_off 
+      Delayed::Worker.new.work_off
       Delayed::Job.count.should == @job_count
     end
     it "should log a failing audit" do
       Delayed::Worker.delay_jobs = false
       FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
       ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-      ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)      
+      ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
@@ -250,11 +258,11 @@ describe GenericFile do
       @f.audit!
     end
     it "should return true on audit_status" do
-      @f.audit_stat.should be_true 
+      @f.audit_stat.should be_true
     end
   end
   describe "save" do
-    before(:each) do 
+    before(:each) do
       @job_count = Delayed::Job.count
     end
     after(:each) do
@@ -264,7 +272,7 @@ describe GenericFile do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
       Delayed::Job.count.should == @job_count+1
-      Delayed::Worker.new.work_off 
+      Delayed::Worker.new.work_off
       Delayed::Job.count.should == @job_count
     end
   end
@@ -374,22 +382,22 @@ describe GenericFile do
       Delayed::Job.expects(:enqueue)
       @file.content.content = "hey"
       @file.save
-      @file.related_url = 'http://example.com' 
+      @file.related_url = 'http://example.com'
       Delayed::Job.expects(:enqueue).never
       @file.save
       @file.delete
     end
     describe "after job runs" do
-      before(:all) do 
+      before(:all) do
         GenericFile.any_instance.stubs(:terms_of_service).returns('1')
         myfile = GenericFile.new
         myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
         myfile.thumbnail.size.nil?.should be_true
         myfile.save
-        Delayed::Worker.new.work_off 
-        @myfile = GenericFile.find(myfile.pid)    
-      end 
+        Delayed::Worker.new.work_off
+        @myfile = GenericFile.find(myfile.pid)
+      end
       after(:all) do
         unless @myfile.inner_object.kind_of? ActiveFedora::UnsavedDigitalObject
           begin
@@ -398,7 +406,7 @@ describe GenericFile do
             # do nothing
           end
         end
-      end    
+      end
       it "should return expected results after a save" do
         @myfile.file_size.should == ['218882']
         @myfile.original_checksum.should == ['5a2d761cab7c15b2b3bb3465ce64586d']
