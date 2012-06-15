@@ -1,5 +1,5 @@
 development:  
-  host: dirapps.aset.psu.edu
+  host: ldap.example.com
   port: 389
   # username: cn=admin,dc=example,dc=com
   # password: simple77
@@ -7,7 +7,7 @@ development:
   # base: dc=example,dc=com
   # uid: uid
 test:  
-  host: dirapps.aset.psu.edu
+  host: ldap.example.com
   port: 389
   # username: cn=admin,dc=example,dc=com
   # password: simple77
@@ -15,12 +15,17 @@ test:
   # base: dc=example,dc=com
   # uid: uid
 integration:
-  host: dirapps.aset.psu.edu
+  host: ldap.example.com
   port: 389
-  group_base: dc=psu,dc=edu
+  group_base: dc=example,dc=com
   uid: uid
 production:  
-  host: dirapps.aset.psu.edu
+  host: ldap.example.com
   port: 389
+  username: cn=admin,dc=example,dc=com
+  password: <%= ENV['LDAP_PASSWORD'] %>
   group_base: dc=psu,dc=edu
+  base: dc=northwestern,dc=edu
   uid: uid
+
+

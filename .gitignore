@@ -3,6 +3,7 @@
 config/database.yml
 config/fedora.yml
 config/solr.yml
+config/hydra-ldap.yml
 
 ## MAC OS
 .DS_Store
