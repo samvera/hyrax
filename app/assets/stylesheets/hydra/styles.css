@@ -99,17 +99,11 @@ button.ui-button-icon-only {
     font-style: normal;
 }
 
-a:link, a:visited, a:active, #uvalicense_read_all {
-    color: blue;
-    text-decoration: underline;
-    border: none;
-}
-
 .editable-text:hover, .textile-text .text:hover {
     color: #E7C584 !important;
 }
 
-a:hover, a:hover.addval, #uvalicense_read_all:hover {
+a:hover.addval, #uvalicense_read_all:hover {
     color: blue
 }
 
