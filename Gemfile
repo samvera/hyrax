@@ -17,6 +17,7 @@ gem 'devise', '~> 2.0.4'
 gem 'delayed_job_active_record', '~> 0.3.2'
 gem 'noid', '~> 0.5.5'
 gem 'daemons'
+gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
 
 gem 'hydra-ldap', '0.0.2'
 gem 'zipruby'
@@ -29,8 +30,7 @@ group :assets do
   gem "compass-susy-plugin", "~> 0.9.0"
 end
 
-group :integration do
-  gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
+group :production, :integration do
   gem 'passenger'
 end
 
@@ -39,7 +39,6 @@ group :development, :test do
   gem "debugger"
   gem 'activerecord-import'
   gem "rails_indexes", :git => "https://github.com/warpc/rails_indexes"
-  gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'rspec', '2.10.0'
