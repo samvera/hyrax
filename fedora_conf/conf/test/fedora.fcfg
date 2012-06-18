@@ -211,7 +211,7 @@
             will be removed.</comment>
     </param>
     <param name="decorator1" value="org.fcrepo.server.messaging.NotificationInvocationHandler"/>
-    <param name="checksumAlgorithm" value="SHA-1">
+    <param name="checksumAlgorithm" value="MD5">
       <comment>Specifies which checksumming algorithm is to be used when 
 			automatically computing checksums as specified by the above 
 			parameter. Valid values are: MD5  SHA-1  SHA-256  SHA-384  SHA-512.</comment>
