@@ -39,7 +39,7 @@ describe GenericFilesController do
 
       # This is confirming that the correct file was attached
       saved_file.label.should == 'world.png'
-      saved_file.content.checksum.should == '28da6259ae5707c68708192a40b3e85c'
+      saved_file.content.checksum.should == 'f794b23c0c6fe1083d0ca8b58261a078cd968967'
       saved_file.content.dsChecksumValid.should be_true
 
       # Confirming that date_uploaded and date_modified were set
