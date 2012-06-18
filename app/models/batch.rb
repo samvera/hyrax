@@ -1,6 +1,6 @@
 class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
-  include Dil::RightsMetadata
+  include Hydra::ModelMixins::RightsMetadata
   include PSU::ModelMethods
   include PSU::Noid
 

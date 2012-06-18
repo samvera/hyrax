@@ -112,7 +112,6 @@ module ScholarSphere
     config.filter_parameters += [:password]
   end
 end
-require 'dil/rights_metadata'
 require 'scholarsphere/permissions'
 require 'psu/id_service'
 require 'psu/noidify'
