@@ -18,6 +18,15 @@ module Scholarsphere
           elsif params[:permission][:group][:public] == 'discover'
             params[:generic_file][:discover_groups_string] = 'public'
           end
+          if params[:permission][:group][:registered] == 'read'
+            if params[:generic_file][:read_groups_string].present?
+              params[:generic_file][:read_groups_string] << ', registered'
+            else 
+              params[:generic_file][:read_groups_string] << 'registered'
+            end
+          elsif params[:permission][:group][:registered] == 'discover'
+            params[:generic_file][:discover_groups_string] = 'registered'
+          end
         end
       end
     end
