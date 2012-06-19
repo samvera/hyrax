@@ -29,32 +29,32 @@ describe GenericFile do
     end
     describe "updating permissions" do
       it "should create new group permissions" do
-        @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+        @file.permissions = {:new_group_name => {'group1'=>'discover'}}
         @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
       end
       it "should create new user permissions" do
-        @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+        @file.permissions = {:new_user_name => {'user1'=>'discover'}}
         @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
       end
       it "should not replace existing groups" do
-        @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
-        @file.permissions = {:new_group_name=>'group2', :new_group_permission=>'discover'}
+        @file.permissions = {:new_group_name=> {'group1' => 'discover'}}
+        @file.permissions = {:new_group_name=> {'group2' => 'discover'}}
         @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
                                      {:type=>'group', :access=>'discover', :name=>'group2'}]
       end
       it "should not replace existing users" do
-        @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
-        @file.permissions = {:new_user_name=>'user2', :new_user_permission=>'discover'}
+        @file.permissions = {:new_user_name=>{'user1'=>'discover'}}
+        @file.permissions = {:new_user_name=>{'user2'=>'discover'}}
         @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
                                      {:type=>'user', :access=>'discover', :name=>'user2'}]
       end
       it "should update permissions on existing users" do
-        @file.permissions = {:new_user_name=>'user1', :new_user_permission=>'discover'}
+        @file.permissions = {:new_user_name=>{'user1'=>'discover'}}
         @file.permissions = {:user=>{'user1'=>'edit'}}
         @file.permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
       end
       it "should update permissions on existing groups" do
-        @file.permissions = {:new_group_name=>'group1', :new_group_permission=>'discover'}
+        @file.permissions = {:new_group_name=>{'group1'=>'discover'}}
         @file.permissions = {:group=>{'group1'=>'edit'}}
         @file.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
       end

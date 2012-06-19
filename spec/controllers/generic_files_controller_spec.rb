@@ -5,6 +5,7 @@ describe GenericFilesController do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
+    User.any_instance.stubs(:groups).returns([])
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
   describe "#create" do
@@ -106,7 +107,7 @@ describe GenericFilesController do
     end
 
     it "should add a new groups and users" do
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_group_name=>'group1', :new_group_permission=>'discover', :new_user_name=>'user1', :new_user_permission=>'edit'}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_group_name=>{'group1'=>'discover'}, :new_user_name=>{'user1'=>'edit'}}}
 
       assigns[:generic_file].discover_groups.should == ["group1"]
       assigns[:generic_file].edit_users.should include("user1", @user.login)

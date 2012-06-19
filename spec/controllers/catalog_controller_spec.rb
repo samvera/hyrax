@@ -6,6 +6,7 @@ describe CatalogController do
     GenericFile.any_instance.stubs(:characterize_if_changed).yields
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
+    User.any_instance.stubs(:groups).returns([])
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
   after do

@@ -7,6 +7,7 @@ describe DashboardController do
       @user = FactoryGirl.find_or_create(:archivist)
       sign_in @user
       controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
+      User.any_instance.stubs(:groups).returns([])
     end
     describe "#index" do
       before (:each) do

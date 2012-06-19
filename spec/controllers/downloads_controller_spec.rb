@@ -25,6 +25,7 @@ describe DownloadsController do
   describe "when logged in as reader" do
     before do
       sign_in FactoryGirl.find_or_create(:archivist)
+      User.any_instance.stubs(:groups).returns([])
       controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
     end
     describe "show" do
@@ -62,6 +63,7 @@ describe DownloadsController do
   describe "when not logged in as reader" do
     before do
       sign_in FactoryGirl.create(:user)
+      User.any_instance.stubs(:groups).returns([])
       controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
     end
     describe "show" do

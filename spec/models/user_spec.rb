@@ -13,7 +13,7 @@ describe User do
 
   describe "#groups" do
     before do
-      Hydra::LDAP.expects(:groups_for_user).with(@user.login+',dc=psu,dc=edu').returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
+      Hydra::LDAP.expects(:groups_for_user).with(@user.login).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
     end
     it "should return a list" do
       @user.groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
