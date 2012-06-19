@@ -65,7 +65,9 @@ module ScholarSphere
       "View" => "read",
       "Edit" => "edit"
     }
-
+    config.owner_permission_levels = {
+      "Edit" => "edit"
+    }
     # help text to display for form metadata elements, these will need to be updated to 
     # reflect a field name change (should one happen) in the generic file datastream
     config.metadata_help = {

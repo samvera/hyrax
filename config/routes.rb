@@ -19,6 +19,9 @@ ScholarSphere::Application.routes.draw do
   match '/logout' => 'sessions#destroy'
   match 'dashboard' => 'dashboard#index', :as => :dashboard
   match 'authorities/:model/:term' => 'authorities#query'
+  match 'directory/user/:uid' => 'directory#user'
+  match 'directory/user/:uid/groups' => 'directory#user_groups'
+  match 'directory/group/:cn' => 'directory#group', :constraints => { :cn => /.*/ }
   match 'batches/:id/edit' => 'batch#edit', :as => :batch_edit
   match 'batches/:id/' => 'batch#update', :as => :batch_generic_files
   match "/catalog/recent" => "catalog#recent", :as => :catalog_recent_path

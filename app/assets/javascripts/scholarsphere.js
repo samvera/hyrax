@@ -1,4 +1,19 @@
 $(function() {
+
+  $.fn.selectRange = function(start, end) {
+    return this.each(function() {
+        if (this.setSelectionRange) {
+            this.focus();
+            this.setSelectionRange(start, end);
+        } else if (this.createTextRange) {
+            var range = this.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', start);
+            range.select();
+        }
+    });
+  };
     // there are two levels of vocabulary auto complete.  
     // currently we have this externally hosted vocabulary
     // for geonames.  I'm not going to make these any easier 
@@ -138,6 +153,128 @@ $(function() {
   $('#add_descriptions').click(function() {
       $('#more_descriptions').show();
   });
+
+  // attach function to verify uid
+  $('#new_user_name_skel').on('blur', function() {
+      // clear out any existing messages
+      $('#directory_user_result').html('');
+      var un = $('#new_user_name_skel').val();
+      var perm = $('#new_user_permission_skel').val();
+      if ( $.trim(un).length == 0 ) {
+        return;
+      }
+      $.ajax( {
+        url: "/directory/user/" + un, 
+        success: function( data ) {           
+          if (!data) {
+            $('#directory_user_result').html('User id ('+un+ ') does not exist.'); 
+            $('#new_user_name_skel').select();
+
+          }
+          else {
+            $('#new_permission_user').attr('disabled', false);
+          }
+        },
+      }); 
+
+  });
+  
+  $('#new_user_permission_skel').on('change', function() {
+      var container = $(document.createElement('div'));
+      container.attr("class", "permission");
+      var un = $('#new_user_name_skel').val();
+      var perm_form = $('#new_user_permission_skel').val();
+      var perm = $('#new_user_permission_skel :selected').text();
+      var remove = $('<a>Remove</a>');
+    
+      // clear out the elements to add more
+      $('#new_user_name_skel').val('');
+      $('#new_user_permission_skel').val('none');
+
+      $('#new_user_list').append(container);
+      container.html(un + ':' + perm + ' '); 
+      container.append(remove);
+      remove.click(function () {
+        container.remove();
+        });
+
+      $('<input>').attr({
+          type: 'hidden',
+          name: 'generic_file[permissions][new_user_name]['+un+']',
+          value: perm_form 
+        }).appendTo(container);
+      /*
+      $('<input>').attr({
+          type: 'hidden',
+          name: 'generic_file[permissions][new_user_permission]['+perm_form+']',
+          value: perm_form 
+        }).appendTo(container);
+      $('new_user_name_skel').focus();  
+      */
+    });
+
+
+  // attach function to verify group cn 
+  $('#new_group_name_skel').on('blur', function() {
+      // clear out any existing messages
+      $('#directory_group_result').html('');
+      var reservedGroups = ["public", "registered"];
+      var cn = $('#new_group_name_skel').val();
+      var perm = $('#new_group_permission_skel').val();
+      if ($.inArray($.trim(cn), reservedGroups) != -1) { 
+        $('#directory_group_result').html('Group ('+cn+ ') is a reserved group name.'); 
+        $('#new_group_name_skel').select();
+        return;
+      }
+      if ($.trim(cn).length == 0) {
+        return;
+      }
+      $.ajax( {
+        url: "/directory/group/" + cn, 
+        success: function( data ) {           
+          if (!data) {
+            $('#directory_group_result').html('Group ('+cn+ ') does not exist.'); 
+            $('#new_group_name_skel').select();
+
+          }
+        },
+      }); 
+
+  });
+  
+  $('#new_group_permission_skel').on('change', function() {
+      var container = $(document.createElement('div'));
+      container.attr("class", "permission");
+      var cn = $('#new_group_name_skel').val();
+      var perm_form = $('#new_group_permission_skel').val();
+      var perm = $('#new_group_permission_skel :selected').text();
+      var remove = $('<a>Remove</a>');
+    
+      // clear out the elements to add more
+      $('#new_group_name_skel').val('');
+      $('#new_group_permission_skel').val('none');
+
+      $('#new_group_list').append(container);
+      container.html(cn + ':' + perm + ' '); 
+      container.append(remove);
+      remove.click(function () {
+        container.remove();
+        });
+
+      $('<input>').attr({
+          type: 'hidden',
+          name: 'generic_file[permissions][new_group_name]['+cn+']',
+          value: perm_form
+        }).appendTo(container);
+      /*
+      $('<input>').attr({
+          type: 'hidden',
+          name: 'generic_file[permissions][new_group_permission]['+perm_form+']',
+          value: perm_form 
+        }).appendTo(container);
+      */
+      $('new_group_name_skel').focus();  
+    });
 
 
 });

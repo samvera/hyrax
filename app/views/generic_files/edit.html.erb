@@ -1,3 +1,24 @@
+<% javascript 'video.js' %>
+<% javascript 'audio.min.js' %>
+<% stylesheet 'video-js.css' %>
+<% stylesheet 'jquery-ui-1.8.1.custom' %>
+
+<% content_for :local_js do %>
+  audiojs.events.ready(function() {
+    var as = audiojs.createAll();
+    });
+
+$( "#new_group_name_skel" ).autocomplete({
+source: "/directory/user/<%= request.env['HTTP_REMOTE_USER'] %>/groups/" 
+});
+<% end %>
+
+<% content_for :local_css do %>
+.audiojs {
+  width: 338px;
+}
+<% end %>
+
 <h1 class="lower">Edit <%= @generic_file.title.join(' | ') %></h1>
 
 <div class="columns two-b">
@@ -38,6 +59,7 @@
         </tr>
       </tbody>
     </table>
+<%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
     <h2 class="non lower">Permissions</h2>
     <table class="verticalheadings">
       <tbody>
@@ -48,7 +70,6 @@
       </tbody>
     </table>
     <h2 class="non lower">Descriptions</h2>
-<%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
     <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
     <table class="verticalheadings">
       <tbody>

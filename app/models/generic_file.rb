@@ -100,8 +100,8 @@ class GenericFile < ActiveFedora::Base
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
     perm_hash = permission_hash
-    perm_hash['person'][params[:new_user_name]] = params[:new_user_permission] if params[:new_user_name].present?
-    perm_hash['group'][params[:new_group_name]] = params[:new_group_permission] if params[:new_group_name].present?
+    params[:new_user_name].each { |name, access| perm_hash['person'][name] = access } if params[:new_user_name].present?
+    params[:new_group_name].each { |name, access| perm_hash['group'][name] = access } if params[:new_group_name].present?
 
     params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
     params[:group].each { |name, access| perm_hash['group'][name] = access} if params[:group]

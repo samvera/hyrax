@@ -1,11 +1,26 @@
-<h2>Update Current</h2>
-<% public_included = false %>
-<% registered_included = false %>
+<h2>Share With</h2>
+  <div class="control-group" id="owner_permissions">
+    <div class="controls">
+      <%= label_tag :owner_access, "Owner (" +request.env['HTTP_REMOTE_USER'] + ") Access", :class=>"control-label" %>
+      <%= select_tag "owner", options_for_select(ScholarSphere::Application::config.owner_permission_levels), {:disabled => true} %>
+      <span>You may not change your edit permission</span>
+    </div>
+  </div>
+  <div class="control-group" id="public_permissions">
+    <div class="controls">
+      <%= label_tag :public_group_access, "Public Access", :class=>"control-label" %>
+      <%= select_tag "permission_group", options_for_select(ScholarSphere::Application::config.public_permission_levels), {:name=>"generic_file[permissions][group][public]"} %>
+    </div>
+  </div>
+  <div class="control-group" id="penn_state_permissions">
+    <div class="controls">
+      <%= label_tag :registered_group_access, "Penn State Access", :class=>"control-label" %>
+      <%= select_tag "permission_group", options_for_select(ScholarSphere::Application::config.public_permission_levels), {:name=>"generic_file[permissions][group][registered]"} %>
+    </div>
+  </div>
+
 <% gf.permissions.each do |permission| %>
-  <% public_included = true if permission[:name].upcase == 'PUBLIC' %>
-  <% registered_included = true if permission[:name].upcase == 'REGISTERED' %>
-  <%= form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => permission[:name] + '_update_form', :class => 'form-horizontal'} do |f| %>
-    <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+  <% next if ["public", "registered", request.env['HTTP_REMOTE_USER']].include?(permission[:name]) %>
     <div class="control-group"> 
       <div class="controls">
       <%
@@ -27,7 +42,6 @@
       <%= f.submit :value => "Update", :name=> "update_permission", :id => "update_permission"  %> 
       </div>
     </div> 
-  <% end %>
 <% end %>
 <%# handle special groups %>
 <% unless public_included %>
@@ -55,27 +69,25 @@
   <% end %>
 <% end %>
 
-<h2>Save New</h2>
-<%= form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => 'generic_file[permissions][new_group_name]_form', :class => 'form-horizontal'} do |f| %>
-  <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
   <div class="control-group" id="new-group"> 
-    <%= label_tag 'generic_file[permissions][new_group_name]', "Group", :class=>"control-label" %>
+    <%= label_tag 'new_group_name_skel', "Group", :class=>"control-label" %>
     <div class="controls">
-      <%= text_field_tag 'generic_file[permissions][new_group_name]' %>
-      <%= select_tag 'generic_file[permissions][new_group_permission]', options_for_select(ScholarSphere::Application::config.permission_levels) %>
-      <%= f.submit :value => "Save", :name=> "new_permission", :id => "new_permission"  %>
+      <%= text_field_tag 'new_group_name_skel' %>
+      <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels) %>
+      <span id="directory_group_result"></span>
     </div>
+    <div id="new_group_list">
   </div>
-<% end %>
 
-<%= form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => 'generic_file[permissions][new_user_name]_form', :class => 'form-horizontal'} do |f| %>
+<%# form_for gf, :url => permissions_generic_file_path, :method => :post, :html => {:id => 'generic_file[permissions][new_user_name]_form', :class => 'form-horizontal'} do |f| %>
   <div class="control-group" id="new-user"> 
-    <%= label_tag 'generic_file[permissions][new_user_name]', "User", :class=>"control-label" %>
+    <%= label_tag 'new_user_name_skel', "User", :class=>"control-label" %>
     <div class="controls">
-      <%= text_field_tag 'generic_file[permissions][new_user_name]' %>
-      <%= select_tag 'generic_file[permissions][new_user_permission]', options_for_select(ScholarSphere::Application::config.permission_levels) %>
-      <%= f.submit :value => "Save", :name=> "new_permission", :id => "new_permission"  %>
+      <%= text_field_tag 'new_user_name_skel' %>
+      <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels) %>
+      <span id="directory_user_result"></span>
     </div>
   </div>
-<% end %>
+  <div id="new_user_list">
+  </div>
 

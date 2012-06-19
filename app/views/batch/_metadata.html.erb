@@ -1,4 +1,4 @@
-<%= form_for([@batch, @generic_file], :url => batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
+<%# form_for([@batch, @generic_file], :url => batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>  
 <%= hidden_field_tag(:extra_description_count, "1") %>
@@ -15,38 +15,6 @@
           <p class="help-block">You may select multiple types to apply to all files<p>
         </div>
       </div>
-      <!-- <select id="generic_file_public_group_access" name="permission[group][public]"> -->
-      <div class="control-group" id="public_permissions">
-        <%= f.label :public_group_access, "Public Access", :class=>"control-label" %>
-        <div class="controls">
-          <%= select_tag "permission_group", options_for_select(ScholarSphere::Application::config.public_permission_levels), {:name=>"permission[group][public]"} %>
-
-        </div>
-      </div><!-- close public_permissions -->
-      <!-- <select id="generic_file_registered_group_access" name="permission[group][registered]"> -->
-      <div class="control-group" id="registered_permissions">
-        <%= f.label :registered_group_access, "Penn State Access", :class=>"control-label" %>
-        <div class="controls">
-          <%= select_tag "permission_group", options_for_select(ScholarSphere::Application::config.public_permission_levels), {:name=>"permission[group][registered]"} %>
-        </div>
-      </div><!-- close registered_permissions -->
-
-      <div class="control-group" id="read_groups">
-        <%= f.label :read_groups_string, "Groups With Read Access", :class=>"control-label" %>
-        <div class="controls">
-          <%= f.text_field :read_groups_string %>
-          <p class="help-block">Use a comma separated list</p>
-        </div>
-      </div>
-
-      <div class="control-group" id="read_groups">
-        <%= f.label :read_users_string, "Users With Read Access", :class=>"control-label" %>
-        <div class="controls">
-          <%= f.text_field :read_users_string %>
-          <p class="help-block">Use a comma separated list</p>
-        </div>
-      </div>
-
       <div class="control-group" id="additional_title_clone">
         <%= f.label :title, "Title", :class=>"control-label" %> 
         <div class="controls">
@@ -229,4 +197,3 @@
   <%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
 </div>
 </div><!-- close .uploader-contents -->
-<% end %>
