@@ -3,8 +3,26 @@ require "active_fedora"
 
 describe User do
 
+  describe "user_key" do
+    before do
+      @user = User.new(:email=>"foo@example.com")
+      @user.stubs(:username =>'foo')
+    end
+
+    it "should return email" do
+      @user.user_key.should == 'foo@example.com'
+    end
+
+    it "should return username" do
+      Devise.stubs(:authentication_keys =>[:username])
+      @user.user_key.should == 'foo'
+    end
+
+  end
+
   describe "superuser" do
     before(:all) do
+      Superuser.delete_all
       @orig_deprecation_behavior = Hydra::SuperuserAttributes.deprecation_behavior
       Hydra::SuperuserAttributes.deprecation_behavior = :silence
 
@@ -18,6 +36,9 @@ describe User do
 
     before(:each) do
       @user = User.create(:email=> "testuser@example.com", :password=> "password", :password_confirmation => "password")
+    end
+    after(:each) do
+      @user.delete
     end
     it "should know if a user can be a superuser" do
       superuser = Superuser.new()

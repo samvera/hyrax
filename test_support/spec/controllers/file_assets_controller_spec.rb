@@ -148,7 +148,7 @@ describe Hydra::FileAssetsController do
     describe "create" do
       before :each do
         mock_user = mock("User")
-        mock_user.stubs(:email).returns('user@example.com')
+        mock_user.stubs(:user_key).returns('user@example.com')
         mock_warden = mock("Warden")
         mock_warden.stubs(:authenticate).returns(mock_user)
         request.env['warden'] = mock_warden

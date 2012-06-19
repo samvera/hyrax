@@ -10,11 +10,21 @@ module Hydra::User
     klass.send(:include, Hydra::SuperuserAttributes)
   end
 
+  # This method should display the unique identifier for this user as defined by devise.
+  # The unique identifier is what access controls will be enforced against. 
+  def user_key
+    send(Devise.authentication_keys.first)
+  end
+
+
   # This method should display the unique identifier for this user
   # the unique identifier is what access controls will be enforced against. 
   def unique_id
     return to_s
   end
+  deprecation_deprecate :unique_id
+
+  
 
   # For backwards compatibility with the Rails2 User models in Hydra/Blacklight
   def login
