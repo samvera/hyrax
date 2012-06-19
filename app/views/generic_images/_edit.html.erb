@@ -20,7 +20,7 @@
     // This hidden form really belongs elsewhere, but putting it inside of an 
     // accordion section un-hides it, so I stuck it here for now. -MZ
     %>
-    <form id="new_contributor" action="<%=url_for(:action=>"create", :controller=>"contributors", :asset_id=>params[:id]) %>" method="post">
+    <form id="new_contributor" action="<%=hydra_asset_contributors_path(:asset_id=>params[:id]) %>" method="post">
       <input class="content_type" type="hidden" name="content_type" value="generic_content" />
       <p><label for="contributor_type">Contributor Type</label>
       <select id="contributor_type" name="contributor_type">
