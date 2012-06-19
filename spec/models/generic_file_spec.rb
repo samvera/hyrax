@@ -190,7 +190,7 @@ describe GenericFile do
   end
   it "should support setting and getting the relative_path value" do
     @file.relative_path = "documents/research/NSF/2010"
-    @file.relative_path.should == ["documents/research/NSF/2010"]
+    @file.relative_path.should == "documents/research/NSF/2010"
   end
   describe "create_thumbnail" do
     describe "with an image that doesn't get resized" do

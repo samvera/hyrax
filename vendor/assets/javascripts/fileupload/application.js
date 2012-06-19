@@ -110,6 +110,19 @@ $(function () {
     
     });
 
+
+    // data. takes the contextual values in the file your uploading
+    // so and assign them to a value in the form that is being uploaded
+    // much is based off https://github.com/blueimp/jQuery-File-Upload/wiki/How-to-submit-additional-Form-Data
+    $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+      //var inputs = data.context.find(':input');
+      //$('#fileupload').formData = inputs.serializeArray();
+      //data.form = inputs.serializeArray
+      //$('#relative_path').val(inputs[0].value); 
+      $('#relative_path').val(data.files[0].webkitRelativePath)
+    });
+
+
     // on fail if abort (aka cancel) decrease the number of uploaded files to send
     $('#fileupload').bind("fileuploadfail", function(e, data){ 
       if (data.errorThrown == 'abort') {

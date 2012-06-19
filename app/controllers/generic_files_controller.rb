@@ -144,6 +144,8 @@ class GenericFilesController < ApplicationController
     apply_depositor_metadata(@generic_file)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
+    @generic_file.relative_path = params[:relative_path] if params.has_key?(:relative_path)
+
     if params.has_key?(:batch_id)
       batch_id = PSU::Noid.namespaceize(params[:batch_id])
       @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")

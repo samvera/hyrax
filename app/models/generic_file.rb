@@ -14,7 +14,7 @@ class GenericFile < ActiveFedora::Base
   belongs_to :batch, :property => :is_part_of
 
   delegate :depositor, :to => :properties
-  delegate :relative_path, :to => :properties
+  delegate :relative_path, :to => :properties, :unique => true
   delegate :related_url, :to => :descMetadata
   delegate :based_near, :to => :descMetadata
   delegate :part_of, :to => :descMetadata
