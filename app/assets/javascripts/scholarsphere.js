@@ -68,7 +68,7 @@ $(function() {
  
   var autocomplete_vocab = new Object();
 
-  autocomplete_vocab.url_var =      ['subject', 'language', 'tag'];   // the url variable to pass to determine the vocab to attach to
+  autocomplete_vocab.url_var =      ['subject', 'language'];   // the url variable to pass to determine the vocab to attach to
   autocomplete_vocab.field_name = new Array(); // the form name to attach the event for autocomplete
   autocomplete_vocab.add_btn_id = new Array(); // the id of the button pressed when adding an additional form element 
 
