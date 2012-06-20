@@ -82,11 +82,18 @@ $('input[name=revision]:radio').on('click', function() {
     <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
     <table class="verticalheadings">
       <tbody>
+        <tr>
+          <th> <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %></th>
+          <td>
+            <%= f.select "resource_type", options_for_select(ScholarSphere::Application::config.resource_types.keys, @generic_file.resource_type.to_a), {}, {:multiple=>true, :size=>7} %>
+            <p class="help-block">You may select multiple types to apply to all files<p>
+          </td>
+        </tr>
       <% @terms.each do |t| %>
         <% next if t.empty? %> 
         <% key = t.to_s.split("generic_file__").last %>
         <%# consider these fields to be uneditable via the web form %>
-        <% next if ['part_of', 'date_modified', 'date_uploaded'].include?(key) %>
+        <% next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key) %>
         <% logger.info "!!!! Generic file has no method #{key}" unless @generic_file.respond_to?(key) %>
         <% if @generic_file.respond_to?(key) %>
           <% vals =  @generic_file.send(key) %>
