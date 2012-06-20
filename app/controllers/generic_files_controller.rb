@@ -104,7 +104,7 @@ class GenericFilesController < ApplicationController
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
     end
     add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata) 
-    @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
+    @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded }.include? k})
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
