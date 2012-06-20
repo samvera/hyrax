@@ -1,4 +1,4 @@
-
+<a href="<%= download_path(@generic_file.id) %>" target="_new">
 <% if ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg'].include?(@generic_file.mime_type) %>
   <img src="<%= download_path(@generic_file) %>" width="338" /> 
 <% elsif ['video/mp4'].include?(@generic_file.mime_type) %>
@@ -15,3 +15,4 @@
 <% else %>
   <img src="/images/default.png" alt="No preview available" width="338" height="493" />
 <% end %>
+</a>
