@@ -26,6 +26,9 @@ ScholarSphere::Application.routes.draw do
   match 'batches/:id/' => 'batch#update', :as => :batch_generic_files
   match "/catalog/recent" => "catalog#recent", :as => :catalog_recent_path
 
+
+  match ':action' => 'static#:action'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
