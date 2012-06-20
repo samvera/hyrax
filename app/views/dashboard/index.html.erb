@@ -1,11 +1,23 @@
 <% javascript 'video.js' %>
 <% javascript 'audio.min.js' %>
+<% javascript 'jquery.zclip.min.js' %>
 <% stylesheet 'video-js.css' %>
 
 <% content_for :local_js do %>
     audiojs.events.ready(function() {
       var as = audiojs.createAll();
+      });
+  copy_links = $('a.copypaste');
+  for(var i=0; i < copy_links; i++) 
+  {
+    $('#'+ copy_links[i].id ).zclip({
+      path: '/assets/ZeroClipboard.swf', 
+      copy: function() {
+        return 'http://' + window.location.host + $('#src_' + copy_links[i].id).attr('href');
+      },
     });
+  }
+
 <% end %>
 
 <% content_for :local_css do %>

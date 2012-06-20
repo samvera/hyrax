@@ -3,11 +3,11 @@
 on element ids -->
 <% if document.has_key?(:noid_s) %>
 <tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>" class="<%= cycle("","zebra") %>"> 
-  <td width="3%"><%= check_box_tag :generic_file, document[:id] %></td> 
+  <td width="3%"><%# check_box_tag :generic_file, document[:id] %></td> 
   <td width="42%">
     <a href="#" id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="itemicon itemexpand">expand</a>
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> <br />
+    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first), :id => 'src_copy_link_' + document[:noid_s].first %> <br />
     <%= document[:noid_s].first %>
   </td>
   <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
@@ -20,15 +20,15 @@ on element ids -->
   </td>
   <td width="5%" align="center">
     <% if document[:read_access_group_t].nil? or (document[:read_access_group_t] & ['public']).empty? %>
-      <a href="/" class="itemicon itemprivate">private</a>
+      <%= link_to 'private', '#', :class => 'itemicon itemprivate', :title => 'Restricted'  %>
     <% else %>
-      <a href="/" class="itemicon itempublic">public</a>
+      <%= link_to 'public', '#', :class => 'itemicon itempublic', :title => 'Publicly Accessible' %>
     <% end %>
   </td>
   <td width="23%" align="center">
-    <a href="/" class="itemicon itemcode">get code</a>
-    <a href="/" class="itemicon itemedit">edit</a>
-    <a href="/" class="itemicon itemdownload">download</a>
+    <%= link_to 'get code', '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => 'copy_link_' + document[:noid_s].first %>
+    <%= link_to 'edit', edit_generic_file_path(document[:noid_s].first), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
+    <%= link_to 'download', download_path(document[:noid_s].first), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
   </td>
 </tr>
 <tr class="hidden" id="detail_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  document detail"> -->
