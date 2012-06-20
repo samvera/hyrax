@@ -9,8 +9,12 @@
     });
 
 $( "#new_group_name_skel" ).autocomplete({
-source: "/directory/user/<%= request.env['HTTP_REMOTE_USER'] %>/groups/" 
+  source: "/directory/user/<%= request.env['HTTP_REMOTE_USER'] %>/groups/" 
 });
+
+$('input[name=revision]:radio').on('click', function() {
+    $('#save_version_note').fadeIn('slow'); 
+  });
 <% end %>
 
 <% content_for :local_css do %>
@@ -39,13 +43,18 @@ source: "/directory/user/<%= request.env['HTTP_REMOTE_USER'] %>/groups/"
             <% @generic_file.content.versions.each_with_index do |version, index| %>
               <%= radio_button_tag(:revision, version.versionID, index == 0) %>
               <%= label_tag("revision_#{version.versionID}".to_sym, "Restore version from #{version.dsCreateDate}") %>
+              <%# @generic_file.depositor.first %> 
+              <br />
             <% end %>
+            <div id="save_version_note" class="ui-state-highlight hidden">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
+            <%= f.submit "Save Revision", :name => "revert_submit", :id => "revert_submit", :class => "btn-primary btn-large" %> 
             <h3>New revision</h3>
             <p>Upload a new version of this file from your computer.</p>
             <p id="upload_field">
             <%= file_field_tag "filedata"  %>
             </p>
-           <%= f.submit "Upload New Version", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %> </td>
+           <%= f.submit "Upload New Version", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
+            </td>
 <% end %>
           </td>
         </tr>
