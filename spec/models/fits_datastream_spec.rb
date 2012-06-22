@@ -5,6 +5,7 @@ describe FitsDatastream do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @file = GenericFile.new
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+    @file.apply_depositor_metadata('mjg36')
     @file.save
     Delayed::Worker.new.work_off
     @file = GenericFile.find(@file.pid)    

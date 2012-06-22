@@ -4,18 +4,18 @@ describe GenericFile do
   before(:each) do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @file = GenericFile.new
+    @file.apply_depositor_metadata('jcoyne')
   end
   describe "attributes" do
     it "should have rightsMetadata" do
-      @file.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
+      @file.rightsMetadata.should be_instance_of ParanoidRightsDatastream
     end
     it "should have properties datastream for depositor" do
       @file.properties.should be_instance_of PropertiesDatastream
     end
     it "should have apply_depositor_metadata" do
-      @file.apply_depositor_metadata('jcoyne')
       @file.rightsMetadata.edit_access.should == ['jcoyne']
-      @file.depositor.should == ['jcoyne']
+      @file.depositor.should == 'jcoyne'
     end
     it "should have a set of permissions" do
       @file.discover_groups=['group1', 'group2']
@@ -30,33 +30,39 @@ describe GenericFile do
     describe "updating permissions" do
       it "should create new group permissions" do
         @file.permissions = {:new_group_name => {'group1'=>'discover'}}
-        @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
+        @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
+                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should create new user permissions" do
         @file.permissions = {:new_user_name => {'user1'=>'discover'}}
-        @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+        @file.permissions.should == [{:type=>"user", :access=>"discover", :name=>"user1"},
+                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should not replace existing groups" do
         @file.permissions = {:new_group_name=> {'group1' => 'discover'}}
         @file.permissions = {:new_group_name=> {'group2' => 'discover'}}
-        @file.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
-                                     {:type=>'group', :access=>'discover', :name=>'group2'}]
+        @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
+                                     {:type=>"group", :access=>"discover", :name=>"group2"},
+                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should not replace existing users" do
         @file.permissions = {:new_user_name=>{'user1'=>'discover'}}
         @file.permissions = {:new_user_name=>{'user2'=>'discover'}}
-        @file.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
-                                     {:type=>'user', :access=>'discover', :name=>'user2'}]
+        @file.permissions.should == [{:type=>"user", :access=>"discover", :name=>"user1"},
+                                     {:type=>"user", :access=>"discover", :name=>"user2"},
+                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should update permissions on existing users" do
         @file.permissions = {:new_user_name=>{'user1'=>'discover'}}
         @file.permissions = {:user=>{'user1'=>'edit'}}
-        @file.permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
+        @file.permissions.should == [{:type=>"user", :access=>"edit", :name=>"user1"},
+                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should update permissions on existing groups" do
         @file.permissions = {:new_group_name=>{'group1'=>'discover'}}
         @file.permissions = {:group=>{'group1'=>'edit'}}
-        @file.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
+        @file.permissions.should == [{:type=>"group", :access=>"edit", :name=>"group1"},
+                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
     end
     it "should have a characterization datastream" do
@@ -89,7 +95,6 @@ describe GenericFile do
       @file.should respond_to(:date_modified)
       @file.should respond_to(:subject)
       @file.should respond_to(:language)
-      @file.should respond_to(:date)
       @file.should respond_to(:rights)
       @file.should respond_to(:resource_type)
       @file.should respond_to(:format)
@@ -198,6 +203,7 @@ describe GenericFile do
         @f = GenericFile.new
         @f.stubs(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
         @f.add_file_datastream(File.new("#{Rails.root}/spec/fixtures/world.png"), :dsid=>'content')
+        @f.apply_depositor_metadata('mjg36')
         @f.save
         @mock_image = mock("image", :from_blob=>true)
         Magick::ImageList.expects(:new).returns(@mock_image)
@@ -221,39 +227,43 @@ describe GenericFile do
       GenericFile.any_instance.stubs(:characterize).returns(true)
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      f.apply_depositor_metadata('mjg36')
       f.save
       Delayed::Worker.new.work_off # characterization job
       @f = GenericFile.find(f.pid)
+      @datastreams = [FileContentDatastream, ActiveFedora::RelsExtDatastream,
+                      ActiveFedora::Datastream, PropertiesDatastream,
+                      ParanoidRightsDatastream]
     end
     after(:all) do
       @f.delete
       Delayed::Worker.delay_jobs = @cur_delay #return to original delay state
     end
     it "should schedule a audit job" do
-      FileContentDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
-      ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
-      ActiveFedora::Datastream.any_instance.stubs(:dsChecksumValid).returns(false)
+      @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
       ChecksumAuditLog.stubs(:create!).returns(true)
       @f.audit!
-      Delayed::Job.count.should == @job_count+3 # 3 version so a job for each
+      Delayed::Job.count.should == @job_count + @datastreams.count
       Delayed::Worker.new.work_off
       Delayed::Job.count.should == @job_count
     end
     it "should log a failing audit" do
       Delayed::Worker.delay_jobs = false
-      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-      ActiveFedora::RelsExtDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-      ActiveFedora::Datastream.any_instance.expects(:dsChecksumValid).returns(false)
+      @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'properties.0', :dsid => 'properties')
+      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'rightsMetadata.0', :dsid => 'rightsMetadata')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
     end
     it "should log a passing audit" do
       Delayed::Worker.delay_jobs = false
-      FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
+      @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(true) }
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'properties.0', :dsid => 'properties')
+      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'rightsMetadata.0', :dsid => 'rightsMetadata')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
     end
@@ -284,6 +294,9 @@ describe GenericFile do
       @f1 = GenericFile.new(:pid => "foobar:1")
       @f2 = GenericFile.new(:pid => "foobar:2")
       @f3 = GenericFile.new(:pid => "foobar:3")
+      @f1.apply_depositor_metadata('mjg36')
+      @f2.apply_depositor_metadata('mjg36')
+      @f3.apply_depositor_metadata('mjg36')
     end
     after(:each) do
       @f1.delete if @f1.persisted?
@@ -354,7 +367,9 @@ describe GenericFile do
     before(:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       GenericFile.any_instance.expects(:characterize_if_changed).yields
-      @new_file = GenericFile.create(:pid => 'ns:123')
+      @new_file = GenericFile.new(:pid => 'ns:123')
+      @new_file.apply_depositor_metadata('mjg36')
+      @new_file.save
     end
     after(:all) do
       @new_file.delete
@@ -394,6 +409,7 @@ describe GenericFile do
         myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
         myfile.thumbnail.size.nil?.should be_true
+        myfile.apply_depositor_metadata('mjg36')
         myfile.save
         Delayed::Worker.new.work_off
         @myfile = GenericFile.find(myfile.pid)
@@ -472,6 +488,214 @@ describe GenericFile do
       # 'group-7' is not eligible to be revoked
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'}
       subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
+    end
+  end
+  describe "permissions validation" do
+    context "depositor must have edit access" do
+      before(:each) do
+        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        @file = GenericFile.new
+        @file.apply_depositor_metadata('mjg36')
+        @rightsmd = @file.rightsMetadata
+      end
+      before(:all) do
+        @rights_xml = <<-RIGHTS
+<rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1" version="0.1">
+  <copyright>
+    <human></human>
+    <machine></machine>
+  </copyright>
+  <access type="discover">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="read">
+    <human></human>
+    <machine>
+      <person>mjg36</person>
+    </machine>
+  </access>
+  <access type="edit">
+    <human></human>
+    <machine></machine>
+  </access>
+  <embargo>
+    <human></human>
+    <machine></machine>
+  </embargo>
+</rightsMetadata>
+      RIGHTS
+      end
+      it "should work via permissions=()" do
+        @file.permissions = {:user => {'mjg36' => 'read'}}
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_attributes" do
+        # automatically triggers save
+        lambda { @file.update_attributes(:read_users_string => 'mjg36') }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_indexed_attributes" do
+        @rightsmd.update_indexed_attributes([:edit_access, :person] => '')
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via permissions()" do
+        @rightsmd.permissions({:person => "mjg36"}, "read")
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_permissions()" do
+        @rightsmd.update_permissions({"person" => {"mjg36" => "read"}})
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via content=()" do
+        @rightsmd.content=(@rights_xml)
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via ng_xml=()" do
+        @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_values()" do
+        @rightsmd.update_values([:edit_access, :person] => '')
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+    end
+    context "public must not have edit access" do
+      before(:each) do
+        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        @file = GenericFile.new
+        @file.apply_depositor_metadata('mjg36')
+        @file.read_groups = ['public']
+        @rightsmd = @file.rightsMetadata
+      end
+      before(:all) do
+        @rights_xml = <<-RIGHTS
+<rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1" version="0.1">
+  <copyright>
+    <human></human>
+    <machine></machine>
+  </copyright>
+  <access type="discover">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="read">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="edit">
+    <human></human>
+    <machine>
+      <group>public</group>
+    </machine>
+  </access>
+  <embargo>
+    <human></human>
+    <machine></machine>
+  </embargo>
+</rightsMetadata>
+        RIGHTS
+      end
+      it "should work via permissions=()" do
+        @file.permissions = {:group => {'public' => 'edit'}}
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_attributes" do
+        # automatically triggers save
+        lambda { @file.update_attributes(:edit_groups_string => 'public') }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_indexed_attributes" do
+        @rightsmd.update_indexed_attributes([:edit_access, :group] => 'public')
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via permissions()" do
+        @rightsmd.permissions({:group => "public"}, "edit")
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_permissions()" do
+        @rightsmd.update_permissions({"group" => {"public" => "edit"}})
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via content=()" do
+        @rightsmd.content=(@rights_xml)
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via ng_xml=()" do
+        @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_values()" do
+        @rightsmd.update_values([:edit_access, :group] => 'public')
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+    end
+    context "registered must not have edit access" do
+      before(:each) do
+        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        @file = GenericFile.new
+        @file.apply_depositor_metadata('mjg36')
+        @file.read_groups = ['registered']
+        @rightsmd = @file.rightsMetadata
+      end
+      before(:all) do
+        @rights_xml = <<-RIGHTS
+<rightsMetadata xmlns="http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1" version="0.1">
+  <copyright>
+    <human></human>
+    <machine></machine>
+  </copyright>
+  <access type="discover">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="read">
+    <human></human>
+    <machine></machine>
+  </access>
+  <access type="edit">
+    <human></human>
+    <machine>
+      <group>registered</group>
+    </machine>
+  </access>
+  <embargo>
+    <human></human>
+    <machine></machine>
+  </embargo>
+</rightsMetadata>
+        RIGHTS
+      end
+      it "should work via permissions=()" do
+        @file.permissions = {:group => {'registered' => 'edit'}}
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_attributes" do
+        # automatically triggers save
+        lambda { @file.update_attributes(:edit_groups_string => 'registered') }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_indexed_attributes" do
+        @rightsmd.update_indexed_attributes([:edit_access, :group] => 'registered')
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via permissions()" do
+        @rightsmd.permissions({:group => "registered"}, "edit")
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_permissions()" do
+        @rightsmd.update_permissions({"group" => {"registered" => "edit"}})
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via content=()" do
+        @rightsmd.content=(@rights_xml)
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via ng_xml=()" do
+        @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
+      it "should work via update_values()" do
+        @rightsmd.update_values([:edit_access, :group] => 'registered')
+        lambda { @file.save }.should raise_error(ParanoidRightsDatastream::PermissionsViolation)
+      end
     end
   end
 end

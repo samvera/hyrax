@@ -59,14 +59,13 @@ describe GenericFilesController do
     end
     it "should set the depositor id" do
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, :files => [file], :Filename => "The world",
-      :batch_id => "sample:batch_id", :permission => {"group"=>{"public"=>"discover"} }, :terms_of_service => "1"
+      xhr :post, :create, :files => [file], :Filename => "The world", :batch_id => "sample:batch_id", :permission => {"group"=>{"public"=>"discover"} }, :terms_of_service => "1"
       response.should be_success
 
       saved_file = GenericFile.find('test:123')
       # This is confirming that apply_depositor_metadata recorded the depositor
       saved_file.properties.depositor.should == ['jilluser']
-      saved_file.depositor.should == ['jilluser']
+      saved_file.depositor.should == 'jilluser'
       saved_file.properties.to_solr.keys.should include('depositor_t')
       saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
       saved_file.to_solr.keys.should include('depositor_t')
@@ -79,6 +78,7 @@ describe GenericFilesController do
       @cur_delay = Delayed::Worker.delay_jobs
       @generic_file = GenericFile.new
       @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @generic_file.apply_depositor_metadata('mjg36')
       @generic_file.save
     end
     after do

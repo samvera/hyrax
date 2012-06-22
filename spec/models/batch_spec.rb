@@ -5,7 +5,9 @@ describe Batch do
     @user = FactoryGirl.find_or_create(:user)
     GenericFile.any_instance.expects(:characterize_if_changed).yields
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-    @file = GenericFile.create
+    @file = GenericFile.new
+    @file.apply_depositor_metadata('mjg36')
+    @file.save
     @batch = Batch.create(:title => "test collection",
                           :creator => @user.login,
                           :part => @file.pid)
@@ -36,9 +38,11 @@ describe Batch do
   it "should be able to have more than one file" do
     # not sure why this is needed here too, but when the test runs alone it is not needed but when run in the group it is needed
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-    logger.info "before create"
-    gf = GenericFile.create
-    logger.info "after create"
+    #logger.info "before create"
+    gf = GenericFile.new
+    #logger.info "after create"
+    gf.apply_depositor_metadata('mjg36')
+    gf.save
     @batch.part << gf.pid
     @batch.save
     @batch.part.should == [@file.pid, gf.pid]

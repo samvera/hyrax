@@ -20,19 +20,21 @@ class ApplicationController < ActionController::Base
   def clear_session_user
     # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
     # logout clears the entire session including flash messages
-    logger.warn "Request is Nil, how weird!!!" if request == nil
-    return if request == nil
-    request.env['warden'].logout  unless ( (not env['warden'].user) || (request.env['HTTP_REMOTE_USER'])) if (env['warden'])
+    if request.nil?
+      logger.warn "Request is Nil, how weird!!!"
+      return
+    end
+    request.env['warden'].logout unless ( (not env['warden'].user) || (request.env['HTTP_REMOTE_USER'])) if (env['warden'])
   end
 
   def set_current_user
-      User.current = current_user
+    User.current = current_user
   end
 
   def render (object = nil)
-     add_notifications
-     super(object)
-  end 
+    add_notifications
+    super(object)
+  end
 
 
   def add_notifications
@@ -43,7 +45,7 @@ class ApplicationController < ActionController::Base
          inbox = User.current.mailbox.inbox
          notice = ''
          inbox.each() do |msg|
-            logger.info "Message = #{msg.messages.inspect}"
+            #logger.info "Message = #{msg.messages.inspect}"
             notice = notice+"<br>"+msg.last_message.body if (msg.last_message.subject == AuditJob::FAIL)
           
             # we are cleaning up the hard way here so that we do not get a raise condition with locks.

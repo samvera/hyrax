@@ -8,80 +8,37 @@ class GenericFile < ActiveFedora::Base
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
+  has_metadata :name => "rightsMetadata", :type => ParanoidRightsDatastream
   has_file_datastream :name => "content", :type => FileContentDatastream
   has_file_datastream :name => "thumbnail", :type => FileContentDatastream
 
   belongs_to :batch, :property => :is_part_of
 
-  delegate :depositor, :to => :properties
-  delegate :relative_path, :to => :properties, :unique => true
-  delegate :related_url, :to => :descMetadata
-  delegate :based_near, :to => :descMetadata
-  delegate :part_of, :to => :descMetadata
-  delegate :contributor, :to => :descMetadata
-  delegate :creator, :to => :descMetadata
-  delegate :title, :to => :descMetadata
-  delegate :tag, :to => :descMetadata
-  delegate :description, :to => :descMetadata
-  delegate :publisher, :to => :descMetadata
-  delegate :date_created, :to => :descMetadata
-  delegate :date_uploaded, :to => :descMetadata, :unique => true
-  delegate :date_modified, :to => :descMetadata, :unique => true
-  delegate :subject, :to => :descMetadata
-  delegate :language, :to => :descMetadata
-  delegate :date, :to => :descMetadata
-  delegate :rights, :to => :descMetadata
-  delegate :resource_type, :to => :descMetadata
-  delegate :format, :to => :descMetadata
-  delegate :identifier, :to => :descMetadata
-  delegate :format_label, :to => :characterization
+  delegate_to :properties, [:relative_path, :depositor], :unique => true
+  delegate_to :descMetadata, [:date_uploaded, :date_modified], :unique => true
+  delegate_to :descMetadata, [:related_url, :based_near, :part_of, :creator,
+                              :contributor, :title, :tag, :description, :rights,
+                              :publisher, :date_created, :subject, :format,
+                              :resource_type, :identifier, :language]
   delegate :mime_type, :to => :characterization, :unique => true
-  delegate :file_size, :to => :characterization
-  delegate :last_modified, :to => :characterization
-  delegate :filename, :to => :characterization
-  delegate :original_checksum, :to => :characterization
-  delegate :rights_basis, :to => :characterization
-  delegate :copyright_basis, :to => :characterization
-  delegate :copyright_note, :to => :characterization
-  delegate :well_formed, :to => :characterization
-  delegate :valid, :to => :characterization
-  delegate :status_message, :to => :characterization
-  delegate :file_title, :to => :characterization
-  delegate :file_author, :to => :characterization
-  delegate :page_count, :to => :characterization
-  delegate :file_language, :to => :characterization
-  delegate :word_count, :to => :characterization
-  delegate :character_count, :to => :characterization
-  delegate :paragraph_count, :to => :characterization
-  delegate :line_count, :to => :characterization
-  delegate :table_count, :to => :characterization
-  delegate :graphics_count, :to => :characterization
-  delegate :byte_order, :to => :characterization
-  delegate :compression, :to => :characterization
-  delegate :width, :to => :characterization
-  delegate :height, :to => :characterization
-  delegate :color_space, :to => :characterization
-  delegate :profile_name, :to => :characterization
-  delegate :profile_version, :to => :characterization
-  delegate :orientation, :to => :characterization
-  delegate :color_map, :to => :characterization
-  delegate :image_producer, :to => :characterization
-  delegate :capture_device, :to => :characterization
-  delegate :scanning_software, :to => :characterization
-  delegate :exif_version, :to => :characterization
-  delegate :gps_timestamp, :to => :characterization
-  delegate :latitude, :to => :characterization
-  delegate :longitude, :to => :characterization
-  delegate :character_set, :to => :characterization
-  delegate :markup_basis, :to => :characterization
-  delegate :markup_language, :to => :characterization
-  delegate :duration, :to => :characterization
-  delegate :bit_depth, :to => :characterization
-  delegate :sample_rate, :to => :characterization
-  delegate :channels, :to => :characterization
-  delegate :data_format, :to => :characterization
-  delegate :offset, :to => :characterization
+  delegate_to :characterization, [:format_label, :file_size, :last_modified,
+                                  :filename, :original_checksum, :rights_basis,
+                                  :copyright_basis, :copyright_note,
+                                  :well_formed, :valid, :status_message,
+                                  :file_title, :file_author, :page_count,
+                                  :file_language, :word_count, :character_count,
+                                  :paragraph_count, :line_count, :table_count,
+                                  :graphics_count, :byte_order, :compression,
+                                  :width, :height, :color_space, :profile_name,
+                                  :profile_version, :orientation, :color_map,
+                                  :image_producer, :capture_device,
+                                  :scanning_software, :exif_version,
+                                  :gps_timestamp, :latitude, :longitude,
+                                  :character_set, :markup_basis,
+                                  :markup_language, :duration, :bit_depth,
+                                  :sample_rate, :channels, :data_format, :offset]
 
+  before_save :validate
   around_save :characterize_if_changed
 
   NO_RUNS = 999
@@ -89,13 +46,18 @@ class GenericFile < ActiveFedora::Base
   #make sure the terms of service is present and set to 1 before saving
   # note GenericFile.create will no longer save a GenericFile as the terms_of_service will not be set
   terms_of_service = nil
-  validates_acceptance_of :terms_of_service, :allow_nil=>false
+  validates_acceptance_of :terms_of_service, :allow_nil => false
 
   # set the terms of service on create so an empty generic file can be created
   #before_validation(:on => :create) do
   #  logger.info "!!!! Before create !!!!"
   #  self.terms_of_service = '1'
   #end
+
+  def validate
+    # add datastream-level validations here as needed
+    rightsMetadata.validate(self)
+  end
 
   ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
   def permissions=(params)
@@ -111,7 +73,7 @@ class GenericFile < ActiveFedora::Base
   def characterize_if_changed
     content_changed = self.content.changed?
     yield
-    logger.debug "DOING CHARACTERIZE ON #{self.pid}"
+    #logger.debug "DOING CHARACTERIZE ON #{self.pid}"
     Delayed::Job.enqueue(CharacterizeJob.new(self.pid), :queue => 'characterize') if content_changed
   end
 
@@ -168,7 +130,7 @@ class GenericFile < ActiveFedora::Base
     first.format = "PNG"
     thumb = first.scale(338, 493)
     self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
-    logger.debug "Has the content changed before saving? #{self.content.changed?}"
+    #logger.debug "Has the content changed before saving? #{self.content.changed?}"
     self.terms_of_service = '1'
     self.save
   end
@@ -195,7 +157,7 @@ class GenericFile < ActiveFedora::Base
     end
     self.thumbnail.content = thumb.to_blob
     self.terms_of_service = '1'
-    logger.debug "Has the content before saving? #{self.content.changed?}"
+    #logger.debug "Has the content before saving? #{self.content.changed?}"
     self.save
   end
 
@@ -320,7 +282,7 @@ class GenericFile < ActiveFedora::Base
 
 
   def self.audit(version, force = false)
-    logger.debug "***AUDIT*** log for #{version.inspect}"
+    #logger.debug "***AUDIT*** log for #{version.inspect}"
     latest_audit = self.find(version.pid).logs(version.dsid).first
     unless force
       return latest_audit unless GenericFile.needs_audit?(version, latest_audit)
@@ -337,17 +299,17 @@ class GenericFile < ActiveFedora::Base
 
   def self.needs_audit?(version, latest_audit)
     if latest_audit and latest_audit.updated_at
-      logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
+      #logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
       days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
-      logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
+      #logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
       if days_since_last_audit < Rails.application.config.max_days_between_audits
-        logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{latest_audit.updated_at})"
+        #logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{latest_audit.updated_at})"
         return false
       end
     else
-      logger.warn "***AUDIT*** problem with audit log!"
+      #logger.warn "***AUDIT*** problem with audit log!"
     end
-    logger.info "***AUDIT*** Audit needed for #{version.pid} #{version.versionID}"
+    #logger.info "***AUDIT*** Audit needed for #{version.pid} #{version.versionID}"
     true
   end
 
@@ -365,7 +327,7 @@ class GenericFile < ActiveFedora::Base
 
   def self.run_audit(version)
     if version.dsChecksumValid
-      logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
+      #logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
       passing = true
       ChecksumAuditLog.prune_history(version)
     else

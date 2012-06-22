@@ -7,6 +7,7 @@ describe UnzipJob do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @generic_file = GenericFile.new(:batch=>@batch)
     @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/icons.zip'), :dsid=>'content')
+    @generic_file.apply_depositor_metadata('mjg36')
     @generic_file.save
   end
 

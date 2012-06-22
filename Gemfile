@@ -6,7 +6,7 @@ gem 'sqlite3', '1.3.6'
 gem 'mysql2', '0.3.11'
 gem 'blacklight', '3.4.2'
 gem 'hydra-head', '4.0.3'
-gem 'active-fedora', '4.2.0'
+gem 'active-fedora', '4.3.0'
 gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'verify-users-exist' 
 
 # the :require arg is necessary on Linux-based hosts

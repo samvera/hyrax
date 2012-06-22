@@ -13,6 +13,7 @@ describe FileContentDatastream do
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       f.expects(:characterize_if_changed).yields
+      f.apply_depositor_metadata('mjg36')
       f.save
       @file = GenericFile.find(f.pid)
     end
@@ -85,6 +86,7 @@ describe FileContentDatastream do
   describe "changed?" do
     before do
       @generic_file = GenericFile.new
+      @generic_file.apply_depositor_metadata('mjg36')
     end
     after do
       @generic_file.delete

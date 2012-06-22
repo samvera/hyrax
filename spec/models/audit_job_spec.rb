@@ -5,7 +5,9 @@ describe AuditJob do
     @user = FactoryGirl.find_or_create(:user)
     GenericFile.any_instance.expects(:characterize_if_changed).yields
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-    @file = GenericFile.create
+    @file = GenericFile.new
+    @file.apply_depositor_metadata('mjg36')
+    @file.save
     @ds = @file.datastreams.first
     @job = AuditJob.new(@user, @file.pid, @ds[0], @ds[1].versionID)
     @inbox = @user.mailbox.inbox
