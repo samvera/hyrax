@@ -7,7 +7,7 @@
 # to run CI testing.
 
 HHOME=/opt/heracles
-WORKSPACE=${JENKINS_HOME}/jobs/scholarsphere/workspace
+WORKSPACE=${JENKINS_HOME}/jobs/scholarsphere-ci/workspace
 #WORKSPACE=/opt/heracles/scholarsphere-jgm
 
 
