@@ -1,21 +1,21 @@
 <% public_included = false %>
 <% registered_included = false %>
-
+<% depositor = gf.depositor || GenericFile.find(:is_part_of_s => "info:fedora/#{batch.pid}").first.depositor %>
 <h2>Share With</h2>
   <div class="control-group" id="owner_permissions">
     <div class="controls">
-      <%= label_tag :owner_access, "Owner (" +request.env['HTTP_REMOTE_USER'] + ") Access", :class=>"control-label" %>
+      <%= label_tag :owner_access, "Owner (#{depositor}) Access", :class=>"control-label" %>
       <%= select_tag "owner", options_for_select(ScholarSphere::Application::config.owner_permission_levels), {:disabled => true} %>
       <span>You may not change your edit permission</span>
     </div>
   </div>
 
 <% gf.permissions.each do |permission| %>
-  <% public_included = true if permission[:name].upcase == 'PUBLIC' %>
-  <% registered_included = true if permission[:name].upcase == 'REGISTERED' %>
+  <% public_included = true if permission[:name].downcase == 'public' %>
+  <% registered_included = true if permission[:name].downcase == 'registered' %>
 
-  <% next if [request.env['HTTP_REMOTE_USER']].include?(permission[:name]) %>
-    <div class="control-group"> 
+  <% next if depositor == permission[:name] %>
+    <div class="control-group">
       <div class="controls">
       <%
          label = case permission[:name]
@@ -32,13 +32,13 @@
         <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.public_permission_levels, permission[:access]), :class=>'small' %>
       <% else %>
         <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'small' %>
-      <% end %> 
+      <% end %>
       </div>
-    </div> 
+    </div>
 <% end %>
 <%# handle special groups %>
 <% unless public_included %>
-    <div class="control-group"> 
+    <div class="control-group">
       <div class="controls">
         <%= label_tag "generic_file[permissions][group][public]", "Public", :class=>"control-label" %>
         <%= select_tag "generic_file[permissions][group][public]", options_for_select(ScholarSphere::Application::config.public_permission_levels, "No Access"), :class=>'small' %>

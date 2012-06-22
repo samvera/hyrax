@@ -28,7 +28,7 @@ module ScholarSphere
     config.assets.paths << '#{Rails.root}/lib/assets/images'
     config.assets.paths << '#{Rails.root}/vendor/assets/javascripts'
     config.assets.paths << '#{Rails.root}/vendor/assets/images'
-    
+
     config.fits_to_desc_mapping = {
       :format_label => :format,
       :last_modified => :date_modified,

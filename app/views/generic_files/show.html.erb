@@ -14,6 +14,13 @@
 }
 <% end %>
 
+<%
+  def zebra
+     @zebra = !@zebra || false
+     return " class='zebra'" if @zebra
+  end
+%>
+
 <h1 class="lower"><%= @generic_file.title.join(' | ') %></h1>
 
 <div class="columns two-b">
@@ -38,8 +45,8 @@
 
     <h2 class="non lower">Metadata</h2>
     <table class="verticalheadings">
-      <tbody>
-        <tr class="zebra">
+      <tbody> 
+        <tr<%= zebra %>>
           <th>Title</th>
           <td>
             <% @generic_file.title.each do |title| %>
@@ -47,7 +54,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Creator</th>
           <td>
             <% @generic_file.creator.each do |creator| %>
@@ -55,7 +62,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Contributor</th>
           <td>
             <% @generic_file.contributor.each do |contributor| %>
@@ -63,7 +70,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Related URL</th>
           <td>
             <% @generic_file.related_url.each do |ru| %>
@@ -71,15 +78,15 @@
             <% end %>
           </td>
         </tr>
-        <tr>
-          <th>Based Near</th>
+        <tr<%= zebra %>>
+          <th>Location</th>
           <td>
             <% @generic_file.based_near.each do |bn| %>
               <%= bn %><br />
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Description</th>
           <td>
             <% @generic_file.description.each do |desc| %>
@@ -87,7 +94,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Language</th>
           <td>
             <% @generic_file.language.each do |lang| %>
@@ -95,7 +102,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>
@@ -103,7 +110,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Rights</th>
           <td>
             <% @generic_file.rights.each do |r| %>
@@ -111,7 +118,7 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Subject</th>
           <td>
             <% @generic_file.subject.each do |sub| %>
@@ -119,11 +126,27 @@
             <% end %>
           </td>
         </tr>
-        <tr>
+        <tr<%= zebra %>>
           <th>Tag</th>
           <td>
             <% @generic_file.tag.each do |t| %>
               <%= t %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr<%= zebra %>>
+          <th>Identifier</th>
+          <td>
+            <% @generic_file.identifier.each do |id| %>
+              <%= id %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr<%= zebra %>> 
+          <th>Date Created</th>
+          <td>
+            <% @generic_file.date_created.each do |dc| %>
+              <%= dc %><br />
             <% end %>
           </td>
         </tr>
@@ -133,24 +156,24 @@
     <h2 class="non lower">Object Details</h2>
     <table class="verticalheadings">
       <tbody>
-        <tr>
-          <th>ID:</th>
+        <tr<%= zebra %>>
+          <th>Date Uploaded</th>
           <td>
-            <% @generic_file.identifier.each do |id| %>
-              <%= id %><br />
-            <% end %>
+            <%= @generic_file.date_uploaded %>
           </td>
         </tr>
-        <tr class="zebra">
-          <th>Versions</th>
+        <tr<%= zebra %>>
+          <th>Date Modified</th>
           <td>
-            <% @generic_file.content.versions.each do |version| %>
-              (<%= version.versionID %>) insert snazzy datastream URL here [<%= version.dsCreateDate %>]<br />
-            <% end %>
+            <%= @generic_file.date_modified %>
           </td>
+        </tr>
+        <tr<%= zebra %>>
+          <th>Audit Status</th>
+          <td><%= @generic_file.audit_stat(false) == 1 ? "passing" : "failing" %> </td>
         </tr>
 <% unless @generic_file.related_files.empty? %>
-        <tr>
+        <tr<%= zebra %>>
           <th>Related Files</th>
           <td>
               <% @generic_file.related_files.each do |f| %>
@@ -159,17 +182,10 @@
           </td>
         </tr>
 <% end %>
-        <tr class="zebra">
-          <th>Permission</th>
-          <td>TODO?</td>
-        </tr>
-        <tr>
-          <th>Audit Status</th>
-          <td><%= @generic_file.audit_stat(false)  %> </td>
-        </tr>
-        <tr class="zebra">
+        <tr<%= zebra %>>
           <th>Characterization</th>
           <td>
+            <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>
             <% @generic_file.characterization_terms.each_pair do |term, values| %>
               <% if values.is_a? Array %>
                 <% values.each do |value| %>
@@ -180,24 +196,6 @@
                 <%= "#{term.to_s.humanize}: #{values}" %><br />
               <% end %>
             <% end %>
-          </td>
-        </tr>
-        <tr> 
-          <th>Date Created</th>
-          <td>
-            <%= @generic_file.date_created %>
-          </td>
-        </tr>
-        <tr class="zebra">
-          <th>Date Modified</th>
-          <td>
-            <%= @generic_file.date_modified %>
-          </td>
-        </tr>
-        <tr>
-          <th>Date Uploaded</th>
-          <td>
-            <%= @generic_file.date_uploaded %>
           </td>
         </tr>
       </tbody>

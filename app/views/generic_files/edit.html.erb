@@ -9,11 +9,11 @@
     });
 
 $( "#new_group_name_skel" ).autocomplete({
-  source: "/directory/user/<%= request.env['HTTP_REMOTE_USER'] %>/groups/" 
+  source: "/directory/user/<%= @generic_file.depositor %>/groups/"
 });
 
 $('input[name=revision]:radio').on('click', function() {
-    $('#save_version_note').fadeIn('slow'); 
+    $('#save_version_note').fadeIn('slow');
   });
 <% end %>
 
@@ -43,7 +43,7 @@ $('input[name=revision]:radio').on('click', function() {
             <% @generic_file.content.versions.each_with_index do |version, index| %>
               <%= radio_button_tag(:revision, version.versionID, index == 0) %>
               <%= label_tag("revision_#{version.versionID}".to_sym, "Restore version from #{version.dsCreateDate}") %>
-              <%# @generic_file.depositor.first %> 
+              <%# @generic_file.depositor %> 
               <br />
             <% end %>
             <div id="save_version_note" class="ui-state-highlight hidden">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
@@ -61,9 +61,7 @@ $('input[name=revision]:radio').on('click', function() {
         <tr>
           <th>Audit</th>
           <td>
-            Audit status: <%= @generic_file.audit_stat  %><br />
-            Date Uploaded: <%= @generic_file.date_uploaded %> <br />
-            Date Modified: <%= @generic_file.date_modified %> <br />
+            Audit status: <%= @generic_file.audit_stat(false) == 1 ? "passing" : "failing" %><br />
           </td>
         </tr>
       </tbody>
@@ -86,7 +84,7 @@ $('input[name=revision]:radio').on('click', function() {
           <th> <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %></th>
           <td>
             <%= f.select "resource_type", options_for_select(ScholarSphere::Application::config.resource_types.keys, @generic_file.resource_type.to_a), {}, {:multiple=>true, :size=>7} %>
-            <p class="help-block">You may select multiple types to apply to all files<p>
+            <p class="help-block">You may select multiple types to apply<p>
           </td>
         </tr>
       <% @terms.each do |t| %>
@@ -102,8 +100,17 @@ $('input[name=revision]:radio').on('click', function() {
           <%# if vals is zero we create an empty array to loop over for output %>
           <% vals = [''] if vals.count == 0 %>
           <% vals.each_with_index do |v, index| %>
+	    <%# a hacky way to change selected fields' labels %>
+	    <% label = nil %>
+            <% label = "Location" if key == "based_near" %>
             <tr>
-              <th><%= f.label key, :class=>"control-label" %> </th>
+              <th>
+		<% if label %>
+		  <%= f.label key, label, :class=>"control-label" %>
+                <% else %>
+                  <%= f.label key, :class=>"control-label" %>
+                <% end %>
+              </th>
               <td>
                 <div class="control-group" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
                   <div class="controls">

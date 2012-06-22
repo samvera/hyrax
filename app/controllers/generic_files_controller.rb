@@ -14,21 +14,6 @@ class GenericFilesController < ApplicationController
   def new
     @generic_file = GenericFile.new 
     @batch_noid = PSU::Noid.noidify(PSU::IdService.mint)
-    @dc_metadata = [
-      ['Based Near', 'based_near'],
-      ['Contributor', 'contributor'],
-      ['Creator', 'creator'], 
-      ['Date Created', 'date_created'], 
-      ['Description', 'description'],
-      ['Identifier', 'identifier'],
-      ['Language', 'language'], 
-      ['Publisher', 'publisher'], 
-      ['Rights', 'rights'],
-      ['Subject', 'subject'], 
-      ['Tag', 'tag'], 
-      ['Title', 'title'],
-      ['Related URL', 'related_url']
-    ]
   end
 
   # routed to /files/:id/edit

@@ -41,8 +41,10 @@ on element ids -->
       </tr>
       <tr>
         <td><strong>Creator:</strong>
+	  <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %>
         </td>
-        <td><strong>Last Audit:</strong>
+        <td><strong>Depositor:</strong>
+	  <%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %>
         </td>
       </tr>
           

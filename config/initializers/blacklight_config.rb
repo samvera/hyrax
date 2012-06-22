@@ -66,7 +66,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__subject_facet"         => "Subject",
       "generic_file__resource_type_facet"   => "Resource Type",
       "generic_file__format_facet"          => "Format",
-      "generic_file__based_near_facet"      => "Based Near",
+      "generic_file__based_near_facet"      => "Location",
       "generic_file__tag_facet"             => "Tag"
     },
     # Setting a limit will trigger Blacklight's 'more' facet values link.
@@ -130,7 +130,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__resource_type_display"   => "Resource Type", 
       "generic_file__format_display"          => "Format", 
       "generic_file__identifier_display"      => "Identifier", 
-      "generic_file__based_near_display"      => "Based Near", 
+      "generic_file__based_near_display"      => "Location", 
       "generic_file__tag_display"             => "Tag"
     }
   }
@@ -171,7 +171,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__resource_type_display"   => "Resource Type", 
       "generic_file__format_display"          => "Format", 
       "generic_file__identifier_display"      => "Identifier", 
-      "generic_file__based_near_display"      => "Based Near", 
+      "generic_file__based_near_display"      => "Location", 
       "generic_file__tag_display"             => "Tag"
     }
   }
