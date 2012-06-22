@@ -132,6 +132,8 @@ namespace :hyhead do
 
       puts "Copying Gemfile from test_support/etc"
       FileUtils.cp('../../test_support/etc/Gemfile','./Gemfile')
+      puts "Copying test model CommonMetadataAsset from test_support/etc"
+      FileUtils.cp('../../test_support/etc/common_metadata_asset.rb','./app/models/')
 
       puts "Copying fixtures into test app spec/fixtures directory"
       FileUtils.mkdir_p( File.join('.','spec') )
