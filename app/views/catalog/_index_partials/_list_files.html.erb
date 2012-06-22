@@ -12,25 +12,28 @@ on element ids -->
       <td rowspan="5">
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
       </td>
-      <th>Description:</th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__description_display") %></th>
+      <th>Title:</th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></th>
+    </tr> 
+    <tr>
+      <th>Depositor:</div>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %></td>
     </tr>
     <tr>
-      <th>Contributor:</div>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__contributor_t") %></td>
+      <th>Creator:</div>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %></td>
+    </tr>
+    <tr>
+      <th>Description:</th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__description_display") %></th>
     </tr>
     <tr>
       <th>Tags:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__tag_display") %></td>
     </tr>
     <tr>
-      <th>Date Modified:</th>
-      <td><%= document[:system_modified_dt] %></td>
+      <th>Date Uploaded:</th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_uploaded_display") %></td>
     </tr>
-    <tr>
-      <th>Date Created:</th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_created_display") %></td>
-    </tr>
-
   </table>
 <% end %>
