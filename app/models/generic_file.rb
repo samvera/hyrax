@@ -1,5 +1,6 @@
 class GenericFile < ActiveFedora::Base
   include ActiveModel::Validations::HelperMethods
+  include ActiveFedora::Validations
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
   include PSU::ModelMethods
@@ -38,8 +39,9 @@ class GenericFile < ActiveFedora::Base
                                   :markup_language, :duration, :bit_depth,
                                   :sample_rate, :channels, :data_format, :offset]
 
-  before_save :validate
   around_save :characterize_if_changed
+  validate :paranoid_permissions
+
 
   NO_RUNS = 999
 
@@ -54,8 +56,9 @@ class GenericFile < ActiveFedora::Base
   #  self.terms_of_service = '1'
   #end
 
-  def validate
-    # add datastream-level validations here as needed
+  def paranoid_permissions
+    # let the rightsMetadata ds make this determination
+    # - the object instance is passed in for easier access to the props ds
     rightsMetadata.validate(self)
   end
 
