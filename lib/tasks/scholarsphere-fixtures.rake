@@ -11,7 +11,7 @@
 # It is important that the meta-data contains the appropriate id, or solor will not index it!
 #
 # Usage: rake scholarsphere:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
-#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
 #                      DEFAULT: scholarsphere
 #              <fixture id> is the id given to this fixture with fedora and solr.   
 #                            This must be unique and any old files will be overwritten. 
@@ -32,7 +32,7 @@
 #            *** Please note that the id must be changed in the file name, foxml.erb, and descMeta.txt if you change it after creation. ***
 #
 #        rake scholarsphere:fixtures:generate [DIR=<fixture dir>]
-#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
 #                      DEFAULT: scholarsphere
 #
 #               Creates foxml.xml files from the foxml.erb files doing any erb substitutions within the erb file.
@@ -40,22 +40,22 @@
 #               the data and meta-data files can be located on load. 
 #
 #        rake scholarsphere:fixtures:delete [DIR=<fixture dir>]
-#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
 #                      DEFAULT: scholarsphere
 #
-#               Remove any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> from fedora and solr. 
+#               Remove any fixtures defined by .xml.foxml files in Rais.root/spec/fixtures/<fixture dir> from fedora and solr. 
 #
 #        rake scholarsphere:fixtures:load [DIR=<fixture dir>]
-#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
 #                      DEFAULT: scholarsphere
 #
-#               load any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> into fedora and solr. 
+#               load any fixtures defined by .xml.foxml files in Rais.root/spec/fixtures/<fixture dir> into fedora and solr. 
 #
 #        rake scholarsphere:fixtures:refresh [DIR=<fixture dir>]
-#              <fixture dir> is an optional directory under test_support/fixtures to find the fixtures to load
+#              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
 #                      DEFAULT: scholarsphere
 #
-#               delete then load any fixtures defined by .xml.foxml files in Rais.root/test_support/fixtures/<fixture dir> into fedora and solr. 
+#               delete then load any fixtures defined by .xml.foxml files in Rais.root/spec/fixtures/<fixture dir> into fedora and solr. 
 #
 # Example meta-data:
 #
@@ -177,7 +177,7 @@ namespace :scholarsphere do
   end
 
   namespace :fixtures do
-    @localDir = 'test_support/fixtures'
+    @localDir = 'spec/fixtures'
     @dir = ENV["FIXTURE_DIR"] || 'scholarsphere'
 
     desc "Create ScholarSphere Hydra fixtures for generation and loading"

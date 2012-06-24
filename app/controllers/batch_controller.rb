@@ -1,9 +1,8 @@
 class BatchController < ApplicationController
-  
+  include ScholarSphere::Noid # for normalize_identifier method
   include Hydra::Controller
-  include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
+  include Hydra::AssetsControllerHelper  # for apply_depositor_metadata method
   include Hydra::FileAssetsHelper
-  include PSU::Noid
 
   prepend_before_filter :normalize_identifier, :only=>[:edit, :show, :update, :destroy] 
 
@@ -15,7 +14,7 @@ class BatchController < ApplicationController
   def update
     batch = Batch.find_or_create(params[:id])
     notice = []
-    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
+    ScholarSphere::GenericFile::Permissions.parse_permissions(params)
     authenticate_user!
     batch.generic_files.each do |gf|
       #todo check metadata not push...

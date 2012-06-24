@@ -3,8 +3,8 @@ class GenericFile < ActiveFedora::Base
   include ActiveFedora::Validations
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
-  include PSU::ModelMethods
-  include PSU::Noid
+  include ScholarSphere::ModelMethods
+  include ScholarSphere::Noid
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream

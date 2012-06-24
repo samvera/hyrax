@@ -17,22 +17,22 @@ Feature: Uploading files via web form
   Scenario: Upload a file, no metadata
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
-    And I attach the file "test_support/fixtures/image.jp2" to "files[]"
+    And I attach the file "spec/fixtures/image.jp2" to "files[]"
     And I press "Start upload"
 
    @javascript
    Scenario: Upload a file, multiple files
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
-    And I attach the file "test_support/fixtures/image.jp2" to "files[]"
-    And I attach the file "test_support/fixtures/libra-oa_1.foxml.xml" to "files[]"
+    And I attach the file "spec/fixtures/image.jp2" to "files[]"
+    And I attach the file "spec/fixtures/libra-oa_1.foxml.xml" to "files[]"
     And I press "Start upload"
     #this really should check to make sure we forward eventually
 
 #  Scenario: Upload a file, with metadata
 #    Given I am logged in as "contentauthor@psu.edu"
 #    When I am on the "ingest" page 
-#    And I attach the file "test_support/fixtures/image.jp2" to "files[]"
+#    And I attach the file "spec/fixtures/image.jp2" to "files[]"
 #    And I press "Start upload"
 #    #And I should see "You have successfully uploaded files"
 #    And I should see "My Files"
@@ -56,10 +56,10 @@ Feature: Uploading files via web form
 #    Given I am logged in as "contentauthor@psu.edu"
 #    When I am on the "ingest" page 
 #    And I press "additional_files_submit"
-#    And I attach the file "test_support/fixtures/image.jp2" to "Filedata_"
-#    And I attach the file "test_support/fixtures/small_file.txt" to "Filedata_2"
+#    And I attach the file "spec/fixtures/image.jp2" to "Filedata_"
+#    And I attach the file "spec/fixtures/small_file.txt" to "Filedata_2"
 #    And I press "additional_files_submit"
-#    And I attach the file "test_support/fixtures/empty_file.txt" to "Filedata_3"
+#    And I attach the file "spec/fixtures/empty_file.txt" to "Filedata_3"
 #    #Then the "file_count" field: within #file_count should contain "2"
 #
 #  @javascript
@@ -67,8 +67,8 @@ Feature: Uploading files via web form
 #    Given I am logged in as "contentauthor@psu.edu"
 #    When I am on the "ingest" page 
 #    And I press "Add files..."
-#    And I attach a file "test_support/fixtures/image.jp2" to the dynamically created "files[]"
-#    And I attach a file "test_support/fixtures/small_file.txt" to the dynamically created "files[]"
+#    And I attach a file "spec/fixtures/image.jp2" to the dynamically created "files[]"
+#    And I attach a file "spec/fixtures/small_file.txt" to the dynamically created "files[]"
 #    And I fill in "Mike Motorcycle" for "generic_file_contributor" 
 #    And I fill in "Dan Ran" for "generic_file_creator"
 #    And I fill in "Dan's Book" for "generic_file_title"
@@ -92,7 +92,7 @@ Feature: Uploading files via web form
 #  Scenario: Upload More metadata
 #    Given I am logged in as "contentauthor@psu.edu"
 #    When I am on the "ingest" page 
-#    And I attach a file "test_support/fixtures/image.jp2" to the dynamically created "#Filedata_"
+#    And I attach a file "spec/fixtures/image.jp2" to the dynamically created "#Filedata_"
 #    And I fill in "Mike Motorcycle" for "generic_file_contributor" 
 #    And I fill in "Dan Ran" for "generic_file_creator"
 #    And I fill in "Dan's Book" for "generic_file_title"
@@ -112,8 +112,8 @@ Feature: Uploading files via web form
 #    Given I am logged in as "contentauthor@psu.edu"
 #    When I am on the "ingest" page 
 #    And I press "additional_files_submit"
-#    And I attach a file "test_support/fixtures/image.jp2" to the dynamically created "#Filedata_"
-#    And I attach a file "test_support/fixtures/small_file.txt" to the dynamically created "#Filedata_2"
+#    And I attach a file "spec/fixtures/image.jp2" to the dynamically created "#Filedata_"
+#    And I attach a file "spec/fixtures/small_file.txt" to the dynamically created "#Filedata_2"
 #    And I fill in "Mike Motorcycle" for "generic_file_contributor" 
 #    And I fill in "Dan Ran" for "generic_file_creator"
 #    And I fill in "Dan's Book" for "generic_file_title"

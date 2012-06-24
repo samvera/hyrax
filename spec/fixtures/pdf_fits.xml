@@ -17,7 +17,7 @@
     <creatingApplicationName toolname="Jhove" toolversion="1.5">GPL Ghostscript 8.15/PScript5.dll Version 5.2.2</creatingApplicationName>
     <lastmodified toolname="Exiftool" toolversion="7.74" status="SINGLE_RESULT">2012:04:19 15:49:11-04:00</lastmodified>
     <created toolname="Exiftool" toolversion="7.74" status="SINGLE_RESULT">2010:10:09 10:29:55</created>
-    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/test_support/fixtures/scholarsphere/scholarsphere_test4.pdf</filepath>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/spec/fixtures/scholarsphere/scholarsphere_test4.pdf</filepath>
     <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">scholarsphere_test4.pdf</filename>
     <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">5a2d761cab7c15b2b3bb3465ce64586d</md5checksum>
     <fslastmodified toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">1334864951000</fslastmodified>

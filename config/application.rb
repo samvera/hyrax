@@ -114,6 +114,8 @@ module ScholarSphere
     config.filter_parameters += [:password]
   end
 end
+# this prevents LoadErrors, related to Rails autoload behavior
 require 'scholarsphere/permissions'
-require 'psu/id_service'
-require 'psu/noidify'
+require 'scholarsphere/id_service'
+require 'scholarsphere/noidify'
+require 'scholarsphere/model_methods'

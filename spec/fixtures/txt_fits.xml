@@ -10,7 +10,7 @@
   </identification>
   <fileinfo>
     <size toolname="Jhove" toolversion="1.5">1039</size>
-    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/test_support/fixtures/scholarsphere/scholarsphere_test1.descMeta.txt</filepath>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/spec/fixtures/scholarsphere/scholarsphere_test1.descMeta.txt</filepath>
     <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">scholarsphere_test1.descMeta.txt</filename>
     <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">b283ff56a57716154cd4deb827964009</md5checksum>
     <fslastmodified toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">1334864951000</fslastmodified>

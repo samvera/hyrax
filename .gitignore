@@ -78,10 +78,10 @@ db/schema.rb
 ## PROJECT::SPECIFIC
 
 ## generates foxml
-test_support/fixtures/scholarsphere/*.foxml.xml
-test_support/fixtures/scholarsphere/scholarsphere_rspecTestFixture.descMeta.txt
-test_support/fixtures/scholarsphere/scholarsphere_rspecTestFixture.foxml.erb
-test_support/fixtures/scholarsphere/scholarsphere_rspecTestFixture.txt
+spec/fixtures/scholarsphere/*.foxml.xml
+spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.descMeta.txt
+spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.foxml.erb
+spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.txt
 
 ## ASSET PIPELINE
 .sass-cache/

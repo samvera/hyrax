@@ -1,5 +1,6 @@
 class DownloadsController < ApplicationController
-  include PSU::Noid
+  # module mixes in normalize_identifier method
+  include ScholarSphere::Noid
 
   before_filter :deny_access_if_not_reader, :only=>[:show]
   prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 

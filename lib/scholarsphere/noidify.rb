@@ -1,8 +1,8 @@
-module PSU
+module ScholarSphere
   module Noid
     def Noid.noidify(identifier)
       identifier.split(":").last
-    end    
+    end
 
     def Noid.namespaceize(identifier)
       if identifier.start_with?(Noid.namespace)
@@ -11,7 +11,7 @@ module PSU
         "#{Noid.namespace}:#{identifier}"
       end
     end
-      
+
     def noid
       Noid.noidify(self.pid)
     end

@@ -14,7 +14,7 @@
   <fileinfo>
     <size toolname="Jhove" toolversion="1.5">1792</size>
     <lastmodified toolname="Exiftool" toolversion="7.74" status="SINGLE_RESULT">2012:04:24 21:00:53-04:00</lastmodified>
-    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/test_support/fixtures/scholarsphere/bg_header.jpg</filepath>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/spec/fixtures/scholarsphere/bg_header.jpg</filepath>
     <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">bg_header.jpg</filename>
     <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">76958714b002451273f5b43752d67f77</md5checksum>
     <fslastmodified toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">1335315653000</fslastmodified>

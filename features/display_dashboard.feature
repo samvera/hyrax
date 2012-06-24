@@ -35,7 +35,7 @@ Feature: As an authenticate and authorized
    Scenario: Upload a file, with metadata and check facets
     Given I am logged in as "contentauthor@psu.edu"
     When I am on the "ingest" page 
-    And I attach the file "test_support/fixtures/image.jp2" to "files[]"
+    And I attach the file "spec/fixtures/image.jp2" to "files[]"
     And I press "Start upload"
 #    Then I should see "The file image.jp2 has been saved"
 #    And I follow "my dashboard"     

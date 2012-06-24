@@ -6,7 +6,7 @@
     </identity>
   </identification>
   <fileinfo>
-    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/test_support/fixtures/scholarsphere/scholarsphere_test3.xls</filepath>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/spec/fixtures/scholarsphere/scholarsphere_test3.xls</filepath>
     <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">scholarsphere_test3.xls</filename>
     <size toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">22016</size>
     <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">bbe9cf68879e42241a1d71e78a5f630b</md5checksum>

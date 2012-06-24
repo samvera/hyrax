@@ -51,8 +51,7 @@ Then /^I should see a file chooser button$/ do
 end
 
 Given /^that "([^"]*)" has been loaded into fedora$/ do |pid|
-  ActiveFedora::FixtureLoader.new('test_support/fixtures').reload(pid)
-  
+  ActiveFedora::FixtureLoader.new('spec/fixtures').reload(pid)
 end
 
 

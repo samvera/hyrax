@@ -1,4 +1,4 @@
-module PSU
+module ScholarSphere
   class IdService
     @@minter = Noid::Minter.new(:template => '.reeddeeddk')
     @@namespace = ScholarSphere::Application.config.id_namespace

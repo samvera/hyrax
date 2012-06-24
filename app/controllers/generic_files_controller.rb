@@ -1,8 +1,8 @@
 class GenericFilesController < ApplicationController
   include Hydra::Controller
-  include Hydra::AssetsControllerHelper  # This is to get apply_depositor_metadata method
+  include Hydra::AssetsControllerHelper  # for apply_depositor_metadata method
   include Hydra::FileAssetsHelper
-  include PSU::Noid
+  include ScholarSphere::Noid # for normalize_identifier method
 
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
@@ -13,7 +13,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new 
-    @batch_noid = PSU::Noid.noidify(PSU::IdService.mint)
+    @batch_noid = ScholarSphere::Noid.noidify(ScholarSphere::IdService.mint)
   end
 
   # routed to /files/:id/edit
@@ -97,7 +97,7 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id/permissions (POST)
   def permissions
-    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
+    ScholarSphere::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.save
     redirect_to edit_generic_file_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
@@ -132,7 +132,7 @@ class GenericFilesController < ApplicationController
     @generic_file.relative_path = params[:relative_path] if params.has_key?(:relative_path)
 
     if params.has_key?(:batch_id)
-      batch_id = PSU::Noid.namespaceize(params[:batch_id])
+      batch_id = ScholarSphere::Noid.namespaceize(params[:batch_id])
       @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
     else
       logger.warn "unable to find batch to attach to"

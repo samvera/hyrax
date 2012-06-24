@@ -381,9 +381,9 @@ describe GenericFile do
       @new_file.noid.should == '123'
     end
     it "should work outside of an instance" do
-      new_id = PSU::IdService.mint
+      new_id = ScholarSphere::IdService.mint
       noid = new_id.split(':').last
-      PSU::Noid.noidify(new_id).should == noid
+      ScholarSphere::Noid.noidify(new_id).should == noid
     end
   end
   describe "characterize" do
@@ -406,7 +406,7 @@ describe GenericFile do
       before(:all) do
         GenericFile.any_instance.stubs(:terms_of_service).returns('1')
         myfile = GenericFile.new
-        myfile.add_file_datastream(File.new(Rails.root + 'test_support/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+        myfile.add_file_datastream(File.new(Rails.root + 'spec/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
         myfile.thumbnail.size.nil?.should be_true
         myfile.apply_depositor_metadata('mjg36')

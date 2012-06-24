@@ -1,8 +1,7 @@
-module Scholarsphere
+module ScholarSphere
   module GenericFile
     module Permissions
-
-      # Copies and transforms permsisions set in params[:permission] into 
+      # Copies and transforms permsisions set in params[:permission] into
       # params[:generic_file][:read_groups_string] and params[:generic_file][:discover_groups_string]
       # Once this is done it becomes possible to do:
       # @generic_file.update_attributes(params[:generic_file])
@@ -12,7 +11,7 @@ module Scholarsphere
           if params[:permission][:group][:public] == 'read'
             if params[:generic_file][:read_groups_string].present?
               params[:generic_file][:read_groups_string] << ', public'
-            else 
+            else
               params[:generic_file][:read_groups_string] << 'public'
             end
           elsif params[:permission][:group][:public] == 'discover'
@@ -21,7 +20,7 @@ module Scholarsphere
           if params[:permission][:group][:registered] == 'read'
             if params[:generic_file][:read_groups_string].present?
               params[:generic_file][:read_groups_string] << ', registered'
-            else 
+            else
               params[:generic_file][:read_groups_string] << 'registered'
             end
           elsif params[:permission][:group][:registered] == 'discover'

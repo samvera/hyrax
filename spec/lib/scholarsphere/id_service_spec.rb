@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe PSU::IdService do
+describe ScholarSphere::IdService do
   describe "mint" do
     before(:all) do
-      @id = PSU::IdService.mint
+      @id = ScholarSphere::IdService.mint
     end
     it "should create a unique id" do
       @id.should_not be_empty
     end
     it "should not mint the same id twice in a row" do
-      other_id = PSU::IdService.mint
+      other_id = ScholarSphere::IdService.mint
       other_id.should_not == @id
     end  
     it "should create many unique ids" do
@@ -17,7 +17,7 @@ describe PSU::IdService do
       threads = (1..10).map do
         Thread.new do
           100.times do
-            a <<  PSU::IdService.mint
+            a <<  ScholarSphere::IdService.mint
           end
         end
       end
@@ -32,7 +32,7 @@ describe PSU::IdService do
           threads = (1..10).map do
             Thread.new do
               20.times do
-                wr.write PSU::IdService.mint
+                wr.write ScholarSphere::IdService.mint
                 wr.write " "
               end
             end

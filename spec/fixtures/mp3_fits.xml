@@ -12,7 +12,7 @@
   </identification>
   <fileinfo>
     <lastmodified toolname="Exiftool" toolversion="7.74" status="SINGLE_RESULT">2012:04:19 15:49:11-04:00</lastmodified>
-    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/test_support/fixtures/scholarsphere/scholarsphere_test5.mp3</filepath>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/mjg/workspace/scholarsphere/spec/fixtures/scholarsphere/scholarsphere_test5.mp3</filepath>
     <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">scholarsphere_test5.mp3</filename>
     <size toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">366464</size>
     <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">d98da8d92c397294164b02a0382eb0e6</md5checksum>
