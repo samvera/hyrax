@@ -25,6 +25,7 @@ class FileContentDatastream < ActiveFedora::Datastream
     out
   end
 
+  # TODO: All the version functionality here + what's in the GF model should probably move into a mixin
   def get_version(version_id)
     self.versions.select { |v| v.versionID == version_id}.first
   end
@@ -33,12 +34,14 @@ class FileContentDatastream < ActiveFedora::Datastream
     self.versions.first
   end
 
+  def version_committer(version)
+    vc = VersionCommitter.where(:obj_id => version.pid,
+                                :datastream_id => version.dsid,
+                                :version_id => version.versionID)
+    return vc.empty? ? nil : vc.first.committer_login
+  end
+
   def fits_path
     ScholarSphere::Application.config.fits_path
   end
-
-  def delivery_url
-    return "#{ActiveFedora.fedora_config.credentials[:url]}/#{self.url}"
-  end
-
 end

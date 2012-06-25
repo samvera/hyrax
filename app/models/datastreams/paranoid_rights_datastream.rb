@@ -3,8 +3,6 @@ require 'hydra/datastream/rights_metadata'
 class ParanoidRightsDatastream < Hydra::Datastream::RightsMetadata
   use_terminology Hydra::Datastream::RightsMetadata
 
-  class PermissionsViolation < ::RuntimeError; end
-
   VALIDATIONS = [
     {:key => :edit_users, :message => 'Depositor must have edit access', :condition => lambda { |obj| !obj.edit_users.include?(obj.depositor) }},
     {:key => :edit_groups, :message => 'Public cannot have edit access', :condition => lambda { |obj| obj.edit_groups.include?('public') }},

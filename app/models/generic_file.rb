@@ -108,9 +108,8 @@ class GenericFile < ActiveFedora::Base
       create_pdf_thumbnail
     elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type
       create_image_thumbnail
-    # if we can figure out how to do video
+    # TODO: if we can figure out how to do video (ffmpeg?)
     #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
-    # TODO
     end
   end
 

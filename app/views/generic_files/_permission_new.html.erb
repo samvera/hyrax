@@ -6,7 +6,7 @@
     <div class="controls">
       <%= label_tag :owner_access, "Owner (#{depositor}) Access", :class=>"control-label" %>
       <%= select_tag "owner", options_for_select(ScholarSphere::Application::config.owner_permission_levels), {:disabled => true} %>
-      <span>You may not change your edit permission</span>
+      <span>Owner must have edit permission</span>
     </div>
   </div>
 

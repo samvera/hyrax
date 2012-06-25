@@ -1,18 +1,18 @@
 class GenericFilesController < ApplicationController
   include Hydra::Controller
   include Hydra::AssetsControllerHelper  # for apply_depositor_metadata method
-  include Hydra::FileAssetsHelper
+  include Hydra::FileAssetsHelper # for add_posted_blob_to_asset method
   include ScholarSphere::Noid # for normalize_identifier method
 
   # actions: audit, index, create, new, edit, show, update, destroy
   before_filter :authenticate_user!, :only=>[:create, :new]
   before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy, :permissions]
   before_filter :find_by_id, :only=>[:audit, :edit, :show, :update, :destroy, :permissions]
-  prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy, :permissions] 
-  
+  prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy, :permissions]
+
   # routed to /files/new
   def new
-    @generic_file = GenericFile.new 
+    @generic_file = GenericFile.new
     @batch_noid = ScholarSphere::Noid.noidify(ScholarSphere::IdService.mint)
   end
 
@@ -39,20 +39,20 @@ class GenericFilesController < ApplicationController
     # check error condition No files
     if !params.has_key?(:files)
        retval = render :json => [{:error => "Error! No file to save"}].to_json
-    
+
     # check error condition empty file
     elsif ((params[:files][0].respond_to?(:tempfile)) && (params[:files][0].tempfile.size == 0))
        retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
 
     elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
        retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-    
+
     elsif (params[:terms_of_service] != '1')
        retval = render :json => [{ :name => params[:files][0].original_filename, :error => "You must accept the terms of service!"}].to_json
-    
+
     # process file
     else
-      create_and_save_generic_file 
+      create_and_save_generic_file
       if @generic_file
         respond_to do |format|
           format.html {
@@ -69,7 +69,7 @@ class GenericFilesController < ApplicationController
         retval = render :json => [{:error => "Error creating generic file."}].to_json
       end
     end
-    
+
     return retval
   end
 
@@ -81,17 +81,18 @@ class GenericFilesController < ApplicationController
   def audit
     render :json=>@generic_file.audit
   end
- 
+
   # routed to /files/:id (PUT)
   def update
     if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
       revision = @generic_file.content.get_version(params[:revision])
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
     end
-    add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata) 
+    add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k})
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
+    record_version_committer(@generic_file, current_user)
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
 
@@ -104,16 +105,28 @@ class GenericFilesController < ApplicationController
   end
 
   protected
+  def record_version_committer(generic_file, user)
+    version = generic_file.content.latest_version
+    # content datastream not (yet?) present
+    return if version.nil?
+    VersionCommitter.create(:obj_id => version.pid,
+                            :datastream_id => version.dsid,
+                            :version_id => version.versionID,
+                            :committer_login => user.login)
+  end
+
+
+
   def find_by_id
     @generic_file = GenericFile.find(params[:id])
   end
 
-  def create_and_save_generic_file      
+  def create_and_save_generic_file
     unless params.has_key?(:files)
       logger.warn "!!!! No Files !!!!"
       return
     end
-    @generic_file = GenericFile.new    
+    @generic_file = GenericFile.new
     @generic_file.terms_of_service = params[:terms_of_service]
     file = params[:files][0]
 
@@ -137,7 +150,8 @@ class GenericFilesController < ApplicationController
     else
       logger.warn "unable to find batch to attach to"
     end
-    @generic_file.save      
+    @generic_file.save
+    record_version_committer(@generic_file, current_user)
     Delayed::Job.enqueue(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
     return @generic_file
   end

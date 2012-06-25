@@ -48,6 +48,16 @@ describe GenericFilesController do
       saved_file.date_modified.should have_at_least(1).items
     end
 
+    it "should record what user created the first version of content" do
+      file = fixture_file_upload('/world.png','image/png')
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :terms_of_service=>"1"
+
+      saved_file = GenericFile.find('test:123')
+      version = saved_file.content.latest_version
+      version.versionID.should == "content.0"
+      saved_file.content.version_committer(version).should == @user.login
+    end
+
     it "should create batch associations from batch_id" do
       Rails.application.config.stubs(:id_namespace).returns('sample')
       file = fixture_file_upload('/world.png','image/png')
@@ -104,6 +114,42 @@ describe GenericFilesController do
     end
     after do
       @generic_file.delete
+    end
+
+    it "should record what user added a new version" do
+      @user = FactoryGirl.find_or_create(:user)
+      sign_in @user
+
+      file = fixture_file_upload('/world.png','image/png')
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+
+      posted_file = GenericFile.find(@generic_file.pid)
+      version1 = posted_file.content.latest_version
+      posted_file.content.version_committer(version1).should == @user.login
+
+      # other user uploads new version
+      archivist = FactoryGirl.find_or_create(:archivist)
+      controller.stubs(:current_user).returns(archivist)
+      sign_in archivist
+
+      file = fixture_file_upload('/image.jp2','image/jp2')
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1"}
+
+      edited_file = GenericFile.find(@generic_file.pid)
+      version2 = edited_file.content.latest_version
+      version2.versionID.should_not == version1.versionID
+      edited_file.content.version_committer(version2).should == archivist.login
+
+      # original user restores his or her version
+      controller.stubs(:current_user).returns(@user)
+      sign_in @user
+      post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1"}
+
+      restored_file = GenericFile.find(@generic_file.pid)
+      version3 = restored_file.content.latest_version
+      version3.versionID.should_not == version2.versionID
+      version3.versionID.should_not == version1.versionID
+      restored_file.content.version_committer(version3).should == @user.login
     end
 
     it "should add a new groups and users" do
