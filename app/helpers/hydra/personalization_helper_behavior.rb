@@ -1,4 +1,7 @@
+require 'deprecation'
 module Hydra::PersonalizationHelperBehavior
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
 
   DEFAULT_USER_ATTRIBUTES = ['full_name', 'affiliation', 'photo']
 
@@ -20,6 +23,7 @@ module Hydra::PersonalizationHelperBehavior
       def #{m}_from_login login
         get_user_attribute(login, '#{m}')
       end
+      deprecation_deprecate :#{m}_from_login
     EOC
   end
 
@@ -30,6 +34,7 @@ module Hydra::PersonalizationHelperBehavior
     path = photo_from_login login
     path == "" ? "" : image_tag(path)
   end
+  deprecation_deprecate :user_photo_tag
 
   private
 
