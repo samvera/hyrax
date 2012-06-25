@@ -1,5 +1,14 @@
 <% javascript 'generic_files.js' %>
 <% stylesheet 'generic_files.css' %>
+<% content_for :local_css do %>
+  h2 { font-weight: normal; }
+<% end %>
+
+<h2 class="heading1">Upload</h2>
+
+<div class="alert">
+  <strong>Note:</strong> You must check the box indicating you agree to Terms of Service before starting your upload. 
+</div>
 
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
   <%=batch_edit_path(@batch_noid)%>
@@ -13,22 +22,27 @@
   <%= link_to 'Add Descriptions', batch_edit_path(@batch_noid), :class=>'btn' %>
   </p>
 </div>
+
 <div class="alert hide" id="fail">
   There was a problem during upload. Please click the &quot;Start Upload&quot; button or <%= link_to 'start over', new_generic_file_path %>
 </div>
+
 <div class="alert hide" id="partial_fail">
-  One or more files did not upload successfully. To continue using the files uploaded use one of the links below.
-  <p>
+  One or more files did not upload successfully. To continue using the files uploaded use one of the links below.<br />
   <%= link_to 'Add Descriptions', batch_edit_path(@batch_noid), :class=>'btn' %>
 </div>
-<div class="alert hide" id="errmsg">
-</div>
+
+<div class="alert hide" id="errmsg"> </div>
+
     <!-- The file upload form used as target for the file upload widget -->
-    <%= form_for(@generic_file, :url => generic_files_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'}) do |f| %>
+    <%= form_for(@generic_file, :url => generic_files_path, :html => {:multipart => true, :class => 'form-horizontal well', :id => 'fileupload'}) do |f| %>
       <%= hidden_field_tag(:total_upload_size, 0) %>
       <%= hidden_field_tag(:relative_path) %>
-      <%= check_box_tag 'terms_of_service' %> <%= label_tag 'terms_of_service' %>      
       <%= hidden_field_tag(:batch_id, @batch_noid) %>
+      <%= link_to 'Read the Terms of Service', '#' %><br />
+      <label class="checkbox">
+      <%= check_box_tag 'terms_of_service' %> Yes, I agree to the Terms of Service.
+    </label>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="span7">

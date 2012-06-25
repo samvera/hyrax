@@ -28,8 +28,9 @@
 
   <% @page_title = application_name + " Dashboard" %>
 
-        <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+  <h2 class="heading1">Dashboard</h2>
 
+        <% extra_head_content << render_opensearch_response_metadata.html_safe %>
   <% if params.has_key?("q") %>
     <p class="you-searched"><a class="itemicon itemsearch">search</a> You searched for: <%= params[:q] %></p> 
   <% end %>
