@@ -13,7 +13,7 @@
 			  <td><%= result[solr_name("extent", :text)] %></td>
 			  <td>
 			    <% dt = DateTime.parse(result[ solr_name("system_create", :date)] ) -%>
-			    <%= format_date dt %>
+          <%= l dt, :format => :hydra %>
 			  </td>
 			</tr>
 		<% end %>		

@@ -1,0 +1,7 @@
+en:
+  date:
+    formats:
+      hydra: "%b. %e, %Y"
+  time:
+    formats:
+      hydra: "%b. %e, %Y"

@@ -1,11 +1,14 @@
 # This was CatalogHelper in the rails2 version of hydra-head
+require 'deprecation'
 module Hydra
   module ArticleMetadataHelperBehavior
+    extend Deprecation
+    self.deprecation_horizon = 'hydra-head 5.x'
       
     def format_date date
      date.strftime("%b. %e, %Y")
     end
-      
+    deprecation_deprecate :format_date
     
     def depositor_string depositor=nil
       "#{depositor}" unless depositor.nil? 
