@@ -54,6 +54,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__contributor_facet",
       "generic_file__publisher_facet",
       "generic_file__subject_facet",
+      "generic_file__language_facet", 
       "generic_file__resource_type_facet",
       "generic_file__format_facet",
       "generic_file__based_near_facet",
@@ -64,6 +65,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__contributor_facet"     => "Contributor",
       "generic_file__publisher_facet"       => "Publisher",
       "generic_file__subject_facet"         => "Subject",
+      "generic_file__language_facet"        => "Language", 
       "generic_file__resource_type_facet"   => "Resource Type",
       "generic_file__format_facet"          => "Format",
       "generic_file__based_near_facet"      => "Location",
@@ -83,8 +85,14 @@ Blacklight.configure(:shared) do |config|
     # sniffing requires solr requests to be made with "echoParams=all", for
     # app code to actually have it echo'd back to see it.     
     :limits => {
-      "subject_topic_facet" => 20,
-      "language_facet" => true
+      "generic_file__contributor_facet" => 5,
+      "generic_file__publisher_facet" => 5,
+      "generic_file__subject_facet" => 5,
+      "generic_file__language_facet" => 5,
+      "generic_file__resource_type_facet" => 5,
+      "generic_file__format_facet" => 5,
+      "generic_file__based_near_facet" => 5,
+      "generic_file__tag_facet" => 5
     }
   }
 

@@ -64,7 +64,8 @@ ul, ol {
 	margin: 0 0 10px 30px;
 }
 ul.slide-list {
-	
+  float: left;
+  clear: left;
 }
 li {
 	margin: 7px 0;
@@ -117,7 +118,9 @@ h3 {
 	line-height: 21px;
 }
 h3.expandable {
-	display: inline-block;
+  float: left;
+  clear: left;
+	/* display: inline-block; */
 	padding-right: 15px;
 	background: url(/site_images/icon_arrow3_right.png) right 7px no-repeat;
 	cursor: pointer;
