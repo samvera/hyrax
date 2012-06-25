@@ -69,7 +69,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__resource_type_facet"   => "Resource Type",
       "generic_file__format_facet"          => "Format",
       "generic_file__based_near_facet"      => "Location",
-      "generic_file__tag_facet"             => "Tag"
+      "generic_file__tag_facet"             => "Keyword"
     },
     # Setting a limit will trigger Blacklight's 'more' facet values link.
     # * If left unset, then all facet values returned by solr will be displayed.
@@ -139,7 +139,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__format_display"          => "Format", 
       "generic_file__identifier_display"      => "Identifier", 
       "generic_file__based_near_display"      => "Location", 
-      "generic_file__tag_display"             => "Tag"
+      "generic_file__tag_display"             => "Keyword"
     }
   }
 
@@ -180,7 +180,7 @@ Blacklight.configure(:shared) do |config|
       "generic_file__format_display"          => "Format", 
       "generic_file__identifier_display"      => "Identifier", 
       "generic_file__based_near_display"      => "Location", 
-      "generic_file__tag_display"             => "Tag"
+      "generic_file__tag_display"             => "Keyword"
     }
   }
 

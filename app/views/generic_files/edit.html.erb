@@ -58,12 +58,15 @@ $('input[name=revision]:radio').on('click', function() {
 <% end %>
           </td>
         </tr>
+        <!--
+        Removed from testing feedback refs #940
         <tr>
           <th>Audit</th>
           <td>
-            Audit status: <%= @generic_file.audit_stat(false) == 1 ? "passing" : "failing" %><br />
+            Audit status: <%# @generic_file.audit_stat(false) == 1 ? "passing" : "failing" %><br />
           </td>
         </tr>
+        -->
       </tbody>
     </table>
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
@@ -102,7 +105,8 @@ $('input[name=revision]:radio').on('click', function() {
           <% vals.each_with_index do |v, index| %>
 	    <%# a hacky way to change selected fields' labels %>
 	    <% label = nil %>
-            <% label = "Location" if key == "based_near" %>
+      <% label = "Location" if key == "based_near" %>
+      <% label = "Keyword" if key == "tag" %>
             <tr>
               <th>
 		<% if label %>
