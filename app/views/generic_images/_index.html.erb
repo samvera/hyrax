@@ -6,7 +6,7 @@
 		
   </td>
   <td>
-    <% creator = get_person_from_role(document, "Creator") %>
+    <% creator = document.get_person_from_role("Creator") %>
     <%= [creator[:last], creator[:first]].join(", ") unless creator.nil? %>
   </td>
   <td>
