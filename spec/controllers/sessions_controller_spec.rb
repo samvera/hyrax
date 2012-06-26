@@ -12,7 +12,7 @@ describe SessionsController do
       request.env['COSIGN_SERVICE']='cosign-gamma-ci.dlt.psu.edu'
       cookies.expects(:delete).with('cosign-gamma-ci.dlt.psu.edu')
       get :destroy
-      response.should redirect_to "https://webaccess.psu.edu/cgi-bin/logout"
+      response.should redirect_to ScholarSphere::Application.config.logout_url
     end
   end
 
