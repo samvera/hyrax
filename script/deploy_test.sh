@@ -26,6 +26,9 @@ passenger-install-apache2-module -a
 echo "=-=-=-=-= $0 rake db:migrate"
 RAILS_ENV=production rake db:migrate
 
+echo "=-=-=-=-= $0 rake assets:precompile"
+RAILS_ENV=production rake assets:precompile
+
 echo "=-=-=-=-= $0 script/delayed_job stop/start"
 RAILS_ENV=production script/delayed_job stop 
 RAILS_ENV=production script/delayed_job -n 10 start

@@ -3,6 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'socket'
 require 'sprockets'
+require 'resolv'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
@@ -11,6 +12,16 @@ Bundler.require *Rails.groups(:assets => %w(development, test))
 
 module ScholarSphere
   class Application < Rails::Application
+    def local_ip
+      orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true  # turn off reverse DNS resolution temporarily
+
+      UDPSocket.open do |s|
+        s.connect '128.118.88.200', 1
+        s.addr.last
+      end
+    ensure
+        Socket.do_not_reverse_lookup = orig
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -41,8 +52,9 @@ module ScholarSphere
       :file_language => :language
     }
 
-    config.logout_url = "https://webaccess.psu.edu/cgi-bin/logout?#{Socket.gethostname}"
-    config.login_url = "https://webaccess.psu.edu?cosign-#{Socket.gethostname}&https://#{Socket.gethostname}/"
+    config.fqdn = Resolv.new.getname(local_ip)
+    config.logout_url = "https://webaccess.psu.edu/cgi-bin/logout?#{config.fqdn}"
+    config.login_url = "https://webaccess.psu.edu?cosign-#{config.fqdn}&https://#{config.fqdn}/"
 
     config.resource_types = {
       "Article"=>"Article", 
