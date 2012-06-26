@@ -19,7 +19,7 @@ module Hydra::ModelMethods
     if !prop_ds.nil? && prop_ds.respond_to?(:depositor_values)
       prop_ds.depositor_values = depositor_id unless prop_ds.nil?
     end
-    rights_ds.update_indexed_attributes([:edit_access, :person]=>depositor_id) unless rights_ds.nil?
+    rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
     return true
   end
 
