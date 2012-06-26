@@ -1,10 +1,9 @@
 # -*- encoding : utf-8 -*-
 require 'blacklight/catalog'
 class DashboardController < ApplicationController
-
   include Blacklight::Catalog
   include Hydra::Catalog
-  
+
   before_filter :enforce_access_controls
   before_filter :enforce_viewing_context_for_show_requests, :only=>:show
   # This applies appropriate access controls to all solr queries (the internal method of this is overidden bellow to only include edit files)

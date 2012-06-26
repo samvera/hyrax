@@ -13,11 +13,12 @@ ScholarSphere::Application.routes.draw do
       post 'permissions'
     end
   end
-   
-  resources :downloads, :only => "show" 
+
+  resources :downloads, :only => "show"
 
   match '/logout' => 'sessions#destroy'
   match 'dashboard' => 'dashboard#index', :as => :dashboard
+  match 'dashboard/facet/:id' => 'dashboard#facet', :as => :dashboard_facet
   match 'authorities/:model/:term' => 'authorities#query'
   match 'directory/user/:uid' => 'directory#user'
   match 'directory/user/:uid/groups' => 'directory#user_groups'

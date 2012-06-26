@@ -7,14 +7,14 @@
 <h2 class="heading1">Upload</h2>
 
 <div class="alert">
-  <strong>Note:</strong> You must check the box indicating you agree to Terms of Service before starting your upload. 
+  <strong>Note:</strong> You must agree to <a href='/terms/'>ScholarSphere's Terms of Service</a> before starting your upload.
 </div>
 
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
   <%=batch_edit_path(@batch_noid)%>
 </div>
 
-<div id="upload_tooltip">Please accept terms of service before you can upload.</div>
+<div id="upload_tooltip">Please accept Terms of Service before you can upload.</div>
 
 <div class="alert alert-info hide" id="success">
   You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
@@ -39,9 +39,10 @@
       <%= hidden_field_tag(:total_upload_size, 0) %>
       <%= hidden_field_tag(:relative_path) %>
       <%= hidden_field_tag(:batch_id, @batch_noid) %>
-      <%= link_to 'Read the Terms of Service', '#' %><br />
       <label class="checkbox">
-      <%= check_box_tag 'terms_of_service' %> Yes, I agree to the Terms of Service.
+      <%= check_box_tag 'terms_of_service' %> I have read and do agree
+      to <%= link_to "ScholarSphere's Terms of Service",
+      '/terms/' %>.
     </label>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
