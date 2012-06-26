@@ -13,7 +13,7 @@
     <%= DateTime.parse(document.fetch(:system_create_dt, "")).to_time %>
   </td>
   <td>
-    <%= (document[:medium_t] || document_type(document)).gsub(/^Generic/,"") %>
+    <%= document.document_type(blacklight_config.show.display_type) %>
   </td>
   <td>
     <%= get_file_asset_count(document)%>

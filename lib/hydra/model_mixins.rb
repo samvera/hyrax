@@ -3,5 +3,6 @@ module Hydra::ModelMixins
   eager_autoload do
     autoload :CommonMetadata
     autoload :RightsMetadata
+    autoload :SolrDocumentExtension
   end
 end
