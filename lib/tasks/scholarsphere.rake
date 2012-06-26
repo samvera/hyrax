@@ -9,6 +9,7 @@ namespace :scholarsphere do
   task :ci => :environment do
     #Rake::Task["hyhead:doc"].invoke
     Rake::Task["jetty:config"].invoke
+    puts Rails.env
     Rake::Task["db:migrate"].invoke
     
     require 'jettywrapper'
