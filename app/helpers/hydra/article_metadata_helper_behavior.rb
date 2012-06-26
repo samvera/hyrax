@@ -13,6 +13,8 @@ module Hydra
     def depositor_string depositor=nil
       "#{depositor}" unless depositor.nil? 
     end
+    deprecation_deprecate :depositor_string
+
     def get_children pid
       par = solr_facet_params(:is_part_of_s)
       query="_query_:\"{!dismax qf=$qf_dismax pf=$pf_dismax}is_part_of_s:info\\:fedora/#{pid.gsub(":",'\:')}\"" 
@@ -21,14 +23,17 @@ module Hydra
       (response, document_list) = get_search_results( :q=>query )
       par.inspect
     end
+    deprecation_deprecate :get_children
 
     def author_list(doc)
       get_persons_from_roles(doc,['author','collaborator','creator','contributor']).map {|person| format_person_string(person[:first],person[:last],person[:institution])}
     end
+    deprecation_deprecate :author_list
 
     def researcher_list(doc)
       get_persons_from_roles(doc,['research team head']).map {|person| format_person_string(person[:first],person[:last],person[:institution])}
     end
+    deprecation_deprecate :researcher_list
 
     def get_persons_from_roles(doc,roles,opts={})
       i = 0
@@ -43,12 +48,14 @@ module Hydra
       end
       return persons
     end
+    deprecation_deprecate :get_persons_from_roles
 
     def format_person_string first_name, last_name, affiliation, opt={}
       full_name = [first_name, last_name].join(" ").strip
       affiliation = affiliation.nil? ? "" : "(#{affiliation})"
       [full_name, affiliation].join(" ").concat(";")
     end
+    deprecation_deprecate :format_person_string
 
     def journal_info(doc)
       title = doc.get(:journal_title_info_main_title_t)
@@ -61,6 +68,7 @@ module Hydra
       journal_info = "" if journal_info.match(/^\.\s+;\s+\(\s+\)\:\s+-\s*$/)
       journal_info
     end
+    deprecation_deprecate :journal_info
 
     def short_abstract(doc,max=250)
       abstract = doc.get(:abstract_t)
@@ -72,6 +80,7 @@ module Hydra
         return abstract[0..max].strip.concat("...")
       end
     end
+    deprecation_deprecate :short_abstract
 
     def admin_info(doc)
       info =<<-EOS
@@ -80,6 +89,7 @@ module Hydra
         | Status: Created
       EOS
     end
+    deprecation_deprecate :admin_info
 
   end
 end

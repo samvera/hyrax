@@ -1,14 +1,21 @@
+# WILL BE REMOVED IN HYDRA-HEAD 5.x
+require 'deprecation'
 module Hydra
   module FacetsHelperBehavior
     include Blacklight::FacetsHelperBehavior
+    extend Deprecation
+    self.deprecation_horizon = 'hydra-head 5.x'
+
 
     # Removing the [remove] link and label class from the default selected facet display
+    # NOT DEPRECATED BECAUSE THIS IS AN OVERRIDE OF A BLACKLIGHT METHOD
     def render_selected_facet_value(facet_solr_field, item)
       content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected")
     end
 
     # Override to remove the label class (easier integration with bootstrap)
     # and handles arrays
+    # NOT DEPRECATED BECAUSE THIS IS AN OVERRIDE OF A BLACKLIGHT METHOD
     def render_facet_value(facet_solr_field, item, options ={})    
       if item.is_a? Array
         render_array_facet_value(facet_solr_field, item, options)

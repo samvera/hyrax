@@ -1,4 +1,7 @@
+require 'deprecation'
 module Hydra::ReleaseProcessHelperBehavior
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
   
   def display_release_status_notice(document)
     readiness = document.test_release_readiness
@@ -14,6 +17,7 @@ module Hydra::ReleaseProcessHelperBehavior
       flash[:error] = flash[:error] | readiness[:failures]
     end
   end
+  deprecation_deprecate :display_release_status_notice
 
   def check_embargo_date_format
     if params.keys.include? [:embargo, :embargo_release_date]
@@ -28,5 +32,6 @@ module Hydra::ReleaseProcessHelperBehavior
       end
     end
   end  
+  #deprecation_deprecate :check_embargo_date_format
   
 end

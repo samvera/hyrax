@@ -11,7 +11,10 @@
 #     include_javascript_for_catalog_edit
 #     javascript_includes << ['hydrangeaArticleBehaviors.js', {:plugin=>:hydrangea_articles}]
 #   end
+require 'deprecation'
 module Hydra::JavascriptIncludesHelperBehavior
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
   
   # Add the appropriate javascripts for the specified content type & action into the Controller's javascript_includes array
   # If you have defined custom javascript includes for that content_type & action, they will be used.
@@ -29,6 +32,7 @@ module Hydra::JavascriptIncludesHelperBehavior
       include_default_javascript( action )
     end
   end
+  deprecation_deprecate :include_javascript_for
   
   # Add the default javascript to the controller's javascript_includes
   # Takes a method argument (ie. show or edit) to decide which defaults to use.
@@ -44,6 +48,7 @@ module Hydra::JavascriptIncludesHelperBehavior
       logger.debug "No default javascript includes defined for #{method} views.  Doing nothing."
     end
   end
+  deprecation_deprecate :include_default_javascript
   
   #
   #   Helpers for Catalog Show & Edit Javascript Includes
@@ -57,6 +62,7 @@ module Hydra::JavascriptIncludesHelperBehavior
     # This file contains the page initialization scripts for catalog show views
     javascript_includes << ["catalog/show", {:plugin=>"hydra-head"}]
   end
+  deprecation_deprecate :include_javascript_for_catalog_show
   
   # Adds the appropriate javascripts to javascript_includes for CatalogController edit views
   # Override this if you want to change the set of javascript_includes for CatalogController edit views
@@ -83,5 +89,6 @@ module Hydra::JavascriptIncludesHelperBehavior
     # This file contains the page initialization scripts for catalog edit views
     javascript_includes << ["catalog/edit", {:plugin=>"hydra-head"}]
   end
+  deprecation_deprecate :include_javascript_for_catalog_edit
   
 end
