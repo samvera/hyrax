@@ -41,8 +41,8 @@ module ScholarSphere
       :file_language => :language
     }
 
-    config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout'
-    config.login_url = 'https://webaccess.psu.edu?cosign-'+ Socket.gethostname + '&https://' + Socket.gethostname + '/scholarsphere-integration'
+    config.logout_url = "https://webaccess.psu.edu/cgi-bin/logout?#{Socket.gethostname}"
+    config.login_url = "https://webaccess.psu.edu?cosign-#{Socket.gethostname}&https://#{Socket.gethostname}/"
 
     config.resource_types = {
       "Article"=>"Article", 
