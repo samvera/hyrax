@@ -2,13 +2,13 @@
   <a class="add-new-asset" href="#">Add a New Asset</a>
   <ul id="select-item-list">
     <li>
-      <%= link_to_create_asset 'Add a Basic MODS Asset', 'mods_asset' %>
+      <%= link_to 'Add a Basic MODS Asset', new_hydra_asset_path(:content_type => 'mods_asset'), :class => 'create_asset' %>
     </li>
     <li>
-      <%= link_to_create_asset 'Add an Image', 'generic_image' %>
+      <%= link_to 'Add an Image', new_hydra_asset_path(:content_type => 'generic_image'), :class => 'create_asset'  %>
     </li>
     <li>
-      <%= link_to_create_asset 'Add Generic Content', 'generic_content' %>
+      <%= link_to 'Add Generic Content', new_hydra_asset_path(:content_type => 'generic_content'), :class => 'create_asset'  %>
     </li>
   </ul>
 </div>      
