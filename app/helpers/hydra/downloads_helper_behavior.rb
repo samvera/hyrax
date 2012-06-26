@@ -1,5 +1,10 @@
+require 'deprecation'
+
 module Hydra
   module DownloadsHelperBehavior
+    extend Deprecation
+    
+    self.deprecation_horizon = 'hydra-head 5.x'
     
     def list_downloadables( datastreams, mime_types=["application/pdf"])
       result = "<ul>" 
@@ -13,6 +18,7 @@ module Hydra
       result << "</ul>"
       return result
     end
+    deprecation_deprecate :list_downloadables
     
   end
 end
