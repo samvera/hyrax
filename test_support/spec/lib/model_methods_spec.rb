@@ -6,6 +6,7 @@ describe Hydra::ModelMethods do
     class TestModel < ActiveFedora::Base
       include Hydra::ModelMixins::CommonMetadata
       include Hydra::ModelMethods
+      has_metadata :name => "properties", :type => Hydra::Datastream::Properties
     end
   end
 
@@ -20,6 +21,9 @@ describe Hydra::ModelMethods do
       subject.apply_depositor_metadata('naomi')
       subject.rightsMetadata.individuals.should == {'naomi' => 'edit', 'jessie' =>'edit'}
     end
+    it "should set depositor" do
+      subject.apply_depositor_metadata('chris')
+      subject.properties.depositor.should == ['chris']
+    end
   end
-
 end

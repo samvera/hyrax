@@ -16,8 +16,8 @@ module Hydra::ModelMethods
     prop_ds = self.datastreams["properties"]
     rights_ds = self.datastreams["rightsMetadata"]
   
-    if !prop_ds.nil? && prop_ds.respond_to?(:depositor_values)
-      prop_ds.depositor_values = depositor_id unless prop_ds.nil?
+    if prop_ds 
+      prop_ds.depositor = depositor_id unless prop_ds.nil?
     end
     rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
     return true
