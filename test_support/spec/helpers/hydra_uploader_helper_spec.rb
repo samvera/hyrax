@@ -1,6 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe HydraUploaderHelper do
+  before :all do
+    @behavior = Hydra::HydraUploaderHelperBehavior.deprecation_behavior
+    Hydra::HydraUploaderHelperBehavior.deprecation_behavior = :silence
+  end
+
+  after :all do
+    Hydra::HydraUploaderHelperBehavior.deprecation_behavior = @behavior
+  end
   
   describe "upload_url" do
     it "should use container_id if its available" do

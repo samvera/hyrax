@@ -3,6 +3,14 @@ include JavascriptIncludesHelper
 # include HydraHelper # This helper provides the Controller's javascript_includes method
 
 describe JavascriptIncludesHelper do
+  before :all do
+    @behavior = Hydra::JavascriptIncludesHelperBehavior.deprecation_behavior
+    Hydra::JavascriptIncludesHelperBehavior.deprecation_behavior = :silence
+  end
+
+  after :all do
+    Hydra::JavascriptIncludesHelperBehavior.deprecation_behavior = @behavior
+  end
 
   before(:each) do
     # Mock behavior of Controller's javascript_includes method

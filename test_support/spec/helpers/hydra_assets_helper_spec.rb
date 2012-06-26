@@ -1,6 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe HydraAssetsHelper do
+  before :all do
+    @behavior = Hydra::HydraAssetsHelperBehavior.deprecation_behavior
+    Hydra::HydraAssetsHelperBehavior.deprecation_behavior = :silence
+  end
+
+  after :all do
+    Hydra::HydraAssetsHelperBehavior.deprecation_behavior = @behavior
+  end
   include HydraAssetsHelper
   
   describe "link_to_create_asset" do
