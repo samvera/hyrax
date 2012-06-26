@@ -1,10 +1,14 @@
 <%- type = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__resource_type_t") -%>
 <%- type = 'no type value' if type.empty? -%>
+<%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"label_t") if title.empty? -%>
 <%- depositor = render_document_show_field_value(:document=>recent_document, :field=>"depositor_t") -%>
+<%- depositor = 'no depositor value' if depositor.empty? -%>
 <div class="item">
-    <h3><a href=<%=generic_file_path(recent_document.fetch(:noid_s, :id))  %> ><%= title %></a></h3>
-                  <span class="item-type"><%=type  %></span>
-                  <span class="item-author"><%= depositor %></span>
+    <h3><table class="recent"><tr> <td span=2><a href=<%=generic_file_path(recent_document.fetch(:noid_s, :id))  %> ><%= title %></a></h3></td></tr>
+                  <tr> <td span=2><span class="item-type">2<%=filename  %></span> </td></tr>
+                  <tr><td><span class="item-type"><%=type  %></span></td>
+                  <td><span class="item-author"><%= depositor %></span></td></tr>
+        </table>
 </div>

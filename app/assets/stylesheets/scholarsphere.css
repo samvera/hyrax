@@ -433,6 +433,19 @@ table {
 	border: none;
 	border-collapse: collapse;
 }
+table.recent {
+    border-bottom: 1px solid #DDDDDD;
+    border-collapse: collapse;
+    border-spacing: 0; 
+    padding: 1px 3px 1px;
+    width: 90%
+}
+table.recent td {
+    padding: 0 3px 0;
+    border-bottom: none;
+    color: #404040;
+    
+}
 table.expanded-details {
 	width: 75%;
 	margin: 0 auto;
