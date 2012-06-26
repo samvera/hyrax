@@ -12,7 +12,7 @@
   <fieldset id='uploader'>
     <legend>File Upload</legend>
     <%= form_tag(hydra_asset_file_assets_path(:asset_id => params[:asset_id] || params[:id]),:method=>"post",:enctype=>"multipart/form-data", :class=>"uploader-form step") do -%>
-      <input type="hidden" name="container_id" value="<%=h container_id %>"/>
+      <%= hidden_field_tag("container_id", params[:asset_id] || params[:id]) %>
       <%= hidden_field_tag("container_content_type", container_content_type, :id => "file_upload_content_type") if defined?(container_content_type) %>
       <%- params[:number_of_files].to_i.times do -%>
         <%= render :partial=>"hydra/file_assets/new"%>
