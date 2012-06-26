@@ -48,9 +48,7 @@ pkg
 db/*.sqlite3
 db/*.sqlite3-journal
 log/*.log
-tmp/*.log
-tmp/pids/
-tmp/test_app/
+tmp
 
 *.sqlite3
 *.log
@@ -64,8 +62,6 @@ log/*
 public/plugin_assets
 public/plugin_assets/
 
-tmp/**/*
-tmp/performance
 
 db/schema.rb
 
