@@ -65,8 +65,7 @@ ScholarSphere::Application.configure do
   
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   # config.assets.precompile += %w( search.js )
- 
-  # override the config settings in config/application.rb
+
   config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout?https://scholarsphere-test.dlt.psu.edu/'
   config.login_url = 'https://webaccess.psu.edu?cosign-scholarsphere-test.dlt.psu.edu&https://scholarsphere-test.dlt.psu.edu/'
 end
