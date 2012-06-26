@@ -46,6 +46,9 @@ RAILS_ENV=integration rake scholarsphere:fixtures:refresh
 echo "=-=-=-=-= $0 script/delayed_job restart"
 RAILS_ENV=integration script/delayed_job restart 
 
+echo "=-=-=-=-= $0 touch ${WORKSPACE}/tmp/restart.txt"
+touch ${WORKSPACE}/tmp/restart.txt
+
 retval=$?
 
 echo "=-=-=-=-= $0 finished $retval"
