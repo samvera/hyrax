@@ -9,3 +9,4 @@ end
 
 # Initialize the rails application
 ScholarSphere::Application.initialize!
+#ActiveRecord::Base.connection.execute("SET AUTOCOMMIT=1")
