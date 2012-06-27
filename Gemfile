@@ -20,7 +20,6 @@ gem 'therubyracer', '0.10.1'
 gem 'zipruby', '0.3.6'
 gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git'
-gem 'secret_token_replacer', :git => 'git://github.com/digineo/secret_token_replacer.git', :ref => '34b37678'
 
 group :assets do
   gem 'sass-rails', "3.2.5"

@@ -47,8 +47,8 @@ echo "=-=-=-=-= $0 script/delayed_job restart"
 RAILS_ENV=integration script/delayed_job stop
 RAILS_ENV=integration script/delayed_job -n 5 start
 
-echo "=-=-=-=-= $0 rake secret:replace"
-rake secret:replace
+echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
+rake scholarsphere:generate_secret
 
 echo "=-=-=-=-= $0 touch ${WORKSPACE}/tmp/restart.txt"
 touch ${WORKSPACE}/tmp/restart.txt

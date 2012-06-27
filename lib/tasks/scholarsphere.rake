@@ -4,6 +4,13 @@ require 'rdf'
 require 'rdf/rdfxml'
 
 namespace :scholarsphere do
+  desc "(Re-)Generate the secret token"
+  task :generate_secret => :environment do
+    include ActiveSupport
+    File.open("#{Rails.root}/config/initializers/secret_token.rb", 'w') do |f|
+      f.puts "#{Rails.application.class.parent_name}::Application.config.secret_token = '#{SecureRandom.hex(64)}'"
+    end
+  end
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci => :environment do
@@ -12,10 +19,10 @@ namespace :scholarsphere do
     Rake::Task["db:drop"].invoke
     Rake::Task["db:create"].invoke
     Rake::Task["db:migrate"].invoke
-    
+
     require 'jettywrapper'
     jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(File.join(Rails.root, 'jetty'))})
-    
+
     error = nil
     error = Jettywrapper.wrap(jetty_params) do
         Rake::Task['spec'].invoke
@@ -26,14 +33,13 @@ namespace :scholarsphere do
 
   namespace :export do
     desc "Dump metadata as RDF/XML for e.g. Summon integration"
-    task :rdfxml => :environment do 
+    task :rdfxml => :environment do
       raise "rake scholarsphere:export:rdfxml output=FILE" unless ENV['output']
       export_file = ENV['output']
       triples = RDF::Repository.new
       rows = GenericFile.count
       GenericFile.find(:all, :rows => rows).each do |gf|
-        next unless ["read", "discover"].include? gf.rightsMetadata.groups["public"] 
-        next unless gf.descMetadata.content
+        next unless gf.rightsMetadata.groups["public"] == "read" && gf.descMetadata.content
         RDF::Reader.for(:ntriples).new(gf.descMetadata.content) do |reader|
           reader.each_statement do |statement|
             triples << statement
