@@ -31,7 +31,7 @@
   
   <body> 
 <%# need a better way to determine if we are on the home page and using three col layout %>
-<% if params[:controller].eql?("catalog") and params[:action].eql?("index") and (!params.has_key?("commit") and !params.has_key?("f")) %> 
+<% if params[:controller].eql?("catalog") and !has_search_parameters? %> 
   <% column_class = "three" %>
 <% else %>
   <% column_class = "two" %>
