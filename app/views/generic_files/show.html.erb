@@ -170,7 +170,8 @@
         </tr>
         <tr<%= zebra %>>
           <th>Audit Status</th>
-          <td><%= @generic_file.audit_stat(false) == 1 ? "passing" : "failing" %> </td>
+          <%- stat= @generic_file.audit_stat(false)  %>
+          <td> <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %></td>           
         </tr>
 <% unless @generic_file.related_files.empty? %>
         <tr<%= zebra %>>

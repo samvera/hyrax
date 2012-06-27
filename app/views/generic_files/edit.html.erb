@@ -63,7 +63,8 @@ $('input[name=revision]:radio').on('click', function() {
         <tr>
           <th>Audit</th>
           <td>
-            Audit status: <%# @generic_file.audit_stat(false) == 1 ? "passing" : "failing" %><br />
+            <%- stat= @generic_file.audit_stat(false)  %>
+            Audit status: <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %>  <br />         
           </td>
         </tr>
         -->
