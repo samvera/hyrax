@@ -14,10 +14,6 @@ namespace :scholarsphere do
 
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci => :environment do
-    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    puts %x(whoami)
-    puts Rails.env
-    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     #Rake::Task["hyhead:doc"].invoke
     Rake::Task["jetty:config"].invoke
     #Rake::Task["db:drop"].invoke
