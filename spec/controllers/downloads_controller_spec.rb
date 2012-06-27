@@ -69,7 +69,7 @@ describe DownloadsController do
     describe "show" do
       it "should deny access" do
         get "show", :id => "test1"
-        response.should redirect_to(catalog_path)        
+        response.should redirect_to("/assets/NoAccess.png")        
       end
     end
   end

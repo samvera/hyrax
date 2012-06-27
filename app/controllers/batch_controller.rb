@@ -36,17 +36,4 @@ class BatchController < ApplicationController
     redirect_to dashboard_path
   end
  
-  protected
-  # Returns the solr permissions document for the given id
-  # @return solr permissions document  
-  # @example This is the document that you can pass into permissions enforcement methods like 'can?'
-  #   gf = GenericFile.find(params[:id])
-  #   if can? :read, permissions_solr_doc_for_id(gf.pid)
-  #     gf.update_attributes(params[:generic_file])
-  #   end
-  def permissions_solr_doc_for_id(id)
-    permissions_solr_response, permissions_solr_document = get_permissions_solr_response_for_doc_id(id)
-    return permissions_solr_document
-  end
-
 end

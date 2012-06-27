@@ -2,24 +2,33 @@ class DownloadsController < ApplicationController
   # module mixes in normalize_identifier method
   include ScholarSphere::Noid
 
-  before_filter :deny_access_if_not_reader, :only=>[:show]
+  # moved check into the routine so we can handle the user with no access 
+  #before_filter :deny_access_if_not_reader, :only=>[:show]
   prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy] 
   
   def show
-    @asset = ActiveFedora::Base.find(params["id"])
-    opts = {}
-    ds = nil
-    opts[:filename] = params["filename"] || @asset.label
-    opts[:disposition] = params["disposition"] if params.has_key?("disposition") 
-    if params.has_key?(:datastream_id)
-      opts[:filename] = params[:datastream_id]
-      ds = @asset.datastreams[params[:datastream_id]]
+    if can? :read, permissions_solr_doc_for_id(params["id"])
+      logger.info "Can read #{params['id']}"
+    
+    
+      @asset = ActiveFedora::Base.find(params["id"])
+      opts = {}
+      ds = nil
+      opts[:filename] = params["filename"] || @asset.label
+      opts[:disposition] = params["disposition"] if params.has_key?("disposition") 
+      if params.has_key?(:datastream_id)
+        opts[:filename] = params[:datastream_id]
+        ds = @asset.datastreams[params[:datastream_id]]
+      end
+      ds = default_content_ds(@asset) if ds.nil?
+      data = ds.content
+      opts[:type] = ds.mimeType
+      send_data data, opts
+      return
+    else 
+      logger.info "Can not read #{params['id']}"
+      redirect_to "/assets/NoAccess.png"
     end
-    ds = default_content_ds(@asset) if ds.nil?
-    data = ds.content
-    opts[:type] = ds.mimeType
-    send_data data, opts
-    return
   end
   
   private 
