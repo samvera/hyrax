@@ -25,15 +25,5 @@
     </ul>
 
     <%# logger.info " controller = #{params[:controller]}" %>
-    <% if params[:controller] == 'catalog' %>
-    <% curpath = catalog_index_path %>
-    <% else %>
-    <% curpath = dashboard_path %>
-    <% end %>
-    
-    <%= form_tag curpath, :method => :get, :id => "search-form-header" do %>
-      <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>    
-      <%= text_field_tag :q, params[:q], :class => "q", :id => "search-field-header", :placeholder => "Type keywords in here"  %>
-      <%= submit_tag 'Go', :id=>'search-submit-header' %>
-    <% end %>
+    <%= render :partial => 'catalog/search_form' %>
 </div> <!-- /masthead -->

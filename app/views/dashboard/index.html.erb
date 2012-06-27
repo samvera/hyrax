@@ -28,6 +28,7 @@
 
   <% @page_title = application_name + " Dashboard" %>
 
+  <%= render :partial => 'search_form' %>
   <h2 class="heading1">Dashboard</h2>
 
         <% extra_head_content << render_opensearch_response_metadata.html_safe %>

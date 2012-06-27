@@ -1,13 +1,8 @@
-<div> 
-    <%= form_tag catalog_index_path, :method => :get, :class => "well form-search" do %>
-      <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
-    <%= text_field_tag :q, params[:q], :class => "q" %>
-    <% unless search_fields.empty? %>
-      <%= label_tag(:search_field, " in ") %>
-      <%= select_tag(:search_field, options_for_select(search_fields, h(params[:search_field])), :title => "Targeted search options", :class=>"search_field") %>
-    <% end %>
-    <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>        
-    
-    <%= submit_tag 'Search', :class=>'btn btn-primary' %>
-  <% end %>
-</div>
+<%# only display the q parameter if the controller is not the dashboard.  If they are in the dashboard controller, then the search is of the dashboard. %>
+<% q = params[:controller] == 'dashboard' ? nil : params[:q] %>
+
+<%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
+  <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>    
+  <%= text_field_tag :q, q, :class => "q", :id => "search-field-header", :placeholder => "Type keywords in here"  %>
+  <%= submit_tag 'Go', :id=>'search-submit-header' %>
+<% end %>

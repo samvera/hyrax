@@ -1,13 +1,8 @@
-<div> 
+<div style="float: right;" > 
     <%= form_tag dashboard_path, :method => :get, :class => "well form-search" do %>
-      <h2 class="search"><%= label_tag(:q, "Search ") %></h2>
-    <%= text_field_tag :q, params[:q], :class => "q" %>
-    <% unless search_fields.empty? %>
-      <%= label_tag(:search_field, " in ") %>
-      <%= select_tag(:search_field, options_for_select(search_fields, h(params[:search_field])), :title => "Targeted search options", :class=>"search_field") %>
-    <% end %>
+      <%= text_field_tag :q, params[:q], :class => "q", :placeholder => "Search My Dashboard", :size => '30', :type => "search", :id => "dashboard_search" %>
+      <%= hidden_field_tag :search_field, 'all_fields' %>
     <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>        
-    
-    <%= submit_tag 'Search', :class=>'btn btn-primary' %>
+    <%= submit_tag 'Go', {:class=>'btn btn-primary', :id => "dashboard_submit"} %>
   <% end %>
 </div>

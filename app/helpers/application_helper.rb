@@ -17,4 +17,14 @@ module ApplicationHelper
     link_url = dashboard_path + "?" + query_params.to_query
     link_to opts[:label], link_url
   end
+
+  def link_to_dashboard_query(query)
+    p = params.dup
+    p.delete :page
+    p.delete :action
+    p[:q]=query
+    link_url = dashboard_path(p)
+    link_to(query, link_url)
+  end
+
 end
