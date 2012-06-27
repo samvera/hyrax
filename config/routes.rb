@@ -5,7 +5,7 @@ ScholarSphere::Application.routes.draw do
 
   devise_for :users
 
-  resources :generic_files, :path => :files do
+  resources :generic_files, :path => :files, :except => :index do
     member do
       post 'audit'
       get :add_user_permission
