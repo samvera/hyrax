@@ -50,7 +50,7 @@ module Hydra::Controller::ControllerBehavior
   # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)
   # defaults to using whatever you have set as the Devise authentication_key
   def user_key
-    current_user.user_key
+    current_user.user_key if current_user
   end
   
 end

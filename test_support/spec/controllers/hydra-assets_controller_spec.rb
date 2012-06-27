@@ -19,7 +19,9 @@ describe Hydra::AssetsController do
   end
   
   before do
-    request.env['WEBAUTH_USER']='bob'
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      controller.stubs(:enforce_access_controls).returns(true)
   end
   
   it "should use DocumentController" do

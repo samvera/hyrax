@@ -19,10 +19,12 @@ module Hydra::Controller::AssetsControllerBehavior
     before_filter :load_document, :only => :update # allows other filters to operate on the document before the update method is called
 
     include Hydra::SubmissionWorkflow
+    include Hydra::AccessControlsEnforcement
     
     
     prepend_before_filter :sanitize_update_params, :only=>:update
     before_filter :check_embargo_date_format, :only=>:update
+    before_filter :enforce_access_controls
   end
       
   def show
