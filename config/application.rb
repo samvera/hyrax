@@ -15,6 +15,19 @@ module ScholarSphere
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    # Make sure RDBMS is up (cannot do this at a higher level)
+    # ActiveRecord::ConnectionAdapters::ConnectionManagement
+    # ActiveRecord::QueryCache
+    class DatabaseChecker
+      def call(env)
+        #ActiveRecord::Base.connection_pool.with_connection { |con| con.active? }
+      #rescue => error
+        #ApplicationController::render_500(error)
+      end
+    end
+    #config.middleware.insert_before ActiveRecord::QueryCache, DatabaseChecker
+
     config.fits_path = 'fits.sh'
     config.max_days_between_audits = 7
     config.id_namespace = "scholarsphere"

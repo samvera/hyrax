@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title><%= h(application_name) %>: System Error</title>
+    <%# render_head_content %>
+    <!-- application css -->
+    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Lato:300,400,900' %>
+    <%= stylesheet_link_tag 'application' %>
+    <%# stylesheet_link_tag params[:controller] %>
+    <%= yield(:css_head) %>
+
+    <!-- application js -->
+    <%= javascript_include_tag 'application' %>
+
+    <!-- controller specific uploader -->
+    <%# javascript_include_tag params[:controller] %>
+    <%= yield(:js_head) %>
+
+    <script>
+      $(function() {
+        <%= yield(:local_js) %>
+      });
+    </script>
+
+    <style>
+      <%= yield(:local_css) %>
+    </style>
+	</head>
+  
+  <body> 
+<%# need a better way to determine if we are on the home page and using three col layout %>
+<% if params[:controller].eql?("catalog") and !has_search_parameters? %> 
+  <% column_class = "three" %>
+<% else %>
+  <% column_class = "two" %>
+<% end %>
+  <div id="wrapper">
+  <div id="container">
+      <%= render :partial => '/user_util_links', :formats => [:html] %>
+      <%= render :partial=>'/flash_msg' %>
+      
+      <div id="content-wrapper">
+        <div id="content">	    
+            <div class="columns <%= column_class %>-a"> 
+                <%= yield %>
+            </div>	<!-- /columns three-a -->
+      </div> <!-- /content -->
+	  </div> <!-- /content-wrapper -->
+
+  </div> <!-- /container -->
+
+    <div id="footer-wrapper">
+      <div id="footer">
+        <div class="footer-logo">
+          <a href="/"><img src="/site_images/logo_psuss_footer.png" alt="PSU Scholar Sphere" /></a>
+          <p>A service of the University Libraries and Information Technology Services.</p>
+        </div>
+        <div class="footer-text">
+          <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
+          <ul>
+            <li><a href="http://psu.edu">Penn State</a></li>
+            <li><a href="http://libraries.psu.edu">University Libraries</a></li>
+            <li><a href="http://its.psu.edu">Information Technology Services</a></li>
+            <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
+          </ul>
+        </div>
+        <div class="clearfix"></div>
+      </div><!-- /footer -->
+    </div><!-- /footer-wrapper -->
+	
+  </div><!-- /wrapper -->
+</body>
+
+</html>
