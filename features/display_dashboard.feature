@@ -30,6 +30,5 @@ Feature: As an authenticate and authorized
     When I press "search-submit-header"
     Then I should see "You searched for: ss search"
     Then I should not see "Dashboard"
-    Then show me the page
     Then the "search-field-header" field should contain "ss search"
 
