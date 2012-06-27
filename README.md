@@ -33,7 +33,7 @@ Copy and **edit** database, Fedora, and Solr configs
 
 (Re-)Generate the app's secret token
 
-    rake secret:token
+    rake secret:replace
 
 Create and migrate database
 
