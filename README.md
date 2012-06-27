@@ -31,6 +31,10 @@ Copy and **edit** database, Fedora, and Solr configs
     cp config/fedora.yml.sample config/fedora.yml
     cp config/solr.yml.sample config/solr.yml
 
+(Re-)Generate the app's secret token
+
+    rake secret:token
+
 Create and migrate database
 
     rake db:create

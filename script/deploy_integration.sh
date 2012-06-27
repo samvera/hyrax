@@ -2,8 +2,8 @@
 #
 # Currently a stub for jenkins as called from
 # https://gamma-ci.dlt.psu.edu/jenkins/job/scholarsphere/configure
-#	Build -> Execute Shell Command == 
-#	test -x /opt/heracles/deploy_integration.sh && /opt/heracles/deploy_integration.sh 
+#	Build -> Execute Shell Command ==
+#	test -x /opt/heracles/deploy_integration.sh && /opt/heracles/deploy_integration.sh
 # to run CI testing.
 
 HHOME=/opt/heracles
@@ -44,7 +44,11 @@ RAILS_ENV=integration rake scholarsphere:fixtures:generate
 RAILS_ENV=integration rake scholarsphere:fixtures:refresh
 
 echo "=-=-=-=-= $0 script/delayed_job restart"
-RAILS_ENV=integration script/delayed_job restart 
+RAILS_ENV=integration script/delayed_job stop
+RAILS_ENV=integration script/delayed_job -n 5 start
+
+echo "=-=-=-=-= $0 rake secret:replace"
+rake secret:replace
 
 echo "=-=-=-=-= $0 touch ${WORKSPACE}/tmp/restart.txt"
 touch ${WORKSPACE}/tmp/restart.txt

@@ -5,6 +5,9 @@ config/fedora.yml
 config/solr.yml
 config/hydra-ldap.yml
 
+# This file is generated automatically by: rake secret:replace
+config/initializers/secret_token.rb
+
 ## MAC OS
 .DS_Store
 
