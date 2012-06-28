@@ -30,6 +30,7 @@ Copy and **edit** database, Fedora, and Solr configs
     cp config/database.yml.sample config/database.yml
     cp config/fedora.yml.sample config/fedora.yml
     cp config/solr.yml.sample config/solr.yml
+    cp config/hydra-ldap.yml.sample config/hydra-ldap.yml
 
 (Re-)Generate the app's secret token
 
