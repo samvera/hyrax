@@ -126,11 +126,8 @@ module Hydra::Controller::FileAssetsBehavior
     parent = ActiveFedora::Base.find(pid, :cast=>true)
     @downloadable = false
     # A FileAsset is downloadable iff the user has read or higher access to a parent
-    if can? :read, parent
-      @downloadable = true
-    end
 
-    if @downloadable
+    if can? :read, parent
       # First try to use datastream_id value (set in FileAssetsHelper)
       if @file_asset.datastreams.include?(datastream_id)
         send_datastream @file_asset.datastreams[datastream_id]
@@ -138,8 +135,7 @@ module Hydra::Controller::FileAssetsBehavior
         send_datastream @file_asset.datastreams["DS1"]
       end
     else
-      flash[:notice]= "You do not have sufficient access privileges to download this file."
-      redirect_to :back
+      raise Hydra::AccessDenied.new("You do not have sufficient access privileges to download this file.")
     end
   end
 end
