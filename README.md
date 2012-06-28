@@ -25,7 +25,7 @@ Install gems
 
     bundle install
 
-Copy and **edit** database, Fedora, and Solr configs
+Copy and **edit** database, LDAP, Fedora, and Solr configs
 
     cp config/database.yml.sample config/database.yml
     cp config/fedora.yml.sample config/fedora.yml
