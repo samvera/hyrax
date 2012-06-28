@@ -25,8 +25,8 @@ cd ${WORKSPACE}
 echo "=-=-=-=-= $0 source ${WORKSPACE}/.rvmrc"
 source ${WORKSPACE}/.rvmrc
 
-echo "=-=-=-=-= $0 cp -f ${HHOME}/config/{database,fedora,solr}.yml ${WORKSPACE}/config"
-cp -f ${HHOME}/config/{database,fedora,solr}.yml ${WORKSPACE}/config
+echo "=-=-=-=-= $0 cp -f ${HHOME}/config/{database,fedora,solr,hydra-ldap}.yml ${WORKSPACE}/config"
+cp -f ${HHOME}/config/{database,fedora,solr,hydra-ldap}.yml ${WORKSPACE}/config
 
 echo "=-=-=-=-= $0 bundle install"
 bundle install
