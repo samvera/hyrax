@@ -15,6 +15,8 @@ module NavigationHelpers
       '/'
     when /logout/
       destroy_user_session_path
+    when /login/
+      new_user_session_path
     when /my account info/
       edit_user_registration_path
     when /the base search page/
