@@ -52,6 +52,7 @@ describe Hydra::FileAssetsController do
       mock_user = mock("User")
       mock_user.stubs(:email).returns("fake_user@example.com")
       mock_user.stubs(:is_being_superuser?).returns(false)
+      mock_user.stubs(:persisted?).returns(true)
       mock_user.stubs(:new_record?).returns(false)
       controller.stubs(:current_user).returns(mock_user)
       request.env["HTTP_REFERER"] = "http://example.com/?q=search"
