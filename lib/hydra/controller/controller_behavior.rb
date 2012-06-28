@@ -27,8 +27,11 @@ module Hydra::Controller::ControllerBehavior
     rescue_from Hydra::AccessDenied do |exception|
       if (exception.action == :edit)
         redirect_to({:action=>'show'}, :alert => exception.message)
-      else
+      elsif current_user and current_user.persisted?
         redirect_to root_url, :alert => exception.message
+      else
+        session["user_return_to"] = request.url
+        redirect_to new_user_session_url, :alert => exception.message
       end
     end
   end

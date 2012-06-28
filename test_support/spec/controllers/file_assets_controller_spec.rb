@@ -58,6 +58,18 @@ describe Hydra::FileAssetsController do
       get(:show, :id=>"hydrangea:fixture_file_asset1")
       response.should redirect_to("http://example.com/?q=search")
     end
+     it "should redirect to the login page if the user is not logged in" do
+      mock_user = mock("User")
+      mock_user.stubs(:email).returns("fake_user@example.com")
+      mock_user.stubs(:is_being_superuser?).returns(false)
+      mock_user.stubs(:persisted?).returns(false)
+      mock_user.stubs(:new_record?).returns(true)
+      controller.stubs(:current_user).returns(mock_user)
+      request.env["HTTP_REFERER"] = "http://example.com/?q=search"
+      get(:show, :id=>"hydrangea:fixture_file_asset1")
+      response.should redirect_to("http://test.host/users/sign_in")
+      session['user_return_to'].should =~ /fixture_file_asset1/
+    end
     it "should redirect to index view if the file does not exist" do
       get(:show, :id=>"example:invalid_object")
       response.should redirect_to(:action => 'index')
