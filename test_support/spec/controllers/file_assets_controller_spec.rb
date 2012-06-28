@@ -57,7 +57,7 @@ describe Hydra::FileAssetsController do
       controller.stubs(:current_user).returns(mock_user)
       request.env["HTTP_REFERER"] = "http://example.com/?q=search"
       get(:show, :id=>"hydrangea:fixture_file_asset1")
-      response.should redirect_to("http://example.com/?q=search")
+      response.should redirect_to(root_url)
     end
      it "should redirect to the login page if the user is not logged in" do
       mock_user = mock("User")
