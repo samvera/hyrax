@@ -12,10 +12,12 @@
 	</head>
   
   <body class="<%= render_body_class %>">
+    <div id="page">
 
 		<div id="hd">
+      <div id="user_util_links">
 			<%= render :partial => '/user_util_links' %>
-			<%= (params[:controller] == "catalog" and !params[:id]) ? "<span id='results_text'>Search Results</span>".html_safe : "" %>
+      </div>
 		</div>
 	    
     <div id="bd">
@@ -38,6 +40,7 @@
         </div>
       </div>
 		</div>
+  </div>
 		
   </body>
 

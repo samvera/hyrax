@@ -1,30 +1,11 @@
-/* This is the CSS that Jessie is creating to put some CSS tweaks necessary to get the app looking like Blacklight again
-   I fully expect this CSS to either be moved to a more appropriate name or removed all together */
 
-#documents table {
-	width:100%;
-}
-
-
-/* The hydra provided search button was miss-aligned w/ the form field */
-#search .submit {
-	margin-bottom:-12px;
-}
-
-/* Record view next/previous links */
-#previousNextDocument {
-	text-align:center;
-}
-#previousNextDocument .previous {
-	float:left;
-}
-
-/* JFG: to be sorted */
 
 /* =HEADER
 -------------------------------------------------------------- */
 
-#doc4 #hd {font-size: 12px; text-align: right;}
+#hd { overflow: visible; margin-bottom: 2em; }
+
+#hd #user_util_links { width: 75%; }
 
 #select-item-box {background: url('/assets/hydra/search-button.png') no-repeat scroll 95% 5px #f5f5f5; border: 1px solid #BBB; float: left; line-height: 20px; margin-top: -3px; padding: 2px 6px; position: relative; text-align: left; width: 170px; z-index: 300; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
 #select-item-box > a {border-bottom: none; vertical-align: text-bottom;}
@@ -37,14 +18,6 @@
 
 /* =SEARCH
 -------------------------------------------------------------- */
-
-#doc4 #bd { font-size: 13px;}
-#bd #search {background-color: #EEE; padding: 12px 20px; background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #DDD), color-stop(1, #EEE));
-background-image: -moz-linear-gradient(center bottom, #DDD 0%, #EEE 100%); }
-#bd .home-text #search { -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
-#bd #search #q {margin: 0 15px 0 0; padding: 0.2em; width: 420px;}
-#bd #search .submit {background: #f3f3f3; border: 1px solid #AAA; font-size: 16px; margin: 0; padding: 4px 6px; width: 75px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
-#bd #search .submit:hover {background: #f7f7f7; cursor: pointer;}
 
 /* =RESULTS
 -------------------------------------------------------------- */

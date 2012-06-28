@@ -33,7 +33,6 @@ module Hydra::UI::Controller
   end
 
   def load_css
-    stylesheet_links << ["hydra/html_refactor", {:media=>"all"}]
   end
 
   def load_js

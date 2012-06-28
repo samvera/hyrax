@@ -1,42 +1,9 @@
-html {
-  background-color: white;
-	overflow-y: scroll;
-}
+/*
+ *= require 'hydra/html_refactor'
+ */
 
-html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-	background: #fff;
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  color: #121212;
-}
-
-#document h1 {
-    display: none;
-}
-
-body td, body ul, body p, body ol {
-	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-}
-
-
-#hd ul {
-	margin: 5px;
-	padding: 5px;
-}
-
-#hd ul li {
-	list-style-type: none;
-	display: inline;
-	color: blue;
-	cursor: pointer;
-	margin-left: 10px;
+#page {
+  width: 1020px;
 }
 
 button.ui-button-icon-only {
@@ -194,11 +161,6 @@ table#file_assets {
 #container_login a {
     color: #E7C584;
 }
-
-#hd {
-  overflow: visible; /* override blacklight */
-}
-
 
 #submitForRelease {
 	background: #DFEFFC;
@@ -389,10 +351,6 @@ tr.document {
 #showUtils #previousNextDocument {
 	float: right;
 	margin: 0;
-}
-
-#results {
-	border: 1px solid #C8C8C8;
 }
 
 .document_show #cover_container h1 {
