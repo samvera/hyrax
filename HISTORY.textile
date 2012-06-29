@@ -1,8 +1,23 @@
 h3. 4.1.0
-* Upgrade to active fedora 4.1.0
+* Add AccessControlsEnforcement to AssetsController
+* Upgrade to active fedora ~>4.1
 * Upgrade to solrizer-fedora 2.1.0
-* Upgrade to blacklight 3.4.1 
+* Upgrade to blacklight ~> 3.4 
 * Improved access controls api
+* HYDRA-817 allow overriding of where we redirect_to, so that nested routes will work
+* Extracted hydra-mods and hydra-access-controls
+* Deprecation fest in preparation for 5.0
+* HYDRA-822 Move GlobalConfig into Hydra. It was removed from Blacklight.
+* HYDRA-831 apply_depositor_metadata should not overwrite existing user permissions
+* HYDRA-832 depositor should apply depositor metadata if the properties datastream exists
+* Fix up layout to better match blacklight.
+
+Note about deprecations:  We encourage the implementer to create their own controllers
+for CRUD operations and use standard Rails forms rather than using the AssetsController 
+and the AssetsControllerHelpers. In the 5.0 series these capabilites will be removed from
+HydraHead.  If you want to continue using these modules, you should copy the appropriate 
+files from this release into your local Hydra application. Further simplified examples 
+of this approach will be forthcoming. Until then, scholarsphere is a great exemplar.
 
 h3. 4.0.0
 * Upgrade to active fedora 4.0.0
