@@ -12,6 +12,15 @@ describe HydraHelper do
   end
   
   describe "get_html_data_with_label" do
+    before :all do
+      @behavior = Hydra::HydraHelperBehavior.deprecation_behavior
+      Hydra::HydraHelperBehavior.deprecation_behavior = :silence
+    end
+
+    after :all do
+      Hydra::HydraHelperBehavior.deprecation_behavior = @behavior
+    end
+
     before(:all) do
       @default_html = " &lt;p&gt;Default Hello&lt;/p&gt;&lt;ol&gt;
            &lt;li&gt;1&lt;/li&gt;
@@ -56,6 +65,15 @@ describe HydraHelper do
   end
   
   describe "get_textile_data_with_label" do
+    before :all do
+      @behavior = Hydra::HydraHelperBehavior.deprecation_behavior
+      Hydra::HydraHelperBehavior.deprecation_behavior = :silence
+    end
+
+    after :all do
+      Hydra::HydraHelperBehavior.deprecation_behavior = @behavior
+    end
+
     before(:all) do
       @sample_document = {'relation_t'=>['http://example.com','"Salt Dev":https://salt-dev.stanford.edu/catalog']}
     end

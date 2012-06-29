@@ -1,16 +1,20 @@
 require "hydra/submission_workflow"
+require 'deprecation'
+
 module Hydra::HydraHelperBehavior
+  extend Deprecation
+  self.deprecation_horizon = 'hydra-head 5.x'
   include Hydra::SubmissionWorkflow
   
+  ## Deprecation functionality provided by Blacklight
   # collection of stylesheet links to be rendered in the <head>
-  def stylesheet_links
-    @stylesheet_links ||= []
-  end
-  
+  # def stylesheet_links
+  #   @stylesheet_links ||= []
+  # end
   # collection of javascript includes to be rendered in the <head>
-  def javascript_includes
-    @javascript_includes ||= []
-  end
+  # def javascript_includes
+  #  @javascript_includes ||= []
+  # end
   
   def async_load_tag( url, tag )
     # Commenting out becasue async_load is provieded by a JS file that we're not currently loading.
@@ -19,6 +23,8 @@ module Hydra::HydraHelperBehavior
     #   "async_load('#{url}', '\##{tag}');"
     # end
   end
+  deprecation_deprecate :async_load_tag
+
   
   def link_to_multifacet( name, args={} )
     facet_params = {}
@@ -36,6 +42,7 @@ module Hydra::HydraHelperBehavior
 
     link_to(name, catalog_index_path(facet_params), options).html_safe
   end
+  deprecation_deprecate :link_to_multifacet
   
   def edit_and_browse_links
     result = ""
@@ -57,6 +64,7 @@ module Hydra::HydraHelperBehavior
     end
     pluralize(count, 'document')
   end
+  deprecation_deprecate :grouped_result_count
   
   def grouping_facet
     fields = Hash[sort_fields]
@@ -87,6 +95,7 @@ module Hydra::HydraHelperBehavior
       return default_response
     end
   end
+  deprecation_deprecate :facet_value_hits
   
   def get_html_data_with_label(doc, label, field_string, opts={})
      if opts[:default] && !doc[field_string]
@@ -125,6 +134,7 @@ module Hydra::HydraHelperBehavior
        text
       end
    end
+  deprecation_deprecate :get_html_data_with_label
    
    def get_textile_data_with_label(doc, label, field_string, opts={})
       if opts[:default] && !doc[field_string]
@@ -148,6 +158,7 @@ module Hydra::HydraHelperBehavior
         text
        end
     end
+   deprecation_deprecate :get_textile_data_with_label
   
   def render_previous_workflow_steps
     previous_show_partials(params[:wf_step]).map{|partial| render partial}.join
