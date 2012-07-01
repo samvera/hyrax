@@ -9,10 +9,6 @@ describe Hydra::Controller::ControllerBehavior do
     @catalog = CatalogTest.new
   end
 
-  after(:all) do
-    Hydra::Controller::ControllerBehavior.deprecation_behavior = @behavior
-  end
-  
   it "should extend classes with the necessary Hydra modules" do
     CatalogTest.included_modules.should include(Hydra::AccessControlsEnforcement)
   end
