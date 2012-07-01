@@ -8,14 +8,6 @@ require 'spec_helper'
 # rake cucumber
 
 describe CatalogController do
-  before :all do
-    @behavior = Hydra::Controller::CatalogControllerBehavior.deprecation_behavior
-    Hydra::Controller::CatalogControllerBehavior.deprecation_behavior = :silence
-  end
-
-  after :all do
-    Hydra::Controller::CatalogControllerBehavior.deprecation_behavior = @behavior
-  end
   
   before do
     session[:user]='bob'

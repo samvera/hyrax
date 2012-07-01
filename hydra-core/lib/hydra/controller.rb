@@ -11,7 +11,6 @@
 # will move to lib/hydra/controller/controller_behavior in release 5.x
 module Hydra::Controller
   autoload :AssetsControllerBehavior, 'hydra/controller/assets_controller_behavior'
-  autoload :CatalogControllerBehavior, 'hydra/controller/catalog_controller_behavior'
   autoload :ControllerBehavior, 'hydra/controller/controller_behavior'
   autoload :RepositoryControllerBehavior, 'hydra/controller/repository_controller_behavior'
   autoload :UploadBehavior, 'hydra/controller/upload_behavior'
