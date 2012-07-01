@@ -1,3 +1,0 @@
-h1. Hydra Installation Prerequisites
-
-Please see "https://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites":https://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites
