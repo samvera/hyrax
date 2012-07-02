@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
   rescue_from Net::LDAP::LdapError, :with => :render_500
   rescue_from RSolr::Error::Http, :with => :render_500
   rescue_from Rubydora::FedoraInvalidRequest, :with => :render_500
+  rescue_from ActionDispatch::Cookies::CookieOverflow, :with => :render_500
   rescue_from AbstractController::ActionNotFound, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
   rescue_from ActionController::RoutingError, :with => :render_404
