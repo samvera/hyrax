@@ -5,6 +5,12 @@
 HHOME=/opt/heracles
 WORKSPACE=${HHOME}/scholarsphere/scholarsphere-test
 
+echo "=-=-=-=-= $0 checking username"
+[[ $(id -nu) == "tomcat" ]] || {
+    echo "*** ERROR: $0 must be run as tomcat user"
+    exit 1
+}
+
 echo "=-=-=-=-= $0 source ${HHOME}/.bashrc"
 source ${HHOME}/.bashrc
 
