@@ -48,4 +48,4 @@ Feature: Sending an email via the contact form
     And I fill in "contact_form_email" with "archivist1@example.com"
     And I fill in "contact_form_message" with "I am contacting you regarding ScholarSphere."
     And I press "Send"
-    Then I should see "Sorry, this message was not sent successfully" 
+    Then I should see "Sorry, " 
