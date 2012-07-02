@@ -69,7 +69,7 @@ describe CatalogController do
         assigns(:document_list).count.should == @public_only_results.docs.count
       end
       it "should return all documents if role does have permissions" do
-        mock_user =  FactoryGirl.create(:user, :email=>"BigWig@example.com")
+        mock_user =  FactoryGirl.build(:user, :email=>"BigWig@example.com")
         mock_user.stub(:is_being_superuser?).and_return(true)
         controller.stub(:current_user).and_return(mock_user)
         get :index
@@ -77,22 +77,6 @@ describe CatalogController do
         ### TODO: instead, expect a certain query(especially the :fq component) to solr
         assigns(:document_list).count.should > @public_only_results.docs.count
       end
-    end
-  end
-  
-  describe "edit" do
-
-    it "should trigger show action" do
-      controller.should_receive(:show)
-      controller.stub(:enforce_access_controls)
-      controller.stub(:load_fedora_document)
-      get :edit, :id=>'hydrangea:fixture_mods_article1'
-    end
-    it "should render show template (which then delegates to edit partials)" do
-      controller.stub(:enforce_access_controls)
-      controller.stub(:load_fedora_document)
-      get :edit, :id=>'hydrangea:fixture_mods_article1'
-      response.should render_template("show")
     end
   end
   
@@ -110,14 +94,6 @@ describe CatalogController do
         controller.should_receive(:load_fedora_document)
         controller.should_receive(:enforce_show_permissions)
         get :show, :id=>'test:3'
-      end
-    end
-    describe "edit" do
-      it "should trigger enforce_edit_permissions and load_fedora_document" do
-        controller.stub(:current_user).and_return(nil)
-        controller.should_receive(:load_fedora_document)
-        controller.should_receive(:enforce_edit_permissions)
-        get :edit, :id=>'test:3'
       end
     end
   end

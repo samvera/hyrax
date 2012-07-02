@@ -36,7 +36,7 @@ describe Hydra::SubmissionWorkflow do
   describe "previous show partials" do
     it "should return all of the previous show partials for display in the HTML-only workflow" do
       prev_partials = previous_show_partials(:permissions)
-      prev_partials.is_a?(Array).should be_true
+      prev_partials.should be_kind_of(Array)
       prev_partials.length.should == 4
       prev_partials.first.should match(/mods.*contributors/)
       prev_partials.last.should match(/mods.*file_assets/)
@@ -50,7 +50,7 @@ describe Hydra::SubmissionWorkflow do
   describe "model specific configurations" do
     it "should return the appropriate configuration when an @document object is available" do
       config = model_config
-      config.is_a?(Array).should be_true
+      config.should be_kind_of(Array)
       config.length.should == 5
       partial_is_mods = []
       config.each do |c|
@@ -66,7 +66,7 @@ describe Hydra::SubmissionWorkflow do
       to = SubmissionWorkflowObject.new
       to.stub(:params).and_return({:content_type => "generic_content"})
       config = to.model_config
-      config.is_a?(Array).should be_true
+      config.should be_kind_of(Array)
       config.length.should == 4
       partial_is_generic = []
       config.each do |c|
@@ -82,7 +82,7 @@ describe Hydra::SubmissionWorkflow do
       to = SubmissionWorkflowObject.new
       to.stub(:params).and_return({:id=>"hydrangea:fixture_mods_article1"})
       config = to.model_config
-      config.is_a?(Array).should be_true
+      config.should be_kind_of(Array)
       config.length.should == 5
       config.each do |c|
         c.is_a?(Hash).should be_true
@@ -95,7 +95,7 @@ describe Hydra::SubmissionWorkflow do
       to = SubmissionWorkflowObject.new
       to.stub(:params).and_return(:id=>"hydra:test_generic_content")
       config = to.model_config
-      config.is_a?(Array).should be_true
+      config.should be_kind_of(Array)
       config.length.should == 4
       partial_is_generic = []
       config.each do |c|
