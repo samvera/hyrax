@@ -13,7 +13,7 @@ class TestAppGenerator < Rails::Generators::Base
 
   def copy_test_models
     copy_file "app/models/sample.rb"
-    #copy_file "app/models/solr_document.rb" # remove this, bl generates it.
+    copy_file "spec/fixtures/hydrangea_fixture_mods_article1.foxml.xml" 
     copy_file "db/migrate/20111101221803_create_searches.rb"
   end
 
