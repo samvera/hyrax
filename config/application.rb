@@ -30,6 +30,10 @@ module ScholarSphere
     config.assets.paths << '#{Rails.root}/vendor/assets/javascripts'
     config.assets.paths << '#{Rails.root}/vendor/assets/images'
 
+    # email to send on contact form - probably need one for the production 
+    # environment 
+    config.contact_email = "dmc186@psu.edu"
+
     config.fits_to_desc_mapping = {
       :format_label => :format,
       :last_modified => :date_modified,
