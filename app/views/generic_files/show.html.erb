@@ -1,11 +1,14 @@
 <% javascript 'video.js' %>
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
+<% javascript 'http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
 
 <% content_for :local_js do %>
-    audiojs.events.ready(function() {
+audiojs.events.ready(function() {
       var as = audiojs.createAll();
-    });
+});
+
+var addthis_config = {"data_track_addressbar":true};<
 <% end %>
 
 <% content_for :local_css do %>
@@ -40,8 +43,6 @@
       <a class="addthis_button_compact"></a>
       <a class="addthis_counter addthis_bubble_style"></a>
     </div>
-    <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24"></script>
     <!-- AddThis Button END -->
     </p>
     <!--
