@@ -4,7 +4,7 @@
       <li><a <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %> href="/">Home</a></li>
       <li><a <%= 'class=active' if action_name == "about" %> href="/about/">About</a></li>
       <li><a <%= 'class=active' if action_name == "help" %> href="/help/">Help</a></li>
-      <li><a <%= 'class=active' if params[:controller] == "contact_form" %> href="/contact_form/new">Contact</a></li>
+      <li><a <%= 'class=active' if params[:controller] == "contact_form" %> href="<%= contact_form_index_path %>">Contact</a></li>
 <% if current_user %>
       <li class="signin">
         <a href="#" class="loggedin"><%= current_user.to_s %><img style="vertical-align:middle;" src="/site_images/icon_arrow_down.png" alt="more" /></a>

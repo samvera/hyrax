@@ -5,7 +5,9 @@ ScholarSphere::Application.routes.draw do
 
   devise_for :users
 
-  resources :contact_form
+  #resources :contact_form, :path => :contact, :only => [:new, :create] do
+  match '/contact' => 'contact_form#create', :via => :post, :as => :contact_form_index
+  match '/contact' => 'contact_form#new', :via => :get, :as => :contact_form_index
 
   resources :generic_files, :path => :files, :except => :index do
     member do
