@@ -1,7 +1,7 @@
 class GenericFilesController < ApplicationController
-  include Hydra::Controller
+  include Hydra::Controller::ControllerBehavior
   include Hydra::AssetsControllerHelper  # for apply_depositor_metadata method
-  include Hydra::FileAssetsHelper # for add_posted_blob_to_asset method
+  include Hydra::Controller::UploadBehavior # for add_posted_blob_to_asset method
   include ScholarSphere::Noid # for normalize_identifier method
 
   # actions: audit, index, create, new, edit, show, update, destroy

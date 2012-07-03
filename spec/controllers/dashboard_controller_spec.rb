@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe DashboardController do
-
   describe "logged in user" do
     before (:each) do
       @user = FactoryGirl.find_or_create(:archivist)
@@ -15,7 +14,7 @@ describe DashboardController do
       end
       it "should be a success" do
         response.should be_success
-        response.should render_template('dashboard/index')        
+        response.should render_template('dashboard/index')
       end
       it "should return an array of documents I can edit" do
         @user_results = Blacklight.solr.find Hash[:fq=>["edit_access_group_t:public OR edit_access_person_t:#{@user.login}"]]

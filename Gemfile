@@ -1,33 +1,34 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.3'
+gem 'rails', '~> 3.2'
 
-gem 'sqlite3', '1.3.6'
-gem 'mysql2', '0.3.11'
-gem 'blacklight', '3.4.2'
-gem 'hydra-head', '4.0.3'
-gem 'active-fedora', '4.3.0'
-gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'verify-users-exist' 
+gem 'sqlite3', '~> 1.3'
+gem 'mysql2', '~> 0.3'
+gem 'blacklight', '~> 3.4'
+gem 'hydra-head', '~> 4.0'
+gem 'active-fedora', '~> 4.3'
+gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'verify-users-exist'
+gem 'hydra-access-controls', :git => 'git://github.com/projecthydra/hydra-access-controls', :ref => 'd6fb94d3d'
 
 # the :require arg is necessary on Linux-based hosts
-gem 'rmagick', '2.13.1', :require => 'RMagick'
-gem 'devise', '2.0.4'
-gem 'delayed_job_active_record', '0.3.2'
-gem 'noid', '0.5.5'
-gem 'daemons', '1.1.8'
-gem 'execjs', '1.4.0'
-gem 'therubyracer', '0.10.1'
-gem 'zipruby', '0.3.6'
+gem 'rmagick', '~> 2.13', :require => 'RMagick'
+gem 'devise', '~> 2.0'
+gem 'delayed_job_active_record', '~> 0.3'
+gem 'noid', '~> 0.5'
+gem 'daemons', '~> 1.1'
+gem 'execjs', '~> 1.4'
+gem 'therubyracer', '~> 0.10'
+gem 'zipruby', '~> 0.3'
 gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git'
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git'
-gem 'mail_form', ">= 1.3.0"
+gem 'mail_form', "~> 1.3"
 
 group :assets do
-  gem 'sass-rails', "3.2.5"
-  gem 'coffee-rails', "3.2.2"
-  gem 'uglifier', "1.2.4"
-  gem "compass-rails", "1.0.1"
-  gem "compass-susy-plugin", "0.9.0"
+  gem 'sass-rails', "~> 3.2"
+  gem 'coffee-rails', "~> 3.2"
+  gem 'uglifier', "~> 1.2"
+  gem "compass-rails", "~> 1.0"
+  gem "compass-susy-plugin", "~> 0.9"
 end
 
 group :production, :integration do

@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   # Adds Hydra behaviors into the application controller
-  include Hydra::Controller
+  include Hydra::Controller::ControllerBehavior
 
   before_filter do |controller|
     # TODO: move this to app/assets/stylesheets and turn on the asset pipeline
@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
   before_filter :set_current_user
 
   # Intercept errors and render user-friendly pages
-  rescue_from StandardError, :with => :render_500
+  rescue_from NameError, :with => :render_500
+  rescue_from RuntimeError, :with => :render_500
   rescue_from ActionView::Template::Error, :with => :render_500
   rescue_from ActiveRecord::StatementInvalid, :with => :render_500
   rescue_from Mysql2::Error, :with => :render_500
@@ -46,12 +47,12 @@ class ApplicationController < ActionController::Base
   end
 
   def render_404(exception)
-    logger.error("Rendering 404 page due to exception: #{exception}")
+    logger.error("Rendering 404 page due to exception: #{exception.inspect}")
     render :template => '/error/404', :layout => "error", :formats => [:html], :status => 404
   end
 
   def render_500(exception)
-    logger.error("Rendering 500 page due to exception: #{exception}")
+    logger.error("Rendering 500 page due to exception: #{exception.inspect}")
     render :template => '/error/500', :layout => "error", :formats => [:html], :status => 500
   end
 

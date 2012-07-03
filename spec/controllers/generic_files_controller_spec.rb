@@ -185,15 +185,17 @@ describe GenericFilesController do
     describe "edit" do
       it "should give me a flash error" do
         get :edit, id:"test5"
-        flash[:notice].should_not be_nil
-        flash[:notice].should_not be_empty
-        flash[:notice].should include("You do not have sufficient privileges to edit this document")
+        response.should redirect_to(:action => 'show')
+        flash[:alert].should_not be_nil
+        flash[:alert].should_not be_empty
+        flash[:alert].should include("You do not have sufficient privileges to edit this document")
       end
     end
     describe "view" do
       it "should show me the file" do
         get :show, id:"test5"
-        flash[:notice].should be_nil
+        response.should_not redirect_to(:action => 'show')
+        flash[:alert].should be_nil
       end
     end
   end
