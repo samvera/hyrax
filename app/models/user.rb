@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
 
   # Groups that user is a member of
   def groups 
-    Hydra::LDAP.groups_for_user(login) rescue []
+    ScholarSphere::LDAP.groups_for_user(login) rescue []
   end
 
   def self.current    

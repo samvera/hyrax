@@ -6,10 +6,10 @@ GIT
 
 GIT
   remote: git://github.com/psu-stewardship/hydra-ldap
-  revision: ed2d2f1eeaaf58b61f0bea923d4e0b508a0c9117
+  revision: e45b96635ce31f9d6e4c8a83197995ea6b116466
   branch: verify-users-exist
   specs:
-    hydra-ldap (0.0.2)
+    hydra-ldap (1.0.0)
       net-ldap
       rails
 
