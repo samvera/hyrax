@@ -6,4 +6,3 @@
 //= require fileupload/jquery.fileupload-ui.js
 //= require fileupload/application.js
 //= require fileupload/locale.js
-//= require fileupload/main.js
