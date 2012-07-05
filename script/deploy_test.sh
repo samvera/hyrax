@@ -11,6 +11,10 @@ echo "=-=-=-=-= $0 checking username"
     exit 1
 }
 
+# stop DJ workers first since they tend to be resource hogs
+echo "=-=-=-=-= $0 script/delayed_job stop"
+RAILS_ENV=production script/delayed_job stop
+
 echo "=-=-=-=-= $0 source ${HHOME}/.bashrc"
 source ${HHOME}/.bashrc
 
@@ -35,8 +39,7 @@ RAILS_ENV=production rake db:migrate
 echo "=-=-=-=-= $0 rake assets:precompile"
 RAILS_ENV=production rake assets:precompile
 
-echo "=-=-=-=-= $0 script/delayed_job stop/start"
-RAILS_ENV=production script/delayed_job stop
+echo "=-=-=-=-= $0 script/delayed_job start"
 RAILS_ENV=production script/delayed_job -n 2 start
 
 echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
