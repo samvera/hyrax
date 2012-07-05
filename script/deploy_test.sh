@@ -37,7 +37,7 @@ RAILS_ENV=production rake assets:precompile
 
 echo "=-=-=-=-= $0 script/delayed_job stop/start"
 RAILS_ENV=production script/delayed_job stop
-RAILS_ENV=production script/delayed_job -n 10 start
+RAILS_ENV=production script/delayed_job -n 5 start
 
 echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret

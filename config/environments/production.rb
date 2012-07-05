@@ -64,8 +64,11 @@ ScholarSphere::Application.configure do
   # config.assets.manifest = YOUR_PATH
   
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( generic_files.js dashboard.js video.js audio.min.js jquery.zclip.min.js video-js.css generic_files.css jquery-ui-1.8.1.custom.css )
+  config.assets.precompile += %w( generic_files.js dashboard.js video.js audio.min.js jquery.zclip.min.js video-js.css generic_files.css jquery-ui-1.8.1.custom.css bootstrap.min.css )
 
   config.logout_url = 'https://webaccess.psu.edu/cgi-bin/logout?https://scholarsphere-test.dlt.psu.edu/'
   config.login_url = 'https://webaccess.psu.edu?cosign-scholarsphere-test.dlt.psu.edu&https://scholarsphere-test.dlt.psu.edu/'
+
+  # uncomment this when ready to put contact form into production
+  # config.contact_email = 'L-SCHOLARSPHERE@lists.psu.edu'
 end
