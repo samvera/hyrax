@@ -1,5 +1,6 @@
 The file(s) <u>
-<% generic_files.each  do |gf|%>
+<% generic_files.first(20).each  do |gf|%>
 <%=link_to(gf.label,generic_file_url(gf.noid))%><%=',' unless gf == generic_files.last %> 
 <% end %>
+<%= '...' if generic_files.length > 20 %>
 have been saved.
