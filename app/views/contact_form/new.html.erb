@@ -55,25 +55,25 @@ to request assistance using ScholarSphere.
   <%= f.text_field :contact_method, :class => 'hide' %>
 
   <div class="control-group">
-    <%= f.label :name, 'Name', :class=>"control-label" %>  
+    <%= f.label :name, 'Your Name', :class=>"control-label" %>
     <div class="controls"><%= f.text_field :name, :class=>"input-xlarge", :value=>"", :required => true %>  </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :email, 'Email', :class=>"control-label" %>  
-    <div class="controls"> 
-    <%= f.text_field :email, :class=>"input-xlarge", :value=>"", :required => true %>  
+    <%= f.label :email, 'Your Email', :class=>"control-label" %>
+    <div class="controls">
+    <%= f.text_field :email, :class=>"input-xlarge", :value=>"", :required => true %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :message, 'Message', :class=>"control-label" %>  
-    <div class="controls"> 
-    <%= f.text_area :message, :class=>"input-xlarge", :value=>"", :required => true %>  
+    <%= f.label :message, 'Message', :class=>"control-label" %>
+    <div class="controls">
+    <%= f.text_area :message, :class=>"input-xlarge", :value=>"", :required => true %>
     </div>
   </div>
 
   <div class="form-actions">
-    <%= f.submit :value => "Send", :class => "btn-primary btn-large"  %>  
+    <%= f.submit :value => "Send", :class => "btn-primary btn-large"  %>
   </div>
 <% end %>
