@@ -1,1 +1,5 @@
-The file <%= link_to(generic_file.label, generic_file_url(generic_file.noid)) %> could not be updated.  You do not have sufficient privileges to edit it.
+The file(s) <u>
+<% generic_files.each  do |gf|%>
+<%=link_to(gf.label,generic_file_url(gf.noid))%><%=',' unless gf == generic_files.last %> 
+<% end %>
+ could not be updated.  You do not have sufficient privileges to edit it.

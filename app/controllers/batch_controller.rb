@@ -16,9 +16,11 @@ class BatchController < ApplicationController
     notice = []
     ScholarSphere::GenericFile::Permissions.parse_permissions(params)
     authenticate_user!
+    fSaved = []
+    fDenied = []      
     batch.generic_files.each do |gf|
       #todo check metadata not push...
-      #if (can read)      
+      #if (can read)
       if can? :read, permissions_solr_doc_for_id(gf.pid)
         if params.has_key?(:permission)
           gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
@@ -27,12 +29,15 @@ class BatchController < ApplicationController
         end
         gf.update_attributes(params[:generic_file])
         gf.save
-        notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_file => gf })
+        fSaved << gf
       else
-        notice << render_to_string(:partial=>'generic_files/asset_permissions_denial_flash', :locals => { :generic_file => gf })
+        fDenied << gf
       end
-      flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
     end
+    logger.info ("********  save files = #{fSaved.inspect}")
+    notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_files => fSaved }) if (fSaved.length > 0)
+    notice << render_to_string(:partial=>'generic_files/asset_permissions_denial_flash', :locals => { :generic_files => fDenied }) if (fDenied.length > 0)
+    flash[:notice] = notice.join("<br/>".html_safe) unless notice.blank?
     redirect_to dashboard_path
   end
  
