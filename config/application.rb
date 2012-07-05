@@ -32,7 +32,7 @@ module ScholarSphere
 
     # email to send on contact form - probably need one for the production 
     # environment 
-    config.contact_email = "dmc186@psu.edu"
+    config.contact_email = 'DLT-GAMMA-PROJECT@lists.psu.edu'
 
     config.fits_to_desc_mapping = {
       :format_label => :format,
