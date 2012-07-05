@@ -2,7 +2,7 @@
 
 <% content_for :local_js do %>
 $( "#new_group_name_skel" ).autocomplete({
-source: "/directory/user/<%= request.env['HTTP_REMOTE_USER'] %>/groups/"
+source: "/directory/user/<%= request.env['REMOTE_USER'] %>/groups/"
 });
 <% end %>
 
