@@ -2,55 +2,62 @@
 #
 # deploy script for scholarsphere-test
 
-HHOME=/opt/heracles
-WORKSPACE=${HHOME}/scholarsphere/scholarsphere-test
+HHOME="/opt/heracles"
+WORKSPACE="${HHOME}/scholarsphere/scholarsphere-test"
+DEFAULT_TERMCOLORS="\e[0m"
+HIGHLIGHT_TERMCOLORS="\e[33m\e[44m\e[1m"
+ERROR_TERMCOLORS="\e[1m\e[31m"
 
-echo "=-=-=-=-= $0 checking username"
+function banner {
+    echo -e "${HIGHLIGHT_TERMCOLORS}=-=-=-=-= $0 ↠ $1 ${DEFAULT_TERMCOLORS}"
+}
+
+banner "checking username"
 [[ $(id -nu) == "tomcat" ]] || {
-    echo "*** ERROR: $0 must be run as tomcat user"
+    echo -e "${ERROR_TERMCOLORS}*** ERROR: $0 must be run as tomcat user ${DEFAULT_TERMCOLORS}"
     exit 1
 }
 
 # stop DJ workers first since they tend to be resource hogs
-echo "=-=-=-=-= $0 script/delayed_job stop"
+banner "script/delayed_job stop"
 RAILS_ENV=production script/delayed_job stop
 
-echo "=-=-=-=-= $0 source ${HHOME}/.bashrc"
+banner "source ${HHOME}/.bashrc"
 source ${HHOME}/.bashrc
 
-echo "=-=-=-=-= $0 source /etc/profile.d/rvm.sh"
+banner "source /etc/profile.d/rvm.sh"
 source /etc/profile.d/rvm.sh
 
-echo "=-=-=-=-= $0 cd ${WORKSPACE}"
+banner "cd ${WORKSPACE}"
 cd ${WORKSPACE}
 
-echo "=-=-=-=-= $0 source ${WORKSPACE}/.rvmrc"
+banner "source ${WORKSPACE}/.rvmrc"
 source ${WORKSPACE}/.rvmrc
 
-echo "=-=-=-=-= $0 bundle install"
+banner "bundle install"
 bundle install
 
-echo "=-=-=-=-= $0 passenger-install-apache2-module -a"
+banner "passenger-install-apache2-module -a"
 passenger-install-apache2-module -a
 
-echo "=-=-=-=-= $0 rake db:migrate"
+banner "rake db:migrate"
 RAILS_ENV=production rake db:migrate
 
-echo "=-=-=-=-= $0 rake assets:precompile"
+banner "rake assets:precompile"
 RAILS_ENV=production rake assets:precompile
 
-echo "=-=-=-=-= $0 script/delayed_job start"
+banner "script/delayed_job start"
 RAILS_ENV=production script/delayed_job -n 2 start
 
-echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
+banner "rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret
 
-echo "=-=-=-=-= $0 touch ${WORKSPACE}/tmp/restart.txt"
+banner "touch ${WORKSPACE}/tmp/restart.txt"
 touch ${WORKSPACE}/tmp/restart.txt
 
 retval=$?
 
-echo "=-=-=-=-= $0 finished $retval"
+banner "finished $retval"
 exit $retval
 
 #
