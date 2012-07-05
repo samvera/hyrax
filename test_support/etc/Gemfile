@@ -27,7 +27,7 @@ gem 'jettywrapper'
 # For testing
 group :development, :test do 
        gem 'rspec-rails'
-       gem 'mocha'
+       gem 'mocha', "~> 0.11.4"
        gem 'cucumber-rails', :require => false
        gem 'capybara'
        gem 'factory_girl', '~> 2.6.0'
