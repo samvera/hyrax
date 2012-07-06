@@ -1,14 +1,17 @@
 ScholarSphere::Application.routes.draw do
+  # Routes for Blacklight-specific functionality such as the catalog
   Blacklight.add_routes(self)
 
+  # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
 
+  # "Recently added files" route for catalog index view
+  match "catalog/recent" => "catalog#recent", :as => :catalog_recent_path
+
+  # Set up user routes
   devise_for :users
 
-  #resources :contact_form, :path => :contact, :only => [:new, :create] do
-  match '/contact' => 'contact_form#create', :via => :post, :as => :contact_form_index
-  match '/contact' => 'contact_form#new', :via => :get, :as => :contact_form_index
-
+  # Generic file routes
   resources :generic_files, :path => :files, :except => :index do
     member do
       post 'audit'
@@ -18,23 +21,36 @@ ScholarSphere::Application.routes.draw do
     end
   end
 
+  # Downloads controller route
   resources :downloads, :only => "show"
 
-  match '/logout' => 'sessions#destroy'
+  # Logout route to destroy session
+  match 'logout' => 'sessions#destroy'
+
+  # Dashboard routes (based on catalog routes)
   match 'dashboard' => 'dashboard#index', :as => :dashboard
   match 'dashboard/facet/:id' => 'dashboard#facet', :as => :dashboard_facet
+
+  # Authority vocabulary queries route
   match 'authorities/:model/:term' => 'authorities#query'
+
+  # LDAP-related routes for group and user lookups
   match 'directory/user/:uid' => 'directory#user'
   match 'directory/user/:uid/groups' => 'directory#user_groups'
   match 'directory/group/:cn' => 'directory#group', :constraints => { :cn => /.*/ }
+
+  # Batch edit routes
   match 'batches/:id/edit' => 'batch#edit', :as => :batch_edit
   match 'batches/:id/' => 'batch#update', :as => :batch_generic_files
-  match "/catalog/recent" => "catalog#recent", :as => :catalog_recent_path
 
-  # catch static actions
+  # Contact form routes
+  match 'contact' => 'contact_form#create', :via => :post, :as => :contact_form_index
+  match 'contact' => 'contact_form#new', :via => :get, :as => :contact_form_index
+
+  # Static page routes (workaround)
   match ':action' => 'static#:action', :constraints => { :action => /about|contact|help|terms/ }
 
-  # catch-all (for routing errors)
+  # Catch-all (for routing errors)
   match '*error' => 'errors#routing'
 
   # The priority is based upon order of creation:
