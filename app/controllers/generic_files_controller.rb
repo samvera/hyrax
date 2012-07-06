@@ -35,41 +35,46 @@ class GenericFilesController < ApplicationController
 
   # routed to /files (POST)
   def create
-    retval = " "
-    # check error condition No files
-    if !params.has_key?(:files)
-       retval = render :json => [{:error => "Error! No file to save"}].to_json
-
-    # check error condition empty file
-    elsif ((params[:files][0].respond_to?(:tempfile)) && (params[:files][0].tempfile.size == 0))
-       retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-
-    elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
-       retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-
-    elsif (params[:terms_of_service] != '1')
-       retval = render :json => [{ :name => params[:files][0].original_filename, :error => "You must accept the terms of service!"}].to_json
-
-    # process file
-    else
-      create_and_save_generic_file
-      if @generic_file
-        respond_to do |format|
-          format.html {
-            retval = render :json => [@generic_file.to_jq_upload].to_json,
-              :content_type => 'text/html',
-              :layout => false
-          }
-          format.json {
-            retval = render :json => [@generic_file.to_jq_upload].to_json
-          }
-        end
+    begin
+      retval = " "
+      # check error condition No files
+      if !params.has_key?(:files)
+         retval = render :json => [{:error => "Error! No file to save"}].to_json
+  
+      # check error condition empty file
+      elsif ((params[:files][0].respond_to?(:tempfile)) && (params[:files][0].tempfile.size == 0))
+         retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
+  
+      elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
+         retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
+  
+      elsif (params[:terms_of_service] != '1')
+         retval = render :json => [{ :name => params[:files][0].original_filename, :error => "You must accept the terms of service!"}].to_json
+  
+      # process file
       else
-        puts "respond bad"
-        retval = render :json => [{:error => "Error creating generic file."}].to_json
+        create_and_save_generic_file
+        if @generic_file
+          respond_to do |format|
+            format.html {
+              retval = render :json => [@generic_file.to_jq_upload].to_json,
+                :content_type => 'text/html',
+                :layout => false
+            }
+            format.json {
+              retval = render :json => [@generic_file.to_jq_upload].to_json
+            }
+          end
+        else
+          puts "respond bad"
+          retval = render :json => [{:error => "Error creating generic file."}].to_json
+        end
       end
+    rescue => error
+      logger.warn "GenericFilesController::create rescued error #{error.inspect}"
+      retval = render :json => [{:error => "Error occured while creating generic file."}].to_json
     end
-
+  
     return retval
   end
 
@@ -150,7 +155,18 @@ class GenericFilesController < ApplicationController
     else
       logger.warn "unable to find batch to attach to"
     end
-    @generic_file.save
+    
+    save_tries = 0
+    begin
+      @generic_file.save
+    rescue RSolr::Error::Http => error
+      logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
+      save_tries++
+      # fail for goo if the tries is greater than 3
+      rescue_action_without_handler(error) if save_tries >=3
+      sleep 0.01       
+      retry
+    end
     record_version_committer(@generic_file, current_user)
     Delayed::Job.enqueue(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
     return @generic_file
