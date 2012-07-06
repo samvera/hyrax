@@ -4,11 +4,13 @@ class GenericFilesController < ApplicationController
   include Hydra::Controller::UploadBehavior # for add_posted_blob_to_asset method
   include ScholarSphere::Noid # for normalize_identifier method
 
-  # actions: audit, index, create, new, edit, show, update, destroy
-  before_filter :authenticate_user!, :only=>[:create, :new]
-  before_filter :enforce_access_controls, :only=>[:edit, :update, :show, :audit, :index, :destroy, :permissions]
-  before_filter :find_by_id, :only=>[:audit, :edit, :show, :update, :destroy, :permissions]
-  prepend_before_filter :normalize_identifier, :only=>[:audit, :edit, :show, :update, :destroy, :permissions]
+  rescue_from AbstractController::ActionNotFound, :with => :render_404
+
+  # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
+  before_filter :authenticate_user!, :except => :show
+  before_filter :enforce_access_controls
+  before_filter :find_by_id, :except => [:index, :create, :new]
+  prepend_before_filter :normalize_identifier, :except => [:index, :create, :new]
 
   # routed to /files/new
   def new
@@ -24,7 +26,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id
   def index
     @generic_files = GenericFile.find(:all, :rows => GenericFile.count)
-    render :json => @generic_files.collect { |p| p.to_jq_upload }.to_json
+    render :json => @generic_files.map(&:to_jq_upload).to_json
   end
 
   # routed to /files/:id (DELETE)
@@ -40,17 +42,17 @@ class GenericFilesController < ApplicationController
       # check error condition No files
       if !params.has_key?(:files)
          retval = render :json => [{:error => "Error! No file to save"}].to_json
-  
+
       # check error condition empty file
       elsif ((params[:files][0].respond_to?(:tempfile)) && (params[:files][0].tempfile.size == 0))
          retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-  
+
       elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
          retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-  
+
       elsif (params[:terms_of_service] != '1')
          retval = render :json => [{ :name => params[:files][0].original_filename, :error => "You must accept the terms of service!"}].to_json
-  
+
       # process file
       else
         create_and_save_generic_file
@@ -74,8 +76,12 @@ class GenericFilesController < ApplicationController
       logger.warn "GenericFilesController::create rescued error #{error.inspect}"
       retval = render :json => [{:error => "Error occured while creating generic file."}].to_json
     end
-  
+
     return retval
+  end
+
+  # routed to /files/:id/citation
+  def citation
   end
 
   # routed to /files/:id
@@ -119,8 +125,6 @@ class GenericFilesController < ApplicationController
                             :version_id => version.versionID,
                             :committer_login => user.login)
   end
-
-
 
   def find_by_id
     @generic_file = GenericFile.find(params[:id])
