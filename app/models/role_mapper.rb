@@ -4,7 +4,4 @@ class RoleMapper
     return [] unless u
     u.groups
   end
-
-
 end
-
