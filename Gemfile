@@ -10,7 +10,7 @@ gem 'hydra-access-controls', :git => 'git://github.com/projecthydra/hydra-access
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'
-gem 'devise', '2.1.2'
+gem 'devise', '2.0.4'
 gem 'delayed_job_active_record', '0.3.2'
 gem 'noid', '0.5.5'
 gem 'daemons', '1.1.8'
