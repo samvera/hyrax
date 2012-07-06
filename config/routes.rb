@@ -14,9 +14,8 @@ ScholarSphere::Application.routes.draw do
   # Generic file routes
   resources :generic_files, :path => :files, :except => :index do
     member do
+      get 'citation', :as => :citation
       post 'audit'
-      get :add_user_permission
-      get :add_group_permission
       post 'permissions'
     end
   end
@@ -48,7 +47,7 @@ ScholarSphere::Application.routes.draw do
   match 'contact' => 'contact_form#new', :via => :get, :as => :contact_form_index
 
   # Static page routes (workaround)
-  match ':action' => 'static#:action', :constraints => { :action => /about|contact|help|terms/ }
+  match ':action' => 'static#:action', :constraints => { :action => /about|contact|help|terms|zotero|mendeley/ }, :as => :static
 
   # Catch-all (for routing errors)
   match '*error' => 'errors#routing'

@@ -1,3 +1,7 @@
+.more_facets_link {
+text-align: right;
+}
+
 .ui-dialog {
 position:absolute;
 width:300px;

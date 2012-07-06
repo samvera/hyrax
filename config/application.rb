@@ -19,6 +19,7 @@ module ScholarSphere
     config.max_days_between_audits = 7
     config.id_namespace = "scholarsphere"
     config.application_name = "ScholarSphere"
+    config.persistent_hostpath = "http://scholarsphere.psu.edu/files/"
     # turning on the new asset pipeline for handling javascript, css, and image files
     config.assets.enabled = true
     config.assets.paths << '#{Rails.root}/app/assets/javascripts'
@@ -30,8 +31,8 @@ module ScholarSphere
     config.assets.paths << '#{Rails.root}/vendor/assets/javascripts'
     config.assets.paths << '#{Rails.root}/vendor/assets/images'
 
-    # email to send on contact form - probably need one for the production 
-    # environment 
+    # email to send on contact form - probably need one for the production
+    # environment
     config.contact_email = 'DLT-GAMMA-PROJECT@lists.psu.edu'
 
     config.fits_to_desc_mapping = {
