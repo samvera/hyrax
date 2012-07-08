@@ -325,7 +325,7 @@ class GenericFile < ActiveFedora::Base
     #setup formatted author list
     authors = get_author_list
     authors.each do |author|
-      next if author.empty?
+      next if author.nil? or author.empty?
       authors_list.push(abbreviate_name(author))
     end
     authors_list.each do |author|
@@ -392,7 +392,7 @@ class GenericFile < ActiveFedora::Base
     end
     # setup title
     title_info = setup_title_info
-    text << "<i>" + mla_citation_title(title_info) + "</i> " unless title.empty?
+    text << "<i>" + mla_citation_title(title_info) + "</i> " unless title.nil? or title.empty?
 
     # Publication
     text << setup_pub_info + ", " unless setup_pub_info.nil?
@@ -445,17 +445,17 @@ class GenericFile < ActiveFedora::Base
       end
     end
     title_info = ""
-    title_info << citation_title(clean_end_punctuation(CGI::escapeHTML(title.first)).strip) unless title.empty?
+    title_info << citation_title(clean_end_punctuation(CGI::escapeHTML(title.first)).strip) unless title.nil? or title.empty?
 
     pub_info = ""
     place = self.based_near.first
     publisher = self.publisher.first
-    unless place.empty?
+    unless place.nil? or place.empty?
       place = CGI::escapeHTML(place)
       pub_info << place
-      pub_info << ": " unless publisher.empty?
+      pub_info << ": " unless publisher.nil? or publisher.empty?
     end
-    unless publisher.empty?
+    unless publisher.nil? or publisher.empty?
       publisher = CGI::escapeHTML(publisher)
       pub_info << publisher
       pub_info << ", " unless setup_pub_date.nil?
@@ -609,12 +609,12 @@ class GenericFile < ActiveFedora::Base
     text = ''
     place = self.based_near.first
     publisher = self.publisher.first
-    unless place.empty?
+    unless place.nil? or place.empty?
       place = CGI::escapeHTML(place)
       text << place
-      text << ": " unless publisher.empty?
+      text << ": " unless publisher.nil? or publisher.empty?
     end
-    unless publisher.empty?
+    unless publisher.nil? or publisher.empty?
       publisher = CGI::escapeHTML(publisher)
       text << publisher
     end
