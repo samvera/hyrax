@@ -29,6 +29,9 @@ module Hydra
   # This usually happens within a call to AccessControlsEnforcement#enforce_access_controls but can be
   # raised manually.
   class Hydra::AccessDenied < CanCan::AccessDenied; end
+
+  User.send(:include, Hydra::SuperuserAttributes)  #Deprecated
+
 end
 
 
@@ -38,6 +41,7 @@ require 'hydra/mods'
 require 'hydra/model_methods'
 require 'hydra/models/file_asset'
 require 'mediashelf/active_fedora_helper' #deprecated
+
 
 SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
 
