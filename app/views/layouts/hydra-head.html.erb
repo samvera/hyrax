@@ -2,7 +2,7 @@
 <html>
   <head>
     <%= csrf_meta_tag %>
-  
+
     <meta charset="utf-8" />
 
     <title><%= h(@page_title || application_name) %></title>
@@ -26,11 +26,13 @@
       });
     </script>
 
+    <%= render :partial => '/ga', :formats => [:html] %>
+
     <style>
       <%= yield(:local_css) %>
     </style>
-	</head>
-  
+  </head>
+
   <body> 
 <%# need a better way to determine if we are on the home page and using three col layout %>
 <% if params[:controller].eql?("catalog") and !has_search_parameters? %> 

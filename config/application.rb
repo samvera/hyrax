@@ -47,15 +47,21 @@ module ScholarSphere
       :file_language => :language
     }
 
+    # Map hostnames onto Google Analytics tracking IDs
+    config.ga_host_map = {
+      'scholarsphere-test.dlt.psu.edu' => 'UA-33252017-1',
+      'scholarsphere.psu.edu' => 'UA-33252017-2',
+    }
+
     config.resource_types = {
-      "Article"=>"Article", 
-      "Multimedia"=>"Multimedia", 
+      "Article"=>"Article",
+      "Multimedia"=>"Multimedia",
       "Conference Proceeding"=> "Conference Proceeding",
-      "Data Set"=>"Data Set", 
-      "Image"=>"Image", 
-      "Thesis"=>"Thesis", 
+      "Data Set"=>"Data Set",
+      "Image"=>"Image",
+      "Thesis"=>"Thesis",
       "Other"=>"Other"
-    } 
+    }
 
     config.public_permission_levels = {
       "No Access"=>"none",
