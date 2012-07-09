@@ -28,6 +28,9 @@ class TestAppGenerator < Rails::Generators::Base
     copy_file "spec/factories/users.rb", :force=>true #overwrite the default factory set up by factory_girl_rails
     copy_file "spec/fixtures/hydrangea_fixture_mods_article1.foxml.xml" 
     copy_file "spec/fixtures/hydrangea_fixture_mods_article2.foxml.xml" 
+    copy_file "spec/fixtures/hydrangea_fixture_mods_article3.foxml.xml" 
+    copy_file "spec/fixtures/hydrangea_fixture_file_asset1.foxml.xml" 
+    copy_file "spec/fixtures/hydrangea_fixture_uploaded_svg1.foxml.xml" 
 
     # For testing Hydra::SubmissionWorkflow
     #copy_file "spec/fixtures/hydra_test_generic_content.foxml.xml"
