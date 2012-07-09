@@ -5,23 +5,17 @@
 #
 # @example 
 #  class CustomHydraController < ApplicationController  
-#    include Hydra::Controller
+#    include Hydra::Controller::ControllerBehavior
 #  end
 #
-# will move to lib/hydra/controller/controller_behavior in release 5.x
-require 'deprecation'
 module Hydra::Controller::ControllerBehavior
   extend ActiveSupport::Concern
-  extend Deprecation
-  self.deprecation_horizon = 'hydra-head 5.x'
 
   included do
     # Other modules to auto-include
     include Hydra::AccessControlsEnforcement
     include Hydra::Controller::RepositoryControllerBehavior
   
-    helper :hydra_assets
-
     # Catch permission errors
     rescue_from Hydra::AccessDenied do |exception|
       if (exception.action == :edit)

@@ -32,14 +32,6 @@ end
 
 
 describe CatalogController do
-  before :all do
-    @behavior = Hydra::Controller::ControllerBehavior.deprecation_behavior
-    Hydra::Controller::ControllerBehavior.deprecation_behavior = :silence
-  end
-
-  after :all do
-    Hydra::Controller::ControllerBehavior.deprecation_behavior = @behavior
-  end
   describe "Home Page" do
     
     it "Should have Valid HTML when not logged in" do

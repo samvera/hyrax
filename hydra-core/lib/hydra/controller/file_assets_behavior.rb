@@ -22,7 +22,7 @@ module Hydra::Controller::FileAssetsBehavior
     end
 
     if params[:asset_id].nil?
-      @solr_result = FileAsset.find_by_solr(:all)
+      @solr_result = FileAsset.find_with_conditions({})
     else
       container_uri = "info:fedora/#{params[:asset_id]}"
       escaped_uri = container_uri.gsub(/(:)/, '\\:')

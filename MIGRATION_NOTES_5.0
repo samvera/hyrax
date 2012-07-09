@@ -1,0 +1,2 @@
+* get_file_asset_count(solr_doc) has been replaced by 
+  fedora_doc.file_asset_count (or just fedora_doc.parts.length if you prefer)

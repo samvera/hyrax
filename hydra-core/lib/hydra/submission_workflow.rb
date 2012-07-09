@@ -116,7 +116,7 @@ module Hydra::SubmissionWorkflow
   def get_af_model_from_params
     if params.has_key?(:content_type)
       return params[:content_type].pluralize.to_sym
-    else
+    elsif params[:id]
       begin
         af = ActiveFedora::Base.load_instance_from_solr(params[:id])
         return "#{ActiveFedora::ContentModel.known_models_for( af ).first}".underscore.pluralize.to_sym

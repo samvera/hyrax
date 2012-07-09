@@ -20,7 +20,7 @@ describe Hydra::FileAssetsController do
   describe "index" do
     
     it "should find all file assets in the repo if no container_id is provided" do
-      ActiveFedora::SolrService.should_receive(:query).with('active_fedora_model_s:FileAsset', {}).and_return("solr result")
+      ActiveFedora::SolrService.should_receive(:query).with("has_model_s:info\\:fedora/afmodel\\:FileAsset", {:sort=>["system_create_dt asc"]}).and_return("solr result")
       controller.stub(:load_permissions_from_solr)
       ActiveFedora::Base.should_receive(:new).never
       xhr :get, :index
@@ -86,7 +86,7 @@ describe Hydra::FileAssetsController do
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File"
     end
     it "if container_id is provided, should associate the created file asset wtih the container" do
-      stub_fa = double("FileAsset", :save)
+      stub_fa = double("FileAsset")
       stub_fa.stub(:pid).and_return("foo:pid")
       stub_fa.stub(:label).and_return("Foo File")
       mock_file = double("File")
@@ -169,7 +169,7 @@ describe Hydra::FileAssetsController do
       end
 
       it "should set is_part_of relationship on the new File Asset pointing back at the container" do
-        test_file = fixture_file_upload('/small_file.txt', 'text/plain')
+        test_file = fixture_file_upload('spec/fixtures/small_file.txt', 'text/plain')
         filename = "My File Name"
         post :create, {:Filedata=>[test_file], :Filename=>filename, :container_id=>@test_container.pid}
         assigns(:file_asset).ids_for_outbound(:is_part_of).should == [@test_container.pid] 

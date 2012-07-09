@@ -54,18 +54,6 @@ describe GenericImage do
     subject.should respond_to(:thumbnail=)
   end
 
-  it "should create a max datastream when setting max value to image file" do
-    f = File.new(File.join( File.dirname(__FILE__), "../../fixtures/image.jp2" ))
-    subject.max = f
-  end
-  
-  describe '#content=' do
-    it "should create a content datastream when given an image file" 
-  end
-
-  describe '#derive_all' do
-    it "should create a max, screen and thumbnail file"
-  end
 
   its(:datastream_url) { should match /http:\/\/127.0.0.1:\d{2,5}\/fedora-test\/objects\/test:pid\/datastreams\/content\/content$/ }
   its(:admin_site) { match /http:\/\/127.0.0.1:\d{2,5}\// }

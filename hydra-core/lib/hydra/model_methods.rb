@@ -101,4 +101,9 @@ module Hydra::ModelMethods
       file_assets
     end
   end
+
+  def file_asset_count
+    ### TODO switch to AF::Base.count
+    parts.length
+  end
 end
