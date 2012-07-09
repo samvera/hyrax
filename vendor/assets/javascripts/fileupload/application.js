@@ -23,16 +23,19 @@ var max_total_file_size = 500000000;
 var max_total_file_size_str = "500 MB";
 
 $(function () {
+    $('#main_upload_start')[0].disabled = true
     'use strict';
     $("#upload_tooltip").hide();
     $("#main_upload_start_span").mousemove(function(e){
        if ( !$('#terms_of_service')[0].checked){
+        $('#main_upload_start')[0].disabled = true
         $("#upload_tooltip").show();
         $("#upload_tooltip").css({
             top: (e.clientY+5)+ "px",
             left: (e.clientX+5) + "px"
         });
        } else {
+         $('#main_upload_start')[0].disabled = false
          $("#upload_tooltip").hide();
        }
     });

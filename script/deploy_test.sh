@@ -18,10 +18,6 @@ banner "checking username"
     exit 1
 }
 
-# stop DJ workers first since they tend to be resource hogs
-banner "script/delayed_job stop"
-RAILS_ENV=production script/delayed_job stop
-
 banner "source ${HHOME}/.bashrc"
 source ${HHOME}/.bashrc
 
@@ -36,6 +32,10 @@ source ${WORKSPACE}/.rvmrc
 
 banner "bundle install"
 bundle install
+
+# stop DJ workers early since they tend to be resource hogs
+banner "script/delayed_job stop"
+RAILS_ENV=production script/delayed_job stop
 
 banner "passenger-install-apache2-module -a"
 passenger-install-apache2-module -a

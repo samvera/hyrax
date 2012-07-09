@@ -1,6 +1,6 @@
 <%-
-  doc_title = (document_show_html_title.nil? || document_show_html_title.empty?) ? @document[:id] : document_show_html_title.first
-  @page_title = "#{doc_title} - #{application_name}" 
+  doc_title = document_show_html_title.blank? ? @document[:id] : document_show_html_title.first
+  @page_title = "#{doc_title} - #{application_name}"
 -%>
 <div id="showHead">
   <div id="showUtils">
@@ -15,7 +15,7 @@
       </span>
     <%- end -%>
     <%- if @previous_document || @next_document -%>
-	    <span class="next"><%= link_to_next_document(@next_document)%></span>	
+	    <span class="next"><%= link_to_next_document(@next_document)%></span>
       </div>
     <%- end -%>
     <%- if editor? && controller.action_name != "delete" -%>

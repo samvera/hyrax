@@ -75,6 +75,9 @@ class GenericFilesController < ApplicationController
     rescue => error
       logger.warn "GenericFilesController::create rescued error #{error.inspect}"
       retval = render :json => [{:error => "Error occured while creating generic file."}].to_json
+    ensure
+      # remove the tempfile (only if it is a temp file)
+      params[:files][0].tempfile.delete if params[:files][0].respond_to?(:tempfile)
     end
 
     return retval
@@ -166,7 +169,7 @@ class GenericFilesController < ApplicationController
     rescue RSolr::Error::Http => error
       logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
       save_tries++
-      # fail for goo if the tries is greater than 3
+      # fail for good if the tries is greater than 3
       rescue_action_without_handler(error) if save_tries >=3
       sleep 0.01       
       retry
