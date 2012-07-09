@@ -23,19 +23,19 @@ var max_total_file_size = 500000000;
 var max_total_file_size_str = "500 MB";
 
 $(function () {
-    $('#main_upload_start')[0].disabled = true
+    $('#main_upload_start').attr('disabled', true);
     'use strict';
     $("#upload_tooltip").hide();
     $("#main_upload_start_span").mousemove(function(e){
-       if ( !$('#terms_of_service')[0].checked){
-        $('#main_upload_start')[0].disabled = true
+       if ( !$('#terms_of_service').is(':checked') ){
+        $('#main_upload_start').attr('disabled', true);
         $("#upload_tooltip").show();
         $("#upload_tooltip").css({
             top: (e.clientY+5)+ "px",
             left: (e.clientX+5) + "px"
         });
        } else {
-         $('#main_upload_start')[0].disabled = false
+         $('#main_upload_start').attr('disabled', false)
          $("#upload_tooltip").hide();
        }
     });
@@ -46,7 +46,7 @@ $(function () {
         $("#upload_tooltip").hide();
     });
     $('#terms_of_service').click(function () {
-        $('#main_upload_start')[0].disabled = !this.checked
+        $('#main_upload_start').attr('disabled', !this.checked);
         $("#upload_tooltip").hide();
     });
 
