@@ -3,7 +3,6 @@
 module Hydra::UI::Controller
   
   def self.included(base)
-    base.helper :hydra_fedora_metadata
     base.helper :generic_content_objects
     base.helper :hydra_uploader
     base.helper :article_metadata
