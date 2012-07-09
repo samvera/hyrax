@@ -12,4 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+// Required by Hydra
+//= require 'jquery.ui.datepicker.js'      
+
+//
+// Required by Blacklight
+//= require jquery-ui
+//= require blacklight/blacklight
 //= require_tree .

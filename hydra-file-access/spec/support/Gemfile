@@ -22,6 +22,7 @@ end
 
 gem 'jquery-rails'
 gem 'blacklight'
-gem 'hydra-core', :path=>'../../'
+gem 'hydra-core', :path=>'../../../hydra-core'
+gem 'hydra-file-access', :path=>'../../'
 gem 'rspec-rails'
 gem 'factory_girl_rails'
