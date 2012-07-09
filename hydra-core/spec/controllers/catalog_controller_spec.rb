@@ -69,6 +69,7 @@ describe CatalogController do
         assigns(:document_list).count.should == @public_only_results.docs.count
       end
       it "should return all documents if role does have permissions" do
+        pending "Need to put documents into solr"
         mock_user =  FactoryGirl.build(:user, :email=>"BigWig@example.com")
         mock_user.stub(:is_being_superuser?).and_return(true)
         controller.stub(:current_user).and_return(mock_user)
@@ -89,9 +90,8 @@ describe CatalogController do
       end
     end
     describe "show" do
-      it "should trigger enforce_show_permissions and load_fedora_document" do
+      it "should trigger enforce_show_permissions" do
         controller.stub(:current_user).and_return(nil)
-        controller.should_receive(:load_fedora_document)
         controller.should_receive(:enforce_show_permissions)
         get :show, :id=>'test:3'
       end

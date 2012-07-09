@@ -36,19 +36,6 @@ module Hydra::Controller::ControllerBehavior
     end
   end
   
-  # Use params[:id] to load an object from Fedora.  Inspects the object for known models and mixes in any of those models' behaviors.
-  # Sets @document_fedora with the loaded object
-  # Sets @file_assets with file objects that are children of the loaded object
-  def load_fedora_document
-    @document_fedora = ActiveFedora::Base.find(params[:id], :cast=>true)
-    unless @document_fedora.class.include?(Hydra::ModelMethods)
-      @document_fedora.class.send :include, Hydra::ModelMethods
-    end
-    
-    @file_assets = @document_fedora.parts(:response_format=>:solr)
-  end
-  deprecation_deprecate :load_fedora_document
-  
   
   # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)
   # defaults to using whatever you have set as the Devise authentication_key

@@ -1,4 +1,6 @@
 require "hydra"
+class Hydra::WorkflowError < StandardError; end;
+
 # will move to lib/hydra/workflow/submission_workflow in release 5.x
 module Hydra::SubmissionWorkflow
   
@@ -94,7 +96,7 @@ module Hydra::SubmissionWorkflow
   
   # Will return the entire workflow configuration for the current model.
   # We determing model first by seeing the @document object is a SolrDocument.  If it is we will determing from the has_model_s field.
-  # Otherwise we will attemtp to determine by the parameters (content_type directly passed or the id of an object).
+  # Otherwise we will attempt to determine by the parameters (content_type directly passed or the id of an object).
   def model_config
     # If we  can get it directly from solr get it there.
     if !@document.nil? and @document.is_a?(SolrDocument)
@@ -104,11 +106,10 @@ module Hydra::SubmissionWorkflow
     # If we can get the model from the params get it there.
     elsif params.has_key?(:content_type) or params.has_key?(:id)
       _model = get_af_model_from_params
-      return workflow_config[_model] if workflow_config.has_key?(_model) and !_model.nil?
+      return workflow_config[_model] if workflow_config.has_key?(_model) and _model
     else 
-      return nil
+      raise Hydra::WorkflowError
     end
-    nil
   end
   
   # Reutrns a symbolized model name determined by parameters.
@@ -119,7 +120,7 @@ module Hydra::SubmissionWorkflow
       begin
         af = ActiveFedora::Base.load_instance_from_solr(params[:id])
         return "#{ActiveFedora::ContentModel.known_models_for( af ).first}".underscore.pluralize.to_sym
-      rescue Exception => e #TODO this should be ActiveFedora::ObjectNotFoundError
+      rescue ActiveFedora::ObjectNotFoundError => e 
         nil
       end
     end

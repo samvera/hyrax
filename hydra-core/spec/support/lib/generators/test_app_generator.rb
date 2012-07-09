@@ -11,10 +11,12 @@ class TestAppGenerator < Rails::Generators::Base
     end
   end
 
-  def copy_test_models
-    copy_file "app/models/sample.rb"
+  def copy_test_fixtures
+    copy_file "app/models/generic_content.rb"
     copy_file "spec/fixtures/hydrangea_fixture_mods_article1.foxml.xml" 
-    copy_file "db/migrate/20111101221803_create_searches.rb"
+
+    # For testing Hydra::SubmissionWorkflow
+    copy_file "spec/fixtures/hydra_test_generic_content.foxml.xml"
   end
 
   def run_blacklight_generator

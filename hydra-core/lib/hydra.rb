@@ -1,6 +1,5 @@
 require "blacklight"
 require 'active-fedora'
-require 'cancan'
 require 'hydra-access-controls'
 
 # Hydra libraries
@@ -25,10 +24,6 @@ module Hydra
 
   autoload :FileAssetsHelper
 
-  # This error is raised when a user isn't allowed to access a given controller action.
-  # This usually happens within a call to AccessControlsEnforcement#enforce_access_controls but can be
-  # raised manually.
-  class Hydra::AccessDenied < CanCan::AccessDenied; end
 end
 
 
