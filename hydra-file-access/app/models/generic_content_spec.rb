@@ -1,5 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require "active_fedora"
+require 'spec_helper'
 
 describe GenericContent do
   before :all do

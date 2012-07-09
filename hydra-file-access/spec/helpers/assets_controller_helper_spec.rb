@@ -1,4 +1,4 @@
-require File.expand_path( File.join( File.dirname(__FILE__),'..','spec_helper') )
+require 'spec_helper'
 
 describe Hydra::AssetsControllerHelper do
   describe "sanitize_update_params" do
