@@ -47,9 +47,9 @@ describe Hydra::AssetsController do
       mock_document = ModsAsset.new
       mock_document.stub(:pid => '_PID_')
       mock_document.stub(:update_from_computing_id).and_return(nil)
-      controller.expects(:check_embargo_date_format).and_return(nil)
+      controller.should_receive(:check_embargo_date_format).and_return(nil)
 
-      ModsAsset.expects(:find).with("_PID_").and_return(mock_document)
+      ModsAsset.should_receive(:find).with("_PID_").and_return(mock_document)
       
       simple_request_params = {"asset"=>{
           "descMetadata"=>{
@@ -58,8 +58,8 @@ describe Hydra::AssetsController do
         }
       }
       
-      mock_document.expects(:update_datastream_attributes).with("descMetadata"=>{"subject"=>{"0"=>"subject1", "1"=>"subject2", "2"=>"subject3"}}).and_return({"subject"=>{"2"=>"My Topic"}})
-      mock_document.expects(:save)
+      mock_document.should_receive(:update_datastream_attributes).with("descMetadata"=>{"subject"=>{"0"=>"subject1", "1"=>"subject2", "2"=>"subject3"}}).and_return({"subject"=>{"2"=>"My Topic"}})
+      mock_document.should_receive(:save)
       controller.stub(:display_release_status_notice)
       put :update, {:id=>"_PID_"}.merge(simple_request_params)
 
@@ -71,11 +71,11 @@ describe Hydra::AssetsController do
       mock_document = ModsAsset.new
       mock_document.stub(:pid => '_PID_')
       mock_document.stub(:update_from_computing_id).and_return(nil)
-      ModsAsset.expects(:find).with("_PID_").and_return(mock_document)
+      ModsAsset.should_receive(:find).with("_PID_").and_return(mock_document)
       
       update_method_args = [ "descMetadata" => { [{:person=>0}, :role] => {"0"=>"role1","1"=>"role2","2"=>"role3"} } ]
-      mock_document.expects(:update_datastream_attributes).with( *update_method_args ).and_return({"person_0_role"=>{"0"=>"role1","1"=>"role2","2"=>"role3"}})
-      mock_document.expects(:save)
+      mock_document.should_receive(:update_datastream_attributes).with( *update_method_args ).and_return({"person_0_role"=>{"0"=>"role1","1"=>"role2","2"=>"role3"}})
+      mock_document.should_receive(:save)
       
       
       nokogiri_request_params = {
@@ -116,9 +116,10 @@ describe Hydra::AssetsController do
   
   describe "destroy" do
     it "should delete the asset identified by pid" do
-      mock_obj = mock("asset", :delete)
-      mock_obj.expects(:destroy_child_assets).and_return([])
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).and_return(mock_obj)
+      mock_obj = double("asset")
+      mock_obj.should_receive(:delete)
+      mock_obj.should_receive(:destroy_child_assets).and_return([])
+      ActiveFedora::Base.should_receive(:find).with("__PID__", :cast=>true).and_return(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
   end
@@ -127,9 +128,10 @@ describe Hydra::AssetsController do
   # Currently, the widthdraw method is an alias for destroy, should behave as such
   describe "withdraw" do
     it "should withdraw the asset identified by pid" do
-      mock_obj = mock("asset", :delete)
-      mock_obj.expects(:destroy_child_assets).and_return([])
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).and_return(mock_obj)
+      mock_obj = double("asset")
+      mock_obj.should_receive(:delete)
+      mock_obj.should_receive(:destroy_child_assets).and_return([])
+      ActiveFedora::Base.should_receive(:find).with("__PID__", :cast=>true).and_return(mock_obj)
       delete(:withdraw, :id => "__PID__")
     end
   end

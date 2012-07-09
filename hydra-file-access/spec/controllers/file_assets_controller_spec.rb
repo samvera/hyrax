@@ -95,7 +95,7 @@ describe Hydra::FileAssetsController do
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File", :container_id=>"_PID_"
     end
     it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
-      controller.should_receive(:model_config).at_least_once.and_return(controller.workflow_config[:mods_assets])
+      controller.should_receive(:model_config).at_least(:once).and_return(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
       response.should redirect_to edit_catalog_path("_PID_", :wf_step=>"permissions")
       request.flash[:notice].should == "You must specify a file to upload."
@@ -109,7 +109,8 @@ describe Hydra::FileAssetsController do
 
   describe "destroy" do
     it "should delete the asset identified by pid" do
-      mock_obj = mock("asset", :delete)
+      mock_obj = double("asset")
+      mock_obj.should_receive(:delete)
       ActiveFedora::Base.should_receive(:find).with("__PID__", :cast=>true).and_return(mock_obj)
       delete(:destroy, :id => "__PID__")
     end

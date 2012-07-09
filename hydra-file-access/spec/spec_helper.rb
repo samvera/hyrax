@@ -8,7 +8,6 @@ require 'bundler/setup'
 require 'rspec/rails'
 require 'rspec/autorun'
 
-
 if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov'
   require 'simplecov-rcov'
@@ -20,7 +19,8 @@ end
 RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
 
-
+  #removes FactoryGirl created users
+  config.use_transactional_fixtures = true 
 end
 
 

@@ -9,7 +9,6 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'hydra-core'
 
-
 if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov'
   require 'simplecov-rcov'

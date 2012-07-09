@@ -108,7 +108,7 @@ module Hydra::SubmissionWorkflow
       _model = get_af_model_from_params
       return workflow_config[_model] if workflow_config.has_key?(_model) and _model
     else 
-      raise Hydra::WorkflowError
+      nil #raise Hydra::WorkflowError
     end
   end
   
