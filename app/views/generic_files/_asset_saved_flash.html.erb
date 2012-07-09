@@ -1,4 +1,4 @@
-The file(s) <u>
+The file(s)
 <% generic_files.first(20).each  do |gf|%>
 <%=link_to(gf.label,generic_file_url(gf.noid))%><%=',' unless gf == generic_files.last %> 
 <% end %>
