@@ -9,7 +9,6 @@ describe HydraControllerTest do
   end
   
   it "should add the necessary helpers to classes that include it" do
-    HydraControllerTest.should_receive(:helper).with(:hydra)
     HydraControllerTest.should_receive(:helper).with(:hydra_assets)
     HydraControllerTest.stub(:before_filter)
     HydraControllerTest.send(:include, Hydra::Controller::ControllerBehavior)

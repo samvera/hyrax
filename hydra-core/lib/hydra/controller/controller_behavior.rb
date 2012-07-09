@@ -20,7 +20,6 @@ module Hydra::Controller::ControllerBehavior
     include Hydra::AccessControlsEnforcement
     include Hydra::Controller::RepositoryControllerBehavior
   
-    helper :hydra
     helper :hydra_assets
 
     # Catch permission errors
