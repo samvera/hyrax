@@ -325,7 +325,7 @@ class GenericFile < ActiveFedora::Base
     #setup formatted author list
     authors = get_author_list
     authors.each do |author|
-      next if author.nil? or author.empty?
+      next if author.blank?
       authors_list.push(abbreviate_name(author))
     end
     authors_list.each do |author|
@@ -392,7 +392,7 @@ class GenericFile < ActiveFedora::Base
     end
     # setup title
     title_info = setup_title_info
-    text << "<i>" + mla_citation_title(title_info) + "</i> " unless title.nil? or title.empty?
+    text << "<i>" + mla_citation_title(title_info) + "</i> " unless title.blank?
 
     # Publication
     text << setup_pub_info + ", " unless setup_pub_info.nil?
@@ -400,7 +400,7 @@ class GenericFile < ActiveFedora::Base
     # Get Pub Date
     text << setup_pub_date unless setup_pub_date.nil?
     if text[-1,1] != "."
-      text << "." unless text.nil? or text.blank?
+      text << "." unless text.blank?
     end
     text.html_safe
   end
@@ -408,7 +408,7 @@ class GenericFile < ActiveFedora::Base
   def export_as_chicago_citation
     author_text = ""
     authors = get_all_authors
-    unless authors.nil?
+    unless authors.blank?
       if authors.length > 10
         authors.each_with_index do |author, index|
           if index < 7
@@ -445,17 +445,17 @@ class GenericFile < ActiveFedora::Base
       end
     end
     title_info = ""
-    title_info << citation_title(clean_end_punctuation(CGI::escapeHTML(title.first)).strip) unless title.nil? or title.empty?
+    title_info << citation_title(clean_end_punctuation(CGI::escapeHTML(title.first)).strip) unless title.blank?
 
     pub_info = ""
     place = self.based_near.first
     publisher = self.publisher.first
-    unless place.nil? or place.empty?
+    unless place.blank?
       place = CGI::escapeHTML(place)
       pub_info << place
-      pub_info << ": " unless publisher.nil? or publisher.empty?
+      pub_info << ": " unless publisher.blank?
     end
-    unless publisher.nil? or publisher.empty?
+    unless publisher.blank?
       publisher = CGI::escapeHTML(publisher)
       pub_info << publisher
       pub_info << ", " unless setup_pub_date.nil?
@@ -597,7 +597,7 @@ class GenericFile < ActiveFedora::Base
 
   def setup_pub_date
     first_date = self.date_created.first
-    unless first_date.nil? or first_date.empty?
+    unless first_date.blank?
       first_date = CGI::escapeHTML(first_date)
       date_value = first_date.gsub(/[^0-9|n\.d\.]/, "")[0,4]
       return nil if date_value.nil?
@@ -609,12 +609,12 @@ class GenericFile < ActiveFedora::Base
     text = ''
     place = self.based_near.first
     publisher = self.publisher.first
-    unless place.nil? or place.empty?
+    unless place.blank?
       place = CGI::escapeHTML(place)
       text << place
-      text << ": " unless publisher.nil? or publisher.empty?
+      text << ": " unless publisher.blank?
     end
-    unless publisher.nil? or publisher.empty?
+    unless publisher.blank?
       publisher = CGI::escapeHTML(publisher)
       text << publisher
     end
@@ -653,7 +653,7 @@ class GenericFile < ActiveFedora::Base
   def setup_title_info
     text = ''
     title = self.title.first
-    unless title.nil? or title.empty?
+    unless title.blank?
       title = CGI::escapeHTML(title)
       title_info = clean_end_punctuation(title.strip)
       text << title_info
