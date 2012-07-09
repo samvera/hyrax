@@ -1,7 +1,6 @@
 require "rails"
 module HydraHead
-
-   class Engine < Rails::Engine
+  class Engine < Rails::Engine
     # Config defaults
     config.mount_at = '/'
     
@@ -11,17 +10,5 @@ module HydraHead
         load railtie
       end
     end
-    
-    # Check the gem config
-    initializer "check config" do |app|
-      # make sure mount_at ends with trailing slash
-      config.mount_at += '/'  unless config.mount_at.last == '/'
-    end
-    
-    initializer "static assets" do |app|
-      app.middleware.use ::ActionDispatch::Static, "#{root}/public"
-    end
-
-   end 
-
+  end 
 end
