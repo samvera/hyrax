@@ -4,8 +4,8 @@ describe FileAsset do
   
   before(:each) do
     @file_asset = FileAsset.new
-    @file_asset.stubs(:create_date).returns("2008-07-02T05:09:42.015Z")
-    @file_asset.stubs(:modified_date).returns("2008-09-29T21:21:52.892Z")
+    @file_asset.stub(:create_date).and_return("2008-07-02T05:09:42.015Z")
+    @file_asset.stub(:modified_date).and_return("2008-09-29T21:21:52.892Z")
   end
   
   it "Should be a kind of ActiveFedora::Base" do

@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe Hydra::FileAssetsController do
   include Devise::TestHelpers
@@ -20,9 +20,9 @@ describe Hydra::FileAssetsController do
   describe "index" do
     
     it "should find all file assets in the repo if no container_id is provided" do
-      ActiveFedora::SolrService.expects(:query).with('active_fedora_model_s:FileAsset', {}).returns("solr result")
-      controller.stubs(:load_permissions_from_solr)
-      ActiveFedora::Base.expects(:new).never
+      ActiveFedora::SolrService.should_receive(:query).with('active_fedora_model_s:FileAsset', {}).and_return("solr result")
+      controller.stub(:load_permissions_from_solr)
+      ActiveFedora::Base.should_receive(:new).never
       xhr :get, :index
       assigns[:solr_result].should == "solr result"
     end
@@ -49,23 +49,23 @@ describe Hydra::FileAssetsController do
 
   describe "show" do
     it "should redirect back if current_user does not have read or edit permissions" do
-      mock_user = mock("User")
-      mock_user.stubs(:email).returns("fake_user@example.com")
-      mock_user.stubs(:is_being_superuser?).returns(false)
-      mock_user.stubs(:persisted?).returns(true)
-      mock_user.stubs(:new_record?).returns(false)
-      controller.stubs(:current_user).returns(mock_user)
+      mock_user = double("User")
+      mock_user.stub(:email).and_return("fake_user@example.com")
+      mock_user.stub(:is_being_superuser?).and_return(false)
+      mock_user.stub(:persisted?).and_return(true)
+      mock_user.stub(:new_record?).and_return(false)
+      controller.stub(:current_user).and_return(mock_user)
       request.env["HTTP_REFERER"] = "http://example.com/?q=search"
       get(:show, :id=>"hydrangea:fixture_file_asset1")
       response.should redirect_to(root_url)
     end
      it "should redirect to the login page if the user is not logged in" do
-      mock_user = mock("User")
-      mock_user.stubs(:email).returns("fake_user@example.com")
-      mock_user.stubs(:is_being_superuser?).returns(false)
-      mock_user.stubs(:persisted?).returns(false)
-      mock_user.stubs(:new_record?).returns(true)
-      controller.stubs(:current_user).returns(mock_user)
+      mock_user = double("User")
+      mock_user.stub(:email).and_return("fake_user@example.com")
+      mock_user.stub(:is_being_superuser?).and_return(false)
+      mock_user.stub(:persisted?).and_return(false)
+      mock_user.stub(:new_record?).and_return(true)
+      controller.stub(:current_user).and_return(mock_user)
       request.env["HTTP_REFERER"] = "http://example.com/?q=search"
       get(:show, :id=>"hydrangea:fixture_file_asset1")
       response.should redirect_to("http://test.host/users/sign_in")
@@ -79,23 +79,23 @@ describe Hydra::FileAssetsController do
   
   describe "create" do
     it "should create and save a file asset from the given params" do
-      mock_fa = mock("FileAsset")
-      mock_file = mock("File")
-      mock_fa.stubs(:pid).returns("foo:pid")
-      controller.expects(:create_and_save_file_assets_from_params).returns([mock_fa])
+      mock_fa = double("FileAsset")
+      mock_file = double("File")
+      mock_fa.stub(:pid).and_return("foo:pid")
+      controller.should_receive(:create_and_save_file_assets_from_params).and_return([mock_fa])
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File"
     end
     it "if container_id is provided, should associate the created file asset wtih the container" do
-      stub_fa = stub("FileAsset", :save)
-      stub_fa.stubs(:pid).returns("foo:pid")
-      stub_fa.stubs(:label).returns("Foo File")
-      mock_file = mock("File")
-      controller.expects(:create_and_save_file_assets_from_params).returns([stub_fa])
-      controller.expects(:associate_file_asset_with_container)      
+      stub_fa = double("FileAsset", :save)
+      stub_fa.stub(:pid).and_return("foo:pid")
+      stub_fa.stub(:label).and_return("Foo File")
+      mock_file = double("File")
+      controller.should_receive(:create_and_save_file_assets_from_params).and_return([stub_fa])
+      controller.should_receive(:associate_file_asset_with_container)      
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File", :container_id=>"_PID_"
     end
     it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
-      controller.expects(:model_config).at_least_once.returns(controller.workflow_config[:mods_assets])
+      controller.should_receive(:model_config).at_least_once.and_return(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
       response.should redirect_to edit_catalog_path("_PID_", :wf_step=>"permissions")
       request.flash[:notice].should == "You must specify a file to upload."
@@ -110,15 +110,15 @@ describe Hydra::FileAssetsController do
   describe "destroy" do
     it "should delete the asset identified by pid" do
       mock_obj = mock("asset", :delete)
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
+      ActiveFedora::Base.should_receive(:find).with("__PID__", :cast=>true).and_return(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
     it "should remove container relationship and perform proper garbage collection" do
       pending "relies on ActiveFedora implementing Base.file_objects_remove"
       mock_container = mock("asset")
-      mock_container.expects(:file_objects_remove).with("_file_asset_pid_")
-      FileAsset.expects(:garbage_collect).with("_file_asset_pid_")
-      ActiveFedora::Base.expects(:find).with("_container_pid_", :cast=>true).returns(mock_container)
+      mock_container.should_receive(:file_objects_remove).with("_file_asset_pid_")
+      FileAsset.should_receive(:garbage_collect).with("_file_asset_pid_")
+      ActiveFedora::Base.should_receive(:find).with("_container_pid_", :cast=>true).and_return(mock_container)
       delete(:destroy, :id => "_file_asset_pid_", :asset_id=>"_container_pid_")
     end
   end
@@ -160,10 +160,10 @@ describe Hydra::FileAssetsController do
     
     describe "create" do
       before :each do
-        mock_user = mock("User")
-        mock_user.stubs(:user_key).returns('user@example.com')
-        mock_warden = mock("Warden")
-        mock_warden.stubs(:authenticate).returns(mock_user)
+        mock_user = double("User")
+        mock_user.stub(:user_key).and_return('user@example.com')
+        mock_warden = double("Warden")
+        mock_warden.stub(:authenticate).and_return(mock_user)
         request.env['warden'] = mock_warden
       end
 

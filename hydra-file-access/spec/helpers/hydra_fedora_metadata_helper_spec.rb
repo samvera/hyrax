@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe HydraFedoraMetadataHelper do
   before :all do
@@ -14,13 +14,13 @@ describe HydraFedoraMetadataHelper do
   end
   
   before(:all) do
-    @resource = mock("fedora object")
-    @resource.stubs(:get_values_from_datastream).with("simple_ds", "subject", "").returns( ["topic1","topic2"] )
+    @resource = double("fedora object")
+    @resource.stub(:get_values_from_datastream).with("simple_ds", "subject", "").and_return( ["topic1","topic2"] )
 
-    @resource.stubs(:get_values_from_datastream).with("ng_ds", [:title, :main_title], "").returns( ["My Title"] )
-    @resource.stubs(:get_values_from_datastream).with("ng_ds", [{:person=>1}, :given_name], "").returns( ["Bob"] )
+    @resource.stub(:get_values_from_datastream).with("ng_ds", [:title, :main_title], "").and_return( ["My Title"] )
+    @resource.stub(:get_values_from_datastream).with("ng_ds", [{:person=>1}, :given_name], "").and_return( ["Bob"] )
 
-    @resource.stubs(:get_values_from_datastream).with("empty_ds", "something", "").returns( [""] )
+    @resource.stub(:get_values_from_datastream).with("empty_ds", "something", "").and_return( [""] )
   end
   
   describe "fedora_text_field" do
@@ -145,7 +145,7 @@ describe HydraFedoraMetadataHelper do
       end
     end
     it "should return the product of fedora_text_field if :choices is not set" do
-      helper.expects(:fedora_text_field).returns("fake response")
+      helper.should_receive(:fedora_text_field).and_return("fake response")
       generated_html = helper.fedora_select(@resource,"simple_ds","subject")
       generated_html.should == "fake response"
     end

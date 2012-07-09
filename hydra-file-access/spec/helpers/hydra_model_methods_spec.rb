@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe Hydra::ModelMethods do
   
@@ -6,18 +6,18 @@ describe Hydra::ModelMethods do
   describe "set_title_and_label" do
     before(:each) do
       dm = mock("descMetadata")
-      helper.stubs(:datastreams).returns("descMetadata"=>dm)
+      helper.stub(:datastreams).and_return("descMetadata"=>dm)
     end
     it "should set the title and the label" do
-      helper.expects(:set_title)
-      helper.stubs(:label).returns(nil)
-      helper.expects(:label=).with("My title")
+      helper.should_receive(:set_title)
+      helper.stub(:label).and_return(nil)
+      helper.should_receive(:label=).with("My title")
       helper.set_title_and_label("My title")
     end
     it "should skip updating if the label is set already" do
-      helper.expects(:set_title).never
-      helper.expects(:label=).never
-      helper.stubs(:label).returns("pre existing label")
+      helper.should_receive(:set_title).never
+      helper.should_receive(:label=).never
+      helper.stub(:label).and_return("pre existing label")
       helper.set_title_and_label("My title", :only_if_blank=>true)
     end
   end
@@ -26,17 +26,17 @@ describe Hydra::ModelMethods do
     it "should set the title if the descMetadata is a NokogiriDatastream that responds to :title term" do
       obj = ActiveFedora::Base.new
       dm = Hydra::Datastream::ModsArticle.new(obj.inner_object, nil)
-      dm.stubs(:content).returns('')
-      helper.stubs(:datastreams).returns("descMetadata"=>dm)
+      dm.stub(:content).and_return('')
+      helper.stub(:datastreams).and_return("descMetadata"=>dm)
       helper.set_title("My title")
       dm.term_values(:title).should == ["My title"]
     end
     it "should set the title if the descMetadata is a MetadataDatastream with a title field defined" do
       obj = ActiveFedora::Base.new
       dm = ActiveFedora::QualifiedDublinCoreDatastream.new(obj.inner_object, nil)
-      dm.stubs(:content).returns('')
+      dm.stub(:content).and_return('')
       #dm = ActiveFedora::QualifiedDublinCoreDatastream.new  nil, nil 
-      helper.stubs(:datastreams).returns("descMetadata"=>dm)
+      helper.stub(:datastreams).and_return("descMetadata"=>dm)
       helper.set_title("My title")
       dm.title.should == ["My title"]
     end
@@ -45,10 +45,10 @@ describe Hydra::ModelMethods do
   describe "set_collection_type" do
     it "should set the collection metadata field" do
       prop_ds = mock("properties ds")
-      prop_ds.expects(:respond_to?).with(:collection_values).returns(true)
-      prop_ds.expects(:collection_values=).with("mods_asset")
+      prop_ds.should_receive(:respond_to?).with(:collection_values).and_return(true)
+      prop_ds.should_receive(:collection_values=).with("mods_asset")
 
-      helper.stubs(:datastreams).returns({"properties"=>prop_ds})
+      helper.stub(:datastreams).and_return({"properties"=>prop_ds})
       helper.set_collection_type("mods_asset")
     end
   end
@@ -73,9 +73,9 @@ describe Hydra::ModelMethods do
     it "should destroy any child assets and return an array listing the child assets" do
       ma = ModsAsset.load_instance_from_solr("hydrangea:fixture_mods_article1")
       file_asset = mock("file object")
-      file_asset.expects(:pid).returns("hydrangea:fixture_uploaded_svg1")
-      file_asset.expects(:delete).returns(true)
-      ma.stubs(:destroyable_child_assets).returns([file_asset])
+      file_asset.should_receive(:pid).and_return("hydrangea:fixture_uploaded_svg1")
+      file_asset.should_receive(:delete).and_return(true)
+      ma.stub(:destroyable_child_assets).and_return([file_asset])
       ma.destroy_child_assets.should == ["hydrangea:fixture_uploaded_svg1"]
     end
     it "should do nothing and return an empty array for an object with no child assets" do

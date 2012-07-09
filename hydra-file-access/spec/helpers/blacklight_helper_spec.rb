@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe BlacklightHelper do
   
@@ -9,7 +9,7 @@ describe BlacklightHelper do
       @config = Blacklight::Configuration.new.configure do |config|
       config.show.display_type = 'has_model_s'
     end
-        helper.stubs(:blacklight_config).returns(@config)
+        helper.stub(:blacklight_config).and_return(@config)
         helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:Presentation"]).should == "presentations"
         helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"]).should == "generic_contents" 
       end

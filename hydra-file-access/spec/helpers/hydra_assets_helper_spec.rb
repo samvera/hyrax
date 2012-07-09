@@ -13,11 +13,11 @@ describe HydraAssetsHelper do
   
   describe "link_to_create_asset" do
     it "should generate login links with redirect params if user is not logged in" do
-      helper.expects(:current_user).returns User.new
+      helper.should_receive(:current_user).and_return User.new
       helper.link_to_create_asset("Create a foo", "foo_model").should == "<a href=\"/hydra/assets/new?content_type=foo_model\" class=\"create_asset\">Create a foo</a>"
     end
     it "should generate login links with redirect params if user is not logged in" do
-      helper.expects(:current_user).returns false
+      helper.should_receive(:current_user).and_return false
       # rails 3.1.x
       # helper.link_to_create_asset("Create a foo", "foo_model").should == "<a href=\"/users/sign_in?redirect_params%5Baction%5D=new&amp;redirect_params%5Bcontent_type%5D=foo_model&amp;redirect_params%5Bcontroller%5D=assets\" class=\"create_asset\">Create a foo</a>"      
       # rails 3.0.x

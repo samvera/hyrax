@@ -1,6 +1,8 @@
 ENV["RAILS_ROOT"] ||= 'spec/internal'
 require 'rspec/core/rake_task'
 
+APP_ROOT= File.expand_path(File.join(File.dirname(__FILE__),".."))
+require 'jettywrapper'
 
 desc "Run specs"
 RSpec::Core::RakeTask.new(:spec => [:generate, :fixtures]) do |t|

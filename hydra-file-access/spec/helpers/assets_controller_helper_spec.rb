@@ -21,7 +21,7 @@ describe Hydra::AssetsControllerHelper do
         "descMetadata"=>{[{:person=>0}, :institution]=>{"0"=>"FACULTY, UNIVERSITY"}, [{:journal=>0}, :title_info, :main_title]=>{"0"=>"The Journal of Mock Object"}, [{:journal=>0}, :issue, :volume]=>{"0"=>"2               "}, [{:journal=>0}, :issn]=>{"0"=>"1234-5678"}, [{:person=>1}, :first_name]=>{"0"=>"Henrietta"}, [{:person=>0}, :last_name]=>{"0"=>"Smith"}, [:location, :url]=>{"0"=>"http://example.com/foo"}, [:subject, :topic]=>{"0"=>"TOPIC 1", "1"=>"TOPIC 2", "2"=>"CONTROLLED TERM"}, [{:person=>0}, :first_name]=>{"0"=>"John"}, [{:person=>1}, :computing_id]=>{"0"=>""}, [{:journal=>0}, :issue, :end_page]=>{"0"=>"230"}, [:note]=>{"0"=>""}, [:title_info, :main_title]=>{"0"=>"Test Article"}, [{:journal=>0}, :issue, :publication_date]=>{"0"=>"FEB. 2007"}, [{:person=>1}, :description]=>{"0"=>""}, [:abstract]=>{"0"=>"ABSTRACT"}, [{:journal=>0}, :issue, :level]=>{"0"=>""}, [{:person=>1}, :institution]=>{"0"=>"Baltimore"}, [{:person=>0}, :computing_id]=>{"0"=>""}, [{:person=>1}, :last_name]=>{"0"=>"Lacks"}, [{:journal=>0}, :issue, :start_page]=>{"0"=>"195"}, [{:person=>0}, :description]=>{"0"=>""}, [{:journal=>0}, :origin_info, :publisher]=>{"0"=>"PUBLISHER"}, [:subject, :topic]=>{"0"=>"Topic1", "1"=>"Topic2"} }, "rightsMetadata"=>{[:embargo, :embargo_release_date]=>{"0"=>""}}, 
         "properties"=>{[:release_to]=>{"0"=>"public"}, :released=>{"0"=>"true"}}
         }
-      helper.stubs(:params).returns(sample_params)
+      helper.stub(:params).and_return(sample_params)
       sanitized_params = helper.sanitize_update_params
       sanitized_params.should == expected_sane_params
       sanitized_params["descMetadata"].should == expected_sane_params["descMetadata"]
@@ -38,7 +38,7 @@ describe Hydra::AssetsControllerHelper do
     it "if handling submission from jeditable (which will only submit one value at a time), return the value it submitted" do
       sample_input = {"descMetadata"=>{"journal_0_issue_start_page"=>{"0"=>"195"}} }
       expected_output = {"0"=>"195"}
-      helper.stubs(:params).returns({:field_id => "my field id"})
+      helper.stub(:params).and_return({:field_id => "my field id"})
       helper.tidy_response_from_update(sample_input).should == expected_output
     end
   end
@@ -47,7 +47,7 @@ describe Hydra::AssetsControllerHelper do
     it "should update the document with the provided params" do
       sample_params = "sample params"
       mock_document = mock("document")
-      mock_document.expects(:update_datastream_attributes).with(sample_params)
+      mock_document.should_receive(:update_datastream_attributes).with(sample_params)
       helper.update_document(mock_document, sample_params)
     end
   end
@@ -55,7 +55,7 @@ describe Hydra::AssetsControllerHelper do
   describe "send_datastream" do
     it "should return the requested datastream with content disposition & mime type set from datastream attributes" do
       test_ds = ModsAsset.find("hydrangea:fixture_file_asset1").datastreams["DS1"]
-      helper.expects(:send_data).with(test_ds.content, :filename=>"bali.jpg", :type=>"image/jpeg")
+      helper.should_receive(:send_data).with(test_ds.content, :filename=>"bali.jpg", :type=>"image/jpeg")
       helper.send(:send_datastream, test_ds)
     end
   end

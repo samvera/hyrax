@@ -13,9 +13,9 @@ describe Hydra::Controller::RepositoryControllerBehavior do
   describe "load_document_from_params" do
     it "should choose which model to use based on submitted params" do
       mock_model_class = mock("model class")
-      mock_model_class.expects(:find).with("object id")
-      helper.stubs(:params).returns( {:content_type => "preferred model", :id => "object id"} )
-      helper.expects(:retrieve_af_model).with("preferred model").returns(mock_model_class)
+      mock_model_class.should_receive(:find).with("object id")
+      helper.stub(:params).and_return( {:content_type => "preferred model", :id => "object id"} )
+      helper.should_receive(:retrieve_af_model).with("preferred model").and_return(mock_model_class)
       helper.load_document_from_params
     end
   end

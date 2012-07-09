@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 
 # See cucumber tests (ie. /features/edit_document.feature) for more tests, including ones that test the edit method & view
@@ -21,7 +21,7 @@ describe Hydra::AssetsController do
   before do
       @user = FactoryGirl.create(:user)
       sign_in @user
-      controller.stubs(:enforce_access_controls).returns(true)
+      controller.stub(:enforce_access_controls).and_return(true)
   end
   
   it "should use DocumentController" do
@@ -33,7 +33,7 @@ describe Hydra::AssetsController do
       @user = FactoryGirl.create(:user)
       sign_in @user
       @asset = ModsAsset.new
-      ModsAsset.stubs(:new).returns(@asset)
+      ModsAsset.stub(:new).and_return(@asset)
     end
     it "should create and redirect with a flash message" do
       get :new, :content_type=>'mods_asset'
@@ -45,11 +45,11 @@ describe Hydra::AssetsController do
   describe "update" do
     it "should update the object with the attributes provided" do
       mock_document = ModsAsset.new
-      mock_document.stubs(:pid => '_PID_')
-      mock_document.stubs(:update_from_computing_id).returns(nil)
-      controller.expects(:check_embargo_date_format).returns(nil)
+      mock_document.stub(:pid => '_PID_')
+      mock_document.stub(:update_from_computing_id).and_return(nil)
+      controller.expects(:check_embargo_date_format).and_return(nil)
 
-      ModsAsset.expects(:find).with("_PID_").returns(mock_document)
+      ModsAsset.expects(:find).with("_PID_").and_return(mock_document)
       
       simple_request_params = {"asset"=>{
           "descMetadata"=>{
@@ -58,9 +58,9 @@ describe Hydra::AssetsController do
         }
       }
       
-      mock_document.expects(:update_datastream_attributes).with("descMetadata"=>{"subject"=>{"0"=>"subject1", "1"=>"subject2", "2"=>"subject3"}}).returns({"subject"=>{"2"=>"My Topic"}})
+      mock_document.expects(:update_datastream_attributes).with("descMetadata"=>{"subject"=>{"0"=>"subject1", "1"=>"subject2", "2"=>"subject3"}}).and_return({"subject"=>{"2"=>"My Topic"}})
       mock_document.expects(:save)
-      controller.stubs(:display_release_status_notice)
+      controller.stub(:display_release_status_notice)
       put :update, {:id=>"_PID_"}.merge(simple_request_params)
 
       response.should redirect_to catalog_path(mock_document.pid, :viewing_context=>"browse")
@@ -69,12 +69,12 @@ describe Hydra::AssetsController do
     
     it "should support updating OM::XML datastreams" do
       mock_document = ModsAsset.new
-      mock_document.stubs(:pid => '_PID_')
-      mock_document.stubs(:update_from_computing_id).returns(nil)
-      ModsAsset.expects(:find).with("_PID_").returns(mock_document)
+      mock_document.stub(:pid => '_PID_')
+      mock_document.stub(:update_from_computing_id).and_return(nil)
+      ModsAsset.expects(:find).with("_PID_").and_return(mock_document)
       
       update_method_args = [ "descMetadata" => { [{:person=>0}, :role] => {"0"=>"role1","1"=>"role2","2"=>"role3"} } ]
-      mock_document.expects(:update_datastream_attributes).with( *update_method_args ).returns({"person_0_role"=>{"0"=>"role1","1"=>"role2","2"=>"role3"}})
+      mock_document.expects(:update_datastream_attributes).with( *update_method_args ).and_return({"person_0_role"=>{"0"=>"role1","1"=>"role2","2"=>"role3"}})
       mock_document.expects(:save)
       
       
@@ -92,7 +92,7 @@ describe Hydra::AssetsController do
           }
         }
       }
-      controller.stubs(:display_release_status_notice)
+      controller.stub(:display_release_status_notice)
       put :update, nokogiri_request_params
       # put :update, :id=>"_PID_", "content_type"=>"mods_asset", "datastream"=>"descMetadata", "field_name"=>"person_0_last_name","parent_select"=>[{":person"=>"0"}, ":last_name"], "child_index"=>"0", "value"=>"Sample New Value"
       response.should redirect_to edit_catalog_path(mock_document.pid, :wf_step=>"publication")
@@ -117,8 +117,8 @@ describe Hydra::AssetsController do
   describe "destroy" do
     it "should delete the asset identified by pid" do
       mock_obj = mock("asset", :delete)
-      mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
+      mock_obj.expects(:destroy_child_assets).and_return([])
+      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).and_return(mock_obj)
       delete(:destroy, :id => "__PID__")
     end
   end
@@ -128,8 +128,8 @@ describe Hydra::AssetsController do
   describe "withdraw" do
     it "should withdraw the asset identified by pid" do
       mock_obj = mock("asset", :delete)
-      mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
+      mock_obj.expects(:destroy_child_assets).and_return([])
+      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).and_return(mock_obj)
       delete(:withdraw, :id => "__PID__")
     end
   end
