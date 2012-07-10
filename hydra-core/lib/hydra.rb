@@ -1,5 +1,3 @@
-require "blacklight"
-require 'active-fedora'
 require 'hydra-access-controls'
 
 # Hydra libraries
@@ -21,8 +19,6 @@ module Hydra
   autoload :User
   autoload :UI
   autoload :Workflow
-
-  autoload :FileAssetsHelper
 
 end
 
