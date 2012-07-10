@@ -1,4 +1,12 @@
-  <div class="breadcrumbs">
-    <a href="/dashboard/">Dashboard</a>&nbsp;&nbsp;/&nbsp;
+<div class="breadcrumbs">
+  <% unless request.referer.blank? %>
+    <% if request.referer.include? 'dashboard' %>
+      <%= link_to 'Dashboard', dashboard_path %>
+    <% elsif request.referer.include? 'catalog' %>
+      <%= link_to 'Back to Search Results', request.referer %>
+    <% end %>
+  <% else %>
+      <%= link_to 'Catalog', catalog_index_path %>
+  <% end %>&nbsp;&nbsp;/&nbsp; 
     <span class="active"><%= @generic_file.title.join(' | ') %></span>
-  </div><!-- /breadcrumbs -->
+</div><!-- /breadcrumbs -->
