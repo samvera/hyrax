@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   rescue_from Blacklight::Exceptions::InvalidSolrID, :with => :render_404
 
   def layout_name
-   'hydra-head'
+    'hydra-head'
   end
 
   def clear_session_user
@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
       logger.warn "Request is Nil, how weird!!!"
       return
     end
-    request.env['warden'].logout unless ( (not env['warden'].user) || (request.env['HTTP_REMOTE_USER']) || (request.env['REMOTE_USER']) ) if (env['warden'])
+    request.env['warden'].logout if env['warden'] and env['warden'].user and request.env['REMOTE_USER']
   end
 
   def set_current_user
