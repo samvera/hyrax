@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
       logger.warn "Request is Nil, how weird!!!"
       return
     end
-    request.env['warden'].logout if env['warden'] and env['warden'].user and request.env['REMOTE_USER']
+    request.env['warden'].logout if env['warden'] and env['warden'].user and request.env['REMOTE_USER'].nil?
   end
 
   def set_current_user
