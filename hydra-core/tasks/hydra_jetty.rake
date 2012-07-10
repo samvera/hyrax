@@ -1,5 +1,5 @@
 ##For jettywrapper set the app_ROOT
-APP_ROOT= File.expand_path(File.join(File.dirname(__FILE__),".."))
+APP_ROOT= File.expand_path(File.join(File.dirname(__FILE__),"../.."))
 require 'jettywrapper'
 
 namespace :hydra do

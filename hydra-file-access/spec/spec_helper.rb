@@ -7,6 +7,7 @@ require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_
 require 'bundler/setup'
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'hydra-file-access'
 
 if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov'

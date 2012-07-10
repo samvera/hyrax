@@ -37,7 +37,7 @@ namespace :jetty do
       app_root = File.join(File.dirname(__FILE__),"..")
     end
      
-    fcfg = File.join(FEDORA_DIR,"fedora.fcfg")
+    fcfg = File.join(FEDORA_DIR,"test/fedora.fcfg")
     puts "PWD:: #{FileUtils.pwd}"
     if File.exists?(fcfg)
       puts "copying over fedora.fcfg"
@@ -57,6 +57,34 @@ namespace :jetty do
   end
 end
 
-task :ci do
- raise "To be implemented, config jetty, start jetty, test each app, stop jetty"
+desc "Run Continuous Integration"
+task :ci => 'jetty:config' do
+  jetty_params = Jettywrapper.load_config.merge(
+      { :startup_wait => 15, 
+        :jetty_port => ENV['TEST_JETTY_PORT'] || 8983
+      }
+  )
+  error = nil
+  error = Jettywrapper.wrap(jetty_params) do
+    Rake::Task['spec'].invoke
+  end
+  raise "test failures: #{error}" if error
+
+end
+
+task :spec do
+  raise "test failures" unless all_modules('rake spec')
+end
+task :clean do
+  raise "test failures" unless all_modules('rake clean')
+end
+
+def all_modules(cmd)
+  ['hydra-core', 'hydra-file-access'].each do |dir|
+    Dir.chdir(dir) do
+      puts "\n\e[1;33m[Hydra CI] #{dir}\e[m\n"
+      #cmd = "bundle exec rake spec" # doesn't work because it doesn't require the gems specified in the Gemfiles of the test rails apps 
+      return false unless system(cmd)
+    end
+  end
 end
