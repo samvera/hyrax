@@ -6,14 +6,18 @@ module Hydra
   autoload :GlobalConfigurable
   extend GlobalConfigurable
   autoload :Assets
+  autoload :AssetsControllerHelper
   autoload :Catalog
   autoload :Controller
   autoload :FileAssets
   autoload :GenericContent
   autoload :GenericImage
   autoload :GenericUserAttributes
-  require 'hydra/model_mixins'
+  autoload :Mods
+  autoload :ModelMixins
+  autoload :ModelMethods
   autoload :RepositoryController
+  autoload :RightsMetadata
   autoload :SubmissionWorkflow
   autoload :SuperuserAttributes
   autoload :User
@@ -23,10 +27,6 @@ module Hydra
 end
 
 
-require 'hydra/assets_controller_helper'
-require 'hydra/rights_metadata'
-require 'hydra/mods'
-require 'hydra/model_methods'
 require 'hydra/models/file_asset'
 
 SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension if defined? SolrDocument
