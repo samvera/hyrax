@@ -153,11 +153,6 @@ EOF
     end
   end
   
-  def create_migration_file
-    migration_template 'migrations/create_superusers.rb', 'db/migrate/create_superusers.rb'    
-  end
-         
-
   
 
   

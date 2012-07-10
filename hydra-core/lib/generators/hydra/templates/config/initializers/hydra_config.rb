@@ -1,5 +1,3 @@
-require "hydra"
-
 # The following lines determine which user attributes your hydrangea app will use
 # This configuration allows you to use the out of the box ActiveRecord associations between users and user_attributes
 # It also allows you to specify your own user attributes
@@ -8,9 +6,6 @@ require "hydra"
 #   User.send(:include, MyLocalLDAPAttributes)
 # As long as your module includes methods for full_name, affiliation, and photo the personalization_helper should function correctly
 #
-# NOTE: For your development environment, also specify the module in lib/user_attributes_loader.rb
-User.send(:include, Hydra::GenericUserAttributes)
-
 if Hydra.respond_to?(:configure)
   Hydra.configure(:shared) do |config|
 

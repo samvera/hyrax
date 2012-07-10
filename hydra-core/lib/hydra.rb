@@ -12,7 +12,6 @@ module Hydra
   autoload :FileAssets
   autoload :GenericContent
   autoload :GenericImage
-  autoload :GenericUserAttributes
   autoload :Mods
   autoload :ModelMixins
   autoload :ModelMethods
