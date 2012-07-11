@@ -39,7 +39,10 @@ class ApplicationController < ActionController::Base
       logger.warn "Request is Nil, how weird!!!"
       return
     end
+    
+    cache_flash
     request.env['warden'].logout if env['warden'] and env['warden'].user and request.env['REMOTE_USER'].nil?
+    restore_flash
   end
 
   def set_current_user
@@ -103,4 +106,12 @@ protected
   end
 
   protect_from_forgery
+  
+  def cache_flash
+    @cflash = {}
+    [:notice, :error, :alert].each {|type| @cflash[type] = flash[type]}
+  end
+  def restore_flash
+    [:notice, :error, :alert].each {|type| flash[type] = @cflash[type]} 
+  end
 end
