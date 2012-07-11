@@ -4,7 +4,6 @@ module Hydra::UI::Controller
   
   def self.included(base)
     base.helper :generic_content_objects
-    base.helper :hydra_uploader
     base.before_filter :store_bounce
     base.before_filter :set_x_ua_compat
     base.before_filter :load_css

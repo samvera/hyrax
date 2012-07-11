@@ -13,7 +13,6 @@ module Hydra::Controller::FileAssetsBehavior
     include Blacklight::Configurable
     copy_blacklight_config_from(CatalogController)
     prepend_before_filter :sanitize_update_params
-    helper :hydra_uploader
   end
   
   def index
