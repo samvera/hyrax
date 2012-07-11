@@ -7,19 +7,12 @@ module Hydra
   extend GlobalConfigurable
   autoload :Catalog
   autoload :Controller
-  autoload :FileAssets
-  autoload :Mods
   autoload :ModelMethods
   autoload :RepositoryController
-  autoload :RightsMetadata
-  autoload :User
-  autoload :UI
-  autoload :Workflow
 
   module ModelMixins
     # We can't autoload ModelMixins, because it's defined by hydra-access-controls
     autoload :CommonMetadata
-    autoload :RightsMetadata
     autoload :SolrDocumentExtension
   end
   module Models

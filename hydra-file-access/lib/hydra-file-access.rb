@@ -5,6 +5,7 @@ module Hydra
   autoload :Assets
   autoload :AssetsControllerHelper
   autoload :SubmissionWorkflow
+  autoload :UI
 
   module Controller
     extend ActiveSupport::Autoload
