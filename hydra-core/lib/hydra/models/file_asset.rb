@@ -9,8 +9,6 @@ module Hydra
       included do
         include Hydra::ModelMethods
         
-        #has_relationship "is_member_of_collection", :has_collection_member, :inbound => true
-        #has_bidirectional_relationship "part_of", :is_part_of, :has_part
         belongs_to :container, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
         has_metadata :name => "descMetadata", :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
         end

@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sanitize'
   gem.add_dependency 'hydra-mods', ">= 0.0.5"
   gem.add_dependency 'deprecation', ">= 0.0.5"
-  gem.add_dependency 'hydra-core'
+  gem.add_dependency 'hydra-core', version
   
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'yard'

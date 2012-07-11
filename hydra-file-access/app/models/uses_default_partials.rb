@@ -10,7 +10,7 @@ class UsesDefaultPartials < ActiveFedora::Base
     super
   end
 
-  has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
+  #has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsGenericContent
   
   # declares a rightsMetadata datastream with type Hydra::Datastream::RightsMetadata
   #  basically, it is another expression of

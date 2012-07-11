@@ -10,23 +10,27 @@ module Hydra
   autoload :Catalog
   autoload :Controller
   autoload :FileAssets
-  autoload :GenericContent
-  autoload :GenericImage
   autoload :Mods
-  autoload :ModelMixins
   autoload :ModelMethods
   autoload :RepositoryController
   autoload :RightsMetadata
   autoload :SubmissionWorkflow
-  autoload :SuperuserAttributes
   autoload :User
   autoload :UI
   autoload :Workflow
 
+  module ModelMixins
+    # We can't autoload ModelMixins, because it's defined by hydra-access-controls
+    autoload :CommonMetadata
+    autoload :RightsMetadata
+    autoload :SolrDocumentExtension
+  end
+  module Models
+    extend ActiveSupport::Autoload
+    autoload :FileAsset
+  end
+
 end
-
-
-require 'hydra/models/file_asset'
 
 SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension if defined? SolrDocument
 

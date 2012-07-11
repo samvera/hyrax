@@ -6,6 +6,7 @@ gem 'sqlite3'
 
 gem 'devise'
 gem 'blacklight'
+gem 'hydra-access-controls', :path=>'../../../hydra-access-controls'
 gem 'hydra-core', :path=>'../../'
 gem 'rspec-rails'
 gem 'factory_girl_rails'

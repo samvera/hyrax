@@ -12,9 +12,9 @@ Gem::Specification.new do |s|
   s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
 
   s.add_dependency('rails', '>= 3.2.6')
+  s.add_dependency('hydra-access-controls',   version)
   s.add_dependency('hydra-core',   version)
   s.add_dependency('hydra-file-access',   version)
-  #s.add_dependency('hydra-access-controls',   version)
   #s.add_dependency('hydra-mods',   version)
   #s.add_dependency('active-fedora',   version) ???
 
