@@ -7,7 +7,6 @@ module Hydra::Controller::FileAssetsBehavior
     include Hydra::AssetsControllerHelper
     include Hydra::Controller::UploadBehavior 
     include Hydra::Controller::RepositoryControllerBehavior
-    include Hydra::UI::Controller
     include Blacklight::SolrHelper
     include Hydra::SubmissionWorkflow
     include Blacklight::Configurable

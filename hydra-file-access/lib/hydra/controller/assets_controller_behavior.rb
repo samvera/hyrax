@@ -13,7 +13,6 @@ module Hydra::Controller::AssetsControllerBehavior
 
   included do
     helper :hydra
-    include Hydra::UI::Controller
     before_filter :search_session, :history_session
     before_filter :load_document, :only => :update # allows other filters to operate on the document before the update method is called
 
