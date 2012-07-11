@@ -12,7 +12,6 @@ module Hydra
   autoload :ModelMethods
   autoload :RepositoryController
   autoload :RightsMetadata
-  autoload :SubmissionWorkflow
   autoload :User
   autoload :UI
   autoload :Workflow

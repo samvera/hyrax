@@ -4,6 +4,8 @@ module Hydra
   end
   autoload :Assets
   autoload :AssetsControllerHelper
+  autoload :SubmissionWorkflow
+
   module Controller
     extend ActiveSupport::Autoload
     autoload :FileAssetsBehavior
