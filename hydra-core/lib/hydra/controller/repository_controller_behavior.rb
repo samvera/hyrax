@@ -76,32 +76,7 @@ module Hydra::Controller::RepositoryControllerBehavior
 
   protected 
   def load_document
-    @document = load_document_from_params
-  end
-
-  # Uses submitted params Hash to figure out what Model to load
-  # params should contain :content_type and :id
-  def load_document_from_params
-    af_model = retrieve_af_model(params[:content_type])
-    unless af_model 
-      af_model = ModsAsset
-    end
-    return af_model.find(params[:id])
-  end
-  
-  def retrieve_af_model(class_name, opts={})
-    if !class_name.nil?
-      klass = Module.const_get(class_name.camelcase)
-    else
-      klass = nil
-    end
-    if klass.is_a?(Class) && klass.superclass == ActiveFedora::Base
-      return klass
-    else
-      return opts.fetch(:default, false)
-    end
-    rescue NameError
-      return false
+    @document = ActiveFedora::Base.find(params[:id], :cast=>true)
   end
 
   private
