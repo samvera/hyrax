@@ -1,4 +1,5 @@
 require 'active_support'
+require 'active-fedora'
 require 'cancan'
 
 module Hydra
