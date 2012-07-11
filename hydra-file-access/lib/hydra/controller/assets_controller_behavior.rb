@@ -9,7 +9,6 @@ module Hydra::Controller::AssetsControllerBehavior
   include Blacklight::SolrHelper
   include Hydra::Controller::RepositoryControllerBehavior
   include Hydra::AssetsControllerHelper
-  include ReleaseProcessHelper
   include Blacklight::Catalog
 
   included do
@@ -113,6 +112,19 @@ module Hydra::Controller::AssetsControllerBehavior
   
   protected
 
+  def check_embargo_date_format
+    if params.keys.include? [:embargo, :embargo_release_date]
+      em_date = params[[:embargo, :embargo_release_date]]["0"]
+      unless em_date.blank?
+        begin 
+          !Date.parse(em_date)
+        rescue
+          params[[:embargo,:embargo_release_date]]["0"] = ""
+          raise "Unacceptable date format"
+        end
+      end
+    end
+  end  
 
   
   def mods_assets_update_validation
