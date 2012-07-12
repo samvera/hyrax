@@ -15,10 +15,10 @@ describe CatalogController do
   describe "#index" do
     before (:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', discover_groups:['public'])
+      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
-      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', discover_groups:['public'])
+      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', read_groups:['public'])
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
     end
@@ -52,19 +52,19 @@ describe CatalogController do
 
   describe "#recent" do
     before do
-      @gf1 = GenericFile.new(title:'Generic File 1', contributor:'contributor 1', resource_type:'type 1', discover_groups:['public'])
+      @gf1 = GenericFile.new(title:'Generic File 1', contributor:'contributor 1', resource_type:'type 1', read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
       sleep 1 # make sure next file is not at the same time compare
-      @gf2 = GenericFile.new(title:'Generic File 2', contributor:'contributor 2', resource_type:'type 2', discover_groups:['public'])
+      @gf2 = GenericFile.new(title:'Generic File 2', contributor:'contributor 2', resource_type:'type 2', read_groups:['public'])
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
       sleep 1 # make sure next file is not at the same time compare
-      @gf3 = GenericFile.new(title:'Generic File 3', contributor:'contributor 3', resource_type:'type 3', discover_groups:['public'])
+      @gf3 = GenericFile.new(title:'Generic File 3', contributor:'contributor 3', resource_type:'type 3', read_groups:['public'])
       @gf3.apply_depositor_metadata('mjg36')
       @gf3.save
       sleep 1 # make sure next file is not at the same time compare
-      @gf4 = GenericFile.new(title:'Generic File 4', contributor:'contributor 4', resource_type:'type 4', discover_groups:['public'])
+      @gf4 = GenericFile.new(title:'Generic File 4', contributor:'contributor 4', resource_type:'type 4', read_groups:['public'])
       @gf4.apply_depositor_metadata('mjg36')
       @gf4.save
       xhr :get, :recent

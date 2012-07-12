@@ -18,48 +18,48 @@ describe GenericFile do
       @file.depositor.should == 'jcoyne'
     end
     it "should have a set of permissions" do
-      @file.discover_groups=['group1', 'group2']
+      @file.read_groups=['group1', 'group2']
       @file.edit_users=['user1']
       @file.read_users=['user2', 'user3']
-      @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
-          {:type=>"group", :access=>"discover", :name=>"group2"},
+      @file.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
+          {:type=>"group", :access=>"read", :name=>"group2"},
           {:type=>"user", :access=>"read", :name=>"user2"},
           {:type=>"user", :access=>"read", :name=>"user3"},
           {:type=>"user", :access=>"edit", :name=>"user1"}]
     end
     describe "updating permissions" do
       it "should create new group permissions" do
-        @file.permissions = {:new_group_name => {'group1'=>'discover'}}
-        @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
+        @file.permissions = {:new_group_name => {'group1'=>'read'}}
+        @file.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should create new user permissions" do
-        @file.permissions = {:new_user_name => {'user1'=>'discover'}}
-        @file.permissions.should == [{:type=>"user", :access=>"discover", :name=>"user1"},
+        @file.permissions = {:new_user_name => {'user1'=>'read'}}
+        @file.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should not replace existing groups" do
-        @file.permissions = {:new_group_name=> {'group1' => 'discover'}}
-        @file.permissions = {:new_group_name=> {'group2' => 'discover'}}
-        @file.permissions.should == [{:type=>"group", :access=>"discover", :name=>"group1"},
-                                     {:type=>"group", :access=>"discover", :name=>"group2"},
+        @file.permissions = {:new_group_name=> {'group1' => 'read'}}
+        @file.permissions = {:new_group_name=> {'group2' => 'read'}}
+        @file.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
+                                     {:type=>"group", :access=>"read", :name=>"group2"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should not replace existing users" do
-        @file.permissions = {:new_user_name=>{'user1'=>'discover'}}
-        @file.permissions = {:new_user_name=>{'user2'=>'discover'}}
-        @file.permissions.should == [{:type=>"user", :access=>"discover", :name=>"user1"},
-                                     {:type=>"user", :access=>"discover", :name=>"user2"},
+        @file.permissions = {:new_user_name=>{'user1'=>'read'}}
+        @file.permissions = {:new_user_name=>{'user2'=>'read'}}
+        @file.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
+                                     {:type=>"user", :access=>"read", :name=>"user2"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should update permissions on existing users" do
-        @file.permissions = {:new_user_name=>{'user1'=>'discover'}}
+        @file.permissions = {:new_user_name=>{'user1'=>'read'}}
         @file.permissions = {:user=>{'user1'=>'edit'}}
         @file.permissions.should == [{:type=>"user", :access=>"edit", :name=>"user1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should update permissions on existing groups" do
-        @file.permissions = {:new_group_name=>{'group1'=>'discover'}}
+        @file.permissions = {:new_group_name=>{'group1'=>'read'}}
         @file.permissions = {:group=>{'group1'=>'edit'}}
         @file.permissions.should == [{:type=>"group", :access=>"edit", :name=>"group1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
@@ -462,7 +462,7 @@ describe GenericFile do
   context "with rightsMetadata" do
     subject do
       m = GenericFile.new()
-      m.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
+      m.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"read"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
       #m.save
       m
     end
@@ -475,19 +475,19 @@ describe GenericFile do
     it "should have read groups writer" do
       subject.read_groups = ['group-2', 'group-3']
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
     end
 
     it "should have read groups string writer" do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
       subject.rightsMetadata.groups.should == {'umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
     end
     it "should only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"discover"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
     end
   end
   describe "permissions validation" do
@@ -505,7 +505,7 @@ describe GenericFile do
     <human></human>
     <machine></machine>
   </copyright>
-  <access type="discover">
+  <access type="read">
     <human></human>
     <machine></machine>
   </access>
@@ -606,7 +606,7 @@ describe GenericFile do
     <human></human>
     <machine></machine>
   </copyright>
-  <access type="discover">
+  <access type="read">
     <human></human>
     <machine></machine>
   </access>
@@ -707,7 +707,7 @@ describe GenericFile do
     <human></human>
     <machine></machine>
   </copyright>
-  <access type="discover">
+  <access type="read">
     <human></human>
     <machine></machine>
   </access>
@@ -811,10 +811,6 @@ describe GenericFile do
     <human></human>
     <machine></machine>
   </copyright>
-  <access type="discover">
-    <human></human>
-    <machine></machine>
-  </access>
   <access type="read">
     <human></human>
     <machine>

@@ -27,12 +27,12 @@ describe GenericFilesController do
       file = fixture_file_upload('/world.png','application/zip')
       Delayed::Job.expects(:enqueue).with {|job| job.kind_of? CharacterizeJob}
       Delayed::Job.expects(:enqueue).with {|job| job.kind_of? UnzipJob}
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }, :terms_of_service=>"1"
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
     it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }, :terms_of_service=>"1"
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
       response.should be_success
       GenericFile.count.should == @file_count + 1
 
@@ -62,14 +62,14 @@ describe GenericFilesController do
       Rails.application.config.stubs(:id_namespace).returns('sample')
       file = fixture_file_upload('/world.png','image/png')
       controller.stubs(:add_posted_blob_to_asset)
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"discover"} }, :terms_of_service=>"1"
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
       lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch
       b = Batch.create(pid: "sample:batch_id")
       b.generic_files.first.pid.should == "test:123"
     end
     it "should set the depositor id" do
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, :files => [file], :Filename => "The world", :batch_id => "sample:batch_id", :permission => {"group"=>{"public"=>"discover"} }, :terms_of_service => "1"
+      xhr :post, :create, :files => [file], :Filename => "The world", :batch_id => "sample:batch_id", :permission => {"group"=>{"public"=>"read"} }, :terms_of_service => "1"
       response.should be_success
 
       saved_file = GenericFile.find('test:123')
@@ -153,9 +153,9 @@ describe GenericFilesController do
     end
 
     it "should add a new groups and users" do
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_group_name=>{'group1'=>'discover'}, :new_user_name=>{'user1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_group_name=>{'group1'=>'read'}, :new_user_name=>{'user1'=>'edit'}}}
 
-      assigns[:generic_file].discover_groups.should == ["group1"]
+      assigns[:generic_file].read_groups.should == ["group1"]
       assigns[:generic_file].edit_users.should include("user1", @user.login)
     end
     it "should update existing groups and users" do
