@@ -6,17 +6,6 @@ GIT
     yaml_db (0.2.2)
 
 GIT
-  remote: git://github.com/projecthydra/hydra-access-controls
-  revision: d6fb94d3d1c01111e519727fc87cc8d991d74596
-  ref: d6fb94d3
-  specs:
-    hydra-access-controls (0.0.2)
-      active-fedora
-      activesupport
-      cancan
-      deprecation
-
-GIT
   remote: git://github.com/psu-stewardship/hydra-ldap
   revision: e45b96635ce31f9d6e4c8a83197995ea6b116466
   ref: e45b9663
@@ -197,6 +186,12 @@ GEM
     hike (1.2.1)
     httpi (1.1.1)
       rack
+    hydra-access-controls (0.0.5)
+      active-fedora
+      activesupport
+      blacklight
+      cancan
+      deprecation
     hydra-head (4.1.0)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.1)
@@ -410,7 +405,7 @@ DEPENDENCIES
   execjs (~> 1.4.0)
   factory_girl_rails (~> 1.7.0)
   headless
-  hydra-access-controls!
+  hydra-access-controls (= 0.0.5)
   hydra-head (= 4.1.0)
   hydra-ldap!
   jettywrapper

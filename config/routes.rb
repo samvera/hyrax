@@ -6,7 +6,7 @@ ScholarSphere::Application.routes.draw do
   root :to => "catalog#index"
 
   # "Recently added files" route for catalog index view
-  match "catalog/recent" => "catalog#recent", :as => :catalog_recent_path
+  match "catalog/recent" => "catalog#recent", :as => :catalog_recent
 
   # Set up user routes
   devise_for :users
@@ -23,8 +23,11 @@ ScholarSphere::Application.routes.draw do
   # Downloads controller route
   resources :downloads, :only => "show"
 
-  # Logout route to destroy session
-  match 'logout' => 'sessions#destroy'
+  # Login/logout route to destroy session
+  match 'logout' => 'sessions#destroy', :as => :destroy_user_session
+  match 'login' => 'sessions#new', :as => :new_user_session
+  # TODO: supposedly required by BL but we haven't wired profiles up yet
+  # match 'profile' => 'sessions#edit', :as => :edit_user_registration
 
   # Dashboard routes (based on catalog routes)
   match 'dashboard' => 'dashboard#index', :as => :dashboard

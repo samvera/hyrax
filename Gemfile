@@ -6,7 +6,7 @@ gem 'blacklight', '3.5.0'
 gem 'hydra-head', '4.1.0'
 gem 'active-fedora', '4.4.0'
 gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'verify-users-exist', :ref => 'e45b9663'
-gem 'hydra-access-controls', :git => 'git://github.com/projecthydra/hydra-access-controls', :ref => 'd6fb94d3'
+gem 'hydra-access-controls', '0.0.5'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'
