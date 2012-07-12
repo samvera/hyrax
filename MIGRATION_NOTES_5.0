@@ -3,5 +3,4 @@
 * remove User.send(:include, Hydra::GenericUserAttributes) from config/initializers/hydra_config.rb
 
 * Hydra::AssetsControllerHelper moved to hydra-file-access.  Is this the correct place?
-* Should we remove app/view/catalog/_document_list.html.erb
 
