@@ -21,6 +21,7 @@ module Hydra
   autoload :SuperuserAttributes
   autoload :User
   autoload :UI
+  autoload :Solr
   autoload :Workflow
 
   autoload :FileAssetsHelper
