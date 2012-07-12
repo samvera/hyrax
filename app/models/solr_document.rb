@@ -2,6 +2,10 @@
 class SolrDocument
   include Blacklight::Solr::Document
 
+  def title_or_label
+    self['generic_file__title_display'] ? 'generic_file__title_display' : 'label_t'
+  end
+
   # self.unique_key = 'id'
 
   # The following shows how to setup this blacklight document to display marc documents
@@ -22,8 +26,8 @@ class SolrDocument
   # single valued. See Blacklight::Solr::Document::ExtendableClassMethods#field_semantics
   # and Blacklight::Solr::Document#to_semantic_values
   # Recommendation: Use field names from Dublin Core
-  #use_extension( Blacklight::Solr::Document::DublinCore)    
-  #field_semantics.merge!(    
+  #use_extension( Blacklight::Solr::Document::DublinCore)
+  #field_semantics.merge!(
   #                       :title => "title_display",
   #                       :author => "author_display",
   #                       :language => "language_facet",

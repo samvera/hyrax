@@ -2,7 +2,7 @@
 <%- type = 'no type value' if type.empty? -%>
 <%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
-<%- title = render_document_show_field_value(:document=>recent_document, :field=>"label_t") if title.empty? -%>
+<%- title = filename if title.empty? -%>
 <%- depositor = render_document_show_field_value(:document=>recent_document, :field=>"depositor_t") -%>
 <%- depositor = 'no depositor value' if depositor.empty? -%>
 <div class="item">

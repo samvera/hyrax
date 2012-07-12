@@ -1,22 +1,22 @@
 <!-- scholarsphere over ride -->
-<!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':' 
+<!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':'
 on element ids -->
 <% if document.has_key?(:noid_s) %>
-<tr id="document_<%= document[:noid_s].first.gsub(":", "_") %>" class="<%= cycle("","zebra") %>"> 
-  <td width="3%"><%# check_box_tag :generic_file, document[:id] %></td> 
+<% noid = document[:noid_s].first %>
+<tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
+  <td width="3%"><%# check_box_tag :generic_file, document[:id] %></td>
   <td width="42%">
-    <a href="#" id="expand_<%= document[:noid_s].first.gsub(":", "_") %>" class="itemicon itemexpand">expand</a>
+    <a href="#" id="expand_<%= noid.gsub(":", "_") %>" class="itemicon itemexpand">expand</a>
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first), :id => 'src_copy_link_' + document[:noid_s].first %> <br />
-    <%= document[:noid_s].first %>
+    <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br />
   </td>
   <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
   <td width="12%">
     <% if !document[:edit_access_group_t].nil? %>
-      Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %> 
+      Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %>
       <br />
     <% end %>
-      Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %> 
+      Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %>
   </td>
   <td width="5%" align="center">
     <% if document[:read_access_group_t].nil? or (document[:read_access_group_t] & ['public']).empty? %>
@@ -26,28 +26,28 @@ on element ids -->
     <% end %>
   </td>
   <td width="23%" align="center">
-    <%= link_to 'get code', '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => 'copy_link_' + document[:noid_s].first %>
-    <%= link_to 'edit', edit_generic_file_path(document[:noid_s].first), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
-    <%= link_to 'download', download_path(document[:noid_s].first), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
+    <%= link_to 'get code', '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
+    <%= link_to 'edit', edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
+    <%= link_to 'download', download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
   </td>
 </tr>
-<tr class="hidden" id="detail_<%= document[:noid_s].first.gsub(":", "_") %>"> <!--  document detail"> -->
+<tr class="hidden" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->
   <td colspan="6">
     <table class="expanded-details">
       <tr>
-        <td><strong>Title:</strong>
-          <%= link_to render_document_show_field_value(:document=>document, :field=>"generic_file__title_t"), generic_file_path(document[:noid_s].first) %> </td>
-        <td><strong>Format:</strong><%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %> </td>
+        <td><strong>File Name: </strong>
+          <%= link_to render_document_show_field_value(:document=>document, :field=>"label_t"), generic_file_path(noid) %> </td>
+        <td><strong>Format: </strong>
+	  <%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %> </td>
       </tr>
       <tr>
-        <td><strong>Creator:</strong>
-	  <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %>
+        <td><strong>Creator: </strong>
+          <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %>
         </td>
-        <td><strong>Depositor:</strong>
-	  <%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %>
+        <td><strong>Depositor: </strong>
+          <%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %>
         </td>
       </tr>
-          
     </table>
   </td>
 </tr>

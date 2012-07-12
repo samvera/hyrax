@@ -1,20 +1,17 @@
-<!-- scholarsphere over ride -->
-<!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':' 
-on element ids -->
 <% if document.has_key?(:noid_s) %>
 <%# logger.info document[:generic_file__creator_t].inspect %>
   <li>
   <h2>
-    <%= link_to document.fetch(:label_t, ['not found']).first, generic_file_path(document[:noid_s].first) %> 
+    <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(document[:noid_s].first) %>
   </h2>
   <table class="verticalheadings">
     <tr>
       <td rowspan="5">
-    <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
+        <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
       </td>
       <th>Title:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></th>
-    </tr> 
+    </tr>
     <tr>
       <th>Depositor:</div>
       <td><%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %></td>
