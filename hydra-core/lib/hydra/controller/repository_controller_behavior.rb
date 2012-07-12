@@ -1,24 +1,8 @@
-# Hydra-repository Contoller is a controller layer mixin. It is in the controller scope: request params, session etc.
-# 
-# will move to lib/hydra/controller/repository_controller_behavior in release 5.x
-# 
-# NOTE: Be careful when creating variables here as they may be overriding something that already exists.
-# The ActionController docs: http://api.rubyonrails.org/classes/ActionController/Base.html
-#
-# Override these methods in your own controller for customizations:
-# 
-# class HomeController < ActionController::Base
-#   
-#   include Stanford::SolrHelper
-#   
-#   def solr_search_params
-#     super.merge :per_page=>10
-#   end
-#   
-# end
+# Hydra::RepositoryContollerBehavior is a controller layer mixin. It is in the controller scope: request params, session etc.
 #
 module Hydra::Controller::RepositoryControllerBehavior
   
+  # TODO, move these to a helper file.
   def self.included(c)
     if c.respond_to?(:helper_method)
       c.helper_method :solr_name

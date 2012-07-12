@@ -1,2 +1,6 @@
 * get_file_asset_count(solr_doc) has been replaced by 
   fedora_doc.file_asset_count (or just fedora_doc.parts.length if you prefer)
+* remove User.send(:include, Hydra::GenericUserAttributes) from config/initializers/hydra_config.rb
+
+* What happened to Hydra::AssetsControllerHelper? Need to restore this?
+
