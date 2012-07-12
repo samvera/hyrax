@@ -1,0 +1,136 @@
+<%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+<%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+<div class="row span6" id="descriptions_display">
+  <h2 class="non lower">Descriptions</h2>
+    <div class="well">
+
+      <div class="control-group">
+        <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
+        <div class="controls">
+          <%= f.select "resource_type", options_for_select(ScholarSphere::Application::config.resource_types.keys, @generic_file.resource_type.to_a), {}, {:multiple=>true, :size=>7} %>
+          <p class="help-block">You may select multiple types to apply<p>
+        </div>
+      </div><!-- /control-group -->
+
+      <% @terms.each do |t| %>
+        <% next if t.empty? %> 
+        <% key = t.to_s.split("generic_file__").last %>
+        <%# consider these fields to be uneditable via the web form %>
+        <% next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key) %>
+        <% logger.info "!!!! Generic file has no method #{key}" unless @generic_file.respond_to?(key) %>
+        <% if @generic_file.respond_to?(key) %>
+          <% vals =  @generic_file.send(key) %>
+          <% # not an arry lets just shove it in one %>
+          <% vals = [vals] unless vals.is_a?(Array) %>
+          <%# if vals is zero we create an empty array to loop over for output %>
+          <% vals = [''] if vals.count == 0 %>
+          <% vals.each_with_index do |v, index| %>
+            <%# a hacky way to change selected fields' labels %>
+            <% label = nil %>
+            <% label = "Location" if key == "based_near" %>
+            <% label = "Keyword" if key == "tag" %>
+            <div class="control-group">
+              <% if label %>
+                <%= f.label key, label, :class=>"control-label" %>
+              <% else %>
+                <%= f.label key, :class=>"control-label" %>
+              <% end %>
+              <div class="controls" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
+                <% if key == "description" %>
+                  <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large"  %>
+
+                <% else %>
+                  <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %> 
+                <% end %>
+                <% if index == 0 %>
+                  <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn"  %>&nbsp;
+                  <span class="formHelpContainer">
+                    <span class="formHelper" id="generic_file_<%= key %>_help">
+                      <%= ScholarSphere::Application.config.metadata_help["generic_file_" + key] %>
+                    </span>
+                  </span>
+                <% end %>
+              </div><!-- /controls -->
+              <div id="additional_<%= key %>_elements"></div>
+            </div><!-- /control-group -->
+          <% end %>
+        <% end %> 
+      <% end %>
+
+    </div><!-- /well -->
+  <div class="row">
+    <div class="form-actions"><%= f.submit "Save Permissions", :name => "update_descriptions", :id => "upload_submit", :class => "btn-primary" %></div>
+  </div>
+</div><!-- /row /span6 -->
+
+<% if false %>
+<div class="row span6" id="descriptions_display">
+  <h2 class="non lower">Descriptions</h2>
+    <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+    <table class="verticalheadings well">
+      <tbody>
+        <tr>
+          <th> <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %></th>
+          <td>
+            <%= f.select "resource_type", options_for_select(ScholarSphere::Application::config.resource_types.keys, @generic_file.resource_type.to_a), {}, {:multiple=>true, :size=>7} %>
+            <p class="help-block">You may select multiple types to apply<p>
+          </td>
+        </tr>
+      <% @terms.each do |t| %>
+        <% next if t.empty? %> 
+        <% key = t.to_s.split("generic_file__").last %>
+        <%# consider these fields to be uneditable via the web form %>
+        <% next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key) %>
+        <% logger.info "!!!! Generic file has no method #{key}" unless @generic_file.respond_to?(key) %>
+        <% if @generic_file.respond_to?(key) %>
+          <% vals =  @generic_file.send(key) %>
+          <% # not an arry lets just shove it in one %>
+          <% vals = [vals] unless vals.is_a?(Array) %>
+          <%# if vals is zero we create an empty array to loop over for output %>
+          <% vals = [''] if vals.count == 0 %>
+          <% vals.each_with_index do |v, index| %>
+	    <%# a hacky way to change selected fields' labels %>
+	    <% label = nil %>
+      <% label = "Location" if key == "based_near" %>
+      <% label = "Keyword" if key == "tag" %>
+            <tr>
+              <th>
+		<% if label %>
+		  <%= f.label key, label, :class=>"control-label" %>
+                <% else %>
+                  <%= f.label key, :class=>"control-label" %>
+                <% end %>
+              </th>
+              <td>
+                <div class="control-group" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
+                  <div class="controls">
+                    <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-medium" %> 
+                    <% if index == 0 %>
+                      <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn"  %>
+                      &nbsp;
+                      <span class="formHelpContainer">
+                        <span class="formHelper" id="generic_file_<%= key %>_help">
+                        <%= ScholarSphere::Application.config.metadata_help["generic_file_" + key] %>
+                        </span>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+                <div id="additional_<%= key %>_elements"></div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %> 
+      <% end %>
+        <tr>
+          <td> 
+  <%= button_to "Delete File", generic_file_path(@generic_file), :confirm => "Do you really want to delete this file from ScholarSphere? This action is irreversible.", :method => :delete, :class => "btn-danger" %>
+          </td>
+          <td align="right"> <%= f.submit "Save Descriptions", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary" %> </td>
+        </tr>
+      </tbody>
+    </table>
+</div><!-- /row -->
+<% end %>
+<% end %>
+
