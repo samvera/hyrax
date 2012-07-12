@@ -154,7 +154,19 @@ $(function() {
       $('#more_descriptions').show();
   });
 
-  // attach function to verify uid
+  $('#new_user_permission_skel').attr('disabled', true);
+  $('#new_group_permission_skel').attr('disabled', true);
+
+  // dropdown of umgs on select enable the permission and add focus
+  $('#new_group_name_skel').on('change', function() {
+      // clear out any existing messages
+    if ($('#new_group_name_skel :selected').index() != "0") {
+      $('#new_group_permission_skel').attr('disabled', false);
+      $('#new_group_permission_skel').focus();
+    }
+  });
+
+  // input for uids -  attach function to verify uid
   $('#new_user_name_skel').on('blur', function() {
       // clear out any existing messages
       $('#directory_user_result').html('');
@@ -169,112 +181,109 @@ $(function() {
           if (!data) {
             $('#directory_user_result').html('User id ('+un+ ') does not exist.'); 
             $('#new_user_name_skel').select();
-
+            $('#new_user_permission_skel').val('none');
+            $('#new_user_permission_skel').attr('disabled', true);
+            return;
           }
           else {
-            $('#new_permission_user').attr('disabled', false);
+            $('#new_user_permission_skel').attr('disabled', false);
+            $('#new_user_permission_skel').focus();
           }
         },
       }); 
 
   });
-  
-  $('#new_user_permission_skel').on('change', function() {
-      var container = $(document.createElement('div'));
-      container.attr("class", "permission");
+
+  // dropdown of perms for users
+  $('#new_user_permission_skel').on('change focus', function() {
+      if($('#new_user_name_skel').val() == "" || $('#new_user_permission_skel :selected').index() == "0") {
+        return;
+      }
       var un = $('#new_user_name_skel').val();
       var perm_form = $('#new_user_permission_skel').val();
       var perm = $('#new_user_permission_skel :selected').text();
-      var remove = $('<a>Remove</a>');
-    
       // clear out the elements to add more
       $('#new_user_name_skel').val('');
       $('#new_user_permission_skel').val('none');
 
-      $('#new_user_list').append(container);
-      container.html(un + ':' + perm + ' '); 
-      container.append(remove);
-      remove.click(function () {
-        container.remove();
-        });
-
-      $('<input>').attr({
-          type: 'hidden',
-          name: 'generic_file[permissions][new_user_name]['+un+']',
-          value: perm_form 
-        }).appendTo(container);
-      /*
-      $('<input>').attr({
-          type: 'hidden',
-          name: 'generic_file[permissions][new_user_permission]['+perm_form+']',
-          value: perm_form 
-        }).appendTo(container);
-      $('new_user_name_skel').focus();  
-      */
-    });
-
-
-  // attach function to verify group cn 
-  $('#new_group_name_skel').on('blur', function() {
-      // clear out any existing messages
-      $('#directory_group_result').html('');
-      var reservedGroups = ["public", "registered"];
-      var cn = $('#new_group_name_skel').val();
-      var perm = $('#new_group_permission_skel').val();
-      if ($.inArray($.trim(cn), reservedGroups) != -1) { 
-        $('#directory_group_result').html('Group ('+cn+ ') is a reserved group name.'); 
-        $('#new_group_name_skel').select();
-        return;
-      }
-      if ($.trim(cn).length == 0) {
-        return;
-      }
-      $.ajax( {
-        url: "/directory/group/" + cn, 
-        success: function( data ) {           
-          if (!data) {
-            $('#directory_group_result').html('Group ('+cn+ ') does not exist.'); 
-            $('#new_group_name_skel').select();
-
-          }
-        },
-      }); 
-
+      addPerm(un, perm_form, perm, 'new_user_name');
   });
-  
-  $('#new_group_permission_skel').on('change', function() {
-      var container = $(document.createElement('div'));
-      container.attr("class", "permission");
+
+  // dropdown of perms for groups
+  $('#new_group_permission_skel').on('change focus', function() {
+      if ($('#new_group_name_skel :selected').index() == "0" || $('#new_group_permission_skel :selected').index() == "0") {
+        return;
+      }
       var cn = $('#new_group_name_skel').val();
       var perm_form = $('#new_group_permission_skel').val();
       var perm = $('#new_group_permission_skel :selected').text();
-      var remove = $('<a>Remove</a>');
-    
       // clear out the elements to add more
       $('#new_group_name_skel').val('');
       $('#new_group_permission_skel').val('none');
+      
+      addPerm(cn, perm_form, perm, 'new_group_name');
+  });
 
-      $('#new_group_list').append(container);
-      container.html(cn + ':' + perm + ' '); 
-      container.append(remove);
+  function addPerm(un, perm_form, perm, perm_type) 
+  { 
+      var tr = $(document.createElement('tr'));
+      var td1 = $(document.createElement('td'));
+      var td2 = $(document.createElement('td'));
+      var remove = $('<button class="close btn-inverse">X</button>');
+
+      $('#new_perms').append(td1);
+      $('#new_perms').append(td2);
+
+      td1.html('<label class="control-label">'+un+'</label>');
+      td2.html(perm);
+      td2.append(remove);
       remove.click(function () {
-        container.remove();
+        tr.remove();
         });
 
       $('<input>').attr({
           type: 'hidden',
-          name: 'generic_file[permissions][new_group_name]['+cn+']',
-          value: perm_form
-        }).appendTo(container);
-      /*
-      $('<input>').attr({
-          type: 'hidden',
-          name: 'generic_file[permissions][new_group_permission]['+perm_form+']',
+          name: 'generic_file[permissions]['+perm_type+']['+un+']',
           value: perm_form 
-        }).appendTo(container);
-      */
-      $('new_group_name_skel').focus();  
-    });
+        }).appendTo(td2);
+      tr.append(td1);
+      tr.append(td2);
+      $('#file_permissions').append(tr);
+      tr.effect("highlight", {}, 3000);
+  }
+
+  $('#edit_descriptions_link').on('click', function() {
+    $('#edit_descriptions_link').attr('class', 'active');
+    $('#edit_versioning_link').attr('class', '');
+    $('#edit_permissions_link').attr('class', '');
+
+    $('#descriptions_display').show();
+    $('#versioning_display').hide();
+    $('#permissions_display').hide();
+    $('#permissions_submit').hide();
+  });
+
+  $('#edit_versioning_link').on('click', function() {
+    $('#edit_descriptions_link').attr('class', '');
+    $('#edit_versioning_link').attr('class', 'active');
+    $('#edit_permissions_link').attr('class', '');
+
+    $('#descriptions_display').hide();
+    $('#versioning_display').show();
+    $('#permissions_display').hide();
+    $('#permissions_submit').hide();
+  });
+
+  $('#edit_permissions_link').on('click', function() {
+    $('#edit_permissions_link').attr('class', 'active');
+    $('#edit_versioning_link').attr('class', '');
+    $('#edit_descriptions_link').attr('class', '');
+
+    $('#descriptions_display').hide();
+    $('#versioning_display').hide();
+    $('#permissions_display').show();
+    $('#permissions_submit').show();
+  });
 
 
 });

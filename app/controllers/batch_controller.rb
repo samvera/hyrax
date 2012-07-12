@@ -9,6 +9,7 @@ class BatchController < ApplicationController
   def edit
     @batch = Batch.new({pid: params[:id]})
     @generic_file = GenericFile.new
+    @groups = ScholarSphere::LDAP.groups_for_user("#{current_user}")
   end
 
   def update

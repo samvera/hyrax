@@ -1,198 +1,167 @@
 
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>  
 <%= hidden_field_tag(:extra_description_count, "1") %>
-<div class="uploader-contents">
-  <div class="row">
-    <div class="span3">
-        <h2>Description(s)</h2>
-    </div>
-    <div class="span9">
-      <div class="control-group" id="resources">
+<div class="row span7" id="descriptions_display">
+  <h2 class="non lower">Descriptions</h2>
+  <div class="well">
+    <div class="control-group" id="resources">
         <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
-        <div class="controls">
+      <div class="controls">
             <%= f.select "resource_type", ScholarSphere::Application::config.resource_types, {}, {:multiple=>true, :size=>7} %>
           <p class="help-block">You may select multiple types to apply to all files<p>
-        </div>
       </div>
-      <div class="control-group" id="additional_title_clone">
-        <%= f.label :title, "Title", :class=>"control-label" %> 
-        <div class="controls">
+    </div>
+
+    <div class="control-group">
+      <%= f.label :title, "Title", :class=>"control-label" %> 
+      <div class="controls" id="additional_title_clone">
           <%= f.text_field :title, :name=>"generic_file[title][]", :value=>"" %>  
-          <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder"  %>
+          <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn"  %>
           &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_title_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>
-            </span>
-         </span>
-        </div>
+          <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title">Help</a>
       </div>
-      <div id="additional_title_elements"></div>
+    </div>
+    <div id="additional_title_elements"></div>
 
-      <div class="control-group" id="additional_tag_clone">
+    <div class="control-group">
         <%= f.label :tag, "Keyword", :class=>"control-label" %> 
-        <div class="controls">
+      <div class="controls" id="additional_tag_clone">
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
-          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder"  %>
+          <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn"  %>
           &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_tag_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>
-            </span>
-         </span>
-        </div>
+          <a href="#" id="generic_file_tag_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>" data-original-title="Keyword">Help</a>
       </div>
-      <div id="additional_tag_elements"></div>
+    </div>
+    <div id="additional_tag_elements"></div>
 
+    <div class="control-group">
       <%= f.label :subject, :class=>"control-label" %> 
-      <div class="controls" id="additional_subject_clone">
-        <%= f.text_field :subject, :class=>"controls", :name=>"generic_file[subject][]", :value=>"" %>  
-        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder"  %>
+      <div class="controls" id="additional_subject_clone"> 
+        <%= f.text_field :subject, :name=>"generic_file[subject][]", :value=>"" %>  
+        <%= f.submit :value => "+", :name=> "additional_subject", :id => "additional_subject_submit", :class => "adder btn"  %>
           &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_subject_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_subject"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_subject_elements"></div>
+          <a href="#" id="generic_file_subject_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_subject"] %>" data-original-title="Subject">Help</a>
+       </div>
+    </div>
+    <div id="additional_subject_elements"></div>
 
+    <div class="control-group">
       <%= f.label :creator, :class=>"control-label" %> 
       <div class="controls" id="additional_creator_clone">
-        <%= f.text_field :creator, :class=>"controls", :name=>"generic_file[creator][]", :value=>"" %>
-        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder"  %>
+        <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"" %>
+        <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn"  %>
           &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_creator_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>
-            </span>
-         </span>
+          <a href="#" id="generic_file_creator_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>" data-original-title="Creator">Help</a>
       </div>
       <div id="additional_creator_elements"></div>
+    </div>
 
-    </div> <!-- close .span9 -->
-  </div><!-- close .row description section -->
-
-  <div class="row">
-    <div class="span12" id="add_descriptions">
+    <div class="row" id="add_descriptions">
       <a href="#" id="add_descriptions">Add More Description Types</a>
     </div>
+      <!-- hidden on initial load -->
+
+    <div class="hidden" id="more_descriptions">
+      <div class="control-group">
+        <%= f.label :related_url, :class=>"control-label" %> 
+        <div class="controls" id="additional_related_url_clone">
+          <%= f.text_field :related_url, :name=>"generic_file[related_url][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder btn"  %>
+          &nbsp;
+          <a href="#" id="generic_file_related_url_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_related_url"] %>" data-original-title="Related URL">Help</a>
+        </div>
+        <div id="additional_related_url_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :based_near, 'Location', :class=>"control-label" %> 
+        <div class="controls" id="additional_based_near_clone">
+        <%= f.text_field :based_near, :name=>"generic_file[based_near][]", :value=>""  %> 
+        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder btn"  %>
+        </div>
+        <div id="additional_based_near_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :contributor, :class=>"control-label" %> 
+        <div class="controls" id="additional_contributor_clone">
+          <%= f.text_field :contributor, :name=>"generic_file[contributor][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_contributor_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_contributor"] %>" data-original-title="Contributor">Help</a>
+        </div>
+        <div id="additional_contributor_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :date_created, :class=>"control-label" %> 
+        <div class="controls" id="additional_date_created_clone">
+          <%= f.text_field :date_created, :name=>"generic_file[date_created][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_date_created_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_date_created"] %>" data-original-title="Date Created">Help</a>
+        </div>
+        <div id="additional_date_created_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :description, :class=>"control-label" %> 
+        <div class="controls" id="additional_description_clone">
+          <%= f.text_area :description, :name=>"generic_file[description][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_description_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_description"] %>" data-original-title="Description">Help</a>
+        </div>
+        <div id="additional_description_elements"></div>
+      </div>
+  
+      <div class="control-group">
+        <%= f.label :identifier, :class=>"control-label" %> 
+        <div class="controls" id="additional_identifier_clone">
+          <%= f.text_field :identifier, :name=>"generic_file[identifier][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_identifier_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_identifier"] %>" data-original-title="Identifier">Help</a>
+        </div>
+        <div id="additional_identifier_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :language, :class=>"control-label" %> 
+        <div class="controls" id="additional_language_clone">
+          <%= f.text_field :language, :name=>"generic_file[language][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_language_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_language"] %>" data-original-title="Language">Help</a>
+        </div>
+        <div id="additional_language_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :publisher, :class=>"control-label" %> 
+        <div class="controls" id="additional_publisher_clone">
+          <%= f.text_field :publisher, :name=>"generic_file[publisher][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_publisher_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_publisher"] %>" data-original-title="Publisher">Help</a>
+        </div>
+        <div id="additional_publisher_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :rights, :class=>"control-label" %> 
+        <div class="controls" id="additional_rights_clone">
+          <%= f.text_field :rights, :name=>"generic_file[rights][]", :value=>""  %> 
+          <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder btn"  %>
+            &nbsp;
+          <a href="#" id="generic_file_rights_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>" data-original-title="Rights">Help</a>
+        </div>
+        <div id="additional_rights_elements"></div>
+      </div>
+    </div> <!-- /more_descriptions -->
+
+  </div><!-- /well -->
+  <div class="form-actions">
+    <%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
   </div>
-  <div class="hidden" id="more_descriptions">
-      <%= f.label :related_url, :class=>"control-label" %> 
-      <div class="controls" id="additional_related_url_clone">
-        <%= f.text_field :related_url, :class=>"controls", :name=>"generic_file[related_url][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_related_url", :id => "additional_related_url_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_related_url_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_related_url"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_related_url_elements"></div>
-
-      <%= f.label :based_near, 'Location', :class=>"control-label" %> 
-      <div class="controls" id="additional_based_near_clone">
-        <%= f.text_field :based_near, :class=>"controls", :name=>"generic_file[based_near][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_based_near", :id => "additional_based_near_submit", :class => "adder"  %>
-      </div>
-      <div id="additional_based_near_elements"></div>
-
-      <%= f.label :contributor, :class=>"control-label" %> 
-      <div class="controls" id="additional_contributor_clone">
-        <%= f.text_field :contributor, :class=>"controls", :name=>"generic_file[contributor][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_contributor", :id => "additional_contributor_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_contributor_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_contributor"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_contributor_elements"></div>
-
-      <%= f.label :date_created, :class=>"control-label" %> 
-      <div class="controls" id="additional_date_created_clone">
-        <%= f.text_field :date_created, :class=>"controls", :name=>"generic_file[date_created][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_date_created", :id => "additional_date_created_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_date_created_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_date_created"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_date_created_elements"></div>
-
-      <%= f.label :description, :class=>"control-label" %> 
-      <div class="controls" id="additional_description_clone">
-        <%= f.text_area :description, :class=>"controls", :name=>"generic_file[description][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_description", :id => "additional_description_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_description_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_description"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_description_elements"></div>
-
-      <%= f.label :identifier, :class=>"control-label" %> 
-      <div class="controls" id="additional_identifier_clone">
-        <%= f.text_field :identifier, :class=>"controls", :name=>"generic_file[identifier][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_identifier", :id => "additional_identifier_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_identifier_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_identifier"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_identifier_elements"></div>
-
-      <%= f.label :language, :class=>"control-label" %> 
-      <div class="controls" id="additional_language_clone">
-        <%= f.text_field :language, :class=>"controls", :name=>"generic_file[language][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_language", :id => "additional_language_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_language_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_language"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_language_elements"></div>
-
-      <%= f.label :publisher, :class=>"control-label" %> 
-      <div class="controls" id="additional_publisher_clone">
-        <%= f.text_field :publisher, :class=>"controls", :name=>"generic_file[publisher][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_publisher", :id => "additional_publisher_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_publisher_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_publisher"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_publisher_elements"></div>
-
-      <%= f.label :rights, :class=>"control-label" %> 
-      <div class="controls" id="additional_rights_clone">
-        <%= f.text_field :rights, :class=>"controls", :name=>"generic_file[rights][]", :value=>""  %> 
-        <%= f.submit :value => "+", :name=> "additional_rights", :id => "additional_rights_submit", :class => "adder"  %>
-          &nbsp;
-          <span class="formHelpContainer">
-            <span class="formHelper" id="generic_file_rights_help">
-              <%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>
-            </span>
-         </span>
-      </div>
-      <div id="additional_rights_elements"></div>
-
-  </div><!-- close .row description section -->
-
-<div class="form-actions">
-  <%= f.submit :value => "Upload", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large" %>
-</div>
-</div><!-- close .uploader-contents -->
+</div> <!-- /row /span6 -->
