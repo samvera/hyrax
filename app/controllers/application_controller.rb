@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
     end
     
     cache_flash
-    request.env['warden'].logout if env['warden'] and env['warden'].user and request.env['REMOTE_USER'].nil?
+    request.env['warden'].logout if env['warden'] and env['warden'].user and !user_loggedin?
     restore_flash
   end
 
@@ -60,8 +60,16 @@ class ApplicationController < ActionController::Base
   end
 
   def render (object=nil)
+    filter_notify
     add_notifications
     super(object)
+  end
+
+  # remove error inserted if the user does in fact login
+  def filter_notify
+     logger.info "Flash alerts #{flash[:alert].inspect} logged in? = #{user_loggedin?}"
+     flash[:alert] = flash[:alert].sub('You need to sign in or sign up before continuing.','') if user_loggedin? && !flash[:alert].blank?
+     flash[:alert] = nil if  !flash[:alert].nil? && flash[:alert].length == 0
   end
 
   def add_notifications
@@ -113,5 +121,9 @@ protected
   end
   def restore_flash
     [:notice, :error, :alert].each {|type| flash[type] = @cflash[type]} 
+  end
+  
+  def user_loggedin?
+      return !request.env['REMOTE_USER'].blank?
   end
 end
