@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'hydra-mods', ">= 0.0.5"
   s.add_dependency 'deprecation', ">= 0.0.5"
   s.add_dependency 'jquery-rails'
-  s.add_dependency 'hydra-access-controls', ">= 0.0.2"
+  s.add_dependency 'hydra-access-controls', ">= 0.0.4"
   
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'yard'
