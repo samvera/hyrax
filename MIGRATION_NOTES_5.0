@@ -4,3 +4,5 @@
 
 * Hydra::AssetsControllerHelper moved to hydra-file-access.  Is this the correct place?
 
+* TODO: pull in changes in hydra-access-controls between 0.0.3 and 0.0.5
+
