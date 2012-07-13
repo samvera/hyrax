@@ -15,11 +15,11 @@ module Hydra::RoleMapperBehavior
       if user_or_uid.kind_of?(String)
         user = ::User.find_by_user_key(user_or_uid)
         user_id = user_or_uid
-      elsif user_or_uid.kind_of?(::User) && !user_or_uid.uid.nil?  
+      elsif user_or_uid.kind_of?(::User) && user_or_uid.user_key   
         user = user_or_uid
         user_id = user.user_key
       end
-      array = byname[user_id]||[]
+      array = byname[user_id].dup || []
       array = array << 'registered' unless (user.nil? || user.new_record?) 
       array
     end
