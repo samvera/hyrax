@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+gem 'rails', '3.2.6'
+
+gem 'sqlite3'
+
+gem 'devise'
+gem 'blacklight'
+gem 'hydra-access-controls', :path=>'../../../hydra-access-controls'
+gem 'hydra-core', :path=>'../../'
+gem 'rspec-rails'
+gem 'factory_girl_rails'

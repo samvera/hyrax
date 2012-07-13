@@ -1,9 +1,0 @@
-# For given rails environment, what is the Solr url?
-development:
-  url: http://localhost:8983/solr/development
-test: &TEST
-  url: http://localhost:8983/solr/test
-cucumber:
-  <<: *TEST
-production:
-  url: http://your.production.server:8080/bl_solr/core0 
