@@ -6,11 +6,12 @@ APP_ROOT= File.dirname(__FILE__)
 require 'jettywrapper'
 
 namespace :jetty do
+  TEMPLATE_DIR = 'hydra-core/lib/generators/hydra/templates'
+  SOLR_DIR = "#{TEMPLATE_DIR}/solr_conf/conf"
+  FEDORA_DIR = "#{TEMPLATE_DIR}/fedora_conf/conf"
+
   desc "Config Jetty"
   task :config do
-    TEMPLATE_DIR = 'hydra-core/lib/generators/hydra/templates'
-    SOLR_DIR = "#{TEMPLATE_DIR}/solr_conf/conf"
-    FEDORA_DIR = "#{TEMPLATE_DIR}/fedora_conf/conf"
     Rake::Task["jetty:reset"].reenable
     Rake::Task["jetty:reset"].invoke
     Rake::Task["jetty:config_fedora"].reenable
