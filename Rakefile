@@ -58,7 +58,7 @@ namespace :jetty do
 end
 
 desc "Run Continuous Integration"
-task :ci => 'jetty:config' do
+task :ci => ['jetty:reset', 'jetty:config'] do
   jetty_params = Jettywrapper.load_config
   error = nil
   error = Jettywrapper.wrap(jetty_params) do
