@@ -73,6 +73,9 @@ task :ci => ['jetty:reset', 'jetty:config'] do
   end
   raise "test failures: #{error}" if error
 
+  Rake::Task["doc"].invoke
+  
+
 end
 
 task :spec do
@@ -89,5 +92,31 @@ def all_modules(cmd)
       #cmd = "bundle exec rake spec" # doesn't work because it doesn't require the gems specified in the Gemfiles of the test rails apps 
       return false unless system(cmd)
     end
+  end
+end
+
+begin
+  require 'yard'
+  require 'yard/rake/yardoc_task'
+  project_root = File.expand_path(".")
+  doc_destination = File.join(project_root, 'doc')
+  if !File.exists?(doc_destination) 
+    FileUtils.mkdir_p(doc_destination)
+  end
+
+  YARD::Rake::YardocTask.new(:doc) do |yt|
+    yt.files   = ['*/lib/**/*.rb', project_root+"*", '*/app/**/*.rb']
+
+    yt.options << "-m" << "textile"
+    yt.options << "--protected"
+    yt.options << "--no-private"
+    yt.options << "-r" << "README.textile"
+    yt.options << "-o" << "doc"
+    yt.options << "--files" << "*.textile"
+  end
+rescue LoadError
+  desc "Generate YARD Documentation"
+  task :doc do
+    abort "Please install the YARD gem to generate rdoc."
   end
 end
