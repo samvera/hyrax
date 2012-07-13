@@ -37,14 +37,18 @@ namespace :jetty do
       app_root = File.join(File.dirname(__FILE__),"..")
     end
      
-    fcfg = File.join(FEDORA_DIR,"test/fedora.fcfg")
-    puts "PWD:: #{FileUtils.pwd}"
+    fcfg = File.join(FEDORA_DIR,"development","fedora.fcfg")
     if File.exists?(fcfg)
-      puts "copying over fedora.fcfg"
+      puts "copying over development/fedora.fcfg"
       cp("#{fcfg}", 'jetty/fedora/default/server/config/', :verbose => true)
     else
       puts "#{fcfg} file not found -- skipping fedora config"
     end
+    fcfg = File.join(FEDORA_DIR,"test","fedora.fcfg")
+    if File.exists?(fcfg)
+      puts "copying over test/fedora.fcfg"
+      cp("#{fcfg}", 'jetty/fedora/test/server/config/', :verbose => true)
+    else
   end
 
   desc "Copies the default SOLR config files and starts up the fedora instance."

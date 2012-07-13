@@ -667,7 +667,7 @@
     <param name="dbPassword" value="fedoraAdmin">
       <comment>The database password.</comment>
     </param>
-    <param name="jdbcURL" value="jdbc:derby:fedora/default/derby/fedora3;create=true">
+    <param name="jdbcURL" value="jdbc:derby:fedora/test/derby/fedora3;create=true">
       <comment>The JDBC connection URL.</comment>
     </param>
     <param name="jdbcDriverClass" value="org.apache.derby.jdbc.EmbeddedDriver">
