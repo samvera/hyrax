@@ -52,7 +52,7 @@ namespace :jetty do
 
   desc "return development jetty to its pristine state, as pulled from git"
   task :reset => ['jetty:stop'] do
-    system("cd jetty && git reset --hard HEAD && git clean -dfx & cd ..")
+    system("cd jetty && git reset --hard HEAD && git clean -dfx && cd ..")
     sleep 2
   end
 end
