@@ -3,6 +3,8 @@
      case request.referer
      when /dashboard/
        link_to 'Dashboard', dashboard_path
+     when /files/
+       link_to 'Dashboard', dashboard_path
      when /catalog/
        link_to 'Back to Search Results', request.referer
      else
