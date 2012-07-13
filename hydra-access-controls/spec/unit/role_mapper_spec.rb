@@ -16,6 +16,13 @@ describe RoleMapper do
     RoleMapper.roles('archivist2@example.com').should == ['archivist']
   end
 
+  it "should not change it's response when it's called repeatedly" do
+    u = User.new(:uid=>'leland_himself@example.com')
+    u.stub(:new_record?).and_return(false)
+    RoleMapper.roles(u).sort.should == ['archivist', 'donor', 'patron', "registered"]
+    RoleMapper.roles(u).sort.should == ['archivist', 'donor', 'patron', "registered"]
+  end
+
   it "should return an empty array if there are no roles" do
     RoleMapper.roles('zeus@olympus.mt').empty?.should == true
   end

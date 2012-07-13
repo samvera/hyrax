@@ -6,6 +6,7 @@ class User
 
   def initialize(params={})
     self.email = params[:email] if params[:email]
+    self.uid = params[:uid] if params[:uid]
   end
   
   def new_record?
