@@ -18,8 +18,9 @@ form {
 }
 <% end %>
 <h1>Add Descriptions</h1>
-The information you provide will be applied to all the entire batch of files you just uploaded.  You may edit the information on individual files
-a from <%= link_to 'my dashboard', dashboard_path %>.
+The information you provide will be applied <em>to the entire batch of
+files</em> you have just deposited into ScholarSphere.  You may edit individual files
+from <%= link_to 'my dashboard', dashboard_path %>.
 <%= form_for([@batch, @generic_file], :url => batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 <%= render :partial => 'generic_files/permission_new', :formats => [:html], :locals => { :gf => @generic_file, :batch => @batch } %>
 <%= render :partial => 'metadata', :formats => [:html], :locals => {:f => f} %>

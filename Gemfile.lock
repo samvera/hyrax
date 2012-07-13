@@ -192,14 +192,14 @@ GEM
       blacklight
       cancan
       deprecation
-    hydra-head (4.1.0)
+    hydra-head (4.1.1)
       RedCloth (= 4.2.9)
       active-fedora (~> 4.1)
       blacklight (~> 3.4)
       block_helpers
       deprecation (>= 0.0.5)
       devise
-      hydra-access-controls (>= 0.0.2)
+      hydra-access-controls (>= 0.0.5)
       hydra-mods (>= 0.0.5)
       jquery-rails
       rails (~> 3.2.3)
@@ -405,8 +405,7 @@ DEPENDENCIES
   execjs (~> 1.4.0)
   factory_girl_rails (~> 1.7.0)
   headless
-  hydra-access-controls (= 0.0.5)
-  hydra-head (= 4.1.0)
+  hydra-head (= 4.1.1)
   hydra-ldap!
   jettywrapper
   launchy

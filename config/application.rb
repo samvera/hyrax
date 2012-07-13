@@ -78,18 +78,18 @@ module ScholarSphere
     # help text to display for form metadata elements, these will need to be updated to
     # reflect a field name change (should one happen) in the generic file datastream
     config.metadata_help = {
-      "generic_file_title" => "The name of the object being uploaded to ScholarSphere.",
-      "generic_file_tag" => "Terms which describe the object. They do not need to belong to any controlled vocabulary.",
-      "generic_file_subject" => "If you would like to align the description of your object with an existing vocabulary of subject terms, enter those here. Currently we support Library of Congress Subject Headings (LCSH); we hope to add additional subject-specific vocabularies (MESH, etc.) in the future. Enter part of a term and ScholarSphere will try to predict the subject heading you are adding.",
-      "generic_file_creator" => "The name of the person or group primarily responsible for the creation of the object being uploaded.",
+      "generic_file_title" => "The title of the object being uploaded to ScholarSphere.",
+      "generic_file_tag" => "Keywords, or tags, that describe the object.",
+      "generic_file_subject" => "If you would like to align the description of your object with an existing vocabulary of subject terms, enter those here. ScholarSphere supports Library of Congress Subject Headings (LCSH). Begin typing a subject term and ScholarSphere will present you with a list of matching terms.",
+      "generic_file_creator" => "The name of a person or group primarily responsible for the creation of the object being uploaded.",
       "generic_file_related_url" => "A URL about the object or the context in which it was created. Example: a link to the research project from which a data set was derived.",
-      "generic_file_contributor" => "Any additional persons or groups responsible for the object's existence, e.g. schools, colleges, or institutes at Penn State; funding agencies responsible for funding the research which produced the object, etc.",
+      "generic_file_contributor" => "A person or group that contributed to the object's existence, including schools, colleges, or institutes at Penn State, and funding agencies responsible for funding the research that produced the object.",
       "generic_file_date_created" => "Date on which the object was created in its present form.",
-      "generic_file_description" => "An abstract, notes about relationships between this object and other objects to which it is related, etc. detailing the object and its context.",
-      "generic_file_identifier" => "A unique handle describing the resource in an external context, i.e. if it has an ISBN, OCLC number, or similar identifying numbers.",
-      "generic_file_language" => "The language (if any) in which the resource is expressed; may be repeated.",
-      "generic_file_publisher" => "The entity responsible for dissemination of the object, if it is different from the Creator. ScholarSphere assumes \"Pennsylvania State University Libraries\" if none is provided",
-      "generic_file_rights" => "Any access restrictions or licensing agreements not already covered by the Public Access Statement."
+      "generic_file_description" => "A brief description, an abstract, or notes about relationships between this object and other objects to which it is related, providing extra context about the object.",
+      "generic_file_identifier" => "A unique handle identifying the object in an external context, e.g. if it has an ISBN, OCLC number, or similar identifying numbers or names.",
+      "generic_file_language" => "A language in which the object is expressed.",
+      "generic_file_publisher" => "An entity responsible for dissemination of the object.",
+      "generic_file_rights" => "A statement about the rights assigned to the object or a content license such as those provided by Creative Commons.  Note that these are not automatically enforced by ScholarSphere, which considers rights, licensing, and access levels separate."
     }
 
     # Custom directories with classes and modules you want to be autoloadable.

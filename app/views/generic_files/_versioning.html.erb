@@ -1,9 +1,16 @@
 <div class="row span6" id="versioning_display">
-  <h2 class="non lower">Versioning</h2>
+  <h2 class="non lower">Versions</h2>
   <div class="well">
-  <h3>Restore Previous Version</h3>
-  <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+    <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
     <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+    <h3>Upload New Version</h3>
+    <p>Upload a new version of this file from your computer.</p>
+    <p id="upload_field">
+      <%= file_field_tag "filedata"  %>
+    </p>
+    <%= f.submit "Upload New Version", :name => "update_versioning", :id => "upload_submit", :class => "btn-primary btn-mini" %>
+    <hr />
+    <h3>Restore Previous Version</h3>
     <% @generic_file.content.versions.each_with_index do |version, index| %>
       <div class="control-group">
         <div>
@@ -17,14 +24,6 @@
     <% end %>
     <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
     <%= f.submit "Save Revision", :name => "revert_submit", :id => "revert_submit", :class => "btn-primary btn-mini" %>
-    <hr />
-          <h3>Upload New Version</h3>
-          <p>Upload a new version of this file from your computer.</p>
-          <p id="upload_field">
-          <%= file_field_tag "filedata"  %>
-          </p>
-         <%= f.submit "Upload New Version", :name => "update_versioning", :id => "upload_submit", :class => "btn-primary btn-mini" %>
-          </td>
   <% end %>
   </div> <!-- /well -->
 </div> <!-- /row -->

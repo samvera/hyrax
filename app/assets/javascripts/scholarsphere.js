@@ -1,5 +1,4 @@
 $(function() {
-
   $.fn.selectRange = function(start, end) {
     return this.each(function() {
         if (this.setSelectionRange) {
@@ -14,68 +13,66 @@ $(function() {
         }
     });
   };
-    // there are two levels of vocabulary auto complete.  
+    // there are two levels of vocabulary auto complete.
     // currently we have this externally hosted vocabulary
-    // for geonames.  I'm not going to make these any easier 
+    // for geonames.  I'm not going to make these any easier
     // to implement for an external url (it's all hard coded)
     // because I'm guessing we'll get away from the hard coding
-  var cities_autocomplete_opts = { 
-    source: function( request, response ) { 
+  var cities_autocomplete_opts = {
+    source: function( request, response ) {
       $.ajax( {
         url: "http://ws.geonames.org/searchJSON",
         dataType: "jsonp",
         data: {
           featureClass: "P",
           style: "full",
-          maxRows: 12, 
+          maxRows: 12,
           name_startsWith: request.term
-        },  
-        success: function( data ) {           response( $.map( data.geonames, function( item ) { 
+        },
+        success: function( data ) {           response( $.map( data.geonames, function( item ) {
             return {
               label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-              value: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-            }   
+              value: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName
+            };
           }));
-        }   
-      }); 
-    },  
-    minLength: 2,
-  }
+        }
+      });
+    },
+    minLength: 2
+  };
   $("#generic_file_based_near").autocomplete(cities_autocomplete_opts);
 
 
-  function get_autocomplete_opts(field)
-  {
-    var autocomplete_opts = { 
+  function get_autocomplete_opts(field) {
+    var autocomplete_opts = {
       minLength: 2,
-      source: function( request, response ) { 
+      source: function( request, response ) {
         $.getJSON( "/authorities/generic_files/" + field, {
-          q: request.term 
+          q: request.term
         }, response );
-      },  
+      },
       focus: function() {
         // prevent value inserted on focus
         return false;
-      }/* 
+      }/*
       select: function( event, ui ) {
-        $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");                
+        $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");
         $(this).val("");
         return false;
       }*/
-    }   
+    };
     return autocomplete_opts;
   }
- 
+
   var autocomplete_vocab = new Object();
 
-  autocomplete_vocab.url_var =      ['subject', 'language'];   // the url variable to pass to determine the vocab to attach to
+  autocomplete_vocab.url_var = ['subject', 'language'];   // the url variable to pass to determine the vocab to attach to
   autocomplete_vocab.field_name = new Array(); // the form name to attach the event for autocomplete
-  autocomplete_vocab.add_btn_id = new Array(); // the id of the button pressed when adding an additional form element 
+  autocomplete_vocab.add_btn_id = new Array(); // the id of the button pressed when adding an additional form element
 
-  // loop over the autocomplete fields and attach the 
+  // loop over the autocomplete fields and attach the
   // events for autocomplete and create other array values for autocomplete
-  for (var i=0; i < autocomplete_vocab.url_var.length; i++)
-  {
+  for (var i=0; i < autocomplete_vocab.url_var.length; i++) {
     autocomplete_vocab.field_name.push('generic_file_' + autocomplete_vocab.url_var[i]);
     autocomplete_vocab.add_btn_id.push('additional_' + autocomplete_vocab.url_var[i] + '_submit');
     // autocompletes
@@ -121,25 +118,24 @@ $(function() {
     return false;
   });
 
-  // this will make the help text for a form element, displayable 
+  // this will make the help text for a form element, displayable
   // when focus is given, assuming there is a help element
-  // help element id must be same id as the form element with a 
+  // help element id must be same id as the form element with a
   // suffix of _help
   $('input[type=text], textarea').focus(function() {
-       $("#"+this.id+"_help").css("display", "inline-block"); 
+       $("#"+this.id+"_help").css("display", "inline-block");
     });
 
   // hides the form help element when focus is lost
   $('input[type=text], textarea').focusout(function() {
-       $("#"+this.id+"_help").css("display", "none"); 
+       $("#"+this.id+"_help").css("display", "none");
       });
 
   $('.icon-plus').click(function() {
     //this.id format: "expand_NNNNNNNNNN"
     var a = this.id.split("expand_");
-    if (a.length > 1)
-    {
-      docId = a[1]
+    if (a.length > 1) {
+      var docId = a[1];
       $("#detail_"+docId).toggle();
       if( $("#detail_"+docId).is(":hidden") ) {
         $("#expand_"+docId).attr("class", "icon-plus");
@@ -148,7 +144,7 @@ $(function() {
         $("#expand_"+docId).attr("class", "icon-minus");
       }
     }
-  })
+  });
 
   $('#add_descriptions').click(function() {
       $('#more_descriptions').show();
@@ -176,10 +172,10 @@ $(function() {
         return;
       }
       $.ajax( {
-        url: "/directory/user/" + un, 
-        success: function( data ) {           
+        url: "/directory/user/" + un,
+        success: function( data ) {
           if (!data) {
-            $('#directory_user_result').html('User id ('+un+ ') does not exist.'); 
+            $('#directory_user_result').html('User id ('+un+ ') does not exist.');
             $('#new_user_name_skel').select();
             $('#new_user_permission_skel').val('none');
             $('#new_user_permission_skel').attr('disabled', true);
@@ -189,14 +185,14 @@ $(function() {
             $('#new_user_permission_skel').attr('disabled', false);
             $('#new_user_permission_skel').focus();
           }
-        },
-      }); 
+        }
+      });
 
   });
 
   // dropdown of perms for users
   $('#new_user_permission_skel').on('change focus', function() {
-      if($('#new_user_name_skel').val() == "" || $('#new_user_permission_skel :selected').index() == "0") {
+      if ($('#new_user_name_skel').val() == "" || $('#new_user_permission_skel :selected').index() == "0") {
         return;
       }
       var un = $('#new_user_name_skel').val();
@@ -220,12 +216,12 @@ $(function() {
       // clear out the elements to add more
       $('#new_group_name_skel').val('');
       $('#new_group_permission_skel').val('none');
-      
+
       addPerm(cn, perm_form, perm, 'new_group_name');
   });
 
-  function addPerm(un, perm_form, perm, perm_type) 
-  { 
+  function addPerm(un, perm_form, perm, perm_type)
+  {
       var tr = $(document.createElement('tr'));
       var td1 = $(document.createElement('td'));
       var td2 = $(document.createElement('td'));
@@ -239,12 +235,12 @@ $(function() {
       td2.append(remove);
       remove.click(function () {
         tr.remove();
-        });
+      });
 
       $('<input>').attr({
           type: 'hidden',
           name: 'generic_file[permissions]['+perm_type+']['+un+']',
-          value: perm_form 
+          value: perm_form
         }).appendTo(td2);
       tr.append(td1);
       tr.append(td2);
@@ -284,6 +280,4 @@ $(function() {
     $('#permissions_display').show();
     $('#permissions_submit').show();
   });
-
-
 });
