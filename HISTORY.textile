@@ -1,3 +1,7 @@
+h3. 4.1.1
+* Fixed solr gated access query so that it doesn't keep appending 'registered' group
+* Moved user into hydra-access-controls, bump hydra-access-controls to 0.0.5
+
 h3. 4.1.0
 * Add AccessControlsEnforcement to AssetsController
 * Upgrade to active fedora ~>4.1
