@@ -10,7 +10,7 @@ describe SolrDocument do
     end
     # this isn't a great test, but...
     it "should try to cast the SolrDocument to the Fedora object" do
-      ActiveFedora::Base.expects(:load_instance_from_solr).with('asdfg', kind_of(SolrDocument))
+      ActiveFedora::Base.should_receive(:load_instance_from_solr).with('asdfg', kind_of(SolrDocument))
       SolrDocumentWithHydraOverride.new(:id => 'asdfg').to_model
     end
   end
