@@ -49,6 +49,8 @@ namespace :jetty do
       puts "copying over test/fedora.fcfg"
       cp("#{fcfg}", 'jetty/fedora/test/server/config/', :verbose => true)
     else
+      puts "#{fcfg} file not found -- skipping fedora config"
+    end
   end
 
   desc "Copies the default SOLR config files and starts up the fedora instance."
