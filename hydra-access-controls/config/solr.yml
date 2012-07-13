@@ -1,6 +1,4 @@
 development:
-  default:
-    url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/development
+  url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/development
 test: 
-  default:
-    url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/test
+  url: http://localhost:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/solr/test
