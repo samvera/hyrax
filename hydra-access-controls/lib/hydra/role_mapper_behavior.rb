@@ -13,9 +13,9 @@ module Hydra::RoleMapperBehavior
     # If you pass in a nil User object (ie. user isn't logged in), or a uid that doesn't exist, it will return an empty array
     def roles(user_or_uid)
       if user_or_uid.kind_of?(String)
-        user = User.find_by_user_key(user_or_uid)
+        user = ::User.find_by_user_key(user_or_uid)
         user_id = user_or_uid
-      elsif user_or_uid.kind_of?(User) && !user_or_uid.uid.nil?  
+      elsif user_or_uid.kind_of?(::User) && !user_or_uid.uid.nil?  
         user = user_or_uid
         user_id = user.user_key
       end

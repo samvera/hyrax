@@ -5,7 +5,7 @@ module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 
   def initialize(user, session=nil)
-    user ||= User.new # guest user (not logged in)
+    user ||= ::User.new # guest user (not logged in)
     hydra_default_permissions(user, session)
   end
 
