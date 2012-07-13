@@ -26,7 +26,7 @@ on element ids -->
     <% end %>
   </td>
   <td width="23%" align="center">
-    <%= link_to 'get code', '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
+    <span style="position: relative;"> <%= link_to 'get code', '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %></span>
     <%= link_to 'edit', edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
     <%= link_to 'download', download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
   </td>

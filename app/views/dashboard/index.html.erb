@@ -1,22 +1,26 @@
 <% javascript 'video.js' %>
 <% javascript 'audio.min.js' %>
-<% javascript 'jquery.zclip.min.js' %>
 <% stylesheet 'video-js.css' %>
+<% javascript 'dashboard.js' %>
+
 
 <% content_for :local_js do %>
     audiojs.events.ready(function() {
       var as = audiojs.createAll();
       });
-  copy_links = $('a.copypaste');
-  for(var i=0; i < copy_links; i++) 
-  {
-    $('#'+ copy_links[i].id ).zclip({
-      path: '/assets/ZeroClipboard.swf', 
-      copy: function() {
-        return 'http://' + window.location.host + $('#src_' + copy_links[i].id).attr('href');
-      },
-    });
-  }
+  
+  $(document).ready(function(){
+      <% rurl = root_url %>
+      <% rurl = rurl.slice(0,rurl.length-2) if rurl[rurl.length-1] == '/' %> 
+      copy_links = $('a.copypaste');
+      for(var i=0; i < copy_links.length; i++) 
+      {
+        $('#'+ copy_links[i].id).zclip({
+          path: '/assets/ZeroClipboard.swf', 
+          copy: function() {return '<%=rurl%>' + $('#src_'+this.id).attr('href'); }
+        });
+      }
+  });
 
 <% end %>
 

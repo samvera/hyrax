@@ -20,7 +20,7 @@
     <%# javascript_include_tag params[:controller] %>
     <%= yield(:js_head) %>
 
-    <script>
+    <script type="text/javascript">
       $(function() {
         <%= yield(:local_js) %>
       });
