@@ -174,7 +174,7 @@ $(function() {
       $.ajax( {
         url: "/directory/user/" + un,
         success: function( data ) {
-          if (!data) {
+          if (!data.length) {
             $('#directory_user_result').html('User id ('+un+ ') does not exist.');
             $('#new_user_name_skel').select();
             $('#new_user_permission_skel').val('none');

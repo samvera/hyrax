@@ -5,7 +5,7 @@ gem 'mysql2', '0.3.11'
 gem 'blacklight', '3.5.0'
 gem 'hydra-head', '4.1.1'
 gem 'active-fedora', '4.4.0'
-gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'verify-users-exist', :ref => 'e45b9663'
+gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'verify-users-exist', :ref => '71efc56'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'

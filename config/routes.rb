@@ -38,7 +38,7 @@ ScholarSphere::Application.routes.draw do
 
   # LDAP-related routes for group and user lookups
   match 'directory/user/:uid' => 'directory#user'
-  match 'directory/user/:uid/groups' => 'directory#user_groups'
+  match 'directory/user/:uid/:attribute' => 'directory#user_attribute'
   match 'directory/group/:cn' => 'directory#group', :constraints => { :cn => /.*/ }
 
   # Batch edit routes
