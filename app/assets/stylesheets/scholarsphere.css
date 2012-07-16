@@ -762,3 +762,8 @@ table.verticalheadings {
     width:779px; /* Make sure your images are the same size */
     height:525px; /* Make sure your images are the same size */
 }
+
+ol.catalog li { 
+  display:block; 
+} 
+
