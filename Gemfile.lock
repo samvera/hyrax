@@ -272,6 +272,8 @@ GEM
       activesupport (= 3.2.6)
       bundler (~> 1.0)
       railties (= 3.2.6)
+    rails_autolink (1.0.9)
+      rails (~> 3.1)
     railties (3.2.6)
       actionpack (= 3.2.6)
       activesupport (= 3.2.6)
@@ -416,6 +418,7 @@ DEPENDENCIES
   noid (= 0.5.5)
   passenger (= 3.0.13)
   rails (= 3.2.6)
+  rails_autolink (= 1.0.9)
   rails_indexes!
   rmagick (= 2.13.1)
   rspec (= 2.10.0)

@@ -102,8 +102,8 @@ var addthis_config = {"data_track_addressbar":true};<
         <tr<%= zebra %>>
           <th>Related URL</th>
           <td>
-            <% @generic_file.related_url.each do |ru| %>
-              <%= ru %><br />
+            <% @generic_file.related_url.each do |url| %>
+              <%= auto_link(url) %><br />
             <% end %>
           </td>
         </tr>
@@ -119,7 +119,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Description</th>
           <td>
             <% @generic_file.description.each do |desc| %>
-              <%= desc %><br />
+              <%= auto_link(desc) %><br />
             <% end %>
           </td>
         </tr>
@@ -135,7 +135,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>
-              <%= pub %><br />
+              <%= auto_link(pub) %><br />
             <% end %>
           </td>
         </tr>
@@ -143,7 +143,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Rights</th>
           <td>
             <% @generic_file.rights.each do |r| %>
-              <%= r %><br />
+              <%= auto_link(r) %><br />
             <% end %>
           </td>
         </tr>
@@ -171,7 +171,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>> 
+        <tr<%= zebra %>>
           <th>Date Created</th>
           <td>
             <% @generic_file.date_created.each do |dc| %>

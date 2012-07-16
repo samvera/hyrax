@@ -22,7 +22,7 @@
     </tr>
     <tr>
       <th>Description:</th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__description_display") %></th>
+      <td><%= auto_link(render_document_show_field_value(:document=>document, :field=>"generic_file__description_display")) %></th>
     </tr>
     <tr>
       <th>Tags:</th>

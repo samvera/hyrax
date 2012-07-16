@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.6'
+gem 'rails_autolink', '1.0.9'
 gem 'mysql2', '0.3.11'
 gem 'blacklight', '3.5.0'
 gem 'hydra-head', '4.1.1'
