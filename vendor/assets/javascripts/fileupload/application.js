@@ -28,14 +28,14 @@ $(function () {
     $("#upload_tooltip").hide();
     $("#main_upload_start_span").mousemove(function(e){
        if ( !$('#terms_of_service').is(':checked') ){
-        $('#main_upload_start').attr('disabled', true);
+           $('#main_upload_start').attr('disabled', true);
         $("#upload_tooltip").show();
         $("#upload_tooltip").css({
             top: (e.clientY+5)+ "px",
             left: (e.clientX+5) + "px"
         });
        } else {
-         $('#main_upload_start').attr('disabled', false)
+         if (filestoupload > 0) $('#main_upload_start').attr('disabled', false);
          $("#upload_tooltip").hide();
        }
     });
@@ -46,7 +46,7 @@ $(function () {
         $("#upload_tooltip").hide();
     });
     $('#terms_of_service').click(function () {
-        $('#main_upload_start').attr('disabled', !this.checked);
+        $('#main_upload_start').attr('disabled', !((this.checked) && (filestoupload > 0)));
         $("#upload_tooltip").hide();
     });
 
@@ -103,6 +103,7 @@ $(function () {
     // count the number of uploaded files to send to edit
     $('#fileupload').bind("fileuploadadd", function(e, data){
       filestoupload++;
+      if ( $('#terms_of_service').is(':checked') )$('#main_upload_start').attr('disabled', false);
     });
     
     // check the validation on if the file type is not accepted just click cancel for the user as we do not want them to see all the hidden files
