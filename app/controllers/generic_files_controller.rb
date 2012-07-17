@@ -26,6 +26,9 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id
   def index
+    perms = permissions_solr_doc_for_id(gf.pid)
+    @can_read =  can? :read, perms
+    @can_edit =  can? :edit, perms
     @generic_files = GenericFile.find(:all, :rows => GenericFile.count)
     render :json => @generic_files.map(&:to_jq_upload).to_json
   end

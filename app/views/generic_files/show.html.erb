@@ -36,8 +36,10 @@ var addthis_config = {"data_track_addressbar":true};<
       <%= link_to "Download", download_path(@generic_file.noid) %>
       &nbsp;|&nbsp;
       <%= link_to "Cite", citation_generic_file_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
-      &nbsp;|&nbsp;
-      <%= link_to "Edit", edit_generic_file_path %>
+      <% if @can_edit %>
+          &nbsp;|&nbsp;
+          <%= link_to "Edit", edit_generic_file_path   %>
+      <%end %>
     </p>
     <p>Export to:
       <%= link_to 'Endnote', generic_file_path(@generic_file.noid, :format => 'endnote') %>
