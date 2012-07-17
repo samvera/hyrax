@@ -494,7 +494,7 @@ class GenericFile < ActiveFedora::Base
       return result
     elsif (non_runs < audit_results.length)
       result =audit_results.reduce(true) { |sum, value| (value == NO_RUNS) ? sum : sum && value }
-      return 'Some audits have not been run, but the ones run where '+ ((result)? 'passing' : 'failing') + '.'
+      return 'Some audits have not been run, but the ones run were '+ ((result)? 'passing' : 'failing') + '.'
     else
       return 'Audits have not yet been run on this file.'
     end
@@ -547,7 +547,7 @@ class GenericFile < ActiveFedora::Base
         return false
       end
     else
-      #logger.warn "***AUDIT*** problem with audit log!"
+      logger.warn "***AUDIT*** problem with audit log!"
     end
     #logger.info "***AUDIT*** Audit needed for #{version.pid} #{version.versionID}"
     true

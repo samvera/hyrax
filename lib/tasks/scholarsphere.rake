@@ -12,6 +12,15 @@ namespace :scholarsphere do
     end
   end
 
+  desc "Characterize uncharacterized files"
+  task :characterize => :environment do
+    GenericFile.find(:all, :rows => GenericFile.count).each do |gf|
+      if gf.characterization.content.nil?
+        Delayed::Job.enqueue(CharacterizeJob.new(gf.pid), :queue => 'characterize')
+      end
+    end
+  end
+
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci => :environment do
     #Rake::Task["hyhead:doc"].invoke
