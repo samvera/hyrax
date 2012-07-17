@@ -33,16 +33,14 @@ class ApplicationController < ActionController::Base
   end
 
   def clear_session_user
-    # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
-    # logout clears the entire session including flash messages
     if request.nil?
       logger.warn "Request is Nil, how weird!!!"
       return
     end
-    
-    cache_flash
-    request.env['warden'].logout if env['warden'] and env['warden'].user and !user_loggedin?
-    restore_flash
+
+    # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
+    # logout clears the entire session including flash messages
+    request.env['warden'].logout if user_logged_in?
   end
 
   def set_current_user
@@ -65,11 +63,14 @@ class ApplicationController < ActionController::Base
     super(object)
   end
 
-  # remove error inserted if the user does in fact login
   def filter_notify
-     logger.info "Flash alerts #{flash[:alert].inspect} logged in? = #{user_loggedin?}"
-     flash[:alert] = flash[:alert].sub('You need to sign in or sign up before continuing.','') if user_loggedin? && !flash[:alert].blank?
-     flash[:alert] = nil if  !flash[:alert].nil? && flash[:alert].length == 0
+    # remove error inserted if the user does in fact login
+    if user_logged_in? and flash[:alert].present?
+      # first remove the bogus message
+      flash[:alert].sub!('You need to sign in or sign up before continuing.', '')
+      # then make the flash nil if that was the only message in the flash
+      flash[:alert] = nil if flash[:alert].blank?
+    end
   end
 
   def add_notifications
@@ -100,7 +101,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-protected
+  protected
   # Returns the solr permissions document for the given id
   # @return solr permissions document
   # @example This is the document that you can pass into permissions enforcement methods like 'can?'
@@ -114,16 +115,17 @@ protected
   end
 
   protect_from_forgery
-  
-  def cache_flash
-    @cflash = {}
-    [:notice, :error, :alert].each {|type| @cflash[type] = flash[type]}
+
+  def user_logged_in?
+    env['warden'] and env['warden'].user and remote_user_blank?
   end
-  def restore_flash
-    [:notice, :error, :alert].each {|type| flash[type] = @cflash[type]} 
-  end
-  
-  def user_loggedin?
-      return !request.env['REMOTE_USER'].blank?
+
+  def remote_user_blank?
+    # Unicorn seems to translate REMOTE_USER into HTTP_REMOTE_USER
+    if Rails.env.development?
+      request.env['HTTP_REMOTE_USER'].blank?
+    else
+      request.env['REMOTE_USER'].blank?
+    end
   end
 end
