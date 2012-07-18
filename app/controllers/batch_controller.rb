@@ -7,9 +7,16 @@ class BatchController < ApplicationController
   prepend_before_filter :normalize_identifier, :only=>[:edit, :show, :update, :destroy]
 
   def edit
-    @batch = Batch.new({pid: params[:id]})
-    @generic_file = GenericFile.new
-    @groups = ScholarSphere::LDAP.groups_for_user("#{current_user}")
+    @batch =  Batch.find_or_create(params[:id])
+    @generic_file = GenericFile.new    
+    @generic_file.title = @batch.generic_files.reduce(''){|combined, current| logger.info "File = #{current.inspect}"; combined = combined + (combined.length >0 ? ', ' :'')+ current.filename[0]}
+    @generic_file.contributor = current_user.name
+    begin
+      @groups = ScholarSphere::LDAP.groups_for_user("#{current_user}")
+    rescue
+      logger.warn "Can not get to LDAP for user groups"
+    end
+   
   end
 
   def update

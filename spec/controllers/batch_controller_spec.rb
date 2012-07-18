@@ -95,4 +95,29 @@ describe BatchController do
       end
     end
   end
+  describe "#edit" do
+    before do
+      @b1 = Batch.new
+      @b1.save
+      @file = GenericFile.new(:batch=>@b1, :filename=>'f1')
+      @file.apply_depositor_metadata(@user.login)
+      @file.save
+      @file2 = GenericFile.new(:batch=>@b1, :filename=>'f2')
+      @file2.apply_depositor_metadata(@user.login)
+      @file2.save
+      controller.stubs(:params).returns({id:@b1.id})       
+    end
+    after do
+      @b1.delete
+      @file.delete
+      @file2.delete
+    end
+    it "should default and contributor" do
+       controller.edit
+       controller.instance_variable_get(:@generic_file).contributor[0].should == @user.name
+       controller.instance_variable_get(:@generic_file).title[0].should include 'f1'
+       controller.instance_variable_get(:@generic_file).title[0].should include 'f2'
+    end
+    
+  end
 end

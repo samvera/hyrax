@@ -23,6 +23,6 @@ files</em> you have just deposited into ScholarSphere.  You may edit individual 
 from <%= link_to 'my dashboard', dashboard_path %>.
 <%= form_for([@batch, @generic_file], :url => batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 <%= render :partial => 'generic_files/permission_new', :formats => [:html], :locals => { :gf => @generic_file, :batch => @batch } %>
-<%= render :partial => 'metadata', :formats => [:html], :locals => {:f => f} %>
+<%= render :partial => 'metadata', :formats => [:html], :locals => {:f => f, :gf => @generic_file} %>
 
 <% end %>
