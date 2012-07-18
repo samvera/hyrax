@@ -32,12 +32,14 @@
 
   <% @page_title = application_name + " Dashboard" %>
 
-  <%= render :partial => 'search_form' %>
-  <h2 class="heading1">Dashboard</h2>
+  <div class="row">
+    <%= render :partial => 'search_form' %>
+    <h2 class="heading1">Dashboard</h2>
+  </div>
 
-        <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
   <% if params.has_key?("q") %>
-    <p class="you-searched"><a class="itemicon itemsearch">search</a> You searched for: <%= params[:q] %></p> 
+    <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
   <% end %>
 
   <%= render :partial => 'did_you_mean' %>

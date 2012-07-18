@@ -25,6 +25,7 @@ module ScholarSphere
     config.assets.paths << '#{Rails.root}/app/assets/javascripts'
     config.assets.paths << '#{Rails.root}/app/assets/stylesheets'
     config.assets.paths << '#{Rails.root}/app/assets/images'
+    config.assets.paths << '#{Rails.root}/app/assets/font'
     config.assets.paths << '#{Rails.root}/lib/assets/javascripts'
     config.assets.paths << '#{Rails.root}/lib/assets/stylesheets'
     config.assets.paths << '#{Rails.root}/lib/assets/images'

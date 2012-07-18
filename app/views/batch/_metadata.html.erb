@@ -1,7 +1,7 @@
 
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>  
 <%= hidden_field_tag(:extra_description_count, "1") %>
-<div class="row span7" id="descriptions_display">
+<div  id="descriptions_display">
   <h2 class="non lower">Descriptions</h2>
   <div class="well">
     <div class="control-group" id="resources">
@@ -61,7 +61,7 @@
     </div>
       <!-- hidden on initial load -->
 
-    <div class="hidden" id="more_descriptions">
+    <div class="hide" id="more_descriptions">
       <div class="control-group">
         <%= f.label :related_url, :class=>"control-label" %> 
         <div class="controls" id="additional_related_url_clone">

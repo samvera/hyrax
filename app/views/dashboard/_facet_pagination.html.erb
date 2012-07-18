@@ -1,13 +1,13 @@
   <% if @pagination.has_previous? || @pagination.has_next? %>
     <div class="prev_next_links">
       <% if @pagination.has_previous? -%>        
-        <%= link_to('« Previous', dashboard_facet_path( @pagination.params_for_previous_url( params) ) , :class=>:prev_page)  %>
+        <%= link_to('« Previous', catalog_facet_path( @pagination.params_for_previous_url( params) ) , :class=>:prev_page)  %>
       <% else -%>
         <span class="disabled ui-state-active prev_page">« Previous</span> 
       <% end -%>
       
       <% if @pagination.has_next? -%>
-        <%= link_to('Next »', dashboard_facet_path( @pagination.params_for_next_url(params)), :class => :next_page ) %>
+        <%= link_to('Next »', catalog_facet_path( @pagination.params_for_next_url(params)), :class => :next_page ) %>
       <% else -%>
         <span class="disabled ui-state-active next_page">Next »</span> 
       <% end -%>

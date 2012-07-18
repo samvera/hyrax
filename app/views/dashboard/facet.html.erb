@@ -1,7 +1,7 @@
 <div class="facet_extended_list">
-  
+  <% if false %>  
   <% sidebar_items << capture do %>
-  <p><%= link_back_to_dashboard %></p>
+  <p><%= link_back_to_catalog %></p>
   <% end %>
 
   <div class="facet_pagination top">
@@ -25,4 +25,5 @@
   <div class="facet_pagination bottom">
     <%= render :partial=>'facet_pagination' %>
   </div>
+<% end %>
 </div>

@@ -1,6 +1,9 @@
 <% [:notice, :error, :alert].each do |type| %>
   <% if flash[type] %>
-    <div class="ui-state-<%= type == :error ? 'error' : 'highlight' %> ui-corner-all <%= type.to_s %>"><%= flash[type].html_safe %></div>
+    <div class="alert alert-<%= type == :error ? 'error' : 'info' %> ui-corner-all <%= type.to_s %>">
+      <a class="close" data-dismiss="alert" href="#">×</a>
+      <%= flash[type].html_safe %>
+    </div>
     <% flash.delete(type) %>
   <% end %>
 <% end %>

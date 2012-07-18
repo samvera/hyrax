@@ -5,10 +5,12 @@
 <%- title = filename if title.empty? -%>
 <%- depositor = render_document_show_field_value(:document=>recent_document, :field=>"depositor_t") -%>
 <%- depositor = 'no depositor value' if depositor.empty? -%>
-<div class="item">
-    <h3><table class="recent"><tr> <td span=2><a href=<%=generic_file_path(recent_document.fetch(:noid_s, :id))  %> ><%= title %></a></h3></td></tr>
-                  <tr> <td span=2><span class="item-type"><%=filename  %></span> </td></tr>
-                  <tr><td><span class="item-type"><%=type  %></span></td>
-                  <td><span class="item-author"><%= depositor %></span></td></tr>
-        </table>
-</div>
+    <tr>
+      <td>
+        <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %></h3>
+        <p>
+          <%= filename %><br />
+          <%= type %> <%= depositor %>
+        </p>
+      </td>
+    </tr>

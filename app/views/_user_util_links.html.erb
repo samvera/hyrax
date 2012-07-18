@@ -1,13 +1,13 @@
 <div id="masthead">
-    <a id="logo" href="/"><img src="/site_images/logo_psuss.png" alt="PSU ScholarSphere" /></a>
+    <a id="logo" href="/"><img src="/assets/site_images/logo_psuss.png" alt="PSU ScholarSphere" /></a>
     <ul id="primary-menu">
       <li><a <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %> href="/">Home</a></li>
       <li><a <%= 'class=active' if action_name == "about" %> href="/about/">About</a></li>
       <li><a <%= 'class=active' if action_name == "help" %> href="/help/">Help</a></li>
       <li><a <%= 'class=active' if params[:controller] == "contact_form" %> href="<%= contact_form_index_path %>">Contact</a></li>
-<% if current_user %>
+      <% if current_user %>
       <li class="signin">
-        <a href="#" class="loggedin"><%= current_user.to_s %><img style="vertical-align:middle;" src="/site_images/icon_arrow_down.png" alt="more" /></a>
+        <a href="#" class="loggedin"><%= current_user.to_s %><img style="vertical-align:middle;" src="/assets/site_images/icon_arrow_down.png" alt="more" /></a>
         <ul class="dropdown">
           <li><%= link_to 'my dashboard', dashboard_path  %></li>
           <li><%= link_to 'upload', new_generic_file_path  %></li>
@@ -18,11 +18,11 @@
           <!-- <li><%# link_to "search history", search_history_path %></li> -->
           <li><%= link_to "log out", destroy_user_session_path %></li>
         </ul>
-      </li>
-<% else %>
+        </li>
+    <% else %>
       <li class="signin"><%= link_to "Login", new_user_session_path %>
-<% end %>
-    </ul>
+    <% end %>
+  </ul> 
 
     <%# logger.info " controller = #{params[:controller]}" %>
     <%= render :partial => 'catalog/search_form' %>

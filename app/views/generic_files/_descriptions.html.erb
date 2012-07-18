@@ -1,6 +1,6 @@
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
-<div class="row span7" id="descriptions_display">
+<div id="descriptions_display"> 
   <h2 class="non lower">Descriptions</h2>
     <div class="well">
 

@@ -26,11 +26,12 @@ var addthis_config = {"data_track_addressbar":true};<
 
 <h1 class="lower"><%= @generic_file.title.join(' | ') %></h1>
 
-<div class="columns two-b">
-  <div class="column first">
+<div class="row">
+  <div class="span40"> 
     <%= render :partial => 'media_display' %>
   </div>
-  <div class="column second">
+  <div class="span2">&nbsp;</div>
+  <div class="span68"><!-- class="column second"> -->
     <h2 class="non lower">Actions</h2>
     <p>
       <%= link_to "Download", download_path(@generic_file.noid) %>
@@ -75,7 +76,7 @@ var addthis_config = {"data_track_addressbar":true};<
     -->
 
     <h2 class="non lower">Metadata</h2>
-    <table class="verticalheadings">
+    <table class="table table-striped"><!-- class="verticalheadings"> -->
       <tbody>
         <tr<%= zebra %>>
           <th>Title</th>
@@ -185,7 +186,7 @@ var addthis_config = {"data_track_addressbar":true};<
     </table> <!-- /verticalheadings -->
 
     <h2 class="non lower">Object Details</h2>
-    <table class="verticalheadings">
+    <table class="table table-striped">
       <tbody>
         <tr<%= zebra %>>
           <th>Date Uploaded</th>

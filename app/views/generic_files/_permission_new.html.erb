@@ -1,7 +1,7 @@
 <% depositor = gf.depositor || GenericFile.find(:is_part_of_s => "info:fedora/#{batch.pid}").first.depositor %>
-  <div class="row span6" id="permissions_display">
+  <div id="permissions_display">
     <h2 class="non lower">Permissions</h2>
-    <div class="alert span6">Permissions are <strong>not</strong> saved until the &quot;Save Permissions&quot; button is pressed.</div>
+    <div class="alert">Permissions are <strong>not</strong> saved until the &quot;Save Permissions&quot; button is pressed.</div>
       <table class="table table-bordered" id="file_permissions">
         <caption class="hide">This table holds the current permissions for this file</caption>
           <tr>
@@ -11,11 +11,11 @@
           <tr id="new-group">
             <td>
               <% @groups.unshift('Select a group') %>
-              <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span4' %>
+              <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span40' %>
             </td>
             <td> 
-              <div class="span3">
-                    <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span2' %>
+              <div class="span30">
+                    <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span20' %>
                     <span id="directory_group_result"></span>
               </dvi>
             </td>
@@ -29,8 +29,8 @@
               <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
             </td>
             <td>
-              <div class="span3">
-                <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span2' %>
+              <div class="span30">
+                <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span20' %>
                 <span id="directory_user_result"></span>
               </div>
             </td>
@@ -48,18 +48,18 @@
           <tr>
             <td><label class="control-label">Public</label></td>
             <td>
-              <div class="span3">
+              <div class="span30">
                       <% public_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "public"}.compact.first %>
-                      <%= select_tag "generic_file[permissions]['group']['public']", options_for_select(ScholarSphere::Application::config.public_permission_levels, public_perm), :class=>'span2' %>
+                      <%= select_tag "generic_file[permissions]['group']['public']", options_for_select(ScholarSphere::Application::config.public_permission_levels, public_perm), :class=>'span20' %>
               </div>
             </td>
           </tr>
           <tr>
             <td><label class="control-label">Penn State</label></td>
             <td>
-              <div class="span3">
+              <div class="span30">
                       <% psu_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "registered"}.compact.first %>
-                      <%= select_tag "generic_file[permissions]['group']['registered']", options_for_select(ScholarSphere::Application::config.public_permission_levels, psu_perm), :class=>'span2' %>
+                      <%= select_tag "generic_file[permissions]['group']['registered']", options_for_select(ScholarSphere::Application::config.public_permission_levels, psu_perm), :class=>'span20' %>
               </div>
             </td>
           </tr>
@@ -71,14 +71,14 @@
             <tr>
               <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %></td>
               <td>
-              <div class="span3">
-                        <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'span2' %>
+              <div class="span30">
+                        <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'span20' %>
               </div>
               </td>
             </tr>
           <% end %>
       </table>
-  <div class="row span6" id="permissions_submit">
+  <div class="row" id="permissions_submit">
     <div class="form-actions">
               <%= submit_tag "Save Permissions", :name => "update_permission", :id => "upload_submit", :class => "btn-primary" %> 
     </div>

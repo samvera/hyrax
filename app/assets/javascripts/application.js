@@ -2,5 +2,5 @@
 //= require jquery_ujs.js
 //= require jquery-ui-1.8.16.custom.min
 //= require blacklight
-//= require general
+//= require bootstrap-dropdown
 //= require scholarsphere

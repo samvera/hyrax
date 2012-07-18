@@ -1,23 +1,21 @@
 <% if document.has_key?(:noid_s) %>
 <%# logger.info document[:generic_file__creator_t].inspect %>
-  <li>
+<li>
   <h2>
     <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(document[:noid_s].first) %>
   </h2>
-  <table class="verticalheadings">
+  <table class="table">
     <tr>
-      <td rowspan="5">
-        <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-      </td>
+      <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %> </td>
       <th>Title:</th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></th>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></td>
     </tr>
     <tr>
-      <th>Depositor:</div>
+      <th>Depositor:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %></td>
     </tr>
     <tr>
-      <th>Creator:</div>
+      <th>Creator:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %></td>
     </tr>
     <tr>
@@ -33,4 +31,5 @@
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_uploaded_display") %></td>
     </tr>
   </table>
+</li>
 <% end %>

@@ -3,19 +3,14 @@
 	  <%-# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {:action=>"index"} but I'm not sure -%>
     <%= form_tag params[:controller] == "folder" ? folder_index_path : dashboard_path, :method=>:get, :class=>'per_page form-inline' do %>
       <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
-      <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>			      
+      <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort])), :class => "span15") %>			      
       &nbsp;&nbsp;&nbsp;
       <%= label_tag(:per_page) do %>
-        Show <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), :title => "Number of results to display per page", :class=>"span1") %> per page
+        Show <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), :title => "Number of results to display per page", :class => "span10") %> per page
         <% end %>
         <%= search_as_hidden_fields(:omit_keys => [:per_page, :sort]) %>
         &nbsp;&nbsp;&nbsp;
       <%= submit_tag 'update', :class=>'button2' %>
 		<% end unless sort_fields.empty? %>
   <% end %>
-    <!--
-    <span class="batch-data">N/A <strong>Objects</strong></span>
-  <span class="batch-data">N/A <strong>Files</strong></span>
-  <span class="batch-data">N/A <strong>Stored</strong></span>
-  -->
 </div>
