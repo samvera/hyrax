@@ -74,9 +74,35 @@ Browse to http://localhost:3000/ and you should see ScholarSphere!
 To audit the digital signatures of every version of every object in the
 repository, run the following command
 
-    RAILS_ENV=production script/audit_repository
+    script/audit_repository
 
 You'll probably want to schedule this regularly (e.g., via cron) in production environments.
+Note that this does not *force* an audit -- it respects the value of max_days_between_audits
+in application.rb.  Also note that if you want to run this on any environment other than 
+development, you will need to call the script with RAILS_ENV=environment in front.
+
+### Characterize All Uncharacterized Datastreams
+
+In the event that some objects have not undergone characterization (for whatever reason), 
+there is a rake task that sweeps through the entire repository looking for objects that lack
+a characterization datastream.  For each object that lacks this datastream, a CharacterizationJob
+that will characterize and thumbnailize the object is queued up.
+
+     rake scholarsphere:characterize     
+
+Note that if you want to run this on any environment other than development, you will need to 
+call the script with RAILS_ENV=environment in front.
+
+### Export Metadata as RDF/XML
+
+There is a rake task that exports the metadata of every object that is readable by the public to
+the RDF/XML format.  This might be useful as an export mechanism, e.g., to Summon or a similar 
+discovery system.
+
+     rake scholarsphere:export:rdfxml
+
+Note that if you want to run this on any environment other than development, you will need to 
+call the script with RAILS_ENV=environment in front.
 
 ### Harvesting Authorities Locally
 
