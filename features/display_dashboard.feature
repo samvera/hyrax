@@ -6,7 +6,6 @@ Feature: As an authenticate and authorized
     Given I am logged in as "contentauthor@psu.edu"
     And I follow "my dashboard" 
     Then I should see "Dashboard"
-    Then I should see "My Files"
 
   Scenario: I am on the homepage and I want to search my dashboard
     Given I am logged in as "contentauthor@psu.edu"
@@ -20,7 +19,7 @@ Feature: As an authenticate and authorized
   Scenario: I am on the dashboard and want to upload files
     Given I am logged in as "contentauthor@psu.edu"
     And I follow "my dashboard" 
-    And I follow "Upload File(s)" 
+    And I press "Upload File(s)" 
     Then I should see "Upload"
 
   Scenario: I am on the dashboard and want to search SS
