@@ -19,7 +19,7 @@ Feature: As an authenticate and authorized
   Scenario: I am on the dashboard and want to upload files
     Given I am logged in as "contentauthor@psu.edu"
     And I follow "my dashboard" 
-    And I press "Upload File(s)" 
+    And I follow "Upload File(s)" 
     Then I should see "Upload"
 
   Scenario: I am on the dashboard and want to search SS
