@@ -268,4 +268,12 @@ ul.slide-list li {
 #footer a {
 	color: #c6c6c6;
 }
+a i, a:hover i {
+  color: #000;
+  text-decoration: none;
+}
+table.expanded-details {
+  width: 75%;
+  margin: 0 auto;
+}
 

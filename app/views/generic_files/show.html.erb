@@ -17,13 +17,6 @@ var addthis_config = {"data_track_addressbar":true};<
 }
 <% end %>
 
-<%
-  def zebra
-     @zebra = !@zebra || false
-     return " class='zebra'" if @zebra
-  end
-%>
-
 <h1 class="lower"><%= @generic_file.title.join(' | ') %></h1>
 
 <div class="row">
@@ -78,7 +71,7 @@ var addthis_config = {"data_track_addressbar":true};<
     <h2 class="non lower">Metadata</h2>
     <table class="table table-striped"><!-- class="verticalheadings"> -->
       <tbody>
-        <tr<%= zebra %>>
+        <tr>
           <th>Title</th>
           <td>
             <% @generic_file.title.each do |title| %>
@@ -86,7 +79,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Creator</th>
           <td>
             <% @generic_file.creator.each do |creator| %>
@@ -94,7 +87,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Contributor</th>
           <td>
             <% @generic_file.contributor.each do |contributor| %>
@@ -102,7 +95,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Related URL</th>
           <td>
             <% @generic_file.related_url.each do |url| %>
@@ -110,7 +103,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Location</th>
           <td>
             <% @generic_file.based_near.each do |bn| %>
@@ -118,7 +111,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Description</th>
           <td>
             <% @generic_file.description.each do |desc| %>
@@ -126,7 +119,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Language</th>
           <td>
             <% @generic_file.language.each do |lang| %>
@@ -134,7 +127,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>
@@ -142,7 +135,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Rights</th>
           <td>
             <% @generic_file.rights.each do |r| %>
@@ -150,7 +143,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Subject</th>
           <td>
             <% @generic_file.subject.each do |sub| %>
@@ -158,7 +151,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Keyword</th>
           <td>
             <% @generic_file.tag.each do |t| %>
@@ -166,7 +159,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Identifier</th>
           <td>
             <% @generic_file.identifier.each do |id| %>
@@ -174,7 +167,7 @@ var addthis_config = {"data_track_addressbar":true};<
             <% end %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Date Created</th>
           <td>
             <% @generic_file.date_created.each do |dc| %>
@@ -188,25 +181,25 @@ var addthis_config = {"data_track_addressbar":true};<
     <h2 class="non lower">Object Details</h2>
     <table class="table table-striped">
       <tbody>
-        <tr<%= zebra %>>
+        <tr>
           <th>Date Uploaded</th>
           <td>
             <%= @generic_file.date_uploaded %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Date Modified</th>
           <td>
             <%= @generic_file.date_modified %>
           </td>
         </tr>
-        <tr<%= zebra %>>
+        <tr>
           <th>Audit Status</th>
           <%- stat= @generic_file.audit_stat(false)  %>
           <td> <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %></td>           
         </tr>
 <% unless @generic_file.related_files.empty? %>
-        <tr<%= zebra %>>
+  <tr>
           <th>Related Files</th>
           <td>
               <% @generic_file.related_files.each do |f| %>
@@ -215,7 +208,7 @@ var addthis_config = {"data_track_addressbar":true};<
           </td>
         </tr>
 <% end %>
-        <tr<%= zebra %>>
+<tr>
           <th>Characterization</th>
           <td>
             <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>

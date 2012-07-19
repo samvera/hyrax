@@ -306,4 +306,28 @@ $(function() {
 	    
 	});
 
+  // enlarge icons on hover
+  /*
+  $('[class^="icon-"]').hover(
+      //on mouseover
+      function(){ 
+        $(this).addClass("icon-large");
+      }, 
+      //on mouseout
+      function() {
+        $(this).removeClass("icon-large");
+      });
+      */
+  // instead for now doing this on a 
+  // case by case (or class by class) basis
+  $('.icon-copy, .icon-edit, .icon-download').hover(
+      //on mouseover
+      function(){ 
+        $(this).addClass("icon-large");
+      }, 
+      //on mouseout
+      function() {
+        $(this).removeClass("icon-large");
+      });
+
 });
