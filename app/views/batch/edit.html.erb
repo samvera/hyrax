@@ -1,7 +1,6 @@
 <% javascript 'bootstrap-tooltip.js' %>
 <% javascript 'bootstrap-popover.js' %>
 <% stylesheet 'jquery-ui-1.8.1.custom' %>
-<% stylesheet 'bootstrap.min.css' %>
 
 <% content_for :local_js do %>
 $('#permissions_display').show();
@@ -12,11 +11,6 @@ $("a[rel=popover]").popover();
 
 <% end %>
 
-<% content_for :local_css do %>
-form {
-  margin: 0;
-}
-<% end %>
 <h1>Add Descriptions</h1>
 The information you provide will be applied <em>to the entire batch of
 files</em> you have just deposited into ScholarSphere.  You may edit individual files
