@@ -6,7 +6,6 @@ Feature: Uploading files via web form
   Scenario: Getting to the ingest screen
     Given I am logged in as "contentauthor@psu.edu"
     When I follow "upload" 
-    Then show me the page 
     Then I should see "Select files"
     And I should see "Start upload"
     And I should see "Cancel upload"

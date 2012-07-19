@@ -14,7 +14,7 @@ Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
   visit "/"
   step %{And I click the anchor "#{login}"} 
   step %{I should see a link to "ingest" with label "upload"}
-  step %{I should see a link to "dashboard" with label "my dashboard"}
+  step %{I should see a link to "dashboard" with label "dashboard"}
   # step %{I should see a link to "logout"} 
 end
 
