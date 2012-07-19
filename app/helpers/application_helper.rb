@@ -27,4 +27,8 @@ module ApplicationHelper
     link_to(query, link_url)
   end
 
+  def display_user_name(recent_document)
+     return User.display_name( recent_document[:depositor_t][0]) if recent_document[:depositor_t] 
+  end
+
 end

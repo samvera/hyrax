@@ -11,8 +11,8 @@
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></td>
     </tr>
     <tr>
-      <th>Depositor:</th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %></td>
+      <th>Owner:</div>
+      <td><%=  display_user_name(document) %></td>
     </tr>
     <tr>
       <th>Creator:</th>

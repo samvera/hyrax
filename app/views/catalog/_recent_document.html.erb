@@ -3,8 +3,8 @@
 <%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
 <%- title = filename if title.empty? -%>
-<%- depositor = render_document_show_field_value(:document=>recent_document, :field=>"depositor_t") -%>
-<%- depositor = 'no depositor value' if depositor.empty? -%>
+<%- depositor = display_user_name(recent_document) -%>
+<%- depositor = 'no depositor value' if depositor.blank? -%>
     <tr>
       <td>
         <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %></h3>

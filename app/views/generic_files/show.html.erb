@@ -182,6 +182,10 @@ var addthis_config = {"data_track_addressbar":true};<
     <table class="table table-striped">
       <tbody>
         <tr>
+          <th>Owner</div>
+          <td><%=  User.display_name( @generic_file.depositor) %></td>
+        </tr>
+        <tr>
           <th>Date Uploaded</th>
           <td>
             <%= @generic_file.date_uploaded %>
