@@ -7,9 +7,14 @@
 <%- depositor = 'no depositor value' if depositor.blank? -%>
     <tr>
       <td>
-        <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %></h3>
-        <p>
-          <%= filename %><br />
+        <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %>
+          <% if recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
+            <span class="label label-important">Restricted</span>
+          <% else %>
+            <span class="label label-success">Public</span>
+          <% end %>
+        </h3>
+        <p> <%= filename %><br />
           <%= type %> <%= depositor %>
         </p>
       </td>
