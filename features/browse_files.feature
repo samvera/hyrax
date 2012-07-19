@@ -8,3 +8,9 @@ Feature: Browse files
     When I follow "Test Document PDF"
     Then I should see "Download"
     But I should not see "Edit"
+    Then show me the page
+    Given I am logged in as "archivist1"
+    When I follow "test"
+    And I follow "Test Document PDF"
+    But I should see "Edit"
+    Then show me the page

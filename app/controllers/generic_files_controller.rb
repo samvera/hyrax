@@ -26,9 +26,6 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id
   def index
-    perms = permissions_solr_doc_for_id(gf.pid)
-    @can_read =  can? :read, perms
-    @can_edit =  can? :edit, perms
     @generic_files = GenericFile.find(:all, :rows => GenericFile.count)
     render :json => @generic_files.map(&:to_jq_upload).to_json
   end
@@ -93,6 +90,10 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id
   def show
+    perms = permissions_solr_doc_for_id(@generic_file.pid)
+    @can_read =  can? :read, perms
+    @can_edit =  can? :edit, perms
+    
     respond_to do |format|
       format.html
       format.endnote { render :text => @generic_file.export_as_endnote }
