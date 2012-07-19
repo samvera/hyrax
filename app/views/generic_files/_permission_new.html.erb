@@ -50,7 +50,7 @@
             <td>
               <div class="span30">
                       <% public_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "public"}.compact.first %>
-                      <%= select_tag "generic_file[permissions]['group']['public']", options_for_select(ScholarSphere::Application::config.public_permission_levels, public_perm), :class=>'span20' %>
+                      <%= select_tag "generic_file[permissions][group][public]", options_for_select(ScholarSphere::Application::config.public_permission_levels, public_perm), :class=>'span20' %>
               </div>
             </td>
           </tr>
@@ -59,7 +59,7 @@
             <td>
               <div class="span30">
                       <% psu_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "registered"}.compact.first %>
-                      <%= select_tag "generic_file[permissions]['group']['registered']", options_for_select(ScholarSphere::Application::config.public_permission_levels, psu_perm), :class=>'span20' %>
+                      <%= select_tag "generic_file[permissions][group][registered]", options_for_select(ScholarSphere::Application::config.public_permission_levels, psu_perm), :class=>'span20' %>
               </div>
             </td>
           </tr>
