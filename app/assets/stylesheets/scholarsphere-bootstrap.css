@@ -47,17 +47,6 @@ h3 {
   padding: 0 0 5px 0;
   line-height: 21px;
 }
-h3.expandable {
-  float: left;
-  clear: left;
-  /* display: inline-block; */
-  padding-right: 15px;
-  background: url(/assets/site_images/icon_arrow3_right.png) right 7px no-repeat;
-  cursor: pointer;
-}
-h3.expandable.open {
-  background: url(/assets/site_images/icon_arrow3_down.png) right 7px no-repeat;
-}
 .span17 h3 {
   font-family: Arial, sans-serif;
   font-size: 11px;
@@ -80,14 +69,21 @@ ul.slide-list {
   float: left;
   clear: left;
 	margin: 0 0 25px 0;
-}
+}/*
 li {
 	margin: 7px 0;
-}
+}*/
 ul.slide-list li {
 	font-size: 11px;
-	line-height: 15px;
+  padding: 0;
+  margin: 0 0 0 5px;
 	list-style: none;
+}
+li.expandable {
+  cursor:pointer;
+}
+#facets {
+  padding-left: 5px;
 }
 /* submit your work link */
 #contribute_link {
@@ -204,6 +200,7 @@ ul.slide-list li {
 #footer a {
 	color: #c6c6c6;
 }
+/* icons shouldn't change color */
 a i, a:hover i {
   color: #000;
   text-decoration: none;
