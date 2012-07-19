@@ -31,7 +31,6 @@
     </style>
   </head>
 
-  <body> 
 <%# need a better way to determine if we are on the home page and using three col layout %>
 <% if params[:controller].eql?("catalog") and !has_search_parameters? %> 
   <% column_class = "three" %>
@@ -41,6 +40,7 @@
   <% column_class = "one" %>
 <% end %>
 
+<body> 
 <div  id="wrapper"> 
   <div class="container">
     <div id="page-positioner">
@@ -100,111 +100,5 @@
     <div class="clearfix"></div>
   </div><!-- /footer -->
 </div><!-- /footer-wrapper -->
-
-
-<% if false %>
-<div class="container" id="wrapper"> 
-  <%= render :partial => '/user_util_links', :formats => [:html] %>
-  <%= render :partial => '/flash_msg' %>
-  <div class="row" id="content-wrapper">
-    <div id="content">
-      <div class="span17">
-      <%= sidebar_items.join('').html_safe %> 
-      </div><!-- /span2 -->
-      <% if column_class == "three" %>
-        <div class="span63">
-          <%= yield %>
-        </div><!-- /span6 -->
-        <div class="span30">
-          <h2 class="heading1">Contribute</h2> 
-          <%= link_to 'Submit Your Work', new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %><br />
-          <div class="row">&nbsp;</div>
-          <div class="row">&nbsp;</div>
-          <h2 class="heading1">Recently Added</h2>
-          <%= render :partial=>'/catalog/recents' %>
-        </div> <!-- /span4 -->
-      <% else %>
-        <div class="span10">
-        <%= yield %>
-        </div><!-- /span10 -->
-      <% end %>
-    </div><!-- /content -->
-  </div><!-- /row -->
-</div><!-- /.container /#wrapper -->
-
-<div id="footer-wrapper" class="row-fluid">
-  <div id="footer">
-    <div class="footer-logo">
-      <a href="/"><img src="/assets/site_images/logo_psuss_footer.png" alt="PSU ScholarSphere" /></a>
-      <p>A service of the University Libraries and Information Technology Services.</p>
-    </div>
-    <div class="footer-text">
-      <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
-      <ul>
-        <li><a href="http://psu.edu">Penn State</a></li>
-        <li><a href="http://libraries.psu.edu">University Libraries</a></li>
-        <li><a href="http://its.psu.edu">Information Technology Services</a></li>
-        <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
-      </ul>
-    </div>
-    <div class="clearfix"></div>
-  </div><!-- /footer -->
-</div><!-- /footer-wrapper -->
-<% end %>
-<% if false %>
-  <div id="wrapper">
-  <div id="container">
-      <%= render :partial => '/user_util_links', :formats => [:html] %>
-      <%= render :partial=>'/flash_msg' %>
-      
-      <div id="content-wrapper">
-        <div id="content">	    
-          <%#  basically everything but the show method on generic files uses the same layout, again probably a better way to handle this %>
-          <% unless params[:controller].eql?("generic_files") and (params[:action].eql?("show") or params[:action].eql?("edit")) %>
-            <div class="columns <%= column_class %>-a"> 
-              <%= sidebar_items.join('').html_safe %> 
-              
-              <div class="column second"> 
-                <%= yield %>
-              </div>
-            <% if column_class == "three" %>
-              <div class="column third">
-                <h2 class="heading1">Contribute</h2> 
-                <%= link_to 'Submit Your Work', new_generic_file_path, :class => "button1", :id => "contribute_link" %>
-                <h2 class="heading1">Recently Added</h2>
-                <%= render :partial=>'/catalog/recents' %>
-              </div><!-- /column third -->
-            <% end %>
-            </div>	<!-- /columns three-a -->
-          <% else %>
-            <%= render :partial => 'generic_files/breadcrumbs' %>
-            <%= yield %>
-          <% end %>
-      </div> <!-- /content -->
-	  </div> <!-- /content-wrapper -->
-
-  </div> <!-- /container -->
-
-    <div id="footer-wrapper">
-      <div id="footer">
-        <div class="footer-logo">
-          <a href="/"><img src="/assets/site_images/logo_psuss_footer.png" alt="PSU ScholarSphere" /></a>
-          <p>A service of the University Libraries and Information Technology Services.</p>
-        </div>
-        <div class="footer-text">
-          <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
-          <ul>
-            <li><a href="http://psu.edu">Penn State</a></li>
-            <li><a href="http://libraries.psu.edu">University Libraries</a></li>
-            <li><a href="http://its.psu.edu">Information Technology Services</a></li>
-            <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
-          </ul>
-        </div>
-        <div class="clearfix"></div>
-      </div><!-- /footer -->
-    </div><!-- /footer-wrapper -->
-	
-  </div><!-- /wrapper -->
-<% end %>
 </body>
 </html>

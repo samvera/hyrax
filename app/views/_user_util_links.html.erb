@@ -1,29 +1,39 @@
 <div id="masthead">
-    <a id="logo" href="/"><img src="/assets/site_images/logo_psuss.png" alt="PSU ScholarSphere" /></a>
-    <ul id="primary-menu">
-      <li><a <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %> href="/">Home</a></li>
-      <li><a <%= 'class=active' if action_name == "about" %> href="/about/">About</a></li>
-      <li><a <%= 'class=active' if action_name == "help" %> href="/help/">Help</a></li>
-      <li><a <%= 'class=active' if params[:controller] == "contact_form" %> href="<%= contact_form_index_path %>">Contact</a></li>
-      <% if current_user %>
-      <li class="signin">
-        <a href="#" class="loggedin"><%= current_user.to_s %><img style="vertical-align:middle;" src="/assets/site_images/icon_arrow_down.png" alt="more" /></a>
-        <ul class="dropdown">
-          <li><%= link_to 'my dashboard', dashboard_path  %></li>
-          <li><%= link_to 'upload', new_generic_file_path  %></li>
+  <a id="logo" href="/"><img src="/assets/site_images/logo_psuss.png" alt="PSU ScholarSphere" /></a>
+  <div class="navbar">
+    <div class="nav-inner">
+      <div class="container">
+        <ul class="nav pull-right">
+          <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
+          <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
+          <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
+          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= contact_form_index_path %>" class="top_nav">Contact</a></li>
+          <li>
+            <div class="btn-group">
+              <% if current_user %>
+                <a href="#" class="btn btn-small "><i class="icon-user"></i><%= current_user.to_s %></a>
+                <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></a> 
+                <ul class="dropdown-menu">
+                    <li><%= link_to raw('<i class="icon-dashboard"></i> dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
+                    <li><%= link_to raw('<i class="icon-upload"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
+                    <li class="divider"></li>
+                    <li><%= link_to raw('<i class="icon-ban-circle"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
+                </ul>
+              <% else %>
+                  <%= link_to raw('<i class="icon-user"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
+              <% end %>
+            </div><!-- /.btn-group -->
+          </li>
+        </ul><!-- /.nav /.pull-right -->
+      </div><!-- /.container -->
+    </div><!-- /.nav-inner -->
+  </div><!-- /.navbar -->
+  <%# logger.info " controller = #{params[:controller]}" %>
+  <%= render :partial => 'catalog/search_form' %>
+</div> <!-- /masthead -->
+
           <!-- <li><%# link_to 'your bookmarks', bookmarks_path %></li> -->
           <!-- <li><%# link_to "saved searches", saved_searches_path %></li> -->
           <!-- <li><%# link_to "Selected Items", folder_index_path %>(<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li> -->
           <!-- <li><%# link_to "selected items", folder_index_path %></li> -->
           <!-- <li><%# link_to "search history", search_history_path %></li> -->
-          <li><%= link_to "log out", destroy_user_session_path %></li>
-        </ul>
-        </li>
-    <% else %>
-      <li class="signin"><%= link_to "Login", new_user_session_path %>
-    <% end %>
-  </ul> 
-
-    <%# logger.info " controller = #{params[:controller]}" %>
-    <%= render :partial => 'catalog/search_form' %>
-</div> <!-- /masthead -->
