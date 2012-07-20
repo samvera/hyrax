@@ -9,4 +9,4 @@ gem 'blacklight'
 gem 'hydra-access-controls', :path=>'../../../hydra-access-controls'
 gem 'hydra-core', :path=>'../../'
 gem 'rspec-rails'
-gem 'factory_girl_rails'
+gem 'factory_girl_rails', "<2.0.0" # >=2.0.0 requires ruby 1.9
