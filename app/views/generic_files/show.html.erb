@@ -91,7 +91,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Contributor</th>
           <td>
             <% @generic_file.contributor.each do |contributor| %>
-              <%= contributor %><br />
+              <%= linked_label(contributor, 'generic_file__contributor_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -107,7 +107,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Location</th>
           <td>
             <% @generic_file.based_near.each do |bn| %>
-              <%= bn %><br />
+              <%= linked_label(bn, 'generic_file__based_near_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -123,7 +123,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Language</th>
           <td>
             <% @generic_file.language.each do |lang| %>
-              <%= lang %><br />
+              <%= linked_label(lang,'generic_file__language_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -147,7 +147,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Subject</th>
           <td>
             <% @generic_file.subject.each do |sub| %>
-              <%= sub %><br />
+              <%= linked_label(sub, 'generic_file__subject_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -155,7 +155,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Keyword</th>
           <td>
             <% @generic_file.tag.each do |t| %>
-              <%= t %><br />
+              <%= linked_label(t, 'generic_file__tag_facet') %><br />
             <% end %>
           </td>
         </tr>
