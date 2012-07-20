@@ -25,12 +25,12 @@ module ScholarSphere
     config.assets.paths << '#{Rails.root}/app/assets/javascripts'
     config.assets.paths << '#{Rails.root}/app/assets/stylesheets'
     config.assets.paths << '#{Rails.root}/app/assets/images'
-    config.assets.paths << '#{Rails.root}/app/assets/font'
     config.assets.paths << '#{Rails.root}/lib/assets/javascripts'
     config.assets.paths << '#{Rails.root}/lib/assets/stylesheets'
     config.assets.paths << '#{Rails.root}/lib/assets/images'
     config.assets.paths << '#{Rails.root}/vendor/assets/javascripts'
     config.assets.paths << '#{Rails.root}/vendor/assets/images'
+    config.assets.paths << '#{Rails.root}/vendor/assets/fonts'
 
     # email to send on contact form - probably need one for the production
     # environment
@@ -68,14 +68,30 @@ module ScholarSphere
       "No Access"=>"none",
       "View/Download" => "read"
     }
+
     config.permission_levels = {
       "No Access"=>"none",
       "View/Download" => "read",
       "Edit" => "edit"
     }
+
     config.owner_permission_levels = {
       "Edit" => "edit"
     }
+
+    config.cc_licenses = {
+      'No license specified' => 'No license specified',
+      'Attribution 3.0 United States' => 'http://creativecommons.org/licenses/by/3.0/us/',
+      'Attribution-ShareAlike 3.0 United States' => 'http://creativecommons.org/licenses/by-sa/3.0/us/',
+      'Attribution-NonCommercial 3.0 United States' => 'http://creativecommons.org/licenses/by-nc/3.0/us/',
+      'Attribution-NoDerivs 3.0 United States' => 'http://creativecommons.org/licenses/by-nd/3.0/us/',
+      'Attribution-NonCommercial-NoDerivs 3.0 United States' => 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/',
+      'Attribution-NonCommercial-ShareAlike 3.0 United States' => 'http://creativecommons.org/licenses/by-nc-sa/3.0/us/',
+      'Public Domain Mark 1.0' => 'http://creativecommons.org/publicdomain/mark/1.0/',
+      'CC0 1.0 Universal' => 'http://creativecommons.org/publicdomain/zero/1.0/',
+      'All rights reserved' => 'All rights reserved'
+    }
+
     # help text to display for form metadata elements, these will need to be updated to
     # reflect a field name change (should one happen) in the generic file datastream
     config.metadata_help = {

@@ -4,14 +4,11 @@ class ApplicationController < ActionController::Base
   # Adds Hydra behaviors into the application controller
   include Hydra::Controller::ControllerBehavior
 
-  before_filter do |controller|
-    # TODO: move this to app/assets/stylesheets and turn on the asset pipeline
-    controller.stylesheet_links << 'bootstrap.min.css'
-  end
-
   ## Force the session to be restarted on every request.  The ensures that when the REMOTE_USER header is not set, the user will be logged out.
   before_filter :clear_session_user
   before_filter :set_current_user
+  before_filter :filter_notify
+  before_filter :add_notifications
 
   # Intercept errors and render user-friendly pages
   rescue_from NameError, :with => :render_500
@@ -55,12 +52,6 @@ class ApplicationController < ActionController::Base
   def render_500(exception)
     logger.error("Rendering 500 page due to exception: #{exception.inspect} - #{exception.backtrace}")
     render :template => '/error/500', :layout => "error", :formats => [:html], :status => 500
-  end
-
-  def render (object=nil)
-    filter_notify
-    add_notifications
-    super(object)
   end
 
   def filter_notify

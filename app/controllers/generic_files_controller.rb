@@ -21,7 +21,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/:id/edit
   def edit
     @terms = @generic_file.get_terms
-    @groups = ScholarSphere::LDAP.groups_for_user("#{current_user}")
+    @groups = current_user.groups
   end
 
   # routed to /files/:id

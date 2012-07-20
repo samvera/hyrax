@@ -1,6 +1,6 @@
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
-<div id="descriptions_display"> 
+<div id="descriptions_display">
   <h2 class="non lower">Descriptions</h2>
     <div class="well">
 
@@ -13,7 +13,7 @@
       </div><!-- /control-group -->
 
       <% @terms.each do |t| %>
-        <% next if t.empty? %> 
+        <% next if t.empty? %>
         <% key = t.to_s.split("generic_file__").last %>
         <%# consider these fields to be uneditable via the web form %>
         <% next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key) %>
@@ -37,10 +37,11 @@
               <% end %>
               <div class="controls" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
                 <% if key == "description" %>
-                  <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large"  %>
-
+                  <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
+                <% elsif key == "rights" %>
+                  <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, @generic_file.rights.to_a) %>
                 <% else %>
-                  <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %> 
+                  <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
                 <% end %>
                 <% if index == 0 %>
                   <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn"  %>&nbsp;
@@ -50,7 +51,7 @@
               <div id="additional_<%= key %>_elements"></div>
             </div><!-- /control-group -->
           <% end %>
-        <% end %> 
+        <% end %>
       <% end %>
 
     </div><!-- /well -->

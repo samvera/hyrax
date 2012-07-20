@@ -128,6 +128,14 @@ var addthis_config = {"data_track_addressbar":true};<
           </td>
         </tr>
         <tr>
+          <th>Resource Type</th>
+          <td>
+            <% @generic_file.resource_type.each do |rtype| %>
+              <%= linked_label(rtype, 'generic_file__resource_type_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+        <tr>
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>

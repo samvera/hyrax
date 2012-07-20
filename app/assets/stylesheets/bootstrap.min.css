@@ -676,7 +676,7 @@ table .span21{float:none;width:150px;margin-left:0;}
 table .span22{float:none;width:158px;margin-left:0;}
 table .span23{float:none;width:166px;margin-left:0;}
 table .span24{float:none;width:174px;margin-left:0;}
-@font-face{font-family:'FontAwesome';src:url('../font/fontawesome-webfont.eot');src:url('../font/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),url('../font/fontawesome-webfont.woff') format('woff'),url('../font/fontawesome-webfont.ttf') format('truetype'),url('../font/fontawesome-webfont.svg#FontAwesome') format('svg');font-weight:normal;font-style:normal;}[class^="icon-"]:before,[class*=" icon-"]:before{font-family:FontAwesome;font-weight:normal;font-style:normal;display:inline-block;text-decoration:inherit;}
+@font-face{font-family:'FontAwesome';src:url('../assets/fontawesome-webfont.eot');src:url('../assets/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),url('../assets/fontawesome-webfont.woff') format('woff'),url('../assets/fontawesome-webfont.ttf') format('truetype'),url('../assets/fontawesome-webfont.svg#FontAwesome') format('svg');font-weight:normal;font-style:normal;}[class^="icon-"]:before,[class*=" icon-"]:before{font-family:FontAwesome;font-weight:normal;font-style:normal;display:inline-block;text-decoration:inherit;}
 a [class^="icon-"],a [class*=" icon-"]{display:inline-block;text-decoration:inherit;}
 .icon-large:before{vertical-align:middle;font-size:1.3333333333333333em;}
 .btn [class^="icon-"],.nav-tabs [class^="icon-"],.btn [class*=" icon-"],.nav-tabs [class*=" icon-"]{line-height:.9em;}
