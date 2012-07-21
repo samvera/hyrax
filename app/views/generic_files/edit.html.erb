@@ -15,9 +15,13 @@ $('input[name=revision]:radio').on('click', function() {
     $('#save_version_note').fadeIn('slow');
     });
 
-$('#permissions_display').hide();
-$('#permissions_submit').hide();
-$('#versioning_display').hide();
+<% if params[:tab] == 'versions' %>
+  versions_tab();
+<% elsif params[:tab] == 'permissions' %>
+  permissions_tab();
+<% else %>
+  descriptions_tab();
+<% end %>
 
 // initialize popover helpers
 $("a[rel=popover]").popover();
@@ -40,9 +44,9 @@ $("a[rel=popover]").popover();
   <div class="span68">
     <%= link_to "&lt;&lt;Browse view".html_safe, generic_file_path %></li>
     <ul class="nav nav-tabs">
-      <li id="edit_descriptions_link" class="active"><a href="#">Descriptions</a></li>
-      <li id="edit_versioning_link"><a href="#">Versions</a></li>
-     <li id="edit_permissions_link"><a href="#">Permissions</a></li>
+      <li id="edit_descriptions_link" ><a href="#">Descriptions</a></li>
+      <li id="edit_versioning_link" ><a href="#">Versions</a></li>
+      <li id="edit_permissions_link" ><a href="#">Permissions</a></li>
     </ul>
     <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>

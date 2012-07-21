@@ -88,6 +88,9 @@ $(function() {
 
   }
 
+  /*
+   * adds additional metadata elements
+   */
   $('.adder').click(function() {
     //this.id = additional_N_submit
     //id for element to clone = additional_N_clone
@@ -150,6 +153,16 @@ $(function() {
       $('#more_descriptions').show();
   });
 
+
+  /*
+   *
+   *
+   * permissions
+   *
+   * ids that end in 'skel' are only used as elements
+   * to clone into real form elements that are then 
+   * submitted
+   */
   $('#new_user_permission_skel').attr('disabled', true);
   $('#new_group_permission_skel').attr('disabled', true);
 
@@ -248,44 +261,21 @@ $(function() {
       tr.effect("highlight", {}, 3000);
   }
 
+  // called from edit object view 
   $('#edit_descriptions_link').on('click', function() {
-    $('#edit_descriptions_link').attr('class', 'active');
-    $('#edit_versioning_link').attr('class', '');
-    $('#edit_permissions_link').attr('class', '');
+      descriptions_tab();
+    });
 
-    $('#descriptions_display').show();
-    $('#versioning_display').hide();
-    $('#permissions_display').hide();
-    $('#permissions_submit').hide();
-  });
-
+  // called from edit object view 
   $('#edit_versioning_link').on('click', function() {
-    $('#edit_descriptions_link').attr('class', '');
-    $('#edit_versioning_link').attr('class', 'active');
-    $('#edit_permissions_link').attr('class', '');
+    versions_tab();
+    });
 
-    $('#descriptions_display').hide();
-    $('#versioning_display').show();
-    $('#permissions_display').hide();
-    $('#permissions_submit').hide();
-  });
-
+  // called from edit object view 
   $('#edit_permissions_link').on('click', function() {
-    $('#edit_permissions_link').attr('class', 'active');
-    $('#edit_versioning_link').attr('class', '');
-    $('#edit_descriptions_link').attr('class', '');
+      permissions_tab();
+    });
 
-    $('#descriptions_display').hide();
-    $('#versioning_display').hide();
-    $('#permissions_display').show();
-    $('#permissions_submit').show();
-  });
-
-  // facets lists
-	$("li.expandable").click(function(){
-		$(this).next("ul").slideToggle();
-    $(this).find('i').toggleClass("icon-chevron-down");
-	}); 
 
 	$('#generic_file_permissions_new_group_name').change(function (){
         var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
@@ -297,7 +287,18 @@ $(function() {
 	    
 	});
 
-  // enlarge icons on hover
+
+  /* 
+   * facets lists
+   */
+	$("li.expandable").click(function(){
+		$(this).next("ul").slideToggle();
+    $(this).find('i').toggleClass("icon-chevron-down");
+	}); 
+
+  /* 
+   * enlarge icons on hover- on dashboard
+   */
   /*
   $('[class^="icon-"]').hover(
       //on mouseover
@@ -322,3 +323,40 @@ $(function() {
       });
 
 });
+// all called from edit object view
+// when permissions link is clicked on edit object
+function permissions_tab () 
+{
+    $('#edit_permissions_link').attr('class', 'active');
+    $('#edit_versioning_link').attr('class', '');
+    $('#edit_descriptions_link').attr('class', '');
+
+    $('#descriptions_display').hide();
+    $('#versioning_display').hide();
+    $('#permissions_display').show();
+    $('#permissions_submit').show();
+}
+// when versions link is clicked on edit object
+function versions_tab()
+{
+    $('#edit_descriptions_link').attr('class', '');
+    $('#edit_versioning_link').attr('class', 'active');
+    $('#edit_permissions_link').attr('class', '');
+
+    $('#descriptions_display').hide();
+    $('#versioning_display').show();
+    $('#permissions_display').hide();
+    $('#permissions_submit').hide();
+}
+// when descriptions link is clicked on edit object
+function descriptions_tab () 
+{
+    $('#edit_descriptions_link').attr('class', 'active');
+    $('#edit_versioning_link').attr('class', '');
+    $('#edit_permissions_link').attr('class', '');
+
+    $('#descriptions_display').show();
+    $('#versioning_display').hide();
+    $('#permissions_display').hide();
+    $('#permissions_submit').hide();
+}
