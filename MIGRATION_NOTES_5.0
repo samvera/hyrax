@@ -1,3 +1,4 @@
+* The generated configs are for Solr 3.5 (upgraded from 1.4).  It ought to work with other versions of solr if you provide your own configs.
 * get_file_asset_count(solr_doc) has been replaced by 
   fedora_doc.file_asset_count (or just fedora_doc.parts.length if you prefer)
 * remove User.send(:include, Hydra::GenericUserAttributes) from config/initializers/hydra_config.rb
@@ -6,4 +7,5 @@
 * Hydra::AssetsControllerHelper moved to hydra-file-access.  Is this the correct place?
 
 * TODO: activate the relavent integration tests in test_support/features
+
 

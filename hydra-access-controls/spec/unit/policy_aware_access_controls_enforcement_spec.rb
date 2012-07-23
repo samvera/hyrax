@@ -66,7 +66,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   end
   
   after(:all) do
-    @policies.access.each {|p| p.delete }
+    @sample_policies.each {|p| p.delete }
   end
   
   subject { MockController.new }
@@ -97,6 +97,9 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   
   describe "apply_gated_discovery" do
     it "should include policy-aware query" do
+      # stubbing out policies_with_access because solr doesn't always return them in the same order.
+      policy_pids = (1..6).map {|n| "test:policy#{n}"}
+      subject.should_receive(:policies_with_access).and_return(policy_pids)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
       @solr_parameters[:fq].first.should include(" OR (is_governed_by_s:info\\:fedora/test\\:policy1 OR is_governed_by_s:info\\:fedora/test\\:policy2 OR is_governed_by_s:info\\:fedora/test\\:policy3 OR is_governed_by_s:info\\:fedora/test\\:policy4 OR is_governed_by_s:info\\:fedora/test\\:policy5 OR is_governed_by_s:info\\:fedora/test\\:policy6)")
     end

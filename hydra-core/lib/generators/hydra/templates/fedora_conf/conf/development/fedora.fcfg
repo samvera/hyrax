@@ -1,63 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server xmlns="http://www.fedora.info/definitions/1/0/config/" class="org.fcrepo.server.BasicServer">
-  <param name="repositoryName" value="Fedora Repository">
-    <comment>Defines a human readable name for the Fedora server; default is 
-		Fedora Repository.</comment>
+  <param name="datastreamExtensionMappingSource" value="mime-to-extensions.xml">
+    <comment>Source of mappings from MIMETYPE to file extension</comment>
   </param>
-  <param name="adminEmailList" value="bob@example.org sally@example.org">
-    <comment>Defines one or more email addresses for server administrators; 
-		list is space delimited.</comment>
+  <param name="datastreamExtensionMappingId" value="ifmissing">
+    <comment>Controls filename extension mapping when the datastream ID is used
+		as the source of the filename.  Values are as above.</comment>
   </param>
-  <param name="fedoraServerPort" value="8983">
-    <comment>Defines the port number on which the Fedora server runs; 
-		default is 8080.</comment>
+  <param name="httpClientMaxConnectionsPerHost" value="5">
+    <comment>Maximum number of Fedora http client connections allowed to a given host.</comment>
   </param>
-  <param name="fedoraShutdownPort" value="8005">
-    <comment>Defines the port number used to shutdown the Fedora sever; 
-		default is 8005.</comment>
-  </param>
-  <param name="fedoraRedirectPort" value="8443">
-    <comment>Defines the redirect port of the Fedora sever; default is 8443.</comment>
+  <param name="httpClientSocketTimeoutSecs" value="120">
+    <comment>Number of seconds Fedora http client will wait for data coming across an 
+		established http connection.</comment>
   </param>
   <param name="fedoraServerHost" value="localhost">
     <comment>Defines the host name for the Fedora server, as seen from the 
 		outside world.</comment>
-  </param>
-  <param name="fedoraAppServerContext" value="fedora">
-    <comment>Defines the context name for the Fedora server within the 
-		application server. If set to eg &quot;myfedora&quot; the URL for Fedora will result
-		in http[s]://fedoraServerHost[:fedoraServerPort]/myfedora.</comment>
-  </param>
-  <param name="datastreamExpirationLimit" value="300">
-    <comment>Controls the size of the datastream mediation hash by removing 
-		entries outside the specified threshold. The value is specified in 
-		seconds. Note this value must be greater than the limit specified for 
-		the datastreamMediationLimit.</comment>
-  </param>
-  <param name="datastreamMediationLimit" value="5000">
-    <comment>Determines the time interval in which external mechanisms must 
-		respond to requests by the Fedora server. The value is specified in 
-		milliseconds. The value specified should be set high enough to allow 
-		for an average response time from any single external mechanisms. Note 
-		this value must be less than the limit specified for the 
-		datastreamExpirationLimit.</comment>
-  </param>
-  <param name="datastreamContentDispositionInlineEnabled" value="true">
-    <comment>determines if a content-disposition header specifying &quot;inline&quot; and
-		a filename is added to the response for the REST API getDatastreamDissemination
-		when no query parameter of download=true is specified.  Browser support for 
-		recognising a filename in case of &quot;inline&quot; content disposition is patchy,
-		so you may wish to disable the content disposition header in this case and only
-		have it provided when download=true is specified, in which case the content disposition
-		of &quot;attachment&quot; will be used; which is generally supported.</comment>
-  </param>
-  <param name="datastreamFilenameSource" value="rels label id">
-    <comment>determines the source of the filename generated when download=true
-		on a datastream dissemination.  Value is space separated list of label: use the datastream label;
-		id: use the datastream ID; rels: use the value defined in RELS-INT.  Each
-		source is checked in order, and the first containing a value is used.  Omit
-		any of the sources if that source is never to be used.  If no sources are to be used,
-		and just the default filename and extension below are to be used, specify &quot; &quot;.</comment>
   </param>
   <param name="datastreamExtensionMappingLabel" value="always">
     <comment>Controls filename extension mapping when the datastream label is used
@@ -68,47 +27,6 @@
 		mapping is found); never: never generate an extension, use the filename from the source
 		as-is</comment>
   </param>
-  <param name="datastreamExtensionMappingId" value="ifmissing">
-    <comment>Controls filename extension mapping when the datastream ID is used
-		as the source of the filename.  Values are as above.</comment>
-  </param>
-  <param name="datastreamExtensionMappingRels" value="never">
-    <comment>Controls filename extension mapping when RELS-INT is used
-		as the source of the filename.  Values are as above.</comment>
-  </param>
-  <param name="datastreamExtensionMappingDefault" value="never">
-    <comment>Controls filename extension mapping when no filename can be determined from
-		the sources listed in datastreamFilenameSource.  Values are always: always generate an extension
-		based on the MIMETYPE (using the default if no appropriate mapping is specified);
-		never: never generate an extension.</comment>
-  </param>
-  <param name="datastreamDefaultFilename" value="download">
-    <comment>Filename to use for datastream downloads when none can be determined from the
-		sources listed in datastreamFilenameSource.</comment>
-  </param>
-  <param name="datastreamDefaultExtension" value="bin">
-    <comment>Extension to use when none can be determined from mappings</comment>
-  </param>
-  <param name="datastreamExtensionMappingSource" value="mime-to-extensions.xml">
-    <comment>Source of mappings from MIMETYPE to file extension</comment>
-  </param>
-  <param name="httpClientTimeoutSecs" value="20">
-    <comment>Number of seconds Fedora http client will wait for a connection before timing 
-		out.</comment>
-  </param>
-  <param name="httpClientSocketTimeoutSecs" value="120">
-    <comment>Number of seconds Fedora http client will wait for data coming across an 
-		established http connection.</comment>
-  </param>
-  <param name="httpClientMaxConnectionsPerHost" value="5">
-    <comment>Maximum number of Fedora http client connections allowed to a given host.</comment>
-  </param>
-  <param name="httpClientMaxTotalConnections" value="5">
-    <comment>Maximum number of total Fedora http client connections allowed at once.</comment>
-  </param>
-  <param name="httpClientFollowRedirects" value="true">
-    <comment>Should the Fedora http client follow redirects?</comment>
-  </param>
   <param name="httpClientMaxFollowRedirects" value="3">
     <comment>Maximun number of redirects the Fedora http client will follow (only if 
 		httpClientFollowRedirects is set to true.)</comment>
@@ -116,20 +34,100 @@
   <param name="httpClientUserAgent" value="Fedora">
     <comment>The value to be set for the User-Agent HTTP request header.</comment>
   </param>
-  <module role="org.fcrepo.server.storage.lowlevel.ILowlevelStorage" class="org.fcrepo.server.storage.lowlevel.akubra.AkubraLowlevelStorageModule">
-  </module>
+  <param name="httpClientMaxTotalConnections" value="5">
+    <comment>Maximum number of total Fedora http client connections allowed at once.</comment>
+  </param>
+  <param name="datastreamFilenameSource" value="rels label id">
+    <comment>determines the source of the filename generated when download=true
+		on a datastream dissemination.  Value is space separated list of label: use the datastream label;
+		id: use the datastream ID; rels: use the value defined in RELS-INT.  Each
+		source is checked in order, and the first containing a value is used.  Omit
+		any of the sources if that source is never to be used.  If no sources are to be used,
+		and just the default filename and extension below are to be used, specify &quot; &quot;.</comment>
+  </param>
+  <param name="adminEmailList" value="bob@example.org sally@example.org">
+    <comment>Defines one or more email addresses for server administrators; 
+		list is space delimited.</comment>
+  </param>
+  <param name="datastreamMediationLimit" value="5000">
+    <comment>Determines the time interval in which external mechanisms must 
+		respond to requests by the Fedora server. The value is specified in 
+		milliseconds. The value specified should be set high enough to allow 
+		for an average response time from any single external mechanisms. Note 
+		this value must be less than the limit specified for the 
+		datastreamExpirationLimit.</comment>
+  </param>
+  <param name="fedoraServerPort" value="8983">
+    <comment>Defines the port number on which the Fedora server runs; 
+		default is 8080.</comment>
+  </param>
+  <param name="fedoraRedirectPort" value="8443">
+    <comment>Defines the redirect port of the Fedora sever; default is 8443.</comment>
+  </param>
+  <param name="httpClientFollowRedirects" value="true">
+    <comment>Should the Fedora http client follow redirects?</comment>
+  </param>
+  <param name="datastreamExtensionMappingDefault" value="never">
+    <comment>Controls filename extension mapping when no filename can be determined from
+		the sources listed in datastreamFilenameSource.  Values are always: always generate an extension
+		based on the MIMETYPE (using the default if no appropriate mapping is specified);
+		never: never generate an extension.</comment>
+  </param>
+  <param name="datastreamContentDispositionInlineEnabled" value="true">
+    <comment>determines if a content-disposition header specifying &quot;inline&quot; and
+		a filename is added to the response for the REST API getDatastreamDissemination
+		when no query parameter of download=true is specified.  Browser support for 
+		recognising a filename in case of &quot;inline&quot; content disposition is patchy,
+		so you may wish to disable the content disposition header in this case and only
+		have it provided when download=true is specified, in which case the content disposition
+		of &quot;attachment&quot; will be used; which is generally supported.</comment>
+  </param>
+  <param name="fedoraAppServerContext" value="fedora">
+    <comment>Defines the context name for the Fedora server within the 
+		application server. If set to eg &quot;myfedora&quot; the URL for Fedora will result
+		in http[s]://fedoraServerHost[:fedoraServerPort]/myfedora.</comment>
+  </param>
+  <param name="fedoraShutdownPort" value="8005">
+    <comment>Defines the port number used to shutdown the Fedora sever; 
+		default is 8005.</comment>
+  </param>
+  <param name="datastreamDefaultExtension" value="bin">
+    <comment>Extension to use when none can be determined from mappings</comment>
+  </param>
+  <param name="datastreamDefaultFilename" value="download">
+    <comment>Filename to use for datastream downloads when none can be determined from the
+		sources listed in datastreamFilenameSource.</comment>
+  </param>
+  <param name="datastreamExpirationLimit" value="300">
+    <comment>Controls the size of the datastream mediation hash by removing 
+		entries outside the specified threshold. The value is specified in 
+		seconds. Note this value must be greater than the limit specified for 
+		the datastreamMediationLimit.</comment>
+  </param>
+  <param name="datastreamExtensionMappingRels" value="never">
+    <comment>Controls filename extension mapping when RELS-INT is used
+		as the source of the filename.  Values are as above.</comment>
+  </param>
+  <param name="httpClientTimeoutSecs" value="20">
+    <comment>Number of seconds Fedora http client will wait for a connection before timing 
+		out.</comment>
+  </param>
+  <param name="repositoryName" value="Fedora Repository">
+    <comment>Defines a human readable name for the Fedora server; default is 
+		Fedora Repository.</comment>
+  </param>
   <module role="org.fcrepo.server.security.Authorization" class="org.fcrepo.server.security.DefaultAuthorization">
     <comment>Builds and manages Fedora's authorization structure.</comment>
-    <param name="REPOSITORY-POLICIES-DIRECTORY" value="data/fedora-xacml-policies/repository-policies" isFilePath="true"/>
     <param name="REPOSITORY-POLICY-GUITOOL-POLICIES-DIRECTORY" value="data/fedora-xacml-policies/repository-policies-generated-by-policyguitool" isFilePath="true">
       <comment>This parameter is for future use.</comment>
     </param>
-    <param name="XACML-COMBINING-ALGORITHM" value="com.sun.xacml.combine.OrderedDenyOverridesPolicyAlg"/>
-    <param name="ENFORCE-MODE" value="permit-all-requests"/>
     <param name="POLICY-SCHEMA-PATH" value="xsd/cs-xacml-schema-policy-01.xsd"/>
-    <param name="VALIDATE-REPOSITORY-POLICIES" value="true"/>
-    <param name="VALIDATE-OBJECT-POLICIES-FROM-FILE" value="false"/>
+    <param name="ENFORCE-MODE" value="permit-all-requests"/>
     <param name="VALIDATE-OBJECT-POLICIES-FROM-DATASTREAM" value="false"/>
+    <param name="XACML-COMBINING-ALGORITHM" value="com.sun.xacml.combine.OrderedDenyOverridesPolicyAlg"/>
+    <param name="VALIDATE-OBJECT-POLICIES-FROM-FILE" value="false"/>
+    <param name="VALIDATE-REPOSITORY-POLICIES" value="true"/>
+    <param name="REPOSITORY-POLICIES-DIRECTORY" value="data/fedora-xacml-policies/repository-policies" isFilePath="true"/>
   </module>
   <module role="org.fcrepo.server.security.BackendSecurity" class="org.fcrepo.server.security.DefaultBackendSecurity">
     <comment>Description: Interface to the backend service security 
@@ -138,17 +136,17 @@
 		This file is located in the distribution in 
 		$FEDORA_HOME/dist/server/config/beSecurity.xml. The configuration file 
 		is read once at server startup.</comment>
-    <param name="beSecurity_validation" value="false">
-      <comment>Controls whether beSecurity config file is validated 
-			against the beSecurityDescription schema. The default is 
-			&quot;false&quot;. Valid values are &quot;true&quot; or 
-			&quot;false&quot;.</comment>
-    </param>
     <param name="beSecurity_char_encoding" value="utf-8">
       <comment>The character encoding used for the beSecurity 
 			configuration file. The default is &quot;utf-8&quot;. The value 
 			specified must correspond to the character encoding used in the 
 			beSecurity configuration file.</comment>
+    </param>
+    <param name="beSecurity_validation" value="false">
+      <comment>Controls whether beSecurity config file is validated 
+			against the beSecurityDescription schema. The default is 
+			&quot;false&quot;. Valid values are &quot;true&quot; or 
+			&quot;false&quot;.</comment>
     </param>
   </module>
   <module role="org.fcrepo.server.storage.DOManager" class="org.fcrepo.server.storage.DefaultDOManager">
@@ -156,35 +154,19 @@
     	context-appropriate DOReaders and DOWriters for reflecting on and 
     	writing to the objects stored in the repository. It also provides 
     	methods for reflecting on the contents of the repository as a whole..</comment>
-    <param name="pidNamespace" value="changeme">
-      <comment>This is the namespace id for pids of newly-created objects. 
-	    	This should be unique for a repository. It can be from 1 to 17 
-	    	characters, and may only contain A-Z, a-z, 0-9, &apos;.&apos;, or &apos;-&apos; (dash).</comment>
-    </param>
-    <param name="storagePool" value="localDerbyPool">
-      <comment>The named connection pool from which read/write database 
-	    	connections are to be provided for the storage subsystem (see the 
-	    	ConnectionPoolManager module). Default is the default provided by the 
-	    	ConnectionPoolManager.</comment>
-    </param>
-    <param name="storageCharacterEncoding" value="UTF-8">
-      <comment>If the serialization format is text-based, this is the 
-	    	character encoding that should be used. Default is UTF-8.</comment>
-    </param>
-    <param name="defaultExportFormat" value="info:fedora/fedora-system:FOXML-1.1"/>
     <param name="defaultDCControlGroup" value="X">
       <comment>The control group to use for the system-generated DC datastream
             if no DC datastream is present on ingest.  Must be &quot;X&quot; or &quot;M&quot;.</comment>
     </param>
-    <param name="defaultRELSControlGroup" value="X">
-      <comment>The control group to use for system-generated RELS-EXT and 
-            RELS-INT datastreams where these are not already present when
-            adding relationships via addRelationship.  Must be &quot;X&quot; or &quot;M&quot;.</comment>
+    <param name="gSearchPassword" value="examplePassword">
+      <comment>The associated password for accessing the REST endpoint
+            of the Fedora Generic Search service.  This parameter is only 
+            required if GSearchDOManager is used, and the service requires 
+            authentication.</comment>
     </param>
-    <param name="gSearchRESTURL" value="http://localhost:8983/fedoragsearch/rest">
-      <comment>The REST endpoint of the Fedora Generic Search service.
-            This parameter is only required if GSearchDOManager is 
-            used.</comment>
+    <param name="storageCharacterEncoding" value="UTF-8">
+      <comment>If the serialization format is text-based, this is the 
+	    	character encoding that should be used. Default is UTF-8.</comment>
     </param>
     <param name="gSearchUsername" value="exampleUsername">
       <comment>The username for accessing the REST endpoint of the
@@ -192,11 +174,27 @@
             GSearchDOManager is used, and the service requires 
             authentication.</comment>
     </param>
-    <param name="gSearchPassword" value="examplePassword">
-      <comment>The associated password for accessing the REST endpoint
-            of the Fedora Generic Search service.  This parameter is only 
-            required if GSearchDOManager is used, and the service requires 
-            authentication.</comment>
+    <param name="storagePool" value="localDerbyPool">
+      <comment>The named connection pool from which read/write database 
+	    	connections are to be provided for the storage subsystem (see the 
+	    	ConnectionPoolManager module). Default is the default provided by the 
+	    	ConnectionPoolManager.</comment>
+    </param>
+    <param name="gSearchRESTURL" value="http://localhost:8983/fedoragsearch/rest">
+      <comment>The REST endpoint of the Fedora Generic Search service.
+            This parameter is only required if GSearchDOManager is 
+            used.</comment>
+    </param>
+    <param name="defaultExportFormat" value="info:fedora/fedora-system:FOXML-1.1"/>
+    <param name="defaultRELSControlGroup" value="X">
+      <comment>The control group to use for system-generated RELS-EXT and 
+            RELS-INT datastreams where these are not already present when
+            adding relationships via addRelationship.  Must be &quot;X&quot; or &quot;M&quot;.</comment>
+    </param>
+    <param name="pidNamespace" value="changeme">
+      <comment>This is the namespace id for pids of newly-created objects. 
+	    	This should be unique for a repository. It can be from 1 to 17 
+	    	characters, and may only contain A-Z, a-z, 0-9, &apos;.&apos;, or &apos;-&apos; (dash).</comment>
     </param>
   </module>
   <module role="org.fcrepo.server.management.Management" class="org.fcrepo.server.management.ManagementModule">
@@ -205,18 +203,6 @@
                  - how the service is exposed
                  - how bytestreams and java types might be marshalled/demarshalled over the wire
                  - how the storage subsystem is implemented.</comment>
-    <param name="decorator1" value="org.fcrepo.server.messaging.NotificationInvocationHandler"/>
-    <param name="autoChecksum" value="false">
-      <comment>Controls whether a checksum is automatically computed for 
-			every datastream as the datastream is added to the repository. This 
-			will allow the integrity of datastream contents to be periodically 
-			checked to insure the object is not corrupted.</comment>
-    </param>
-    <param name="checksumAlgorithm" value="MD5">
-      <comment>Specifies which checksumming algorithm is to be used when 
-			automatically computing checksums as specified by the above 
-			parameter. Valid values are: MD5  SHA-1  SHA-256  SHA-384  SHA-512.</comment>
-    </param>
     <param name="purgeDelayInMillis" value="60000">
       <comment>Optional, default is 60000 (1 minute).
             This specifies the amount of time between checks to remove
@@ -224,10 +210,22 @@
             each check, old files whose age exceeds uploadStorageMinutes
             will be removed.</comment>
     </param>
+    <param name="decorator1" value="org.fcrepo.server.messaging.NotificationInvocationHandler"/>
+    <param name="checksumAlgorithm" value="SHA-1">
+      <comment>Specifies which checksumming algorithm is to be used when 
+			automatically computing checksums as specified by the above 
+			parameter. Valid values are: MD5  SHA-1  SHA-256  SHA-384  SHA-512.</comment>
+    </param>
     <param name="uploadStorageMinutes" value="5">
       <comment>Optional, default is 5.
             This specifies the minimum amount of time that each uploaded
             file should be kept in temporary storage.</comment>
+    </param>
+    <param name="autoChecksum" value="true">
+      <comment>Controls whether a checksum is automatically computed for 
+			every datastream as the datastream is added to the repository. This 
+			will allow the integrity of datastream contents to be periodically 
+			checked to insure the object is not corrupted.</comment>
     </param>
   </module>
   <module role="org.fcrepo.server.access.Access" class="org.fcrepo.server.access.DefaultAccess">
@@ -306,18 +304,16 @@
   </module>
   <module role="org.fcrepo.server.search.FieldSearch" class="org.fcrepo.server.search.FieldSearchSQLModule">
     <comment>Supports the API-A simpleSearch and advancedSearch methods.</comment>
-    <param name="maxResults" value="100">
-      <comment>(required, must be &gt; 0) 
-            The maximum number of records to 
-            return as the result of a search. Even if a client requests more 
-            results at a time, this is the cutoff value.</comment>
-    </param>
-    <param name="maxSecondsPerSession" value="500">
-      <comment>(required, must be &gt; 0) 
-            The maximum number of seconds that the server guarantees subsequent
-            search results may be obtained. This is only used in cases where the
-            number of results is greater than maxResults (as specified by the
-            server [above] or the client [in the search request]).</comment>
+    <param name="indexDCFields" value="true">
+      <comment>(optional, default is true) Whether the content of the DC 
+	    	datastream should be examined and the contents indexed, for each object.
+	        You may wish to save time and space by disabling DC field indexing, 
+	        particularly if you have an external search service (such as Fedora 
+	        Generic Search) that already fulfills this need. 
+	        Note: If you change this value on a Fedora repository that has been 
+	        running for some time, you will need to perform a SQL rebuild using the 
+	        Fedora Rebuilder tool if you want to change objects that have already 
+	        been ingested.</comment>
     </param>
     <param name="connectionPool" value="localDerbyPool">
       <comment>(optional) To make unspecified, comment out or delete the 
@@ -336,16 +332,18 @@
             and make sure you have a connectionPool large enough to accomodate
             your users.</comment>
     </param>
-    <param name="indexDCFields" value="true">
-      <comment>(optional, default is true) Whether the content of the DC 
-	    	datastream should be examined and the contents indexed, for each object.
-	        You may wish to save time and space by disabling DC field indexing, 
-	        particularly if you have an external search service (such as Fedora 
-	        Generic Search) that already fulfills this need. 
-	        Note: If you change this value on a Fedora repository that has been 
-	        running for some time, you will need to perform a SQL rebuild using the 
-	        Fedora Rebuilder tool if you want to change objects that have already 
-	        been ingested.</comment>
+    <param name="maxSecondsPerSession" value="500">
+      <comment>(required, must be &gt; 0) 
+            The maximum number of seconds that the server guarantees subsequent
+            search results may be obtained. This is only used in cases where the
+            number of results is greater than maxResults (as specified by the
+            server [above] or the client [in the search request]).</comment>
+    </param>
+    <param name="maxResults" value="100">
+      <comment>(required, must be &gt; 0) 
+            The maximum number of records to 
+            return as the result of a search. Even if a client requests more 
+            results at a time, this is the cutoff value.</comment>
     </param>
   </module>
   <module role="org.fcrepo.server.resourceIndex.ResourceIndex" class="org.fcrepo.server.resourceIndex.ResourceIndexModule">
@@ -356,11 +354,6 @@
             0 = off and 1 = on.
             WARNING: changing the level (except to 0) requires 
             running the Resource Index Rebuilder.</comment>
-    </param>
-    <param name="datastore" value="localMulgaraTriplestore">
-      <comment>(required) 
-            Name of the triplestore to use. WARNING: changing the 
-            triplestore running the Resource Index Rebuilder.</comment>
     </param>
     <param name="syncUpdates" value="false">
       <comment>(optional, default is false)
@@ -373,6 +366,11 @@
             API-M operations (depending on the triplestore 
             implementation).</comment>
     </param>
+    <param name="datastore" value="localMulgaraTriplestore">
+      <comment>(required) 
+            Name of the triplestore to use. WARNING: changing the 
+            triplestore running the Resource Index Rebuilder.</comment>
+    </param>
     <param name="alias:test" value="http://example.org/terms#">
       <comment>(optional) Aliases that can be used for queries. The param 
 			name of an alias starts with the string &quot;alias:&quot; and is followed by 
@@ -384,30 +382,30 @@
   </module>
   <module role="org.fcrepo.oai.OAIProvider" class="org.fcrepo.server.oai.FedoraOAIProviderModule">
     <comment>Description: Exposes the repository for OAI harvesters.</comment>
-    <param name="repositoryName" value="Your Fedora Repository Name Here"/>
-    <param name="repositoryDomainName" value="example.org"/>
-    <param name="adminEmails" value="oai-admin@example.org bob@example.org"/>
-    <param name="friends" value="http://arXiv.org/oai2 http://memory.loc.gov/cgi-bin/oai2_0"/>
     <param name="maxRecords" value="100"/>
+    <param name="friends" value="http://arXiv.org/oai2 http://memory.loc.gov/cgi-bin/oai2_0"/>
+    <param name="adminEmails" value="oai-admin@example.org bob@example.org"/>
+    <param name="repositoryDomainName" value="example.org"/>
     <param name="maxHeaders" value="100"/>
+    <param name="repositoryName" value="Your Fedora Repository Name Here"/>
   </module>
   <module role="org.fcrepo.server.storage.translation.DOTranslator" class="org.fcrepo.server.storage.translation.DOTranslatorModule">
     <comment>Supports translation from DigitalObject to a stream of some
 		         format, and vice-versa. The parameters below specify
 		         serializer/deserializer classes to be used for a given format. Those
 		         classes must implement the DOSerializer/DODeserializer interfaces.</comment>
-    <param name="serializer_info:fedora/fedora-system:METSFedoraExt-1.1" value="org.fcrepo.server.storage.translation.METSFedoraExt1_1DOSerializer"/>
-    <param name="deserializer_info:fedora/fedora-system:METSFedoraExt-1.1" value="org.fcrepo.server.storage.translation.METSFedoraExt1_1DODeserializer"/>
-    <param name="serializer_info:fedora/fedora-system:METSFedoraExt-1.0" value="org.fcrepo.server.storage.translation.METSFedoraExt1_0DOSerializer"/>
-    <param name="deserializer_info:fedora/fedora-system:METSFedoraExt-1.0" value="org.fcrepo.server.storage.translation.METSFedoraExt1_0DODeserializer"/>
-    <param name="serializer_info:fedora/fedora-system:FOXML-1.1" value="org.fcrepo.server.storage.translation.FOXML1_1DOSerializer"/>
-    <param name="deserializer_info:fedora/fedora-system:FOXML-1.1" value="org.fcrepo.server.storage.translation.FOXML1_1DODeserializer"/>
-    <param name="serializer_info:fedora/fedora-system:FOXML-1.0" value="org.fcrepo.server.storage.translation.FOXML1_0DOSerializer"/>
-    <param name="deserializer_info:fedora/fedora-system:FOXML-1.0" value="org.fcrepo.server.storage.translation.FOXML1_0DODeserializer"/>
     <param name="serializer_info:fedora/fedora-system:ATOM-1.1" value="org.fcrepo.server.storage.translation.Atom1_1DOSerializer"/>
-    <param name="deserializer_info:fedora/fedora-system:ATOM-1.1" value="org.fcrepo.server.storage.translation.Atom1_1DODeserializer"/>
-    <param name="serializer_info:fedora/fedora-system:ATOMZip-1.1" value="org.fcrepo.server.storage.translation.AtomZip1_1DOSerializer"/>
+    <param name="deserializer_info:fedora/fedora-system:FOXML-1.1" value="org.fcrepo.server.storage.translation.FOXML1_1DODeserializer"/>
+    <param name="serializer_info:fedora/fedora-system:METSFedoraExt-1.0" value="org.fcrepo.server.storage.translation.METSFedoraExt1_0DOSerializer"/>
+    <param name="deserializer_info:fedora/fedora-system:METSFedoraExt-1.1" value="org.fcrepo.server.storage.translation.METSFedoraExt1_1DODeserializer"/>
+    <param name="serializer_info:fedora/fedora-system:METSFedoraExt-1.1" value="org.fcrepo.server.storage.translation.METSFedoraExt1_1DOSerializer"/>
+    <param name="deserializer_info:fedora/fedora-system:METSFedoraExt-1.0" value="org.fcrepo.server.storage.translation.METSFedoraExt1_0DODeserializer"/>
+    <param name="serializer_info:fedora/fedora-system:FOXML-1.0" value="org.fcrepo.server.storage.translation.FOXML1_0DOSerializer"/>
     <param name="deserializer_info:fedora/fedora-system:ATOMZip-1.1" value="org.fcrepo.server.storage.translation.AtomZip1_1DODeserializer"/>
+    <param name="serializer_info:fedora/fedora-system:FOXML-1.1" value="org.fcrepo.server.storage.translation.FOXML1_1DOSerializer"/>
+    <param name="deserializer_info:fedora/fedora-system:ATOM-1.1" value="org.fcrepo.server.storage.translation.Atom1_1DODeserializer"/>
+    <param name="deserializer_info:fedora/fedora-system:FOXML-1.0" value="org.fcrepo.server.storage.translation.FOXML1_0DODeserializer"/>
+    <param name="serializer_info:fedora/fedora-system:ATOMZip-1.1" value="org.fcrepo.server.storage.translation.AtomZip1_1DOSerializer"/>
   </module>
   <module role="org.fcrepo.server.management.PIDGenerator" class="org.fcrepo.server.management.BasicPIDGenerator">
     <comment>The pid generator.</comment>
@@ -417,7 +415,7 @@
     <comment>Fedora's Java Messaging Service (JMS) Module</comment>
     <param name="enabled" value="false"/>
     <param name="java.naming.factory.initial" value="org.apache.activemq.jndi.ActiveMQInitialContextFactory"/>
-    <param name="java.naming.provider.url" value="vm:(broker:(tcp://localhost:61616,stomp://localhost:61613))"/>
+    <param name="java.naming.provider.url" value="vm:(broker:(tcp://localhost:61616))"/>
     <param name="datastore1" value="apimUpdateMessages">
       <comment>A datastore representing a JMS Destination for APIM events which update the repository</comment>
     </param>
@@ -436,6 +434,28 @@
              written in Schematron language), and other programatic validation
              including referential integrity checking of existence and
              availability of distributed data and/or services.</comment>
+    <param name="tempDir" value="work">
+      <comment>(required)
+            This is a directory that the validation module can use as a work space, as
+            when it must write a temporary file.</comment>
+    </param>
+    <param name="rules_info:fedora/fedora-system:ATOM-1.1" value="schematron/atom-bogus.xml">
+      <comment>The local path to the Schematron Rules used for 
+            Fedora-specific on Atom XML files.</comment>
+    </param>
+    <param name="schtron_preprocessor" value="schematron/preprocessor.xslt"/>
+    <param name="rules_info:fedora/fedora-system:ATOMZip-1.1" value="schematron/atom-bogus.xml">
+      <comment>The local path to the Schematron Rules used for 
+            Fedora-specific on Atom Zip files.</comment>
+    </param>
+    <param name="rules_info:fedora/fedora-system:FOXML-1.1" value="schematron/foxmlRules1-1.xml">
+      <comment>The local path to the Schematron Rules used for 
+			Fedora-specific validation on FOXML 1.1 XML files.</comment>
+    </param>
+    <param name="rules_info:fedora/fedora-system:FOXML-1.0" value="schematron/foxmlRules1-0.xml">
+      <comment>The local path to the Schematron Rules used for 
+    		Fedora-specific validation on FOXML 1.0 XML files.</comment>
+    </param>
     <param name="xsd_info:fedora/fedora-system:METSFedoraExt-1.1" value="xsd/mets-fedora-ext1-1.xsd">
       <comment>The local path for the Fedora-METS XML
 			schema used to do XML schema validation of digital objects.</comment>
@@ -443,6 +463,10 @@
     <param name="xsd_info:fedora/fedora-system:METSFedoraExt-1.0" value="xsd/mets-fedora-ext.xsd">
       <comment>The local path for the Fedora-METS 1.0 XML
             schema used to do XML schema validation of digital objects.</comment>
+    </param>
+    <param name="xsd_xacml_policy1.0" value="xsd/cs-xacml-schema-policy-1.0.xsd">
+      <comment>The local path for the OASIS XACML XML policy schema 
+			used to do XML schema validation of XACML policies.</comment>
     </param>
     <param name="xsd_info:fedora/fedora-system:FOXML-1.1" value="xsd/foxml1-1.xsd">
       <comment>The local path for the Fedora FOXML 1.1 XML schema
@@ -456,43 +480,17 @@
       <comment>The local path for the Atom XML schema used to do XML 
 			schema validation of digital objects</comment>
     </param>
-    <param name="xsd_info:fedora/fedora-system:ATOMZip-1.1" value="xsd/atom.xsd">
-      <comment>The local path for the Atom XML schema used to do XML 
-			schema validation of digital objects</comment>
-    </param>
-    <param name="xsd_xacml_policy1.0" value="xsd/cs-xacml-schema-policy-1.0.xsd">
-      <comment>The local path for the OASIS XACML XML policy schema 
-			used to do XML schema validation of XACML policies.</comment>
-    </param>
-    <param name="rules_info:fedora/fedora-system:METSFedoraExt-1.1" value="schematron/metsExtRules1-1.xml">
-      <comment>The local path to the Schematron Rules used for 
-			Fedora-specific validation on Fedora-METS XML files.</comment>
-    </param>
     <param name="rules_info:fedora/fedora-system:METSFedoraExt-1.0" value="schematron/metsExtRules1-0.xml">
       <comment>The local path to the Schematron Rules used for 
 			Fedora-specific validation on Fedora-METS 1.0 XML files.</comment>
     </param>
-    <param name="rules_info:fedora/fedora-system:FOXML-1.1" value="schematron/foxmlRules1-1.xml">
-      <comment>The local path to the Schematron Rules used for 
-			Fedora-specific validation on FOXML 1.1 XML files.</comment>
+    <param name="xsd_info:fedora/fedora-system:ATOMZip-1.1" value="xsd/atom.xsd">
+      <comment>The local path for the Atom XML schema used to do XML 
+			schema validation of digital objects</comment>
     </param>
-    <param name="rules_info:fedora/fedora-system:FOXML-1.0" value="schematron/foxmlRules1-0.xml">
+    <param name="rules_info:fedora/fedora-system:METSFedoraExt-1.1" value="schematron/metsExtRules1-1.xml">
       <comment>The local path to the Schematron Rules used for 
-    		Fedora-specific validation on FOXML 1.0 XML files.</comment>
-    </param>
-    <param name="rules_info:fedora/fedora-system:ATOM-1.1" value="schematron/atom-bogus.xml">
-      <comment>The local path to the Schematron Rules used for 
-            Fedora-specific on Atom XML files.</comment>
-    </param>
-    <param name="rules_info:fedora/fedora-system:ATOMZip-1.1" value="schematron/atom-bogus.xml">
-      <comment>The local path to the Schematron Rules used for 
-            Fedora-specific on Atom Zip files.</comment>
-    </param>
-    <param name="schtron_preprocessor" value="schematron/preprocessor.xslt"/>
-    <param name="tempDir" value="work">
-      <comment>(required)
-            This is a directory that the validation module can use as a work space, as
-            when it must write a temporary file.</comment>
+			Fedora-specific validation on Fedora-METS XML files.</comment>
     </param>
   </module>
   <module role="org.fcrepo.server.storage.ExternalContentManager" class="org.fcrepo.server.storage.DefaultExternalContentManager">
@@ -507,49 +505,16 @@
              information regarding connection pool options, refer to the Apache
              Commons Pool API documentation at
              http://jakarta.apache.org/commons/pool/apidocs/index.html.</comment>
-    <param name="dbUsername" value="fedoraAdmin">
-      <comment>The database user name.</comment>
-    </param>
-    <param name="dbPassword" value="fedoraAdmin">
-      <comment>The database password.</comment>
-    </param>
-    <param name="jdbcURL" value="jdbc:mysql://localhost/fedora3?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true">
-      <comment>The JDBC connection URL.</comment>
-    </param>
-    <param name="jdbcDriverClass" value="com.mysql.jdbc.Driver">
-      <comment>The JDBC driver class name.</comment>
-    </param>
-    <param name="ddlConverter" value="org.fcrepo.server.utilities.MySQLDDLConverter"/>
-    <param name="maxActive" value="100">
-      <comment>The maximum number of active instances in pool.</comment>
-    </param>
     <param name="maxIdle" value="10">
       <comment>The maximum number of idle instances in pool.</comment>
     </param>
-    <param name="maxWait" value="-1">
-      <comment>The maximum amount of time in milliseconds the 
-			borrowObject() method should wait before throwing an Exception when 
-            whenExhaustedAction is set to WHEN_EXHAUSTED_BLOCK. A value less 
-            than zero indicates block indefinitely.</comment>
+    <param name="testOnBorrow" value="true">
+      <comment>When true objects are validated before borrowed from the 
+			pool.</comment>
     </param>
-    <param name="minIdle" value="0">
-      <comment>The minimum of idle instances in pool.</comment>
-    </param>
-    <param name="minEvictableIdleTimeMillis" value="1800000">
-      <comment>The minimum amount of time in milliseconds an object can be 
-			idle in pool before eligible for eviction (if applicable). A value 
-            less than zero indicates no object will be evicted due to idle time 
-            alone.</comment>
-    </param>
-    <param name="numTestsPerEvictionRun" value="3">
-      <comment>The number of objects to be examined on each run of idle 
-			evictor thread (if applicable). A value less than zero indicates 
-			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
-    </param>
-    <param name="timeBetweenEvictionRunsMillis" value="-1">
-      <comment>The time in milliseconds to sleep between runs of the idle 
-			object evictor thread. A value less than zero indicates no idle 
-			evictor thread is run.</comment>
+    <param name="testWhileIdle" value="true">
+      <comment>When true, objects are validated by the idle object evictor 
+			thread.</comment>
     </param>
     <param name="validationQuery" value="select 1">
       <comment>The query to run when validating connections.
@@ -559,17 +524,22 @@
             that returns at least one row.  If this is NOT specified,
             validation tests will not be run.</comment>
     </param>
-    <param name="testOnBorrow" value="true">
-      <comment>When true objects are validated before borrowed from the 
-			pool.</comment>
+    <param name="ddlConverter" value="org.fcrepo.server.utilities.MySQLDDLConverter"/>
+    <param name="dbUsername" value="fedoraAdmin">
+      <comment>The database user name.</comment>
     </param>
     <param name="testOnReturn" value="true">
       <comment>When true, objects are validated before returned to the 
 			pool.</comment>
     </param>
-    <param name="testWhileIdle" value="true">
-      <comment>When true, objects are validated by the idle object evictor 
-			thread.</comment>
+    <param name="maxActive" value="100">
+      <comment>The maximum number of active instances in pool.</comment>
+    </param>
+    <param name="dbPassword" value="fedoraAdmin">
+      <comment>The database password.</comment>
+    </param>
+    <param name="jdbcURL" value="jdbc:mysql://localhost/fedora3?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true">
+      <comment>The JDBC connection URL.</comment>
     </param>
     <param name="whenExhaustedAction" value="1">
       <comment>Action to take when a new object is requested and the the pool has
@@ -578,34 +548,13 @@
 				1 (block i.e., wait until pool resources are freed) 
 				2 (grow i.e., increase the size of the pool).</comment>
     </param>
-  </datastore>
-  <datastore id="localMcKoiPool">
-    <comment>McKoi database on localhost running on port 9157 Each
-            connection pool instance has several configuration parameter that
-            can be used to tune the options for the connection pool. It is
-            recommended that you not change the default values unless you are
-            trying to address a specific performance issue. For additional
-            information regarding connection pool options, refer to the Apache
-            Commons Pool API documentation at
-            http://jakarta.apache.org/commons/pool/apidocs/index.html.</comment>
-    <param name="dbUsername" value="fedoraAdmin">
-      <comment>The database user name.</comment>
+    <param name="numTestsPerEvictionRun" value="3">
+      <comment>The number of objects to be examined on each run of idle 
+			evictor thread (if applicable). A value less than zero indicates 
+			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
     </param>
-    <param name="dbPassword" value="fedoraAdmin">
-      <comment>The database password.</comment>
-    </param>
-    <param name="jdbcURL" value="jdbc:mckoi://localhost:9157/">
-      <comment>The JDBC connection URL.</comment>
-    </param>
-    <param name="jdbcDriverClass" value="com.mckoi.JDBCDriver">
+    <param name="jdbcDriverClass" value="com.mysql.jdbc.Driver">
       <comment>The JDBC driver class name.</comment>
-    </param>
-    <param name="ddlConverter" value="org.fcrepo.server.utilities.McKoiDDLConverter"/>
-    <param name="maxActive" value="100">
-      <comment>The maximum number of active instances in pool.</comment>
-    </param>
-    <param name="maxIdle" value="10">
-      <comment>The maximum number of idle instances in pool.</comment>
     </param>
     <param name="maxWait" value="-1">
       <comment>The maximum amount of time in milliseconds the 
@@ -622,34 +571,10 @@
             less than zero indicates no object will be evicted due to idle time 
             alone.</comment>
     </param>
-    <param name="numTestsPerEvictionRun" value="3">
-      <comment>The number of objects to be examined on each run of idle 
-			evictor thread (if applicable). A value less than zero indicates 
-			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
-    </param>
     <param name="timeBetweenEvictionRunsMillis" value="-1">
       <comment>The time in milliseconds to sleep between runs of the idle 
 			object evictor thread. A value less than zero indicates no idle 
 			evictor thread is run.</comment>
-    </param>
-    <param name="testOnBorrow" value="true">
-      <comment>When true objects are validated before borrowed from the 
-			pool.</comment>
-    </param>
-    <param name="testOnReturn" value="true">
-      <comment>When true, objects are validated before returned to the 
-			pool.</comment>
-    </param>
-    <param name="testWhileIdle" value="true">
-      <comment>When true, objects are validated by the idle object evictor 
-			thread.</comment>
-    </param>
-    <param name="whenExhaustedAction" value="1">
-      <comment>Action to take when a new object is requested and the the pool has
-            reached maximum number of active objects. Valid values are:
-				0 (fail i.e., throw Exception) 
-				1 (block i.e., wait until pool resources are freed) 
-				2 (grow i.e., increase the size of the pool).</comment>
     </param>
   </datastore>
   <datastore id="localDerbyPool">
@@ -661,8 +586,27 @@
             information regarding connection pool options, refer to the Apache
             Commons Pool API documentation at
             http://jakarta.apache.org/commons/pool/apidocs/index.html.</comment>
+    <param name="maxIdle" value="10">
+      <comment>The maximum number of idle instances in pool.</comment>
+    </param>
+    <param name="testOnBorrow" value="true">
+      <comment>When true objects are validated before borrowed from the 
+            pool.</comment>
+    </param>
+    <param name="testWhileIdle" value="true">
+      <comment>When true, objects are validated by the idle object evictor 
+            thread.</comment>
+    </param>
+    <param name="ddlConverter" value="org.fcrepo.server.utilities.DerbyDDLConverter"/>
     <param name="dbUsername" value="fedoraAdmin">
       <comment>The database user name.</comment>
+    </param>
+    <param name="testOnReturn" value="true">
+      <comment>When true, objects are validated before returned to the 
+            pool.</comment>
+    </param>
+    <param name="maxActive" value="100">
+      <comment>The maximum number of active instances in pool.</comment>
     </param>
     <param name="dbPassword" value="fedoraAdmin">
       <comment>The database password.</comment>
@@ -670,15 +614,20 @@
     <param name="jdbcURL" value="jdbc:derby:fedora/default/derby/fedora3;create=true">
       <comment>The JDBC connection URL.</comment>
     </param>
+    <param name="whenExhaustedAction" value="1">
+      <comment>Action to take when a new object is requested and the the pool has
+            reached maximum number of active objects. Valid values are:
+                0 (fail i.e., throw Exception) 
+                1 (block i.e., wait until pool resources are freed) 
+                2 (grow i.e., increase the size of the pool).</comment>
+    </param>
+    <param name="numTestsPerEvictionRun" value="3">
+      <comment>The number of objects to be examined on each run of idle 
+            evictor thread (if applicable). A value less than zero indicates 
+            that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
+    </param>
     <param name="jdbcDriverClass" value="org.apache.derby.jdbc.EmbeddedDriver">
       <comment>The JDBC driver class name.</comment>
-    </param>
-    <param name="ddlConverter" value="org.fcrepo.server.utilities.DerbyDDLConverter"/>
-    <param name="maxActive" value="100">
-      <comment>The maximum number of active instances in pool.</comment>
-    </param>
-    <param name="maxIdle" value="10">
-      <comment>The maximum number of idle instances in pool.</comment>
     </param>
     <param name="maxWait" value="-1">
       <comment>The maximum amount of time in milliseconds the 
@@ -695,34 +644,10 @@
             less than zero indicates no object will be evicted due to idle time 
             alone.</comment>
     </param>
-    <param name="numTestsPerEvictionRun" value="3">
-      <comment>The number of objects to be examined on each run of idle 
-            evictor thread (if applicable). A value less than zero indicates 
-            that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
-    </param>
     <param name="timeBetweenEvictionRunsMillis" value="-1">
       <comment>The time in milliseconds to sleep between runs of the idle 
             object evictor thread. A value less than zero indicates no idle 
             evictor thread is run.</comment>
-    </param>
-    <param name="testOnBorrow" value="true">
-      <comment>When true objects are validated before borrowed from the 
-            pool.</comment>
-    </param>
-    <param name="testOnReturn" value="true">
-      <comment>When true, objects are validated before returned to the 
-            pool.</comment>
-    </param>
-    <param name="testWhileIdle" value="true">
-      <comment>When true, objects are validated by the idle object evictor 
-            thread.</comment>
-    </param>
-    <param name="whenExhaustedAction" value="1">
-      <comment>Action to take when a new object is requested and the the pool has
-            reached maximum number of active objects. Valid values are:
-                0 (fail i.e., throw Exception) 
-                1 (block i.e., wait until pool resources are freed) 
-                2 (grow i.e., increase the size of the pool).</comment>
     </param>
   </datastore>
   <datastore id="localOraclePool">
@@ -734,8 +659,36 @@
             information regarding connection pool options, refer to the Apache
             Commons Pool API documentation at
             http://jakarta.apache.org/commons/pool/apidocs/index.html.</comment>
+    <param name="maxIdle" value="10">
+      <comment>The maximum number of idle instances in pool.</comment>
+    </param>
+    <param name="testOnBorrow" value="true">
+      <comment>When true objects are validated before borrowed from the 
+			pool.</comment>
+    </param>
+    <param name="testWhileIdle" value="true">
+      <comment>When true, objects are validated by the idle object evictor 
+			thread.</comment>
+    </param>
+    <param name="validationQuery" value="select &apos;validationQuery&apos; from dual">
+      <comment>The query to run when validating connections.
+            Connections are validated according to the testOnBorrow,
+            testOnReturn, and testWhileIdle configuration values.
+            If this is specified, it must be a SQL SELECT statement
+            that returns at least one row.  If this is NOT specified,
+            validation tests will not be run.</comment>
+    </param>
+    <param name="ddlConverter" value="org.fcrepo.server.utilities.OracleDDLConverter"/>
     <param name="dbUsername" value="fedoraAdmin">
       <comment>The database user name.</comment>
+    </param>
+    <param name="connection.SetBigStringTryClob" value="true"/>
+    <param name="testOnReturn" value="true">
+      <comment>When true, objects are validated before returned to the 
+			pool.</comment>
+    </param>
+    <param name="maxActive" value="100">
+      <comment>The maximum number of active instances in pool.</comment>
     </param>
     <param name="dbPassword" value="fedoraAdmin">
       <comment>The database password.</comment>
@@ -743,15 +696,20 @@
     <param name="jdbcURL" value="jdbc:oracle:thin:@localhost:1521:fedora3">
       <comment>The JDBC connection URL.</comment>
     </param>
+    <param name="whenExhaustedAction" value="1">
+      <comment>Action to take when a new object is requested and the the pool has
+            reached maximum number of active objects. Valid values are:
+				0 (fail i.e., throw Exception) 
+				1 (block i.e., wait until pool resources are freed) 
+				2 (grow i.e., increase the size of the pool).</comment>
+    </param>
+    <param name="numTestsPerEvictionRun" value="3">
+      <comment>The number of objects to be examined on each run of idle 
+			evictor thread (if applicable). A value less than zero indicates 
+			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
+    </param>
     <param name="jdbcDriverClass" value="oracle.jdbc.OracleDriver">
       <comment>The JDBC driver class name.</comment>
-    </param>
-    <param name="ddlConverter" value="org.fcrepo.server.utilities.OracleDDLConverter"/>
-    <param name="maxActive" value="100">
-      <comment>The maximum number of active instances in pool.</comment>
-    </param>
-    <param name="maxIdle" value="10">
-      <comment>The maximum number of idle instances in pool.</comment>
     </param>
     <param name="maxWait" value="-1">
       <comment>The maximum amount of time in milliseconds the 
@@ -768,44 +726,11 @@
             less than zero indicates no object will be evicted due to idle time 
             alone.</comment>
     </param>
-    <param name="numTestsPerEvictionRun" value="3">
-      <comment>The number of objects to be examined on each run of idle 
-			evictor thread (if applicable). A value less than zero indicates 
-			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
-    </param>
     <param name="timeBetweenEvictionRunsMillis" value="-1">
       <comment>The time in milliseconds to sleep between runs of the idle 
 			object evictor thread. A value less than zero indicates no idle 
 			evictor thread is run.</comment>
     </param>
-    <param name="validationQuery" value="select &apos;validationQuery&apos; from dual">
-      <comment>The query to run when validating connections.
-            Connections are validated according to the testOnBorrow,
-            testOnReturn, and testWhileIdle configuration values.
-            If this is specified, it must be a SQL SELECT statement
-            that returns at least one row.  If this is NOT specified,
-            validation tests will not be run.</comment>
-    </param>
-    <param name="testOnBorrow" value="true">
-      <comment>When true objects are validated before borrowed from the 
-			pool.</comment>
-    </param>
-    <param name="testOnReturn" value="true">
-      <comment>When true, objects are validated before returned to the 
-			pool.</comment>
-    </param>
-    <param name="testWhileIdle" value="true">
-      <comment>When true, objects are validated by the idle object evictor 
-			thread.</comment>
-    </param>
-    <param name="whenExhaustedAction" value="1">
-      <comment>Action to take when a new object is requested and the the pool has
-            reached maximum number of active objects. Valid values are:
-				0 (fail i.e., throw Exception) 
-				1 (block i.e., wait until pool resources are freed) 
-				2 (grow i.e., increase the size of the pool).</comment>
-    </param>
-    <param name="connection.SetBigStringTryClob" value="true"/>
   </datastore>
   <datastore id="localPostgreSQLPool">
     <comment>PostgreSQL database on localhost with db name of fedora3. Each
@@ -816,8 +741,35 @@
              information regarding connection pool options, refer to the Apache
              Commons Pool API documentation at
              http://jakarta.apache.org/commons/pool/apidocs/index.html.</comment>
+    <param name="maxIdle" value="10">
+      <comment>The maximum number of idle instances in pool.</comment>
+    </param>
+    <param name="testOnBorrow" value="true">
+      <comment>When true objects are validated before borrowed from the 
+			pool.</comment>
+    </param>
+    <param name="testWhileIdle" value="true">
+      <comment>When true, objects are validated by the idle object evictor 
+			thread.</comment>
+    </param>
+    <param name="validationQuery" value="select 1">
+      <comment>The query to run when validating connections.
+            Connections are validated according to the testOnBorrow,
+            testOnReturn, and testWhileIdle configuration values.
+            If this is specified, it must be a SQL SELECT statement
+            that returns at least one row.  If this is NOT specified,
+            validation tests will not be run.</comment>
+    </param>
+    <param name="ddlConverter" value="org.fcrepo.server.utilities.PostgresDDLConverter"/>
     <param name="dbUsername" value="fedoraAdmin">
       <comment>The database user name.</comment>
+    </param>
+    <param name="testOnReturn" value="true">
+      <comment>When true, objects are validated before returned to the 
+			pool.</comment>
+    </param>
+    <param name="maxActive" value="100">
+      <comment>The maximum number of active instances in pool.</comment>
     </param>
     <param name="dbPassword" value="fedoraAdmin">
       <comment>The database password.</comment>
@@ -825,15 +777,20 @@
     <param name="jdbcURL" value="jdbc:postgresql:fedora3">
       <comment>The JDBC connection URL.</comment>
     </param>
+    <param name="whenExhaustedAction" value="1">
+      <comment>Action to take when a new object is requested and the the pool has
+            reached maximum number of active objects. Valid values are:
+				0 (fail i.e., throw Exception) 
+				1 (block i.e., wait until pool resources are freed) 
+				2 (grow i.e., increase the size of the pool).</comment>
+    </param>
+    <param name="numTestsPerEvictionRun" value="3">
+      <comment>The number of objects to be examined on each run of idle 
+			evictor thread (if applicable). A value less than zero indicates 
+			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
+    </param>
     <param name="jdbcDriverClass" value="org.postgresql.Driver">
       <comment>The JDBC driver class name.</comment>
-    </param>
-    <param name="ddlConverter" value="org.fcrepo.server.utilities.PostgresDDLConverter"/>
-    <param name="maxActive" value="100">
-      <comment>The maximum number of active instances in pool.</comment>
-    </param>
-    <param name="maxIdle" value="10">
-      <comment>The maximum number of idle instances in pool.</comment>
     </param>
     <param name="maxWait" value="-1">
       <comment>The maximum amount of time in milliseconds the 
@@ -850,64 +807,14 @@
             less than zero indicates no object will be evicted due to idle time 
             alone.</comment>
     </param>
-    <param name="numTestsPerEvictionRun" value="3">
-      <comment>The number of objects to be examined on each run of idle 
-			evictor thread (if applicable). A value less than zero indicates 
-			that ceil(numIdle)/abs(numTestsPerEvictionRun) will be run.</comment>
-    </param>
     <param name="timeBetweenEvictionRunsMillis" value="-1">
       <comment>The time in milliseconds to sleep between runs of the idle 
 			object evictor thread. A value less than zero indicates no idle 
 			evictor thread is run.</comment>
     </param>
-    <param name="validationQuery" value="select 1">
-      <comment>The query to run when validating connections.
-            Connections are validated according to the testOnBorrow,
-            testOnReturn, and testWhileIdle configuration values.
-            If this is specified, it must be a SQL SELECT statement
-            that returns at least one row.  If this is NOT specified,
-            validation tests will not be run.</comment>
-    </param>
-    <param name="testOnBorrow" value="true">
-      <comment>When true objects are validated before borrowed from the 
-			pool.</comment>
-    </param>
-    <param name="testOnReturn" value="true">
-      <comment>When true, objects are validated before returned to the 
-			pool.</comment>
-    </param>
-    <param name="testWhileIdle" value="true">
-      <comment>When true, objects are validated by the idle object evictor 
-			thread.</comment>
-    </param>
-    <param name="whenExhaustedAction" value="1">
-      <comment>Action to take when a new object is requested and the the pool has
-            reached maximum number of active objects. Valid values are:
-				0 (fail i.e., throw Exception) 
-				1 (block i.e., wait until pool resources are freed) 
-				2 (grow i.e., increase the size of the pool).</comment>
-    </param>
   </datastore>
   <datastore id="localMulgaraTriplestore">
     <comment>local Mulgara Triplestore used by the Resource Index</comment>
-    <param name="connectorClassName" value="org.trippi.impl.mulgara.MulgaraConnector">
-      <comment>The name of the Trippi Connector class used to communicate 
-			with the triplestore.</comment>
-    </param>
-    <param name="remote" value="false">
-      <comment>Tells the connector to communicate with Mulgara in remote or 
-			local mode. If true, the host parameter must be defined. If false,
-			the path parameter must be defined.</comment>
-    </param>
-    <param name="path" value="data/resourceIndex" isFilePath="true">
-      <comment>The local path to the main triplestore directory.</comment>
-    </param>
-    <param name="serverName" value="fedora">
-      <comment>The server name for rmi binding.</comment>
-    </param>
-    <param name="modelName" value="ri">
-      <comment>The name of the model to use.</comment>
-    </param>
     <param name="poolInitialSize" value="3">
       <comment>The initial size of the session pool used for queries. 
 			Note: A value of 0 will cause the Resource Index to operate in 
@@ -915,19 +822,22 @@
 			and handled in FIFO order; this will severely impair performance and 
 			is only intended for debugging.</comment>
     </param>
-    <param name="poolMaxGrowth" value="-1">
-      <comment>Maximum number of additional sessions the pool may add. If 
-			specified as -1, no limit will be placed on pool growth.</comment>
-    </param>
-    <param name="readOnly" value="false">
-      <comment>Whether the triplestore should be read-only. Most Fedora 
-			repositories will set this to false.</comment>
+    <param name="bufferSafeCapacity" value="40000">
+      <comment>The maximum size the buffer can reach before being forcibly 
+			flushed. If this threshold is reached, flushing will occur in the 
+			foreground and the buffer will be locked for writing until it is 
+			finished. This should be larger than autoFlushBufferSize.</comment>
     </param>
     <param name="autoCreate" value="true">
       <comment>Create the model if it doesn&apos;t already exist. 
 			At startup, the model will be automatically created. In addition, an 
 			XML schema datatyped model named &quot;xsd&quot; will also be automatically 
 			created.</comment>
+    </param>
+    <param name="bufferFlushBatchSize" value="20000">
+      <comment>The number of updates to send to the triplestore at a time. 
+			This should be the same size as, or smaller than 
+			autoFlushBufferSize.</comment>
     </param>
     <param name="autoTextIndex" value="false">
       <comment>Whether to propagate adds/deletes to a full-text 
@@ -937,11 +847,23 @@
 			Note that if this is true and autoCreate is true, the text model 
 			will also be created if it doesn&apos;t already exist.</comment>
     </param>
+    <param name="poolMaxGrowth" value="-1">
+      <comment>Maximum number of additional sessions the pool may add. If 
+			specified as -1, no limit will be placed on pool growth.</comment>
+    </param>
+    <param name="remote" value="false">
+      <comment>Tells the connector to communicate with Mulgara in remote or 
+			local mode. If true, the host parameter must be defined. If false,
+			the path parameter must be defined.</comment>
+    </param>
     <param name="autoFlushDormantSeconds" value="5">
       <comment>Seconds of buffer inactivity that will trigger an 
 			auto-flush. If this threshold is reached, flushing will occur in the 
 			background, during which time the buffer is still available for 
 			writing.</comment>
+    </param>
+    <param name="serverName" value="fedora">
+      <comment>The server name for rmi binding.</comment>
     </param>
     <param name="autoFlushBufferSize" value="20000">
       <comment>The size at which the buffer should be auto-flushed. If 
@@ -949,16 +871,19 @@
 			during which time the buffer is still available for 
 			writing.</comment>
     </param>
-    <param name="bufferFlushBatchSize" value="20000">
-      <comment>The number of updates to send to the triplestore at a time. 
-			This should be the same size as, or smaller than 
-			autoFlushBufferSize.</comment>
+    <param name="modelName" value="ri">
+      <comment>The name of the model to use.</comment>
     </param>
-    <param name="bufferSafeCapacity" value="40000">
-      <comment>The maximum size the buffer can reach before being forcibly 
-			flushed. If this threshold is reached, flushing will occur in the 
-			foreground and the buffer will be locked for writing until it is 
-			finished. This should be larger than autoFlushBufferSize.</comment>
+    <param name="readOnly" value="false">
+      <comment>Whether the triplestore should be read-only. Most Fedora 
+			repositories will set this to false.</comment>
+    </param>
+    <param name="path" value="data/resourceIndex" isFilePath="true">
+      <comment>The local path to the main triplestore directory.</comment>
+    </param>
+    <param name="connectorClassName" value="org.trippi.impl.mulgara.MulgaraConnector">
+      <comment>The name of the Trippi Connector class used to communicate 
+			with the triplestore.</comment>
     </param>
   </datastore>
   <datastore id="localPostgresMPTTriplestore">
@@ -979,20 +904,20 @@
 		     http://jdbc.postgresql.org/download.html
 		     and make sure it's accessible to your servlet container.
 		     If you're running Tomcat, putting it in common/lib/ will work.</comment>
-    <param name="connectorClassName" value="org.trippi.impl.mpt.MPTConnector"/>
-    <param name="ddlGenerator" value="org.nsdl.mptstore.impl.postgres.PostgresDDLGenerator"/>
-    <param name="jdbcDriver" value="org.postgresql.Driver"/>
-    <param name="jdbcURL" value="jdbc:postgresql://localhost/riTriples"/>
-    <param name="username" value="fedoraAdmin"/>
-    <param name="password" value="fedoraAdmin"/>
-    <param name="poolInitialSize" value="3"/>
-    <param name="poolMaxSize" value="10"/>
-    <param name="backslashIsEscape" value="true"/>
     <param name="fetchSize" value="1000"/>
-    <param name="autoFlushDormantSeconds" value="5"/>
-    <param name="autoFlushBufferSize" value="1000"/>
-    <param name="bufferFlushBatchSize" value="1000"/>
+    <param name="poolInitialSize" value="3"/>
     <param name="bufferSafeCapacity" value="2000"/>
+    <param name="bufferFlushBatchSize" value="1000"/>
+    <param name="backslashIsEscape" value="true"/>
+    <param name="autoFlushDormantSeconds" value="5"/>
+    <param name="password" value="fedoraAdmin"/>
+    <param name="autoFlushBufferSize" value="1000"/>
+    <param name="username" value="fedoraAdmin"/>
+    <param name="poolMaxSize" value="10"/>
+    <param name="jdbcURL" value="jdbc:postgresql://localhost/riTriples"/>
+    <param name="ddlGenerator" value="org.nsdl.mptstore.impl.postgres.PostgresDDLGenerator"/>
+    <param name="connectorClassName" value="org.trippi.impl.mpt.MPTConnector"/>
+    <param name="jdbcDriver" value="org.postgresql.Driver"/>
   </datastore>
   <datastore id="apimUpdateMessages">
     <comment>Messaging Destination for API-M events which update the repository</comment>

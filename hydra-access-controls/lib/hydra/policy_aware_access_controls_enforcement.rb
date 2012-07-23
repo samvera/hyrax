@@ -7,7 +7,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     super
     additional_clauses = policy_clauses
     unless additional_clauses.nil? || additional_clauses.empty?
-      solr_parameters[:fq].first << " OR " + policy_clauses
+      solr_parameters[:fq].first << " OR " + additional_clauses
       logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
     end
   end
