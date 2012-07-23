@@ -131,7 +131,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Resource Type</th>
           <td>
             <% @generic_file.resource_type.each do |rtype| %>
-              <%= linked_label(rtype, 'generic_file__resource_type_facet') %><br />
+              <%= link_to_facet(rtype, 'generic_file__resource_type_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -147,7 +147,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Rights</th>
           <td>
             <% @generic_file.rights.each do |r| %>
-              <%= auto_link(r) %><br />
+              <%=link_to_field('rights',r)%> <%= auto_link(r, :html => { :target => '_blank' }) {|text| 'definition'} %><br />
             <% end %>
           </td>
         </tr>

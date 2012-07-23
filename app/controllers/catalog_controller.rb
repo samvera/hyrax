@@ -288,6 +288,20 @@ class CatalogController < ApplicationController
       }
     end
 
+    config.add_search_field('depositor') do |field|
+      field.solr_local_parameters = {
+        :qf => "$depositor_qf",
+        :pf => "$depositor_pf"
+      }
+    end
+
+    config.add_search_field('rights') do |field|
+      field.solr_local_parameters = {
+        :qf => "$rights_qf",
+        :pf => "$rights_pf"
+      }
+    end
+
     # "sort results by" select (pulldown)
     # label in pulldown is followed by the name of the SOLR field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
