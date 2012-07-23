@@ -7,8 +7,7 @@ describe FitsDatastream do
     @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
     @file.apply_depositor_metadata('mjg36')
     @file.save
-    Delayed::Worker.new.work_off
-    @file = GenericFile.find(@file.pid)    
+    @file = GenericFile.find(@file.pid)
   end
   after(:all) do
     @file.delete

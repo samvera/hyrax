@@ -9,7 +9,7 @@ describe AuditJob do
     @file.apply_depositor_metadata('mjg36')
     @file.save
     @ds = @file.datastreams.first
-    @job = AuditJob.new(@user, @file.pid, @ds[0], @ds[1].versionID)
+    @job = Resque.enqueue(AuditJob, @user.id, @file.pid, @ds[0], @ds[1].versionID)
     @inbox = @user.mailbox.inbox
   end
   after(:all) do
@@ -24,7 +24,6 @@ describe AuditJob do
       #ActiveFedora::Datastream.any_instance.stubs(:dsChecksumValid).returns(true)
     end
     it "should send passing mail" do
-      @job.perform
       @inbox = @user.mailbox.inbox
       @inbox.count.should == 1
       @inbox.each { |msg| msg.last_message.subject.should == AuditJob::PASS }
@@ -36,7 +35,6 @@ describe AuditJob do
       #FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
     end
     it "should send failing mail" do
-      @job.perform
       @inbox = @user.mailbox.inbox
       @inbox.count.should == 1
       @inbox.each { |msg| msg.last_message.subject.should == AuditJob::FAIL }

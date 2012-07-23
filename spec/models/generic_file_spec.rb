@@ -114,7 +114,7 @@ describe GenericFile do
     end
     describe "that have been saved" do
       before (:each) do
-        Delayed::Job.expects(:enqueue).once.returns("the job")
+        Resque.expects(:enqueue).once.returns("the job")
       end
       after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
@@ -222,14 +222,12 @@ describe GenericFile do
   describe "audit" do
     before(:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      @cur_delay = Delayed::Worker.delay_jobs
-      @job_count = Delayed::Job.count
+      @job_count = Resque.size(:audit)
       GenericFile.any_instance.stubs(:characterize).returns(true)
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       f.apply_depositor_metadata('mjg36')
       f.save
-      Delayed::Worker.new.work_off # characterization job
       @f = GenericFile.find(f.pid)
       @datastreams = [FileContentDatastream, ActiveFedora::RelsExtDatastream,
                       ActiveFedora::Datastream, PropertiesDatastream,
@@ -237,18 +235,14 @@ describe GenericFile do
     end
     after(:all) do
       @f.delete
-      Delayed::Worker.delay_jobs = @cur_delay #return to original delay state
     end
     it "should schedule a audit job" do
       @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
       ChecksumAuditLog.stubs(:create!).returns(true)
       @f.audit!
-      Delayed::Job.count.should == @job_count + @datastreams.count
-      Delayed::Worker.new.work_off
-      Delayed::Job.count.should == @job_count
+      Resque.size(:audit).should == @job_count + @datastreams.count
     end
     it "should log a failing audit" do
-      Delayed::Worker.delay_jobs = false
       @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
@@ -258,7 +252,6 @@ describe GenericFile do
       @f.audit!
     end
     it "should log a passing audit" do
-      Delayed::Worker.delay_jobs = false
       @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(true) }
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
       ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
@@ -273,7 +266,7 @@ describe GenericFile do
   end
   describe "save" do
     before(:each) do
-      @job_count = Delayed::Job.count
+      @job_count = Resque.size(:characterize)
     end
     after(:each) do
       @file.delete
@@ -281,9 +274,7 @@ describe GenericFile do
     it "should schedule a characterization job" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @file.save
-      Delayed::Job.count.should == @job_count+1
-      Delayed::Worker.new.work_off
-      Delayed::Job.count.should == @job_count
+      Resque.size(:characterize).should == @job_count + 1
     end
   end
   describe "related_files" do
@@ -394,11 +385,11 @@ describe GenericFile do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should not be triggered unless the content ds is changed" do
-      Delayed::Job.expects(:enqueue)
+      Resque.expects(:enqueue)
       @file.content.content = "hey"
       @file.save
       @file.related_url = 'http://example.com'
-      Delayed::Job.expects(:enqueue).never
+      Resque.expects(:enqueue).never
       @file.save
       @file.delete
     end
@@ -411,7 +402,6 @@ describe GenericFile do
         myfile.thumbnail.size.nil?.should be_true
         myfile.apply_depositor_metadata('mjg36')
         myfile.save
-        Delayed::Worker.new.work_off
         @myfile = GenericFile.find(myfile.pid)
       end
       after(:all) do

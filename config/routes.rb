@@ -52,6 +52,13 @@ ScholarSphere::Application.routes.draw do
   match 'contact' => 'contact_form#create', :via => :post, :as => :contact_form_index
   match 'contact' => 'contact_form#new', :via => :get, :as => :contact_form_index
 
+  # Resque monitoring routes
+  namespace :admin do
+    constraints ResqueAdmin do
+      mount Resque::Server, :at => "queues"
+    end
+  end
+
   # Static page routes (workaround)
   match ':action' => 'static#:action', :constraints => { :action => /about|contact|help|terms|zotero|mendeley/ }, :as => :static
 

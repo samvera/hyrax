@@ -1,9 +1,11 @@
-class UnzipJob < Struct.new( :pid )
-  def perform
-    zip_file = GenericFile.find(pid)
+class UnzipJob
+  @queue = :unzip
+
+  def self.perform(pid)
+    zip_file = GenericFile.find(pid, :cast => true)
     Zip::Archive.open_buffer(zip_file.content.content) do |archive|
       archive.each do |f|
-        @generic_file = GenericFile.new()
+        @generic_file = GenericFile.new
         @generic_file.batch_id = zip_file.batch.pid
         file_name = f.name
         mime_types = MIME::Types.of(file_name)

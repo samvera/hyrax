@@ -81,7 +81,7 @@ class GenericFile < ActiveFedora::Base
     content_changed = self.content.changed?
     yield
     #logger.debug "DOING CHARACTERIZE ON #{self.pid}"
-    Delayed::Job.enqueue(CharacterizeJob.new(self.pid), :queue => 'characterize') if content_changed
+    Resque.enqueue(CharacterizeJob, self.pid) if content_changed
   end
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
@@ -527,9 +527,7 @@ class GenericFile < ActiveFedora::Base
     unless force
       return latest_audit unless GenericFile.needs_audit?(version, latest_audit)
     end
-    job = AuditJob.new(User.current, version.pid, version.dsid, version.versionID)
-    #job.perform
-    Delayed::Job.enqueue(job, :queue => 'audit')
+    Resque.enqueue(AuditJob, version.pid, version.dsid, version.versionID)
 
     # run the find just incase the job has finished already
     latest_audit = self.find(version.pid).logs(version.dsid).first

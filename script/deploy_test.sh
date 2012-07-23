@@ -33,9 +33,9 @@ source ${WORKSPACE}/.rvmrc
 banner "bundle install"
 bundle install
 
-# stop DJ workers early since they tend to be resource hogs
-banner "script/delayed_job stop"
-RAILS_ENV=production script/delayed_job stop
+# stop Resque pool early
+banner "resque-pool stop"
+kill -2 
 
 banner "passenger-install-apache2-module -a"
 passenger-install-apache2-module -a
@@ -46,8 +46,8 @@ RAILS_ENV=production rake db:migrate
 banner "rake assets:precompile"
 RAILS_ENV=production rake assets:precompile
 
-banner "script/delayed_job start"
-RAILS_ENV=production script/delayed_job -n 2 start
+banner "resque-pool start"
+resque-pool --daemon --environment production
 
 banner "rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret

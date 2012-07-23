@@ -43,9 +43,9 @@ echo "=-=-=-=-= $0 rake fixtures:create/refresh"
 RAILS_ENV=integration rake scholarsphere:fixtures:generate
 RAILS_ENV=integration rake scholarsphere:fixtures:refresh
 
-echo "=-=-=-=-= $0 script/delayed_job restart"
-RAILS_ENV=integration script/delayed_job stop
-RAILS_ENV=integration script/delayed_job -n 5 start
+echo "=-=-=-=-= $0 resque-pool restart"
+resque-pool TODO
+resque-pool --daemon --environment integration
 
 echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret

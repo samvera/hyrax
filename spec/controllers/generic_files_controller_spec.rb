@@ -25,8 +25,8 @@ describe GenericFilesController do
 
     it "should expand zip files" do
       file = fixture_file_upload('/world.png','application/zip')
-      Delayed::Job.expects(:enqueue).with {|job| job.kind_of? CharacterizeJob}
-      Delayed::Job.expects(:enqueue).with {|job| job.kind_of? UnzipJob}
+      Resque.expects(:enqueue).with { |job| job.kind_of? CharacterizeJob }
+      Resque.expects(:enqueue).with { |job| job.kind_of? UnzipJob }
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
@@ -85,7 +85,6 @@ describe GenericFilesController do
 
   describe "audit" do
     before do
-      @cur_delay = Delayed::Worker.delay_jobs
       @generic_file = GenericFile.new
       @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @generic_file.apply_depositor_metadata('mjg36')
@@ -93,10 +92,8 @@ describe GenericFilesController do
     end
     after do
       @generic_file.delete
-      Delayed::Worker.delay_jobs = @cur_delay #return to original delay state
     end
     it "should return json with the result" do
-      Delayed::Worker.delay_jobs = false
       xhr :post, :audit, :id=>@generic_file.pid
       response.should be_success
       lambda { JSON.parse(response.body) }.should_not raise_error

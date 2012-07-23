@@ -1,9 +1,9 @@
+class CharacterizeJob
+  @queue = :characterize
 
-class CharacterizeJob < Struct.new( :genericFile_id)
-  def perform
-    generic_file = GenericFile.find(genericFile_id)
+  def self.perform(generic_file_id)
+    generic_file = GenericFile.find(generic_file_id, :cast => true)
     generic_file.characterize
     generic_file.create_thumbnail
   end
-    
 end

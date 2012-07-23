@@ -16,7 +16,7 @@ namespace :scholarsphere do
   task :characterize => :environment do
     GenericFile.find(:all, :rows => GenericFile.count).each do |gf|
       if gf.characterization.content.nil?
-        Delayed::Job.enqueue(CharacterizeJob.new(gf.pid), :queue => 'characterize')
+        Resque.enqueue(CharacterizeJob, gf.pid)
       end
     end
   end

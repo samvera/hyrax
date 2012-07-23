@@ -184,7 +184,7 @@ class GenericFilesController < ApplicationController
       retry
     end
     record_version_committer(@generic_file, current_user)
-    Delayed::Job.enqueue(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
+    Resque.enqueue(UnzipJob, @generic_file.pid) if file.content_type == 'application/zip'
     return @generic_file
   end
 end
