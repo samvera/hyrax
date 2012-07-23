@@ -44,5 +44,7 @@ require 'hydra/models/file_asset'
 require 'mediashelf/active_fedora_helper' #deprecated
 
 
-SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension if defined? SolrDocument
-
+begin
+  SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
+rescue NameError
+end
