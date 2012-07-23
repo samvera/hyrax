@@ -121,18 +121,6 @@ $(function() {
     return false;
   });
 
-  // this will make the help text for a form element, displayable
-  // when focus is given, assuming there is a help element
-  // help element id must be same id as the form element with a
-  // suffix of _help
-  $('input[type=text], textarea').focus(function() {
-       $("#"+this.id+"_help").css("display", "inline-block");
-    });
-
-  // hides the form help element when focus is lost
-  $('input[type=text], textarea').focusout(function() {
-       $("#"+this.id+"_help").css("display", "none");
-      });
 
   $('.icon-plus').on('click', function() {
     //this.id format: "expand_NNNNNNNNNN"
