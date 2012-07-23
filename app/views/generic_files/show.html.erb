@@ -83,7 +83,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Creator</th>
           <td>
             <% @generic_file.creator.each do |creator| %>
-              <%= creator %><br />
+              <%= link_to_field('creator', creator) %><br />
             <% end %>
           </td>
         </tr>
@@ -91,7 +91,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Contributor</th>
           <td>
             <% @generic_file.contributor.each do |contributor| %>
-              <%= linked_label(contributor, 'generic_file__contributor_facet') %><br />
+              <%= link_to_facet(contributor, 'generic_file__contributor_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -107,7 +107,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Location</th>
           <td>
             <% @generic_file.based_near.each do |bn| %>
-              <%= linked_label(bn, 'generic_file__based_near_facet') %><br />
+              <%= link_to_facet(bn, 'generic_file__based_near_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -123,7 +123,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Language</th>
           <td>
             <% @generic_file.language.each do |lang| %>
-              <%= linked_label(lang,'generic_file__language_facet') %><br />
+              <%= link_to_facet(lang,'generic_file__language_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -139,7 +139,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>
-              <%= auto_link(pub) %><br />
+              <%= link_to_facet('publisher',pub) %><br />
             <% end %>
           </td>
         </tr>
@@ -155,7 +155,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Subject</th>
           <td>
             <% @generic_file.subject.each do |sub| %>
-              <%= linked_label(sub, 'generic_file__subject_facet') %><br />
+              <%= link_to_facet(sub, 'generic_file__subject_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -163,7 +163,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Keyword</th>
           <td>
             <% @generic_file.tag.each do |t| %>
-              <%= linked_label(t, 'generic_file__tag_facet') %><br />
+              <%= link_to_facet(t, 'generic_file__tag_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -191,7 +191,7 @@ var addthis_config = {"data_track_addressbar":true};<
       <tbody>
         <tr>
           <th>Owner</div>
-          <td><%=  User.display_name( @generic_file.depositor) %></td>
+          <td><%= link_to_field('depositor', @generic_file.depositor, User.display_name( @generic_file.depositor)) %></td>
         </tr>
         <tr>
           <th>Date Uploaded</th>

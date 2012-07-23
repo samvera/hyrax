@@ -33,6 +33,9 @@ ScholarSphere::Application.routes.draw do
   match 'dashboard' => 'dashboard#index', :as => :dashboard
   match 'dashboard/facet/:id' => 'dashboard#facet', :as => :dashboard_facet
 
+  # advanced routes for advanced search
+  match 'advanced' => 'advanced#index', :as => :advanced
+
   # Authority vocabulary queries route
   match 'authorities/:model/:term' => 'authorities#query'
 

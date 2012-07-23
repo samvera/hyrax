@@ -31,4 +31,16 @@ module ApplicationHelper
      return User.display_name( recent_document[:depositor_t][0]) if recent_document[:depositor_t] 
   end
 
+  def link_to_facet(field, field_string)
+      link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
+  end
+
+
+  def link_to_field(fieldname, fieldvalue, displayvalue = nil)
+      p = {:search_field=>'advanced', fieldname=>fieldvalue}
+      link_url = catalog_index_path(p)
+      display = displayvalue.blank? ? fieldvalue: displayvalue
+      link_to(display, link_url)
+  end
+
 end

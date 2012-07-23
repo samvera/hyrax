@@ -158,3 +158,10 @@ table.expanded-details {
   width: 75%;
   margin: 0 auto;
 }
+
+span.bottom { 
+    position: absolute; 
+    bottom: 0; 
+    right: 0 
+} 
+

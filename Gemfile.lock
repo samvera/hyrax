@@ -97,6 +97,11 @@ GEM
       rsolr-ext (~> 1.0.3)
       sass-rails
       unicode
+    blacklight_advanced_search (1.2.4)
+      blacklight (~> 3.2, >= 3.2.1)
+      parslet
+      rails (~> 3.0)
+    blankslate (2.1.2.4)
     block_helpers (0.3.3)
       activesupport (>= 2.0)
     builder (3.0.0)
@@ -251,6 +256,8 @@ GEM
       mediashelf-loggable
       nokogiri (>= 1.4.2)
     orm_adapter (0.0.7)
+    parslet (1.4.0)
+      blankslate (~> 2.0)
     passenger (3.0.13)
       daemon_controller (>= 1.0.0)
       fastthread (>= 1.0.1)
@@ -394,6 +401,7 @@ DEPENDENCIES
   activerecord-import
   bcrypt-ruby
   blacklight (= 3.5.0)
+  blacklight_advanced_search
   capybara
   coffee-rails (~> 3.2.2)
   compass-rails (~> 1.0.3)

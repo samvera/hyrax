@@ -6,3 +6,7 @@
   <%= text_field_tag :q, q, :class => "q", :id => "search-field-header", :placeholder => "Type keywords in here"  %>
   <%= submit_tag 'Go', :id=>'search-submit-header' %>
 <% end %>
+<span class="bottom">
+ <%= link_to 'More options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
+ <%= link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
+<span>

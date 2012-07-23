@@ -5,6 +5,7 @@ class CatalogController < ApplicationController
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
+  include BlacklightAdvancedSearch::ParseBasicQ
 
   rescue_from RSolr::Error::Http, :with => :render_500
 
@@ -146,7 +147,8 @@ class CatalogController < ApplicationController
     # This one uses all the defaults set by the solr request handler. Which
     # solr request handler? The one set in config[:default_solr_parameters][:qt],
     # since we aren't specifying it otherwise.
-    config.add_search_field 'all_fields', :label => 'All Fields'
+    config.add_search_field 'all_fields', :label => 'All Fields', :include_in_advanced_search => false
+    
 
     # Now we see how to over-ride Solr request handler defaults, in this
     # case for a BL "search field", which is really a dismax aggregate
@@ -178,7 +180,7 @@ class CatalogController < ApplicationController
     config.add_search_field('title') do |field|
       field.solr_parameters = {
         :"spellcheck.dictionary" => "title"
-      },
+      }
       field.solr_local_parameters = {
         :qf => "$title_qf",
         :pf => "$title_pf"
@@ -246,6 +248,7 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('format') do |field|
+      field.include_in_advanced_search = false
       field.solr_parameters = {
         :"spellcheck.dictionary" => "format"
       }

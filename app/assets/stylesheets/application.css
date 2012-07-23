@@ -4,4 +4,5 @@
  *= require font-awesome
  *= require scholarsphere-bootstrap
  *= require blacklight_more_facets
- */
+ *= require 'blacklight_advanced_search'
+*/
