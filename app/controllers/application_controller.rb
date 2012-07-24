@@ -108,15 +108,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   def user_logged_in?
-    env['warden'] and env['warden'].user and !remote_user_blank?
+    env['warden'] and env['warden'].user and remote_user_set?
   end
 
-  def remote_user_blank?
+  def remote_user_set?
     # Unicorn seems to translate REMOTE_USER into HTTP_REMOTE_USER
     if Rails.env.development?
-      request.env['HTTP_REMOTE_USER'].blank?
+      request.env['HTTP_REMOTE_USER'].present?
     else
-      request.env['REMOTE_USER'].blank?
+      request.env['REMOTE_USER'].present?
     end
   end
 end
