@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
     # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
     # logout clears the entire session including flash messages
-    request.env['warden'].logout if user_logged_in?
+    request.env['warden'].logout unless user_logged_in?
   end
 
   def set_current_user
@@ -108,7 +108,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   def user_logged_in?
-    env['warden'] and env['warden'].user and remote_user_blank?
+    env['warden'] and env['warden'].user and !remote_user_blank?
   end
 
   def remote_user_blank?
