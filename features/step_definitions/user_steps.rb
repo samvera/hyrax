@@ -7,7 +7,7 @@ Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
   Capybara.register_driver(driver_name) do |app|
     Capybara::RackTest::Driver.new(app, headers: { 'REMOTE_USER' => login })
   end
-  user = User.create(:login => login)
+  user = User.find_or_create_by_login(login)
   User.find_by_login(login).should_not be_nil
   Capybara.current_driver = driver_name
   

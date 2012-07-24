@@ -175,6 +175,7 @@ describe GenericFilesController do
       f.read_groups = ['public']
       f.expects(:characterize_if_changed).yields
       f.save
+      @file = f
     end
     after(:all) do
       GenericFile.find('scholarsphere:test5').delete
@@ -195,5 +196,39 @@ describe GenericFilesController do
         flash[:alert].should be_nil
       end
     end
+    describe "flash" do
+      render_views
+      it "should not let the user submit if they logout" do
+        sign_out @user
+        get :new
+        response.should_not be_success
+        flash[:alert].should_not be_nil      
+        flash[:alert].should include("You need to sign in or sign up before continuing")              
+      end
+      it "should filter flash if they signin" do
+        request.env['warden'].stubs(:user).returns( @user)      
+        sign_out @user
+        get :new
+        sign_in @user
+        get :show, id:"test5"
+        response.body.should_not include("You need to sign in or sign up before continuing")
+      end
+      describe "failing audit" do
+        before(:all) do
+          ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
+          @archivist = FactoryGirl.find_or_create(:archivist)
+        end
+        it "should display failing audits" do
+            sign_out @user
+            sign_in @archivist            
+            @ds = @file.datastreams.first
+            AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
+            get :show, id:"test5"
+            response.body.should include("The audit run")
+            response.body.should include("was failing")        
+        end
+      end
+    end
+    
   end
 end
