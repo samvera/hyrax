@@ -230,6 +230,8 @@ $(function() {
       var td2 = $(document.createElement('td'));
       var remove = $('<button class="close btn-inverse">X</button>');
 
+      $('#save_perm_note').show();
+
       $('#new_perms').append(td1);
       $('#new_perms').append(td2);
 
@@ -247,7 +249,7 @@ $(function() {
         }).appendTo(td2);
       tr.append(td1);
       tr.append(td2);
-      $('#file_permissions').append(tr);
+      $('#file_permissions').after(tr);
       tr.effect("highlight", {}, 3000);
   }
 
@@ -268,7 +270,7 @@ $(function() {
 
 
 	$('#generic_file_permissions_new_group_name').change(function (){
-        var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
+      var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
 	    if (this.value.toUpperCase() == 'PUBLIC') {
 	       edit_option.disabled =true;	       
 	    } else {

@@ -9,9 +9,9 @@
       <td>
         <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %>
           <% if recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
-            <span class="label label-important">Restricted</span>
+            <span class="label label-important">Private</span>
           <% else %>
-            <span class="label label-success">Public</span>
+            <span class="label label-success">Open Access</span>
           <% end %>
         </h3>
         <p> <%= filename %><br />

@@ -29,12 +29,13 @@ class BatchController < ApplicationController
       #todo check metadata not push...
       #if (can read)
       if can? :read, permissions_solr_doc_for_id(gf.pid)
-        if params.has_key?(:permission)
-          gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
-        else
-          gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-        end
+        #if params.has_key?(:permission)
+        #  gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, params[:permission][:group][:public])
+        #else
+        #  gf.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+        #end
         gf.update_attributes(params[:generic_file])
+        gf.set_visibility(params)
         gf.save
         fSaved << gf
       else

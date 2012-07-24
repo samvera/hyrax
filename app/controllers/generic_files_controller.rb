@@ -111,8 +111,11 @@ class GenericFilesController < ApplicationController
       revision = @generic_file.content.get_version(params[:revision])
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
     end
+
+
     add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k})
+    @generic_file.set_visibility(params)
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
     record_version_committer(@generic_file, current_user)

@@ -49,9 +49,14 @@ $("a[rel=popover]").popover();
       <li id="edit_permissions_link" ><a href="#">Permissions</a></li>
     </ul>
     <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
-<%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
-  <%= render :partial => "permission_new", :locals => { :gf => @generic_file } %>
-<% end %>
+
+    <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+      <%= render :partial => "permission", :locals => { :gf => @generic_file } %>
+    <% end %>
+    <%# form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+      <%# render :partial => "permission_new", :locals => { :gf => @generic_file } %>
+    <%# end %>
+
     <%= render :partial => "versioning", :locals => { :generic_file => @generic_file } %>
-  </div> <!-- /column second -->
-</div><!-- /columns two-b -->
+  </div> <!-- /.span68-->
+</div><!-- /.row -->

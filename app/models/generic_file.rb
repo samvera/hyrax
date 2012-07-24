@@ -197,6 +197,24 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
+  def set_visibility(params)
+    # only set explicit permissions
+    if params[:visibility] == "open"
+      self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "read")
+    elsif params[:visibility] == "psu"
+      self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "read")
+      self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+    else 
+      self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "none")
+      self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+      #params[:generic_file][:permissions][:group][:public] = "none"
+      #params[:generic_file][:permissions][:group][:registered] = "none"
+    end 
+
+  end 
+
+  def to_solr(solr_doc={})
+    super(solr_doc)
   def to_solr(solr_doc={}, opts={})
     super(solr_doc, opts)
     solr_doc["label_t"] = self.label
