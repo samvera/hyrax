@@ -23,5 +23,8 @@ module Hydra
 
 end
 
-SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension if defined? SolrDocument
+begin
+  SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
+rescue NameError
+end
 
