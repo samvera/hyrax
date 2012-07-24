@@ -13,6 +13,7 @@ gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'
 gem 'resque', '1.21.0', :require => 'resque/server'
+gem 'resque-pool', '0.3.0'
 gem 'devise', '2.0.4'
 gem 'noid', '0.5.5'
 gem 'daemons', '1.1.8'
@@ -21,8 +22,8 @@ gem 'therubyracer', '~> 0.10.1'
 gem 'zipruby', '~> 0.3.6'
 gem 'mail_form', "~> 1.3.0"
 gem 'rails_autolink', '1.0.9'
-gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db.git', :ref => '98e9a5dc'
-gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer.git', :ref => 'd92a75b0'
+gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db', :ref => '98e9a5dc'
+gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer', :ref => 'd92a75b0'
 
 group :assets do
   gem 'sass-rails', "~> 3.2.5"

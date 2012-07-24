@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/lostapathy/yaml_db.git
+  remote: git://github.com/lostapathy/yaml_db
   revision: 98e9a5dca43e3fedd3268c76a73af40d1bdf1dfd
   ref: 98e9a5dc
   specs:
@@ -16,7 +16,7 @@ GIT
       rails
 
 GIT
-  remote: git://github.com/psu-stewardship/mailboxer.git
+  remote: git://github.com/psu-stewardship/mailboxer
   revision: d92a75b01b3dc0a1c9d9e976eb0dbf80c6bfe800
   ref: d92a75b0
   specs:
@@ -305,6 +305,10 @@ GEM
       redis-namespace (~> 1.0)
       sinatra (>= 0.9.2)
       vegas (~> 0.1.2)
+    resque-pool (0.3.0)
+      rake
+      resque (~> 1.20)
+      trollop (~> 1.16)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rmagick (2.13.1)
@@ -379,6 +383,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
+    trollop (1.16.2)
     tzinfo (0.3.33)
     uglifier (1.2.6)
       execjs (>= 0.3.0)
@@ -438,6 +443,7 @@ DEPENDENCIES
   rails_autolink (= 1.0.9)
   rails_indexes!
   resque (= 1.21.0)
+  resque-pool (= 0.3.0)
   rmagick (= 2.13.1)
   rspec (= 2.10.0)
   rspec-rails (>= 2.4.0)

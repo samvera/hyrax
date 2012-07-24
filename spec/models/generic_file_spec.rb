@@ -114,7 +114,7 @@ describe GenericFile do
     end
     describe "that have been saved" do
       before (:each) do
-        Resque.expects(:enqueue).once.returns("the job")
+        Resque.expects(:enqueue).once.returns(true)
       end
       after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
@@ -222,7 +222,6 @@ describe GenericFile do
   describe "audit" do
     before(:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      @job_count = Resque.size(:audit)
       GenericFile.any_instance.stubs(:characterize).returns(true)
       f = GenericFile.new
       f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
@@ -239,42 +238,31 @@ describe GenericFile do
     it "should schedule a audit job" do
       @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
       ChecksumAuditLog.stubs(:create!).returns(true)
+      Resque.expects(:enqueue).times(@datastreams.count)
       @f.audit!
-      Resque.size(:audit).should == @job_count + @datastreams.count
     end
     it "should log a failing audit" do
       @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'properties.0', :dsid => 'properties')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'rightsMetadata.0', :dsid => 'rightsMetadata')
-      ChecksumAuditLog.expects(:create!).with(:pass => false, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
+      ChecksumAuditLog.all.all? { |cal| cal.pass == 0 }.should be_true
     end
     it "should log a passing audit" do
       @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(true) }
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'DC1.0', :dsid => 'DC')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'content.0', :dsid => 'content')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'properties.0', :dsid => 'properties')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'rightsMetadata.0', :dsid => 'rightsMetadata')
-      ChecksumAuditLog.expects(:create!).with(:pass => true, :pid => @f.pid, :version => 'RELS-EXT.0', :dsid => 'RELS-EXT')
       @f.audit!
+      ChecksumAuditLog.all.all? { |cal| cal.pass == 1 }.should be_true
     end
     it "should return true on audit_status" do
       @f.audit_stat.should be_true
     end
   end
   describe "save" do
-    before(:each) do
-      @job_count = Resque.size(:characterize)
-    end
     after(:each) do
       @file.delete
     end
     it "should schedule a characterization job" do
       @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      Resque.expects(:enqueue).once
       @file.save
-      Resque.size(:characterize).should == @job_count + 1
     end
   end
   describe "related_files" do
@@ -385,7 +373,7 @@ describe GenericFile do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should not be triggered unless the content ds is changed" do
-      Resque.expects(:enqueue)
+      Resque.expects(:enqueue).once
       @file.content.content = "hey"
       @file.save
       @file.related_url = 'http://example.com'

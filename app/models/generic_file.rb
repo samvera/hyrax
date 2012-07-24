@@ -520,7 +520,6 @@ class GenericFile < ActiveFedora::Base
     GenericFile.audit(version, true)
   end
 
-
   def self.audit(version, force = false)
     #logger.debug "***AUDIT*** log for #{version.inspect}"
     latest_audit = self.find(version.pid).logs(version.dsid).first
@@ -566,14 +565,15 @@ class GenericFile < ActiveFedora::Base
   def self.run_audit(version)
     if version.dsChecksumValid
       #logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
-      passing = true
+      passing = 1
       ChecksumAuditLog.prune_history(version)
     else
       logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
-      passing = false
+      passing = 0
     end
-    return ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
-                             :dsid=>version.dsid, :version=>version.versionID)
+    check = ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
+                                     :dsid=>version.dsid, :version=>version.versionID)
+    return check
   end
 
 

@@ -4,6 +4,7 @@
 
 HHOME="/opt/heracles"
 WORKSPACE="${HHOME}/scholarsphere/scholarsphere-test"
+RESQUE_POOL_PIDFILE="${WORKSPACE}/tmp/pids/resque-pool.pid"
 DEFAULT_TERMCOLORS="\e[0m"
 HIGHLIGHT_TERMCOLORS="\e[33m\e[44m\e[1m"
 ERROR_TERMCOLORS="\e[1m\e[31m"
@@ -35,7 +36,9 @@ bundle install
 
 # stop Resque pool early
 banner "resque-pool stop"
-kill -2 
+[ -f $RESQUE_POOL_PIDFILE ] && {
+    kill -2 $(cat $RESQUE_POOL_PIDFILE)
+}
 
 banner "passenger-install-apache2-module -a"
 passenger-install-apache2-module -a
@@ -47,7 +50,7 @@ banner "rake assets:precompile"
 RAILS_ENV=production rake assets:precompile
 
 banner "resque-pool start"
-resque-pool --daemon --environment production
+resque-pool --daemon --environment production start
 
 banner "rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret

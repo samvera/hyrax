@@ -6,8 +6,9 @@
 #	test -x /opt/heracles/deploy_integration.sh && /opt/heracles/deploy_integration.sh
 # to run CI testing.
 
-HHOME=/opt/heracles
-WORKSPACE=${HHOME}/scholarsphere/scholarsphere-integration
+HHOME="/opt/heracles"
+WORKSPACE="${HHOME}/scholarsphere/scholarsphere-integration"
+RESQUE_POOL_PIDFILE="${WORKSPACE}/tmp/pids/resque-pool.pid"
 
 echo hello ss-integration
 echo "=-=-=-=-= $0 export RAILS_ENV=integration"
@@ -44,8 +45,10 @@ RAILS_ENV=integration rake scholarsphere:fixtures:generate
 RAILS_ENV=integration rake scholarsphere:fixtures:refresh
 
 echo "=-=-=-=-= $0 resque-pool restart"
-resque-pool TODO
-resque-pool --daemon --environment integration
+[ -f $RESQUE_POOL_PIDFILE ] && {
+    kill -2 $(cat $RESQUE_POOL_PIDFILE)
+}
+resque-pool --daemon --environment integration start
 
 echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret

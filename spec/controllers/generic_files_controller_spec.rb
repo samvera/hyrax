@@ -25,8 +25,8 @@ describe GenericFilesController do
 
     it "should expand zip files" do
       file = fixture_file_upload('/world.png','application/zip')
-      Resque.expects(:enqueue).with { |job| job.kind_of? CharacterizeJob }
-      Resque.expects(:enqueue).with { |job| job.kind_of? UnzipJob }
+      Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
+      Resque.expects(:enqueue).with(UnzipJob, 'test:123')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
@@ -172,7 +172,7 @@ describe GenericFilesController do
       f.set_title_and_label('world.png')
       f.add_file_datastream(File.new(Rails.root +  'spec/fixtures/world.png'))
       # grant public read access explicitly
-      f.update_attributes({:read_groups_string => 'public'})
+      f.read_groups = ['public']
       f.expects(:characterize_if_changed).yields
       f.save
     end
