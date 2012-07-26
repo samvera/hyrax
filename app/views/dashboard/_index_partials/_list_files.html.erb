@@ -31,6 +31,7 @@ on element ids -->
     </span>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-edit"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-download"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
+    <%= link_to raw('<i class="icon-trash"></i>'), generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :confirm => 'Are you sure this is perminent?' %>&nbsp;&nbsp;&nbsp;
   </td>
 </tr>
 <tr class="hide" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->

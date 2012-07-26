@@ -31,3 +31,13 @@ Feature: As an authenticate and authorized
     Then I should not see "Dashboard"
     Then the "search-field-header" field should contain "ss search"
 
+ @javascript
+  Scenario: I have files on my dashboard I should see icons 
+    Given I load scholarsphere fixtures
+    And I am logged in as "archivist1"
+    And I follow "dashboard"
+    Then show me the page
+    Then I should see "Test Document Text"
+    Given I follow "Delete"
+    Then I should see "The file has been deleted"
+
