@@ -55,8 +55,9 @@ class ApplicationController < ActionController::Base
   end
 
   def filter_notify
-    # remove error inserted if the user does in fact login
-    if user_logged_in? and flash[:alert].present?
+    # remove error inserted since we are not showing a page before going to web access, this error message always shows up a page too late.
+    # for the moment just remove it always.  If we show a transition page in the future we may want to  display it then.
+    if flash[:alert].present?
       # first remove the bogus message
       flash[:alert].sub!('You need to sign in or sign up before continuing.', '')
       # then make the flash nil if that was the only message in the flash
