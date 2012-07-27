@@ -184,7 +184,6 @@ GEM
       builder (>= 2.1.2)
     headless (0.3.1)
     hike (1.2.1)
-    hooks (0.2.0)
     httpi (1.1.1)
       rack
     hydra-access-controls (0.0.5)
@@ -331,12 +330,10 @@ GEM
       railties (>= 3.0)
       rspec (~> 2.10.0)
     ruby-prof (0.11.2)
-    rubydora (0.5.13)
+    rubydora (0.5.10)
       activemodel
       activesupport
-      deprecation
       fastercsv
-      hooks
       mime-types
       nokogiri
       rest-client
@@ -362,6 +359,10 @@ GEM
       libwebsocket (~> 0.1.3)
       multi_json (~> 1.0)
       rubyzip
+    sinatra (1.3.2)
+      rack (~> 1.3, >= 1.3.6)
+      rack-protection (~> 1.2)
+      tilt (~> 1.3, >= 1.3.3)
     solrizer (1.2.2)
       daemons
       mediashelf-loggable (~> 0.4.7)
