@@ -53,12 +53,12 @@ describe BatchController do
         file.read_groups.should == ['group1', 'group2']
       end
       it "should set public read access" do
-        post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"read"}}, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "visibility"=>"open", "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_groups.should == ['public']
       end
       it "should set public read access and groups at the same time" do
-        post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"read"}}, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "visibility"=>"open", "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_groups.should == ['group1', 'group2', 'public']
       end

@@ -13,7 +13,8 @@ describe User do
 
   describe "#groups" do
     before do
-      ScholarSphere::LDAP.expects(:groups_for_user).with(@user.login).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
+      filter = Net::LDAP::Filter.eq('uid', @user.login)
+      Hydra::LDAP.expects(:groups_for_user).with(filter).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
     end
     it "should return a list" do
       @user.groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
