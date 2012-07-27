@@ -97,12 +97,13 @@ describe BatchController do
   end
   describe "#edit" do
     before do
+      GenericFile.any_instance.stubs(:characterize_if_changed).yields 
       @b1 = Batch.new
       @b1.save
-      @file = GenericFile.new(:batch=>@b1, :filename=>'f1')
+      @file = GenericFile.new(:batch=>@b1, :label=>'f1')
       @file.apply_depositor_metadata(@user.login)
       @file.save
-      @file2 = GenericFile.new(:batch=>@b1, :filename=>'f2')
+      @file2 = GenericFile.new(:batch=>@b1, :label=>'f2')
       @file2.apply_depositor_metadata(@user.login)
       @file2.save
       controller.stubs(:params).returns({id:@b1.id})       
@@ -112,9 +113,9 @@ describe BatchController do
       @file.delete
       @file2.delete
     end
-    it "should default and contributor" do
+    it "should default creator" do
        controller.edit
-       controller.instance_variable_get(:@generic_file).contributor[0].should == @user.name
+       controller.instance_variable_get(:@generic_file).creator[0].should == @user.name
        controller.instance_variable_get(:@generic_file).title[0].should include 'f1'
        controller.instance_variable_get(:@generic_file).title[0].should include 'f2'
     end
