@@ -61,6 +61,9 @@ resque-pool --daemon --environment production start
 banner "rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret
 
+banner "rake scholarsphere:resolrize"
+RAILS_ENV=production rake scholarsphere:resolrize
+
 banner "touch ${WORKSPACE}/tmp/restart.txt"
 touch ${WORKSPACE}/tmp/restart.txt
 

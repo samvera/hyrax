@@ -21,6 +21,11 @@ namespace :scholarsphere do
     end
   end
 
+  desc "Re-solrize all objects"
+  task :resolrize => :environment do
+    Resque.enqueue(ResolrizeJob)
+  end
+
   desc "Execute Continuous Integration build (docs, tests with coverage)"
   task :ci => :environment do
     #Rake::Task["hyhead:doc"].invoke

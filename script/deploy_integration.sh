@@ -56,6 +56,9 @@ resque-pool --daemon --environment integration start
 echo "=-=-=-=-= $0 rake scholarsphere:generate_secret"
 rake scholarsphere:generate_secret
 
+echo "=-=-=-=-= $0 rake scholarsphere:resolrize"
+RAILS_ENV=integration rake scholarsphere:resolrize
+
 echo "=-=-=-=-= $0 touch ${WORKSPACE}/tmp/restart.txt"
 touch ${WORKSPACE}/tmp/restart.txt
 
