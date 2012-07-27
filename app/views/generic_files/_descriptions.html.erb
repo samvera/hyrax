@@ -41,7 +41,8 @@
                 <% elsif key == "rights" %>
                   <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, @generic_file.rights.to_a) %>
                 <% else %>
-                  <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
+                  <% req = (index == 0) && ((key == "title") || (key == "creator") || (key == "keyword")) %>
+                  <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large", :required => req  %>
                 <% end %>
                 <% if index == 0 %>
                   <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn"  %>&nbsp;

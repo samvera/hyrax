@@ -103,10 +103,12 @@ $(function() {
     //we don't want a button on each element being appended
     cloneElem.find('#'+this.id).remove();
     cloneElem.find('.formHelp').remove();
+    cloneElem.find(":contains('Help')").remove();
 
     //clear out the value for the element being appended
     //so the new element has a blank value
     cloneElem.find('input[type=text]').attr("value", "");
+    cloneElem.find('input[type=text]').attr("required", false);
 
     // should we attach an auto complete based on the input
     if (this.id == 'additional_based_near_submit') {
