@@ -47,7 +47,8 @@ class DashboardController < ApplicationController
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     config.add_facet_field "generic_file__resource_type_facet", :label => "Resource Type", :limit => 5
-    config.add_facet_field "generic_file__contributor_facet", :label => "Contributor", :limit => 5
+    #config.add_facet_field "generic_file__contributor_facet", :label => "Contributor", :limit => 5
+    config.add_facet_field "generic_file__creator_facet", :label => "Creator", :limit => 5
     config.add_facet_field "generic_file__tag_facet", :label => "Keyword", :limit => 5
     config.add_facet_field "generic_file__subject_facet", :label => "Subject", :limit => 5
     config.add_facet_field "generic_file__language_facet", :label => "Language", :limit => 5

@@ -83,7 +83,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Creator</th>
           <td>
             <% @generic_file.creator.each do |creator| %>
-              <%= link_to_field('creator', creator) %><br />
+              <%= link_to_facet(creator, 'generic_file__creator_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -91,7 +91,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Contributor</th>
           <td>
             <% @generic_file.contributor.each do |contributor| %>
-              <%= link_to_facet(contributor, 'generic_file__contributor_facet') %><br />
+              <%= link_to_field('contributor', contributor) %><br />
             <% end %>
           </td>
         </tr>

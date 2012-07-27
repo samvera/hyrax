@@ -370,6 +370,8 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
+    solrizer-fedora (2.2.0)
+      active-fedora (~> 4.0)
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -451,6 +453,7 @@ DEPENDENCIES
   rubydora (= 0.5.10)
   sass-rails (~> 3.2.5)
   selenium-webdriver
+  solrizer-fedora (= 2.2.0)
   sqlite3
   therubyracer (~> 0.10.1)
   uglifier (~> 1.2.6)
