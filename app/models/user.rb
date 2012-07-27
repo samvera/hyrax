@@ -39,7 +39,19 @@ class User < ActiveRecord::Base
 
   # Groups that user is a member of
   def groups
-    ScholarSphere::LDAP.groups_for_user(login) rescue []
+    self.class.groups(login) 
+  end
+
+  def self.groups(login)
+    Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []
+  end
+
+  def attributes(attributes=[])
+    self.class.attributes(login, attributes)
+  end
+
+  def self.attributes(login, attributes=[])
+    Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attributes)
   end
 
   def self.current
