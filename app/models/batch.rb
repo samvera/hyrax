@@ -14,17 +14,16 @@ class Batch < ActiveFedora::Base
   delegate :part, :to => :descMetadata
 
   def self.find_or_create(pid)
-     begin
-        @batch = Batch.find(pid)
-     rescue ActiveFedora::ObjectNotFoundError
-        @batch = Batch.create({pid: pid})
-     end     
+    begin
+      @batch = Batch.find(pid)
+    rescue ActiveFedora::ObjectNotFoundError
+      @batch = Batch.create({pid: pid})
+    end
   end
-  
-  def to_solr(solr_doc={})
-    super(solr_doc)
+
+  def to_solr(solr_doc={}, opts={})
+    super(solr_doc, opts)
     solr_doc["noid_s"] = noid
     return solr_doc
   end
-
 end
