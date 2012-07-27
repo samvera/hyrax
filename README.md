@@ -17,6 +17,7 @@ For more information, read the [ScholarSphere development docs](https://github.c
 
 Infrastructural components
 
+ * Ruby 1.9.3 (we use RVM to manage our Rubies)
  * Fedora (if you don't have access to an instance, use the built-in
    hydra-jetty submodule)
  * Solr (if you don't have access to an instance, use the built-in
@@ -69,12 +70,12 @@ configure it, & fire it up
     rake jetty:config
     rake jetty:start
 
-Start the resque-pool workers (needed for characterization, audit, and
-unzip services)
+Start the resque-pool workers (needed for characterization, audit,
+unzip, and resolrization services)
 
     resque-pool --daemon --environment development start
 
-Run the app server
+Run the app server (the bundled app server is Unicorn)
 
     rails server
 
@@ -91,25 +92,37 @@ repository, run the following command
 
 You'll probably want to schedule this regularly (e.g., via cron) in production environments.
 Note that this does not *force* an audit -- it respects the value of max_days_between_audits
-in application.rb.  Also note that if you want to run this on any environment other than 
+in application.rb.  Also note that if you want to run this on any environment other than
 development, you will need to call the script with RAILS_ENV=environment in front.
+
+### Re-solrize All Objects
+
+If for some reason you need to force all objects to be re-solrizer,
+perhaps because you have updated which fields are facetable and which
+are not, ScholarSphere contains a rake task that kicks off a
+re-solrization asynchronously via a Resque job.
+
+     rake scholarsphere:resolrize
+
+Note that if you want to run this on any environment other than development, you will need to
+call the script with RAILS_ENV=environment in front.
 
 ### Characterize All Uncharacterized Datastreams
 
-In the event that some objects have not undergone characterization (for whatever reason), 
+In the event that some objects have not undergone characterization (for whatever reason),
 there is a rake task that sweeps through the entire repository looking for objects that lack
 a characterization datastream.  For each object that lacks this datastream, a CharacterizationJob
 that will characterize and thumbnailize the object is queued up.
 
-     rake scholarsphere:characterize     
+     rake scholarsphere:characterize
 
-Note that if you want to run this on any environment other than development, you will need to 
+Note that if you want to run this on any environment other than development, you will need to
 call the script with RAILS_ENV=environment in front.
 
 ### Export Metadata as RDF/XML
 
 There is a rake task that exports the metadata of every object that is readable by the public to
-the RDF/XML format.  This might be useful as an export mechanism, e.g., to Summon or a similar 
+the RDF/XML format.  This might be useful as an export mechanism, e.g., to Summon or a similar
 discovery system.
 
      rake scholarsphere:export:rdfxml
