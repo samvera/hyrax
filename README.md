@@ -69,9 +69,10 @@ configure it, & fire it up
     rake jetty:config
     rake jetty:start
 
-Start the delayed job workers (needed for characterization and audit services)
+Start the resque-pool workers (needed for characterization, audit, and
+unzip services)
 
-    script/delayed_job start
+    resque-pool --daemon --environment development start
 
 Run the app server
 
