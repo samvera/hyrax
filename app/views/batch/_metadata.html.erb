@@ -15,7 +15,7 @@
     <div class="control-group">
       <%= f.label :title, "Title", :class=>"control-label" %> 
       <div class="controls" id="additional_title_clone">
-          <%= f.text_field :title, :name=>"generic_file[title][]", :value=>gf.title[0] %>  
+          <%= f.text_field :title, :name=>"generic_file[title][]", :value=>gf.title[0], :required=> true %>  
           <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn"  %>
           &nbsp;
           <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title">Help</a>
@@ -26,7 +26,7 @@
     <div class="control-group">
         <%= f.label :tag, "Keyword", :class=>"control-label" %> 
       <div class="controls" id="additional_tag_clone">
-          <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>""  %> 
+          <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>"", :required=> true  %> 
           <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn"  %>
           &nbsp;
           <a href="#" id="generic_file_tag_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>" data-original-title="Keyword">Help</a>
@@ -37,7 +37,7 @@
     <div class="control-group">
       <%= f.label :creator, :class=>"control-label" %>
       <div class="controls" id="additional_creator_clone">
-        <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"" %>
+        <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"", :required=> true %>
         <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn"  %>
           &nbsp;
           <a href="#" id="generic_file_creator_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>" data-original-title="Creator">Help</a>
