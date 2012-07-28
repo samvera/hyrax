@@ -34,7 +34,7 @@ ScholarSphere::Application.routes.draw do
   match 'dashboard/facet/:id' => 'dashboard#facet', :as => :dashboard_facet
 
   # advanced routes for advanced search
-  match 'advanced' => 'advanced#index', :as => :advanced
+  match 'search' => 'advanced#index', :as => :advanced
 
   # Authority vocabulary queries route
   match 'authorities/:model/:term' => 'authorities#query'
@@ -60,7 +60,7 @@ ScholarSphere::Application.routes.draw do
   end
 
   # Static page routes (workaround)
-  match ':action' => 'static#:action', :constraints => { :action => /about|contact|help|terms|zotero|mendeley/ }, :as => :static
+  match ':action' => 'static#:action', :constraints => { :action => /about|help|terms|zotero|mendeley/ }, :as => :static
 
   # Catch-all (for routing errors)
   match '*error' => 'errors#routing'
