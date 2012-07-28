@@ -4,77 +4,96 @@
     <meta charset="utf-8" />
 
     <title><%= h(application_name) %>: System Error</title>
-    <%# render_head_content %>
     <!-- application css -->
-    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Lato:300,400,900' %>
     <%= stylesheet_link_tag 'application' %>
-    <%# stylesheet_link_tag params[:controller] %>
     <%= yield(:css_head) %>
 
     <!-- application js -->
     <%= javascript_include_tag 'application' %>
 
     <!-- controller specific uploader -->
-    <%# javascript_include_tag params[:controller] %>
     <%= yield(:js_head) %>
 
-    <script>
+    <script type="text/javascript">
       $(function() {
         <%= yield(:local_js) %>
       });
     </script>
 
-    <style>
+    <%= render :partial => '/ga', :formats => [:html] %>
+
+    <style type="text/css">
       <%= yield(:local_css) %>
     </style>
-	</head>
-  
-  <body> 
-  <% column_class = "two" %>
-  <div id="wrapper">
-  <div id="container">
-    <div id="masthead">
-    <a id="logo" href="/"><img src="/assets/site_images/logo_psuss.png" alt="PSU ScholarSphere" /></a>
-    <ul id="primary-menu">
-      <li><a <%= 'class=active' if action_name == "index" %> href="/">Home</a></li>
-      <li><a <%= 'class=active' if action_name == "about" %> href="/about/">About</a></li>
-      <li><a <%= 'class=active' if action_name == "help" %> href="/help/">Help</a></li>
-      <li><a <%= 'class=active' if action_name == "contact" %> href="/contact/">Contact</a></li>
-      <li class="signin"><%= link_to "Login", ScholarSphere::Application::config.login_url %>
-    </ul>
+  </head>
 
-</div> <!-- /masthead -->
+<body> 
+<div  id="wrapper"> 
+  <div class="container">
+    <div id="page-positioner">
+      <div id="masthead">
+        <a id="logo" href="/"><img src="/assets/site_images/logo_psuss2.png" alt="PSU ScholarSphere" /></a>
+        <div class="navbar">
+          <div class="nav-inner">
+            <div class="container">
+              <ul class="nav pull-right">
+                <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
+                <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
+                <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
+                <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= contact_form_index_path %>" class="top_nav">Contact</a></li>
+                <li>
+                  <div class="btn-group">
+                    <% if current_user %>
+                      <a href="#" class="btn btn-small "><i class="icon-user"></i><%= current_user.to_s %></a>
+                      <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></a> 
+                      <ul class="dropdown-menu">
+                          <li><%= link_to raw('<i class="icon-dashboard"></i> dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
+                          <li><%= link_to raw('<i class="icon-upload"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
+                          <li class="divider"></li>
+                          <li><%= link_to raw('<i class="icon-ban-circle"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
+                      </ul>
+                    <% else %>
+                        <%= link_to raw('<i class="icon-user"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
+                    <% end %>
+                  </div><!-- /.btn-group -->
+                </li>
+              </ul><!-- /.nav /.pull-right -->
+            </div><!-- /.container -->
+          </div><!-- /.nav-inner -->
+        </div><!-- /.navbar -->
+      </div> <!-- /masthead -->
+
+      <div id="content-wrapper"> 
+        <div id="content" class="row">
+          <!-- 110 rows -->
+            <div class="span110">
+              <%= yield %>
+            </div>
+        </div><!-- /#content -->
+      </div><!-- /#content-wrapper -->
+    </div><!-- /#page-positioner -->
+  </div><!-- /.container -->
+</div><!-- /#wrapper -->
+<div id="footer-wrapper" class="row-fluid">
+  <div id="footer">
+    <div class="footer-logo">
+      <a href="/"><img src="/assets/site_images/logo_psuss_footer.png" alt="PSU ScholarSphere" /></a>
+      <p>A service of the University Libraries and Information Technology Services.</p>
+    </div>
+    <div class="footer-text">
+      <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
+      <ul>
+        <li><a href="http://psu.edu">Penn State</a></li>
+        <li><a href="http://libraries.psu.edu">University Libraries</a></li>
+        <li><a href="http://its.psu.edu">Information Technology Services</a></li>
+        <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
+      </ul>
+    </div>
+    <div class="clearfix"></div>
+  </div><!-- /footer -->
+</div><!-- /footer-wrapper -->
+
       
-      <div id="content-wrapper">
-        <div id="content">	    
-            <div class="columns <%= column_class %>-a"> 
-                <%= yield %>
-            </div>	<!-- /columns three-a -->
-      </div> <!-- /content -->
-	  </div> <!-- /content-wrapper -->
-
-  </div> <!-- /container -->
-
-    <div id="footer-wrapper">
-      <div id="footer">
-        <div class="footer-logo">
-          <a href="/"><img src="/assets/site_images/logo_psuss_footer.png" alt="PSU ScholarSphere" /></a>
-          <p>A service of the University Libraries and Information Technology Services.</p>
-        </div>
-        <div class="footer-text">
-          <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
-          <ul>
-            <li><a href="http://psu.edu">Penn State</a></li>
-            <li><a href="http://libraries.psu.edu">University Libraries</a></li>
-            <li><a href="http://its.psu.edu">Information Technology Services</a></li>
-            <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
-          </ul>
-        </div>
-        <div class="clearfix"></div>
-      </div><!-- /footer -->
-    </div><!-- /footer-wrapper -->
-	
-  </div><!-- /wrapper -->
 </body>
 
 </html>
