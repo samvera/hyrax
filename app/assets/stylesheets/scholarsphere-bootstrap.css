@@ -59,8 +59,6 @@ li.expandable {
 #content-wrapper {
 	padding: 0 19px 0 21px;
 	background: url(/assets/site_images/bg_content2.png) 0 0 no-repeat;
-  /* width: 940px; */
-  /* margin: 0 auto; */
 }
 #content {
   /* width: 900px; */
@@ -73,27 +71,15 @@ li.expandable {
 
 #search-form-header {
 	position: absolute;
-	bottom: 0px;
-	right: 20px;
+  bottom: 5px;
+  right: 10px;
 }
-#search-field-header {
-	padding: 5px 40px 10px 20px;
-	background: url(/assets/site_images/bg_search_field.png) 0 0 no-repeat;
-	border: none;
-	width: 485px;
+a.advanced_search {
+  color: #eee;
 }
-#search-submit-header {
-	position: absolute;
-	top: 0;
-	right: 10px;
-	background: transparent;
-	border: none;
-	color: #fff;
-	text-transform: uppercase;
-	cursor: pointer;
-	font-size: 15px;
-	line-height: 19px;
-	padding: 2px 18px;
+a.advanced_search:hover {
+  color: #fff;
+  text-decoration: none;
 }
 /* Pages */
 #logo {
@@ -158,12 +144,6 @@ table.expanded-details {
   width: 75%;
   margin: 0 auto;
 }
-
-span.bottom { 
-    position: absolute; 
-    bottom: 0; 
-    right: 0 
-} 
 
 /* used for public/penn state/private radio buttons for permissions */
 div.btn-group[data-toggle=buttons-radio] input[type=radio] {

@@ -2,11 +2,13 @@
 <% q = params[:controller] == 'dashboard' ? nil : params[:q] %>
 
 <%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
-  <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>    
-  <%= text_field_tag :q, q, :class => "q", :id => "search-field-header", :placeholder => "Type keywords in here"  %>
-  <%= submit_tag 'Go', :id=>'search-submit-header' %>
-<% end %>
-<span class="bottom">
+  <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>   
+            <div class="controls">
+              <div class="input-append">
+  <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-heade", :placeholder => "Type keywords in here"  %><input type="submit" class="btn btn-info" value="GO" />
+&nbsp;
  <%= link_to 'More options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
  <%= link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
-<span>
+              </div>
+            </div>
+<% end %>

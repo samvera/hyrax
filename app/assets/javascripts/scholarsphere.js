@@ -124,6 +124,8 @@ $(function() {
   });
 
 
+  // show/hide more information on the dashboard when clicking
+  // plus/minus
   $('.icon-plus').on('click', function() {
     //this.id format: "expand_NNNNNNNNNN"
     var a = this.id.split("expand_");
@@ -304,7 +306,7 @@ $(function() {
       */
   // instead for now doing this on a 
   // case by case (or class by class) basis
-  $('.icon-copy, .icon-edit, .icon-download').hover(
+  $('.icon-copy, .icon-edit, .icon-download, .icon-trash').hover(
       //on mouseover
       function(){ 
         $(this).addClass("icon-large");
