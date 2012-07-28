@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
   rescue_from Mysql2::Error, :with => :render_500
   rescue_from Net::LDAP::LdapError, :with => :render_500
   rescue_from RSolr::Error::Http, :with => :render_500
+  rescue_from Blacklight::Exceptions::ECONNREFUSED, :with => :render_500
+  rescue_from Errno::ECONNREFUSED, :with => :render_500
   rescue_from Rubydora::FedoraInvalidRequest, :with => :render_500
   rescue_from ActionDispatch::Cookies::CookieOverflow, :with => :render_500
   rescue_from AbstractController::ActionNotFound, :with => :render_404

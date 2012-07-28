@@ -7,8 +7,6 @@ class CatalogController < ApplicationController
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
 
-  rescue_from RSolr::Error::Http, :with => :render_500
-
   # These before_filters apply the hydra access controls
   before_filter :enforce_access_controls
   before_filter :enforce_viewing_context_for_show_requests, :only=>:show
