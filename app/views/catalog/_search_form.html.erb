@@ -5,7 +5,7 @@
   <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>   
             <div class="controls">
               <div class="input-append">
-  <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-heade", :placeholder => "Type keywords in here"  %><input type="submit" class="btn btn-info" value="GO" />
+  <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => "Type keywords in here"  %><input type="submit" class="btn btn-info" id="search-submit-header" value="GO" />
 &nbsp;
  <%= link_to 'More options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
  <%= link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
