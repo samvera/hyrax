@@ -36,7 +36,6 @@ Feature: As an authenticate and authorized
     Given I load scholarsphere fixtures
     And I am logged in as "archivist1"
     And I follow "dashboard"
-    Then show me the page
     Then I should see "Test Document Text"
     Given I follow "Delete"
     Then I should see "The file has been deleted"
