@@ -4,13 +4,15 @@ gem 'rails', '3.2.6'
 gem 'mysql2', '0.3.11'
 gem 'blacklight', '3.5.0'
 gem "blacklight_advanced_search"
-#gem 'font-awesome-rails'
 gem 'hydra-head', '4.1.1'
 gem 'active-fedora', '4.4.0'
 gem 'rubydora', '0.5.10'
+<<<<<<< HEAD
 gem "hydra-ldap", "~> 0.0.4"
+=======
+>>>>>>> refs #1021, #1018, #1019: adds acts_as_follower gem for a follows/followed model; adds migration and model for acts_as_follower; pins some gems that got unpinned
 gem 'solrizer-fedora', '2.2.0'
-
+gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'master', :ref => '8a24aa66c1'
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'
 gem 'resque', '1.21.0', :require => 'resque/server'
@@ -18,11 +20,12 @@ gem 'resque-pool', '0.3.0'
 gem 'devise', '2.0.4'
 gem 'noid', '0.5.5'
 gem 'daemons', '1.1.8'
-gem 'execjs', '~> 1.4.0'
-gem 'therubyracer', '~> 0.10.1'
-gem 'zipruby', '~> 0.3.6'
-gem 'mail_form', "~> 1.3.0"
+gem 'execjs', '1.4.0'
+gem 'therubyracer', '0.10.1'
+gem 'zipruby', '0.3.6'
+gem 'mail_form', "1.3.0"
 gem 'rails_autolink', '1.0.9'
+gem 'acts_as_follower'
 gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db', :ref => '98e9a5dc'
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer', :ref => 'd92a75b0'
 
