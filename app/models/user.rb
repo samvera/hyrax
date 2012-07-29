@@ -26,9 +26,8 @@ class User < ActiveRecord::Base
   def to_s
     login
   end
-  #alias_method :name, :to_s
 
-  def name    
+  def name
     return self.class.display_name(login)
   end
 
@@ -39,7 +38,7 @@ class User < ActiveRecord::Base
 
   # Groups that user is a member of
   def groups
-    self.class.groups(login) 
+    self.class.groups(login)
   end
 
   def self.groups(login)
@@ -61,14 +60,12 @@ class User < ActiveRecord::Base
   def self.current=(user)
     Thread.current[:user] = user
   end
-  
+
   def self.display_name(login)
-    begin
-      res = ScholarSphere::LDAP.get_user(login, ["displayname"])
-      logger.info "LDAP result = #{res[0].displayname}"
-      return res[0].displayname[0].titleize
-     rescue        
-        return login
-     end
+    res = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), ["displayname"])
+    logger.info "LDAP result = #{res[0].displayname}"
+    return res[0].displayname[0].titleize
+  rescue
+    return login
   end
 end
