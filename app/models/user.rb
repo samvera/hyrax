@@ -45,6 +45,22 @@ class User < ActiveRecord::Base
     Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []
   end
 
+  def populate_attributes
+    entry = attributes.first
+    self.email = entry[:mail].first
+    self.display_name = entry[:displayname].first
+    self.address = entry[:postaladdress].first
+    self.admin_area = entry[:psadminarea].first
+    self.department = entry[:psdepartment].first
+    self.title = entry[:title].first
+    self.office = entry[:psofficelocation].first
+    self.chat_id = entry[:pschatname].first
+    self.website = entry[:labeleduri].first.split('$').first
+    self.affiliation = entry[:edupersonprimaryaffiliation].first
+    self.telephone = entry[:telephonenumber].first
+    self.save
+  end
+
   def attributes(attributes=[])
     self.class.attributes(login, attributes)
   end

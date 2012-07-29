@@ -20,4 +20,10 @@ describe User do
       @user.groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
     end
   end
+
+  describe "#attributes" do
+    it "should return user attributes from LDAP" do
+      User.attributes('mjg36', ['cn']).should == ['MICHAEL JOSEPH GIARLO']
+    end
+  end
 end

@@ -9,8 +9,13 @@ module Devise
       end
 
       def authenticate!
-        if request.headers["REMOTE_USER"].present?
-          u = User.find_or_create_by_login(request.headers["REMOTE_USER"])
+        remote_user = request.headers['REMOTE_USER']
+        if remote_user.present?
+          u = User.find_by_login(remote_user)
+          if u.nil?
+            u = User.create(:login => remote_user)
+            u.populate_attributes
+          end
           success!(u)
         else
           fail!

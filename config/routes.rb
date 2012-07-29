@@ -26,8 +26,10 @@ ScholarSphere::Application.routes.draw do
   # Login/logout route to destroy session
   match 'logout' => 'sessions#destroy', :as => :destroy_user_session
   match 'login' => 'sessions#new', :as => :new_user_session
-  # TODO: supposedly required by BL but we haven't wired profiles up yet
-  # match 'profile' => 'sessions#edit', :as => :edit_user_registration
+
+  # User profile
+  match 'users/:uid' => 'users#show', :as => :profile
+  match 'users/:uid/edit' => 'users#edit', :as => :edit_profile
 
   # Dashboard routes (based on catalog routes)
   match 'dashboard' => 'dashboard#index', :as => :dashboard
