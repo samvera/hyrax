@@ -1,0 +1,12 @@
+development:
+  host: localhost
+  port: 6479
+test:
+  host: localhost
+  port: 6479
+integration:
+  host: localhost
+  port: 6479
+production:
+  host: localhost
+  port: 6479

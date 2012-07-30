@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   prepend_before_filter :find_user
   before_filter :authenticate_user!, :only => [:edit, :update, :follow, :unfollow]
   before_filter :user_is_current_user, :only => [:edit, :update]
+  after_filter :add_to_activity_stream, :only => [:follow, :unfollow]
 
   # Display user profile
   def show
@@ -38,5 +39,9 @@ class UsersController < ApplicationController
 
   def user_is_current_user
     redirect_to profile_path(@user.to_s), :alert => "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
+  end
+
+  def add_to_activity_stream
+    rdb.redis.zadd("events", )
   end
 end
