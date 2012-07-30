@@ -54,6 +54,16 @@ module ScholarSphere
       'scholarsphere.psu.edu' => 'UA-33252017-2',
     }
 
+    # Map hostnames onto vhosts
+    config.hosts_vhosts_map = {
+      'fedora1test' => 'https://scholarsphere-integration.dlt.psu.edu/',
+      'fedora2test' => 'https://scholarsphere-test.dlt.psu.edu/',
+      'ss1stage' => 'https://scholarsphere-staging.dlt.psu.edu/',
+      'ss2stage' => 'https://scholarsphere-staging.dlt.psu.edu/',
+      'ss1prod' => 'https://scholarsphere.psu.edu/',
+      'ss2prod' => 'https://scholarsphere.psu.edu/'
+    }
+
     config.resource_types = {
       "Article"=>"Article",
       "Multimedia"=>"Multimedia",

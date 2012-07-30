@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   rescue_from Errno::ECONNREFUSED, :with => :render_500
   rescue_from Rubydora::FedoraInvalidRequest, :with => :render_500
   rescue_from ActionDispatch::Cookies::CookieOverflow, :with => :render_500
+  rescue_from Redis::CannotConnectError, :with => :render_500
   rescue_from AbstractController::ActionNotFound, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
   rescue_from ActionController::RoutingError, :with => :render_404
