@@ -155,3 +155,11 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
   height:     100%;
   opacity:    0;
 }
+
+.btn-warning.active,
+.btn-danger.active,
+.btn-success.active,
+.btn-primary.active {  
+    font-weight:bold;
+    color: yellow;  
+}
