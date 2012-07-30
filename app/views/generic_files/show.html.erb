@@ -16,8 +16,7 @@ var addthis_config = {"data_track_addressbar":true};<
   width: 338px;
 }
 <% end %>
-
-<h1 class="lower"><%= @generic_file.title.join(' | ') %></h1>
+<h1 class="lower"><%= display_title(@generic_file) %></h1>
 
 <div class="row">
   <div class="span40"> 
