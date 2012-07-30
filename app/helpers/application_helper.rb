@@ -28,7 +28,8 @@ module ApplicationHelper
   end
 
   def display_user_name(recent_document)
-     return User.display_name( recent_document[:depositor_t][0]) if recent_document[:depositor_t] 
+     return "no display name" unless recent_document[:depositor_t]
+     return User.where(:login => recent_document[:depositor_t][0]).display_name rescue recent_document[:depositor_t][0]
   end
 
   def link_to_facet(field, field_string)
@@ -48,4 +49,9 @@ module ApplicationHelper
       link_to(display, link_url)
   end
 
+  def iconify_auto_link(text)
+    auto_link(text) do |value|
+      "<i class='icon-external-link'></i>&nbsp;#{value}"
+    end
+  end
 end

@@ -42,11 +42,16 @@
                   <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large", :required => req  %>
                 <% end %>
                 <% if index == 0 %>
+<<<<<<< HEAD
                   <button class="adder btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">+<span class="accessible-hidden">add another <%= key %></span></button>
                   &nbsp;
                   <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= key.humanize %>">Help</a>
                 <% else %>
                   <button class="remover btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">-<span class="accessible-hidden">add another <%= key %></span></button>
+=======
+                  <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn"  %>&nbsp;
+                  <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= key.humanize %>" title="Help"><i class="icon-question-sign"></i></a>
+>>>>>>> /bad-path/
                 <% end %>
               </div><!-- /controls -->              
               <div id="additional_<%= key %>_elements"></div>
@@ -57,7 +62,11 @@
 
     </div><!-- /well -->
   <div class="row">
+<<<<<<< HEAD
     <div class="form-actions"><%= f.submit "Save Descriptions", :name => "update_descriptions", :id => "upload_submit", :class => "btn-primary", :onclick=>"confirmation_needed = false;" %></div>
+=======
+    <div class="form-actions"><%= f.submit "Save Descriptions", :name => "update_descriptions", :id => "upload_submit", :class => "btn-primary icon-save" %></div>
+>>>>>>> /bad-path/
   </div>
 </div><!-- /row /span6 -->
 <% end %>

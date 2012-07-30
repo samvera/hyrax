@@ -1,0 +1,50 @@
+<h2><%= @user.display_name %> (<%= @user.to_s %>)</h2>
+<h3>Social</h3>
+<% if not signed_in? %>
+<!-- do not display the follow button at all -->
+<% elsif current_user == @user %>
+<a class="btn btn-primary" href="<%= edit_profile_path(@user.to_s) %>">
+  <i class="icon-edit"></i> Edit Profile
+</a>
+<% elsif current_user.following?(@user) %>
+<a class="btn btn-primary" href="<%= unfollow_user_path(@user.to_s) %>">
+  <i class="icon-eye-close"></i> Unfollow
+</a>
+<% else %>
+<a class="btn btn-primary" href="<%= follow_user_path(@user.to_s) %>">
+  <i class="icon-eye-open"></i> Follow
+</a>
+<% end %>
+<dl>
+ <dt>Followers</dt>
+ <dd><%= @user.followers_count %></dd>
+ <dt>Following</dt>
+ <dd><%= @user.follow_count %></dd>
+</dl>
+<h3>Activity</h3>
+<p>TODO: show recent actions, # of deposited files, what else?</p>
+<%= link_to_field('depositor', @user.to_s, 'Files in Scholarsphere') %>
+<h3>Info</h3>
+<p>TODO: Allow users to edit/restrict this info? Allow upload of avatar/picture? Allow connections to twitter, facebook, etc.?</p>
+<dl>
+  <dt>Email</dt>
+  <dd><%= @user.email %></dd>
+  <dt>Chat ID</dt>
+  <dd><%= @user.chat_id %></dd>
+  <dt>Website(s)</dt>
+  <dd><%= iconify_auto_link(@user.website) %></dd>
+  <dt>Title</dt>
+  <dd><%= @user.title %></dd>
+  <dt>Administrative Area</dt>
+  <dd><%= @user.admin_area %></dd>
+  <dt>Department</dt>
+  <dd><%= @user.department %></dd>
+  <dt>Office</dt>
+  <dd><%= @user.office %></dd>
+  <dt>Address</dt>
+  <dd><%= @user.address %></dd>
+  <dt>Affiliation</dt>
+  <dd><%= @user.affiliation %></dd>
+  <dt>Telephone</dt>
+  <dd><%= @user.telephone %></dd>
+</dl>

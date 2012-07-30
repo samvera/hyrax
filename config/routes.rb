@@ -27,9 +27,11 @@ ScholarSphere::Application.routes.draw do
   match 'logout' => 'sessions#destroy', :as => :destroy_user_session
   match 'login' => 'sessions#new', :as => :new_user_session
 
-  # User profile
+  # User profile & follows
   match 'users/:uid' => 'users#show', :as => :profile
   match 'users/:uid/edit' => 'users#edit', :as => :edit_profile
+  match 'users/:uid/follow' => 'users#follow', :as => :follow_user
+  match 'users/:uid/unfollow' => 'users#unfollow', :as => :unfollow_user
 
   # Dashboard routes (based on catalog routes)
   match 'dashboard' => 'dashboard#index', :as => :dashboard

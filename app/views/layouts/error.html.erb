@@ -27,8 +27,8 @@
     </style>
   </head>
 
-<body> 
-<div  id="wrapper"> 
+<body>
+<div  id="wrapper">
   <div class="container">
     <div id="page-positioner">
       <div id="masthead">
@@ -44,16 +44,16 @@
                 <li>
                   <div class="btn-group">
                     <% if current_user %>
-                      <a href="#" class="btn btn-small "><i class="icon-user"></i><%= current_user.to_s %></a>
-                      <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></a> 
+                    <a href="<%= profile_path(current_user.to_s) %>" class="btn btn-small"><i class="icon-user">&nbsp;</i><%= current_user.to_s %></a>
+                      <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></a>
                       <ul class="dropdown-menu">
                           <li><%= link_to raw('<i class="icon-dashboard"></i> dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
-                          <li><%= link_to raw('<i class="icon-upload"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
+                          <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
                           <li class="divider"></li>
-                          <li><%= link_to raw('<i class="icon-ban-circle"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
+                          <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
                       </ul>
                     <% else %>
-                        <%= link_to raw('<i class="icon-user"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
+                        <%= link_to raw('<i class="icon-signin"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
                     <% end %>
                   </div><!-- /.btn-group -->
                 </li>
@@ -63,7 +63,7 @@
         </div><!-- /.navbar -->
       </div> <!-- /masthead -->
 
-      <div id="content-wrapper"> 
+      <div id="content-wrapper">
         <div id="content" class="row">
           <!-- 110 rows -->
             <div class="span110">

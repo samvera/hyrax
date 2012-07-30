@@ -23,7 +23,7 @@ describe User do
 
   describe "#attributes" do
     it "should return user attributes from LDAP" do
-      User.attributes('mjg36', ['cn']).should == ['MICHAEL JOSEPH GIARLO']
+      User.directory_attributes('mjg36', ['cn']).should == ['MICHAEL JOSEPH GIARLO']
     end
   end
 end

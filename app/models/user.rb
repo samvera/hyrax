@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   # Adds acts_as_messageable for user mailboxes
   include Mailboxer::Models::Messageable
-  # Connects this user object to Blacklights Bookmarks and Folders.
+  # Connects this user object to Blacklight's Bookmarks and Folders.
   include Blacklight::User
 
   Devise.add_module(:http_header_authenticatable,
@@ -14,8 +14,13 @@ class User < ActiveRecord::Base
   # set this up as a messageable object
   acts_as_messageable
 
+  # Users should be able to follow things
+  acts_as_follower
+  # Users should be followable
+  acts_as_followable
+
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :login
+  attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone
 
   # This method should display the unique identifier for this user as defined by devise.
   # The unique identifier is what access controls will be enforced against.
@@ -28,7 +33,7 @@ class User < ActiveRecord::Base
   end
 
   def name
-    return self.class.display_name(login)
+    return self.display_name
   end
 
   # method needed for messaging
@@ -46,27 +51,29 @@ class User < ActiveRecord::Base
   end
 
   def populate_attributes
-    entry = attributes.first
-    self.email = entry[:mail].first
-    self.display_name = entry[:displayname].first
-    self.address = entry[:postaladdress].first
-    self.admin_area = entry[:psadminarea].first
-    self.department = entry[:psdepartment].first
-    self.title = entry[:title].first
-    self.office = entry[:psofficelocation].first
-    self.chat_id = entry[:pschatname].first
-    self.website = entry[:labeleduri].first.split('$').first
-    self.affiliation = entry[:edupersonprimaryaffiliation].first
-    self.telephone = entry[:telephonenumber].first
-    self.save
+    entry = directory_attributes.first
+    attrs = {
+      :email => entry[:mail].first,
+      :display_name => entry[:displayname].first,
+      :address => entry[:postaladdress].first.gsub('$', "\n"),
+      :admin_area => entry[:psadminarea].first,
+      :department => entry[:psdepartment].first,
+      :title => entry[:title].first,
+      :office => entry[:psofficelocation].first,
+      :chat_id => entry[:pschatname].first,
+      :website => entry[:labeleduri].first.gsub('$', "\n"),
+      :affiliation => entry[:edupersonprimaryaffiliation].first,
+      :telephone => entry[:telephonenumber].first,
+    }
+    update_attributes(attrs)
   end
 
-  def attributes(attributes=[])
-    self.class.attributes(login, attributes)
+  def directory_attributes(attrs=[])
+    self.class.directory_attributes(login, attrs)
   end
 
-  def self.attributes(login, attributes=[])
-    Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attributes)
+  def self.directory_attributes(login, attrs=[])
+    Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
   end
 
   def self.current
@@ -75,13 +82,5 @@ class User < ActiveRecord::Base
 
   def self.current=(user)
     Thread.current[:user] = user
-  end
-
-  def self.display_name(login)
-    res = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), ["displayname"])
-    logger.info "LDAP result = #{res[0].displayname}"
-    return res[0].displayname[0].titleize
-  rescue
-    return login
   end
 end

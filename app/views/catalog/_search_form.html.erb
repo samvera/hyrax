@@ -2,14 +2,25 @@
 <% q = params[:controller] == 'dashboard' ? nil : params[:q] %>
 
 <%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
-  <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>   
+  <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>
             <div class="controls">
               <div class="input-append">
+<<<<<<< HEAD
               <label class="accessible-hidden">Search Scholarsphere</label> 
   <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => "Type keywords in here"  %><input type="submit" class="btn btn-info" id="search-submit-header" value="GO" />
 &nbsp;
  <%= link_to 'More options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
  <%= link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
+=======
+  <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => "Type keywords in here" %>
+  <button type="submit" class="btn btn-info" id="search-submit-header">
+    <i class="icon-search"> GO</i>
+  </button>
+  <!-- <input type="submit" class="btn btn-info" id="search-submit-header" value="GO"><i class="icon-search"></i></input>
+&nbsp; -->
+ <%= link_to 'more options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
+ <%= link_to 'fewer options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
+>>>>>>> /bad-path/
               </div>
             </div>
 <% end %>

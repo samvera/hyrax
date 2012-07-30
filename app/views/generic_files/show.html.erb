@@ -100,7 +100,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Related URL</th>
           <td>
             <% @generic_file.related_url.each do |url| %>
-              <%= auto_link(url) %><br />
+              <%= iconify_auto_link(url) %><br />
             <% end %>
           </td>
         </tr>
@@ -116,7 +116,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Description</th>
           <td>
             <% @generic_file.description.each do |desc| %>
-              <%= auto_link(desc) %><br />
+              <%= iconify_auto_link(desc) %><br />
             <% end %>
           </td>
         </tr>
@@ -148,7 +148,7 @@ var addthis_config = {"data_track_addressbar":true};<
           <th>Rights</th>
           <td>
             <% @generic_file.rights.each do |r| %>
-              <%=link_to_field('rights',r)%> <%= auto_link(r, :html => { :target => '_blank' }) {|text| 'definition'} %><br />
+              <%=link_to_field('rights',r)%> <%= iconify_auto_link(r) %><br />
             <% end %>
           </td>
         </tr>
@@ -192,7 +192,8 @@ var addthis_config = {"data_track_addressbar":true};<
       <tbody>
         <tr>
           <th>Owner</div>
-          <td><%= link_to_field('depositor', @generic_file.depositor, User.display_name( @generic_file.depositor)) %></td>
+          <%# link_to_field('depositor', @generic_file.depositor, User.find_by_login(@generic_file.depositor).display_name) %>
+          <td><%= link_to User.find_by_login(@generic_file.depositor).display_name, profile_path(@generic_file.depositor) %></td>
         </tr>
         <tr>
           <th>Date Uploaded</th>

@@ -166,10 +166,10 @@ $(function() {
       var docId = a[1];
       $("#detail_"+docId).toggle();
       if( $("#detail_"+docId).is(":hidden") ) {
-        $("#expand_"+docId).attr("class", "icon-plus icon-large");
+        $("#expand_"+docId).attr("class", "icon-plus");
       }
       else {
-        $("#expand_"+docId).attr("class", "icon-minus icon-large");
+        $("#expand_"+docId).attr("class", "icon-minus");
       }
     }
     return false;
@@ -190,7 +190,7 @@ $(function() {
    * permissions
    *
    * ids that end in 'skel' are only used as elements
-   * to clone into real form elements that are then 
+   * to clone into real form elements that are then
    * submitted
    */
 
@@ -314,6 +314,7 @@ $(function() {
       tr.effect("highlight", {}, 3000);
   }
 
+<<<<<<< HEAD
   $('.remove_perm').on('click', function() {
      var top = $(this).parent().parent();
      top.hide(); // do not show the block
@@ -323,16 +324,19 @@ $(function() {
   });
 
   // called from edit object view 
+=======
+  // called from edit object view
+>>>>>>> /bad-path/
   $('#edit_descriptions_link').on('click', function() {
       descriptions_tab();
     });
 
-  // called from edit object view 
+  // called from edit object view
   $('#edit_versioning_link').on('click', function() {
     versions_tab();
     });
 
-  // called from edit object view 
+  // called from edit object view
   $('#edit_permissions_link').on('click', function() {
       permissions_tab();
     });
@@ -340,11 +344,24 @@ $(function() {
   // when user clicks on visibility, update potential access levels
   $("input[name='visibility']").on("change", set_access_levels); 
 
+<<<<<<< HEAD
+=======
+	$('#generic_file_permissions_new_group_name').change(function (){
+      var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
+	    if (this.value.toUpperCase() == 'PUBLIC') {
+	       edit_option.disabled =true;
+	    } else {
+           edit_option.disabled =false;
+	    }
+
+	});
+>>>>>>> /bad-path/
 
 
-  /* 
+  /*
    * facets lists
    */
+<<<<<<< HEAD
     $("li.expandable").click(function(){
        $(this).next("ul").slideToggle();
     
@@ -354,21 +371,41 @@ $(function() {
     $("li.expandable_new").click(function(){   
        $(this).find('i').toggleClass("icon-chevron-down");
     }); 
+=======
+	$("li.expandable").click(function(){
+		$(this).next("ul").slideToggle();
+    $(this).find('i').toggleClass("icon-chevron-down");
+	});
+>>>>>>> /bad-path/
 
-  /* 
+  /*
    * enlarge icons on hover- on dashboard
    */
   /*
   $('[class^="icon-"]').hover(
       //on mouseover
-      function(){ 
+      function(){
         $(this).addClass("icon-large");
-      }, 
+      },
       //on mouseout
       function() {
         $(this).removeClass("icon-large");
       });
       */
+<<<<<<< HEAD
+=======
+  // instead for now doing this on a
+  // case by case (or class by class) basis
+  $('.icon-link, .icon-pencil, .icon-download-alt, .icon-trash, .icon-question-sign, .icon-plus, .icon-minus').hover(
+      //on mouseover
+      function(){
+        $(this).addClass("icon-large");
+      },
+      //on mouseout
+      function() {
+        $(this).removeClass("icon-large");
+      });
+>>>>>>> /bad-path/
 
 }); //closing function at the top of the page
 
@@ -459,7 +496,7 @@ function validate_existing_perms()
 
 // all called from edit object view
 // when permissions link is clicked on edit object
-function permissions_tab () 
+function permissions_tab ()
 {
     $('#edit_permissions_link').attr('class', 'active');
     $('#edit_versioning_link').attr('class', '');
@@ -483,7 +520,7 @@ function versions_tab()
     $('#permissions_submit').hide();
 }
 // when descriptions link is clicked on edit object
-function descriptions_tab () 
+function descriptions_tab ()
 {
     $('#edit_descriptions_link').attr('class', 'active');
     $('#edit_versioning_link').attr('class', '');

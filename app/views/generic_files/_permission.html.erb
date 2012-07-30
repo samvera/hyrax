@@ -12,6 +12,7 @@
     <p class="span15 offset52"><a href="" >What's this <i class="icon-question-sign icon-large"></i></a></p>
   </div>
   <div class="control-group">
+<<<<<<< HEAD
     <h3>Visibility - <small>who should have the ability to read and download</small></h3>
       <div class="controls">
         <label class="radio">
@@ -23,14 +24,52 @@
         <label class="radio">
           <input type="radio" id="visibility_restricted" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-important">Private</span> Visible to users/groups specified below, if any. 
         </label>
+=======
+    <label for="" class="control-label"><h3>Visibility</h3></label> 
+    <div class="controls"> 
+      <div class="btn-group" data-toggle="buttons-radio" >
+        <button type="button" class="btn btn-success<% if !public_perm.blank? %> active<% end %>" data-toggle="button">
+          <i class="icon-share"></i> Open Access 
+          <input type="radio" name="visibility" value="open" <% if !public_perm.blank? %> checked="true"<% end %>/>
+        </button>
+        <button type="button" class="btn btn-primary<% if !psu_perm.blank? %> active<% end %> " data-toggle="button">
+          <i class="icon-key"></i> Penn State 
+          <input type="radio" name="visibility" value="psu" <% if !psu_perm.blank? %> checked="true"<% end %> />
+        </button>
+        <button type="button" class="btn btn-danger<% if psu_perm.blank? and public_perm.blank?%> active<% end %>" data-toggle="button">
+          <i class="icon-ban-circle"></i> Private
+          <input type="radio" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> 
+        </button>
+      </div>
+>>>>>>> /bad-path/
     </div><!-- /.controls -->
   </div><!-- /.control-group --> 
   <div class="row">
       <h3>Share With <small>(optional)</small></h3>
   </div>
   <div class="row control-group">
+<<<<<<< HEAD
     <div id="new-user"> 
       <div class="input-append">
+=======
+    <div id="new-group" class="input-prepend">
+      <span class="add-on"><i class="icon-group"></i></span>
+      <% @groups.unshift('Select a group') %>
+      <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span40' %>
+      <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span20' %>
+      <br /><span id="directory_group_result"></span>
+    </div>
+  </div>
+  <div class="control-group">
+    <div id="new-user"> 
+      <div class="input-prepend">
+        <span class="add-on"><i class="icon-user"></i></span>
+        <div class="input-append">
+          <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
+            <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span20' %>
+         <br /> <span id="directory_user_result"></span> 
+        </div>
+>>>>>>> /bad-path/
         <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
         <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
         <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span17' %>
