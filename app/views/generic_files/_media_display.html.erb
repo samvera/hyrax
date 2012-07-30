@@ -13,6 +13,6 @@
 <% elsif ['application/pdf'].include?(@generic_file.mime_type) %>
   <img src="<%= download_path(@generic_file.noid, {:datastream_id => 'thumbnail'}) %>" width="338" height="493" /> 
 <% else %>
-  <img src="/images/default.png" alt="No preview available" width="338" height="493" />
+  <img src="/assets/default.png" alt="No preview available" width="338" height="493" />
 <% end %>
 </a>

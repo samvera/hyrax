@@ -6,7 +6,7 @@
   </h2>
   <table class="table">
     <tr>
-      <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %> </td>
+      <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %> </td>
       <th>Title:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></td>
     </tr>
