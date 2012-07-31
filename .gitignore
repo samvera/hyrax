@@ -84,4 +84,4 @@ spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.txt
 
 ## ASSET PIPELINE
 .sass-cache/
-public/assets/*.*
+public/assets/
