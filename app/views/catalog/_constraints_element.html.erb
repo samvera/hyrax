@@ -10,19 +10,20 @@
     options[:escape_value] = true unless options.has_key?(:escape_value)
 -%>
 
-<span class="appliedFilter constraint <%= options[:classes].join(" ") if options[:classes] %>">
+<span class="appliedFilter constraint <%= options[:classes].join(" ") if options[:classes] %>"> 
       <%- unless label.blank? -%>
-        <span class="filterName"><%= options[:escape_label] ? h(label) : label %></span> 
+        <span class="filterName"><%= options[:escape_label] ? h(label) : label %>:</span> 
       <%- end -%>
       <%- unless value.blank? -%>
         <span class="filterValue"><%= options[:escape_value] ? h(value) : value %></span>
       <%- end -%>
+      &nbsp;&nbsp;
       <%- unless options[:remove].blank? -%>
-        <% accessible_remove_label =               
+        <% accessible_remove_label = #'<a class="close" data-dismiss="alert" href="#">x</a>'.html_safe
                 if label.blank?
                   "Remove constraint #{options[:escape_value] ? h(value) : value}"
                 else
-                  "Remove constraint #{options[:escape_value] ? h(value) : value}: #{options[:escape_value] ? h(value) : value}"
+                  "Remove constraint #{options[:escape_label] ? h(label) : label}: #{options[:escape_value] ? h(value) : value}"
                 end              
         %>                
         <%= link_to(accessible_remove_label,
