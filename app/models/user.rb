@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   # Connects this user object to Blacklight's Bookmarks and Folders.
   include Blacklight::User
 
+  delegate :can?, :cannot?, :to => :ability
+
   Devise.add_module(:http_header_authenticatable,
                     :strategy => true,
                     :controller => :sessions,
@@ -55,13 +57,13 @@ class User < ActiveRecord::Base
     attrs = {
       :email => entry[:mail].first,
       :display_name => entry[:displayname].first,
-      :address => entry[:postaladdress].first.gsub('$', "\n"),
+      :address => entry[:postaladdress].first,
       :admin_area => entry[:psadminarea].first,
       :department => entry[:psdepartment].first,
       :title => entry[:title].first,
       :office => entry[:psofficelocation].first,
       :chat_id => entry[:pschatname].first,
-      :website => entry[:labeleduri].first.gsub('$', "\n"),
+      :website => entry[:labeleduri].first,
       :affiliation => entry[:edupersonprimaryaffiliation].first,
       :telephone => entry[:telephonenumber].first,
     }
@@ -74,6 +76,10 @@ class User < ActiveRecord::Base
 
   def self.directory_attributes(login, attrs=[])
     Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
+  end
+
+  def ability
+    @ability ||= Ability.new(self)
   end
 
   def self.current

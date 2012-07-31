@@ -2,7 +2,6 @@ class UsersController < ApplicationController
   prepend_before_filter :find_user
   before_filter :authenticate_user!, :only => [:edit, :update, :follow, :unfollow]
   before_filter :user_is_current_user, :only => [:edit, :update]
-  after_filter :add_to_activity_stream, :only => [:follow, :unfollow]
 
   # Display user profile
   def show
@@ -17,17 +16,24 @@ class UsersController < ApplicationController
   # Process changes from profile form
   def update
     # TODO: flesh this out
+    Resque.enqueue(UserEditProfileEventJob, current_user.login)
   end
 
   # Follow a user
   def follow
-    current_user.follow(@user) unless current_user.following?(@user)
+    unless current_user.following?(@user)
+      current_user.follow(@user)
+      Resque.enqueue(UserFollowEventJob, current_user.login, @user.login)
+    end
     redirect_to profile_path(@user.to_s), :notice => "You are following #{@user.to_s}"
   end
 
   # Unfollow a user
   def unfollow
-    current_user.stop_following(@user) if current_user.following?(@user)
+    if current_user.following?(@user)
+      current_user.stop_following(@user)
+      Resque.enqueue(UserUnfollowEventJob, current_user.login, @user.login)
+    end
     redirect_to profile_path(@user.to_s), :notice => "You are no longer following #{@user.to_s}"
   end
 
@@ -39,9 +45,5 @@ class UsersController < ApplicationController
 
   def user_is_current_user
     redirect_to profile_path(@user.to_s), :alert => "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
-  end
-
-  def add_to_activity_stream
-    rdb.redis.zadd("events", )
   end
 end

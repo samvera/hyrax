@@ -32,7 +32,9 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id (DELETE)
   def destroy
+    pid = @generic_file.noid
     @generic_file.delete
+    Resque.enqueue(ContentDeleteEventJob, pid, current_user.login)
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
   end
 
@@ -58,6 +60,7 @@ class GenericFilesController < ApplicationController
       else
         create_and_save_generic_file
         if @generic_file
+          Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.login)
           respond_to do |format|
             format.html {
               retval = render :json => [@generic_file.to_jq_upload].to_json,
@@ -93,7 +96,7 @@ class GenericFilesController < ApplicationController
     perms = permissions_solr_doc_for_id(@generic_file.pid)
     @can_read =  can? :read, perms
     @can_edit =  can? :edit, perms
-    
+
     respond_to do |format|
       format.html
       format.endnote { render :text => @generic_file.export_as_endnote }
@@ -110,14 +113,18 @@ class GenericFilesController < ApplicationController
     if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
       revision = @generic_file.content.get_version(params[:revision])
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
+      Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.login, params[:revision])
     end
 
-
-    add_posted_blob_to_asset(@generic_file, params[:filedata]) if params.has_key?(:filedata)
+    if params.has_key?(:filedata)
+      add_posted_blob_to_asset(@generic_file, params[:filedata])
+      Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.login)
+    end
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k})
     @generic_file.set_visibility(params)
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
+    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login)
     record_version_committer(@generic_file, current_user)
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
@@ -127,6 +134,7 @@ class GenericFilesController < ApplicationController
     ScholarSphere::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.save
+    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login)
     redirect_to edit_generic_file_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
 
@@ -175,7 +183,7 @@ class GenericFilesController < ApplicationController
     else
       logger.warn "unable to find batch to attach to"
     end
-    
+
     save_tries = 0
     begin
       @generic_file.save
@@ -184,7 +192,7 @@ class GenericFilesController < ApplicationController
       save_tries++
       # fail for good if the tries is greater than 3
       rescue_action_without_handler(error) if save_tries >=3
-      sleep 0.01       
+      sleep 0.01
       retry
     end
     record_version_committer(@generic_file, current_user)

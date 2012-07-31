@@ -13,7 +13,7 @@ module ScholarSphere
         break unless ActiveFedora::Base.exists?(pid)
       end
       return pid
-    end    
+    end
     protected
     def self.next_id
       # seed with process id so that if two processes are running they do not come up with the same id.

@@ -23,6 +23,12 @@
 </dl>
 <h3>Activity</h3>
 <p>TODO: show recent actions, # of deposited files, what else?</p>
+<ul>
+  <% @user.events.each do |event| %>
+    <li><%= event[0].html_safe %>
+  [<%= time_ago_in_words(Time.at(event[1])) %> ago]</li>
+  <% end %>
+</ul>
 <%= link_to_field('depositor', @user.to_s, 'Files in Scholarsphere') %>
 <h3>Info</h3>
 <p>TODO: Allow users to edit/restrict this info? Allow upload of avatar/picture? Allow connections to twitter, facebook, etc.?</p>

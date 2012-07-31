@@ -32,6 +32,7 @@ class BatchController < ApplicationController
         gf.update_attributes(params[:generic_file])
         gf.set_visibility(params)
         gf.save
+        Resque.enqueue(ContentUpdateEventJob, gf.pid, current_user.login)
         fSaved << gf
       else
         fDenied << gf

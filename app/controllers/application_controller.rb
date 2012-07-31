@@ -32,6 +32,10 @@ class ApplicationController < ActionController::Base
     'hydra-head'
   end
 
+  def current_ability
+    current_user.ability
+  end
+
   def clear_session_user
     if request.nil?
       logger.warn "Request is Nil, how weird!!!"
