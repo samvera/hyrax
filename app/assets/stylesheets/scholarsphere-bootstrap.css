@@ -39,6 +39,9 @@ ul.slide-list li {
   margin: 0 0 0 5px;
   list-style: none;
 }
+.grey, .grey:hover{
+  color:  #999999;
+}
 li.expandable {
   cursor:pointer;
 }
