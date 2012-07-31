@@ -1,2 +1,11 @@
-<li class="expandable nav-header"><%= facet_field.label -%> <i class="icon-chevron-right"></i></li>
-  <%= yield %>
+<li class="expandable_new">
+   <% id = facet_field.label.sub(" ","_")+"_db" %>
+
+    <a class="accordion-toggle" data-toggle="collapse" data-parent="#facet_group" data-target="#collapse_<%= id%>">
+      <%= facet_field.label %><i class="icon-chevron-right"></i>
+    </a>
+
+  <div id="collapse_<%= id%>" class="accordion-body collapse">
+      <%= yield %>
+  </div>
+</li>
