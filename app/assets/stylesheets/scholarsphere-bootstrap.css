@@ -110,6 +110,11 @@ a.advanced_search:hover {
 	font-weight: bold;
 }
 
+#advanced_search_tips {
+  list-style: none;
+  margin: 0 0 5px 5px; 
+}
+
 /* Footer */
 #footer-wrapper {
 	background: #404040 url(/assets/site_images/bg_footer.png) 0 0 repeat-x;
