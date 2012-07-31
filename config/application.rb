@@ -4,6 +4,8 @@ require 'rails/all'
 require 'socket'
 require 'sprockets'
 require 'resolv'
+require 'uri'
+
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
@@ -12,6 +14,15 @@ Bundler.require *Rails.groups(:assets => %w(development, test))
 
 module ScholarSphere
   class Application < Rails::Application
+    # Returns an array containing the vhost 'CoSign service' value and URL
+    def get_vhost_by_host
+      hostname = Socket.gethostname
+      vhost = Rails.application.config.hosts_vhosts_map[hostname] || "https://#{hostname}/"
+      service = URI.parse(vhost).host
+      port = URI.parse(vhost).port
+      service << "-#{port}" unless port == 443
+      return [service, vhost]
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -56,7 +67,7 @@ module ScholarSphere
 
     # Map hostnames onto vhosts
     config.hosts_vhosts_map = {
-      'fedora1test' => 'https://scholarsphere-integration.dlt.psu.edu/',
+      'fedora1test' => 'https://scholarsphere-integration.dlt.psu.edu:8443/',
       'fedora2test' => 'https://scholarsphere-test.dlt.psu.edu/',
       'ss1stage' => 'https://scholarsphere-staging.dlt.psu.edu/',
       'ss2stage' => 'https://scholarsphere-staging.dlt.psu.edu/',
