@@ -285,10 +285,9 @@ $(function() {
   /* 
    * facets lists
    */
-	$("li.expandable").click(function(){
-		$(this).next("ul").slideToggle();
-    $(this).find('i').toggleClass("icon-chevron-down");
-	}); 
+    $("li.expandable").click(function(){
+       $(this).find('i').toggleClass("icon-chevron-down");
+    }); 
 
   /* 
    * enlarge icons on hover- on dashboard

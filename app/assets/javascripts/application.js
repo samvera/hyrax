@@ -4,4 +4,5 @@
 //= require blacklight
 //= require bootstrap-dropdown
 //= require bootstrap-button
+//= require bootstrap-collapse
 //= require scholarsphere

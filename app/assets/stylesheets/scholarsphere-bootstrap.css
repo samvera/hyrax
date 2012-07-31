@@ -18,16 +18,26 @@ h1, h2, h3, h4, h5 {
   font-family: "Lato", Arial, sans-serif;
   font-weight: 300; 
 }
+ul.help-list {
+  margin: 0 0 10px 0;
+}
+ul.help-list li {
+  font-size: 12px;
+  padding: 0;
+  margin: 0 0 0 5px;
+  list-style: none;
+}
+
 ul.slide-list {
   float: left;
   clear: left;
-	margin: 0 0 25px 0;
+  margin: 0 0 10px 0;
 }
 ul.slide-list li {
-	font-size: 11px;
+  font-size: 12px;
   padding: 0;
   margin: 0 0 0 5px;
-	list-style: none;
+  list-style: none;
 }
 li.expandable {
   cursor:pointer;
