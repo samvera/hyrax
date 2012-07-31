@@ -286,6 +286,12 @@ $(function() {
    * facets lists
    */
     $("li.expandable").click(function(){
+       $(this).next("ul").slideToggle();
+    
+       $(this).find('i').toggleClass("icon-chevron-down");
+    }); 
+
+    $("li.expandable_new").click(function(){   
        $(this).find('i').toggleClass("icon-chevron-down");
     }); 
 
