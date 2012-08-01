@@ -8,7 +8,7 @@ gem "blacklight_advanced_search"
 gem 'hydra-head', '4.1.1'
 gem 'active-fedora', '4.4.0'
 gem 'rubydora', '0.5.10'
-gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'master', :ref => '8a24aa66c1'
+gem "hydra-ldap", "~> 0.0.4"
 gem 'solrizer-fedora', '2.2.0'
 
 # the :require arg is necessary on Linux-based hosts
