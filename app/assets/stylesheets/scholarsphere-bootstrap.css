@@ -184,3 +184,8 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
     font-weight:bold;
     color: yellow;  
 }
+
+/* used to over ride some defaults set in bootstrap.css */
+th.center, td.center {
+  text-align: center;
+}

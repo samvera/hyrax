@@ -19,13 +19,15 @@ on element ids -->
       Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %>
   </td>
   <td width="5%" align="center">
-    <% if document[:read_access_group_t].nil? or (document[:read_access_group_t] & ['public']).empty? %>
-      <i class="icon-lock" title="Restricted"></i>
+    <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
+      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions"><span class="label label-info" title="Penn State">Penn State</span></a> 
+    <% elsif !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('public') %>
+      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions"><span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
-      <i class="icon-unlock" title="Publicly Accessible"></i>
+      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions"><span class="label label-important" title="Private">Private</span></a>
     <% end %>
   </td>
-  <td width="23%" align="center">
+  <td width="23%" class="center">
     <span style="position: relative;">
      <%= link_to raw('<i class="icon-copy"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
     </span>&nbsp;&nbsp;&nbsp;

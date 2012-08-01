@@ -204,7 +204,7 @@ class GenericFile < ActiveFedora::Base
     elsif params[:visibility] == "psu"
       self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "read")
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-    else 
+    elsif params[:visibility] == "restricted" 
       self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "none")
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
       #params[:generic_file][:permissions][:group][:public] = "none"
