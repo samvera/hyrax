@@ -9,7 +9,9 @@
 <div class="well">
   <div class="control-group">
     <label for="" class="control-label"><h3>Visibility</h3></label> 
-    <div class="controls"> 
+      <div class="controls">
+<% ua = request.env['HTTP_USER_AGENT'] %>
+<% if !!(ua =~ /Chrome/) %>
       <div class="btn-group" data-toggle="buttons-radio" >
         <button type="button" class="btn btn-success<% if !public_perm.blank? %> active<% end %>" data-toggle="button">
           Open Access 
@@ -24,6 +26,17 @@
           <input type="radio" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> 
         </button>
       </div>
+<% else %>
+        <label class="radio">
+          <input type="radio" name="visibility" value="open" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="visibility" value="psu" <% if !psu_perm.blank? %> checked="true"<% end %> /><span class="label label-info">Penn State</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-important">Private</span>
+        </label>
+<% end %>
     </div><!-- /.controls -->
   </div><!-- /.control-group --> 
   <div class="row">
