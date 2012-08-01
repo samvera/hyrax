@@ -6,18 +6,11 @@ on element ids -->
 <tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
   <td width="3%"><%# check_box_tag :generic_file, document[:id] %></td>
   <td width="42%">
-    <a href="#" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large"></i></a>
+    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large"></i></a>
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br />
   </td>
   <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
-  <td width="12%">
-    <% if !document[:edit_access_group_t].nil? %>
-      Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %>
-      <br />
-    <% end %>
-      Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %>
-  </td>
   <td width="5%" align="center">
     <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions"><span class="label label-info" title="Penn State">Penn State</span></a> 
@@ -40,17 +33,20 @@ on element ids -->
   <td colspan="6">
     <table class="expanded-details">
       <tr>
-        <td><strong>File Name: </strong>
-          <%= link_to render_document_show_field_value(:document=>document, :field=>"label_t"), generic_file_path(noid) %> </td>
-        <td><strong>Format: </strong>
-	  <%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %> </td>
+        <td><strong>File Name: </strong> <%= link_to render_document_show_field_value(:document=>document, :field=>"label_t"), generic_file_path(noid) %> </td>
+        <td><strong>Format: </strong> <%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %> </td>
       </tr>
       <tr>
-        <td><strong>Creator: </strong>
-          <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %>
-        </td>
-        <td><strong>Depositor: </strong>
-          <%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %>
+        <td><strong>Creator: </strong> <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %> </td>
+        <td><strong>Depositor: </strong> <%= render_document_show_field_value(:document=>document, :field=>"depositor_t") %> </td>
+      </tr>
+      <tr>
+        <td colspan="2"><strong>Edit Access: </strong>
+          <% if !document[:edit_access_group_t].nil? %>
+            Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %>
+            <br />
+          <% end %>
+          Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %>
         </td>
       </tr>
     </table>

@@ -139,6 +139,7 @@ $(function() {
         $("#expand_"+docId).attr("class", "icon-minus icon-large");
       }
     }
+    return false;
   });
 
   $('#add_descriptions').click(function() {
