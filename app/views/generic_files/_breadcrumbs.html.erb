@@ -1,17 +1,19 @@
 <div class="breadcrumbs">
+  <% home_url = link_to('Home', root_path) unless current_user %>
+  <% home_url = link_to('Home', root_path)+'  / '+ link_to('Dashboard', dashboard_path) if current_user %>
   <%=
      case request.referer
      when /dashboard/
-       link_to 'Dashboard', dashboard_path
+       home_url
      when /files/
-       link_to 'Dashboard', dashboard_path
+       home_url+'  / '+link_to( 'Back to previous', request.referer)
      when /catalog/
-       link_to 'Back to Search Results', request.referer
+       home_url+'  / '+link_to( 'Back to Search Results', request.referer)
      else
-       link_to 'Catalog', root_path
+       link_to 'Home', root_path
      end
   %>
-  &nbsp;&nbsp;/&nbsp;
+  &nbsp;/&nbsp;
   <span class="active">
     <%= @generic_file.title.join(' | ') %>
   </span>
