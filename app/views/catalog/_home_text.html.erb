@@ -1,6 +1,6 @@
-<h1>Getting Started</h1>
+<!--<h1>Getting Started</h1>
 <img src="/assets/splashscreen.png" width="450" height="259" alt="just a place holder" />
-      <br/><br/>
+      <br/><br/> -->
       <h2 class="heading1">What is ScholarSphere?</h2>
       <p>ScholarSphere helps Penn State researchers share their work with a worldwide
 audience. Faculty, students, and academic programs can use ScholarSphere to collect 
@@ -9,4 +9,7 @@ presentations, publications, datasets or other scholarly creations.  Penn State 
 this service to its community to comply with funder policies for sharing the results of 
 research.  ScholarSphere helps fulfill the University's land grant mission to share its
 knowledge with the citizens of Pennsylvania and beyond. 
+      <hr class="grey"/>
+      <h2 class="heading1">Recently Uploaded by Others <span class="heading1 label label-success">with Open Access</span></h2>
+      <%= render :partial=>'/catalog/recents', :locals => {:recent_documents=>@recent_documents, :msg=>"No public work has been contributed.", :display_thumbs=>true, :display_access=>false} %>
 

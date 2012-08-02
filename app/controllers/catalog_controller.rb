@@ -20,12 +20,30 @@ class CatalogController < ApplicationController
   def index
     super
     recent
+    #also grab my recent docs too
+    recent_me    
   end
 
   def recent
-    (resp, doc_list) = get_search_results(:q =>'', :sort=>"system_create_dt desc", :rows=>3)
+    if (user_logged_in?)
+      # grab other people's documents
+      (resp, doc_list) = get_search_results(:q =>'{!lucene q.op=AND df=depositor_t}-'+current_user.login, :sort=>"system_create_dt desc", :rows=>3)      
+    else 
+      # grab any documents we do not know who you are
+      (resp, doc_list) = get_search_results(:q =>'', :sort=>"system_create_dt desc", :rows=>3)
+    end
     @recent_documents = doc_list[0..3]
   end
+
+  def recent_me
+    if (user_logged_in?)
+      (resp, doc_list) = get_search_results(:q =>'{!lucene q.op=AND df=depositor_t}'+current_user.login, :sort=>"system_create_dt desc", :rows=>3)
+      @recent_user_documents = doc_list[0..3]
+    else 
+       @recent_user_documents = nil
+    end
+  end
+
 
 #####################
 # jgm testing start #

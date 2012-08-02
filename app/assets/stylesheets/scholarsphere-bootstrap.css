@@ -189,3 +189,7 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
 th.center, td.center {
   text-align: center;
 }
+
+.pad-left{
+    padding-left:10px;
+}

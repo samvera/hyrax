@@ -1,21 +1,26 @@
-<%- type = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__resource_type_t") -%>
+<%- type = link_to_facet_list(recent_document[:generic_file__resource_type_t], 'generic_file__resource_type_facet') -%>
 <%- type = 'no type value' if type.empty? -%>
 <%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
 <%- title = filename if title.empty? -%>
 <%- depositor = display_user_name(recent_document) -%>
 <%- depositor = 'no depositor value' if depositor.blank? -%>
-    <tr>
+    <tr>    
+      <% if display_thumbs %>
+        <td class="span10"><%= link_to_field('depositor_t', recent_document[:depositor_t], depositor) %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
+      <% end %> 
       <td>
         <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %>
-          <% if recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
-            <span class="label label-important">Private</span>
-          <% else %>
-            <span class="label label-success">Open Access</span>
+          <% if display_access %>
+              <% if recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
+                <span class="label label-important">Private</span>
+              <% else %>
+                <span class="label label-success">Open Access</span>
+              <% end %>
           <% end %>
         </h3>
         <p> <%= filename %><br />
-          <%= type %> <%= depositor %>
+          <%= type.html_safe %> 
         </p>
       </td>
     </tr>

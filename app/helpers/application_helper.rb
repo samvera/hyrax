@@ -35,6 +35,11 @@ module ApplicationHelper
       link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
   end
 
+  def link_to_facet_list(list, field_string, seperator=", ")  
+      return list.map{ |item| link_to_facet(item, field_string) }.join(seperator) unless list.blank?
+      return "No value entered"
+  end
+
 
   def link_to_field(fieldname, fieldvalue, displayvalue = nil)
       p = {:search_field=>'advanced', fieldname=>fieldvalue}
