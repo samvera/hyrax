@@ -1,4 +1,10 @@
 $(function() {
+
+  // bootstrap alerts are closed this function 
+  $('.alert .close').live('click',function(){
+    $(this).parent().hide();
+  });
+
   $.fn.selectRange = function(start, end) {
     return this.each(function() {
         if (this.setSelectionRange) {
@@ -156,17 +162,6 @@ $(function() {
    * to clone into real form elements that are then 
    * submitted
    */
-  $('#new_user_permission_skel').attr('disabled', true);
-  $('#new_group_permission_skel').attr('disabled', true);
-
-  // dropdown of umgs on select enable the permission and add focus
-  $('#new_group_name_skel').on('change', function() {
-      // clear out any existing messages
-    if ($('#new_group_name_skel :selected').index() != "0") {
-      $('#new_group_permission_skel').attr('disabled', false);
-      $('#new_group_permission_skel').focus();
-    }
-  });
 
   // input for uids -  attach function to verify uid
   $('#new_user_name_skel').on('blur', function() {
@@ -180,27 +175,48 @@ $(function() {
       $.ajax( {
         url: "/directory/user/" + un,
         success: function( data ) {
-          if (!data.length) {
-            $('#directory_user_result').html('User id ('+un+ ') does not exist.');
-            $('#new_user_name_skel').select();
-            $('#new_user_permission_skel').val('none');
-            $('#new_user_permission_skel').attr('disabled', true);
-            return;
-          }
-          else {
-            $('#new_user_permission_skel').attr('disabled', false);
-            $('#new_user_permission_skel').focus();
+          if (data != null) {
+            if (!data.length) {
+              $('#directory_user_result').html('User id ('+un+ ') does not exist.');
+              $('#new_user_name_skel').select();
+              $('#new_user_permission_skel').val('none');
+              $('#new_user_permission_skel').attr('disabled', true);
+              return;
+            }
+            else {
+              $('#new_user_permission_skel').focus();
+            }
           }
         }
       });
 
   });
 
-  // dropdown of perms for users
-  $('#new_user_permission_skel').on('change focus', function() {
+ 
+  // add button for new user 
+  $('#add_new_user_skel').on('click', function() {
       if ($('#new_user_name_skel').val() == "" || $('#new_user_permission_skel :selected').index() == "0") {
-        return;
+        $('#new_user_name_skel').focus();
+        return false;
       }
+      
+      if ($('#new_user_name_skel').val() == $('#file_owner').html()) {
+        $('#permissions_error_text').html("Cannot change owner permissions.");
+        $('#permissions_error').show();
+        $('#new_user_name_skel').val('');
+        $('#new_user_name_skel').focus();
+        return false;
+      }
+
+      if (!is_permission_duplicate($('#new_user_name_skel').val())) {
+        $('#permissions_error_text').html("This user already has a permission.");
+        $('#permissions_error').show();
+        $('#new_user_name_skel').focus();
+        return false;
+      }
+      $('#permissions_error').html();
+      $('#permissions_error').hide();
+
       var un = $('#new_user_name_skel').val();
       var perm_form = $('#new_user_permission_skel').val();
       var perm = $('#new_user_permission_skel :selected').text();
@@ -209,21 +225,33 @@ $(function() {
       $('#new_user_permission_skel').val('none');
 
       addPerm(un, perm_form, perm, 'new_user_name');
+      return false;
   });
 
-  // dropdown of perms for groups
-  $('#new_group_permission_skel').on('change focus', function() {
+  // add button for new user 
+  $('#add_new_group_skel').on('click', function() {
       if ($('#new_group_name_skel :selected').index() == "0" || $('#new_group_permission_skel :selected').index() == "0") {
-        return;
+        $('#new_group_name_skel').focus();
+        return false;
       }
       var cn = $('#new_group_name_skel').val();
       var perm_form = $('#new_group_permission_skel').val();
       var perm = $('#new_group_permission_skel :selected').text();
+
+      if (!is_permission_duplicate($('#new_group_name_skel').val())) {
+        $('#permissions_error_text').html("This group already has a permission.");
+        $('#permissions_error').show();
+        $('#new_group_name_skel').focus();
+        return false;
+      }
+      $('#permissions_error').html();
+      $('#permissions_error').hide();
       // clear out the elements to add more
       $('#new_group_name_skel').val('');
       $('#new_group_permission_skel').val('none');
 
       addPerm(cn, perm_form, perm, 'new_group_name');
+      return false;
   });
 
   function addPerm(un, perm_form, perm, perm_type)
@@ -231,7 +259,7 @@ $(function() {
       var tr = $(document.createElement('tr'));
       var td1 = $(document.createElement('td'));
       var td2 = $(document.createElement('td'));
-      var remove = $('<button class="close btn-inverse">X</button>');
+      var remove = $('<button class="btn close">X</button>');
 
       $('#save_perm_note').show();
 
@@ -271,16 +299,9 @@ $(function() {
       permissions_tab();
     });
 
+  // when user clicks on visibility, update potential access levels
+  $("input[name='visibility']").on("change", set_access_levels); 
 
-	$('#generic_file_permissions_new_group_name').change(function (){
-      var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
-	    if (this.value.toUpperCase() == 'PUBLIC') {
-	       edit_option.disabled =true;	       
-	    } else {
-           edit_option.disabled =false;         
-	    }
-	    
-	});
 
 
   /* 
@@ -323,6 +344,83 @@ $(function() {
       });
 
 });
+
+// return the files visibility level (penn state, open, restricted);
+function get_visibility(){
+  return $("input[name='visibility']:checked").val()
+}
+
+/* 
+ * if visibility is Open or Penn State then we can't selectively 
+ * set other users/groups to 'read' (it would be over ruled by the
+ * visibility of Open or Penn State) so disable the Read option
+ */
+function set_access_levels() {
+  var vis = get_visibility();
+  var enabled_disabled = false;
+  if (vis == "open" || vis == "psu") {
+    enabled_disabled = true;
+  }
+  $('#new_group_permission_skel option[value=read]').attr("disabled", enabled_disabled);
+  $('#new_user_permission_skel option[value=read]').attr("disabled", enabled_disabled);
+  var perms_sel = $("select[name^='generic_file[permissions]']");
+  $.each(perms_sel, function(index, sel_obj) {
+    $.each(sel_obj, function(j, opt) {
+      if( opt.value == "read") {
+        opt.disabled = enabled_disabled;
+      }
+    });
+  });
+}
+
+/*
+ * make sure the permission being applied is not for a user/group
+ * that already has a permission.
+ */
+function is_permission_duplicate(user_or_group_name) {
+  s = "[" + user_or_group_name + "]";
+  var patt = new RegExp(preg_quote(s), 'gi');
+  var perms_input = $("input[name^='generic_file[permissions]']");
+  var perms_sel = $("select[name^='generic_file[permissions]']");
+  var flag = 1;
+  perms_input.each(function(index, form_input) {
+      // if the name is already being used - return false (not valid)
+      if (patt.test(form_input.name)) {
+        flag = 0;
+      }
+    });
+  if (flag) {
+    perms_sel.each(function(index, form_input) {
+      // if the name is already being used - return false (not valid)
+      if (patt.test(form_input.name)) {
+        flag = 0;
+      }
+    });
+  } 
+  // putting a return false inside the each block
+  // was not working.  Not sure why would seem better
+  // rather than setting this flag var
+  return (flag ? true : false); 
+}
+
+// is it worth checking to make sure users aren't filling up permissions that will be ignored.
+// or when a user has already set a permission for a user then updates the visibility -- is it
+// still relevant 
+function validate_existing_perms() {
+  var vis = get_visibility();
+  if (vis == "open" || vis == "psu") 
+  {
+    var perms = $("input[name^='generic_file[permissions]']");
+    $.each(perms, function(index, form_input) {
+        if (form_input.name != "generic_file[permissions][group][public]" && form_input.name != "generic_file[permissions][group][registered]") {
+          if (form_input.value != 'edit') {
+            alert("silly permission: " + form_input.name + " " + form_input.value );
+          }
+        }
+    });
+  }
+}
+
 // all called from edit object view
 // when permissions link is clicked on edit object
 function permissions_tab () 
@@ -359,4 +457,19 @@ function descriptions_tab ()
     $('#versioning_display').hide();
     $('#permissions_display').hide();
     $('#permissions_submit').hide();
+}
+function preg_quote( str ) {
+    // http://kevin.vanzonneveld.net
+    // +   original by: booeyOH
+    // +   improved by: Ates Goral (http://magnetiq.com)
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   bugfixed by: Onno Marsman
+    // *     example 1: preg_quote("$40");
+    // *     returns 1: '\$40'
+    // *     example 2: preg_quote("*RRRING* Hello?");
+    // *     returns 2: '\*RRRING\* Hello\?'
+    // *     example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
+    // *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
+
+    return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }

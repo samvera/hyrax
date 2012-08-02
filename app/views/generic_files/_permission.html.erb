@@ -6,69 +6,58 @@
 <input type="hidden" name="generic_file[permissions][group][registered]" value="2" />
 <h2>Permissions</h2>
 <div class="alert hide" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save Permissions&quot; button is pressed.</div>
+<div class="alert alert-error hide" id="permissions_error"><a class="close" data-dismiss="alert" href="#">×</a><span id="permissions_error_text"></span></div>
 <div class="well">
+  <div class="row">
+    <p class="span15 offset52"><a href="" >What's this <i class="icon-question-sign icon-large"></i></a></p>
+  </div>
   <div class="control-group">
-    <label for="" class="control-label"><h3>Visibility</h3></label> 
+    <h3>Visibility - <small>who should have the ability to read and download</small></h3>
       <div class="controls">
-<% ua = request.env['HTTP_USER_AGENT'] %>
-<% if !!(ua =~ /Chrome/) %>
-      <div class="btn-group" data-toggle="buttons-radio" >
-        <button type="button" class="btn btn-success<% if !public_perm.blank? %> active<% end %>" data-toggle="button">
-          Open Access 
-          <input type="radio" name="visibility" value="open" <% if !public_perm.blank? %> checked="true"<% end %>/>
-        </button>
-        <button type="button" class="btn btn-primary<% if !psu_perm.blank? %> active<% end %> " data-toggle="button">
-          Penn State 
-          <input type="radio" name="visibility" value="psu" <% if !psu_perm.blank? %> checked="true"<% end %> />
-        </button>
-        <button type="button" class="btn btn-danger<% if psu_perm.blank? and public_perm.blank?%> active<% end %>" data-toggle="button">
-          Private
-          <input type="radio" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> 
-        </button>
-      </div>
-<% else %>
         <label class="radio">
-          <input type="radio" name="visibility" value="open" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span>
+          <input type="radio" id="visibility_open" name="visibility" value="open" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
         </label>
         <label class="radio">
-          <input type="radio" name="visibility" value="psu" <% if !psu_perm.blank? %> checked="true"<% end %> /><span class="label label-info">Penn State</span>
+          <input type="radio" id="visibility_psu" name="visibility" value="psu" <% if !psu_perm.blank? %> checked="true"<% end %> /><span class="label label-info">Penn State</span> Visible to all Penn State users. 
         </label>
         <label class="radio">
-          <input type="radio" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-important">Private</span>
+          <input type="radio" id="visibility_restricted" name="visibility" value="restricted"<% if psu_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-important">Private</span> Visible to users/groups specified below, if any. 
         </label>
-<% end %>
     </div><!-- /.controls -->
   </div><!-- /.control-group --> 
   <div class="row">
-    <label class="control-label"><h3>Share With</h3></label>
+      <h3>Share With <small>(optional)</small></h3>
+  </div>
+  <div class="row control-group">
+    <div id="new-user"> 
+      <div class="input-append">
+        <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
+        <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span17' %>
+        <button class="btn btn-mini btn-inverse" id="add_new_user_skel">Add</button>
+        <br /> <span id="directory_user_result"></span> 
+        <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
+      </div>
+    </div>
   </div>
   <div class="row control-group">
     <div id="new-group" >
-      <% @groups.unshift('Select a group') %>
-      <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span40' %>
-      <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span20' %>
-      <br /><span id="directory_group_result"></span>
-    </div>
-  </div>
-  <div class="control-group">
-    <div id="new-user"> 
       <div class="input-append">
-      
-        <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
-          <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span20' %>
-         <br /> <span id="directory_user_result"></span> 
-        <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
+        <% @groups.unshift('Select a group') %>
+        <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span40' %>
+        <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span17' %>
+        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" >Add</button>
+        <br /><span id="directory_group_result"></span>
       </div>
     </div>
   </div>
 </div><!-- /.well -->
 <table class="table table-bordered"> 
   <tr> 
-    <th>Person/Group</th>
-    <th>Access Level</th>
+    <th width="60%">Person/Group</th>
+    <th width="40%">Access Level</th>
   </tr>
   <tr id="file_permissions">
-    <td><%= label_tag :owner_access, "Owner (#{depositor})", :class=>"control-label" %></td>
+    <td><%= label_tag :owner_access, "Owner (<span id=\"file_owner\">#{depositor}</span>)".html_safe, :class=>"control-label" %></td>
     <td>
     <%= ScholarSphere::Application::config.owner_permission_levels.keys[0] %>
     </td>

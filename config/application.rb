@@ -86,12 +86,12 @@ module ScholarSphere
     }
 
     config.public_permission_levels = {
-      "No Access"=>"none",
+      "Choose Access"=>"none",
       "View/Download" => "read"
     }
 
     config.permission_levels = {
-      "No Access"=>"none",
+      "Choose Access"=>"none",
       "View/Download" => "read",
       "Edit" => "edit"
     }

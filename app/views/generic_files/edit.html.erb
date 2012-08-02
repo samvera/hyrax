@@ -23,6 +23,9 @@ $('input[name=revision]:radio').on('click', function() {
   descriptions_tab();
 <% end %>
 
+// only valid for perm tab
+set_access_levels();
+
 // initialize popover helpers
 $("a[rel=popover]").popover();
 
