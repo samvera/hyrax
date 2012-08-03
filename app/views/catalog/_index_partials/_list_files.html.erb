@@ -3,10 +3,12 @@
 <li>
   <h2>
     <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(document[:noid_s].first) %>
+    <small>[<%= link_to 'Download', download_path(document[:noid_s].first), :target => '_new' %>]</small>
   </h2>
   <table class="table">
     <tr>
-      <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %> </td>
+      <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %> 
+      </td>
       <th>Title:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></td>
     </tr>
@@ -23,7 +25,7 @@
       <td><%= auto_link(render_document_show_field_value(:document=>document, :field=>"generic_file__description_display")) %></th>
     </tr>
     <tr>
-      <th>Tags:</th>
+      <th>Keywords:</th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__tag_display") %></td>
     </tr>
     <tr>
