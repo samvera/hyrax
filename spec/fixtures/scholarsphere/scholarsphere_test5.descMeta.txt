@@ -4,6 +4,13 @@
 <info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/contributor> "archivist1" .
 <info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/title> "Test mp3" .
 <info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "test" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keya" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keyb" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keyc" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keyd" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keye" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keyf" .
+<info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/relation> "keyg" .
 <info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/subject> "Test mp3 Test" .
 <info:fedora/scholarsphere:test5> <http://purl.org/dc/terms/language> "En" .
 <info:fedora/scholarsphere:test5> <http://xmlns.com/foaf/0.1/based_near> "State College" .
