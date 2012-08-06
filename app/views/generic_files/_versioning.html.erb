@@ -23,7 +23,7 @@
       </div>
     <% end %>
     <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
-    <%= f.submit "Save Revision", :name => "revert_submit", :id => "revert_submit", :class => "btn-primary btn-mini" %>
+    <%= f.submit "Save Revision", :name => "revert_submit", :id => "revert_submit", :class => "btn-primary btn-mini", :onclick=>"confirmation_needed = false;" %>
   <% end %>
   </div> <!-- /well -->
 </div> <!-- /row -->

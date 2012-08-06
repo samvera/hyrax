@@ -132,6 +132,8 @@ $(function() {
     return false;
   });
   
+  $('.remover').click(removeField);
+    
   function removeField () {
     // get parent and remove it
     $(this).parent().remove();

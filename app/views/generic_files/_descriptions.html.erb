@@ -19,6 +19,7 @@
         <% next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key) %>
         <% logger.info "!!!! Generic file has no method #{key}" unless @generic_file.respond_to?(key) %>
         <% if @generic_file.respond_to?(key) %>
+          <div class="control-group">
           <% vals =  @generic_file.send(key) %>
           <% # not an arry lets just shove it in one %>
           <% vals = [vals] unless vals.is_a?(Array) %>
@@ -31,8 +32,7 @@
             <% label = "Location" if key == "based_near" %>
             <% label = "Keyword" if key == "tag" %>
             <% label = "* "+label if req %>
-            <div class="control-group">
-              <%= f.label key, label, :class=>"control-label" %>
+              <%= f.label key, label, :class=>"control-label" if index == 0 %>
               <div class="controls" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
                 <% if key == "description" %>
                   <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
@@ -44,17 +44,19 @@
                 <% if index == 0 %>
                   <%= f.submit :value => "+", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "adder btn"  %>&nbsp;
                   <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= key.humanize %>">Help</a>
+                <% else %>
+                  <%= f.submit :value => "-", :name=> "additional_#{key}", :id => "additional_#{key}_submit", :class => "remover btn"  %>&nbsp;                
                 <% end %>
-              </div><!-- /controls -->
+              </div><!-- /controls -->              
               <div id="additional_<%= key %>_elements"></div>
-            </div><!-- /control-group -->
           <% end %>
+          </div><!-- /control-group -->
         <% end %>
       <% end %>
 
     </div><!-- /well -->
   <div class="row">
-    <div class="form-actions"><%= f.submit "Save Descriptions", :name => "update_descriptions", :id => "upload_submit", :class => "btn-primary" %></div>
+    <div class="form-actions"><%= f.submit "Save Descriptions", :name => "update_descriptions", :id => "upload_submit", :class => "btn-primary", :onclick=>"confirmation_needed = false;" %></div>
   </div>
 </div><!-- /row /span6 -->
 <% end %>

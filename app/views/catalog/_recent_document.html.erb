@@ -11,7 +11,9 @@
       <td>
         <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %>
           <% if display_access %>
-              <% if recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
+              <% if !recent_document[:read_access_group_t].blank? and recent_document[:read_access_group_t].include?('registered') %>
+                 <span class="label label-info" title="Penn State">Penn State</span> 
+              <% elsif recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
                 <span class="label label-important">Private</span>
               <% else %>
                 <span class="label label-success">Open Access</span>
