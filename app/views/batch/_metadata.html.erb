@@ -2,7 +2,7 @@
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>  
 <%= hidden_field_tag(:extra_description_count, "1") %>
 <div  id="descriptions_display">
-  <h2 class="non lower">Descriptions</h2>
+  <h2 class="non lower">Descriptions  <small class="pull-right">* indicates required fields</small></h2>
   <div class="well">
     <div class="control-group" id="resources">
         <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :title, "Title", :class=>"control-label" %> 
+      <%= f.label :title, "* Title", :class=>"control-label" %> 
       <div class="controls" id="additional_title_clone">
           <%= f.text_field :title, :name=>"generic_file[title][]", :value=>gf.title[0], :required=> true %>  
           <%= f.submit :value => "+", :name=> "additional_title", :id => "additional_title_submit", :class => "adder btn"  %>
@@ -24,7 +24,7 @@
     <div id="additional_title_elements"></div>
 
     <div class="control-group">
-        <%= f.label :tag, "Keyword", :class=>"control-label" %> 
+        <%= f.label :tag, "* Keyword", :class=>"control-label" %> 
       <div class="controls" id="additional_tag_clone">
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>"", :required=> true  %> 
           <%= f.submit :value => "+", :name=> "additional_tag", :id => "additional_tag_submit", :class => "adder btn"  %>
@@ -35,7 +35,7 @@
     <div id="additional_tag_elements"></div>
 
     <div class="control-group">
-      <%= f.label :creator, :class=>"control-label" %>
+      <%= f.label :creator, "* Creator", :class=>"control-label" %>
       <div class="controls" id="additional_creator_clone">
         <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"", :required=> true %>
         <%= f.submit :value => "+", :name=> "additional_creator", :id => "additional_creator_submit", :class => "adder btn"  %>

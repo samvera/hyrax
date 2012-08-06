@@ -1,7 +1,7 @@
 <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
 <div id="descriptions_display">
-  <h2 class="non lower">Descriptions</h2>
+  <h2 class="non lower">Descriptions <small class="pull-right">* indicates required fields</small> </h2>
     <div class="well">
 
       <div class="control-group">
@@ -25,23 +25,20 @@
           <%# if vals is zero we create an empty array to loop over for output %>
           <% vals = [''] if vals.count == 0 %>
           <% vals.each_with_index do |v, index| %>
+            <% req = (index == 0) && ((key == "title") || (key == "creator") || (key == "tag")) %>
             <%# a hacky way to change selected fields' labels %>
-            <% label = nil %>
+            <% label = key.capitalize %>
             <% label = "Location" if key == "based_near" %>
             <% label = "Keyword" if key == "tag" %>
+            <% label = "* "+label if req %>
             <div class="control-group">
-              <% if label %>
-                <%= f.label key, label, :class=>"control-label" %>
-              <% else %>
-                <%= f.label key, :class=>"control-label" %>
-              <% end %>
+              <%= f.label key, label, :class=>"control-label" %>
               <div class="controls" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
                 <% if key == "description" %>
                   <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
                 <% elsif key == "rights" %>
                   <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, @generic_file.rights.to_a) %>
                 <% else %>
-                  <% req = (index == 0) && ((key == "title") || (key == "creator") || (key == "keyword")) %>
                   <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large", :required => req  %>
                 <% end %>
                 <% if index == 0 %>
