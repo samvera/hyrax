@@ -1,5 +1,4 @@
-<%- type = link_to_facet_list(recent_document[:generic_file__resource_type_t], 'generic_file__resource_type_facet') -%>
-<%- type = 'no type value' if type.empty? -%>
+<%- keywords = link_to_facet_list(recent_document[:generic_file__tag_t], 'generic_file__tag_facet', 'no keywords specified') -%>
 <%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
 <%- title = filename if title.empty? -%>
@@ -20,7 +19,7 @@
           <% end %>
         </h3>
         <p> <%= filename %><br />
-          <%= type.html_safe %> 
+          <%= keywords.html_safe %> 
         </p>
       </td>
     </tr>
