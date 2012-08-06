@@ -105,9 +105,12 @@ $(function() {
     var newId = this.id.replace("submit", "elements");
     var cloneElem = $('#'+cloneId).clone();
 
-    //remove the button before adding the input
-    //we don't want a button on each element being appended
-    cloneElem.find('#'+this.id).remove();
+    // change the add button to a remove button
+    var plusbttn = cloneElem.find('#'+this.id);
+    plusbttn.attr("value","-");
+    plusbttn.on('click',removeField);
+    
+    // remove the help tag on subsequent added fields
     cloneElem.find('.formHelp').remove();
     cloneElem.find(":contains('Help')").remove();
 
@@ -128,7 +131,12 @@ $(function() {
     cloneElem.find('input[type=text]').focus();
     return false;
   });
-
+  
+  function removeField () {
+    // get parent and remove it
+    $(this).parent().remove();
+    return false;
+  }
 
   // show/hide more information on the dashboard when clicking
   // plus/minus
@@ -150,7 +158,10 @@ $(function() {
 
   $('#add_descriptions').click(function() {
       $('#more_descriptions').show();
+      return false;
   });
+
+  $("a[rel=popover]").click(function() { return false;});
 
 
   /*

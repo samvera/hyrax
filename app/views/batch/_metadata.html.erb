@@ -20,8 +20,8 @@
           &nbsp;
           <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title">Help</a>
       </div>
+      <div id="additional_title_elements"></div>
     </div>
-    <div id="additional_title_elements"></div>
 
     <div class="control-group">
         <%= f.label :tag, "* Keyword", :class=>"control-label" %> 
@@ -31,8 +31,8 @@
           &nbsp;
           <a href="#" id="generic_file_tag_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>" data-original-title="Keyword">Help</a>
       </div>
+      <div id="additional_tag_elements"></div>
     </div>
-    <div id="additional_tag_elements"></div>
 
     <div class="control-group">
       <%= f.label :creator, "* Creator", :class=>"control-label" %>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="row" id="add_descriptions">
-      <a href="#" id="add_descriptions">Add More Description Types</a>
+      <a href="#" id="add_descriptions" >Add More Description Types</a>
     </div>
       <!-- hidden on initial load -->
 
