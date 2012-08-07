@@ -49,7 +49,8 @@ RAILS_ENV=integration rake scholarsphere:fixtures:refresh
 
 echo "=-=-=-=-= $0 resque-pool restart"
 [ -f $RESQUE_POOL_PIDFILE ] && {
-    kill -15 $(cat $RESQUE_POOL_PIDFILE) && wait $(cat $RESQUE_POOL_PIDFILE)
+    PID=$(cat $RESQUE_POOL_PIDFILE)
+    kill -15 $PID && wait $PID
 }
 resque-pool --daemon --environment integration start
 

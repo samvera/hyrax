@@ -1,4 +1,7 @@
 <h2><%= @user.display_name %> (<%= @user.to_s %>)</h2>
+<% if @user.avatar? %>
+ <%= image_tag @user.avatar.url(:medium) %>
+<% end %>
 <h3>Social</h3>
 <% if not signed_in? %>
 <!-- do not display the follow button at all -->
@@ -24,7 +27,7 @@
 <h3>Activity</h3>
 <p>TODO: show recent actions, # of deposited files, what else?</p>
 <ul>
-  <% @user.events.each do |event| %>
+  <% @user.profile_events.each do |event| %>
     <li><%= event[0].html_safe %>
   [<%= time_ago_in_words(Time.at(event[1])) %> ago]</li>
   <% end %>

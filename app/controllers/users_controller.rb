@@ -5,18 +5,19 @@ class UsersController < ApplicationController
 
   # Display user profile
   def show
-    # TODO: flesh this out
   end
 
   # Display form for users to edit their profile information
   def edit
-    # TODO: flesh this out
   end
 
   # Process changes from profile form
   def update
-    # TODO: flesh this out
-    Resque.enqueue(UserEditProfileEventJob, current_user.login)
+    @user.avatar = params[:user][:avatar] if params[:user][:avatar].present? rescue nil
+    @user.avatar = nil if params[:delete_avatar]
+    @user.save
+    Resque.enqueue(UserEditProfileEventJob, @user.login)
+    redirect_to profile_path(@user.to_s), :notice => "Your profile has been updated"
   end
 
   # Follow a user

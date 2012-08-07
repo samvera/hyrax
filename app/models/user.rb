@@ -22,7 +22,10 @@ class User < ActiveRecord::Base
   acts_as_followable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone
+  attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone, :avatar
+
+  # Add user avatar (via paperclip library)
+  has_attached_file :avatar, :styles => { medium: "300x300>", thumb: "100x100>" }
 
   # This method should display the unique identifier for this user as defined by devise.
   # The unique identifier is what access controls will be enforced against.

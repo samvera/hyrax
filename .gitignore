@@ -65,7 +65,6 @@ log/*
 public/plugin_assets
 public/plugin_assets/
 
-
 db/schema.rb
 
 .project
@@ -85,3 +84,6 @@ spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.txt
 ## ASSET PIPELINE
 .sass-cache/
 public/assets/
+
+## Paperclip assets
+public/system/

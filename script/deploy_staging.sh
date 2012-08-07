@@ -43,7 +43,8 @@ bundle install
 # stop Resque pool early
 banner "resque-pool stop"
 [ -f $RESQUE_POOL_PIDFILE ] && {
-    kill -2 $(cat $RESQUE_POOL_PIDFILE) && wait $(cat $RESQUE_POOL_PIDFILE)
+    PID=$(cat $RESQUE_POOL_PIDFILE)
+    kill -2 $PID && wait $PID
 }
 
 banner "passenger-install-apache2-module -a"

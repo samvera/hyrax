@@ -1,0 +1,24 @@
+<h1>Edit Profile</h1>
+<%= form_for @user, :url => update_profile_path(@user.login), :html => {:multipart => true, :class => 'form-horizontal well' } do |form| %>
+<div class="control-group">
+  <%= form.label :avatar, 'User picture', :class => "control-label" %>
+  <div class="controls">
+    <% if @user.avatar? %>
+      <%= image_tag @user.avatar.url(:thumb) %>
+    <% end %>
+    <%= form.file_field :avatar %>
+    <p>Maximum size of 500Kb in JPG, GIF, or PNG format.</p>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= form.label :delete_avatar, 'Delete picture?', :class => 'control-label' %>
+  <div class="controls">
+    <%= check_box_tag 'delete_avatar' %>
+  </div>
+</div>
+
+<div class="form-actions">
+  <%= form.submit :value => "Save", :class => "btn-primary btn-large" %>
+</div>
+<% end %>
