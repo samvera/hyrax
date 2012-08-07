@@ -170,4 +170,3 @@ git@github.com:your-username/scholarsphere.git my-scholarsphere`)
 what you've added"`)
 1. Push your branch to github (`git push origin new-feature`)
 1. Create a pull request e.g. at https://github.com/your-username/scholarsphere/pull/new/master
-
