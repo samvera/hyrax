@@ -45,13 +45,16 @@ Copy and **edit** database, LDAP, Fedora, and Solr configs
     cp config/solr.yml.sample config/solr.yml
     cp config/hydra-ldap.yml.sample config/hydra-ldap.yml
 
+Create database
+
+    rake db:create
+
 (Re-)Generate the app's secret token
 
     rake scholarsphere:generate_secret
 
-Create and migrate database
+Migrate database
 
-    rake db:create
     rake db:migrate
 
 If you'll be *developing* ScholarSphere, setup test databases and load
