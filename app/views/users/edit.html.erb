@@ -1,5 +1,20 @@
 <h1>Edit Profile</h1>
 <%= form_for @user, :url => update_profile_path(@user.login), :html => {:multipart => true, :class => 'form-horizontal well' } do |form| %>
+
+<div class="control-group">
+  <%= form.label :directory, 'Create/manage groups', :class => 'control-label' %>
+  <div class="controls">
+    <%= link_to 'User Managed Groups Management', 'http://umg.its.psu.edu/' %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= form.label :directory, 'Edit directory entry', :class => 'control-label' %>
+  <div class="controls">
+    <%= link_to 'Instructions', 'http://www.psu.edu/directory/#update' %>
+  </div>
+</div>
+
 <div class="control-group">
   <%= form.label :avatar, 'User picture', :class => "control-label" %>
   <div class="controls">

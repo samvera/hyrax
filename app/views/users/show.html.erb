@@ -1,10 +1,7 @@
 <h2><%= @user.display_name %> (<%= @user.to_s %>)</h2>
-<% if @user.avatar? %>
- <%= image_tag @user.avatar.url(:medium) %>
-<% end %>
-<h3>Social</h3>
+<%= image_tag @user.avatar.url(:medium) %>
 <% if not signed_in? %>
-<!-- do not display the follow button at all -->
+<!-- sign in to access social functions -->
 <% elsif current_user == @user %>
 <a class="btn btn-primary" href="<%= edit_profile_path(@user.to_s) %>">
   <i class="icon-edit"></i> Edit Profile
@@ -19,22 +16,31 @@
 </a>
 <% end %>
 <dl>
- <dt>Followers</dt>
- <dd><%= @user.followers_count %></dd>
- <dt>Following</dt>
- <dd><%= @user.follow_count %></dd>
+ <dt><%= @followers.count %> Follower(s)</dt>
+ <dd>
+ <% @followers.each do |f| %>
+   <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %></a>
+ <% end %>
+ </dd>
+ <dt>Following <%= @following.count %></dt>
+ <dd>
+ <% @following.each do |f| %>
+   <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %></a>
+ <% end %>
+ </dd>
+ <dt>Deposited Files</dt>
+ <dd><%= link_to_field('depositor', @user.to_s, GenericFile.find(:depositor_t => @user.to_s).count) %></dd>
+ <dt>Active Since</dt>
+ <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
 </dl>
 <h3>Activity</h3>
-<p>TODO: show recent actions, # of deposited files, what else?</p>
 <ul>
   <% @user.profile_events.each do |event| %>
     <li><%= event[0].html_safe %>
   [<%= time_ago_in_words(Time.at(event[1])) %> ago]</li>
   <% end %>
 </ul>
-<%= link_to_field('depositor', @user.to_s, 'Files in Scholarsphere') %>
 <h3>Info</h3>
-<p>TODO: Allow users to edit/restrict this info? Allow upload of avatar/picture? Allow connections to twitter, facebook, etc.?</p>
 <dl>
   <dt>Email</dt>
   <dd><%= @user.email %></dd>

@@ -2,7 +2,11 @@
   <% if flash[type] %>
     <div class="alert alert-<%= type == :error ? 'error' : 'info' %> ui-corner-all <%= type.to_s %>">
       <a class="close" data-dismiss="alert" href="#">×</a>
-      <%= flash[type].html_safe %>
+      <% if flash[type].respond_to? :join %>
+        <%= flash[type].join("<br/>").html_safe %>
+      <% else %>
+        <%= flash[type].html_safe %>
+      <% end %>
     </div>
     <% flash.delete(type) %>
   <% end %>

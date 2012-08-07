@@ -5,6 +5,8 @@ class UsersController < ApplicationController
 
   # Display user profile
   def show
+    @followers = @user.followers
+    @following = @user.all_following
   end
 
   # Display form for users to edit their profile information
@@ -15,7 +17,10 @@ class UsersController < ApplicationController
   def update
     @user.avatar = params[:user][:avatar] if params[:user][:avatar].present? rescue nil
     @user.avatar = nil if params[:delete_avatar]
-    @user.save
+    unless @user.save
+      redirect_to edit_profile_path(@user.to_s), :alert => @user.errors.full_messages
+      return
+    end
     Resque.enqueue(UserEditProfileEventJob, @user.login)
     redirect_to profile_path(@user.to_s), :notice => "Your profile has been updated"
   end

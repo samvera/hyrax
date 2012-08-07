@@ -12,7 +12,7 @@ gem "hydra-ldap", "~> 0.0.4"
 =======
 >>>>>>> refs #1021, #1018, #1019: adds acts_as_follower gem for a follows/followed model; adds migration and model for acts_as_follower; pins some gems that got unpinned
 gem 'solrizer-fedora', '2.2.0'
-gem 'hydra-ldap', :git => 'git://github.com/psu-stewardship/hydra-ldap', :branch => 'master', :ref => '8a24aa66c1'
+gem "hydra-ldap", "0.0.4"
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'

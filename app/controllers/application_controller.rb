@@ -65,8 +65,12 @@ class ApplicationController < ActionController::Base
     # remove error inserted since we are not showing a page before going to web access, this error message always shows up a page too late.
     # for the moment just remove it always.  If we show a transition page in the future we may want to  display it then.
     if flash[:alert].present?
-      # first remove the bogus message
-      flash[:alert].sub!('You need to sign in or sign up before continuing.', '')
+      flash[:alert] = [flash[:alert]].flatten.reject do |item|
+        # first remove the bogus message
+        item == 'You need to sign in or sign up before continuing.'
+        # Also, remove extraneous paperclip errors for weird file types
+        item =~ /is not recognized by the 'identify' command/
+      end
       # then make the flash nil if that was the only message in the flash
       flash[:alert] = nil if flash[:alert].blank?
     end
