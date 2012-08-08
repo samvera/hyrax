@@ -9,8 +9,8 @@ class BatchController < ApplicationController
   def edit
     @batch =  Batch.find_or_create(params[:id])
     @generic_file = GenericFile.new
-    @generic_file.title =  @batch.generic_files.map{ |gf| gf.label }.join(', ')
-    @generic_file.creator = current_user.name
+    @generic_file.title =  @batch.generic_files.map(&:label).join(', ')
+    @generic_file.creator = current_user.display_name || current_user.login
     begin
       @groups = current_user.groups
     rescue

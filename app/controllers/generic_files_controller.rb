@@ -175,7 +175,7 @@ class GenericFilesController < ApplicationController
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
     @generic_file.relative_path = params[:relative_path] if params.has_key?(:relative_path)
-    @generic_file.creator = current_user.name
+    @generic_file.creator = current_user.display_name || current_user.login
 
     if params.has_key?(:batch_id)
       batch_id = ScholarSphere::Noid.namespaceize(params[:batch_id])

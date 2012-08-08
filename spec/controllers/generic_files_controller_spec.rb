@@ -20,13 +20,14 @@ describe GenericFilesController do
         Batch.find("sample:batch_id").delete
       rescue
       end
-      @mock.delete
+      @mock.delete unless @mock.kind_of? ActiveFedora::UnsavedDigitalObject
     end
 
     it "should expand zip files" do
       file = fixture_file_upload('/world.png','application/zip')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       Resque.expects(:enqueue).with(UnzipJob, 'test:123')
+      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 

@@ -76,7 +76,7 @@ describe BatchController do
       end
 
       it "should not set any tags" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]} 
+        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.tag.should be_empty
       end
@@ -88,7 +88,7 @@ describe BatchController do
         file.title = "Original Title"
         file.read_groups.should == []
         file.save
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""], "title"=>"New Title"} 
+        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""], "title"=>"New Title"}
         file = GenericFile.find(@file2.pid)
         file.title.should == ["Original Title"]
         file.read_groups.should == []
@@ -97,7 +97,8 @@ describe BatchController do
   end
   describe "#edit" do
     before do
-      GenericFile.any_instance.stubs(:characterize_if_changed).yields 
+      User.any_instance.stubs(:display_name).returns("Jill Z. User")
+      GenericFile.any_instance.stubs(:characterize_if_changed).yields
       @b1 = Batch.new
       @b1.save
       @file = GenericFile.new(:batch=>@b1, :label=>'f1')
@@ -106,7 +107,7 @@ describe BatchController do
       @file2 = GenericFile.new(:batch=>@b1, :label=>'f2')
       @file2.apply_depositor_metadata(@user.login)
       @file2.save
-      controller.stubs(:params).returns({id:@b1.id})       
+      controller.stubs(:params).returns({id:@b1.id})
     end
     after do
       @b1.delete
@@ -115,10 +116,9 @@ describe BatchController do
     end
     it "should default creator" do
        controller.edit
-       controller.instance_variable_get(:@generic_file).creator[0].should == @user.name
+       controller.instance_variable_get(:@generic_file).creator[0].should == @user.display_name
        controller.instance_variable_get(:@generic_file).title[0].should include 'f1'
        controller.instance_variable_get(:@generic_file).title[0].should include 'f2'
     end
-    
   end
 end
