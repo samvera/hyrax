@@ -21,6 +21,13 @@ namespace :scholarsphere do
     end
   end
 
+  desc "Characterize uncharacterized files"
+  task :characterize! => :environment do
+    GenericFile.find(:all, :rows => GenericFile.count).each do |gf|
+      Resque.enqueue(CharacterizeJob, gf.pid)
+    end
+  end
+
   desc "Re-solrize all objects"
   task :resolrize => :environment do
     Resque.enqueue(ResolrizeJob)

@@ -34,7 +34,7 @@ on element ids -->
     <table class="expanded-details">
       <tr>
         <td><strong>File Name: </strong> <%= link_to render_document_show_field_value(:document=>document, :field=>"label_t"), generic_file_path(noid) %> </td>
-        <td><strong>Format: </strong> <%= render_document_show_field_value(:document=>document, :field=>"format_label_t") %> </td>
+        <td><strong>File Format: </strong> <%= render_document_show_field_value(:document=>document, :field=>"file_format_t") %> </td>
       </tr>
       <tr>
         <td><strong>Creator: </strong> <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %> </td>

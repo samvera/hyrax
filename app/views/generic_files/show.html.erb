@@ -226,13 +226,19 @@ var addthis_config = {"data_track_addressbar":true};<
           <td>
             <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>
             <% @generic_file.characterization_terms.each_pair do |term, values| %>
+              <% label = term.to_s %>
+              <% if label == "format_label" %>
+                 <% label = "File Format"  %>
+                 <% values = @generic_file.file_format %>
+              <% end %>
+              <% label = label.humanize %>
               <% if values.is_a? Array %>
                 <% values.each do |value| %>
                   <% next if value.empty? %>
-                  <%= "#{term.to_s.humanize}: #{value}" %><br />
+                  <%= "#{label}: #{value}" %><br />
                 <% end %>
               <% else %>
-                <%= "#{term.to_s.humanize}: #{values}" %><br />
+                <%= "#{label}: #{values}" %><br />
               <% end %>
             <% end %>
           </td>

@@ -102,7 +102,7 @@ class CatalogController < ApplicationController
     config.add_facet_field "generic_file__language_facet", :label => "Language", :limit => 5
     config.add_facet_field "generic_file__based_near_facet", :label => "Location", :limit => 5
     config.add_facet_field "generic_file__publisher_facet", :label => "Publisher", :limit => 5
-    config.add_facet_field "generic_file__format_facet", :label => "Format", :limit => 5
+    config.add_facet_field "file_format_facet", :label => "File Format", :limit => 5
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -125,7 +125,7 @@ class CatalogController < ApplicationController
     config.add_index_field "generic_file__date_created_display", :label => "Date Created"
     config.add_index_field "generic_file__rights_display", :label => "Rights"
     config.add_index_field "generic_file__resource_type_display", :label => "Resource Type"
-    config.add_index_field "generic_file__format_display", :label => "Format"
+    config.add_index_field "generic_file__format_display", :label => "File Format"
     config.add_index_field "generic_file__identifier_display", :label => "Identifier"
 
     # solr fields to be displayed in the show (single result) view
@@ -144,7 +144,7 @@ class CatalogController < ApplicationController
     config.add_show_field "generic_file__date_created_display", :label => "Date Created"
     config.add_show_field "generic_file__rights_display", :label => "Rights"
     config.add_show_field "generic_file__resource_type_display", :label => "Resource Type"
-    config.add_show_field "generic_file__format_display", :label => "Format"
+    config.add_show_field "generic_file__file_format_display", :label => "File Format"
     config.add_show_field "generic_file__identifier_display", :label => "Identifier"
 
     # "fielded" search configuration. Used by pulldown among other places.

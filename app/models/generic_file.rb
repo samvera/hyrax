@@ -217,7 +217,16 @@ class GenericFile < ActiveFedora::Base
     super(solr_doc, opts)
     solr_doc["label_t"] = self.label
     solr_doc["noid_s"] = noid
+    solr_doc["file_format_t"] = file_format
+    solr_doc["file_format_facet"] = solr_doc["file_format_t"]
     return solr_doc
+  end
+
+  def file_format
+    return nil if self.mime_type.blank? and self.format_label.blank?
+    return self.mime_type.split('/')[1]+ " ("+self.format_label.join(", ")+")" unless self.mime_type.blank? or self.format_label.blank?
+    return self.mime_type.split('/')[1] unless self.mime_type.blank?
+    return self.format_label
   end
 
   def label=(new_label)
