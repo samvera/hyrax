@@ -9,27 +9,27 @@
     <tr>
       <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %> 
       </td>
-      <th>Title:</th>
+      <th><h4>Title:</h4></th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></td>
     </tr>
     <tr>
-      <th>Owner:</div>
+      <th><h4>Owner:<h4></div>
       <td><%=  display_user_name(document) %></td>
     </tr>
     <tr>
-      <th>Creator:</th>
+      <th><h4>Creator:</h4></th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %></td>
     </tr>
     <tr>
-      <th>Description:</th>
+      <th><h4>Description:</h4></th>
       <td><%= auto_link(render_document_show_field_value(:document=>document, :field=>"generic_file__description_display")) %></th>
     </tr>
     <tr>
-      <th>Keywords:</th>
+      <th><h4>Keywords:</h4></th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__tag_display") %></td>
     </tr>
     <tr>
-      <th>Date Uploaded:</th>
+      <th><h4>Date Uploaded:</h4></th>
       <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_uploaded_display") %></td>
     </tr>
   </table>

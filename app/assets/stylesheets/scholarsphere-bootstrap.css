@@ -161,6 +161,8 @@ a i, a:hover i {
   color: #000;
   text-decoration: none;
 }
+
+/* used for the more details on dashboard */
 table.expanded-details {
   width: 75%;
   margin: 0 auto;
@@ -194,4 +196,13 @@ th.center, td.center {
     padding-left:10px;
 }
 
+<<<<<<< HEAD
 a small{font-size:9px}
+=======
+/* use if a label should be hidden from view but available to screen readers */
+.accessible-hidden {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+>>>>>>> changes for accessibility, also found a bug where access drop downs were disabled if a user was not in ldap. fixes #1183

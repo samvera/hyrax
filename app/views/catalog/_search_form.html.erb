@@ -5,6 +5,7 @@
   <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>   
             <div class="controls">
               <div class="input-append">
+              <label class="accessible-hidden">Search Scholarsphere</label> 
   <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => "Type keywords in here"  %><input type="submit" class="btn btn-info" id="search-submit-header" value="GO" />
 &nbsp;
  <%= link_to 'More options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>

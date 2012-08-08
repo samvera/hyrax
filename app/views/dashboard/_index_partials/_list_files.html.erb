@@ -13,20 +13,20 @@ on element ids -->
   <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
   <td width="5%" align="center">
     <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
-      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>><span class="label label-info" title="Penn State">Penn State</span></a> 
+      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="Penn State">Penn State</span></a> 
     <% elsif !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('public') %>
-      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>><span class="label label-success" title="Open Access">Open Access</span></a>
+      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-important" title="Private">Private</span></a>
     <% end %>
   </td>
   <td width="23%" class="center">
     <span style="position: relative;">
-     <%= link_to raw('<i class="icon-copy"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
+     <%= link_to raw('<i class="icon-copy icon-large"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
     </span>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-edit"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-download"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-trash"></i>'), generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation'} %>&nbsp;&nbsp;&nbsp;
+    <%= link_to raw('<i class="icon-edit icon-large"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
+    <%= link_to raw('<i class="icon-download icon-large"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
+    <%= link_to raw('<i class="icon-trash icon-large"></i>'), generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation'} %>&nbsp;&nbsp;&nbsp;
   </td>
 </tr>
 <tr class="hide" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->

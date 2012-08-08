@@ -8,6 +8,7 @@
 
   <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 
+  <h3>Search Results</h3>
   <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= render_constraints(params) %></strong></div>	
   <%= render :partial => 'did_you_mean' %>
   <%= render :partial => 'facet_selected' %>

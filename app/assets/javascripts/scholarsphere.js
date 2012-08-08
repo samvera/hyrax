@@ -1,4 +1,19 @@
+//over ride the blacklight default to submit 
+//form when sort by or show per page change
+Blacklight.do_select_submit = function() {
+  $(Blacklight.do_select_submit.selector).each(function() {
+        var select = $(this);
+        select.closest("form").find("input[type=submit]").show();
+        select.bind("change", function() {
+          return false;            
+        });
+    });
+};
+Blacklight.do_select_submit.selector = "form.sort select, form.per_page select";
+
+// short hand for $(document).ready();
 $(function() {
+
 
   // bootstrap alerts are closed this function 
   $('.alert .close').live('click',function(){
@@ -101,13 +116,15 @@ $(function() {
     //this.id = additional_N_submit
     //id for element to clone = additional_N_clone
     //id for element to append to = additional_N_elements
+    //var cloneId = this.id.replace("submit", "clone");
+    //var newId = this.id.replace("submit", "elements");
     var cloneId = this.id.replace("submit", "clone");
     var newId = this.id.replace("submit", "elements");
     var cloneElem = $('#'+cloneId).clone();
-
     // change the add button to a remove button
     var plusbttn = cloneElem.find('#'+this.id);
-    plusbttn.attr("value","-");
+    //plusbttn.attr("value","-");
+    plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
     plusbttn.on('click',removeField);
     
     // remove the help tag on subsequent added fields
@@ -160,6 +177,7 @@ $(function() {
 
   $('#add_descriptions').click(function() {
       $('#more_descriptions').show();
+      $('#add_descriptions').hide();
       return false;
   });
 
@@ -193,7 +211,6 @@ $(function() {
               $('#directory_user_result').html('User id ('+un+ ') does not exist.');
               $('#new_user_name_skel').select();
               $('#new_user_permission_skel').val('none');
-              $('#new_user_permission_skel').attr('disabled', true);
               return;
             }
             else {
@@ -344,19 +361,14 @@ $(function() {
         $(this).removeClass("icon-large");
       });
       */
-  // instead for now doing this on a 
-  // case by case (or class by class) basis
-  $('.icon-copy, .icon-edit, .icon-download, .icon-trash').hover(
-      //on mouseover
-      function(){ 
-        $(this).addClass("icon-large");
-      }, 
-      //on mouseout
-      function() {
-        $(this).removeClass("icon-large");
-      });
 
-});
+}); //closing function at the top of the page
+
+
+
+/*
+ * begin functions
+ */
 
 // return the files visibility level (penn state, open, restricted);
 function get_visibility(){
@@ -368,7 +380,8 @@ function get_visibility(){
  * set other users/groups to 'read' (it would be over ruled by the
  * visibility of Open or Penn State) so disable the Read option
  */
-function set_access_levels() {
+function set_access_levels() 
+{
   var vis = get_visibility();
   var enabled_disabled = false;
   if (vis == "open" || vis == "psu") {
@@ -390,7 +403,8 @@ function set_access_levels() {
  * make sure the permission being applied is not for a user/group
  * that already has a permission.
  */
-function is_permission_duplicate(user_or_group_name) {
+function is_permission_duplicate(user_or_group_name) 
+{
   s = "[" + user_or_group_name + "]";
   var patt = new RegExp(preg_quote(s), 'gi');
   var perms_input = $("input[name^='generic_file[permissions]']");
@@ -419,7 +433,8 @@ function is_permission_duplicate(user_or_group_name) {
 // is it worth checking to make sure users aren't filling up permissions that will be ignored.
 // or when a user has already set a permission for a user then updates the visibility -- is it
 // still relevant 
-function validate_existing_perms() {
+function validate_existing_perms() 
+{
   var vis = get_visibility();
   if (vis == "open" || vis == "psu") 
   {

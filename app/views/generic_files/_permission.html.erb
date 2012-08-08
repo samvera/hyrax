@@ -5,7 +5,7 @@
 <input type="hidden" name="generic_file[permissions][group][public]" value="1" />
 <input type="hidden" name="generic_file[permissions][group][registered]" value="2" />
 <h2>Permissions</h2>
-<div class="alert hide" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save Permissions&quot; button is pressed.</div>
+<div class="alert hide" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save<% if params[:controller] == 'generic_file' %> Permissions<% end %>&quot; button is pressed at the bottom of the page.</div>
 <div class="alert alert-error hide" id="permissions_error"><a class="close" data-dismiss="alert" href="#">×</a><span id="permissions_error_text"></span></div>
 <div class="well">
   <div class="row">
@@ -31,11 +31,11 @@
   <div class="row control-group">
     <div id="new-user"> 
       <div class="input-append">
+        <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
         <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
         <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_user_skel">Add</button>
         <br /> <span id="directory_user_result"></span> 
-        <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
       </div>
     </div>
   </div>

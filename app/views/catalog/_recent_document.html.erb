@@ -20,7 +20,7 @@
               <% end %>
           <% end %>
         </h3>
-        <p> <%= filename %><br />
+        <p> <%= link_to filename, generic_file_path(recent_document.fetch(:noid_s, :id)) %><br />
           <%= keywords.html_safe %> 
         </p>
       </td>
