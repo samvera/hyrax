@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
 
   # Groups that user is a member of
   def groups
-    self.class.groups(login)
+    self.class.groups(login) rescue []
   end
 
   def self.groups(login)

@@ -3,6 +3,7 @@ require 'blacklight/catalog'
 class DashboardController < ApplicationController
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
+  include ActionView::Helpers::DateHelper
 
   before_filter :enforce_access_controls
   before_filter :enforce_viewing_context_for_show_requests, :only=>:show
@@ -19,6 +20,7 @@ class DashboardController < ApplicationController
     extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => "Atom for results")
     (@response, @document_list) = get_search_results
     @user = current_user
+    @last_event_timestamp = @user.events.first.last.to_i
     @filters = params[:f] || []
 
     respond_to do |format|
@@ -26,6 +28,15 @@ class DashboardController < ApplicationController
       format.rss  { render :layout => false }
       format.atom { render :layout => false }
     end
+  end
+
+  def activity
+    # reverse events since we're prepending rows. without reverse, old events wind up first
+    events = current_user.events.reverse
+    # filter events to include only those that have occurred since params[:since]
+    events.select! { |msg, ts| ts > params[:since].to_i } if params[:since]
+    # return the event, a formatted date string, and a numerical timestamp
+    render :json => events.map { |msg, ts| [msg, "#{time_ago_in_words(Time.at(ts))} ago", ts.to_i] }
   end
 
   configure_blacklight do |config|

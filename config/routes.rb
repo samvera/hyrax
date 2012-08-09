@@ -34,8 +34,9 @@ ScholarSphere::Application.routes.draw do
   match 'users/:uid/follow' => 'users#follow', :as => :follow_user
   match 'users/:uid/unfollow' => 'users#unfollow', :as => :unfollow_user
 
-  # Dashboard routes (based on catalog routes)
+  # Dashboard routes (based partly on catalog routes)
   match 'dashboard' => 'dashboard#index', :as => :dashboard
+  match 'dashboard/activity' => 'dashboard#activity', :as => :dashboard_activity
   match 'dashboard/facet/:id' => 'dashboard#facet', :as => :dashboard_facet
 
   # advanced routes for advanced search

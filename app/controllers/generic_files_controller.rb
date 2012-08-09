@@ -110,21 +110,26 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id (PUT)
   def update
+    version_event = false
+
     if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
       revision = @generic_file.content.get_version(params[:revision])
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
+      version_event = true
       Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.login, params[:revision])
     end
 
     if params.has_key?(:filedata)
       add_posted_blob_to_asset(@generic_file, params[:filedata])
+      version_event = true
       Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.login)
     end
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k})
     @generic_file.set_visibility(params)
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
-    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login)
+    # do not trigger an update event if a version event has already been triggered
+    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login) unless version_event
     record_version_committer(@generic_file, current_user)
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
