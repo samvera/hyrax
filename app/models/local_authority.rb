@@ -55,11 +55,12 @@ class LocalAuthority < ActiveRecord::Base
 
   def self.entries_by_term(model, term, query)
     return if query.empty?
+    lowQuery = query.downcase
     hits = []
     term = DomainTerm.where(:model => model, :term => term).first
     if term
       authorities = term.local_authorities.collect(&:id).uniq      
-      sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "#{query}%").select("label, uri").limit(25).to_sql
+      sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("lower(label) like ?", "#{lowQuery}%").select("label, uri").limit(25).to_sql
       LocalAuthorityEntry.find_by_sql(sql).each do |hit|
         hits << {:uri => hit.uri, :label => hit.label}
       end
