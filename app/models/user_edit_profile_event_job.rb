@@ -1,13 +1,15 @@
 class UserEditProfileEventJob < EventJob
   def initialize(editor_id)
-    message = "User #{link_to editor_id, profile_path(editor_id)} has edited his or her profile"
+    action = "User #{link_to editor_id, profile_path(editor_id)} has edited his or her profile"
     timestamp = Time.now.to_i
     editor = User.find_by_login(editor_id)
+    # Create the event
+    event = editor.create_event(action, timestamp)
     # Log the event to the editor's stream
-    editor.stream[:event].zadd(timestamp, message)
+    editor.log_event(event)
     # Fan out the event to all followers
     editor.followers.each do |user|
-      user.stream[:event].zadd(timestamp, message)
+      user.log_event(event)
     end
   end
 end

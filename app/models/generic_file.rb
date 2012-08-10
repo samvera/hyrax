@@ -204,14 +204,17 @@ class GenericFile < ActiveFedora::Base
     elsif params[:visibility] == "psu"
       self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "read")
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
+<<<<<<< HEAD
     elsif params[:visibility] == "restricted" 
+=======
+    else
+>>>>>>> refs #1018, #1019, #1021: checkpoint commit, not confirmed working, needs specs!  refactors redis activity streams to abstract the redisisms; creates each event as a distinct key in redis; instead of sorted sets, use hashes for events and lists for logs of event ids; adds to_param method to GF and User to that redis keys for these objects correspond to keys we recognize (gf.noid and user.login)
       self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "none")
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
       #params[:generic_file][:permissions][:group][:public] = "none"
       #params[:generic_file][:permissions][:group][:registered] = "none"
-    end 
-
-  end 
+    end
+  end
 
   def to_solr(solr_doc={}, opts={})
     super(solr_doc, opts)
@@ -222,11 +225,17 @@ class GenericFile < ActiveFedora::Base
     return solr_doc
   end
 
+<<<<<<< HEAD
   def file_format
     return nil if self.mime_type.blank? and self.format_label.blank?
     return self.mime_type.split('/')[1]+ " ("+self.format_label.join(", ")+")" unless self.mime_type.blank? or self.format_label.blank?
     return self.mime_type.split('/')[1] unless self.mime_type.blank?
     return self.format_label
+=======
+  # Redefine this for more intuitive keys in Redis
+  def to_param
+    noid
+>>>>>>> refs #1018, #1019, #1021: checkpoint commit, not confirmed working, needs specs!  refactors redis activity streams to abstract the redisisms; creates each event as a distinct key in redis; instead of sorted sets, use hashes for events and lists for logs of event ids; adds to_param method to GF and User to that redis keys for these objects correspond to keys we recognize (gf.noid and user.login)
   end
 
   def label=(new_label)

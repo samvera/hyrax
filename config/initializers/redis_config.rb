@@ -9,6 +9,6 @@ Nest.class_eval do
   end
 
   def [](key)
-    self.class.new("#{self}:#{key.to_param}", redis)
+    self.class.new("#{self}:#{key.to_param}", @redis)
   end
 end

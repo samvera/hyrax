@@ -43,6 +43,11 @@ class User < ActiveRecord::Base
     return self.display_name
   end
 
+  # Redefine this for more intuitive keys in Redis
+  def to_param
+    login
+  end
+
   # method needed for messaging
   def mailboxer_email(obj=nil)
     return nil
