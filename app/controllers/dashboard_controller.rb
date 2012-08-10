@@ -20,7 +20,7 @@ class DashboardController < ApplicationController
     extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => "Atom for results")
     (@response, @document_list) = get_search_results
     @user = current_user
-    @last_event_timestamp = @user.events.first.last.to_i
+    @last_event_timestamp = @user.events.first.last.to_i || 0 rescue 0
     @filters = params[:f] || []
 
     respond_to do |format|

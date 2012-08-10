@@ -23,6 +23,12 @@ describe GenericFilesController do
       @mock.delete unless @mock.kind_of? ActiveFedora::UnsavedDigitalObject
     end
 
+    it "should spawn a content deposit event job" do
+      file = fixture_file_upload('/world.png','application/zip')
+      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
+    end
+
     it "should expand zip files" do
       file = fixture_file_upload('/world.png','application/zip')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
@@ -103,6 +109,26 @@ describe GenericFilesController do
     end
   end
 
+  describe "destroy" do
+    before(:each) do
+      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+      @generic_file = GenericFile.new
+      @generic_file.apply_depositor_metadata(@user.login)
+      @generic_file.save
+      @user = FactoryGirl.find_or_create(:user)
+      sign_in @user
+    end
+    it "should delete the file" do
+      @generic_file.expects(:delete).once
+      delete :destroy, :id=>@generic_file.pid
+      GenericFile.find(@generic_file.pid).count.should == 0
+    end
+    it "should spawn a content delete event job" do
+      Resque.expects(:enqueue).with(ContentDeleteEventJob, @generic_file.pid, @user.login)
+      delete :destroy, :id=>@generic_file.pid
+    end
+  end
+
   describe "update" do
     before do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
@@ -112,6 +138,15 @@ describe GenericFilesController do
     end
     after do
       @generic_file.delete
+    end
+
+    it "should spawn a content update event job" do
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, 'test:123', 'jilluser')
+      @user = FactoryGirl.find_or_create(:user)
+      sign_in @user
+
+      file = fixture_file_upload('/world.png','image/png')
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
     end
 
     it "should record what user added a new version" do
@@ -130,6 +165,8 @@ describe GenericFilesController do
       controller.stubs(:current_user).returns(archivist)
       sign_in archivist
 
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, 'test:123', 'jilluser').never
+      Resque.expects(:enqueue).with(ContentNewVersionEventJob, 'test:123', archivist.login).once
       file = fixture_file_upload('/image.jp2','image/jp2')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1"}
 
@@ -141,6 +178,8 @@ describe GenericFilesController do
       # original user restores his or her version
       controller.stubs(:current_user).returns(@user)
       sign_in @user
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, 'test:123', 'jilluser').never
+      Resque.expects(:enqueue).with(ContentRestoredVersionEventJob, 'test:123', @user.login).once
       post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1"}
 
       restored_file = GenericFile.find(@generic_file.pid)
@@ -203,11 +242,11 @@ describe GenericFilesController do
         sign_out @user
         get :new
         response.should_not be_success
-        flash[:alert].should_not be_nil      
-        flash[:alert].should include("You need to sign in or sign up before continuing")              
+        flash[:alert].should_not be_nil
+        flash[:alert].should include("You need to sign in or sign up before continuing")
       end
       it "should filter flash if they signin" do
-        request.env['warden'].stubs(:user).returns( @user)      
+        request.env['warden'].stubs(:user).returns(@user)
         sign_out @user
         get :new
         sign_in @user
@@ -221,15 +260,14 @@ describe GenericFilesController do
         end
         it "should display failing audits" do
             sign_out @user
-            sign_in @archivist            
+            sign_in @archivist
             @ds = @file.datastreams.first
             AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
             get :show, id:"test5"
             response.body.should include("The audit run")
-            response.body.should include("was failing")        
+            response.body.should include("was failing")
         end
       end
     end
-    
   end
 end

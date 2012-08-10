@@ -29,6 +29,13 @@ describe BatchController do
       controller.expects(:can?).with(:read, "mock solr permissions").times(2)
       post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
     end
+    it "should log a content update event" do
+      controller.expects(:permissions_solr_doc_for_id).times(2).returns("mock solr permissions")
+      controller.expects(:can?).with(:read, "mock solr permissions").times(2)
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.login).once
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.login).once
+      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
+    end
     describe "when views are shown" do
       render_views
       it "should show flash messages" do
@@ -74,14 +81,12 @@ describe BatchController do
         file.title.should == ["New Title"]
         file.tag.should == ["footag", "bartag"]
       end
-
       it "should not set any tags" do
         post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.tag.should be_empty
       end
     end
-
     describe "when user does not have edit permissions on a file" do
       it "should not modify the object" do
         file = GenericFile.find(@file2.pid)

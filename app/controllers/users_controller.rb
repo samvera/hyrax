@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   prepend_before_filter :find_user
-  before_filter :authenticate_user!, :only => [:edit, :update, :follow, :unfollow]
-  before_filter :user_is_current_user, :only => [:edit, :update]
+  before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow]
+  before_filter :user_is_current_user, only: [:edit, :update]
+  before_filter :user_not_current_user, only: [:follow, :unfollow]
 
   # Display user profile
   def show
@@ -18,11 +19,11 @@ class UsersController < ApplicationController
     @user.avatar = params[:user][:avatar] if params[:user][:avatar].present? rescue nil
     @user.avatar = nil if params[:delete_avatar]
     unless @user.save
-      redirect_to edit_profile_path(@user.to_s), :alert => @user.errors.full_messages
+      redirect_to edit_profile_path(@user.to_s), alert: @user.errors.full_messages
       return
     end
     Resque.enqueue(UserEditProfileEventJob, @user.login)
-    redirect_to profile_path(@user.to_s), :notice => "Your profile has been updated"
+    redirect_to profile_path(@user.to_s), notice: "Your profile has been updated"
   end
 
   # Follow a user
@@ -31,7 +32,7 @@ class UsersController < ApplicationController
       current_user.follow(@user)
       Resque.enqueue(UserFollowEventJob, current_user.login, @user.login)
     end
-    redirect_to profile_path(@user.to_s), :notice => "You are following #{@user.to_s}"
+    redirect_to profile_path(@user.to_s), notice: "You are following #{@user.to_s}"
   end
 
   # Unfollow a user
@@ -40,16 +41,20 @@ class UsersController < ApplicationController
       current_user.stop_following(@user)
       Resque.enqueue(UserUnfollowEventJob, current_user.login, @user.login)
     end
-    redirect_to profile_path(@user.to_s), :notice => "You are no longer following #{@user.to_s}"
+    redirect_to profile_path(@user.to_s), notice: "You are no longer following #{@user.to_s}"
   end
 
   private
   def find_user
     @user = User.find_by_login(params[:uid])
-    redirect_to root_path, :alert => "User '#{params[:uid]}' does not exist" if @user.nil?
+    redirect_to root_path, alert: "User '#{params[:uid]}' does not exist" if @user.nil?
   end
 
   def user_is_current_user
-    redirect_to profile_path(@user.to_s), :alert => "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
+    redirect_to profile_path(@user.to_s), alert: "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
+  end
+
+  def user_not_current_user
+    redirect_to profile_path(@user.to_s), alert: "You cannot follow or unfollow yourself" if @user == current_user
   end
 end

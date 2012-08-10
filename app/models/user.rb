@@ -63,20 +63,24 @@ class User < ActiveRecord::Base
   end
 
   def populate_attributes
-    entry = directory_attributes.first
-    attrs = {
-      :email => entry[:mail].first,
-      :display_name => entry[:displayname].first,
-      :address => entry[:postaladdress].first,
-      :admin_area => entry[:psadminarea].first,
-      :department => entry[:psdepartment].first,
-      :title => entry[:title].first,
-      :office => entry[:psofficelocation].first,
-      :chat_id => entry[:pschatname].first,
-      :website => entry[:labeleduri].first,
-      :affiliation => entry[:edupersonprimaryaffiliation].first,
-      :telephone => entry[:telephonenumber].first,
-    }
+    begin
+      entry = directory_attributes.first
+    rescue
+      logger.warn "Directory entry not found for user '#{login}'"
+      return
+    end
+    attrs = {}
+    attrs[:email] = entry[:mail].first rescue nil
+    attrs[:display_name] = entry[:displayname].first rescue nil
+    attrs[:address] = entry[:postaladdress].first.gsub('$', "\n") rescue nil
+    attrs[:admin_area] = entry[:psadminarea].first rescue nil
+    attrs[:department] = entry[:psdepartment].first rescue nil
+    attrs[:title] = entry[:title].first rescue nil
+    attrs[:office] = entry[:psofficelocation].first.gsub('$', "\n") rescue nil
+    attrs[:chat_id] = entry[:pschatname].first rescue nil
+    attrs[:website] = entry[:labeleduri].first.gsub('$', "\n") rescue nil
+    attrs[:affiliation] = entry[:edupersonprimaryaffiliation].first rescue nil
+    attrs[:telephone] = entry[:telephonenumber].first rescue nil
     update_attributes(attrs)
   end
 
