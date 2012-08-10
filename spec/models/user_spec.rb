@@ -12,6 +12,20 @@ describe User do
   it "should have a login" do
     @user.login.should == "jilluser"
   end
+  it "should have activity stream-related methods defined" do
+    @user.should respond_to(:stream)
+    @user.should respond_to(:events)
+    @user.should respond_to(:profile_events)
+    @user.should respond_to(:create_event)
+    @user.should respond_to(:log_event)
+    @user.should respond_to(:log_profile_event)
+  end
+  it "should redefine to_param to make redis keys more recognizable" do
+    @user.to_param.should == @user.login
+  end
+  it "should have a cancan ability defined" do
+    @user.should respond_to(:can?)
+  end
   it "should not have any followers" do
     @user.followers_count.should == 0
     @another_user.follows_count.should == 0

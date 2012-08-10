@@ -116,10 +116,6 @@ describe 'Routes' do
     it "should route to login" do
       { get: '/login' }.should route_to(controller: 'sessions', action: 'new')
     end
-
-    it "should route to profile" # do
-      # { get: '/profile' }.should route_to(controller: 'sessions', action: 'edit')
-    # end
   end
 
   describe 'Dashboard' do

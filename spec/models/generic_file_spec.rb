@@ -125,6 +125,17 @@ describe GenericFile do
           end
         end
       end
+      it "should have activity stream-related methods defined" do
+        @file.save
+        f = GenericFile.find(@file.pid)
+        f.should respond_to(:stream)
+        f.should respond_to(:events)
+        f.should respond_to(:create_event)
+        f.should respond_to(:log_event)
+      end
+      it "should redefine to_param to make redis keys more recognizable" do
+        @file.to_param.should == @file.noid
+      end
       it "should be able to set values via delegated methods" do
         @file.related_url = "http://example.org/"
         @file.creator = "John Doe"
