@@ -314,6 +314,14 @@ $(function() {
       tr.effect("highlight", {}, 3000);
   }
 
+  $('.remove_perm').on('click', function() {
+     var top = $(this).parent().parent();
+     top.hide(); // do not show the block
+     top.find('.select_perm')[0].options[0].selected= true; // select the first otion which is none
+     return false;
+      
+  });
+
   // called from edit object view 
   $('#edit_descriptions_link').on('click', function() {
       descriptions_tab();

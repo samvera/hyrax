@@ -70,9 +70,8 @@
     <tr>
       <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %></td>
       <td>
-      <div class="span30">
-                <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'span20' %>
-      </div>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'span20 select_perm' %>
+      <button class="btn close remove_perm">X</button>
       </td>
     </tr>
   <% end %>
