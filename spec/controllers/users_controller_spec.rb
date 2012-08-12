@@ -70,7 +70,13 @@ describe UsersController do
       flash[:notice].should include("Your profile has been updated")
       @user.avatar.file?.should be_false
     end
-    it "should refresh directory attributes"
+    it "should refresh directory attributes" do
+      Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.login).once
+      User.any_instance.expects(:populate_attributes).once
+      post :update, uid: @user.login, update_directory: true
+      response.should redirect_to(profile_path(@user.login))
+      flash[:notice].should include("Your profile has been updated")
+    end
   end
   describe "#follow" do
     after(:all) do

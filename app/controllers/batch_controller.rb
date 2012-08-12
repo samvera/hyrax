@@ -46,7 +46,11 @@ class BatchController < ApplicationController
       gf.update_attributes(params[:generic_file])
       gf.set_visibility(params)
       gf.save
-      Resque.enqueue(ContentUpdateEventJob, gf.pid, current_user.login)
+      begin
+        Resque.enqueue(ContentUpdateEventJob, gf.pid, current_user.login)
+      rescue Redis::CannotConnectError
+        logger.error "Redis is down!"
+      end
       saved << gf
     end
     notice << render_to_string(:partial=>'generic_files/asset_saved_flash', :locals => { :generic_files => saved }) unless saved.empty?

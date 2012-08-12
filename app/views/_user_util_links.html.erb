@@ -20,7 +20,11 @@
 =======
                     <li><%= link_to raw('<i class="icon-dashboard"></i> dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
                     <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
+<<<<<<< HEAD
 >>>>>>> /bad-path/
+=======
+                    <li><%= link_to raw('<i class="icon-cog"></i> settings'), edit_profile_path(current_user.login), :id => 'upload_nav_link'  %></li>
+>>>>>>> refs #1018, #1019, #1021: various rescues to make sure the site doesn't break if Redis becomes unresponsive; adds ability to refresh LDAP info from edit profile view; adds spec for edit profile view
                     <li class="divider"></li>
                     <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
                 </ul>

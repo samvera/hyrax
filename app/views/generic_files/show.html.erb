@@ -210,7 +210,7 @@ var addthis_config = {"data_track_addressbar":true};<
         <tr>
           <th>Audit Status</th>
           <%- stat= @generic_file.audit_stat(false)  %>
-          <td> <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %></td>           
+          <td> <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %></td>
         </tr>
 <% unless @generic_file.related_files.empty? %>
   <tr>

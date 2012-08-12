@@ -34,7 +34,11 @@ class GenericFilesController < ApplicationController
   def destroy
     pid = @generic_file.noid
     @generic_file.delete
-    Resque.enqueue(ContentDeleteEventJob, pid, current_user.login)
+    begin
+      Resque.enqueue(ContentDeleteEventJob, pid, current_user.login)
+    rescue Redis::CannotConnectError
+      logger.error "Redis is down!"
+    end
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
   end
 
@@ -60,7 +64,11 @@ class GenericFilesController < ApplicationController
       else
         create_and_save_generic_file
         if @generic_file
-          Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.login)
+          begin
+            Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.login)
+          rescue Redis::CannotConnectError
+            logger.error "Redis is down!"
+          end
           respond_to do |format|
             format.html {
               retval = render :json => [@generic_file.to_jq_upload].to_json,
@@ -72,13 +80,12 @@ class GenericFilesController < ApplicationController
             }
           end
         else
-          puts "respond bad"
           retval = render :json => [{:error => "Error creating generic file."}].to_json
         end
       end
     rescue => error
-      logger.warn "GenericFilesController::create rescued error #{error.inspect}"
-      retval = render :json => [{:error => "Error occured while creating generic file."}].to_json
+      logger.warn "GenericFilesController::create rescued error #{error.backtrace}"
+      retval = render :json => [{:error => "Error occurred while creating generic file."}].to_json
     ensure
       # remove the tempfile (only if it is a temp file)
       params[:files][0].tempfile.delete if params[:files][0].respond_to?(:tempfile)
@@ -116,20 +123,32 @@ class GenericFilesController < ApplicationController
       revision = @generic_file.content.get_version(params[:revision])
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
       version_event = true
-      Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.login, params[:revision])
+      begin
+        Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.login, params[:revision])
+      rescue Redis::CannotConnectError
+        logger.error "Redis is down!"
+      end
     end
 
     if params.has_key?(:filedata)
       add_posted_blob_to_asset(@generic_file, params[:filedata])
       version_event = true
-      Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.login)
+      begin
+        Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.login)
+      rescue Redis::CannotConnectError
+        logger.error "Redis is down!"
+      end
     end
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k})
     @generic_file.set_visibility(params)
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
     # do not trigger an update event if a version event has already been triggered
-    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login) unless version_event
+    begin
+      Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login) unless version_event
+    rescue Redis::CannotConnectError
+      logger.error "Redis is down!"
+    end
     record_version_committer(@generic_file, current_user)
     redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
@@ -201,7 +220,11 @@ class GenericFilesController < ApplicationController
       retry
     end
     record_version_committer(@generic_file, current_user)
-    Resque.enqueue(UnzipJob, @generic_file.pid) if file.content_type == 'application/zip'
+    begin
+      Resque.enqueue(UnzipJob, @generic_file.pid) if file.content_type == 'application/zip'
+    rescue Redis::CannotConnectError
+      logger.error "Redis is down!"
+    end
     return @generic_file
   end
 end

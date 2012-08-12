@@ -81,7 +81,11 @@ class GenericFile < ActiveFedora::Base
     content_changed = self.content.changed?
     yield
     #logger.debug "DOING CHARACTERIZE ON #{self.pid}"
-    Resque.enqueue(CharacterizeJob, self.pid) if content_changed
+    begin
+      Resque.enqueue(CharacterizeJob, self.pid) if content_changed
+    rescue Redis::CannotConnectError
+      logger.error "Redis is down!"
+    end
   end
 
   ## Extract the metadata from the content datastream and record it in the characterization datastream
@@ -560,7 +564,11 @@ class GenericFile < ActiveFedora::Base
     unless force
       return latest_audit unless GenericFile.needs_audit?(version, latest_audit)
     end
-    Resque.enqueue(AuditJob, version.pid, version.dsid, version.versionID)
+    begin
+      Resque.enqueue(AuditJob, version.pid, version.dsid, version.versionID)
+    rescue Redis::CannotConnectError
+      logger.error "Redis is down!"
+    end
 
     # run the find just incase the job has finished already
     latest_audit = self.find(version.pid).logs(version.dsid).first

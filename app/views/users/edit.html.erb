@@ -2,20 +2,6 @@
 <%= form_for @user, :url => update_profile_path(@user.login), :html => {:multipart => true, :class => 'form-horizontal well' } do |form| %>
 
 <div class="control-group">
-  <%= form.label :directory, 'Create/manage groups', :class => 'control-label' %>
-  <div class="controls">
-    <%= link_to 'User Managed Groups Management', 'http://umg.its.psu.edu/' %>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= form.label :directory, 'Edit directory entry', :class => 'control-label' %>
-  <div class="controls">
-    <%= link_to 'Instructions', 'http://www.psu.edu/directory/#update' %>
-  </div>
-</div>
-
-<div class="control-group">
   <%= form.label :avatar, 'User picture', :class => "control-label" %>
   <div class="controls">
     <% if @user.avatar? %>
@@ -30,6 +16,27 @@
   <%= form.label :delete_avatar, 'Delete picture?', :class => 'control-label' %>
   <div class="controls">
     <%= check_box_tag 'delete_avatar' %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= form.label :update_directory, 'Refresh directory info?', :class => 'control-label' %>
+  <div class="controls">
+    <%= check_box_tag 'update_directory' %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= form.label :directory, 'Edit directory entry', :class => 'control-label' %>
+  <div class="controls">
+    <%= link_to 'Instructions', 'http://www.psu.edu/directory/#update' %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= form.label :directory, 'Manage groups', :class => 'control-label' %>
+  <div class="controls">
+    <%= link_to 'User Managed Groups Management', 'http://umg.its.psu.edu/' %>
   </div>
 </div>
 

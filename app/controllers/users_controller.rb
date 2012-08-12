@@ -16,13 +16,18 @@ class UsersController < ApplicationController
 
   # Process changes from profile form
   def update
+    @user.populate_attributes if params[:update_directory]
     @user.avatar = params[:user][:avatar] if params[:user][:avatar].present? rescue nil
     @user.avatar = nil if params[:delete_avatar]
     unless @user.save
       redirect_to edit_profile_path(@user.to_s), alert: @user.errors.full_messages
       return
     end
-    Resque.enqueue(UserEditProfileEventJob, @user.login)
+    begin
+      Resque.enqueue(UserEditProfileEventJob, @user.login)
+    rescue Redis::CannotConnectError
+      logger.error "Redis is down!"
+    end
     redirect_to profile_path(@user.to_s), notice: "Your profile has been updated"
   end
 
@@ -30,7 +35,11 @@ class UsersController < ApplicationController
   def follow
     unless current_user.following?(@user)
       current_user.follow(@user)
-      Resque.enqueue(UserFollowEventJob, current_user.login, @user.login)
+      begin
+        Resque.enqueue(UserFollowEventJob, current_user.login, @user.login)
+      rescue Redis::CannotConnectError
+        logger.error "Redis is down!"
+      end
     end
     redirect_to profile_path(@user.to_s), notice: "You are following #{@user.to_s}"
   end
@@ -39,7 +48,11 @@ class UsersController < ApplicationController
   def unfollow
     if current_user.following?(@user)
       current_user.stop_following(@user)
-      Resque.enqueue(UserUnfollowEventJob, current_user.login, @user.login)
+      begin
+        Resque.enqueue(UserUnfollowEventJob, current_user.login, @user.login)
+      rescue Redis::CannotConnectError
+        logger.error "Redis is down!"
+      end
     end
     redirect_to profile_path(@user.to_s), notice: "You are no longer following #{@user.to_s}"
   end
