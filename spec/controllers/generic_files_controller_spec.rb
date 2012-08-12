@@ -24,8 +24,9 @@ describe GenericFilesController do
     end
 
     it "should spawn a content deposit event job" do
-      file = fixture_file_upload('/world.png','application/zip')
+      file = fixture_file_upload('/world.png','image/png')
       Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
+      Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
@@ -119,12 +120,12 @@ describe GenericFilesController do
       sign_in @user
     end
     it "should delete the file" do
-      @generic_file.expects(:delete).once
+      GenericFile.find(@generic_file.pid).should_not be_nil
       delete :destroy, :id=>@generic_file.pid
-      GenericFile.find(@generic_file.pid).count.should == 0
+      lambda { GenericFile.find(@generic_file.pid) }.should raise_error(ActiveFedora::ObjectNotFoundError)
     end
     it "should spawn a content delete event job" do
-      Resque.expects(:enqueue).with(ContentDeleteEventJob, @generic_file.pid, @user.login)
+      Resque.expects(:enqueue).with(ContentDeleteEventJob, @generic_file.noid, @user.login)
       delete :destroy, :id=>@generic_file.pid
     end
   end
@@ -141,12 +142,21 @@ describe GenericFilesController do
     end
 
     it "should spawn a content update event job" do
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, 'test:123', 'jilluser')
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser')
+      @user = FactoryGirl.find_or_create(:user)
+      sign_in @user
+
+      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+    end
+
+    it "should spawn a content new version event job" do
+      Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser')
+      Resque.expects(:enqueue).with(CharacterizeJob, @generic_file.pid)
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
     end
 
     it "should record what user added a new version" do
@@ -154,7 +164,7 @@ describe GenericFilesController do
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
 
       posted_file = GenericFile.find(@generic_file.pid)
       version1 = posted_file.content.latest_version
@@ -165,10 +175,11 @@ describe GenericFilesController do
       controller.stubs(:current_user).returns(archivist)
       sign_in archivist
 
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, 'test:123', 'jilluser').never
-      Resque.expects(:enqueue).with(ContentNewVersionEventJob, 'test:123', archivist.login).once
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser').never
+      Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, archivist.login).once
+      Resque.expects(:enqueue).with(CharacterizeJob, @generic_file.pid).once
       file = fixture_file_upload('/image.jp2','image/jp2')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1"}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''] }
 
       edited_file = GenericFile.find(@generic_file.pid)
       version2 = edited_file.content.latest_version
@@ -178,9 +189,10 @@ describe GenericFilesController do
       # original user restores his or her version
       controller.stubs(:current_user).returns(@user)
       sign_in @user
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, 'test:123', 'jilluser').never
-      Resque.expects(:enqueue).with(ContentRestoredVersionEventJob, 'test:123', @user.login).once
-      post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1"}
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser').never
+      Resque.expects(:enqueue).with(ContentRestoredVersionEventJob, @generic_file.pid, @user.login, 'content.0').once
+      Resque.expects(:enqueue).with(CharacterizeJob, @generic_file.pid).once
+      post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1", :tag=>['']}
 
       restored_file = GenericFile.find(@generic_file.pid)
       version3 = restored_file.content.latest_version
@@ -190,7 +202,7 @@ describe GenericFilesController do
     end
 
     it "should add a new groups and users" do
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_group_name=>{'group1'=>'read'}, :new_user_name=>{'user1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :tag=>[''], :permissions=>{:new_group_name=>{'group1'=>'read'}, :new_user_name=>{'user1'=>'edit'}}}
 
       assigns[:generic_file].read_groups.should == ["group1"]
       assigns[:generic_file].edit_users.should include("user1", @user.login)
@@ -198,7 +210,7 @@ describe GenericFilesController do
     it "should update existing groups and users" do
       @generic_file.read_groups = ['group3']
       @generic_file.save
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :permissions=>{:new_group_name=>'', :new_group_permission=>'', :new_user_name=>'', :new_user_permission=>'', :group=>{'group3' =>'read'}}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :tag=>[''], :permissions=>{:new_group_name=>'', :new_group_permission=>'', :new_user_name=>'', :new_user_permission=>'', :group=>{'group3' =>'read'}}}
 
       assigns[:generic_file].read_groups.should == ["group3"]
     end
@@ -259,13 +271,13 @@ describe GenericFilesController do
           @archivist = FactoryGirl.find_or_create(:archivist)
         end
         it "should display failing audits" do
-            sign_out @user
-            sign_in @archivist
-            @ds = @file.datastreams.first
-            AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
-            get :show, id:"test5"
-            response.body.should include("The audit run")
-            response.body.should include("was failing")
+          sign_out @user
+          sign_in @archivist
+          @ds = @file.datastreams.first
+          AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
+          get :show, id:"test5"
+          response.body.should include("The audit run")
+          response.body.should include("was failing")
         end
       end
     end

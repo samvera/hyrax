@@ -229,7 +229,7 @@ namespace :scholarsphere do
 
     desc "Remove default ScholarSphere Hydra fixtures"
     task :delete do
-      ENV["dir"] = File.join(Rails.root, @localDir, @dir) 
+      ENV["dir"] = File.join(Rails.root, @localDir, @dir)
       fixtures = find_fixtures(@dir)
       fixtures.each do |fixture|
         ENV["pid"] = fixture
@@ -240,6 +240,19 @@ namespace :scholarsphere do
 
     desc "Refresh default ScholarSphere Hydra fixtures"
     task :refresh => [:delete, :load]
+
+    desc "Fix fixtures so they work with Cucumber [KLUDGE]"
+    task :fix => :environment do
+      puts "Attempting to fix fixtures that break cuke"
+      ## Kludgy workarounds to get past lack of depositor in fixtures
+      # First, create a user record
+      User.create(login: 'archivist1', display_name: 'Captain Archivist')
+      # Then, set this user as the depositor of test4 to appease this damn failing cuke
+      gf = GenericFile.find('scholarsphere:test4')
+      gf.terms_of_service = '1'
+      gf.apply_depositor_metadata('archivist1')
+      gf.save
+    end
 
     private
 
@@ -254,7 +267,7 @@ namespace :scholarsphere do
         File.basename(fixture_file, '.foxml.xml').gsub('_',':')
       end
     end
-    
+
     def find_fixtures_erb(dir)
       Dir.glob(File.join(Rails.root, @localDir, dir, '*.foxml.erb'))
     end
@@ -264,4 +277,3 @@ namespace :scholarsphere do
     end
   end
 end
-  

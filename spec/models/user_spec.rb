@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe User do
-  before do
+  before(:all) do
     @user = FactoryGirl.find_or_create(:user)
     @another_user = FactoryGirl.find_or_create(:archivist)
   end
-  after do
+  after(:all) do
     @user.delete
     @another_user.delete
   end
@@ -28,11 +28,17 @@ describe User do
   end
   it "should not have any followers" do
     @user.followers_count.should == 0
-    @another_user.follows_count.should == 0
+    @another_user.follow_count.should == 0
   end
   describe "follow/unfollow" do
     before(:all) do
+      @user = FactoryGirl.find_or_create(:user)
+      @another_user = FactoryGirl.find_or_create(:archivist)
       @user.follow(@another_user)
+    end
+    after do
+      @user.delete
+      @another_user.delete
     end
     it "should be able to follow another user" do
       @user.following?(@another_user).should be_true
@@ -41,7 +47,7 @@ describe User do
       @user.followed_by?(@another_user).should be_false
     end
     it "should be able to unfollow another user" do
-      @user.unfollow(@another_user)
+      @user.stop_following(@another_user)
       @user.following?(@another_user).should be_false
       @another_user.followed_by?(@user).should be_false
     end

@@ -12,18 +12,16 @@ ActiveFedora::Base.class_eval do
   def events(size=-1)
     stream[:event].lrange(0, size).map do |event_id|
       {
-        action: stream.hget("events:#{event_id}", "action"),
-        timestamp: stream.hget("events:#{event_id}", "timestamp")
+        action: $redis.hget("events:#{event_id}", "action"),
+        timestamp: $redis.hget("events:#{event_id}", "timestamp")
       }
     end
   end
 
   def create_event(action, timestamp)
-    stream.multi do
-      @event_id = stream.incr("events:latest_id")
-      stream.hmset("events:#{@event_id}", "action", action, "timestamp", timestamp)
-    end
-    @event_id.value
+    event_id = $redis.incr("events:latest_id")
+    $redis.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
+    event_id
   end
 
   def log_event(event_id)

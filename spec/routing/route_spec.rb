@@ -130,10 +130,6 @@ describe 'Routes' do
     it "should route to dashboard activity" do
       { get: '/dashboard/activity' }.should route_to(controller: 'dashboard', action: 'activity')
     end
-
-    it "should route to dashboard activity with params" do
-      { get: '/dashboard/activity?since=1234567890' }.should route_to(controller: 'dashboard', action: 'activity', params: { since: '1234567890' })
-    end
   end
 
   describe 'Advanced Search' do

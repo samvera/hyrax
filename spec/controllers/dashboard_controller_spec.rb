@@ -1,24 +1,35 @@
 require 'spec_helper'
 
 describe DashboardController do
+  before do
+    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    User.any_instance.stubs(:groups).returns([])
+    controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
+  end
   # This doesn't really belong here, but it works for now
-  describe "authenticate" do
-    before(:all) do
+  describe "authenticate!" do
+    before(:each) do
       @user = FactoryGirl.find_or_create(:archivist)
-      sign_in @user
-      controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
-      User.any_instance.stubs(:groups).returns([])
+      request.stubs(:headers).returns('REMOTE_USER' => @user.login).at_least_once
+      @strategy = Devise::Strategies::HttpHeaderAuthenticatable.new(nil)
+      @strategy.expects(:request).returns(request).at_least_once
     end
     it "should populate LDAP attrs if user is new" do
-      User.stubs(:find_by_login).with('bob123').returns(nil)
-      User.expects(:create).with(login: 'bob123')
-      User.any_instance.expects(:populate_attributes)
+      User.stubs(:find_by_login).with(@user.login).returns(nil)
+      User.expects(:create).with(login: @user.login).returns(@user).once
+      User.any_instance.expects(:populate_attributes).once
+      @strategy.should be_valid
+      @strategy.authenticate!.should == :success
+      sign_in @user
       get :index
     end
     it "should not populate LDAP attrs if user is not new" do
-      User.stubs(:find_by_login).with('bob123').returns(@user)
-      User.expects(:create).with(login: 'bob123').never
+      User.stubs(:find_by_login).with(@user.login).returns(@user)
+      User.expects(:create).with(login: @user.login).never
       User.any_instance.expects(:populate_attributes).never
+      @strategy.should be_valid
+      @strategy.authenticate!.should == :success
+      sign_in @user
       get :index
     end
   end

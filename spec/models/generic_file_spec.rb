@@ -112,8 +112,11 @@ describe GenericFile do
       @file.should respond_to(:file_author)
       @file.should respond_to(:page_count)
     end
+    it "should redefine to_param to make redis keys more recognizable" do
+      @file.to_param.should == @file.noid
+    end
     describe "that have been saved" do
-      before (:each) do
+      before(:each) do
         Resque.expects(:enqueue).once.returns(true)
       end
       after(:each) do
@@ -132,9 +135,6 @@ describe GenericFile do
         f.should respond_to(:events)
         f.should respond_to(:create_event)
         f.should respond_to(:log_event)
-      end
-      it "should redefine to_param to make redis keys more recognizable" do
-        @file.to_param.should == @file.noid
       end
       it "should be able to set values via delegated methods" do
         @file.related_url = "http://example.org/"

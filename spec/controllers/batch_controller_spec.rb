@@ -31,7 +31,7 @@ describe BatchController do
     end
     it "should log a content update event" do
       controller.expects(:permissions_solr_doc_for_id).times(2).returns("mock solr permissions")
-      controller.expects(:can?).with(:read, "mock solr permissions").times(2)
+      controller.expects(:can?).with(:read, "mock solr permissions").times(2).returns(true)
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.login).once
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.login).once
       post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
@@ -39,7 +39,7 @@ describe BatchController do
     describe "when views are shown" do
       render_views
       it "should show flash messages" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"","read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
         response.should redirect_to dashboard_path
         flash[:notice].should_not be_nil
         flash[:notice].should_not be_empty
