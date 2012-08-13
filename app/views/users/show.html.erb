@@ -33,13 +33,6 @@
  <dt>Active Since</dt>
  <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
 </dl>
-<h3>Activity</h3>
-<ul>
-  <% @user.profile_events.each do |event| %>
-    <li><%= event[0].html_safe %>
-  [<%= time_ago_in_words(Time.at(event[1])) %> ago]</li>
-  <% end %>
-</ul>
 <h3>Info</h3>
 <dl>
   <dt>Email</dt>
@@ -63,3 +56,4 @@
   <dt>Telephone</dt>
   <dd><%= @user.telephone %></dd>
 </dl>
+<%= render :partial => 'users/activity_log', :locals => {:events => @events} %>

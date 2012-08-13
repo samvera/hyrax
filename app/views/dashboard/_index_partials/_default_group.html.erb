@@ -1,25 +1,3 @@
-<span id="last-event" class="ui-helper-hidden"><%= @last_event_timestamp %></span>
-<table class="table table-striped" id="activity">
-  <caption class="accessible-hidden">Activity of users you follow</caption>
-  <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>Activity</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-  <% if @user.respond_to? :events
-       @user.events.each do |event| %>
-    <tr>
-      <td>&nbsp;</td>
-      <td><%= event[0].html_safe %></td>
-      <td><%= time_ago_in_words(Time.at(event[1])) %> ago</td>
-    </tr>
-  <%   end
-     end %>
-  </tbody>
-</table>
 <table class="table table-striped">
   <caption class="accessible-hidden">Listing of files you have deposited in ScholarSphere</caption>
 <% unless params[:display_type] == 'list' %>
@@ -35,3 +13,4 @@
     <%= render :partial => 'dashboard/_index_partials/list_files', :locals => {:document => document, :counter => counter} %>
   <% end %>
 </table>
+<%= render :partial => 'users/activity_log', :locals => {:events => @events} %>

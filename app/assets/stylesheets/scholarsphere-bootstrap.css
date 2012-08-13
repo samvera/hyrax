@@ -178,6 +178,7 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
   height:     100%;
   opacity:    0;
 }
+<<<<<<< HEAD
 
 .btn-warning.active,
 .btn-danger.active,
@@ -205,3 +206,12 @@ th.center, td.center {
 
 /* used on facets */
 a small{font-size:9px}
+=======
+/* used for the table to display the activity log */
+#activity {
+  display: block;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+>>>>>>> updates in UI for the social branch, added partial for activity log to shared. refs #1018 refs #1019 refs #1021

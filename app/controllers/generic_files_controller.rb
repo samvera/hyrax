@@ -103,6 +103,7 @@ class GenericFilesController < ApplicationController
     perms = permissions_solr_doc_for_id(@generic_file.pid)
     @can_read =  can? :read, perms
     @can_edit =  can? :edit, perms
+    @events = @generic_file.events(100)
 
     respond_to do |format|
       format.html

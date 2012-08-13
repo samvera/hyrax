@@ -246,11 +246,6 @@ var addthis_config = {"data_track_addressbar":true};<
         </tr>
       </tbody>
     </table> <!-- /verticalheadings -->
-    <h2 class="non lower">Activity</h2>
-    <ul>
-      <% @generic_file.events.each do |event| %>
-        <li><%= event[0].html_safe %> [<%= time_ago_in_words(Time.at(event[1])) %> ago]</li>
-      <% end %>
-    </ul>
+    <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
   </div><!-- /columns second -->
 </div> <!-- /columns two-b -->

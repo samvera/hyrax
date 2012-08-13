@@ -1,5 +1,7 @@
 //= require jquery.zclip.min
 
+/* polling functionality for the dashboard activity, can be turned on
+
 setInterval(function() {
   var last_event_container = $('#last-event');
   var last_event = last_event_container.text();
@@ -18,3 +20,5 @@ setInterval(function() {
     };
   }, dataType: "json"});
 }, 5000);
+
+ */

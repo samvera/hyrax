@@ -6,6 +6,11 @@ class UsersController < ApplicationController
 
   # Display user profile
   def show
+    if @user.respond_to? :profile_events
+      @events = @user.profile_events(100) 
+    else 
+      @events = []
+    end
     @followers = @user.followers
     @following = @user.all_following
   end

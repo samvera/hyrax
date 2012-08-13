@@ -1,0 +1,20 @@
+<span id="last-event" class="ui-helper-hidden"><%# @last_event_timestamp %></span>
+<table class="table table-striped" id="activity">
+  <caption class="accessible-hidden">Activity of users you follow</caption>
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Activity</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% events.each do |event| %>
+    <tr>
+      <td>&nbsp;</td>
+      <td><%= event[:action].html_safe %></td>
+      <td><%= time_ago_in_words(Time.at(event[:timestamp].to_i)) %> ago</td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

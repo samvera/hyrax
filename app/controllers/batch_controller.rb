@@ -43,6 +43,10 @@ class BatchController < ApplicationController
         next
 >>>>>>> refs #1018, #1019, #1021: fix redis monkeypatches; add workaround to fixtures so cukes pass; specs written for social-profile branch, and all specs + cukes passing
       end
+      pp params
+      puts "------------------------------------------------------"
+      puts params[:generic_file]
+      puts "------------------------------------------------------"
       gf.update_attributes(params[:generic_file])
       gf.set_visibility(params)
       gf.save
