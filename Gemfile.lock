@@ -166,13 +166,8 @@ GEM
       railties (>= 3.0.0)
     fastercsv (1.5.5)
     fastthread (1.0.7)
-<<<<<<< HEAD
-    ffi (1.1.3)
-    foreigner (1.2.0)
-=======
     ffi (1.1.5)
     foreigner (1.2.1)
->>>>>>> updates in UI for the social branch, added partial for activity log to shared. refs #1018 refs #1019 refs #1021
       activerecord (>= 3.0.0)
     fssm (0.2.9)
     gherkin (2.11.1)
@@ -223,11 +218,7 @@ GEM
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
     kgio (2.7.4)
-<<<<<<< HEAD
-    launchy (2.1.1)
-=======
     launchy (2.1.2)
->>>>>>> updates in UI for the social branch, added partial for activity log to shared. refs #1018 refs #1019 refs #1021
       addressable (~> 2.3)
     libv8 (3.3.10.4)
     libwebsocket (0.1.5)
@@ -446,11 +437,7 @@ DEPENDENCIES
   factory_girl_rails (~> 1.7.0)
   headless
   hydra-head (= 4.1.1)
-<<<<<<< HEAD
-  hydra-ldap (~> 0.0.4)
-=======
   hydra-ldap (= 0.0.4)
->>>>>>> refs #1018, #1019, #1021: use released hydra-ldap instead of trunk; add default user avatars to asset pipeline; deal with flash more gracefully in app controller; add user avatar validations; add UMG and LDAP edit links to edit profile view; list deposited files and membership date in profile
   jettywrapper
   launchy
   mail_form (= 1.3.0)

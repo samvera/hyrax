@@ -7,10 +7,7 @@ gem 'blacklight_advanced_search', '1.2.4'
 gem 'hydra-head', '4.1.1'
 gem 'active-fedora', '4.4.0'
 gem 'rubydora', '0.5.10'
-<<<<<<< HEAD
 gem "hydra-ldap", "~> 0.0.4"
-=======
->>>>>>> refs #1021, #1018, #1019: adds acts_as_follower gem for a follows/followed model; adds migration and model for acts_as_follower; pins some gems that got unpinned
 gem 'solrizer-fedora', '2.2.0'
 gem "hydra-ldap", "0.0.4"
 

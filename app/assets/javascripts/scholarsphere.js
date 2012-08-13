@@ -314,7 +314,6 @@ $(function() {
       tr.effect("highlight", {}, 3000);
   }
 
-<<<<<<< HEAD
   $('.remove_perm').on('click', function() {
      var top = $(this).parent().parent();
      top.hide(); // do not show the block
@@ -324,9 +323,6 @@ $(function() {
   });
 
   // called from edit object view 
-=======
-  // called from edit object view
->>>>>>> /bad-path/
   $('#edit_descriptions_link').on('click', function() {
       descriptions_tab();
     });
@@ -344,8 +340,6 @@ $(function() {
   // when user clicks on visibility, update potential access levels
   $("input[name='visibility']").on("change", set_access_levels); 
 
-<<<<<<< HEAD
-=======
 	$('#generic_file_permissions_new_group_name').change(function (){
       var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
 	    if (this.value.toUpperCase() == 'PUBLIC') {
@@ -355,13 +349,10 @@ $(function() {
 	    }
 
 	});
->>>>>>> /bad-path/
-
 
   /*
    * facets lists
    */
-<<<<<<< HEAD
     $("li.expandable").click(function(){
        $(this).next("ul").slideToggle();
     
@@ -371,12 +362,6 @@ $(function() {
     $("li.expandable_new").click(function(){   
        $(this).find('i').toggleClass("icon-chevron-down");
     }); 
-=======
-	$("li.expandable").click(function(){
-		$(this).next("ul").slideToggle();
-    $(this).find('i').toggleClass("icon-chevron-down");
-	});
->>>>>>> /bad-path/
 
   /*
    * enlarge icons on hover- on dashboard
@@ -392,20 +377,6 @@ $(function() {
         $(this).removeClass("icon-large");
       });
       */
-<<<<<<< HEAD
-=======
-  // instead for now doing this on a
-  // case by case (or class by class) basis
-  $('.icon-link, .icon-pencil, .icon-download-alt, .icon-trash, .icon-question-sign, .icon-plus, .icon-minus').hover(
-      //on mouseover
-      function(){
-        $(this).addClass("icon-large");
-      },
-      //on mouseout
-      function() {
-        $(this).removeClass("icon-large");
-      });
->>>>>>> /bad-path/
 
 }); //closing function at the top of the page
 

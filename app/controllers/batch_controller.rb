@@ -26,27 +26,10 @@ class BatchController < ApplicationController
     saved = []
     denied = []
     batch.generic_files.each do |gf|
-<<<<<<< HEAD
-      #todo check metadata not push...
-      #if (can read)
-      if can? :read, permissions_solr_doc_for_id(gf.pid)
-        gf.update_attributes(params[:generic_file])
-        gf.set_visibility(params)
-        gf.save
-        Resque.enqueue(ContentUpdateEventJob, gf.pid, current_user.login)
-        fSaved << gf
-      else
-        fDenied << gf
-=======
       unless can? :read, permissions_solr_doc_for_id(gf.pid)
         denied << gf
         next
->>>>>>> refs #1018, #1019, #1021: fix redis monkeypatches; add workaround to fixtures so cukes pass; specs written for social-profile branch, and all specs + cukes passing
       end
-      pp params
-      puts "------------------------------------------------------"
-      puts params[:generic_file]
-      puts "------------------------------------------------------"
       gf.update_attributes(params[:generic_file])
       gf.set_visibility(params)
       gf.save

@@ -6,46 +6,27 @@ on element ids -->
 <tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
   <td width="3%"><%# check_box_tag :generic_file, document[:id] %></td>
   <td width="42%">
-<<<<<<< HEAD
     <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large"></i></a>
-=======
-    <a href="#" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus"></i></a>
->>>>>>> /bad-path/
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br />
   </td>
   <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
   <td width="5%" align="center">
-<<<<<<< HEAD
     <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="Penn State">Penn State</span></a> 
     <% elsif !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('public') %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-important" title="Private">Private</span></a>
-=======
-    <% if document[:read_access_group_t].nil? or (document[:read_access_group_t] & ['public']).empty? %>
-      <i class="icon-lock" title="Private"></i>
-    <% else %>
-      <i class="icon-unlock" title="Open Access"></i>
->>>>>>> /bad-path/
     <% end %>
   </td>
   <td width="23%" class="center">
     <span style="position: relative;">
-<<<<<<< HEAD
-     <%= link_to raw('<i class="icon-copy icon-large"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
+     <%= link_to raw('<i class="icon-link icon-large"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
     </span>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-edit icon-large"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-download icon-large"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
+    <%= link_to raw('<i class="icon-pencil icon-large"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
+    <%= link_to raw('<i class="icon-download-alt icon-large"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-trash icon-large"></i>'), generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation'} %>&nbsp;&nbsp;&nbsp;
-=======
-     <%= link_to raw('<i class="icon-link"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
-    </span>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-pencil"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-download-alt"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-trash"></i>'), generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation' %>&nbsp;&nbsp;&nbsp;
->>>>>>> /bad-path/
   </td>
 </tr>
 <tr class="hide" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->
