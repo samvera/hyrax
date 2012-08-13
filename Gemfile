@@ -7,7 +7,6 @@ gem 'blacklight_advanced_search', '1.2.4'
 gem 'hydra-head', '4.1.1'
 gem 'active-fedora', '4.4.0'
 gem 'rubydora', '0.5.10'
-gem "hydra-ldap", "~> 0.0.4"
 gem 'solrizer-fedora', '2.2.0'
 gem "hydra-ldap", "0.0.4"
 
