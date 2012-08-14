@@ -33,6 +33,7 @@ Install system dependencies
  * libmagickwand-dev
  * [FITS](http://code.google.com/p/fits/) -- put it in a
   directory on your PATH
+ * ghostscript (required to create thumbnails from pdfs)
 
 Install gems
 
