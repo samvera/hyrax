@@ -28,30 +28,49 @@ module ApplicationHelper
   end
 
   def display_user_name(recent_document)
-     return "no display name" unless recent_document[:depositor_t]
-     return User.where(:login => recent_document[:depositor_t][0]).display_name rescue recent_document[:depositor_t][0]
+    return "no display name" unless recent_document[:depositor_t]
+    return User.where(:login => recent_document[:depositor_t][0]).name rescue recent_document[:depositor_t][0]
+  end
+
+  def get_depositor_from_document(doc)
+    doc[:depositor_t] ? doc[:depositor_t][0] : "no depositor value"
   end
 
   def link_to_facet(field, field_string)
-      link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
+    link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
   end
 
-  def link_to_facet_list(list, field_string, emptyText="No value entered", seperator=", ")  
-      return list.map{ |item| link_to_facet(item, field_string) }.join(seperator) unless list.blank?
-      return emptyText
+  def link_to_facet_list(list, field_string, emptyText="No value entered", seperator=", ")
+    return list.map{ |item| link_to_facet(item, field_string) }.join(seperator) unless list.blank?
+    return emptyText
   end
 
 
   def link_to_field(fieldname, fieldvalue, displayvalue = nil)
-      p = {:search_field=>'advanced', fieldname=>fieldvalue}
-      link_url = catalog_index_path(p)
-      display = displayvalue.blank? ? fieldvalue: displayvalue
-      link_to(display, link_url)
+    p = {:search_field=>'advanced', fieldname=>fieldvalue}
+    link_url = catalog_index_path(p)
+    display = displayvalue.blank? ? fieldvalue: displayvalue
+    link_to(display, link_url)
   end
 
   def iconify_auto_link(text)
     auto_link(text) do |value|
       "<i class='icon-external-link'></i>&nbsp;#{value}<br />"
+    end
+  end
+
+  def link_to_profile(login)
+    user = User.find_by_login(login)
+    link_to user.name, profile_path(login)
+  rescue
+    link_to login, profile_path(login)
+  end
+
+  def linkify_chat_id(chat_id)
+    if chat_id.end_with? '@chat.psu.edu'
+      "<a href=\"xmpp:#{chat_id}\">#{chat_id}</a>"
+    else
+      chat_id
     end
   end
 end

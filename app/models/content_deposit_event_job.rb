@@ -1,7 +1,7 @@
 class ContentDepositEventJob < EventJob
   def initialize(generic_file_id, depositor_id)
     gf = GenericFile.find(generic_file_id)
-    action = "User #{link_to depositor_id, profile_path(depositor_id)} has deposited #{link_to gf.title.first, generic_file_path(gf.noid)}"
+    action = "User #{link_to_profile depositor_id} has deposited #{link_to gf.title.first, generic_file_path(gf.noid)}"
     timestamp = Time.now.to_i
     depositor = User.find_by_login(depositor_id)
     # Create the event

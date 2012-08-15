@@ -29,8 +29,8 @@ var addthis_config = {"data_track_addressbar":true};<
     <h2 class="non lower">Actions</h2>
     <p>
       <%= link_to "Download", download_path(@generic_file.noid) %>
-      &nbsp;|&nbsp;
-      <%= link_to "Cite", citation_generic_file_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
+      <!-- &nbsp;|&nbsp; -->
+      <%# link_to "Cite", citation_generic_file_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
       <% if @can_edit %>
           &nbsp;|&nbsp;
           <%= link_to "Edit", edit_generic_file_path   %>
@@ -191,9 +191,8 @@ var addthis_config = {"data_track_addressbar":true};<
     <table class="table table-striped">
       <tbody>
         <tr>
-          <th>Owner</div>
-          <%# link_to_field('depositor', @generic_file.depositor, User.find_by_login(@generic_file.depositor).display_name) %>
-          <td><%= link_to User.find_by_login(@generic_file.depositor).display_name, profile_path(@generic_file.depositor) %></td>
+          <th>Depositor</th>
+          <td><%= link_to_profile @generic_file.depositor %></td>
         </tr>
         <tr>
           <th>Date Uploaded</th>

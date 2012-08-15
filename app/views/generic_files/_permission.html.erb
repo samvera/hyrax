@@ -57,7 +57,7 @@
     <th width="40%">Access Level</th>
   </tr>
   <tr id="file_permissions">
-    <td><%= label_tag :owner_access, "Depositor (<span id=\"file_owner\">#{depositor}</span>)".html_safe, :class=>"control-label" %></td>
+    <td><%= label_tag :owner_access, "Depositor (<span id=\"file_owner\">#{link_to_profile depositor}</span>)".html_safe, :class=>"control-label" %></td>
     <td>
     <%= ScholarSphere::Application::config.owner_permission_levels.keys[0] %>
     </td>

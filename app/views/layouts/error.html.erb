@@ -47,9 +47,9 @@
                     <a href="<%= profile_path(current_user.to_s) %>" class="btn btn-small"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
                       <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></a>
                       <ul class="dropdown-menu">
-                          <li><%= link_to raw('<i class="icon-dashboard"></i> dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
+                          <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
                           <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
-                          <li><%= link_to raw('<i class="icon-cog"></i> settings'), edit_profile_path(current_user.login), :id => 'upload_nav_link'  %></li>
+                          <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), edit_profile_path(current_user.login), :id => 'upload_nav_link'  %></li>
                           <li class="divider"></li>
                           <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
                       </ul>

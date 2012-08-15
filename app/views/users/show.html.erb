@@ -1,7 +1,7 @@
   <h1 class="span110">
     <span class="span60">
-    <%= image_tag @user.avatar.url(:medium), :width => 100 %>
-    <%= @user.display_name.titleize %> (<%= @user.to_s %>)
+    <%= image_tag @user.avatar.url(:thumb), :width => 100 %>
+    <%= @user.name %> (<%= @user.login %>)
     </span>
 
     <span class="span20 offset20">
@@ -32,18 +32,18 @@
     <ul class="thumbnails">
       <% @followers.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
   </div>
 
-  <div> 
+  <div>
     <h4><i class="icon-hand-right"></i> Following: <%= @following.count %></h4>
     <ul class="thumbnails">
       <% @following.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>

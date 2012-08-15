@@ -425,11 +425,8 @@ describe GenericFile do
         @myfile.characterization_terms.keys.should include(:filename)
       end
       it "should append metadata from the characterization" do
-        @myfile.format.should == ["Portable Document Format"]
-        @myfile.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
         @myfile.filename[0].should == @myfile.label
-        @myfile.date_modified.nil?.should be_false
       end
       it "should include thumbnail generation in characterization job" do
         @myfile.thumbnail.size.nil?.should be_false
@@ -437,7 +434,6 @@ describe GenericFile do
       it "should append each term only once" do
         @myfile.append_metadata
         @myfile.format_label.should == ["Portable Document Format"]
-        @myfile.identifier.should == ["5a2d761cab7c15b2b3bb3465ce64586d"]
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
       end
     end

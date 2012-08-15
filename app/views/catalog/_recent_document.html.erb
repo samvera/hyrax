@@ -2,17 +2,16 @@
 <%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
 <%- title = filename if title.empty? -%>
-<%- depositor = display_user_name(recent_document) -%>
-<%- depositor = 'no depositor value' if depositor.blank? -%>
-    <tr>    
+<%- depositor = get_depositor_from_document(recent_document) -%>
+    <tr>
       <% if display_thumbs %>
-        <td class="span10"><%= link_to_field('depositor_t', recent_document[:depositor_t], depositor) %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
-      <% end %> 
+        <td class="span10"><%= link_to_profile depositor %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
+      <% end %>
       <td>
         <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %>
           <% if display_access %>
               <% if !recent_document[:read_access_group_t].blank? and recent_document[:read_access_group_t].include?('registered') %>
-                 <span class="label label-info" title="Penn State">Penn State</span> 
+                 <span class="label label-info" title="Penn State">Penn State</span>
               <% elsif recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
                 <span class="label label-important">Private</span>
               <% else %>
@@ -21,7 +20,7 @@
           <% end %>
         </h3>
         <p> <%= link_to filename, generic_file_path(recent_document.fetch(:noid_s, :id)) %><br />
-          <%= keywords.html_safe %> 
+          <%= keywords.html_safe %>
         </p>
       </td>
     </tr>

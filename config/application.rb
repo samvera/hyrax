@@ -48,12 +48,6 @@ module ScholarSphere
     config.contact_email = 'DLT-GAMMA-PROJECT@lists.psu.edu'
 
     config.fits_to_desc_mapping = {
-      :format_label => :format,
-      :last_modified => :date_modified,
-      :original_checksum => :identifier,
-      :rights_basis => :rights,
-      :copyright_basis => :rights,
-      :copyright_note => :rights,
       :file_title => :title,
       :file_author => :creator,
       :file_language => :language

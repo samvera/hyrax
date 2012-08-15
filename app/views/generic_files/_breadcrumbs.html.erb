@@ -1,20 +1,25 @@
 <div class="breadcrumbs">
-  <% home_url = link_to('Home', root_path) unless current_user %>
-  <% home_url = link_to('Home', root_path)+'  / '+ link_to('Dashboard', dashboard_path) if current_user %>
-  <%=
+  <%
+     crumbs = []
+     crumbs << link_to('Home', root_path)
+
      case request.referer
      when /dashboard/
-       home_url
+       crumbs << link_to('Dashboard', dashboard_path)
      when /files/
-       home_url+'  / '+link_to( 'Back to previous', request.referer)
+       crumbs << link_to('Back to previous', request.referer)
      when /catalog/
-       home_url+'  / '+link_to( 'Back to Search Results', request.referer)
-     else
-       link_to 'Home', root_path
+       crumbs << link_to('Back to search results', request.referer)
      end
-  %>
-  &nbsp;/&nbsp;
-  <span class="active">
-    <%= @generic_file.title.join(' | ') %>
-  </span>
+
+     crumbs << @generic_file.title.first
+
+     crumbs.each do |crumb| %>
+       <% if crumb == crumbs.last %>
+       <span class="active"> <%= crumb %>
+       <% else %>
+       <span> <%= crumb %> <span class="divider">/</span>
+       <% end %>
+       </span>
+  <% end %>
 </div><!-- /breadcrumbs -->
