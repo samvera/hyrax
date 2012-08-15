@@ -4,12 +4,12 @@
   <div id="permissions_display">
 <input type="hidden" name="generic_file[permissions][group][public]" value="1" />
 <input type="hidden" name="generic_file[permissions][group][registered]" value="2" />
-<h2>Permissions</h2>
-<div class="alert hide" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save<% if params[:controller] == 'generic_file' %> Permissions<% end %>&quot; button is pressed at the bottom of the page.</div>
+<h2><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %><small>(applied to all files just uploaded)</small><% end %></h2>
+<div class="alert hide" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
 <div class="alert alert-error hide" id="permissions_error"><a class="close" data-dismiss="alert" href="#">×</a><span id="permissions_error_text"></span></div>
 <div class="well">
   <div class="row">
-    <p class="span15 offset52"><a href="" >What's this <i class="icon-question-sign icon-large"></i></a></p>
+    <p class="pull-right"><a href="" >What's this <i class="icon-question-sign icon-large"></i></a></p>
   </div>
   <div class="control-group">
     <h3>Visibility - <small>who should have the ability to read and download</small></h3>
@@ -77,8 +77,6 @@
   <% end %>
 </table>
 </div><!-- /#permissions_display -->
-<div class="row" id="permissions_submit">
-  <div class="form-actions">
-        <%= button_tag '<i class="icon-save"></i> Save Permissions'.html_safe, :type => 'submit', :class => 'btn-primary', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_permission" %>
-  </div>
+<div class="row form-actions" id="permissions_submit">
+        <%= button_tag '<i class="icon-save"></i> Save'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_permission" %>
 </div>

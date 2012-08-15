@@ -1,7 +1,31 @@
+<h2>Individual Titles <small>(applied to individual files uploaded)</small><small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
+<div id="" class="well">
+  <p>
+  <i class="icon-info-sign"></i> Filename will be the default title.  Please provide a more meaningful title, and filenames will still be preserved by the system.
+  </p>
+  <div class="row">
+    <div class="span60">
+      <% @batch.generic_files.each do |gen_f| %>
+        <div class="control-group">
+          <%= f.label :title, "<span class='error'>*</span> Title".html_safe, :class=>"control-label" %> 
+          <div class="controls" id="additional_title_clone">
+            <%= f.text_field :title, :name=>"title[#{gen_f.id}][]", :value=>gen_f.label, :required=> true %>  
+            <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title"><i class="icon-question-sign icon-large"></i></a>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="span40">
+      <!-- put metadata about file being edited here -->
+    </div>
+  </div>
+</div>
+
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>  
 <%= hidden_field_tag(:extra_description_count, "1") %>
 <div  id="descriptions_display">
-  <h2 class="non lower">Descriptions  <small class="pull-right">* indicates required fields</small></h2>
+  <h2 class="non lower">Bulk Descriptions <small>(applied to all files just uploaded)</small>  <small class="pull-right"><span class="error">*</span> indicates required fields</small></h2>
   <div class="well">
     <div class="control-group" id="resources">
         <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
@@ -12,18 +36,7 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :title, "* Title", :class=>"control-label" %> 
-      <div class="controls" id="additional_title_clone">
-          <%= f.text_field :title, :name=>"generic_file[title][]", :value=>gf.title[0], :required=> true %>  
-          <button class="adder btn" name="additional_title" id="additional_title_submit">+<span class="accessible-hidden">add another Title</span></button>
-          &nbsp;
-          <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title"><i class="icon-question-sign icon-large"></i></a>
-      </div>
-      <div id="additional_title_elements"></div>
-    </div>
-
-    <div class="control-group">
-        <%= f.label :tag, "* Keyword", :class=>"control-label" %> 
+      <%= f.label :tag, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %> 
       <div class="controls" id="additional_tag_clone">
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>"", :required=> true  %> 
           <button class="adder btn" name="additional_tag" id="additional_tag_submit">+<span class="accessible-hidden">add another Tag</span></button>
@@ -34,7 +47,7 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :creator, "* Creator", :class=>"control-label" %>
+      <%= f.label :creator, "<span class='error'>*</span> Creator".html_safe, :class=>"control-label" %>
       <div class="controls" id="additional_creator_clone">
         <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"", :required=> true %>
           <button class="adder btn" name="additional_creator" id="additional_creator_submit">+<span class="accessible-hidden">add another Creator</span></button>
@@ -159,7 +172,4 @@
       </div>
     </div> <!-- /more_descriptions -->
   </div><!-- /well -->
-  <div class="form-actions">
-    <%= f.button '<i class="icon-save"></i> Save'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;" %>
-  </div>
 </div> <!-- /row /span6 -->

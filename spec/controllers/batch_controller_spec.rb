@@ -34,7 +34,7 @@ describe BatchController do
       controller.expects(:can?).with(:read, "mock solr permissions").times(2).returns(true)
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.login).once
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.login).once
-      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
+      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]} 
     end
     describe "when views are shown" do
       render_views
@@ -76,7 +76,7 @@ describe BatchController do
         file.discover_groups.should == []
       end
       it "should set metadata like title" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "tag"=>["footag", "bartag"], "title"=>"New Title"} 
+        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "tag"=>["footag", "bartag"]}, "title"=>{@file.pid=>"New Title"} 
         file = GenericFile.find(@file.pid)
         file.title.should == ["New Title"]
         file.tag.should == ["footag", "bartag"]
@@ -93,7 +93,7 @@ describe BatchController do
         file.title = "Original Title"
         file.read_groups.should == []
         file.save
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""], "title"=>"New Title"}
+        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}, "title"=>{@file2.pid=>"Title Wont Change"}
         file = GenericFile.find(@file2.pid)
         file.title.should == ["Original Title"]
         file.read_groups.should == []
@@ -122,8 +122,7 @@ describe BatchController do
     it "should default creator" do
        controller.edit
        controller.instance_variable_get(:@generic_file).creator[0].should == @user.display_name
-       controller.instance_variable_get(:@generic_file).title[0].should include 'f1'
-       controller.instance_variable_get(:@generic_file).title[0].should include 'f2'
+       controller.instance_variable_get(:@generic_file).title[0].should == 'f1'
     end
   end
 end

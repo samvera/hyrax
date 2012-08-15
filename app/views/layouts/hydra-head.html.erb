@@ -32,12 +32,11 @@
 <%# need a better way to determine if we are on the home page and using three col layout %>
 <% if params[:controller].eql?("catalog") and !has_search_parameters? %> 
   <% column_class = "three" %>
-<% elsif not ['generic_files', 'batches', 'advanced', 'users'].include?(params[:controller]) %>
+<% elsif not ['generic_files', 'batch', 'advanced', 'users'].include?(params[:controller]) %>
   <% column_class = "two" %>
 <% else %>
   <% column_class = "one" %>
 <% end %>
-
 <body> 
 <div  id="wrapper"> 
   <div class="container">

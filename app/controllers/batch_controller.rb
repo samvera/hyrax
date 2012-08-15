@@ -9,8 +9,13 @@ class BatchController < ApplicationController
   def edit
     @batch =  Batch.find_or_create(params[:id])
     @generic_file = GenericFile.new
+<<<<<<< HEAD
     @generic_file.title =  @batch.generic_files.map(&:label).join(', ')
     @generic_file.creator = current_user.name
+=======
+    @generic_file.title =  @batch.generic_files.map(&:label)
+    @generic_file.creator = current_user.display_name || current_user.login
+>>>>>>> now add ind. titles to batch upload fixes #1232
     begin
       @groups = current_user.groups
     rescue
@@ -30,6 +35,8 @@ class BatchController < ApplicationController
         denied << gf
         next
       end
+
+      gf.title = params[:title][gf.pid] if params[:title][gf.pid] rescue gf.label 
       gf.update_attributes(params[:generic_file])
       gf.set_visibility(params)
       gf.save

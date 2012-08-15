@@ -200,7 +200,9 @@ th.center, td.center {
 }
 
 /* used on facets */
-a small{font-size:9px}
+a small{
+  font-size:9px
+}
 
 /* used for the table to display the activity log */
 #activity {
@@ -215,4 +217,7 @@ dl#user_info dt{
 /* icon colors for links in blue buttons */
 a.btn-primary i, a.btn-primary:hover i { 
   color: #fff;
+}
+.error {
+  color: #990000;
 }
