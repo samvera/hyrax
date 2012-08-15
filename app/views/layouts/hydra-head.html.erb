@@ -32,7 +32,7 @@
 <%# need a better way to determine if we are on the home page and using three col layout %>
 <% if params[:controller].eql?("catalog") and !has_search_parameters? %> 
   <% column_class = "three" %>
-<% elsif not ['generic_files', 'batches', 'advanced'].include?(params[:controller]) %>
+<% elsif not ['generic_files', 'batches', 'advanced', 'users'].include?(params[:controller]) %>
   <% column_class = "two" %>
 <% else %>
   <% column_class = "one" %>
@@ -60,9 +60,9 @@
                 <%= yield %>
               </div><!-- /.span63 -->
 
-              <div class="span30 pad-left">
+              <div class="span30 offset2">
                 <h2 class="heading1">Contribute</h2> 
-                <%= link_to 'Share Your Work', new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %><br />
+                <%= link_to '<i class="icon-file"></i> Share Your Work'.html_safe, new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %><br />
                 <div class="row">&nbsp;</div>
                 <div class="row">&nbsp;</div>
                 <h2 class="heading1">My Latest</h2> 

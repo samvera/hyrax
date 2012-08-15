@@ -1,46 +1,61 @@
-<h1>Edit Profile</h1>
-<%= form_for @user, :url => update_profile_path(@user.login), :html => {:multipart => true, :class => 'form-horizontal well' } do |form| %>
+<% javascript 'bootstrap-tooltip.js'%>
+<% javascript 'bootstrap-popover.js'%>
 
-<div class="control-group">
-  <%= form.label :avatar, 'User picture', :class => "control-label" %>
-  <div class="controls">
-    <% if @user.avatar? %>
-      <%= image_tag @user.avatar.url(:thumb) %>
-    <% end %>
-    <%= form.file_field :avatar %>
-    <p>Maximum size of 500Kb in JPG, GIF, or PNG format.</p>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= form.label :delete_avatar, 'Delete picture?', :class => 'control-label' %>
-  <div class="controls">
-    <%= check_box_tag 'delete_avatar' %>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= form.label :update_directory, 'Refresh directory info?', :class => 'control-label' %>
-  <div class="controls">
-    <%= check_box_tag 'update_directory' %>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= form.label :directory, 'Edit directory entry', :class => 'control-label' %>
-  <div class="controls">
-    <%= link_to 'Instructions', 'http://www.psu.edu/directory/#update' %>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= form.label :directory, 'Manage groups', :class => 'control-label' %>
-  <div class="controls">
-    <%= link_to 'User Managed Groups Management', 'http://umg.its.psu.edu/' %>
-  </div>
-</div>
-
-<div class="form-actions">
-  <%= form.submit :value => "Save", :class => "btn-primary btn-large" %>
-</div>
+<% content_for :local_js do %>
+// initialize popover helpers
+$("a[rel=popover]").popover();
 <% end %>
+
+<h1>Edit Profile</h1>
+<div class="span45 well">
+  <%= form_for @user, :url => update_profile_path(@user.login), :html => {:multipart => true, :class => 'form-horizontal' } do |f| %>
+    <div class="control-group">
+      <%= f.label :avatar, '<i class="icon-camera-retro"></i> Change picture'.html_safe, :class => "control-label" %>
+      <div class="controls">
+        <% if @user.avatar? %>
+          <%= image_tag @user.avatar.url(:thumb) %>
+        <% end %>
+        <%= f.file_field :avatar %>
+        <p>Maximum size of 500Kb in JPG, GIF, or PNG format.</p>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :delete_avatar, '<i class="icon-remove"></i> Delete picture'.html_safe, :class => 'control-label' %>
+      <div class="controls">
+        <label class="checkbox">
+          <%= check_box_tag 'delete_avatar' %> Yes 
+          <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="icon-question-sign icon-large"></i></a>
+        </label>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :update_directory, '<i class="icon-refresh"></i> Refresh directory info'.html_safe, :class => 'control-label' %>
+      <div class="controls">
+        <label class="checkbox">
+          <%= check_box_tag 'update_directory' %> Yes
+          <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from Penn State's central directory (LDAP) and is cached by ScholarSphere.  If you have updated that information and don't see those changes in your ScholarSphere profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="icon-question-sign icon-large"></i></a>
+        </label>
+      </div>
+    </div>
+
+
+    <div class="form-actions">
+      <%= f.button '<i class="icon-save"></i> Save Profile'.html_safe, :type => 'submit', :class => "btn-primary btn-large" %>
+    </div>
+  <% end %>
+</div><!-- /span /well-->
+
+<div class="span53 offset1 well">
+  <h3><i class="icon-user"></i> Directory Info (LDAP) <%= link_to 'Edit Instructions', 'http://www.psu.edu/directory/#update', :class => 'btn btn-mini btn-primary' %></h3>
+  <%= render :partial => 'user_info', :locals => {:user => @user} %>
+
+  <hr />
+
+  <h3><i class="icon-group"></i> User Managed Groups Info (UMG) <%= link_to 'Manage UMG', 'http://umg.its.psu.edu/', :class => 'btn btn-mini btn-primary' %> </h3>
+  <% @groups.each do |g| %>
+    <i class="icon-caret-right"></i> <%= g %><br />
+  <% end %>
+</div>
+

@@ -44,7 +44,7 @@
                 <% if index == 0 %>
                   <button class="adder btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">+<span class="accessible-hidden">add another <%= key %></span></button>
                   &nbsp;
-                  <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= key.humanize %>">Help</a>
+                  <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= key.humanize %>"><i class="icon-question-sign icon-large"></i></a>
                 <% else %>
                   <button class="remover btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">-<span class="accessible-hidden">add another <%= key %></span></button>
                 <% end %>
@@ -57,7 +57,9 @@
 
     </div><!-- /well -->
   <div class="row">
-    <div class="form-actions"><%= f.submit "Save Descriptions", :name => "update_descriptions", :id => "upload_submit", :class => "btn-primary", :onclick=>"confirmation_needed = false;" %></div>
+    <div class="form-actions">
+      <%= f.button '<i class="icon-save"></i> Save Descriptions'.html_safe, :type => 'submit', :class => 'btn-primary', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_descriptions" %>
+    </div>
   </div>
 </div><!-- /row /span6 -->
 <% end %>

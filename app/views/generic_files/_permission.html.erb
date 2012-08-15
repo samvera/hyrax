@@ -34,7 +34,7 @@
         <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
         <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
         <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span17' %>
-        <button class="btn btn-mini btn-inverse" id="add_new_user_skel">Add</button>
+        <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i>Add</button>
         <br /> <span id="directory_user_result"></span> 
       </div>
     </div>
@@ -45,7 +45,7 @@
         <% @groups.unshift('Select a group') %>
         <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span40' %>
         <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span17' %>
-        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" >Add</button>
+        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i>Add</button>
         <br /><span id="directory_group_result"></span>
       </div>
     </div>
@@ -57,7 +57,7 @@
     <th width="40%">Access Level</th>
   </tr>
   <tr id="file_permissions">
-    <td><%= label_tag :owner_access, "Owner (<span id=\"file_owner\">#{depositor}</span>)".html_safe, :class=>"control-label" %></td>
+    <td><%= label_tag :owner_access, "Depositor (<span id=\"file_owner\">#{depositor}</span>)".html_safe, :class=>"control-label" %></td>
     <td>
     <%= ScholarSphere::Application::config.owner_permission_levels.keys[0] %>
     </td>
@@ -79,7 +79,6 @@
 </div><!-- /#permissions_display -->
 <div class="row" id="permissions_submit">
   <div class="form-actions">
-        <%#= f.submit "Save Permissions", :name => "update_permission", :id => "upload_submit", :class => "btn-primary", :onclick=>"confirmation_needed = false;" %>
-    <%= submit_tag "Save Permissions", :name => "update_permission", :id => "upload_submit", :class => "btn-primary", :onclick=>"confirmation_needed = false;" %>
+        <%= f.button '<i class="icon-save"></i> Save Permissions'.html_safe, :type => 'submit', :class => 'btn-primary', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_permission" %>
   </div>
 </div>

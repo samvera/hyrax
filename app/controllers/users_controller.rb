@@ -17,6 +17,8 @@ class UsersController < ApplicationController
 
   # Display form for users to edit their profile information
   def edit
+    @user = current_user
+    @groups = @user.groups
   end
 
   # Process changes from profile form

@@ -192,10 +192,6 @@ th.center, td.center {
   text-align: center;
 }
 
-.pad-left{
-    padding-left:10px;
-}
-
 /* use if a label should be hidden from view but available to screen readers */
 .accessible-hidden {
   position: absolute !important;
@@ -205,10 +201,18 @@ th.center, td.center {
 
 /* used on facets */
 a small{font-size:9px}
+
 /* used for the table to display the activity log */
 #activity {
   display: block;
   height: 200px;
   overflow-y: scroll;
 }
-
+/* user information list on user show page */
+dl#user_info dt{
+  padding-top: 15px;
+}
+/* icon colors for links in blue buttons */
+a.btn-primary i, a.btn-primary:hover i { 
+  color: #fff;
+}

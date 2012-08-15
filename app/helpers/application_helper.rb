@@ -51,7 +51,7 @@ module ApplicationHelper
 
   def iconify_auto_link(text)
     auto_link(text) do |value|
-      "<i class='icon-external-link'></i>&nbsp;#{value}"
+      "<i class='icon-external-link'></i>&nbsp;#{value}<br />"
     end
   end
 end

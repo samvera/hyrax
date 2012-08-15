@@ -6,14 +6,11 @@
             <div class="controls">
               <div class="input-append">
               <label class="accessible-hidden">Search Scholarsphere</label> 
-  <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => "Type keywords in here" %>
-  <button type="submit" class="btn btn-info" id="search-submit-header">
-    <i class="icon-search"> GO</i>
-  </button>
+              <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => "Type keywords in here" %><button type="submit" class="btn btn-info" id="search-submit-header"><i class="icon-search"></i> Go</button>
   <!-- <input type="submit" class="btn btn-info" id="search-submit-header" value="GO"><i class="icon-search"></i></input>
 &nbsp; -->
- <%= link_to 'more options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
- <%= link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
+ <%# link_to 'more options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
+ <%# link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
               </div>
             </div>
 <% end %>

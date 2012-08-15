@@ -166,10 +166,10 @@ $(function() {
       var docId = a[1];
       $("#detail_"+docId).toggle();
       if( $("#detail_"+docId).is(":hidden") ) {
-        $("#expand_"+docId).attr("class", "icon-plus");
+        $("#expand_"+docId).attr("class", "icon-plus icon-large");
       }
       else {
-        $("#expand_"+docId).attr("class", "icon-minus");
+        $("#expand_"+docId).attr("class", "icon-minus icon-large");
       }
     }
     return false;

@@ -17,7 +17,7 @@
           <%= f.text_field :title, :name=>"generic_file[title][]", :value=>gf.title[0], :required=> true %>  
           <button class="adder btn" name="additional_title" id="additional_title_submit">+<span class="accessible-hidden">add another Title</span></button>
           &nbsp;
-          <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title"><i class="icon-question-sign icon-large"></i></a>
       </div>
       <div id="additional_title_elements"></div>
     </div>
@@ -28,7 +28,7 @@
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>"", :required=> true  %> 
           <button class="adder btn" name="additional_tag" id="additional_tag_submit">+<span class="accessible-hidden">add another Tag</span></button>
           &nbsp;
-          <a href="#" id="generic_file_tag_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>" data-original-title="Keyword"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_tag_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>" data-original-title="Keyword"><i class="icon-question-sign icon-large"></i></a>
       </div>
       <div id="additional_tag_elements"></div>
     </div>
@@ -39,7 +39,7 @@
         <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"", :required=> true %>
           <button class="adder btn" name="additional_creator" id="additional_creator_submit">+<span class="accessible-hidden">add another Creator</span></button>
           &nbsp;
-          <a href="#" id="generic_file_creator_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>" data-original-title="Creator"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_creator_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>" data-original-title="Creator"><i class="icon-question-sign icon-large"></i></a>
       </div>
       <div id="additional_creator_elements"></div>
     </div>
@@ -50,7 +50,7 @@
         <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, 'No license specified') %>
           <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="accessible-hidden">add another Rights</span></button>
         &nbsp;
-        <a href="#" id="generic_file_rights_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>" data-original-title="Rights"><i class="icon-question-sign"></i></a>
+        <a href="#" id="generic_file_rights_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>" data-original-title="Rights"><i class="icon-question-sign icon-large"></i></a>
       </div>
       <div id="additional_rights_elements"></div>
     </div>
@@ -67,7 +67,7 @@
           <%= f.text_field :related_url, :name=>"generic_file[related_url][]", :value=>""  %> 
           <button class="adder btn" name="additional_related_url" id="additional_related_url_submit">+<span class="accessible-hidden">add another Related URL</span></button>
           &nbsp;
-          <a href="#" id="generic_file_related_url_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_related_url"] %>" data-original-title="Related URL"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_related_url_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_related_url"] %>" data-original-title="Related URL"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_related_url_elements"></div>
       </div>
@@ -87,7 +87,7 @@
           <%= f.text_field :contributor, :name=>"generic_file[contributor][]", :value=>gf.contributor[0]  %> 
           <button class="adder btn" name="additional_contributor" id="additional_contributor_submit">+<span class="accessible-hidden">add another Contributor</span></button>
             &nbsp;
-          <a href="#" id="generic_file_contributor_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_contributor"] %>" data-original-title="Contributor"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_contributor_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_contributor"] %>" data-original-title="Contributor"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_contributor_elements"></div>
       </div>
@@ -98,7 +98,7 @@
           <%= f.text_field :date_created, :name=>"generic_file[date_created][]", :value=>""  %> 
           <button class="adder btn" name="additional_date_created" id="additional_date_created_submit">+<span class="accessible-hidden">add another Date Created</span></button>
             &nbsp;
-          <a href="#" id="generic_file_date_created_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_date_created"] %>" data-original-title="Date Created"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_date_created_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_date_created"] %>" data-original-title="Date Created"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_date_created_elements"></div>
       </div>
@@ -109,7 +109,7 @@
           <%= f.text_area :description, :name=>"generic_file[description][]", :value=>""  %> 
           <button class="adder btn" name="additional_description" id="additional_description_submit">+<span class="accessible-hidden">add another Description</span></button>
             &nbsp;
-          <a href="#" id="generic_file_description_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_description"] %>" data-original-title="Description"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_description_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_description"] %>" data-original-title="Description"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_description_elements"></div>
       </div>
@@ -120,7 +120,7 @@
           <%= f.text_field :identifier, :name=>"generic_file[identifier][]", :value=>""  %> 
           <button class="adder btn" name="additional_identifier" id="additional_identifier_submit">+<span class="accessible-hidden">add another Identifier</span></button>
             &nbsp;
-          <a href="#" id="generic_file_identifier_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_identifier"] %>" data-original-title="Identifier"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_identifier_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_identifier"] %>" data-original-title="Identifier"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_identifier_elements"></div>
       </div>
@@ -131,7 +131,7 @@
           <%= f.text_field :language, :name=>"generic_file[language][]", :value=>""  %> 
           <button class="adder btn" name="additional_language" id="additional_language_submit">+<span class="accessible-hidden">add another Language</span></button>
             &nbsp;
-          <a href="#" id="generic_file_language_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_language"] %>" data-original-title="Language"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_language_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_language"] %>" data-original-title="Language"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_language_elements"></div>
       </div>
@@ -142,7 +142,7 @@
           <%= f.text_field :publisher, :name=>"generic_file[publisher][]", :value=>""  %> 
           <button class="adder btn" name="additional_publisher" id="additional_publisher_submit">+<span class="accessible-hidden">add another Publisher</span></button>
             &nbsp;
-          <a href="#" id="generic_file_publisher_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_publisher"] %>" data-original-title="Publisher"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_publisher_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_publisher"] %>" data-original-title="Publisher"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_publisher_elements"></div>
       </div>
@@ -153,13 +153,13 @@
           <%= f.text_field :subject, :name=>"generic_file[subject][]", :value=>"" %>  
           <button class="adder btn" name="additional_subject" id="additional_subject_submit">+<span class="accessible-hidden">add another Subject</span></button>
           &nbsp;
-          <a href="#" id="generic_file_subject_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_subject"] %>" data-original-title="Subject"><i class="icon-question-sign"></i></a>
+          <a href="#" id="generic_file_subject_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_subject"] %>" data-original-title="Subject"><i class="icon-question-sign icon-large"></i></a>
         </div>
         <div id="additional_subject_elements"></div>
       </div>
     </div> <!-- /more_descriptions -->
   </div><!-- /well -->
   <div class="form-actions">
-    <%= f.submit :value => "Save", :name => "upload_submit", :id => "upload_submit", :class => "btn-primary btn-large", :onclick=>"confirmation_needed = false;"%>
+    <%= f.button '<i class="icon-save"></i> Save'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;" %>
   </div>
 </div> <!-- /row /span6 -->

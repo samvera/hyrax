@@ -1,59 +1,56 @@
-<h2><%= @user.display_name %> (<%= @user.to_s %>)</h2>
-<%= image_tag @user.avatar.url(:medium) %>
-<% if not signed_in? %>
-<!-- sign in to access social functions -->
-<% elsif current_user == @user %>
-<a class="btn btn-primary" href="<%= edit_profile_path(@user.to_s) %>">
-  <i class="icon-edit"></i> Edit Profile
-</a>
-<% elsif current_user.following?(@user) %>
-<a class="btn btn-primary" href="<%= unfollow_user_path(@user.to_s) %>">
-  <i class="icon-eye-close"></i> Unfollow
-</a>
-<% else %>
-<a class="btn btn-primary" href="<%= follow_user_path(@user.to_s) %>">
-  <i class="icon-eye-open"></i> Follow
-</a>
-<% end %>
-<dl>
- <dt><%= @followers.count %> Follower(s)</dt>
- <dd>
- <% @followers.each do |f| %>
-   <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %></a>
- <% end %>
- </dd>
- <dt>Following <%= @following.count %></dt>
- <dd>
- <% @following.each do |f| %>
-   <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %></a>
- <% end %>
- </dd>
- <dt>Deposited Files</dt>
- <dd><%= link_to_field('depositor', @user.to_s, GenericFile.find(:depositor_t => @user.to_s).count) %></dd>
- <dt>Active Since</dt>
- <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
-</dl>
-<h3>Info</h3>
-<dl>
-  <dt>Email</dt>
-  <dd><%= @user.email %></dd>
-  <dt>Chat ID</dt>
-  <dd><%= @user.chat_id %></dd>
-  <dt>Website(s)</dt>
-  <dd><%= iconify_auto_link(@user.website) %></dd>
-  <dt>Title</dt>
-  <dd><%= @user.title %></dd>
-  <dt>Administrative Area</dt>
-  <dd><%= @user.admin_area %></dd>
-  <dt>Department</dt>
-  <dd><%= @user.department %></dd>
-  <dt>Office</dt>
-  <dd><%= @user.office %></dd>
-  <dt>Address</dt>
-  <dd><%= @user.address %></dd>
-  <dt>Affiliation</dt>
-  <dd><%= @user.affiliation %></dd>
-  <dt>Telephone</dt>
-  <dd><%= @user.telephone %></dd>
-</dl>
-<%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+  <h1 class="span110">
+    <span class="span60">
+    <%= image_tag @user.avatar.url(:medium), :width => 100 %>
+    <%= @user.display_name.titleize %> (<%= @user.to_s %>)
+    </span>
+
+    <span class="span20 offset20">
+      <% if not signed_in? %>
+        <!-- sign in to access social functions -->
+      <% elsif current_user == @user %>
+        <a class="btn btn-primary" href="<%= edit_profile_path(@user.to_s) %>"><i class="icon-edit"></i> Edit Your Profile </a>
+      <% elsif current_user.following?(@user) %>
+        <a class="btn btn-primary" href="<%= unfollow_user_path(@user.to_s) %>"><i class="icon-eye-close"></i> Unfollow </a>
+      <% else %>
+        <a class="btn btn-primary" href="<%= follow_user_path(@user.to_s) %>"><i class="icon-eye-open"></i> Follow</a>
+      <% end %>
+    </span>
+  </h1>
+    <dl>
+      <dt><i class="icon-calendar"></i> Active Since</dt>
+      <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
+      <dt><i class="icon-folder-open"></i> Deposited Files</dt>
+      <dd><%= link_to_field('depositor', @user.to_s, GenericFile.find(:depositor_t => @user.to_s).count) %></dd>
+    </dl>
+
+<hr />
+
+<h2>User Info</h2>
+<div class="span44">
+  <div>
+    <h4><i class="icon-hand-left"></i> Follower(s): <%= @followers.count %></h4>
+    <ul class="thumbnails">
+      <% @followers.each do |f| %>
+        <li class="span8">
+          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %>
+        <li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div> 
+    <h4><i class="icon-hand-right"></i> Following: <%= @following.count %></h4>
+    <ul class="thumbnails">
+      <% @following.each do |f| %>
+        <li class="span8">
+          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.display_name } ) %>
+        <li>
+      <% end %>
+    </ul>
+  </div>
+  <%= render :partial => 'user_info', :locals => {:user => @user} %>
+</div><!-- close span44 -->
+
+<div class="span60 offset5">
+  <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+</div>

@@ -8,7 +8,7 @@
     <p id="upload_field">
       <%= file_field_tag "filedata"  %>
     </p>
-    <%= f.submit "Upload New Version", :name => "update_versioning", :id => "upload_submit", :class => "btn-primary btn-mini" %>
+    <%= f.button '<i class="icon-upload-alt"></i> Upload New Version'.html_safe, :name => "update_versioning", :id => "upload_submit", :class => "btn-primary btn-mini" %>
     <hr />
     <h3>Restore Previous Version</h3>
     <% @generic_file.content.versions.each_with_index do |version, index| %>
@@ -23,7 +23,7 @@
       </div>
     <% end %>
     <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
-    <%= f.submit "Save Revision", :name => "revert_submit", :id => "revert_submit", :class => "btn-primary btn-mini", :onclick=>"confirmation_needed = false;" %>
+    <%= f.button '<i class="icon-save"></i> Save Revision'.html_safe, :type => 'submit', :class => 'btn-primary btn-mini', :onclick => "confirmation_needed = false;", :name => "revert_submit", :id => "revert_submit" %>
   <% end %>
   </div> <!-- /well -->
 </div> <!-- /row -->
