@@ -68,6 +68,7 @@ ScholarSphere::Application.configure do
   
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   config.assets.precompile += %w( generic_files.js dashboard.js video.js audio.min.js jquery.zclip.min.js bootstrap-tooltip.js bootstrap-popover.js video-js.css generic_files.css jquery-ui-1.8.1.custom.css bootstrap.min.css )
+  config.assets.precompile += %w( *.jpg *.png *.gif *.ico )
 
   config.logout_url = "https://webaccess.psu.edu/cgi-bin/logout?#{get_vhost_by_host[1]}"
   config.login_url = "https://webaccess.psu.edu?cosign-#{get_vhost_by_host[0]}&#{get_vhost_by_host[1]}"
