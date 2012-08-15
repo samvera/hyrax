@@ -1,6 +1,6 @@
 class UserEditProfileEventJob < EventJob
   def initialize(editor_id)
-    action = "User #{link_to editor_id, profile_path(editor_id)} has edited his or her profile"
+    action = "User #{link_to_profile editor_id} has edited his or her profile"
     timestamp = Time.now.to_i
     editor = User.find_by_login(editor_id)
     # Create the event

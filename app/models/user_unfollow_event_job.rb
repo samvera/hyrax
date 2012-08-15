@@ -1,6 +1,6 @@
 class UserUnfollowEventJob < EventJob
   def initialize(unfollower_id, unfollowee_id)
-    action = "User #{link_to unfollower_id, profile_path(unfollower_id)} has unfollowed #{link_to unfollowee_id, profile_path(unfollowee_id)}"
+    action = "User #{link_to_profile unfollower_id} has unfollowed #{link_to_profile unfollowee_id}"
     timestamp = Time.now.to_i
     unfollower = User.find_by_login(unfollower_id)
     # Create the event

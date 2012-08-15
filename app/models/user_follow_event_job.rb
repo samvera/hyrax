@@ -1,6 +1,6 @@
 class UserFollowEventJob < EventJob
   def initialize(follower_id, followee_id)
-    action = "User #{link_to follower_id, profile_path(follower_id)} is now following #{link_to followee_id, profile_path(followee_id)}"
+    action = "User #{link_to_profile follower_id} is now following #{link_to_profile followee_id}"
     timestamp = Time.now.to_i
     follower = User.find_by_login(follower_id)
     # Create the event
