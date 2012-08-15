@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def name
-    return self.display_name.titleize || self.login
+    return self.display_name.titleize || self.login rescue self.login
   end
 
   # Redefine this for more intuitive keys in Redis
