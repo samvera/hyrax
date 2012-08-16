@@ -110,11 +110,13 @@ module ScholarSphere
     # help text to display for form metadata elements, these will need to be updated to
     # reflect a field name change (should one happen) in the generic file datastream
     config.metadata_help = {
+      "generic_file_resource_type" => "The type of resource this file is in ScholarSphere.",
       "generic_file_title" => "The title of the object being uploaded to ScholarSphere.",
       "generic_file_tag" => "Keywords, or tags, that describe the object.",
       "generic_file_subject" => "If you would like to align the description of your object with an existing vocabulary of subject terms, enter those here. ScholarSphere supports Library of Congress Subject Headings (LCSH). Begin typing a subject term and ScholarSphere will present you with a list of matching terms.",
       "generic_file_creator" => "The name of a person or group primarily responsible for the creation of the object being uploaded.",
       "generic_file_related_url" => "A URL about the object or the context in which it was created. Example: a link to the research project from which a data set was derived.",
+      "generic_file_based_near" => "A location that is relevant to where this file was created.",
       "generic_file_contributor" => "A person or group that contributed to the object's existence, including schools, colleges, or institutes at Penn State, and funding agencies responsible for funding the research that produced the object.",
       "generic_file_date_created" => "Date on which the object was created in its present form.",
       "generic_file_description" => "A brief description, an abstract, or notes about relationships between this object and other objects to which it is related, providing extra context about the object.",

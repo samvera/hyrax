@@ -2,7 +2,7 @@
 <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
 <%= hidden_field_tag('redirect_tab', 'descriptions') %>
 <div id="descriptions_display">
-  <h2 class="non lower">Descriptions <small class="pull-right">* indicates required fields</small> </h2>
+  <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
     <div class="well">
 
       <div class="control-group">
@@ -10,6 +10,7 @@
         <div class="controls">
           <p class="help-block">You may select multiple types to apply<p>
           <%= f.select "resource_type", options_for_select(ScholarSphere::Application::config.resource_types.keys, @generic_file.resource_type.to_a), {}, {:multiple=>true, :size=>7} %>
+          <a href="#" id="generic_file_resource_type_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_resource_type'] %>" data-original-title="Resource Type"><i class="icon-question-sign icon-large"></i></a>
         </div>
       </div><!-- /control-group -->
 
@@ -32,8 +33,14 @@
             <% label = key.capitalize %>
             <% label = "Location" if key == "based_near" %>
             <% label = "Keyword" if key == "tag" %>
-            <% label = "* "+label if req %>
+            <% label = "Date Created" if key == "date_created" %>
+            <% label = "Related URL" if key == "related_url" %>
+            <% if req %>
+              <% tmp = '<span class="error">*</span>' + label %>
+              <%= f.label key, tmp.html_safe, :class=>"control-label" if index == 0 %>
+            <% else %>
               <%= f.label key, label, :class=>"control-label" if index == 0 %>
+            <% end %>
               <div class="controls" <% if index == 0%> id="additional_<%= key %>_clone" <% end %>>
                 <% if key == "description" %>
                   <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
@@ -45,7 +52,7 @@
                 <% if index == 0 %>
                   <button class="adder btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">+<span class="accessible-hidden">add another <%= key %></span></button>
                   &nbsp;
-                  <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= key.humanize %>"><i class="icon-question-sign icon-large"></i></a>
+                  <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= label %>"><i class="icon-question-sign icon-large"></i></a>
                 <% else %>
                   <button class="remover btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">-<span class="accessible-hidden">add another <%= key %></span></button>
                 <% end %>
