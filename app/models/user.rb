@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   # Add user avatar (via paperclip library)
   has_attached_file :avatar, :styles => { medium: "300x300>", thumb: "100x100>" }, :default_url => '/assets/missing_:style.png'
   validates :avatar, :attachment_content_type => { :content_type => /^image\/(jpg|jpeg|pjpeg|png|x-png|gif)$/ }, :if => Proc.new { |p| p.avatar.file? }
-  validates :avatar, :attachment_size => { :less_than => 500.kilobytes }, :if => Proc.new { |p| p.avatar.file? }
+  validates :avatar, :attachment_size => { :less_than => 2.megabytes }, :if => Proc.new { |p| p.avatar.file? }
 
   # This method should display the unique identifier for this user as defined by devise.
   # The unique identifier is what access controls will be enforced against.

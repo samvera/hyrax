@@ -61,7 +61,7 @@ describe UsersController do
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.login).never
       post :update, uid: @user.login, user: { avatar: f }
       response.should redirect_to(edit_profile_path(@user.login))
-      flash[:alert].should include("Avatar file size must be less than 512000 Bytes")
+      flash[:alert].should include("Avatar file size must be less than 2097152 Bytes")
     end
     it "should delete an avatar" do
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.login).once

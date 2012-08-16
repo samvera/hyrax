@@ -16,7 +16,7 @@ $("a[rel=popover]").popover();
           <%= image_tag @user.avatar.url(:thumb) %>
         <% end %>
         <%= f.file_field :avatar %>
-        <p>Maximum size of 500Kb in JPG, GIF, or PNG format.</p>
+        <span class="label label-important">JPG, GIF, or PNG (less than 2MB)</span>
       </div>
     </div>
 
@@ -24,7 +24,7 @@ $("a[rel=popover]").popover();
       <%= f.label :delete_avatar, '<i class="icon-remove"></i> Delete picture'.html_safe, :class => 'control-label' %>
       <div class="controls">
         <label class="checkbox">
-          <%= check_box_tag 'delete_avatar' %> Yes 
+          <%= check_box_tag 'delete_avatar' %> Yes
           <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="icon-question-sign icon-large"></i></a>
         </label>
       </div>
