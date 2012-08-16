@@ -180,24 +180,25 @@ describe GenericFile do
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
-    @file.to_solr.should_not be_nil
-    @file.to_solr["generic_file__part_of_t"].should be_nil
-    @file.to_solr["generic_file__date_uploaded_t"].should be_nil
-    @file.to_solr["generic_file__date_modified_t"].should be_nil
-    @file.to_solr["generic_file__rights_t"].should be_nil
-    @file.to_solr["generic_file__related_url_t"].should be_nil
-    @file.to_solr["generic_file__contributor_t"].should == ["Mohammad"]
-    @file.to_solr["generic_file__creator_t"].should == ["Allah"]
-    @file.to_solr["generic_file__title_t"].should == ["The Work"]
-    @file.to_solr["generic_file__description_t"].should == ["The work by Allah"]
-    @file.to_solr["generic_file__publisher_t"].should == ["Vertigo Comics"]
-    @file.to_solr["generic_file__subject_t"].should == ["Theology"]
-    @file.to_solr["generic_file__language_t"].should == ["Arabic"]
-    @file.to_solr["generic_file__date_created_t"].should == ["1200"]
-    @file.to_solr["generic_file__resource_type_t"].should == ["Book"]
-    @file.to_solr["generic_file__format_t"].should == ["application/pdf"]
-    @file.to_solr["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
-    @file.to_solr["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
+    local = @file.to_solr
+    local.should_not be_nil
+    local["generic_file__part_of_t"].should be_nil
+    local["generic_file__date_uploaded_t"].should be_nil
+    local["generic_file__date_modified_t"].should be_nil
+    local["generic_file__rights_t"].should be_nil
+    local["generic_file__related_url_t"].should be_nil
+    local["generic_file__contributor_t"].should == ["Mohammad"]
+    local["generic_file__creator_t"].should == ["Allah"]
+    local["generic_file__title_t"].should == ["The Work"]
+    local["generic_file__description_t"].should == ["The work by Allah"]
+    local["generic_file__publisher_t"].should == ["Vertigo Comics"]
+    local["generic_file__subject_t"].should == ["Theology"]
+    local["generic_file__language_t"].should == ["Arabic"]
+    local["generic_file__date_created_t"].should == ["1200"]
+    local["generic_file__resource_type_t"].should == ["Book"]
+    local["generic_file__format_t"].should == ["application/pdf"]
+    local["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
+    local["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
   end
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]

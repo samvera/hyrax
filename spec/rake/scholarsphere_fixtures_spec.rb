@@ -50,39 +50,22 @@ describe "scholarsphere:fixtures" do
   after(:each) do
     delete_fixture_files
   end
-   
-  describe 'create' do        
-    it 'should create a fixture' do
+    
+  describe 'create, generate, load and delete' do
+    it 'should load and then delete fixtures' do
       ENV["FIXTURE_ID"] = "rspecTestFixture" 
       ENV["FIXTURE_TITLE"] = "rspec Test Fixture" 
       ENV["FIXTURE_USER"] = "rspec"
-      capture_stdout do
-        @rake['scholarsphere:fixtures:create'].invoke
-      end
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.txt")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt")).length.should == 1
-    end    
-  end
-
-  describe 'generate' do        
-    it 'should generate an xml file' do
-      capture_stdout do
-        @rake['scholarsphere:fixtures:create'].invoke
-        @rake['scholarsphere:fixtures:generate'].invoke
-      end
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml")).length.should == 1
-    end    
-  end
-
-  describe 'load and delete' do
-    it 'should load and then delete fixtures' do
       o = capture_stdout do
         @rake['scholarsphere:fixtures:create'].invoke
         @rake['scholarsphere:fixtures:generate'].invoke
         @rake['scholarsphere:fixtures:load'].invoke       
         @rake['scholarsphere:fixtures:delete'].invoke
       end
+      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.txt")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt")).length.should == 1
+      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml")).length.should == 1
       o.should include "Loaded 'scholarsphere:rspecTestFixture'"
       o.should include "Deleted 'scholarsphere:rspecTestFixture'"
     end    
