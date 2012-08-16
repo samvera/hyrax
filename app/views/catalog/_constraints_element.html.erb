@@ -17,19 +17,4 @@
       <%- unless value.blank? -%>
         <span class="filterValue"><%= options[:escape_value] ? h(value) : value %></span>
       <%- end -%>
-      &nbsp;&nbsp;
-      <%- unless options[:remove].blank? -%>
-        <% accessible_remove_label = #'<a class="close" data-dismiss="alert" href="#">x</a>'.html_safe
-                if label.blank?
-                  "Remove constraint #{options[:escape_value] ? h(value) : value}"
-                else
-                  "Remove constraint #{options[:escape_label] ? h(label) : label}: #{options[:escape_value] ? h(value) : value}"
-                end              
-        %>                
-        <%= link_to(accessible_remove_label,
-					options[:remove],
-					:class=>'btnRemove imgReplace',
-          :title=>'remove'
-				) %>
-      <%- end -%>
 </span>
