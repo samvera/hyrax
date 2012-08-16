@@ -65,6 +65,7 @@ $("a[rel=popover]").popover();
     <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
 
     <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+      <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render :partial => "permission", :locals => { :gf => @generic_file, :f=> f } %>
     <% end %>
 

@@ -2,7 +2,8 @@
   <h2 class="non lower">Versions</h2>
   <div class="well">
     <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
-    <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+      <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+      <%= hidden_field_tag('redirect_tab', 'versions') %>
     <h3>Upload New Version</h3>
     <p>Upload a new version of this file from your computer.</p>
     <p id="upload_field">

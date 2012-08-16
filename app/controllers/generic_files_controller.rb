@@ -151,7 +151,8 @@ class GenericFilesController < ApplicationController
       logger.error "Redis is down!"
     end
     record_version_committer(@generic_file, current_user)
-    redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+    redirect_to edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+
   end
 
   # routed to /files/:id/permissions (POST)
