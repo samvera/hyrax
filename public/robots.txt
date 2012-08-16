@@ -1,0 +1,4 @@
+Sitemap: http://scholarsphere.psu.edu/sitemap.xml
+
+User-agent: *
+Disallow: /nothing

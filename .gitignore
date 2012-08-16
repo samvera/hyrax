@@ -87,3 +87,6 @@ public/assets/
 
 ## Paperclip assets
 public/system/
+
+## Sitemap
+public/sitemap.xml

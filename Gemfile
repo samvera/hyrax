@@ -25,6 +25,7 @@ gem 'mail_form', "1.3.0"
 gem 'rails_autolink', '1.0.9'
 gem 'acts_as_follower', '0.1.1'
 gem 'nest', '1.1.1'
+gem 'sitemap', '0.3.2'
 gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db', :ref => '98e9a5dc'
 gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer', :ref => 'd92a75b0'
 
