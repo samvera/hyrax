@@ -50,18 +50,19 @@ $(function() {
           maxRows: 12,
           name_startsWith: request.term
         },
-        success: function( data ) {           response( $.map( data.geonames, function( item ) {
+        success: function( data ) {        response( $.map( data.geonames, function( item ) {
             return {
               label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
               value: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName
             };
           }));
-        }
+        },
       });
     },
     minLength: 2
   };
-  $("#generic_file_based_near").autocomplete(cities_autocomplete_opts);
+  //$("#generic_file_based_near").autocomplete(cities_autocomplete_opts);
+  $("#generic_file_based_near").autocomplete(get_autocomplete_opts("location"));
 
 
   function get_autocomplete_opts(field) {
@@ -75,7 +76,11 @@ $(function() {
       focus: function() {
         // prevent value inserted on focus
         return false;
-      }/*
+      },
+      complete: function(event) {
+        $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");          
+      }
+      /*
       select: function( event, ui ) {
         $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");
         $(this).val("");
