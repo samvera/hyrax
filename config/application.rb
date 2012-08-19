@@ -49,8 +49,7 @@ module ScholarSphere
 
     config.fits_to_desc_mapping = {
       :file_title => :title,
-      :file_author => :creator,
-      :file_language => :language
+      :file_author => :creator
     }
 
     # Map hostnames onto Google Analytics tracking IDs
