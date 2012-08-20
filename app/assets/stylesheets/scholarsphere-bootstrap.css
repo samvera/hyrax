@@ -29,7 +29,6 @@ ul.help-list li {
 }
 
 ul.slide-list {
-  float: left;
   clear: left;
   margin: 0 0 10px 0;
 }
@@ -220,4 +219,8 @@ a.btn-primary i, a.btn-primary:hover i {
 }
 .error {
   color: #990000;
+}
+/* override the padding left on nav-list from bootstrap */
+.nav-list {
+  padding-left: 0px;
 }
