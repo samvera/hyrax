@@ -39,6 +39,10 @@ class User < ActiveRecord::Base
     login
   end
 
+  def email_address
+    return self.email 
+  end
+
   def name
     return self.display_name.titleize || self.login rescue self.login
   end

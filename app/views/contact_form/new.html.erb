@@ -7,19 +7,34 @@ request assistance using ScholarSphere; or to provide usability testing
 feedback.
 </p>
 
+<% if current_user %>
+  <% nm = current_user.name %>
+  <% em = current_user.email_address %>
+<% else %>
+  <% nm = '' %>
+  <% em = '' %>
+<% end %>
+
 <h2>Contact Form</h2>
 <%= form_for(@contact_form, :url => contact_form_index_path, :html => {:class => 'form-horizontal well'}) do |f| %>
   <%= f.text_field :contact_method, :class => 'hide' %>
+  <div class="control-group">
+    <%= f.label :issue_type, 'Issue Type', :class => "control-label" %>
+    <div class="controls">
+      <% ContactForm::ISSUE_TYPES.unshift(['Select an Issue Type', nil]) %>
+      <%= f.select 'issue_type', options_for_select(ContactForm::ISSUE_TYPES), {}, {:class=> 'input-large', :required => true } %>
+    </div>
+  </div>
 
   <div class="control-group">
     <%= f.label :name, 'Your Name', :class=>"control-label" %>
-    <div class="controls"><%= f.text_field :name, :class=>"input-xlarge", :value=>"", :required => true %>  </div>
+    <div class="controls"><%= f.text_field :name, :class=>"input-xlarge", :value => nm, :required => true %>  </div>
   </div>
 
   <div class="control-group">
     <%= f.label :email, 'Your Email', :class=>"control-label" %>
     <div class="controls">
-    <%= f.text_field :email, :class=>"input-xlarge", :value=>"", :required => true %>
+    <%= f.text_field :email, :class=>"input-xlarge", :value => em, :required => true %>
     </div>
   </div>
 
