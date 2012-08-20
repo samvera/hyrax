@@ -2,7 +2,7 @@ require 'rdf'
 require 'rdf/rdfxml'
 
 class LocalAuthority < ActiveRecord::Base
-  has_and_belongs_to_many :domain_terms
+  has_and_belongs_to_many :domain_terms, :uniq=> true 
   has_many :local_authority_entries
 
   def self.harvest_rdf(name, sources, opts = {})
@@ -44,9 +44,8 @@ class LocalAuthority < ActiveRecord::Base
   end
 
   def self.register_vocabulary(model, term, name)
-    authority = self.where(:name => name)
-    return if authority == nil
-    return if authority.empty?
+    authority = self.find_by_name(name)
+    return if authority.blank?
     model = model.to_s.sub(/RdfDatastream$/, '').underscore.pluralize
     domain_term = DomainTerm.find_or_create_by_model_and_term(:model => model, :term => term)
     return if domain_term.local_authorities.include? authority
