@@ -21,8 +21,9 @@ feedback.
   <div class="control-group">
     <%= f.label :issue_type, 'Issue Type', :class => "control-label" %>
     <div class="controls">
-      <% ContactForm::ISSUE_TYPES.unshift(['Select an Issue Type', nil]) %>
-      <%= f.select 'issue_type', options_for_select(ContactForm::ISSUE_TYPES), {}, {:class=> 'input-large', :required => true } %>
+      <% issue_types = ContactForm::ISSUE_TYPES %>
+      <% issue_types.unshift(['Select an Issue Type', nil]) %>
+      <%= f.select 'issue_type', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true } %>
     </div>
   </div>
 
