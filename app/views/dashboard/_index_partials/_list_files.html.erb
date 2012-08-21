@@ -10,7 +10,7 @@ on element ids -->
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br />
   </td>
-  <td width="15%"><%= document.fetch(:system_create_dt,'').to_time.strftime("%m/%d/%Y") %> </td>
+  <td width="15%"><%= document.fetch(:generic_file__date_uploaded_dt,'').to_time.strftime("%m/%d/%Y") unless document.fetch(:generic_file__date_uploaded_dt,'').blank? %> </td>
   <td width="5%" align="center">
     <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="Penn State">Penn State</span></a> 

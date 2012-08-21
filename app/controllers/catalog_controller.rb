@@ -324,9 +324,9 @@ class CatalogController < ApplicationController
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     # label is key, solr field is value
-    config.add_sort_field 'score desc, generic_file__date_uploaded_sort desc', :label => 'relevance'
-    config.add_sort_field 'generic_file__date_uploaded_sort desc', :label => 'date uploaded'
-    config.add_sort_field 'generic_file__date_modified_sort desc', :label => 'date modified'
+    config.add_sort_field 'score desc, generic_file__date_uploaded_dt desc', :label => 'relevance'
+    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => 'date uploaded new'
+    config.add_sort_field 'generic_file__date_modified_dt desc', :label => 'date modified new'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
