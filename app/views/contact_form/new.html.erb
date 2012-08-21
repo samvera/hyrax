@@ -19,11 +19,11 @@ feedback.
 <%= form_for(@contact_form, :url => contact_form_index_path, :html => {:class => 'form-horizontal well'}) do |f| %>
   <%= f.text_field :contact_method, :class => 'hide' %>
   <div class="control-group">
-    <%= f.label :issue_type, 'Issue Type', :class => "control-label" %>
+    <%= f.label :category, 'Issue Type', :class => "control-label" %>
     <div class="controls">
       <% issue_types = ContactForm::ISSUE_TYPES %>
       <% issue_types.unshift(['Select an Issue Type', nil]) %>
-      <%= f.select 'issue_type', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true } %>
+      <%= f.select 'category', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true } %>
     </div>
   </div>
 
@@ -36,6 +36,13 @@ feedback.
     <%= f.label :email, 'Your Email', :class=>"control-label" %>
     <div class="controls">
     <%= f.text_field :email, :class=>"input-xlarge", :value => em, :required => true %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :subject, 'Subject', :class=>"control-label" %>
+    <div class="controls">
+    <%= f.text_field :subject, :class=>"input-xlarge", :required => true %>
     </div>
   </div>
 
