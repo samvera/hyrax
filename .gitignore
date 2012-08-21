@@ -58,6 +58,9 @@ tmp
 *~
 *.swp
 
+#redis snapshot db
+dump.rdb
+
 vendor/plugins/haml/init.rb
 vendor/plugins/blacklight/.git
 log/*
