@@ -185,7 +185,7 @@ describe GenericFile do
     local["generic_file__part_of_t"].should be_nil
     local["generic_file__date_uploaded_t"].should be_nil
     local["generic_file__date_modified_t"].should be_nil
-    local["generic_file__rights_t"].should be_nil
+    local["generic_file__rights_t"].should == ["Wide open, buddy."]
     local["generic_file__related_url_t"].should be_nil
     local["generic_file__contributor_t"].should == ["Mohammad"]
     local["generic_file__creator_t"].should == ["Allah"]

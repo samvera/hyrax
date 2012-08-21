@@ -37,7 +37,7 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :searchable, :facetable, :displayable
     end
     map.rights(:in => RDF::DC) do |index|
-      index.as :displayable
+      index.as :searchable, :displayable
     end
     map.resource_type(:to => "type", :in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable
