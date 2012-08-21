@@ -56,14 +56,23 @@ class LocalAuthority < ActiveRecord::Base
     return if query.empty?
     lowQuery = query.downcase
     hits = []
-    term = DomainTerm.where(:model => model, :term => term).first
-    if term
-      authorities = term.local_authorities.collect(&:id).uniq      
-      sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("lower(label) like ?", "#{lowQuery}%").select("label, uri").limit(25).to_sql
-      LocalAuthorityEntry.find_by_sql(sql).each do |hit|
-        hits << {:uri => hit.uri, :label => hit.label}
+    # move lc_subject into it's own table since being part of the usual structure caused it to be too slow.  
+    # When/if we move to having multiple dictionaries for subject we will need to also do a check for the appropriate dictionary. 
+    if (term == 'subject' && model == 'generic_files') # and local_authoritiy = lc_subject 
+        sql = SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{lowQuery}%").select("label, uri").limit(25).to_sql
+        SubjectLocalAuthorityEntry.find_by_sql(sql).each do |hit|
+          hits << {:uri => hit.uri, :label => hit.label}
+        end
+    else 
+      dterm = DomainTerm.where(:model => model, :term => term).first
+      if dterm
+        authorities = dterm.local_authorities.collect(&:id).uniq      
+        sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("lower(label) like ?", "#{lowQuery}%").select("label, uri").limit(25).to_sql
+        LocalAuthorityEntry.find_by_sql(sql).each do |hit|
+          hits << {:uri => hit.uri, :label => hit.label}
+        end
       end
     end
-    hits
+    return hits
   end
 end
