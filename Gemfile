@@ -21,7 +21,7 @@ gem 'daemons', '1.1.8'
 gem 'execjs', '1.4.0'
 gem 'therubyracer', '0.10.1'
 gem 'zipruby', '0.3.6'
-gem 'mail_form', "1.3.0"
+gem 'mail_form', :git => 'git@github.com:psu-stewardship/mail_form.git'
 gem 'rails_autolink', '1.0.9'
 gem 'acts_as_follower', '0.1.1'
 gem 'nest', '1.1.1'
