@@ -24,6 +24,7 @@ describe GenericFilesController do
     end
 
     it "should spawn a content deposit event job" do
+      GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','image/png')
       Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
@@ -31,6 +32,7 @@ describe GenericFilesController do
     end
 
     it "should expand zip files" do
+      GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','application/zip')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       Resque.expects(:enqueue).with(UnzipJob, 'test:123')
@@ -57,6 +59,7 @@ describe GenericFilesController do
     end
 
     it "should record what user created the first version of content" do
+      GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :terms_of_service=>"1"
 
@@ -93,6 +96,7 @@ describe GenericFilesController do
 
   describe "audit" do
     before do
+      GenericFile.any_instance.stubs(:to_solr).returns({})
       @generic_file = GenericFile.new
       @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
       @generic_file.apply_depositor_metadata('mjg36')
@@ -113,6 +117,7 @@ describe GenericFilesController do
   describe "destroy" do
     before(:each) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+      GenericFile.any_instance.stubs(:to_solr).returns({})
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata(@user.login)
       @generic_file.save
@@ -160,6 +165,7 @@ describe GenericFilesController do
     end
 
     it "should record what user added a new version" do
+      GenericFile.any_instance.stubs(:to_solr).returns({})
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
 

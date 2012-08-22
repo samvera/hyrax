@@ -584,10 +584,10 @@ class GenericFile < ActiveFedora::Base
         return false
       end
     else
-      logger.warn "***AUDIT*** problem with audit log!"
+      logger.warn "***AUDIT*** problem with audit log!  Latest Audit is not nil, but updated_at is not set #{latest_audit}"  unless latest_audit.nil?
     end
     #logger.info "***AUDIT*** Audit needed for #{version.pid} #{version.versionID}"
-    true
+    return true
   end
 
   def self.audit_everything(force = false)
