@@ -5,7 +5,8 @@
 #       Build -> Execute Shell Command ==
 #       test -x $WORKSPACE/script/jenkins_build.sh && $WORKSPACE/script/jenkins_build.sh
 # to run CI testing.
-
+LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8
 HHOME="/opt/heracles"
 WORKSPACE="${JENKINS_HOME}/jobs/scholarsphere-ci/workspace"
 RESQUE_POOL_PIDFILE="${WORKSPACE}/tmp/pids/resque-pool.pid"
