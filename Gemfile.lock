@@ -6,6 +6,13 @@ GIT
     yaml_db (0.2.2)
 
 GIT
+  remote: git://github.com/psu-stewardship/mail_form.git
+  revision: 50c00f037864914ce2dfce0ea55ea3cfc8b99010
+  specs:
+    mail_form (1.3.0)
+      actionmailer (~> 3.0)
+
+GIT
   remote: git://github.com/psu-stewardship/mailboxer
   revision: d92a75b01b3dc0a1c9d9e976eb0dbf80c6bfe800
   ref: d92a75b0
@@ -14,13 +21,6 @@ GIT
       carrierwave (>= 0.5.8)
       foreigner (>= 0.9.1)
       rails (> 3.0.0)
-
-GIT
-  remote: git@github.com:psu-stewardship/mail_form.git
-  revision: 50c00f037864914ce2dfce0ea55ea3cfc8b99010
-  specs:
-    mail_form (1.3.0)
-      actionmailer (~> 3.0)
 
 GIT
   remote: https://github.com/warpc/rails_indexes
