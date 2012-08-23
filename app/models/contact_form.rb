@@ -18,7 +18,7 @@ class ContactForm < MailForm::Base
   # in ActionMailer accepts.
   def headers
     {
-      :subject => "SS-Form:#{subject}",
+      :subject => "Contact Form:#{subject}",
       :to => ScholarSphere::Application.config.contact_email, 
       :from => %("#{name}" <#{email}>)
     }
