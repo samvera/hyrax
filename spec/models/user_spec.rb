@@ -63,6 +63,12 @@ describe User do
   end
 
   describe "#attributes" do
+    before do
+      entry = Net::LDAP::Entry.new()
+      entry['dn'] = ["uid=mjg36,dc=psu,edu"]
+      entry['cn'] = ["MICHAEL JOSEPH GIARLO"]
+      Hydra::LDAP.expects(:get_user).returns([entry])
+    end
     it "should return user attributes from LDAP" do
       User.directory_attributes('mjg36', ['cn']).first['cn'].should == ['MICHAEL JOSEPH GIARLO']
     end
