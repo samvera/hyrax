@@ -23,8 +23,6 @@ class CreateLocalAuthorities < ActiveRecord::Migration
       t.integer :local_authority_id, :foreign_key => true
     end
 
-    add_index :domain_terms_local_authorities, [:domain_term_id, :local_authority_id], :unique => true
-
     add_index :local_authority_entries, [:local_authority_id, :label], :name => 'entries_by_term_and_label'
     add_index :local_authority_entries, [:local_authority_id, :uri], :name => 'entries_by_term_and_uri'
     add_index :domain_terms, [:model, :term], :name => 'terms_by_model_and_term'
