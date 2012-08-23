@@ -124,6 +124,9 @@ describe GenericFilesController do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
     end
+    after do
+      @user.delete
+    end    
     it "should delete the file" do
       GenericFile.find(@generic_file.pid).should_not be_nil
       delete :destroy, :id=>@generic_file.pid
@@ -152,6 +155,7 @@ describe GenericFilesController do
       sign_in @user
 
       post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      @user.delete      
     end
 
     it "should spawn a content new version event job" do
@@ -162,6 +166,7 @@ describe GenericFilesController do
 
       file = fixture_file_upload('/world.png','image/png')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      @user.delete
     end
 
     it "should record what user added a new version" do
@@ -205,6 +210,7 @@ describe GenericFilesController do
       version3.versionID.should_not == version2.versionID
       version3.versionID.should_not == version1.versionID
       restored_file.content.version_committer(version3).should == @user.login
+      @user.delete
     end
 
     it "should add a new groups and users" do
@@ -275,6 +281,9 @@ describe GenericFilesController do
         before(:all) do
           ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
           @archivist = FactoryGirl.find_or_create(:archivist)
+        end
+        after(:all) do
+          @archivist.delete
         end
         it "should display failing audits" do
           sign_out @user
