@@ -11,6 +11,7 @@ require 'uri'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 Bundler.require *Rails.groups(:assets => %w(development, test))
+Encoding.default_external = Encoding::UTF_8
 
 module ScholarSphere
   class Application < Rails::Application
