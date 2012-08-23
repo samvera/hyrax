@@ -16,8 +16,8 @@ class ContactFormController < ApplicationController
       flash[:error] << @contact_form.errors.full_messages.map { |s| s.to_s }.join(",")
       render :new
     end
-  rescue ScriptError
-      flash[:error] = 'Sorry, this message appears to be spam and was not delivered.'
+  rescue 
+      flash[:error] = 'Sorry, this message was not delivered.'
       render :new
   end
 
