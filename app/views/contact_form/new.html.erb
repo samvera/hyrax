@@ -21,7 +21,7 @@ feedback.
   <div class="control-group">
     <%= f.label :category, 'Issue Type', :class => "control-label" %>
     <div class="controls">
-      <% issue_types = ContactForm::ISSUE_TYPES %>
+      <% issue_types = ContactForm::ISSUE_TYPES.dup %>
       <% issue_types.unshift(['Select an Issue Type', nil]) %>
       <%= f.select 'category', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true } %>
     </div>
