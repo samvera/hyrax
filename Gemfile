@@ -15,6 +15,7 @@ gem 'active-fedora', '4.4.0'
 gem 'rubydora', '0.5.10'
 gem 'solrizer-fedora', '2.2.0'
 gem "hydra-ldap", "0.0.4"
+gem 'clamav'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'

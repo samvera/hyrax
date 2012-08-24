@@ -1,0 +1,1 @@
+ClamAV.instance.loaddb()

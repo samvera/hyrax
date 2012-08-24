@@ -132,6 +132,7 @@ class GenericFilesController < ApplicationController
     end
 
     if params.has_key?(:filedata)
+      return unless virus_check(params[:filedata]) == 0
       add_posted_blob_to_asset(@generic_file, params[:filedata])
       version_event = true
       begin
@@ -179,15 +180,23 @@ class GenericFilesController < ApplicationController
     @generic_file = GenericFile.find(params[:id])
   end
 
+  def virus_check( file)
+      stat = ClamAV.instance.scanfile(file.path)
+      flash[:error] = "Virus checking did not pass for #{file.original_filename} status = #{stat}" unless stat == 0
+      logger.warn "Virus checking did not pass for #{file.inspect} status = #{stat}" unless stat == 0
+      return stat
+  end 
+
   def create_and_save_generic_file
     unless params.has_key?(:files)
       logger.warn "!!!! No Files !!!!"
       return
     end
+    file = params[:files][0]
+    return nil unless virus_check(file) == 0  
+
     @generic_file = GenericFile.new
     @generic_file.terms_of_service = params[:terms_of_service]
-    file = params[:files][0]
-
     # if we want to be able to save zero length files then we can use this to make the file 1 byte instead of zero length and fedora will take it
     #if (file.tempfile.size == 0)
     #   logger.warn "Encountered an empty file...  Creating a new temp file with on space."
