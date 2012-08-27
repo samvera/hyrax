@@ -4,14 +4,14 @@
 <h2>Upload</h2>
 
 <div class="alert">
-  <strong>Note:</strong> You must agree to <a href='/terms/' target="_blank">ScholarSphere's Terms of Service</a> before starting your upload.
+  <strong>Note:</strong> You must agree to <a href='/agreement/' target="_blank">ScholarSphere's Deposit Agreement</a> before starting your upload.
 </div>
 
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
   <%=batch_edit_path(@batch_noid)%>
 </div>
 
-<div id="upload_tooltip">Please accept Terms of Service before you can upload.</div>
+<div id="upload_tooltip">Please accept Deposit Agreement before you can upload.</div>
 
 <div class="alert alert-info hide" id="success">
   You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
@@ -38,8 +38,8 @@
       <%= hidden_field_tag(:batch_id, @batch_noid) %>
       <label class="checkbox">
       <%= check_box_tag 'terms_of_service' %> I have read and do agree
-      to <%= link_to "ScholarSphere's Terms of Service",
-        '/terms/', :target => "_blank" %>.
+      to <%= link_to "ScholarSphere's Desposit Agreement",
+        '/agreement/', :target => "_blank" %>.
     </label>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">

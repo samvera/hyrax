@@ -28,11 +28,11 @@
           <%# if vals is zero we create an empty array to loop over for output %>
           <% vals = [''] if vals.count == 0 %>
           <% vals.each_with_index do |v, index| %>
-            <%# req = (index == 0) && ((key == "title") || (key == "creator") || (key == "tag")) %>
             <% req = (index == 0) && (["title", "creator", "tag", "rights"].include?(key)) %>
             <%# a hacky way to change selected fields' labels %>
             <% label = key.capitalize %>
             <% label = "Location" if key == "based_near" %>
+            <% label = "Abstract or Summary" if key == "description" %>
             <% label = "Keyword" if key == "tag" %>
             <% label = "Date Created" if key == "date_created" %>
             <% label = "Related URL" if key == "related_url" %>
