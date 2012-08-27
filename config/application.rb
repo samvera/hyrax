@@ -71,13 +71,26 @@ module ScholarSphere
     }
 
     config.resource_types = {
-      "Article"=>"Article",
-      "Multimedia"=>"Multimedia",
-      "Conference Proceeding"=> "Conference Proceeding",
-      "Data Set"=>"Data Set",
-      "Image"=>"Image",
-      "Thesis"=>"Thesis",
-      "Other"=>"Other"
+      "Article" => "Article",
+      "Audio" => "Audio",
+      "Book" => "Book",
+      "Capstone Project" => "Capstone Project",
+      "Conference Proceeding" => "Conference Proceeding",
+      "Dataset" => "Dataset",
+      "Dissertation" => "Dissertation",
+      "Image" => "Image",
+      "Journal" => "Journal",
+      "Map or Cartographic Material" => "Map or Cartographic Material",
+      "Masters Thesis" => "Masters Thesis",
+      "Part of Book" => "Part of Book",
+      "Poster" => "Poster",
+      "Presentation" => "Presentation",
+      "Project" => "Project",
+      "Report" => "Report",
+      "Research Paper" => "Research Paper",
+      "Software or Program Code" => "Software or Program Code",
+      "Video" => "Video",
+      "Other" => "Other",
     }
 
     config.public_permission_levels = {
