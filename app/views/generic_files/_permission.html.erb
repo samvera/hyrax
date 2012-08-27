@@ -1,5 +1,6 @@
 <% depositor = gf.depositor || GenericFile.find(:is_part_of_s => "info:fedora/#{batch.pid}").first.depositor %>
 <% public_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "public"}.compact.first %>
+<% public_perm = true if params[:controller] == 'batch' %>
 <% psu_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "registered"}.compact.first %>
  
 
@@ -80,9 +81,9 @@
     <div id="new-user"> 
       <div class="input-append">
         <p class="help-block">Enter Penn State Access Account Id (one at a time)</p>
-        <%= text_field_tag 'new_user_name_skel', nil, :class => "span31" %><span class="add-on">@psu.edu</span>
+        <%= text_field_tag 'new_user_name_skel', nil, :class => "span29" %><span class="add-on">@psu.edu</span>
         <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span17' %>
-        <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i>Add</button>
+        <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i> Add</button>
         <br /> <span id="directory_user_result"></span> 
       </div>
     </div>
@@ -91,9 +92,9 @@
     <div id="new-group" >
       <div class="input-append">
         <% @groups.unshift('Select a group') %>
-        <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span40' %>
+        <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span38' %>
         <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span17' %>
-        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i>Add</button>
+        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i> Add</button>
         <br /><span id="directory_group_result"></span>
       </div>
     </div>

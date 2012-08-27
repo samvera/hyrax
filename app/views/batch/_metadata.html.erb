@@ -58,9 +58,9 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :rights, :class=>"control-label" %>
+      <%= f.label :rights, '<span class="error">*</span> Rights'.html_safe, :class=>"control-label" %>
       <div class="controls" id="additional_rights_clone">
-        <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, 'No license specified') %>
+        <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), :required => true %>
           <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="accessible-hidden">add another Rights</span></button>
         &nbsp;
         <a href="#" id="generic_file_rights_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>" data-original-title="Rights"><i class="icon-question-sign icon-large"></i></a>
