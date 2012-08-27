@@ -97,11 +97,15 @@ a.advanced_search:hover {
   text-decoration: none;
 }
 /* Pages */
-#logo {
+#sheild {
 	float: left;
 	margin: 15px 0 0 0;
 }
-
+#logo {
+  position: absolute;
+  top: 40px;
+  left: 85px;
+}
 .nav li a.top_nav{
 	font-size: 14px;
 	line-height: 18px; 
