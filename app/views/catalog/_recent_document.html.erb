@@ -8,7 +8,13 @@
         <td class="span10"><%= link_to_profile depositor %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
       <% end %>
       <td>
-        <h3><%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id))  %>
+        <h3>
+          <% if title.length > 25 %>
+            <%= link_to "#{title[0..24]}...", generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
+          <% else %>
+            <%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
+          <% end %>
+
           <% if display_access %>
               <% if !recent_document[:read_access_group_t].blank? and recent_document[:read_access_group_t].include?('registered') %>
                  <span class="label label-info" title="Penn State">Penn State</span>
@@ -19,8 +25,13 @@
               <% end %>
           <% end %>
         </h3>
-        <p> <%= link_to filename, generic_file_path(recent_document.fetch(:noid_s, :id)) %><br />
-          <%= keywords.html_safe %>
+        <p> 
+          <% if filename.length > 25 %>
+            <%= link_to "#{filename[0..24]}...", generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
+          <% else %>
+            <%= link_to filename, generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
+          <% end %>
+            <%= keywords.html_safe %>
         </p>
       </td>
     </tr>
