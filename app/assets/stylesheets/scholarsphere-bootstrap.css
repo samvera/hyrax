@@ -229,6 +229,7 @@ a.btn-primary i, a.btn-primary:hover i {
   padding-left: 0px;
 }
 
+ul.faq li       { list-style-type: none }  
 ol.faq        { list-style-type: decimal }  
 ol.faq li     { list-style-type: decimal }  
 ol.faq ol     { list-style-type: lower-alpha } 
