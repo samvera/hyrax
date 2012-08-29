@@ -66,7 +66,7 @@ ScholarSphere::Application.routes.draw do
   end
 
   # Static page routes (workaround)
-  match ':action' => 'static#:action', :constraints => { :action => /about|help|terms|zotero|mendeley|agreement/ }, :as => :static
+  match ':action' => 'static#:action', :constraints => { :action => /about|help|terms|zotero|mendeley|agreement|subject_libraries/ }, :as => :static
 
   # Catch-all (for routing errors)
   match '*error' => 'errors#routing'
