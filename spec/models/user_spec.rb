@@ -56,6 +56,7 @@ describe User do
     before do
       filter = Net::LDAP::Filter.eq('uid', @user.login)
       Hydra::LDAP.expects(:groups_for_user).with(filter).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
+      Hydra::LDAP.connection.stubs(:get_operation_result).returns(OpenStruct.new({code:0, message:"Success"}))
     end
     it "should return a list" do
       @user.groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]

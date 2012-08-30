@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   acts_as_followable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone, :avatar
+  attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone, :avatar, :ldap_available, :ldap_last_update, :group_list, :groups_last_update
 
   # Add user avatar (via paperclip library)
   has_attached_file :avatar, :styles => { medium: "300x300>", thumb: "100x100>" }, :default_url => '/assets/missing_:style.png'
@@ -57,20 +57,70 @@ class User < ActiveRecord::Base
     return nil
   end
 
+  def ldap_exist?
+    if (ldap_last_update.blank? || ((Time.now-ldap_last_update) > 24*60*60 ))
+      return ldap_exist!
+    end
+    return ldap_available    
+  end
+
+  def ldap_exist!
+      exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
+      if (Hydra::LDAP.connection.get_operation_result.code==0)
+        logger.debug "exist = #{exist}"
+        attrs = {}
+        attrs[:ldap_available] = exist
+        attrs[:ldap_last_update] = Time.now
+        update_attributes(attrs)
+
+      # todo: Should we retry here if the code is 51-53???
+      else 
+        logger.warn "Error checking exists for #{login} reason: #{Hydra::LDAP.connection.get_operation_result.message}"
+        return false 
+      end
+      return exist
+  end
+
   # Groups that user is a member of
   def groups
-    self.class.groups(login) rescue []
+    if (groups_last_update.blank? || ((Time.now-groups_last_update) > 24*60*60 ))
+      return groups!
+    end
+    return self.group_list.split(";?;");     
+  end
+
+  def groups!
+      list = self.class.groups(login)
+      if (Hydra::LDAP.connection.get_operation_result.code==0)
+        logger.debug "groups = #{list}"
+        attrs = {}
+        attrs[:ldap_na] = false
+        attrs[:group_list] = list.join(";?;")
+        attrs[:groups_last_update] = Time.now
+        update_attributes(attrs)
+
+      # todo: Should we retry here if the code is 51-53???
+      else 
+        logger.warn "Error getting groups for #{login} reason: #{Hydra::LDAP.connection.get_operation_result.message}"
+        return [] 
+      end
+      return list
   end
 
   def self.groups(login)
-    Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []
+    Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
   end
 
   def populate_attributes
+    #update exist cache
+    exist = ldap_exist!
+    logger.warn "No ldapentry exists for #{login}" unless exists
+    return unless exists
+
     begin
       entry = directory_attributes.first
     rescue
-      logger.warn "Directory entry not found for user '#{login}'"
+      logger.warn "Error getting directory entry: #{Hydra::LDAP.connection.get_operation_result.message}"
       return
     end
     attrs = {}
@@ -86,6 +136,11 @@ class User < ActiveRecord::Base
     attrs[:affiliation] = entry[:edupersonprimaryaffiliation].first rescue nil
     attrs[:telephone] = entry[:telephonenumber].first rescue nil
     update_attributes(attrs)
+    
+    # update the group cache also
+    groups!
+    
+    
   end
 
   def directory_attributes(attrs=[])

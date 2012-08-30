@@ -172,8 +172,9 @@ describe 'event jobs' do
     @another_user.events.length.should == 0
     @third_user.events.length.should == 0
     @gf.events.length.should == 0
-    Time.expects(:now).returns(1).at_least_once
-    event = {action: 'User <a href="/users/jilluser">jilluser</a> has updated <a href="/files/123">Hamlet</a>', timestamp: '1' }
+    @now = Time.now
+    Time.expects(:now).returns(@now).at_least_once
+    event = {action: 'User <a href="/users/jilluser">jilluser</a> has updated <a href="/files/123">Hamlet</a>', timestamp: @now.to_i.to_s }
     ContentUpdateEventJob.perform('test:123', @user.login)
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
