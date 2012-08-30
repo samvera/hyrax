@@ -1,3 +1,7 @@
+<% content_for :local_js do %>
+    // setting a fixed height so that the dialog does not hop around when you get to the last small page
+    $.ui.dialog.prototype.options["height"]=window.innerHeight  *0.75
+<% end %>
 
 <% unless has_search_parameters? %>
 	<%# if there are no input/search related params, display the "home" partial -%>
