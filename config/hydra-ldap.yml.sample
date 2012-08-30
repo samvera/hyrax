@@ -4,8 +4,8 @@ development:
   # username: cn=admin,dc=example,dc=com
   # password: simple77
   group_base: dc=psu,dc=edu
-  # base: dc=example,dc=com
-  # uid: uid
+  base: dc=example,dc=com
+  uid: uid
 test:  
   host: ldap.example.com
   port: 389
@@ -22,10 +22,10 @@ integration:
 production:  
   host: ldap.example.com
   port: 389
-  username: cn=admin,dc=example,dc=com
-  password: <%= ENV['LDAP_PASSWORD'] %>
+  #username: cn=admin,dc=example,dc=com
+  #password: <%= ENV['LDAP_PASSWORD'] %>
   group_base: dc=psu,dc=edu
-  base: dc=northwestern,dc=edu
+  base: dc=example,dc=com
   uid: uid
 
 
