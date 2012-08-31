@@ -135,6 +135,7 @@ $(function() {
     // remove the help tag on subsequent added fields
     cloneElem.find('.formHelp').remove();
     cloneElem.find('i').remove();
+    cloneElem.find('.modal-div').remove();
 
     //clear out the value for the element being appended
     //so the new element has a blank value

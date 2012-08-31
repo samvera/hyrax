@@ -54,6 +54,7 @@
                   <button class="adder btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">+<span class="accessible-hidden">add another <%= key %></span></button>
                   &nbsp;
                   <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= label %>"><i class="icon-question-sign icon-large"></i></a>
+                  <%= render :partial => "rights_modal" if key == "rights" %>
                 <% else %>
                   <button class="remover btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">-<span class="accessible-hidden">add another <%= key %></span></button>
                 <% end %>

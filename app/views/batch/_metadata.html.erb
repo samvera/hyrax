@@ -65,6 +65,8 @@
           <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="accessible-hidden">add another Rights</span></button>
         &nbsp;
         <a href="#" id="generic_file_rights_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>" data-original-title="Rights"><i class="icon-question-sign icon-large"></i></a>
+        <%= render :partial => "generic_files/rights_modal" %>
+        
       </div>
       <div id="additional_rights_elements"></div>
     </div>
