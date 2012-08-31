@@ -4,6 +4,7 @@ class BatchController < ApplicationController
   include Hydra::Controller::UploadBehavior
   include ScholarSphere::Noid # for normalize_identifier method
 
+  before_filter :has_access?
   prepend_before_filter :normalize_identifier, :only=>[:edit, :show, :update, :destroy]
 
   def edit

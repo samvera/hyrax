@@ -92,6 +92,7 @@ class User < ActiveRecord::Base
   def groups!
       list = self.class.groups(login)
       if (Hydra::LDAP.connection.get_operation_result.code==0)
+        list.sort!
         logger.debug "groups = #{list}"
         attrs = {}
         attrs[:ldap_na] = false
@@ -114,8 +115,8 @@ class User < ActiveRecord::Base
   def populate_attributes
     #update exist cache
     exist = ldap_exist!
-    logger.warn "No ldapentry exists for #{login}" unless exists
-    return unless exists
+    logger.warn "No ldapentry exists for #{login}" unless exist
+    return unless exist
 
     begin
       entry = directory_attributes.first

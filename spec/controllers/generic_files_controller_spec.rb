@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe GenericFilesController do
   before do
+    Hydra::LDAP.stubs(:does_user_exist?).returns(true)
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
