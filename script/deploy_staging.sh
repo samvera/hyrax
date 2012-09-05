@@ -9,6 +9,14 @@ DEFAULT_TERMCOLORS="\e[0m"
 HIGHLIGHT_TERMCOLORS="\e[33m\e[44m\e[1m"
 ERROR_TERMCOLORS="\e[1m\e[31m"
 
+function anywait {
+    for pid in "$@"; do
+        while kill -0 "$pid"; do
+            sleep 0.5
+        done
+    done
+}
+
 function banner {
     echo -e "${HIGHLIGHT_TERMCOLORS}=-=-=-=-= $0 ↠ $1 ${DEFAULT_TERMCOLORS}"
 }
@@ -44,7 +52,7 @@ bundle install
 banner "resque-pool stop"
 [ -f $RESQUE_POOL_PIDFILE ] && {
     PID=$(cat $RESQUE_POOL_PIDFILE)
-    kill -2 $PID && wait $PID
+    kill -2 $PID && anywait $PID
 }
 
 banner "passenger-install-apache2-module -a"

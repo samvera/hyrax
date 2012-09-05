@@ -6,6 +6,14 @@
 #	test -x /opt/heracles/deploy_integration.sh && /opt/heracles/deploy_integration.sh
 # to run CI testing.
 
+function anywait {
+    for pid in "$@"; do
+        while kill -0 "$pid"; do
+            sleep 0.5
+        done
+    done
+}
+
 HHOME="/opt/heracles"
 WORKSPACE="${HHOME}/scholarsphere/scholarsphere-integration"
 RESQUE_POOL_PIDFILE="${WORKSPACE}/tmp/pids/resque-pool.pid"
@@ -50,7 +58,7 @@ RAILS_ENV=integration rake scholarsphere:fixtures:refresh
 echo "=-=-=-=-= $0 resque-pool restart"
 [ -f $RESQUE_POOL_PIDFILE ] && {
     PID=$(cat $RESQUE_POOL_PIDFILE)
-    kill -15 $PID && wait $PID
+    kill -15 $PID && anywait $PID
 }
 resque-pool --daemon --environment integration start
 
