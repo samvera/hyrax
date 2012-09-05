@@ -31,6 +31,9 @@ Install system dependencies
  * libsqlite3-dev (if running SQLite as RDBMS)
  * libmagick-dev
  * libmagickwand-dev
+ * clamav
+ * clamav-daemon
+ * libclamav-dev
  * [FITS](http://code.google.com/p/fits/) -- put it in a
   directory on your PATH
  * ghostscript (required to create thumbnails from pdfs)

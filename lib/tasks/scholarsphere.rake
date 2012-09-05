@@ -4,6 +4,25 @@ require 'rdf'
 require 'rdf/rdfxml'
 
 namespace :scholarsphere do
+  desc "Restore missing user accounts"
+  task :restore_users => :environment do
+    # Query Solr for unique depositors
+    terms_url = "#{ActiveFedora.solr_config[:url]}/terms?terms.fl=depositor_t&terms.sort=index&terms.limit=5000&wt=json&omitHeader=true"
+    # Parse JSON response (looks like {"terms":{"depositor_t":["mjg36",3]}})
+    terms_json = open(terms_url).read
+    depositor_logins = JSON.parse(terms_json)['terms']['depositor_t'] rescue []
+    # Filter out doc counts, and leave logins
+    depositor_logins.select! { |item| item.is_a? String }
+    # Check for depositor User accounts & restore/populate if missing
+    depositor_logins.each { |l| User.create(login: l).populate_attributes if User.find_by_login(l).nil? }
+    # Then iterate over other User accounts and populate their attributes just in case
+    User.all.each do |u|
+      # Skip user if already populated earlier
+      next if depositor_logins.include? u.login
+      u.populate_attributes
+    end
+  end
+
   desc "(Re-)Generate the secret token"
   task :generate_secret => :environment do
     include ActiveSupport
