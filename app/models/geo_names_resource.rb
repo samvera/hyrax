@@ -13,7 +13,7 @@ class GeoNamesResource < ActiveResource::Base
       return col      
   end
  
-  def self.find_loaction(location)
+  def self.find_location(location)
     return GeoNamesResource.find(:all, :params => { :q =>location, :username=>"cam156", :maxRows=>10})
   end
   

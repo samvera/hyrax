@@ -37,7 +37,7 @@ var addthis_config = {"data_track_addressbar":true};<
       <%end %>
     </p>
     <p>Export to:
-      <%= link_to 'Endnote', generic_file_path(@generic_file.noid, :format => 'endnote') %>
+      <%= link_to 'EndNote', generic_file_path(@generic_file.noid, :format => 'endnote') %>
       &nbsp;|&nbsp;
       <%= link_to 'Zotero', static_path('zotero'), {:id => 'zoteroLink', :name =>    'zotero', :class => 'lightboxLink'} %>
       &nbsp;|&nbsp;

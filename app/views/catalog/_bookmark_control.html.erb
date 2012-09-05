@@ -2,7 +2,7 @@
   <%- existing_bookmark = current_user.existing_bookmark_for(document.id) -%>
   <%- 
   # Note these two forms are pretty similar but for different :methods, classes, and labels. 
-  # but it was simpler to leave them seperate instead of DRYing them, got confusing trying that.
+  # but it was simpler to leave them separate instead of DRYing them, got confusing trying that.
   # the data-doc-id attribute is used by our JS that converts to a checkbox/label.
   -%>  
   <% unless existing_bookmark %>  
