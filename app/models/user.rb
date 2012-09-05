@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   include Mailboxer::Models::Messageable
   # Connects this user object to Blacklight's Bookmarks and Folders.
   include Blacklight::User
+  
+  RETRY_TIMES = 5
 
   delegate :can?, :cannot?, :to => :ability
 
@@ -66,6 +68,11 @@ class User < ActiveRecord::Base
 
   def ldap_exist!
       exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
+      retryCount = 0
+      while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
+        exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
+      end
+
       if (Hydra::LDAP.connection.get_operation_result.code==0)
         logger.debug "exist = #{exist}"
         attrs = {}
@@ -91,6 +98,7 @@ class User < ActiveRecord::Base
 
   def groups!
       list = self.class.groups(login)
+      
       if (Hydra::LDAP.connection.get_operation_result.code==0)
         list.sort!
         logger.debug "groups = #{list}"
@@ -109,7 +117,12 @@ class User < ActiveRecord::Base
   end
 
   def self.groups(login)
-    Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
+    groups = Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
+    retryCount = 0
+    while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
+      groups = Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
+    end
+    return groups
   end
 
   def populate_attributes
@@ -149,7 +162,12 @@ class User < ActiveRecord::Base
   end
 
   def self.directory_attributes(login, attrs=[])
-    Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
+    attrs  = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
+    retryCount = 0
+    while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
+      attrs  = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
+    end
+    return attrs
   end
 
   def ability
