@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   # Connects this user object to Blacklight's Bookmarks and Folders.
   include Blacklight::User
   
-  RETRY_TIMES = 5
+  RETRY_TIMES = 7
 
   delegate :can?, :cannot?, :to => :ability
 
@@ -70,6 +70,7 @@ class User < ActiveRecord::Base
       exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
       retryCount = 0
       while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
+        retryCount+=1
         exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
       end
 
@@ -120,6 +121,7 @@ class User < ActiveRecord::Base
     groups = Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
     retryCount = 0
     while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
+      retryCount+=1
       groups = Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
     end
     return groups
@@ -165,6 +167,7 @@ class User < ActiveRecord::Base
     attrs  = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
     retryCount = 0
     while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
+      retryCount+=1
       attrs  = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
     end
     return attrs
