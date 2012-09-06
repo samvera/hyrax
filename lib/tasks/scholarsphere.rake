@@ -2,6 +2,10 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'rdf'
 require 'rdf/rdfxml'
+require 'rubygems'
+require 'action_view'
+require 'rainbow'
+include ActionView::Helpers::NumberHelper
 
 namespace :scholarsphere do
   desc "Restore missing user accounts"
@@ -21,6 +25,44 @@ namespace :scholarsphere do
       next if depositor_logins.include? u.login
       u.populate_attributes
     end
+  end
+
+  desc "Report users quota in SS"
+  task :quota_report => :environment do
+    caution_sz = 3000000000   # 3GB
+    warning_sz = 5000000000   # 5GB
+    problem_sz = 10000000000  # 10GB
+    # loop over users in active record 
+    users = {}
+    User.all.each do |u|
+      # for each user query get list of documents 
+      user_files = GenericFile.find( :depositor_t => u.login )
+      # sum the size of the users docs
+      sz = 0
+      user_files.each do |f| 
+        #puts number_to_human_size(f.file_size.first.to_i)
+        sz += f.file_size.first.to_i
+        #puts "#{sz}:#{f.file_size.first}"
+      end
+      uname = "#{u.login} #{u.name}"
+      users = users.merge(uname => sz)
+    end
+    longest_key = users.keys.max { |a,b| a.length <=> b.length }
+    printf "%-#{longest_key.length}s %s".background(:white).foreground(:black), "User", "Space Used"
+    puts ""
+    users.each_pair do |k,v| 
+      if v >= problem_sz
+        printf "%-#{longest_key.length}s %s".background(:red).foreground(:white).blink, k, number_to_human_size(v)
+      elsif v >= warning_sz
+        printf "%-#{longest_key.length}s %s".background(:red).foreground(:white), k, number_to_human_size(v)
+      elsif v >= caution_sz
+        printf "%-#{longest_key.length}s %s".background(:yellow).foreground(:black), k, number_to_human_size(v)
+      else
+        printf "%-#{longest_key.length}s %s".background(:black).foreground(:white), k, number_to_human_size(v)
+      end
+      puts ""
+    end
+
   end
 
   desc "(Re-)Generate the secret token"
