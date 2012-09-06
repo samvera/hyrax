@@ -29,7 +29,7 @@ banner "checking username"
 }
 
 banner "exit if not ss1prod or ss2prod"
-[[ $HOSTNAME == "ss1prod" || $HOSTNAME == "ss2prod"]] || {
+[[ $HOSTNAME == "ss1prod" || $HOSTNAME == "ss2prod" ]] || {
     echo -e "${ERROR_TERMCOLORS}*** ERROR: $0 must be run on ss1prod or ss2prod ${DEFAULT_TERMCOLORS}"
     exit 1
 }

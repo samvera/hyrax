@@ -29,7 +29,7 @@ banner "checking username"
 }
 
 banner "exit if not ss1stage or ss2stage"
-[[ $HOSTNAME == "ss1stage" || $HOSTNAME == "ss2stage"]] || {
+[[ $HOSTNAME == "ss1stage" || $HOSTNAME == "ss2stage" ]] || {
     echo -e "${ERROR_TERMCOLORS}*** ERROR: $0 must be run on ss1stage or ss2stage ${DEFAULT_TERMCOLORS}"
     exit 1
 }
