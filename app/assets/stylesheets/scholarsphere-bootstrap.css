@@ -235,4 +235,16 @@ ol.faq li     { list-style-type: decimal }
 ol.faq ol     { list-style-type: lower-alpha } 
 ol.faq ol li    { list-style-type: lower-alpha } 
 ol.faq ol ol  { list-style-type: lower-roman }  
-ol.faq ol ol li { list-style-type: lower-roman }  
+ol.faq ol ol li { list-style-type: lower-roman }
+
+.pager .disabled {
+  pointer-events: none; 
+  cursor: default; 
+  font-style: bold;
+  background-color: #ffff00;
+}
+    
+.pager a[rel="next"].disabled, .pager a[rel="prev"].disabled {
+  font-style: italic;
+  background-color: #bebebe;
+}    
