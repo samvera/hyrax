@@ -28,6 +28,7 @@ ScholarSphere::Application.routes.draw do
   match 'login' => 'sessions#new', :as => :new_user_session
 
   # User profile & follows
+  match 'users' => 'users#index', :as => :profiles
   match 'users/:uid' => 'users#show', :as => :profile
   match 'users/:uid/edit' => 'users#edit', :as => :edit_profile
   match 'users/:uid/update' => 'users#update', :as => :update_profile, :via => :put

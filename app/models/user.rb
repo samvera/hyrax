@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   # Connects this user object to Blacklight's Bookmarks and Folders.
   include Blacklight::User
   
+  self.per_page = 5
+  
   RETRY_TIMES = 7
 
   delegate :can?, :cannot?, :to => :ability

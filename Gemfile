@@ -17,6 +17,7 @@ gem 'solrizer-fedora', '2.2.0'
 gem "hydra-ldap", "0.0.4"
 gem 'clamav'
 gem 'rainbow'
+gem 'will_paginate'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'

@@ -384,6 +384,16 @@ $(function() {
       });
       */
 
+
+    $(".sorts").click(function(){
+       var itag =$(this).find('i')    
+       itag.toggleClass("icon-arrow-down");
+       itag.toggleClass("icon-arrow-up");       
+       sort = itag.attr('class') == "icon-arrow-down" ? itag.attr('id')+'_rev':  itag.attr('id') ;
+       $('input[name="sort"]').attr('value', sort);
+       $("#user_submit").click();
+    }); 
+
 }); //closing function at the top of the page
 
 

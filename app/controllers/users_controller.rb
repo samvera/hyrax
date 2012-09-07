@@ -1,8 +1,16 @@
 class UsersController < ApplicationController
-  prepend_before_filter :find_user
+  prepend_before_filter :find_user, :except => [:index, :search]
   before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow]
   before_filter :user_is_current_user, only: [:edit, :update]
   before_filter :user_not_current_user, only: [:follow, :unfollow]
+
+  def index
+    sort_val = get_sort
+    query = params[:uq].blank? ? nil : "%"+params[:uq]+"%"
+    @users = User.where("login like ? OR display_name like ?",query,query).paginate(:page => params[:page], 
+                           :per_page => 10, :order => sort_val) unless query.blank?    
+    @users = User.paginate(:page => params[:page], :per_page => 10, :order => sort_val) if query.blank?
+  end
 
   # Display user profile
   def show
@@ -76,5 +84,14 @@ class UsersController < ApplicationController
 
   def user_not_current_user
     redirect_to profile_path(@user.to_s), alert: "You cannot follow or unfollow yourself" if @user == current_user
+  end
+
+  def get_sort
+    sort = params[:sort].blank? ? "name" : params[:sort]
+    sort_val = case sort
+           when "name"  then "display_name"
+           when "name_rev"   then "display_name DESC"
+           end
+    return sort_val
   end
 end
