@@ -1,26 +1,27 @@
-class BatchUpdateJob < EventJob
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers
-  include ActionView::Helpers::DateHelper
-  include Hydra::AccessControlsEnforcement
-  include ApplicationHelper
-
-  def self.queue
-    :batch_update
-  end
-
-  #def self.perform(batch_id, gen_file, login, params)
-  def self.perform(login, params)
+class BatchUpdateJob < MetaSaveJob
+  def initialize(login, params)
     params.symbolize_keys!
     batch = Batch.find_or_create(params[:id])
+    user = User.find_by_login(login)
     logger.error "---------------------"
     logger.error "params: #{params.inspect}"
     logger.error "---------------------"
+    logger.error "user: #{user.inspect}"
 
     saved = []
     denied = []
     batch.generic_files.each do |gf|
-      unless can? :read, get_permissions_solr_response_for_doc_id(gf.pid)
+      logger.error "---------------------"
+      logger.error "pid: #{gf.pid}"
+      logger.error "---------------------"
+      if user.can? :read, get_permissions_solr_response_for_doc_id(gf.pid)
+        logger.error "if is true???"
+      else
+        logger.error "not true???"
+      end
+
+      unless user.can? :read, get_permissions_solr_response_for_doc_id(gf.pid)
+        logger.error "DEEEENIED!"
         denied << gf
         next
       end 
