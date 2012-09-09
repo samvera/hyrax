@@ -19,7 +19,7 @@ class BatchUpdateJob < MetaSaveJob
 
       save_tries = 0 
       begin
-        @generic_file.save
+        gf.save
       rescue RSolr::Error::Http => error
         logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
         save_tries++
