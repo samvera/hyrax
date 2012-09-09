@@ -24,7 +24,7 @@ class BatchController < ApplicationController
     authenticate_user!
     Resque.enqueue(BatchUpdateJob, current_user.login, params)
 
-    flash[:notice] = "Files are being processessed by ScholarSphere the permissions, and the metadata you added is being applied. This should only take a couple minutes."
+    flash[:notice] = "Your files are being processed by ScholarSphere in the background. The metadata and access controls you specified are being applied."
     redirect_to dashboard_path
   end
 end
