@@ -16,6 +16,19 @@ class BatchUpdateJob < MetaSaveJob
       gf.update_attributes(params[:generic_file])
       gf.set_visibility(params)
       gf.save
+
+      save_tries = 0 
+      begin
+        @generic_file.save
+      rescue RSolr::Error::Http => error
+        logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
+        save_tries++
+        # fail for good if the tries is greater than 3
+        rescue_action_without_handler(error) if save_tries >=3
+        sleep 0.01
+        retry
+      end
+
       begin
         Resque.enqueue(ContentUpdateEventJob, gf.pid, login)
       rescue Redis::CannotConnectError
