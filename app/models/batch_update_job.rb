@@ -1,9 +1,5 @@
 class BatchUpdateJob
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers
-  include ActionView::Helpers::DateHelper
   include Hydra::AccessControlsEnforcement
-  include ApplicationHelper
 
   def self.queue
     :batch_update
@@ -18,13 +14,13 @@ class BatchUpdateJob
     batch = Batch.find_or_create(params[:id])
     user = User.find_by_login(login)
 
-    # TODO: Determine if we need to use these two arrays. Commented out all lines for now.
-    #saved = []
-    #denied = []
+    # TODO: Determine if we need to use these two arrays. Commented out all lines for now w/ XXX.
+    # XXX saved = []
+    # XXX denied = []
     batch.generic_files.each do |gf|
       unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
         logger.error "User #{user.login} DEEEENIED access to #{gf.pid}!"
-        #denied << gf
+        # XXX denied << gf
         next
       end
       gf.title = params[:title][gf.pid] if params[:title][gf.pid] rescue gf.label
@@ -48,7 +44,7 @@ class BatchUpdateJob
       rescue Redis::CannotConnectError
         logger.error "Redis is down!"
       end
-      #saved << gf
+      # XXX saved << gf
     end
   end
 end
