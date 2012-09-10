@@ -257,6 +257,7 @@ ol.faq ol ol li { list-style-type: lower-roman }
     display: inline-block;
     padding: 5px 14px;
 }    
+    
 .pager a[rel="next"].disabled, .pager a[rel="prev"].disabled {
   font-style: italic;
   background-color: #bebebe;
