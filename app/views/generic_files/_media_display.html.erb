@@ -1,6 +1,5 @@
-<a href="<%= download_path(@generic_file.noid) %>" target="_new">
 <% if ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg'].include?(@generic_file.mime_type) %>
-  <img src="<%= download_path(@generic_file.noid) %>" width="338" /> 
+  <a href="<%= download_path(@generic_file.noid) %>" target="_new"><img src="<%= download_path(@generic_file.noid) %>" width="338" /></a>
 <% elsif ['video/mp4'].include?(@generic_file.mime_type) %>
   <video controls="controls" class="video-js vjs-default-skin" data-setup="{}" preload="auto">
     <source src="<%= download_path(@generic_file.noid) %>" type="<%= @generic_file.mime_type %>" />
@@ -11,8 +10,7 @@
     Your browser does not support the audio tag.
     </audio>
 <% elsif ['application/pdf'].include?(@generic_file.mime_type) %>
-  <img src="<%= download_path(@generic_file.noid, {:datastream_id => 'thumbnail'}) %>" width="338" height="493" /> 
+  <a href="<%= download_path(@generic_file.noid) %>" target="_new"><img src="<%= download_path(@generic_file.noid, {:datastream_id => 'thumbnail'}) %>" width="338" height="493" /></a>
 <% else %>
-  <img src="/assets/default.png" alt="No preview available" width="338" height="493" />
+  <a href="<%= download_path(@generic_file.noid) %>" target="_new"><img src="/assets/default.png" alt="No preview available" width="338" height="493" /></a>
 <% end %>
-</a>
