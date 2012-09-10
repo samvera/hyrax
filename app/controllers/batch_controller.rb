@@ -23,7 +23,6 @@ class BatchController < ApplicationController
     #ScholarSphere::GenericFile::Permissions.parse_permissions(params)
     authenticate_user!
     Resque.enqueue(BatchUpdateJob, current_user.login, params, params[:generic_file])
-    #BatchUpdateJob.perform(current_user.login, params)
     flash[:notice] = 'Your files are being processed by ScholarSphere in the background. The metadata and access controls you specified are being applied. Files will be marked <span class="label label-important" title="Private">Private</span> until this process is complete (shouldn\'t take too long, hang in there!). You may need to refresh your dashboard to see these updates.'
     redirect_to dashboard_path
   end
