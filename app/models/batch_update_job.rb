@@ -10,7 +10,10 @@ class BatchUpdateJob
   end
 
   def initialize(login, params, perms)
-    params.symbolize_keys!
+    #params.symbolize_keys!
+    #perms.symbolize_keys!
+    params = HashWithIndifferentAccess.new(params)
+    perms = HashWithIndifferentAccess.new(perms)
     batch = Batch.find_or_create(params[:id])
     user = User.find_by_login(login)
 
@@ -18,43 +21,42 @@ class BatchUpdateJob
     # XXX saved = []
     # XXX denied = []
 
-    batch.generic_files.each do |gf|
-      logger.error "-- on save perms(batch)----------"
-      logger.error perms 
-
-      #gf.update_attributes(params["generic_file"])
-      gf.update_attributes(perms)
-    end
 #    batch.generic_files.each do |gf|
-#      unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
-#        logger.error "User #{user.login} DEEEENIED access to #{gf.pid}!"
-#        # XXX denied << gf
-#        next
-#      end
-#      gf.title = params[:title][gf.pid] if params[:title][gf.pid] rescue gf.label
-#      logger.error "-- on resque params----------"
-#      logger.error params[:generic_file]
-#      gf.update_attributes(params[:generic_file])
-#      gf.set_visibility(params)
+#      logger.error "-- on save perms(batch)----------"
+#      logger.error perms 
 #
-#      save_tries = 0
-#      begin
-#        gf.save
-#      rescue RSolr::Error::Http => error
-#        save_tries += 1
-#        logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
-#        # fail for good if the tries is greater than 3
-#        rescue_action_without_handler(error) if save_tries >=3
-#        sleep 0.01
-#        retry
-#      end
-#
-#      begin
-#        Resque.enqueue(ContentUpdateEventJob, gf.pid, login)
-#      rescue Redis::CannotConnectError
-#        logger.error "Redis is down!"
-#      end
-#      # XXX saved << gf
+#      #gf.update_attributes(params["generic_file"])
+#      gf.update_attributes(perms)
 #    end
+    batch.generic_files.each do |gf|
+      unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
+        logger.error "User #{user.login} DEEEENIED access to #{gf.pid}!"
+        # XXX denied << gf
+        next
+      end
+      gf.title = params[:title][gf.pid] if params[:title][gf.pid] rescue gf.label
+      logger.error "-- on resque params----------"
+      logger.error params[:generic_file]
+      gf.update_attributes(params[:generic_file])
+      gf.set_visibility(params)
+
+      save_tries = 0
+      begin
+        gf.save
+      rescue RSolr::Error::Http => error
+        save_tries += 1
+        logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
+        # fail for good if the tries is greater than 3
+        rescue_action_without_handler(error) if save_tries >=3
+        sleep 0.01
+        retry
+      end #
+      begin
+        Resque.enqueue(ContentUpdateEventJob, gf.pid, login)
+      rescue Redis::CannotConnectError
+        logger.error "Redis is down!"
+      end
+      # XXX saved << gf
+    end
   end
 end
