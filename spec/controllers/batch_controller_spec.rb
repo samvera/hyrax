@@ -26,17 +26,10 @@ describe BatchController do
       @file.delete
       @file2.delete
     end
-    it "should check permissions for each file before updating" do
-      controller.expects(:permissions_solr_doc_for_id).times(2).returns("mock solr permissions")
-      controller.expects(:can?).with(:read, "mock solr permissions").times(2)
-      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
-    end
-    it "should log a content update event" do
-      controller.expects(:permissions_solr_doc_for_id).times(2).returns("mock solr permissions")
-      controller.expects(:can?).with(:read, "mock solr permissions").times(2).returns(true)
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.login).once
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.login).once
-      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]} 
+    it "should equeue a batch update job" do
+      params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
+      Resque.expects(:enqueue).with(BatchUpdateJob, @user.login, params).once
+      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
     describe "when views are shown" do
       render_views
@@ -45,7 +38,7 @@ describe BatchController do
         response.should redirect_to dashboard_path
         flash[:notice].should_not be_nil
         flash[:notice].should_not be_empty
-        flash[:notice].should include("The file(s)")
+        flash[:notice].should include("Your files are being processed")
       end
     end
     describe "when user has edit permissions on a file" do
