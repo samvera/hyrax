@@ -39,7 +39,7 @@ class GenericFile < ActiveFedora::Base
                                   :markup_language, :duration, :bit_depth,
                                   :sample_rate, :channels, :data_format, :offset]
 
-  around_save :characterize_if_changed
+  around_save :characterize_if_changed, :retry_warming
   validate :paranoid_permissions
 
 
@@ -75,6 +75,20 @@ class GenericFile < ActiveFedora::Base
     params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
     params[:group].each { |name, access| perm_hash['group'][name] = access} if params[:group]
     rightsMetadata.update_permissions(perm_hash)
+  end
+
+  def retry_warming
+      save_tries = 0
+      begin
+        yield
+      rescue RSolr::Error::Http => error
+        save_tries += 1
+        logger.warn "Retry Solr caught RSOLR error on #{self.pid}: #{error.inspect}"
+        # fail for good if the tries is greater than 3
+        rescue_action_without_handler(error) if save_tries >=3
+        sleep 0.01
+        retry
+      end
   end
 
   def characterize_if_changed
