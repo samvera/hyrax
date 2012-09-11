@@ -28,7 +28,7 @@ describe BatchController do
     end
     it "should equeue a batch update job" do
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      Resque.expects(:enqueue).with(BatchUpdateJob, @user.login, params).once
+      Resque.expects(:enqueue).with(BatchUpdateJob, @user.login, params, params['generic_file']).once
       post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
     describe "when views are shown" do
