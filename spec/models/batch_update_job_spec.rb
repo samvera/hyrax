@@ -25,7 +25,7 @@ describe BatchUpdateJob do
       BatchUpdateJob.any_instance.stubs(:get_permissions_solr_response_for_doc_id).returns(["","mock solr permissions"])       
       User.any_instance.expects(:can?).with(:edit, "mock solr permissions").times(2)
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      BatchUpdateJob.perform(@user.login, params)
+      BatchUpdateJob.perform(@user.login, params, params[:generic_file])
       #b = Batch.find(@batch.pid)
     end
   end
@@ -36,7 +36,7 @@ describe BatchUpdateJob do
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.login).once
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.login).once
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      BatchUpdateJob.perform(@user.login, params)
+      BatchUpdateJob.perform(@user.login, params, params[:generic_file])
     end
   end
 end
