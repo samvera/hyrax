@@ -33,7 +33,8 @@ var addthis_config = {"data_track_addressbar":true};
       <%# link_to "Cite", citation_generic_file_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
       <% if @can_edit %>
           &nbsp;|&nbsp;
-          <%= link_to "Edit", edit_generic_file_path   %>
+          <%= link_to "Edit", edit_generic_file_path unless @generic_file.processing?   %>
+          <%= "File is being processed you may edit once it is complete" if @generic_file.processing?   %>
       <%end %>
     </p>
     <p>Export to:

@@ -12,6 +12,7 @@ class Batch < ActiveFedora::Base
   delegate :title, :to => :descMetadata
   delegate :creator, :to => :descMetadata
   delegate :part, :to => :descMetadata
+  delegate :status, :to => :descMetadata
 
   def self.find_or_create(pid)
     begin

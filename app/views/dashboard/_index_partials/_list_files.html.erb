@@ -4,7 +4,12 @@ on element ids -->
 <% if document.has_key?(:noid_s) %>
 <% noid = document[:noid_s].first %>
 <tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
-  <td width="3%"><%# check_box_tag :generic_file, document[:id] %></td>
+  <td width="3%"><%# check_box_tag :generic_file, document[:id] %>
+  <% gf = GenericFile.find(document.id) %>
+  <% if gf.processing? %>
+     <i class="icon-magic icon-large"/>
+  <% end %>
+  </td>
   <td width="42%">
     <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large"></i></a>
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>

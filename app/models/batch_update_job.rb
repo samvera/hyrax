@@ -49,6 +49,8 @@ class BatchUpdateJob
       
       saved << gf
     end
+    batch.update_attributes({status:["Complete"]})
+    
     job_user = User.where(login:"batchuser").first
     job_user = User.create(login:"batchuser", email:"batchmail") unless job_user
     
