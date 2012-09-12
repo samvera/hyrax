@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_filter :clear_session_user
   before_filter :set_current_user
   before_filter :filter_notify
-  before_filter :add_notifications
+  before_filter :notifications_number
 
   # Intercept errors and render user-friendly pages
   rescue_from NameError, :with => :render_500
@@ -76,31 +76,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def add_notifications
+  def notifications_number
+    @notify_number=0
     # no where to put these notifications when doing create in generic files or java script requests
     return if ((action_name == "create") && (controller_name == "generic_files")) || (request.format== :js)
 
     if User.current
-      inbox = User.current.mailbox.inbox
-      notice = ''
-      inbox.each do |msg|
-        #logger.info "Message = #{msg.messages.inspect}"
-        notice = notice+"<br>"+msg.last_message.body if (msg.last_message.subject == AuditJob::FAIL)
-
-        # we are cleaning up the hard way here so that we do not get a raise condition with locks.
-        # does not seem to happen on dev enviromnet but it is happening in integration
-        msg.messages.each do |notify|
-          notify.receipts.each do |receipt|
-            receipt.delete
-          end
-          notify.delete
-        end
-        msg.delete
-      end
-      unless notice.blank?
-        flash[:notice] ||= ''
-        flash[:notice] << notice
-      end
+      @notify_number=User.current.mailbox.inbox.count
     end
   end
 

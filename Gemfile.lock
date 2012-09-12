@@ -13,16 +13,6 @@ GIT
       actionmailer (~> 3.0)
 
 GIT
-  remote: git://github.com/psu-stewardship/mailboxer
-  revision: d92a75b01b3dc0a1c9d9e976eb0dbf80c6bfe800
-  ref: d92a75b0
-  specs:
-    mailboxer (0.6.5)
-      carrierwave (>= 0.5.8)
-      foreigner (>= 0.9.1)
-      rails (> 3.0.0)
-
-GIT
   remote: https://github.com/warpc/rails_indexes
   revision: 4a550270989d0b74546b18fd0ff09e12492f2c3a
   specs:
@@ -236,6 +226,10 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mailboxer (0.8.0)
+      carrierwave (>= 0.5.8)
+      foreigner (>= 0.9.1)
+      rails (> 3.0.0)
     marc (0.5.0)
     mediashelf-loggable (0.4.9)
     metaclass (0.0.1)
@@ -450,7 +444,7 @@ DEPENDENCIES
   jettywrapper
   launchy
   mail_form!
-  mailboxer!
+  mailboxer (= 0.8.0)
   mocha (= 0.11.4)
   mysql2 (= 0.3.11)
   nest (= 1.1.1)
