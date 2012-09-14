@@ -276,3 +276,7 @@ ol.faq ol ol li { list-style-type: lower-roman }
     filter:alpha(opacity=70); /* IE transparency */  
     
 }
+
+.fleft {
+    float: left;
+}

@@ -11,7 +11,7 @@
         Your browser does not support the video tag.  
       </video> 
   <% elsif !(document['mime_type_t'] & ['audio/mp3', 'audio/mpeg']).empty? %>
-      <audio src="<%= download_path(document["id"]) %>" preload="auto"> </audio>
+      <audio src="<%= download_path(document["id"], format:'audio') %>" preload="auto"> </audio>
   <% else %>
     <%= link_to image_tag("/assets/default.png", {:width=>width, :height=>height}), generic_file_path(document[:noid_s].first) %>
   <% end %>

@@ -33,14 +33,14 @@ describe DownloadsController do
         DownloadsController.default_content_dsid.should == "content"
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
-        controller.expects(:send_data).with(expected_content, {:filename => 'world.png', :type => 'image/png'})
+        controller.expects(:send_data).with(expected_content, {:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
         get "show", :id => "test1"
         response.should be_success
       end
       it "should return requested datastreams" do
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").descMetadata.content
-        controller.expects(:send_data).with(expected_content, {:filename => 'descMetadata',:type => "text/plain"})
+        controller.expects(:send_data).with(expected_content, {:filename => 'descMetadata', :disposition => 'inline', :type => "text/plain"})
         get "show", :id => "test1", :datastream_id => "descMetadata"
         response.should be_success
       end
@@ -54,7 +54,7 @@ describe DownloadsController do
       it "should allow you to specify filename for download" do
         controller.stubs(:render)
         expected_content = ActiveFedora::Base.find("scholarsphere:test1").content.content
-        controller.expects(:send_data).with(expected_content, {:filename => "my%20dog.png", :type => 'image/png'}) 
+        controller.expects(:send_data).with(expected_content, {:filename => "my%20dog.png", :disposition => 'inline', :type => 'image/png'}) 
         get "show", :id => "test1", "filename" => "my%20dog.png"
       end
     end
