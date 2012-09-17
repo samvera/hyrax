@@ -17,7 +17,7 @@ class AuditJob
 
         # look up the user for sending the message to
         login = generic_file.depositor
-        #logger.info "User login is #{login}"
+        #logger.info "User login is #{login}"`
         #logger.info "All users = #{User.all}"
         if login
           user = User.find_by_login(login)
@@ -25,14 +25,12 @@ class AuditJob
           job_user = User.where(login:"audituser").first
           job_user = User.create(login:"audituser", email:"auditemail") unless job_user
 
-          #send the user a message about the audit
-          # TODO: do we want to do this on failing only?
-          #puts "Log is #{log.inspect}"
-          message = "The audit run at #{log.created_at} for #{log.pid}:#{log.dsid}:#{log.version} was #{log.pass == 1 ? 'passing' : 'failing'}."
-          subject = (log.pass == 1 ? PASS : FAIL)
-          #logger.info "Sending message [#{subject}] #{message.inspect} to user #{user.login}"
-          job_user.send_message(user, message, subject)
-          #logger.info "inbox = #{user.mailbox.inbox.inspect}"
+          #send the user a message about the failing audit
+          unless (log.pass == 1)
+            message = "The audit run at #{log.created_at} for #{log.pid}:#{log.dsid}:#{log.version} was #{log.pass == 1 ? 'passing' : 'failing'}."
+            subject = (log.pass == 1 ? PASS : FAIL)
+            job_user.send_message(user, message, subject)
+          end 
         end
       else
         logger.warn "No datastream for audit!!!!! pid: #{generic_file_id} dsid: #{datastream_id}"

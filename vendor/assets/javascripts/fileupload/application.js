@@ -20,7 +20,9 @@ var max_file_size = 200000000;
 var max_file_size_str = "200 MB";
 //500 MB max total upload size
 var max_total_file_size = 500000000;
+var max_file_count = 100;
 var max_total_file_size_str = "500 MB";
+var first_file_after_max = ''; 
 
 $(function () {
     $('#main_upload_start').attr('disabled', true);
@@ -106,6 +108,7 @@ $(function () {
       if ( $('#terms_of_service').is(':checked') )$('#main_upload_start').attr('disabled', false);
     });
     
+    
     // check the validation on if the file type is not accepted just click cancel for the user as we do not want them to see all the hidden files
     $('#fileupload').bind("fileuploadadded", function(e, data){
         if (data.files[0].error == 'acceptFileTypes'){
@@ -120,8 +123,15 @@ $(function () {
         }
         // cumulative upload file size is too big
         else if( total_sz > max_total_file_size) {
+          if (first_file_after_max == '') first_file_after_max = data.files[0].name;
           $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click(); 
-          $("#errmsg").html("All files selected from " + data.files[0].name + " and after will not be uploaded because your total upload is too big. You may not upload more than " + max_total_file_size_str + " in one upload.");
+          $("#errmsg").html("All files selected from " + first_file_after_max + " and after will not be uploaded because your total upload is too big. You may not upload more than " + max_total_file_size_str + " in one upload.");
+          $("#errmsg").fadeIn('slow');
+        }
+        else if( filestoupload > max_file_count) {
+          if (first_file_after_max == '') first_file_after_max = data.files[0].name;
+          $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click(); 
+          $("#errmsg").html("All files selected from " + first_file_after_max + " and after will not be uploaded because your total number of files is too big. You may not upload more than " + max_file_count + " files in one upload.");
           $("#errmsg").fadeIn('slow');
         }
         else {

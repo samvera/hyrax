@@ -18,12 +18,11 @@ describe AuditJob do
     @file.delete
   end
   describe "passing audit" do
-    it "should send passing mail" do
+    it "should not send passing mail" do
       ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(true)
       Resque.enqueue(AuditJob, @file.pid, @ds[0], @ds[1].versionID)
       @inbox = @user.mailbox.inbox
-      @inbox.count.should == 1
-      @inbox.each { |msg| msg.last_message.subject.should == AuditJob::PASS }
+      @inbox.count.should == 0
     end
   end
   describe "failing audit" do

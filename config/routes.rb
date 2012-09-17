@@ -27,6 +27,11 @@ ScholarSphere::Application.routes.draw do
   match 'logout' => 'sessions#destroy', :as => :destroy_user_session
   match 'login' => 'sessions#new', :as => :new_user_session
 
+  # Messages
+  match 'mailbox' => 'mailbox#index', :as => :mailbox
+  match 'mailbox/delete_all' => 'mailbox#delete_all', :as => :mailbox_delete_all
+  match 'mailbox/:uid/delete' => 'mailbox#delete', :as => :mailbox_delete
+
   # User profile & follows
   match 'users' => 'users#index', :as => :profiles
   match 'users/:uid' => 'users#show', :as => :profile

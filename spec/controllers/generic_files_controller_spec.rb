@@ -323,8 +323,8 @@ describe GenericFilesController do
           @ds = @file.datastreams.first
           AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
           get :show, id:"test5"
-          response.body.should include("The audit run")
-          response.body.should include("was failing")
+          response.body.should include('<span id="notify_number" class="overlay"> 1</span>') # notify should be 1 for failing job
+          @archivist.mailbox.inbox[0].messages[0].subject.should == "Failing Audit Run"
         end
       end
     end

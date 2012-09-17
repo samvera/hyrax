@@ -26,6 +26,8 @@ describe BatchUpdateJob do
       User.any_instance.expects(:can?).with(:edit, "mock solr permissions").times(2)
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
       BatchUpdateJob.perform(@user.login, params, params[:generic_file])
+      @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload permission denied"
+      @user.mailbox.inbox[0].messages[0].move_to_trash @user
       #b = Batch.find(@batch.pid)
     end
   end
@@ -37,6 +39,8 @@ describe BatchUpdateJob do
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.login).once
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
       BatchUpdateJob.perform(@user.login, params, params[:generic_file])
+      @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload complete"
+      @user.mailbox.inbox[0].messages[0].move_to_trash @user
     end
   end
 end

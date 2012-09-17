@@ -14,10 +14,10 @@ gem 'hydra-head', '4.1.1'
 gem 'active-fedora', '4.4.0'
 gem 'rubydora', '0.5.10'
 gem 'solrizer-fedora', '2.2.0'
-gem "hydra-ldap", "0.0.4"
-gem 'clamav'
-gem 'rainbow'
-gem 'will_paginate'
+gem 'hydra-ldap', '0.0.4'
+gem 'clamav', '0.4.1'
+gem 'rainbow', '1.1.4'
+gem 'will_paginate', '3.0.3'
 
 # the :require arg is necessary on Linux-based hosts
 gem 'rmagick', '2.13.1', :require => 'RMagick'
@@ -30,20 +30,20 @@ gem 'daemons', '1.1.8'
 gem 'execjs', '1.4.0'
 gem 'therubyracer', '0.10.1'
 gem 'zipruby', '0.3.6'
-gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git'
+gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 gem 'rails_autolink', '1.0.9'
 gem 'acts_as_follower', '0.1.1'
 gem 'nest', '1.1.1'
 gem 'sitemap', '0.3.2'
 gem 'yaml_db', :git => 'git://github.com/lostapathy/yaml_db', :ref => '98e9a5dc'
-gem 'mailboxer', :git => 'git://github.com/psu-stewardship/mailboxer', :ref => 'd92a75b0'
+gem 'mailboxer', '0.8.0'
 
 group :assets do
-  gem 'sass-rails', "~> 3.2.5"
-  gem 'coffee-rails', "~> 3.2.2"
-  gem 'uglifier', "~> 1.2.6"
-  gem "compass-rails", "~> 1.0.3"
-  gem "compass-susy-plugin", "~> 0.9"
+  gem 'sass-rails', '3.2.5'
+  gem 'coffee-rails', '3.2.2'
+  gem 'uglifier', '1.2.7'
+  gem 'compass-rails', '1.0.3'
+  gem 'compass-susy-plugin', '0.9'
 end
 
 group :production, :integration do

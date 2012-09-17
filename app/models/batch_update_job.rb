@@ -1,5 +1,7 @@
 class BatchUpdateJob
   include Hydra::AccessControlsEnforcement
+  include GenericFileHelper
+  include Rails.application.routes.url_helpers 
 
   def self.queue
     :batch_update
@@ -22,7 +24,7 @@ class BatchUpdateJob
     batch.generic_files.each do |gf|
       unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
         logger.error "User #{user.login} DEEEENIED access to #{gf.pid}!"
-        # XXX denied << gf
+        #denied << gf
         next
       end
       gf.title = params[:title][gf.pid] if params[:title][gf.pid] rescue gf.label
@@ -45,7 +47,25 @@ class BatchUpdateJob
       rescue Redis::CannotConnectError
         logger.error "Redis is down!"
       end
-      # XXX saved << gf
+      
+      #saved << gf
     end
+    batch.update_attributes({status:["Complete"]})
+    
+    job_user = User.where(login:"batchuser").first
+    job_user = User.create(login:"batchuser", email:"batchmail") unless job_user
+    
+    message = "The file(s) "+ file_list(saved)+ " have been saved." unless saved.empty?
+    job_user.send_message(user, message, 'Batch upload complete') unless saved.empty?
+ 
+    message = "The file(s) "+ file_list(denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless denied.empty?
+    job_user.send_message(user, message, 'Batch upload permission denied') unless denied.empty?
+     
   end
+  
+  def file_list ( files)
+    return files.map {|gf| '<a href="'+generic_files_path+'/'+gf.noid+'">'+display_title(gf)+'</a>'}.join(', ')
+    
+  end
+  
 end

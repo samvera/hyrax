@@ -15,7 +15,8 @@ class DownloadsController < ApplicationController
       opts = {}
       ds = nil
       opts[:filename] = params["filename"] || @asset.label
-      opts[:disposition] = params["disposition"] if params.has_key?("disposition") 
+      #opts[:disposition] = params["disposition"] if params.has_key?("disposition") 
+      opts[:disposition] = 'inline' 
       if params.has_key?(:datastream_id)
         opts[:filename] = params[:datastream_id]
         ds = @asset.datastreams[params[:datastream_id]]
