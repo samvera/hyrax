@@ -3,10 +3,9 @@ class User < ActiveRecord::Base
   include Mailboxer::Models::Messageable
   # Connects this user object to Blacklight's Bookmarks and Folders.
   include Blacklight::User
-  
-  self.per_page = 5
-  
-  RETRY_TIMES = 7
+  # Workaround to retry LDAP calls a number of times
+  include ScholarSphere::Utils
+
 
   delegate :can?, :cannot?, :to => :ability
 
@@ -33,6 +32,9 @@ class User < ActiveRecord::Base
   validates :avatar, :attachment_content_type => { :content_type => /^image\/(jpg|jpeg|pjpeg|png|x-png|gif)$/ }, :if => Proc.new { |p| p.avatar.file? }
   validates :avatar, :attachment_size => { :less_than => 2.megabytes }, :if => Proc.new { |p| p.avatar.file? }
 
+  # Pagination hook
+  self.per_page = 5
+
   # This method should display the unique identifier for this user as defined by devise.
   # The unique identifier is what access controls will be enforced against.
   def user_key
@@ -44,7 +46,7 @@ class User < ActiveRecord::Base
   end
 
   def email_address
-    return self.email 
+    return self.email
   end
 
   def name
@@ -65,30 +67,25 @@ class User < ActiveRecord::Base
     if (ldap_last_update.blank? || ((Time.now-ldap_last_update) > 24*60*60 ))
       return ldap_exist!
     end
-    return ldap_available    
+    return ldap_available
   end
 
   def ldap_exist!
-      exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
-      retryCount = 0
-      while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
-        retryCount+=1
-        exist = Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login)) rescue false
-      end
-
-      if (Hydra::LDAP.connection.get_operation_result.code==0)
-        logger.debug "exist = #{exist}"
-        attrs = {}
-        attrs[:ldap_available] = exist
-        attrs[:ldap_last_update] = Time.now
-        update_attributes(attrs)
-
-      # todo: Should we retry here if the code is 51-53???
-      else 
-        logger.warn "Error checking exists for #{login} reason: #{Hydra::LDAP.connection.get_operation_result.message}"
-        return false 
-      end
-      return exist
+    exist = retry_unless(7.times, lambda { Hydra::LDAP.connection.get_operation_result.code == 53 }) do
+      Hydra::LDAP.does_user_exist?(Net::LDAP::Filter.eq('uid', login))
+    end rescue false
+    if Hydra::LDAP.connection.get_operation_result.code == 0
+      logger.debug "exist = #{exist}"
+      attrs = {}
+      attrs[:ldap_available] = exist
+      attrs[:ldap_last_update] = Time.now
+      update_attributes(attrs)
+      # TODO: Should we retry here if the code is 51-53???
+    else
+      logger.warn "LDAP error checking exists for #{login}, reason (code: #{Hydra::LDAP.connection.get_operation_result.code}): #{Hydra::LDAP.connection.get_operation_result.message}"
+      return false
+    end
+    return exist
   end
 
   # Groups that user is a member of
@@ -96,35 +93,33 @@ class User < ActiveRecord::Base
     if (groups_last_update.blank? || ((Time.now-groups_last_update) > 24*60*60 ))
       return groups!
     end
-    return self.group_list.split(";?;");     
+    return self.group_list.split(";?;")
   end
 
   def groups!
-      list = self.class.groups(login)
-      
-      if (Hydra::LDAP.connection.get_operation_result.code==0)
-        list.sort!
-        logger.debug "groups = #{list}"
-        attrs = {}
-        attrs[:ldap_na] = false
-        attrs[:group_list] = list.join(";?;")
-        attrs[:groups_last_update] = Time.now
-        update_attributes(attrs)
+    list = self.class.groups(login)
 
-      # todo: Should we retry here if the code is 51-53???
-      else 
-        logger.warn "Error getting groups for #{login} reason: #{Hydra::LDAP.connection.get_operation_result.message}"
-        return [] 
-      end
-      return list
+    if Hydra::LDAP.connection.get_operation_result.code == 0
+      list.sort!
+      logger.debug "groups = #{list}"
+      attrs = {}
+      attrs[:ldap_na] = false
+      attrs[:group_list] = list.join(";?;")
+      attrs[:groups_last_update] = Time.now
+      update_attributes(attrs)
+      # TODO: Should we retry here if the code is 51-53???
+    else
+      logger.warn "Error getting groups for #{login} reason: #{Hydra::LDAP.connection.get_operation_result.message}"
+      return []
+    end
+    return list
   end
 
   def self.groups(login)
-    groups = Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
-    retryCount = 0
-    while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
-      retryCount+=1
-      groups = Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login))  { |result| result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') } } rescue []    
+    groups = retry_unless(7.times, lambda { Hydra::LDAP.connection.get_operation_result.code == 53 }) do
+      Hydra::LDAP.groups_for_user(Net::LDAP::Filter.eq('uid', login)) do |result|
+        result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '').sub(/,dc=psu,dc=edu/, '') }
+      end rescue []
     end
     return groups
   end
@@ -154,11 +149,9 @@ class User < ActiveRecord::Base
     attrs[:affiliation] = entry[:edupersonprimaryaffiliation].first rescue nil
     attrs[:telephone] = entry[:telephonenumber].first rescue nil
     update_attributes(attrs)
-    
+
     # update the group cache also
     groups!
-    
-    
   end
 
   def directory_attributes(attrs=[])
@@ -166,12 +159,9 @@ class User < ActiveRecord::Base
   end
 
   def self.directory_attributes(login, attrs=[])
-    attrs  = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
-    retryCount = 0
-    while (retryCount < RETRY_TIMES) && (Hydra::LDAP.connection.get_operation_result.code==53)
-      retryCount+=1
-      attrs  = Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
-    end
+    attrs = retry_unless(7.times, lambda { Hydra::LDAP.connection.get_operation_result.code == 53 }) do
+      Hydra::LDAP.get_user(Net::LDAP::Filter.eq('uid', login), attrs)
+    end rescue []
     return attrs
   end
 

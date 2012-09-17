@@ -6,7 +6,6 @@ require 'sprockets'
 require 'resolv'
 require 'uri'
 
-
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
@@ -175,3 +174,4 @@ require 'scholarsphere/id_service'
 require 'scholarsphere/noidify'
 require 'scholarsphere/model_methods'
 require 'scholarsphere/role_mapper'
+require 'scholarsphere/utils'
