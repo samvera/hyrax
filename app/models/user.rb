@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
   # Workaround to retry LDAP calls a number of times
   include ScholarSphere::Utils
 
-
   delegate :can?, :cannot?, :to => :ability
 
   Devise.add_module(:http_header_authenticatable,
