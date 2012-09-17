@@ -19,10 +19,17 @@ class MailboxController < ApplicationController
   end
 
   def delete
-     msg = Conversation.find(params[:uid])
-     delete_message(msg)
-     empty_trash(msg.participants[0])
-     redirect_to mailbox_path
+    if (User.current)
+      msg = Conversation.find(params[:uid])
+      puts "************* User = #{msg.participants[0].login}.inspect"
+      if (msg.participants[0] == User.current) || (msg.participants[1] == User.current)
+         delete_message(msg)
+         empty_trash(msg.participants[0])
+      end
+   else 
+      flash[:alert] = "You do not have privileges to delete the notification..."
+   end
+   redirect_to mailbox_path
   end
 
 private 

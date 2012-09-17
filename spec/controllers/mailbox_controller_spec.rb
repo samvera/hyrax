@@ -38,6 +38,16 @@ describe MailboxController do
       response.should redirect_to(mailbox_path)
       @user.mailbox.inbox.count.should ==1
     end
+    it "should not delete message" do
+      @curator = FactoryGirl.find_or_create(:curator)
+      rec = @another_user.send_message(@curator, 'message 3', 'subject 3')
+      @curator.mailbox.inbox.count.should == 1
+      get :delete, :uid=> rec.conversation.id
+      response.should redirect_to(mailbox_path)
+      @curator.mailbox.inbox.count.should ==1
+      rec.delete
+      @curator.delete       
+    end
   end
   describe "#delete_all" do
     render_views
