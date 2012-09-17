@@ -43,7 +43,6 @@ module ScholarSphere
     config.assets.paths << '#{Rails.root}/vendor/assets/javascripts'
     config.assets.paths << '#{Rails.root}/vendor/assets/images'
     config.assets.paths << '#{Rails.root}/vendor/assets/fonts'
-    config.assets.paths << '#{Rails.root}/vendor/assets/audio'
 
     # email to send on contact form - probably need one for the production
     # environment
