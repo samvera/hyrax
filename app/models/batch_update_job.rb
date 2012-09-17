@@ -17,14 +17,13 @@ class BatchUpdateJob
     batch = Batch.find_or_create(params[:id])
     user = User.find_by_login(login)
 
-    # TODO: Determine if we need to use these two arrays. Commented out all lines for now w/ XXX.
-    # XXX saved = []
-    # XXX denied = []
+    saved = []
+    denied = []
 
     batch.generic_files.each do |gf|
       unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
         logger.error "User #{user.login} DEEEENIED access to #{gf.pid}!"
-        #denied << gf
+        denied << gf
         next
       end
       gf.title = params[:title][gf.pid] if params[:title][gf.pid] rescue gf.label
@@ -48,7 +47,7 @@ class BatchUpdateJob
         logger.error "Redis is down!"
       end
       
-      #saved << gf
+      saved << gf
     end
     batch.update_attributes({status:["Complete"]})
     
