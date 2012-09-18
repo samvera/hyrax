@@ -6,7 +6,7 @@
     Your browser does not support the audio tag.
   </video>
 <% elsif ['audio/mp3', 'audio/mpeg'].include?(@generic_file.mime_type) %>
-  <audio preload="auto" src="<%= download_path(@generic_file.noid, format:'audio') %>" type="<%= @generic_file.mime_type %>" />
+  <audio src="<%= download_path(@generic_file.noid, format:'audio') %>" type="<%= @generic_file.mime_type %>" />
     Your browser does not support the audio tag.
     </audio>
 <% elsif ['application/pdf'].include?(@generic_file.mime_type) %>

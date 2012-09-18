@@ -8,9 +8,7 @@
 <% stylesheet 'jquery-ui-1.8.1.custom' %>
 
 <% content_for :local_js do %>
-  audiojs.events.ready(function() {
-    var as = audiojs.createAll();
-    });
+initialize_audio();
 
 $('input[name=revision]:radio').on('click', function() {
     $('#save_version_note').fadeIn('slow');

@@ -533,3 +533,21 @@ function preg_quote( str ) {
 
     return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }
+
+
+function initialize_audio() {
+
+  if (navigator.userAgent.match("Chrome")){
+      $('audio').each(function() {
+         this.controls = true;
+         //$(this).attr("controls","controls");
+      }); 
+  }else {
+      $('audio').each(function() {
+         $(this).attr("preload","auto");
+      }); 
+    audiojs.events.ready(function() {
+          var as = audiojs.createAll();
+    });
+  };
+}

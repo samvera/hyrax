@@ -5,9 +5,7 @@
 
 
 <% content_for :local_js do %>
-    audiojs.events.ready(function() {
-      var as = audiojs.createAll();
-      });
+  initialize_audio();
   
   $(document).ready(function(){
       <% rurl = root_url %>
@@ -26,6 +24,11 @@
 
 <% content_for :local_css do %>
 .audiojs {
+  width: 38px;
+  float: left;
+}
+
+audio {
   width: 38px;
   float: left;
 }

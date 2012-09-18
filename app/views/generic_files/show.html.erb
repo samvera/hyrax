@@ -4,10 +4,7 @@
 <% javascript 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
 
 <% content_for :local_js do %>
-audiojs.events.ready(function() {
-      var as = audiojs.createAll();
-});
-
+initialize_audio();
 var addthis_config = {"data_track_addressbar":true};
 <% end %>
 
