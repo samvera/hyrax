@@ -6,5 +6,4 @@ Feature: Browse Dashboard files
     And I follow "dashboard"
     And I follow "more Keywords"
     And I follow "keyf"
-    Then show me the page
     Then I should see "Test mp3"

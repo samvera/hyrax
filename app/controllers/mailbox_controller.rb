@@ -21,7 +21,6 @@ class MailboxController < ApplicationController
   def delete
     if (User.current)
       msg = Conversation.find(params[:uid])
-      puts "************* User = #{msg.participants[0].login}.inspect"
       if (msg.participants[0] == User.current) || (msg.participants[1] == User.current)
          delete_message(msg)
          empty_trash(msg.participants[0])
