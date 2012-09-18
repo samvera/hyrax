@@ -141,7 +141,7 @@ var addthis_config = {"data_track_addressbar":true};
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>
-              <%= link_to_facet('publisher',pub) %><br />
+              <%= link_to_facet(pub,'generic_file__publisher_facet') %><br />
             <% end %>
           </td>
         </tr>
