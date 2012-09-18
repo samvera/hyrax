@@ -14,7 +14,7 @@ $('input[name=revision]:radio').on('click', function() {
     $('#save_version_note').fadeIn('slow');
     });
 
-confirmation_needed = true;
+confirmation_needed = false;
 window.onbeforeunload = confirmExit;
 function confirmExit(){
       if(confirmation_needed){ 
