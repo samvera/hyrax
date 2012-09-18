@@ -5,9 +5,9 @@
   </p>
   <div class="row">
     <div class="span60">
-      <% @batch.generic_files.each do |gen_f| %>
+      <% @batch.generic_files.sort! { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
         <div class="control-group">
-          <%= f.label :title, "<span class='error'>*</span> Title".html_safe, :class=>"control-label" %> 
+          <%= f.label :title, "<span class='error'>*</span> Title #{index+1}".html_safe, :class=>"control-label" %> 
           <div class="controls" id="additional_title_clone">
             <%= f.text_field :title, :name=>"title[#{gen_f.id}][]", :value=>gen_f.label, :required=> true %>  
             <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title"><i class="icon-question-sign icon-large"></i></a>
