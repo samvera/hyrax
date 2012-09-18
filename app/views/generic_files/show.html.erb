@@ -236,10 +236,10 @@ var addthis_config = {"data_track_addressbar":true};
               <% if values.is_a? Array %>
                 <% values.each do |value| %>
                   <% next if value.empty? %>
-                  <%= "#{label}: #{value}" %><br />
+                  <%= "#{label}: #{value.truncate(250)}" %><br />
                 <% end %>
               <% else %>
-                <%= "#{label}: #{values}" %><br />
+                <%= "#{label}: #{values.truncate(250)}" %><br />
               <% end %>
             <% end %>
           </td>
