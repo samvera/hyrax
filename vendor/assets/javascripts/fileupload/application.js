@@ -175,6 +175,8 @@ $(function () {
              var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
              $(location).attr('href',loc);
          }
+         $('#total_upload_size').val( parseInt($('#total_upload_size').val()) - data.files[0].size );
+         
       } else {
        if (error_string.length > 0) {
           error_string +='<br/>';
