@@ -77,10 +77,11 @@ rake scholarsphere:generate_secret
 [[ $HOSTNAME == "ss1prod" ]] && {
   banner "rake scholarsphere:resolrize"
   RAILS_ENV=production rake scholarsphere:resolrize
-  banner "rake sitemap:generate & ping"
-  RAILS_ENV=production rake sitemap:generate
-  RAILS_ENV=production rake sitemap:ping
 }
+
+banner "rake sitemap:generate & ping"
+RAILS_ENV=production rake sitemap:generate
+RAILS_ENV=production rake sitemap:ping
 
 banner "touch ${WORKSPACE}/tmp/restart.txt"
 touch ${WORKSPACE}/tmp/restart.txt
