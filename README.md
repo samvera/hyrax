@@ -23,7 +23,7 @@ Infrastructural components
  * Solr (if you don't have access to an instance, use the built-in
    hydra-jetty submodule)
  * A relational database (SQLite and MySQL have been tested)
- * Redis (for processing background jobs)
+ * Redis (for activity streams and background jobs)
 
 Install system dependencies
 
