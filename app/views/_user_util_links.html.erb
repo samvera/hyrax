@@ -12,7 +12,7 @@
           <li>
             <div class="btn-group">
               <% if current_user %>
-                <a href="<%= mailbox_path %>" class="btn btn-small " title="click for User Notifications"><i class="icon-bullhorn">&nbsp;</i>
+                <a href="<%= mailbox_path %>" class="icon-btn btn btn-small" title="click for User Notifications"><i class="icon-bullhorn">&nbsp;</i>
                 <% if @notify_number > 0 %>
                 <span id="notify_number" class="overlay"> <%=@notify_number%></span>
                 <% end %>                 
