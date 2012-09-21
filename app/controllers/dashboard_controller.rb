@@ -147,16 +147,16 @@ class DashboardController < ApplicationController
       # Solr parameter de-referencing like $title_qf.
       # See: http://wiki.apache.org/solr/LocalParams
       field.solr_local_parameters = {
-        :qf => "$contributor_qf",
-        :pf => "$contributor_pf"
+        :qf => "generic_file__contributor_t",
+        :pf => "generic_file__contributor_t"
       }
     end
 
     config.add_search_field('creator') do |field|
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
       field.solr_local_parameters = {
-        :qf => "$creator_qf",
-        :pf => "$creator_pf"
+        :qf => "generic_file__creator_t",
+        :pf => "generic_file__creator_t"
       }
     end
 
@@ -165,8 +165,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "title"
       },
       field.solr_local_parameters = {
-        :qf => "$title_qf",
-        :pf => "$title_pf"
+        :qf => "generic_file__title_t",
+        :pf => "generic_file__title_t"
       }
     end
 
@@ -175,8 +175,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "description"
       }
       field.solr_local_parameters = {
-        :qf => "$description_qf",
-        :pf => "$description_pf"
+        :qf => "generic_file__description_t",
+        :pf => "generic_file__description_t"
       }
     end
 
@@ -185,8 +185,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "publisher"
       }
       field.solr_local_parameters = {
-        :qf => "$publisher_qf",
-        :pf => "$publisher_pf"
+        :qf => "generic_file__publisher_t",
+        :pf => "generic_file__publisher_t"
       }
     end
 
@@ -195,8 +195,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "date_created"
       }
       field.solr_local_parameters = {
-        :qf => "$date_created_qf",
-        :pf => "$date_created_pf"
+        :qf => "generic_file__date_created_t",
+        :pf => "generic_file__date_created_t"
       }
     end
 
@@ -205,8 +205,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "subject"
       }
       field.solr_local_parameters = {
-        :qf => "$subject_qf",
-        :pf => "$subject_pf"
+        :qf => "generic_file__subject_t",
+        :pf => "generic_file__subject_t"
       }
     end
 
@@ -215,8 +215,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "language"
       }
       field.solr_local_parameters = {
-        :qf => "$language_qf",
-        :pf => "$language_pf"
+        :qf => "generic_file__language_t",
+        :pf => "generic_file__language_t"
       }
     end
 
@@ -225,8 +225,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "resource_type"
       }
       field.solr_local_parameters = {
-        :qf => "$resource_type_qf",
-        :pf => "$resource_type_pf"
+        :qf => "generic_file__resource_type_t",
+        :pf => "generic_file__resource_type_t"
       }
     end
 
@@ -235,8 +235,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "format"
       }
       field.solr_local_parameters = {
-        :qf => "$format_qf",
-        :pf => "$format_pf"
+        :qf => "generic_file__format_t",
+        :pf => "generic_file__format_t"
       }
     end
 
@@ -245,8 +245,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "identifier"
       }
       field.solr_local_parameters = {
-        :qf => "$identifier_qf",
-        :pf => "$identifier_pf"
+        :qf => "id_t",
+        :pf => "id_t"
       }
     end
 
@@ -265,8 +265,8 @@ class DashboardController < ApplicationController
         :"spellcheck.dictionary" => "tag"
       }
       field.solr_local_parameters = {
-        :qf => "$tag_qf",
-        :pf => "$tag_pf"
+        :qf => "generic_file__based_near_t",
+        :pf => "generic_file__based_near_t"
       }
     end
 
@@ -276,8 +276,8 @@ class DashboardController < ApplicationController
     # except in the relevancy case).
     # label is key, solr field is value
     config.add_sort_field 'score desc, generic_file__date_uploaded_dt desc', :label => 'relevance'
-    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => 'date uploaded new'
-    config.add_sort_field 'generic_file__date_modified_dt desc', :label => 'date modified new'
+    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => 'date uploaded'
+    config.add_sort_field 'generic_file__date_modified_dt desc', :label => 'date modified'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.

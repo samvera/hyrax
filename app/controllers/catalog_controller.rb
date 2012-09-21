@@ -328,8 +328,8 @@ class CatalogController < ApplicationController
     # except in the relevancy case).
     # label is key, solr field is value
     config.add_sort_field 'score desc, generic_file__date_uploaded_dt desc', :label => 'relevance'
-    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => 'date uploaded new'
-    config.add_sort_field 'generic_file__date_modified_dt desc', :label => 'date modified new'
+    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => 'date uploaded'
+    config.add_sort_field 'generic_file__date_modified_dt desc', :label => 'date modified'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
