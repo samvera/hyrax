@@ -6,8 +6,8 @@ class UsersController < ApplicationController
 
   def index
     sort_val = get_sort
-    query = params[:uq].blank? ? nil : "%"+params[:uq]+"%"
-    @users = User.where("login like ? OR display_name like ?",query,query).paginate(:page => params[:page], 
+    query = params[:uq].blank? ? nil : "%"+params[:uq].downcase+"%"
+    @users = User.where("login like lower(?) OR display_name like lower(?)",query,query).paginate(:page => params[:page], 
                            :per_page => 10, :order => sort_val) unless query.blank?    
     @users = User.paginate(:page => params[:page], :per_page => 10, :order => sort_val) if query.blank?
   end
