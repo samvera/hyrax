@@ -181,16 +181,16 @@ class CatalogController < ApplicationController
       # Solr parameter de-referencing like $title_qf.
       # See: http://wiki.apache.org/solr/LocalParams
       field.solr_local_parameters = {
-        :qf => "$contributor_qf",
-        :pf => "$contributor_pf"
+        :qf => "generic_file__contributor_t",
+        :pf => "generic_file__contributor_t"
       }
     end
 
     config.add_search_field('creator') do |field|
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
       field.solr_local_parameters = {
-        :qf => "$creator_qf",
-        :pf => "$creator_pf"
+        :qf => "generic_file__creator_t",
+        :pf => "generic_file__creator_t"
       }
     end
 
@@ -199,8 +199,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "title"
       }
       field.solr_local_parameters = {
-        :qf => "$title_qf",
-        :pf => "$title_pf"
+        :qf => "generic_file__title_t",
+        :pf => "generic_file__title_t"
       }
     end
 
@@ -209,8 +209,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "description"
       }
       field.solr_local_parameters = {
-        :qf => "$description_qf",
-        :pf => "$description_pf"
+        :qf => "generic_file__description_t",
+        :pf => "generic_file__description_t"
       }
     end
 
@@ -219,8 +219,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "publisher"
       }
       field.solr_local_parameters = {
-        :qf => "$publisher_qf",
-        :pf => "$publisher_pf"
+        :qf => "generic_file__publisher_t",
+        :pf => "generic_file__publisher_t"
       }
     end
 
@@ -229,8 +229,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "date_created"
       }
       field.solr_local_parameters = {
-        :qf => "$date_created_qf",
-        :pf => "$date_created_pf"
+        :qf => "generic_file__date_created_t",
+        :pf => "generic_file__date_created_t"
       }
     end
 
@@ -239,8 +239,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "subject"
       }
       field.solr_local_parameters = {
-        :qf => "$subject_qf",
-        :pf => "$subject_pf"
+        :qf => "generic_file__subject_t",
+        :pf => "generic_file__subject_t"
       }
     end
 
@@ -249,8 +249,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "language"
       }
       field.solr_local_parameters = {
-        :qf => "$language_qf",
-        :pf => "$language_pf"
+        :qf => "generic_file__language_t",
+        :pf => "generic_file__language_t"
       }
     end
 
@@ -259,8 +259,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "resource_type"
       }
       field.solr_local_parameters = {
-        :qf => "$resource_type_qf",
-        :pf => "$resource_type_pf"
+        :qf => "generic_file__resource_type_t",
+        :pf => "generic_file__resource_type_t"
       }
     end
 
@@ -270,28 +270,30 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "format"
       }
       field.solr_local_parameters = {
-        :qf => "$format_qf",
-        :pf => "$format_pf"
+        :qf => "generic_file__format_t",
+        :pf => "generic_file__format_t"
       }
     end
 
     config.add_search_field('identifier') do |field|
+      field.include_in_advanced_search = false
       field.solr_parameters = {
         :"spellcheck.dictionary" => "identifier"
       }
       field.solr_local_parameters = {
-        :qf => "$identifier_qf",
-        :pf => "$identifier_pf"
+        :qf => "id_t",
+        :pf => "id_t"
       }
     end
 
     config.add_search_field('based_near') do |field|
+      field.label = "Location"
       field.solr_parameters = {
         :"spellcheck.dictionary" => "based_near"
       }
       field.solr_local_parameters = {
-        :qf => "$based_near_qf",
-        :pf => "$based_near_pf"
+        :qf => "generic_file__based_near_t",
+        :pf => "generic_file__based_near_t"
       }
     end
 
@@ -300,22 +302,22 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "tag"
       }
       field.solr_local_parameters = {
-        :qf => "$tag_qf",
-        :pf => "$tag_pf"
+        :qf => "generic_file__tag_t",
+        :pf => "generic_file__tag_t"
       }
     end
 
     config.add_search_field('depositor') do |field|
       field.solr_local_parameters = {
-        :qf => "$depositor_qf",
-        :pf => "$depositor_pf"
+        :qf => "depositor_t",
+        :pf => "depositor_t"
       }
     end
 
     config.add_search_field('rights') do |field|
       field.solr_local_parameters = {
-        :qf => "$rights_qf",
-        :pf => "$rights_pf"
+        :qf => "generic_file__rights_t",
+        :pf => "generic_file__rights_t"
       }
     end
 
