@@ -1,5 +1,5 @@
 module ActiveFedora
-  class UnsavedDigitalObject 
+  class UnsavedDigitalObject
     def assign_pid
       @pid ||= ScholarSphere::IdService.mint
     end
