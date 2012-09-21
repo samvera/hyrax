@@ -2,7 +2,7 @@
 <%- width = 36 if width.blank? -%>
 <% if (document['mime_type_t']) %>
   <% if !(document['mime_type_t'] & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg']).empty? %>
-    <%= link_to image_tag(download_path(document["id"], {:datastream_id => 'thumbnail'})), generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag(download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), generic_file_path(document[:noid_s].first) %>
   <% elsif !(document['mime_type_t'] & ['application/pdf']).empty? %>
     <%= link_to image_tag(download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), generic_file_path(document[:noid_s].first) %>
   <% elsif !(document['mime_type_t'] & ['video/mp4']).empty? %>

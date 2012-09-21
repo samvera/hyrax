@@ -176,16 +176,17 @@ class GenericFile < ActiveFedora::Base
     # horizontal img
     height = self.height.first.to_i
     width = self.width.first.to_i
+    scale = height / width
     if width > height
-      if width > 50 and height > 35
-        thumb = img.scale(50, 35)
+      if width > 150 and height > 105
+        thumb = img.scale(150, height/scale)
       else
         thumb = img.scale(width, height)
       end
     # vertical img
     else
-      if width > 45 and height > 60
-        thumb = img.scale(45, 60)
+      if width > 150 and height > 200
+        thumb = img.scale(150*scale, 200)
       else
         thumb = img.scale(width, height)
       end
