@@ -7,7 +7,7 @@ on element ids -->
   <td width="3%"><%# check_box_tag :generic_file, document[:id] %>
   <% gf = GenericFile.find(document.id) %>
   <% if gf.processing? %>
-     <i class="icon-magic icon-large"/>
+     <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
   <% end %>
   </td>
   <td width="42%">

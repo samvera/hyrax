@@ -78,9 +78,11 @@ class ApplicationController < ActionController::Base
 
   def notifications_number
     @notify_number=0
+    @batches=[]
     return  if ((action_name == "index") && (controller_name == "mailbox"))
     if User.current
       @notify_number= User.current.mailbox.inbox(:unread => true).count(:id, :distinct => true)
+      @batches=User.current.mailbox.inbox.map {|msg| msg.last_message.body[/<a class="batchid ui-helper-hidden">(.*)<\/a>The file(.*)/,1]}.select{|val| !val.blank?}
     end
   end
 
