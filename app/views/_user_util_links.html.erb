@@ -12,11 +12,7 @@
           <li>
             <div class="btn-group">
               <% if current_user %>
-                <a href="<%= mailbox_path %>" class="icon-btn btn btn-small" title="click for User Notifications"><i class="icon-bullhorn">&nbsp;</i>
-                <% if @notify_number > 0 %>
-                <span id="notify_number" class="overlay"> <%=@notify_number%></span>
-                <% end %>                 
-                </a>  
+                 <%= render :partial => 'users/notify_link' %>
                 <a href="<%= profile_path(current_user.to_s) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
                 <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>
                 <ul class="dropdown-menu">

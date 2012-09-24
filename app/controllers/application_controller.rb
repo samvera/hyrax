@@ -78,11 +78,9 @@ class ApplicationController < ActionController::Base
 
   def notifications_number
     @notify_number=0
-    # no where to put these notifications when doing create in generic files or java script requests
-    return if ((action_name == "create") && (controller_name == "generic_files")) || (request.format== :js)
-
+    return  if ((action_name == "index") && (controller_name == "mailbox"))
     if User.current
-      @notify_number=User.current.mailbox.inbox.count
+      @notify_number= User.current.mailbox.inbox(:unread => true).count(:id, :distinct => true)
     end
   end
 

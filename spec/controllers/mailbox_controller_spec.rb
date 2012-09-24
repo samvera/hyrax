@@ -20,6 +20,7 @@ describe MailboxController do
   describe "#index" do
     render_views
     it "should show message" do
+      User.current.expects(:mark_as_read)
       get :index
       response.should be_success
       response.should_not redirect_to(root_path)

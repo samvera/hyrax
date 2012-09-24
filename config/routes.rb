@@ -8,6 +8,9 @@ ScholarSphere::Application.routes.draw do
   # "Recently added files" route for catalog index view
   match "catalog/recent" => "catalog#recent", :as => :catalog_recent
 
+  # "Notifications" route for catalog index view
+  match "users/notifications_number" => "users#notifications_number", :as => :user_notify
+
   # Set up user routes
   devise_for :users
 
@@ -28,9 +31,9 @@ ScholarSphere::Application.routes.draw do
   match 'login' => 'sessions#new', :as => :new_user_session
 
   # Messages
-  match 'mailbox' => 'mailbox#index', :as => :mailbox
-  match 'mailbox/delete_all' => 'mailbox#delete_all', :as => :mailbox_delete_all
-  match 'mailbox/:uid/delete' => 'mailbox#delete', :as => :mailbox_delete
+  match 'notifications' => 'mailbox#index', :as => :mailbox
+  match 'notifications/delete_all' => 'mailbox#delete_all', :as => :mailbox_delete_all
+  match 'notifications/:uid/delete' => 'mailbox#delete', :as => :mailbox_delete
 
   # User profile & follows
   match 'users' => 'users#index', :as => :profiles
