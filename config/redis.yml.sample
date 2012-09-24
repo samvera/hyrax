@@ -10,3 +10,6 @@ integration:
 production:
   host: localhost
   port: 6379
+resque:
+  host: localhost
+  port: 6379

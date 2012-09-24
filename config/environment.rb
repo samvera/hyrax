@@ -12,6 +12,7 @@ if defined?(PhusionPassenger)
       # The important two lines
       $redis.client.disconnect if $redis 
       $redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
+      Resque.redis.client.reconnect if Resque.redis
     end
   end
 else
