@@ -385,13 +385,20 @@ $(function() {
       */
 
 
+
+    $(".sorts-dash").click(function(){
+       var itag =$(this).find('i');    
+       toggle_icon(itag);    
+       sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id') +' asc';
+       $('#sort').val(sort).selected = true;
+       $(".icon-refresh").parent().click();
+    }); 
     $(".sorts").click(function(){
-       var itag =$(this).find('i')    
-       itag.toggleClass("icon-arrow-down");
-       itag.toggleClass("icon-arrow-up");       
-       sort = itag.attr('class') == "icon-arrow-down" ? itag.attr('id')+'_rev':  itag.attr('id') ;
-       $('input[name="sort"]').attr('value', sort);
-       $("#user_submit").click();
+       var itag =$(this).find('i');
+       toggle_icon(itag);    
+        sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id');
+        $('input[name="sort"]').attr('value', sort);
+        $(".icon-search").parent().click();
     }); 
 
 }); //closing function at the top of the page
@@ -401,6 +408,11 @@ $(function() {
 /*
  * begin functions
  */
+
+function toggle_icon(itag){
+       itag.toggleClass("icon-caret-down");
+       itag.toggleClass("icon-caret-up");       
+}
 
 // return the files visibility level (penn state, open, restricted);
 function get_visibility(){

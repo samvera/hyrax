@@ -90,7 +90,8 @@ class UsersController < ApplicationController
     sort = params[:sort].blank? ? "name" : params[:sort]
     sort_val = case sort
            when "name"  then "display_name"
-           when "name_rev"   then "display_name DESC"
+           when "name desc"   then "display_name DESC"
+           else sort
            end
     return sort_val
   end

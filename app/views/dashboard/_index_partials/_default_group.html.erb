@@ -1,15 +1,19 @@
 <table class="table table-striped">
   <caption class="accessible-hidden">Listing of files you have deposited in ScholarSphere</caption>
 <% unless params[:display_type] == 'list' %>
+  <thead> 
   <tr>
     <th>&nbsp;</th>
-    <th>Title</th>
-    <th>Date Uploaded</th>
+    <th class="center">Title</th>
+    <th class="sorts-dash"><i id="generic_file__date_uploaded_dt" class="<%=params[:sort]== "generic_file__date_uploaded_dt desc" ? 'icon-caret-down' : params[:sort]== "generic_file__date_uploaded_dt asc" ? 'icon-caret-up' : ''%>"></i>Date Uploaded</th>
     <th>Visibility</th>
     <th class="center">Action</th>
   </tr>
+  </thead> 
   <% end %>
+  <tbody> 
   <% docs.each_with_index do |document,counter| %>
     <%= render :partial => 'dashboard/_index_partials/list_files', :locals => {:document => document, :counter => counter} %>
   <% end %>
+  </tbody> 
 </table>
