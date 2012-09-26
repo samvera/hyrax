@@ -281,6 +281,10 @@ ol.faq ol ol li { list-style-type: lower-roman }
     float: left;
 }
 
+.fright {
+    float: right;
+}
+
 .navbar .icon-btn {
     padding: 4px 20px 4px 2px;
 }
