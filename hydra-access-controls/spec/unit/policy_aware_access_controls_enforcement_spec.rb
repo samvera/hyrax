@@ -1,11 +1,6 @@
 require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
-  before do
-    class Rails; end
-    Rails.stub(:root).and_return('spec/support')
-    Rails.stub(:env).and_return('test')
-  end
   before(:all) do
     class MockController
       include Hydra::AccessControlsEnforcement

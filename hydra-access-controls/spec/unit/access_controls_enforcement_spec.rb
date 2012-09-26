@@ -2,11 +2,6 @@ require 'spec_helper'
 # Need way to find way to stub current_user and RoleMapper in order to run these tests
 
 describe Hydra::AccessControlsEnforcement do
-  before do
-    class Rails; end
-    Rails.stub(:root).and_return('spec/support')
-    Rails.stub(:env).and_return('test')
-  end
   before(:all) do
     class MockController
       include Hydra::AccessControlsEnforcement

@@ -1,13 +1,6 @@
 require 'spec_helper'
 
 describe RoleMapper do
-  before do
-    class Rails; end
-    
-    Rails.stub(:root).and_return('spec/support')
-    Rails.stub(:env).and_return('test')
-  end
-  
   it "should define the 4 roles" do
     RoleMapper.role_names.sort.should == %w(admin_policy_object_editor archivist donor patron researcher) 
   end
