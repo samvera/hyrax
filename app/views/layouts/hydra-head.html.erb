@@ -61,8 +61,8 @@
 
               <div class="span30 offset2">
                 <h2 class="heading1">Contribute</h2> 
-                <%= link_to '<i class="icon-file"></i> Share Your Work'.html_safe, new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %><br />
-                <div class="row">&nbsp;</div>
+                <%= link_to '<i class="icon-file"></i> Share Your Work'.html_safe, new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %>
+                <div class="row center"> <a href="/terms/">Terms of Use</a></div><br />                
                 <div class="row">&nbsp;</div>
                 <h2 class="heading1">My Latest</h2> 
                 <%= render :partial=>'/catalog/recents', :locals => {:recent_documents=>@recent_user_documents, :display_thumbs=>false, :display_access=>true} %>
