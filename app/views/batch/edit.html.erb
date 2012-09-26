@@ -2,9 +2,21 @@
 <% javascript 'bootstrap-popover.js' %>
 <% javascript 'bootstrap-modal.js'%>
 <% javascript 'batch.js' %>
-<% stylesheet 'jquery-ui-1.8.1.custom' %>
+
+<% javascript 'jquery.validate.js' %>
+
+<style type="text/css">
+label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+
+</style>
+  
 
 <% content_for :local_js do %>
+   if (navigator.userAgent.match("MSIE")){
+      $("#new_generic_file").validate();
+   }
+
+
 $('#permissions_display').show();
 
 // initialize popover helpers

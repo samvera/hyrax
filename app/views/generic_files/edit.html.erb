@@ -7,7 +7,18 @@
 <% stylesheet 'video-js.css' %>
 <% stylesheet 'jquery-ui-1.8.1.custom' %>
 
+<% javascript 'jquery.validate.js' %>
+
+<style type="text/css">
+label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+</style>
+  
+
+
 <% content_for :local_js do %>
+   if (navigator.userAgent.match("MSIE")){
+      $("#fileupload").validate();
+   }
 initialize_audio();
 
 $('input[name=revision]:radio').on('click', function() {
