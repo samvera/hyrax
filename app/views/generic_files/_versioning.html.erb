@@ -17,8 +17,8 @@
         <div>
           <label class="radio">
           <%= radio_button_tag(:revision, version.versionID, index == 0) %>
-          <%# label_tag("revision_#{version.versionID}".to_sym, "Restore from #{version.dsCreateDate.to_formatted_s(:long_ordinal)} [by #{@generic_file.content.version_committer(version)}]") %>
-          Restore from <%= version.dsCreateDate.to_formatted_s(:long_ordinal) %> [by <%= @generic_file.content.version_committer(version) %>]
+          <%# label_tag("revision_#{version.versionID}".to_sym, "Restore from #{version.dsCreated.localtime.to_formatted_s(:long_ordinal)} [by #{@generic_file.content.version_committer(version)}]") %>
+          Restore from <%= version.dsCreateDate.localtime.to_formatted_s(:long_ordinal) %> [by <%= @generic_file.content.version_committer(version) %>]
           </label>
         </div>
       </div>
