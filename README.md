@@ -13,6 +13,11 @@ and documentation are freely available via [Github](http://github.com/psu-stewar
 
 For more information, read the [ScholarSphere development docs](https://github.com/psu-stewardship/scholarsphere/wiki).
 
+## License
+
+ScholarSphere is available under the Apache 2.0 license.
+[Read the copyright statement and license](/psu-stewardship/scholarsphere/blob/master/LICENSE.md).
+
 ## Install
 
 Infrastructural components
