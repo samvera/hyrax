@@ -4,7 +4,9 @@ class GenericFile < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
   include ScholarSphere::ModelMethods
-  include ScholarSphere::Noid
+  include ScholarSphere::Noid  
+                                              
+  @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -55,6 +57,13 @@ class GenericFile < ActiveFedora::Base
   #  logger.info "!!!! Before create !!!!"
   #  self.terms_of_service = '1'
   #end
+
+  def self.get_label(key)
+     label = @@FIELD_LABEL_MAP[key]
+     puts "label = #{label}"
+     label = key.gsub('_',' ').titleize if label.blank?
+     return label
+  end
 
   def persistent_url
     "#{ScholarSphere::Application.config.persistent_hostpath}#{noid}"
@@ -282,6 +291,18 @@ class GenericFile < ActiveFedora::Base
       terms.concat(new_terms)
     end
     terms
+  end
+
+  def get_values
+    terms = get_terms
+    values = {}
+    terms.each do |t|
+        next if t.empty?
+        key = t.to_s.split("generic_file__").last
+        next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key)
+        values[key] = self.send(key) if self.respond_to?(key)
+    end        
+    return values          
   end
 
   def characterization_terms

@@ -2,6 +2,9 @@ ScholarSphere::Application.routes.draw do
   # Routes for Blacklight-specific functionality such as the catalog
   Blacklight.add_routes(self)
 
+  # add batch edit routes
+  Hydra::BatchEdit.add_routes(self)
+
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
 

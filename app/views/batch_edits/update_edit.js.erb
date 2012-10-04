@@ -1,0 +1,3 @@
+<% value = "" %>
+<% @vals.each { |val|  logger.warn"#{val.inspect}"; value = value + val+'<br />'}%>
+$("#data_<%= @key%>").html( "<%=value.html_safe%>");
