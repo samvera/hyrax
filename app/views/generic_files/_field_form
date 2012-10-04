@@ -19,8 +19,8 @@
           <%= f.text_area :description, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large" %>
         <% elsif key == "rights" %>
           <% choices = ScholarSphere::Application::config.cc_licenses %>
-          <% choices = {""=>""}.merge(choices) unless render_req %>
-          <%= f.select "rights", options_for_select(choices, generic_file.rights.to_a) %>
+          <% choices = {""=>""}.merge(choices) %>
+          <%= f.select "rights", options_for_select(choices, v) %>
         <% else %>
           <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large", :required => req  %>
         <% end %>

@@ -7,7 +7,7 @@ class BatchEditsController < ApplicationController
        @generic_file = GenericFile.new
        @generic_file.depositor = current_user.login
        @groups = current_user.groups       
-       @terms = @generic_file.get_terms.reject{|k,v| (k=='generic_file__title')|| (k == 'generic_file__part_of')}
+       @terms = @generic_file.get_terms.reject{|k,v| (k=='generic_file__title')|| (k == 'generic_file__part_of')|| (k == 'generic_file__date_uploaded') || (k == 'generic_file__date_modified')}
 
        # do we want to show the original values for anything...
        @show_file = GenericFile.new
@@ -17,7 +17,7 @@ class BatchEditsController < ApplicationController
        permissions = []
        batch.each do |doc_id|
           gf = GenericFile.find(doc_id)
-          h = h.merge(gf.get_values) {|key, v1, v2| v1.zip(v2).flatten.compact.uniq}
+          h = h.merge(gf.get_values) {|key, v1, v2| (v1+v2).uniq}
           @names << display_title(gf)    
           permissions =  (permissions+gf.permissions).uniq
        end
