@@ -1,4 +1,5 @@
 require 'hydra-access-controls'
+require 'hydra-file-access'
 
 # Hydra libraries
 module Hydra
