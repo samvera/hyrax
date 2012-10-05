@@ -132,9 +132,9 @@ end
 
 
 namespace :all do
-  task :build   => FRAMEWORKS.map { |f| "#{f}:build"   } + ['rails:build']
-  task :install => FRAMEWORKS.map { |f| "#{f}:install" } + ['rails:install']
-  task :push    => FRAMEWORKS.map { |f| "#{f}:push"    } + ['rails:push']
+  task :build   => FRAMEWORKS.map { |f| "#{f}:build"   } + ['hydra-head:build']
+  task :install => FRAMEWORKS.map { |f| "#{f}:install" } + ['hydra-head:install']
+  task :push    => FRAMEWORKS.map { |f| "#{f}:push"    } + ['hydra-head:push']
 
   task :ensure_clean_state do
     unless `git status -s | grep -v RAILS_VERSION`.strip.empty?

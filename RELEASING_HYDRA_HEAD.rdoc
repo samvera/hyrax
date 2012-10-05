@@ -1,0 +1,3 @@
+Update /HYDRA_VERSION
+
+rake all:release
