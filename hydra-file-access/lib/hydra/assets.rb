@@ -1,5 +1,8 @@
 module Hydra
   module Assets
-    include Hydra::Controller::AssetsControllerBehavior
+    extend ActiveSupport::Concern
+    included do
+      include Hydra::Controller::AssetsControllerBehavior
+    end
   end
 end
