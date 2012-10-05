@@ -5,7 +5,6 @@ module Hydra
   extend ActiveSupport::Autoload
   autoload :GlobalConfigurable
   extend GlobalConfigurable
-  autoload :Catalog
   autoload :Controller
   autoload :ModelMethods
   autoload :RepositoryController

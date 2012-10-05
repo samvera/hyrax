@@ -167,7 +167,7 @@ module Hydra::AccessControlsEnforcement
   #
   # @example This method should be added to your Catalog Controller's solr_search_params_logic
   #   class CatalogController < ApplicationController 
-  #     include Hydra::Catalog
+  #     include Hydra::Controller::ControllerBehavior
   #     CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params
   #   end
   def add_access_controls_to_solr_params(solr_parameters, user_parameters)
