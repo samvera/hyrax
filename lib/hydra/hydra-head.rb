@@ -1,7 +1,7 @@
 module HydraHead 
-  require 'hydra-head/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
-  require 'hydra-head/routes'
-  require 'hydra'
+  #require 'hydra-access-controls'
+  require 'hydra-core'
+  require 'hydra-file-access'
   
   def self.version
     HydraHead::VERSION

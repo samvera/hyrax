@@ -1,8 +1,18 @@
-require 'hydra'
-
 module HydraHead 
+  #require 'hydra-access-controls'
+  require 'hydra-core'
+  require 'hydra-file-access'
   require 'hydra-head/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
   require 'hydra-head/routes'
+  
+  def self.version
+    HydraHead::VERSION
+  end
+
+  def self.root
+    @root ||= File.expand_path(File.dirname(File.dirname(__FILE__)))
+  end
+  
   # If you put this in your application's routes.rb, it will add the Hydra Head routes to the app.
   # The hydra:head generator puts this in routes.rb for you by default.
   # See {HydraHead::Routes} for information about how to modify which routes are generated.
@@ -15,4 +25,5 @@ module HydraHead
   def self.add_routes(router, options = {})
     HydraHead::Routes.new(router, options).draw
   end
+  
 end

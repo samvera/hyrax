@@ -1,6 +1,4 @@
 require 'hydra-access-controls'
-require 'hydra-file-access'
-
 # Hydra libraries
 module Hydra
   extend ActiveSupport::Autoload
@@ -10,18 +8,16 @@ module Hydra
   autoload :ModelMethods
   autoload :RepositoryController
   autoload :Solr
-
   module ModelMixins
-    # We can't autoload ModelMixins, because it's defined by hydra-access-controls
+    # ModelMixins already loaded by hydra-access-controls
     autoload :CommonMetadata
     autoload :SolrDocumentExtension
   end
-  module Models
-    extend ActiveSupport::Autoload
-    autoload :FileAsset
-  end
-
+  autoload :Models
 end
+
+# require these models once the hydra module has been set up, so that all autoloads take place
+#require 'hydra-file-access'
 
 begin
   SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
