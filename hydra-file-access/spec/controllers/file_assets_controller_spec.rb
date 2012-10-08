@@ -51,7 +51,6 @@ describe Hydra::FileAssetsController do
     it "should redirect back if current_user does not have read or edit permissions" do
       mock_user = double("User")
       mock_user.stub(:email).and_return("fake_user@example.com")
-      mock_user.stub(:is_being_superuser?).and_return(false)
       mock_user.stub(:persisted?).and_return(true)
       mock_user.stub(:new_record?).and_return(false)
       controller.stub(:current_user).and_return(mock_user)
@@ -62,7 +61,6 @@ describe Hydra::FileAssetsController do
      it "should redirect to the login page if the user is not logged in" do
       mock_user = double("User")
       mock_user.stub(:email).and_return("fake_user@example.com")
-      mock_user.stub(:is_being_superuser?).and_return(false)
       mock_user.stub(:persisted?).and_return(false)
       mock_user.stub(:new_record?).and_return(true)
       controller.stub(:current_user).and_return(mock_user)

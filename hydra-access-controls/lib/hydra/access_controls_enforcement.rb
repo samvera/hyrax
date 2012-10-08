@@ -225,16 +225,9 @@ module Hydra::AccessControlsEnforcement
   end
 
 
-  # Even though is_being_superuser? is deprecated, keep this method around (just return empty set) 
-  # so developers can easily override this behavior in their local app
+  # override to apply super user permissions
   def apply_superuser_permissions(permission_types)
-    user_access_filters = []
-    if current_user.respond_to?(:is_being_superuser?) && current_user.is_being_superuser?(session) ##Deprecated
-      permission_types.each do |type|
-        user_access_filters << "#{type}_access_person_t:[* TO *]"        
-      end
-    end
-    user_access_filters
+    []
   end
   
   # proxy for {enforce_index_permissions}

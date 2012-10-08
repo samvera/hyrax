@@ -85,7 +85,6 @@ describe Hydra::AccessControlsEnforcement do
   describe "enforce_show_permissions" do
     it "should allow a user w/ edit permissions to view an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
-      user.stub(:is_being_superuser?).and_return false
       RoleMapper.stub(:roles).with(user.user_key).and_return(["archivist"])
       subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(true)
@@ -98,7 +97,6 @@ describe Hydra::AccessControlsEnforcement do
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
-      user.stub(:is_being_superuser?).and_return false
       RoleMapper.stub(:roles).with(user.user_key).and_return([])
       subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(false)
@@ -112,7 +110,6 @@ describe Hydra::AccessControlsEnforcement do
   describe "apply_gated_discovery" do
     before(:each) do
       @stub_user = User.new :uid=>'archivist1@example.com'
-      @stub_user.stub(:is_being_superuser?).and_return false
       RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["archivist","researcher"])
       subject.stub(:current_user).and_return(@stub_user)
       @solr_parameters = {}
@@ -131,36 +128,11 @@ describe Hydra::AccessControlsEnforcement do
         @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:researcher/)        
       end
     end
-    
-    describe "(DEPRECATED) for superusers" do
-      it "should return superuser access level" do
-        stub_user = User.new(:uid=>'suzie@example.com')
-        stub_user.stub(:is_being_superuser?).and_return true
-        RoleMapper.stub(:roles).with(stub_user.user_key).and_return(["archivist","researcher"])
-        subject.stub(:current_user).and_return(stub_user)
-        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
-        ["discover","edit","read"].each do |type|    
-          @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:\[\* TO \*\]/)          
-        end
-      end
-      it "should not return superuser access to non-superusers" do
-        stub_user = User.new(:uid=>'suzie@example.com')
-        stub_user.stub(:is_being_superuser?).and_return false
-        RoleMapper.stub(:roles).with(stub_user.user_key).and_return(["archivist","researcher"])
-        subject.stub(:current_user).and_return(stub_user)
-        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
-        ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].should_not include("#{type}_access_person_t\:\[\* TO \*\]")              
-        end
-      end
-    end
-
   end
   
   describe "exclude_unwanted_models" do
     before(:each) do
       stub_user = User.new :uid=>'archivist1@example.com'
-      stub_user.stub(:is_being_superuser?).and_return false
       subject.stub(:current_user).and_return(stub_user)
       @solr_parameters = {}
       @user_parameters = {}

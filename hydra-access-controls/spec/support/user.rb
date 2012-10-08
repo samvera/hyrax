@@ -13,10 +13,6 @@ class User
     new_record == true
   end
   
-  def is_being_superuser?(session)
-    # do nothing -- stubbing deprecated behavior
-  end
-  
   def self.find_by_uid(uid)
     nil
   end

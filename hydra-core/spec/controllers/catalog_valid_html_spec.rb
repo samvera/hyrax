@@ -35,17 +35,12 @@ describe CatalogController do
   describe "Home Page" do
     
     it "Should have Valid HTML when not logged in" do
-      controller.stub(:current_user).and_return(nil)
       get("index", "controller"=>"catalog")
       document_check(response.body)
     end
     
     it "Should have Valid HTML when I'm logged in" do
-        mock_user = FactoryGirl.build(:user, :email=>"archivist1@example.com")
-        mock_user.stub(:can_be_superuser?).and_return(true)
-        mock_user.stub(:is_being_superuser?).and_return(true)
-
-        sign_in mock_user
+        sign_in FactoryGirl.build(:user, :email=>"archivist1@example.com")
         get("index", "controller"=>"catalog")
         document_check(response.body)
     end
@@ -55,8 +50,6 @@ describe CatalogController do
     
     before(:each)  do
         mock_user = FactoryGirl.build(:user, :email=>"archivist1@example.com")
-        mock_user.stub(:can_be_superuser?).and_return(true)
-        mock_user.stub(:is_being_superuser?).and_return(true)
         sign_in mock_user
     end
     

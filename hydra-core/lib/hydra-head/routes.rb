@@ -24,7 +24,7 @@ module HydraHead
     end
 
     def default_route_sets
-      [:superuser, :assets_with_all_nested_routes]
+      [:assets_with_all_nested_routes]
     end
 
     module RouteSets
@@ -38,14 +38,8 @@ module HydraHead
           end
         end
       end
-      
-      def superuser
-        add_routes do |options|
-          match 'superuser', :to => 'user_sessions#superuser', :as => 'superuser'
-        end
-      end
-
     end
+
     include RouteSets
 
   end

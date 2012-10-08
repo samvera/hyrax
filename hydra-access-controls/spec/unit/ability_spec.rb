@@ -26,7 +26,6 @@ describe Ability do
     before do
       User.any_instance.stub(:email).and_return(nil)
       User.any_instance.stub(:new_record?).and_return(true)
-      User.any_instance.stub(:is_being_superuser?).and_return(false)
     end
     subject { Ability.new(nil) }
     it "should call custom_permissions" do
