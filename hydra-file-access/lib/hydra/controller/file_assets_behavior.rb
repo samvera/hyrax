@@ -1,8 +1,15 @@
-# will move to lib/hydra/controller / file_assets_controller_behavior.rb in release 5.x
+# @deprecated
+# Include this module in a controller to generically interact with any FileAsset in generic ways
+# created with the assumption that you are using the genric AssetsControllerBehavior (also @deprecated)
+require 'deprecation'
+
 module Hydra::Controller::FileAssetsBehavior
   extend ActiveSupport::Concern
+  extend Deprecation
   
   included do
+    Deprecation.warn Hydra::Controller::FileAssetsBehavior, "Hydra::Controller::FileAssetsBehavior will be removed in hydra-head 6.0"
+    
     include Hydra::AccessControlsEnforcement
     include Hydra::AssetsControllerHelper
     include Hydra::Controller::UploadBehavior 

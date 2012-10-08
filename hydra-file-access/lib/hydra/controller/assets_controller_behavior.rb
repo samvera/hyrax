@@ -1,7 +1,5 @@
 # @deprecated  Create Model-specific Controllers instead ie. ArticlesController, ETDController, etc.
-# Also see Hydra::Controller::AssetsControllerBehavior for more info.
-# will move to lib/hydra/controller / assets_controller_behavior.rb in release 5.x
-require 'om'
+require 'deprecation'
 
 module Hydra::Controller::AssetsControllerBehavior
   extend ActiveSupport::Concern
@@ -10,8 +8,10 @@ module Hydra::Controller::AssetsControllerBehavior
   include Hydra::Controller::RepositoryControllerBehavior
   include Hydra::AssetsControllerHelper
   include Blacklight::Catalog
+  extend Deprecation
 
   included do
+    Deprecation.warn Hydra::Controller::AssetsControllerBehavior, "Hydra::Controller::AssetsControllerBehavior will be removed in hydra-head 6.0"
     helper :hydra
     before_filter :search_session, :history_session
     before_filter :load_document, :only => :update # allows other filters to operate on the document before the update method is called
