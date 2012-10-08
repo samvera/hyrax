@@ -13,7 +13,7 @@ gem 'mysql2', '0.3.11'
 # Hydra community components
 gem 'blacklight', '3.6.0'
 gem 'blacklight_advanced_search', '1.2.4'
-gem 'hydra-head', '4.1.1'
+gem 'hydra-head', :git => 'https://github.com/projecthydra/hydra-head.git' 
 gem 'active-fedora', '4.5.0'
 gem 'rubydora', '0.5.13'
 gem 'solrizer-fedora', '2.2.0'

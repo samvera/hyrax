@@ -23,6 +23,45 @@ GIT
       activerecord (>= 2.3.0)
       railties
 
+GIT
+  remote: https://github.com/projecthydra/hydra-head.git
+  revision: 02607f8a7b9eb7aedf45b3316480339724e11914
+  specs:
+    hydra-access-controls (5.0.0.pre4)
+      active-fedora
+      activesupport
+      blacklight
+      cancan
+      deprecation
+    hydra-core (5.0.0.pre4)
+      RedCloth (= 4.2.9)
+      active-fedora (~> 4.1)
+      blacklight (~> 3.4)
+      block_helpers
+      deprecation (>= 0.0.5)
+      devise
+      hydra-access-controls (= 5.0.0.pre4)
+      hydra-mods (>= 0.0.5)
+      jquery-rails
+      rails (~> 3.2.3)
+      sanitize
+    hydra-file-access (5.0.0.pre4)
+      RedCloth (= 4.2.9)
+      active-fedora (~> 4.1)
+      blacklight (~> 3.4)
+      block_helpers
+      deprecation (>= 0.0.5)
+      devise
+      hydra-core (= 5.0.0.pre4)
+      hydra-mods (>= 0.0.5)
+      rails (~> 3.2.3)
+      sanitize
+    hydra-head (5.0.0.pre4)
+      hydra-access-controls (= 5.0.0.pre4)
+      hydra-core (= 5.0.0.pre4)
+      hydra-file-access (= 5.0.0.pre4)
+      rails (>= 3.2.6)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -180,24 +219,6 @@ GEM
     hooks (0.2.1)
     httpi (1.1.1)
       rack
-    hydra-access-controls (0.0.5)
-      active-fedora
-      activesupport
-      blacklight
-      cancan
-      deprecation
-    hydra-head (4.1.1)
-      RedCloth (= 4.2.9)
-      active-fedora (~> 4.1)
-      blacklight (~> 3.4)
-      block_helpers
-      deprecation (>= 0.0.5)
-      devise
-      hydra-access-controls (>= 0.0.5)
-      hydra-mods (>= 0.0.5)
-      jquery-rails
-      rails (~> 3.2.3)
-      sanitize
     hydra-ldap (0.1.0)
       net-ldap
       rails
@@ -446,7 +467,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.1.0)
   headless
   hydra-batch-edit!
-  hydra-head (= 4.1.1)
+  hydra-head!
   hydra-ldap (= 0.1.0)
   jettywrapper
   launchy
