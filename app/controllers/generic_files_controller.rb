@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright © 2012 The Pennsylvania State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +17,11 @@ class GenericFilesController < ApplicationController
   include Hydra::Controller::ControllerBehavior
   include Hydra::AssetsControllerHelper  # for apply_depositor_metadata method
   include Hydra::Controller::UploadBehavior # for add_posted_blob_to_asset method
+  include Blacklight::Configurable # comply with BL 3.7
   include ScholarSphere::Noid # for normalize_identifier method
+
+  # This is needed as of BL 3.7
+  self.copy_blacklight_config_from(CatalogController)
 
   rescue_from AbstractController::ActionNotFound, :with => :render_404
 
