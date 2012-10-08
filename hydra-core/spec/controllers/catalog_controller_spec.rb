@@ -26,9 +26,6 @@ describe CatalogController do
     it "should map {:controller=>'catalog', :action=>'show', :id=>'test:3'} to GET /catalog/test:3" do
       { :get => "/catalog/test:3" }.should route_to(:controller => 'catalog', :action => 'show', :id=>'test:3')
     end
-    it "should map {:controller=>'catalog', :action=>'edit', :id=>'test:3'} to GET /catalog/test:3" do
-      { :get => "/catalog/test:3/edit" }.should route_to(:controller => 'catalog', :action => 'edit', :id=>'test:3')
-    end
 
     it "should map catalog_path" do
       # catalog_path.should == '/catalog'

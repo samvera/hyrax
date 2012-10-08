@@ -97,7 +97,7 @@ describe Hydra::FileAssetsController do
     it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
       controller.should_receive(:model_config).at_least(:once).and_return(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
-      response.should redirect_to edit_catalog_path("_PID_", :wf_step=>"permissions")
+      response.should redirect_to catalog_path("_PID_", :wf_step=>"permissions")
       request.flash[:notice].should == "You must specify a file to upload."
     end
     it "should display a message that you need to select a file to upload if no Filedata is provided" do

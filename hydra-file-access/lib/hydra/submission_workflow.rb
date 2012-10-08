@@ -56,7 +56,7 @@ module Hydra::SubmissionWorkflow
       return_params.delete(:wf_step)
       return catalog_path(id, return_params)
     end
-    return edit_catalog_path(id,return_params)
+    return catalog_path(id,return_params)
   end
   
   # Convenience method to return the partial for any given step by name.
