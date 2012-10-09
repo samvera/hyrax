@@ -1,6 +1,7 @@
 GIT
   remote: git://github.com/psu-stewardship/hydra-batch-edit.git
   revision: 26795c7b46a41c052b6889427fcd08ebdb86c7d7
+  ref: 26795c7b
   specs:
     hydra-batch-edit (0.0.6)
       blacklight
@@ -25,7 +26,8 @@ GIT
 
 GIT
   remote: https://github.com/projecthydra/hydra-head.git
-  revision: 02607f8a7b9eb7aedf45b3316480339724e11914
+  revision: 720e07afd45ee0da41bcf2bf8e0c57c646ec7b29
+  ref: 720e07afd4
   specs:
     hydra-access-controls (5.0.0.pre4)
       active-fedora
@@ -116,7 +118,7 @@ GEM
     arel (3.0.2)
     backports (2.6.4)
     bcrypt-ruby (3.0.1)
-    blacklight (3.7.0)
+    blacklight (3.7.1)
       compass-rails (~> 1.0.0)
       compass-susy-plugin (>= 0.9.0)
       kaminari (~> 0.13)
@@ -210,7 +212,7 @@ GEM
     foreigner (1.2.1)
       activerecord (>= 3.0.0)
     fssm (0.2.9)
-    gherkin (2.11.3)
+    gherkin (2.11.4)
       json (>= 1.4.6)
     gyoku (0.4.6)
       builder (>= 2.1.2)
@@ -451,7 +453,7 @@ DEPENDENCIES
   activerecord-import
   acts_as_follower (= 0.1.1)
   bcrypt-ruby
-  blacklight (= 3.7.0)
+  blacklight (= 3.7.1)
   blacklight_advanced_search (= 1.2.4)
   capybara
   clamav (= 0.4.1)
