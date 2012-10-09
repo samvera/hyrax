@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe FacetsHelper do
+  let(:blacklight_config) { Blacklight::Configuration.new }
+
+  before(:each) do
+    helper.stub(:blacklight_config).and_return blacklight_config
+  end
+  
   
   describe "render_selected_facet_value" do
     it "should be html_safe and not have the remove link" do

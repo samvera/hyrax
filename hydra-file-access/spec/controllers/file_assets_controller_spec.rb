@@ -20,7 +20,7 @@ describe Hydra::FileAssetsController do
   describe "index" do
     
     it "should find all file assets in the repo if no container_id is provided" do
-      ActiveFedora::SolrService.should_receive(:query).with("has_model_s:info\\:fedora/afmodel\\:FileAsset", {:sort=>["system_create_dt asc"]}).and_return("solr result")
+      ActiveFedora::SolrService.should_receive(:query).with("has_model_s:info\\:fedora\\/afmodel\\:FileAsset", {:sort=>["system_create_dt asc"]}).and_return("solr result")
       controller.stub(:load_permissions_from_solr)
       ActiveFedora::Base.should_receive(:new).never
       xhr :get, :index
