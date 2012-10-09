@@ -72,12 +72,17 @@ describe Hydra::AdminPolicy do
         subject.should_not have_key( Hydra.config[:permissions][:embargo_release_date] )
       end
       it "should provide prefixed/inherited solr permissions fields" do
-        subject[Hydra.config[:permissions][:inheritable][:catchall] ].should == ["posers", "slightlycoolkids", "africana-faculty", "cool-kids", "constantine", "nero", "julius_caesar"] 
+        catchall = Hydra.config[:permissions][:inheritable][:catchall] 
+        subject[catchall].should have(7).items
+        subject[catchall].should include("posers", "slightlycoolkids", "africana-faculty", "cool-kids", "constantine", "nero", "julius_caesar") 
         subject[Hydra.config[:permissions][:inheritable][:discover][:group] ].should == ["posers"]
         subject[Hydra.config[:permissions][:inheritable][:discover][:individual] ].should == ["constantine"]
         subject[Hydra.config[:permissions][:inheritable][:read][:group] ].should == ["slightlycoolkids"]
         subject[Hydra.config[:permissions][:inheritable][:read][:individual] ].should == ["nero"]
-        subject[Hydra.config[:permissions][:inheritable][:edit][:group] ].should == ["africana-faculty", "cool-kids"]
+        inheritable_group = Hydra.config[:permissions][:inheritable][:edit][:group]
+        subject[inheritable_group].length.should == 2
+        subject[inheritable_group].should include("africana-faculty", "cool-kids")
+
         subject[Hydra.config[:permissions][:inheritable][:edit][:individual] ].should == ["julius_caesar"]
         subject[Hydra.config[:permissions][:inheritable][:embargo_release_date] ].should == "2102-10-01"
       end

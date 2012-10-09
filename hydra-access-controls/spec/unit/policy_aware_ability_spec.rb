@@ -67,7 +67,9 @@ describe Hydra::PolicyAwareAbility do
   end
   describe "edit_groups_from_policy" do
     it "should retrieve the list of groups with edit access from the policy" do
-      subject.edit_groups_from_policy(@policy.pid).should == ["cool_kids","in_crowd"]
+      result = subject.edit_groups_from_policy(@policy.pid)
+      result.length.should == 2
+      result.should include("cool_kids","in_crowd")
     end
   end
   describe "edit_persons_from_policy" do
@@ -77,7 +79,9 @@ describe Hydra::PolicyAwareAbility do
   end
   describe "read_groups_from_policy" do
     it "should retrieve the list of groups with read access from the policy" do
-      subject.read_groups_from_policy(@policy.pid).should == ["cool_kids", "in_crowd", "africana-faculty"]
+      result = subject.read_groups_from_policy(@policy.pid)
+      result.length.should == 3
+      result.should include("cool_kids", "in_crowd", "africana-faculty")
     end
   end
   describe "read_persons_from_policy" do
