@@ -5,7 +5,6 @@ module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 
   def self.user_class
-    puts "Hydra.config[:user_model]: #{Hydra.config[:user_model].constantize.inspect}"
     Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
   end
 
