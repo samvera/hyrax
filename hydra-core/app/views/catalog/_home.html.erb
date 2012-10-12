@@ -1,6 +1,4 @@
 <%= render :partial=>'search_form' %>
 <%= render :partial=>'home_text' %>
 
-<% sidebar_items << capture do %>
-  <%= render :partial=>'facets' %>
-<% end %>
+<%= sidebar_items.join('').html_safe %>
