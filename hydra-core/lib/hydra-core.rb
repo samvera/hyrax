@@ -16,3 +16,12 @@ module HydraHead
     HydraHead::Routes.new(router, options).draw
   end
 end
+
+ActiveSupport.on_load(:after_initialize) do
+  begin
+    puts "Requiring SolrDocumentExtension"
+    SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
+  rescue NameError
+    puts "Couldn't find SolrDocument"
+  end
+end

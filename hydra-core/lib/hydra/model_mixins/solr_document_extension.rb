@@ -18,7 +18,9 @@ module Hydra::ModelMixins
         i += 1
       end
     end
+    def get_file_asset_count()
+      ActiveFedora::Base.count(:conditions=>"is_part_of_t:#{ActiveFedora::Base.quote_for_solr(id)}")
+    end
   end
 end
 
-SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension

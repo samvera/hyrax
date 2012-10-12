@@ -1,6 +1,6 @@
-<tr class="document <%= cycle("even","odd") %>">
+<tr class="document">
   <td>
-    <%= link_to_document(document, :label => blacklight_config.show.heading.to_sym, :counter => (counter + 1 + @response.params[:start].to_i)) %>
+    <%= link_to_document(document, :label => blacklight_config.show.heading.to_sym) %>
   </td>
   <td>
 
@@ -12,7 +12,7 @@
     <%= document.document_type(blacklight_config.show.display_type) %>
   </td>
   <td>
-    <%= get_file_asset_count(document)%>
+    <%= document.get_file_asset_count()%>
   </td>
   <td>
     Created

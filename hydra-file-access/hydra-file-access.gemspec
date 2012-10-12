@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rails", '~>3.2.3' 
   gem.add_dependency "blacklight", '~>3.4'  
   gem.add_dependency "devise"
-  gem.add_dependency "active-fedora", '~>4.1'
+  gem.add_dependency "active-fedora"
   gem.add_dependency 'RedCloth', '=4.2.9'
   gem.add_dependency 'block_helpers'
   gem.add_dependency 'sanitize'
