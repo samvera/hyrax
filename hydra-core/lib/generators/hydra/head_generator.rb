@@ -33,7 +33,7 @@ class HeadGenerator < Rails::Generators::Base
     file_path = "config/initializers/hydra_config.rb"
     copy_file "config/initializers/hydra_config.rb", file_path
     insert_into_file file_path, :after => '# specify the user model' do      
-        "\n    config[:user_model] = '#{model_name}'" 
+        "\n    config[:user_model] = '#{model_name.classify}'" 
     end
     
 

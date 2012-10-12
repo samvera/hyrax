@@ -5,11 +5,12 @@ module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 
   def self.user_class
+    puts "Hydra.config[:user_model]: #{Hydra.config[:user_model].constantize.inspect}"
     Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
   end
 
   def initialize(user, session=nil)
-    user ||= user_class.new # guest user (not logged in)
+    user ||= Hydra::Ability.user_class.new # guest user (not logged in)
     hydra_default_permissions(user, session)
   end
 
