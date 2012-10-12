@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'ability'
 
 describe Ability do
   before do

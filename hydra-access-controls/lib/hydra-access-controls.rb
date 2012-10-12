@@ -25,6 +25,9 @@ module Hydra
   class AccessDenied < ::CanCan::AccessDenied; end
 
 end
-require 'ability'
+ActiveSupport.on_load(:after_initialize) do
+  # Enable the ability class in the local application to load before the ability class provided by hydra-access-controls
+  require 'ability'
+end
 require 'role_mapper'
 
