@@ -18,4 +18,3 @@
 <div class="<%= params[:action]%>_details">
   <%= render :partial => "#{params[:controller]}/_#{params[:action]}_partials/default_details", :locals => {:document => document}%>
 </div>
-<%= async_load_tag(hydra_asset_downloads_path(params[:id]), 'downloads') %>
