@@ -30,7 +30,13 @@ class HeadGenerator < Rails::Generators::Base
     copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
 
     # Initializers
-    copy_file "config/initializers/hydra_config.rb", "config/initializers/hydra_config.rb"
+    file_path = "config/initializers/hydra_config.rb"
+    copy_file "config/initializers/hydra_config.rb", file_path
+    insert_into_file file_path, :after => '# specify the user model' do      
+        "\n    config[:user_model] = '#{model_name}'" 
+    end
+    
+
     copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
 
     # Role Mappings

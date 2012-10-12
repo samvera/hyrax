@@ -35,5 +35,7 @@ if Hydra.respond_to?(:configure)
       :owner => "depositor_t",
       :embargo_release_date => "embargo_release_date_dt"
     }
+
+    # specify the user model
   end
 end

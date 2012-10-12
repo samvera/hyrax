@@ -4,8 +4,12 @@ require "blacklight"
 module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 
+  def self.user_class
+    Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
+  end
+
   def initialize(user, session=nil)
-    user ||= ::User.new # guest user (not logged in)
+    user ||= user_class.new # guest user (not logged in)
     hydra_default_permissions(user, session)
   end
 
