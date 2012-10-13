@@ -7,8 +7,8 @@ describe BlacklightHelper do
         config.show.display_type = 'has_model_s'
       end
       helper.stub(:blacklight_config).and_return(@config)
-      helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:Presentation"]).should == "presentations"
-      helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"]).should == "generic_contents" 
+      helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:Presentation"]).should == "presentation"
+      helper.document_partial_name('has_model_s' => ["info:fedora/hull-cModel:genericContent"]).should == "generic_content" 
     end
   end
   
