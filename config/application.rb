@@ -179,6 +179,9 @@ module ScholarSphere
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+    
+    #configure the number of fits array items shown on the Generic File show page
+    config.fits_message_length = 5
   end
 end
 # this prevents LoadErrors, related to Rails autoload behavior

@@ -18,6 +18,10 @@ limitations under the License.
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
 <% javascript 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
+<% javascript 'bootstrap-tooltip.js'%>
+<% javascript 'bootstrap-popover.js'%>
+<% javascript 'bootstrap-modal.js'%>
+
 
 <% content_for :local_js do %>
 initialize_audio();
@@ -240,6 +244,7 @@ var addthis_config = {"data_track_addressbar":true};
           <td>
             <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>
             <% @generic_file.characterization_terms.each_pair do |term, values| %>
+            <div>
               <% label = term.to_s %>
               <% if label == "format_label" %>
                  <% label = "File Format"  %>
@@ -247,13 +252,20 @@ var addthis_config = {"data_track_addressbar":true};
               <% end %>
               <% label = label.humanize %>
               <% if values.is_a? Array %>
-                <% values.each do |value| %>
+                <% length = values.length %>
+                <% length = ScholarSphere::Application::config.fits_message_length-1 if term == :status_message %>
+                <% values[0..length].each_with_index do |value, idx| %>
                   <% next if value.empty? %>
-                  <%= "#{label}: #{value.truncate(250)}" %><br />
+                  <%= "#{label}: #{value.truncate(250)}" %>
+                  <%= "<br />".html_safe unless idx == length %> 
+                <% end %>
+                <% if length != values.length %>
+                   <%= render :partial => "generic_files/extra_fields_modal", :locals=>{:name=>term, :values=> values, :start=>ScholarSphere::Application::config.fits_message_length}%>
                 <% end %>
               <% else %>
                 <%= "#{label}: #{values.truncate(250)}" %><br />
               <% end %>
+            </div>
             <% end %>
           </td>
         </tr>
