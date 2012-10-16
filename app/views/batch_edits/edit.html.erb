@@ -5,6 +5,19 @@
 <% stylesheet "jquery-ui-1.8.23.custom.css" %>
 
 <% content_for :local_js do %>
+
+  function pause(milliseconds) {
+    var dt = new Date();
+    while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+  }
+
+  window.onbeforeunload = clearBatch;
+  function clearBatch(){
+    // clear the batch edit items
+    $("#clear_batch").click();
+    pause(500);
+  }  
+
 // initialize popover helpers
 $("a[rel=popover]").popover();
   <% @terms.each do |t| %>
@@ -159,5 +172,9 @@ h2 small {
        </div>
      <% end %>
    </div>
+
+<!-- Ajax call to clear the batch before page uload. -->
+<%= button_to "Clear Batch", { :controller => :batch_edits, :action=>:clear  }, :form_class=>'hidden' , :remote => true, :id=>'clear_batch' %> 
+
 </div><!-- descriptions_display -->
 

@@ -15,6 +15,7 @@
 ScholarSphere::Application.routes.draw do
   # Routes for Blacklight-specific functionality such as the catalog
   Blacklight.add_routes(self)
+  match 'batch_edits/clear' => 'batch_edits#clear', :as => :batch_edits_clear
 
   # add batch edit routes
   Hydra::BatchEdit.add_routes(self)
