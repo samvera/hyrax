@@ -132,6 +132,8 @@ module ScholarSphere
       'CC0 1.0 Universal' => 'http://creativecommons.org/publicdomain/zero/1.0/',
       'All rights reserved' => 'All rights reserved'
     }
+    
+    config.cc_licenses_reverse = Hash[*config.cc_licenses.to_a.flatten.reverse]
 
     # help text to display for form metadata elements, these will need to be updated to
     # reflect a field name change (should one happen) in the generic file datastream

@@ -61,15 +61,17 @@ module ApplicationHelper
 
 
   def link_to_field(fieldname, fieldvalue, displayvalue = nil)
-    p = {:search_field=>'advanced', fieldname=>fieldvalue}
+    p = {:search_field=>'advanced', fieldname=>'"'+fieldvalue+'"'}
     link_url = catalog_index_path(p)
     display = displayvalue.blank? ? fieldvalue: displayvalue
     link_to(display, link_url)
   end
 
-  def iconify_auto_link(text)
+  def iconify_auto_link(text, showLink = true)
     auto_link(text) do |value|
-      "<i class='icon-external-link'></i>&nbsp;#{value}<br />"
+      link = "<i class='icon-external-link'></i>&nbsp;#{value}<br />" if showLink
+      link = "<i class='icon-external-link'></i>&nbsp;<br />" unless showLink
+      link
     end
   end
 
