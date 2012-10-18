@@ -19,7 +19,7 @@ gem 'rubydora', '0.5.13'
 gem 'solrizer-fedora', '2.2.0'
 gem 'hydra-ldap', '0.1.0'
 gem 'noid', '0.5.5'
-gem 'hydra-batch-edit', :git=>'git://github.com/psu-stewardship/hydra-batch-edit.git', :ref => '26795c7b'
+gem 'hydra-batch-edit', :git=>'git://github.com/psu-stewardship/hydra-batch-edit.git', :ref => '70b3025b34'
 
 # Other components
 gem 'resque', '1.22.0', :require => 'resque/server'

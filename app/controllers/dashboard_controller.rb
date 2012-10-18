@@ -14,6 +14,7 @@
 
 require 'blacklight/catalog'
 class DashboardController < ApplicationController
+  include Hydra::BatchEditBehavior
   include Blacklight::Catalog
   include Blacklight::Configurable # comply with BL 3.7
   include Hydra::Controller::ControllerBehavior
@@ -45,6 +46,11 @@ class DashboardController < ApplicationController
       format.rss  { render :layout => false }
       format.atom { render :layout => false }
     end
+    @batch_size = batch.size
+    @empty_batch = batch.empty?
+    count_on_page = @document_list.count {|doc| batch.index(doc.id)}
+    @all_checked = (@batch_size >= @document_list.count) && (count_on_page == @document_list.count)
+    @batch_part_on_other_page = (@batch_size - count_on_page) > 0
   end
 
   def activity

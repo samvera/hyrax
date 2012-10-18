@@ -21,8 +21,10 @@ limitations under the License.
 
 
 <% content_for :local_js do %>
+
   initialize_audio();
   
+  // Load clipboard swif 
   $(document).ready(function(){
       <% rurl = root_url %>
       <% rurl = rurl.slice(0,rurl.length-2) if rurl[rurl.length-1] == '/' %> 
@@ -36,18 +38,10 @@ limitations under the License.
       }
   });
 
-  // remove the existing toggle bittins and reinitialize with no labels
-  $("[data-behavior='batch-add-form']").unbind("bl_checkbox_submit");
-  $("input[type='checkbox'].batch_toggle").remove();
-  $("label.batch_toggle").remove();
-  $("[data-behavior='batch-add-form']").bl_checkbox_submit({
-          checked_label: "",
-          unchecked_label: "",
-          css_class: "batch_toggle"
-      }); 
-  
+  var batch_size = <%= @batch_size %>;
+ 
   // hide or show the batch update buttons on page startup
-  toggleButtons();
+  toggleButtons(<%= !@empty_batch %>);
       
   // hide or show the batch update buttons file selections
   $(".batch_toggle").bind('click', function(e) {
@@ -57,18 +51,50 @@ limitations under the License.
 
     
   // function to hide or show the batch update buttons based on how may items are checked
-  function toggleButtons( ){
-      var n = $(".batch_toggle:checked").length;
-      if (n>0) {
-          $('.batch-select-all').show();
-          $('.button_to').show();
-      } else {
-          $('.batch-select-all').hide();
-          $('.button_to').hide();
-      }
+  function toggleButtons(forceOn ){
+    forceOn = typeof forceOn !== 'undefined' ? forceOn : false
+    var n = $(".batch_toggle:checked").length;
+    if (n == <%= @document_list.count %>)
+        $("#check_all").attr('checked', true);
+    else
+        $("#check_all").attr('checked', false);
+    
+    if ((n>0) || (forceOn)) {
+        $('.batch-select-all').show();
+        $('.button_to').show();
+    } else if (<%= !@batch_part_on_other_page %>){
+        $('.batch-select-all').hide();
+        $('.button_to').hide();
     }
-<% end %>
+  }
+    
+    
+    // check all buttons
+    $("#check_all").bind('click', function(e) {
 
+       /*var checked = $("#check_all")[0]['checked'];
+       $("input[type='checkbox'].batch_toggle").each(function(index, value) {
+          var ck = value['checked'];
+          // not the same state click the box
+          if ((checked && !ck) || (!checked && ck)){
+             value.click();
+          }
+       });*/
+       var checked = $("#check_all")[0]['checked'];
+       var timeout = 0;
+       var timeoutInc = 30;
+       $("input[type='checkbox'].batch_toggle").each(function(index, value) {
+          var ck = value['checked'];
+          // not the same state click the box
+          if ((checked && !ck) || (!checked && ck)){
+             setTimeout(function(){value.click();},timeout);
+          }
+          timeout+=timeoutInc; 
+       });
+       setTimeout(toggleButtons,timeout+200);
+    });
+
+ <% end %>
 
 
 <% content_for :local_css do %>
@@ -86,6 +112,7 @@ audio {
  
   float: right;
   padding-left: 6px;
+  padding-top: 0px;
   padding-top: 0px;
 }
 

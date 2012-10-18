@@ -6,16 +6,14 @@
 
 <% content_for :local_js do %>
 
-  function pause(milliseconds) {
-    var dt = new Date();
-    while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
-  }
-
   window.onbeforeunload = clearBatch;
   function clearBatch(){
-    // clear the batch edit items
-    $("#clear_batch").click();
-    pause(500);
+    // clear the batch edit items 
+    // NOTE: setting results to variable to make browser wait until action is complete
+    var clearState = $.ajax({
+      type: 'POST',
+      url: '<%=batch_edits_clear_path %>',
+    });
   }  
 
 // initialize popover helpers
