@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/psu-stewardship/hydra-batch-edit.git
-  revision: 70b3025b343c17900e96cd3bf512b7f6a2ed8e36
-  ref: 70b3025b34
+  revision: 0c548b49fc9252736ea908f573f9a771f10bfbcc
+  ref: 0c548b49fc
   specs:
     hydra-batch-edit (0.0.6)
       blacklight

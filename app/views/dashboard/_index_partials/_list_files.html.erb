@@ -21,13 +21,13 @@ on element ids -->
 <% noid = document[:noid_s].first %>
 <tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
   <% gf = GenericFile.find(document.id) %>
-  <td width="2%"><%= batch_edit_select(document) %></td> 
-  <td width="2%"><%# check_box_tag :generic_file, document[:id] %>
+  <td width="4%"><%= batch_edit_select(document) %></td> 
+  <td width="2%">
   <% if gf.processing? %>
      <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
   <% end %>
   </td>
-  <td width="39%">
+  <td width="38%">
     <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large fleft"></i></a>
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <span class=center><%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>

@@ -38,8 +38,6 @@ limitations under the License.
       }
   });
 
-  var batch_size = <%= @batch_size %>;
- 
   // hide or show the batch update buttons on page startup
   toggleButtons(<%= !@empty_batch %>);
       
@@ -54,11 +52,6 @@ limitations under the License.
   function toggleButtons(forceOn ){
     forceOn = typeof forceOn !== 'undefined' ? forceOn : false
     var n = $(".batch_toggle:checked").length;
-    if (n == <%= @document_list.count %>)
-        $("#check_all").attr('checked', true);
-    else
-        $("#check_all").attr('checked', false);
-    
     if ((n>0) || (forceOn)) {
         $('.batch-select-all').show();
         $('.button_to').show();
@@ -69,35 +62,12 @@ limitations under the License.
   }
     
     
-    // check all buttons
-    $("#check_all").bind('click', function(e) {
-
-       /*var checked = $("#check_all")[0]['checked'];
-       $("input[type='checkbox'].batch_toggle").each(function(index, value) {
-          var ck = value['checked'];
-          // not the same state click the box
-          if ((checked && !ck) || (!checked && ck)){
-             value.click();
-          }
-       });*/
-       var checked = $("#check_all")[0]['checked'];
-       var timeout = 0;
-       var timeoutInc = 30;
-       $("input[type='checkbox'].batch_toggle").each(function(index, value) {
-          var ck = value['checked'];
-          // not the same state click the box
-          if ((checked && !ck) || (!checked && ck)){
-             setTimeout(function(){value.click();},timeout);
-          }
-          timeout+=timeoutInc; 
-       });
-       setTimeout(toggleButtons,timeout+200);
-    });
 
  <% end %>
 
 
 <% content_for :local_css do %>
+
 .audiojs {
   width: 38px;
   float: left;  
@@ -126,6 +96,13 @@ audio {
 
 .button_to .btn-primary {
 background-color:#faa732;background-image:-moz-linear-gradient(top, #fbb450, #f89406);background-image:-ms-linear-gradient(top, #fbb450, #f89406);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));background-image:-webkit-linear-gradient(top, #fbb450, #f89406);background-image:-o-linear-gradient(top, #fbb450, #f89406);background-image:linear-gradient(top, #fbb450, #f89406);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbb450', endColorstr='#f89406', GradientType=0);border-color:#f89406 #f89406 #ad6704;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);*background-color:#f89406;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);}.btn-warning:hover,.btn-warning:active,.btn-warning.active,.btn-warning.disabled,.btn-warning[disabled]{background-color:#f89406;*background-color:#df8505;
+}
+
+.table th, .table td {
+  padding: 4px;
+}
+.table .sm {
+  padding: 2px;
 }
 <% end %>
 

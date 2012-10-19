@@ -6,14 +6,18 @@
 
 <% content_for :local_js do %>
 
+  function pause(milliseconds) {    var dt = new Date();    while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }  }
+  
   window.onbeforeunload = clearBatch;
   function clearBatch(){
     // clear the batch edit items 
     // NOTE: setting results to variable to make browser wait until action is complete
     var clearState = $.ajax({
+      headers: {Accept : "application/javascript"},      
       type: 'POST',
       url: '<%=batch_edits_clear_path %>',
     });
+    pause(50);
   }  
 
 // initialize popover helpers
@@ -34,6 +38,7 @@ $("a[rel=popover]").popover();
       var save_button = "#"+key+"_save";
       $(save_button).removeAttr("disabled");         
       $(form_id).removeClass("loading");
+      $(form_id).children([".control-group"]).removeClass('hidden')
   });
 
   $(".ajax-form").bind('ajax:before', function(){
@@ -41,8 +46,13 @@ $("a[rel=popover]").popover();
         var key = this.id.replace("form_","");
         var save_button = "#"+key+"_save";
         $(save_button).attr("disabled", "disabled");
-        $(form_id).addClass("loading");        
+        $(form_id).addClass("loading");
+        $(form_id).children([".control-group"]).addClass('hidden')        
     });
+
+  // hide permissions to begin with
+  $('#permissions_display').hide();
+  $('#permissions_submit').hide();
 
 
   // called from edit object view 

@@ -30,12 +30,12 @@ class BatchEditsController < ApplicationController
        @show_file.permissions = HashWithIndifferentAccess.new(perm_param)       
    end
 
-   def after_update    
-      
+   def after_update 
      redirect_to dashboard_path unless request.xhr?
    end
    
   def update_document(obj)
+      super
       obj.date_modified = Time.now.ctime
       obj.set_visibility(params)
   end
