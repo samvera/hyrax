@@ -43,8 +43,10 @@ require 'hydra/model_methods'
 require 'hydra/models/file_asset'
 require 'mediashelf/active_fedora_helper' #deprecated
 
-
-begin
-  SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
-rescue NameError
+ActiveSupport.on_load(:after_initialize) do
+  begin
+    SolrDocument.use_extension Hydra::ModelMixins::SolrDocumentExtension
+  rescue NameError
+    puts "Couldn't find SolrDocument"
+  end
 end
