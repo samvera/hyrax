@@ -1,0 +1,31 @@
+<div >
+  <h3> Descriptions:</h3>
+
+    <ul class="nav nav-tabs">
+      <li id="batch_descriptions_link"><a href="#"><i class="icon-tags"></i> Descriptions</a></li>
+    </ul>
+  <div class="well active" id="descriptions_display"> 
+      <table class="table table-striped"><!-- class="verticalheadings"> -->
+      <tbody>
+      <% @terms.each do |t| %>
+        <% next if t.empty? %>
+        <% key = t.to_s.split("generic_file__").last %>
+        <% next unless @generic_file.respond_to?(key) %>
+        <% label = GenericFile::get_label(key) %>
+        <% vals =  @generic_file.send(key) %>
+        <% # not an arry lets just shove it in one %>
+        <% vals = [vals] unless vals.is_a?(Array) %>
+            <tr id='row_<%=key%>' class="expandable">
+              <th width="20%">
+                    <%=label%>
+              </th>
+              <td>
+                <% vals.each do |val| %>
+                  <%= val %><br />
+                <% end %>
+              </td>
+            </tr>
+       <% end %>
+        </tbody></table> <!-- class="verticalheadings"> -->
+    </div><!-- /well -->
+</div>
