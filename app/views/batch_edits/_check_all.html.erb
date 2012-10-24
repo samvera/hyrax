@@ -1,22 +1,7 @@
 <script type = "text/javascript"> 
- 
 
-$(document).ready(function() { 
-
-  $("[data-behavior='batch-edit-select-page']").bind('click', function(e) {
-    e.preventDefault();
-    toggleState($(this));    
-    toggleState($("[data-behavior='batch-edit-select-all']"));    
-  });
-
-  $("[data-behavior='batch-edit-select-all']").bind('click', function(e) {
-    e.preventDefault();
-    toggleState($(this));    
-    toggleState($("[data-behavior='batch-edit-select-page']"));    
-  });
-  
-  function toggleState (obj) {
-    if (obj.attr('data-state') == 'off'){
+  function toggleState (obj, state) {
+    if (state == 'on'){
       obj.attr("data-state", 'on');
       obj.find('a i').addClass('icon-ok');
     }else {
@@ -25,51 +10,113 @@ $(document).ready(function() {
     }
 
   }
-  
-  // check all buttons
-  $("#check_all").bind('click', function(e) {
+
+  function check_all_page(e) {
      var checked = $("#check_all")[0]['checked'];
 
      // only check the current page
-     if ($("[data-behavior='batch-edit-select-page']").attr('data-state') == 'on') {
-       var timeout = 0;
-       var timeoutInc = 30;
-       
-       $("input[type='checkbox'].batch_toggle").each(function(index, value) {
-          // check each individual box
-          var ck = value['checked'];
-          // not the same state click the box
-          if ((checked && !ck) || (!checked && ck)){
-             setTimeout(function(){value.click();},timeout);
-          }
-          timeout+=timeoutInc; 
-       });
-       setTimeout(toggleButtons,timeout+200);
+     var timeout = 0;
+     var timeoutInc = 30;
      
-     // check all results
-     } else {
-        // post an update to the batch
-        var url;
-        if (checked) url =  '<%=all_batch_edits_path %>';
-        else url = '<%=clear_batch_edits_path %>';
-        var clearState = $.ajax({
-          headers: {           
-               Accept : "application/javascript",          
-           },      
-          type: 'PUT',
-          url: url,
-        });
-        // show that update on the local screen
-        $("input[type='checkbox'].batch_toggle").attr('checked', checked);
-     }
+     $("input[type='checkbox'].batch_toggle").each(function(index, value) {
+        // check each individual box
+        var ck = value['checked'];
+        // not the same state click the box
+        if ((checked && !ck) || (!checked && ck)){
+           setTimeout(function(){value.click();},timeout);
+        }
+        timeout+=timeoutInc; 
+     });
+     setTimeout(toggleButtons,timeout+200);     
+     $("#check_all").attr('checked', checked);
+  }
+
+  function clear_batch () {
+    var url = '<%=clear_batch_edits_path %>';
+    var clearState = $.ajax({
+      headers: {           
+           Accept : "application/javascript",          
+       },      
+      type: 'PUT',
+      url: url,
+      async: false,
+    });
+
+  }
+ 
+
+$(document).ready(function() { 
+
+  $("[data-behavior='batch-edit-select-page']").bind('click', function(e) {
+    e.preventDefault();
+    $("#check_all").attr('checked', true);
+    toggleState($(this),'on');    
+    toggleState($("[data-behavior='batch-edit-select-all']"),'off');    
+    toggleState($("[data-behavior='batch-edit-select-none']"),'off');    
+    clear_batch();
+    check_all_page();
+    
   });
 
+  $("[data-behavior='batch-edit-select-all']").bind('click', function(e) {
+    e.preventDefault();
+    $("#check_all").attr('checked', true);
+    toggleState($(this), 'on');    
+    toggleState($("[data-behavior='batch-edit-select-page']"),'off');    
+    toggleState($("[data-behavior='batch-edit-select-none']"),'off');    
+    var url =  '<%=all_batch_edits_path %>';
+    var clearState = $.ajax({
+      headers: {           
+           Accept : "application/javascript",          
+       },      
+      type: 'PUT',
+      url: url,
+      async: false,
+    });
+    // show that update on the local screen
+    //$("input[type='checkbox'].batch_toggle").attr('checked', true);
+    check_all_page();
+  });
+
+  $("[data-behavior='batch-edit-select-none']").bind('click', function(e) {
+    e.preventDefault();
+    $("#check_all").attr('checked', false);
+    toggleState($(this), 'on');    
+    toggleState($("[data-behavior='batch-edit-select-page']"),'off');    
+    toggleState($("[data-behavior='batch-edit-select-all']"),'off');  
+    clear_batch();  
+    // show that update on the local screen
+    check_all_page(); 
+    //$("input[type='checkbox'].batch_toggle").attr('checked', false);
+    toggleButtons(false, true);
+  });
+
+  
+  
+  // check all buttons
+  $("#check_all").bind('click', check_all_page);
+  
+
   $(".batch_toggle").bind('click', function(e) {
+      // selecting a single box turn off the group selections
+      toggleState($("[data-behavior='batch-edit-select-all']"),'off');    
+      toggleState($("[data-behavior='batch-edit-select-page']"),'off');    
+      toggleState($("[data-behavior='batch-edit-select-none']"),'off');    
+  
       var n = $(".batch_toggle:checked").length;
-      if (n == <%= @document_list.count %>)
+      if (n == <%= @document_list.count %>) {
           $("#check_all").attr('checked', true);
-      else
+          if (!<%=@batch_part_on_other_page%>) {
+            toggleState($("[data-behavior='batch-edit-select-page']"),'on');    
+          } else if ((n + <%=@batch_size_on_other_page%>) == <%=@result_set_size%>){
+            toggleState($("[data-behavior='batch-edit-select-all']"),'on');    
+          }
+      } else {
           $("#check_all").attr('checked', false);
+          if ((n + <%=@batch_size_on_other_page%>) == 0){
+            toggleState($("[data-behavior='batch-edit-select-none']"),'on');                 
+          }
+      }
     });
   
  
@@ -81,8 +128,9 @@ $(document).ready(function() {
       <%= check_box_tag 'check_all', 'yes', @all_checked %>
       <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="icon-cog" title="click to determine select all check box action"></span></a>
       <ul class="dropdown-menu">
-        <li data-behavior="batch-edit-select-page" data-state="on"><a href="#"><i class="icon-ok"></i> Affects Current Page</a></li>
-        <li data-behavior="batch-edit-select-all" data-state="off"><a href="#"><i class="">&nbsp;</i> Affects <em>All</em> Results</a></li>
+        <li data-behavior="batch-edit-select-none" data-state="<%= @empty_batch ? 'on' : 'off' %>"><a href="#"><i class="<%= @empty_batch ? 'icon-ok' : '' %>"></i> Select None</a></li>
+        <li data-behavior="batch-edit-select-page" data-state="<%= @all_checked && !@batch_part_on_other_page ? 'on' : 'off' %>"><a href="#"><i class="<%= @all_checked && !@batch_part_on_other_page ? 'icon-ok' : '' %>"></i> Select Only Current Page</a></li>
+        <li data-behavior="batch-edit-select-all" data-state="<%= @entire_result_set_selected ? 'on' : 'off' %>"><a href="#"><i class="<%= @entire_result_set_selected ? 'icon-ok' : '' %>"></i> Select <em>All</em> Results</a></li>
       </ul>
     </div>
 

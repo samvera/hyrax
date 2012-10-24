@@ -19,6 +19,22 @@ limitations under the License.
 <% stylesheet 'video-js.css' %>
 <% javascript 'dashboard.js' %>
 
+<script type = "text/javascript"> 
+
+  // function to hide or show the batch update buttons based on how may items are checked
+  function toggleButtons(forceOn, otherPage ){
+    forceOn = typeof forceOn !== 'undefined' ? forceOn : false
+    otherPage = typeof otherPage !== 'undefined' ? otherPage : <%= !@batch_part_on_other_page %>
+    var n = $(".batch_toggle:checked").length;
+    if ((n>0) || (forceOn)) {
+        $('.batch-select-all').show();
+        $('.button_to').show();
+    } else if ( otherPage){
+        $('.batch-select-all').hide();
+        $('.button_to').hide();
+    }
+  }
+</script>
 
 <% content_for :local_js do %>
 
@@ -46,22 +62,6 @@ limitations under the License.
         e.preventDefault();
         toggleButtons();
     });
-
-    
-  // function to hide or show the batch update buttons based on how may items are checked
-  function toggleButtons(forceOn ){
-    forceOn = typeof forceOn !== 'undefined' ? forceOn : false
-    var n = $(".batch_toggle:checked").length;
-    if ((n>0) || (forceOn)) {
-        $('.batch-select-all').show();
-        $('.button_to').show();
-    } else if (<%= !@batch_part_on_other_page %>){
-        $('.batch-select-all').hide();
-        $('.button_to').hide();
-    }
-  }
-    
-    
 
  <% end %>
 

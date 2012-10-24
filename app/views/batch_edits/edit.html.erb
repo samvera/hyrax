@@ -113,7 +113,7 @@ h2 small {
 
 <h2 class="non lower">Batch Modify Descriptions &nbsp;&nbsp;&nbsp;<small>Select a term to overwrite the values in all files in the batch.</small> </h2>
 <div class="scrollx scrolly fileHeight"> <!-- original values -->
-  <h3> <b>Edits will be applied to: </b></h3>
+  <h3> <b>Edits will be applied to: (<%=@names.size%> files) </b></h3>
    <%= @names.join(", ").html_safe %>
 </div> <!-- /original values --> 
 
