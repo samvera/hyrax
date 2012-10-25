@@ -16,18 +16,18 @@
 
      // only check the current page
      var timeout = 0;
-     var timeoutInc = 30;
+     var timeoutInc = 60;
      
      $("input[type='checkbox'].batch_toggle").each(function(index, value) {
         // check each individual box
         var ck = value['checked'];
         // not the same state click the box
         if ((checked && !ck) || (!checked && ck)){
-           setTimeout(function(){value.click();},timeout);
+           window.parent.setTimeout(function(){value.click();},timeout);
         }
         timeout+=timeoutInc; 
      });
-     setTimeout(toggleButtons,timeout+200);     
+     window.parent.setTimeout(toggleButtons,timeout+500);     
      $("#check_all").attr('checked', checked);
   }
 
@@ -100,6 +100,7 @@ $(document).ready(function() {
     // show that update on the local screen
     set_all_checkboxes(true)
     $("body").css("cursor", "auto");
+    toggleButtons(true);
   });
 
   $("[data-behavior='batch-edit-select-none']").bind('click', function(e) {
@@ -124,24 +125,29 @@ $(document).ready(function() {
   
 
   $(".batch_toggle").bind('click', function(e) {
-      // selecting a single box turn off the group selections
-      toggleState($("[data-behavior='batch-edit-select-all']"),'off');    
-      toggleState($("[data-behavior='batch-edit-select-page']"),'off');    
-      toggleState($("[data-behavior='batch-edit-select-none']"),'off');    
-  
-      var n = $(".batch_toggle:checked").length;
-      if (n == <%= @document_list.count %>) {
-          $("#check_all").attr('checked', true);
-          if (!<%=@batch_part_on_other_page%>) {
-            toggleState($("[data-behavior='batch-edit-select-page']"),'on');    
-          } else if ((n + <%=@batch_size_on_other_page%>) == <%=@result_set_size%>){
-            toggleState($("[data-behavior='batch-edit-select-all']"),'on');    
-          }
-      } else {
-          $("#check_all").attr('checked', false);
-          if ((n + <%=@batch_size_on_other_page%>) == 0){
-            toggleState($("[data-behavior='batch-edit-select-none']"),'on');                 
-          }
+
+      // if we are unchecking a box remove the group selections
+      if ($(e.currentTarget).attr('checked') != "checked") {
+        toggleState($("[data-behavior='batch-edit-select-all']"),'off');    
+        toggleState($("[data-behavior='batch-edit-select-page']"),'off');    
+        toggleState($("[data-behavior='batch-edit-select-none']"),'off');
+        $("#check_all").attr('checked', false);
+      }
+      // checking a single box see if we need to turn on one of the groups    
+      else {
+        var n = $(".batch_toggle:checked").length;
+        if (n == <%= @document_list.count %>) {
+            $("#check_all").attr('checked', true);
+            if (!<%=@batch_part_on_other_page%>) {
+              toggleState($("[data-behavior='batch-edit-select-page']"),'on');    
+            } else if ((n + <%=@batch_size_on_other_page%>) == <%=@result_set_size%>){
+              toggleState($("[data-behavior='batch-edit-select-all']"),'on');    
+            }
+        } else {            
+            if ((n + <%=@batch_size_on_other_page%>) == 0){
+              toggleState($("[data-behavior='batch-edit-select-none']"),'on');                 
+            }
+        }
       }
     });
   

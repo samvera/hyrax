@@ -41,18 +41,22 @@ class DashboardController < ApplicationController
     @last_event_timestamp = @user.events.first[:timestamp].to_i || 0 rescue 0
     @filters = params[:f] || []
 
+    # adding a key to the session so that the history will be saved so that batch_edits select all will work
+    search_session[:dashboard] = true 
     respond_to do |format|
       format.html { save_current_search_params }
       format.rss  { render :layout => false }
       format.atom { render :layout => false }
     end
-    @batch_size = batch.uniq.size
+
+    # set up some parameters for allowing the batch controls to show appropiately
+    count_on_page = @document_list.count {|doc| batch.index(doc.id)}
+    batch_size = batch.uniq.size
     @result_set_size = @response.response["numFound"]
     @empty_batch = batch.empty?
-    count_on_page = @document_list.count {|doc| batch.index(doc.id)}
-    @all_checked = (@batch_size >= @document_list.count) && (count_on_page == @document_list.count)
-    @entire_result_set_selected = @response.response["numFound"] == @batch_size
-    @batch_size_on_other_page = @batch_size - count_on_page
+    @all_checked = (count_on_page == @document_list.count)
+    @entire_result_set_selected = @response.response["numFound"] == batch_size
+    @batch_size_on_other_page = batch_size - count_on_page
     @batch_part_on_other_page = (@batch_size_on_other_page) > 0    
   end
 
