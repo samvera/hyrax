@@ -43,22 +43,45 @@
     });
 
   }
+  
+  function set_all_checkboxes(checked){
+    $("input[type='checkbox'].batch_toggle").each(function(){
+      $(this).attr('checked', checked);   
+      
+      // make sure the form is set correctly
+      form = $($(this).parent()[0]);      
+      if (checked) {
+        form.find("input[name=_method]").val("delete");
+
+      } else {
+        form.find("input[name=_method]").val("put");
+      }
+    });
+    
+  }
  
 
 $(document).ready(function() { 
 
   $("[data-behavior='batch-edit-select-page']").bind('click', function(e) {
+    $("body").css("cursor", "progress");
     e.preventDefault();
     $("#check_all").attr('checked', true);
     toggleState($(this),'on');    
     toggleState($("[data-behavior='batch-edit-select-all']"),'off');    
     toggleState($("[data-behavior='batch-edit-select-none']"),'off');    
     clear_batch();
+    
+    // uncheck everything on the current page
+    set_all_checkboxes(false);
+    
+    // check everything on the current page
     check_all_page();
     
   });
 
   $("[data-behavior='batch-edit-select-all']").bind('click', function(e) {
+    $("body").css("cursor", "progress");
     e.preventDefault();
     $("#check_all").attr('checked', true);
     toggleState($(this), 'on');    
@@ -73,21 +96,24 @@ $(document).ready(function() {
       url: url,
       async: false,
     });
+    
     // show that update on the local screen
-    //$("input[type='checkbox'].batch_toggle").attr('checked', true);
-    check_all_page();
+    set_all_checkboxes(true)
+    $("body").css("cursor", "auto");
   });
 
   $("[data-behavior='batch-edit-select-none']").bind('click', function(e) {
+    $("body").css("cursor", "progress");
     e.preventDefault();
     $("#check_all").attr('checked', false);
     toggleState($(this), 'on');    
     toggleState($("[data-behavior='batch-edit-select-page']"),'off');    
     toggleState($("[data-behavior='batch-edit-select-all']"),'off');  
     clear_batch();  
+
     // show that update on the local screen
-    check_all_page(); 
-    //$("input[type='checkbox'].batch_toggle").attr('checked', false);
+    set_all_checkboxes(false)
+    $("body").css("cursor", "auto");
     toggleButtons(false, true);
   });
 
