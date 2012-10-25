@@ -8,8 +8,6 @@ module Hydra::Controller::FileAssetsBehavior
   extend Deprecation
   
   included do
-    Deprecation.warn Hydra::Controller::FileAssetsBehavior, "Hydra::Controller::FileAssetsBehavior will be removed in hydra-head 6.0"
-    
     include Hydra::AccessControlsEnforcement
     include Hydra::AssetsControllerHelper
     include Hydra::Controller::UploadBehavior 
@@ -19,6 +17,11 @@ module Hydra::Controller::FileAssetsBehavior
     include Blacklight::Configurable
     copy_blacklight_config_from(CatalogController)
     prepend_before_filter :sanitize_update_params
+    before_filter :show_deprecation_message
+  end
+
+  def show_deprecation_message
+    Deprecation.warn Hydra::Controller::FileAssetsBehavior, "Hydra::Controller::FileAssetsBehavior will be removed in hydra-head 6.0"
   end
   
   def index

@@ -1,4 +1,7 @@
 require 'active_support'
+# TODO would it be possible to put the require fedora in an after_initialize block like this?
+#ActiveSupport.on_load(:after_initialize) do
+# This would allow solrizer to load it's config files after the rails logger is up.
 require 'active-fedora'
 require 'cancan'
 
