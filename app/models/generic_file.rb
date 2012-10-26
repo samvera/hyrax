@@ -669,6 +669,7 @@ class GenericFile < ActiveFedora::Base
   # Is this file in the middle of being processed by a batch?
   def processing?
      return false if self.batch.blank?
+     return false if !self.batch.methods.include? :status
      return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
   end
 

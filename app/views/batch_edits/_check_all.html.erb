@@ -155,14 +155,18 @@ $(document).ready(function() {
 }); 
  
 </script>
-
-    <div class="dropdown">
-      <%= check_box_tag 'check_all', 'yes', @all_checked %>
+  <% if !@disable_select_all %> 
+    <div class="dropdown" >
+      <%= check_box_tag 'check_all', 'yes', @all_checked, :disabled => ((@batch_size_on_other_page + @document_list.count) > @max_batch_size) %>
       <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="icon-cog" title="click to determine select all check box action"></span></a>
       <ul class="dropdown-menu">
         <li data-behavior="batch-edit-select-none" data-state="<%= @empty_batch ? 'on' : 'off' %>"><a href="#"><i class="<%= @empty_batch ? 'icon-ok' : '' %>"></i> Select None</a></li>
         <li data-behavior="batch-edit-select-page" data-state="<%= @all_checked && !@batch_part_on_other_page ? 'on' : 'off' %>"><a href="#"><i class="<%= @all_checked && !@batch_part_on_other_page ? 'icon-ok' : '' %>"></i> Select Only Current Page</a></li>
-        <li data-behavior="batch-edit-select-all" data-state="<%= @entire_result_set_selected ? 'on' : 'off' %>"><a href="#"><i class="<%= @entire_result_set_selected ? 'icon-ok' : '' %>"></i> Select <em>All</em> Results</a></li>
+        <% if @result_set_size <= @max_batch_size %> 
+          <li data-behavior="batch-edit-select-all" data-state="<%= @entire_result_set_selected ? 'on' : 'off' %>"><a href="#"><i class="<%= @entire_result_set_selected ? 'icon-ok' : '' %>"></i> Select <em>All</em> Results</a></li>
+        <% else %>
+          <li data-behavior="batch-edit-select-all-disabled" data-state="'off' %>"><a href="#" onclick="return false;" disabled="true"> Result Set Too Big For Select All (><%=@max_batch_size%>)</a></li>
+        <% end %>                  
       </ul>
     </div>
-
+  <% end %>

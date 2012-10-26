@@ -50,7 +50,9 @@ class DashboardController < ApplicationController
     end
 
     # set up some parameters for allowing the batch controls to show appropiately
+    @max_batch_size = 80
     count_on_page = @document_list.count {|doc| batch.index(doc.id)}
+    @disable_select_all = @document_list.count > @max_batch_size
     batch_size = batch.uniq.size
     @result_set_size = @response.response["numFound"]
     @empty_batch = batch.empty?
