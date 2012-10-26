@@ -149,10 +149,7 @@ EOF
     if File.exists?(file_path) 
       insert_into_file file_path, :after => 'include Blacklight::Controller' do 
         "  \n# Adds Hydra behaviors into the application controller \n" +        
-        "  include Hydra::Controller::ControllerBehavior\n" +
-        "  def layout_name\n" +
-        "   'hydra-head'\n" +
-        "  end\n"     
+        "  include Hydra::Controller::ControllerBehavior\n"
       end
     else
       puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller::ControllerBehavior module in the Controller class definition.  See the Hydra::Controller::ControllerBehavior section in the Hydra API Docs for more info." 
