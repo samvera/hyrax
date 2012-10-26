@@ -43,16 +43,30 @@ Install system dependencies
   directory on your PATH
  * ghostscript (required to create thumbnails from pdfs)
 
+Get the ScholarSphere code
+
+    git clone https://github.com/psu-stewardship/scholarsphere.git
+
 Install gems
 
     bundle install
 
-Copy and **edit** database, LDAP, Fedora, and Solr configs
+Copy database, LDAP, Fedora, and Solr configs
 
     cp config/database.yml.sample config/database.yml
     cp config/fedora.yml.sample config/fedora.yml
     cp config/solr.yml.sample config/solr.yml
+    cp config/redis.yml.sample config/redis.yml
     cp config/hydra-ldap.yml.sample config/hydra-ldap.yml
+
+If you're using SQLite, a vanilla Redis installation, and the
+Hydra-Jetty Solr and Fedora components (see below), you should not
+need to tweak the database.yml, fedora.yml, solr.yml, or redis.yml
+files.
+
+If you're planning to use LDAP for user account information and
+groups, you will need to know some information about your LDAP
+service, which will go into hydra-ldap.yml.
 
 Create database
 
