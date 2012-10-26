@@ -24,8 +24,8 @@ module Hydra
         t.access {
           t.human_readable(:path=>"human")
           t.machine {
-            t.group
-            t.person
+            t.group(:index_as=>[:searchable])
+            t.person(:index_as=>[:searchable])
           }
           t.person(:proxy=>[:machine, :person])
           t.group(:proxy=>[:machine, :group])
