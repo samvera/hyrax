@@ -180,7 +180,14 @@
 	    	ConnectionPoolManager module). Default is the default provided by the 
 	    	ConnectionPoolManager.</comment>
     </param>
-    <param name="gSearchRESTURL" value="http://localhost:8983/fedoragsearch/rest">
+    <param name="fedoraStorageHintProvider" value="org.fcrepo.server.storage.NullStorageHintsProvider">
+      <comment>Hints are gathered and passed to the underline storage systems (only Akubra for now).
+            These are meta data or contextual information about object or datastream to be added or updated.
+            The default implementation is NullStorageHintsProvider; it provides no hints. You you can implement
+            your own FedoraStorageHintProvider and drop your implementation to the $CATALINA_HOME/webapps/fedora/WEB_INF/classes
+            directory (unpackaged), or the $CATALINA_HOME/webapps/fedora/WEB_INF/lib director (packaged).</comment>
+    </param>
+    <param name="gSearchRESTURL" value="http://localhost:8080/fedoragsearch/rest">
       <comment>The REST endpoint of the Fedora Generic Search service.
             This parameter is only required if GSearchDOManager is 
             used.</comment>
@@ -211,7 +218,7 @@
             will be removed.</comment>
     </param>
     <param name="decorator1" value="org.fcrepo.server.messaging.NotificationInvocationHandler"/>
-    <param name="checksumAlgorithm" value="SHA-1">
+    <param name="checksumAlgorithm" value="MD5">
       <comment>Specifies which checksumming algorithm is to be used when 
 			automatically computing checksums as specified by the above 
 			parameter. Valid values are: MD5  SHA-1  SHA-256  SHA-384  SHA-512.</comment>
@@ -221,7 +228,7 @@
             This specifies the minimum amount of time that each uploaded
             file should be kept in temporary storage.</comment>
     </param>
-    <param name="autoChecksum" value="true">
+    <param name="autoChecksum" value="false">
       <comment>Controls whether a checksum is automatically computed for 
 			every datastream as the datastream is added to the repository. This 
 			will allow the integrity of datastream contents to be periodically 
