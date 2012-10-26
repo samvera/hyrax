@@ -370,7 +370,7 @@
   </requestHandler>
 
 
-  <requestHandler name="search" class="solr.SearchHandler" >
+  <requestHandler name="search" class="solr.SearchHandler" default="true" >
     <lst name="defaults">
      <str name="defType">dismax</str>
        <str name="facet">on</str>
