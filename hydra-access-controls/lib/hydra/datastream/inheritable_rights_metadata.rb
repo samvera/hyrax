@@ -7,7 +7,6 @@ module Hydra
       @terminology = Hydra::Datastream::RightsMetadata.terminology
   
       def to_solr(solr_doc=Hash.new)
-        solr_doc["inheritable_access_t"] = access.machine.group.val + access.machine.person.val
         solr_doc["inheritable_discover_access_group_t"] = discover_access.machine.group
         solr_doc["inheritable_discover_access_person_t"] = discover_access.machine.person
         solr_doc["inheritable_read_access_group_t"] = read_access.machine.group

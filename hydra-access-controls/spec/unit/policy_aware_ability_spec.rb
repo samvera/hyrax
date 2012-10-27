@@ -4,7 +4,6 @@ describe Hydra::PolicyAwareAbility do
   before do
     Hydra.stub(:config).and_return({
       :permissions=>{
-        :catchall => "access_t",
         :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
         :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
         :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
@@ -12,7 +11,6 @@ describe Hydra::PolicyAwareAbility do
         :embargo_release_date => "embargo_release_date_dt",
       
         :inheritable => {
-          :catchall => "inheritable_access_t",
           :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
           :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
           :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},

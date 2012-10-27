@@ -28,7 +28,6 @@ if Hydra.respond_to?(:configure)
     # You only need to change these values if you've indexed permissions by some means other than the Hydra's built-in tooling.
     # If you change these, you must also update the permissions request handler in your solrconfig.xml to return those values
     config[:permissions] = {
-      :catchall => "access_t",
       :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
       :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
       :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},

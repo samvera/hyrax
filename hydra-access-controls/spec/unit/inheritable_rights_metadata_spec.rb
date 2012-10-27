@@ -4,7 +4,6 @@ require "nokogiri"
 describe Hydra::Datastream::InheritableRightsMetadata do
   before do
     Hydra.stub(:config).and_return({:permissions=>{
-      :catchall => "access_t",
       :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
       :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
       :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
@@ -12,7 +11,6 @@ describe Hydra::Datastream::InheritableRightsMetadata do
       :embargo_release_date => "embargo_release_date_dt",
       
       :inheritable => {
-        :catchall => "inheritable_access_t",
         :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
         :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
         :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},
@@ -42,7 +40,6 @@ describe Hydra::Datastream::InheritableRightsMetadata do
   describe "to_solr" do
     subject {@sample.to_solr}
     it "should NOT provide normal solr permissions fields" do    
-      subject.should_not have_key( Hydra.config[:permissions][:catchall] )
       subject.should_not have_key( Hydra.config[:permissions][:discover][:group] ) 
       subject.should_not have_key( Hydra.config[:permissions][:discover][:individual] )
       subject.should_not have_key( Hydra.config[:permissions][:read][:group] )
@@ -52,7 +49,6 @@ describe Hydra::Datastream::InheritableRightsMetadata do
       subject.should_not have_key( Hydra.config[:permissions][:embargo_release_date] )
     end
     it "should provide prefixed/inherited solr permissions fields" do
-      subject[Hydra.config[:permissions][:inheritable][:catchall] ].should == ["posers", "slightly-cool-kids", "africana-faculty", "cool-kids", "constantine", "nero", "julius_caesar"] 
       subject[Hydra.config[:permissions][:inheritable][:discover][:group] ].should == ["posers"]
       subject[Hydra.config[:permissions][:inheritable][:discover][:individual] ].should == ["constantine"]
       subject[Hydra.config[:permissions][:inheritable][:read][:group] ].should == ["slightly-cool-kids"]

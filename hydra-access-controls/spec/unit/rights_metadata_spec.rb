@@ -47,6 +47,18 @@ describe Hydra::ModelMixins::RightsMetadata do
 
   end
 
+  context "to_solr" do
+    before do
+      subject.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
+    end
+    it "should produce a solr document" do
+      result = subject.rightsMetadata.to_solr
+      result.should == {'read_access_group_t'=>['group-6', 'group-7'],
+        'edit_access_group_t' => ['group-8'], 'discover_access_person_t' => ['person2'],
+        'read_access_person_t' =>["person1"]}
+    end
+  end
+
   context "with rightsMetadata" do
     before do
       subject.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})

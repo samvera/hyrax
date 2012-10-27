@@ -21,16 +21,16 @@ module Hydra
           t.description(:path=>'human', :attributes=>{:type=>'description'})
           t.url(:path=>'machine', :attributes=>{:type=>'uri'})
         }
-        t.access {
+        t.access do
           t.human_readable(:path=>"human")
           t.machine {
-            t.group(:index_as=>[:searchable])
-            t.person(:index_as=>[:searchable])
+            t.group
+            t.person
           }
           t.person(:proxy=>[:machine, :person])
           t.group(:proxy=>[:machine, :group])
           # accessor :access_person, :term=>[:access, :machine, :person]
-        }
+        end
         t.discover_access(:ref=>[:access], :attributes=>{:type=>"discover"})
         t.read_access(:ref=>[:access], :attributes=>{:type=>"read"})
         t.edit_access(:ref=>[:access], :attributes=>{:type=>"edit"})
@@ -175,6 +175,19 @@ module Hydra
 
       def to_solr(solr_doc=Hash.new)
         super(solr_doc)
+        vals = edit_access.machine.group
+        solr_doc['edit_access_group_t'] = vals unless vals.empty?
+        vals = discover_access.machine.group
+        solr_doc['discover_access_group_t'] = vals unless vals.empty?
+        vals = read_access.machine.group
+        solr_doc['read_access_group_t'] = vals unless vals.empty?
+        vals = edit_access.machine.person
+        solr_doc['edit_access_person_t'] = vals unless vals.empty?
+        vals = discover_access.machine.person
+        solr_doc['discover_access_person_t'] = vals unless vals.empty?
+        vals = read_access.machine.person
+        solr_doc['read_access_person_t'] = vals unless vals.empty?
+
         ::Solrizer::Extractor.insert_solr_field_value(solr_doc, "embargo_release_date_dt", embargo_release_date(:format=>:solr_date)) if embargo_release_date
         solr_doc
       end
