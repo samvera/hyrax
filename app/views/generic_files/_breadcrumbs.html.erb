@@ -13,9 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
-
 <div class="breadcrumbs">
   <%
+     include_file = true if include_file.blank?
      crumbs = []
      crumbs << link_to('Home', root_path)
 
@@ -28,7 +28,7 @@ limitations under the License.
        crumbs << link_to('Back to search results', request.referer)
      end
 
-     crumbs << @generic_file.title.first
+     crumbs << @generic_file.title.first if include_file
 
      crumbs.each do |crumb| %>
        <% if crumb == crumbs.last %>

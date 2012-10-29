@@ -111,6 +111,9 @@ class GenericFile < ActiveFedora::Base
         rescue_action_without_handler(error) if save_tries >=3
         sleep 0.01
         retry
+      rescue ResourceConflict
+        sleep 0.01
+        retry
       end
   end
 

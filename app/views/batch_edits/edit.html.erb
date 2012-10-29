@@ -28,24 +28,27 @@ $("a[rel=popover]").popover();
 
   <% end %>
 
-
-  $(".ajax-form").bind('ajax:success', function(){
-      var form_id = "#"+this.id;
-      var key = this.id.replace("form_","");
+//  $(".ajax-form").bind('ajax:success', function(){
+//     var form_id = "#"+this.id;
+//     var key = this.id.replace("form_","");
+  function after_ajax(form_id){
+      var key = form_id.replace("form_","");
       var save_button = "#"+key+"_save";
       $(save_button).removeAttr("disabled");         
-      $(form_id).removeClass("loading");
-      $(form_id).children([".control-group"]).removeClass('hidden')
-  });
+      $('#'+form_id).removeClass("loading");
+      $('#'+form_id).children([".control-group"]).removeClass('hidden')
+  }
 
-  $(".ajax-form").bind('ajax:before', function(){
-        var form_id = "#"+this.id;
-        var key = this.id.replace("form_","");
+//  $(".ajax-form").bind('ajax:before', function(){
+//       var form_id = "#"+this.id;
+//       var key = this.id.replace("form_","");
+  function before_ajax(form_id){
+        var key = form_id.replace("form_","");
         var save_button = "#"+key+"_save";
         $(save_button).attr("disabled", "disabled");
-        $(form_id).addClass("loading");
-        $(form_id).children([".control-group"]).addClass('hidden')        
-    });
+        $('#'+form_id).addClass("loading");
+        $('#'+form_id).children([".control-group"]).addClass('hidden')        
+    }
 
   // hide permissions to begin with
   $('#permissions_display').hide();
@@ -84,6 +87,85 @@ $("a[rel=popover]").popover();
        $(this).find('i').toggleClass("icon-chevron-down");
     }); 
 
+    var ajaxManager = (function() {
+         var requests = [];
+         var running = false;
+         return {
+            addReq:  function(opt) {
+                requests.push(opt);
+            },
+            removeReq:  function(opt) {
+                if( $.inArray(opt, requests) > -1 )
+                    requests.splice($.inArray(opt, requests), 1);
+            },
+            runNow: function(){
+                clearTimeout(self.tid);
+                if (!running) {
+                   run();
+                }
+            },
+            run: function() {
+                running = true;
+                var self = this,
+                    orgSuc;
+    
+                if( requests.length ) {
+                    oriSuc = requests[0].complete;
+    
+                    requests[0].complete = function() {
+                         if( typeof oriSuc === 'function' ) oriSuc();
+                         requests.shift();
+                         self.run.apply(self, []);
+                    };   
+    
+                    $.ajax(requests[0]);
+                } else {
+                  self.tid = setTimeout(function() {
+                     self.run.apply(self, []);
+                  }, 500);
+                }
+                running = false;
+            },
+            stop:  function() {
+                requests = [];
+                clearTimeout(this.tid);
+            }
+         };
+    }());
+        
+    ajaxManager.run();
+
+
+    $(".field-save").click(function(e){ 
+      e.preventDefault();
+      var button = $(this);
+      var form = $(button.parent().parent()[0]);
+      var form_id = form[0].id
+      before_ajax(form_id);
+
+       ajaxManager.addReq({
+          queue: "add_doc",
+          url: form.attr("action"),
+          dataType: "json",
+          type: form.attr("method").toUpperCase(),
+          data: form.serialize(),
+          success: function (e) {
+              eval(e.responseText);
+              after_ajax(form_id);
+          },
+          error: function (e) {
+            if (e.status == 200) {
+              eval(e.responseText);
+              after_ajax(form_id);
+            } else {
+              alert("Error! "+e.responseText+" status: "+e.status);
+            }
+          }, 
+       });
+       setTimeout(ajaxManager.runNow(),100);
+   });
+
+
 
 <% end %>
 
@@ -106,11 +188,18 @@ h2 small {
    color: red;   
 }
 
+
+.status {
+   color: green; 
+   padding:5px 5px 5px;  
+}
+
 .loading { 
  background: white url('/assets/loading.gif') center bottom no-repeat; 
 }
 <% end %>
 
+<%= render :partial => 'generic_files/breadcrumbs', :locals => {:include_file=>false} %>
 <h2 class="non lower">Batch Modify Descriptions &nbsp;&nbsp;&nbsp;<small>Select a term to overwrite the values in all files in the batch.</small> </h2>
 <div class="scrollx scrolly fileHeight"> <!-- original values -->
   <h3> <b>Edits will be applied to: (<%=@names.size%> files) </b></h3>
@@ -155,8 +244,9 @@ h2 small {
                         <%= hidden_field_tag('key', key) %>
                         <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => key } %>
                       <div class="row">
-                         <%= f.submit "Save changes", :class=>'btn btn-primary' , :id=>key+'_save'%>
+                         <%= f.submit "Save changes", :class=>'btn btn-primary field-save' , :id=>key+'_save'%>
                          <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%=key%>" href="#collapse_<%=key%>">Cancel </a>
+                         <div id="status_<%=key%>" class="status fleft"></div>
                       </div>
                     <% end %>
                   </div>

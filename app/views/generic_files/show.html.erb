@@ -253,7 +253,7 @@ var addthis_config = {"data_track_addressbar":true};
               <% label = label.humanize %>
               <% if values.is_a? Array %>
                 <% length = values.length %>
-                <% length = ScholarSphere::Application::config.fits_message_length-1 if term == :status_message %>
+                <% length = ScholarSphere::Application::config.fits_message_length-1  if term == :status_message && values.length > ScholarSphere::Application::config.fits_message_length-1  %>
                 <% values[0..length].each_with_index do |value, idx| %>
                   <% next if value.empty? %>
                   <%= "#{label}: #{value.truncate(250)}" %>
