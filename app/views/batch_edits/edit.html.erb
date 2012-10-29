@@ -154,11 +154,11 @@ $("a[rel=popover]").popover();
               after_ajax(form_id);
           },
           error: function (e) {
+            after_ajax(form_id);
             if (e.status == 200) {
               eval(e.responseText);
-              after_ajax(form_id);
             } else {
-              alert("Error! "+e.responseText+" status: "+e.status);
+              alert("Error!  Status: "+e.status);
             }
           }, 
        });
