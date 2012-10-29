@@ -53,9 +53,13 @@ describe Hydra::ModelMixins::RightsMetadata do
     end
     it "should produce a solr document" do
       result = subject.rightsMetadata.to_solr
-      result.should == {'read_access_group_t'=>['group-6', 'group-7'],
-        'edit_access_group_t' => ['group-8'], 'discover_access_person_t' => ['person2'],
-        'read_access_person_t' =>["person1"]}
+      result.size.should == 4
+      ## Wrote the test in this way, because the implementation uses a hash, and the hash order is not deterministic (especially in ruby 1.8.7)
+      result['read_access_group_t'].size.should == 2
+      result['read_access_group_t'].should include('group-6', 'group-7')
+      result['edit_access_group_t'].should == ['group-8']
+      result['discover_access_person_t'].should == ['person2']
+      result['read_access_person_t'].should == ['person1']
     end
   end
 
