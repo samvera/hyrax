@@ -1,3 +1,7 @@
+h3. 5.0.0
+* We no longer require the hydra-file-access stuff by default, add "gem 'hydra-file-access'" if you want to continue to use it.
+* Upgrade to active-fedora 5.0 (you must add :index_as=>[:searchable] to models you want to index in solr)
+
 h3. 4.1.1
 * Fixed solr gated access query so that it doesn't keep appending 'registered' group
 * Moved user into hydra-access-controls, bump hydra-access-controls to 0.0.5
