@@ -7,7 +7,7 @@ class BatchEditsController < ApplicationController
        @generic_file = GenericFile.new
        @generic_file.depositor = current_user.login
        @groups = current_user.groups       
-       @terms = @generic_file.get_terms.reject{|k,v| (k=='generic_file__format')|| (k=='generic_file__resource_type')|| (k=='generic_file__title')|| (k == 'generic_file__part_of')|| (k == 'generic_file__date_uploaded') || (k == 'generic_file__date_modified')}
+       @terms = @generic_file.get_terms.reject{|k,v| (k=='generic_file__format')|| (k=='generic_file__title')|| (k == 'generic_file__part_of')|| (k == 'generic_file__date_uploaded') || (k == 'generic_file__date_modified')}
 
        # do we want to show the original values for anything...
        @show_file = GenericFile.new
@@ -17,11 +17,16 @@ class BatchEditsController < ApplicationController
        permissions = []
        batch.each do |doc_id|
           gf = GenericFile.find(doc_id)
-          h = h.merge(gf.get_values) {|key, v1, v2| (v1+v2).uniq}
+          h = h.merge(gf.get_values) {|key, v1, v2| (v1+v2).uniq }
           @names << display_title(gf)    
           permissions =  (permissions+gf.permissions).uniq
        end
-        
+       
+       # why am I doing this you may ask... Well... if truth be told I have no idea, but if I use just a single item in the batch
+       # my h arrays get converted into strings in update attributes unless I do this first....
+       h.keys.each {|key| h[key] = h[key].to_a} if (batch.size == 1)        
+       # end of wierd fix...
+       
        @show_file.update_attributes(h)
        # map the permissions to parameter like input so that the assign will work
        # todo sort the access level some how...

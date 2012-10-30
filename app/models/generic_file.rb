@@ -320,7 +320,7 @@ class GenericFile < ActiveFedora::Base
     terms.each do |t|
         next if t.empty?
         key = t.to_s.split("generic_file__").last
-        next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key)
+        next if ['part_of', 'date_modified', 'date_uploaded', 'format'].include?(key)
         values[key] = self.send(key) if self.respond_to?(key)
     end        
     return values          

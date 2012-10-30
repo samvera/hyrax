@@ -21,15 +21,23 @@
           <% choices = ScholarSphere::Application::config.cc_licenses %>
           <% choices = {""=>""}.merge(choices) %>
           <%= f.select "rights", options_for_select(choices, v) %>
+        <% elsif key == "resource_type" %>
+           <% if (index == 0) %>
+            <p class="help-block">You may select multiple types to apply<p>
+            <% choices = ScholarSphere::Application::config.resource_types.keys %>
+            <%= f.select "resource_type", options_for_select(choices, vals.to_a), {}, {:multiple=>true, :size=>7} %>
+           <%end%>        
         <% else %>
           <%= f.text_field :title, :name=>"generic_file[#{key}][]", :id => "generic_file_"+key, :value=>v, :class => "input-large", :required => req  %>
         <% end %>
-        <% if index == 0 %>
-          <button class="adder btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">+<span class="accessible-hidden">add another <%= key %></span></button>
-          &nbsp;
+        <% if index == 0  %>
+          <% if (key != "resource_type") %>
+            <button class="adder btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">+<span class="accessible-hidden">add another <%= key %></span></button>
+            &nbsp;
+          <% end %>
           <a href="#" id="generic_file_<%= key %>_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help['generic_file_' + key] %>" data-original-title="<%= label %>"><i class="icon-question-sign icon-large"></i></a>
           <%= render :partial => "generic_files/rights_modal" if key == "rights" %>
-        <% else %>
+        <% elsif (key != "resource_type") %>
           <button class="remover btn" name="additional_<%= key %>" id="additional_<%= key %>_submit">-<span class="accessible-hidden">add another <%= key %></span></button>
         <% end %>
       </div><!-- /controls -->              
