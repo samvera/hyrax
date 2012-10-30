@@ -111,13 +111,24 @@ class GenericFile < ActiveFedora::Base
         # fail for good if the tries is greater than 3
         rescue_action_without_handler(error) if save_tries >=3
         sleep 0.01
-        retry
+        retry      
       rescue  ActiveResource::ResourceConflict => error
         conflict_tries += 1
         logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
         rescue_action_without_handler(error) if conflict_tries >=10
         sleep 0.01
         retry
+      rescue =>error
+        if (error.to_s.downcase.include? "conflict")
+          conflict_tries += 1
+          logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
+          rescue_action_without_handler(error) if conflict_tries >=10
+          sleep 0.01
+          retry
+        else
+          rescue_action_without_handler(error)
+        end          
+      
       end
   end
 
