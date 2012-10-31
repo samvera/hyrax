@@ -7,8 +7,13 @@
 * We've removed app/views/catalog/_default_group.html.erb and app/views/catalog/_document_list.html.erb
 * Hydra::AssetsControllerHelper moved to hydra-file-access.  Is this the correct place?
 
-* TODO: activate the relavent integration tests in test_support/features
+* If you previously ran the hydra generator it created a method: ApplicationController#layout_name.  Ensure it is returning a value corresponding to a template in your app/views/layouts directory.  Or remove it altogether to use the default blacklight template.
 
+* hydra-core no longer overrides the blacklight views in any way. If you want to keep the old views copy them from a copy of the hydra-head 4.x gem into your application
+
+* hydra-file-access is not required by default.  If you need those behaviors, add "gem 'hydra-file-access'" to your Gemfile.
+
+* TODO: activate the relavent integration tests in test_support/features
 
 
 
