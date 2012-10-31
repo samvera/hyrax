@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://projecthydra.org"
   s.summary     = %q{Hydra-Head Rails Engine (requires Rails3) }
   s.description = %q{Hydra-Head is a Rails Engine containing the core code for a Hydra application. The full hydra stack includes: Blacklight, Fedora, Solr, active-fedora, solrizer, and om}
-  s.files = ['lib/hydra-head.rb']
+  s.files = ['lib/hydra/head.rb']
   s.require_paths = ["lib"]
 
   s.add_dependency('rails', '>= 3.2.6')
