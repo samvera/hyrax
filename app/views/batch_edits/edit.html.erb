@@ -34,6 +34,7 @@ $("a[rel=popover]").popover();
   function after_ajax(form_id){
       var key = form_id.replace("form_","");
       var save_button = "#"+key+"_save";
+      $("#status_"+key).html("Values Updated");
       $(save_button).removeAttr("disabled");         
       $('#'+form_id).removeClass("loading");
       $('#'+form_id).children([".control-group"]).removeClass('hidden')
@@ -87,6 +88,19 @@ $("a[rel=popover]").popover();
        $(this).find('i').toggleClass("icon-chevron-down");
     }); 
 
+    function deserialize(Params) {
+        var Data = Params.split("&");
+        var i = Data.length;
+        var Result  = {}; 
+        while (i--) {
+            var Pair = decodeURIComponent(Data[i]).split("=");
+            var Key = Pair[0];
+            var Val = Pair[1];
+            Result[Key] = Val;
+        }   
+        return Result;
+    }
+ 
     var ajaxManager = (function() {
          var requests = [];
          var running = false;
@@ -112,8 +126,33 @@ $("a[rel=popover]").popover();
                 if( requests.length ) {
                     oriSuc = requests[0].complete;
     
+                    // combine data from multiple requests
+                    if (requests.length > 1) {
+                       data = deserialize(requests[0].data);
+                       form = [requests[0].form]
+                       for (var i=requests.length-1; i>0 ; i--){
+                          req = requests.pop();
+                          adata = deserialize(req.data);
+                          for (key in  Object.keys(adata)){ 
+                             curKey =   Object.keys(adata)[key] ;                      
+                             if (curKey.slice(0,12) == "generic_file"){
+                                data[curKey] = adata[curKey];
+                                form.push (req.form);
+                             }
+                          }
+                       } 
+                       requests[0].data = $.param(data);
+                       requests[0].form = form;
+                    }    
+    
                     requests[0].complete = function() {
                          if( typeof oriSuc === 'function' ) oriSuc();
+                         if (typeof requests[0].form === 'object'){
+                            for (f in form) {
+                               form_id = form[f];
+                               after_ajax(form_id);
+                            }
+                         }
                          requests.shift();
                          self.run.apply(self, []);
                     };   
@@ -136,7 +175,10 @@ $("a[rel=popover]").popover();
     ajaxManager.run();
 
 
-    $(".field-save").click(function(e){ 
+    $("#permissions_save").click(runSave);
+    $(".field-save").click(runSave);
+
+    function runSave(e){     
       e.preventDefault();
       var button = $(this);
       var form = $(button.parent().parent()[0]);
@@ -144,6 +186,7 @@ $("a[rel=popover]").popover();
       before_ajax(form_id);
 
        ajaxManager.addReq({
+          form: form_id,
           queue: "add_doc",
           url: form.attr("action"),
           dataType: "json",
@@ -163,9 +206,7 @@ $("a[rel=popover]").popover();
           }, 
        });
        setTimeout(ajaxManager.runNow(),100);
-   });
-
-
+   }
 
 <% end %>
 
@@ -264,6 +305,7 @@ h2 small {
        <div class="row">
           <%= f.submit "Save changes", :class=>'btn btn-primary', :id=>'permissions_save' %>
           <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_permissions" href="#collapse_permissions">Cancel </a>
+          <div id="status_permissions" class="status fleft"></div>
        </div>
      <% end %>
    </div>
