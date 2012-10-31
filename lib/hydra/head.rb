@@ -1,6 +1,5 @@
 module HydraHead 
   require 'hydra-core'
-  require 'hydra-file-access'
 
   def self.version
     HydraHead::VERSION
