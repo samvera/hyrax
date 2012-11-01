@@ -158,7 +158,7 @@ $(document).ready(function() {
   <% if !@disable_select_all %> 
     <div class="dropdown" >
       <%= check_box_tag 'check_all', 'yes', @all_checked, :disabled => ((@batch_size_on_other_page + @document_list.count) > @max_batch_size) %>
-      <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="icon-cog" title="click to determine select all check box action"></span></a>
+      <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="icon-cog" title="click for selection options"></span></a>
       <ul class="dropdown-menu">
         <li data-behavior="batch-edit-select-none" data-state="<%= @empty_batch ? 'on' : 'off' %>"><a href="#"><i class="<%= @empty_batch ? 'icon-ok' : '' %>"></i> Select None</a></li>
         <li data-behavior="batch-edit-select-page" data-state="<%= @all_checked && !@batch_part_on_other_page ? 'on' : 'off' %>"><a href="#"><i class="<%= @all_checked && !@batch_part_on_other_page ? 'icon-ok' : '' %>"></i> Select Only Current Page</a></li>

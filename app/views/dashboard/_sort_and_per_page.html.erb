@@ -16,7 +16,7 @@ limitations under the License.
 
 <div class="batch-info"> 
    <% session[:batch_edit_state] = "on" %>
-    <%=batch_delete%> <%=batch_edit_continue %>   
+    <%=batch_delete%> <%=batch_edit_continue("Edit Selected") %>   
 	<% unless @response.response['numFound'] < 2 %>
 	  <%-# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {:action=>"index"} but I'm not sure -%>
     <%= form_tag params[:controller] == "folder" ? folder_index_path : dashboard_path, :method=>:get, :class=>'per_page form-inline' do %>
