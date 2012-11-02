@@ -55,7 +55,9 @@ describe CatalogController do
     describe "access controls" do
       before(:all) do
         fq = "read_access_group_t:public OR edit_access_group_t:public OR discover_access_group_t:public"
-        @public_only_results = Blacklight.solr.find Hash[:fq=>fq]
+        solr_opts = {:fq=>fq}
+        response = Blacklight.solr.get('select', :params=> solr_opts)
+        @public_only_results = Blacklight::SolrResponse.new(response, solr_opts)
       end
 
       it "should only return public documents if role does not have permissions" do
