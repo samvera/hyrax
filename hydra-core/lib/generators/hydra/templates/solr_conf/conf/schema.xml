@@ -250,6 +250,10 @@
    <field name="text" type="text" indexed="true" stored="true" multiValued="true"/>
    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 
+   <!-- These pub_date fields are just for testing hydra and can be removed -->
+   <field name="pub_date" type="string" indexed="true" stored="true" multiValued="true"/>
+   <field name="pub_date_sort" type="sint" indexed="true" stored="true" multiValued="false"/>
+
    <!-- format is used for facet, display, and choosing which partial to use for the show view, so it must be stored and indexed -->
    <field name="format" type="string" indexed="true" stored="true"/>
    
@@ -274,5 +278,6 @@
  <defaultSearchField>text</defaultSearchField>
  <solrQueryParser defaultOperator="AND" />
  <copyField source="*_facet" dest="text" />
+ <copyField source="pub_date" dest="pub_date_sort"/>
 
 </schema>
