@@ -1,9 +1,11 @@
 <div >
-  <h3> Descriptions:</h3>
+  <h1 class="lower"><%= display_title(@generic_file) %></h1>
+    <h2 class="non lower">Actions</h2>
+    <p>
+      <%= link_to "Download (can only be used once)", @download_link %>
+    </p>
+  <h2> Descriptions:</h2>
 
-    <ul class="nav nav-tabs">
-      <li id="batch_descriptions_link"><a href="#"><i class="icon-tags"></i> Descriptions</a></li>
-    </ul>
   <div class="well active" id="descriptions_display"> 
       <table class="table table-striped"><!-- class="verticalheadings"> -->
       <tbody>

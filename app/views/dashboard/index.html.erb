@@ -18,6 +18,8 @@ limitations under the License.
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
 <% javascript 'dashboard.js' %>
+<% javascript 'swfobject.js' %>
+<% javascript 'jquery.clippy.js' %>
 
 <script type = "text/javascript"> 
 
@@ -41,19 +43,53 @@ limitations under the License.
 
   initialize_audio();
   
+  function getSingleUse( id){
+    <% rurl = root_url %>
+    <% rurl = rurl.slice(0,rurl.length-1) if rurl[rurl.length-1] == '/' %>
+    var resp = $.ajax({
+      headers: {Accept : "application/javascript"},      
+      type: 'get',
+      url: '<%=rurl %>/single_use_link/generate_show/'+id.slice(10),
+      async: false,
+    });
+    $('#'+id).attr('singleUse',resp.responseText);
+   return resp;
+ }
+  
+  
   // Load clipboard swif 
   $(document).ready(function(){
+      var singleUse;
       <% rurl = root_url %>
-      <% rurl = rurl.slice(0,rurl.length-2) if rurl[rurl.length-1] == '/' %> 
-      copy_links = $('a.copypaste');
-      for(var i=0; i < copy_links.length; i++) 
-      {
-        $('#'+ copy_links[i].id).zclip({
-          path: '/assets/ZeroClipboard.swf', 
-          copy: function() {return '<%=rurl%>' + $('#src_'+this.id).attr('href'); }
+      <% rurl = rurl.slice(0,rurl.length-1) if rurl[rurl.length-1] == '/' %>
+      if (typeof swfobject !== 'undefined' && swfobject.getFlashPlayerVersion().major !== 0){       
+        copy_links = $('a.copypaste');
+        for(var i=0; i < copy_links.length; i++) 
+        {
+          setTimeout(getSingleUse(copy_links[i].id),1);                
+          $('#'+ copy_links[i].id).zclip({
+            path: '/assets/ZeroClipboard.swf',
+            copy: function() {            
+                var singleUse = $('#'+this.id).attr('singleUse');
+                return '<%=rurl%>' + singleUse;
+            },
+            afterCopy: function(f) {
+              alert("A single use link to "+$('#src_copy_link'+this.id.slice(10))[0].text+" was copied to your clip board.");
+              setTimeout(getSingleUse(this.id),5);                
+            }
+            
+          });
+        }
+      } else {
+        $('a.copypaste').click(function(){
+           var singleUse = getSingleUse(this.id);
+           var url = '<%=rurl%>' + singleUse.responseText;
+           alert('Your Single Use Link: '+url);
+           return false;
         });
       }
   });
+
 
   // hide or show the batch update buttons on page startup
   toggleButtons(<%= !@empty_batch %>);
@@ -63,6 +99,22 @@ limitations under the License.
         e.preventDefault();
         toggleButtons();
     });
+
+
+  /*$('a.copypaste').zclip({
+      path: "/assets/ZeroClipboard.swf",
+      copy: function(){
+    return '123 abc';
+    }
+  });
+  
+  $("#copy-button").zclip({
+      path: "/assets/ZeroClipboard.swf",
+      copy: function(){
+    return 'abc 123';
+    }
+  });*/
+
 
  <% end %>
 
@@ -105,7 +157,22 @@ background-color:#faa732;background-image:-moz-linear-gradient(top, #fbb450, #f8
 .table .sm {
   padding: 2px;
 }
+
+.over {
+z-index:100;
+}
+.under
+{
+position:absolute;
+padding:0px 0px 0px 0px;
+left:10px;
+top:-8px;
+color:orange;
+z-index:1; 
+}
+
 <% end %>
+
 
   <% @page_title = application_name + " Dashboard" %>
 
@@ -135,3 +202,5 @@ background-color:#faa732;background-image:-moz-linear-gradient(top, #fbb450, #f8
 
   <%= render 'results_pagination' %>
   <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+
+  <span id="single_clippy" class="clippy hidden" data-text="This is a test"></span> <i class="icon-link over" onlick="alert('abc');"></i> 

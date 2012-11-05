@@ -43,8 +43,8 @@ on element ids -->
     <% end %>
   </td>
   <td width="23%" class="center">
-    <span style="position: relative;">
-     <%= link_to raw('<i class="icon-link icon-large"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{noid}" %>
+    <span style="position: relative; display: inline-block">
+     <%= link_to raw('<!--i class="icon-unlock under"></i--><i class="icon-link icon-large over"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Single Use Link to File', :id => "copy_link_#{noid}" %>
     </span>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-pencil icon-large"></i>'), edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-download-alt icon-large"></i>'), download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
