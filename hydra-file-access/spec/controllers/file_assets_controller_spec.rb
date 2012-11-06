@@ -27,8 +27,7 @@ describe Hydra::FileAssetsController do
       assigns[:solr_result].should == "solr result"
     end
     it "should find all file assets belonging to a given container object if asset_id is provided" do
-      pid = 'hydrangea:fixture_mods_article3'
-      xhr :get, :index, :asset_id=>pid
+      xhr :get, :index, :asset_id=>'hydrangea:fixture_mods_article3'
       assigns[:response][:response][:docs].first["id"].should == "hydrangea:fixture_file_asset1"
       assigns[:document_list].first.id.should == "hydrangea:fixture_file_asset1"
       

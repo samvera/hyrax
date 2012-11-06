@@ -34,9 +34,8 @@ module Hydra::Controller::FileAssetsBehavior
     else
       container_uri = "info:fedora/#{params[:asset_id]}"
       escaped_uri = container_uri.gsub(/(:)/, '\\:')
-      extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}", 'qf'=>'is_part_of_s', 'qt'=>'standard', :rows=>10}
-      @response = find( extra_controller_params )
-      @document_list = @response.docs.collect {|doc| SolrDocument.new(doc, @response)}  
+      extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}", 'qf'=>'is_part_of_s', 'qt'=>'standard', :rows=>10}.with_indifferent_access
+      @response, @document_list = get_search_results( extra_controller_params )
       
       # Including this line so permissions tests can be run against the container
       @container_response, @document = get_solr_response_for_doc_id(params[:asset_id])
