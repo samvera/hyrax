@@ -578,7 +578,10 @@ function initialize_audio() {
          $(this).attr("preload","auto");
       });
     audiojs.events.ready(function() {
-          var as = audiojs.createAll();
+          var as = audiojs.createAll({
+                 imageLocation: '/assets/player-graphics.gif',
+                 swfLocation: '/assets/audiojs.swf'
+          });
     });
   };
 }
