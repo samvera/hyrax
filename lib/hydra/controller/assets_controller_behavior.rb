@@ -99,6 +99,7 @@ module Hydra::Controller::AssetsControllerBehavior
   
   def destroy
     af = ActiveFedora::Base.find(params[:id], :cast=>true)
+    authorize! :destroy, af
     assets = af.destroy_child_assets
     af.delete
     msg = "Deleted #{params[:id]}"

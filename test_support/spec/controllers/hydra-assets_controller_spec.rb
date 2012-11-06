@@ -116,10 +116,13 @@ describe Hydra::AssetsController do
   
   describe "destroy" do
     it "should delete the asset identified by pid" do
-      mock_obj = mock("asset", :delete)
-      mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
+      mock_document = mock("asset", :delete)
+      mock_document.expects(:destroy_child_assets).returns([])
+      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_document)
+      # stub out authorize!
+      controller.expects(:authorize!).with(:destroy, mock_document)      
       delete(:destroy, :id => "__PID__")
+      response.should redirect_to catalog_index_path
     end
   end
   
@@ -127,10 +130,19 @@ describe Hydra::AssetsController do
   # Currently, the widthdraw method is an alias for destroy, should behave as such
   describe "withdraw" do
     it "should withdraw the asset identified by pid" do
-      mock_obj = mock("asset", :delete)
-      mock_obj.expects(:destroy_child_assets).returns([])
-      ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
-      delete(:withdraw, :id => "__PID__")
+      mock_document = mock("asset", :delete)
+      mock_document.stubs(:pid => '_PID_')
+      mock_document.expects(:destroy_child_assets).returns([])
+      ActiveFedora::Base.expects(:find).with("_PID_", :cast => true).returns(mock_document)
+      # stub out authorize!
+      controller.expects(:authorize!).with(:destroy, mock_document)
+      delete :withdraw, :id => "_PID_"
+      response.should redirect_to catalog_index_path
+    end
+    it "should restrict withdrawing to authorized users" do
+      mock_obj = mock("asset")
+      ActiveFedora::Base.expects(:find).with("_PID_", :cast=>true).returns(mock_obj)
+      lambda{get :withdraw, :id => "_PID_"}.should raise_error(CanCan::AccessDenied)
     end
   end
   
