@@ -10,6 +10,9 @@ class Hydra::PermissionsController < ApplicationController
 
   include Hydra::AssetsControllerHelper
   include Hydra::SubmissionWorkflow
+  include Hydra::AccessControlsEnforcement
+  
+  before_filter :enforce_access_controls
   
   def index
     @document_fedora=ActiveFedora::Base.find(params[:asset_id], :cast=>true)
@@ -79,7 +82,7 @@ class Hydra::PermissionsController < ApplicationController
     end
     
     @document_fedora=ActiveFedora::Base.find(pid, :cast=>true)
-
+    
     # update the datastream's values
     result = @document_fedora.rightsMetadata.update_permissions(params[:permission])
     
