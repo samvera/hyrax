@@ -23,6 +23,8 @@ describe Hydra::ContributorsController do
   describe "create" do
     it "should support adding new person / contributor / organization nodes" do
       mock_document = mock("document")
+      # stub out access controlls enforcement
+      controller.expects(:enforce_access_controls).at_least_once.returns(true)
       ["person","conference","organization"].each do |type|
         mock_document.expects(:insert_contributor).with(type).returns(["foo node",989])
         mock_document.expects(:save)
@@ -33,6 +35,8 @@ describe Hydra::ContributorsController do
     end
     it "should return inline html if format is inline" do
       mock_document = mock("document")
+      # stub out access controlls enforcement
+      controller.expects(:enforce_access_controls).at_least_once.returns(true)
       ["person","conference","organization"].each do |type|
         mock_document.expects(:insert_contributor).with(type).returns(["foo node","foo index"])
         mock_document.expects(:save)
@@ -49,8 +53,14 @@ describe Hydra::ContributorsController do
       mock_dataset.expects(:remove_contributor).with("conference", "3")
       mock_dataset.expects(:save)
       ModsAsset.expects(:find).with("_PID_").returns(mock_dataset)
-      
+      # stub out authorize!
+      controller.expects(:authorize!).with(:edit, mock_dataset)
       delete :destroy, :asset_id=>"_PID_", :content_type => "mods_asset", :contributor_type=>"conference", :index=>"3"
+    end
+    it "should now allow non-authed users to destroy contributors" do
+      mock_dataset = mock("Dataset")
+      ModsAsset.expects(:find).with("_PID_").returns(mock_dataset)
+      lambda{delete :destroy, :asset_id=>"_PID_", :content_type => "mods_asset", :contributor_type=>"conference", :index=>"3"}.should raise_error(CanCan::AccessDenied)
     end
   end
   

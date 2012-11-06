@@ -6,8 +6,10 @@ class Hydra::ContributorsController < ApplicationController
   include Hydra::Controller::RepositoryControllerBehavior
   include Hydra::AssetsControllerHelper
   include Hydra::SubmissionWorkflow
-
+  include Hydra::AccessControlsEnforcement
+  
   before_filter :load_document, :only => :update 
+  before_filter :enforce_access_controls
 
   def initialize *args
     Deprecation.warn(Hydra::ContributorsController, "Hydra::ContributorsController is deprecated and will be removed from #{self.class.deprecation_horizon}")
@@ -71,6 +73,7 @@ class Hydra::ContributorsController < ApplicationController
   def destroy
     af_model = retrieve_af_model(params[:content_type], :default=>ModsAsset)
     @document_fedora = af_model.find(params[:asset_id])
+    authorize! :edit, @document_fedora
     @document_fedora.remove_contributor(params[:contributor_type], params[:index])
     result = @document_fedora.save
     if request.xhr?
