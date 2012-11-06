@@ -144,7 +144,7 @@ module Hydra::AccessControlsEnforcement
   end
 
   ## proxies to enforce_edit_permssions.  This method is here for you to override
-  def enforce_delete_permissions(opts={})
+  def enforce_destroy_permissions(opts={})
     enforce_edit_permissions(opts)
   end
 
