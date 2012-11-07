@@ -57,6 +57,7 @@ module Hydra::Controller::FileAssetsBehavior
     elsif params.has_key?(:number_of_files) and params[:number_of_files] == "0"
       return redirect_to next_step(params[:id])
     end
+    authorize! :edit, (params[:container_id] || params[:id])
     
     if params.has_key?(:Filedata)
       notice = process_files
@@ -98,6 +99,7 @@ module Hydra::Controller::FileAssetsBehavior
   
   # Common destroy method for all AssetsControllers 
   def destroy
+    authorize! :destroy, params[:id]
     ActiveFedora::Base.find(params[:id], :cast=>true).delete 
 
     flash[:notice] = "Deleted #{params[:id]} from #{params[:container_id]}."

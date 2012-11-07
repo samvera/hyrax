@@ -79,13 +79,17 @@ describe Hydra::FileAssetsController do
   
   describe "create" do
     it "should create and save a file asset from the given params" do
+      # stub out authorize! call
+      controller.expects(:authorize!).with(:edit, "example:invalid_object").returns(true)
       mock_fa = mock("FileAsset")
       mock_file = mock("File")
       mock_fa.stubs(:pid).returns("foo:pid")
       controller.expects(:create_and_save_file_assets_from_params).returns([mock_fa])
-      xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File"
+      xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File", :id => "example:invalid_object"
     end
     it "if container_id is provided, should associate the created file asset wtih the container" do
+      # stub out authorize! call
+      controller.expects(:authorize!).with(:edit, "_PID_").returns(true)
       stub_fa = stub("FileAsset", :save)
       stub_fa.stubs(:pid).returns("foo:pid")
       stub_fa.stubs(:label).returns("Foo File")
@@ -95,20 +99,29 @@ describe Hydra::FileAssetsController do
       xhr :post, :create, :Filedata=>[mock_file], :Filename=>"Foo File", :container_id=>"_PID_"
     end
     it "should redirect back to edit view if no Filedata is provided but container_id is provided" do
+      # stub out authorize! call
+      controller.expects(:authorize!).with(:edit, "_PID_").returns(true)
       controller.expects(:model_config).at_least_once.returns(controller.workflow_config[:mods_assets])
       xhr :post, :create, :container_id=>"_PID_", :wf_step=>"files"
       response.should redirect_to edit_catalog_path("_PID_", :wf_step=>"permissions")
       request.flash[:notice].should == "You must specify a file to upload."
     end
     it "should display a message that you need to select a file to upload if no Filedata is provided" do
+      # stub out authorize! call
+      controller.expects(:authorize!).returns(true)
       xhr :post, :create
       request.flash[:notice].include?("You must specify a file to upload.").should be_true
+    end
+    it "should throw an error if you don't have the ability to edit the parent object" do
+      lambda{xhr :post, :create, :id => "hydrangea:fixture_mods_dataset1"}.should raise_error(CanCan::AccessDenied)
     end
     
   end
 
   describe "destroy" do
     it "should delete the asset identified by pid" do
+      # stub out authorize! call
+      controller.expects(:authorize!).returns(true)
       mock_obj = mock("asset", :delete)
       ActiveFedora::Base.expects(:find).with("__PID__", :cast=>true).returns(mock_obj)
       delete(:destroy, :id => "__PID__")
@@ -168,6 +181,8 @@ describe Hydra::FileAssetsController do
       end
 
       it "should set is_part_of relationship on the new File Asset pointing back at the container" do
+        # stub out authorize! call
+        controller.expects(:authorize!).returns(true)
         test_file = fixture_file_upload('/small_file.txt', 'text/plain')
         filename = "My File Name"
         post :create, {:Filedata=>[test_file], :Filename=>filename, :container_id=>@test_container.pid}
