@@ -13,12 +13,12 @@ Gem::Specification.new do |s|
   s.files = ['lib/hydra/head.rb']
   s.require_paths = ["lib"]
 
+  s.required_ruby_version = '>= 1.9.3'
+
   s.add_dependency('rails', '>= 3.2.6')
   s.add_dependency('hydra-access-controls',   version)
   s.add_dependency('hydra-core',   version)
 
-  s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'factory_girl_rails', '<2.0.0' #2.0.0 requires ruby 1.9
   s.add_development_dependency "jettywrapper" 
   s.add_development_dependency "yard" 
 

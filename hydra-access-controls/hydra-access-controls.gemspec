@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["hydra-tech@googlegroups.com"]
   gem.description   = %q{Access controls for project hydra}
   gem.summary       = %q{Access controls for project hydra}
-  gem.homepage      = ""
+  gem.homepage      = "http://projecthydra.org"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
@@ -14,6 +14,8 @@ Gem::Specification.new do |gem|
   gem.name          = "hydra-access-controls"
   gem.require_paths = ["lib"]
   gem.version       = version
+
+  gem.required_ruby_version = '>= 1.9.3'
 
   gem.add_dependency 'activesupport'
   gem.add_dependency 'active-fedora'

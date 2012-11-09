@@ -15,7 +15,8 @@ Gem::Specification.new do |gem|
   gem.name          = "hydra-core"
   gem.require_paths = ["lib"]
   gem.version       = version
-#  gem.required_ruby_version = '>= 1.9.3'
+
+  gem.required_ruby_version = '>= 1.9.3'
 
 
   gem.add_dependency "rails", '~>3.2.3' 
@@ -35,6 +36,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'jettywrapper', ">=1.3.1"
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'cucumber-rails', '>=1.2.0'
-  gem.add_development_dependency 'factory_girl_rails', '<2.0.0'  #>=2.0.0 requires ruby 1.9
+  gem.add_development_dependency 'factory_girl_rails'
   gem.add_development_dependency 'solrizer-fedora', '>=2.1.0'
 end
