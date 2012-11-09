@@ -23,9 +23,19 @@ class DownloadsController < ApplicationController
   def show
     if can? :read, permissions_solr_doc_for_id(params["id"])
       logger.info "Can read #{params['id']}"
-    
-    
-      @asset = ActiveFedora::Base.find(params["id"])
+
+      send_content (params["id"])
+      return
+    else 
+      logger.info "Can not read #{params['id']}"
+      redirect_to "/assets/NoAccess.png"
+    end
+  end
+
+  protected
+  
+  def send_content (id)
+      @asset = ActiveFedora::Base.find(id)
       opts = {}
       ds = nil
       opts[:filename] = params["filename"] || @asset.label
@@ -40,11 +50,8 @@ class DownloadsController < ApplicationController
       opts[:type] = ds.mimeType
       send_data data, opts
       return
-    else 
-      logger.info "Can not read #{params['id']}"
-      redirect_to "/assets/NoAccess.png"
-    end
   end
+  
   
   private 
   
