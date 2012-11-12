@@ -22,6 +22,12 @@ describe UsersController do
     User.any_instance.stubs(:groups).returns([])
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
+  after(:all) do
+    @user = FactoryGirl.find(:user) rescue
+    @user.delete if @user
+    @another_user = FactoryGirl.find(:archivist) rescue
+    @another_user.delete if @user
+  end
   describe "#show" do
     it "show the user profile if user exists" do
       get :show, uid: @user.login
@@ -90,6 +96,18 @@ describe UsersController do
       post :update, uid: @user.login, update_directory: true
       response.should redirect_to(profile_path(@user.login))
       flash[:notice].should include("Your profile has been updated")
+    end
+    it "should set an social handles" do
+      @user.twitter_handle.blank?.should be_true
+      @user.facebook_handle.blank?.should be_true
+      @user.googleplus_handle.blank?.should be_true
+      post :update, uid: @user.login, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo' }
+      response.should redirect_to(profile_path(@user.login))
+      flash[:notice].should include("Your profile has been updated")
+      u = User.find_by_login(@user.login)
+      u.twitter_handle.should == 'twit'
+      u.facebook_handle.should == 'face'
+      u.googleplus_handle.should == 'goo'
     end
   end
   describe "#follow" do

@@ -56,6 +56,26 @@ $("a[rel=popover]").popover();
       </div>
     </div>
 
+    <div class="control-group">
+      <%= f.label :twitter_handle, '<i class="icon-twitter"></i> Twitter Handle'.html_safe, :class => 'control-label' %>
+      <div class="controls">
+         <%= f.text_field :twitter_handle, :class =>"input-medium" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :facebook_handle, '<i class="icon-facebook"></i> Facebook Handle'.html_safe, :class => 'control-label' %>
+      <div class="controls">
+         <%= f.text_field :facebook_handle, :class =>"input-medium" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :googleplus_handle, '<i class="icon-google-plus"></i> Google+ Handle'.html_safe, :class => 'control-label' %>
+      <div class="controls">
+         <%= f.text_field :googleplus_handle, :class =>"input-medium" %>
+      </div>
+    </div>
 
     <div class="form-actions">
       <%= f.button '<i class="icon-save"></i> Save Profile'.html_safe, :type => 'submit', :class => "btn-primary btn-large" %>

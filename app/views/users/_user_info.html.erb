@@ -15,6 +15,15 @@ limitations under the License.
 %>
 
 <dl id="user_info">
+  <dt><i class="icon-facebook"></i> Facebook Handle</dt>
+  <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+
+  <dt><i class="icon-twitter"></i> Twitter Handle</dt>
+  <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
+ 
+  <dt><i class="icon-google-plus"></i> Google+ Handle</dt>
+  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+ 
   <dt><i class="icon-envelope-alt"></i> Email</dt>
   <dd><%= mail_to user.email %></dd>
 

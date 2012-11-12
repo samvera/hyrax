@@ -45,8 +45,9 @@ class UsersController < ApplicationController
 
   # Process changes from profile form
   def update
+    @user.update_attributes(params[:user])
+  
     @user.populate_attributes if params[:update_directory]
-    @user.avatar = params[:user][:avatar] if params[:user][:avatar].present? rescue nil
     @user.avatar = nil if params[:delete_avatar]
     unless @user.save
       redirect_to edit_profile_path(@user.to_s), alert: @user.errors.full_messages
