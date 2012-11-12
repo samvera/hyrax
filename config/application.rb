@@ -61,6 +61,8 @@ module ScholarSphere
     # email to send on contact form - probably need one for the production
     # environment
     config.contact_email = 'DLT-GAMMA-PROJECT@lists.psu.edu'
+    config.scholarsphere_version = "v1.2.0"
+    config.scholarsphere_release_date = "Nov. 7, 2012"
 
     config.fits_to_desc_mapping = {
       :file_title => :title,
