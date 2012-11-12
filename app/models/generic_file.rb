@@ -1,10 +1,26 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 class GenericFile < ActiveFedora::Base
   include ActiveModel::Validations::HelperMethods
   include ActiveFedora::Validations
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
   include ScholarSphere::ModelMethods
-  include ScholarSphere::Noid
+  include ScholarSphere::Noid  
+                                              
+  @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
 
   has_metadata :name => "characterization", :type => FitsDatastream
   has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -56,6 +72,13 @@ class GenericFile < ActiveFedora::Base
   #  self.terms_of_service = '1'
   #end
 
+  def self.get_label(key)
+     label = @@FIELD_LABEL_MAP[key]
+     puts "label = #{label}"
+     label = key.gsub('_',' ').titleize if label.blank?
+     return label
+  end
+
   def persistent_url
     "#{ScholarSphere::Application.config.persistent_hostpath}#{noid}"
   end
@@ -79,6 +102,7 @@ class GenericFile < ActiveFedora::Base
 
   def retry_warming
       save_tries = 0
+      conflict_tries = 0
       begin
         yield
       rescue RSolr::Error::Http => error
@@ -87,7 +111,24 @@ class GenericFile < ActiveFedora::Base
         # fail for good if the tries is greater than 3
         rescue_action_without_handler(error) if save_tries >=3
         sleep 0.01
+        retry      
+      rescue  ActiveResource::ResourceConflict => error
+        conflict_tries += 1
+        logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
+        rescue_action_without_handler(error) if conflict_tries >=10
+        sleep 0.01
         retry
+      rescue =>error
+        if (error.to_s.downcase.include? "conflict")
+          conflict_tries += 1
+          logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
+          rescue_action_without_handler(error) if conflict_tries >=10
+          sleep 0.01
+          retry
+        else
+          rescue_action_without_handler(error)
+        end          
+      
       end
   end
 
@@ -176,16 +217,17 @@ class GenericFile < ActiveFedora::Base
     # horizontal img
     height = self.height.first.to_i
     width = self.width.first.to_i
+    scale = height / width
     if width > height
-      if width > 50 and height > 35
-        thumb = img.scale(50, 35)
+      if width > 150 and height > 105
+        thumb = img.scale(150, height/scale)
       else
         thumb = img.scale(width, height)
       end
     # vertical img
     else
-      if width > 45 and height > 60
-        thumb = img.scale(45, 60)
+      if width > 150 and height > 200
+        thumb = img.scale(150*scale, 200)
       else
         thumb = img.scale(width, height)
       end
@@ -281,6 +323,18 @@ class GenericFile < ActiveFedora::Base
       terms.concat(new_terms)
     end
     terms
+  end
+
+  def get_values
+    terms = get_terms
+    values = {}
+    terms.each do |t|
+        next if t.empty?
+        key = t.to_s.split("generic_file__").last
+        next if ['part_of', 'date_modified', 'date_uploaded', 'format'].include?(key)
+        values[key] = self.send(key) if self.respond_to?(key)
+    end        
+    return values          
   end
 
   def characterization_terms
@@ -633,6 +687,7 @@ class GenericFile < ActiveFedora::Base
   # Is this file in the middle of being processed by a batch?
   def processing?
      return false if self.batch.blank?
+     return false if !self.batch.methods.include? :status
      return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
   end
 

@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # -*- encoding : utf-8 -*-
 require 'blacklight/catalog'
 
@@ -107,7 +122,7 @@ class CatalogController < ApplicationController
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
     # handler defaults, or have no facets.
-    config.default_solr_params[:"facet.field"] = config.facet_fields.keys
+    config.add_facet_fields_to_solr_request!
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
@@ -181,16 +196,16 @@ class CatalogController < ApplicationController
       # Solr parameter de-referencing like $title_qf.
       # See: http://wiki.apache.org/solr/LocalParams
       field.solr_local_parameters = {
-        :qf => "$contributor_qf",
-        :pf => "$contributor_pf"
+        :qf => "generic_file__contributor_t",
+        :pf => "generic_file__contributor_t"
       }
     end
 
     config.add_search_field('creator') do |field|
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
       field.solr_local_parameters = {
-        :qf => "$creator_qf",
-        :pf => "$creator_pf"
+        :qf => "generic_file__creator_t",
+        :pf => "generic_file__creator_t"
       }
     end
 
@@ -199,18 +214,19 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "title"
       }
       field.solr_local_parameters = {
-        :qf => "$title_qf",
-        :pf => "$title_pf"
+        :qf => "generic_file__title_t",
+        :pf => "generic_file__title_t"
       }
     end
 
     config.add_search_field('description') do |field|
+      field.label = "Abstract or Summary"
       field.solr_parameters = {
         :"spellcheck.dictionary" => "description"
       }
       field.solr_local_parameters = {
-        :qf => "$description_qf",
-        :pf => "$description_pf"
+        :qf => "generic_file__description_t",
+        :pf => "generic_file__description_t"
       }
     end
 
@@ -219,8 +235,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "publisher"
       }
       field.solr_local_parameters = {
-        :qf => "$publisher_qf",
-        :pf => "$publisher_pf"
+        :qf => "generic_file__publisher_t",
+        :pf => "generic_file__publisher_t"
       }
     end
 
@@ -229,8 +245,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "date_created"
       }
       field.solr_local_parameters = {
-        :qf => "$date_created_qf",
-        :pf => "$date_created_pf"
+        :qf => "generic_file__date_created_t",
+        :pf => "generic_file__date_created_t"
       }
     end
 
@@ -239,8 +255,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "subject"
       }
       field.solr_local_parameters = {
-        :qf => "$subject_qf",
-        :pf => "$subject_pf"
+        :qf => "generic_file__subject_t",
+        :pf => "generic_file__subject_t"
       }
     end
 
@@ -249,8 +265,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "language"
       }
       field.solr_local_parameters = {
-        :qf => "$language_qf",
-        :pf => "$language_pf"
+        :qf => "generic_file__language_t",
+        :pf => "generic_file__language_t"
       }
     end
 
@@ -259,8 +275,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "resource_type"
       }
       field.solr_local_parameters = {
-        :qf => "$resource_type_qf",
-        :pf => "$resource_type_pf"
+        :qf => "generic_file__resource_type_t",
+        :pf => "generic_file__resource_type_t"
       }
     end
 
@@ -270,28 +286,30 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "format"
       }
       field.solr_local_parameters = {
-        :qf => "$format_qf",
-        :pf => "$format_pf"
+        :qf => "generic_file__format_t",
+        :pf => "generic_file__format_t"
       }
     end
 
     config.add_search_field('identifier') do |field|
+      field.include_in_advanced_search = false
       field.solr_parameters = {
         :"spellcheck.dictionary" => "identifier"
       }
       field.solr_local_parameters = {
-        :qf => "$identifier_qf",
-        :pf => "$identifier_pf"
+        :qf => "id_t",
+        :pf => "id_t"
       }
     end
 
     config.add_search_field('based_near') do |field|
+      field.label = "Location"
       field.solr_parameters = {
         :"spellcheck.dictionary" => "based_near"
       }
       field.solr_local_parameters = {
-        :qf => "$based_near_qf",
-        :pf => "$based_near_pf"
+        :qf => "generic_file__based_near_t",
+        :pf => "generic_file__based_near_t"
       }
     end
 
@@ -300,22 +318,22 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "tag"
       }
       field.solr_local_parameters = {
-        :qf => "$tag_qf",
-        :pf => "$tag_pf"
+        :qf => "generic_file__tag_t",
+        :pf => "generic_file__tag_t"
       }
     end
 
     config.add_search_field('depositor') do |field|
       field.solr_local_parameters = {
-        :qf => "$depositor_qf",
-        :pf => "$depositor_pf"
+        :qf => "depositor_t",
+        :pf => "depositor_t"
       }
     end
 
     config.add_search_field('rights') do |field|
       field.solr_local_parameters = {
-        :qf => "$rights_qf",
-        :pf => "$rights_pf"
+        :qf => "generic_file__rights_t",
+        :pf => "generic_file__rights_t"
       }
     end
 
@@ -324,9 +342,11 @@ class CatalogController < ApplicationController
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     # label is key, solr field is value
-    config.add_sort_field 'score desc, generic_file__date_uploaded_dt desc', :label => 'relevance'
-    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => 'date uploaded new'
-    config.add_sort_field 'generic_file__date_modified_dt desc', :label => 'date modified new'
+    config.add_sort_field 'score desc, generic_file__date_uploaded_dt desc', :label => "relevance \u25BC"
+    config.add_sort_field 'generic_file__date_uploaded_dt desc', :label => "date uploaded \u25BC"
+    config.add_sort_field 'generic_file__date_uploaded_dt asc', :label => "date uploaded \u25B2"
+    config.add_sort_field 'generic_file__date_modified_dt desc', :label => "date modified \u25BC"
+    config.add_sort_field 'generic_file__date_modified_dt asc', :label => "date modified \u25B2"
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.

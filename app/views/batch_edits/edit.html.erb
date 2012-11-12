@@ -1,0 +1,317 @@
+<% javascript 'bootstrap-modal.js'%>
+<% javascript 'bootstrap-tooltip.js'%>
+<% javascript 'bootstrap-popover.js'%>
+
+<% stylesheet "jquery-ui-1.8.23.custom.css" %>
+
+<% content_for :local_js do %>
+
+  window.onbeforeunload = clearBatch;
+  function clearBatch(){
+    // clear the batch edit items (do it inline so it is done before the next page load 
+    var clearState = $.ajax({
+      headers: {Accept : "application/javascript"},      
+      type: 'POST',
+      url: '<%=batch_edits_clear_path %>',
+      async: false,
+    });
+  }  
+
+// initialize popover helpers
+$("a[rel=popover]").popover();
+  <% @terms.each do |t| %>
+    <% key = t.to_s.split("generic_file__").last %>
+    <% vals =  @show_file.send(key) %>
+    <% next if vals.blank? %>    
+    <% vals = [vals] unless vals.is_a?(Array) %>
+    $("#<%='generic_file_'+key%>").autocomplete({"source":["<%=vals.join(",")%>"]});
+
+  <% end %>
+
+//  $(".ajax-form").bind('ajax:success', function(){
+//     var form_id = "#"+this.id;
+//     var key = this.id.replace("form_","");
+  function after_ajax(form_id){
+      var key = form_id.replace("form_","");
+      var save_button = "#"+key+"_save";
+      $("#status_"+key).html("Changes Saved");
+      $(save_button).removeAttr("disabled");         
+      $('#'+form_id).removeClass("loading");
+      $('#'+form_id).children([".control-group"]).removeClass('hidden')
+  }
+
+//  $(".ajax-form").bind('ajax:before', function(){
+//       var form_id = "#"+this.id;
+//       var key = this.id.replace("form_","");
+  function before_ajax(form_id){
+        var key = form_id.replace("form_","");
+        var save_button = "#"+key+"_save";
+        $(save_button).attr("disabled", "disabled");
+        $('#'+form_id).addClass("loading");
+        $('#'+form_id).children([".control-group"]).addClass('hidden')        
+    }
+
+  // hide permissions to begin with
+  $('#permissions_display').hide();
+  $('#permissions_submit').hide();
+
+
+  // called from edit object view 
+  $('#batch_descriptions_link').on('click', function() {
+    $('#batch_descriptions_link').attr('class', 'active');
+    $('#batch_permissions_link').attr('class', '');
+
+    $('#descriptions_display').show();
+    $('#permissions_display').hide();
+    $('#permissions_submit').hide();
+      descriptions_tab();
+    });
+
+  // called from edit object view
+  $('#batch_permissions_link').on('click', function() {
+    $('#batch_permissions_link').attr('class', 'active');
+    $('#batch_descriptions_link').attr('class', '');
+
+    $('#descriptions_display').hide();
+    $('#permissions_display').show();
+    $('#permissions_submit').hide();
+  });
+
+
+    $("tr.expandable").click(function(){
+       $(this).next("ul").slideToggle();
+    
+       $(this).find('i.toggle').toggleClass("icon-chevron-down");
+    }); 
+
+    $("tr.expandable_new").click(function(){   
+       $(this).find('i').toggleClass("icon-chevron-down");
+    }); 
+
+    function deserialize(Params) {
+        var Data = Params.split("&");
+        var i = Data.length;
+        var Result  = {}; 
+        while (i--) {
+            var Pair = decodeURIComponent(Data[i]).split("=");
+            var Key = Pair[0];
+            var Val = Pair[1];
+            Result[Key] = Val;
+        }   
+        return Result;
+    }
+ 
+    var ajaxManager = (function() {
+         var requests = [];
+         var running = false;
+         return {
+            addReq:  function(opt) {
+                requests.push(opt);
+            },
+            removeReq:  function(opt) {
+                if( $.inArray(opt, requests) > -1 )
+                    requests.splice($.inArray(opt, requests), 1);
+            },
+            runNow: function(){
+                clearTimeout(self.tid);
+                if (!running) {
+                   run();
+                }
+            },
+            run: function() {
+                running = true;
+                var self = this,
+                    orgSuc;
+    
+                if( requests.length ) {
+                    oriSuc = requests[0].complete;
+    
+                    // combine data from multiple requests
+                    if (requests.length > 1) {
+                       var data = deserialize(requests[0].data.replace(/\+/g," "));
+                       form = [requests[0].form]
+                       for (var i=requests.length-1; i>0 ; i--){
+                          req = requests.pop();
+                          adata = deserialize(req.data.replace(/\+/g," "));
+                          for (key in  Object.keys(adata)){ 
+                             curKey =   Object.keys(adata)[key] ;                      
+                             if (curKey.slice(0,12) == "generic_file"){
+                                data[curKey] = adata[curKey];
+                                form.push (req.form);
+                             }
+                          }
+                       } 
+                       requests[0].data = $.param(data);
+                       requests[0].form = form;
+                    }    
+    
+                    requests[0].complete = function() {
+                         if( typeof oriSuc === 'function' ) oriSuc();
+                         if (typeof requests[0].form === 'object'){
+                            for (f in form) {
+                               form_id = form[f];
+                               after_ajax(form_id);
+                            }
+                         }
+                         requests.shift();
+                         self.run.apply(self, []);
+                    };   
+    
+                    $.ajax(requests[0]);
+                } else {
+                  self.tid = setTimeout(function() {
+                     self.run.apply(self, []);
+                  }, 500);
+                }
+                running = false;
+            },
+            stop:  function() {
+                requests = [];
+                clearTimeout(this.tid);
+            }
+         };
+    }());
+        
+    ajaxManager.run();
+
+
+    $("#permissions_save").click(runSave);
+    $(".field-save").click(runSave);
+
+    function runSave(e){     
+      e.preventDefault();
+      var button = $(this);
+      var form = $(button.parent().parent()[0]);
+      var form_id = form[0].id
+      before_ajax(form_id);
+
+       ajaxManager.addReq({
+          form: form_id,
+          queue: "add_doc",
+          url: form.attr("action"),
+          dataType: "json",
+          type: form.attr("method").toUpperCase(),
+          data: form.serialize(),
+          success: function (e) {
+              eval(e.responseText);
+              after_ajax(form_id);
+          },
+          error: function (e) {
+            after_ajax(form_id);
+            if (e.status == 200) {
+              eval(e.responseText);
+            } else {
+              alert("Error!  Status: "+e.status);
+            }
+          }, 
+       });
+       setTimeout(ajaxManager.runNow(),100);
+   }
+
+<% end %>
+
+<% content_for :local_css do %>
+    #upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
+
+.fileHeight {
+  max-height: 50px
+}
+
+.scrollx {
+  overflow-x: auto;
+}
+
+.scrolly {
+  overflow-y: auto;
+}
+
+h2 small {
+   color: red;   
+}
+
+
+.status {
+   color: green; 
+   padding:5px 5px 5px;  
+}
+
+.loading { 
+ background: white url('/assets/loading.gif') center bottom no-repeat; 
+}
+<% end %>
+
+<%= render :partial => 'generic_files/breadcrumbs', :locals => {:include_file=>false} %>
+<h2 class="non lower">Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit file descriptions.</small> </h2>
+<div class="scrollx scrolly fileHeight"> <!-- original values -->
+  <h3> <b>Changes will be applied to: (<%=@names.size%> files) </b></h3>
+   <%= @names.join(", ").html_safe %>
+</div> <!-- /original values --> 
+
+<div >
+  <h3> Descriptions:</h3>
+
+    <ul class="nav nav-tabs">
+      <li id="batch_descriptions_link"><a href="#"><i class="icon-tags"></i> Descriptions</a></li>
+      <li id="batch_permissions_link"><a href="#"><i class="icon-key"></i> Permissions</a></li>
+    </ul>
+  <div class="well active" id="descriptions_display"> 
+      <table class="table table-striped"><!-- class="verticalheadings"> -->
+      <tbody>
+      <% @terms.each do |t| %>
+        <% next if t.empty? %>
+        <% key = t.to_s.split("generic_file__").last %>
+        <% next unless @generic_file.respond_to?(key) %>
+        <% label = GenericFile::get_label(key) %>
+        <% vals =  @show_file.send(key) %>
+        <% # not an arry lets just shove it in one %>
+        <% vals = [vals] unless vals.is_a?(Array) %>
+            <tr id='row_<%=key%>' class="expandable">
+              <th width="20%">
+                 <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%=key%>" href="#collapse_<%=key%>">
+                    <%=label%>&nbsp;<i class="toggle icon-chevron-right grey"></i>
+                 </a>
+              </th>
+              <!--td  width="30%" class="scrollx" id="data_<%= key%>">
+                 <% vals.each do |val| %>
+                    <%= val%><br />
+                  <% end %>
+              </td -->
+              <td  width="50%" class="scrolly">
+    
+                  <div id="collapse_<%=key%>" class="accordion-body collapse scrolly">
+                    <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_"+key, :class=>"ajax-form"} do |f| %>
+                        <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+                        <%= hidden_field_tag('update_type', 'update') %>
+                        <%= hidden_field_tag('key', key) %>
+                        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => key } %>
+                      <div class="row">
+                         <%= f.submit "Save changes", :class=>'btn btn-primary field-save' , :id=>key+'_save'%>
+                         <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%=key%>" href="#collapse_<%=key%>">Cancel </a>
+                         <div id="status_<%=key%>" class="status fleft"></div>
+                      </div>
+                    <% end %>
+                  </div>
+              </td>          
+            </tr>
+       <% end %>
+        </tbody></table> <!-- class="verticalheadings"> -->
+    </div><!-- /well -->
+    <div id="permissions_display">
+      <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_permissions", :class=>"ajax-form"} do |f| %>
+         <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+         <%= hidden_field_tag('update_type', 'update') %>
+         <%= hidden_field_tag('key', 'permissions') %>
+         <%= render :partial => "generic_files/permission", :locals => { :gf => @show_file, :f=> f } %>
+       <div class="row">
+          <%= f.submit "Save changes", :class=>'btn btn-primary', :id=>'permissions_save' %>
+          <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_permissions" href="#collapse_permissions">Cancel </a>
+          <div id="status_permissions" class="status fleft"></div>
+       </div>
+     <% end %>
+   </div>
+
+<!-- Ajax call to clear the batch before page uload. -->
+<%= button_to "Clear Batch", { :controller => :batch_edits, :action=>:clear  }, :form_class=>'hidden' , :remote => true, :id=>'clear_batch' %> 
+
+</div><!-- descriptions_display -->
+

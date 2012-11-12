@@ -1,3 +1,19 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
 <div id="masthead">
   <a id="shield" href="http://psu.edu/"><img src="/assets/site_images/logo_psuss_shield.png" width="219" height="60" alt="Penn State University" /></a>
   <a id="logo" href="/"><img src="/assets/site_images/logo_psuss_logotype.png" width="132" height="37" alt="Penn State ScholarSphere" /></a>
@@ -12,11 +28,7 @@
           <li>
             <div class="btn-group">
               <% if current_user %>
-                <a href="<%= mailbox_path %>" class="btn btn-small " title="click for User Notifications"><i class="icon-bullhorn">&nbsp;</i>
-                <% if @notify_number > 0 %>
-                <span id="notify_number" class="overlay"> <%=@notify_number%></span>
-                <% end %>                 
-                </a>  
+                 <%= render :partial => 'users/notify_link' %>
                 <a href="<%= profile_path(current_user.to_s) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
                 <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>
                 <ul class="dropdown-menu">

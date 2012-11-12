@@ -1,38 +1,178 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
 <% javascript 'video.js' %>
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
 <% javascript 'dashboard.js' %>
+<% javascript 'swfobject.js' %>
+<% javascript 'jquery.clippy.js' %>
 
+<script type = "text/javascript"> 
+
+  // function to hide or show the batch update buttons based on how may items are checked
+  function toggleButtons(forceOn, otherPage ){
+    forceOn = typeof forceOn !== 'undefined' ? forceOn : false
+    otherPage = typeof otherPage !== 'undefined' ? otherPage : <%= !@batch_part_on_other_page %>
+    var n = $(".batch_toggle:checked").length;
+    if ((n>0) || (forceOn)) {
+        $('.batch-select-all').show();
+        $('.button_to').show();
+    } else if ( otherPage){
+        $('.batch-select-all').hide();
+        $('.button_to').hide();
+    }
+    $("body").css("cursor", "auto");
+  }
+</script>
 
 <% content_for :local_js do %>
+
   initialize_audio();
   
+  function getSingleUse( id){
+    <% rurl = root_url %>
+    <% rurl = rurl.slice(0,rurl.length-1) if rurl[rurl.length-1] == '/' %>
+    var resp = $.ajax({
+      headers: {Accept : "application/javascript"},      
+      type: 'get',
+      url: '<%=rurl %>/single_use_link/generate_show/'+id.slice(10),
+      async: false,
+    });
+    $('#'+id).attr('singleUse',resp.responseText);
+   return resp;
+ }
+  
+  
+  // Load clipboard swif 
   $(document).ready(function(){
+      var singleUse;
       <% rurl = root_url %>
-      <% rurl = rurl.slice(0,rurl.length-2) if rurl[rurl.length-1] == '/' %> 
-      copy_links = $('a.copypaste');
-      for(var i=0; i < copy_links.length; i++) 
-      {
-        $('#'+ copy_links[i].id).zclip({
-          path: '/assets/ZeroClipboard.swf', 
-          copy: function() {return '<%=rurl%>' + $('#src_'+this.id).attr('href'); }
+      <% rurl = rurl.slice(0,rurl.length-1) if rurl[rurl.length-1] == '/' %>
+      if (typeof swfobject !== 'undefined' && swfobject.getFlashPlayerVersion().major !== 0){       
+        copy_links = $('a.copypaste');
+        for(var i=0; i < copy_links.length; i++) 
+        {
+          setTimeout(getSingleUse(copy_links[i].id),1);                
+          $('#'+ copy_links[i].id).zclip({
+            path: '/assets/ZeroClipboard.swf',
+            copy: function() {            
+                var singleUse = $('#'+this.id).attr('singleUse');
+                return '<%=rurl%>' + singleUse;
+            },
+            afterCopy: function(f) {
+              alert("A single use link to "+$('#src_copy_link'+this.id.slice(10))[0].text+" was copied to your clip board.");
+              setTimeout(getSingleUse(this.id),5);                
+            }
+            
+          });
+        }
+      } else {
+        $('a.copypaste').click(function(){
+           var singleUse = getSingleUse(this.id);
+           var url = '<%=rurl%>' + singleUse.responseText;
+           alert('Your Single Use Link: '+url);
+           return false;
         });
       }
   });
 
-<% end %>
+
+  // hide or show the batch update buttons on page startup
+  toggleButtons(<%= !@empty_batch %>);
+      
+  // hide or show the batch update buttons file selections
+  $(".batch_toggle").bind('click', function(e) {
+        e.preventDefault();
+        toggleButtons();
+    });
+
+
+  /*$('a.copypaste').zclip({
+      path: "/assets/ZeroClipboard.swf",
+      copy: function(){
+    return '123 abc';
+    }
+  });
+  
+  $("#copy-button").zclip({
+      path: "/assets/ZeroClipboard.swf",
+      copy: function(){
+    return 'abc 123';
+    }
+  });*/
+
+
+ <% end %>
+
 
 <% content_for :local_css do %>
+
 .audiojs {
   width: 38px;
-  float: left;
+  float: left;  
 }
 
 audio {
   width: 38px;
   float: left;
 }
+
+.batch-select-all, .button_to {
+ 
+  float: right;
+  padding-left: 6px;
+  padding-top: 0px;
+  padding-top: 0px;
+}
+
+.bedit {
+  width: 65%;
+ }
+ 
+.batch-select-all .btn-primary {
+  background-color:#da4f49;background-image:-moz-linear-gradient(top, #ee5f5b, #bd362f);background-image:-ms-linear-gradient(top, #ee5f5b, #bd362f);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));background-image:-webkit-linear-gradient(top, #ee5f5b, #bd362f);background-image:-o-linear-gradient(top, #ee5f5b, #bd362f);background-image:linear-gradient(top, #ee5f5b, #bd362f);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ee5f5b', endColorstr='#bd362f', GradientType=0);border-color:#bd362f #bd362f #802420;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);*background-color:#bd362f;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);}.btn-danger:hover,.btn-danger:active,.btn-danger.active,.btn-danger.disabled,.btn-danger[disabled]{background-color:#bd362f;*background-color:#a9302a;
+}
+
+.button_to .btn-primary {
+background-color:#faa732;background-image:-moz-linear-gradient(top, #fbb450, #f89406);background-image:-ms-linear-gradient(top, #fbb450, #f89406);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));background-image:-webkit-linear-gradient(top, #fbb450, #f89406);background-image:-o-linear-gradient(top, #fbb450, #f89406);background-image:linear-gradient(top, #fbb450, #f89406);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbb450', endColorstr='#f89406', GradientType=0);border-color:#f89406 #f89406 #ad6704;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);*background-color:#f89406;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);}.btn-warning:hover,.btn-warning:active,.btn-warning.active,.btn-warning.disabled,.btn-warning[disabled]{background-color:#f89406;*background-color:#df8505;
+}
+
+.table th, .table td {
+  padding: 4px;
+}
+.table .sm {
+  padding: 2px;
+}
+
+.over {
+z-index:100;
+}
+.under
+{
+position:absolute;
+padding:0px 0px 0px 0px;
+left:10px;
+top:-8px;
+color:orange;
+z-index:1; 
+}
+
 <% end %>
+
 
   <% @page_title = application_name + " Dashboard" %>
 
@@ -62,3 +202,5 @@ audio {
 
   <%= render 'results_pagination' %>
   <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+
+  <span id="single_clippy" class="clippy hidden" data-text="This is a test"></span> <i class="icon-link over" onlick="alert('abc');"></i> 

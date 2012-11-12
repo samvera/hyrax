@@ -1,12 +1,38 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 ScholarSphere::Application.routes.draw do
+  match 'single_use_link/generate_download/:id' => 'single_use_link#generate_download', :as => :generate_download_single_use_link
+  match 'single_use_link/generate_show/:id' => 'single_use_link#generate_show', :as => :generate_show_single_use_link
+  match 'single_use_link/show/:id' => 'single_use_link#show', :as => :show_single_use_link
+  match 'single_use_link/download/:id' => 'single_use_link#download', :as => :download_single_use_link
+
   # Routes for Blacklight-specific functionality such as the catalog
   Blacklight.add_routes(self)
+  match 'batch_edits/clear' => 'batch_edits#clear', :as => :batch_edits_clear
+
+  # add batch edit routes
+  Hydra::BatchEdit.add_routes(self)
 
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
 
   # "Recently added files" route for catalog index view
   match "catalog/recent" => "catalog#recent", :as => :catalog_recent
+
+  # "Notifications" route for catalog index view
+  match "users/notifications_number" => "users#notifications_number", :as => :user_notify
 
   # Set up user routes
   devise_for :users
@@ -28,9 +54,9 @@ ScholarSphere::Application.routes.draw do
   match 'login' => 'sessions#new', :as => :new_user_session
 
   # Messages
-  match 'mailbox' => 'mailbox#index', :as => :mailbox
-  match 'mailbox/delete_all' => 'mailbox#delete_all', :as => :mailbox_delete_all
-  match 'mailbox/:uid/delete' => 'mailbox#delete', :as => :mailbox_delete
+  match 'notifications' => 'mailbox#index', :as => :mailbox
+  match 'notifications/delete_all' => 'mailbox#delete_all', :as => :mailbox_delete_all
+  match 'notifications/:uid/delete' => 'mailbox#delete', :as => :mailbox_delete
 
   # User profile & follows
   match 'users' => 'users#index', :as => :profiles

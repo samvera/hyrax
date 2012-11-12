@@ -1,0 +1,33 @@
+<div >
+  <h1 class="lower"><%= display_title(@generic_file) %></h1>
+    <h2 class="non lower">Actions</h2>
+    <p>
+      <%= link_to "Download (can only be used once)", @download_link %>
+    </p>
+  <h2> Descriptions:</h2>
+
+  <div class="well active" id="descriptions_display"> 
+      <table class="table table-striped"><!-- class="verticalheadings"> -->
+      <tbody>
+      <% @terms.each do |t| %>
+        <% next if t.empty? %>
+        <% key = t.to_s.split("generic_file__").last %>
+        <% next unless @generic_file.respond_to?(key) %>
+        <% label = GenericFile::get_label(key) %>
+        <% vals =  @generic_file.send(key) %>
+        <% # not an arry lets just shove it in one %>
+        <% vals = [vals] unless vals.is_a?(Array) %>
+            <tr id='row_<%=key%>' class="expandable">
+              <th width="20%">
+                    <%=label%>
+              </th>
+              <td>
+                <% vals.each do |val| %>
+                  <%= val %><br />
+                <% end %>
+              </td>
+            </tr>
+       <% end %>
+        </tbody></table> <!-- class="verticalheadings"> -->
+    </div><!-- /well -->
+</div>

@@ -1,3 +1,17 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 module ApplicationHelper
 
   def javascript(*files)
@@ -47,15 +61,17 @@ module ApplicationHelper
 
 
   def link_to_field(fieldname, fieldvalue, displayvalue = nil)
-    p = {:search_field=>'advanced', fieldname=>fieldvalue}
+    p = {:search_field=>'advanced', fieldname=>'"'+fieldvalue+'"'}
     link_url = catalog_index_path(p)
     display = displayvalue.blank? ? fieldvalue: displayvalue
     link_to(display, link_url)
   end
 
-  def iconify_auto_link(text)
+  def iconify_auto_link(text, showLink = true)
     auto_link(text) do |value|
-      "<i class='icon-external-link'></i>&nbsp;#{value}<br />"
+      link = "<i class='icon-external-link'></i>&nbsp;#{value}<br />" if showLink
+      link = "<i class='icon-external-link'></i>&nbsp;<br />" unless showLink
+      link
     end
   end
 

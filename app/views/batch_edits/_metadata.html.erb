@@ -1,0 +1,180 @@
+<h2>Individual Titles <small>(applied to individual files uploaded)</small><small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
+<div id="" class="well">
+  <p>
+  <i class="icon-info-sign"></i> Filename will be the default title.  Please provide a more meaningful title, and filenames will still be preserved by the system.
+  </p>
+  <div class="row">
+    <div class="span60">
+      <% @batch.generic_files.sort! { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
+        <div class="control-group">
+          <%= f.label :title, "<span class='error'>*</span> Title #{index+1}".html_safe, :class=>"control-label" %> 
+          <div class="controls" id="additional_title_clone">
+            <%= f.text_field :title, :name=>"title[#{gen_f.id}][]", :value=>gen_f.label, :required=> true %>  
+            <a href="#" id="generic_file_title_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_title"] %>" data-original-title="Title"><i class="icon-question-sign icon-large"></i></a>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="span40">
+      <!-- put metadata about file being edited here -->
+    </div>
+  </div>
+</div>
+
+<%= hidden_field_tag('generic_file[terms_of_service]', '1') %>  
+<%= hidden_field_tag(:extra_description_count, "1") %>
+<div  id="descriptions_display">
+  <h2 class="non lower">Bulk Descriptions <small>(applied to all files just uploaded)</small>  <small class="pull-right"><span class="error">*</span> indicates required fields</small></h2>
+  <div class="well">
+    <div class="control-group" id="resources">
+        <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
+      <div class="controls">
+          <p class="help-block">You may select multiple types to apply to all files<p>
+          <%= f.select "resource_type", ScholarSphere::Application::config.resource_types, {}, {:multiple=>true, :size=>7} %>
+          <a href="#" id="generic_file_resource_type_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_resource_type"] %>" data-original-title="Resource Type"><i class="icon-question-sign icon-large"></i></a>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :tag, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %> 
+      <div class="controls" id="additional_tag_clone">
+          <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>"", :required=> true  %> 
+          <button class="adder btn" name="additional_tag" id="additional_tag_submit">+<span class="accessible-hidden">add another Tag</span></button>
+          &nbsp;
+          <a href="#" id="generic_file_tag_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_tag"] %>" data-original-title="Keyword"><i class="icon-question-sign icon-large"></i></a>
+      </div>
+      <div id="additional_tag_elements"></div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :creator, "<span class='error'>*</span> Creator".html_safe, :class=>"control-label" %>
+      <div class="controls" id="additional_creator_clone">
+        <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"", :required=> true %>
+          <button class="adder btn" name="additional_creator" id="additional_creator_submit">+<span class="accessible-hidden">add another Creator</span></button>
+          &nbsp;
+          <a href="#" id="generic_file_creator_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_creator"] %>" data-original-title="Creator"><i class="icon-question-sign icon-large"></i></a>
+      </div>
+      <div id="additional_creator_elements"></div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :rights, '<span class="error">*</span> Rights'.html_safe, :class=>"control-label" %>
+      <div class="controls" id="additional_rights_clone">
+        <%= f.select "rights", options_for_select(ScholarSphere::Application::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), :required => true %>
+          <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="accessible-hidden">add another Rights</span></button>
+        &nbsp;
+        <a href="#" id="generic_file_rights_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_rights"] %>" data-original-title="Rights"><i class="icon-question-sign icon-large"></i></a>
+        <%= render :partial => "generic_files/rights_modal" %>
+        
+      </div>
+      <div id="additional_rights_elements"></div>
+    </div>
+
+    <div class="row" id="add_descriptions">
+      <a href="#" id="add_descriptions" >Add More Description Types</a>
+    </div>
+      <!-- hidden on initial load -->
+
+    <div class="hide" id="more_descriptions">
+      <div class="control-group">
+        <%= f.label :related_url, "Related URL", :class=>"control-label" %> 
+        <div class="controls" id="additional_related_url_clone">
+          <%= f.text_field :related_url, :name=>"generic_file[related_url][]", :value=>""  %> 
+          <button class="adder btn" name="additional_related_url" id="additional_related_url_submit">+<span class="accessible-hidden">add another Related URL</span></button>
+          &nbsp;
+          <a href="#" id="generic_file_related_url_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_related_url"] %>" data-original-title="Related URL"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_related_url_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :based_near, 'Location', :class=>"control-label" %> 
+        <div class="controls" id="additional_based_near_clone">
+        <%= f.text_field :based_near, :name=>"generic_file[based_near][]", :value=>""  %> 
+        <button class="adder btn" name="additional_based_near" id="additional_based_near_submit">+<span class="accessible-hidden">add another Location</span></button>
+        &nbsp;
+          <a href="#" id="generic_file_based_near_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_based_near"] %>" data-original-title="Location"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_based_near_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :contributor, :class=>"control-label" %> 
+        <div class="controls" id="additional_contributor_clone">
+          <%= f.text_field :contributor, :name=>"generic_file[contributor][]", :value=>gf.contributor[0]  %> 
+          <button class="adder btn" name="additional_contributor" id="additional_contributor_submit">+<span class="accessible-hidden">add another Contributor</span></button>
+            &nbsp;
+          <a href="#" id="generic_file_contributor_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_contributor"] %>" data-original-title="Contributor"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_contributor_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :date_created, "Date Created", :class=>"control-label" %> 
+        <div class="controls" id="additional_date_created_clone">
+          <%= f.text_field :date_created, :name=>"generic_file[date_created][]", :value=>""  %> 
+          <button class="adder btn" name="additional_date_created" id="additional_date_created_submit">+<span class="accessible-hidden">add another Date Created</span></button>
+            &nbsp;
+          <a href="#" id="generic_file_date_created_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_date_created"] %>" data-original-title="Date Created"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_date_created_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :description, "Abstract or Summary", :class=>"control-label" %> 
+        <div class="controls" id="additional_description_clone">
+          <%= f.text_area :description, :name=>"generic_file[description][]", :value=>""  %> 
+          <button class="adder btn" name="additional_description" id="additional_description_submit">+<span class="accessible-hidden">add another Abstract or Summary</span></button>
+            &nbsp;
+          <a href="#" id="generic_file_description_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_description"] %>" data-original-title="Abstract or Summary"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_description_elements"></div>
+      </div>
+  
+      <div class="control-group">
+        <%= f.label :identifier, :class=>"control-label" %> 
+        <div class="controls" id="additional_identifier_clone">
+          <%= f.text_field :identifier, :name=>"generic_file[identifier][]", :value=>""  %> 
+          <button class="adder btn" name="additional_identifier" id="additional_identifier_submit">+<span class="accessible-hidden">add another Identifier</span></button>
+            &nbsp;
+          <a href="#" id="generic_file_identifier_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_identifier"] %>" data-original-title="Identifier"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_identifier_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :language, :class=>"control-label" %> 
+        <div class="controls" id="additional_language_clone">
+          <%= f.text_field :language, :name=>"generic_file[language][]", :value=>""  %> 
+          <button class="adder btn" name="additional_language" id="additional_language_submit">+<span class="accessible-hidden">add another Language</span></button>
+            &nbsp;
+          <a href="#" id="generic_file_language_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_language"] %>" data-original-title="Language"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_language_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :publisher, :class=>"control-label" %> 
+        <div class="controls" id="additional_publisher_clone">
+          <%= f.text_field :publisher, :name=>"generic_file[publisher][]", :value=>""  %> 
+          <button class="adder btn" name="additional_publisher" id="additional_publisher_submit">+<span class="accessible-hidden">add another Publisher</span></button>
+            &nbsp;
+          <a href="#" id="generic_file_publisher_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_publisher"] %>" data-original-title="Publisher"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_publisher_elements"></div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :subject, :class=>"control-label" %> 
+        <div class="controls" id="additional_subject_clone"> 
+          <%= f.text_field :subject, :name=>"generic_file[subject][]", :value=>"" %>  
+          <button class="adder btn" name="additional_subject" id="additional_subject_submit">+<span class="accessible-hidden">add another Subject</span></button>
+          &nbsp;
+          <a href="#" id="generic_file_subject_help" rel="popover" data-content="<%= ScholarSphere::Application.config.metadata_help["generic_file_subject"] %>" data-original-title="Subject"><i class="icon-question-sign icon-large"></i></a>
+        </div>
+        <div id="additional_subject_elements"></div>
+      </div>
+    </div> <!-- /more_descriptions -->
+  </div><!-- /well -->
+</div> <!-- /row /span6 -->

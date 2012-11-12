@@ -1,15 +1,29 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 class UsersController < ApplicationController
-  prepend_before_filter :find_user, :except => [:index, :search]
+  prepend_before_filter :find_user, :except => [:index, :search, :notifications_number]
   before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow]
   before_filter :user_is_current_user, only: [:edit, :update]
   before_filter :user_not_current_user, only: [:follow, :unfollow]
 
   def index
     sort_val = get_sort
-    query = params[:uq].blank? ? nil : "%"+params[:uq]+"%"
-    @users = User.where("login like ? OR display_name like ?",query,query).paginate(:page => params[:page], 
-                           :per_page => 10, :order => sort_val) unless query.blank?    
-    @users = User.paginate(:page => params[:page], :per_page => 10, :order => sort_val) if query.blank?
+    query = params[:uq].blank? ? nil : "%"+params[:uq].downcase+"%"
+    @users = User.where("(login like lower(?) OR display_name like lower(?)) and ldap_available = true ",query,query).paginate(:page => params[:page], 
+                           :per_page => 10, :order => sort_val) unless query.blank?   
+    @users = User.where("ldap_available = true").paginate(:page => params[:page], :per_page => 10, :order => sort_val) if query.blank?
   end
 
   # Display user profile
@@ -90,7 +104,8 @@ class UsersController < ApplicationController
     sort = params[:sort].blank? ? "name" : params[:sort]
     sort_val = case sort
            when "name"  then "display_name"
-           when "name_rev"   then "display_name DESC"
+           when "name desc"   then "display_name DESC"
+           else sort
            end
     return sort_val
   end

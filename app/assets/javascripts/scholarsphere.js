@@ -1,11 +1,27 @@
-//over ride the blacklight default to submit 
+/*
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+//over ride the blacklight default to submit
 //form when sort by or show per page change
 Blacklight.do_select_submit = function() {
   $(Blacklight.do_select_submit.selector).each(function() {
         var select = $(this);
         select.closest("form").find("input[type=submit]").show();
         select.bind("change", function() {
-          return false;            
+          return false;
         });
     });
 };
@@ -14,8 +30,11 @@ Blacklight.do_select_submit.selector = "form.sort select, form.per_page select";
 // short hand for $(document).ready();
 $(function() {
 
+  // set up global batch edit options to override the ones in the gem 
+  window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};
+ 
 
-  // bootstrap alerts are closed this function 
+  // bootstrap alerts are closed this function
   $('.alert .close').live('click',function(){
     $(this).parent().hide();
   });
@@ -78,7 +97,7 @@ $(function() {
         return false;
       },
       complete: function(event) {
-        $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");          
+        $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
       }
       /*
       select: function( event, ui ) {
@@ -131,7 +150,7 @@ $(function() {
     //plusbttn.attr("value","-");
     plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
     plusbttn.on('click',removeField);
-    
+
     // remove the help tag on subsequent added fields
     cloneElem.find('.formHelp').remove();
     cloneElem.find('i').remove();
@@ -154,9 +173,9 @@ $(function() {
     cloneElem.find('input[type=text]').focus();
     return false;
   });
-  
+
   $('.remover').click(removeField);
-    
+
   function removeField () {
     // get parent and remove it
     $(this).parent().remove();
@@ -228,14 +247,14 @@ $(function() {
 
   });
 
- 
-  // add button for new user 
+
+  // add button for new user
   $('#add_new_user_skel').on('click', function() {
       if ($('#new_user_name_skel').val() == "" || $('#new_user_permission_skel :selected').index() == "0") {
         $('#new_user_name_skel').focus();
         return false;
       }
-      
+
       if ($('#new_user_name_skel').val() == $('#file_owner').html()) {
         $('#permissions_error_text').html("Cannot change owner permissions.");
         $('#permissions_error').show();
@@ -264,7 +283,7 @@ $(function() {
       return false;
   });
 
-  // add button for new user 
+  // add button for new user
   $('#add_new_group_skel').on('click', function() {
       if ($('#new_group_name_skel :selected').index() == "0" || $('#new_group_permission_skel :selected').index() == "0") {
         $('#new_group_name_skel').focus();
@@ -325,10 +344,10 @@ $(function() {
      top.hide(); // do not show the block
      top.find('.select_perm')[0].options[0].selected= true; // select the first otion which is none
      return false;
-      
+
   });
 
-  // called from edit object view 
+  // called from edit object view
   $('#edit_descriptions_link').on('click', function() {
       descriptions_tab();
     });
@@ -344,7 +363,7 @@ $(function() {
     });
 
   // when user clicks on visibility, update potential access levels
-  $("input[name='visibility']").on("change", set_access_levels); 
+  $("input[name='visibility']").on("change", set_access_levels);
 
 	$('#generic_file_permissions_new_group_name').change(function (){
       var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
@@ -361,13 +380,13 @@ $(function() {
    */
     $("li.expandable").click(function(){
        $(this).next("ul").slideToggle();
-    
-       $(this).find('i').toggleClass("icon-chevron-down");
-    }); 
 
-    $("li.expandable_new").click(function(){   
        $(this).find('i').toggleClass("icon-chevron-down");
-    }); 
+    });
+
+    $("li.expandable_new").click(function(){
+       $(this).find('i').toggleClass("icon-chevron-down");
+    });
 
   /*
    * enlarge icons on hover- on dashboard
@@ -385,14 +404,21 @@ $(function() {
       */
 
 
+
+    $(".sorts-dash").click(function(){
+       var itag =$(this).find('i');
+       toggle_icon(itag);
+       sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id') +' asc';
+       $('#sort').val(sort).selected = true;
+       $(".icon-refresh").parent().click();
+    });
     $(".sorts").click(function(){
-       var itag =$(this).find('i')    
-       itag.toggleClass("icon-arrow-down");
-       itag.toggleClass("icon-arrow-up");       
-       sort = itag.attr('class') == "icon-arrow-down" ? itag.attr('id')+'_rev':  itag.attr('id') ;
-       $('input[name="sort"]').attr('value', sort);
-       $("#user_submit").click();
-    }); 
+       var itag =$(this).find('i');
+       toggle_icon(itag);
+        sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id');
+        $('input[name="sort"]').attr('value', sort);
+        $(".icon-search").parent().click();
+    });
 
 }); //closing function at the top of the page
 
@@ -402,17 +428,22 @@ $(function() {
  * begin functions
  */
 
+function toggle_icon(itag){
+       itag.toggleClass("icon-caret-down");
+       itag.toggleClass("icon-caret-up");
+}
+
 // return the files visibility level (penn state, open, restricted);
 function get_visibility(){
   return $("input[name='visibility']:checked").val()
 }
 
-/* 
- * if visibility is Open or Penn State then we can't selectively 
+/*
+ * if visibility is Open or Penn State then we can't selectively
  * set other users/groups to 'read' (it would be over ruled by the
  * visibility of Open or Penn State) so disable the Read option
  */
-function set_access_levels() 
+function set_access_levels()
 {
   var vis = get_visibility();
   var enabled_disabled = false;
@@ -435,7 +466,7 @@ function set_access_levels()
  * make sure the permission being applied is not for a user/group
  * that already has a permission.
  */
-function is_permission_duplicate(user_or_group_name) 
+function is_permission_duplicate(user_or_group_name)
 {
   s = "[" + user_or_group_name + "]";
   var patt = new RegExp(preg_quote(s), 'gi');
@@ -455,20 +486,20 @@ function is_permission_duplicate(user_or_group_name)
         flag = 0;
       }
     });
-  } 
+  }
   // putting a return false inside the each block
   // was not working.  Not sure why would seem better
   // rather than setting this flag var
-  return (flag ? true : false); 
+  return (flag ? true : false);
 }
 
 // is it worth checking to make sure users aren't filling up permissions that will be ignored.
 // or when a user has already set a permission for a user then updates the visibility -- is it
-// still relevant 
-function validate_existing_perms() 
+// still relevant
+function validate_existing_perms()
 {
   var vis = get_visibility();
-  if (vis == "open" || vis == "psu") 
+  if (vis == "open" || vis == "psu")
   {
     var perms = $("input[name^='generic_file[permissions]']");
     $.each(perms, function(index, form_input) {
@@ -541,13 +572,16 @@ function initialize_audio() {
       $('audio').each(function() {
          this.controls = true;
          //$(this).attr("controls","controls");
-      }); 
+      });
   }else {
       $('audio').each(function() {
          $(this).attr("preload","auto");
-      }); 
+      });
     audiojs.events.ready(function() {
-          var as = audiojs.createAll();
+          var as = audiojs.createAll({
+                 imageLocation: '/assets/player-graphics.gif',
+                 swfLocation: '/assets/audiojs.swf'
+          });
     });
   };
 }

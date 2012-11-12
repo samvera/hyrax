@@ -1,3 +1,19 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
 <% javascript 'video.js' %>
 <% javascript 'audio.min.js' %>
 <% javascript 'bootstrap-tooltip.js'%>
@@ -7,7 +23,18 @@
 <% stylesheet 'video-js.css' %>
 <% stylesheet 'jquery-ui-1.8.1.custom' %>
 
+<% javascript 'jquery.validate.js' %>
+
+<style type="text/css">
+label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+</style>
+  
+
+
 <% content_for :local_js do %>
+   if (navigator.userAgent.match("MSIE")){
+      $("#fileupload").validate();
+   }
 initialize_audio();
 
 $('input[name=revision]:radio').on('click', function() {

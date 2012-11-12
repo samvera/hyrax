@@ -1,3 +1,17 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 ScholarSphere::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -67,7 +81,7 @@ ScholarSphere::Application.configure do
   # config.assets.manifest = YOUR_PATH
   
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( generic_files.js dashboard.js video.js audio.min.js jquery.zclip.min.js bootstrap-tooltip.js bootstrap-popover.js video-js.css generic_files.css jquery-ui-1.8.1.custom.css bootstrap.min.css batch.js reset_body.css scholarsphere-bootstrap.css bootstrap-modal.js)
+  config.assets.precompile += %w( generic_files.js dashboard.js video.js audio.min.js jquery.zclip.min.js bootstrap-tooltip.js bootstrap-popover.js video-js.css generic_files.css jquery-ui-1.8.1.custom.css jquery-ui-1.8.23.custom.css bootstrap.min.css batch.js reset_body.css scholarsphere-bootstrap.css bootstrap-modal.js jquery.validate.js)
   config.assets.precompile += %w( *.jpg *.png *.gif *.ico )
 
   config.logout_url = "https://webaccess.psu.edu/cgi-bin/logout?#{get_vhost_by_host[1]}"

@@ -1,7 +1,27 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
 <% javascript 'video.js' %>
 <% javascript 'audio.min.js' %>
 <% stylesheet 'video-js.css' %>
 <% javascript 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
+<% javascript 'bootstrap-tooltip.js'%>
+<% javascript 'bootstrap-popover.js'%>
+<% javascript 'bootstrap-modal.js'%>
+
 
 <% content_for :local_js do %>
 initialize_audio();
@@ -13,13 +33,13 @@ var addthis_config = {"data_track_addressbar":true};
   width: 338px;
 }
 <% end %>
-<%= render :partial => 'breadcrumbs' %>
+<%= render :partial => 'generic_files/breadcrumbs' %>
 
 <h1 class="lower"><%= display_title(@generic_file) %></h1>
 
 <div class="row">
   <div class="span40">
-    <%= render :partial => 'media_display' %>
+    <%= render :partial => 'generic_files/media_display' %>
   </div>
   <div class="span2">&nbsp;</div>
   <div class="span68"><!-- class="column second"> -->
@@ -111,7 +131,7 @@ var addthis_config = {"data_track_addressbar":true};
           </td>
         </tr>
         <tr>
-          <th>Description</th>
+          <th>Abstract or Summary</th>
           <td>
             <% @generic_file.description.each do |desc| %>
               <%= iconify_auto_link(desc) %><br />
@@ -146,7 +166,7 @@ var addthis_config = {"data_track_addressbar":true};
           <th>Rights</th>
           <td>
             <% @generic_file.rights.each do |r| %>
-              <%=link_to_field('rights',r)%> <%= iconify_auto_link(r) %><br />
+              <%=link_to_field('rights',r, ScholarSphere::Application::config.cc_licenses_reverse[r])%> <%= iconify_auto_link(r,false) %><br />
             <% end %>
           </td>
         </tr>
@@ -224,6 +244,7 @@ var addthis_config = {"data_track_addressbar":true};
           <td>
             <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>
             <% @generic_file.characterization_terms.each_pair do |term, values| %>
+            <div>
               <% label = term.to_s %>
               <% if label == "format_label" %>
                  <% label = "File Format"  %>
@@ -231,13 +252,20 @@ var addthis_config = {"data_track_addressbar":true};
               <% end %>
               <% label = label.humanize %>
               <% if values.is_a? Array %>
-                <% values.each do |value| %>
+                <% length = values.length %>
+                <% length = ScholarSphere::Application::config.fits_message_length-1  if term == :status_message && values.length > ScholarSphere::Application::config.fits_message_length-1  %>
+                <% values[0..length].each_with_index do |value, idx| %>
                   <% next if value.empty? %>
-                  <%= "#{label}: #{value.truncate(250)}" %><br />
+                  <%= "#{label}: #{value.truncate(250)}" %>
+                  <%= "<br />".html_safe unless idx == length %> 
+                <% end %>
+                <% if length != values.length %>
+                   <%= render :partial => "generic_files/extra_fields_modal", :locals=>{:name=>term, :values=> values, :start=>ScholarSphere::Application::config.fits_message_length}%>
                 <% end %>
               <% else %>
                 <%= "#{label}: #{values.truncate(250)}" %><br />
               <% end %>
+            </div>
             <% end %>
           </td>
         </tr>

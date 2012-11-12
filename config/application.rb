@@ -1,3 +1,17 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
@@ -118,6 +132,8 @@ module ScholarSphere
       'CC0 1.0 Universal' => 'http://creativecommons.org/publicdomain/zero/1.0/',
       'All rights reserved' => 'All rights reserved'
     }
+    
+    config.cc_licenses_reverse = Hash[*config.cc_licenses.to_a.flatten.reverse]
 
     # help text to display for form metadata elements, these will need to be updated to
     # reflect a field name change (should one happen) in the generic file datastream
@@ -165,6 +181,9 @@ module ScholarSphere
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+    
+    #configure the number of fits array items shown on the Generic File show page
+    config.fits_message_length = 5
   end
 end
 # this prevents LoadErrors, related to Rails autoload behavior

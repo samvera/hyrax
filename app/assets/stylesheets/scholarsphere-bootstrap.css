@@ -191,7 +191,7 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
 }
 
 /* used to over ride some defaults set in bootstrap.css */
-th.center, td.center {
+.center, th.center, td.center {
   text-align: center;
 }
 
@@ -279,4 +279,17 @@ ol.faq ol ol li { list-style-type: lower-roman }
 
 .fleft {
     float: left;
+}
+
+.fright {
+    float: right;
+}
+
+.navbar .icon-btn {
+    padding: 4px 20px 4px 2px;
+}
+
+.extra_tag {
+    position: relative;
+    top: -60px;
 }

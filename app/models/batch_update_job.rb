@@ -1,3 +1,17 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 class BatchUpdateJob
   include Hydra::AccessControlsEnforcement
   include GenericFileHelper
@@ -54,10 +68,10 @@ class BatchUpdateJob
     job_user = User.where(login:"batchuser").first
     job_user = User.create(login:"batchuser", email:"batchmail") unless job_user
     
-    message = "The file(s) "+ file_list(saved)+ " have been saved." unless saved.empty?
+    message = '<a class="batchid ui-helper-hidden">ss-'+batch.noid+'</a>The file(s) '+ file_list(saved)+ " have been saved." unless saved.empty?
     job_user.send_message(user, message, 'Batch upload complete') unless saved.empty?
  
-    message = "The file(s) "+ file_list(denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless denied.empty?
+    message = '<a class="batchid ui-helper-hidden">'+batch.noid+'</a>The file(s) '+ file_list(denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless denied.empty?
     job_user.send_message(user, message, 'Batch upload permission denied') unless denied.empty?
      
   end
