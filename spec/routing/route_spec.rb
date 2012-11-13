@@ -245,6 +245,10 @@ describe 'Routes' do
       { get: '/mendeley' }.should route_to(controller: 'static', action: 'mendeley')
     end
 
+    it "should route to versions" do
+      { get: '/versions' }.should route_to(controller: 'static', action: 'versions')
+    end
+
     it "should *not* route a bogus static page" do
       { get: '/awesome' }.should_not route_to(controller: 'static', action: 'awesome')
     end

@@ -27,6 +27,9 @@ describe 'event jobs' do
   end
   after(:each) do
     @gf.delete
+    @user.delete
+    @another_user.delete
+    @third_user.delete
     $redis.keys('events:*').each { |key| $redis.del key }
     $redis.keys('User:*').each { |key| $redis.del key }
     $redis.keys('GenericFile:*').each { |key| $redis.del key }
@@ -34,14 +37,14 @@ describe 'event jobs' do
   it "should log user edit profile events" do
     # UserEditProfile should log the event to the editor's dashboard and his/her followers' dashboards
     @another_user.follow(@user)
-    @user.events.length.should == 0
-    @another_user.events.length.should == 0
+    count_user = @user.events.length
+    count_another = @another_user.events.length
     Time.expects(:now).returns(1).at_least_once
     event = { action: 'User <a href="/users/jilluser">jilluser</a> has edited his or her profile', timestamp: '1' }
     UserEditProfileEventJob.perform(@user.login)
-    @user.events.length.should == 1
+    @user.events.length.should == count_user + 1
     @user.events.first.should == event
-    @another_user.events.length.should == 1
+    @another_user.events.length.should == count_another + 1
     @another_user.events.first.should == event
   end
   it "should log user follow events" do

@@ -34,6 +34,11 @@ describe User do
     @user.should respond_to(:log_event)
     @user.should respond_to(:log_profile_event)
   end
+  it "should have social attributes" do
+    @user.should respond_to(:twitter_handle)
+    @user.should respond_to(:facebook_handle)
+    @user.should respond_to(:googleplus_handle)
+  end
   it "should redefine to_param to make redis keys more recognizable" do
     @user.to_param.should == @user.login
   end

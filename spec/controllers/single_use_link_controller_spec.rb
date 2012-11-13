@@ -39,6 +39,7 @@ describe SingleUseLinkController do
     after do
       sign_out @user
       SingleUseLink.find(:all).each{ |l| l.delete}
+      @user.delete
     end
     describe "GET 'generate_download'" do
       it "returns http success" do
@@ -81,6 +82,9 @@ describe SingleUseLinkController do
       @shash=  assigns[:su].downloadKey
       sign_out @user
     end    
+    before (:each) do
+      @user.delete
+    end
     describe "GET 'download'" do
       it "returns http success" do
         controller.stubs(:render)

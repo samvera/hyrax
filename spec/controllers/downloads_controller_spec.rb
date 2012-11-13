@@ -42,6 +42,10 @@ describe DownloadsController do
       User.any_instance.stubs(:groups).returns([])
       controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
     end
+    after do
+      arch = FactoryGirl.find(:archivist) rescue
+      arch.delete if arch
+    end
     describe "show" do
       it "should default to returning configured default download" do
         DownloadsController.default_content_dsid.should == "content"
@@ -80,6 +84,11 @@ describe DownloadsController do
       User.any_instance.stubs(:groups).returns([])
       controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
     end
+    after do
+      user = FactoryGirl.find(:user) rescue
+      user.delete if user
+    end
+    
     describe "show" do
       it "should deny access" do
         get "show", :id => "test1"

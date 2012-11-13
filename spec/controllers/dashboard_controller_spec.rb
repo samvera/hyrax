@@ -28,6 +28,9 @@ describe DashboardController do
       @strategy = Devise::Strategies::HttpHeaderAuthenticatable.new(nil)
       @strategy.expects(:request).returns(request).at_least_once
     end
+    after(:each) do
+      @user.delete
+    end
     it "should populate LDAP attrs if user is new" do
       User.stubs(:find_by_login).with(@user.login).returns(nil)
       User.expects(:create).with(login: @user.login).returns(@user).once

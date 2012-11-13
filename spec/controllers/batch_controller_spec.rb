@@ -24,6 +24,9 @@ describe BatchController do
     User.any_instance.stubs(:groups).returns([])
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
+  after do
+    @user.delete
+  end
   describe "#update" do
     before do
       @batch = Batch.new
