@@ -20,7 +20,7 @@ task :fixtures do
 end
 
 
-describe "Create the test rails app"
+desc "Create the test rails app"
 task :generate do
   unless File.exists?('spec/internal/Rakefile')
     puts "Generating rails app"
@@ -42,7 +42,7 @@ task :generate do
   puts "Running specs"
 end
 
-describe "Clean out the test rails app"
+desc "Clean out the test rails app"
 task :clean do
   puts "Removing sample rails app"
   `rm -rf spec/internal`
