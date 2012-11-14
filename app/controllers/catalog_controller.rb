@@ -15,6 +15,7 @@
 
 # -*- encoding : utf-8 -*-
 require 'blacklight/catalog'
+require 'blacklight_advanced_search'
 
 class CatalogController < ApplicationController
   include Blacklight::Catalog

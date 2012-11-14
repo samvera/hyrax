@@ -2,21 +2,21 @@
 require File.expand_path('../lib/scholarsphere/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["TODO: Write your name"]
+  gem.authors       = ["Justin Coyne"]
   gem.email         = ["justin.coyne@yourmediashelf.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{An gem for a rails engine extracted from PSU Scholarsphere}
+  gem.summary       = %q{Scholarsphere is a hydra-head for a file repository}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = "."
+  gem.name          = "scholarsphere"
   gem.require_paths = ["lib"]
   gem.version       = Scholarsphere::VERSION
 
   gem.add_dependency 'rails', '~> 3.2.8'
-  gem.add_dependency 'blacklight', '~> 4.0.0.pre4'
+  gem.add_dependency 'blacklight'#, '~> 4.0.0.pre4'
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency 'hydra-head', '5.0.0.pre11'
   #gem 'hydra-ldap', '0.1.0'

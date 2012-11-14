@@ -1,6 +1,18 @@
-# .
+# Scholarsphere
 
-TODO: Write a gem description
+Add to config/routes.rb
+```
+  mount Scholarsphere::Engine => '/'
+```
+
+
+Run the blacklight generator
+```
+rails generate blacklight --devise
+```
+
+Add include Scholarsphere::User into your user model
+run the mailboxer generator
 
 ## Installation
 
