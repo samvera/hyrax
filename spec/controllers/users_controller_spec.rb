@@ -51,14 +51,14 @@ describe UsersController do
     it "redirects to show profile when user attempts to edit another profile" do
       get :edit, uid: @another_user.login
       response.should redirect_to(profile_path(@another_user.login))
-      flash[:alert].should include("You cannot edit archivist1's profile")
+      flash[:alert].should include("Permission denied: cannot access this page.")
     end
   end
   describe "#update" do
     it "should not allow other users to update" do
       post :update, uid: @another_user.login, user: { avatar: nil }
       response.should redirect_to(profile_path(@another_user.login))
-      flash[:alert].should include("You cannot edit archivist1's profile")
+      flash[:alert].should include("Permission denied: cannot access this page.")
     end
     it "should set an avatar and redirect to profile" do
       @user.avatar.file?.should be_false

@@ -162,7 +162,7 @@ describe 'Routes' do
 
   describe 'Users' do
     it 'should route to user trophies' do
-      { post: 'users/trophy' }.should route_to(controller: 'users', action: 'create_trophy')
+      { post: '/users/bob135/trophy' }.should route_to(controller: 'users', action: 'create_trophy', uid: 'bob135')
     end
     it 'should route to user profile' do
       { get: '/users/bob135' }.should route_to(controller: 'users', action: 'show', uid: 'bob135')

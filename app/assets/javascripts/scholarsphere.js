@@ -395,12 +395,8 @@ $(function() {
                type:"post",
                data: "file_id="+this.id,
                success:function(data) {
-                  //  t = $.parseJSON(data);
-                      alert(data.trophy.generic_file_id);
                       $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-on");
-                     $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-off");
-  
-                      alert(this)
+                      $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-off");
                     }
                })
      });
