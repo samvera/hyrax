@@ -6,6 +6,8 @@ config/solr.yml
 config/hydra-ldap.yml
 config/redis.yml
 
+Gemfile.lock
+
 # This file is generated automatically by: rake scholarsphere:generate_secret
 config/initializers/secret_token.rb
 

@@ -1,59 +1,11 @@
-# workaround for "invalid byte sequence in US-ASCII (ArgumentError)" breaking the Jenkins build
-if RUBY_VERSION =~ /1.9/
-  Encoding.default_external = Encoding::UTF_8
-  Encoding.default_internal = Encoding::UTF_8
-end
-
 source 'http://rubygems.org'
 
-# Ruby on Rails components
-gem 'rails', '3.2.8'
-gem 'mysql2', '0.3.11'
+# Please see scholarsphere.gemspec for dependency information.
+gemspec
 
-# Hydra community components
-gem 'blacklight', '3.7.1'
-gem 'blacklight_advanced_search', '1.2.4'
-gem 'hydra-head', :git => 'https://github.com/projecthydra/hydra-head.git', :ref => '720e07afd4'
-gem 'active-fedora', '4.5.0'
-gem 'rubydora', '0.5.13'
-gem 'solrizer-fedora', '2.2.0'
-gem 'hydra-ldap', '0.1.0'
-gem 'noid', '0.5.5'
-gem 'hydra-batch-edit', :git=>'git://github.com/psu-stewardship/hydra-batch-edit.git', :ref => 'b753c7aeac'
+#gem 'hydra-batch-edit', :git=>'git://github.com/psu-stewardship/hydra-batch-edit.git', :ref => 'b753c7aeac'
 
-# Other components
-gem 'resque', '1.22.0', :require => 'resque/server'
-gem 'resque-pool', '0.3.0'
-# NOTE: the :require arg is necessary on Linux-based hosts
-gem 'rmagick', '2.13.1', :require => 'RMagick'
-gem 'devise', '2.1.2'
-gem 'paperclip', '3.3.0'
-gem 'daemons', '1.1.9'
-gem 'execjs', '1.4.0'
-gem 'therubyracer', '0.10.2'
-gem 'zipruby', '0.3.6'
 gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
-gem 'rails_autolink', '1.0.9'
-gem 'acts_as_follower', '0.1.1'
-gem 'nest', '1.1.1'
-gem 'sitemap', '0.3.2'
-gem 'yaml_db', '0.2.3'
-gem 'mailboxer', '0.8.0'
-gem 'clamav', '0.4.1'
-gem 'rainbow', '1.1.4'
-gem 'will_paginate', '3.0.3'
-
-group :assets do
-  gem 'sass-rails', '3.2.5'
-  gem 'coffee-rails', '3.2.2'
-  gem 'uglifier', '1.3.0'
-  gem 'compass-rails', '1.0.3'
-  gem 'compass-susy-plugin', '0.9'
-end
-
-group :production, :integration do
-  gem 'passenger', '3.0.13'
-end
 
 group :development, :test do
   gem 'sqlite3'
