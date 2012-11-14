@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
   end
 
   def has_access?
-    unless current_user.ldap_exist?
+    unless current_user && current_user.ldap_exist?
       render :template => '/error/401', :layout => "error", :formats => [:html], :status => 401
     end
   end
