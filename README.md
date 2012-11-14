@@ -11,6 +11,13 @@ Run the blacklight generator
 rails generate blacklight --devise
 ```
 
+Run the scholarsphere migrations
+how?
+
+```
+rake db:migrate
+```
+
 Add include Scholarsphere::User into your user model
 run the mailboxer generator
 
