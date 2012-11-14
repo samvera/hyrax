@@ -201,10 +201,15 @@ class GenericFilesController < ApplicationController
   end
 
   def virus_check( file)
+    if defined? ClamAV
       stat = ClamAV.instance.scanfile(file.path)
       flash[:error] = "Virus checking did not pass for #{file.original_filename} status = #{stat}" unless stat == 0
       logger.warn "Virus checking did not pass for #{file.inspect} status = #{stat}" unless stat == 0
-      return stat
+      stat
+    else
+      logger.warn "Virus checking disabled for #{file.inspect}"
+      0
+    end
   end 
 
   def create_and_save_generic_file

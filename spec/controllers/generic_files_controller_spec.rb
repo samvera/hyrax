@@ -18,6 +18,7 @@ describe GenericFilesController do
   before do
     Hydra::LDAP.connection.stubs(:get_operation_result).returns(OpenStruct.new({code:0, message:"Success"}))
     Hydra::LDAP.stubs(:does_user_exist?).returns(true)
+
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
@@ -108,21 +109,36 @@ describe GenericFilesController do
       saved_file.to_solr.keys.should include('depositor_t')
       saved_file.to_solr['depositor_t'].should == ['jilluser']
     end
-    it "Shoul call virus check" do
+    it "Should call virus check" do
       GenericFile.any_instance.stubs(:to_solr).returns({})
-      ClamAV.any_instance.expects(:scanfile).returns(0)      
+      controller.expects(:virus_check).returns(0)      
       file = fixture_file_upload('/world.png','image/png')
       Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
-    it "failing virus check should create flash" do
-      GenericFile.any_instance.stubs(:to_solr).returns({})
-      ClamAV.any_instance.expects(:scanfile).returns(1)      
-      file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
-      flash[:error].should_not be_empty
+    describe "#virus_check" do
+      before do
+        unless defined? ClamAV
+          class ClamAV
+            def self.instance
+              new
+            end
+          end
+          @stubbed_clamav = true
+        end
+      end
+      after do
+        Object.send(:remove_const, :ClamAV) if @stubbed_clamav
+      end
+      it "failing virus check should create flash" do
+        GenericFile.any_instance.stubs(:to_solr).returns({})
+        ClamAV.any_instance.expects(:scanfile).returns(1)      
+        file = fixture_file_upload('/world.png','image/png')
+        controller.send :virus_check, file
+        flash[:error].should_not be_empty
+      end
     end
 
 
@@ -175,7 +191,7 @@ describe GenericFilesController do
   describe "update" do
     before do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      ClamAV.any_instance.stubs(:scanfile).returns(0)
+      #controller.expects(:virus_check).returns(0)      
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata(@user.login)
       @generic_file.save
@@ -262,10 +278,11 @@ describe GenericFilesController do
       assigns[:generic_file].read_groups.should == ["group3"]
     end
     it "should spawn a virus check" do
+      # The expectation is in the begin block
+      controller.expects(:virus_check).returns(0)      
       Resque.stubs(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser')
       Resque.stubs(:enqueue).with(CharacterizeJob, @generic_file.pid)
       GenericFile.stubs(:save).returns({})
-      ClamAV.any_instance.expects(:scanfile).returns(0)
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       file = fixture_file_upload('/world.png','image/png')
