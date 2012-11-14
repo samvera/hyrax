@@ -16,8 +16,7 @@ require 'spec_helper'
 
 describe BatchController do
   before do
-    Hydra::LDAP.connection.stubs(:get_operation_result).returns(OpenStruct.new({code:0, message:"Success"}))
-    Hydra::LDAP.stubs(:does_user_exist?).returns(true)
+    controller.stubs(:has_access?).returns(true)
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user

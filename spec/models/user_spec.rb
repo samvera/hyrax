@@ -75,7 +75,8 @@ describe User do
     before do
       filter = Net::LDAP::Filter.eq('uid', @user.login)
       Hydra::LDAP.expects(:groups_for_user).with(filter).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
-      Hydra::LDAP.connection.stubs(:get_operation_result).returns(OpenStruct.new({code:0, message:"Success"}))
+      stub_connection = stub(:get_operation_result => OpenStruct.new({code:0, message:"Success"}))
+      Hydra::LDAP.stubs(:connection).returns(stub_connection)
     end
     it "should return a list" do
       @user.groups.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
@@ -88,6 +89,8 @@ describe User do
       entry['dn'] = ["uid=mjg36,dc=psu,edu"]
       entry['cn'] = ["MICHAEL JOSEPH GIARLO"]
       Hydra::LDAP.expects(:get_user).returns([entry])
+      stub_connection = stub(:get_operation_result => OpenStruct.new({code:0, message:"Success"}))
+      Hydra::LDAP.stubs(:connection).returns(stub_connection)
     end
     it "should return user attributes from LDAP" do
       User.directory_attributes('mjg36', ['cn']).first['cn'].should == ['MICHAEL JOSEPH GIARLO']

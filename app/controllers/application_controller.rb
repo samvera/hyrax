@@ -30,7 +30,6 @@ class ApplicationController < ActionController::Base
   rescue_from ActionView::Template::Error, :with => :render_500
   rescue_from ActiveRecord::StatementInvalid, :with => :render_500
   rescue_from Mysql2::Error, :with => :render_500
-  rescue_from Net::LDAP::LdapError, :with => :render_500
   rescue_from RSolr::Error::Http, :with => :render_500
   rescue_from Blacklight::Exceptions::ECONNREFUSED, :with => :render_500
   rescue_from Errno::ECONNREFUSED, :with => :render_500
@@ -128,10 +127,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  ### Hook which is overridden in Scholarsphere::Ldap::Controller
   def has_access?
-    unless current_user.ldap_exist?
-      render :template => '/error/401', :layout => "error", :formats => [:html], :status => 401
-    end
   end
+
+  include Scholarsphere::Ldap::Controller
 
 end
