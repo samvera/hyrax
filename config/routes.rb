@@ -63,6 +63,10 @@ ScholarSphere::Application.routes.draw do
   match 'users/:uid' => 'users#show', :as => :profile
   match 'users/:uid/edit' => 'users#edit', :as => :edit_profile
   match 'users/:uid/update' => 'users#update', :as => :update_profile, :via => :put
+  match "users/:uid/trophy" => "users#create_trophy", :as => :update_trophy_user, :via => :post
+
+
+
   match 'users/:uid/follow' => 'users#follow', :as => :follow_user
   match 'users/:uid/unfollow' => 'users#unfollow', :as => :unfollow_user
 

@@ -176,6 +176,7 @@ z-index:1;
 
   <% @page_title = application_name + " Dashboard" %>
 
+  <div class="accessible-hidden" id="current_user"><%=@user.login%></div>
   <div class="row">
     <%= render :partial => 'search_form' %>
     <h2 class="heading1">My Dashboard</h2>

@@ -77,6 +77,13 @@ class User < ActiveRecord::Base
     return nil
   end
 
+  # method needed for trophies
+  def trophies
+     trophies = Trophy.where(user_id:self.id)    
+    return trophies
+  end
+
+
   def ldap_exist?
     if (ldap_last_update.blank? || ((Time.now-ldap_last_update) > 24*60*60 ))
       return ldap_exist!

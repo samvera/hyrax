@@ -9,7 +9,7 @@ source 'http://rubygems.org'
 # Ruby on Rails components
 gem 'rails', '3.2.8'
 gem 'mysql2', '0.3.11'
-
+gem 'rb-readline'
 # Hydra community components
 gem 'blacklight', '3.7.1'
 gem 'blacklight_advanced_search', '1.2.4'
