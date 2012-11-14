@@ -293,3 +293,11 @@ ol.faq ol ol li { list-style-type: lower-roman }
     position: relative;
     top: -60px;
 }
+
+.trophy-off:hover,.trophy-off {
+     color: black;
+}
+
+.trophy-on:hover,.trophy-on {
+     color: goldenrod;
+}
