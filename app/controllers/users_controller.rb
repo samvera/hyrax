@@ -14,7 +14,7 @@
 
 class UsersController < ApplicationController
   prepend_before_filter :find_user, :except => [:index, :search, :notifications_number]
-  before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :create_trophy]
+  before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
   before_filter :user_is_current_user, only: [:edit, :update, :create_trophy]
   before_filter :user_not_current_user, only: [:follow, :unfollow]
 
@@ -60,15 +60,21 @@ class UsersController < ApplicationController
     end
     redirect_to profile_path(@user.to_s), notice: "Your profile has been updated"
   end
-  def create_trophy
+  def toggle_trophy
      # TO DO  make sure current user has access to file
-     #puts "ZZZZZZZZ #{params}"
-     logger.error "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ DDDDDDDDDDDDDDaaaaaaaaaaaaaannnnnnnnN"
-     logger.error params
-     t=Trophy.create(:generic_file_id=>params[:file_id], :user_id=>current_user.id)
+     t = Trophy.where(:generic_file_id => params[:file_id], :user_id => current_user.id).first
+     if t.blank? 
+       t = Trophy.create(:generic_file_id => params[:file_id], :user_id => current_user.id)
+       return false unless t.persisted?
+     else
+       t.delete  
+       #TODO do this better says Mike
+       return false if t.persisted?  
+     end
      render :json => t
-
   end 
+
+
   # Follow a user
   def follow
     unless current_user.following?(@user)

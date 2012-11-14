@@ -58,6 +58,8 @@ class GenericFile < ActiveFedora::Base
   around_save :characterize_if_changed, :retry_warming
   validate :paranoid_permissions
 
+  #TODO Uncomment when ActiveFedora bug is fixed
+  #before_delete :cleanup_trophies 
 
   NO_RUNS = 999
 
@@ -77,6 +79,11 @@ class GenericFile < ActiveFedora::Base
      puts "label = #{label}"
      label = key.gsub('_',' ').titleize if label.blank?
      return label
+  end
+
+  def delete
+     self.cleanup_trophies
+     super
   end
 
   def persistent_url
@@ -691,6 +698,12 @@ class GenericFile < ActiveFedora::Base
      return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
   end
 
+  def cleanup_trophies
+    puts "HELLLOOOOOO"
+    puts self.noid
+    Trophy.destroy_all(generic_file_id: self.noid)
+  end
+
   private
 
   def permission_hash
@@ -814,4 +827,5 @@ class GenericFile < ActiveFedora::Base
     temp_name = name.split(", ")
     return temp_name.last + " " + temp_name.first
   end
+
 end

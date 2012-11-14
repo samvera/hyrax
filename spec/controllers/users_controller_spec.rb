@@ -157,4 +157,11 @@ describe UsersController do
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end
+  describe "#toggle_trophy" do
+     it "should trophize a file" do
+      post :toggle_trophy, {uid: @user.login, file_id: '123'}
+      JSON.parse(response.body)['trophy']['user_id'].should == @user.id
+      JSON.parse(response.body)['trophy']['generic_file_id'].should == '123'
+    end
+  end
 end

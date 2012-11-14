@@ -38,7 +38,12 @@ limitations under the License.
       <dt><i class="icon-folder-open"></i> Deposited Files</dt>
       <dd><%= link_to_field('depositor', @user.to_s, GenericFile.find(:depositor_t => @user.to_s).count) %></dd>
     </dl>
-
+    <dl>
+    <dt><i class="icon-trophy"></i>Trophy Files</dt>
+    <% @user.trophies.each do |t| %>
+    <dd> <%= t.generic_file_id %></dd>
+    <% end %>
+    </dl>
 <hr />
 
 <h2>User Info</h2>
