@@ -24,7 +24,9 @@ class CreateSubjectLocalAuthorityEntries < ActiveRecord::Migration
     when "sqlite", "sqlite3"
       ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
       ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence where name='#{table}'")
-      ActiveRecord::Base.connection.execute("VACUUM")
+      unless ActiveRecord::Base.connection.adapter_name == 'SQLite'
+        ActiveRecord::Base.connection.execute("VACUUM")
+      end
     end
   end
 
