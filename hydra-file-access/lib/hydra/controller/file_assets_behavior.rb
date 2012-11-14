@@ -33,7 +33,7 @@ module Hydra::Controller::FileAssetsBehavior
       @solr_result = FileAsset.find_with_conditions({})
     else
       container_uri = "info:fedora/#{params[:asset_id]}"
-      escaped_uri = container_uri.gsub(/(:)/, '\\:')
+      escaped_uri = ActiveFedora::SolrService.escape_uri_for_query(container_uri)
       extra_controller_params =  {:q=>"is_part_of_s:#{escaped_uri}", 'qf'=>'is_part_of_s', 'qt'=>'standard', :rows=>10}.with_indifferent_access
       @response, @document_list = get_search_results( extra_controller_params )
       
