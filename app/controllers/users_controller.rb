@@ -65,7 +65,10 @@ class UsersController < ApplicationController
     end
     redirect_to profile_path(@user.to_s), notice: "Your profile has been updated"
   end
-  def toggle_trophy
+  def toggle_trophy    
+     unless current_user.can? :edit, permissions_solr_doc_for_id("scholarsphere:#{params[:file_id]}")
+       return false
+     end
      # TO DO  make sure current user has access to file
      t = Trophy.where(:generic_file_id => params[:file_id], :user_id => current_user.id).first
      if t.blank? 

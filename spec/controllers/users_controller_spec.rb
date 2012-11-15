@@ -158,10 +158,29 @@ describe UsersController do
     end
   end
   describe "#toggle_trophy" do
-     it "should trophize a file" do
-      post :toggle_trophy, {uid: @user.login, file_id: '123'}
+     before do
+       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+       @file = GenericFile.new()
+       @file.apply_depositor_metadata(@user.login)
+       @file.save
+     end
+     after do
+       @file.delete
+     end
+     it "should trophy a file" do
+      post :toggle_trophy, {uid: @user.login, file_id: @file.pid["scholarsphere:".length..-1]}
       JSON.parse(response.body)['trophy']['user_id'].should == @user.id
-      JSON.parse(response.body)['trophy']['generic_file_id'].should == '123'
+      JSON.parse(response.body)['trophy']['generic_file_id'].should == @file.pid["scholarsphere:".length..-1]
+    end
+     it "should not trophy a file for a different user" do
+      post :toggle_trophy, {uid: @another_user.login, file_id: @file.pid}
+      response.should_not be_success
+    end
+     it "should not trophy a file with no edit privs" do
+      sign_out @user
+      sign_in @another_user
+      post :toggle_trophy, {uid: @another_user.login, file_id: @file.pid}
+      response.should_not be_success
     end
   end
 end
