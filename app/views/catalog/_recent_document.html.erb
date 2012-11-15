@@ -10,9 +10,9 @@
       <td>
         <h3>
           <% if title.length > 25 %>
-            <%= link_to "#{title[0..24]}...", generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
+            <%= link_to "#{title[0..24]}...", sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
           <% else %>
-            <%= link_to title, generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
+            <%= link_to title, sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
           <% end %>
 
           <% if display_access %>
@@ -27,9 +27,9 @@
         </h3>
         <p> 
           <% if filename.length > 25 %>
-            <%= link_to "#{filename[0..24]}...", generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
+            <%= link_to "#{filename[0..24]}...", sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
           <% else %>
-            <%= link_to filename, generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
+            <%= link_to filename, sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
           <% end %>
             <%= keywords.html_safe %>
         </p>

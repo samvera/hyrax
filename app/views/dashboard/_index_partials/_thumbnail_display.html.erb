@@ -18,24 +18,24 @@ limitations under the License.
 <%- width = 36 if width.blank? -%>
 <% if (document['mime_type_t']) %>
   <% if !(document['mime_type_t'] & ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg']).empty? %>
-    <%= link_to image_tag(download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag(download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), sufia.generic_file_path(document[:noid_s].first) %>
   <% elsif !(document['mime_type_t'] & ['application/pdf']).empty? %>
-    <%= link_to image_tag(download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width,:height=>height}),generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width,:height=>height}),sufia.generic_file_path(document[:noid_s].first) %>
   <% elsif !(document['mime_type_t'] & ['video/mp4']).empty? %>
       <video controls="controls" height="80" width="140"
 	      class="video-js vjs-default-skin" data-setup="{}"
 	      preload="auto"> 
-        <source src="<%= download_path(document["id"]) %>"
+        <source src="<%= sufia.download_path(document["id"]) %>"
 		 type="<%= document['mime_type_t'].first %>"   />
         Your browser does not support the video tag.  
       </video> 
   <% elsif !(document['mime_type_t'] & ['audio/mp3',
       'audio/mpeg']).empty? %>
-      <audio src="<%= download_path(document["id"], format:'audio')
+      <audio src="<%= sufia.download_path(document["id"], format:'audio')
 						  %>" > </audio>
   <% else %>
-    <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document[:noid_s].first) %>
   <% end %>
 <% else %>
- <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), generic_file_path(document[:noid_s].first) %> 
+ <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document[:noid_s].first) %> 
 <% end %>

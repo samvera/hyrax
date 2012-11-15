@@ -12,15 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module ApplicationHelper
-
-  def javascript(*files)
-    content_for(:js_head) { javascript_include_tag(*files) }
-  end
-
-  def stylesheet(*files)
-    content_for(:css_head) { stylesheet_link_tag(*files) }
-  end
+module SufiaHelper
 
   # link_back_to_dashboard(:label=>'Back to Search')
   # Create a link back to the dashboard screen, keeping the user's facet, query and paging choices intact by using session.
@@ -77,9 +69,9 @@ module ApplicationHelper
 
   def link_to_profile(login)
     user = User.find_by_login(login)
-    link_to user.name, profile_path(login)
+    link_to user.name, sufia.profile_path(login)
   rescue
-    link_to login, profile_path(login)
+    link_to login, sufia.profile_path(login)
   end
 
   def linkify_chat_id(chat_id)

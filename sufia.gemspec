@@ -34,6 +34,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'execjs', '1.4.0'
   gem.add_dependency 'therubyracer', '0.10.2'
   gem.add_dependency 'zipruby', '0.3.6'
+  gem.add_dependency 'mail_form'
   gem.add_dependency 'rails_autolink', '1.0.9'
   gem.add_dependency 'acts_as_follower', '0.1.1'
   gem.add_dependency 'nest', '1.1.1'
