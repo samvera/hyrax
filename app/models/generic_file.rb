@@ -699,8 +699,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def cleanup_trophies
-    puts "HELLLOOOOOO"
-    puts self.noid
+
     Trophy.destroy_all(generic_file_id: self.noid)
   end
 
