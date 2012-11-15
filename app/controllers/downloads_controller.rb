@@ -14,7 +14,7 @@
 
 class DownloadsController < ApplicationController
   # module mixes in normalize_identifier method
-  include ScholarSphere::Noid
+  include Scholarsphere::Noid
 
   # moved check into the routine so we can handle the user with no access 
   #before_filter :deny_access_if_not_reader, :only=>[:show]

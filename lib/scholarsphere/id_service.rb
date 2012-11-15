@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module ScholarSphere
+require 'noid'
+
+module Scholarsphere
   class IdService
-    @@minter = Noid::Minter.new(:template => '.reeddeeddk')
-    @@namespace = ScholarSphere::Application.config.id_namespace
+    @@minter = ::Noid::Minter.new(:template => '.reeddeeddk')
+    @@namespace = Scholarsphere::Engine.config.id_namespace
     def self.valid?(identifier)
       # remove the fedora namespace since it's not part of the noid
       noid = identifier.split(":").last

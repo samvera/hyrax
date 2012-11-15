@@ -20,6 +20,7 @@ module Scholarsphere::User
     include Mailboxer::Models::Messageable
     # Connects this user object to Blacklight's Bookmarks and Folders.
     include Blacklight::User
+    include Hydra::User
 
     delegate :can?, :cannot?, :to => :ability
 

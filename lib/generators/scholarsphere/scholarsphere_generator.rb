@@ -34,6 +34,14 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
     end
   end
 
+  def create_configuration_files
+    copy_file "config/scholarsphere.rb", "config/initializers/scholarsphere.rb"
+  end
+
+  def catalog_controller
+    copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
+  end
+  
 
   def inject_routes
     # These will end up in routes.rb file in reverse order

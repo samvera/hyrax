@@ -36,7 +36,7 @@ module Scholarsphere
 
     protected
     def Noid.namespace
-      Rails.application.config.id_namespace
+      Scholarsphere::Engine.config.id_namespace
     end
   end
 end

@@ -16,27 +16,27 @@ class MailboxController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    if User.current
-      inbox = User.current.mailbox.inbox
+    if current_user
+      inbox = current_user.mailbox.inbox
       @messages = inbox.all
-      User.current.mark_as_read @messages
+      current_user.mark_as_read @messages
     else
       @messages =[]
     end 
   end
 
   def delete_all     
-     User.current.mailbox.inbox.each do |msg|
+     current_user.mailbox.inbox.each do |msg|
         delete_message(msg)
      end
-     empty_trash(User.current)
+     empty_trash(current_user)
      redirect_to mailbox_path
   end
 
   def delete
-    if (User.current)
+    if (current_user)
       msg = Conversation.find(params[:uid])
-      if (msg.participants[0] == User.current) || (msg.participants[1] == User.current)
+      if (msg.participants[0] == current_user) || (msg.participants[1] == current_user)
          delete_message(msg)
          empty_trash(msg.participants[0])
       end

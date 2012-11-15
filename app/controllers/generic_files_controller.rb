@@ -34,7 +34,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new
-    @batch_noid = ScholarSphere::Noid.noidify(ScholarSphere::IdService.mint)
+    @batch_noid = Scholarsphere::Noid.noidify(Scholarsphere::IdService.mint)
   end
 
   # routed to /files/:id/edit
@@ -177,7 +177,7 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id/permissions (POST)
   def permissions
-    ScholarSphere::GenericFile::Permissions.parse_permissions(params)
+    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.save
     Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login)
@@ -237,7 +237,7 @@ class GenericFilesController < ApplicationController
     @generic_file.creator = current_user.name
 
     if params.has_key?(:batch_id)
-      batch_id = ScholarSphere::Noid.namespaceize(params[:batch_id])
+      batch_id = Scholarsphere::Noid.namespaceize(params[:batch_id])
       @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
     else
       logger.warn "unable to find batch to attach to"

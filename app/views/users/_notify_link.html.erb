@@ -26,10 +26,10 @@ $(document).ready(function() {
  
 </script>
   <div class='hide'>
-    <%= link_to "notify", user_notify_path, :remote => true, :id => 'notify_update_link' %>
+    <%= link_to "notify", scholarsphere.user_notify_path, :remote => true, :id => 'notify_update_link' %>
   </div>
  
 
-<a id="notify_link"  href="<%= mailbox_path %>" class="icon-btn btn btn-small" title="click for User Notifications">
+<a id="notify_link"  href="<%= scholarsphere.mailbox_path %>" class="icon-btn btn btn-small" title="click for User Notifications">
  <%= render :partial => 'users/notify_number' %>
 </a>  

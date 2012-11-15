@@ -14,6 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// require jquery-1.8.2.min
+// require jquery_ujs.js
+// require jquery-ui-1.8.23.custom.min
+// require blacklight
+//= require bootstrap-dropdown
+//= require bootstrap-button
+//= require bootstrap-collapse
+//= require batch_edit
+//= require generic_files
+
 //over ride the blacklight default to submit
 //form when sort by or show per page change
 Blacklight.do_select_submit = function() {

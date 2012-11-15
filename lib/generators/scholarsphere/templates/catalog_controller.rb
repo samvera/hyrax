@@ -41,7 +41,7 @@ class CatalogController < ApplicationController
   end
 
   def recent
-    if (user_logged_in?)
+    if user_signed_in?
       # grab other people's documents
       (resp, doc_list) = get_search_results(:q =>'{!lucene q.op=AND df=depositor_t}-'+current_user.login, :sort=>"system_create_dt desc", :rows=>3)      
     else 
@@ -52,7 +52,7 @@ class CatalogController < ApplicationController
   end
 
   def recent_me
-    if (user_logged_in?)
+    if user_signed_in?
       (resp, doc_list) = get_search_results(:q =>'{!lucene q.op=AND df=depositor_t}'+current_user.login, :sort=>"system_create_dt desc", :rows=>3)
       @recent_user_documents = doc_list[0..3]
     else 

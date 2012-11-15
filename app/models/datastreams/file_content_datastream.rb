@@ -56,6 +56,6 @@ class FileContentDatastream < ActiveFedora::Datastream
   end
 
   def fits_path
-    ScholarSphere::Application.config.fits_path
+    Scholarsphere::Engine.config.fits_path
   end
 end

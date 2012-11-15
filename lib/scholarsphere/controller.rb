@@ -19,10 +19,6 @@ module Scholarsphere::Controller
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
 
-    ## Force the session to be restarted on every request.  The ensures that when the REMOTE_USER header is not set, the user will be logged out.
-    before_filter :clear_session_user
-    before_filter :set_current_user
-    before_filter :filter_notify
     before_filter :notifications_number
 
   end
@@ -35,21 +31,6 @@ module Scholarsphere::Controller
     current_user.ability
   end
 
-  def clear_session_user
-    if request.nil?
-      logger.warn "Request is Nil, how weird!!!"
-      return
-    end
-
-    # only logout if the REMOTE_USER is not set in the HTTP headers and a user is set within warden
-    # logout clears the entire session including flash messages
-    request.env['warden'].logout unless user_logged_in?
-  end
-
-  def set_current_user
-    User.current = current_user
-  end
-
   def render_404(exception)
     logger.error("Rendering 404 page due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
     render :template => '/error/404', :layout => "error", :formats => [:html], :status => 404
@@ -60,28 +41,14 @@ module Scholarsphere::Controller
     render :template => '/error/500', :layout => "error", :formats => [:html], :status => 500
   end
 
-  def filter_notify
-    # remove error inserted since we are not showing a page before going to web access, this error message always shows up a page too late.
-    # for the moment just remove it always.  If we show a transition page in the future we may want to  display it then.
-    if flash[:alert].present?
-      flash[:alert] = [flash[:alert]].flatten.reject do |item|
-        # first remove the bogus message
-        item == 'You need to sign in or sign up before continuing.'
-        # Also, remove extraneous paperclip errors for weird file types
-        item =~ /is not recognized by the 'identify' command/
-      end
-      # then make the flash nil if that was the only message in the flash
-      flash[:alert] = nil if flash[:alert].blank?
-    end
-  end
 
   def notifications_number
     @notify_number=0
     @batches=[]
     return  if ((action_name == "index") && (controller_name == "mailbox"))
-    if User.current
-      @notify_number= User.current.mailbox.inbox(:unread => true).count(:id, :distinct => true)
-      @batches=User.current.mailbox.inbox.map {|msg| msg.last_message.body[/<a class="batchid ui-helper-hidden">(.*)<\/a>The file(.*)/,1]}.select{|val| !val.blank?}
+    if current_user 
+      @notify_number= current_user.mailbox.inbox(:unread => true).count(:id, :distinct => true)
+      @batches=current_user.mailbox.inbox.map {|msg| msg.last_message.body[/<a class="batchid ui-helper-hidden">(.*)<\/a>The file(.*)/,1]}.select{|val| !val.blank?}
     end
   end
 
@@ -98,23 +65,12 @@ module Scholarsphere::Controller
     return permissions_solr_document
   end
 
-  def user_logged_in?
-    env['warden'] and env['warden'].user and remote_user_set?
-  end
-
-  def remote_user_set?
-    # Unicorn seems to translate REMOTE_USER into HTTP_REMOTE_USER
-    if Rails.env.development?
-      request.env['HTTP_REMOTE_USER'].present?
-    else
-      request.env['REMOTE_USER'].present?
-    end
-  end
-
   ### Hook which is overridden in Scholarsphere::Ldap::Controller
   def has_access?
+    true
   end
 
   include Scholarsphere::Ldap::Controller
+  # include Scholarsphere::HttpHeaderAuth
 
 end

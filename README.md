@@ -1,18 +1,14 @@
 # Scholarsphere
 
-Add to config/routes.rb
+Run the blacklight, hydra mailboxer and scholarsphere generators
 ```
-  mount Scholarsphere::Engine => '/'
-```
-
-
-Run the blacklight generator
-```
-rails generate blacklight --devise
+rails g blacklight --devise
+rails g hydra:head -df
+rails g mailboxer:install
+rails g scholarsphere -df
 ```
 
-Run the scholarsphere migrations
-how?
+Run the migrations
 
 ```
 rake db:migrate
@@ -21,7 +17,7 @@ rake db:migrate
 Add include Scholarsphere::User into your user model
 Add include Scholarsphere::Controller into your application_controller.rb
 
-run the mailboxer generator
+Add role_map_*.yml files into config?
 
 
 ```
@@ -30,4 +26,3 @@ gem 'jettywrapper'
 bundle install
 
 
-Edit the config/solr.yml so that it had dev/test cores

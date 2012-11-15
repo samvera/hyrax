@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% javascript 'generic_files.js' %>
-<% stylesheet 'generic_files.css' %>
-<% stylesheet 'scholarsphere-bootstrap.css' %>
 <h2>Upload</h2>
 
 <div class="alert">
@@ -24,7 +21,7 @@ limitations under the License.
 </div>
 
 <div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
-  <%=batch_edit_path(@batch_noid)%>
+  <%=scholarsphere.batch_edit_path(@batch_noid)%>
 </div>
 
 <div id="upload_tooltip">Please accept Deposit Agreement before you can upload.</div>
@@ -32,23 +29,23 @@ limitations under the License.
 <div class="alert alert-info hide" id="success">
   You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
   <p>
-  <%= link_to 'Add Descriptions', batch_edit_path(@batch_noid), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', scholarsphere.batch_edit_path(@batch_noid), :class=>'btn' %>
   </p>
 </div>
 
 <div class="alert hide" id="fail">
-  There was a problem during upload. Please click the &quot;Start Upload&quot; button or <%= link_to 'start over', new_generic_file_path %>
+  There was a problem during upload. Please click the &quot;Start Upload&quot; button or <%= link_to 'start over', scholarsphere.new_generic_file_path %>
 </div>
 
 <div class="alert hide" id="partial_fail">
   One or more files did not upload successfully. To continue using the files uploaded use one of the links below.<br />
-  <%= link_to 'Add Descriptions', batch_edit_path(@batch_noid), :class=>'btn' %>
+  <%= link_to 'Add Descriptions', scholarsphere.batch_edit_path(@batch_noid), :class=>'btn' %>
 </div>
 
 <div class="alert hide" id="errmsg"> </div>
 
     <!-- The file upload form used as target for the file upload widget -->
-    <%= form_for(@generic_file, :url => generic_files_path, :html => {:multipart => true, :class => 'form-horizontal well', :id => 'fileupload'}) do |f| %>
+    <%= form_for(@generic_file, :url => scholarsphere.generic_files_path, :html => {:multipart => true, :class => 'form-horizontal well', :id => 'fileupload'}) do |f| %>
       <%= hidden_field_tag(:total_upload_size, 0) %>
       <%= hidden_field_tag(:relative_path) %>
       <%= hidden_field_tag(:batch_id, @batch_noid) %>

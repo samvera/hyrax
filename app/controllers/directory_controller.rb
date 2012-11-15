@@ -14,7 +14,6 @@
 
 class DirectoryController < ApplicationController
   include Hydra::Controller::ControllerBehavior
-  include ScholarSphere::Utils
 
   # returns true if the user exists and false otherwise
   def user
