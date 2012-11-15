@@ -1,4 +1,4 @@
-module Scholarsphere
+module Sufia
   module HttpHeaderAuth
     extend ActiveSupport::Concern
 

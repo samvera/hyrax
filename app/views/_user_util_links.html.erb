@@ -24,17 +24,17 @@ limitations under the License.
           <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
           <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
           <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
-          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= scholarsphere.contact_form_index_path %>" class="top_nav">Contact</a></li>
+          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>" class="top_nav">Contact</a></li>
           <li>
             <div class="btn-group">
               <% if current_user %>
                  <%= render :partial => 'users/notify_link' %>
-                <a href="<%= scholarsphere.profile_path(current_user.to_s) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
+                <a href="<%= sufia.profile_path(current_user.to_s) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
                 <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>
                 <ul class="dropdown-menu">
-                    <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), scholarsphere.dashboard_path, :id => 'dashboard_nav_link'  %></li>
-                    <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), scholarsphere.new_generic_file_path, :id => 'upload_nav_link'  %></li>
-                    <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), scholarsphere.edit_profile_path(current_user.login), :id => 'upload_nav_link'  %></li>
+                    <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), sufia.dashboard_path, :id => 'dashboard_nav_link'  %></li>
+                    <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), sufia.new_generic_file_path, :id => 'upload_nav_link'  %></li>
+                    <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), sufia.edit_profile_path(current_user.login), :id => 'upload_nav_link'  %></li>
                     <li class="divider"></li>
                     <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
                 </ul>

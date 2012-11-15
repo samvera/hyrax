@@ -1,11 +1,11 @@
 # A bucket to put ldap related methods into the user module
-module Scholarsphere::Ldap
+module Sufia::Ldap
 
   module User 
     extend ActiveSupport::Concern
     included do
       # Workaround to retry LDAP calls a number of times
-      include ::Scholarsphere::Utils
+      include ::Sufia::Utils
     end
     def populate_attributes
       #update exist cache

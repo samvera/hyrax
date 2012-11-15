@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module Scholarsphere
+module Sufia
   module Noid
     def Noid.noidify(identifier)
       identifier.split(":").last
@@ -36,7 +36,7 @@ module Scholarsphere
 
     protected
     def Noid.namespace
-      Scholarsphere::Engine.config.id_namespace
+      Sufia::Engine.config.id_namespace
     end
   end
 end

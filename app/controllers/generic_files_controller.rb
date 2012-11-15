@@ -17,7 +17,7 @@ class GenericFilesController < ApplicationController
   include Hydra::Controller::ControllerBehavior
   include Hydra::Controller::UploadBehavior # for add_posted_blob_to_asset method
   include Blacklight::Configurable # comply with BL 3.7
-  include Scholarsphere::Noid # for normalize_identifier method
+  include Sufia::Noid # for normalize_identifier method
 
   # This is needed as of BL 3.7
   self.copy_blacklight_config_from(CatalogController)
@@ -34,7 +34,7 @@ class GenericFilesController < ApplicationController
   # routed to /files/new
   def new
     @generic_file = GenericFile.new
-    @batch_noid = Scholarsphere::Noid.noidify(Scholarsphere::IdService.mint)
+    @batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
   end
 
   # routed to /files/:id/edit
@@ -177,7 +177,7 @@ class GenericFilesController < ApplicationController
 
   # routed to /files/:id/permissions (POST)
   def permissions
-    Scholarsphere::GenericFile::Permissions.parse_permissions(params)
+    Sufia::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.save
     Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login)
@@ -237,7 +237,7 @@ class GenericFilesController < ApplicationController
     @generic_file.creator = current_user.name
 
     if params.has_key?(:batch_id)
-      batch_id = Scholarsphere::Noid.namespaceize(params[:batch_id])
+      batch_id = Sufia::Noid.namespaceize(params[:batch_id])
       @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
     else
       logger.warn "unable to find batch to attach to"

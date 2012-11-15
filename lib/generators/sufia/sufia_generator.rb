@@ -2,7 +2,7 @@
 require 'rails/generators'
 require 'rails/generators/migration'     
 
-class ScholarsphereGenerator < Rails::Generators::Base
+class SufiaGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
 
   source_root File.expand_path('../templates', __FILE__)
@@ -35,7 +35,7 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
   end
 
   def create_configuration_files
-    copy_file "config/scholarsphere.rb", "config/initializers/scholarsphere.rb"
+    copy_file "config/sufia.rb", "config/initializers/sufia.rb"
   end
 
   def catalog_controller
@@ -47,7 +47,7 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
     # These will end up in routes.rb file in reverse order
     # we add em, since each is added at the top of file. 
     # we want "root" to be FIRST for optimal url generation. 
-    route "mount Scholarsphere::Engine => '/'"
+    route "mount Sufia::Engine => '/'"
   end
 
   private  

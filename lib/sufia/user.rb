@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module Scholarsphere::User
+module Sufia::User
   extend ActiveSupport::Concern
 
   included do
@@ -45,7 +45,7 @@ module Scholarsphere::User
     self.per_page = 5
 
     # TODO Only include this if they have Hydra::LDAP defined
-    include Scholarsphere::Ldap::User
+    include Sufia::Ldap::User
   end
 
   # This method should display the unique identifier for this user as defined by devise.
@@ -76,7 +76,7 @@ module Scholarsphere::User
     return nil
   end
 
-  # The basic groups method, override or will fallback to Scholarsphere::Ldap::User 
+  # The basic groups method, override or will fallback to Sufia::Ldap::User 
   # def groups
   #   []
   # end

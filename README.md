@@ -26,3 +26,8 @@ gem 'jettywrapper'
 bundle install
 
 
+application.css
+ *= require scholarsphere
+
+application.js
+//= require scholarsphere

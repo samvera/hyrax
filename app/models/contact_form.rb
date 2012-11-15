@@ -33,8 +33,8 @@ class ContactForm < MailForm::Base
   def headers
     {
       :subject => "Contact Form:#{subject}",
-      :to => Scholarsphere::Engine.config.contact_email, 
-      :from => Scholarsphere::Engine.config.from_email
+      :to => Sufia::Engine.config.contact_email, 
+      :from => Sufia::Engine.config.from_email
     }
   end
 end

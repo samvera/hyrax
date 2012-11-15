@@ -2,7 +2,7 @@
 <% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
 <div>
   <div class='hide'>
-    <%= link_to "Recent", scholarsphere.catalog_recent_path, :remote => true, :id => 'recent_doc_link' %>
+    <%= link_to "Recent", sufia.catalog_recent_path, :remote => true, :id => 'recent_doc_link' %>
   </div>
   <% if recent_documents.blank? %>
       <h3>  <%= msg %> </h3>

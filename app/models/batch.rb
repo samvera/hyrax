@@ -15,8 +15,8 @@
 class Batch < ActiveFedora::Base
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
-  include Scholarsphere::ModelMethods
-  include Scholarsphere::Noid
+  include Sufia::ModelMethods
+  include Sufia::Noid
 
   has_metadata :name => "descMetadata", :type => BatchRdfDatastream
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module Scholarsphere::Controller
+module Sufia::Controller
   extend ActiveSupport::Concern
 
   included do 
@@ -65,12 +65,12 @@ module Scholarsphere::Controller
     return permissions_solr_document
   end
 
-  ### Hook which is overridden in Scholarsphere::Ldap::Controller
+  ### Hook which is overridden in Sufia::Ldap::Controller
   def has_access?
     true
   end
 
-  include Scholarsphere::Ldap::Controller
-  # include Scholarsphere::HttpHeaderAuth
+  include Sufia::Ldap::Controller
+  # include Sufia::HttpHeaderAuth
 
 end

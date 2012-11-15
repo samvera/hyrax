@@ -23,8 +23,8 @@ class GenericFile < ActiveFedora::Base
   include ActiveFedora::Validations
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
-  include Scholarsphere::ModelMethods
-  include Scholarsphere::Noid  
+  include Sufia::ModelMethods
+  include Sufia::Noid  
                                               
   @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
 
@@ -86,7 +86,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def persistent_url
-    "#{Scholarsphere::Engine.config.persistent_hostpath}#{noid}"
+    "#{Sufia::Engine.config.persistent_hostpath}#{noid}"
   end
 
   def paranoid_permissions
@@ -246,7 +246,7 @@ class GenericFile < ActiveFedora::Base
 
   def append_metadata
     terms = self.characterization_terms
-    Scholarsphere::Engine.config.fits_to_desc_mapping.each_pair do |k, v|
+    Sufia::Engine.config.fits_to_desc_mapping.each_pair do |k, v|
       if terms.has_key?(k)
         # coerce to array to remove a conditional
         terms[k] = [terms[k]] unless terms[k].is_a? Array

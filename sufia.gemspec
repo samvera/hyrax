@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/scholarsphere/version', __FILE__)
+require File.expand_path('../lib/sufia/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Coyne"]
@@ -11,9 +11,9 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = "scholarsphere"
+  gem.name          = "sufia"
   gem.require_paths = ["lib"]
-  gem.version       = Scholarsphere::VERSION
+  gem.version       = Sufia::VERSION
 
   gem.add_dependency 'rails', '~> 3.2.8'
   gem.add_dependency 'blacklight'#, '~> 4.0.0.pre4'

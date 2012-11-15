@@ -1,4 +1,4 @@
-Scholarsphere::Engine.routes.draw do
+Sufia::Engine.routes.draw do
   match 'single_use_link/generate_download/:id' => 'single_use_link#generate_download', :as => :generate_download_single_use_link
   match 'single_use_link/generate_show/:id' => 'single_use_link#generate_show', :as => :generate_show_single_use_link
   match 'single_use_link/show/:id' => 'single_use_link#show', :as => :show_single_use_link
@@ -73,7 +73,7 @@ Scholarsphere::Engine.routes.draw do
 
   # Resque monitoring routes
   namespace :admin do
-    constraints Scholarsphere::ResqueAdmin do
+    constraints Sufia::ResqueAdmin do
       mount Resque::Server, :at => "queues"
     end
   end

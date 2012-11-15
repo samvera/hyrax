@@ -14,10 +14,10 @@
 
 require 'noid'
 
-module Scholarsphere
+module Sufia
   class IdService
     @@minter = ::Noid::Minter.new(:template => '.reeddeeddk')
-    @@namespace = Scholarsphere::Engine.config.id_namespace
+    @@namespace = Sufia::Engine.config.id_namespace
     def self.valid?(identifier)
       # remove the fedora namespace since it's not part of the noid
       noid = identifier.split(":").last

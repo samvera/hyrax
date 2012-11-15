@@ -1,4 +1,4 @@
-require "scholarsphere/version"
+require "sufia/version"
 require 'blacklight'
 require 'hydra/head'
 require 'hydra-batch-edit'
@@ -9,10 +9,10 @@ require 'acts_as_follower'
 require 'paperclip'
 require 'will_paginate'
 
-module Scholarsphere
+module Sufia
 
   class Engine < ::Rails::Engine
-    engine_name 'scholarsphere'
+    engine_name 'sufia'
   end
 
   class ResqueAdmin
@@ -25,27 +25,26 @@ module Scholarsphere
   end
 
   def self.config(&block)
-    @@config ||= Scholarsphere::Engine::Configuration.new
+    @@config ||= Sufia::Engine::Configuration.new
 
     yield @@config if block
 
     return @@config
   end
 
-  autoload :Controller,   'scholarsphere/controller'
-  autoload :Ldap,         'scholarsphere/ldap'
-  autoload :Utils,        'scholarsphere/utils'
-  autoload :User,         'scholarsphere/user'
-  autoload :ModelMethods, 'scholarsphere/model_methods'
-  autoload :Noid,         'scholarsphere/noid'
-  autoload :IdService,    'scholarsphere/id_service'
-  autoload :IdService,    'scholarsphere/id_service'
+  autoload :Controller,   'sufia/controller'
+  autoload :Ldap,         'sufia/ldap'
+  autoload :Utils,        'sufia/utils'
+  autoload :User,         'sufia/user'
+  autoload :ModelMethods, 'sufia/model_methods'
+  autoload :Noid,         'sufia/noid'
+  autoload :IdService,    'sufia/id_service'
 end
 
 module ActiveFedora
   class UnsavedDigitalObject
     def assign_pid
-      @pid ||= Scholarsphere::IdService.mint
+      @pid ||= Sufia::IdService.mint
     end
   end
 end
