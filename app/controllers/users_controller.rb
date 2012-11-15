@@ -33,6 +33,10 @@ class UsersController < ApplicationController
     else 
       @events = []
     end
+    @trophies=[]
+    @user.trophies.each do |t| 
+      @trophies << GenericFile.find("scholarsphere:#{t.generic_file_id}")
+    end
     @followers = @user.followers
     @following = @user.all_following
   end
