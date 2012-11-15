@@ -15,10 +15,9 @@
 
 class GenericFilesController < ApplicationController
   include Hydra::Controller::ControllerBehavior
-  include Hydra::AssetsControllerHelper  # for apply_depositor_metadata method
   include Hydra::Controller::UploadBehavior # for add_posted_blob_to_asset method
   include Blacklight::Configurable # comply with BL 3.7
-  include ScholarSphere::Noid # for normalize_identifier method
+  include Scholarsphere::Noid # for normalize_identifier method
 
   # This is needed as of BL 3.7
   self.copy_blacklight_config_from(CatalogController)
@@ -231,7 +230,7 @@ class GenericFilesController < ApplicationController
     #   file.tempfile = f
     #end
     add_posted_blob_to_asset(@generic_file,file)
-    apply_depositor_metadata(@generic_file)
+    @generic_file.apply_depositor_metadata(user_key)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
     @generic_file.relative_path = params[:relative_path] if params.has_key?(:relative_path)

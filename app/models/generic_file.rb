@@ -14,6 +14,9 @@
 
 require 'datastreams/fits_datastream'
 require 'datastreams/generic_file_rdf_datastream'
+require 'datastreams/properties_datastream'
+require 'datastreams/paranoid_rights_datastream'
+require 'datastreams/file_content_datastream'
 
 class GenericFile < ActiveFedora::Base
   include ActiveModel::Validations::HelperMethods

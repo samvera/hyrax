@@ -39,8 +39,7 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
     # These will end up in routes.rb file in reverse order
     # we add em, since each is added at the top of file. 
     # we want "root" to be FIRST for optimal url generation. 
-    route('Scholarsphere.add_routes(self)')
-    route('root :to => "catalog#index"')
+    route "mount Scholarsphere::Engine => '/'"
   end
 
   private  
