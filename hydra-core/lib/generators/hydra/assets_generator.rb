@@ -17,34 +17,20 @@ module Hydra
     source_root File.expand_path('../templates', __FILE__)
   
     def assets
-      if use_asset_pipeline?
-        insert_into_file "app/assets/stylesheets/application.css", :after => " *= require_self" do
+      insert_into_file "app/assets/stylesheets/application.css", :after => " *= require_self" do
 %q{
  *
  * Required by Hydra
  *= require 'hydra/styles'         
 }
-        end
+      end
 
-        insert_into_file "app/assets/javascripts/application.js", :after => "//= require jquery_ujs" do
+      insert_into_file "app/assets/javascripts/application.js", :after => "//= require jquery_ujs" do
 %q{
 // Required by Hydra
 //= require 'jquery.ui.datepicker.js'      
 }          
-        end
-        directory("../../../../app/assets/images/blacklight", "public/images/blacklight")
-      else
-        # directories are relative to the source_root 
-        directory("../../../../assets/images", "public/images")
-        directory("../../../../assets/stylesheets", "public/stylesheets") 
-        directory("../../../../assets/javascripts", "public/javascripts") 
       end
     end
-
-    private
-    def use_asset_pipeline?
-      (Rails::VERSION::MAJOR >= 3 and Rails::VERSION::MINOR >= 1) and Rails.application.config.assets.enabled
-    end
-    
   end
 end
