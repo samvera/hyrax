@@ -16,6 +16,7 @@ class UsersController < ApplicationController
   prepend_before_filter :find_user, :except => [:index, :search, :notifications_number]
   before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
   before_filter :user_is_current_user, only: [:edit, :update, :toggle_trophy]
+
   before_filter :user_not_current_user, only: [:follow, :unfollow]
 
   def index
