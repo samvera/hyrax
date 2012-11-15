@@ -74,15 +74,6 @@ EOF
   end
   
   #
-  # Static Assets
-  #
-  # Call external generator in AssetsGenerator, which copies static assets like stylesheets, javascript and images 
-  # into the app's public directory
-  def copy_public_assets 
-    generate "hydra:assets"
-  end
-  
-  #
   # Migrations
   #
   
