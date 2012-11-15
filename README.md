@@ -19,6 +19,8 @@ rake db:migrate
 ```
 
 Add include Scholarsphere::User into your user model
+Add include Scholarsphere::Controller into your application_controller.rb
+
 run the mailboxer generator
 
 

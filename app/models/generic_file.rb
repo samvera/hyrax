@@ -12,13 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'datastreams/fits_datastream'
+require 'datastreams/generic_file_rdf_datastream'
+
 class GenericFile < ActiveFedora::Base
   include ActiveModel::Validations::HelperMethods
   include ActiveFedora::Validations
   include Hydra::ModelMixins::CommonMetadata
   include Hydra::ModelMixins::RightsMetadata
-  include ScholarSphere::ModelMethods
-  include ScholarSphere::Noid  
+  include Scholarsphere::ModelMethods
+  include Scholarsphere::Noid  
                                               
   @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
 
@@ -80,7 +83,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def persistent_url
-    "#{ScholarSphere::Application.config.persistent_hostpath}#{noid}"
+    "#{Scholarsphere::Engine.config.persistent_hostpath}#{noid}"
   end
 
   def paranoid_permissions
@@ -240,7 +243,7 @@ class GenericFile < ActiveFedora::Base
 
   def append_metadata
     terms = self.characterization_terms
-    ScholarSphere::Application.config.fits_to_desc_mapping.each_pair do |k, v|
+    Scholarsphere::Engine.config.fits_to_desc_mapping.each_pair do |k, v|
       if terms.has_key?(k)
         # coerce to array to remove a conditional
         terms[k] = [terms[k]] unless terms[k].is_a? Array
@@ -372,7 +375,7 @@ class GenericFile < ActiveFedora::Base
       '%G' => [:language],
       '%[' => [:date_modified],
       '%9' => [:resource_type],
-      '%~' => ScholarSphere::Application.config.application_name,
+      '%~' => Application.config.application_name,
       '%W' => 'Penn State University'
     }
     text = []

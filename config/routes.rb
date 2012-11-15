@@ -4,8 +4,6 @@ Scholarsphere::Engine.routes.draw do
   match 'single_use_link/show/:id' => 'single_use_link#show', :as => :show_single_use_link
   match 'single_use_link/download/:id' => 'single_use_link#download', :as => :download_single_use_link
 
-  # Routes for Blacklight-specific functionality such as the catalog
-  Blacklight.add_routes(self)
   match 'batch_edits/clear' => 'batch_edits#clear', :as => :batch_edits_clear
 
   # add batch edit routes

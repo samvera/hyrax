@@ -77,7 +77,7 @@ limitations under the License.
 
               <div class="span30 offset2">
                 <h2 class="heading1">Contribute</h2> 
-                <%= link_to '<i class="icon-file"></i> Share Your Work'.html_safe, new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %>
+                <%= link_to '<i class="icon-file"></i> Share Your Work'.html_safe, scholarsphere.new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %>
                 <div class="row center"> <a href="/terms/">Terms of Use</a></div><br />                
                 <div class="row">&nbsp;</div>
                 <h2 class="heading1">My Latest</h2> 
@@ -99,7 +99,7 @@ limitations under the License.
   <div id="footer">
     <div class="footer-logo">
       <p class="fright">
-      <a href="/versions/"><%= ScholarSphere::Application::config.scholarsphere_version %></a></p>
+      <a href="/versions/"><%= Scholarsphere::VERSION %></a></p>
       <a href="/"><img src="/assets/site_images/logo_psuss_footer.png" alt="Penn State ScholarSphere" /></a>
       <p>A service of the University Libraries and Information Technology Services.</p>
     </div>

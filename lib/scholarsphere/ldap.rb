@@ -5,7 +5,7 @@ module Scholarsphere::Ldap
     extend ActiveSupport::Concern
     included do
       # Workaround to retry LDAP calls a number of times
-      include ScholarSphere::Utils
+      include ::Scholarsphere::Utils
     end
     def populate_attributes
       #update exist cache

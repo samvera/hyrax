@@ -1,0 +1,97 @@
+# Copyright © 2012 The Pennsylvania State University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+module Scholarsphere::User
+  extend ActiveSupport::Concern
+
+  included do
+    # Adds acts_as_messageable for user mailboxes
+    include Mailboxer::Models::Messageable
+    # Connects this user object to Blacklight's Bookmarks and Folders.
+    include Blacklight::User
+
+    delegate :can?, :cannot?, :to => :ability
+
+    # set this up as a messageable object
+    acts_as_messageable
+
+    # Users should be able to follow things
+    acts_as_follower
+    # Users should be followable
+    acts_as_followable
+
+    # Setup accessible (or protected) attributes for your model
+    attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone, :avatar, 
+    :ldap_available, :ldap_last_update, :group_list, :groups_last_update, :facebook_handle, :twitter_handle, :googleplus_handle
+
+    # Add user avatar (via paperclip library)
+    has_attached_file :avatar, :styles => { medium: "300x300>", thumb: "100x100>" }, :default_url => '/assets/missing_:style.png'
+    validates :avatar, :attachment_content_type => { :content_type => /^image\/(jpg|jpeg|pjpeg|png|x-png|gif)$/ }, :if => Proc.new { |p| p.avatar.file? }
+    validates :avatar, :attachment_size => { :less_than => 2.megabytes }, :if => Proc.new { |p| p.avatar.file? }
+
+    # Pagination hook
+    self.per_page = 5
+
+    # TODO Only include this if they have Hydra::LDAP defined
+    include Scholarsphere::Ldap::User
+  end
+
+  # This method should display the unique identifier for this user as defined by devise.
+  # The unique identifier is what access controls will be enforced against.
+  def user_key
+    send(Devise.authentication_keys.first)
+  end
+
+  def to_s
+    login
+  end
+
+  def email_address
+    return self.email
+  end
+
+  def name
+    return self.display_name.titleize || self.login rescue self.login
+  end
+
+  # Redefine this for more intuitive keys in Redis
+  def to_param
+    login
+  end
+
+  # method needed for messaging
+  def mailboxer_email(obj=nil)
+    return nil
+  end
+
+  # The basic groups method, override or will fallback to Scholarsphere::Ldap::User 
+  # def groups
+  #   []
+  # end
+
+  def ability
+    @ability ||= Ability.new(self)
+  end
+
+  module ClassMethods 
+    def current
+      Thread.current[:user]
+    end
+
+    def current=(user)
+      Thread.current[:user] = user
+    end
+  end
+
+end

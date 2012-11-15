@@ -13,7 +13,7 @@
 # limitations under the License.
 
 require 'hydra/model_methods'
-module ScholarSphere
+module Scholarsphere
   module ModelMethods
     extend ActiveSupport::Concern
     include Hydra::ModelMethods

@@ -12,34 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class ApplicationController < ActionController::Base
-  # Adds a few additional behaviors into the application controller
-  include Blacklight::Controller
-  # Adds Hydra behaviors into the application controller
-  include Hydra::Controller::ControllerBehavior
+module Scholarsphere::Controller
+  extend ActiveSupport::Concern
 
-  ## Force the session to be restarted on every request.  The ensures that when the REMOTE_USER header is not set, the user will be logged out.
-  before_filter :clear_session_user
-  before_filter :set_current_user
-  before_filter :filter_notify
-  before_filter :notifications_number
+  included do 
+    # Adds Hydra behaviors into the application controller
+    include Hydra::Controller::ControllerBehavior
 
-  # Intercept errors and render user-friendly pages
-  rescue_from NameError, :with => :render_500
-  rescue_from RuntimeError, :with => :render_500
-  rescue_from ActionView::Template::Error, :with => :render_500
-  rescue_from ActiveRecord::StatementInvalid, :with => :render_500
-  rescue_from Mysql2::Error, :with => :render_500
-  rescue_from RSolr::Error::Http, :with => :render_500
-  rescue_from Blacklight::Exceptions::ECONNREFUSED, :with => :render_500
-  rescue_from Errno::ECONNREFUSED, :with => :render_500
-  rescue_from Rubydora::FedoraInvalidRequest, :with => :render_500
-  rescue_from ActionDispatch::Cookies::CookieOverflow, :with => :render_500
-  rescue_from Redis::CannotConnectError, :with => :render_500
-  rescue_from AbstractController::ActionNotFound, :with => :render_404
-  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
-  rescue_from ActionController::RoutingError, :with => :render_404
-  rescue_from Blacklight::Exceptions::InvalidSolrID, :with => :render_404
+    ## Force the session to be restarted on every request.  The ensures that when the REMOTE_USER header is not set, the user will be logged out.
+    before_filter :clear_session_user
+    before_filter :set_current_user
+    before_filter :filter_notify
+    before_filter :notifications_number
+
+  end
 
   def layout_name
     'hydra-head'
@@ -111,8 +97,6 @@ class ApplicationController < ActionController::Base
     permissions_solr_response, permissions_solr_document = get_permissions_solr_response_for_doc_id(id)
     return permissions_solr_document
   end
-
-  protect_from_forgery
 
   def user_logged_in?
     env['warden'] and env['warden'].user and remote_user_set?
