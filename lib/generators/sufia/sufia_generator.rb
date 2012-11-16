@@ -83,7 +83,7 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
   end
 
   def install_mailboxer
-    generate("mailboxer")
+    generate "mailboxer:install" 
   end
 
   private  
