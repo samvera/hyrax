@@ -22,10 +22,8 @@ describe MailboxController do
     @subject = "Test Subject"
     @rec1 = @another_user.send_message(@user, @message, @subject)
     @rec2 = @user.send_message(@another_user, @message, @subject)
-    User.stubs(:current).returns( @user)
     MailboxController.any_instance.stubs(:authenticate_user!).returns(true)
     sign_in @user
-    User.current = @user
   end
   after(:each) do
     @rec1.delete
@@ -34,7 +32,7 @@ describe MailboxController do
   describe "#index" do
     render_views
     it "should show message" do
-      User.current.expects(:mark_as_read)
+      @user.expects(:mark_as_read)
       get :index
       response.should be_success
       response.should_not redirect_to(root_path)
@@ -50,7 +48,7 @@ describe MailboxController do
       get :index
       response.body.should include('message 2')
       get :delete, :uid=> rec.conversation.id
-      response.should redirect_to(mailbox_path)
+      response.should redirect_to(@routes.url_helpers.mailbox_path)
       @user.mailbox.inbox.count.should ==1
     end
     it "should not delete message" do
@@ -58,7 +56,7 @@ describe MailboxController do
       rec = @another_user.send_message(@curator, 'message 3', 'subject 3')
       @curator.mailbox.inbox.count.should == 1
       get :delete, :uid=> rec.conversation.id
-      response.should redirect_to(mailbox_path)
+      response.should redirect_to(@routes.url_helpers.mailbox_path)
       @curator.mailbox.inbox.count.should ==1
       rec.delete
       @curator.delete       

@@ -29,7 +29,7 @@ limitations under the License.
                 <tr class="<%= cycle("","zebra") %>"> 
                    <td ><%= msg.last_message.subject.html_safe  %></td> 
                    <td ><%= msg.last_message.body.html_safe  %></td> 
-                   <td>    <%= link_to raw('<i class="icon-trash icon-large"></i>'), mailbox_delete_path(msg.id), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete %>&nbsp;&nbsp;&nbsp;</td>
+                   <td>    <%= link_to raw('<i class="icon-trash icon-large"></i>'), sufia.mailbox_delete_path(msg.id), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete %>&nbsp;&nbsp;&nbsp;</td>
                    
                 </tr> 
             <% end %> 

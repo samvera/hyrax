@@ -30,7 +30,7 @@ class MailboxController < ApplicationController
         delete_message(msg)
      end
      empty_trash(current_user)
-     redirect_to mailbox_path
+     redirect_to sufia.mailbox_path
   end
 
   def delete
@@ -43,7 +43,7 @@ class MailboxController < ApplicationController
    else 
       flash[:alert] = "You do not have privileges to delete the notification..."
    end
-   redirect_to mailbox_path
+   redirect_to sufia.mailbox_path
   end
 
 private 
