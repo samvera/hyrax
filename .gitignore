@@ -24,8 +24,7 @@ tmtags
 .\#*
 
 ## VIM
-*.swp
-*.swo
+*.sw[pon]
 
 ## OSX
 .DS_Store

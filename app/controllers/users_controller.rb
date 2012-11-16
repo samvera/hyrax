@@ -84,7 +84,7 @@ class UsersController < ApplicationController
         logger.error "Redis is down!"
       end
     end
-    redirect_to profile_path(@user.to_s), notice: "You are no longer following #{@user.to_s}"
+    redirect_to sufia.profile_path(@user.to_s), notice: "You are no longer following #{@user.to_s}"
   end
 
   private

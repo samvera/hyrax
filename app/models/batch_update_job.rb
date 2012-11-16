@@ -65,7 +65,7 @@ class BatchUpdateJob
     end
     batch.update_attributes({status:["Complete"]})
     
-    job_user = User.where(login:"batchuser").first
+    job_user = User.find_by_user_key("batchuser")
     job_user = User.create(login:"batchuser", email:"batchmail") unless job_user
     
     message = '<a class="batchid ui-helper-hidden">ss-'+batch.noid+'</a>The file(s) '+ file_list(saved)+ " have been saved." unless saved.empty?

@@ -12,8 +12,9 @@ class SufiaGenerator < Rails::Generators::Base
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Adds user behavior to the user model
- 3. Creates the sufia.rb configuration file
- 4. Copys the catalog controller into the local app
+ 3. Adds controller behavior to the application controller
+ 4. Creates the sufia.rb configuration file
+ 5. Copies the catalog controller into the local app
        """ 
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -50,6 +51,20 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
     end    
   end
 
+  # Add behaviors to the application controller
+  def inject_sufia_controller_behavior    
+    controller_name = "ApplicationController"
+    file_path = "app/controllers/application_controller.rb"
+    if File.exists?(file_path) 
+      insert_into_file file_path, :after => 'include Hydra::Controller::ControllerBehavior' do 
+        "  \n# Adds Sufia behaviors into the application controller \n" +        
+        "  include Sufia::Controller\n"
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Could not find #{file_path}.  To add Sufia behaviors to your  Controllers, you must include the Sufia::Controller module in the Controller class definition." 
+    end
+  end
+  
   def create_configuration_files
     copy_file "config/sufia.rb", "config/initializers/sufia.rb"
   end

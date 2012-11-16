@@ -118,20 +118,20 @@ describe UsersController do
       @user.following?(@another_user).should be_false
       Resque.expects(:enqueue).with(UserFollowEventJob, @user.login, @another_user.login).once
       post :follow, uid: @another_user.login
-      response.should redirect_to(profile_path(@another_user.login))
+      response.should redirect_to(sufia.profile_path(@another_user.login))
       flash[:notice].should include("You are following #{@another_user.login}")
     end
     it "should redirect to profile if already following and not log an event" do
       User.any_instance.stubs(:following?).with(@another_user).returns(true)
       Resque.expects(:enqueue).with(UserFollowEventJob, @user.login, @another_user.login).never
       post :follow, uid: @another_user.login
-      response.should redirect_to(profile_path(@another_user.login))
+      response.should redirect_to(sufia.profile_path(@another_user.login))
       flash[:notice].should include("You are following #{@another_user.login}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       Resque.expects(:enqueue).with(UserFollowEventJob, @user.login, @user.login).never
       post :follow, uid: @user.login
-      response.should redirect_to(profile_path(@user.login))
+      response.should redirect_to(sufia.profile_path(@user.login))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end
@@ -140,20 +140,20 @@ describe UsersController do
       User.any_instance.stubs(:following?).with(@another_user).returns(true)
       Resque.expects(:enqueue).with(UserUnfollowEventJob, @user.login, @another_user.login).once
       post :unfollow, uid: @another_user.login
-      response.should redirect_to(profile_path(@another_user.login))
+      response.should redirect_to(sufia.profile_path(@another_user.login))
       flash[:notice].should include("You are no longer following #{@another_user.login}")
     end
     it "should redirect to profile if not following and not log an event" do
       @user.stubs(:following?).with(@another_user).returns(false)
       Resque.expects(:enqueue).with(UserUnfollowEventJob, @user.login, @another_user.login).never
       post :unfollow, uid: @another_user.login
-      response.should redirect_to(profile_path(@another_user.login))
+      response.should redirect_to(sufia.profile_path(@another_user.login))
       flash[:notice].should include("You are no longer following #{@another_user.login}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       Resque.expects(:enqueue).with(UserUnfollowEventJob, @user.login, @user.login).never
       post :unfollow, uid: @user.login
-      response.should redirect_to(profile_path(@user.login))
+      response.should redirect_to(sufia.profile_path(@user.login))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end
