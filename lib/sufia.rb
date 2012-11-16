@@ -11,6 +11,7 @@ require 'acts_as_follower'
 require 'paperclip'
 require 'will_paginate'
 require 'nest'
+require 'rmagick'
 
 module Sufia
 
