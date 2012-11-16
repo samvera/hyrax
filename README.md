@@ -3,9 +3,8 @@
 Run the blacklight, hydra and scholarsphere generators
 ```
 rails g blacklight --devise
-rails g hydra:head -df
-rails g mailboxer:install
-rails g scholarsphere -df
+rails g hydra:head -f
+rails g sufia -f
 ```
 
 Run the migrations
