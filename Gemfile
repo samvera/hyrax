@@ -15,7 +15,6 @@ group :development, :test do
   gem "rails_indexes", :git => "git://github.com/warpc/rails_indexes.git", :ref => '4a550270'
   gem 'selenium-webdriver'
   gem 'headless'
-  gem 'rspec', '2.11.0'
   gem 'rspec-rails', '>= 2.11.0'
   gem 'ruby-prof'
   gem 'mocha', '0.12.4', :require => false

@@ -41,6 +41,7 @@ describe GenericFilesController do
     end
 
     it "should spawn a content deposit event job" do
+    puts "L44"
       GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','image/png')
       Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
@@ -49,15 +50,18 @@ describe GenericFilesController do
     end
 
     it "should expand zip files" do
+    puts "L53"
       GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','application/zip')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       Resque.expects(:enqueue).with(UnzipJob, 'test:123')
       Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
+      puts "D60"
     end
 
     it "should create and save a file asset from the given params" do
+    puts "L64"
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
       response.should be_success

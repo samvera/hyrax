@@ -33,10 +33,8 @@ RSpec::Core::RakeTask.new(:spec => [:generate, :fixtures]) do |t|
   t.rspec_opts = "--colour"
 end
 
-task :fixtures do
-  # within_test_app do
-  #   system "rake hydra:fixtures:refresh RAILS_ENV=test"
-  # end
+desc "Load scholarsphere fixtures"
+task :fixtures => ['scholarsphere:fixtures:create', 'scholarsphere:fixtures:generate', 'scholarsphere:fixtures:load'] do
 end
 
 

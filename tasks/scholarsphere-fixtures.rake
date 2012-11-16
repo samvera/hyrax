@@ -183,34 +183,31 @@
 #
 #
 #
-namespace :scholarsphere do
-  
-  desc "Init Hydra configuration" 
-  task :init => [:environment] do
-    # We need to just start rails so that all the models are loaded
-  end
 
+require 'sufia'
+
+SUFIA_TEST_NS = 'sufia' #this must be the same as id_namespace in the test applications config
+namespace :scholarsphere do
   namespace :fixtures do
     #@localDir = 'spec/fixtures'
-    @localDir = File.expand_path("../../../spec/fixtures", __FILE__)
-    puts "Local: #{@localDir}"
+    @localDir = File.expand_path("../../spec/fixtures", __FILE__)
     @dir = ENV["FIXTURE_DIR"] || 'scholarsphere'
 
     desc "Create ScholarSphere Hydra fixtures for generation and loading"
-    task :create => :environment do
+    task :create  do
       @id = ENV["FIXTURE_ID"] ||'scholarsphere1'
       @title = ENV["FIXTURE_TITLE"] || 'scholarsphere test'
       @user = ENV["FIXTURE_USER"] || 'archivist1'
 
-      @root ='<%=Rails.root%>'
+      @root ='<%=@localDir%>'
 
       @inputFoxmlFile = File.join(@localDir, 'scholarsphere_generic_stub.foxml.erb')
       @inputDescFile = File.join(@localDir,  'scholarsphere_generic_stub.descMeta.txt')
       @inputTxtFile = File.join(@localDir,  'scholarsphere_generic_stub.txt')
 
-      @outputFoxmlFile = File.join(@localDir, @dir, 'scholarsphere_'+@id+'.foxml.erb')
-      @outputDescFile = File.join(@localDir, @dir, 'scholarsphere_'+@id+'.descMeta.txt')
-      @outputTxtFile = File.join(@localDir, @dir, 'scholarsphere_'+@id+'.txt')
+      @outputFoxmlFile = File.join(@localDir, @dir, "#{SUFIA_TEST_NS}_#{@id}.foxml.erb")
+      @outputDescFile = File.join(@localDir, @dir, "#{SUFIA_TEST_NS}_#{@id}.descMeta.txt")
+      @outputTxtFile = File.join(@localDir, @dir, "#{SUFIA_TEST_NS}_#{@id}.txt")
 
       run_erb_stub @inputFoxmlFile, @outputFoxmlFile
       run_erb_stub @inputDescFile, @outputDescFile
@@ -225,7 +222,7 @@ namespace :scholarsphere do
         unless fixture.include?('generic_stub')
           outFile = fixture.sub('foxml.erb','foxml.xml')
           File.open(outFile, "w+") do |f|
-            f.write(ERB.new(get_erb_template fixture).result())
+            f.write(ERB.new(get_erb_template fixture).result(binding))
           end
         end
       end
@@ -260,7 +257,7 @@ namespace :scholarsphere do
     task :refresh => [:delete, :load]
 
     desc "Fix fixtures so they work with Cucumber [KLUDGE]"
-    task :fix => :environment do
+    task :fix do
       puts "Attempting to fix fixtures that break cuke"
       ## Kludgy workarounds to get past lack of depositor in fixtures
       # First, create a user record

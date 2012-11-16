@@ -54,11 +54,11 @@ class GenericFilesController < ApplicationController
     pid = @generic_file.noid
     @generic_file.delete
     begin
-      Resque.enqueue(ContentDeleteEventJob, pid, current_user.login)
+      Resque.enqueue(ContentDeleteEventJob, pid, current_user.user_key)
     rescue Redis::CannotConnectError
       logger.error "Redis is down!"
     end
-    redirect_to dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
+    redirect_to sufia.dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
   end
 
   # routed to /files (POST)
@@ -81,10 +81,14 @@ class GenericFilesController < ApplicationController
 
       # process file
       else
+      puts "Processing"
         create_and_save_generic_file
+        puts "created adn saved"
         if @generic_file
           begin
-            Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.login)
+            puts "before enqueue"
+            Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.user_key)
+            puts "after enqueue"
           rescue Redis::CannotConnectError
             logger.error "Redis is down!"
           end
@@ -144,7 +148,7 @@ class GenericFilesController < ApplicationController
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
       version_event = true
       begin
-        Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.login, params[:revision])
+        Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.user_key, params[:revision])
       rescue Redis::CannotConnectError
         logger.error "Redis is down!"
       end
@@ -155,7 +159,7 @@ class GenericFilesController < ApplicationController
       add_posted_blob_to_asset(@generic_file, params[:filedata])
       version_event = true
       begin
-        Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.login)
+        Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.user_key)
       rescue Redis::CannotConnectError
         logger.error "Redis is down!"
       end
@@ -166,12 +170,12 @@ class GenericFilesController < ApplicationController
     @generic_file.save
     # do not trigger an update event if a version event has already been triggered
     begin
-      Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login) unless version_event
+      Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.user_key) unless version_event
     rescue Redis::CannotConnectError
       logger.error "Redis is down!"
     end
     record_version_committer(@generic_file, current_user)
-    redirect_to edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+    redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
 
   end
 
@@ -180,8 +184,8 @@ class GenericFilesController < ApplicationController
     Sufia::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.save
-    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.login)
-    redirect_to edit_generic_file_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.user_key)
+    redirect_to sufia.edit_generic_file_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
 
   protected
@@ -192,7 +196,7 @@ class GenericFilesController < ApplicationController
     VersionCommitter.create(:obj_id => version.pid,
                             :datastream_id => version.dsid,
                             :version_id => version.versionID,
-                            :committer_login => user.login)
+                            :committer_login => user.user_key)
   end
 
   def find_by_id
@@ -229,7 +233,10 @@ class GenericFilesController < ApplicationController
     #   f.rewind
     #   file.tempfile = f
     #end
+    puts "before posting blob"
     add_posted_blob_to_asset(@generic_file,file)
+
+    puts "after posting blob"
     @generic_file.apply_depositor_metadata(user_key)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
@@ -248,7 +255,7 @@ class GenericFilesController < ApplicationController
       @generic_file.save
     rescue RSolr::Error::Http => error
       logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
-      save_tries++
+      save_tries+=1
       # fail for good if the tries is greater than 3
       rescue_action_without_handler(error) if save_tries >=3
       sleep 0.01
