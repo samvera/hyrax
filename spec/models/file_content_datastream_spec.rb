@@ -25,7 +25,7 @@ describe FileContentDatastream do
     before(:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       f = GenericFile.new
-      f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.expects(:characterize_if_changed).yields
       f.apply_depositor_metadata('mjg36')
       f.save
@@ -51,7 +51,7 @@ describe FileContentDatastream do
     end
     describe "add a version" do
       before(:all) do
-        @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+        @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
         @file.expects(:characterize_if_changed).yields
         @file.save
       end
@@ -74,7 +74,7 @@ describe FileContentDatastream do
     it "should return an xml document" do
       repo = mock("repo")
       repo.stubs(:config=>{})
-      f = File.new(Rails.root + 'spec/fixtures/world.png')
+      f = File.new(fixture_path + '/world.png')
       content = mock("file")
       content.stubs(:read=>f.read)
       content.stubs(:rewind=>f.rewind)
@@ -86,7 +86,7 @@ describe FileContentDatastream do
     it "should return expected results when invoked via HTTP" do
       repo = mock("repo")
       repo.stubs(:config=>{})
-      f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(Rails.root + 'spec/fixtures/world.png'),
+      f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(fixture_path + '/world.png'),
                                                  :filename => 'world.png')
       content = mock("file")
       content.stubs(:read=>f.read)
@@ -106,13 +106,13 @@ describe FileContentDatastream do
       @generic_file.delete
     end
     it "should only return true when the datastream has actually changed" do
-      @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @generic_file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @generic_file.content.changed?.should be_true
       @generic_file.save
       @generic_file.content.changed?.should be_false
 
       # Add a thumbnail ds
-      @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'thumbnail')
+      @generic_file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'thumbnail')
       @generic_file.thumbnail.changed?.should be_true
       @generic_file.content.changed?.should be_false
 

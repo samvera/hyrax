@@ -37,7 +37,7 @@ RSpec.configure do |config|
   config.mock_with :mocha
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = File.expand_path("../fixtures", __FILE__)
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -55,12 +55,6 @@ end
 module FactoryGirl
   def self.find_or_create(handle, by=:email)
     tmpl = FactoryGirl.build(handle)
-    result = tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by))
-    unless result
-      puts "Handle: #{handle} " + FactoryGirl.build(handle).inspect
-      result = FactoryGirl.create(handle)
-    end
-    result
-
+    tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by)) || FactoryGirl.create(handle)
   end
 end
