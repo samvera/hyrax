@@ -22,6 +22,8 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'mocha'
 
+Resque.inline = Rails.env.test?
+
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 FactoryGirl.find_definitions
 
