@@ -46,6 +46,10 @@ class UsersController < ApplicationController
   def edit
     @user = current_user
     @groups = @user.groups
+    @trophies=[]
+    @user.trophies.each do |t| 
+      @trophies << GenericFile.find("scholarsphere:#{t.generic_file_id}")
+    end
   end
 
   # Process changes from profile form
@@ -57,6 +61,11 @@ class UsersController < ApplicationController
     unless @user.save
       redirect_to edit_profile_path(@user.to_s), alert: @user.errors.full_messages
       return
+    end
+    delete_trophy = params.keys.reject{|k,v|k.slice(0,'remove_trophy'.length)!='remove_trophy'}
+    delete_trophy = delete_trophy.map{|v| v.slice('remove_trophy_'.length..-1)}
+    delete_trophy.each do | smash_trophy |
+      Trophy.where(user_id: current_user.id, generic_file_id: smash_trophy.slice('scholarsphere:'.length..-1)).each.map(&:delete)
     end
     begin
       Resque.enqueue(UserEditProfileEventJob, @user.login)
