@@ -25,5 +25,7 @@ class TestAppGenerator < Rails::Generators::Base
     say_status("warning", "GENERATING SUFIA", :yellow)       
 
     generate 'sufia', '-f'
+
+    remove_file 'spec/factories/users.rb'
   end
 end

@@ -1,5 +1,7 @@
 require 'rspec/core'
 require 'rspec/core/rake_task'
+APP_ROOT="." # for jettywrapper
+require 'jettywrapper'
 # namespace :scholarsphere do
 #   desc "Execute Continuous Integration build (docs, tests with coverage)"
 #   task :ci => :environment do

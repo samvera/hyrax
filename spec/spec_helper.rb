@@ -22,9 +22,12 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'mocha'
 
+FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
+FactoryGirl.find_definitions
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+#Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -50,8 +53,14 @@ RSpec.configure do |config|
 end
 
 module FactoryGirl
-  def self.find_or_create(handle, by=:login)
+  def self.find_or_create(handle, by=:email)
     tmpl = FactoryGirl.build(handle)
-    tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by)) || FactoryGirl.create(handle)
+    result = tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by))
+    unless result
+      puts "Handle: #{handle} " + FactoryGirl.build(handle).inspect
+      result = FactoryGirl.create(handle)
+    end
+    result
+
   end
 end

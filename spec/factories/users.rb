@@ -12,17 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+puts "In here"
 FactoryGirl.define do
   factory :user, :class => User do |u|
-    login 'jilluser'
+    email 'jilluser@example.com'
+    password 'password'
   end
 
   factory :archivist, :class => User do |u|
-    login 'archivist1'
+    email 'archivist1@example.com'
+    password 'password'
   end
 
   factory :curator, :class => User do |u|
-    login 'curator1'
+    email 'curator1@example.com'
+    password 'password'
   end
 end
 

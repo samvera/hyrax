@@ -15,46 +15,9 @@
 require 'spec_helper'
 
 describe 'Routes' do
-  describe 'Blacklight' do
-    it "should route Blacklight routes"
-    # TODO: finish adding route specs for BL
-    #           clear_bookmarks        /bookmarks/clear(.:format)                bookmarks#clear
-    #                 bookmarks GET    /bookmarks(.:format)                      bookmarks#index
-    #                           POST   /bookmarks(.:format)                      bookmarks#create
-    #              new_bookmark GET    /bookmarks/new(.:format)                  bookmarks#new
-    #             edit_bookmark GET    /bookmarks/:id/edit(.:format)             bookmarks#edit
-    #                  bookmark GET    /bookmarks/:id(.:format)                  bookmarks#show
-    #                           PUT    /bookmarks/:id(.:format)                  bookmarks#update
-    #                           DELETE /bookmarks/:id(.:format)                  bookmarks#destroy
-    #              clear_folder        /folder/clear(.:format)                   folder#clear
-    #            folder_destroy        /folder/destroy(.:format)                 folder#destroy
-    #              folder_index GET    /folder(.:format)                         folder#index
-    #                    folder PUT    /folder/:id(.:format)                     folder#update
-    #                           DELETE /folder/:id(.:format)                     folder#destroy
-    #            search_history        /search_history(.:format)                 search_history#index
-    #      clear_search_history        /search_history/clear(.:format)           search_history#clear
-    #      clear_saved_searches        /saved_searches/clear(.:format)           saved_searches#clear
-    #            saved_searches        /saved_searches(.:format)                 saved_searches#index
-    #               save_search        /saved_searches/save/:id(.:format)        saved_searches#save
-    #             forget_search        /saved_searches/forget/:id(.:format)      saved_searches#forget
-    #        opensearch_catalog        /catalog/opensearch(.:format)             catalog#opensearch
-    #          citation_catalog        /catalog/citation(.:format)               catalog#citation
-    #             email_catalog        /catalog/email(.:format)                  catalog#email
-    #               sms_catalog        /catalog/sms(.:format)                    catalog#sms
-    #           endnote_catalog        /catalog/endnote(.:format)                catalog#endnote
-    # send_email_record_catalog        /catalog/send_email_record(.:format)      catalog#send_email_record
-    #             catalog_facet        /catalog/facet/:id(.:format)              catalog#facet
-    #             catalog_index        /catalog(.:format)                        catalog#index
-    #    librarian_view_catalog        /catalog/:id/librarian_view(.:format)     catalog#librarian_view
-    #             solr_document GET    /catalog/:id(.:format)                    catalog#show
-    #                           PUT    /catalog/:id(.:format)                    catalog#update
-    #                   catalog GET    /catalog/:id(.:format)                    catalog#show
-    #                           PUT    /catalog/:id(.:format)                    catalog#update
-    #                  feedback        /feedback(.:format)                       feedback#show
-    #         feedback_complete        /feedback/complete(.:format)              feedback#complete
-  end
-
+  before(:each) { @routes = Sufia::Engine.routes }
   describe 'Catalog' do
+  
     it 'should route the root url to the catalog controller' do
       { get: '/' }.should route_to(controller: 'catalog', action: 'index')
     end

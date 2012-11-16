@@ -12,5 +12,5 @@ gem 'rspec-rails'
 gem 'capybara'
 gem 'mocha'
 
-gem 'factory_girl_rails', "<2.0.0" # >=2.0.0 requires ruby 1.9
+gem 'factory_girl'
 
