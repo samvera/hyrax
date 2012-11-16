@@ -89,7 +89,7 @@ class UsersController < ApplicationController
 
   private
   def find_user
-    @user = User.find_by_login(params[:uid])
+    @user = User.find_by_user_key(params[:uid])
     redirect_to root_path, alert: "User '#{params[:uid]}' does not exist" if @user.nil?
   end
 
