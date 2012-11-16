@@ -1,4 +1,4 @@
-# Scholarsphere
+# Sufia
 
 Run the blacklight, hydra and scholarsphere generators
 ```
@@ -14,20 +14,18 @@ Run the migrations
 rake db:migrate
 ```
 
-Add include Scholarsphere::User into your user model
-Add include Scholarsphere::Controller into your application_controller.rb
-
-Add role_map_*.yml files into config?
-
-
+In your Gemfile add this:
 ```
 gem 'jettywrapper'
 ```
-bundle install
+Then run `bundle install`
 
 
-application.css
+If you want to use the assets that ship with Sufia, add the following to application.css
+```
  *= require scholarsphere
-
-application.js
+```
+and add the following to application.js
+```
 //= require scholarsphere
+```
