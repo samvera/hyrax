@@ -395,6 +395,13 @@ $(function() {
                type:"post",
                data: "file_id="+this.id,
                success:function(data) {
+                      var oldclass = $('#'+data.trophy.generic_file_id).find('i').attr("class");
+                      if (oldclass.indexOf("trophy-on") != -1){
+                        $('#'+data.trophy.generic_file_id).find('i').attr("title", "Turn Trophy ON");
+                      } else {
+                        $('#'+data.trophy.generic_file_id).find('i').attr("title", "Turn Trophy OFF");
+                      }
+                    
                       $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-on");
                       $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-off");
                     }
