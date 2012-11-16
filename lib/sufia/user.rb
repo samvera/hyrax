@@ -55,7 +55,7 @@ module Sufia::User
   end
 
   def to_s
-    login
+    user_key
   end
 
   def email_address
@@ -63,12 +63,12 @@ module Sufia::User
   end
 
   def name
-    return self.display_name.titleize || self.login rescue self.login
+    return self.display_name.titleize || self.user_key rescue self.user_key
   end
 
   # Redefine this for more intuitive keys in Redis
   def to_param
-    login
+    user_key
   end
 
   # method needed for messaging

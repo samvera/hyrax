@@ -13,4 +13,5 @@
 # limitations under the License.
 
 class VersionCommitter < ActiveRecord::Base
+  attr_accessible :obj_id, :datastream_id, :version_id, :committer_login
 end

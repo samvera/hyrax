@@ -16,8 +16,7 @@ require 'spec_helper'
 
 describe GenericFilesController do
   before do
-    Hydra::LDAP.connection.stubs(:get_operation_result).returns(OpenStruct.new({code:0, message:"Success"}))
-    Hydra::LDAP.stubs(:does_user_exist?).returns(true)
+    controller.stubs(:has_access?).returns(true)
 
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @user = FactoryGirl.find_or_create(:user)
@@ -41,27 +40,23 @@ describe GenericFilesController do
     end
 
     it "should spawn a content deposit event job" do
-    puts "L44"
-      GenericFile.any_instance.stubs(:to_solr).returns({})
+      #GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','image/png')
-      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
+      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser@example.com')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
     it "should expand zip files" do
-    puts "L53"
-      GenericFile.any_instance.stubs(:to_solr).returns({})
+      #GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','application/zip')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       Resque.expects(:enqueue).with(UnzipJob, 'test:123')
-      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
+      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser@example.com')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
-      puts "D60"
     end
 
     it "should create and save a file asset from the given params" do
-    puts "L64"
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
       response.should be_success
@@ -80,14 +75,14 @@ describe GenericFilesController do
     end
 
     it "should record what user created the first version of content" do
-      GenericFile.any_instance.stubs(:to_solr).returns({})
+      #GenericFile.any_instance.stubs(:to_solr).returns({})
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :terms_of_service=>"1"
 
       saved_file = GenericFile.find('test:123')
       version = saved_file.content.latest_version
       version.versionID.should == "content.0"
-      saved_file.content.version_committer(version).should == @user.login
+      saved_file.content.version_committer(version).should == @user.user_key
     end
 
     it "should create batch associations from batch_id" do
@@ -106,18 +101,23 @@ describe GenericFilesController do
 
       saved_file = GenericFile.find('test:123')
       # This is confirming that apply_depositor_metadata recorded the depositor
-      saved_file.properties.depositor.should == ['jilluser']
-      saved_file.depositor.should == 'jilluser'
+      #TODO make sure this is moved to scholarsphere:
+      #saved_file.properties.depositor.should == ['jilluser']
+      saved_file.properties.depositor.should == ['jilluser@example.com']
+      #TODO make sure this is moved to scholarsphere:
+      #saved_file.depositor.should == 'jilluser'
+      saved_file.depositor.should == 'jilluser@example.com'
       saved_file.properties.to_solr.keys.should include('depositor_t')
-      saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
+      #TODO make sure this is moved to scholarsphere:
+      #saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
+      saved_file.properties.to_solr['depositor_t'].should == ['jilluser@example.com']
       saved_file.to_solr.keys.should include('depositor_t')
-      saved_file.to_solr['depositor_t'].should == ['jilluser']
+      saved_file.to_solr['depositor_t'].should == ['jilluser@example.com']
     end
     it "Should call virus check" do
-      GenericFile.any_instance.stubs(:to_solr).returns({})
       controller.expects(:virus_check).returns(0)      
       file = fixture_file_upload('/world.png','image/png')
-      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser')
+      Resque.expects(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser@example.com')
       Resque.expects(:enqueue).with(CharacterizeJob, 'test:123')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
@@ -150,7 +150,7 @@ describe GenericFilesController do
 
   describe "audit" do
     before do
-      GenericFile.any_instance.stubs(:to_solr).returns({})
+      #GenericFile.any_instance.stubs(:to_solr).returns({})
       @generic_file = GenericFile.new
       @generic_file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @generic_file.apply_depositor_metadata('mjg36')
@@ -171,9 +171,8 @@ describe GenericFilesController do
   describe "destroy" do
     before(:each) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      GenericFile.any_instance.stubs(:to_solr).returns({})
       @generic_file = GenericFile.new
-      @generic_file.apply_depositor_metadata(@user.login)
+      @generic_file.apply_depositor_metadata(@user.user_key)
       @generic_file.save
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
@@ -187,7 +186,7 @@ describe GenericFilesController do
       lambda { GenericFile.find(@generic_file.pid) }.should raise_error(ActiveFedora::ObjectNotFoundError)
     end
     it "should spawn a content delete event job" do
-      Resque.expects(:enqueue).with(ContentDeleteEventJob, @generic_file.noid, @user.login)
+      Resque.expects(:enqueue).with(ContentDeleteEventJob, @generic_file.noid, @user.user_key)
       delete :destroy, :id=>@generic_file.pid
     end
   end
@@ -197,7 +196,7 @@ describe GenericFilesController do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       #controller.expects(:virus_check).returns(0)      
       @generic_file = GenericFile.new
-      @generic_file.apply_depositor_metadata(@user.login)
+      @generic_file.apply_depositor_metadata(@user.user_key)
       @generic_file.save
     end
     after do
@@ -205,7 +204,7 @@ describe GenericFilesController do
     end
 
     it "should spawn a content update event job" do
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser')
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com')
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
@@ -213,7 +212,7 @@ describe GenericFilesController do
     end
 
     it "should spawn a content new version event job" do
-      Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser')
+      Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser@example.com')
       Resque.expects(:enqueue).with(CharacterizeJob, @generic_file.pid)      
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
@@ -224,8 +223,6 @@ describe GenericFilesController do
     end
 
     it "should record what user added a new version" do
-      GenericFile.any_instance.stubs(:to_solr).returns({})
-      
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
 
@@ -234,15 +231,15 @@ describe GenericFilesController do
 
       posted_file = GenericFile.find(@generic_file.pid)
       version1 = posted_file.content.latest_version
-      posted_file.content.version_committer(version1).should == @user.login
+      posted_file.content.version_committer(version1).should == @user.user_key
 
       # other user uploads new version
       archivist = FactoryGirl.find_or_create(:archivist)
       controller.stubs(:current_user).returns(archivist)
       sign_in archivist
 
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser').never
-      Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, archivist.login).once
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com').never
+      Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, archivist.user_key).once
       Resque.expects(:enqueue).with(CharacterizeJob, @generic_file.pid).once
       file = fixture_file_upload('/image.jp2','image/jp2')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''] }
@@ -250,13 +247,13 @@ describe GenericFilesController do
       edited_file = GenericFile.find(@generic_file.pid)
       version2 = edited_file.content.latest_version
       version2.versionID.should_not == version1.versionID
-      edited_file.content.version_committer(version2).should == archivist.login
+      edited_file.content.version_committer(version2).should == archivist.user_key
 
       # original user restores his or her version
       controller.stubs(:current_user).returns(@user)
       sign_in @user
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser').never
-      Resque.expects(:enqueue).with(ContentRestoredVersionEventJob, @generic_file.pid, @user.login, 'content.0').once
+      Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com').never
+      Resque.expects(:enqueue).with(ContentRestoredVersionEventJob, @generic_file.pid, @user.user_key, 'content.0').once
       Resque.expects(:enqueue).with(CharacterizeJob, @generic_file.pid).once
       post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1", :tag=>['']}
 
@@ -264,7 +261,7 @@ describe GenericFilesController do
       version3 = restored_file.content.latest_version
       version3.versionID.should_not == version2.versionID
       version3.versionID.should_not == version1.versionID
-      restored_file.content.version_committer(version3).should == @user.login
+      restored_file.content.version_committer(version3).should == @user.user_key
       @user.delete
     end
 
@@ -272,7 +269,7 @@ describe GenericFilesController do
       post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :tag=>[''], :permissions=>{:new_group_name=>{'group1'=>'read'}, :new_user_name=>{'user1'=>'edit'}}}
 
       assigns[:generic_file].read_groups.should == ["group1"]
-      assigns[:generic_file].edit_users.should include("user1", @user.login)
+      assigns[:generic_file].edit_users.should include("user1", @user.user_key)
     end
     it "should update existing groups and users" do
       @generic_file.read_groups = ['group3']
@@ -284,7 +281,7 @@ describe GenericFilesController do
     it "should spawn a virus check" do
       # The expectation is in the begin block
       controller.expects(:virus_check).returns(0)      
-      Resque.stubs(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser')
+      Resque.stubs(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser@example.com')
       Resque.stubs(:enqueue).with(CharacterizeJob, @generic_file.pid)
       GenericFile.stubs(:save).returns({})
       @user = FactoryGirl.find_or_create(:user)

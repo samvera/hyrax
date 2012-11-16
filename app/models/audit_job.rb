@@ -34,8 +34,9 @@ class AuditJob
         #logger.info "User login is #{login}"`
         #logger.info "All users = #{User.all}"
         if login
-          job_user = User.find_by_user_key(login)
+          user = User.find_by_user_key(login)
           #logger.info "ZZZ user = #{user.inspect}"
+          job_user = User.find_by_user_key('audituser')
           job_user = User.create(Devise.authentication_keys.first => "audituser") unless job_user
 
           #send the user a message about the failing audit

@@ -81,14 +81,10 @@ class GenericFilesController < ApplicationController
 
       # process file
       else
-      puts "Processing"
         create_and_save_generic_file
-        puts "created adn saved"
         if @generic_file
           begin
-            puts "before enqueue"
             Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.user_key)
-            puts "after enqueue"
           rescue Redis::CannotConnectError
             logger.error "Redis is down!"
           end
@@ -233,10 +229,8 @@ class GenericFilesController < ApplicationController
     #   f.rewind
     #   file.tempfile = f
     #end
-    puts "before posting blob"
     add_posted_blob_to_asset(@generic_file,file)
 
-    puts "after posting blob"
     @generic_file.apply_depositor_metadata(user_key)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
@@ -261,6 +255,7 @@ class GenericFilesController < ApplicationController
       sleep 0.01
       retry
     end
+
     record_version_committer(@generic_file, current_user)
     begin
       Resque.enqueue(UnzipJob, @generic_file.pid) if file.content_type == 'application/zip'
