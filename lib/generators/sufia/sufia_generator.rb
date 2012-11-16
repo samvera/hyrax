@@ -11,6 +11,9 @@ class SufiaGenerator < Rails::Generators::Base
   desc """
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
+ 2. Adds user behavior to the user model
+ 3. Creates the sufia.rb configuration file
+ 4. Copys the catalog controller into the local app
        """ 
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -32,6 +35,19 @@ add_avatars_to_users.rb		create_checksum_audit_logs.rb	create_version_committers
 add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
       better_migration_template f
     end
+  end
+
+  # Add behaviors to the user model
+  def inject_sufia_user_behavior
+    file_path = "app/models/#{model_name.underscore}.rb"
+    if File.exists?(file_path) 
+      inject_into_class file_path, model_name.classify do 
+        "# Connects this user object to Sufia behaviors. " +
+        "\n include Sufia::User\n"        
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g sufia client" 
+    end    
   end
 
   def create_configuration_files
