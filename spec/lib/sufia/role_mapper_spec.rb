@@ -19,7 +19,7 @@ describe RoleMapper do
     @user = FactoryGirl.create(:user)
     User.any_instance.stubs(:groups).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
   end
-  subject {::RoleMapper.roles(@user.login)}
+  subject {::RoleMapper.roles(@user.user_key)}
   it { should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]}
 end
 

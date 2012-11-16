@@ -6,7 +6,7 @@ class SingleUseLinkController < DownloadsController
   def generate_download
     id  = check_single_use_link
     @su =  SingleUseLink.create_download(id)
-    @link =  Rails.application.routes.url_helpers.download_single_use_link_path(@su.downloadKey)
+    @link =  sufia.download_single_use_link_path(@su.downloadKey)
     @generic_file = GenericFile.find(id)
     respond_to do |format|
       format.html
@@ -18,7 +18,7 @@ class SingleUseLinkController < DownloadsController
   def generate_show
     id  = check_single_use_link
     @su = SingleUseLink.create_show(id)
-    @link = Rails.application.routes.url_helpers.show_single_use_link_path(@su.downloadKey)
+    @link = sufia.show_single_use_link_path(@su.downloadKey)
     @generic_file = GenericFile.find(id)
     respond_to do |format|
       format.html
@@ -35,7 +35,7 @@ class SingleUseLinkController < DownloadsController
     id = link.itemId 
     
     #check to make sure the path matches
-    not_found if link.path != Rails.application.routes.url_helpers.download_path(id)
+    not_found if link.path != sufia.download_path(id)
     
     # send the data content
     send_content(id)
@@ -48,7 +48,7 @@ class SingleUseLinkController < DownloadsController
     id = link.itemId 
     
     #check to make sure the path matches
-    not_found if link.path != Rails.application.routes.url_helpers.generic_file_path(id)
+    not_found if link.path != sufia.generic_file_path(id)
     
     #show the file
     @generic_file = GenericFile.find(id)
@@ -57,7 +57,7 @@ class SingleUseLinkController < DownloadsController
     
     # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
     @su =  SingleUseLink.create_download(id)
-    @download_link =  Rails.application.routes.url_helpers.download_single_use_link_path(@su.downloadKey)
+    @download_link =  sufia.download_single_use_link_path(@su.downloadKey)
   end
   
   protected

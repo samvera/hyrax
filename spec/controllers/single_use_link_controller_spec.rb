@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe SingleUseLinkController do
   before(:all) do
-    Hydra::LDAP.connection.stubs(:get_operation_result).returns(OpenStruct.new({code:0, message:"Success"}))
-    Hydra::LDAP.stubs(:does_user_exist?).returns(true)
     User.any_instance.stubs(:groups).returns([])
 
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
@@ -25,6 +23,7 @@ describe SingleUseLinkController do
     @file2.delete
   end
   before do
+    controller.stubs(:has_access?).returns(true)
     controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
   end
   describe "logged in user" do
@@ -45,7 +44,7 @@ describe SingleUseLinkController do
       it "returns http success" do
         get 'generate_download', id:@file.pid
         response.should be_success
-        assigns[:link].should == Sufia::Engine.routes.url_helpers.download_single_use_link_path(@hash)
+        assigns[:link].should == @routes.url_helpers.download_single_use_link_path(@hash)
       end
     end
   
@@ -53,7 +52,7 @@ describe SingleUseLinkController do
       it "returns http success" do
         get 'generate_show', id:@file.pid
         response.should be_success
-        assigns[:link].should == Sufia::Engine.routes.routes.url_helpers.show_single_use_link_path(@hash)
+        assigns[:link].should == @routes.url_helpers.show_single_use_link_path(@hash)
       end
     end   
   end
@@ -96,12 +95,10 @@ describe SingleUseLinkController do
       it "returns 404 on second attempt" do
         get :download, id:@dhash 
         response.should be_success
-        get :download, id:@dhash 
-        response.should_not be_success
+        lambda {get :download, id:@dhash}.should raise_error ActionController::RoutingError
       end
       it "returns 404 on attempt to get download with show" do
-        get :download, id:@shash 
-        response.should_not be_success
+        lambda {get :download, id:@shash}.should raise_error ActionController::RoutingError
       end
     end
 
@@ -114,12 +111,10 @@ describe SingleUseLinkController do
       it "returns 404 on second attempt" do
         get :show, id:@shash 
         response.should be_success
-        get :show, id:@shash 
-        response.should_not be_success
+        lambda {get :show, id:@shash}.should raise_error ActionController::RoutingError
       end
       it "returns 404 on attempt to get show with download" do
-        get :show, id:@dhash 
-        response.should_not be_success
+        lambda {get :show, id:@dhash}.should raise_error ActionController::RoutingError
       end
     end
   end
