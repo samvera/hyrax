@@ -66,7 +66,8 @@ class BatchUpdateJob
     batch.update_attributes({status:["Complete"]})
     
     job_user = User.find_by_user_key("batchuser")
-    job_user = User.create(login:"batchuser", email:"batchmail") unless job_user
+    job_user = User.create(Devise.authentication_keys.first => "batchuser") unless job_user
+    
     
     message = '<a class="batchid ui-helper-hidden">ss-'+batch.noid+'</a>The file(s) '+ file_list(saved)+ " have been saved." unless saved.empty?
     job_user.send_message(user, message, 'Batch upload complete') unless saved.empty?
@@ -77,7 +78,7 @@ class BatchUpdateJob
   end
   
   def file_list ( files)
-    return files.map {|gf| '<a href="'+generic_files_path+'/'+gf.noid+'">'+display_title(gf)+'</a>'}.join(', ')
+    return files.map {|gf| '<a href="'+Sufia::Engine.routes.url_helpers.generic_files_path+'/'+gf.noid+'">'+display_title(gf)+'</a>'}.join(', ')
     
   end
   

@@ -24,7 +24,11 @@ describe User do
     @another_user.delete
   end
   it "should have a login" do
+    pending "Move to scholarsphere"
     @user.login.should == "jilluser"
+  end
+  it "should have an email" do
+    @user.user_key.should == "jilluser@example.com"
   end
   it "should have activity stream-related methods defined" do
     @user.should respond_to(:stream)

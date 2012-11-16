@@ -23,7 +23,7 @@ describe Batch do
     @file.apply_depositor_metadata('mjg36')
     @file.save
     @batch = Batch.create(:title => "test collection",
-                          :creator => @user.login,
+                          :creator => @user.user_key,
                           :part => @file.pid)
   end
   after(:all) do
@@ -38,7 +38,7 @@ describe Batch do
     @batch.descMetadata.should be_kind_of BatchRdfDatastream
   end
   it "should belong to testuser" do
-    @batch.creator.should == [@user.login]
+    @batch.creator.should == [@user.user_key]
   end
   it "should be titled 'test collection'" do
     @batch.title.should == ["test collection"]

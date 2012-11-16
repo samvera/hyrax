@@ -1,5 +1,4 @@
 require "sufia/version"
-#require 'activerecord-import'
 require 'blacklight'
 require 'hydra/head'
 require 'hydra-ldap' #TODO remove this
@@ -12,6 +11,7 @@ require 'paperclip'
 require 'will_paginate'
 require 'nest'
 require 'rmagick'
+require 'activerecord-import'
 
 module Sufia
 
