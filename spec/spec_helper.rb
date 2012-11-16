@@ -50,7 +50,11 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
 
   config.include Devise::TestHelpers, :type => :controller
+
+  # see https://github.com/rails/journey/issues/39
+  config.before(:each, :type=>"controller") { @routes = Sufia::Engine.routes }
 end
+
 
 module FactoryGirl
   def self.find_or_create(handle, by=:email)
