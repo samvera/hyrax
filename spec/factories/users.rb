@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-puts "In here"
 FactoryGirl.define do
   factory :user, :class => User do |u|
     email 'jilluser@example.com'

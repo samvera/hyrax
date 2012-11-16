@@ -18,7 +18,7 @@ describe FitsDatastream do
   before(:all) do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     @file = GenericFile.new
-    @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+    @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
     @file.apply_depositor_metadata('mjg36')
     @file.save
     @file = GenericFile.find(@file.pid)

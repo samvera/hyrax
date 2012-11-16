@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<foxml:digitalObject PID="<%=Sufia::Application.config.id_namespace%>:<%= @id %>" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+<foxml:digitalObject PID="<%=Sufia::Engine.config.id_namespace%>:<%= @id %>" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
   <foxml:objectProperties>
     <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
@@ -14,14 +14,14 @@
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
           <dc:title><%= @title %></dc:title>
-          <dc:identifier><%=Sufia::Application.config.id_namespace%>:<%= @id %></dc:identifier>
+          <dc:identifier><%=Sufia::Engine.config.id_namespace%>:<%= @id %></dc:identifier>
         </oai_dc:dc>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="descMetadata" STATE="A" VERSIONABLE="true">
     <foxml:datastreamVersion ID="descMetadata.0" LABEL="" MIMETYPE="text/plain">
-      <foxml:contentLocation REF="file:<%=@root%>/spec/fixtures/scholarsphere/<%=Sufia::Application.config.id_namespace%>_<%= @id %>.descMeta.txt" TYPE="URL"/>
+      <foxml:contentLocation REF="file:<%=@root%>/spec/fixtures/scholarsphere/<%=Sufia::Engine.config.id_namespace%>_<%= @id %>.descMeta.txt" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
@@ -29,7 +29,7 @@
       LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="application/rdf+xml">
       <foxml:xmlContent>
         <rdf:RDF xmlns:ns0="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/<%=Sufia::Application.config.id_namespace%>:<%= @id %>">
+          <rdf:Description rdf:about="info:fedora/<%=Sufia::Engine.config.id_namespace%>:<%= @id %>">
             <ns0:hasModel rdf:resource="info:fedora/afmodel:GenericFile"/>
           </rdf:Description>
         </rdf:RDF>
@@ -39,7 +39,7 @@
   <foxml:datastream CONTROL_GROUP="M" ID="content" STATE="A" VERSIONABLE="true">
     <foxml:datastreamVersion ID="content.0" LABEL="Test Data 1"
       MIMETYPE="text/plain" >
-      <foxml:contentLocation REF="file:<%=@root%>/spec/fixtures/scholarsphere/<%=Sufia::Application.config.id_namespace%>_<%= @id %>.txt" TYPE="URL"/>
+      <foxml:contentLocation REF="file:<%=@root%>/spec/fixtures/scholarsphere/<%=Sufia::Engine.config.id_namespace%>_<%= @id %>.txt" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="rightsMetadata" STATE="A" VERSIONABLE="true">

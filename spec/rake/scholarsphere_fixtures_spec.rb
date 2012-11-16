@@ -42,11 +42,11 @@ describe "scholarsphere:fixtures" do
   end
   
   def delete_fixture_files
-    File.delete(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.txt"))
-    File.delete(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt"))
-    File.delete(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb"))
+    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.txt"))
+    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt"))
+    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb"))
     begin
-      File.delete(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml"))
+      File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml"))
     rescue
       # do nothing; this just means the generate task was not called
     end
@@ -76,10 +76,10 @@ describe "scholarsphere:fixtures" do
         @rake['scholarsphere:fixtures:load'].invoke       
         @rake['scholarsphere:fixtures:delete'].invoke
       end
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.txt")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt")).length.should == 1
-      Dir.glob(Rails.root.join(File.expand_path("spec/fixtures/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.txt")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml")).length.should == 1
       o.should include "Loaded 'scholarsphere:rspecTestFixture'"
       o.should include "Deleted 'scholarsphere:rspecTestFixture'"
     end    

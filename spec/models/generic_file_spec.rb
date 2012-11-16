@@ -86,7 +86,7 @@ describe GenericFile do
       @file.descMetadata.should be_kind_of GenericFileRdfDatastream
     end
     it "should have content datastream" do
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @file.content.should be_kind_of FileContentDatastream
     end
   end
@@ -229,7 +229,7 @@ describe GenericFile do
         @f = GenericFile.new
         @f.stubs(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
         @f.stubs(:to_solr).returns({})
-        @f.add_file_datastream(File.new("#{Rails.root}/spec/fixtures/world.png"), :dsid=>'content')
+        @f.add_file_datastream(File.new("#{fixture_path}/world.png"), :dsid=>'content')
         @f.apply_depositor_metadata('mjg36')
         @f.save
         @mock_image = mock("image", :from_blob=>true)
@@ -251,7 +251,7 @@ describe GenericFile do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       GenericFile.any_instance.stubs(:characterize).returns(true)
       f = GenericFile.new
-      f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata('mjg36')
       f.save
       @f = GenericFile.find(f.pid)
@@ -287,7 +287,7 @@ describe GenericFile do
       @file.delete
     end
     it "should schedule a characterization job" do
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       Resque.expects(:enqueue).once
       @file.save
     end
@@ -394,7 +394,7 @@ describe GenericFile do
   end
   describe "characterize" do
     it "should return expected results when called" do
-      @file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @file.characterize
       doc = Nokogiri::XML.parse(@file.characterization.content)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
@@ -412,7 +412,7 @@ describe GenericFile do
       before(:all) do
         GenericFile.any_instance.stubs(:terms_of_service).returns('1')
         myfile = GenericFile.new
-        myfile.add_file_datastream(File.new(Rails.root + 'spec/fixtures/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+        myfile.add_file_datastream(File.new(fixture_path + '/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
         myfile.thumbnail.size.nil?.should be_true
         myfile.apply_depositor_metadata('mjg36')

@@ -21,7 +21,7 @@ describe DownloadsController do
     f = GenericFile.new(:pid => 'scholarsphere:test1')
     f.apply_depositor_metadata('archivist1')
     f.set_title_and_label('world.png')
-    f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content', :mimeType => 'image/png')
+    f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content', :mimeType => 'image/png')
     f.expects(:characterize_if_changed).yields
     f.save
   end

@@ -19,7 +19,7 @@ describe ChecksumAuditLog do
     GenericFile.any_instance.stubs(:terms_of_service).returns('1')
     GenericFile.any_instance.stubs(:characterize).returns(true) # stub out characterization so it does not get audited
     @f = GenericFile.new
-    @f.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+    @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
     @f.apply_depositor_metadata('mjg36')
     @f.save
     @version = @f.datastreams['content'].versions.first

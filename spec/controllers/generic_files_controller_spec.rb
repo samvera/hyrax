@@ -148,7 +148,7 @@ describe GenericFilesController do
     before do
       GenericFile.any_instance.stubs(:to_solr).returns({})
       @generic_file = GenericFile.new
-      @generic_file.add_file_datastream(File.new(Rails.root + 'spec/fixtures/world.png'), :dsid=>'content')
+      @generic_file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @generic_file.apply_depositor_metadata('mjg36')
       @generic_file.save
     end
@@ -297,7 +297,7 @@ describe GenericFilesController do
       f = GenericFile.new(:pid => 'scholarsphere:test5')
       f.apply_depositor_metadata('archivist1')
       f.set_title_and_label('world.png')
-      f.add_file_datastream(File.new(Rails.root +  'spec/fixtures/world.png'))
+      f.add_file_datastream(File.new(fixture_path +  '/world.png'))
       # grant public read access explicitly
       f.read_groups = ['public']
       f.expects(:characterize_if_changed).yields
