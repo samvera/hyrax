@@ -5,11 +5,11 @@ class SingleUseLink < ActiveRecord::Base
     
   
   def self.create_show(item_id)
-     create_path(item_id, Rails.application.routes.url_helpers.generic_file_path(item_id) )     
+     create_path(item_id, Sufia::Engine.routes.url_helpers.generic_file_path(item_id) )     
   end
 
   def self.create_download(item_id)
-     create_path(item_id, Rails.application.routes.url_helpers.download_path(item_id) )
+     create_path(item_id, Sufia::Engine.routes.url_helpers.download_path(item_id) )
   end
   
   def expired?

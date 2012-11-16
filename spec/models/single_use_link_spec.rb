@@ -25,21 +25,21 @@ describe SingleUseLink do
         su = SingleUseLink.create_show( @file.pid)
         su.downloadKey.should == @hash
         su.itemId.should == @file.pid
-        su.path.should == Rails.application.routes.url_helpers.generic_file_path(@file.pid)
+        su.path.should == Sufia::Engine.routes.url_helpers.generic_file_path(@file.pid)
         su.delete
      end 
      it "should create show download link" do
         su = SingleUseLink.create_download( @file.pid)
         su.downloadKey.should == @hash
         su.itemId.should == @file.pid
-        su.path.should == Rails.application.routes.url_helpers.download_path(@file.pid)        
+        su.path.should == Sufia::Engine.routes.url_helpers.download_path(@file.pid)        
         su.delete
      end 
   end
   describe "find" do
      describe "not expired" do
        before do
-          @su = SingleUseLink.create(downloadKey:'sha2hashb', itemId:@file.pid, path:Rails.application.routes.url_helpers.download_path(@file.noid), expires:DateTime.now.advance(:hours => 1))
+          @su = SingleUseLink.create(downloadKey:'sha2hashb', itemId:@file.pid, path:Sufia::Engine.routes.url_helpers.download_path(@file.noid), expires:DateTime.now.advance(:hours => 1))
        end
        after do
           @su.delete
@@ -59,7 +59,7 @@ describe SingleUseLink do
      end
      describe "expired" do
        before do
-          @su = SingleUseLink.create(downloadKey:'sha2hashb', itemId:@file.pid, path:Rails.application.routes.url_helpers.download_path(@file.noid), expires:DateTime.now.advance(:hours => -1))
+          @su = SingleUseLink.create(downloadKey:'sha2hashb', itemId:@file.pid, path:Sufia::Engine.routes.url_helpers.download_path(@file.noid), expires:DateTime.now.advance(:hours => -1))
        end
        after do
           @su.delete
