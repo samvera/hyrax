@@ -30,13 +30,13 @@ describe SessionsController do
       request.env['COSIGN_SERVICE'] = 'cosign-gamma-ci.dlt.psu.edu'
       cookies.expects(:delete).with('cosign-gamma-ci.dlt.psu.edu')
       get :destroy
-      response.should redirect_to ScholarSphere::Application.config.logout_url
+      response.should redirect_to Sufia::Application.config.logout_url
     end
   end
   describe "#new" do
     it "should redirect to the central login page" do
       get :new
-      response.should redirect_to ScholarSphere::Application.config.login_url
+      response.should redirect_to Sufia::Application.config.login_url
     end
   end
 end

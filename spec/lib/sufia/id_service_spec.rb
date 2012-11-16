@@ -14,16 +14,16 @@
 
 require 'spec_helper'
 
-describe ScholarSphere::IdService do
+describe Sufia::IdService do
   describe "mint" do
     before(:all) do
-      @id = ScholarSphere::IdService.mint
+      @id = Sufia::IdService.mint
     end
     it "should create a unique id" do
       @id.should_not be_empty
     end
     it "should not mint the same id twice in a row" do
-      other_id = ScholarSphere::IdService.mint
+      other_id = Sufia::IdService.mint
       other_id.should_not == @id
     end  
     it "should create many unique ids" do
@@ -31,7 +31,7 @@ describe ScholarSphere::IdService do
       threads = (1..10).map do
         Thread.new do
           100.times do
-            a <<  ScholarSphere::IdService.mint
+            a <<  Sufia::IdService.mint
           end
         end
       end
@@ -46,7 +46,7 @@ describe ScholarSphere::IdService do
           threads = (1..10).map do
             Thread.new do
               20.times do
-                wr.write ScholarSphere::IdService.mint
+                wr.write Sufia::IdService.mint
                 wr.write " "
               end
             end

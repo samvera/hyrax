@@ -1,0 +1,16 @@
+source 'https://rubygems.org'
+
+gem 'rails', '3.2.9'
+
+gem 'sqlite3'
+
+gem 'devise'
+gem 'blacklight'
+gem 'hydra-head'
+gem 'sufia', :path=>'../../'
+gem 'rspec-rails'
+gem 'capybara'
+gem 'mocha'
+
+gem 'factory_girl_rails', "<2.0.0" # >=2.0.0 requires ruby 1.9
+

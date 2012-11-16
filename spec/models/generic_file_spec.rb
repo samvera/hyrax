@@ -387,9 +387,9 @@ describe GenericFile do
       @new_file.noid.should == '123'
     end
     it "should work outside of an instance" do
-      new_id = ScholarSphere::IdService.mint
+      new_id = Sufia::IdService.mint
       noid = new_id.split(':').last
-      ScholarSphere::Noid.noidify(new_id).should == noid
+      Sufia::Noid.noidify(new_id).should == noid
     end
   end
   describe "characterize" do
