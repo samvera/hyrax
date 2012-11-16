@@ -29,7 +29,7 @@ class BatchUpdateJob
     params = HashWithIndifferentAccess.new(params)
     perms = HashWithIndifferentAccess.new(perms)
     batch = Batch.find_or_create(params[:id])
-    user = User.find_by_login(login)
+    user = User.find_by_user_key(login)
 
     saved = []
     denied = []
