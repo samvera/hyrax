@@ -228,7 +228,6 @@ describe GenericFile do
       before do
         @f = GenericFile.new
         @f.stubs(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
-        @f.stubs(:to_solr).returns({})
         @f.add_file_datastream(File.new("#{fixture_path}/world.png"), :dsid=>'content')
         @f.apply_depositor_metadata('mjg36')
         @f.save
