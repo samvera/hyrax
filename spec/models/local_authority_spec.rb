@@ -16,9 +16,9 @@ require 'spec_helper'
 
 describe LocalAuthority do
   before(:all) do
-    @tsv = [Rails.root + 'spec/fixtures/cities15000.tsv']
-    @nt = [Rails.root + 'spec/fixtures/genreForms.nt']
-    @rdfxml = [Rails.root + 'spec/fixtures/lexvo.rdf']
+    @tsv = [fixture_path + '/cities15000.tsv']
+    @nt = [fixture_path + '/genreForms.nt']
+    @rdfxml = [fixture_path + '/lexvo.rdf']
     LocalAuthority.count.should == 0
     LocalAuthorityEntry.count.should == 0
   end
