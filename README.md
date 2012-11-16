@@ -1,6 +1,6 @@
 # Scholarsphere
 
-Run the blacklight, hydra mailboxer and scholarsphere generators
+Run the blacklight, hydra and scholarsphere generators
 ```
 rails g blacklight --devise
 rails g hydra:head -df

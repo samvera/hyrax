@@ -1,4 +1,5 @@
 require "sufia/version"
+require 'activerecord-import'
 require 'blacklight'
 require 'hydra/head'
 require 'hydra-ldap' #TODO remove this

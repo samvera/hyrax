@@ -15,6 +15,7 @@ This generator makes the following changes to your application:
  3. Adds controller behavior to the application controller
  4. Creates the sufia.rb configuration file
  5. Copies the catalog controller into the local app
+ 6. Generates mailboxer
        """ 
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -79,6 +80,10 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
     # we add em, since each is added at the top of file. 
     # we want "root" to be FIRST for optimal url generation. 
     route "mount Sufia::Engine => '/'"
+  end
+
+  def install_mailboxer
+    generate("mailboxer")
   end
 
   private  
