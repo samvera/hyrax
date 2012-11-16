@@ -34,7 +34,7 @@ RSpec::Core::RakeTask.new(:spec => [:generate, :fixtures]) do |t|
 end
 
 desc "Load scholarsphere fixtures"
-task :fixtures => ['scholarsphere:fixtures:refresh'] do
+task :fixtures do# => ['scholarsphere:fixtures:refresh'] do
   #NOTE do we need fixtures:create, fixtures:generate
 end
 
