@@ -16,7 +16,7 @@ require 'rdf'
 require 'rdf/rdfxml'
 
 class LocalAuthority < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :local_authority, :label, :uri
   has_and_belongs_to_many :domain_terms, :uniq=> true 
   has_many :local_authority_entries
 
