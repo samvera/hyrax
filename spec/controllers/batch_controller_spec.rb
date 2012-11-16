@@ -31,7 +31,7 @@ describe BatchController do
       @batch = Batch.new
       @batch.save
       @file = GenericFile.new(:batch=>@batch)
-      @file.apply_depositor_metadata(@user.login)
+      @file.apply_depositor_metadata(@user.user_key)
       @file.save
       @file2 = GenericFile.new(:batch=>@batch)
       @file2.apply_depositor_metadata('otherUser')
@@ -44,7 +44,7 @@ describe BatchController do
     end
     it "should equeue a batch update job" do
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      Resque.expects(:enqueue).with(BatchUpdateJob, @user.login, params, params['generic_file']).once
+      Resque.expects(:enqueue).with(BatchUpdateJob, @user.user_key, params, params['generic_file']).once
       post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
     describe "when views are shown" do
@@ -118,10 +118,10 @@ describe BatchController do
       @b1 = Batch.new
       @b1.save
       @file = GenericFile.new(:batch=>@b1, :label=>'f1')
-      @file.apply_depositor_metadata(@user.login)
+      @file.apply_depositor_metadata(@user.user_key)
       @file.save
       @file2 = GenericFile.new(:batch=>@b1, :label=>'f2')
-      @file2.apply_depositor_metadata(@user.login)
+      @file2.apply_depositor_metadata(@user.user_key)
       @file2.save
       controller.stubs(:params).returns({id:@b1.id})
     end

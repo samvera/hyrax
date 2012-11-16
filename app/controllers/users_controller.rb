@@ -54,7 +54,7 @@ class UsersController < ApplicationController
       return
     end
     begin
-      Resque.enqueue(UserEditProfileEventJob, @user.login)
+      Resque.enqueue(UserEditProfileEventJob, @user.user_key)
     rescue Redis::CannotConnectError
       logger.error "Redis is down!"
     end
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
     unless current_user.following?(@user)
       current_user.follow(@user)
       begin
-        Resque.enqueue(UserFollowEventJob, current_user.login, @user.login)
+        Resque.enqueue(UserFollowEventJob, current_user.user_key, @user.user_key)
       rescue Redis::CannotConnectError
         logger.error "Redis is down!"
       end
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
     if current_user.following?(@user)
       current_user.stop_following(@user)
       begin
-        Resque.enqueue(UserUnfollowEventJob, current_user.login, @user.login)
+        Resque.enqueue(UserUnfollowEventJob, current_user.user_key, @user.user_key)
       rescue Redis::CannotConnectError
         logger.error "Redis is down!"
       end

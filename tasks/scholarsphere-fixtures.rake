@@ -184,7 +184,7 @@
 #
 #
 
-require 'sufia'
+require 'active_fedora'
 
 SUFIA_TEST_NS = 'sufia' #this must be the same as id_namespace in the test applications config
 namespace :scholarsphere do

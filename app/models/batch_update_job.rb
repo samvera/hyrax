@@ -36,7 +36,7 @@ class BatchUpdateJob
 
     batch.generic_files.each do |gf|
       unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
-        logger.error "User #{user.login} DEEEENIED access to #{gf.pid}!"
+        logger.error "User #{user.user_key} DEEEENIED access to #{gf.pid}!"
         denied << gf
         next
       end
