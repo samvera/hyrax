@@ -161,7 +161,8 @@ class GenericFile < ActiveFedora::Base
   def related_files
     relateds = begin
                  self.batch.generic_files
-               rescue NoMethodError
+               rescue NoMethodError => e
+                 #batch is nil
                  batch_id = self.object_relations["isPartOf"].first || self.object_relations[:is_part_of].first
                  return [] if batch_id.nil?
                  self.class.find(:is_part_of_s => batch_id)
@@ -188,8 +189,8 @@ class GenericFile < ActiveFedora::Base
     # use the field type to see if the return will be one item or multiple
     if args.is_a? String
       gf.terms_of_service = '1'
-    else
-      gf.each {|f| f.terms_of_service = '1'}
+    elsif gf.respond_to? :each
+      gf.each {|f| f.terms_of_service = '1'} 
     end
     return gf
   end
