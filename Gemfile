@@ -25,4 +25,6 @@ group :development, :test do
   gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.1.0"
   gem 'launchy'
+
+  gem 'devise'
 end # (leave this comment here to catch a stray line inserted by blacklight!)

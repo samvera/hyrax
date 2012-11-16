@@ -22,16 +22,18 @@ describe DashboardController do
   end
   # This doesn't really belong here, but it works for now
   describe "authenticate!" do
-    before(:each) do
-      @user = FactoryGirl.find_or_create(:archivist)
-      request.stubs(:headers).returns('REMOTE_USER' => @user.login).at_least_once
-      @strategy = Devise::Strategies::HttpHeaderAuthenticatable.new(nil)
-      @strategy.expects(:request).returns(request).at_least_once
-    end
-    after(:each) do
-      @user.delete
-    end
+    # move to scholarsphere
+    # before(:each) do
+    #   @user = FactoryGirl.find_or_create(:archivist)
+    #   request.stubs(:headers).returns('REMOTE_USER' => @user.login).at_least_once
+    #   @strategy = Devise::Strategies::HttpHeaderAuthenticatable.new(nil)
+    #   @strategy.expects(:request).returns(request).at_least_once
+    # end
+    # after(:each) do
+    #   @user.delete
+    # end
     it "should populate LDAP attrs if user is new" do
+      pending "This should only be in scholarsphere"
       User.stubs(:find_by_login).with(@user.login).returns(nil)
       User.expects(:create).with(login: @user.login).returns(@user).once
       User.any_instance.expects(:populate_attributes).once
@@ -41,6 +43,7 @@ describe DashboardController do
       get :index
     end
     it "should not populate LDAP attrs if user is not new" do
+      pending "This should only be in scholarsphere"
       User.stubs(:find_by_login).with(@user.login).returns(@user)
       User.expects(:create).with(login: @user.login).never
       User.any_instance.expects(:populate_attributes).never
@@ -66,7 +69,7 @@ describe DashboardController do
         response.should render_template('dashboard/index')
       end
       it "should return an array of documents I can edit" do
-        @user_results = Blacklight.solr.find Hash[:fq=>["edit_access_group_t:public OR edit_access_person_t:#{@user.login}"]]
+        @user_results = Blacklight.solr.find Hash[:fq=>["edit_access_group_t:public OR edit_access_person_t:#{@user.user_key}"]]
         assigns(:document_list).count.should eql(@user_results.docs.count)
       end
     end
