@@ -35,7 +35,7 @@ module SufiaHelper
 
   def display_user_name(recent_document)
     return "no display name" unless recent_document[:depositor_t]
-    return User.where(:login => recent_document[:depositor_t][0]).name rescue recent_document[:depositor_t][0]
+    return User.find_by_user_key(recent_document[:depositor_t][0]).name rescue recent_document[:depositor_t][0]
   end
 
   def get_depositor_from_document(doc)
@@ -68,10 +68,10 @@ module SufiaHelper
   end
 
   def link_to_profile(login)
-    user = User.find_by_login(login)
-    link_to user.name, sufia.profile_path(login)
+    user = User.find_by_user_key(login)
+    link_to user.name, Sufia::Engine.routes.url_helpers.profile_path(login)
   rescue
-    link_to login, sufia.profile_path(login)
+    link_to login, Sufia::Engine.routes.url_helpers.profile_path(login)
   end
 
   def linkify_chat_id(chat_id)

@@ -16,7 +16,7 @@ class UserFollowEventJob < EventJob
   def initialize(follower_id, followee_id)
     action = "User #{link_to_profile follower_id} is now following #{link_to_profile followee_id}"
     timestamp = Time.now.to_i
-    follower = User.find_by_login(follower_id)
+    follower = User.find_by_user_key(follower_id)
     # Create the event
     event = follower.create_event(action, timestamp)
     # Log the event to the follower's stream
