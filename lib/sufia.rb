@@ -13,6 +13,7 @@ require 'nest'
 require 'rmagick'
 require 'activerecord-import'
 
+autoload :Zip, 'zipruby'
 module Sufia
 
   class Engine < ::Rails::Engine
@@ -25,6 +26,7 @@ module Sufia
     initializer "Patch active_record" do
       require 'sufia/active_record/redis'
     end
+
   end
 
   class ResqueAdmin

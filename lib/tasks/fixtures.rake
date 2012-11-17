@@ -189,58 +189,57 @@ require 'active_fedora'
 SUFIA_TEST_NS = 'sufia' #this must be the same as id_namespace in the test applications config
 namespace :scholarsphere do
   namespace :fixtures do
-    @localDir = File.expand_path("../../spec/fixtures", __FILE__)
+    @localDir = File.expand_path("../../../spec/fixtures", __FILE__)
     @dir = ENV["FIXTURE_DIR"] || 'scholarsphere'
 
-    desc "Create ScholarSphere Hydra fixtures for generation and loading"
-    task :create  do
-      @id = ENV["FIXTURE_ID"] ||'scholarsphere1'
-      @title = ENV["FIXTURE_TITLE"] || 'scholarsphere test'
-      @user = ENV["FIXTURE_USER"] || 'archivist1'
-
-      @root ='<%=@localDir%>'
-
-      @inputFoxmlFile = File.join(@localDir, 'scholarsphere_generic_stub.foxml.erb')
-      @inputDescFile = File.join(@localDir,  'scholarsphere_generic_stub.descMeta.txt')
-      @inputTxtFile = File.join(@localDir,  'scholarsphere_generic_stub.txt')
-
-      @outputFoxmlFile = File.join(@localDir, @dir, "#{SUFIA_TEST_NS}_#{@id}.foxml.erb")
-      @outputDescFile = File.join(@localDir, @dir, "#{SUFIA_TEST_NS}_#{@id}.descMeta.txt")
-      @outputTxtFile = File.join(@localDir, @dir, "#{SUFIA_TEST_NS}_#{@id}.txt")
-
-      run_erb_stub @inputFoxmlFile, @outputFoxmlFile
-      run_erb_stub @inputDescFile, @outputDescFile
-      run_erb_stub @inputTxtFile, @outputTxtFile
+    desc "Load default ScholarSphere Hydra fixtures"
+    task :load => :environment do
+      dir = File.join(@localDir, @dir) 
+      loader = ActiveFedora::FixtureLoader.new(dir)
+      fixtures = find_fixtures(@dir)
+      fixtures.each do |fixture|
+        loader.import_and_index(fixture)
+        puts "Loaded '#{fixture}'"
+        # Rake::Task["repo:load"].reenable
+        # Rake::Task["repo:load"].invoke
+      end
+      raise "No fixtures found; you may need to generate from erb, use: rake scholarsphere:fixtures:generate" if fixtures.empty?
     end
 
-    desc "Generate default ScholarSphere Hydra fixtures"
-    task :generate do
-      ENV["dir"] = File.join(@localDir, @dir) 
-      fixtures = find_fixtures_erb(@dir)
+    desc "Remove default ScholarSphere Hydra fixtures"
+    task :delete do
+      ENV["dir"] = File.join(@localDir, @dir)
+      fixtures = find_fixtures(@dir)
       fixtures.each do |fixture|
-        unless fixture.include?('generic_stub')
-          outFile = fixture.sub('foxml.erb','foxml.xml')
-          File.open(outFile, "w+") do |f|
-            f.write(ERB.new(get_erb_template fixture).result(binding))
-          end
-        end
+        ENV["pid"] = fixture
+        Rake::Task["repo:delete"].reenable
+        Rake::Task["repo:delete"].invoke
       end
     end
-   
+
+    desc "Refresh default ScholarSphere Hydra fixtures"
+    task :refresh => [:delete, :load]
+
+    desc "Fix fixtures so they work with Cucumber [KLUDGE]"
+    task :fix do
+      puts "Attempting to fix fixtures that break cuke"
+      ## Kludgy workarounds to get past lack of depositor in fixtures
+      # First, create a user record
+      User.create(login: 'archivist1', display_name: 'Captain Archivist')
+      # Then, set this user as the depositor of test4 to appease this damn failing cuke
+      gf = GenericFile.find('scholarsphere:test4')
+      gf.terms_of_service = '1'
+      gf.apply_depositor_metadata('archivist1')
+      gf.save
+    end
+
     private
 
-    def run_erb_stub(inputFile, outputFile)
-      File.open(outputFile, "w+") do |f|
-        f.write(ERB.new(get_erb_template inputFile).result())
+    def find_fixtures(dir)
+      Dir.glob(File.join(@localDir, dir, '*.foxml.xml')).map do |fixture_file|
+        File.basename(fixture_file, '.foxml.xml').gsub('_',':')
       end
     end
 
-    def find_fixtures_erb(dir)
-      Dir.glob(File.join(@localDir, dir, '*.foxml.erb'))
-    end
-
-    def get_erb_template(file)
-      File.read(file)
-    end
   end
 end

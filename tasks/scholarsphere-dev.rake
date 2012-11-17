@@ -2,26 +2,6 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 APP_ROOT="." # for jettywrapper
 require 'jettywrapper'
-# namespace :scholarsphere do
-#   desc "Execute Continuous Integration build (docs, tests with coverage)"
-#   task :ci => :environment do
-#     #Rake::Task["hyhead:doc"].invoke
-#     Rake::Task["jetty:config"].invoke
-#     #Rake::Task["db:drop"].invoke
-#     #Rake::Task["db:create"].invoke
-#     Rake::Task["db:migrate"].invoke
-# 
-#     require 'jettywrapper'
-#     jetty_params = Jettywrapper.load_config.merge({:jetty_home => File.expand_path(File.join(Rails.root, 'jetty'))})
-# 
-#     error = nil
-#     error = Jettywrapper.wrap(jetty_params) do
-#         Rake::Task['spec'].invoke
-#         Rake::Task['cucumber:ok'].invoke
-#     end
-#     raise "test failures: #{error}" if error
-#   end
-# 
 ENV["RAILS_ROOT"] ||= 'spec/internal'
 
 desc "Run specs"
@@ -36,6 +16,11 @@ end
 desc "Load scholarsphere fixtures"
 task :fixtures do# => ['scholarsphere:fixtures:refresh'] do
   #NOTE do we need fixtures:create, fixtures:generate
+  within_test_app do
+    puts "Loading fixtures "
+    ENV["RAILS_ENV"] = 'test'
+    puts `rake scholarsphere:fixtures:refresh`
+  end
 end
 
 

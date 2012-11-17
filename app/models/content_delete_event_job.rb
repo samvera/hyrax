@@ -16,7 +16,7 @@ class ContentDeleteEventJob < EventJob
   def initialize(generic_file_id, depositor_id)
     action = "User #{link_to_profile depositor_id} has deleted file '#{generic_file_id}'"
     timestamp = Time.now.to_i
-    depositor = User.find_by_login(depositor_id)
+    depositor = User.find_by_user_key(depositor_id)
     # Create the event
     event = depositor.create_event(action, timestamp)
     # Log the event to the depositor's profile stream

@@ -22,7 +22,7 @@ class UserFollowEventJob < EventJob
     # Log the event to the follower's stream
     follower.log_event(event)
     # Fan out the event to followee
-    followee = User.find_by_login(followee_id)
+    followee = User.find_by_user_key(followee_id)
     followee.log_event(event)
     # Fan out the event to all followers
     follower.followers.each do |user|

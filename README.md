@@ -28,3 +28,10 @@ and add the following to application.js
 ```
 //= require scholarsphere
 ```
+
+Testing: 
+```
+rake scholarsphere:fixtures:create scholarsphere:fixtures:generate
+rake fixtures
+rake spec
+```

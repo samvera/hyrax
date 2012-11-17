@@ -6,6 +6,7 @@ module Sufia::Ldap
     included do
       # Workaround to retry LDAP calls a number of times
       include ::Sufia::Utils
+      attr_accessible :ldap_na
     end
     def populate_attributes
       #update exist cache

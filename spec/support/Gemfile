@@ -8,9 +8,9 @@ gem 'devise'
 gem 'blacklight'
 gem 'hydra-head'
 gem 'sufia', :path=>'../../'
-gem 'rspec-rails'
-gem 'capybara'
-gem 'mocha'
+gem 'rspec-rails', :group=>:test
+gem 'capybara', :group=>:test
+gem 'mocha', :group=>:test
 
 gem 'factory_girl'
 
