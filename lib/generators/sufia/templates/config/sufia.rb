@@ -11,6 +11,8 @@ Sufia.config do |config|
       :file_author => :creator
     }
 
+  config.max_days_between_audits = 7
+
   # TODO move these to an HttpAuth initializer
     # Map hostnames onto vhosts
   config.hosts_vhosts_map = {
