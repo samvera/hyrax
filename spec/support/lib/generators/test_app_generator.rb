@@ -21,6 +21,10 @@ class TestAppGenerator < Rails::Generators::Base
     generate 'hydra:head', '-f'
   end
 
+  def install_redis_config
+    copy_file "config/redis.yml"
+  end
+
   def run_sufia_generator
     say_status("warning", "GENERATING SUFIA", :yellow)       
 
@@ -29,7 +33,4 @@ class TestAppGenerator < Rails::Generators::Base
     remove_file 'spec/factories/users.rb'
   end
 
-  def install_redis_config
-    copy_file "config/redis.yml"
-  end
 end
