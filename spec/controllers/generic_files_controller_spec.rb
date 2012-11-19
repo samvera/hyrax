@@ -86,11 +86,11 @@ describe GenericFilesController do
     end
 
     it "should create batch associations from batch_id" do
-      Rails.application.config.stubs(:id_namespace).returns('sample')
+      Sufia::Engine.config.stubs(:id_namespace).returns('sample')
       file = fixture_file_upload('/world.png','image/png')
       controller.stubs(:add_posted_blob_to_asset)
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
-      lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch
+      lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
       b = Batch.create(pid: "sample:batch_id")
       b.generic_files.first.pid.should == "test:123"
     end
@@ -227,16 +227,16 @@ describe GenericFilesController do
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1@example.com'=>'edit'}}}
 
       posted_file = GenericFile.find(@generic_file.pid)
       version1 = posted_file.content.latest_version
       posted_file.content.version_committer(version1).should == @user.user_key
 
-      # other user uploads new version
+      # other user uploads new version 
+      # TODO this should be a separate test
       archivist = FactoryGirl.find_or_create(:archivist)
       controller.stubs(:current_user).returns(archivist)
-      sign_in archivist
 
       Resque.expects(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com').never
       Resque.expects(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, archivist.user_key).once
@@ -311,7 +311,7 @@ describe GenericFilesController do
     describe "edit" do
       it "should give me a flash error" do
         get :edit, id:"test5"
-        response.should redirect_to(:action => 'show')
+        response.should redirect_to @routes.url_helpers.generic_file_path('test5')
         flash[:alert].should_not be_nil
         flash[:alert].should_not be_empty
         flash[:alert].should include("You do not have sufficient privileges to edit this document")

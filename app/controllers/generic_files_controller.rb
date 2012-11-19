@@ -22,7 +22,17 @@ class GenericFilesController < ApplicationController
   # This is needed as of BL 3.7
   self.copy_blacklight_config_from(CatalogController)
 
-  rescue_from AbstractController::ActionNotFound, :with => :render_404
+  # Catch permission errors
+  rescue_from Hydra::AccessDenied do |exception|
+    if (exception.action == :edit)
+      redirect_to(sufia.url_for({:action=>'show'}), :alert => exception.message)
+    elsif current_user and current_user.persisted?
+      redirect_to root_url, :alert => exception.message
+    else
+      session["user_return_to"] = request.url
+      redirect_to new_user_session_url, :alert => exception.message
+    end
+  end
 
   # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
   before_filter :authenticate_user!, :except => [:show, :citation]
