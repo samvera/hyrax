@@ -23,7 +23,7 @@ describe 'Routes' do
     end
 
     it 'should route to recently added files' do
-      { get: '/catalog/recent' }.should route_to(controller: 'catalog', action: 'show', id: 'recent')
+      { get: '/catalog/recent' }.should route_to(controller: 'catalog', action: 'recent')
     end
   end
 
