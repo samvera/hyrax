@@ -125,6 +125,13 @@ describe GenericFilesController do
       flash[:error].should_not be_empty
     end
 
+    it "should error out of create and save after on continuos rsolr error" do
+      GenericFile.any_instance.stubs(:save).raises(RSolr::Error::Http.new({},{}))  
+          
+      file = fixture_file_upload('/world.png','image/png')
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
+      response.body.should include("Error occurred while creating generic file.")
+    end
 
   end
 

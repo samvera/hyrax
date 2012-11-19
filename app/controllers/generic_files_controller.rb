@@ -244,7 +244,7 @@ class GenericFilesController < ApplicationController
       @generic_file.save
     rescue RSolr::Error::Http => error
       logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
-      save_tries++
+      save_tries+=1
       # fail for good if the tries is greater than 3
       rescue_action_without_handler(error) if save_tries >=3
       sleep 0.01
