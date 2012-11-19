@@ -1,5 +1,6 @@
 require "sufia/version"
 require 'blacklight'
+require 'blacklight_advanced_search'
 require 'hydra/head'
 require 'hydra-ldap' #TODO remove this
 require 'hydra-batch-edit'
