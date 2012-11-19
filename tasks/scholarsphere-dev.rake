@@ -5,7 +5,7 @@ require 'jettywrapper'
 ENV["RAILS_ROOT"] ||= 'spec/internal'
 
 desc "Run specs"
-RSpec::Core::RakeTask.new(:spec => [:generate, :fixtures]) do |t|
+RSpec::Core::RakeTask.new(:spec => [:generate]) do |t|
   # if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.8/
   #   t.rcov = true
   #   t.rcov_opts = %w{--exclude spec\/*,gems\/*,ruby\/* --aggregate coverage.data}
