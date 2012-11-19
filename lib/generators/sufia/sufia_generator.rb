@@ -68,6 +68,7 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
   
   def create_configuration_files
     copy_file "config/sufia.rb", "config/initializers/sufia.rb"
+    copy_file "config/redis_config.rb", "config/initializers/redis_config.rb"
   end
 
   def catalog_controller

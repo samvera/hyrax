@@ -28,4 +28,8 @@ class TestAppGenerator < Rails::Generators::Base
 
     remove_file 'spec/factories/users.rb'
   end
+
+  def install_redis_config
+    copy_file "config/redis.yml"
+  end
 end
