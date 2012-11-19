@@ -163,7 +163,7 @@ describe GenericFilesController do
       xhr :post, :audit, :id=>@generic_file.pid
       response.should be_success
       lambda { JSON.parse(response.body) }.should_not raise_error
-      audit_results = JSON.parse(response.body).collect { |result| result["checksum_audit_log"]["pass"] }
+      audit_results = JSON.parse(response.body).collect { |result| result["pass"] }
       audit_results.reduce(true) { |sum, value| sum && value }.should be_true
     end
   end
