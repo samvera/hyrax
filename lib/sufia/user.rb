@@ -93,6 +93,26 @@ module Sufia::User
     def current=(user)
       Thread.current[:user] = user
     end
+
+    # Override this method if you aren't using email/password
+    def audituser
+      User.find_by_user_key(audituser_key) || User.create!(Devise.authentication_keys.first => audituser_key, password: Devise.friendly_token[0,20])
+    end
+
+    # Override this method if you aren't using email as the userkey
+    def audituser_key
+      'audituser@example.com'
+    end
+
+    # Override this method if you aren't using email/password
+    def batchuser
+      User.find_by_user_key(batchuser_key) || User.create!(Devise.authentication_keys.first => batchuser_key, password: Devise.friendly_token[0,20])
+    end
+
+    # Override this method if you aren't using email as the userkey
+    def batchuser_key
+      'batchuser@example.com'
+    end
   end
 
 end

@@ -30,7 +30,6 @@ class BatchUpdateJob
     perms = HashWithIndifferentAccess.new(perms)
     batch = Batch.find_or_create(params[:id])
     user = User.find_by_user_key(login)
-
     saved = []
     denied = []
 
@@ -65,9 +64,7 @@ class BatchUpdateJob
     end
     batch.update_attributes({status:["Complete"]})
     
-    job_user = User.find_by_user_key("batchuser")
-    job_user = User.create(Devise.authentication_keys.first => "batchuser") unless job_user
-    
+    job_user = User.batchuser()
     
     message = '<a class="batchid ui-helper-hidden">ss-'+batch.noid+'</a>The file(s) '+ file_list(saved)+ " have been saved." unless saved.empty?
     job_user.send_message(user, message, 'Batch upload complete') unless saved.empty?
