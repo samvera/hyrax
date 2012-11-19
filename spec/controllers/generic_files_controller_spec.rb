@@ -295,7 +295,7 @@ describe GenericFilesController do
   describe "someone elses files" do
     before(:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      f = GenericFile.new(:pid => 'scholarsphere:test5')
+      f = GenericFile.new(:pid => 'sufia:test5')
       f.apply_depositor_metadata('archivist1')
       f.set_title_and_label('world.png')
       f.add_file_datastream(File.new(fixture_path +  '/world.png'))
@@ -306,7 +306,7 @@ describe GenericFilesController do
       @file = f
     end
     after(:all) do
-      GenericFile.find('scholarsphere:test5').delete
+      GenericFile.find('sufia:test5').delete
     end
     describe "edit" do
       it "should give me a flash error" do
