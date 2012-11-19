@@ -20,6 +20,9 @@ describe RoleMapper do
     User.any_instance.stubs(:groups).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
   end
   subject {::RoleMapper.roles(@user.user_key)}
-  it { should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]}
+  it "should return LDAP groups" do
+    pending "This is for Penn only"
+    subject.should == ["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"]
+  end
 end
 

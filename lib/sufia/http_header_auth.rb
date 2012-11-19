@@ -8,6 +8,15 @@ module Sufia
       before_filter :filter_notify
     end
 
+    def self.get_vhost_by_host(config)
+      hosts_vhosts_map = config.hosts_vhosts_map
+      hostname = Socket.gethostname
+      vhost = hosts_vhosts_map[hostname] || "https://#{hostname}/"
+      service = URI.parse(vhost).host
+      port = URI.parse(vhost).port
+      service << "-#{port}" unless port == 443
+      return [service, vhost]
+    end
     def clear_session_user
       if request.nil?
         logger.warn "Request is Nil, how weird!!!"

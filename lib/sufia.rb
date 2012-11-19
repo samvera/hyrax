@@ -46,12 +46,13 @@ module Sufia
     return @@config
   end
 
-  autoload :Controller,   'sufia/controller'
-  autoload :Ldap,         'sufia/ldap'
-  autoload :Utils,        'sufia/utils'
-  autoload :User,         'sufia/user'
-  autoload :ModelMethods, 'sufia/model_methods'
-  autoload :Noid,         'sufia/noid'
-  autoload :IdService,    'sufia/id_service'
+  autoload :Controller,    'sufia/controller'
+  autoload :Ldap,          'sufia/ldap'
+  autoload :Utils,         'sufia/utils'
+  autoload :User,          'sufia/user'
+  autoload :ModelMethods,  'sufia/model_methods'
+  autoload :Noid,          'sufia/noid'
+  autoload :IdService,     'sufia/id_service'
+  autoload :HttpHeaderAuth,'sufia/http_header_auth'
 end
 
