@@ -35,9 +35,9 @@ class AuditJob
         #logger.info "All users = #{User.all}"
         if login
           user = User.find_by_user_key(login)
+          logger.warn "User '#{login}' not found" unless user
           #logger.info "ZZZ user = #{user.inspect}"
           job_user = User.audituser()
-
           #send the user a message about the failing audit
           unless (log.pass == 1)
             message = "The audit run at #{log.created_at} for #{log.pid}:#{log.dsid}:#{log.version} was #{log.pass == 1 ? 'passing' : 'failing'}."

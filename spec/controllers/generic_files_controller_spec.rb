@@ -296,7 +296,7 @@ describe GenericFilesController do
     before(:all) do
       GenericFile.any_instance.stubs(:terms_of_service).returns('1')
       f = GenericFile.new(:pid => 'sufia:test5')
-      f.apply_depositor_metadata('archivist1')
+      f.apply_depositor_metadata('archivist1@example.com')
       f.set_title_and_label('world.png')
       f.add_file_datastream(File.new(fixture_path +  '/world.png'))
       # grant public read access explicitly
@@ -355,6 +355,7 @@ describe GenericFilesController do
           @ds = @file.datastreams.first
           AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
           get :show, id:"test5"
+          assigns[:notify_number].should == 1
           response.body.should include('<span id="notify_number" class="overlay"> 1</span>') # notify should be 1 for failing job
           @archivist.mailbox.inbox[0].messages[0].subject.should == "Failing Audit Run"
         end
