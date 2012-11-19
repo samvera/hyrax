@@ -20,7 +20,7 @@ require "rake"
 describe "scholarsphere:fixtures" do
 
   def loaded_files_excluding_current_rake_file
-    $".reject { |file| file.include? "lib/tasks/scholarsphere-fixtures" }
+    $".reject { |file| file.include? "tasks/scholarsphere-fixtures" }
   end
 
   # saves original $stdout in variable
@@ -42,11 +42,11 @@ describe "scholarsphere:fixtures" do
   end
   
   def delete_fixture_files
-    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.txt"))
-    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt"))
-    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb"))
+    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "sufia_rspecTestFixture.txt"))
+    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "sufia_rspecTestFixture.descMeta.txt"))
+    File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "sufia_rspecTestFixture.foxml.erb"))
     begin
-      File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml"))
+      File.delete(File.join(File.expand_path("#{fixture_path}/scholarsphere"), "sufia_rspecTestFixture.foxml.xml"))
     rescue
       # do nothing; this just means the generate task was not called
     end
@@ -56,7 +56,8 @@ describe "scholarsphere:fixtures" do
   before(:each) do
     @rake = Rake::Application.new 
     Rake.application = @rake
-    Rake.application.rake_require("lib/tasks/scholarsphere-fixtures", ["."], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("tasks/scholarsphere-fixtures", ["."], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("lib/tasks/fixtures", ["."], loaded_files_excluding_current_rake_file)
     Rake.application.rake_require("lib/tasks/active_fedora", [activefedora_path], loaded_files_excluding_current_rake_file)      
     Rake::Task.define_task(:environment)
   end
@@ -76,12 +77,12 @@ describe "scholarsphere:fixtures" do
         @rake['scholarsphere:fixtures:load'].invoke       
         @rake['scholarsphere:fixtures:delete'].invoke
       end
-      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.txt")).length.should == 1
-      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.erb")).length.should == 1
-      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.descMeta.txt")).length.should == 1
-      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "scholarsphere_rspecTestFixture.foxml.xml")).length.should == 1
-      o.should include "Loaded 'scholarsphere:rspecTestFixture'"
-      o.should include "Deleted 'scholarsphere:rspecTestFixture'"
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "sufia_rspecTestFixture.txt")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "sufia_rspecTestFixture.foxml.erb")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "sufia_rspecTestFixture.descMeta.txt")).length.should == 1
+      Dir.glob(File.join(fixture_path, File.expand_path("/scholarsphere"), "sufia_rspecTestFixture.foxml.xml")).length.should == 1
+      o.should include "Loaded 'sufia:rspecTestFixture'"
+      o.should include "Deleted 'sufia:rspecTestFixture'"
     end    
   end
 end
