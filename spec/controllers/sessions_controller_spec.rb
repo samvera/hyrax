@@ -17,12 +17,14 @@ require 'spec_helper'
 describe SessionsController do
   describe "routing" do
     it "should send /logout to sessions#destroy" do
-      { get: '/logout' }.should route_to(controller: 'sessions', action: 'destroy')
-      destroy_user_session_path.should == '/logout'
+      #pending "This is a customization that PSU did in their own routes file, not default devise"
+      { get: '/logout' }.should route_to( controller: 'sessions', action: 'destroy')
+      @routes.url_helpers.destroy_user_session_path.should == '/logout'
     end
     it "should send /login to sessions#new" do
-      { get: '/login' }.should route_to(controller: 'sessions', action: 'new')
-      new_user_session_path.should == '/login'
+      #pending "This is a customization that PSU did in their own routes file, not default devise"
+      { get: '/login' }.should route_to( controller: 'sessions', action: 'new')
+      @routes.url_helpers.new_user_session_path.should == '/login'
     end
   end
   describe "#destroy" do

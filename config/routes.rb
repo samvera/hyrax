@@ -31,6 +31,7 @@ Sufia::Engine.routes.draw do
   resources :downloads, :only => "show"
 
   # Login/logout route to destroy session
+  # can just be in the PSU scholarsphere
   match 'logout' => 'sessions#destroy', :as => :destroy_user_session
   match 'login' => 'sessions#new', :as => :new_user_session
 
