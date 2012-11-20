@@ -30,23 +30,20 @@ describe MailboxController do
     @rec2.delete
   end
   describe "#index" do
-    render_views
     it "should show message" do
-      @user.expects(:mark_as_read)
+      User.any_instance.expects(:mark_as_read)
       get :index
       response.should be_success
-      response.should_not redirect_to(root_path)
-      response.body.should include('Test Message')
-      response.body.should include('Test Subject')
+      assigns[:messages].first.last_message.body.should == 'Test Message'
+      assigns[:messages].first.last_message.subject.should == 'Test Subject'
     end
   end
   describe "#delete" do
-    render_views
     it "should delete message" do
       rec = @another_user.send_message(@user, 'message 2', 'subject 2')
       @user.mailbox.inbox.count.should == 2
       get :index
-      response.body.should include('message 2')
+      assigns[:messages].first.last_message.body.should == 'message 2'
       get :delete, :uid=> rec.conversation.id
       response.should redirect_to(@routes.url_helpers.mailbox_path)
       @user.mailbox.inbox.count.should ==1
@@ -63,7 +60,6 @@ describe MailboxController do
     end
   end
   describe "#delete_all" do
-    render_views
     it "should delete message" do
       rec1 = @another_user.send_message(@user, 'message 2', 'subject 2')
       rec2 = @another_user.send_message(@user, 'message 3', 'subject 3')

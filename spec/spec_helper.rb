@@ -20,7 +20,7 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
-require 'mocha/setup'
+require 'mocha'
 
 Resque.inline = Rails.env.test?
 
