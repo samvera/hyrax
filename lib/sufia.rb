@@ -11,7 +11,7 @@ require 'acts_as_follower'
 require 'paperclip'
 require 'will_paginate'
 require 'nest'
-require 'rmagick'
+require 'RMagick'
 require 'activerecord-import'
 
 autoload :Zip, 'zipruby'
