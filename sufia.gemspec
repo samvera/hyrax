@@ -20,7 +20,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency 'hydra-head', '5.0.0.pre11'
   #TODO remove
-  gem.add_dependency 'hydra-ldap', '0.1.0'
   gem.add_dependency 'noid', '0.5.5'
   gem.add_dependency 'hydra-batch-edit', '~> 0.0.7'
 
