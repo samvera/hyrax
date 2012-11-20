@@ -70,7 +70,6 @@ module Sufia::Controller
     true
   end
 
-  include Sufia::Ldap::Controller
   # include Sufia::HttpHeaderAuth
 
 end
