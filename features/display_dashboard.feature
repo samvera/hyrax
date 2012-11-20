@@ -34,7 +34,7 @@ Feature: As an authenticate and authorized
  @javascript
   Scenario: I have files on my dashboard I should see icons 
     Given I load scholarsphere fixtures
-    And I am logged in as "archivist1"
+    And I am logged in as "archivist1@example.com"
     And I follow "dashboard"
     Then I should see "Test Document Text"
     Given I follow "Delete"

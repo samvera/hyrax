@@ -6,9 +6,6 @@ Sufia::Engine.routes.draw do
 
   match 'batch_edits/clear' => 'batch_edits#clear', :as => :batch_edits_clear
 
-  # add batch edit routes
-  Hydra::BatchEdit.add_routes(self)
-
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
 

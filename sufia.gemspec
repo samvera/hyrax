@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   #TODO remove
   gem.add_dependency 'hydra-ldap', '0.1.0'
   gem.add_dependency 'noid', '0.5.5'
-  gem.add_dependency 'hydra-batch-edit'#, :git=>'git://github.com/psu-stewardship/hydra-batch-edit.git', :ref => 'b753c7aeac'
+  gem.add_dependency 'hydra-batch-edit', '~> 0.0.7'
 
 # Other components
   gem.add_dependency 'resque', '1.22.0'#, :require => 'resque/server'

@@ -30,7 +30,7 @@ limitations under the License.
 <% end %>
 
 <h2>Contact Form</h2>
-<%= form_for(@contact_form, :url => contact_form_index_path, :html => {:class => 'form-horizontal well'}) do |f| %>
+<%= form_for(@contact_form, :url => sufia.contact_form_index_path, :html => {:class => 'form-horizontal well'}) do |f| %>
   <%= f.text_field :contact_method, :class => 'hide' %>
   <div class="control-group">
     <%= f.label :category, 'Issue Type', :class => "control-label" %>

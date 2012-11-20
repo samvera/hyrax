@@ -78,6 +78,10 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
 
   # The engine routes have to come after the devise routes so that /users/sign_in will work
   def inject_routes
+    routing_code = "Hydra::BatchEdit.add_routes(self)"
+    sentinel = /HydraHead.add_routes\(self\)/
+    inject_into_file 'config/routes.rb', "\n  #{routing_code}\n", { :after => sentinel, :verbose => false }
+
     routing_code = "mount Sufia::Engine => '/'"
     sentinel = /devise_for :users/
     inject_into_file 'config/routes.rb', "\n  #{routing_code}\n", { :after => sentinel, :verbose => false }
