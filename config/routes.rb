@@ -18,6 +18,9 @@ ScholarSphere::Application.routes.draw do
   match 'single_use_link/show/:id' => 'single_use_link#show', :as => :show_single_use_link
   match 'single_use_link/download/:id' => 'single_use_link#download', :as => :download_single_use_link
 
+  # "Recently added files" route for catalog index view
+  match "catalog/recent" => "catalog#recent", :as => :catalog_recent
+
   # Routes for Blacklight-specific functionality such as the catalog
   Blacklight.add_routes(self)
   match 'batch_edits/clear' => 'batch_edits#clear', :as => :batch_edits_clear
@@ -27,9 +30,6 @@ ScholarSphere::Application.routes.draw do
 
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
-
-  # "Recently added files" route for catalog index view
-  match "catalog/recent" => "catalog#recent", :as => :catalog_recent
 
   # "Notifications" route for catalog index view
   match "users/notifications_number" => "users#notifications_number", :as => :user_notify
