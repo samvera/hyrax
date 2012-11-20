@@ -33,4 +33,8 @@ class TestAppGenerator < Rails::Generators::Base
     remove_file 'spec/factories/users.rb'
   end
 
+  def remove_index_page
+    remove_file 'public/index.html'
+  end
+
 end

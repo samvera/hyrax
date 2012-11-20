@@ -76,8 +76,12 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
   end
   
 
+  # The engine routes have to come after the devise routes so that /users/sign_in will work
   def inject_routes
-    route "mount Sufia::Engine => '/'"
+    routing_code = "mount Sufia::Engine => '/'"
+    sentinel = /devise_for :users/
+    inject_into_file 'config/routes.rb', "\n  #{routing_code}\n", { :after => sentinel, :verbose => false }
+    
   end
 
   def install_mailboxer

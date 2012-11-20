@@ -44,7 +44,7 @@ describe User do
     @user.should respond_to(:googleplus_handle)
   end
   it "should redefine to_param to make redis keys more recognizable" do
-    @user.to_param.should == @user.login
+    @user.to_param.should == @user.user_key
   end
   it "should have a cancan ability defined" do
     @user.should respond_to(:can?)

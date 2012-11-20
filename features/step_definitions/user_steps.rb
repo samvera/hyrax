@@ -17,15 +17,19 @@
 # @example
 #   I am logged in as "archivist1@example.com"
 Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
-  driver_name = "rack_test_authenticated_header_#{login}".to_s
-  Capybara.register_driver(driver_name) do |app|
-    Capybara::RackTest::Driver.new(app, headers: { 'REMOTE_USER' => login })
-  end
-  user = User.find_or_create_by_login(login)
-  User.find_by_login(login).should_not be_nil
-  Capybara.current_driver = driver_name
-  
+  # driver_name = "rack_test_authenticated_header_#{login}".to_s
+  # Capybara.register_driver(driver_name) do |app|
+  #   Capybara::RackTest::Driver.new(app, headers: { 'REMOTE_USER' => login })
+  # end
+  #Capybara.current_driver = driver_name
+  user = User.where(:email=>login).first || FactoryGirl.create(:user, :email=>login)
+  User.find_by_user_key(login).should_not be_nil
   visit "/"
+  step %{And I click the anchor "Login"} 
+  fill_in 'Email', with: login
+  fill_in 'Password', with: 'password'
+  click_button 'Sign in'
+  
   step %{And I click the anchor "#{login}"} 
   step %{I should see a link to "ingest" with label "upload"}
   step %{I should see a link to "dashboard" with label "dashboard"}

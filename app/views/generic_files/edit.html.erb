@@ -14,20 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% javascript 'video.js' %>
-<% javascript 'audio.min.js' %>
-<% javascript 'bootstrap-tooltip.js'%>
-<% javascript 'bootstrap-popover.js'%>
-<% javascript 'bootstrap-modal.js'%>
+<% content_for :head do %>
+  <% javascript_include_tag 'video.js' %>
+  <% javascript_include_tag 'audio.min.js' %>
+  <% stylesheet_link_tag 'video-js.css' %>
 
-<% stylesheet 'video-js.css' %>
-<% stylesheet 'jquery-ui-1.8.1.custom' %>
+  <% javascript_include_tag 'bootstrap-tooltip.js'%>
+  <% javascript_include_tag 'bootstrap-popover.js'%>
+  <% javascript_include_tag 'bootstrap-modal.js'%>
 
-<% javascript 'jquery.validate.js' %>
+
+  <% javascript_include_tag 'jquery.validate.js' %>
 
 <style type="text/css">
 label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
 </style>
+<% end %>
   
 
 

@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% javascript 'bootstrap-tooltip.js'%>
-<% javascript 'bootstrap-popover.js'%>
+<% content_for :head do %>
+
+  <% javascript_include_tag 'bootstrap-tooltip.js'%>
+  <% javascript_include_tag 'bootstrap-popover.js'%>
+<% end %>
 
 <% content_for :local_js do %>
 // initialize popover helpers

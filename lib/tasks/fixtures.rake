@@ -225,11 +225,11 @@ namespace :scholarsphere do
       puts "Attempting to fix fixtures that break cuke"
       ## Kludgy workarounds to get past lack of depositor in fixtures
       # First, create a user record
-      User.create(login: 'archivist1', display_name: 'Captain Archivist')
+      User.create(email: 'archivist1@example.com')#, display_name: 'Captain Archivist')
       # Then, set this user as the depositor of test4 to appease this damn failing cuke
       gf = GenericFile.find('scholarsphere:test4')
       gf.terms_of_service = '1'
-      gf.apply_depositor_metadata('archivist1')
+      gf.apply_depositor_metadata('archivist1@example.com')
       gf.save
     end
 
