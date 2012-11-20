@@ -12,83 +12,83 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# scholarsphere-fixtures
+# sufia-fixtures
 #
 # This was extracted from the original Hydra version in 
-#                      ~/rvm/gems/<rails version>@scholarsphere/bundler/gems/lib/railties
+#                      ~/rvm/gems/<rails version>@sufia/bundler/gems/lib/railties
 # It has been changed to read all files out of a directory and pass those as fixtures.
 # Any _ in the file name will be modified to a : for the id, since colons are not valid in a file name. 
-# The files should be named id_[fixture id] which should relates to the id within the foxml scholarsphere:[fixture id] where 
+# The files should be named id_[fixture id] which should relates to the id within the foxml sufia:[fixture id] where 
 # [fixture id] is some alpha numeric id ('test1')
 #
 # There are 2 sets of data needed to attach to a ScholarSphere fixture, 1 the data file, and 2 the metadata.
 # It is important that the meta-data contains the appropriate id, or solor will not index it!
 #
-# Usage: rake scholarsphere:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
+# Usage: rake sufia:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
 #              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
-#                      DEFAULT: scholarsphere
+#                      DEFAULT: sufia
 #              <fixture id> is the id given to this fixture with fedora and solr.   
 #                            This must be unique and any old files will be overwritten. 
-#                      DEFAULT: scholarsphere1
+#                      DEFAULT: sufia
 #              <fixture title> is the title given to the fixture in fedora and solor, 
 #                            along with being put in the description and subject by default.
-#                      DEFAULT: scholarsphere test
+#                      DEFAULT: sufia test
 #              <fixture user> is the user given to the fixture in fedora and solor, 
 #                            along with being put in the contributor and rights.
 #                      DEFAULT: archivist1
 #           
 #          
 #               Creates new fixture files including the erb, descMeta, and text for loading into ScholarSphere.  
-#               The Files are named based on the scholarsphere: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
+#               The Files are named based on the sufia: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
 #               The foxml.erb file references the descMeta.txt and .txt file.  You can edit the erb to point to other data and/or edit the 
 #               .descMeta.txt  and/or .txt file to contain the data you wish.  
 #
 #            *** Please note that the id must be changed in the file name, foxml.erb, and descMeta.txt if you change it after creation. ***
 #
-#        rake scholarsphere:fixtures:generate [DIR=<fixture dir>]
+#        rake sufia:fixtures:generate [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
-#                      DEFAULT: scholarsphere
+#                      DEFAULT: sufia
 #
 #               Creates foxml.xml files from the foxml.erb files doing any erb substitutions within the erb file.
 #               This task is mostly used to put the appropriate Rails.root into the foxml.xml file so that 
 #               the data and meta-data files can be located on load. 
 #
-#        rake scholarsphere:fixtures:delete [DIR=<fixture dir>]
+#        rake sufia:fixtures:delete [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
-#                      DEFAULT: scholarsphere
+#                      DEFAULT: sufia
 #
 #               Remove any fixtures defined by .xml.foxml files in Rais.root/spec/fixtures/<fixture dir> from fedora and solr. 
 #
-#        rake scholarsphere:fixtures:load [DIR=<fixture dir>]
+#        rake sufia:fixtures:load [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
-#                      DEFAULT: scholarsphere
+#                      DEFAULT: sufia
 #
 #               load any fixtures defined by .xml.foxml files in Rais.root/spec/fixtures/<fixture dir> into fedora and solr. 
 #
-#        rake scholarsphere:fixtures:refresh [DIR=<fixture dir>]
+#        rake sufia:fixtures:refresh [DIR=<fixture dir>]
 #              <fixture dir> is an optional directory under spec/fixtures to find the fixtures to load
-#                      DEFAULT: scholarsphere
+#                      DEFAULT: sufia
 #
 #               delete then load any fixtures defined by .xml.foxml files in Rais.root/spec/fixtures/<fixture dir> into fedora and solr. 
 #
 # Example meta-data:
 #
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/publisher> "archivist1" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/description> "MP3 Description" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/created> "04/12/2012" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/contributor> "archivist1" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/title> "MP3" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/relation> "test" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/subject> "MP3 Test" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/language> "En" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://xmlns.com/foaf/0.1/based_near> "State College" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/rights> "archivist1" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/creator> "archivist1" .
-#    <info:fedora/scholarsphere:[fixture id]> <http://purl.org/dc/terms/identifier> "Test" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/publisher> "archivist1" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/description> "MP3 Description" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/created> "04/12/2012" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/contributor> "archivist1" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/title> "MP3" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/relation> "test" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/subject> "MP3 Test" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/language> "En" .
+#    <info:fedora/sufia:[fixture id]> <http://xmlns.com/foaf/0.1/based_near> "State College" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/rights> "archivist1" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/creator> "archivist1" .
+#    <info:fedora/sufia:[fixture id]> <http://purl.org/dc/terms/identifier> "Test" .
 #
 # Example foxml:  (note the ID needs to be unique) (the binary data in the xml below was generated using base64 on the text)
 #    <?xml version="1.0" encoding="UTF-8"?>
-#    <foxml:digitalObject PID="scholarsphere:[fixture id]" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+#    <foxml:digitalObject PID="sufia:[fixture id]" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
 #      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
 #      <foxml:objectProperties>
 #        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
@@ -103,7 +103,7 @@
 #              xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
 #              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
 #              <dc:title>testFixture2.txt</dc:title>
-#              <dc:identifier>scholarsphere:[fixture id]</dc:identifier>
+#              <dc:identifier>sufia:[fixture id]</dc:identifier>
 #            </oai_dc:dc>
 #          </foxml:xmlContent>
 #        </foxml:datastreamVersion>
@@ -134,7 +134,7 @@
 #          LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="application/rdf+xml" SIZE="286">
 #          <foxml:xmlContent>
 #            <rdf:RDF xmlns:ns0="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-#              <rdf:Description rdf:about="info:fedora/scholarsphere:[fixture id]">
+#              <rdf:Description rdf:about="info:fedora/sufia:[fixture id]">
 #                <ns0:hasModel rdf:resource="info:fedora/afmodel:GenericFile"/>
 #              </rdf:Description>
 #            </rdf:RDF>
@@ -187,12 +187,12 @@
 require 'active_fedora'
 
 SUFIA_TEST_NS = 'sufia' #this must be the same as id_namespace in the test applications config
-namespace :scholarsphere do
+namespace :sufia do
   namespace :fixtures do
     @localDir = File.expand_path("../../../spec/fixtures", __FILE__)
-    @dir = ENV["FIXTURE_DIR"] || 'scholarsphere'
+    @dir = ENV["FIXTURE_DIR"] || 'sufia'
 
-    desc "Load default ScholarSphere Hydra fixtures"
+    desc "Load default Sufia Hydra fixtures"
     task :load => :environment do
       dir = File.join(@localDir, @dir) 
       loader = ActiveFedora::FixtureLoader.new(dir)
@@ -203,10 +203,10 @@ namespace :scholarsphere do
         # Rake::Task["repo:load"].reenable
         # Rake::Task["repo:load"].invoke
       end
-      raise "No fixtures found; you may need to generate from erb, use: rake scholarsphere:fixtures:generate" if fixtures.empty?
+      raise "No fixtures found; you may need to generate from erb, use: rake sufia:fixtures:generate" if fixtures.empty?
     end
 
-    desc "Remove default ScholarSphere Hydra fixtures"
+    desc "Remove default Sufia Hydra fixtures"
     task :delete do
       ENV["dir"] = File.join(@localDir, @dir)
       fixtures = find_fixtures(@dir)
@@ -217,7 +217,7 @@ namespace :scholarsphere do
       end
     end
 
-    desc "Refresh default ScholarSphere Hydra fixtures"
+    desc "Refresh default Sufia Hydra fixtures"
     task :refresh => [:delete, :load]
 
     desc "Fix fixtures so they work with Cucumber [KLUDGE]"
@@ -227,7 +227,7 @@ namespace :scholarsphere do
       # First, create a user record
       User.create(email: 'archivist1@example.com')#, display_name: 'Captain Archivist')
       # Then, set this user as the depositor of test4 to appease this damn failing cuke
-      gf = GenericFile.find('scholarsphere:test4')
+      gf = GenericFile.find('sufia:test4')
       gf.terms_of_service = '1'
       gf.apply_depositor_metadata('archivist1@example.com')
       gf.save

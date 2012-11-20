@@ -14,12 +14,12 @@ RSpec::Core::RakeTask.new(:spec => [:generate]) do |t|
 end
 
 desc "Load scholarsphere fixtures"
-task :fixtures do# => ['scholarsphere:fixtures:refresh'] do
+task :fixtures do# => ['sufia:fixtures:refresh'] do
   #NOTE do we need fixtures:create, fixtures:generate
   within_test_app do
     puts "Loading fixtures "
     ENV["RAILS_ENV"] = 'test'
-    puts `rake scholarsphere:fixtures:refresh`
+    puts `rake sufia:fixtures:refresh`
   end
 end
 

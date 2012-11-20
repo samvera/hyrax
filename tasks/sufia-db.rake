@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-namespace :scholarsphere do
+namespace :sufia do
   namespace :db do
     desc "delete all Generic Files in Fedora and Solr (This may take some time...)."
     task :deleteAll => :environment do
