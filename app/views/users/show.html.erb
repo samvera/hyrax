@@ -54,6 +54,7 @@ limitations under the License.
       <% @followers.each do |f| %>
         <li class="span8">
           <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(f.name, profile_path(f.login), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
@@ -65,6 +66,7 @@ limitations under the License.
       <% @following.each do |f| %>
         <li class="span8">
           <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(f.name, profile_path(f.login), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
