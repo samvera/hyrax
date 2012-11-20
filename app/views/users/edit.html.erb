@@ -54,7 +54,7 @@ $("a[rel=popover]").popover();
       <div class="controls">
         <label class="checkbox">
           <%= check_box_tag 'update_directory' %> Yes
-          <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from Penn State's central directory (LDAP) and is cached by ScholarSphere.  If you have updated that information and don't see those changes in your ScholarSphere profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="icon-question-sign icon-large"></i></a>
+          <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from <%=t('sufia.institution_name') %>'s central directory (LDAP) and is cached by <%=t('sufia.product_name') %>.  If you have updated that information and don't see those changes in your <%=t('sufia.product_name') %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="icon-question-sign icon-large"></i></a>
         </label>
       </div>
     </div>

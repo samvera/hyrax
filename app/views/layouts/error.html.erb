@@ -47,40 +47,7 @@ limitations under the License.
 <div  id="wrapper">
   <div class="container">
     <div id="page-positioner">
-      <div id="masthead">
-        <a id="shield" href="http://psu.edu/"><img src="/assets/site_images/logo_psuss_shield.png" width="219" height="60" alt="Penn State University" /></a>
-        <a id="logo" href="/"><img src="/assets/site_images/logo_psuss_logotype.png" width="132" height="37" alt="Penn State ScholarSphere" /></a>
-        <div class="navbar">
-          <div class="nav-inner">
-            <div class="container">
-              <ul class="nav pull-right">
-                <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
-                <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
-                <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
-                <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= contact_form_index_path %>" class="top_nav">Contact</a></li>
-                <li>
-                  <div class="btn-group">
-                    <% if current_user %>
-                    <a href="<%= profile_path(current_user.to_s) %>" class="btn btn-small"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
-                      <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></a>
-                      <ul class="dropdown-menu">
-                          <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), dashboard_path, :id => 'dashboard_nav_link'  %></li>
-                          <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), new_generic_file_path, :id => 'upload_nav_link'  %></li>
-                          <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), edit_profile_path(current_user.login), :id => 'upload_nav_link'  %></li>
-                          <li class="divider"></li>
-                          <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
-                      </ul>
-                    <% else %>
-                        <%= link_to raw('<i class="icon-signin"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
-                    <% end %>
-                  </div><!-- /.btn-group -->
-                </li>
-              </ul><!-- /.nav /.pull-right -->
-            </div><!-- /.container -->
-          </div><!-- /.nav-inner -->
-        </div><!-- /.navbar -->
-      </div> <!-- /masthead -->
-
+      <%= render :partial => '/masthead', :formats => [:html] %>
       <div id="content-wrapper">
         <div id="content" class="row">
           <!-- 110 rows -->
@@ -92,25 +59,7 @@ limitations under the License.
     </div><!-- /#page-positioner -->
   </div><!-- /.container -->
 </div><!-- /#wrapper -->
-<div id="footer-wrapper" class="row-fluid">
-  <div id="footer">
-    <div class="footer-logo">
-      <a href="/"><img src="/assets/site_images/logo_psuss_footer.png" alt="Penn State ScholarSphere" /></a>
-      <p>A service of the University Libraries and Information Technology Services.</p>
-    </div>
-    <div class="footer-text">
-      <p><strong>Copyright &copy; 2012 The Pennsylvania State University</strong></p>
-      <ul>
-        <li><a href="http://psu.edu">Penn State</a></li>
-        <li><a href="http://libraries.psu.edu">University Libraries</a></li>
-        <li><a href="http://its.psu.edu">Information Technology Services</a></li>
-        <li><a href="http://accessibility.psu.edu/">Accessibility</a></li>
-      </ul>
-    </div>
-    <div class="clearfix"></div>
-  </div><!-- /footer -->
-</div><!-- /footer-wrapper -->
-
+<%= render partial: '/footer' %>
       
 </body>
 

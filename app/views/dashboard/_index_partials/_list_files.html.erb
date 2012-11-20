@@ -35,7 +35,7 @@ on element ids -->
   <td width="17%"><%= document.fetch(:generic_file__date_uploaded_dt,'').to_time.strftime("%m/%d/%Y") unless document.fetch(:generic_file__date_uploaded_dt,'').blank? %> </td>
   <td width="5%" align="center">
     <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
-      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="Penn State">Penn State</span></a> 
+      <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
     <% elsif !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('public') %>
       <a href="<%= generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>

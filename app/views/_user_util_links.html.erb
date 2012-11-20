@@ -13,46 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
-
-<div id="masthead">
-  <a id="shield" href="http://psu.edu/"><img src="/assets/site_images/logo_psuss_shield.png" width="219" height="60" alt="Penn State University" /></a>
-  <a id="logo" href="/"><img src="/assets/site_images/logo_psuss_logotype.png" width="132" height="37" alt="Penn State ScholarSphere" /></a>
-  <div class="navbar">
-    <div class="nav-inner">
-      <div class="container">
-        <ul class="nav pull-right">
-          <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
-          <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
-          <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
-          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>" class="top_nav">Contact</a></li>
-          <li>
-            <div class="btn-group">
-              <% if current_user %>
-                 <%= render :partial => 'users/notify_link' %>
-                <a href="<%= sufia.profile_path(current_user.to_s) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
-                <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>
-                <ul class="dropdown-menu">
-                    <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), sufia.dashboard_path, :id => 'dashboard_nav_link'  %></li>
-                    <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), sufia.new_generic_file_path, :id => 'upload_nav_link'  %></li>
-                    <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), sufia.edit_profile_path(current_user.user_key), :id => 'upload_nav_link'  %></li>
-                    <li class="divider"></li>
-                    <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
-                </ul>
-              <% else %>
-                  <%= link_to raw('<i class="icon-signin"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
-              <% end %>
-            </div><!-- /.btn-group -->
-          </li>
-        </ul><!-- /.nav /.pull-right -->
-      </div><!-- /.container -->
-    </div><!-- /.nav-inner -->
-  </div><!-- /.navbar -->
-  <%# logger.info " controller = #{params[:controller]}" %>
-  <%= render :partial => 'catalog/search_form' %>
-</div> <!-- /masthead -->
-
-          <!-- <li><%# link_to 'your bookmarks', bookmarks_path %></li> -->
-          <!-- <li><%# link_to "saved searches", saved_searches_path %></li> -->
-          <!-- <li><%# link_to "Selected Items", folder_index_path %>(<span id="folder_number"><%= "#{session[:folder_document_ids] ? session[:folder_document_ids].length : 0}" %></span>)</li> -->
-          <!-- <li><%# link_to "selected items", folder_index_path %></li> -->
-          <!-- <li><%# link_to "search history", search_history_path %></li> -->
+<% if current_user %>
+   <%= render :partial => 'users/notify_link' %>
+  <a href="<%= sufia.profile_path(current_user.to_s) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
+  <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>
+  <ul class="dropdown-menu">
+      <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), sufia.dashboard_path, :id => 'dashboard_nav_link'  %></li>
+      <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), sufia.new_generic_file_path, :id => 'upload_nav_link'  %></li>
+      <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), sufia.edit_profile_path(current_user.user_key), :id => 'upload_nav_link'  %></li>
+      <li class="divider"></li>
+      <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
+  </ul>
+<% else %>
+    <%= link_to raw('<i class="icon-signin"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
+<% end %>

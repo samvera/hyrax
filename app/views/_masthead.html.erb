@@ -1,0 +1,38 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
+<div id="masthead">
+  <%= render partial: '/logo' %>
+  <div class="navbar">
+    <div class="nav-inner">
+      <div class="container">
+        <ul class="nav pull-right">
+          <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
+          <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
+          <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
+          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>" class="top_nav">Contact</a></li>
+          <li>
+            <div class="btn-group">
+              <%= render partial: '/user_util_links' %>
+            </div><!-- /.btn-group -->
+          </li>
+        </ul><!-- /.nav /.pull-right -->
+      </div><!-- /.container -->
+    </div><!-- /.nav-inner -->
+  </div><!-- /.navbar -->
+  <%= render :partial => 'catalog/search_form' %>
+</div> <!-- /masthead -->
+
