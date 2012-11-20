@@ -1,4 +1,5 @@
 require "hydra/submission_workflow"
+require 'deprecation' 
 
 module Hydra::HydraHelperBehavior
   include Hydra::SubmissionWorkflow
@@ -14,7 +15,9 @@ module Hydra::HydraHelperBehavior
     return result.html_safe
   end
   
+  # @deprecated
   def grouping_facet
+    Deprecation.warn Hydra::HydraHelperBehavior, "Grouping facet will be removed in hydra-file-access 6.0"
     fields = Hash[sort_fields]
     case h(params[:sort])
     when fields['date -']
