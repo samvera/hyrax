@@ -24,7 +24,7 @@ require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
 
 module WithinHelpers
-  Hydra::LDAP.stubs(:does_user_exist?).returns(true)
+#  Hydra::LDAP.stubs(:does_user_exist?).returns(true)
 
   def with_scope(locator)
     locator ? within(locator) { yield } : yield

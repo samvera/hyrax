@@ -22,13 +22,14 @@ def activefedora_path
   Gem.loaded_specs['active-fedora'].full_gem_path
 end
 
-Given /^I load scholarsphere fixtures$/ do
+Given /^I load sufia fixtures$/ do
   @rake = Rake::Application.new
   Rake.application = @rake
-  Rake.application.rake_require("lib/tasks/fixtures", ["."], loaded_files_excluding_current_rake_file)
-  Rake.application.rake_require("lib/tasks/active_fedora", [activefedora_path], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("tasks/sufia-fixtures", ["."], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("lib/tasks/fixtures", ["."], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("lib/tasks/active_fedora", [activefedora_path], loaded_files_excluding_current_rake_file)
   Rake::Task.define_task(:environment)
-  @rake['scholarsphere:fixtures:refresh'].invoke
-  @rake['scholarsphere:fixtures:fix'].invoke
+  @rake['sufia:fixtures:refresh'].invoke
+  @rake['sufia:fixtures:fix'].invoke
 end
 

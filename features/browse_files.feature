@@ -1,7 +1,7 @@
 Feature: Browse files 
 
   Scenario: Browse via Fixtures 
-    Given I load scholarsphere fixtures
+    Given I load sufia fixtures
     When I go to the home page
     And I follow "more Keyword"
     And I follow "test"
