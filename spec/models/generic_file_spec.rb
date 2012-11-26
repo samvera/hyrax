@@ -411,7 +411,7 @@ describe GenericFile do
       before(:all) do
         GenericFile.any_instance.stubs(:terms_of_service).returns('1')
         myfile = GenericFile.new
-        myfile.add_file_datastream(File.new(fixture_path + '/scholarsphere/scholarsphere_test4.pdf'), :dsid=>'content')
+        myfile.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
         myfile.thumbnail.size.nil?.should be_true
         myfile.apply_depositor_metadata('mjg36')

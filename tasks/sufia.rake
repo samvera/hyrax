@@ -19,7 +19,7 @@ require 'action_view'
 require 'rainbow'
 include ActionView::Helpers::NumberHelper
 
-namespace :scholarsphere do
+namespace :sufia do
   desc "Restore missing user accounts"
   task :restore_users => :environment do
     # Query Solr for unique depositors
@@ -109,7 +109,7 @@ namespace :scholarsphere do
   namespace :export do
     desc "Dump metadata as RDF/XML for e.g. Summon integration"
     task :rdfxml => :environment do
-      raise "rake scholarsphere:export:rdfxml output=FILE" unless ENV['output']
+      raise "rake sufia:export:rdfxml output=FILE" unless ENV['output']
       export_file = ENV['output']
       triples = RDF::Repository.new
       rows = GenericFile.count
