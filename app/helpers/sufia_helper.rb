@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 module SufiaHelper
 
   # link_back_to_dashboard(:label=>'Back to Search')

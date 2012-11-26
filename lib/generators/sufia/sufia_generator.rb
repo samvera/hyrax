@@ -15,7 +15,8 @@ This generator makes the following changes to your application:
  3. Adds controller behavior to the application controller
  4. Creates the sufia.rb configuration file
  5. Copies the catalog controller into the local app
- 6. Generates mailboxer
+ 6. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
+ 7. Generates mailboxer
        """ 
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -86,6 +87,19 @@ add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
     sentinel = /devise_for :users/
     inject_into_file 'config/routes.rb', "\n  #{routing_code}\n", { :after => sentinel, :verbose => false }
     
+  end
+
+  # Add behaviors to the SolrDocument model
+  def inject_sufia_solr_document_behavior
+    file_path = "app/models/solr_document.rb"
+    if File.exists?(file_path) 
+      inject_into_class file_path, "SolrDocument" do 
+        "  # Adds Sufia behaviors to the SolrDocument.\n" +
+        "  include Sufia::SolrDocumentBehavior\n"        
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist." 
+    end    
   end
 
   def install_mailboxer
