@@ -2,8 +2,8 @@
 <%# logger.info document[:generic_file__creator_t].inspect %>
 <li>
   <h2>
-    <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), generic_file_path(document[:noid_s].first) %>
-    <small>[<%= link_to 'Download', download_path(document[:noid_s].first), :target => '_new' %>]</small>
+    <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(document[:noid_s].first) %>
+    <small>[<%= link_to 'Download', sufia.download_path(document[:noid_s].first), :target => '_new' %>]</small>
   </h2>
   <table class="table">
     <tr>
