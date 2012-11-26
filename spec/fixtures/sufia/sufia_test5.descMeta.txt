@@ -14,6 +14,6 @@
 <info:fedora/sufia:test5> <http://purl.org/dc/terms/subject> "Test mp3 Test" .
 <info:fedora/sufia:test5> <http://purl.org/dc/terms/language> "En" .
 <info:fedora/sufia:test5> <http://xmlns.com/foaf/0.1/based_near> "State College" .
-<info:fedora/sufia:test5> <http://purl.org/dc/terms/rights> "archivist1" .
-<info:fedora/sufia:test5> <http://purl.org/dc/terms/creator> "archivist1" .
+<info:fedora/sufia:test5> <http://purl.org/dc/terms/rights> "archivist2@example.com" .
+<info:fedora/sufia:test5> <http://purl.org/dc/terms/creator> "archivist1@example.com" .
 <info:fedora/sufia:test5> <http://purl.org/dc/terms/identifier> "Test" .
