@@ -30,6 +30,6 @@ limitations under the License.
   <% end %>
 
   <% if(paginator.has_next?)  %>
-    <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»', params.merge(:id => solr_field, :action=>"facet"), :class => "more_facets_link" %></li>
+    <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»', sufia.url_for(params.merge(:id => solr_field, :action=>"facet", :path_only=>true)), :class => "more_facets_link" %></li>
   <% end %>
 </ul> <!-- /slide-list -->
