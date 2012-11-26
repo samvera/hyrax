@@ -82,4 +82,24 @@ module SufiaHelper
       chat_id
     end
   end
+
+  # Override to remove the label class (easier integration with bootstrap)
+  # and handles arrays
+  def render_facet_value(facet_solr_field, item, options ={})    
+    if item.is_a? Array
+      render_array_facet_value(facet_solr_field, item, options)
+    end
+    path =sufia.url_for(add_facet_params_and_redirect(facet_solr_field, item.value).merge(:only_path=>true))
+    (link_to_unless(options[:suppress_link], item.value, path, :class=>"facet_select") + " " + render_facet_count(item.hits)).html_safe
+  end
+
+    # link_back_to_catalog(:label=>'Back to Search')
+  # Create a link back to the index screen, keeping the user's facet, query and paging choices intact by using session.
+  def link_back_to_catalog(opts={:label=>t('blacklight.back_to_search')})
+    query_params = session[:search] ? session[:search].dup : {}
+    query_params.delete :counter
+    query_params.delete :total
+    link_url = sufia.url_for(query_params)
+    link_to opts[:label], link_url
+  end
 end
