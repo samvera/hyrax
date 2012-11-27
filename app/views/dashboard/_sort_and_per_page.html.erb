@@ -19,7 +19,7 @@ limitations under the License.
     <%=batch_delete%> <%=batch_edit_continue("Edit Selected") %>   
 	<% unless @response.response['numFound'] < 2 %>
 	  <%-# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {:action=>"index"} but I'm not sure -%>
-    <%= form_tag params[:controller] == "folder" ? folder_index_path : dashboard_path, :method=>:get, :class=>'per_page form-inline' do %>
+    <%= form_tag params[:controller] == "folder" ? sufia.folder_index_path : sufia.dashboard_path, :method=>:get, :class=>'per_page form-inline' do %>
       <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
       <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort])), :class => "span15") %>			      
       &nbsp;&nbsp;&nbsp;
