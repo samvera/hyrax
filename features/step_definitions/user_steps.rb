@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'hydra-file-access'
+
 # @example
 #   I log in as "archivist1@example.com"
 # @example
@@ -30,7 +32,7 @@ Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
   fill_in 'Password', with: 'password'
   click_button 'Sign in'
   
-  step %{And I click the anchor "#{login}"} 
+  step %{And I click within the anchor "i.icon-user"} 
   step %{I should see a link to "ingest" with label "upload"}
   step %{I should see a link to "dashboard" with label "dashboard"}
   # step %{I should see a link to "logout"} 
