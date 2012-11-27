@@ -8,7 +8,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       attr_accessor :params
       
       def user_key
-        current_user.user_key
+        current_or_guest_user.user_key
       end
 
       def session
@@ -71,7 +71,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     @user_parameters = {}
     @user = FactoryGirl.build(:sara_student)
     RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
-    subject.stub(:current_user).and_return(@user)
+    subject.stub(:current_or_guest_user).and_return(@user)
   end
   
   describe "policies_with_access" do

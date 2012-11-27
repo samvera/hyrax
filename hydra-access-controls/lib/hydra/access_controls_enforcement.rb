@@ -72,7 +72,7 @@ module Hydra::AccessControlsEnforcement
     end
   end
   
-  private
+  protected
 
   # If someone hits the show action while their session's viewing_context is in edit mode, 
   # this will redirect them to the edit action.
@@ -106,7 +106,7 @@ module Hydra::AccessControlsEnforcement
       if @permissions_solr_document["embargo_release_date_dt"] 
         embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
-          unless current_user && can?(:edit, params[:id])
+          unless current_or_guest_user && can?(:edit, params[:id])
             raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
           end
         end
@@ -201,7 +201,7 @@ module Hydra::AccessControlsEnforcement
     end
     
     # Grant access based on user id & role
-    unless current_user.nil?
+    unless current_or_guest_user.nil?
       user_access_filters += apply_role_permissions(permission_types)
       user_access_filters += apply_individual_permissions(permission_types)
       user_access_filters += apply_superuser_permissions(permission_types)
@@ -224,8 +224,10 @@ module Hydra::AccessControlsEnforcement
   def apply_individual_permissions(permission_types)
       # for individual person access
       user_access_filters = []
-      permission_types.each do |type|
-        user_access_filters << "#{type}_access_person_t:#{user_key}"        
+      if user_key
+        permission_types.each do |type|
+          user_access_filters << "#{type}_access_person_t:#{user_key}"        
+        end
       end
       user_access_filters
   end

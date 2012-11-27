@@ -12,7 +12,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     end
   end
   
-  # returns solr query for finding all objects whose policies grant discover access to current_user
+  # returns solr query for finding all objects whose policies grant discover access to current_or_guest_user
   def policy_clauses 
     policy_pids = policies_with_access
     return nil if policy_pids.empty?
@@ -23,10 +23,10 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # find all the policies that grant discover/read/edit permissions to this user or any of it's groups
   def policies_with_access
     #### TODO -- Memoize this and put it in the session?
-    return [] unless current_user
+    return [] unless current_or_guest_user
     user_access_filters = []
     # Grant access based on user id & role
-    unless current_user.nil?
+    unless current_or_guest_user.nil?
       user_access_filters += apply_policy_role_permissions(discovery_permissions)
       user_access_filters += apply_policy_individual_permissions(discovery_permissions)
     end
