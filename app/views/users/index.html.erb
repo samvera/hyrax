@@ -32,9 +32,9 @@ limitations under the License.
         <tbody> 
             <% @users.each do |user| %> 
                 <tr class="<%= cycle("","zebra") %>"> 
-                   <td><a href="<%= profile_path(user.login) %>" class="btn btn-small " ><%= image_tag user.avatar.url(:thumb), :width => 30 %></a></td> 
-                   <td ><a href="<%= profile_path(user.login) %>"  ><%= user.name %><a></td> 
-                   <td><a href="<%= profile_path(user.login) %>"  ><%= user.login %><a></td>
+                   <td><a href="<%= sufia.profile_path(URI.escape(user.login,'@.'i)) %>" class="btn btn-small " ><%= image_tag user.avatar.url(:thumb), :width => 30 %></a></td> 
+                   <td ><a href="<%= sufia.profile_path(URI.escape(user.login,'@.'i)) %>"  ><%= user.name %><a></td> 
+                   <td><a href="<%= sufia.profile_path(URI.escape(user.login,'@.'i)) %>"  ><%= user.login %><a></td>
                    <td><%= user.department %> </td> 
                    <td><%= GenericFile.find(:depositor_t => user.to_s).count %> </td> 
                 </tr> 

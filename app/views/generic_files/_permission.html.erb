@@ -39,7 +39,7 @@ limitations under the License.
   </div>
   <div class="modal-body">
     <h3>Visibility</h3>
-    <p>This setting will determine who can view your file, and the associated metadata in ScholarSphere. Setting 
+    <p>This setting will determine who can view your file, and the associated metadata. Setting 
     the visibility to <span class="label label-success">Open Access</span> will allow your content to be discovered in Google and viewed by anyone.
     The visibility setting <span class="label label-info"><%=t('sufia.institution_name') %></span> will only allow users who are logged into <%=t('sufia.product_name') %>
     (via WebAccess) to view the content.  Files that are marked <span class="label label-important">Private</span> are only able to be viewed
@@ -98,7 +98,7 @@ limitations under the License.
       <div class="input-append">
         <p class="help-block">Enter <%=t('sufia.account_label') %> (one at a time)</p>
         <%= text_field_tag 'new_user_name_skel', nil, :class => "span29" %><span class="add-on">@psu.edu</span>
-        <%= select_tag 'new_user_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class=> 'span17' %>
+        <%= select_tag 'new_user_permission_skel', options_for_select(Sufia::Engine.config.permission_levels), :class=> 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i> Add</button>
         <br /> <span id="directory_user_result"></span> 
       </div>
@@ -109,7 +109,7 @@ limitations under the License.
       <div class="input-append">
         <% @groups.unshift('Select a group') %>
         <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span38' %>
-        <%= select_tag 'new_group_permission_skel', options_for_select(ScholarSphere::Application::config.permission_levels), :class => 'span17' %>
+        <%= select_tag 'new_group_permission_skel', options_for_select(Sufia::Engine.config.permission_levels), :class => 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i> Add</button>
         <br /><span id="directory_group_result"></span>
       </div>
@@ -124,7 +124,7 @@ limitations under the License.
   <tr id="file_permissions">
     <td><%= label_tag :owner_access, "Depositor (<span id=\"file_owner\">#{link_to_profile depositor}</span>)".html_safe, :class=>"control-label" %></td>
     <td>
-    <%= ScholarSphere::Application::config.owner_permission_levels.keys[0] %>
+    <%= Sufia::Engine.config.owner_permission_levels.keys[0] %>
     </td>
   </tr>
   <% gf.permissions.each do |permission| %>
@@ -135,7 +135,7 @@ limitations under the License.
     <tr>
       <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %></td>
       <td>
-      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(ScholarSphere::Application::config.permission_levels, permission[:access]), :class=>'span20 select_perm' %>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia::Engine.config.permission_levels, permission[:access]), :class=>'span20 select_perm' %>
       <button class="btn close remove_perm">X</button>
       </td>
     </tr>
