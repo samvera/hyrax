@@ -14,17 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% javascript 'bootstrap-tooltip.js' %>
-<% javascript 'bootstrap-popover.js' %>
-<% javascript 'bootstrap-modal.js'%>
-<% javascript 'batch.js' %>
 
-<% javascript 'jquery.validate.js' %>
 
-<style type="text/css">
-label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+<% content_for :head do %>
+  <% javascript_include_tag 'bootstrap-tooltip.js'%>
+  <% javascript_include_tag 'bootstrap-popover.js'%>
+  <% javascript_include_tag 'bootstrap-modal.js'%>
 
-</style>
+  <% javascript_include_tag 'batch.js' %>
+
+  <% javascript_include_tag 'jquery.validate.js' %>
+  <style type="text/css">
+  label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+
+  </style>
+<% end %> 
+
+
   
 
 <% content_for :local_js do %>
