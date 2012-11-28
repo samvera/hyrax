@@ -109,7 +109,7 @@ module Hydra::AccessControlsEnforcement
       if @permissions_solr_document["embargo_release_date_dt"] 
         embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
-          unless current_or_guest_user && can?(:edit, params[:id])
+          unless can?(:edit, params[:id])
             raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
           end
         end
@@ -204,11 +204,10 @@ module Hydra::AccessControlsEnforcement
     end
     
     # Grant access based on user id & role
-    unless current_or_guest_user.nil?
-      user_access_filters += apply_role_permissions(permission_types)
-      user_access_filters += apply_individual_permissions(permission_types)
-      user_access_filters += apply_superuser_permissions(permission_types)
-    end
+    # TODO make this a chain of permissions to apply
+    user_access_filters += apply_role_permissions(permission_types)
+    user_access_filters += apply_individual_permissions(permission_types)
+    user_access_filters += apply_superuser_permissions(permission_types)
     solr_parameters[:fq] << user_access_filters.join(" OR ")
     logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
@@ -216,7 +215,7 @@ module Hydra::AccessControlsEnforcement
   def apply_role_permissions(permission_types)
       # for roles
       user_access_filters = []
-      ::RoleMapper.roles(user_key).each_with_index do |role, i|
+      current_ability.user_groups(current_user, session).each_with_index do |role, i|
         permission_types.each do |type|
           user_access_filters << "#{type}_access_group_t:#{role}"
         end

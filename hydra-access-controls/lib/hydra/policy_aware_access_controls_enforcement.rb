@@ -12,7 +12,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     end
   end
   
-  # returns solr query for finding all objects whose policies grant discover access to current_or_guest_user
+  # returns solr query for finding all objects whose policies grant discover access to current_user
   def policy_clauses 
     policy_pids = policies_with_access
     return nil if policy_pids.empty?
@@ -23,13 +23,11 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # find all the policies that grant discover/read/edit permissions to this user or any of it's groups
   def policies_with_access
     #### TODO -- Memoize this and put it in the session?
-    return [] unless current_or_guest_user
+    return [] unless current_user
     user_access_filters = []
     # Grant access based on user id & role
-    unless current_or_guest_user.nil?
-      user_access_filters += apply_policy_role_permissions(discovery_permissions)
-      user_access_filters += apply_policy_individual_permissions(discovery_permissions)
-    end
+    user_access_filters += apply_policy_role_permissions(discovery_permissions)
+    user_access_filters += apply_policy_individual_permissions(discovery_permissions)
     result = policy_class.find_with_conditions( user_access_filters.join(" OR "), :fl => "id" )
     logger.debug "get policies: #{result}\n\n"
     result.map {|h| h['id']}
@@ -39,7 +37,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   def apply_policy_role_permissions(permission_types)
       # for roles
       user_access_filters = []
-      ::RoleMapper.roles(user_key).each_with_index do |role, i|
+      current_ability.user_groups(current_user, session).each_with_index do |role, i|
         discovery_permissions.each do |type|
           user_access_filters << "inheritable_#{type}_access_group_t:#{role}"
         end

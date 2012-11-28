@@ -1,5 +1,6 @@
 require 'spec_helper'
-# Need way to find way to stub current_or_guest_user and RoleMapper in order to run these tests
+# Need way to find way to stub current_user and RoleMapper in order to run these tests
+require 'ability'
 
 describe Hydra::AccessControlsEnforcement do
   before(:all) do
@@ -7,8 +8,12 @@ describe Hydra::AccessControlsEnforcement do
       include Hydra::AccessControlsEnforcement
       attr_accessor :params
       
+      def current_ability
+        @current_ability ||= Ability.new(current_user)
+      end
+
       def user_key
-        current_or_guest_user.user_key
+        current_user.user_key
       end
 
       def session
@@ -24,7 +29,7 @@ describe Hydra::AccessControlsEnforcement do
     end
     context "Given I am not logged in" do
       before do
-        subject.stub(:current_or_guest_user).and_return(User.new)
+        subject.stub(:current_user).and_return(User.new(:new_record=>true))
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       end
       it "Then I should be treated as a member of the 'public' group" do
@@ -44,7 +49,7 @@ describe Hydra::AccessControlsEnforcement do
         User.stub(:find_by_user_key).and_return(@user)
         # This is a pretty fragile way to stub it...
         RoleMapper.stub(:byname).and_return(@user.user_key=>["faculty", "africana-faculty"])
-        subject.stub(:current_or_guest_user).and_return(@user)
+        subject.stub(:current_user).and_return(@user)
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       end
       it "Then I should be treated as a member of the 'public' and 'registered' groups" do
@@ -86,7 +91,7 @@ describe Hydra::AccessControlsEnforcement do
     it "should allow a user w/ edit permissions to view an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
       RoleMapper.stub(:roles).with(user.user_key).and_return(["archivist"])
-      subject.stub(:current_or_guest_user).and_return(user)
+      subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(true)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
@@ -98,7 +103,7 @@ describe Hydra::AccessControlsEnforcement do
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
       RoleMapper.stub(:roles).with(user.user_key).and_return([])
-      subject.stub(:current_or_guest_user).and_return(user)
+      subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(false)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.params = {}
@@ -111,7 +116,7 @@ describe Hydra::AccessControlsEnforcement do
     before(:each) do
       @stub_user = User.new :uid=>'archivist1@example.com'
       RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["archivist","researcher"])
-      subject.stub(:current_or_guest_user).and_return(@stub_user)
+      subject.stub(:current_user).and_return(@stub_user)
       @solr_parameters = {}
       @user_parameters = {}
     end
@@ -133,7 +138,7 @@ describe Hydra::AccessControlsEnforcement do
   describe "exclude_unwanted_models" do
     before(:each) do
       stub_user = User.new :uid=>'archivist1@example.com'
-      subject.stub(:current_or_guest_user).and_return(stub_user)
+      subject.stub(:current_user).and_return(stub_user)
       @solr_parameters = {}
       @user_parameters = {}
     end
@@ -147,7 +152,7 @@ describe Hydra::AccessControlsEnforcement do
     describe "when the user is a guest user (user key nil)" do
       before do
         stub_user = User.new
-        subject.stub(:current_or_guest_user).and_return(stub_user)
+        subject.stub(:current_user).and_return(stub_user)
       end
       it "should not create filters" do
         subject.send(:apply_individual_permissions, ["edit","discover","read"]).should == []
