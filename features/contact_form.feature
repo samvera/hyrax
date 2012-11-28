@@ -1,6 +1,8 @@
 Feature: Sending an email via the contact form 
 
   Scenario: Input info to contact form and send 
+    # this step allows delivery even if the mail server is down
+    Given I have a mail server
     Given I am on the home page
     When I follow "Contact" 
     Then I should see "Contact Form"
@@ -11,6 +13,8 @@ Feature: Sending an email via the contact form
     And I select "Depositing content" from "contact_form_category"
     And I press "Send"
     Then I should see "Thank you"
+    # this step allows the delivery to go back to normal
+    Then I reset the mail server
 
   Scenario: Input no selection for contact type 
     Given I am on the home page

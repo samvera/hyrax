@@ -24,6 +24,14 @@ Given /^And I click within the anchor "(.*?)"$/ do |selector|
   find(selector).click
 end
 
+Given /^I have a mail server$/ do
+  ContactForm.any_instance.stubs(:deliver).returns(true)
+end
+
+Then /^I reset the mail server$/ do
+  ContactForm.any_instance.unstub(:deliver)
+end
+
 When /^I follow the link within$/ do |selector|
   find(selector).click
 end
