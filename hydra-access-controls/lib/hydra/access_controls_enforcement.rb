@@ -1,7 +1,8 @@
-# will move to lib/hydra/access_control folder/namespace in release 5.x
 module Hydra::AccessControlsEnforcement
   extend ActiveSupport::Concern
-  
+  extend Deprecation 
+  self.deprecation_horizon = "hydra-access-controls 6.0"
+
   included do
     include Hydra::AccessControlsEvaluation
   end
@@ -77,6 +78,7 @@ module Hydra::AccessControlsEnforcement
   # If someone hits the show action while their session's viewing_context is in edit mode, 
   # this will redirect them to the edit action.
   # If they do not have sufficient privileges to edit documents, it will silently switch their session to browse mode.
+  # @deprecated this is a vestige of the old workflow, which is being removed from hydra-head
   def enforce_viewing_context_for_show_requests
     if params[:viewing_context] == "browse"
       session[:viewing_context] = params[:viewing_context]
@@ -93,6 +95,7 @@ module Hydra::AccessControlsEnforcement
       end
     end
   end
+  deprecation_deprecate :enforce_viewing_context_for_show_requests
   
   #
   # Action-specific enforcement
