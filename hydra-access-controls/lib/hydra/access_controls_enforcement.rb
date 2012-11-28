@@ -5,6 +5,16 @@ module Hydra::AccessControlsEnforcement
 
   included do
     include Hydra::AccessControlsEvaluation
+    class_attribute :solr_access_filters_logic
+
+    # Set defaults. Each symbol identifies a _method_ that must be in
+    # this class, taking one parameter (permission_types)
+    # Can be changed in local apps or by plugins, eg:
+    # CatalogController.include ModuleDefiningNewMethod
+    # CatalogController.solr_access_filters_logic += [:new_method]
+    # CatalogController.solr_access_filters_logic.delete(:we_dont_want)
+    self.solr_access_filters_logic = [:apply_role_permissions, :apply_individual_permissions, :apply_superuser_permissions ]
+
   end
   
   #
@@ -204,10 +214,9 @@ module Hydra::AccessControlsEnforcement
     end
     
     # Grant access based on user id & role
-    # TODO make this a chain of permissions to apply
-    user_access_filters += apply_role_permissions(permission_types)
-    user_access_filters += apply_individual_permissions(permission_types)
-    user_access_filters += apply_superuser_permissions(permission_types)
+    solr_access_filters_logic.each do |method_name|
+      user_access_filters += send(method_name, permission_types)
+    end
     solr_parameters[:fq] << user_access_filters.join(" OR ")
     logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
