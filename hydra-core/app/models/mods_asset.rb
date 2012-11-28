@@ -10,16 +10,7 @@ class ModsAsset < ActiveFedora::Base
   ## Convenience methods for manipulating the rights metadata datastream
   include Hydra::ModelMixins::RightsMetadata
   
-  # declares a descMetadata datastream with type Hydra::Datastream::ModsArticle
-  #  basically, it is another expression of
-  #  has_metadata :name => "descMetadata", :type => Hydra::Datastream::ModsArticle
-  #include Hydra::ModelMixins::ModsObject
-  
   # adds helpful methods for basic hydra objects
   include Hydra::ModelMethods
-
-  # adds file_objects methods
-  include ActiveFedora::FileManagement
-
   
 end
