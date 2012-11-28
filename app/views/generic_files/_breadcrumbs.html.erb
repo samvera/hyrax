@@ -21,7 +21,7 @@ limitations under the License.
 
      case request.referer
      when /dashboard/
-       crumbs << link_to('Dashboard', dashboard_path)
+       crumbs << link_to('Dashboard', sufia.dashboard_path)
      when /files/
        crumbs << link_to('Back to previous', request.referer)
      when /catalog/

@@ -84,7 +84,7 @@ $("a[rel=popover]").popover();
   </div>
   <div class="span2">&nbsp;</div>
   <div class="span68">
-    <%= link_to "&lt;&lt;Browse view".html_safe, generic_file_path %></li>
+    <%= link_to "&lt;&lt;Browse view".html_safe, sufia.generic_file_path %></li>
     <ul class="nav nav-tabs">
       <li id="edit_descriptions_link"><a href="#"><i class="icon-tags"></i> Descriptions</a></li>
       <li id="edit_versioning_link"><a href="#"><i class="icon-sitemap"></i> Versions</a></li>
@@ -92,7 +92,7 @@ $("a[rel=popover]").popover();
     </ul>
     <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
 
-    <%= form_for @generic_file, :url => generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+    <%= form_for @generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render :partial => "permission", :locals => { :gf => @generic_file, :f=> f } %>
     <% end %>

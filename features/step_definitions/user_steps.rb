@@ -27,7 +27,7 @@ Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
   user = User.where(:email=>login).first || FactoryGirl.create(:user, :email=>login)
   User.find_by_user_key(login).should_not be_nil
   visit "/"
-  step %{And I click the anchor "Login"} 
+  find("a[href=\"/users/sign_in\"]").click
   fill_in 'Email', with: login
   fill_in 'Password', with: 'password'
   click_button 'Sign in'

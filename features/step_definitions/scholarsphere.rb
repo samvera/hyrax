@@ -24,6 +24,14 @@ Given /^And I click within the anchor "(.*?)"$/ do |selector|
   find(selector).click
 end
 
+Given /^I have a mail server$/ do
+  ContactForm.any_instance.stubs(:deliver).returns(true)
+end
+
+Then /^I reset the mail server$/ do
+  ContactForm.any_instance.unstub(:deliver)
+end
+
 When /^I follow the link within$/ do |selector|
   find(selector).click
 end
@@ -50,3 +58,10 @@ Then /^"([^\"]*)" should( not)? be disabled$/ do |label, negate|
   end
   ["false", "", nil].send(negate ? :should : :should_not, include(field[:disabled]))
 end
+
+Given /^I load users$/ do
+  FactoryGirl.create(:user)
+  FactoryGirl.create(:archivist)
+  FactoryGirl.create(:curator)
+end
+

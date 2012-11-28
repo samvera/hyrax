@@ -50,7 +50,7 @@ class UsersController < ApplicationController
     @user.populate_attributes if params[:update_directory]
     @user.avatar = nil if params[:delete_avatar]
     unless @user.save
-      redirect_to sufia.edit_profile_path(@user.to_s), alert: @user.errors.full_messages
+      redirect_to sufia.edit_profile_path(URI.escape(@user.to_s,'@.')), alert: @user.errors.full_messages
       return
     end
     begin
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     rescue Redis::CannotConnectError
       logger.error "Redis is down!"
     end
-    redirect_to sufia.profile_path(@user.to_s), notice: "Your profile has been updated"
+    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "Your profile has been updated"
   end
 
   # Follow a user
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
         logger.error "Redis is down!"
       end
     end
-    redirect_to sufia.profile_path(@user.to_s), notice: "You are following #{@user.to_s}"
+    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "You are following #{@user.to_s}"
   end
 
   # Unfollow a user
@@ -84,7 +84,7 @@ class UsersController < ApplicationController
         logger.error "Redis is down!"
       end
     end
-    redirect_to sufia.profile_path(@user.to_s), notice: "You are no longer following #{@user.to_s}"
+    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "You are no longer following #{@user.to_s}"
   end
 
   private
@@ -94,11 +94,11 @@ class UsersController < ApplicationController
   end
 
   def user_is_current_user
-    redirect_to sufia.profile_path(@user.to_s), alert: "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
+    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), alert: "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
   end
 
   def user_not_current_user
-    redirect_to sufia.profile_path(@user.to_s), alert: "You cannot follow or unfollow yourself" if @user == current_user
+    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), alert: "You cannot follow or unfollow yourself" if @user == current_user
   end
 
   def get_sort

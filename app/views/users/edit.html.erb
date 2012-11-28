@@ -27,7 +27,7 @@ $("a[rel=popover]").popover();
 
 <h1>Edit Profile</h1>
 <div class="span45 well">
-  <%= form_for @user, :url => update_profile_path(@user.login), :html => {:multipart => true, :class => 'form-horizontal' } do |f| %>
+  <%= form_for @user, :url => sufia.update_profile_path(URI.escape(@user.to_s, '@.')), :html => {:multipart => true, :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
       <%= f.label :avatar, '<i class="icon-camera-retro"></i> Change picture'.html_safe, :class => "control-label" %>
       <div class="controls">
@@ -93,8 +93,10 @@ $("a[rel=popover]").popover();
   <hr />
 
   <h3><i class="icon-group"></i> User Managed Groups Info (UMG) <%= link_to 'Manage UMG', 'http://umg.its.psu.edu/', :class => 'btn btn-mini btn-primary' %> </h3>
-  <% @groups.each do |g| %>
-    <i class="icon-caret-right"></i> <%= g %><br />
+  <% if @groups %>
+    <% @groups.each do |g| %>
+      <i class="icon-caret-right"></i> <%= g %><br />
+    <% end %>
   <% end %>
 </div>
 
