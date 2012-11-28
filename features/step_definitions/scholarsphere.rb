@@ -50,3 +50,10 @@ Then /^"([^\"]*)" should( not)? be disabled$/ do |label, negate|
   end
   ["false", "", nil].send(negate ? :should : :should_not, include(field[:disabled]))
 end
+
+Given /^I load users$/ do
+  FactoryGirl.create(:user)
+  FactoryGirl.create(:archivist)
+  FactoryGirl.create(:curator)
+end
+

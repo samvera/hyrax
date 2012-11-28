@@ -24,11 +24,11 @@ limitations under the License.
       <% if not signed_in? %>
         <!-- sign in to access social functions -->
       <% elsif current_user == @user %>
-        <a class="btn btn-primary" href="<%= edit_profile_path(@user.to_s) %>"><i class="icon-edit"></i> Edit Your Profile </a>
+        <a class="btn btn-primary" href="<%= sufia.edit_profile_path(URI.escape(@user.to_s, '@.')) %>"><i class="icon-edit"></i> Edit Your Profile </a>
       <% elsif current_user.following?(@user) %>
-        <a class="btn btn-primary" href="<%= unfollow_user_path(@user.to_s) %>"><i class="icon-eye-close"></i> Unfollow </a>
+        <a class="btn btn-primary" href="<%= sufia.unfollow_user_path(@user.to_s) %>"><i class="icon-eye-close"></i> Unfollow </a>
       <% else %>
-        <a class="btn btn-primary" href="<%= follow_user_path(@user.to_s) %>"><i class="icon-eye-open"></i> Follow</a>
+        <a class="btn btn-primary" href="<%= sufia.follow_user_path(@user.to_s) %>"><i class="icon-eye-open"></i> Follow</a>
       <% end %>
     </span>
   </h1>
@@ -48,7 +48,7 @@ limitations under the License.
     <ul class="thumbnails">
       <% @followers.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.login), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
@@ -59,7 +59,7 @@ limitations under the License.
     <ul class="thumbnails">
       <% @following.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.login), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>

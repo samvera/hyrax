@@ -50,14 +50,14 @@ describe UsersController do
     end
     it "redirects to show profile when user attempts to edit another profile" do
       get :edit, uid: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:alert].should include("You cannot edit archivist1@example.com's profile")
     end
   end
   describe "#update" do
     it "should not allow other users to update" do
       post :update, uid: @another_user.user_key, user: { avatar: nil }
-      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:alert].should include("You cannot edit archivist1@example.com's profile")
     end
     it "should set an avatar and redirect to profile" do
@@ -65,7 +65,7 @@ describe UsersController do
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.user_key).once
       f = fixture_file_upload('/world.png', 'image/png')
       post :update, uid: @user.user_key, user: { avatar: f }
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       User.find_by_user_key(@user.user_key).avatar.file?.should be_true
     end
@@ -73,20 +73,20 @@ describe UsersController do
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
       post :update, uid: @user.user_key, user: { avatar: f }
-      response.should redirect_to(@routes.url_helpers.edit_profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("Avatar content type is invalid")
     end
     it "should validate the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
       post :update, uid: @user.user_key, user: { avatar: f }
-      response.should redirect_to(@routes.url_helpers.edit_profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("Avatar file size must be less than 2097152 Bytes")
     end
     it "should delete an avatar" do
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.user_key).once
       post :update, uid: @user.user_key, delete_avatar: true
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       @user.avatar.file?.should be_false
     end
@@ -94,7 +94,7 @@ describe UsersController do
       Resque.expects(:enqueue).with(UserEditProfileEventJob, @user.user_key).once
       User.any_instance.expects(:populate_attributes).once
       post :update, uid: @user.user_key, update_directory: true
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
     end
     it "should set an social handles" do
@@ -102,7 +102,7 @@ describe UsersController do
       @user.facebook_handle.blank?.should be_true
       @user.googleplus_handle.blank?.should be_true
       post :update, uid: @user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo' }
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       u = User.find_by_user_key(@user.user_key)
       u.twitter_handle.should == 'twit'
@@ -118,20 +118,20 @@ describe UsersController do
       @user.following?(@another_user).should be_false
       Resque.expects(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).once
       post :follow, uid: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if already following and not log an event" do
       User.any_instance.stubs(:following?).with(@another_user).returns(true)
       Resque.expects(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).never
       post :follow, uid: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       Resque.expects(:enqueue).with(UserFollowEventJob, @user.user_key, @user.user_key).never
       post :follow, uid: @user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end
@@ -140,20 +140,20 @@ describe UsersController do
       User.any_instance.stubs(:following?).with(@another_user).returns(true)
       Resque.expects(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).once
       post :unfollow, uid: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if not following and not log an event" do
       @user.stubs(:following?).with(@another_user).returns(false)
       Resque.expects(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).never
       post :unfollow, uid: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       Resque.expects(:enqueue).with(UserUnfollowEventJob, @user.user_key, @user.user_key).never
       post :unfollow, uid: @user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.user_key))
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end
