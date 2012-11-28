@@ -11,13 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 When /^I attach a file "([^"]*)" to the dynamically created "([^"]*)"$/ do |path, field|
   find(field).native.send_keys(File.expand_path(path, Rails.root))
 end
 
 Given /^And I click the anchor "([^"]*)"$/ do |link|
   click_link(link)
+end
+
+Given /^And I click within the anchor "(.*?)"$/ do |selector|
+#Given /^(?:|I )click within the anchor "([^"]*)"$/ do |selector|
+  find(selector).click
+end
+
+When /^I follow the link within$/ do |selector|
+  find(selector).click
 end
 
 # tests wether a select option is choosen
