@@ -2,10 +2,6 @@ module Hydra
   module BlacklightHelperBehavior
     include Blacklight::BlacklightHelperBehavior
     
-    def document_partial_path_templates
-      ["%2$s/%1$s"] + super
-    end
-
     # Given a Fedora uri, generate a reasonable partial name
     def document_partial_name(document)
       display_type = document[blacklight_config.show.display_type]
