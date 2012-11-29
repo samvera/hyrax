@@ -38,7 +38,7 @@ and add the following to application.js
 This information is for people who want to modify the engine itself, not an application that uses the engine:
 ### Create fixtures
 ```
-rake scholarsphere:fixtures:create scholarsphere:fixtures:generate
+rake sufia:fixtures:create sufia:fixtures:generate
 rake fixtures
 rake clean spec
 bundle exec cucumber fixtures
