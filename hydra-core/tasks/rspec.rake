@@ -3,12 +3,12 @@ require 'rspec/core/rake_task'
 
 
 desc "Run specs"
-RSpec::Core::RakeTask.new(:spec => [:generate, :fixtures]) do |t|
-  # if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.8/
-  #   t.rcov = true
-  #   t.rcov_opts = %w{--exclude spec\/*,gems\/*,ruby\/* --aggregate coverage.data}
-  # end
-  t.rspec_opts = "--colour"
+task :spec => [:generate, :fixtures] do |t|
+  Bundler.with_clean_env do
+    within_test_app do
+      system "rake myspec"
+    end
+  end
 end
 
 task :fixtures do
