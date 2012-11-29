@@ -1,3 +1,4 @@
+require 'rspec/core/rake_task'
 desc "run the hydra-core gem spec"
 gem_home = File.expand_path('../../../../..', __FILE__)
 RSpec::Core::RakeTask.new(:myspec) do |t|
