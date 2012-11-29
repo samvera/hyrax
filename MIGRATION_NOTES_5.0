@@ -13,7 +13,8 @@
 
 * hydra-file-access is not required by default.  If you need those behaviors, add "gem 'hydra-file-access'" to your Gemfile.
 
-* TODO: activate the relavent integration tests in test_support/features
+
+* IMPORTANT - Do NOT create update() methods in the catalog controller.  Blacklight is now using Catalog#update method to store pagination information into the session.  Thus hydra is no longer enforcing any access controls on Catalog#update.
 
 
 

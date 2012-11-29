@@ -29,6 +29,8 @@ module Hydra::AccessControlsEnforcement
   #   class CatalogController < ApplicationController  
   #     before_filter :enforce_access_controls
   #   end
+  #
+  # @deprecated HYDRA-886 Blacklight is now using Catalog#update to store pagination info, so we don't want to enforce_edit_permissions on it. Instead just call before_filter :enforce_show_permissions, :only=>:show. Move all Edit/Update/Delete methods into non-catalog backed controllers.
   def enforce_access_controls(opts={})
     controller_action = params[:action].to_s
     delegate_method = "enforce_#{controller_action}_permissions"
@@ -38,6 +40,7 @@ module Hydra::AccessControlsEnforcement
       true
     end
   end
+  deprecation_deprecate :enforce_access_controls
   
   
   #
@@ -142,6 +145,7 @@ module Hydra::AccessControlsEnforcement
       session[:viewing_context] = "edit"
     end
   end
+  deprecation_deprecate :enforce_edit_permissions
 
   ##  This method is here for you to override
   def enforce_create_permissions(opts={})
@@ -150,6 +154,7 @@ module Hydra::AccessControlsEnforcement
       raise Hydra::AccessDenied.new "You do not have sufficient privileges to create a new document."
     end
   end
+  deprecation_deprecate :enforce_edit_permissions
 
   ## proxies to enforce_edit_permssions.  This method is here for you to override
   def enforce_update_permissions(opts={})
