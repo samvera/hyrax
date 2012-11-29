@@ -240,7 +240,7 @@ module Hydra::AccessControlsEnforcement
   def apply_individual_permissions(permission_types)
       # for individual person access
       user_access_filters = []
-      if user_key
+      if user_key.present?
         permission_types.each do |type|
           user_access_filters << "#{type}_access_person_t:#{user_key}"        
         end

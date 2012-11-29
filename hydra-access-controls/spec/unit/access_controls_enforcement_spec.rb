@@ -158,6 +158,15 @@ describe Hydra::AccessControlsEnforcement do
         subject.send(:apply_individual_permissions, ["edit","discover","read"]).should == []
       end
     end
+    describe "when the user is a guest user (user key empty string)" do
+      before do
+        stub_user = User.new :uid=>''
+        subject.stub(:current_user).and_return(stub_user)
+      end
+      it "should not create filters" do
+        subject.send(:apply_individual_permissions, ["edit","discover","read"]).should == []
+      end
+    end
   end
 end
 
