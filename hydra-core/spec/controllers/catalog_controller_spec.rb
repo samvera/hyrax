@@ -72,7 +72,6 @@ describe CatalogController do
     describe "index" do
       it "should trigger enforce_index_permissions" do
         controller.should_receive(:add_access_controls_to_solr_params)
-        controller.should_receive(:enforce_index_permissions)
         get :index
       end
     end
