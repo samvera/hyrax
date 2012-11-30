@@ -16,5 +16,6 @@
 
 * IMPORTANT - Do NOT create update() methods in the catalog controller.  Blacklight is now using Catalog#update method to store pagination information into the session.  Thus hydra is no longer enforcing any access controls on Catalog#update.
 
+* Methods in Ability class have ceased passing around user and session in the method signature (they're now relying on instance variables). If you've overridden any of these methods, you may receive an error like: `ArgumentError: wrong number of arguments (0 for 2)`  You ought to be able to just remove these parameters from the signature.
 
 
