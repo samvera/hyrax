@@ -183,7 +183,6 @@ describe Hydra::FileAssetsController do
       it "should set is_part_of relationship on the new File Asset pointing back at the container" do
         # stub out authorize! call
         controller.should_receive(:authorize!).and_return(true)
-        puts "FFP: #{fixture_path}"
         test_file = fixture_file_upload('/small_file.txt', 'text/plain')
         filename = "My File Name"
         post :create, {:Filedata=>[test_file], :Filename=>filename, :container_id=>@test_container.pid}

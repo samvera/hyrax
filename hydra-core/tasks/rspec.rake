@@ -5,6 +5,7 @@ task :spec => [:generate, :fixtures] do |t|
   Bundler.with_clean_env do
     within_test_app do
       system "rake myspec"
+      abort "Error running hydra-core" unless $?.success?
     end
   end
 end

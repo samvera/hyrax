@@ -7,7 +7,8 @@ desc "Run specs"
 task :spec => [:generate, :fixtures] do |t|
   Bundler.with_clean_env do
     within_test_app do
-      system "rake myspec"
+      system('rake myspec')
+      abort "Error running hydra-file-access" unless $?.success?
     end
   end
 end
