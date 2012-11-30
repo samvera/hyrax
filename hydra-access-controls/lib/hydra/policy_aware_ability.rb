@@ -2,7 +2,8 @@
 module Hydra::PolicyAwareAbility
   
   # Extends Hydra::Ability.test_edit to try policy controls if object-level controls deny access
-  def test_edit(pid, user, session)
+  def test_edit(pid, user=nil, session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to test_edit, use the instance_variables", caller) if user || session
     result = super
     if result 
       return result
@@ -12,7 +13,8 @@ module Hydra::PolicyAwareAbility
   end
   
   # Extends Hydra::Ability.test_read to try policy controls if object-level controls deny access
-  def test_read(pid, user, session)
+  def test_read(pid, user=nil, session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller) if user || session
     result = super
     if result 
       return result
@@ -45,28 +47,30 @@ module Hydra::PolicyAwareAbility
   end
   
   # Tests whether the object's governing policy object grants edit access for the current user
-  def test_edit_from_policy(object_pid, user, session)    
+  def test_edit_from_policy(object_pid, user=nil, session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to test_edit_from_policy, use the instance_variables", caller) if user || session
     policy_pid = policy_pid_for(object_pid)
     if policy_pid.nil?
       return false
     else
-      logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide EDIT permissions for #{user_key(user)}?")
-      group_intersection = user_groups(user, session) & edit_groups_from_policy( policy_pid )
-      result = !group_intersection.empty? || edit_persons_from_policy( policy_pid ).include?(user_key(user))
+      logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide EDIT permissions for #{@user.user_key}?")
+      group_intersection = user_groups & edit_groups_from_policy( policy_pid )
+      result = !group_intersection.empty? || edit_persons_from_policy( policy_pid ).include?(@user.user_key)
       logger.debug("[CANCAN] -policy- decision: #{result}")
       return result
     end
   end   
   
   # Tests whether the object's governing policy object grants read access for the current user
-  def test_read_from_policy(object_pid, user, session)
+  def test_read_from_policy(object_pid, user=nil, session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to test_read_from_policy, use the instance_variables", caller) if user || session
     policy_pid = policy_pid_for(object_pid)
     if policy_pid.nil?
       return false
     else
-      logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide READ permissions for #{user_key(user)}?")
-      group_intersection = user_groups(user, session) & read_groups_from_policy( policy_pid )
-      result = !group_intersection.empty? || read_persons_from_policy( policy_pid ).include?(user_key(user))
+      logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide READ permissions for #{@user.user_key}?")
+      group_intersection = user_groups & read_groups_from_policy( policy_pid )
+      result = !group_intersection.empty? || read_persons_from_policy( policy_pid ).include?(@user.user_key)
       logger.debug("[CANCAN] -policy- decision: #{result}")
       result
     end

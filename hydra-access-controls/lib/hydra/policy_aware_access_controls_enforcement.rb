@@ -37,7 +37,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   def apply_policy_role_permissions(permission_types)
       # for roles
       user_access_filters = []
-      current_ability.user_groups(current_user, session).each_with_index do |role, i|
+      current_ability.user_groups.each_with_index do |role, i|
         discovery_permissions.each do |type|
           user_access_filters << "inheritable_#{type}_access_group_t:#{role}"
         end

@@ -229,7 +229,7 @@ module Hydra::AccessControlsEnforcement
   def apply_role_permissions(permission_types)
       # for roles
       user_access_filters = []
-      current_ability.user_groups(current_user, session).each_with_index do |role, i|
+      current_ability.user_groups.each_with_index do |role, i|
         permission_types.each do |type|
           user_access_filters << "#{type}_access_group_t:#{role}"
         end
