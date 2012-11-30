@@ -37,7 +37,7 @@ module Hydra::Ability
   # Requires no arguments, but accepts 2 arguments for backwards compatibility
   def hydra_default_permissions(user=nil, session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to hydra_default_permissions, use the instance_variables", caller()) if user || session
-    logger.debug("Usergroups are " + user_groups().inspect)
+    logger.debug("Usergroups are " + user_groups.inspect)
     create_permissions()
     edit_permissions()
     read_permissions()
@@ -109,8 +109,8 @@ module Hydra::Ability
   def test_read(pid, user=nil, session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller()) if user || session
     permissions_doc(pid)
-    logger.debug("[CANCAN] Checking edit permissions for user: #{@user.user_key} with groups: #{user_groups(user, session).inspect}")
-    group_intersection = user_groups(user, session) & read_groups
+    logger.debug("[CANCAN] Checking edit permissions for user: #{@user.user_key} with groups: #{user_groups.inspect}")
+    group_intersection = user_groups & read_groups
     result = !group_intersection.empty? || read_persons.include?(@user.user_key)
     logger.debug("[CANCAN] decision: #{result}")
     result
