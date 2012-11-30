@@ -30,6 +30,7 @@ require "factories"
 
 require 'support/blacklight'
 require 'support/rails'
+Object.logger = Logger.new(File.expand_path('../test.log', __FILE__))
 
 RSpec.configure do |config|
 
