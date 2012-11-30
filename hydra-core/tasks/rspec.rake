@@ -1,6 +1,4 @@
 ENV["RAILS_ROOT"] ||= 'spec/internal'
-require 'rspec/core/rake_task'
-
 
 desc "Run specs"
 task :spec => [:generate, :fixtures] do |t|

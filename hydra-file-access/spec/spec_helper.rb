@@ -22,6 +22,8 @@ RSpec.configure do |config|
 
   #removes FactoryGirl created users
   config.use_transactional_fixtures = true 
+
+  config.fixture_path = File.expand_path('../fixtures', __FILE__)
 end
 
 

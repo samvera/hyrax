@@ -36,4 +36,9 @@ class TestAppGenerator < Rails::Generators::Base
     #copy_file "spec/fixtures/hydra_test_generic_content.foxml.xml"
   end
 
+  
+  def copy_rspec_rake_task
+    copy_file "lib/tasks/rspec.rake"
+  end
+
 end
