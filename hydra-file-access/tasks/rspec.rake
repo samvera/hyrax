@@ -28,14 +28,16 @@ task :generate do
     `cp spec/support/Gemfile spec/internal`
     puts "Copying generator"
     `cp -r spec/support/lib/generators spec/internal/lib`
-    within_test_app do
-      puts "Bundle install"
-      `bundle install`
-      puts "running test_app_generator"
-      system "rails generate test_app"
+    Bundler.with_clean_env do
+      within_test_app do
+        puts "Bundle install"
+        `bundle install`
+        puts "running test_app_generator"
+        system "rails generate test_app"
 
-      puts "running migrations"
-      puts `rake db:migrate db:test:prepare`
+        puts "running migrations"
+        puts `rake db:migrate db:test:prepare`
+      end
     end
   end
   puts "Running specs"
