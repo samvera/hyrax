@@ -1,6 +1,5 @@
 require 'spec_helper'
-# Need way to find way to stub current_user and RoleMapper in order to run these tests
-require 'ability'
+require_relative '../../app/models/ability'
 
 describe Hydra::AccessControlsEnforcement do
   before(:all) do

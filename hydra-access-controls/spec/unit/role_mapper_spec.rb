@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_relative '../../app/models/role_mapper'
 
 describe RoleMapper do
   it "should define the 4 roles" do

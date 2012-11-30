@@ -4,6 +4,7 @@ require 'active_support'
 # This would allow solrizer to load it's config files after the rails logger is up.
 require 'active-fedora'
 require 'cancan'
+require 'rails'
 
 module Hydra
   extend ActiveSupport::Autoload
@@ -16,6 +17,8 @@ module Hydra
   autoload :PolicyAwareAbility
   autoload :AdminPolicy
   autoload :RoleMapperBehavior
+  class Engine < Rails::Engine
+  end
 
   module ModelMixins
     extend ActiveSupport::Autoload
@@ -28,8 +31,3 @@ module Hydra
   class AccessDenied < ::CanCan::AccessDenied; end
 
 end
-
-# Enable the ability/role_mapper classes in the local application to load before the ability/role_mapper classes provided by hydra-access-controls
-autoload :Ability, 'ability'
-autoload :RoleMapper, 'role_mapper'
-
