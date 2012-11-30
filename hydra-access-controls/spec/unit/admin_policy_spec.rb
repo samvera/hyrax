@@ -60,7 +60,6 @@ describe Hydra::AdminPolicy do
     describe "to_solr" do
       subject {@policy.to_solr}
       it "should not affect normal solr permissions fields" do    
-      puts subject
         subject.should_not have_key( Hydra.config[:permissions][:discover][:group] ) 
         subject.should_not have_key( Hydra.config[:permissions][:discover][:individual] )
         subject.should_not have_key( Hydra.config[:permissions][:read][:group] )
