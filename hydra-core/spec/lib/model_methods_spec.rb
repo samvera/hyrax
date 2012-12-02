@@ -25,5 +25,10 @@ describe Hydra::ModelMethods do
       subject.apply_depositor_metadata('chris')
       subject.properties.depositor.should == ['chris']
     end
+    it "should accept objects that respond_to? :user_key" do
+      stub_user = stub(:user, :user_key=>'monty')
+      subject.apply_depositor_metadata(stub_user)
+      subject.properties.depositor.should == ['monty']
+    end
   end
 end
