@@ -5,6 +5,7 @@ module Hydra::AccessControlsEnforcement
 
   included do
     include Hydra::AccessControlsEvaluation
+    include Blacklight::SolrHelper # for force_to_utf8
     class_attribute :solr_access_filters_logic
 
     # Set defaults. Each symbol identifies a _method_ that must be in
