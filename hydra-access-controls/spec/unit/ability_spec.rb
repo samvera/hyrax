@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../app/models/ability'
 
 describe Ability do
   before do

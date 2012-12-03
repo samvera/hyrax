@@ -1,4 +1,5 @@
 ENV["environment"] ||= "test"
+
 module Hydra
   # Stubbing Hydra.config[:policy_aware] so Hydra::PolicyAwareAbility will be loaded for tests.
   def self.config
@@ -9,8 +10,6 @@ end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-
-
 
 if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov'
@@ -31,6 +30,12 @@ require "factories"
 require 'support/blacklight'
 require 'support/rails'
 Object.logger = Logger.new(File.expand_path('../test.log', __FILE__))
+
+# Since we're not doing a Rails Engine test, we have to load these classes manually:
+require_relative '../app/models/role_mapper'
+require_relative '../app/models/ability'
+
+
 
 RSpec.configure do |config|
 
