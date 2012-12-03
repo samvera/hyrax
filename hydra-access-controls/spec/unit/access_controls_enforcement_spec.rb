@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../app/models/ability'
 
 describe Hydra::AccessControlsEnforcement do
   before(:all) do
@@ -75,12 +74,14 @@ describe Hydra::AccessControlsEnforcement do
   describe "enforce_access_controls" do
     describe "when the method exists" do
       it "should call the method" do
+        Deprecation.stub(:warn)
         subject.params = {:action => :index}
         subject.enforce_access_controls.should be_true
       end
     end
     describe "when the method doesn't exist" do
       it "should not call the method, but should return true" do
+        Deprecation.stub(:warn)
         subject.params = {:action => :facet}
         subject.enforce_access_controls.should be_true
       end
