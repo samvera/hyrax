@@ -18,4 +18,6 @@
 
 * Methods in Ability class have ceased passing around user and session in the method signature (they're now relying on instance variables). If you've overridden any of these methods, you may receive an error like: `ArgumentError: wrong number of arguments (0 for 2)`  You ought to be able to just remove these parameters from the signature.
 
+* Hydra::Controller no longer includes Hydra::Controller::RepositoryControllerBehavior by default as all it's methods are deprecated.  If you still require RepositoryControllerBehavior, include it manually on your controller.
+
 

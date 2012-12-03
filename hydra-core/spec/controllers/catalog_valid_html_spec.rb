@@ -53,47 +53,21 @@ describe CatalogController do
         sign_in mock_user
     end
     
-    #Article Data Type
-    it "Should have valid html when in Article Edit Show" do
-      controller.session[:viewing_context] = "edit"
-      get(:show, {:id=>"hydrangea:fixture_mods_article1"}, :action=>"edit")
-      document_check(response.body)
-    end
-    
     it "Should have valid html when in Article Browse Show" do 
-       
-       controller.session[:viewing_context] = "browse"
-       get(:show, {:id=>"hydrangea:fixture_mods_article1"}, :action=>"browse")
+       get(:show, {:id=>"hydrangea:fixture_mods_article1"})
        document_check(response.body)
     end
     
-    #Data Set Data Type
-    it "Should have valid html when in Dataset Edit Show" do
-      controller.session[:viewing_context] = "edit"
-      get(:show, {:id=>"hydrangea:fixture_mods_dataset1"}, :action=>"edit")
+    it "Should have valid html when in Dataset Browse Show" do 
+      get(:show, {:id=>"hydrangea:fixture_mods_dataset1"})
       document_check(response.body)
     end
     
     it "Should have valid html when in Dataset Browse Show" do 
-       controller.session[:viewing_context] = "browse"
-       get(:show, {:id=>"hydrangea:fixture_mods_dataset1"}, :action=>"browse")
-       document_check(response.body)
+      get(:show, {:id=>"hydrus:admin_class1"})
+      File.open('/tmp/out.xml', 'w') { |f| f << response.body }
+      document_check(response.body)
     end
-    
-    #APO datatype hydrus:admin_class1
-     it "Should have valid html when in Dataset Edit Show" do
-        controller.session[:viewing_context] = "edit"
-        get(:show, {:id=>"hydrus:admin_class1"}, :action=>"edit")
-        document_check(response.body)
-      end
-
-      it "Should have valid html when in Dataset Browse Show" do 
-         controller.session[:viewing_context] = "browse"
-         get(:show, {:id=>"hydrus:admin_class1"}, :action=>"browse")
-        File.open('/tmp/out.xml', 'w') { |f| f << response.body }
-        document_check(response.body)
-            
-      end
     
     # The delete view should be the same for all data types
     it "Should have valid html when in Dataset Delete" do 

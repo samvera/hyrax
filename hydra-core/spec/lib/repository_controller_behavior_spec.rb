@@ -11,6 +11,7 @@ describe Hydra::Controller::RepositoryControllerBehavior do
   
   describe "load_document" do
     it "should load the model for the pid" do
+      Deprecation.stub(:warn)
       mock_model = mock("model")
       subject.stub(:params).and_return( {:id => "object id"} )
       ActiveFedora::Base.should_receive(:find).with("object id", :cast=>true).and_return(mock_model)
@@ -20,6 +21,7 @@ describe Hydra::Controller::RepositoryControllerBehavior do
   
   describe "format_pid" do
     it "convert pids into XHTML safe strings" do 
+     Deprecation.stub(:warn)
      pid = subject.format_pid("hydra:123")
      pid.should match(/hydra_123/)   
     end 

@@ -1,6 +1,8 @@
 # Hydra::RepositoryContollerBehavior is a controller layer mixin. It is in the controller scope: request params, session etc.
 #
 module Hydra::Controller::RepositoryControllerBehavior
+  extend Deprecation 
+  self.deprecation_horizon = "hydra-access-controls 6.0"
   
   # TODO, move these to a helper file.
   def self.included(c)
@@ -14,20 +16,24 @@ module Hydra::Controller::RepositoryControllerBehavior
   #
   # This method converts pid strings into xhtml safe IDs, since xhmlt expects namespaces to be defined. 
   # I.E. hydrus:123 = hydrus_123
+  # @deprecated
   def format_pid(pid)
     pid.gsub(":", "_")
   end
+  deprecation_deprecate :format_pid
   
   
-  
+  # @deprecated
   def solr_name(field_name, field_type = :text)
     ::ActiveFedora::SolrService.solr_name(field_name, field_type)
   end
+  deprecation_deprecate :solr_name
   
   
   # Returns a list of datastreams for download.
   # Uses user's roles and "mime_type" value in submitted params to decide what to return.
   # if you pass the optional argument of :canonical=>true, it will return the canonical datastream for this object (a single object not a hash of datastreams)
+  # @deprecated
   def downloadables(fedora_object=@fedora_object, opts={})
     if opts[:canonical]
       mime_type = opts[:mime_type] ? opts[:mime_type] : "application/pdf"
@@ -57,14 +63,20 @@ module Hydra::Controller::RepositoryControllerBehavior
     # puts "downloadables result: #{result}"
     return result    
   end
+  deprecation_deprecate :downloadables
 
   protected 
+
+  # @deprecated
   def load_document
     @document = ActiveFedora::Base.find(params[:id], :cast=>true)
   end
+  deprecation_deprecate :load_document
 
   private
   
+
+  # @deprecated
   def filter_datastreams_for_mime_type(datastreams_hash, mime_type)
     result = Hash[]
     datastreams_hash.each_pair do |dsid,ds|

@@ -14,7 +14,6 @@ module Hydra::Controller::ControllerBehavior
   included do
     # Other modules to auto-include
     include Hydra::AccessControlsEnforcement
-    include Hydra::Controller::RepositoryControllerBehavior
   
     # Catch permission errors
     rescue_from Hydra::AccessDenied do |exception|
