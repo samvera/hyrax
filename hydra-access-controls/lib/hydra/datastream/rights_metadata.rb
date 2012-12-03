@@ -192,7 +192,11 @@ module Hydra
         solr_doc
       end
 
-
+      # Completely clear the permissions
+      def clear_permissions!
+        remove_all_permissions({:person=>true})
+        remove_all_permissions({:group=>true})
+      end
 
 
       

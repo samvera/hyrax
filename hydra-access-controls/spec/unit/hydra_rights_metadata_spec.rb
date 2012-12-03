@@ -122,6 +122,22 @@ describe Hydra::Datastream::RightsMetadata do
       @sample.update_permissions( {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}} )
     end
   end
+
+  describe "clear_permissions!" do
+    before do
+      @sample.permissions({"person"=>"person_123"}, "read")
+      @sample.permissions({"person"=>"person_456"}, "edit")
+      @sample.permissions({"person"=>"person_789"}, "discover")
+      @sample.permissions({"group"=>"group_123"}, "read")
+      @sample.permissions({"group"=>"group_456"}, "edit")
+      @sample.permissions({"group"=>"group_789"}, "discover")
+    end
+    it "clears permissions" do
+      @sample.clear_permissions!
+      @sample.individuals.should == {}
+      @sample.groups.should == {}
+    end
+  end
   
   describe "update_indexed_attributes" do
     it "should update the declared properties" do
