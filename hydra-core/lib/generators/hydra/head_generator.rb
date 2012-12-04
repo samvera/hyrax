@@ -49,12 +49,16 @@ class HeadGenerator < Rails::Generators::Base
     copy_file "config/solr_mappings.yml", "config/solr_mappings.yml"
 
     # Fedora & Solr YAML files
-    copy_file "config/fedora.yml", "config/fedora.yml"
-    copy_file "config/solr.yml", "config/solr.yml"
-   
-    # Fedora & Solr Config files
-    directory "fedora_conf"
-    directory "solr_conf"
+    begin
+      invoke('active_fedora:config')
+    rescue NoMethodError
+      # Looks like we are falling back on the old way of doing this
+      copy_file "config/fedora.yml", "config/fedora.yml"
+      copy_file "config/solr.yml", "config/solr.yml"
+      # Fedora & Solr Config files
+      directory "fedora_conf"
+      directory "solr_conf"
+    end
   end
   
   # Register mimetypes required by hydra-head
