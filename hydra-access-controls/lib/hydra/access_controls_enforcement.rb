@@ -155,7 +155,7 @@ module Hydra::AccessControlsEnforcement
       raise Hydra::AccessDenied.new "You do not have sufficient privileges to create a new document."
     end
   end
-  deprecation_deprecate :enforce_edit_permissions
+  deprecation_deprecate :enforce_create_permissions
 
   ## proxies to enforce_edit_permssions.  This method is here for you to override
   def enforce_update_permissions(opts={})
