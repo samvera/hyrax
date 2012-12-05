@@ -28,7 +28,7 @@
   adminPath: RequestHandler path to manage cores.  
     If 'null' (or absent), cores will not be manageable via REST
   -->
-  <cores adminPath="/admin/cores">
+  <cores adminPath="/admin/cores" defaultCoreName="development">
     <core name="development" instanceDir="development-core" />
     <core name="test" instanceDir="test-core" />
   </cores>

@@ -30,9 +30,9 @@ class DashboardController < ApplicationController
   before_filter :enforce_viewing_context_for_show_requests, :only=>:show
 
   # This applies appropriate access controls to all solr queries (the internal method of this is overidden bellow to only include edit files)
-  DashboardController.solr_search_params_logic << :add_access_controls_to_solr_params
+  DashboardController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
-  DashboardController.solr_search_params_logic << :exclude_unwanted_models
+  DashboardController.solr_search_params_logic += [:exclude_unwanted_models]
 
   def index
     extra_head_content << view_context.auto_discovery_link_tag(:rss, sufia.url_for(params.merge(:format => 'rss')), :title => "RSS for results")
