@@ -60,4 +60,8 @@ def within_test_app
   FileUtils.cd('../..')
 end
   
-
+namespace :meme do
+  desc "configure jetty to generate checksums"
+  task :config do
+  end
+end

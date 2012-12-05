@@ -14,7 +14,6 @@
 
 class RoleMapper
   def self.roles(uid)
-  puts "**** IN ROLEMAPPER ****"
     u = User.find_by_login(uid)
     return [] unless u
     u.groups

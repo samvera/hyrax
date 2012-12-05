@@ -16,13 +16,14 @@ Gem::Specification.new do |gem|
   gem.version       = Sufia::VERSION
 
   gem.add_dependency 'rails', '~> 3.2.8'
-  gem.add_dependency 'blacklight'#, '~> 4.0.0.pre4'
+  gem.add_dependency 'blacklight', '~> 4.0.0'
   gem.add_dependency 'blacklight_advanced_search'
-  gem.add_dependency 'hydra-head', '5.0.0.pre11'
+  #gem.add_dependency 'hydra-head', '5.0.0.rc1'
+  gem.add_dependency "hydra-head", "~> 5.0.0.rc1"
   # Just for the stylesheets. This can probably be removed when we upgrade to 5.0.0 because the 
   # Hydra generator no longer adds the assets automatically.
-  gem.add_dependency 'hydra-file-access', '5.0.0.pre11'
-  gem.add_dependency 'hydra-core', '5.0.0.pre11'
+  #gem.add_dependency 'hydra-file-access', '~> 5.0.0.rc1'
+  #gem.add_dependency 'hydra-core', '~> 5.0.0.rc1'
 
   #TODO remove
   gem.add_dependency 'noid', '0.5.5'

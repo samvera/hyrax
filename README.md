@@ -40,6 +40,7 @@ This information is for people who want to modify the engine itself, not an appl
 ```
 rake sufia:fixtures:create sufia:fixtures:generate
 rake fixtures
+rake jetty:config
 rake clean spec
 bundle exec cucumber fixtures
 ```
