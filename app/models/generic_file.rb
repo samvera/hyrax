@@ -80,7 +80,6 @@ class GenericFile < ActiveFedora::Base
 
   def self.get_label(key)
      label = @@FIELD_LABEL_MAP[key]
-     puts "label = #{label}"
      label = key.gsub('_',' ').titleize if label.blank?
      return label
   end
