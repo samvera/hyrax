@@ -117,9 +117,9 @@ EOF
         "\n  # These before_filters apply the hydra access controls" +
         "\n  before_filter :enforce_show_permissions, :only=>:show" +
         "\n  # This applies appropriate access controls to all solr queries" +  
-        "\n  CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params" +  
+        "\n  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]" +  
         "\n  # This filters out objects that you want to exclude from search results, like FileAssets" +  
-        "\n  CatalogController.solr_search_params_logic << :exclude_unwanted_models" 
+        "\n  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]" 
 
       end
     else

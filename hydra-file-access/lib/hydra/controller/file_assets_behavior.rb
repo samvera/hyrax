@@ -12,7 +12,6 @@ module Hydra::Controller::FileAssetsBehavior
     include Hydra::AssetsControllerHelper
     include Hydra::Controller::UploadBehavior 
     include Hydra::Controller::RepositoryControllerBehavior
-    include Blacklight::SolrHelper
     include Hydra::SubmissionWorkflow
     include Blacklight::Configurable
     copy_blacklight_config_from(CatalogController)

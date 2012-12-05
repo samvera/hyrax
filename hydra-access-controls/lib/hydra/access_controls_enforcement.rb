@@ -176,7 +176,7 @@ module Hydra::AccessControlsEnforcement
   # Currently does nothing, instead relies on 
   # @param [Hash] opts (optional, not currently used)
   def enforce_index_permissions(opts={})
-    # Do nothing. Relies on enforce_search_permissions being included in the Controller's solr_search_params_logic
+    # Do nothing. Relies on add_access_controls_to_solr_params being in the Controller's solr_search_params_logic
     return true
   end
   
