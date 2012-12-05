@@ -55,12 +55,12 @@ describe CatalogController do
     end
     describe "facet search" do
       before do
-        xhr :get, :index, :fq=>"{!raw f=generic_file__contributor_facet}Contrib1"
+        xhr :get, :index, :q=>"{f=generic_file__contributor_facet}Contrib1"
       end
       it "should find facet files" do
         response.should be_success
         response.should render_template('catalog/index')
-        assigns(:document_list).count.should eql(2)
+        assigns(:document_list).count.should eql(1)
       end
     end
   end

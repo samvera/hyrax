@@ -6,7 +6,9 @@ gem 'sqlite3'
 
 gem 'devise'
 gem 'blacklight'
-gem 'hydra-head'
+
+#gem 'hydra-head'
+gem "hydra-head",:git =>  "https://github.com/projecthydra/hydra-head.git"
 gem 'sufia', :path=>'../../'
 gem 'rspec-rails', :group=>:test
 gem 'capybara', :group=>:test

@@ -18,7 +18,6 @@ class TestAppGenerator < Rails::Generators::Base
   def run_hydra_head_generator
     say_status("warning", "GENERATING HH", :yellow)       
 
-    generate 'hydra:head', '-f'
   end
 
   def install_redis_config
@@ -35,6 +34,11 @@ class TestAppGenerator < Rails::Generators::Base
 
   def remove_index_page
     remove_file 'public/index.html'
+  end
+  
+  def install_fedora_conf
+    copy_file 'fedora_conf/fedora.fcfg', '../../jetty/fedora/test/server/config/fedora.fcfg'
+    copy_file 'fedora_conf/fedora.fcfg', '../../jetty/fedora/default/server/config/fedora.fcfg'
   end
 
 end

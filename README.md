@@ -40,6 +40,7 @@ This information is for people who want to modify the engine itself, not an appl
 ```
 rake scholarsphere:fixtures:create scholarsphere:fixtures:generate
 rake fixtures
+rake jetty:config
 rake clean spec
 bundle exec cucumber fixtures
 ```

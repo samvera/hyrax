@@ -19,12 +19,14 @@ class DashboardController < ApplicationController
   include Blacklight::Configurable # comply with BL 3.7
   include Hydra::Controller::ControllerBehavior
   include ActionView::Helpers::DateHelper
+  include BlacklightAdvancedSearch::ParseBasicQ
+  include BlacklightAdvancedSearch::Controller
 
   # This is needed as of BL 3.7
   self.copy_blacklight_config_from(CatalogController)
 
   before_filter :authenticate_user!
-  before_filter :enforce_access_controls
+  before_filter :enforce_show_permissions, :only=>:show
   before_filter :enforce_viewing_context_for_show_requests, :only=>:show
 
   # This applies appropriate access controls to all solr queries (the internal method of this is overidden bellow to only include edit files)
