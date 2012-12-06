@@ -16,12 +16,12 @@ require 'spec_helper'
 
 describe BatchController do
   before do
-    controller.stubs(:has_access?).returns(true)
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    controller.stub(:has_access?).and_return(true)
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
-    User.any_instance.stubs(:groups).returns([])
-    controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
+    User.any_instance.stub(:groups).and_return([])
+    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
   after do
     @user.delete
@@ -44,7 +44,7 @@ describe BatchController do
     end
     it "should equeue a batch update job" do
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      Resque.expects(:enqueue).with(BatchUpdateJob, @user.user_key, params, params['generic_file']).once
+      Resque.should_receive(:enqueue).with(BatchUpdateJob, @user.user_key, params, params['generic_file']).once
       post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
     describe "when views are shown" do
@@ -113,8 +113,8 @@ describe BatchController do
   end
   describe "#edit" do
     before do
-      User.any_instance.stubs(:display_name).returns("Jill Z. User")
-      GenericFile.any_instance.stubs(:characterize_if_changed).yields
+      User.any_instance.stub(:display_name).and_return("Jill Z. User")
+      GenericFile.any_instance.stub(:characterize_if_changed).and_yield
       @b1 = Batch.new
       @b1.save
       @file = GenericFile.new(:batch=>@b1, :label=>'f1')
@@ -123,7 +123,7 @@ describe BatchController do
       @file2 = GenericFile.new(:batch=>@b1, :label=>'f2')
       @file2.apply_depositor_metadata(@user.user_key)
       @file2.save
-      controller.stubs(:params).returns({id:@b1.id})
+      controller.stub(:params).and_return({id:@b1.id})
     end
     after do
       @b1.delete

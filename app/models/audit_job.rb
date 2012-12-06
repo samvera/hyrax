@@ -19,7 +19,7 @@ class AuditJob
   FAIL = 'Failing Audit Run'
 
   def self.perform(generic_file_id, datastream_id, version_id)
-    generic_file = GenericFile.find(generic_file_id, :cast => true)
+    generic_file = GenericFile.find(generic_file_id)
     #logger.info "GF is #{generic_file.pid}"
     if generic_file
       datastream = generic_file.datastreams[datastream_id]

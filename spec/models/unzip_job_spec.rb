@@ -17,8 +17,7 @@ require 'spec_helper'
 describe UnzipJob do
   before(:all) do
     @batch = Batch.create
-    GenericFile.any_instance.expects(:characterize_if_changed).at_least_once.yields
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @generic_file = GenericFile.new(:batch=>@batch)
     @generic_file.add_file_datastream(File.new(fixture_path + '/icons.zip'), :dsid=>'content')
     @generic_file.apply_depositor_metadata('mjg36')
@@ -32,9 +31,12 @@ describe UnzipJob do
 
   it "should create GenericFiles for each file in the zipfile" do
     one = GenericFile.new
+    #one.should_receive(:characterize_if_changed)
     two = GenericFile.new
+    #two.should_receive(:characterize_if_changed)
     three = GenericFile.new
-    GenericFile.expects(:new).times(3).returns(one, two, three)
+    #three.should_receive(:characterize_if_changed)
+    GenericFile.should_receive(:new).exactly(3).times.and_return(one, two, three)
     Resque.enqueue(UnzipJob, @generic_file.pid)
 
     one.content.size.should == 13024 #bread

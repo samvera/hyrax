@@ -18,8 +18,8 @@ describe AuditJob do
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
     @inbox = @user.mailbox.inbox
-    GenericFile.any_instance.expects(:characterize_if_changed).yields
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.apply_depositor_metadata(@user.user_key)
     @file.save
@@ -33,7 +33,7 @@ describe AuditJob do
   end
   describe "passing audit" do
     it "should not send passing mail" do
-      ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(true)
+      ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(true)
       Resque.enqueue(AuditJob, @file.pid, @ds[0], @ds[1].versionID)
       @inbox = @user.mailbox.inbox
       @inbox.count.should == 0
@@ -41,7 +41,7 @@ describe AuditJob do
   end
   describe "failing audit" do
     it "should send failing mail" do
-      ActiveFedora::RelsExtDatastream.any_instance.stubs(:dsChecksumValid).returns(false)
+      ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(false)
       Resque.enqueue(AuditJob, @file.pid, @ds[0], @ds[1].versionID)
       @inbox = @user.mailbox.inbox
       @inbox.count.should == 1

@@ -16,22 +16,22 @@ require 'spec_helper'
 
 describe 'host_to_vhost' do
   it "should return the proper vhost on fedora1test" do
-    Socket.stubs(:gethostname).returns('fedora1test')
+    Socket.stub(:gethostname).and_return('fedora1test')
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[0].should == 'scholarsphere-integration.dlt.psu.edu-8443'
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[1].should == 'https://scholarsphere-integration.dlt.psu.edu:8443/'
   end
   it "should return the proper vhost on fedora2test" do
-    Socket.stubs(:gethostname).returns('fedora2test')
+    Socket.stub(:gethostname).and_return('fedora2test')
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[0].should == 'scholarsphere-test.dlt.psu.edu'
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[1].should == 'https://scholarsphere-test.dlt.psu.edu/'
   end
   it "should return the proper vhost on ss1stage" do
-    Socket.stubs(:gethostname).returns('ss1stage')
+    Socket.stub(:gethostname).and_return('ss1stage')
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[0].should == 'scholarsphere-staging.dlt.psu.edu'
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[1].should == 'https://scholarsphere-staging.dlt.psu.edu/'
   end
   it "should return the proper vhost on dev" do
-    Socket.stubs(:gethostname).returns('some1host')
+    Socket.stub(:gethostname).and_return('some1host')
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[0].should == 'some1host'
     Sufia::HttpHeaderAuth.get_vhost_by_host(Sufia.config)[1].should == 'https://some1host/'
   end

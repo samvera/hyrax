@@ -16,7 +16,7 @@ require 'spec_helper'
 
 describe GenericFile do
   before(:each) do
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.apply_depositor_metadata('jcoyne')
   end
@@ -131,7 +131,7 @@ describe GenericFile do
     end
     describe "that have been saved" do
       before(:each) do
-        Resque.expects(:enqueue).once.returns(true)
+        Resque.should_receive(:enqueue).once.and_return(true)
       end
       after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
@@ -227,18 +227,18 @@ describe GenericFile do
     describe "with an image that doesn't get resized" do
       before do
         @f = GenericFile.new
-        @f.stubs(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
+        @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
         @f.add_file_datastream(File.new("#{fixture_path}/world.png"), :dsid=>'content')
         @f.apply_depositor_metadata('mjg36')
         @f.save
         @mock_image = mock("image", :from_blob=>true)
-        Magick::ImageList.expects(:new).returns(@mock_image)
+        Magick::ImageList.should_receive(:new).and_return(@mock_image)
       end
       after do
         @f.delete
       end
       it "should scale the thumbnail to original size" do
-        @mock_image.expects(:scale).with(50, 50).returns(stub(:to_blob=>'fake content'))
+        @mock_image.should_receive(:scale).with(50, 50).and_return(stub(:to_blob=>'fake content'))
         @f.create_thumbnail
         @f.content.changed?.should be_false
         @f.thumbnail.content.should == 'fake content'
@@ -246,48 +246,81 @@ describe GenericFile do
     end
   end
   describe "audit" do
-    before(:all) do
-      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      GenericFile.any_instance.stubs(:characterize).returns(true)
-      f = GenericFile.new
+    before(:each) do
+      u = FactoryGirl.create(:user)
+      f = GenericFile.new(:terms_of_service=>'1')
+      f.stub(:characterize).and_return(true)
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-      f.apply_depositor_metadata('mjg36')
-      f.save
+      f.apply_depositor_metadata(u.user_key)
+      f.save!
       @f = GenericFile.find(f.pid)
-      @datastreams = [FileContentDatastream, ActiveFedora::RelsExtDatastream,
-                      ActiveFedora::Datastream, PropertiesDatastream,
-                      ParanoidRightsDatastream]
+      @f.stub(:characterize).and_return(true)
     end
-    after(:all) do
-      @f.delete
-    end
-    it "should schedule a audit job" do
-      @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
-      ChecksumAuditLog.stubs(:create!).returns(true)
-      Resque.expects(:enqueue).times(@datastreams.count)
+    it "should schedule a audit job for each datastream" do
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'DC', "DC1.0")
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'RELS-EXT', "RELS-EXT.0")
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'rightsMetadata', "rightsMetadata.0")
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'properties', "properties.0")
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'content', "content.0")
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'characterization', "characterization.0")
+      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'thumbnail', "thumbnail.0")
       @f.audit!
     end
     it "should log a failing audit" do
-      @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(false) }
+      @f.datastreams.each { |ds| ds.stub(:dsChecksumValid).and_return(false) }
+      GenericFile.stub(:run_audit).and_return(stub(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
       @f.audit!
       ChecksumAuditLog.all.all? { |cal| cal.pass == 0 }.should be_true
     end
     it "should log a passing audit" do
-      @datastreams.each { |ds| ds.any_instance.stubs(:dsChecksumValid).returns(true) }
+      GenericFile.stub(:run_audit).and_return(stub(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
       @f.audit!
       ChecksumAuditLog.all.all? { |cal| cal.pass == 1 }.should be_true
     end
+
     it "should return true on audit_status" do
       @f.audit_stat.should be_true
     end
   end
+
+  describe "run_audit" do
+    before do
+      @f = GenericFile.new(:terms_of_service => '1')
+      @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      @f.apply_depositor_metadata('mjg36')
+      @f.save!
+      @version = @f.datastreams['content'].versions.first
+      @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
+      @new = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>0)
+    end
+    it "should not prune failed audits" do
+      @version.should_receive(:dsChecksumValid).and_return(true)
+      GenericFile.run_audit(@version)
+
+      @version.should_receive(:dsChecksumValid).and_return(false)
+      GenericFile.run_audit(@version)
+
+      @version.should_receive(:dsChecksumValid).and_return(false)
+      GenericFile.run_audit(@version)
+
+      @version.should_receive(:dsChecksumValid).and_return(true)
+      GenericFile.run_audit(@version)
+
+      @version.should_receive(:dsChecksumValid).and_return(false)
+      GenericFile.run_audit(@version)
+
+      @f.logs(@version.dsid).map(&:pass).should == [0, 1, 0, 0, 1, 0, 1]
+    end
+
+  end
+
   describe "save" do
     after(:each) do
       @file.delete
     end
     it "should schedule a characterization job" do
       @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-      Resque.expects(:enqueue).once
+      Resque.should_receive(:enqueue).once
       @file.save
     end
   end
@@ -334,8 +367,8 @@ describe GenericFile do
       @f1.save
       @f2.save
       mock_batch = mock("batch")
-      mock_batch.stubs(:generic_files => [@f1, @f2])
-      @f1.expects(:batch).returns(mock_batch)
+      mock_batch.stub(:generic_files => [@f1, @f2])
+      @f1.should_receive(:batch).and_return(mock_batch)
       @f1.related_files.should == [@f2]
     end
     it "should work when batch is not defined by querying solr" do
@@ -343,7 +376,7 @@ describe GenericFile do
       @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
       @f1.save
       @f2.save
-      @f1.expects(:batch).twice.raises(NoMethodError)
+      @f1.should_receive(:batch).twice.and_raise(NoMethodError)
       lambda { @f1.related_files }.should_not raise_error
       @f1.related_files.should == [@f2]
     end
@@ -352,7 +385,7 @@ describe GenericFile do
       @f2.add_relationship(:is_part_of, "info:fedora/#{@batch_id}")
       @f1.save
       @f2.save
-      @f1.expects(:batch).twice.raises(NoMethodError)
+      @f1.should_receive(:batch).twice.and_raise(NoMethodError)
       lambda { @f1.related_files }.should_not raise_error
       @f1.related_files.should == [@f2]
     end
@@ -362,16 +395,16 @@ describe GenericFile do
       @f1.save
       @f2.save
       mock_batch = mock("batch")
-      mock_batch.stubs(:generic_files).raises(NoMethodError)
-      @f1.expects(:batch).twice
+      mock_batch.stub(:generic_files).and_raise(NoMethodError)
+      @f1.should_receive(:batch).twice
       lambda { @f1.related_files }.should_not raise_error
       @f1.related_files.should == [@f2]
     end
   end
   describe "noid integration" do
     before(:all) do
-      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      GenericFile.any_instance.expects(:characterize_if_changed).yields
+      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
+      GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
       @new_file = GenericFile.new(:pid => 'ns:123')
       @new_file.apply_depositor_metadata('mjg36')
       @new_file.save
@@ -399,17 +432,17 @@ describe GenericFile do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should not be triggered unless the content ds is changed" do
-      Resque.expects(:enqueue).once
+      Resque.should_receive(:enqueue).once
       @file.content.content = "hey"
       @file.save
       @file.related_url = 'http://example.com'
-      Resque.expects(:enqueue).never
+      Resque.should_receive(:enqueue).never
       @file.save
       @file.delete
     end
     describe "after job runs" do
       before(:all) do
-        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         myfile = GenericFile.new
         myfile.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
@@ -493,7 +526,7 @@ describe GenericFile do
   describe "permissions validation" do
     context "depositor must have edit access" do
       before(:each) do
-        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @rightsmd = @file.rightsMetadata
@@ -593,7 +626,7 @@ describe GenericFile do
     end
     context "public must not have edit access" do
       before(:each) do
-        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @file.read_groups = ['public']
@@ -694,7 +727,7 @@ describe GenericFile do
     end
     context "registered must not have edit access" do
       before(:each) do
-        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @file.read_groups = ['registered']
@@ -795,7 +828,7 @@ describe GenericFile do
     end
     context "everything is copacetic" do
       before(:each) do
-        GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @file.read_groups = ['public']

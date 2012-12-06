@@ -22,7 +22,7 @@ describe MailboxController do
     @subject = "Test Subject"
     @rec1 = @another_user.send_message(@user, @message, @subject)
     @rec2 = @user.send_message(@another_user, @message, @subject)
-    MailboxController.any_instance.stubs(:authenticate_user!).returns(true)
+    MailboxController.any_instance.stub(:authenticate_user!).and_return(true)
     sign_in @user
   end
   after(:each) do
@@ -31,7 +31,7 @@ describe MailboxController do
   end
   describe "#index" do
     it "should show message" do
-      User.any_instance.expects(:mark_as_read)
+      User.any_instance.should_receive(:mark_as_read)
       get :index
       response.should be_success
       assigns[:messages].first.last_message.body.should == 'Test Message'

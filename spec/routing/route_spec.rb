@@ -172,17 +172,17 @@ describe 'Routes' do
   #   before do
   #     @routes = Resque::Server.routes
   #     warden_mock = mock('warden')
-  #     warden_mock.stubs(:user).returns(FactoryGirl.find_or_create(:archivist))
-  #     ActionDispatch::Request.any_instance.stubs(:env).returns({'warden': warden_mock})
+  #     warden_mock.stub(:user).returns(FactoryGirl.find_or_create(:archivist))
+  #     ActionDispatch::Request.any_instance.stub(:env).returns({'warden': warden_mock})
   #   end
 
     it "should route to queues if group is set properly" #do
-  #     User.any_instance.stubs(:groups).returns(['umg/up.dlt.scholarsphere-admin'])
+  #     User.any_instance.stub(:groups).returns(['umg/up.dlt.scholarsphere-admin'])
   #     { get: '/admin/queues' }.should route_to('resque/server#index')
   #   end
 
     it "should *not* route to queues if group is not set properly" #do
-  #     User.any_instance.stubs(:groups).returns(['something'])
+  #     User.any_instance.stub(:groups).returns(['something'])
   #     { get: '/admin/queues' }.should_not route_to('resque/server#index')
   #   end
   end

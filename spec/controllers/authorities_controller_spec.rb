@@ -23,7 +23,7 @@ describe AuthoritiesController do
                    {:label => "Edgar", :uri => "http://example.org/edga"}, 
                    {:label => "Eddie", :uri => "http://example.org/edd"},
                    {:label => "Economics", :uri => "http://example.org/eco"}]
-      LocalAuthority.expects(:entries_by_term).returns(mock_hits)
+      LocalAuthority.should_receive(:entries_by_term).and_return(mock_hits)
       xhr :get, :query, :model=>"generic_files", :term=>"subject", :q=>"E"
       response.should be_success
       JSON.parse(response.body).count.should == 6

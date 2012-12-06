@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe SingleUseLinkController do
   before(:all) do
-    User.any_instance.stubs(:groups).returns([])
+    User.any_instance.stub(:groups).and_return([])
 
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
     @file.set_title_and_label('world.png')
@@ -23,17 +23,17 @@ describe SingleUseLinkController do
     @file2.delete
   end
   before do
-    controller.stubs(:has_access?).returns(true)
-    controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
+    controller.stub(:has_access?).and_return(true)
+    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
   describe "logged in user" do
     before do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       @now = DateTime.now
-      DateTime.stubs(:now).returns(@now)
+      DateTime.stub(:now).and_return(@now)
       @hash = "sha2hash"+@now.to_f.to_s 
-      Digest::SHA2.expects(:new).returns(@hash)
+      Digest::SHA2.should_receive(:new).and_return(@hash)
     end
     after do
       sign_out @user
@@ -41,7 +41,7 @@ describe SingleUseLinkController do
       @user.delete
     end
     describe "GET 'generate_download'" do
-      it "returns http success" do
+      it "and_return http success" do
         get 'generate_download', id:@file.pid
         response.should be_success
         assigns[:link].should == @routes.url_helpers.download_single_use_link_path(@hash)
@@ -49,7 +49,7 @@ describe SingleUseLinkController do
     end
   
     describe "GET 'generate_show'" do
-      it "returns http success" do
+      it "and_return http success" do
         get 'generate_show', id:@file.pid
         response.should be_success
         assigns[:link].should == @routes.url_helpers.show_single_use_link_path(@hash)
@@ -58,14 +58,14 @@ describe SingleUseLinkController do
   end
   describe "unkown user" do
     describe "GET 'generate_download'" do
-      it "returns http failure" do
+      it "and_return http failure" do
         get 'generate_download', id:@file.pid
         response.should_not be_success
       end
     end
   
     describe "GET 'generate_show'" do
-      it "returns http failure" do
+      it "and_return http failure" do
         get 'generate_show', id:@file.pid
         response.should_not be_success
       end
@@ -85,35 +85,35 @@ describe SingleUseLinkController do
       @user.delete
     end
     describe "GET 'download'" do
-      it "returns http success" do
-        controller.stubs(:render)
+      it "and_return http success" do
+        controller.stub(:render)
         expected_content = ActiveFedora::Base.find(@file.pid).content.content
-        controller.expects(:send_data).with(expected_content, {:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
+        controller.should_receive(:send_data).with(expected_content, {:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
         get :download, id:@dhash 
         response.should be_success
       end
-      it "returns 404 on second attempt" do
+      it "and_return 404 on second attempt" do
         get :download, id:@dhash 
         response.should be_success
         lambda {get :download, id:@dhash}.should raise_error ActionController::RoutingError
       end
-      it "returns 404 on attempt to get download with show" do
+      it "and_return 404 on attempt to get download with show" do
         lambda {get :download, id:@shash}.should raise_error ActionController::RoutingError
       end
     end
 
     describe "GET 'show'" do
-      it "returns http success" do
+      it "and_return http success" do
         get 'show', id:@shash
         response.should be_success
         assigns[:generic_file].pid.should == @file.pid
       end
-      it "returns 404 on second attempt" do
+      it "and_return 404 on second attempt" do
         get :show, id:@shash 
         response.should be_success
         lambda {get :show, id:@shash}.should raise_error ActionController::RoutingError
       end
-      it "returns 404 on attempt to get show with download" do
+      it "and_return 404 on attempt to get show with download" do
         lambda {get :show, id:@dhash}.should raise_error ActionController::RoutingError
       end
     end

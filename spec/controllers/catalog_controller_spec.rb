@@ -16,23 +16,23 @@ require 'spec_helper'
 
 describe CatalogController do
   before do
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-    GenericFile.any_instance.stubs(:characterize_if_changed).yields
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
+    GenericFile.any_instance.stub(:characterize_if_changed).and_yield
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
-    User.any_instance.stubs(:groups).returns([])
-    controller.stubs(:clear_session_user) ## Don't clear out the authenticated session
+    User.any_instance.stub(:groups).and_return([])
+    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
   after do
     @user.delete
   end
   describe "#index" do
     before (:all) do
-      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', read_groups:['public'])
+      GenericFile.find_each { |f| f.delete }
+      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', read_groups:['public'], :terms_of_service=>'1')
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
-      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', read_groups:['public'])
+      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', read_groups:['public'], :terms_of_service=>'1')
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
     end
@@ -69,19 +69,19 @@ describe CatalogController do
     before do
       @gf1 = GenericFile.new(title:'Generic File 1', contributor:'contributor 1', resource_type:'type 1', read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
-      @gf1.save
+      @gf1.save!
       sleep 1 # make sure next file is not at the same time compare
       @gf2 = GenericFile.new(title:'Generic File 2', contributor:'contributor 2', resource_type:'type 2', read_groups:['public'])
       @gf2.apply_depositor_metadata('mjg36')
-      @gf2.save
+      @gf2.save!
       sleep 1 # make sure next file is not at the same time compare
       @gf3 = GenericFile.new(title:'Generic File 3', contributor:'contributor 3', resource_type:'type 3', read_groups:['public'])
       @gf3.apply_depositor_metadata('mjg36')
-      @gf3.save
+      @gf3.save!
       sleep 1 # make sure next file is not at the same time compare
       @gf4 = GenericFile.new(title:'Generic File 4', contributor:'contributor 4', resource_type:'type 4', read_groups:['public'])
       @gf4.apply_depositor_metadata('mjg36')
-      @gf4.save
+      @gf4.save!
       xhr :get, :recent
     end
 

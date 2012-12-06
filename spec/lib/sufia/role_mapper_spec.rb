@@ -17,7 +17,7 @@ require 'spec_helper'
 describe RoleMapper do
   before do
     @user = FactoryGirl.create(:user)
-    User.any_instance.stubs(:groups).returns(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
+    User.any_instance.stub(:groups).and_return(["umg/up.dlt.gamma-ci", "umg/up.dlt.redmine"])
   end
   subject {::RoleMapper.roles(@user.user_key)}
   it "should return LDAP groups" do

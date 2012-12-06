@@ -20,7 +20,6 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
-require 'mocha'
 
 Resque.inline = Rails.env.test?
 
@@ -32,12 +31,6 @@ FactoryGirl.find_definitions
 #Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|
-  # == Mock Framework
-  #
-  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  config.mock_with :mocha
-
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = File.expand_path("../fixtures", __FILE__)
 
