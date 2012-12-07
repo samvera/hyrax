@@ -631,7 +631,6 @@ class GenericFile < ActiveFedora::Base
   end
 
   def self.audit(version, force = false)
-    #logger.debug "***AUDIT*** log for #{version.inspect}"
     latest_audit = self.find(version.pid).logs(version.dsid).first
     unless force
       return latest_audit unless GenericFile.needs_audit?(version, latest_audit)

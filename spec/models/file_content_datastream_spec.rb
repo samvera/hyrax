@@ -16,17 +16,17 @@ require 'spec_helper'
 
 describe FileContentDatastream do
   before do
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @subject = FileContentDatastream.new(nil, 'content')
-    @subject.stubs(:pid=>'my_pid')
-    @subject.stubs(:dsVersionID=>'content.7')
+    @subject.stub(:pid=>'my_pid')
+    @subject.stub(:dsVersionID=>'content.7')
   end
   describe "version control" do
     before(:all) do
-      GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
       f = GenericFile.new
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-      f.expects(:characterize_if_changed).yields
+      f.should_receive(:characterize_if_changed).and_yield
       f.apply_depositor_metadata('mjg36')
       f.save
       @file = GenericFile.find(f.pid)
@@ -52,7 +52,7 @@ describe FileContentDatastream do
     describe "add a version" do
       before(:all) do
         @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-        @file.expects(:characterize_if_changed).yields
+        @file.should_receive(:characterize_if_changed).and_yield
         @file.save
       end
       it "should return two versions" do
@@ -73,25 +73,25 @@ describe FileContentDatastream do
     end
     it "should return an xml document" do
       repo = mock("repo")
-      repo.stubs(:config=>{})
+      repo.stub(:config=>{})
       f = File.new(fixture_path + '/world.png')
       content = mock("file")
-      content.stubs(:read=>f.read)
-      content.stubs(:rewind=>f.rewind)
-      @subject.expects(:content).times(5).returns(f)
+      content.stub(:read=>f.read)
+      content.stub(:rewind=>f.rewind)
+      @subject.should_receive(:content).exactly(5).times.and_return(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should return expected results when invoked via HTTP" do
       repo = mock("repo")
-      repo.stubs(:config=>{})
+      repo.stub(:config=>{})
       f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(fixture_path + '/world.png'),
                                                  :filename => 'world.png')
       content = mock("file")
-      content.stubs(:read=>f.read)
-      content.stubs(:rewind=>f.rewind)
-      @subject.expects(:content).times(5).returns(f)
+      content.stub(:read=>f.read)
+      content.stub(:rewind=>f.rewind)
+      @subject.should_receive(:content).exactly(5).times.and_return(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:identity/@mimetype', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).first.value.should == 'image/png'

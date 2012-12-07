@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SingleUseLink do
   before (:all) do
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
     @file.apply_depositor_metadata('mjg36')
@@ -16,9 +16,9 @@ describe SingleUseLink do
   describe "create" do
      before do
         @now = DateTime.now
-        DateTime.stubs(:now).returns(@now)
+        DateTime.stub(:now).and_return(@now)
         @hash = "sha2hash"+@now.to_f.to_s
-        Digest::SHA2.expects(:new).returns(@hash)
+        Digest::SHA2.should_receive(:new).and_return(@hash)
         
      end
      it "should create show link" do

@@ -17,8 +17,8 @@ require 'spec_helper'
 describe Batch do
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
-    GenericFile.any_instance.expects(:characterize_if_changed).yields
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.apply_depositor_metadata('mjg36')
     @file.save
@@ -51,7 +51,7 @@ describe Batch do
   end
   it "should be able to have more than one file" do
     # not sure why this is needed here too, but when the test runs alone it is not needed but when run in the group it is needed
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     #logger.info "before create"
     gf = GenericFile.new
     #logger.info "after create"
@@ -71,14 +71,14 @@ describe Batch do
   describe "find_or_create" do
     describe "when the object exists" do
       it "should find batch instead of creating" do
-        Batch.expects(:create).never
+        Batch.should_receive(:create).never
         @b2 = Batch.find_or_create( @batch.pid)
       end
     end
     describe "when the object does not exist" do
       it "should create" do
         lambda {Batch.find("batch:123")}.should raise_error(ActiveFedora::ObjectNotFoundError)
-        Batch.expects(:create).once.returns("the batch")
+        Batch.should_receive(:create).once.and_return("the batch")
         @b2 = Batch.find_or_create( "batch:123")
         @b2.should == "the batch"
       end

@@ -3,9 +3,8 @@ source 'http://rubygems.org'
 # Please see scholarsphere.gemspec for dependency information.
 gemspec
 
-#gem 'hydra-batch-edit', :git=>'git://github.com/psu-stewardship/hydra-batch-edit.git', :ref => 'b753c7aeac'
 
-gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
+#gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 
 gem "hydra-head",:git =>  "https://github.com/projecthydra/hydra-head.git"
 
@@ -15,12 +14,11 @@ group :development, :test do
   gem 'unicorn-rails'
   gem "debugger"
   gem 'activerecord-import'
-  gem "rails_indexes", :git => "git://github.com/warpc/rails_indexes.git", :ref => '4a550270'
+#  gem "rails_indexes", :git => "git://github.com/warpc/rails_indexes.git", :ref => '4a550270'
   gem 'selenium-webdriver'
   gem 'headless'
   gem 'rspec-rails', '>= 2.11.0'
   gem 'ruby-prof'
-  gem 'mocha', '0.12.4', :require => false
   gem 'cucumber-rails', '~> 1.0', :require => false
   gem 'database_cleaner'
   gem 'capybara'

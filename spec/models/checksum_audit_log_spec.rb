@@ -16,21 +16,21 @@ require 'spec_helper'
 
 describe ChecksumAuditLog do
   before(:all) do
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
-    GenericFile.any_instance.stubs(:characterize).returns(true) # stub out characterization so it does not get audited
-    @f = GenericFile.new
+    @f = GenericFile.new(:terms_of_service => '1')
     @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
     @f.apply_depositor_metadata('mjg36')
-    @f.save
+    @f.save!
     @version = @f.datastreams['content'].versions.first
     @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
     @new = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>0)
-    @different_ds = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>'descMetadata', :version=>'descMetadata.0', :pass=>0)
-    @different_pid = ChecksumAuditLog.create(:pid=>"other_pid", :dsid=>'content', :version=>'content.0', :pass=>0)
   end
   after(:all) do
     @f.delete
     ChecksumAuditLog.all.each(&:delete)
+  end
+  before(:each) do
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
+    GenericFile.any_instance.stub(:characterize).and_return(true) # stub out characterization so it does not get audited
   end
   it "should return a list of logs for this datastream sorted by date descending" do
     @f.logs(@version.dsid).should == [@new, @old]
@@ -46,18 +46,5 @@ describe ChecksumAuditLog do
     lambda { ChecksumAuditLog.find(success3.id)}.should raise_exception ActiveRecord::RecordNotFound
     ChecksumAuditLog.find(success1.id).should_not be_nil
     @f.logs(@version.dsid).should == [success1, @new, @old]
-  end
-  it "should not prune failed audits" do
-    FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
-    @f.audit!
-    FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-    @f.audit!
-    FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-    @f.audit!
-    FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(true)
-    @f.audit!
-    FileContentDatastream.any_instance.expects(:dsChecksumValid).returns(false)
-    @f.audit!
-    @f.logs(@version.dsid).map(&:pass).should == [0, 1, 0, 0, 1, 0, 1]
   end
 end

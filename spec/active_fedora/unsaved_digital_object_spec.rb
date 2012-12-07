@@ -21,7 +21,7 @@ describe ActiveFedora::UnsavedDigitalObject do
     Sufia::IdService.valid?(@obj.pid).should be_true
   end
   it "should not use Fedora's pid service" do
-    ActiveFedora::RubydoraConnection.any_instance.expects(:nextid).never
+    ActiveFedora::RubydoraConnection.any_instance.should_receive(:nextid).never
     @obj = ActiveFedora::UnsavedDigitalObject.new(ActiveFedora::Base, 'id')
     @obj.save
   end
@@ -39,9 +39,9 @@ describe ActiveFedora::UnsavedDigitalObject do
   it "should not assign a pid that already exists in Fedora" do
     mock_pid = 'scholarsphere:ef12ef12f'
     unique_pid = 'scholarsphere:bb22bb22b'
-    Sufia::IdService.stubs(:next_id).returns(mock_pid, unique_pid)
-    ActiveFedora::Base.stubs(:exists?).with(mock_pid).returns(true)
-    ActiveFedora::Base.stubs(:exists?).with(unique_pid).returns(false)
+    Sufia::IdService.stub(:next_id).and_return(mock_pid, unique_pid)
+    ActiveFedora::Base.stub(:exists?).with(mock_pid).and_return(true)
+    ActiveFedora::Base.stub(:exists?).with(unique_pid).and_return(false)
     @obj = ActiveFedora::UnsavedDigitalObject.new(ActiveFedora::Base, 'id')
     pid = @obj.assign_pid
     @obj.pid.should == unique_pid

@@ -30,7 +30,7 @@ describe SessionsController do
   describe "#destroy" do
     it "should redirect to the central logout page and destroy the cookie" do
       request.env['COSIGN_SERVICE'] = 'cosign-gamma-ci.dlt.psu.edu'
-      cookies.expects(:delete).with('cosign-gamma-ci.dlt.psu.edu')
+      cookies.should_receive(:delete).with('cosign-gamma-ci.dlt.psu.edu')
       get :destroy
       response.should redirect_to Sufia::Engine.config.logout_url
     end

@@ -16,7 +16,7 @@ require 'spec_helper'
 
 describe BatchUpdateJob do
   before(:all) do
-    GenericFile.any_instance.stubs(:terms_of_service).returns('1')
+    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     @batch = Batch.new
     @batch.save
@@ -36,8 +36,8 @@ describe BatchUpdateJob do
   end
   describe "failing update" do
     it "should check permissions for each file before updating" do
-      BatchUpdateJob.any_instance.stubs(:get_permissions_solr_response_for_doc_id).returns(["","mock solr permissions"])       
-      User.any_instance.expects(:can?).with(:edit, "mock solr permissions").times(2)
+      BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
+      User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
       BatchUpdateJob.perform(@user.user_key, params, params[:generic_file])
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload permission denied"
@@ -47,10 +47,10 @@ describe BatchUpdateJob do
   end
   describe "passing update" do
     it "should log a content update event" do
-      BatchUpdateJob.any_instance.stubs(:get_permissions_solr_response_for_doc_id).returns(["","mock solr permissions"])       
-      User.any_instance.expects(:can?).with(:edit, "mock solr permissions").times(2).returns(true)
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.user_key).once
-      Resque.expects(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.user_key).once
+      BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
+      User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times.and_return(true)
+      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.user_key).once
+      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.user_key).once
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
       BatchUpdateJob.perform(@user.user_key, params, params[:generic_file])
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload complete"
