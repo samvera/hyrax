@@ -38,9 +38,16 @@ and add the following to application.js
 This information is for people who want to modify the engine itself, not an application that uses the engine:
 ### Create fixtures
 ```
+# start jetty
+git submodule init && git submodule update
+rake jetty:config
+rake jetty:start
+
+# load sufia fixtures
 rake sufia:fixtures:create sufia:fixtures:generate
 rake fixtures
-rake jetty:config
+
+# run the tests
 rake clean spec
 bundle exec cucumber fixtures
 ```
