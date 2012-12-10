@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'hydra-file-access'
-
 # @example
 #   I log in as "archivist1@example.com"
 # @example
