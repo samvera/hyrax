@@ -6,7 +6,7 @@ h2. Installation
 
 The easiest way to make your code use this gem is to run the hydra generator that comes with the hydra-head gem.  That will set up everything you need:
 
-* adds ```include Hydra::User``` to your User class
+* adds _include Hydra::User_ to your User class
 * modifies the filters in your CatalogController class to inject access controls into solr queries
 * adds the YAML files that are used by the default RoleMapper class
 * adds section to hydra_config initializer that sets names used to look up enforcement info in solr
