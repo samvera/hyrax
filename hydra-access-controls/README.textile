@@ -4,17 +4,12 @@ The hydra-access-controls gem provides access controls models and functionality 
 
 h2. Installation
 
-Add this line to your application's Gemfile:
+The easiest way to make your code use this gem is to run the hydra generator that comes with the hydra-head gem.  That will set up everything you need:
 
-    gem 'hydra-access-controls'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install hydra-access-controls
+* adds ```include Hydra::User``` to your User class
+* modifies the filters in your CatalogController class to inject access controls into solr queries
+* adds the YAML files that are used by the default RoleMapper class
+* adds section to hydra_config initializer that sets names used to look up enforcement info in solr
 
 h2. Usage
 
