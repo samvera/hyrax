@@ -23,10 +23,6 @@ module Sufia::Controller
 
   end
 
-  def layout_name
-    'hydra-head'
-  end
-
   def current_ability
     current_user ? current_user.ability : super
   end
