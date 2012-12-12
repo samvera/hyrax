@@ -5,10 +5,6 @@ gemspec
 
 
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
-
-gem "hydra-head",:git =>  "https://github.com/projecthydra/hydra-head.git"
-
-
 group :development, :test do
   gem 'sqlite3'
   gem 'unicorn-rails'
