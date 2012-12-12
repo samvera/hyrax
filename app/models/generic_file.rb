@@ -114,24 +114,24 @@ class GenericFile < ActiveFedora::Base
         save_tries += 1
         logger.warn "Retry Solr caught RSOLR error on #{self.pid}: #{error.inspect}"
         # fail for good if the tries is greater than 3
-        rescue_action_without_handler(error) if save_tries >=3
+        raise if save_tries >=3
         sleep 0.01
         retry      
       rescue  ActiveResource::ResourceConflict => error
         conflict_tries += 1
         logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
-        rescue_action_without_handler(error) if conflict_tries >=10
+        raise if conflict_tries >=10
         sleep 0.01
         retry
       rescue =>error
         if (error.to_s.downcase.include? "conflict")
           conflict_tries += 1
           logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
-          rescue_action_without_handler(error) if conflict_tries >=10
+          raise if conflict_tries >=10
           sleep 0.01
           retry
         else
-          rescue_action_without_handler(error)
+          raise
         end          
       
       end
