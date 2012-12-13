@@ -20,6 +20,8 @@ module Sufia
   class Engine < ::Rails::Engine
     engine_name 'sufia'
 
+    config.autoload_paths << File.expand_path("../sufia/jobs", __FILE__)
+    
     initializer "Patch active_fedora" do
       require 'sufia/active_fedora/redis'
     end
