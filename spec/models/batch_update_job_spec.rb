@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # Copyright © 2012 The Pennsylvania State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,8 +37,8 @@ describe BatchUpdateJob do
     it "should check permissions for each file before updating" do
       BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
       User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times
-      params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      BatchUpdateJob.new(@user.user_key, params, params[:generic_file]).run
+       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}.with_indifferent_access
+      BatchUpdateJob.new(@user.user_key, params).run
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload permission denied"
       @user.mailbox.inbox[0].messages[0].move_to_trash @user
       #b = Batch.find(@batch.pid)
@@ -53,8 +54,8 @@ describe BatchUpdateJob do
       s2 = stub('two')
       ContentUpdateEventJob.should_receive(:new).with(@file2.pid, @user.user_key).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
-      params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      BatchUpdateJob.new(@user.user_key, params, params[:generic_file]).run
+      params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}.with_indifferent_access
+      BatchUpdateJob.new(@user.user_key, params).run
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload complete"
       @user.mailbox.inbox[0].messages[0].move_to_trash @user
     end

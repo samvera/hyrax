@@ -259,18 +259,17 @@ class GenericFile < ActiveFedora::Base
     end
   end
 
-  def set_visibility(params)
+  def set_visibility(visibility)
     # only set explicit permissions
-    if params[:visibility] == "open"
+    case visibility
+    when "open"
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "read")
-    elsif params[:visibility] == "psu"
+    when "psu"
       self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "read")
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-    elsif params[:visibility] == "restricted" 
+    when "restricted" 
       self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "none")
       self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-      #params[:generic_file][:permissions][:group][:public] = "none"
-      #params[:generic_file][:permissions][:group][:registered] = "none"
     end
   end
 

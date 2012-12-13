@@ -42,7 +42,7 @@ class BatchEditsController < ApplicationController
   def update_document(obj)
       super
       obj.date_modified = Time.now.ctime
-      obj.set_visibility(params)
+      obj.set_visibility(params[:visibility])
   end
     
    def update

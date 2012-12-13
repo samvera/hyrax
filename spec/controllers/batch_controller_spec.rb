@@ -45,7 +45,7 @@ describe BatchController do
     it "should equeue a batch update job" do
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
       s1 = stub('one')
-      BatchUpdateJob.should_receive(:new).with(@user.user_key, params, params['generic_file']).and_return(s1)
+      BatchUpdateJob.should_receive(:new).with(@user.user_key, params).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
