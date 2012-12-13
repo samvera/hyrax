@@ -28,5 +28,8 @@ class CharacterizeJob
     generic_file = GenericFile.find(generic_file_id)
     generic_file.characterize
     generic_file.create_thumbnail
+    if generic_file.video?
+      Sufia.queue.push(TranscodeVideoJob.new(generic_file_id, 'content'))
+    end
   end
 end

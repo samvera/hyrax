@@ -43,6 +43,17 @@ module Sufia
       validates_acceptance_of :terms_of_service, :allow_nil => false
     end
 
+    def pdf?
+      ["application/pdf"].include? self.mime_type
+    end
+
+    def image?
+      ["image/png","image/jpeg", 'image/jpg', 'image/bmp', "image/gif"].include? self.mime_type
+    end
+
+    def video?
+      ["video/mpeg", "video/mp4", "video/x-msvideo", "video/avi", "video/quicktime"].include? self.mime_type
+    end
 
     def persistent_url
       "#{Sufia::Engine.config.persistent_hostpath}#{noid}"

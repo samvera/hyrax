@@ -5,12 +5,12 @@ module Sufia
       # and that the object is already has a pid set
       def create_thumbnail
         return if self.content.content.nil?
-        if ["application/pdf"].include? self.mime_type
+        if pdf?
           create_pdf_thumbnail
-        elsif ["image/png","image/jpeg", "image/gif"].include? self.mime_type
+        elsif image?
           create_image_thumbnail
-        # TODO: if we can figure out how to do video (ffmpeg?)
-        #elsif ["video/mpeg", "video/mp4"].include? self.mime_type
+        # elsif video?
+        #   create_video_thumbnail
         end
       end
 

@@ -43,6 +43,13 @@ COUNT=4 QUEUE=* rake environment resque:work
 ```
 See https://github.com/defunkt/resque for more options
 
+### If you want to enable transcoding of video
+#### Installing ffmpeg on a mac
+Use homebrew:
+```
+brew install ffmpeg --with-libvpx --with-libvorbis
+```
+
 ## Developers:
 This information is for people who want to modify the engine itself, not an application that uses the engine:
 ### Create fixtures
