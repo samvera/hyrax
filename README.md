@@ -25,11 +25,14 @@ rake db:migrate
 ```
 
 
-### If you want to use the assets that ship with Sufia, add the following to application.css
+### If you want to use the assets that ship with Sufia...
+#### add the following to application.css
 ```
  *= require sufia
 ```
-and add the following to application.js
+You'll want to ensure you're not loading the blacklight.css, so remove this line ```*= require_tree .```
+
+#### Add the following to application.js
 ```
 //= require sufia
 ```
