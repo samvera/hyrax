@@ -16,6 +16,7 @@ require 'rails_autolink'
 
 autoload :Zip, 'zipruby'
 module Sufia
+  extend ActiveSupport::Autoload
 
   autoload :Resque, 'sufia/queue/resque'
 
@@ -60,6 +61,7 @@ module Sufia
     @queue ||= config.queue.new('sufia')
   end
 
+  autoload :GenericFile
   autoload :Controller,           'sufia/controller'
   autoload :Utils,                'sufia/utils'
   autoload :User,                 'sufia/user'
