@@ -15,7 +15,7 @@
 require 'spec_helper'
 
 describe BatchUpdateJob do
-  before(:all) do
+  before do
     GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     @batch = Batch.new
@@ -27,10 +27,8 @@ describe BatchUpdateJob do
     @file2.apply_depositor_metadata('otherUser')
     @file2.save
   end
-  after(:all) do
-    # clear any existing messages
+  after do
     @batch.delete
-    @user.delete
     @file.delete
     @file2.delete
   end
@@ -39,7 +37,7 @@ describe BatchUpdateJob do
       BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
       User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      BatchUpdateJob.perform(@user.user_key, params, params[:generic_file])
+      BatchUpdateJob.new(@user.user_key, params, params[:generic_file]).run
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload permission denied"
       @user.mailbox.inbox[0].messages[0].move_to_trash @user
       #b = Batch.find(@batch.pid)
@@ -49,10 +47,14 @@ describe BatchUpdateJob do
     it "should log a content update event" do
       BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
       User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times.and_return(true)
-      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @file.pid, @user.user_key).once
-      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @file2.pid, @user.user_key).once
+      s1 = stub('one')
+      ContentUpdateEventJob.should_receive(:new).with(@file.pid, @user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+      s2 = stub('two')
+      ContentUpdateEventJob.should_receive(:new).with(@file2.pid, @user.user_key).and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
-      BatchUpdateJob.perform(@user.user_key, params, params[:generic_file])
+      BatchUpdateJob.new(@user.user_key, params, params[:generic_file]).run
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload complete"
       @user.mailbox.inbox[0].messages[0].move_to_trash @user
     end

@@ -53,11 +53,7 @@ class UsersController < ApplicationController
       redirect_to sufia.edit_profile_path(URI.escape(@user.to_s,'@.')), alert: @user.errors.full_messages
       return
     end
-    begin
-      Resque.enqueue(UserEditProfileEventJob, @user.user_key)
-    rescue Redis::CannotConnectError
-      logger.error "Redis is down!"
-    end
+    Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
     redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "Your profile has been updated"
   end
 
@@ -65,11 +61,7 @@ class UsersController < ApplicationController
   def follow
     unless current_user.following?(@user)
       current_user.follow(@user)
-      begin
-        Resque.enqueue(UserFollowEventJob, current_user.user_key, @user.user_key)
-      rescue Redis::CannotConnectError
-        logger.error "Redis is down!"
-      end
+      Sufia.queue.push(UserFollowEventJob.new(current_user.user_key, @user.user_key))
     end
     redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "You are following #{@user.to_s}"
   end
@@ -78,11 +70,7 @@ class UsersController < ApplicationController
   def unfollow
     if current_user.following?(@user)
       current_user.stop_following(@user)
-      begin
-        Resque.enqueue(UserUnfollowEventJob, current_user.user_key, @user.user_key)
-      rescue Redis::CannotConnectError
-        logger.error "Redis is down!"
-      end
+      Sufia.queue.push(UserUnfollowEventJob.new(current_user.user_key, @user.user_key))
     end
     redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "You are no longer following #{@user.to_s}"
   end

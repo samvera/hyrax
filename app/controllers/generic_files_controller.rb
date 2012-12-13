@@ -63,11 +63,7 @@ class GenericFilesController < ApplicationController
   def destroy
     pid = @generic_file.noid
     @generic_file.delete
-    begin
-      Resque.enqueue(ContentDeleteEventJob, pid, current_user.user_key)
-    rescue Redis::CannotConnectError
-      logger.error "Redis is down!"
-    end
+    Sufia.queue.push(ContentDeleteEventJob.new(pid, current_user.user_key))
     redirect_to sufia.dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
   end
 
@@ -93,11 +89,7 @@ class GenericFilesController < ApplicationController
       else
         create_and_save_generic_file
         if @generic_file
-          begin
-            Resque.enqueue(ContentDepositEventJob, @generic_file.pid, current_user.user_key)
-          rescue Redis::CannotConnectError
-            logger.error "Redis is down!"
-          end
+          Sufia.queue.push(ContentDepositEventJob.new(@generic_file.pid, current_user.user_key))
           respond_to do |format|
             format.html {
               retval = render :json => [@generic_file.to_jq_upload].to_json,
@@ -153,33 +145,21 @@ class GenericFilesController < ApplicationController
       revision = @generic_file.content.get_version(params[:revision])
       @generic_file.add_file_datastream(revision.content, :dsid => 'content')
       version_event = true
-      begin
-        Resque.enqueue(ContentRestoredVersionEventJob, @generic_file.pid, current_user.user_key, params[:revision])
-      rescue Redis::CannotConnectError
-        logger.error "Redis is down!"
-      end
+      Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
     end
 
     if params.has_key?(:filedata)
       return unless virus_check(params[:filedata]) == 0
       add_posted_blob_to_asset(@generic_file, params[:filedata])
       version_event = true
-      begin
-        Resque.enqueue(ContentNewVersionEventJob, @generic_file.pid, current_user.user_key)
-      rescue Redis::CannotConnectError
-        logger.error "Redis is down!"
-      end
+      Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
     end
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k})
     @generic_file.set_visibility(params)
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
     # do not trigger an update event if a version event has already been triggered
-    begin
-      Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.user_key) unless version_event
-    rescue Redis::CannotConnectError
-      logger.error "Redis is down!"
-    end
+    Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
     record_version_committer(@generic_file, current_user)
     redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
 
@@ -190,7 +170,7 @@ class GenericFilesController < ApplicationController
     Sufia::GenericFile::Permissions.parse_permissions(params)
     @generic_file.update_attributes(params[:generic_file].reject { |k,v| %w{ Filedata Filename revision}.include? k})
     @generic_file.save
-    Resque.enqueue(ContentUpdateEventJob, @generic_file.pid, current_user.user_key)
+    Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
     redirect_to sufia.edit_generic_file_path, :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
   end
 
@@ -267,11 +247,7 @@ class GenericFilesController < ApplicationController
     end
 
     record_version_committer(@generic_file, current_user)
-    begin
-      Resque.enqueue(UnzipJob, @generic_file.pid) if file.content_type == 'application/zip'
-    rescue Redis::CannotConnectError
-      logger.error "Redis is down!"
-    end
+    Sufia.queue.push(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
     return @generic_file
   end
   

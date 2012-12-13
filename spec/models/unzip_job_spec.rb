@@ -37,7 +37,7 @@ describe UnzipJob do
     three = GenericFile.new
     #three.should_receive(:characterize_if_changed)
     GenericFile.should_receive(:new).exactly(3).times.and_return(one, two, three)
-    Resque.enqueue(UnzipJob, @generic_file.pid)
+    UnzipJob.new(@generic_file.pid).run
 
     one.content.size.should == 13024 #bread
     one.content.label.should == 'spec/fixtures/bread-icon.png'

@@ -62,7 +62,9 @@ describe UsersController do
     end
     it "should set an avatar and redirect to profile" do
       @user.avatar.file?.should be_false
-      Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).once
+      s1 = stub('one')
+      UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       f = fixture_file_upload('/world.png', 'image/png')
       post :update, uid: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
@@ -70,7 +72,8 @@ describe UsersController do
       User.find_by_user_key(@user.user_key).avatar.file?.should be_true
     end
     it "should validate the content type of an avatar" do
-      Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
+      #Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
+      Sufia.queue.should_receive(:push).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
       post :update, uid: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
@@ -78,20 +81,25 @@ describe UsersController do
     end
     it "should validate the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
-      Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
+      #Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
+      Sufia.queue.should_receive(:push).never
       post :update, uid: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("Avatar file size must be less than 2097152 Bytes")
     end
     it "should delete an avatar" do
-      Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).once
+      s1 = stub('one')
+      UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       post :update, uid: @user.user_key, delete_avatar: true
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       @user.avatar.file?.should be_false
     end
     it "should refresh directory attributes" do
-      Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).once
+      s1 = stub('one')
+      UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       User.any_instance.should_receive(:populate_attributes).once
       post :update, uid: @user.user_key, update_directory: true
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
@@ -116,20 +124,24 @@ describe UsersController do
     end
     it "should follow another user if not already following, and log an event" do
       @user.following?(@another_user).should be_false
-      Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).once
+      s1 = stub('one')
+      UserFollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       post :follow, uid: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if already following and not log an event" do
       User.any_instance.stub(:following?).with(@another_user).and_return(true)
-      Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).never
+      #Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).never
+      Sufia.queue.should_receive(:push).never
       post :follow, uid: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
-      Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @user.user_key).never
+      #Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @user.user_key).never
+      Sufia.queue.should_receive(:push).never
       post :follow, uid: @user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")
@@ -138,20 +150,24 @@ describe UsersController do
   describe "#unfollow" do
     it "should unfollow another user if already following, and log an event" do
       User.any_instance.stub(:following?).with(@another_user).and_return(true)
-      Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).once
+      s1 = stub('one')
+      UserUnfollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       post :unfollow, uid: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if not following and not log an event" do
       @user.stub(:following?).with(@another_user).and_return(false)
-      Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).never
+      #Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).never
+      Sufia.queue.should_receive(:push).never
       post :unfollow, uid: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
-      Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @user.user_key).never
+      #Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @user.user_key).never
+      Sufia.queue.should_receive(:push).never
       post :unfollow, uid: @user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")

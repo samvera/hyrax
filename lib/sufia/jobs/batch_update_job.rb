@@ -17,17 +17,22 @@ class BatchUpdateJob
   include GenericFileHelper
   include Rails.application.routes.url_helpers 
 
-  def self.queue
+  def queue_name
     :batch_update
   end
 
-  def self.perform(*args)
-    new(*args)
-  end
+  attr_accessor :login, :params, :perms
 
   def initialize(login, params, perms)
-    params = HashWithIndifferentAccess.new(params)
-    perms = HashWithIndifferentAccess.new(perms)
+    self.login = login
+    self.params = params
+    self.perms = perms
+
+  end
+
+  def run
+    params = HashWithIndifferentAccess.new(self.params)
+    perms = HashWithIndifferentAccess.new(self.perms)
     batch = Batch.find_or_create(params[:id])
     user = User.find_by_user_key(login)
     saved = []
@@ -55,11 +60,7 @@ class BatchUpdateJob
         sleep 0.01
         retry
       end #
-      begin
-        Resque.enqueue(ContentUpdateEventJob, gf.pid, login)
-      rescue Redis::CannotConnectError
-        logger.error "Redis is down!"
-      end
+      Sufia.queue.push(ContentUpdateEventJob.new(gf.pid, login))
       
       saved << gf
     end

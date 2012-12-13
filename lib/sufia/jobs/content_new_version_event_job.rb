@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class ContentNewVersionEventJob < EventJob
-  def initialize(generic_file_id, depositor_id)
+  def run
     gf = GenericFile.find(generic_file_id)
     action = "User #{link_to_profile depositor_id} has added a new version of #{link_to gf.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(gf.noid)}"
     timestamp = Time.now.to_i

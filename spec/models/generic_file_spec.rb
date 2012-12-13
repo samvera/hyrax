@@ -131,7 +131,7 @@ describe GenericFile do
     end
     describe "that have been saved" do
       before(:each) do
-        Resque.should_receive(:enqueue).once.and_return(true)
+        Sufia.queue.should_receive(:push).once
       end
       after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
@@ -257,13 +257,27 @@ describe GenericFile do
       @f.stub(:characterize).and_return(true)
     end
     it "should schedule a audit job for each datastream" do
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'DC', "DC1.0")
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'RELS-EXT', "RELS-EXT.0")
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'rightsMetadata', "rightsMetadata.0")
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'properties', "properties.0")
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'content', "content.0")
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'characterization', "characterization.0")
-      Resque.should_receive(:enqueue).with(AuditJob, @f.pid, 'thumbnail', "thumbnail.0")
+      s1 = stub('one')
+      AuditJob.should_receive(:new).with(@f.pid, 'DC', "DC1.0").and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1)
+      s2 = stub('two')
+      AuditJob.should_receive(:new).with(@f.pid, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2)
+      s3 = stub('three')
+      AuditJob.should_receive(:new).with(@f.pid, 'rightsMetadata', "rightsMetadata.0").and_return(s3)
+      Sufia.queue.should_receive(:push).with(s3)
+      s4 = stub('four')
+      AuditJob.should_receive(:new).with(@f.pid, 'properties', "properties.0").and_return(s4)
+      Sufia.queue.should_receive(:push).with(s4)
+      s5 = stub('five')
+      AuditJob.should_receive(:new).with(@f.pid, 'content', "content.0").and_return(s5)
+      Sufia.queue.should_receive(:push).with(s5)
+      s6 = stub('six')
+      AuditJob.should_receive(:new).with(@f.pid, 'characterization', "characterization.0").and_return(s6)
+      Sufia.queue.should_receive(:push).with(s6)
+      s7 = stub('seven')
+      AuditJob.should_receive(:new).with(@f.pid, 'thumbnail', "thumbnail.0").and_return(s7)
+      Sufia.queue.should_receive(:push).with(s7)
       @f.audit!
     end
     it "should log a failing audit" do
@@ -320,7 +334,7 @@ describe GenericFile do
     end
     it "should schedule a characterization job" do
       @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-      Resque.should_receive(:enqueue).once
+      Sufia.queue.should_receive(:push).once
       @file.save
     end
   end
@@ -432,11 +446,11 @@ describe GenericFile do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should not be triggered unless the content ds is changed" do
-      Resque.should_receive(:enqueue).once
+      Sufia.queue.should_receive(:push).once
       @file.content.content = "hey"
       @file.save
       @file.related_url = 'http://example.com'
-      Resque.should_receive(:enqueue).never
+      Sufia.queue.should_receive(:push).never
       @file.save
       @file.delete
     end

@@ -13,12 +13,22 @@
 # limitations under the License.
 
 class AuditJob
-  @queue = :audit
+  def queue_name
+    :audit
+  end
 
   PASS = 'Passing Audit Run'
   FAIL = 'Failing Audit Run'
 
-  def self.perform(generic_file_id, datastream_id, version_id)
+  attr_accessor :generic_file_id, :datastream_id, :version_id
+
+  def initialize(generic_file_id, datastream_id, version_id)
+    self.generic_file_id = generic_file_id
+    self.datastream_id = datastream_id
+    self.version_id = version_id
+  end
+
+  def run
     generic_file = GenericFile.find(generic_file_id)
     #logger.info "GF is #{generic_file.pid}"
     if generic_file

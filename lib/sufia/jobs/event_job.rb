@@ -19,11 +19,15 @@ class EventJob
   include Hydra::AccessControlsEnforcement
   include SufiaHelper
 
-  def self.queue
+  def queue_name
     :event
   end
 
-  def self.perform(*args)
-    new(*args)
+  attr_accessor :generic_file_id, :depositor_id
+
+  def initialize(generic_file_id, depositor_id)
+    self.generic_file_id = generic_file_id
+    self.depositor_id = depositor_id
   end
+
 end

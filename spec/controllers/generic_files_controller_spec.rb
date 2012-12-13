@@ -40,19 +40,31 @@ describe GenericFilesController do
     end
 
     it "should spawn a content deposit event job" do
-      #GenericFile.any_instance.stub(:to_solr).and_return({})
       file = fixture_file_upload('/world.png','image/png')
-      Resque.should_receive(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser@example.com')
-      Resque.should_receive(:enqueue).with(CharacterizeJob, 'test:123')
+      s1 = stub('one')
+      ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
     it "should expand zip files" do
-      #GenericFile.any_instance.stub(:to_solr).and_return({})
       file = fixture_file_upload('/world.png','application/zip')
-      Resque.should_receive(:enqueue).with(CharacterizeJob, 'test:123')
-      Resque.should_receive(:enqueue).with(UnzipJob, 'test:123')
-      Resque.should_receive(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser@example.com')
+      s1 = stub('one')
+      ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
+
+      s3 = stub('one')
+      UnzipJob.should_receive(:new).with('test:123').and_return(s3)
+      Sufia.queue.should_receive(:push).with(s3).once
+
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
@@ -117,8 +129,14 @@ describe GenericFilesController do
     it "Should call virus check" do
       controller.should_receive(:virus_check).and_return(0)      
       file = fixture_file_upload('/world.png','image/png')
-      Resque.should_receive(:enqueue).with(ContentDepositEventJob, 'test:123', 'jilluser@example.com')
-      Resque.should_receive(:enqueue).with(CharacterizeJob, 'test:123')
+
+      s1 = stub('one')
+      ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
 
@@ -186,7 +204,9 @@ describe GenericFilesController do
       lambda { GenericFile.find(@generic_file.pid) }.should raise_error(ActiveFedora::ObjectNotFoundError)
     end
     it "should spawn a content delete event job" do
-      Resque.should_receive(:enqueue).with(ContentDeleteEventJob, @generic_file.noid, @user.user_key)
+      s1 = stub('one')
+      ContentDeleteEventJob.should_receive(:new).with(@generic_file.noid, @user.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       delete :destroy, :id=>@generic_file.pid
     end
   end
@@ -204,7 +224,9 @@ describe GenericFilesController do
     end
 
     it "should spawn a content update event job" do
-      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com')
+      s1 = stub('one')
+      ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
@@ -212,8 +234,12 @@ describe GenericFilesController do
     end
 
     it "should spawn a content new version event job" do
-      Resque.should_receive(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser@example.com')
-      Resque.should_receive(:enqueue).with(CharacterizeJob, @generic_file.pid)      
+      s1 = stub('one')
+      ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
 
@@ -238,9 +264,15 @@ describe GenericFilesController do
       archivist = FactoryGirl.find_or_create(:archivist)
       controller.stub(:current_user).and_return(archivist)
 
-      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com').never
-      Resque.should_receive(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, archivist.user_key).once
-      Resque.should_receive(:enqueue).with(CharacterizeJob, @generic_file.pid).once
+      ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
+
+      s1 = stub('one')
+      ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, archivist.user_key).and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       file = fixture_file_upload('/image.jp2','image/jp2')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''] }
 
@@ -252,9 +284,14 @@ describe GenericFilesController do
       # original user restores his or her version
       controller.stub(:current_user).and_return(@user)
       sign_in @user
-      Resque.should_receive(:enqueue).with(ContentUpdateEventJob, @generic_file.pid, 'jilluser@example.com').never
-      Resque.should_receive(:enqueue).with(ContentRestoredVersionEventJob, @generic_file.pid, @user.user_key, 'content.0').once
-      Resque.should_receive(:enqueue).with(CharacterizeJob, @generic_file.pid).once
+      ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
+      s1 = stub('one')
+      ContentRestoredVersionEventJob.should_receive(:new).with(@generic_file.pid, @user.user_key, 'content.0').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1", :tag=>['']}
 
       restored_file = GenericFile.find(@generic_file.pid)
@@ -281,8 +318,13 @@ describe GenericFilesController do
     it "should spawn a virus check" do
       # The expectation is in the begin block
       controller.should_receive(:virus_check).and_return(0)      
-      Resque.stub(:enqueue).with(ContentNewVersionEventJob, @generic_file.pid, 'jilluser@example.com')
-      Resque.stub(:enqueue).with(CharacterizeJob, @generic_file.pid)
+      s1 = stub('one')
+      ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      Sufia.queue.should_receive(:push).with(s1).once
+
+      s2 = stub('one')
+      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
+      Sufia.queue.should_receive(:push).with(s2).once
       GenericFile.stub(:save).and_return({})
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
@@ -353,7 +395,7 @@ describe GenericFilesController do
           sign_out @user
           sign_in @archivist
           @ds = @file.datastreams.first
-          AuditJob.perform(@file.pid, @ds[0], @ds[1].versionID)
+          AuditJob.new(@file.pid, @ds[0], @ds[1].versionID).run
           get :show, id:"test5"
           assigns[:notify_number].should == 1
           response.body.should include('<span id="notify_number" class="overlay"> 1</span>') # notify should be 1 for failing job

@@ -13,9 +13,11 @@
 # limitations under the License.
 
 class ResolrizeJob
-  @queue = :resolrize
+  def queue_name
+    :resolrize
+  end
 
-  def self.perform
+  def run
     Solrizer::Fedora::Solrizer.new.solrize_objects(:suppress_errors => false)
   end
 end

@@ -13,10 +13,19 @@
 # limitations under the License.
 
 class CharacterizeJob
-  @queue = :characterize
 
-  def self.perform(generic_file_id)
-    generic_file = GenericFile.find(generic_file_id, :cast => true)
+  def queue_name
+    :characterize
+  end
+
+  attr_accessor :generic_file_id
+
+  def initialize(generic_file_id)
+    self.generic_file_id = generic_file_id
+  end
+
+  def run
+    generic_file = GenericFile.find(generic_file_id)
     generic_file.characterize
     generic_file.create_thumbnail
   end

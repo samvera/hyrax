@@ -93,6 +93,8 @@ Sufia.config do |config|
       "Edit" => "edit"
     }
 
+    config.queue = Sufia::Resque::Queue
+
 end
 
 

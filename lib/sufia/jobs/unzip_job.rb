@@ -13,10 +13,18 @@
 # limitations under the License.
 
 class UnzipJob
-  @queue = :unzip
+  def queue_name
+    :unzip
+  end
 
-  def self.perform(pid)
-    zip_file = GenericFile.find(pid, :cast => true)
+  attr_accessor :pid
+
+  def initialize(pid)
+    self.pid = pid
+  end
+
+  def run
+    zip_file = GenericFile.find(pid)
     Zip::Archive.open_buffer(zip_file.content.content) do |archive|
       archive.each do |f|
         @generic_file = GenericFile.new
