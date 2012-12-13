@@ -25,7 +25,7 @@ rake db:migrate
 ```
 
 
-###If you want to use the assets that ship with Sufia, add the following to application.css
+### If you want to use the assets that ship with Sufia, add the following to application.css
 ```
  *= require scholarsphere
 ```
@@ -33,6 +33,12 @@ and add the following to application.js
 ```
 //= require scholarsphere
 ```
+
+### Start background workers
+```
+COUNT=4 QUEUE=* rake resque:work
+```
+See https://github.com/defunkt/resque for more options
 
 ## Developers:
 This information is for people who want to modify the engine itself, not an application that uses the engine:
