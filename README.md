@@ -36,7 +36,7 @@ and add the following to application.js
 
 ### Start background workers
 ```
-COUNT=4 QUEUE=* rake resque:work
+COUNT=4 QUEUE=* rake environment resque:work
 ```
 See https://github.com/defunkt/resque for more options
 
