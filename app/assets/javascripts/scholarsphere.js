@@ -397,9 +397,9 @@ $(function() {
                success:function(data) {
                       var oldclass = $('#'+data.trophy.generic_file_id).find('i').attr("class");
                       if (oldclass.indexOf("trophy-on") != -1){
-                        $('#'+data.trophy.generic_file_id).find('i').attr("title", "Turn Trophy ON");
+                        $('#'+data.trophy.generic_file_id).find('i').attr("title", "Highlight work");
                       } else {
-                        $('#'+data.trophy.generic_file_id).find('i').attr("title", "Turn Trophy OFF");
+                        $('#'+data.trophy.generic_file_id).find('i').attr("title", "Unhighlight work");
                       }
                     
                       $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-on");
