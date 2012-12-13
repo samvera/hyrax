@@ -11,7 +11,7 @@ gem 'jettywrapper'
 ```
 Then `bundle install`
 
-### Run the blacklight, hydra and scholarsphere generators
+### Run the blacklight, hydra and sufia generators
 ```
 rails g blacklight --devise
 rails g hydra:head -f
@@ -27,11 +27,11 @@ rake db:migrate
 
 ### If you want to use the assets that ship with Sufia, add the following to application.css
 ```
- *= require scholarsphere
+ *= require sufia
 ```
 and add the following to application.js
 ```
-//= require scholarsphere
+//= require sufia
 ```
 
 ### Start background workers
