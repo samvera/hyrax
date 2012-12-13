@@ -41,6 +41,7 @@ module Sufia
         save unless self.new_object?
       end
 
+      # Populate descMetadata with fields from FITS (e.g. Author from pdfs)
       def append_metadata
         terms = self.characterization_terms
         Sufia::Engine.config.fits_to_desc_mapping.each_pair do |k, v|
