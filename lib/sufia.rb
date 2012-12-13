@@ -17,10 +17,15 @@ require 'rails_autolink'
 autoload :Zip, 'zipruby'
 module Sufia
 
+  autoload :Resque, 'sufia/queue/resque'
+
   attr_accessor :queue
 
   class Engine < ::Rails::Engine
     engine_name 'sufia'
+
+    config.queue = Sufia::Resque::Queue
+    
 
     config.autoload_paths << File.expand_path("../sufia/jobs", __FILE__)
     
@@ -63,6 +68,5 @@ module Sufia
   autoload :IdService,            'sufia/id_service'
   autoload :HttpHeaderAuth,       'sufia/http_header_auth'
   autoload :SolrDocumentBehavior, 'sufia/solr_document_behavior'
-  autoload :Resque,               'sufia/queue/resque'
 end
 
