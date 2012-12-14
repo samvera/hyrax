@@ -36,10 +36,6 @@ describe 'Routes' do
       { post: '/files/7/audit' }.should route_to(controller: 'generic_files', action: 'audit', id: '7')
     end
 
-    it 'should route to permissions' do
-      { post: '/files/2/permissions' }.should route_to(controller: 'generic_files', action: 'permissions', id: '2')
-    end
-
     it 'should route to create' do
       { post: '/files' }.should route_to(controller: 'generic_files', action: 'create')
     end

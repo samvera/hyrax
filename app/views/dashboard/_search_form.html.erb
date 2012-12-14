@@ -15,7 +15,7 @@ limitations under the License.
 %>
 
 <div style="float: right;" >
-    <%= form_tag sufia.dashboard_path, :method => :get, :class => "well form-search" do %>
+    <%= form_tag sufia.dashboard_index_path, :method => :get, :class => "well form-search" do %>
       <label class="accessible-hidden">Search My Dashboard</label>
       <%= text_field_tag :q, params[:q], :class => "q", :placeholder => "Search My Dashboard", :size => '30', :type => "search", :id => "dashboard_search" %>
       <%= hidden_field_tag :search_field, 'all_fields' %>

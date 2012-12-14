@@ -33,7 +33,7 @@ module Blacklight::RenderConstraintsHelperBehavior
         render_constraint_element(label,
             localized_params[:q], 
             :classes => ["query"], 
-            :remove => dashboard_path(localized_params.merge(:q=>nil, :action=>'index')))
+            :remove => dashboard_index_path(localized_params.merge(:q=>nil, :action=>'index')))
       else
         render_constraint_element(label,
             localized_params[:q], 
@@ -60,7 +60,7 @@ module Blacklight::RenderConstraintsHelperBehavior
       if params[:controller] == 'dashboard'       
         render_constraint_element( facet_field_labels[facet],
                   val, 
-                  :remove => dashboard_path(remove_facet_params(facet, val, localized_params)),
+                  :remove => dashboard_index_path(remove_facet_params(facet, val, localized_params)),
                   :classes => ["filter", "filter-" + facet.parameterize] 
                 ) + "\n"    
       else

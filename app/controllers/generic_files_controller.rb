@@ -64,7 +64,7 @@ class GenericFilesController < ApplicationController
     pid = @generic_file.noid
     @generic_file.delete
     Sufia.queue.push(ContentDeleteEventJob.new(pid, current_user.user_key))
-    redirect_to sufia.dashboard_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
+    redirect_to sufia.dashboard_index_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
   end
 
   # routed to /files (POST)

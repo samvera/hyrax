@@ -36,7 +36,7 @@ class BatchEditsController < ApplicationController
    end
 
    def after_update 
-     redirect_to dashboard_path unless request.xhr?
+     redirect_to dashboard_index_path unless request.xhr?
    end
    
   def update_document(obj)
@@ -48,7 +48,7 @@ class BatchEditsController < ApplicationController
    def update
       # keep the batch around if we are doing ajax calls
       batch_sav = batch.dup if request.xhr?        
-      catalog_index_path = dashboard_path
+      catalog_index_path = dashboard_index_path
       type = params["update_type"]
       if (type == "update")
         #params["generic_file"].reject! {|k,v| (v.blank? || (v.respond_to?(:length) && v.length==1 && v.first.blank?))}

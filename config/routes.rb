@@ -45,9 +45,14 @@ Sufia::Engine.routes.draw do
   match 'users/:uid/unfollow' => 'users#unfollow', :as => :unfollow_user
 
   # Dashboard routes (based partly on catalog routes)
-  match 'dashboard' => 'dashboard#index', :as => :dashboard
-  match 'dashboard/activity' => 'dashboard#activity', :as => :dashboard_activity
-  match 'dashboard/facet/:id' => 'dashboard#facet', :as => :dashboard_facet
+  resources 'dashboard', :only=>:index do
+    collection do
+      get 'page/:page', :action => :index
+      get 'activity', :action => :activity, :as => :dashboard_activity
+      get 'facet/:id', :action => :facet, :as => :dashboard_facet
+    end
+  end
+    
 
   # advanced routes for advanced search
   match 'search' => 'advanced#index', :as => :advanced
