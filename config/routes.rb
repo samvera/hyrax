@@ -20,7 +20,6 @@ Sufia::Engine.routes.draw do
     member do
       get 'citation', :as => :citation
       post 'audit'
-      post 'permissions'
     end
   end
 
