@@ -35,6 +35,10 @@ module Sufia
       require 'sufia/active_fedora/redis'
     end
 
+    initializer "Patch kaminari" do
+      require "kaminari/helpers/tag"
+    end
+
     initializer "Patch active_record" do
       require 'sufia/active_record/redis'
     end
