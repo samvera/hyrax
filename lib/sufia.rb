@@ -27,6 +27,7 @@ module Sufia
 
     config.queue = Sufia::Resque::Queue
     config.ffmpeg_path = 'ffmpeg'
+    config.fits_message_length = 5
     
 
     config.autoload_paths << File.expand_path("../sufia/jobs", __FILE__)
