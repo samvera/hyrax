@@ -65,6 +65,12 @@ describe CatalogController do
         get :index
         assigns(:document_list).count.should == @public_only_results.docs.count
       end
+
+      it "should return documents if user has groups" do
+        RoleMapper.stub(:roles).and_return(["abc/123","cde/567"])
+        get :index
+        assigns(:document_list).count.should == @public_only_results.docs.count
+      end
     end
   end
   
