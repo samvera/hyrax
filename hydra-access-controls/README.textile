@@ -4,64 +4,32 @@ The hydra-access-controls gem provides access controls models and functionality 
 
 h2. Installation
 
-Add this line to your application's Gemfile:
+The easiest way to make your code use this gem is to run the hydra generator that comes with the hydra-head gem.  That will set up everything you need:
 
-    gem 'hydra-access-controls'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install hydra-access-controls
+* adds _include Hydra::User_ to your User class
+* modifies the filters in your CatalogController class to inject access controls into solr queries
+* adds the YAML files that are used by the default RoleMapper class
+* adds section to hydra_config initializer that sets names used to look up enforcement info in solr (see "Modifying solr field names for enforcement" below)
 
 h2. Usage
 
-h3. Policy-based Enforcement (or Collecton-level enforcement)
+h3. Enforcing Hydra-based Access Controls in your Controllers
 
-If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects they are linked to with an isGovernedBy RDF relationship (stored in solr as _is_governed_by_s__ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
+They hydra generator handles part of this for you - it sets up the CatalogController (Blacklight's main controller for searches) to do gated discovery for you.
+In your custom controllers, you need to tell them to enforce access controls.  
 
-AdminPolicy objects store their inheritable rightsMetadata in a datastream called defaultRights.  This datastream uses the regular Hydra rightsMetadata schema.  Each AdminPolicy object also has its own rightsMetadata datasream, like all other Hydra assets, which specifies who is able to _edit_ the Policy or _use_ it (associate it with objects).
+*!!!This section is unfinished!!!*  
+_If you encounter this note, send an email to the hydra-tech mailing list asking "jcoyne":https://github.com/jcoyne to explain how to make a controller enforce Hydra-based access controls using CanCan._
 
-Object-level permissions and Policy-level permissions are combined to produce the list of Individuals & Groups who have access to the object.  This means that if _either_ the object's rightsMetadata or the Policy's defaultRights grants access to an Individual or Group, that access will be allowed.
-
-* Currently, an asset can have only one Policy associated with it -- you can't associate objects with multiple policies
-* 
-
-To turn on Policy-based enforcement, 
-
-* include the Hydra::PolicyAwareAbility module in your Ability class (Make sure to include it _after_ Hydra::Ability because it overrides some of the methods provided by that module.)
-* include the Hydra::PolicyAwareAccessControlsEnforcement module into any appropriate Controllers (or into ApplicationController)
- 
-# app/models/ability.rb
-<pre>
-  # Allows you to use CanCan to control access to Models
-  require 'cancan'
-  class Ability
-    include CanCan::Ability
-    include Hydra::Ability
-    include Hydra::PolicyAwareAbility
-  end
-</pre>
-
-# app/controllers/catalog_controller.rb
-<pre>
-  class CatalogController < ApplicationController  
-
-    include Blacklight::Catalog
-    include Hydra::Controller::ControllerBehavior
-    include Hydra::PolicyAwareAccessControlsEnforcement
-    
-    # ...
-  end
-</pre>
 
 h3. Modifying solr field names for enforcement
 
 Hydra uses its own set of default solr field names to track rights-related metadata in solr.  If you want to use your own field names, you can change them in your Hydra config.  You will also have to modify the permissions response handler in your solrconfig.xml to return those fields.
 
-# config/initializers/hydra_config.rb
+Note: The hydra generator sets up the defaults for you in this file.  You only need to edit it if you want to change the field names.
+
+In config/initializers/hydra_config.rb
+
 <pre>
   Hydra.configure(:shared) do |config|
     # ... other stuff ...
@@ -81,6 +49,49 @@ Hydra uses its own set of default solr field names to track rights-related metad
     }
   end
 </pre>
+
+h3. Policy-based Enforcement (or Collecton-level enforcement)
+
+If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects they are linked to with an isGovernedBy RDF relationship (stored in solr as _is_governed_by_s__ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
+
+AdminPolicy objects store their inheritable rightsMetadata in a datastream called defaultRights.  This datastream uses the regular Hydra rightsMetadata schema.  Each AdminPolicy object also has its own rightsMetadata datasream, like all other Hydra assets, which specifies who is able to _edit_ the Policy or _use_ it (associate it with objects).
+
+Object-level permissions and Policy-level permissions are combined to produce the list of Individuals & Groups who have access to the object.  This means that if _either_ the object's rightsMetadata or the Policy's defaultRights grants access to an Individual or Group, that access will be allowed.
+
+* Currently, an asset can have only one Policy associated with it -- you can't associate objects with multiple policies
+
+To turn on Policy-based enforcement, 
+
+* include the Hydra::PolicyAwareAbility module in your Ability class (Make sure to include it _after_ Hydra::Ability because it overrides some of the methods provided by that module.)
+* include the Hydra::PolicyAwareAccessControlsEnforcement module into any appropriate Controllers (or into ApplicationController)
+ 
+
+Example app/models/ability.rb
+
+<pre>
+  # Allows you to use CanCan to control access to Models
+  require 'cancan'
+  class Ability
+    include CanCan::Ability
+    include Hydra::Ability
+    include Hydra::PolicyAwareAbility
+  end
+</pre>
+
+Example app/controllers/catalog_controller.rb
+
+<pre>
+  class CatalogController < ApplicationController  
+
+    include Blacklight::Catalog
+    include Hydra::Controller::ControllerBehavior
+    include Hydra::PolicyAwareAccessControlsEnforcement
+    
+    # ...
+  end
+</pre>
+
+
 
 h2. Contributing
 
