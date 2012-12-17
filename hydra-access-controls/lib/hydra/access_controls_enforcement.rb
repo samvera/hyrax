@@ -232,10 +232,14 @@ module Hydra::AccessControlsEnforcement
       user_access_filters = []
       current_ability.user_groups.each_with_index do |role, i|
         permission_types.each do |type|
-          user_access_filters << "#{type}_access_group_t:#{role}"
+          user_access_filters << escape_filter("#{type}_access_group_t", role)
         end
       end
       user_access_filters
+  end
+
+  def escape_filter(key, value)
+    [key, value.gsub('/', '\/')].join(':')
   end
 
   def apply_individual_permissions(permission_types)
@@ -243,7 +247,7 @@ module Hydra::AccessControlsEnforcement
       user_access_filters = []
       if user_key.present?
         permission_types.each do |type|
-          user_access_filters << "#{type}_access_person_t:#{user_key}"        
+          user_access_filters << escape_filter("#{type}_access_person_t", user_key)
         end
       end
       user_access_filters
