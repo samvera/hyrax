@@ -44,7 +44,13 @@ describe Hydra::ModelMixins::RightsMetadata do
       subject.permissions = [{:name=>'group1', :access=>'edit', :type=>'group'}]
       subject.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
     end
-
+    it "should assign user permissions when :type == 'person'" do
+      subject.permissions = [{:name=>'user1', :access=>'discover', :type=>'person'}]
+      subject.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+    end
+    it "should raise an ArgumentError when the :type hashkey is invalid" do
+      expect{subject.permissions = [{:name=>'user1', :access=>'read', :type=>'foo'}]}.to raise_error(ArgumentError)
+    end
   end
 
   context "to_solr" do

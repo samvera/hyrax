@@ -11,10 +11,12 @@ module Hydra
         perm_hash = {'person' => rightsMetadata.individuals, 'group'=> rightsMetadata.groups}
 
         params.each do |row|
-          if row[:type] == 'user'
+          if row[:type] == 'user' || row[:type] == 'person'
             perm_hash['person'][row[:name]] = row[:access]
-          else
+          elsif row[:type] == 'group'
             perm_hash['group'][row[:name]] = row[:access]
+          else
+            raise ArgumentError, "Permission type must be 'user', 'person' (alias for 'user'), or 'group'"
           end
         end
         
