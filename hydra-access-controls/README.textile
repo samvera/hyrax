@@ -19,7 +19,7 @@ h3. Enforcing Hydra-based Access Controls in your Controllers
 
 They hydra generator handles part of this for you - it sets up the CatalogController (Blacklight's main controller for searches) to do gated discovery for you.
 
-Beyond enabling gated discovery, *everything is done using "CanCan":https://github.com/ryanb/cancan*.  For more information on CanCan, how to use it, and how to define access controls policies (aka "abilities":https://github.com/ryanb/cancan/wiki/Defining-Abilities), refer to the CanCan documentation.
+Beyond enabling gated discovery, *everything is done using "CanCan":https://github.com/ryanb/cancan*.  For more information on CanCan, how to use it, and how to define access controls policies (aka "abilities":https://github.com/ryanb/cancan/wiki/Defining-Abilities), refer to the "CanCan documentation":https://github.com/ryanb/cancan/blob/master/README.rdoc.
 
 Within your CanCan ability definitions, if you include the "Hydra::Ability":https://github.com/projecthydra/hydra-head/blob/master/hydra-access-controls/lib/hydra/ability.rb module, it will define :read and :edit permissions for you, along with some convenience methods that help you evaluate permssions against info in the rightsMetadata. 
 
