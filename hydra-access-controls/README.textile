@@ -15,13 +15,13 @@ The easiest way to make your code use this gem is to run the hydra generator tha
 
 h2. Usage
 
-h3. Enforcing Hydra-based Access Controls in your Controllers
+h3. Enforcing Hydra-based Access Controls using CanCan and Hydra::Ability
 
 They hydra generator handles part of this for you - it sets up the CatalogController (Blacklight's main controller for searches) to do gated discovery for you.
 
 Beyond enabling gated discovery, *everything is done using "CanCan":https://github.com/ryanb/cancan*.  For more information on CanCan, how to use it, and how to define access controls policies (aka "abilities":https://github.com/ryanb/cancan/wiki/Defining-Abilities), refer to the "CanCan documentation":https://github.com/ryanb/cancan/blob/master/README.rdoc.
 
-Within your CanCan ability definitions, if you include the "Hydra::Ability":https://github.com/projecthydra/hydra-head/blob/master/hydra-access-controls/lib/hydra/ability.rb module, it will define :read and :edit permissions for you, along with some convenience methods that help you evaluate permssions against info in the rightsMetadata. 
+Within your CanCan ability definitions (usually ability.rb), if you include the "Hydra::Ability":https://github.com/projecthydra/hydra-head/blob/master/hydra-access-controls/lib/hydra/ability.rb module, you will have :read and :edit permissions defined for you, along with some convenience methods that help you evaluate permssions against info in the rightsMetadata. *Note*: the Hydra rails generator includes this module into your ability.rb for you!
 
 In your custom controllers, you need to tell them to enforce access controls using "CanCan":https://github.com/ryanb/cancan.  There are a number of ways to do this.  The easiest way is to use the cancan "controller action":https://github.com/ryanb/cancan/wiki/Authorizing-Controller-Actions 'load_and_authorize_resource', however on show and edit, this also causes a load the resource from fedora, which you may want to avoid.  If you want to authorize from solr, you ought to be able to call the cancan methods `authorize!` or `can?` which just checks the solr permissions handler. 
 
