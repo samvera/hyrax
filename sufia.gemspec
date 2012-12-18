@@ -26,7 +26,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'hydra-batch-edit', '~> 0.0.7'
 
 # Other components
-  gem.add_dependency 'resque', '1.23.0'#, :require => 'resque/server'
+  gem.add_dependency 'resque', '1.22.0'#, :require => 'resque/server'
   gem.add_dependency 'resque-pool', '0.3.0'
 # NOTE: the :require arg is necessary on Linux-based hosts
   gem.add_dependency 'rmagick', '2.13.1'#, :require => 'RMagick'
