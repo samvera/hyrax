@@ -32,7 +32,6 @@ Given /^I (?:am )?log(?:ged)? in as "([^\"]*)"$/ do |login|
   
   step %{And I click within the anchor "i.icon-user"} 
   step %{I should see a link to "ingest" with label "upload"}
-  save_and_open_page
   step %{I should see a link to "dashboard" with label "dashboard"}
   # step %{I should see a link to "logout"} 
 end
