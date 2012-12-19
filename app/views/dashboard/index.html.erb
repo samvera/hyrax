@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% content_for :head do %>
-  <% javascript_include_tag 'video.js' %>
-  <% javascript_include_tag 'audio.min.js' %>
-  <% stylesheet_link_tag 'video-js.css' %>
-  <% javascript_include_tag 'dashboard.js' %>
-  <% javascript_include_tag 'swfobject.js' %>
-  <% javascript_include_tag 'jquery.clippy.js' %>
+<% content_for :js_head do %>
+  <%= javascript_include_tag 'video.js' %>
+  <%= javascript_include_tag 'audio.min.js' %>
+  <%= stylesheet_link_tag 'video-js.css' %>
+  <%= javascript_include_tag 'dashboard.js' %>
+  <%= javascript_include_tag 'swfobject.js' %>
+  <%= javascript_include_tag 'jquery.clippy.js' %>
 
   <script type = "text/javascript"> 
 
