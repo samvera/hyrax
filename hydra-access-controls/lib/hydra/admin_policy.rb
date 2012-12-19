@@ -48,10 +48,12 @@ class Hydra::AdminPolicy < ActiveFedora::Base
     perm_hash = {'person' => defaultRights.individuals, 'group'=> defaultRights.groups}
 
     params.each do |row|
-      if row[:type] == 'user'
-        perm_hash['person'][row[:name]] = row[:access]
-      else
+      if row[:type] == 'user' || row[:type] == 'person'
+        perm_hash['person'][row[:name]] = row[:access]        
+      elsif row[:type] == 'group'
         perm_hash['group'][row[:name]] = row[:access]
+      else
+        raise ArgumentError, "Permission type must be 'user', 'person' (alias for 'user'), or 'group'"
       end
     end
     

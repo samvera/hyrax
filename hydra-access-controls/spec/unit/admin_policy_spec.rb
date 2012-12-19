@@ -47,6 +47,46 @@ describe Hydra::AdminPolicy do
       subject["title_display"].should == 'Foobar'
     end
   end
+
+  describe "updating default permissions" do
+    it "should create new group permissions" do
+      subject.default_permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
+      subject.default_permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
+    end
+    it "should create new user permissions" do
+      subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
+      subject.default_permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+    end
+    it "should not replace existing groups" do
+      subject.default_permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
+      subject.default_permissions = [{:name=>'group2', :access=>'discover', :type=>'group'}]
+      subject.default_permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
+                                   {:type=>'group', :access=>'discover', :name=>'group2'}]
+    end
+    it "should not replace existing users" do
+      subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
+      subject.default_permissions = [{:name=>'user2', :access=>'discover', :type=>'user'}]
+      subject.default_permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
+                                   {:type=>'user', :access=>'discover', :name=>'user2'}]
+    end
+    it "should update permissions on existing users" do
+      subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
+      subject.default_permissions = [{:name=>'user1', :access=>'edit', :type=>'user'}]
+      subject.default_permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
+    end
+    it "should update permissions on existing groups" do
+      subject.default_permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
+      subject.default_permissions = [{:name=>'group1', :access=>'edit', :type=>'group'}]
+      subject.default_permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
+    end
+    it "should assign user permissions when :type == 'person'" do
+      subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'person'}]
+      subject.default_permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+    end
+    it "should raise an ArgumentError when the :type hashkey is invalid" do
+      expect{subject.default_permissions = [{:name=>'user1', :access=>'read', :type=>'foo'}]}.to raise_error(ArgumentError)
+    end
+  end
   
   describe "Inheritable rights" do
     before do
