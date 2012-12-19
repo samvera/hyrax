@@ -1,6 +1,8 @@
-<% javascript_include_tag 'bootstrap-modal.js'%>
-<% javascript_include_tag 'bootstrap-tooltip.js'%>
-<% javascript_include_tag 'bootstrap-popover.js'%>
+<% content_for :js_head do %>
+  <%= javascript_include_tag 'bootstrap-modal.js'%>
+  <%= javascript_include_tag 'bootstrap-tooltip.js'%>
+  <%= javascript_include_tag 'bootstrap-popover.js'%>
+<% end %> 
 
 <% stylesheet_link_tag "jquery-ui-1.8.23.custom.css" %>
 
