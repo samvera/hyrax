@@ -19,7 +19,6 @@ module Sufia
     include Sufia::GenericFile::Audit
     include Sufia::GenericFile::Permissions
                                                 
-    @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
 
     included do
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -177,6 +176,8 @@ module Sufia
     end
 
     module ClassMethods
+     @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
+
       def get_label(key)
          label = @@FIELD_LABEL_MAP[key]
          label = key.gsub('_',' ').titleize if label.blank?

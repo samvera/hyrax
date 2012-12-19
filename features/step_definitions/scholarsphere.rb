@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+require "cucumber/rspec/doubles"
+
 When /^I attach a file "([^"]*)" to the dynamically created "([^"]*)"$/ do |path, field|
   find(field).native.send_keys(File.expand_path(path, Rails.root))
 end
@@ -25,7 +27,7 @@ Given /^And I click within the anchor "(.*?)"$/ do |selector|
 end
 
 Given /^I have a mail server$/ do
-  ContactForm.any_instance.stubs(:deliver).returns(true)
+  ContactForm.any_instance.stub(:deliver).and_return(true)
 end
 
 Then /^I reset the mail server$/ do
