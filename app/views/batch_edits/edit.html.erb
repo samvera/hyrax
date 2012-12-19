@@ -36,9 +36,10 @@ $("a[rel=popover]").popover();
   function after_ajax(form_id){
       var key = form_id.replace("form_","");
       var save_button = "#"+key+"_save";
+      var outer_div = "#collapse_"+key;
       $("#status_"+key).html("Changes Saved");
       $(save_button).removeAttr("disabled");         
-      $('#'+form_id).removeClass("loading");
+      $(outer_div).removeClass("loading");
       $('#'+form_id).children([".control-group"]).removeClass('hidden')
   }
 
@@ -48,8 +49,9 @@ $("a[rel=popover]").popover();
   function before_ajax(form_id){
         var key = form_id.replace("form_","");
         var save_button = "#"+key+"_save";
+        var outer_div = "#collapse_"+key;
         $(save_button).attr("disabled", "disabled");
-        $('#'+form_id).addClass("loading");
+        $(outer_div).addClass("loading");
         $('#'+form_id).children([".control-group"]).addClass('hidden')        
     }
 
