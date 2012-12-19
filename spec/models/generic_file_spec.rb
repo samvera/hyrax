@@ -194,6 +194,7 @@ describe GenericFile do
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
+    @file.mime_type = "image/jpeg"
     local = @file.to_solr
     local.should_not be_nil
     local["generic_file__part_of_t"].should be_nil
@@ -213,6 +214,7 @@ describe GenericFile do
     local["generic_file__format_t"].should == ["application/pdf"]
     local["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     local["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
+    local["mime_type_t"].should == ["image/jpeg"]    
   end
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]

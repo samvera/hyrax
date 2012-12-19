@@ -22,7 +22,7 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
     t.identification {
       t.identity {
         t.format_label(:path=>{:attribute=>"format"})
-        t.mime_type(:path=>{:attribute=>"mimetype"})
+        t.mime_type(:path=>{:attribute=>"mimetype"}, index_as: [:searchable])
       }
     }
     t.fileinfo {
