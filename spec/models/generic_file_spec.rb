@@ -130,9 +130,10 @@ describe GenericFile do
       @file.to_param.should == @file.noid
     end
     describe "that have been saved" do
-      before(:each) do
-        Sufia.queue.should_receive(:push).once
-      end
+      # This file has no content, so it doesn't characterize
+      # before(:each) do
+      #   Sufia.queue.should_receive(:push).once
+      # end
       after(:each) do
         unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
           begin
@@ -230,7 +231,7 @@ describe GenericFile do
       before do
         @f = GenericFile.new
         @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
-        @f.add_file_datastream(File.new("#{fixture_path}/world.png"), :dsid=>'content')
+        @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
         @f.apply_depositor_metadata('mjg36')
         @f.save
         @mock_image = mock("image", :from_blob=>true)
