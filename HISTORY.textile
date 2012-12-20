@@ -1,3 +1,6 @@
+h3. 5.1.0
+* Bump to AF ~> 5.3
+
 h3. 5.0.0
 * We no longer require the hydra-file-access stuff by default, add "gem 'hydra-file-access'" if you want to continue to use it.
 * Upgrade to active-fedora 5.0 (you must add :index_as=>[:searchable] to models you want to index in solr)
