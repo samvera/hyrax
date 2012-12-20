@@ -19,7 +19,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'blacklight', '~> 4.0.0'
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency "hydra-head", "~> 5.0.0"
-  gem.add_dependency "active-fedora", "~> 5.0.0"
 
   #TODO remove
   gem.add_dependency 'noid', '0.5.5'
