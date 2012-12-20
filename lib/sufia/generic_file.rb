@@ -37,8 +37,6 @@ module Sufia
       around_save :characterize_if_changed, :retry_warming
 
       #make sure the terms of service is present and set to 1 before saving
-      # note GenericFile.create will no longer save a GenericFile as the terms_of_service will not be set
-      terms_of_service = nil
       validates_acceptance_of :terms_of_service, :allow_nil => false
     end
 
