@@ -2,7 +2,7 @@
 #
 module Hydra::Controller::RepositoryControllerBehavior
   extend Deprecation 
-  self.deprecation_horizon = "hydra-access-controls 6.0"
+  self.deprecation_horizon = "hydra-core 6.0"
   
   # TODO, move these to a helper file.
   def self.included(c)

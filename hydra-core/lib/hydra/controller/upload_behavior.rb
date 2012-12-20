@@ -1,5 +1,7 @@
 module Hydra::Controller::UploadBehavior
   
+  extend Deprecation 
+  self.deprecation_horizon = "hydra-core 6.0"
   # Creates a File Asset, adding the posted blob to the File Asset's datastreams and saves the File Asset
   #
   # @return [FileAsset] the File Asset  
@@ -49,6 +51,7 @@ module Hydra::Controller::UploadBehavior
     file_asset.add_relationship(:is_part_of, container_id)
     file_asset.save
   end
+  deprecation_deprecate :associate_file_asset_with_container
   
   # Apply any posted file metadata to the file asset
   def apply_posted_file_metadata         
