@@ -28,7 +28,7 @@ $(function () {
     $('#main_upload_start').attr('disabled', true);
     'use strict';
     $("#upload_tooltip").hide();
-    $("#main_upload_start_span").mousemove(function(e){
+    $("#main_upload_start_span > button").mousemove(function(e){
        if ( !$('#terms_of_service').is(':checked') ){
            $('#main_upload_start').attr('disabled', true);
         $("#upload_tooltip").show();
@@ -41,10 +41,10 @@ $(function () {
          $("#upload_tooltip").hide();
        }
     });
-    $("#main_upload_start_span").mouseout(function(e){
+    $("#main_upload_start_span > button").mouseout(function(e){
         $("#upload_tooltip").hide();
     });
-    $("#main_upload_start_span").mouseleave(function(e){
+    $("#main_upload_start_span > button").mouseleave(function(e){
         $("#upload_tooltip").hide();
     });
     $('#terms_of_service').click(function () {
