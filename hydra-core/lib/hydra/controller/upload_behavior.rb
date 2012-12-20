@@ -47,7 +47,6 @@ module Hydra::Controller::UploadBehavior
       file_asset = @file_asset
     end
     file_asset.add_relationship(:is_part_of, container_id)
-    file_asset.datastreams["RELS-EXT"].dirty = true
     file_asset.save
   end
   

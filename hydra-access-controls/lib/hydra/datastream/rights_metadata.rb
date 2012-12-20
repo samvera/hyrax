@@ -111,7 +111,6 @@ module Hydra
             access_type_symbol = "#{new_access_level}_access".to_sym
             result = self.update_values([access_type_symbol, type] => {"-1"=>actor})
           end
-          self.dirty = true
           return new_access_level
         end
           
