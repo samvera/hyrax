@@ -13,7 +13,7 @@ group :development, :test do
 #  gem "rails_indexes", :git => "git://github.com/warpc/rails_indexes.git", :ref => '4a550270'
   gem 'selenium-webdriver'
   gem 'headless'
-  gem 'rspec-rails', '>= 2.11.0'
+  gem 'rspec-rails', '~> 2.12.0'
   gem 'ruby-prof'
   gem 'cucumber-rails', '~> 1.0', :require => false
   gem 'database_cleaner'
