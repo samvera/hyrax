@@ -65,7 +65,7 @@ class BatchUpdateJob
 
     save_tries = 0
     begin
-      gf.save
+      gf.save!
     rescue RSolr::Error::Http => error
       save_tries += 1
       logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
