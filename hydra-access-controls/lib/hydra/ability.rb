@@ -1,11 +1,18 @@
 # Code for [CANCAN] access to Hydra models
+require 'cancan'
 module Hydra::Ability
   extend ActiveSupport::Concern
   
+  # once you include Hydra::Ability you can add custom permission methods by appending to ability_logic like so:
+  #
+  # self.ability_logic +=[:setup_my_permissions]
   
   included do
+    include CanCan::Ability
     include Hydra::AccessControlsEnforcement
     include Blacklight::SolrHelper
+    class_attribute :ability_logic
+    self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :custom_permissions]
   end
 
   def self.user_class
@@ -38,10 +45,9 @@ module Hydra::Ability
   def hydra_default_permissions(user=nil, session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to hydra_default_permissions, use the instance_variables", caller()) if user || session
     logger.debug("Usergroups are " + user_groups.inspect)
-    create_permissions()
-    edit_permissions()
-    read_permissions()
-    custom_permissions()
+    self.ability_logic.each do |method|
+      send(method)
+    end
   end
 
   def create_permissions(user=nil, session=nil)

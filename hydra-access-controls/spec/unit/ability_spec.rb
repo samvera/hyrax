@@ -245,6 +245,30 @@ describe Ability do
 
   end
 
+  describe "custom method" do
+    before do
+      class MyAbility
+        include Hydra::Ability
+        self.ability_logic +=[:setup_my_permissions]
+
+        def setup_my_permissions
+          can :accept, ActiveFedora::Base
+        end
+      end
+    end
+
+    after do
+      Object.send(:remove_const, :MyAbility)
+    end
+
+    subject { MyAbility.new(FactoryGirl.create(:staff)) }
+
+    it "should be set the custom permission" do
+      subject.can?(:accept, ActiveFedora::Base).should be_true
+    end
+
+  end
+
   #
   # Policy-based Access Controls
   #
