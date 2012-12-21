@@ -14,10 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// require jquery-1.8.2.min
-// require jquery_ujs.js
-// require jquery-ui-1.8.23.custom.min
-// require blacklight
+//= require jquery-ui-1.9.2/jquery.ui.core
+//= require jquery-ui-1.9.2/jquery.ui.widget
+//= require jquery-ui-1.9.2/jquery.ui.autocomplete
 //= require bootstrap-dropdown
 //= require bootstrap-button
 //= require bootstrap-collapse
