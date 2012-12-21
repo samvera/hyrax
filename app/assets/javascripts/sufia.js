@@ -22,6 +22,7 @@ limitations under the License.
 //= require bootstrap-button
 //= require bootstrap-collapse
 //= require batch_edit
+//= require terms_of_service
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
