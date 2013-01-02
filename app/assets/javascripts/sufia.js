@@ -16,6 +16,7 @@ limitations under the License.
 
 //= require jquery-ui-1.9.2/jquery.ui.core
 //= require jquery-ui-1.9.2/jquery.ui.widget
+//= require jquery-ui-1.9.2/jquery.ui.menu
 //= require jquery-ui-1.9.2/jquery.ui.autocomplete
 //= require bootstrap-dropdown
 //= require bootstrap-button
