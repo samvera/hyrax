@@ -238,7 +238,7 @@ var addthis_config = {"data_track_addressbar":true};
           <th>Related Files</th>
           <td>
               <% @generic_file.related_files.each do |f| %>
-                <dd><%= link_to(f.label, generic_file_url(f.noid)) %></dd>
+                <dd><%= link_to(f.label, sufia.generic_file_url(f.noid)) %></dd>
               <% end %>
           </td>
         </tr>
