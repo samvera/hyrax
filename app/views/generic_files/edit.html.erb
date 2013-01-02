@@ -35,7 +35,7 @@ label.error { float: left; color: red; padding-left: .5em; vertical-align: top; 
 
 <% content_for :local_js do %>
    if (navigator.userAgent.match("MSIE")){
-      $("#fileupload").validate();
+      $("form").validate();
    }
 initialize_audio();
 
@@ -92,7 +92,7 @@ $("a[rel=popover]").popover();
     </ul>
     <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
 
-    <%= form_for @generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'fileupload'} do |f| %>
+    <%= form_for @generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'permission'} do |f| %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render :partial => "permission", :locals => { :gf => @generic_file, :f=> f } %>
     <% end %>
