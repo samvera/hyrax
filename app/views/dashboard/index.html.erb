@@ -15,11 +15,6 @@ limitations under the License.
 %>
 
 <% content_for :js_head do %>
-  <%= javascript_include_tag 'video.js' %>
-  <%= javascript_include_tag 'audio.min.js' %>
-  <%= stylesheet_link_tag 'video-js.css' %>
-  <%= javascript_include_tag 'dashboard.js' %>
-  <%= javascript_include_tag 'swfobject.js' %>
 
   <script type = "text/javascript"> 
 
@@ -101,20 +96,6 @@ limitations under the License.
     });
 
   $('#documents').batchEdit();
-
-  /*$('a.copypaste').zclip({
-      path: "/assets/ZeroClipboard.swf",
-      copy: function(){
-    return '123 abc';
-    }
-  });
-  
-  $("#copy-button").zclip({
-      path: "/assets/ZeroClipboard.swf",
-      copy: function(){
-    return 'abc 123';
-    }
-  });*/
 
 
  <% end %>

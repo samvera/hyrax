@@ -26,12 +26,15 @@ limitations under the License.
 //= require bootstrap-tooltip
 //= require bootstrap-popover
 
-//= require batch_edit
-//= require terms_of_service
-//= require fileupload
 //= require video
 //= require audio.min
 //= require jquery.validate
+//= require swfobject
+//= require jquery.zclip.min
+
+//= require batch_edit
+//= require terms_of_service
+//= require fileupload
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
