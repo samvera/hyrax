@@ -1,0 +1,67 @@
+    <h2 class="non lower">File Details</h2>
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <th>Depositor</th>
+          <td><%= link_to_profile @generic_file.depositor %></td>
+        </tr>
+        <tr>
+          <th>Date Uploaded</th>
+          <td>
+            <%= @generic_file.date_uploaded %>
+          </td>
+        </tr>
+        <tr>
+          <th>Date Modified</th>
+          <td>
+            <%= @generic_file.date_modified %>
+          </td>
+        </tr>
+        <tr>
+          <th>Audit Status</th>
+          <%- stat= @generic_file.audit_stat(false)  %>
+          <td> <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %></td>
+        </tr>
+<% unless @generic_file.related_files.empty? %>
+  <tr>
+          <th>Related Files</th>
+          <td>
+              <% @generic_file.related_files.each do |f| %>
+                <dd><%= link_to(f.label, sufia.generic_file_url(f.noid)) %></dd>
+              <% end %>
+          </td>
+        </tr>
+<% end %>
+<tr>
+          <th>Characterization</th>
+          <td>
+            <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>
+            <% @generic_file.characterization_terms.each_pair do |term, values| %>
+            <div>
+              <% label = term.to_s %>
+              <% if label == "format_label" %>
+                 <% label = "File Format"  %>
+                 <% values = @generic_file.file_format %>
+              <% end %>
+              <% label = label.humanize %>
+              <% if values.is_a? Array %>
+                <% length = values.length %>
+                <% length = Sufia::Engine.config.fits_message_length-1  if term == :status_message && values.length > Sufia::Engine.config.fits_message_length-1  %>
+                <% values[0..length].each_with_index do |value, idx| %>
+                  <% next if value.empty? %>
+                  <%= "#{label}: #{value.truncate(250)}" %>
+                  <%= "<br />".html_safe unless idx == length %> 
+                <% end %>
+                <% if length != values.length %>
+                   <%= render :partial => "generic_files/extra_fields_modal", :locals=>{:name=>term, :values=> values, :start=>Sufia::Engine.config.fits_message_length}%>
+                <% end %>
+              <% else %>
+                <%= "#{label}: #{values.truncate(250)}" %><br />
+              <% end %>
+            </div>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table> <!-- /verticalheadings -->
+

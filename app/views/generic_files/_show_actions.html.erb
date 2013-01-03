@@ -1,0 +1,37 @@
+    <h2 class="non lower">Actions</h2>
+    <p>
+      <%= link_to "Download", sufia.download_path(@generic_file.noid) %>
+      <!-- &nbsp;|&nbsp; -->
+      <%# link_to "Cite", citation_generic_file_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
+      <% if @can_edit %>
+          &nbsp;|&nbsp;
+          <%= link_to "Edit", sufia.edit_generic_file_path unless @generic_file.processing?   %>
+          <%= "File is being processed you may edit once it is complete" if @generic_file.processing?   %>
+      <%end %>
+    </p>
+    <p>Export to:
+      <%= link_to 'EndNote', sufia.generic_file_path(@generic_file.noid, :format => 'endnote') %>
+      &nbsp;|&nbsp;
+      <%= link_to 'Zotero', sufia.static_path('zotero'), {:id => 'zoteroLink', :name =>    'zotero', :class => 'lightboxLink'} %>
+      &nbsp;|&nbsp;
+      <%= link_to 'Mendeley', sufia.static_path('mendeley'), {:id => 'mendeleyLink', :name =>    'mendeley', :class => 'lightboxLink'} %>
+      <!-- Disabling RefWorks export due to stakeholder deprioritization -->
+      <%# link_to 'RefWorks', refworks_export_url(:id => @generic_file.noid) %>
+      <!-- &nbsp;|&nbsp; -->
+      <!-- Disabling Email This and SMS This links due to lack of use cases -->
+      <%# link_to 'Email This', email_catalog_path(:id => @generic_file.persistent_url), {:id => 'emailLink', :name => 'email', :class => 'lightboxLink'} %>
+    </p>
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+      <a class="addthis_button_preferred_1"></a>
+      <a class="addthis_button_preferred_2"></a>
+      <a class="addthis_button_preferred_3"></a>
+      <a class="addthis_button_preferred_4"></a>
+      <a class="addthis_button_compact"></a>
+      <a class="addthis_counter addthis_bubble_style"></a>
+    </div>
+    <!-- AddThis Button END -->
+
+    <!-- COinS hook for Zotero -->
+    <span class="Z3988" title="<%= @generic_file.export_as_openurl_ctx_kev %>"></span>
+

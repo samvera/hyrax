@@ -15,19 +15,19 @@ limitations under the License.
 %>
 
 <% if @generic_file.image? %>
-  <a href="<%= sufia.download_path(@generic_file.noid) %>" target="_new"><img src="<%= sufia.download_path(@generic_file.noid) %>" width="338" /></a>
+  <a href="<%= sufia.download_path(@generic_file) %>" target="_new"><img src="<%= sufia.download_path(@generic_file) %>" width="338" /></a>
 <% elsif @generic_file.video? %>
   <video controls="controls" class="video-js vjs-default-skin" data-setup="{}" preload="auto">
-    <source src="<%= sufia.download_path(@generic_file.noid, datastream_id: 'webm') %>" type="video/webm" />
-    <source src="<%= sufia.download_path(@generic_file.noid, datastream_id: 'mp4') %>" type="video/mp4" />
+    <source src="<%= sufia.download_path(@generic_file, datastream_id: 'webm') %>" type="video/webm" />
+    <source src="<%= sufia.download_path(@generic_file, datastream_id: 'mp4') %>" type="video/mp4" />
     Your browser does not support the audio tag.
   </video>
 <% elsif ['audio/mp3', 'audio/mpeg'].include?(@generic_file.mime_type) %>
-  <audio src="<%= sufia.download_path(@generic_file.noid, format:'audio') %>" type="<%= @generic_file.mime_type %>" />
+  <audio src="<%= sufia.download_path(@generic_file, format:'audio') %>" type="<%= @generic_file.mime_type %>" />
     Your browser does not support the audio tag.
     </audio>
 <% elsif @generic_file.pdf?%>
-  <a href="<%= sufia.download_path(@generic_file.noid) %>" target="_new"><img src="<%= sufia.download_path(@generic_file.noid, {:datastream_id => 'thumbnail'}) %>" width="338" height="493" /></a>
+  <a href="<%= sufia.download_path(@generic_file) %>" target="_new"><img src="<%= sufia.download_path(@generic_file, {:datastream_id => 'thumbnail'}) %>" width="338" height="493" /></a>
 <% else %>
-  <a href="<%= sufia.download_path(@generic_file.noid) %>" target="_new"><img src="/assets/default.png" alt="No preview available" width="338" height="493" /></a>
+  <a href="<%= sufia.download_path(@generic_file) %>" target="_new"><img src="/assets/default.png" alt="No preview available" width="338" height="493" /></a>
 <% end %>
