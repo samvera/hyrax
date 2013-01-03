@@ -24,6 +24,8 @@ limitations under the License.
 //= require batch_edit
 //= require terms_of_service
 //= require fileupload
+//= require video
+//= require audio.min
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change

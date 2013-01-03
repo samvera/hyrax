@@ -16,15 +16,10 @@ limitations under the License.
 
 
 <% content_for :js_head do  %>
-  <% javascript_include_tag 'video.js' %>
-  <% javascript_include_tag 'audio.min.js' %>
   <% javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
   <% javascript_include_tag 'bootstrap-tooltip.js'%>
   <% javascript_include_tag 'bootstrap-popover.js'%>
   <% javascript_include_tag 'bootstrap-modal.js'%>
-<% end %>
-<% content_for :css_head do  %>
-  <% stylesheet_link_tag 'video-js.css' %>
 <% end %>
 
 <% content_for :local_js do %>
