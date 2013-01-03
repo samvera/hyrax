@@ -68,14 +68,14 @@ module Sufia
   end
 
   autoload :GenericFile
-  autoload :Controller#,                  'sufia/controller'
-  autoload :Utils#,                       'sufia/utils'
-  autoload :User#,                        'sufia/user'
-  autoload :ModelMethods#,                'sufia/model_methods'
-  autoload :Noid#,                        'sufia/noid'
-  autoload :IdService#,                   'sufia/id_service'
-  autoload :HttpHeaderAuth#,              'sufia/http_header_auth'
-  autoload :SolrDocumentBehavior#,        'sufia/solr_document_behavior'
+  autoload :Controller
+  autoload :Utils
+  autoload :User
+  autoload :ModelMethods
+  autoload :Noid
+  autoload :IdService
+  autoload :HttpHeaderAuth
+  autoload :SolrDocumentBehavior
   autoload :FilesControllerBehavior
   autoload :DownloadsControllerBehavior
 end
