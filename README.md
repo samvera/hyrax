@@ -37,6 +37,9 @@ You'll want to ensure you're not loading the blacklight.css, so remove this line
 //= require sufia
 ```
 
+### Install Fits.sh
+http://code.google.com/p/fits/downloads/list
+
 ### Start background workers
 ```
 COUNT=4 QUEUE=* rake environment resque:work
