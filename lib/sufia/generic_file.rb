@@ -38,6 +38,7 @@ module Sufia
 
       #make sure the terms of service is present and set to 1 before saving
       validates_acceptance_of :terms_of_service, :allow_nil => false
+      after_find :preset_terms
     end
 
     def pdf?
@@ -173,25 +174,18 @@ module Sufia
        return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
     end
 
+    def preset_terms
+      self.terms_of_service = '1'
+    end
+
     module ClassMethods
-     @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
+      # TODO this could probably be better handled by i18n
+      @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
 
       def get_label(key)
          label = @@FIELD_LABEL_MAP[key]
          label = key.gsub('_',' ').titleize if label.blank?
          return label
-      end
-
-      # redefine find so that it sets the terms of service
-      def find(args, opts={})
-        gf = super
-        # use the field type to see if the return will be one item or multiple
-        if args.is_a? String
-          gf.terms_of_service = '1'
-        elsif gf.respond_to? :each
-          gf.each {|f| f.terms_of_service = '1'} 
-        end
-        return gf
       end
     end
 
