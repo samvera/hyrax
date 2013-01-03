@@ -111,7 +111,7 @@ module Sufia
           end
         end
       rescue => error
-        logger.warn "GenericFilesController::create rescued error #{error.backtrace}"
+        logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
         retval = render :json => [{:error => "Error occurred while creating generic file."}].to_json
       ensure
         # remove the tempfile (only if it is a temp file)
