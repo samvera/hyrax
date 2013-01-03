@@ -188,8 +188,7 @@ describe GenericFilesController do
 
   describe "destroy" do
     before(:each) do
-      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
-      @generic_file = GenericFile.new
+      @generic_file = GenericFile.new(:terms_of_service => '1')
       @generic_file.apply_depositor_metadata(@user.user_key)
       @generic_file.save
       @user = FactoryGirl.find_or_create(:user)
@@ -213,9 +212,8 @@ describe GenericFilesController do
 
   describe "update" do
     before do
-      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
       #controller.should_receive(:virus_check).and_return(0)      
-      @generic_file = GenericFile.new
+      @generic_file = GenericFile.new(:terms_of_service=>'1')
       @generic_file.apply_depositor_metadata(@user.user_key)
       @generic_file.save
     end
@@ -335,9 +333,8 @@ describe GenericFilesController do
   end
 
   describe "someone elses files" do
-    before(:all) do
-      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
-      f = GenericFile.new(:pid => 'sufia:test5')
+    before do
+      f = GenericFile.new(:pid => 'sufia:test5', :terms_of_service=> '1')
       f.apply_depositor_metadata('archivist1@example.com')
       f.set_title_and_label('world.png')
       f.add_file_datastream(File.new(fixture_path +  '/world.png'))
@@ -347,8 +344,8 @@ describe GenericFilesController do
       f.save
       @file = f
     end
-    after(:all) do
-      GenericFile.find('sufia:test5').delete
+    after do
+      GenericFile.find('sufia:test5').destroy
     end
     describe "edit" do
       it "should give me a flash error" do
@@ -367,7 +364,6 @@ describe GenericFilesController do
       end
     end
     describe "flash" do
-      render_views
       it "should not let the user submit if they logout" do
         sign_out @user
         get :new
@@ -376,23 +372,17 @@ describe GenericFilesController do
         flash[:alert].should include("You need to sign in or sign up before continuing")
       end
       it "should filter flash if they signin" do
-        request.env['warden'].stub(:user).and_return(@user)
-        sign_out @user
-        get :new
         sign_in @user
         get :show, id:"test5"
-        response.body.should_not include("You need to sign in or sign up before continuing")
+        flash[:alert].should be_nil
       end
       describe "failing audit" do
-        before(:all) do
+        render_views
+        before do
           ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(false)
           @archivist = FactoryGirl.find_or_create(:archivist)
         end
-        after(:all) do
-          @archivist.delete
-        end
         it "should display failing audits" do
-          sign_out @user
           sign_in @archivist
           @ds = @file.datastreams.first
           AuditJob.new(@file.pid, @ds[0], @ds[1].versionID).run

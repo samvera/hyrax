@@ -27,9 +27,9 @@ module Sufia
       self.copy_blacklight_config_from(CatalogController)
 
       # Catch permission errors
-      rescue_from Hydra::AccessDenied do |exception|
+      rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
         if (exception.action == :edit)
-          redirect_to(sufia.url_for({:action=>'show'}), :alert => exception.message)
+          redirect_to(sufia.url_for({:action=>'show'}), :alert => "You do not have sufficient privileges to edit this document")
         elsif current_user and current_user.persisted?
           redirect_to root_url, :alert => exception.message
         else
@@ -41,9 +41,9 @@ module Sufia
       # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
       before_filter :authenticate_user!, :except => [:show, :citation]
       before_filter :has_access?, :except => [:show]
-      before_filter :enforce_access_controls
-      before_filter :find_by_id, :except => [:index, :create, :new]
       prepend_before_filter :normalize_identifier, :except => [:index, :create, :new]
+      load_resource :only=>[:audit]
+      load_and_authorize_resource :except=>[:index, :audit]
     end
 
 
@@ -127,9 +127,7 @@ module Sufia
 
     # routed to /files/:id
     def show
-      perms = permissions_solr_doc_for_id(@generic_file.pid)
-      @can_read =  can? :read, perms
-      @can_edit =  can? :edit, perms
+      @can_edit =  can? :edit, @generic_file
       @events = @generic_file.events(100)
 
       respond_to do |format|
@@ -180,10 +178,6 @@ module Sufia
                               :datastream_id => version.dsid,
                               :version_id => version.versionID,
                               :committer_login => user.user_key)
-    end
-
-    def find_by_id
-      @generic_file = ::GenericFile.find(params[:id])
     end
 
     def virus_check( file)
@@ -247,74 +241,5 @@ module Sufia
       Sufia.queue.push(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
       return @generic_file
     end
-    
-    
-    
-    ############################ to get rid of deprication warnings.  Need to fix #################
-    # Controller "before" filter that delegates enforcement based on the controller action
-    # Action-specific implementations are enforce_index_permissions, enforce_show_permissions, etc.
-    # @param [Hash] opts (optional, not currently used)
-    #
-    # @example
-    #   class CatalogController < ApplicationController  
-    #     before_filter :enforce_access_controls
-    #   end
-    #
-    # @deprecated HYDRA-886 Blacklight is now using Catalog#update to store pagination info, so we don't want to enforce_edit_permissions on it. Instead just call before_filter :enforce_show_permissions, :only=>:show. Move all Edit/Update/Delete methods into non-catalog backed controllers.
-    def enforce_access_controls(opts={})
-      controller_action = params[:action].to_s
-      delegate_method = "enforce_#{controller_action}_permissions"
-      if self.respond_to?(delegate_method.to_sym, true)
-        self.send(delegate_method.to_sym)
-      else
-        true
-      end
-    end
-    
-   
-    # Controller "before" filter for enforcing access controls on edit actions
-    # @param [Hash] opts (optional, not currently used)
-    def enforce_edit_permissions(opts={})
-      logger.debug("Enforcing edit permissions")
-      load_permissions_from_solr
-      if !can? :edit, params[:id]
-        session[:viewing_context] = "browse"
-        raise Hydra::AccessDenied.new("You do not have sufficient privileges to edit this document. You have been redirected to the read-only view.", :edit, params[:id])
-      else
-        session[:viewing_context] = "edit"
-      end
-    end
-   
-    ##  This method is here for you to override
-    def enforce_create_permissions(opts={})
-      logger.debug("Enforcing create permissions")
-      if !can? :create, ActiveFedora::Base.new
-        raise Hydra::AccessDenied.new "You do not have sufficient privileges to create a new document."
-      end
-    end
-   
-    ## proxies to enforce_edit_permssions.  This method is here for you to override
-    def enforce_update_permissions(opts={})
-      enforce_edit_permissions(opts)
-    end
-
-    ## proxies to enforce_edit_permssions.  This method is here for you to override
-    def enforce_destroy_permissions(opts={})
-      enforce_edit_permissions(opts)
-    end
-
-    ## proxies to enforce_edit_permssions.  This method is here for you to override
-    def enforce_new_permissions(opts={})
-      enforce_create_permissions(opts)
-    end
-
-    # Controller "before" filter for enforcing access controls on index actions
-    # Currently does nothing, instead relies on 
-    # @param [Hash] opts (optional, not currently used)
-    def enforce_index_permissions(opts={})
-      # Do nothing. Relies on enforce_search_permissions being included in the Controller's solr_search_params_logic
-      return true
-    end
-    
   end
 end
