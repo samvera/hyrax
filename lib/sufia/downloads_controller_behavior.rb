@@ -39,7 +39,7 @@ module Sufia
     protected
     
     def send_content (id)
-        @asset = ActiveFedora::Base.find(id)
+        @asset = ActiveFedora::Base.find(id, :cast=>true)
         opts = {}
         ds = nil
         opts[:filename] = params["filename"] || @asset.label
