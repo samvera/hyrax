@@ -18,14 +18,20 @@ limitations under the License.
 //= require jquery-ui-1.9.2/jquery.ui.widget
 //= require jquery-ui-1.9.2/jquery.ui.menu
 //= require jquery-ui-1.9.2/jquery.ui.autocomplete
+
 //= require bootstrap-dropdown
 //= require bootstrap-button
+//= require bootstrap-modal
 //= require bootstrap-collapse
+//= require bootstrap-tooltip
+//= require bootstrap-popover
+
 //= require batch_edit
 //= require terms_of_service
 //= require fileupload
 //= require video
 //= require audio.min
+//= require jquery.validate
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
