@@ -49,6 +49,7 @@ module Sufia
           ds = @asset.datastreams[params[:datastream_id]]
         end
         ds = default_content_ds(@asset) if ds.nil?
+        raise ActionController::RoutingError.new('Not Found') if ds.nil?
         data = ds.content
         opts[:type] = ds.mimeType
         send_data data, opts
@@ -64,8 +65,6 @@ module Sufia
       end
       if asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
         return asset.datastreams[DownloadsController.default_content_dsid]
-      else
-        return asset.inner_object.profile.to_xml
       end
     end
     
