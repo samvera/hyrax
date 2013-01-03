@@ -290,8 +290,8 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "format"
       }
       field.solr_local_parameters = {
-        :qf => "generic_file__format_t",
-        :pf => "generic_file__format_t"
+        :qf => "file_format_t",
+        :pf => "file_format_t"
       }
     end
 

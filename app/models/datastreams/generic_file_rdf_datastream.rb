@@ -17,7 +17,6 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   map_predicates do |map|
     map.part_of(:to => "isPartOf", :in => RDF::DC)
     map.contributor(:in => RDF::DC) do |index|
-      #index.as :searchable, :facetable, :displayable
       index.as :searchable, :displayable
     end
     map.creator(:in => RDF::DC) do |index|
@@ -54,9 +53,6 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :searchable, :displayable
     end
     map.resource_type(:to => "type", :in => RDF::DC) do |index|
-      index.as :searchable, :facetable, :displayable
-    end
-    map.format(:in => RDF::DC) do |index|
       index.as :searchable, :facetable, :displayable
     end
     map.identifier(:in => RDF::DC) do |index|

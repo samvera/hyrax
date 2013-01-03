@@ -111,7 +111,6 @@ describe GenericFile do
       @file.should respond_to(:language)
       @file.should respond_to(:rights)
       @file.should respond_to(:resource_type)
-      @file.should respond_to(:format)
       @file.should respond_to(:identifier)
     end
     it "should delegate methods to characterization metadata" do
@@ -191,11 +190,11 @@ describe GenericFile do
     @file.language = "Arabic"
     @file.rights = "Wide open, buddy."
     @file.resource_type = "Book"
-    @file.format = "application/pdf"
     @file.identifier = "urn:isbn:1234567890"
     @file.based_near = "Medina, Saudi Arabia"
     @file.related_url = "http://example.org/TheWork/"
     @file.mime_type = "image/jpeg"
+    @file.format_label = "JPEG Image"
     local = @file.to_solr
     local.should_not be_nil
     local["generic_file__part_of_t"].should be_nil
@@ -212,7 +211,7 @@ describe GenericFile do
     local["generic_file__language_t"].should == ["Arabic"]
     local["generic_file__date_created_t"].should == ["1200"]
     local["generic_file__resource_type_t"].should == ["Book"]
-    local["generic_file__format_t"].should == ["application/pdf"]
+    local["file_format_t"].should == "jpeg (JPEG Image)"
     local["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     local["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
     local["mime_type_t"].should == ["image/jpeg"]    

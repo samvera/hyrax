@@ -32,7 +32,7 @@ module Sufia
       delegate_to :descMetadata, [:date_uploaded, :date_modified], :unique => true
       delegate_to :descMetadata, [:related_url, :based_near, :part_of, :creator,
                                   :contributor, :title, :tag, :description, :rights,
-                                  :publisher, :date_created, :subject, :format,
+                                  :publisher, :date_created, :subject,
                                   :resource_type, :identifier, :language]
       around_save :characterize_if_changed, :retry_warming
 
@@ -160,7 +160,7 @@ module Sufia
       terms.each do |t|
           next if t.empty?
           key = t.to_s.split("generic_file__").last
-          next if ['part_of', 'date_modified', 'date_uploaded', 'format'].include?(key)
+          next if ['part_of', 'date_modified', 'date_uploaded'].include?(key)
           values[key] = self.send(key) if self.respond_to?(key)
       end        
       return values          
