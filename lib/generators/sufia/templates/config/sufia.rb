@@ -95,6 +95,9 @@ Sufia.config do |config|
 
     config.queue = Sufia::Resque::Queue
 
+    # Map hostnames onto Google Analytics tracking IDs
+    #config.google_analytics_id = 'UA-99999999-1'
+
 end
 
 

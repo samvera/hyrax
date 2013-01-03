@@ -15,8 +15,8 @@ limitations under the License.
 %>
 
 <%
-tracking_id = 1234 #Scholarsphere::Engine.config.ga_host_map[request.host]
-unless tracking_id.blank?
+if Sufia::Engine.config.respond_to? :google_analytics_id
+tracking_id = Sufia::Engine.config.google_analytics_id
 %>
 <script type="text/javascript">
   var _gaq = _gaq || [];
