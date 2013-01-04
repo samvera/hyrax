@@ -1,42 +1,37 @@
-<%#
-Copyright © 2012 The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-%>
-
-<div class="facet_extended_list">
-  <% sidebar_items << capture do %>
+<!-- This was copied from https://github.com/projectblacklight/blacklight/blob/master/app/views/catalog/facet.html.erb
+ It implements the facets in the same manner as blacklight does for the main catalog for the individual's dashbord 
+-->
+ <% sidebar_items << capture do %>
   <p><%= link_back_to_catalog %></p>
-  <% end %>
+<% end %>
 
-  <div class="facet_pagination top">
-    <%= render :partial=>'facet_pagination' %>
-  </div>
-  
+<div class="facet_pagination top">
+  <%= render :partial=>'facet_pagination' %>
+</div>
+
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
   <h3><%= facet_field_labels[params[:id]] %></h3>
+</div>
+<div class="modal-body">
+  <div class="facet_extended_list">
+
+    <ul class="facet_extended_list">
+      <% @pagination.items.each do |item| %>
+        <li>
+          <% if facet_in_params?( params[:id], item.value ) %>              
+            <%= render_selected_facet_value(params[:id], item) %>              
+          <% else %>              
+            <%= render_facet_value(params[:id], item) %>              
+          <% end -%>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
   
-  <ul class="facet_extended_list">
-    <% @pagination.items.each do |item| %>
-      <li>
-        <% if facet_in_params?( params[:id], item.value ) %>              
-          <%= render_selected_facet_value(params[:id], item) %>              
-        <% else %>              
-          <%= render_facet_value(params[:id], item) %>              
-        <% end -%>
-      </li>
-    <% end %>
-  </ul>
-  
+<div class="modal-footer">
+
   <div class="facet_pagination bottom">
     <%= render :partial=>'facet_pagination' %>
   </div>
