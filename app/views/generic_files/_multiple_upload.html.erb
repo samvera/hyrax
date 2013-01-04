@@ -1,0 +1,135 @@
+<div class="alert">
+  <strong>Note:</strong> You must agree to <a href='/agreement/' target="_blank"><%= t('sufia.deposit_agreement') %></a> before starting your upload.
+</div>
+
+<div class="alert alert-info hide" id="redirect-loc" type="text/x-jquery-tmpl">
+  <%=sufia.batch_edit_path(@batch_noid)%>
+</div>
+
+<div id="upload_tooltip"><%= t('sufia.upload_tooltip') %></div>
+
+<div class="alert alert-info hide" id="success">
+  You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
+  <p>
+  <%= link_to 'Add Descriptions', sufia.batch_edit_path(@batch_noid), :class=>'btn' %>
+  </p>
+</div>
+
+<div class="alert hide" id="fail">
+  There was a problem during upload. Please click the &quot;Start Upload&quot; button or <%= link_to 'start over', sufia.new_generic_file_path %>
+</div>
+
+<div class="alert hide" id="partial_fail">
+  One or more files did not upload successfully. To continue using the files uploaded use one of the links below.<br />
+  <%= link_to 'Add Descriptions', sufia.batch_edit_path(@batch_noid), :class=>'btn' %>
+</div>
+
+<div class="alert hide" id="errmsg"> </div>
+
+    <!-- The file upload form used as target for the file upload widget -->
+    <%= form_for(@generic_file, :url => sufia.generic_files_path, :html => {:multipart => true, :class => 'form-horizontal well', :id => 'fileupload'}) do |f| %>
+      <%= hidden_field_tag(:total_upload_size, 0) %>
+      <%= hidden_field_tag(:relative_path) %>
+      <%= hidden_field_tag(:batch_id, @batch_noid) %>
+      <label class="checkbox">
+      <%= check_box_tag 'terms_of_service' %> I have read and do agree
+      to <%= link_to t('sufia.deposit_agreement'),
+        '/agreement/', :target => "_blank" %>.
+    </label>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="span70">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="icon-plus icon-white"></i>
+                    <span>Select files...</span>
+                    <input type="file" name="files[]" multiple />
+                </span>
+                <% ua = request.env['HTTP_USER_AGENT'] %>
+                <% if !!(ua =~ /Chrome/) %>
+                <span class="btn btn-success fileinput-button">
+                    <i class="icon-plus icon-white"></i>
+                    <span>Select folder...</span>
+                    <input type="file" name="files[]" directory webkitdirectory mozdirectory />
+                </span>
+                <% end %>
+                <span id="main_upload_start_span">
+                <button type="submit" class="btn btn-primary start" id='main_upload_start'>
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start upload</span>
+                </button>
+                </span>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="icon-ban-circle icon-white"></i>
+                    <span>Cancel upload</span>
+                </button>
+            </div>
+            <div class="span50">
+                <!-- The global progress bar -->
+                <div class="progress progress-success progress-striped active fade">
+                    <div class="bar" style="width:0%;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- The loading indicator is shown during image processing -->
+        <div class="fileupload-loading"></div>
+        <br />
+        <!-- The table listing the files available for upload/download -->
+        <table id="file-table" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+  <% end %>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-jquery-tmpl">
+ {% for (var i=0, file; file=o.files[i]; i++) { %}
+
+    <tr class="template-upload fade">
+        <td class="preview"><span class="fade"></span></td>
+        <td class="name"><span>{%=file.name%}</span></td>
+        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        {% if (file.error) { %}
+            <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else if (o.files.valid && !i) { %}
+            <td>
+                <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
+            </td>
+            <td class="start">{% if (!o.options.autoUpload) { %}
+              <button class="btn btn-primary hide">
+                    <i class="icon-upload icon-white"></i>
+                    <span>{%=locale.fileupload.start%}</span>
+              </button>
+            {% } %}</td>
+        {% } else { %}
+            <td colspan="2"></td>
+        {% } %}
+        <td class="cancel">{% if (!i) { %}
+            <button class="btn btn-warning">
+                <i class="icon-ban-circle icon-white"></i>
+                <span>{%=locale.fileupload.cancel%}</span>
+            </button>
+        {% } %}</td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-jquery-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        {% if (file.error) { %}
+            <td><span></span></td>
+            <td class="name"><span>{%=file.name%}</span></td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else { %}
+            <td class="preview">
+              {% if (file.thumbnail_url) { %} <span class="label label-success">Success</span> {% } %}
+            </td>
+            <td class="name">
+                {%=file.name%}
+                <!--a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}" target="_blank">{%=file.name%}</a-->
+            </td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td colspan="2"></td>
+        {% } %}
+    </tr>
+{% } %}
+</script>
