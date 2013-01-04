@@ -42,7 +42,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'yaml_db', '0.2.3'
   gem.add_dependency 'mailboxer', '0.8.0'
   gem.add_dependency 'rainbow', '1.1.4'
-  gem.add_dependency 'will_paginate', '3.0.3'
   gem.add_dependency 'activerecord-import'
   gem.add_dependency 'font-awesome-sass-rails', '~>2.0'
 end

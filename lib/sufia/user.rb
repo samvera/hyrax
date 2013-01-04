@@ -41,9 +41,6 @@ module Sufia::User
     validates :avatar, :attachment_content_type => { :content_type => /^image\/(jpg|jpeg|pjpeg|png|x-png|gif)$/ }, :if => Proc.new { |p| p.avatar.file? }
     validates :avatar, :attachment_size => { :less_than => 2.megabytes }, :if => Proc.new { |p| p.avatar.file? }
 
-    # Pagination hook
-    self.per_page = 5
-
   end
 
   # This method should display the unique identifier for this user as defined by devise.

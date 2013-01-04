@@ -32,9 +32,9 @@ limitations under the License.
         <tbody> 
             <% @users.each do |user| %> 
                 <tr class="<%= cycle("","zebra") %>"> 
-                   <td><a href="<%= sufia.profile_path(URI.escape(user.login,'@.'i)) %>" class="btn btn-small " ><%= image_tag user.avatar.url(:thumb), :width => 30 %></a></td> 
-                   <td ><a href="<%= sufia.profile_path(URI.escape(user.login,'@.'i)) %>"  ><%= user.name %><a></td> 
-                   <td><a href="<%= sufia.profile_path(URI.escape(user.login,'@.'i)) %>"  ><%= user.login %><a></td>
+                   <td><a href="<%= sufia.profile_path(URI.escape(user.user_key,'@.')) %>" class="btn btn-small " ><%= image_tag user.avatar.url(:thumb), :width => 30 %></a></td> 
+                   <td ><a href="<%= sufia.profile_path(URI.escape(user.user_key,'@.')) %>"  ><%= user.name %><a></td> 
+                   <td><a href="<%= sufia.profile_path(URI.escape(user.user_key,'@.')) %>"  ><%= user.user_key %><a></td>
                    <td><%= user.department %> </td> 
                    <td><%= GenericFile.find(:depositor_t => user.to_s).count %> </td> 
                 </tr> 
@@ -42,5 +42,5 @@ limitations under the License.
             <% end %> 
         </tbody> 
     </table> 
-    <%= will_paginate @users, :class => 'pager', :previous_label => '&laquo; Previous', :next_label => 'Next &raquo;'%> 
+    <%= paginate @users %>
 </div> 
