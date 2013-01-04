@@ -42,5 +42,7 @@ limitations under the License.
             <% end %> 
         </tbody> 
     </table> 
-    <%= paginate @users %>
+    <div class="pager">
+      <%= paginate @users,  :theme => 'blacklight'%>
+    </div>
 </div> 
