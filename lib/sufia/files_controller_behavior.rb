@@ -93,7 +93,7 @@ module Sufia
 
         # process file
         else
-          create_and_save_generic_file
+          create_and_save_generic_file(params[:files][0], params[:terms_of_service], params[:relative_path], params[:batch_id])
           if @generic_file
             Sufia.queue.push(ContentDepositEventJob.new(@generic_file.pid, current_user.user_key))
             respond_to do |format|
@@ -192,35 +192,21 @@ module Sufia
       end
     end 
 
-    def create_and_save_generic_file
-      unless params.has_key?(:files)
-        logger.warn "!!!! No Files !!!!"
-        return
-      end
-      file = params[:files][0]
+    def create_and_save_generic_file(file, terms_of_service, relative_path, batch_id)
       return nil unless virus_check(file) == 0  
 
       @generic_file = ::GenericFile.new
-      @generic_file.terms_of_service = params[:terms_of_service]
-      # if we want to be able to save zero length files then we can use this to make the file 1 byte instead of zero length and fedora will take it
-      #if (file.tempfile.size == 0)
-      #   logger.warn "Encountered an empty file...  Creating a new temp file with on space."
-      #   f = Tempfile.new ("emptyfile")
-      #   f.write " "
-      #   f.rewind
-      #   file.tempfile = f
-      #end
+      @generic_file.terms_of_service = terms_of_service
       add_posted_blob_to_asset(@generic_file,file)
 
       @generic_file.apply_depositor_metadata(user_key)
       @generic_file.date_uploaded = Time.now.ctime
       @generic_file.date_modified = Time.now.ctime
-      @generic_file.relative_path = params[:relative_path] if params.has_key?(:relative_path)
+      @generic_file.relative_path = relative_path if relative_path
       @generic_file.creator = current_user.name
 
-      if params.has_key?(:batch_id)
-        batch_id = Sufia::Noid.namespaceize(params[:batch_id])
-        @generic_file.add_relationship("isPartOf", "info:fedora/#{batch_id}")
+      if batch_id
+        @generic_file.add_relationship("isPartOf", "info:fedora/#{Sufia::Noid.namespaceize(batch_id)}")
       else
         logger.warn "unable to find batch to attach to"
       end
