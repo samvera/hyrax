@@ -9,9 +9,10 @@ module Hydra::Controller::UploadBehavior
     if params.has_key?(:Filedata)
       @file_assets = []
       params[:Filedata].each do |file|
-        @file_asset = create_asset_from_file(file)
-        add_posted_blob_to_asset(@file_asset,file)
-        @file_asset.save
+        @file_asset = FileAsset.new
+        @file_asset.label = file.original_filename
+        add_posted_blob_to_asset(@file_asset, file, file.original_filename)
+        @file_asset.save!
         @file_assets << @file_asset
       end
       return @file_assets
@@ -24,10 +25,13 @@ module Hydra::Controller::UploadBehavior
   # Sets asset label and title to filename if they're empty
   #
   # @param [FileAsset] asset the File Asset to add the blob to
+  # @param [#read] file the IO object that is the blob
+  # @param [String] file the IO object that is the blob
   # @return [FileAsset] file the File Asset  
-  def add_posted_blob_to_asset(asset, file)
-    #file_name = filename_from_params
-    file_name = file.original_filename
+  def add_posted_blob_to_asset(asset, file, file_name = nil)
+    # deprecating 2 argument constructor because it depends on a HTTP request.  If we pass the file name we can use for non-web too.
+    Deprecation.warn(Hydra::Controller::UploadBehavior, "add_posted_blob_to_asset with a 2 argument constructor is deprecated. Pass a filename (e.g. \"file.original_name\") as the third argument. 2 argument constructor will be removed in hydra-core 6" ) if file_name.nil?
+    file_name ||= file.original_filename
     options = {:label=>file_name, :mimeType=>mime_type(file_name)}
     dsid = datastream_id #Only call this once so that it could be a sequence
     options[:dsid] = dsid if dsid
