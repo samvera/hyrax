@@ -93,6 +93,7 @@ module Sufia
         else
           create_and_save_generic_file(file, params[:terms_of_service], params[:relative_path], params[:batch_id], file.original_filename)
           if @generic_file
+            Sufia.queue.push(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
             Sufia.queue.push(ContentDepositEventJob.new(@generic_file.pid, current_user.user_key))
             respond_to do |format|
               format.html {
@@ -223,7 +224,6 @@ module Sufia
       end
 
       record_version_committer(@generic_file, current_user)
-      Sufia.queue.push(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
       return @generic_file
     end
   end
