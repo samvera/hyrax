@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 # Please see scholarsphere.gemspec for dependency information.
 gemspec
 
+gem 'hydra-head', github: 'projecthydra/hydra-head', ref: 'd60913b'  #pre5.2
 
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 group :development, :test do

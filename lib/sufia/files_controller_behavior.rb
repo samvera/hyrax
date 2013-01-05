@@ -78,22 +78,20 @@ module Sufia
       begin
         retval = " "
         # check error condition No files
-        if !params.has_key?(:files)
-           retval = render :json => [{:error => "Error! No file to save"}].to_json
+        return render(:json => [{:error => "Error! No file to save"}].to_json) if !params.has_key?(:files)
 
+        file = params[:files][0]
         # check error condition empty file
-        elsif ((params[:files][0].respond_to?(:tempfile)) && (params[:files][0].tempfile.size == 0))
-           retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-
-        elsif ((params[:files][0].respond_to?(:size)) && (params[:files][0].size == 0))
-           retval = render :json => [{ :name => params[:files][0].original_filename, :error => "Error! Zero Length File!"}].to_json
-
+        if ((file.respond_to?(:tempfile)) && (file.tempfile.size == 0))
+           retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
+        elsif ((file.respond_to?(:size)) && (file.size == 0))
+           retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
         elsif (params[:terms_of_service] != '1')
-           retval = render :json => [{ :name => params[:files][0].original_filename, :error => "You must accept the terms of service!"}].to_json
+           retval = render :json => [{ :name => file.original_filename, :error => "You must accept the terms of service!"}].to_json
 
         # process file
         else
-          create_and_save_generic_file(params[:files][0], params[:terms_of_service], params[:relative_path], params[:batch_id])
+          create_and_save_generic_file(file, params[:terms_of_service], params[:relative_path], params[:batch_id], file.original_filename)
           if @generic_file
             Sufia.queue.push(ContentDepositEventJob.new(@generic_file.pid, current_user.user_key))
             respond_to do |format|
@@ -115,7 +113,7 @@ module Sufia
         retval = render :json => [{:error => "Error occurred while creating generic file."}].to_json
       ensure
         # remove the tempfile (only if it is a temp file)
-        params[:files][0].tempfile.delete if params[:files][0].respond_to?(:tempfile)
+        file.tempfile.delete if file.respond_to?(:tempfile)
       end
 
       return retval
@@ -154,7 +152,7 @@ module Sufia
 
       if params.has_key?(:filedata)
         return unless virus_check(params[:filedata]) == 0
-        add_posted_blob_to_asset(@generic_file, params[:filedata])
+        add_posted_blob_to_asset(@generic_file, params[:filedata], params[:filedata].original_filename)
         version_event = true
         Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
       end
@@ -192,12 +190,13 @@ module Sufia
       end
     end 
 
-    def create_and_save_generic_file(file, terms_of_service, relative_path, batch_id)
+    def create_and_save_generic_file(file, terms_of_service, relative_path, batch_id, file_name)
       return nil unless virus_check(file) == 0  
 
       @generic_file = ::GenericFile.new
       @generic_file.terms_of_service = terms_of_service
-      add_posted_blob_to_asset(@generic_file,file)
+      #This depends on the 3 arg constructor in hh 5.2.0
+      add_posted_blob_to_asset(@generic_file,file, file_name)
 
       @generic_file.apply_depositor_metadata(user_key)
       @generic_file.date_uploaded = Time.now.ctime
