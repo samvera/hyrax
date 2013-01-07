@@ -41,8 +41,8 @@ module Sufia
         img = Magick::ImageList.new
         img.from_blob(content.content)
         # horizontal img
-        height = self.height.first.to_i
-        width = self.width.first.to_i
+        height = Float(self.height.first.to_i)
+        width = Float(self.width.first.to_i)
         scale = height / width
         if width > height
           if width > 150 and height > 105
