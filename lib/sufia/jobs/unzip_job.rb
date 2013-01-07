@@ -38,7 +38,6 @@ class UnzipJob
         @generic_file.apply_depositor_metadata(zip_file.edit_users.first)
         @generic_file.date_uploaded = Time.now.ctime
         @generic_file.date_modified = Time.now.ctime
-        @generic_file.terms_of_service = '1'
         @generic_file.save
       end
     end

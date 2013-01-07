@@ -26,7 +26,6 @@ module Sufia
             thumb = first.scale(338, 493)
             self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
             #logger.debug "Has the content changed before saving? #{self.content.changed?}"
-            self.terms_of_service = '1'
             stat = self.save
             break
           rescue => e
@@ -59,7 +58,6 @@ module Sufia
           end
         end
         self.thumbnail.content = thumb.to_blob
-        self.terms_of_service = '1'
         #logger.debug "Has the content before saving? #{self.content.changed?}"
         self.save
       end

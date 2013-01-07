@@ -18,7 +18,6 @@ describe GenericFilesController do
   before do
     controller.stub(:has_access?).and_return(true)
 
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
     User.any_instance.stub(:groups).and_return([])
@@ -26,7 +25,6 @@ describe GenericFilesController do
   end
   describe "#create" do
     before do
-      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
       @file_count = GenericFile.count
       @mock = GenericFile.new({:pid => 'test:123'})
       GenericFile.stub(:new).and_return(@mock)
@@ -48,7 +46,7 @@ describe GenericFilesController do
       s2 = stub('one')
       CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
     end
 
     it "should expand zip files" do
@@ -65,12 +63,12 @@ describe GenericFilesController do
       UnzipJob.should_receive(:new).with('test:123').and_return(s3)
       Sufia.queue.should_receive(:push).with(s3).once
 
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
     end
 
     it "should create and save a file asset from the given params" do
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
       response.should be_success
       GenericFile.count.should == @file_count + 1
 
@@ -188,7 +186,7 @@ describe GenericFilesController do
 
   describe "destroy" do
     before(:each) do
-      @generic_file = GenericFile.new(:terms_of_service => '1')
+      @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata(@user.user_key)
       @generic_file.save
       @user = FactoryGirl.find_or_create(:user)
@@ -213,7 +211,7 @@ describe GenericFilesController do
   describe "update" do
     before do
       #controller.should_receive(:virus_check).and_return(0)      
-      @generic_file = GenericFile.new(:terms_of_service=>'1')
+      @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata(@user.user_key)
       @generic_file.save
     end
@@ -227,7 +225,7 @@ describe GenericFilesController do
       Sufia.queue.should_receive(:push).with(s1).once
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
       @user.delete      
     end
 
@@ -242,7 +240,7 @@ describe GenericFilesController do
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
       @user.delete
     end
 
@@ -251,7 +249,7 @@ describe GenericFilesController do
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1@example.com'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1@example.com'=>'edit'}}}
 
       posted_file = GenericFile.find(@generic_file.pid)
       version1 = posted_file.content.latest_version
@@ -272,7 +270,7 @@ describe GenericFilesController do
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       file = fixture_file_upload('/image.jp2','image/jp2')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''] }
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''] }
 
       edited_file = GenericFile.find(@generic_file.pid)
       version2 = edited_file.content.latest_version
@@ -290,7 +288,7 @@ describe GenericFilesController do
       s2 = stub('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
-      post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:terms_of_service=>"1", :tag=>['']}
+      post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:tag=>['']}
 
       restored_file = GenericFile.find(@generic_file.pid)
       version3 = restored_file.content.latest_version
@@ -301,7 +299,7 @@ describe GenericFilesController do
     end
 
     it "should add a new groups and users" do
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :tag=>[''], :permissions=>{:new_group_name=>{'group1'=>'read'}, :new_user_name=>{'user1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:tag=>[''], :permissions=>{:new_group_name=>{'group1'=>'read'}, :new_user_name=>{'user1'=>'edit'}}}
 
       assigns[:generic_file].read_groups.should == ["group1"]
       assigns[:generic_file].edit_users.should include("user1", @user.user_key)
@@ -309,7 +307,7 @@ describe GenericFilesController do
     it "should update existing groups and users" do
       @generic_file.read_groups = ['group3']
       @generic_file.save
-      post :update, :id=>@generic_file.pid, :generic_file=>{:terms_of_service=>"1", :tag=>[''], :permissions=>{:new_group_name=>'', :new_group_permission=>'', :new_user_name=>'', :new_user_permission=>'', :group=>{'group3' =>'read'}}}
+      post :update, :id=>@generic_file.pid, :generic_file=>{:tag=>[''], :permissions=>{:new_group_name=>'', :new_group_permission=>'', :new_user_name=>'', :new_user_permission=>'', :group=>{'group3' =>'read'}}}
 
       assigns[:generic_file].read_groups.should == ["group3"]
     end
@@ -327,14 +325,14 @@ describe GenericFilesController do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:terms_of_service=>"1", :tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
     end
 
   end
 
   describe "someone elses files" do
     before do
-      f = GenericFile.new(:pid => 'sufia:test5', :terms_of_service=> '1')
+      f = GenericFile.new(:pid => 'sufia:test5')
       f.apply_depositor_metadata('archivist1@example.com')
       f.set_title_and_label('world.png')
       f.add_file_datastream(File.new(fixture_path +  '/world.png'))

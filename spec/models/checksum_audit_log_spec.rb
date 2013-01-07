@@ -16,7 +16,7 @@ require 'spec_helper'
 
 describe ChecksumAuditLog do
   before(:all) do
-    @f = GenericFile.new(:terms_of_service => '1')
+    @f = GenericFile.new
     @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
     @f.apply_depositor_metadata('mjg36')
     @f.save!
@@ -29,7 +29,6 @@ describe ChecksumAuditLog do
     ChecksumAuditLog.all.each(&:delete)
   end
   before(:each) do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     GenericFile.any_instance.stub(:characterize).and_return(true) # stub out characterization so it does not get audited
   end
   it "should return a list of logs for this datastream sorted by date descending" do
