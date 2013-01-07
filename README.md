@@ -68,5 +68,5 @@ rake fixtures
 
 # run the tests
 rake clean spec
-bundle exec cucumber fixtures
+bundle exec cucumber features
 ```
