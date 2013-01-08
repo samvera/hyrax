@@ -107,7 +107,6 @@ $(function() {
     },
     minLength: 2
   };
-  //$("#generic_file_based_near").autocomplete(cities_autocomplete_opts);
   $("#generic_file_based_near").autocomplete(get_autocomplete_opts("location"));
 
 
@@ -126,12 +125,6 @@ $(function() {
       complete: function(event) {
         $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
       }
-      /*
-      select: function( event, ui ) {
-        $("#selectedSubjects").append("<div class = 'selectedsubject'>" + ui.item.label+"<img id='killSubject' style='position:relative; left:10px' src='images/close_icon.gif'/><div id='hiddenId' style='display:none'>"+ui.item.value+"</div></div>");
-        $(this).val("");
-        return false;
-      }*/
     };
     return autocomplete_opts;
   }
@@ -164,17 +157,11 @@ $(function() {
    * adds additional metadata elements
    */
   $('.adder').click(function() {
-    //this.id = additional_N_submit
-    //id for element to clone = additional_N_clone
-    //id for element to append to = additional_N_elements
-    //var cloneId = this.id.replace("submit", "clone");
-    //var newId = this.id.replace("submit", "elements");
     var cloneId = this.id.replace("submit", "clone");
     var newId = this.id.replace("submit", "elements");
     var cloneElem = $('#'+cloneId).clone();
     // change the add button to a remove button
     var plusbttn = cloneElem.find('#'+this.id);
-    //plusbttn.attr("value","-");
     plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
     plusbttn.on('click',removeField);
 
@@ -250,21 +237,6 @@ $(function() {
        $(this).find('i').toggleClass("icon-chevron-down");
     });
 
-  /*
-   * enlarge icons on hover- on dashboard
-   */
-  /*
-  $('[class^="icon-"]').hover(
-      //on mouseover
-      function(){
-        $(this).addClass("icon-large");
-      },
-      //on mouseout
-      function() {
-        $(this).removeClass("icon-large");
-      });
-      */
-
     $(".sorts-dash").click(function(){
        var itag =$(this).find('i');
        toggle_icon(itag);
@@ -293,25 +265,6 @@ function toggle_icon(itag){
        itag.toggleClass("icon-caret-up");
 }
 
-// is it worth checking to make sure users aren't filling up permissions that will be ignored.
-// or when a user has already set a permission for a user then updates the visibility -- is it
-// still relevant
-function validate_existing_perms()
-{
-  var vis = get_visibility();
-  if (vis == "open" || vis == "psu")
-  {
-    var perms = $("input[name^='generic_file[permissions]']");
-    $.each(perms, function(index, form_input) {
-        if (form_input.name != "generic_file[permissions][group][public]" && form_input.name != "generic_file[permissions][group][registered]") {
-          if (form_input.value != 'edit') {
-            alert("silly permission: " + form_input.name + " " + form_input.value );
-          }
-        }
-    });
-  }
-}
-
 function preg_quote( str ) {
     // http://kevin.vanzonneveld.net
     // +   original by: booeyOH
@@ -334,7 +287,6 @@ function initialize_audio() {
   if (navigator.userAgent.match("Chrome")){
       $('audio').each(function() {
          this.controls = true;
-         //$(this).attr("controls","controls");
       });
   }else {
       $('audio').each(function() {
