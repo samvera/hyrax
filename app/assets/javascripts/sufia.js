@@ -237,19 +237,6 @@ $(function() {
 
 
 
-  // when user clicks on visibility, update potential access levels
-  $("input[name='visibility']").on("change", set_access_levels);
-
-	$('#generic_file_permissions_new_group_name').change(function (){
-      var edit_option = $("#generic_file_permissions_new_group_permission option[value='edit']")[0];
-	    if (this.value.toUpperCase() == 'PUBLIC') {
-	       edit_option.disabled =true;
-	    } else {
-           edit_option.disabled =false;
-	    }
-
-	});
-
   /*
    * facets lists
    */
@@ -277,8 +264,6 @@ $(function() {
         $(this).removeClass("icon-large");
       });
       */
-
-
 
     $(".sorts-dash").click(function(){
        var itag =$(this).find('i');
@@ -308,66 +293,6 @@ function toggle_icon(itag){
        itag.toggleClass("icon-caret-up");
 }
 
-// return the files visibility level (penn state, open, restricted);
-function get_visibility(){
-  return $("input[name='visibility']:checked").val()
-}
-
-/*
- * if visibility is Open or Penn State then we can't selectively
- * set other users/groups to 'read' (it would be over ruled by the
- * visibility of Open or Penn State) so disable the Read option
- */
-function set_access_levels()
-{
-  var vis = get_visibility();
-  var enabled_disabled = false;
-  if (vis == "open" || vis == "psu") {
-    enabled_disabled = true;
-  }
-  $('#new_group_permission_skel option[value=read]').attr("disabled", enabled_disabled);
-  $('#new_user_permission_skel option[value=read]').attr("disabled", enabled_disabled);
-  var perms_sel = $("select[name^='generic_file[permissions]']");
-  $.each(perms_sel, function(index, sel_obj) {
-    $.each(sel_obj, function(j, opt) {
-      if( opt.value == "read") {
-        opt.disabled = enabled_disabled;
-      }
-    });
-  });
-}
-
-/*
- * make sure the permission being applied is not for a user/group
- * that already has a permission.
- */
-function is_permission_duplicate(user_or_group_name)
-{
-  s = "[" + user_or_group_name + "]";
-  var patt = new RegExp(preg_quote(s), 'gi');
-  var perms_input = $("input[name^='generic_file[permissions]']");
-  var perms_sel = $("select[name^='generic_file[permissions]']");
-  var flag = 1;
-  perms_input.each(function(index, form_input) {
-      // if the name is already being used - return false (not valid)
-      if (patt.test(form_input.name)) {
-        flag = 0;
-      }
-    });
-  if (flag) {
-    perms_sel.each(function(index, form_input) {
-      // if the name is already being used - return false (not valid)
-      if (patt.test(form_input.name)) {
-        flag = 0;
-      }
-    });
-  }
-  // putting a return false inside the each block
-  // was not working.  Not sure why would seem better
-  // rather than setting this flag var
-  return (flag ? true : false);
-}
-
 // is it worth checking to make sure users aren't filling up permissions that will be ignored.
 // or when a user has already set a permission for a user then updates the visibility -- is it
 // still relevant
@@ -387,43 +312,6 @@ function validate_existing_perms()
   }
 }
 
-// all called from edit object view
-// when permissions link is clicked on edit object
-function permissions_tab ()
-{
-    $('#edit_permissions_link').attr('class', 'active');
-    $('#edit_versioning_link').attr('class', '');
-    $('#edit_descriptions_link').attr('class', '');
-
-    $('#descriptions_display').hide();
-    $('#versioning_display').hide();
-    $('#permissions_display').show();
-    $('#permissions_submit').show();
-}
-// when versions link is clicked on edit object
-function versions_tab()
-{
-    $('#edit_descriptions_link').attr('class', '');
-    $('#edit_versioning_link').attr('class', 'active');
-    $('#edit_permissions_link').attr('class', '');
-
-    $('#descriptions_display').hide();
-    $('#versioning_display').show();
-    $('#permissions_display').hide();
-    $('#permissions_submit').hide();
-}
-// when descriptions link is clicked on edit object
-function descriptions_tab ()
-{
-    $('#edit_descriptions_link').attr('class', 'active');
-    $('#edit_versioning_link').attr('class', '');
-    $('#edit_permissions_link').attr('class', '');
-
-    $('#descriptions_display').show();
-    $('#versioning_display').hide();
-    $('#permissions_display').hide();
-    $('#permissions_submit').hide();
-}
 function preg_quote( str ) {
     // http://kevin.vanzonneveld.net
     // +   original by: booeyOH
