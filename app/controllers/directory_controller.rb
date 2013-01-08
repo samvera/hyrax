@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class DirectoryController < ApplicationController
-  include Hydra::Controller::ControllerBehavior
+  #include Hydra::Controller::ControllerBehavior
 
   # returns true if the user exists and false otherwise
   def user
