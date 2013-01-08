@@ -59,10 +59,7 @@ limitations under the License.
     <button class="btn btn-mini btn-inverse" onclick="return false;"><i class="icon-plus-sign" ></i>Add</button>.
     </p>
 
-    <p>
-    The list of groups in the drop-down marked &quot;Select a group&quot; is a list of User Managed Groups that you are a member of, and are managed by <%=t('sufia.institution_name') %>'s ITS department.  You may select a specific group and assign an access
-    level for a file within <%=t('sufia.product_name') %>, similarly to adding user access levels.  However, management of these groups and their membership is handled centrally at <a href="http://umg.its.psu.edu" target="_blank">umg.its.psu.edu</a>.  
-    </p>
+    <%= render partial: 'groups_description' %>
 
     <h3>Permission Definitions</h3>
     <p>
@@ -97,7 +94,7 @@ limitations under the License.
     <div id="new-user"> 
       <div class="input-append">
         <p class="help-block">Enter <%=t('sufia.account_label') %> (one at a time)</p>
-        <%= text_field_tag 'new_user_name_skel', nil, :class => "span29" %><span class="add-on">@psu.edu</span>
+        <%= text_field_tag 'new_user_name_skel', nil, :class => "span29" %><span class="add-on"><%=t('sufia.directory.suffix') %></span>
         <%= select_tag 'new_user_permission_skel', options_for_select(Sufia::Engine.config.permission_levels), :class=> 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i> Add</button>
         <br /> <span id="directory_user_result"></span> 

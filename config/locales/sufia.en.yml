@@ -5,6 +5,8 @@ en:
     institution_name:   "Penn State"
     deposit_agreement:  "ScholarSphere's Deposit Agreement"
     upload_tooltip:     "Please accept Deposit Agreement before you can upload."
+    directory:
+      suffix:           "@psu.edu"
     search:
       form:
         q:
