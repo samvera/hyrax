@@ -39,6 +39,7 @@ limitations under the License.
 //= require terms_of_service
 //= require fileupload
 //= require sufia/permissions
+//= require sufia/tabs
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
@@ -235,24 +236,6 @@ $(function() {
   $("a[rel=popover]").click(function() { return false;});
 
 
-
-  // called from edit object view
-  $('#edit_descriptions_link').on('click', function(e) {
-      e.preventDefault();
-      descriptions_tab();
-    });
-
-  // called from edit object view
-  $('#edit_versioning_link').on('click', function(e) {
-      e.preventDefault();
-      versions_tab();
-    });
-
-  // called from edit object view
-  $('#edit_permissions_link').on('click', function(e) {
-      e.preventDefault();
-      permissions_tab();
-    });
 
   // when user clicks on visibility, update potential access levels
   $("input[name='visibility']").on("change", set_access_levels);
