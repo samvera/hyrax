@@ -91,7 +91,7 @@ module Sufia
 
         # process file
         else
-          create_and_save_generic_file(file, params[:terms_of_service], params[:relative_path], params[:batch_id], file.original_filename)
+          create_and_save_generic_file(file, params[:relative_path], params[:batch_id], file.original_filename)
           if @generic_file
             Sufia.queue.push(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
             Sufia.queue.push(ContentDepositEventJob.new(@generic_file.pid, current_user.user_key))
@@ -191,11 +191,10 @@ module Sufia
       end
     end 
 
-    def create_and_save_generic_file(file, terms_of_service, relative_path, batch_id, file_name)
+    def create_and_save_generic_file(file, relative_path, batch_id, file_name)
       return nil unless virus_check(file) == 0  
 
       @generic_file = ::GenericFile.new
-      @generic_file.terms_of_service = terms_of_service
       #This depends on the 3 arg constructor in hh 5.2.0
       add_posted_blob_to_asset(@generic_file,file, file_name)
 

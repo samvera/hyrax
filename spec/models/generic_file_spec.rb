@@ -16,7 +16,6 @@ require 'spec_helper'
 
 describe GenericFile do
   before(:each) do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.apply_depositor_metadata('jcoyne')
   end
@@ -250,7 +249,7 @@ describe GenericFile do
   describe "audit" do
     before(:each) do
       u = FactoryGirl.create(:user)
-      f = GenericFile.new(:terms_of_service=>'1')
+      f = GenericFile.new
       f.stub(:characterize).and_return(true)
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata(u.user_key)
@@ -301,7 +300,7 @@ describe GenericFile do
 
   describe "run_audit" do
     before do
-      @f = GenericFile.new(:terms_of_service => '1')
+      @f = GenericFile.new
       @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @f.apply_depositor_metadata('mjg36')
       @f.save!
@@ -419,7 +418,6 @@ describe GenericFile do
   end
   describe "noid integration" do
     before(:all) do
-      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
       GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
       @new_file = GenericFile.new(:pid => 'ns:123')
       @new_file.apply_depositor_metadata('mjg36')
@@ -458,7 +456,6 @@ describe GenericFile do
     end
     describe "after job runs" do
       before(:all) do
-        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         myfile = GenericFile.new
         myfile.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
@@ -542,7 +539,6 @@ describe GenericFile do
   describe "permissions validation" do
     context "depositor must have edit access" do
       before(:each) do
-        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @rightsmd = @file.rightsMetadata
@@ -642,7 +638,6 @@ describe GenericFile do
     end
     context "public must not have edit access" do
       before(:each) do
-        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @file.read_groups = ['public']
@@ -743,7 +738,6 @@ describe GenericFile do
     end
     context "registered must not have edit access" do
       before(:each) do
-        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @file.read_groups = ['registered']
@@ -844,7 +838,6 @@ describe GenericFile do
     end
     context "everything is copacetic" do
       before(:each) do
-        GenericFile.any_instance.stub(:terms_of_service).and_return('1')
         @file = GenericFile.new
         @file.apply_depositor_metadata('mjg36')
         @file.read_groups = ['public']

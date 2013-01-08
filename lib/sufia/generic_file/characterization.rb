@@ -37,7 +37,6 @@ module Sufia
         self.characterization.ng_xml = self.content.extract_metadata
         self.append_metadata
         self.filename = self.label
-        self.terms_of_service = '1'
         save unless self.new_object?
       end
 

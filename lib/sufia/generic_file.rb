@@ -35,10 +35,6 @@ module Sufia
                                   :publisher, :date_created, :subject,
                                   :resource_type, :identifier, :language]
       around_save :characterize_if_changed, :retry_warming
-
-      #make sure the terms of service is present and set to 1 before saving
-      validates_acceptance_of :terms_of_service, :allow_nil => false
-      after_find :preset_terms
     end
 
     def pdf?
@@ -172,10 +168,6 @@ module Sufia
        return false if self.batch.blank?
        return false if !self.batch.methods.include? :status
        return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
-    end
-
-    def preset_terms
-      self.terms_of_service = '1'
     end
 
     module ClassMethods

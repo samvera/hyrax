@@ -15,7 +15,6 @@ limitations under the License.
 %>
 
 <%= form_for @generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
-<%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
 <%= hidden_field_tag('redirect_tab', 'descriptions') %>
 <div id="descriptions_display">
   <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>

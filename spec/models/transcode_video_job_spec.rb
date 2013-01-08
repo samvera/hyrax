@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TranscodeVideoJob do
   before do
-    @generic_file = GenericFile.new(:terms_of_service=>'1')
+    @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('jcoyne@example.com')
     @generic_file.add_file_datastream(File.new(fixture_path + '/countdown.avi'), :dsid=>'content')
     @generic_file.save!

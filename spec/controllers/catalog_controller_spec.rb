@@ -16,7 +16,6 @@ require 'spec_helper'
 
 describe CatalogController do
   before do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     GenericFile.any_instance.stub(:characterize_if_changed).and_yield
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
@@ -29,10 +28,10 @@ describe CatalogController do
   describe "#index" do
     before (:all) do
       GenericFile.find_each { |f| f.delete }
-      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', read_groups:['public'], :terms_of_service=>'1')
+      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
-      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', read_groups:['public'], :terms_of_service=>'1')
+      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', read_groups:['public'])
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
     end

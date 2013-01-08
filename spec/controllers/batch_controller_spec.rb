@@ -17,7 +17,6 @@ require 'spec_helper'
 describe BatchController do
   before do
     controller.stub(:has_access?).and_return(true)
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
     User.any_instance.stub(:groups).and_return([])
@@ -43,16 +42,16 @@ describe BatchController do
       @file2.delete
     end
     it "should equeue a batch update job" do
-      params = {'generic_file' => {'terms_of_service' => '1', 'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
+      params = {'generic_file' => {'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}
       s1 = stub('one')
       BatchUpdateJob.should_receive(:new).with(@user.user_key, params).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
+      post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
     describe "when views are shown" do
       render_views
       it "should show flash messages" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"","read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"","read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
         response.should redirect_to @routes.url_helpers.dashboard_index_path
         flash[:notice].should_not be_nil
         flash[:notice].should_not be_empty
@@ -61,41 +60,41 @@ describe BatchController do
     end
     describe "when user has edit permissions on a file" do
       it "should set the users with read access" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_users.should == ['archivist1', 'archivist2']
 
         response.should redirect_to @routes.url_helpers.dashboard_index_path
       end
       it "should set the groups with read access" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_groups.should == ['group1', 'group2']
       end
       it "should set public read access" do
-        post :update, :id=>@batch.pid, "visibility"=>"open", "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "visibility"=>"open", "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_groups.should == ['public']
       end
       it "should set public read access and groups at the same time" do
-        post :update, :id=>@batch.pid, "visibility"=>"open", "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "visibility"=>"open", "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_groups.should == ['group1', 'group2', 'public']
       end
       it "should set public discover access and groups at the same time" do
-        post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"none"}}, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "permission"=>{"group"=>{"public"=>"none"}}, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.read_groups.should == ['group1', 'group2']
         file.discover_groups.should == []
       end
       it "should set metadata like title" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "tag"=>["footag", "bartag"]}, "title"=>{@file.pid=>"New Title"} 
+        post :update, :id=>@batch.pid, "generic_file"=>{"tag"=>["footag", "bartag"]}, "title"=>{@file.pid=>"New Title"} 
         file = GenericFile.find(@file.pid)
         file.title.should == ["New Title"]
         file.tag.should == ["footag", "bartag"]
       end
       it "should not set any tags" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]}
+        post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
         file.tag.should be_empty
       end
@@ -106,7 +105,7 @@ describe BatchController do
         file.title = "Original Title"
         file.read_groups.should == []
         file.save
-        post :update, :id=>@batch.pid, "generic_file"=>{"terms_of_service"=>"1", "read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}, "title"=>{@file2.pid=>"Title Wont Change"}
+        post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}, "title"=>{@file2.pid=>"Title Wont Change"}
         file = GenericFile.find(@file2.pid)
         file.title.should == ["Original Title"]
         file.read_groups.should == []

@@ -276,7 +276,6 @@ h2 small {
     
                   <div id="collapse_<%=key%>" class="accordion-body collapse scrolly">
                     <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_"+key, :class=>"ajax-form"} do |f| %>
-                        <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
                         <%= hidden_field_tag('update_type', 'update') %>
                         <%= hidden_field_tag('key', key) %>
                         <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => key } %>
