@@ -38,7 +38,8 @@ class SingleUseLinkController < DownloadsController
     not_found if link.path != sufia.download_path(id)
     
     # send the data content
-    send_content(id)
+    asset = ActiveFedora::Base.find(id, :cast=>true)
+    send_content(asset)
   end
 
   def show

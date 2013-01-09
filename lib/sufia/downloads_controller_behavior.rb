@@ -26,10 +26,9 @@ module Sufia
     
     def show
       if can? :read, params["id"]
-        logger.info "Can read #{params['id']}"
-
-        send_content (params["id"])
-        return
+        asset = ActiveFedora::Base.find(params[:id], :cast=>true)
+        # we can now examine @asset and determine if we should send_content, or some other action.
+        send_content (asset)
       else 
         logger.info "Can not read #{params['id']}"
         redirect_to "/assets/NoAccess.png"
@@ -38,17 +37,16 @@ module Sufia
 
     protected
     
-    def send_content (id)
-        @asset = ActiveFedora::Base.find(id, :cast=>true)
+    def send_content (asset)
         opts = {}
         ds = nil
-        opts[:filename] = params["filename"] || @asset.label
+        opts[:filename] = params["filename"] || asset.label
         opts[:disposition] = 'inline' 
         if params.has_key?(:datastream_id)
           opts[:filename] = params[:datastream_id]
-          ds = @asset.datastreams[params[:datastream_id]]
+          ds = asset.datastreams[params[:datastream_id]]
         end
-        ds = default_content_ds(@asset) if ds.nil?
+        ds = default_content_ds(asset) if ds.nil?
         raise ActionController::RoutingError.new('Not Found') if ds.nil?
         data = ds.content
         opts[:type] = ds.mimeType
