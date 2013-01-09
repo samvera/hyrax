@@ -77,5 +77,6 @@ module Sufia
   autoload :SolrDocumentBehavior
   autoload :FilesControllerBehavior
   autoload :DownloadsControllerBehavior
+  autoload :FileContent
 end
 

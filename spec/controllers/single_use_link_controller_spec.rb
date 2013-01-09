@@ -4,7 +4,6 @@ describe SingleUseLinkController do
   before(:all) do
     User.any_instance.stub(:groups).and_return([])
 
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
     @file.set_title_and_label('world.png')

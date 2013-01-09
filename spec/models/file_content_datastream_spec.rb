@@ -16,17 +16,14 @@ require 'spec_helper'
 
 describe FileContentDatastream do
   before do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @subject = FileContentDatastream.new(nil, 'content')
     @subject.stub(:pid=>'my_pid')
     @subject.stub(:dsVersionID=>'content.7')
   end
   describe "version control" do
     before(:all) do
-      GenericFile.any_instance.stub(:terms_of_service).and_return('1')
       f = GenericFile.new
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-      f.should_receive(:characterize_if_changed).and_yield
       f.apply_depositor_metadata('mjg36')
       f.save
       @file = GenericFile.find(f.pid)
@@ -52,7 +49,6 @@ describe FileContentDatastream do
     describe "add a version" do
       before(:all) do
         @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-        @file.should_receive(:characterize_if_changed).and_yield
         @file.save
       end
       it "should return two versions" do
@@ -68,8 +64,7 @@ describe FileContentDatastream do
   end
   describe "extract_metadata" do
     it "should have the path" do
-      @subject.fits_path.should_not be_nil
-      @subject.fits_path.should_not == ''
+      @subject.send(:fits_path).should be_present
     end
     it "should return an xml document" do
       repo = mock("repo")
