@@ -15,7 +15,12 @@
 require 'spec_helper'
 
 describe 'Routes' do
-  before(:each) { @routes = Sufia::Engine.routes }
+  before(:each) do
+    @routes = Sufia::Engine.routes 
+    # so we have to do this instead:
+    # engine routes broke in rspec rails 2.12.1, so we had to add this:
+    assertion_instance.instance_variable_set(:@routes, @routes)
+  end
   describe 'Catalog' do
   
     it 'should route the root url to the catalog controller' do

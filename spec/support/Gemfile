@@ -6,9 +6,7 @@ gem 'sqlite3'
 
 gem 'devise'
 gem 'blacklight'
-#gem "hydra-head"
-gem 'hydra-head', github: 'projecthydra/hydra-head', ref: 'd60913b'  #pre5.2
-
+gem "hydra-head"
 
 gem 'sufia', :path=>'../../'
 gem 'rspec-rails', :group=>:test
