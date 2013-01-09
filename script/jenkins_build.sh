@@ -32,8 +32,8 @@ cp -f ${HHOME}/config/{database,fedora,solr,hydra-ldap}.yml ${WORKSPACE}/config
 echo "=-=-=-=-= $0 resque-pool --daemon --environment test start"
 resque-pool --daemon --environment test start
 
-echo "=-=-=-=-= $0 HEADLESS=true RAILS_ENV=test rake --trace scholarsphere:ci"
-HEADLESS=true RAILS_ENV=test rake --trace scholarsphere:ci
+echo "=-=-=-=-= $0 HEADLESS=true RAILS_ENV=test bundle exec rake --trace scholarsphere:ci"
+HEADLESS=true RAILS_ENV=test bundle exec rake --trace scholarsphere:ci
 retval=$?
 
 echo "=-=-=-=-= $0 kill resque-pool's pid to stop it"
