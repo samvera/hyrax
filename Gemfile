@@ -1,9 +1,7 @@
 source 'http://rubygems.org'
 
-# Please see scholarsphere.gemspec for dependency information.
+# Please see sufia.gemspec for dependency information.
 gemspec
-
-gem 'hydra-head', github: 'projecthydra/hydra-head', ref: 'd60913b'  #pre5.2
 
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 group :development, :test do
@@ -23,6 +21,4 @@ group :development, :test do
   gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.1.0"
   gem 'launchy'
-
-  gem 'devise'
 end # (leave this comment here to catch a stray line inserted by blacklight!)
