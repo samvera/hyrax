@@ -4,10 +4,10 @@ class SingleUseLinkController < DownloadsController
   prepend_before_filter :normalize_identifier, :except => [:download, :show]
   
   def generate_download
-    id  = check_single_use_link
-    @su =  SingleUseLink.create_download(id)
+    @generic_file = GenericFile.find(params[:id])
+    authorize! :read, @generic_file   
+    @su =  SingleUseLink.create_download(params[:id])
     @link =  sufia.download_single_use_link_path(@su.downloadKey)
-    @generic_file = GenericFile.find(id)
     respond_to do |format|
       format.html
       format.js  {render :js => @link}
@@ -16,10 +16,10 @@ class SingleUseLinkController < DownloadsController
   end
 
   def generate_show
-    id  = check_single_use_link
-    @su = SingleUseLink.create_show(id)
+    @generic_file = GenericFile.find(params[:id])
+    authorize! :read, @generic_file   
+    @su = SingleUseLink.create_show(params[:id])
     @link = sufia.show_single_use_link_path(@su.downloadKey)
-    @generic_file = GenericFile.find(id)
     respond_to do |format|
       format.html
       format.js  {render :js => @link}
@@ -62,14 +62,6 @@ class SingleUseLinkController < DownloadsController
   end
   
   protected
-  
-  def check_single_use_link
-    id = params[:id]
-    # make sure the user is allowed to read the document before they generate the link
-    perms = permissions_solr_doc_for_id(id)
-    @can_read =  can? :read, perms    
-    return id
-  end
   
   def lookup_hash  
     id = params[:id]
