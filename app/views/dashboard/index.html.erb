@@ -83,17 +83,18 @@ limitations under the License.
            return false;
         });
       }
+  
+      // hide or show the batch update buttons file selections
+      $(".batch_toggle").bind('click', function(e) {
+           e.preventDefault();
+           toggleButtons();
+       });
   });
 
 
   // hide or show the batch update buttons on page startup
   toggleButtons(<%= !@empty_batch %>);
       
-  // hide or show the batch update buttons file selections
-  $(".batch_toggle").bind('click', function(e) {
-        e.preventDefault();
-        toggleButtons();
-    });
 
   $('#documents').batchEdit();
 
