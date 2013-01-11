@@ -70,7 +70,7 @@ class BatchUpdateJob
       save_tries += 1
       logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
       # fail for good if the tries is greater than 3
-      rescue_action_without_handler(error) if save_tries >=3
+      raise error if save_tries >=3
       sleep 0.01
       retry
     end #
