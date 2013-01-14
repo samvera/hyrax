@@ -66,6 +66,12 @@ module Sufia::User
     user_key
   end
 
+  # method needed for trophies
+  def trophies
+     trophies = Trophy.where(user_id:self.id)
+    return trophies
+  end
+
   # method needed for messaging
   def mailboxer_email(obj=nil)
     return nil

@@ -37,6 +37,12 @@ module Sufia
       around_save :characterize_if_changed, :retry_warming
     end
 
+    def delete
+       self.cleanup_trophies
+       super
+    end
+
+
     def pdf?
       ["application/pdf"].include? self.mime_type
     end
@@ -84,6 +90,11 @@ module Sufia
         
         end
     end
+
+    def cleanup_trophies
+      Trophy.destroy_all(generic_file_id: self.noid)
+    end
+
 
     def related_files
       relateds = begin

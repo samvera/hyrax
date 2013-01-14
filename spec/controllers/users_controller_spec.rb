@@ -51,14 +51,14 @@ describe UsersController do
     it "redirects to show profile when user attempts to edit another profile" do
       get :edit, uid: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
-      flash[:alert].should include("You cannot edit archivist1@example.com's profile")
+      flash[:alert].should include("Permission denied: cannot access this page.")
     end
   end
   describe "#update" do
     it "should not allow other users to update" do
       post :update, uid: @another_user.user_key, user: { avatar: nil }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
-      flash[:alert].should include("You cannot edit archivist1@example.com's profile")
+      flash[:alert].should include("Permission denied: cannot access this page.")
     end
     it "should set an avatar and redirect to profile" do
       @user.avatar.file?.should be_false
@@ -171,6 +171,33 @@ describe UsersController do
       post :unfollow, uid: @user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")
+    end
+  end
+  describe "#toggle_trophy" do
+     before do
+       @file = GenericFile.new()
+       @file.apply_depositor_metadata(@user.user_key)
+       @file.save
+       @file_id = @file.pid.split(":").last
+     end
+     after do
+       @file.delete
+     end
+     it "should trophy a file" do
+      post :toggle_trophy, {uid: @user.user_key, file_id: @file_id}
+      puts "Body: #{response.body}"
+      JSON.parse(response.body)['user_id'].should == @user.id
+      JSON.parse(response.body)['generic_file_id'].should == @file_id
+    end
+     it "should not trophy a file for a different user" do
+      post :toggle_trophy, {uid: @another_user.user_key, file_id: @file_id}
+      response.should_not be_success
+    end
+     it "should not trophy a file with no edit privs" do
+      sign_out @user
+      sign_in @another_user
+      post :toggle_trophy, {uid: @another_user.user_key, file_id: @file_id}
+      response.should_not be_success
     end
   end
 end

@@ -25,10 +25,12 @@ on element ids -->
   <td width="1%">
   <% if gf.processing? %>
      <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
+  <% elsif gf.depositor  != @user.user_key %>
+     <i class="icon-gift icon-large"/>
   <% end %>
   </td>
   <td width="37%">
-    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large fleft"></i></a>
+    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large fleft"></i></a>&nbsp;
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <span class=center><%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
   </td>
@@ -49,6 +51,15 @@ on element ids -->
     <%= link_to raw('<i class="icon-pencil icon-large"></i>'), sufia.edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-download-alt icon-large"></i>'), sufia.download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-trash icon-large"></i>'), sufia.generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation'} %>&nbsp;&nbsp;&nbsp;
+
+ <% trophyclass = "trophy-off" %>
+ <% trophytitle= "Highlight work " %>
+ <% if @user.trophies.map(&:generic_file_id).include? noid %>
+     <% trophyclass = "trophy-on" %>
+     <% trophytitle= "Unhighlight work" %>
+<% end %>
+
+ <%= link_to raw("<i class='#{trophyclass} icon-trophy icon-large'></i>"),"", :class=> 'trophy-class', :title => trophytitle, :id => noid,  :remote=>true %>&nbsp;&nbsp;&nbsp;
   </td>
 </tr>
 <tr class="hide" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->

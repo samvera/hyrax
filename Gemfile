@@ -16,7 +16,7 @@ group :development, :test do
   gem 'ruby-prof'
   gem 'cucumber-rails', '~> 1.0', :require => false
   gem 'database_cleaner'
-  gem 'capybara'
+  gem 'capybara', '~>1.1.3'
   gem 'bcrypt-ruby'
   gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.1.0"

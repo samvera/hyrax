@@ -14,8 +14,9 @@
 
 class UsersController < ApplicationController
   prepend_before_filter :find_user, :except => [:index, :search, :notifications_number]
-  before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow]
-  before_filter :user_is_current_user, only: [:edit, :update]
+  before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
+  before_filter :user_is_current_user, only: [:edit, :update, :toggle_trophy]
+
   before_filter :user_not_current_user, only: [:follow, :unfollow]
 
   def index
@@ -35,6 +36,10 @@ class UsersController < ApplicationController
     else 
       @events = []
     end
+    @trophies=[]
+    @user.trophies.each do |t| 
+      @trophies << GenericFile.find("#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}")
+    end
     @followers = @user.followers
     @following = @user.all_following
   end
@@ -43,6 +48,10 @@ class UsersController < ApplicationController
   def edit
     @user = current_user
     @groups = @user.groups
+    @trophies=[]
+    @user.trophies.each do |t| 
+      @trophies << GenericFile.find("#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}")
+    end
   end
 
   # Process changes from profile form
@@ -57,7 +66,33 @@ class UsersController < ApplicationController
     end
     Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
     redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "Your profile has been updated"
+    delete_trophy = params.keys.reject{|k,v|k.slice(0,'remove_trophy'.length)!='remove_trophy'}
+    delete_trophy = delete_trophy.map{|v| v.slice('remove_trophy_'.length..-1)}
+    delete_trophy.each do | smash_trophy |
+      Trophy.where(user_id: current_user.id, generic_file_id: smash_trophy.slice("#{Sufia::Engine.config.id_namespace}:".length..-1)).each.map(&:delete)
+      #Trophy.where(user_id: current_user.id, generic_file_id: smash_trophy.slice("#{Sufia::Engine.config.id_namespace}:".length..-1)).each.map(&:delete)
+    end
   end
+  def toggle_trophy    
+     id = params[:file_id]
+     id = "#{Sufia::Engine.config.id_namespace}:#{id}" unless id.include?(":")
+     unless current_user.can? :edit, permissions_solr_doc_for_id(id)
+       redirect_to root_path, alert: "You do not have permissions to the file"
+       return false
+     end
+     # TO DO  make sure current user has access to file
+     t = Trophy.where(:generic_file_id => params[:file_id], :user_id => current_user.id).first
+     if t.blank? 
+       t = Trophy.create(:generic_file_id => params[:file_id], :user_id => current_user.id)
+       return false unless t.persisted?
+     else
+       t.delete  
+       #TODO do this better says Mike
+       return false if t.persisted?  
+     end
+     render :json => t
+  end 
+
 
   # Follow a user
   def follow
@@ -84,7 +119,7 @@ class UsersController < ApplicationController
   end
 
   def user_is_current_user
-    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), alert: "You cannot edit #{@user.to_s}\'s profile" unless @user == current_user
+    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), alert: "Permission denied: cannot access this page." unless @user == current_user
   end
 
   def user_not_current_user
