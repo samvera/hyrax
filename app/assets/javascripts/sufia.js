@@ -40,6 +40,7 @@ limitations under the License.
 //= require fileupload
 //= require sufia/permissions
 //= require sufia/tabs
+//= require sufia/trophy
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
@@ -235,26 +236,6 @@ $(function() {
 
     $("li.expandable_new").click(function(){
        $(this).find('i').toggleClass("icon-chevron-down");
-    });
-
-    $('.trophy-class').click(function(){
-      var uid=$("#current_user").html();
-      $.ajax({
-         url:"/users/"+uid+"/trophy",
-         type:"post",
-         data: "file_id="+this.id,
-         success:function(data) {
-           var oldclass = $('#'+data.trophy.generic_file_id).find('i').attr("class");
-           if (oldclass.indexOf("trophy-on") != -1){
-             $('#'+data.trophy.generic_file_id).find('i').attr("title", "Highlight work");
-           } else {
-             $('#'+data.trophy.generic_file_id).find('i').attr("title", "Unhighlight work");
-           }
-                    
-           $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-on");
-           $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-off");
-         }
-      })
     });
 
     $(".sorts-dash").click(function(){
