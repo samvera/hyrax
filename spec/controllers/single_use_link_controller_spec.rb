@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe SingleUseLinkController do
   before(:all) do
-    User.any_instance.stub(:groups).and_return([])
-
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
     @file.set_title_and_label('world.png')

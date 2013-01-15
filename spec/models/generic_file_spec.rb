@@ -182,9 +182,9 @@ describe GenericFile do
     @file.title = "The Work"
     @file.description = "The work by Allah"
     @file.publisher = "Vertigo Comics"
-    @file.date_created = "1200"
-    @file.date_uploaded = "2011"
-    @file.date_modified = "2012"
+    @file.date_created = "1200-01-01"
+    @file.date_uploaded = "2011-01-01"
+    @file.date_modified = "2012-01-01"
     @file.subject = "Theology"
     @file.language = "Arabic"
     @file.rights = "Wide open, buddy."
@@ -208,7 +208,7 @@ describe GenericFile do
     local["generic_file__publisher_t"].should == ["Vertigo Comics"]
     local["generic_file__subject_t"].should == ["Theology"]
     local["generic_file__language_t"].should == ["Arabic"]
-    local["generic_file__date_created_t"].should == ["1200"]
+    local["generic_file__date_created_t"].should == ["1200-01-01"]
     local["generic_file__resource_type_t"].should == ["Book"]
     local["file_format_t"].should == "jpeg (JPEG Image)"
     local["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]

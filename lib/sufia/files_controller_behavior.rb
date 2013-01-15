@@ -199,8 +199,8 @@ module Sufia
       add_posted_blob_to_asset(@generic_file,file, file_name)
 
       @generic_file.apply_depositor_metadata(user_key)
-      @generic_file.date_uploaded = Time.now.ctime
-      @generic_file.date_modified = Time.now.ctime
+      @generic_file.date_uploaded = Date.today
+      @generic_file.date_modified = Date.today
       @generic_file.relative_path = relative_path if relative_path
       @generic_file.creator = current_user.name
 

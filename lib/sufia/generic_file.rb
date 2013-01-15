@@ -105,8 +105,8 @@ module Sufia
       solr_doc["file_format_t"] = file_format
       solr_doc["file_format_facet"] = solr_doc["file_format_t"]
       # remap dates as a valid xml date not to_s
-      solr_doc['generic_file__date_uploaded_dt'] = Time.parse(date_uploaded).utc.to_s.sub(' ','T').sub(' UTC','Z') rescue Time.new(date_uploaded).utc.to_s.sub(' ','T').sub(' UTC','Z') unless date_uploaded.blank?
-      solr_doc['generic_file__date_modified_dt'] = Time.parse(date_modified).utc.to_s.sub(' ','T').sub(' UTC','Z') rescue Time.new(date_modified).utc.to_s.sub(' ','T').sub(' UTC','Z') unless date_modified.blank?
+      # solr_doc['generic_file__date_uploaded_dt'] = Time.parse(date_uploaded).utc.to_s.sub(' ','T').sub(' UTC','Z') rescue Time.new(date_uploaded).utc.to_s.sub(' ','T').sub(' UTC','Z') unless date_uploaded.blank?
+      # solr_doc['generic_file__date_modified_dt'] = Time.parse(date_modified).utc.to_s.sub(' ','T').sub(' UTC','Z') rescue Time.new(date_modified).utc.to_s.sub(' ','T').sub(' UTC','Z') unless date_modified.blank?
       return solr_doc
     end
 
@@ -141,14 +141,7 @@ module Sufia
     end
 
     def get_terms
-      terms = []
-      self.descMetadata.class.config[:predicate_mapping].each do |uri, mappings|
-        new_terms = mappings.keys.map(&:to_s).select do |term|
-          term.start_with? "generic_file__" and !['type', 'behaviors'].include? term.split('__').last
-        end
-        terms.concat(new_terms)
-      end
-      terms
+      self.descMetadata.class.config.keys
     end
 
     def get_values
@@ -156,11 +149,10 @@ module Sufia
       values = {}
       terms.each do |t|
           next if t.empty?
-          key = t.to_s.split("generic_file__").last
-          next if ['part_of', 'date_modified', 'date_uploaded'].include?(key)
-          values[key] = self.send(key) if self.respond_to?(key)
+          next if ['part_of', 'date_modified', 'date_uploaded'].include?(t)
+          values[t] = self.send(key) if self.respond_to?(key)
       end        
-      return values          
+      values          
     end
 
     # Is this file in the middle of being processed by a batch?
