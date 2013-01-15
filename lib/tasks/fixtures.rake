@@ -228,7 +228,6 @@ namespace :sufia do
       User.create(email: 'archivist1@example.com')#, display_name: 'Captain Archivist')
       # Then, set this user as the depositor of test4 to appease this damn failing cuke
       gf = GenericFile.find('sufia:test4')
-      gf.terms_of_service = '1'
       gf.apply_depositor_metadata('archivist1@example.com')
       gf.save
     end
