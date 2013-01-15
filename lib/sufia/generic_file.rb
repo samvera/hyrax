@@ -115,9 +115,6 @@ module Sufia
       solr_doc["noid_s"] = noid
       solr_doc["file_format_t"] = file_format
       solr_doc["file_format_facet"] = solr_doc["file_format_t"]
-      # remap dates as a valid xml date not to_s
-      # solr_doc['generic_file__date_uploaded_dt'] = Time.parse(date_uploaded).utc.to_s.sub(' ','T').sub(' UTC','Z') rescue Time.new(date_uploaded).utc.to_s.sub(' ','T').sub(' UTC','Z') unless date_uploaded.blank?
-      # solr_doc['generic_file__date_modified_dt'] = Time.parse(date_modified).utc.to_s.sub(' ','T').sub(' UTC','Z') rescue Time.new(date_modified).utc.to_s.sub(' ','T').sub(' UTC','Z') unless date_modified.blank?
       return solr_doc
     end
 
