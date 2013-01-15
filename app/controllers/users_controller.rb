@@ -36,7 +36,7 @@ class UsersController < ApplicationController
     else 
       @events = []
     end
-    @trophies = trophy_ids
+    @trophies = @user.trophy_ids
     @followers = @user.followers
     @following = @user.all_following
   end
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   def edit
     @user = current_user
     @groups = @user.groups
-    @trophies = trophy_ids
+    @trophies = @user.trophy_ids
   end
 
   # Process changes from profile form
