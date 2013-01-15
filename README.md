@@ -8,6 +8,7 @@ gem 'blacklight'
 gem 'hydra-head'
 gem 'sufia'
 gem 'jettywrapper'
+gem 'font-awesome-sass-rails'
 ```
 Then `bundle install`
 
