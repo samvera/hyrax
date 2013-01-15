@@ -13,7 +13,7 @@
 # limitations under the License.
 
 at_exit do
-  Batch.find(:all, :rows=>Batch.count).map(&:delete)
-  GenericFile.find(:all, :rows=>GenericFile.count).map(&:delete)
+  Batch.destroy_all
+  GenericFile.destroy_all
   User.destroy_all
 end
