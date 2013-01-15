@@ -53,8 +53,8 @@ limitations under the License.
     <ul class="thumbnails">
       <% @followers.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.login), { :title => f.name } ) %>
-          <%= link_to(f.name, sufia.profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
+          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
@@ -65,8 +65,8 @@ limitations under the License.
     <ul class="thumbnails">
       <% @following.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.login), { :title => f.name } ) %>
-          <%= link_to(f.name, sufia.profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
+          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
