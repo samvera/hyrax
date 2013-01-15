@@ -8,7 +8,7 @@ Sufia::Engine.routes.draw do
 
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
-
+  
   # "Recently added files" route for catalog index view
   match "catalog/recent" => "catalog#recent", :as => :catalog_recent
 
@@ -41,6 +41,10 @@ Sufia::Engine.routes.draw do
   match 'users/:uid' => 'users#show', :as => :profile
   match 'users/:uid/edit' => 'users#edit', :as => :edit_profile
   match 'users/:uid/update' => 'users#update', :as => :update_profile, :via => :put
+  match "users/:uid/trophy" => "users#toggle_trophy", :as => :update_trophy_user, :via => :post
+
+
+
   match 'users/:uid/follow' => 'users#follow', :as => :follow_user
   match 'users/:uid/unfollow' => 'users#unfollow', :as => :unfollow_user
 

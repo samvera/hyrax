@@ -35,7 +35,7 @@ This generator makes the following changes to your application:
     # Can't get this any more DRY, because we need this order.
     %w{acts_as_follower_migration.rb	add_social_to_users.rb		create_single_use_links.rb	add_ldap_attrs_to_user.rb
 add_avatars_to_users.rb		create_checksum_audit_logs.rb	create_version_committers.rb
-add_groups_to_users.rb		create_local_authorities.rb}.each do |f|
+add_groups_to_users.rb		create_local_authorities.rb	create_trophies.rb}.each do |f|
       better_migration_template f
     end
   end

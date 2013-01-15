@@ -25,10 +25,12 @@ on element ids -->
   <td width="1%">
   <% if gf.processing? %>
      <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
+  <% elsif gf.depositor  != @user.user_key %>
+     <i class="icon-gift icon-large"/>
   <% end %>
   </td>
   <td width="37%">
-    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large fleft"></i></a>
+    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large fleft"></i></a>&nbsp;
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <span class=center><%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
   </td>
@@ -49,6 +51,8 @@ on element ids -->
     <%= link_to raw('<i class="icon-pencil icon-large"></i>'), sufia.edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-download-alt icon-large"></i>'), sufia.download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
     <%= link_to raw('<i class="icon-trash icon-large"></i>'), sufia.generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation'} %>&nbsp;&nbsp;&nbsp;
+
+  <%= display_trophy_link(@user, noid) %>&nbsp;&nbsp;&nbsp;
   </td>
 </tr>
 <tr class="hide" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->
@@ -64,7 +68,7 @@ on element ids -->
       </tr>
       <tr>
         <td colspan="2"><strong>Edit Access: </strong>
-          <% if !document[:edit_access_group_t].nil? %>
+          <% if !document[:edit_access_group_t].nil?%>
             Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %>
             <br />
           <% end %>

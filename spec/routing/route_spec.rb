@@ -105,6 +105,8 @@ describe 'Routes' do
       { get: '/dashboard/facet/1' }.should route_to(controller: 'dashboard', action: 'facet', id: '1')
     end
 
+  
+
     it "should route to dashboard activity" do
       { get: '/dashboard/activity' }.should route_to(controller: 'dashboard', action: 'activity')
     end
@@ -123,6 +125,9 @@ describe 'Routes' do
   end
 
   describe 'Users' do
+    it 'should route to user trophies' do
+      { post: '/users/bob135/trophy' }.should route_to(controller: 'users', action: 'toggle_trophy', uid: 'bob135')
+    end
     it 'should route to user profile' do
       { get: '/users/bob135' }.should route_to(controller: 'users', action: 'show', uid: 'bob135')
     end

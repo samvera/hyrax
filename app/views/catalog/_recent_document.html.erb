@@ -2,6 +2,7 @@
 <%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
 <%- title = render_document_show_field_value(:document=>recent_document, :field=>"generic_file__title_t") -%>
 <%- title = filename if title.empty? -%>
+<%- short_title = truncate(title, :length => 28, :separator => ' ') -%>
 <%- depositor = get_depositor_from_document(recent_document) -%>
     <tr>
       <% if display_thumbs %>
@@ -9,11 +10,7 @@
       <% end %>
       <td>
         <h3>
-          <% if title.length > 25 %>
-            <%= link_to "#{title[0..24]}...", sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
-          <% else %>
-            <%= link_to title, sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
-          <% end %>
+          <%= link_to short_title, sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
 
           <% if display_access %>
               <% if !recent_document[:read_access_group_t].blank? and recent_document[:read_access_group_t].include?('registered') %>

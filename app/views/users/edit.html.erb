@@ -74,6 +74,9 @@ $("a[rel=popover]").popover();
       </div>
     </div>
 
+    <%= render :partial => 'trophy_edit', :locals => {:trophies => @trophies} %>
+
+
     <div class="form-actions">
       <%= f.button '<i class="icon-save"></i> Save Profile'.html_safe, :type => 'submit', :class => "btn-primary btn-large" %>
     </div>

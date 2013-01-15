@@ -5,13 +5,13 @@ class BatchEditsController < ApplicationController
    def edit
        super 
        @generic_file = GenericFile.new
-       @generic_file.depositor = current_user.login
+       @generic_file.depositor = current_user.user_key
        @groups = current_user.groups       
        @terms = @generic_file.get_terms.reject{|k,v| (k=='generic_file__title')|| (k == 'generic_file__part_of')|| (k == 'generic_file__date_uploaded') || (k == 'generic_file__date_modified')}
 
        # do we want to show the original values for anything...
        @show_file = GenericFile.new
-       @show_file.depositor = current_user.login
+       @show_file.depositor = current_user.user_key
        h  = {}
        @names = []
        permissions = []

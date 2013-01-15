@@ -30,6 +30,7 @@ limitations under the License.
       <% else %>
         <a class="btn btn-primary" href="<%= sufia.follow_user_path(@user.to_s) %>"><i class="icon-eye-open"></i> Follow</a>
       <% end %>
+      <a class="btn btn-primary" href="<%= sufia.profiles_path %>"><i class="icon-globe"></i> View Users</a>
     </span>
   </h1>
     <dl>
@@ -37,6 +38,10 @@ limitations under the License.
       <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
       <dt><i class="icon-folder-open"></i> Deposited Files</dt>
       <dd><%= link_to_field('depositor', @user.to_s, GenericFile.find(:depositor_t => @user.to_s).count) %></dd>
+      <dt><i class="icon-trophy trophy-on" ></i> Highlighted Files</dt>
+      <% @trophies.each do |t| %>
+        <dd> <%= link_to display_title(t), sufia.generic_file_path(t) %></dd>
+      <% end %>
     </dl>
 
 <hr />
@@ -48,7 +53,8 @@ limitations under the License.
     <ul class="thumbnails">
       <% @followers.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
+          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>
@@ -59,7 +65,8 @@ limitations under the License.
     <ul class="thumbnails">
       <% @following.each do |f| %>
         <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.login), { :title => f.name } ) %>
+          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
+          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
         <li>
       <% end %>
     </ul>

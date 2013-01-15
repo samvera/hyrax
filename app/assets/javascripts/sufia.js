@@ -40,6 +40,7 @@ limitations under the License.
 //= require fileupload
 //= require sufia/permissions
 //= require sufia/tabs
+//= require sufia/trophy
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change

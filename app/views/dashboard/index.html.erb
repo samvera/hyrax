@@ -158,6 +158,7 @@ z-index:1;
 
   <% @page_title = application_name + " Dashboard" %>
 
+  <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
   <div class="row">
     <%= render :partial => 'search_form' %>
     <h2 class="heading1">My Dashboard</h2>
@@ -184,5 +185,3 @@ z-index:1;
 
   <%= render 'results_pagination' %>
   <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
-
-  <span id="single_clippy" class="clippy hidden" data-text="This is a test"></span> <i class="icon-link over" onlick="alert('abc');"></i> 
