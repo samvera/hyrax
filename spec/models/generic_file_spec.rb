@@ -214,6 +214,7 @@ describe GenericFile do
     local["generic_file__identifier_t"].should == ["urn:isbn:1234567890"]
     local["generic_file__based_near_t"].should == ["Medina, Saudi Arabia"]
     local["mime_type_t"].should == ["image/jpeg"]    
+    local["noid_s"].should == "__DO_NOT_USE__"
   end
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]
