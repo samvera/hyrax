@@ -71,6 +71,16 @@ module Sufia::User
      trophies = Trophy.where(user_id:self.id)
     return trophies
   end
+  
+  #method to get the trophy ids without the namespace included
+  def trophy_ids
+    trophies=[]
+    trophies.each do |t|
+      @trophies << GenericFile.find("#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}")
+ 
+    end
+    return trophies
+  end
 
   # method needed for messaging
   def mailboxer_email(obj=nil)

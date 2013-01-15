@@ -36,10 +36,7 @@ class UsersController < ApplicationController
     else 
       @events = []
     end
-    @trophies=[]
-    @user.trophies.each do |t| 
-      @trophies << GenericFile.find("#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}")
-    end
+    @trophies = trophy_ids
     @followers = @user.followers
     @following = @user.all_following
   end
@@ -48,10 +45,7 @@ class UsersController < ApplicationController
   def edit
     @user = current_user
     @groups = @user.groups
-    @trophies=[]
-    @user.trophies.each do |t| 
-      @trophies << GenericFile.find("#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}")
-    end
+    @trophies = trophy_ids
   end
 
   # Process changes from profile form
