@@ -43,8 +43,8 @@ describe User do
     @user.should respond_to(:facebook_handle)
     @user.should respond_to(:googleplus_handle)
   end
-  it "should redefine to_param to make redis keys more recognizable" do
-    @user.to_param.should == @user.user_key
+  it "should redefine to_param to make redis keys more recognizable (and useable within Rails URLs)" do
+    @user.to_param.should == "jilluser@example-dot-com"
   end
   it "should have a cancan ability defined" do
     @user.should respond_to(:can?)
