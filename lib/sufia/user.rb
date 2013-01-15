@@ -63,7 +63,8 @@ module Sufia::User
 
   # Redefine this for more intuitive keys in Redis
   def to_param
-    user_key
+    # hack because rails doesn't like periods in urls.
+    user_key.gsub(/\./, '-dot-')
   end
 
   # method needed for messaging
@@ -108,6 +109,11 @@ module Sufia::User
     def batchuser_key
       'batchuser@example.com'
     end
+
+    def from_url_component(component)
+      User.find_by_user_key(component.gsub(/-dot-/, '.'))
+    end
+
   end
 
 end
