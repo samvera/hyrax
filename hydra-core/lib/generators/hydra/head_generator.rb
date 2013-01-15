@@ -45,9 +45,6 @@ class HeadGenerator < Rails::Generators::Base
     copy_file "config/role_map_production.yml", "config/role_map_production.yml"
     copy_file "config/role_map_test.yml", "config/role_map_test.yml"
    
-    # Solr Mappings
-    copy_file "config/solr_mappings.yml", "config/solr_mappings.yml"
-
     # Fedora & Solr YAML files
     begin
       invoke('active_fedora:config')
