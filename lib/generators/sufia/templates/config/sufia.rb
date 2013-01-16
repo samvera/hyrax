@@ -1,7 +1,3 @@
-
-require 'sufia/http_header_auth'
-
-# TODO move this method to HttpAuth initializer
 # Returns an array containing the vhost 'CoSign service' value and URL
 Sufia.config do |config|
   config.id_namespace = "sufia"
@@ -12,21 +8,6 @@ Sufia.config do |config|
     }
 
   config.max_days_between_audits = 7
-
-  # TODO move these to an HttpAuth initializer
-    # Map hostnames onto vhosts
-  config.hosts_vhosts_map = {
-    'fedora1test' => 'https://scholarsphere-integration.dlt.psu.edu:8443/',
-    'fedora2test' => 'https://scholarsphere-test.dlt.psu.edu/',
-    'ss1stage' => 'https://scholarsphere-staging.dlt.psu.edu/',
-    'ss2stage' => 'https://scholarsphere-staging.dlt.psu.edu/',
-    'ss1prod' => 'https://scholarsphere.psu.edu/',
-    'ss2prod' => 'https://scholarsphere.psu.edu/'
-  }
-
-  # TODO move these to an HttpAuth initializer
-  config.logout_url = "https://webaccess.psu.edu/cgi-bin/logout?#{Sufia::HttpHeaderAuth.get_vhost_by_host(config)[1]}"
-  config.login_url = "https://webaccess.psu.edu?cosign-#{Sufia::HttpHeaderAuth.get_vhost_by_host(config)[0]}&#{Sufia::HttpHeaderAuth.get_vhost_by_host(config)[1]}"
 
       config.cc_licenses = {
       'Attribution 3.0 United States' => 'http://creativecommons.org/licenses/by/3.0/us/',

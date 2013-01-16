@@ -86,16 +86,6 @@ describe 'Routes' do
     end
   end
 
-  describe 'Sessions' do
-    it "should route to logout" do
-      { get: '/logout' }.should route_to(controller: 'sessions', action: 'destroy')
-    end
-
-    it "should route to login" do
-      { get: '/login' }.should route_to(controller: 'sessions', action: 'new')
-    end
-  end
-
   describe 'Dashboard' do
     it "should route to dashboard" do
       { get: '/dashboard' }.should route_to(controller: 'dashboard', action: 'index')
