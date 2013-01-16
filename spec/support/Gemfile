@@ -6,7 +6,7 @@ gem 'sqlite3'
 
 gem 'devise'
 gem 'blacklight'
-gem "hydra-head"
+gem "hydra-head", github: 'projecthydra/hydra-head', ref: '5ee4e26' # 5.2.0+ (doesn't generate solr_mappings.yml)
 
 gem 'sufia', :path=>'../../'
 gem 'rspec-rails', :group=>:test
