@@ -13,12 +13,10 @@
 
 // initialize popover helpers
 $("a[rel=popover]").popover();
-  <% @terms.each do |t| %>
-    <% key = t.to_s.split("generic_file__").last %>
-    <% vals =  @show_file.send(key) %>
+  <% @terms.each do |term| %>
+    <% vals =  @show_file.send(term) %>
     <% next if vals.blank? %>    
-    <% vals = [vals] unless vals.is_a?(Array) %>
-    $("#<%='generic_file_'+key%>").autocomplete({"source":["<%=vals.join(",")%>"]});
+    $("#<%='generic_file_'+term.to_s%>").autocomplete({"source":["<%=vals.join(",")%>"]});
 
   <% end %>
 
@@ -253,18 +251,12 @@ h2 small {
   <div class="well active" id="descriptions_display"> 
       <table class="table table-striped"><!-- class="verticalheadings"> -->
       <tbody>
-      <% @terms.each do |t| %>
-        <% next if t.empty? %>
-        <% key = t.to_s.split("generic_file__").last %>
-        <% next unless @generic_file.respond_to?(key) %>
-        <% label = GenericFile::get_label(key) %>
-        <% vals =  @show_file.send(key) %>
-        <% # not an arry lets just shove it in one %>
-        <% vals = [vals] unless vals.is_a?(Array) %>
-            <tr id='row_<%=key%>' class="expandable">
+      <% @terms.each do |term| %>
+        <% vals =  @show_file.send(term) %>
+            <tr id='row_<%=term.to_s%>' class="expandable">
               <th width="20%">
-                 <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%=key%>" href="#collapse_<%=key%>">
-                    <%=label%>&nbsp;<i class="toggle icon-chevron-right grey"></i>
+                 <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%=term.to_s%>" href="#collapse_<%=term.to_s%>">
+                    <%=get_label(term)%>&nbsp;<i class="toggle icon-chevron-right grey"></i>
                  </a>
               </th>
               <!--td  width="30%" class="scrollx" id="data_<%= key%>">
@@ -274,15 +266,15 @@ h2 small {
               </td -->
               <td  width="50%" class="scrolly">
     
-                  <div id="collapse_<%=key%>" class="accordion-body collapse scrolly">
-                    <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_"+key, :class=>"ajax-form"} do |f| %>
+                  <div id="collapse_<%=term.to_s%>" class="accordion-body collapse scrolly">
+                    <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_"+term.to_s, :class=>"ajax-form"} do |f| %>
                         <%= hidden_field_tag('update_type', 'update') %>
-                        <%= hidden_field_tag('key', key) %>
-                        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => key } %>
+                        <%= hidden_field_tag('key', term.to_s) %>
+                        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => term } %>
                       <div class="row">
-                         <%= f.submit "Save changes", :class=>'btn btn-primary field-save' , :id=>key+'_save'%>
-                         <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%=key%>" href="#collapse_<%=key%>">Cancel </a>
-                         <div id="status_<%=key%>" class="status fleft"></div>
+                         <%= f.submit "Save changes", :class=>'btn btn-primary field-save' , :id=>term.to_s+'_save'%>
+                         <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%=term.to_s%>" href="#collapse_<%=term.to_s%>">Cancel </a>
+                         <div id="status_<%=term.to_s%>" class="status fleft"></div>
                       </div>
                     <% end %>
                   </div>

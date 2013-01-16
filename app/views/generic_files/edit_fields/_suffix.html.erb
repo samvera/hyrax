@@ -1,0 +1,9 @@
+        <% if index == 0  %>
+          <%= add_field(key) %>
+          &nbsp;
+          <%= help_icon(key) %>
+          <%= render :partial => "generic_files/rights_modal" if key == "rights" %>
+        <% else %>
+          <%= subtract_field(key) %>
+        <% end %>
+

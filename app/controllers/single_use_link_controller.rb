@@ -53,8 +53,7 @@ class SingleUseLinkController < DownloadsController
     
     #show the file
     @generic_file = GenericFile.find(id)
-    @terms = @generic_file.get_terms
-    #render 'generic_files/show'
+    @terms = @generic_file.terms_for_display
     
     # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
     @su =  SingleUseLink.create_download(id)

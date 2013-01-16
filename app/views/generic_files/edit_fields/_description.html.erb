@@ -1,0 +1,6 @@
+      <div class="controls" <%  if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
+        <%= f.text_area :description, :name=>"generic_file[#{key.to_s}][]", :id => "generic_file_"+key.to_s, :value=>v, :class => "input-large" %>
+        <%= render :partial=>"generic_files/edit_fields/suffix", :locals=>{key: key, index: index} %>
+      </div><!-- /controls -->              
+      <div id="additional_<%= key %>_elements"></div>
+

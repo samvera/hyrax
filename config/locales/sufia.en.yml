@@ -12,4 +12,28 @@ en:
         q:
           label:        "Search Scholarsphere"
           placeholder:  "Type keywords in here"
+
+    field_label:
+      based_near:       "Location"
+      description:      "Abstract or Summary"
+      tag:              "Keyword"
+      date_created:     "Date Created"
+      related_url:      "Related URL"
+
+    metadata_help: 
+      resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."
+      title: "A name for the file to aid in identifying it. Defaults to the file name, though a more descriptive title is encouraged. <em>This is a required field</em>."
+      tag: "Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>."
+      subject: "Headings or index terms describing what the file is about; these <em>do</em> need to conform to an existing vocabulary. Currently ScholarSphere supports Library of Congress Subject Headings."
+      creator: "The person or group responsible for the file being uploaded. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. \"Smith, John.\" <em>This is a required field</em>."
+      related_url: "A link to a website or other specific content (audio, video, PDF document) related to the file. An example is the URL of a research project from which the file was derived."
+      based_near: "A place name related to the file, such as its site of publication, or the city, state, or country the file's contents are about. Calls upon the GeoNames web service (<a href=\"http://www.geonames.org\">http://www.geonames.org</a>)."
+      contributor: "A person or group you want to recognize for playing a role in the creation of the file, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. \"Jones, Mary (advisor).\""
+      date_created: "The date on which the file was generated. Dates are accepted in the form YYYY-MM-DD, e.g. 1776-07-04."
+      description: "Free-text notes about the file itself. Examples include abstracts of a paper, citation information for a journal article, or a tag indicating a larger collection to which the file belongs."
+      identifier: "A unique handle describing the file. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
+      language: " The language of the file content."
+      publisher: "The person or group making the file available. Generally this is Penn State or the Penn State University Libraries."
+      rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. <em>This is a required field</em>."
+
     

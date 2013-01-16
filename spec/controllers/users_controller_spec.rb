@@ -185,7 +185,6 @@ describe UsersController do
      end
      it "should trophy a file" do
       post :toggle_trophy, {uid: @user.user_key, file_id: @file_id}
-      puts "Body: #{response.body}"
       JSON.parse(response.body)['user_id'].should == @user.id
       JSON.parse(response.body)['generic_file_id'].should == @file_id
     end

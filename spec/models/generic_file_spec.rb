@@ -15,10 +15,25 @@
 require 'spec_helper'
 
 describe GenericFile do
-  before(:each) do
+  before do
     @file = GenericFile.new
     @file.apply_depositor_metadata('jcoyne')
   end
+
+  describe "terms_for_editing" do
+    it "should return a list" do
+      @file.terms_for_editing.should == [ :contributor, :creator, :title, :description, :publisher,
+       :date_created, :subject, :language, :rights, :identifier, :based_near, :tag, :related_url]
+    end
+  end
+  describe "terms_for_display" do
+    it "should return a list" do
+      @file.terms_for_display.should == [ :part_of, :contributor, :creator, :title, :description, 
+        :publisher, :date_created, :date_uploaded, :date_modified,:subject, :language, :rights, 
+        :resource_type, :identifier, :based_near, :tag, :related_url]
+    end
+  end
+
   describe "attributes" do
     it "should have rightsMetadata" do
       @file.rightsMetadata.should be_instance_of ParanoidRightsDatastream

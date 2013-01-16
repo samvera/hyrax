@@ -55,7 +55,7 @@ module Sufia
 
     # routed to /files/:id/edit
     def edit
-      @terms = @generic_file.get_terms
+      @terms = @generic_file.terms_for_editing
       @groups = current_user.groups
     end
 

@@ -148,7 +148,12 @@ module Sufia
       }
     end
 
-    def get_terms
+    def terms_for_editing
+      terms_for_display -
+       [:part_of, :date_modified, :date_uploaded, :format, :resource_type]
+    end
+
+    def terms_for_display
       self.descMetadata.class.config.keys
     end
 
@@ -168,17 +173,6 @@ module Sufia
        return false if self.batch.blank?
        return false if !self.batch.methods.include? :status
        return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
-    end
-
-    module ClassMethods
-      # TODO this could probably be better handled by i18n
-      @@FIELD_LABEL_MAP = {"based_near"=>"Location", 'description'=>"Abstract or Summary", 'tag'=>"Keyword", 'date_created'=>"Date Created", 'related_url'=>"Related URL"}
-
-      def get_label(key)
-         label = @@FIELD_LABEL_MAP[key]
-         label = key.gsub('_',' ').titleize if label.blank?
-         return label
-      end
     end
 
   end

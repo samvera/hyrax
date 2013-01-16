@@ -20,24 +20,9 @@ limitations under the License.
   <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
     <div class="well">
 
-      <div class="control-group">
-        <%= f.label :resource_type, "Resource Types", :class=>"control-label", :for=>"resource_type" %>
-        <div class="controls">
-          <p class="help-block">You may select multiple types to apply<p>
-          <%= f.select "resource_type", options_for_select(Sufia::Engine.config.resource_types.keys, @generic_file.resource_type.to_a), {}, {:multiple=>true, :size=>7} %>
-          <a href="#" id="generic_file_resource_type_help" rel="popover" data-content="<%= Sufia::Engine.config.metadata_help['generic_file_resource_type'] %>" data-original-title="Resource Type"><i class="icon-question-sign icon-large"></i></a>
-        </div>
-      </div><!-- /control-group -->
-    
-      <% @terms.each do |t| %>
-        <% next if t.empty? %>
-        <% key = t.to_s.split("generic_file__").last %>
-        <%# consider these fields to be uneditable via the web form %>
-        <% next if ['part_of', 'date_modified', 'date_uploaded', 'format', 'resource_type'].include?(key) %>
-        <% logger.info "!!!! Generic file has no method #{key}" unless @generic_file.respond_to?(key) %>
-        <% if @generic_file.respond_to?(key) %>
-             <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @generic_file, :f =>f, :render_req => true, :key => key } %>        
-        <% end %>
+      <%= render :partial=>'generic_files/edit_fields/type', :locals => {f:f} %>
+      <% @terms.each do |term| %>
+        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @generic_file, :f =>f, :render_req => true, :key => term } %>        
       <% end %>
  
     </div><!-- /well -->
