@@ -4,8 +4,8 @@ require File.expand_path('../lib/sufia/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Coyne"]
   gem.email         = ["justin.coyne@yourmediashelf.com"]
-  gem.description   = %q{Engine for PSU scholarsphere}
-  gem.summary       = %q{A generic hyda-head repository}
+  gem.description   = %q{Sufia is a Rails engine for creating a self-deposit institutional repository}
+  gem.summary       = %q{Sufia was extracted from ScholarSphere developed by Penn State University}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
