@@ -1,5 +1,0 @@
-<%= form_tag(batch_edits_path, :method => :put, :class=> "batch-select-all hidden", "data-behavior" => 'batch-select-all') do -%>  
-    <%= hidden_field_tag('update_type', 'delete_all') %>
-  <%= submit_tag("Delete Selected", :class=>'batch-all-button btn btn-primary', :data => { :confirm => 'Deleting a file from ScholarSphere is permanent. Click OK to delete this file from ScholarSphere, or Cancel to cancel this operation'}) %>
-<% end %>
-

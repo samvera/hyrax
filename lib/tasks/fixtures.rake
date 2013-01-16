@@ -21,7 +21,7 @@
 # The files should be named id_[fixture id] which should relates to the id within the foxml sufia:[fixture id] where 
 # [fixture id] is some alpha numeric id ('test1')
 #
-# There are 2 sets of data needed to attach to a ScholarSphere fixture, 1 the data file, and 2 the metadata.
+# There are 2 sets of data needed to attach to a sufia fixture, 1 the data file, and 2 the metadata.
 # It is important that the meta-data contains the appropriate id, or solor will not index it!
 #
 # Usage: rake sufia:fixtures:create [DIR=<fixture dir>] [FIXTURE_ID=<fixture id>] [FIXTURE_TITLE=<fixture title>] [FIXTURE_USER=<fixture user>]
@@ -38,7 +38,7 @@
 #                      DEFAULT: archivist1
 #           
 #          
-#               Creates new fixture files including the erb, descMeta, and text for loading into ScholarSphere.  
+#               Creates new fixture files including the erb, descMeta, and text for loading into sufia.  
 #               The Files are named based on the sufia: id_<fixture id>.foxml.erb, id_<fixture id>.descMeta.txt, and id_<fixture id>.txt
 #               The foxml.erb file references the descMeta.txt and .txt file.  You can edit the erb to point to other data and/or edit the 
 #               .descMeta.txt  and/or .txt file to contain the data you wish.  
