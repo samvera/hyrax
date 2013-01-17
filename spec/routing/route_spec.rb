@@ -215,7 +215,7 @@ describe 'Routes' do
 
   describe "Catch-all" do
     it "should route non-existent routes to errors" do
-       get('/awesome').should_not be_routable
+      { get: '/awesome' }.should route_to(controller: 'errors', action: 'routing', error: 'awesome')
     end
   end
 end
