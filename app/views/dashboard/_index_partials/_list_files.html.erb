@@ -34,7 +34,7 @@ on element ids -->
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
     <span class=center><%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
   </td>
-  <td width="17%"><%= document.fetch(:generic_file__date_uploaded_dt,'').to_time.strftime("%m/%d/%Y") unless document.fetch(:generic_file__date_uploaded_dt,'').blank? %> </td>
+  <td width="17%"><%= document.fetch(:desc_metadata__date_uploaded_dt,'').to_time.strftime("%m/%d/%Y") unless document.fetch(:desc_metadata__date_uploaded_dt,'').blank? %> </td>
   <td width="5%" align="center">
     <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
       <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
@@ -63,7 +63,7 @@ on element ids -->
         <td><strong>File Format: </strong> <%= render_document_show_field_value(:document=>document, :field=>"file_format_t") %> </td>
       </tr>
       <tr>
-        <td><strong>Creator: </strong> <%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %> </td>
+        <td><strong>Creator: </strong> <%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__creator_display") %> </td>
         <td><strong>Depositor: </strong> <%= link_to_profile render_document_show_field_value(:document=>document, :field=>"depositor_t") %> </td>
       </tr>
       <tr>

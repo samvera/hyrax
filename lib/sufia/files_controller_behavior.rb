@@ -157,10 +157,9 @@ module Sufia
         version_event = true
         Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
       end
-      @generic_file.attributes = params[:generic_file].reject { |k,v| %w{ Filedata Filename revision part_of date_modified date_uploaded format }.include? k}
-      @generic_file.set_visibility(params[:visibility])
-      @generic_file.date_modified = Time.now.ctime
-      @generic_file.save!
+
+      update_metadata
+
       # do not trigger an update event if a version event has already been triggered
       Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
       record_version_committer(@generic_file, current_user)
@@ -169,6 +168,16 @@ module Sufia
     end
 
     protected
+
+    # this is provided so that implementing application can override this behavior and map params to different attributes
+    def update_metadata
+      valid_attributes = params[:generic_file].select { |k,v| (@generic_file.terms_for_editing + [:permissions]).include? k.to_sym}
+      @generic_file.attributes = valid_attributes
+      @generic_file.set_visibility(params[:visibility])
+      @generic_file.date_modified = DateTime.now
+      @generic_file.save!
+    end
+
     def record_version_committer(generic_file, user)
       version = generic_file.content.latest_version
       # content datastream not (yet?) present

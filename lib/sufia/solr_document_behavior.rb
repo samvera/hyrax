@@ -16,7 +16,7 @@
 module Sufia
   module SolrDocumentBehavior
     def title_or_label
-      self['generic_file__title_display'] ? 'generic_file__title_display' : 'label_t'
+      self['desc_metadata__title_display'] ? 'desc_metadata__title_display' : 'label_t'
     end
   end
 end

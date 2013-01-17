@@ -1,5 +1,4 @@
 <% if document.has_key?(:noid_s) %>
-<%# logger.info document[:generic_file__creator_t].inspect %>
 <li>
   <h2>
     <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(document[:noid_s].first) %>
@@ -10,7 +9,7 @@
       <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %>
       </td>
       <th><h4>Title:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__title_display") %></td>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__title_display") %></td>
     </tr>
     <tr>
       <th><h4>Depositor:<h4></div>
@@ -18,19 +17,19 @@
     </tr>
     <tr>
       <th><h4>Creator:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__creator_display") %></td>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__creator_display") %></td>
     </tr>
     <tr>
       <th><h4>Description:</h4></th>
-      <td><%= iconify_auto_link(render_document_show_field_value(:document=>document, :field=>"generic_file__description_display")) %></th>
+      <td><%= iconify_auto_link(render_document_show_field_value(:document=>document, :field=>"desc_metadata__description_display")) %></th>
     </tr>
     <tr>
       <th><h4>Keywords:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__tag_display") %></td>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__tag_display") %></td>
     </tr>
     <tr>
       <th><h4>Date Uploaded:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"generic_file__date_uploaded_display") %></td>
+      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__date_uploaded_display") %></td>
     </tr>
   </table>
 </li>

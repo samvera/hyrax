@@ -13,7 +13,7 @@
           <th>Creator</th>
           <td>
             <% @generic_file.creator.each do |creator| %>
-              <%= link_to_facet(creator, 'generic_file__creator_facet') %><br />
+              <%= link_to_facet(creator, 'desc_metadata__creator_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -37,7 +37,7 @@
           <th>Location</th>
           <td>
             <% @generic_file.based_near.each do |bn| %>
-              <%= link_to_facet(bn, 'generic_file__based_near_facet') %><br />
+              <%= link_to_facet(bn, 'desc_metadata__based_near_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -53,7 +53,7 @@
           <th>Language</th>
           <td>
             <% @generic_file.language.each do |lang| %>
-              <%= link_to_facet(lang,'generic_file__language_facet') %><br />
+              <%= link_to_facet(lang,'desc_metadata__language_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -61,7 +61,7 @@
           <th>Resource Type</th>
           <td>
             <% @generic_file.resource_type.each do |rtype| %>
-              <%= link_to_facet(rtype, 'generic_file__resource_type_facet') %><br />
+              <%= link_to_facet(rtype, 'desc_metadata__resource_type_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -69,7 +69,7 @@
           <th>Publisher</th>
           <td>
             <% @generic_file.publisher.each do |pub| %>
-              <%= link_to_facet(pub,'generic_file__publisher_facet') %><br />
+              <%= link_to_facet(pub,'desc_metadata__publisher_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -85,7 +85,7 @@
           <th>Subject</th>
           <td>
             <% @generic_file.subject.each do |sub| %>
-              <%= link_to_facet(sub, 'generic_file__subject_facet') %><br />
+              <%= link_to_facet(sub, 'desc_metadata__subject_facet') %><br />
             <% end %>
           </td>
         </tr>
@@ -93,7 +93,7 @@
           <th>Keyword</th>
           <td>
             <% @generic_file.tag.each do |t| %>
-              <%= link_to_facet(t, 'generic_file__tag_facet') %><br />
+              <%= link_to_facet(t, 'desc_metadata__tag_facet') %><br />
             <% end %>
           </td>
         </tr>
