@@ -1,3 +1,7 @@
+h3. 5.2.0 (Unreleased)
+* add FileAsset.add_file
+* Don't generate solr_mappings.yml by default
+
 h3. 5.1.0
 * Bump to AF ~> 5.3
 
