@@ -32,11 +32,7 @@ module Hydra::Controller::UploadBehavior
     # deprecating 2 argument constructor because it depends on a HTTP request.  If we pass the file name we can use for non-web too.
     Deprecation.warn(Hydra::Controller::UploadBehavior, "add_posted_blob_to_asset with a 2 argument constructor is deprecated. Pass a filename (e.g. \"file.original_name\") as the third argument. 2 argument constructor will be removed in hydra-core 6" ) if file_name.nil?
     file_name ||= file.original_filename
-    options = {:label=>file_name, :mimeType=>mime_type(file_name)}
-    dsid = datastream_id #Only call this once so that it could be a sequence
-    options[:dsid] = dsid if dsid
-    asset.add_file_datastream(file, options)
-    asset.set_title_and_label( file_name, :only_if_blank=>true )
+    asset.add_file(file, datastream_id, file_name)
   end
 
   #Override this if you want to specify the datastream_id (dsID) for the created blob
@@ -57,14 +53,5 @@ module Hydra::Controller::UploadBehavior
   end
   deprecation_deprecate :associate_file_asset_with_container
   
-  
-  private
-  # Return the mimeType for a given file name
-  # @param [String] file_name The filename to use to get the mimeType
-  # @return [String] mimeType for filename passed in. Default: application/octet-stream if mimeType cannot be determined
-  def mime_type file_name
-    mime_types = MIME::Types.of(file_name)
-    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
-  end
   
 end

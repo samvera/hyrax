@@ -38,6 +38,18 @@ module Hydra
         descMetadata.title = label
       end    
       
+      # Puts the contents of file (posted blob) into a datastream and sets the title and label 
+      # Sets asset label and title to filename if they're empty
+      #
+      # @param [#read] file the IO object that is the blob
+      # @param [String] file the IO object that is the blob
+      def add_file(file, dsid, file_name)
+        options = {:label=>file_name, :mimeType=>mime_type(file_name)}
+        options[:dsid] = dsid if dsid
+        add_file_datastream(file, options)
+        set_title_and_label( file_name, :only_if_blank=>true )
+      end
+
       # augments add_file_datastream to also put file size (in bytes/KB/MB/GB/TB) in dc:extent 
       def add_file_datastream(file, opts={})
         super
@@ -69,6 +81,16 @@ module Hydra
         else
           super(solr_doc,opts)
         end
+      end
+
+        
+      private
+      # Return the mimeType for a given file name
+      # @param [String] file_name The filename to use to get the mimeType
+      # @return [String] mimeType for filename passed in. Default: application/octet-stream if mimeType cannot be determined
+      def mime_type file_name
+        mime_types = MIME::Types.of(file_name)
+        mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
       end
 
     end
