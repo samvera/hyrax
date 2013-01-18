@@ -19,7 +19,6 @@ module Sufia
 
     included do
       include Hydra::Controller::ControllerBehavior
-      include Hydra::Controller::UploadBehavior # for add_posted_blob_to_asset method
       include Blacklight::Configurable # comply with BL 3.7
       include Sufia::Noid # for normalize_identifier method
 
@@ -45,7 +44,6 @@ module Sufia
       load_resource :only=>[:audit]
       load_and_authorize_resource :except=>[:index, :audit]
     end
-
 
     # routed to /files/new
     def new
@@ -80,7 +78,7 @@ module Sufia
         # check error condition No files
         return render(:json => [{:error => "Error! No file to save"}].to_json) if !params.has_key?(:files)
 
-        file = params[:files][0]
+        file = params[:files].first
         # check error condition empty file
         if ((file.respond_to?(:tempfile)) && (file.tempfile.size == 0))
            retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
@@ -91,10 +89,11 @@ module Sufia
 
         # process file
         else
-          create_and_save_generic_file(file, params[:relative_path], params[:batch_id], file.original_filename)
-          if @generic_file
-            Sufia.queue.push(UnzipJob.new(@generic_file.pid)) if file.content_type == 'application/zip'
-            Sufia.queue.push(ContentDepositEventJob.new(@generic_file.pid, current_user.user_key))
+          if virus_check(file) == 0 
+            @generic_file = ::GenericFile.new
+            # Relative path is set by the jquery uploader when uploading a directory
+            @generic_file.relative_path = params[:relative_path] if params[:relative_path]
+            Sufia::GenericFile::Actions.create(@generic_file, file, params[:batch_id], file.original_filename, datastream_id, current_user)
             respond_to do |format|
               format.html {
                 retval = render :json => [@generic_file.to_jq_upload].to_json,
@@ -106,6 +105,7 @@ module Sufia
               }
             end
           else
+          puts "Returned false"
             retval = render :json => [{:error => "Error creating generic file."}].to_json
           end
         end
@@ -152,8 +152,9 @@ module Sufia
       end
 
       if params.has_key?(:filedata)
-        return unless virus_check(params[:filedata]) == 0
-        add_posted_blob_to_asset(@generic_file, params[:filedata], params[:filedata].original_filename)
+        file = params[:filedata]
+        return unless virus_check(file) == 0
+        @generic_file.add_file(file, datastream_id, file.original_filename)
         version_event = true
         Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
       end
@@ -162,12 +163,17 @@ module Sufia
 
       # do not trigger an update event if a version event has already been triggered
       Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
-      record_version_committer(@generic_file, current_user)
+      @generic_file.record_version_committer(current_user)
       redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
 
     end
 
     protected
+
+    # The name of the datastream where we store the file data
+    def datastream_id
+      'content'
+    end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
@@ -178,15 +184,6 @@ module Sufia
       @generic_file.save!
     end
 
-    def record_version_committer(generic_file, user)
-      version = generic_file.content.latest_version
-      # content datastream not (yet?) present
-      return if version.nil?
-      VersionCommitter.create(:obj_id => version.pid,
-                              :datastream_id => version.dsid,
-                              :version_id => version.versionID,
-                              :committer_login => user.user_key)
-    end
 
     def virus_check( file)
       if defined? ClamAV
@@ -200,39 +197,5 @@ module Sufia
       end
     end 
 
-    def create_and_save_generic_file(file, relative_path, batch_id, file_name)
-      return nil unless virus_check(file) == 0  
-
-      @generic_file = ::GenericFile.new
-      #This depends on the 3 arg constructor in hh 5.2.0
-      add_posted_blob_to_asset(@generic_file,file, file_name)
-
-      @generic_file.apply_depositor_metadata(user_key)
-      @generic_file.date_uploaded = Date.today
-      @generic_file.date_modified = Date.today
-      @generic_file.relative_path = relative_path if relative_path
-      @generic_file.creator = current_user.name
-
-      if batch_id
-        @generic_file.add_relationship("isPartOf", "info:fedora/#{Sufia::Noid.namespaceize(batch_id)}")
-      else
-        logger.warn "unable to find batch to attach to"
-      end
-
-      save_tries = 0
-      begin
-        @generic_file.save
-      rescue RSolr::Error::Http => error
-        logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
-        save_tries+=1
-        # fail for good if the tries is greater than 3
-        raise error if save_tries >=3
-        sleep 0.01
-        retry
-      end
-
-      record_version_committer(@generic_file, current_user)
-      return @generic_file
-    end
   end
 end

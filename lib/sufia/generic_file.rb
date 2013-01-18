@@ -10,6 +10,7 @@ module Sufia
     autoload :Thumbnail
     autoload :Characterization
     autoload :Audit
+    autoload :Actions
     autoload :Permissions
     include Sufia::ModelMethods
     include Sufia::Noid  
@@ -42,6 +43,16 @@ module Sufia
        super
     end
 
+
+    def record_version_committer(user)
+      version = content.latest_version
+      # content datastream not (yet?) present
+      return if version.nil?
+      VersionCommitter.create(:obj_id => version.pid,
+                              :datastream_id => version.dsid,
+                              :version_id => version.versionID,
+                              :committer_login => user.user_key)
+    end
 
     def pdf?
       ["application/pdf"].include? self.mime_type

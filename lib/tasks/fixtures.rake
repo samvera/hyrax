@@ -198,6 +198,7 @@ namespace :sufia do
       loader = ActiveFedora::FixtureLoader.new(dir)
       fixtures = find_fixtures(@dir)
       fixtures.each do |fixture|
+      puts "Fixture is #{fixture}"
         loader.import_and_index(fixture)
         puts "Loaded '#{fixture}'"
         # Rake::Task["repo:load"].reenable

@@ -4,9 +4,9 @@ gem 'rails', '3.2.11'
 
 gem 'sqlite3'
 
-gem 'devise'
+gem 'devise' #BL adds this later, so check to see if we can remove this
 gem 'blacklight'
-gem "hydra-head", github: 'projecthydra/hydra-head', ref: '5ee4e26' # 5.2.0+ (doesn't generate solr_mappings.yml)
+gem "hydra-head"
 
 gem 'sufia', :path=>'../../'
 gem 'rspec-rails', :group=>:test

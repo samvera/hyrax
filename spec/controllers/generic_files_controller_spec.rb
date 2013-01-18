@@ -50,7 +50,7 @@ describe GenericFilesController do
     end
 
     it "should expand zip files" do
-      file = fixture_file_upload('/world.png','application/zip')
+      file = fixture_file_upload('/icons.zip','application/zip')
       s1 = stub('one')
       ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once

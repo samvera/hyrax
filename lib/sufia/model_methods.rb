@@ -16,7 +16,10 @@ require 'hydra/model_methods'
 module Sufia
   module ModelMethods
     extend ActiveSupport::Concern
-    include Hydra::ModelMethods
+
+    included do
+      include Hydra::ModelMethods
+    end
 
     # OVERRIDE to support Hydra::Datastream::Properties which does not
     #   respond to :depositor_values but :depositor
