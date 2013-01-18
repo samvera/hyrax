@@ -10,8 +10,9 @@ describe Hydra::ModelMethods do
     end
   end
 
+  subject {TestModel.new }
+
   describe "apply_depositor_metadata" do
-    subject {TestModel.new }
     it "should add edit access" do
       subject.apply_depositor_metadata('naomi')
       subject.rightsMetadata.individuals.should == {'naomi' => 'edit'}
@@ -29,6 +30,17 @@ describe Hydra::ModelMethods do
       stub_user = stub(:user, :user_key=>'monty')
       subject.apply_depositor_metadata(stub_user)
       subject.properties.depositor.should == ['monty']
+    end
+  end
+
+  describe 'add_file' do
+    it "should set the dsid, mimetype and content" do
+      file_name = "my_file.foo"
+      mock_file = "File contents"
+      subject.should_receive(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :dsid=>'bar')
+      subject.should_receive(:set_title_and_label).with( file_name, :only_if_blank=>true )
+      subject.should_receive(:mime_type).with(file_name).and_return("mymimetype")
+      subject.add_file(mock_file, 'bar', file_name)
     end
   end
 end

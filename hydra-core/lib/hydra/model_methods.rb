@@ -1,6 +1,7 @@
 # will move to lib/hydra/model/model_behavior.rb  (with appropriate namespace changes) in release 5.x
 module Hydra::ModelMethods
   extend ActiveSupport::Concern
+  extend Deprecation
 
   included do
     unless self.class ==  Module
@@ -26,6 +27,19 @@ module Hydra::ModelMethods
     return true
   end
 
+  # Puts the contents of file (posted blob) into a datastream and sets the title and label 
+  # Sets asset label and title to filename if they're empty
+  #
+  # @param [#read] file the IO object that is the blob
+  # @param [String] file the IO object that is the blob
+  def add_file(file, dsid, file_name)
+    options = {:label=>file_name, :mimeType=>mime_type(file_name)}
+    options[:dsid] = dsid if dsid
+    add_file_datastream(file, options)
+    set_title_and_label( file_name, :only_if_blank=>true )
+  end
+
+
   #
   # Set the collection type (e.g. hydrangea_article) for the asset
   #
@@ -35,6 +49,7 @@ module Hydra::ModelMethods
       prop_ds.collection_values = collection
     end
   end
+  deprecation_deprecate :set_collection_type
   
   # Set the title and label on the current object
   #
@@ -70,20 +85,6 @@ module Hydra::ModelMethods
     end
   end
 
-  # Call insert_contributor on the descMetadata datastream
-  def insert_contributor(type, opts={})
-    ds = self.datastreams["descMetadata"]
-    node, index = ds.insert_contributor(type,opts)
-    return node, index
-  end
-  
-  # Call remove_contributor on the descMetadata datastream
-  def remove_contributor(type, index)
-    ds = self.datastreams["descMetadata"]
-    result = ds.remove_contributor(type,index)
-    return result
-  end
-  
   # Call to remove file objects
   def destroy_child_assets
     destroyable_child_assets.each.inject([]) do |destroyed,fo|
@@ -93,6 +94,8 @@ module Hydra::ModelMethods
     end
 
   end
+  deprecation_deprecate :destroy_child_assets
+  
 
   def destroyable_child_assets
     return [] unless self.parts
@@ -104,9 +107,11 @@ module Hydra::ModelMethods
       file_assets
     end
   end
+  deprecation_deprecate :destroyable_child_assets
 
   def file_asset_count
     ### TODO switch to AF::Base.count
     parts.length
   end
+  deprecation_deprecate :file_asset_count
 end
