@@ -20,11 +20,16 @@ module Sufia::Controller
     include Hydra::Controller::ControllerBehavior
 
     before_filter :notifications_number
+    helper_method :groups
 
   end
 
   def current_ability
     current_user ? current_user.ability : super
+  end
+
+  def groups
+    @groups ||= current_user ? current_user.groups : []
   end
 
   def render_404(exception)

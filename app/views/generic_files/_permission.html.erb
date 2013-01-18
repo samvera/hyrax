@@ -104,8 +104,7 @@ limitations under the License.
   <div class="row control-group">
     <div id="new-group" >
       <div class="input-append">
-        <% @groups.unshift('Select a group') %>
-        <%= select_tag 'new_group_name_skel', options_for_select(@groups), :class => 'span38' %>
+        <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + groups), :class => 'span38' %>
         <%= select_tag 'new_group_permission_skel', options_for_select(Sufia::Engine.config.permission_levels), :class => 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i> Add</button>
         <br /><span id="directory_group_result"></span>

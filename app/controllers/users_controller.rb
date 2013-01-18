@@ -44,7 +44,6 @@ class UsersController < ApplicationController
   # Display form for users to edit their profile information
   def edit
     @user = current_user
-    @groups = @user.groups
     @trophies = @user.trophy_ids
   end
 

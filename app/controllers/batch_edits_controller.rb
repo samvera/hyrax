@@ -6,7 +6,6 @@ class BatchEditsController < ApplicationController
        super 
        @generic_file = GenericFile.new
        @generic_file.depositor = current_user.user_key
-       @groups = current_user.groups       
        @terms = @generic_file.editable_terms - [:title] # +:format, :resource_type 
 
        # do we want to show the original values for anything...
