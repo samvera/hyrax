@@ -1,5 +1,5 @@
-h3. 5.2.0 (Unreleased)
-* add FileAsset.add_file
+h3. 5.2.0
+* add Hydra::ModelMethods.add_file
 * Don't generate solr_mappings.yml by default
 
 h3. 5.1.0
