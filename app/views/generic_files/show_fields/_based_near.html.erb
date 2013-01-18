@@ -1,0 +1,9 @@
+        <tr>
+          <th>Location</th>
+          <td>
+            <% @generic_file.based_near.each do |bn| %>
+              <%= link_to_facet(bn, 'desc_metadata__based_near_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+

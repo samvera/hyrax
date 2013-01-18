@@ -1,0 +1,9 @@
+        <tr>
+          <th>Subject</th>
+          <td>
+            <% @generic_file.subject.each do |sub| %>
+              <%= link_to_facet(sub, 'desc_metadata__subject_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+

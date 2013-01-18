@@ -1,0 +1,9 @@
+        <tr>
+          <th>Publisher</th>
+          <td>
+            <% @generic_file.publisher.each do |pub| %>
+              <%= link_to_facet(pub,'desc_metadata__publisher_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+

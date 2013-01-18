@@ -1,0 +1,9 @@
+        <tr>
+          <th>Contributor</th>
+          <td>
+            <% @generic_file.contributor.each do |contributor| %>
+              <%= link_to_field('contributor', contributor) %><br />
+            <% end %>
+          </td>
+        </tr>
+
