@@ -1,6 +1,10 @@
-h3. 5.2.0
+h3. 5.3.0
 * add Hydra::ModelMethods.add_file
 * Don't generate solr_mappings.yml by default
+
+h3. 5.2.0
+* Custom abilities (cancan) via ability_logic_chain
+* Refactor upload behavior so that add_posted_blob_to_asset() isn't tightly coupled to Rack::Multipart::UploadedFile
 
 h3. 5.1.0
 * Bump to AF ~> 5.3
