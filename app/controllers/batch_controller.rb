@@ -25,11 +25,6 @@ class BatchController < ApplicationController
     @generic_file = GenericFile.new
     @generic_file.creator = current_user.name
     @generic_file.title =  @batch.generic_files.map(&:label)
-    begin
-      @groups = current_user.groups
-    rescue
-      logger.warn "Can not get to LDAP for user groups"
-    end
   end
 
   def update

@@ -90,10 +90,8 @@ $("a[rel=popover]").popover();
   <hr />
 
   <h3><i class="icon-group"></i> User Managed Groups Info (UMG) <%= link_to 'Manage UMG', 'http://umg.its.psu.edu/', :class => 'btn btn-mini btn-primary' %> </h3>
-  <% if @groups %>
-    <% @groups.each do |g| %>
-      <i class="icon-caret-right"></i> <%= g %><br />
-    <% end %>
+  <% groups.each do |g| %>
+    <i class="icon-caret-right"></i> <%= g %><br />
   <% end %>
 </div>
 
