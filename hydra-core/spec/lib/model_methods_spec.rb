@@ -39,7 +39,7 @@ describe Hydra::ModelMethods do
       mock_file = "File contents"
       subject.should_receive(:add_file_datastream).with(mock_file, :label=>file_name, :mimeType=>"mymimetype", :dsid=>'bar')
       subject.should_receive(:set_title_and_label).with( file_name, :only_if_blank=>true )
-      subject.should_receive(:mime_type).with(file_name).and_return("mymimetype")
+      MIME::Types.should_receive(:of).with(file_name).and_return([stub(:content_type=>"mymimetype")])
       subject.add_file(mock_file, 'bar', file_name)
     end
   end

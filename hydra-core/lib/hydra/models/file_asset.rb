@@ -70,17 +70,6 @@ module Hydra
           super(solr_doc,opts)
         end
       end
-
-        
-      private
-      # Return the mimeType for a given file name
-      # @param [String] file_name The filename to use to get the mimeType
-      # @return [String] mimeType for filename passed in. Default: application/octet-stream if mimeType cannot be determined
-      def mime_type file_name
-        mime_types = MIME::Types.of(file_name)
-        mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
-      end
-
     end
   end
 end

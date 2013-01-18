@@ -33,7 +33,9 @@ module Hydra::ModelMethods
   # @param [#read] file the IO object that is the blob
   # @param [String] file the IO object that is the blob
   def add_file(file, dsid, file_name)
-    options = {:label=>file_name, :mimeType=>mime_type(file_name)}
+    mime_types = MIME::Types.of(file_name)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    options = {:label=>file_name, :mimeType=>mime_type}
     options[:dsid] = dsid if dsid
     add_file_datastream(file, options)
     set_title_and_label( file_name, :only_if_blank=>true )
@@ -114,4 +116,5 @@ module Hydra::ModelMethods
     parts.length
   end
   deprecation_deprecate :file_asset_count
+
 end
