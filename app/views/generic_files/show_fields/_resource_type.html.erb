@@ -1,0 +1,9 @@
+        <tr>
+          <th>Resource Type</th>
+          <td>
+            <% @generic_file.resource_type.each do |rtype| %>
+              <%= link_to_facet(rtype, 'desc_metadata__resource_type_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+

@@ -1,0 +1,9 @@
+        <tr>
+          <th>Keyword</th>
+          <td>
+            <% @generic_file.tag.each do |t| %>
+              <%= link_to_facet(t, 'desc_metadata__tag_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+

@@ -1,0 +1,9 @@
+        <tr>
+          <th>Abstract or Summary</th>
+          <td>
+            <% @generic_file.description.each do |desc| %>
+              <%= iconify_auto_link(desc) %><br />
+            <% end %>
+          </td>
+        </tr>
+

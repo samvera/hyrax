@@ -1,0 +1,9 @@
+        <tr>
+          <th>Creator</th>
+          <td>
+            <% @generic_file.creator.each do |creator| %>
+              <%= link_to_facet(creator, 'desc_metadata__creator_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+

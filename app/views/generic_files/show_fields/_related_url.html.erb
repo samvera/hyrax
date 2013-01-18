@@ -1,0 +1,9 @@
+        <tr>
+          <th>Related URL</th>
+          <td>
+            <% @generic_file.related_url.each do |url| %>
+              <%= iconify_auto_link(url) %><br />
+            <% end %>
+          </td>
+        </tr>
+
