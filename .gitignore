@@ -6,6 +6,8 @@ config/solr.yml
 config/hydra-ldap.yml
 config/redis.yml
 
+# bad gem etiquette, man
+.rvmrc
 Gemfile.lock
 
 # This file is generated automatically by: rake scholarsphere:generate_secret
@@ -78,13 +80,11 @@ db/schema.rb
 /.bundle
 /.yardoc
 /doc
+
 ## PROJECT::SPECIFIC
 
-## generates foxml
-spec/fixtures/scholarsphere/*.foxml.xml
-spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.descMeta.txt
-spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.foxml.erb
-spec/fixtures/scholarsphere/scholarsphere_rspecTestFixture.txt
+## fixtures for dev
+spec/fixtures/sufia/sufia_sufia1.*
 
 ## ASSET PIPELINE
 .sass-cache/

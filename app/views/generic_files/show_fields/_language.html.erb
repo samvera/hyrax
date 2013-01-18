@@ -1,0 +1,9 @@
+        <tr>
+          <th>Language</th>
+          <td>
+            <% @generic_file.language.each do |lang| %>
+              <%= link_to_facet(lang,'desc_metadata__language_facet') %><br />
+            <% end %>
+          </td>
+        </tr>
+
