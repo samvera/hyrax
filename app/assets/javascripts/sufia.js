@@ -68,7 +68,7 @@ $(function() {
   setInterval(notify_update_link, 30*1000);
 
   // bootstrap alerts are closed this function
-  $('.alert .close').live('click',function(){
+  $(document).on('click', '.alert .close' , function(){
     $(this).parent().hide();
   });
 
