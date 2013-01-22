@@ -37,6 +37,13 @@ describe GenericFilesController do
       @mock.delete unless @mock.inner_object.class == ActiveFedora::UnsavedDigitalObject 
     end
 
+    it "should render error the file wasn't actually a file" do
+      file = 'hello'
+      xhr :post, :create, :files=>[file], :Filename=>"The World", :batch_id=>'sample:batch_id', :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
+      response.status.should == 422
+      JSON.parse(response.body).first['error'].should match(/no file for upload/i)
+    end
+
     it "should spawn a content deposit event job" do
       file = fixture_file_upload('/world.png','image/png')
       s1 = stub('one')

@@ -78,7 +78,12 @@ module Sufia
         # check error condition No files
         return render(:json => [{:error => "Error! No file to save"}].to_json) if !params.has_key?(:files)
 
-        file = params[:files].first
+        file = params[:files].detect {|f| f.respond_to?(:original_filename) }
+        if !file
+          render :json => [{:name => 'unknown file', :error => "Error! No file for upload"}], :status => :unprocessable_entity
+          return false
+        end
+
         # check error condition empty file
         if ((file.respond_to?(:tempfile)) && (file.tempfile.size == 0))
            retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
