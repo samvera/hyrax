@@ -78,7 +78,7 @@ task :ci => ['jetty:reset', 'jetty:config'] do
 
 end
 
-FRAMEWORKS = ['hydra-access-controls', 'hydra-core', 'hydra-file-access']
+FRAMEWORKS = ['hydra-access-controls', 'hydra-core']
 
 root    = File.expand_path('../', __FILE__)
 version = File.read("#{root}/HYDRA_VERSION").strip
