@@ -28,8 +28,8 @@ module Hydra::Ability
   end
 
   ## You can override this method if you are using a different AuthZ (such as LDAP)
-  def user_groups(user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to user_groups, use the instance_variables", caller()) if user || session
+  def user_groups(deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to user_groups, use the instance_variables", caller()) if deprecated_user || deprecated_session
 
     return @user_groups if @user_groups
     
@@ -46,21 +46,21 @@ module Hydra::Ability
   
 
   # Requires no arguments, but accepts 2 arguments for backwards compatibility
-  def hydra_default_permissions(user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to hydra_default_permissions, use the instance_variables", caller()) if user || session
+  def hydra_default_permissions(deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to hydra_default_permissions, use the instance_variables", caller()) if deprecated_user || deprecated_session
     logger.debug("Usergroups are " + user_groups.inspect)
     self.ability_logic.each do |method|
       send(method)
     end
   end
 
-  def create_permissions(user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to create_permissions, use the instance_variables", caller()) if user || session
+  def create_permissions(deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to create_permissions, use the instance_variables", caller()) if deprecated_user || deprecated_session
     can :create, :all if user_groups.include? 'registered'
   end
 
-  def edit_permissions(user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to edit_permissions, use the instance_variables", caller()) if user || session
+  def edit_permissions(deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to edit_permissions, use the instance_variables", caller()) if deprecated_user || deprecated_session
     can [:edit, :update, :destroy], String do |pid|
       test_edit(pid)
     end 
@@ -75,8 +75,8 @@ module Hydra::Ability
     end       
   end
 
-  def read_permissions(user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to read_permissions, use the instance_variables", caller()) if user || session
+  def read_permissions(deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to read_permissions, use the instance_variables", caller()) if deprecated_user || deprecated_session
     can :read, String do |pid|
       test_read(pid)
     end
@@ -93,8 +93,8 @@ module Hydra::Ability
 
 
   ## Override custom permissions in your own app to add more permissions beyond what is defined by default.
-  def custom_permissions(user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to custom_permissions, use the instance_variables", caller()) if user || session
+  def custom_permissions(deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to custom_permissions, use the instance_variables", caller()) if deprecated_user || deprecated_session
   end
   
   protected
@@ -106,8 +106,8 @@ module Hydra::Ability
   end
 
 
-  def test_edit(pid, user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to test_edit, use the instance_variables", caller()) if user || session
+  def test_edit(pid, deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to test_edit, use the instance_variables", caller()) if deprecated_user || deprecated_session
     permissions_doc(pid)
     logger.debug("[CANCAN] Checking edit permissions for user: #{@user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & edit_groups
@@ -116,8 +116,8 @@ module Hydra::Ability
     result
   end   
   
-  def test_read(pid, user=nil, session=nil)
-    ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller()) if user || session
+  def test_read(pid, deprecated_user=nil, deprecated_session=nil)
+    ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller()) if deprecated_user || deprecated_session
     permissions_doc(pid)
     logger.debug("[CANCAN] Checking edit permissions for user: #{@user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & read_groups
