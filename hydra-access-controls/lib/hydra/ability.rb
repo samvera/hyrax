@@ -19,10 +19,11 @@ module Hydra::Ability
     Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
   end
 
-  attr_accessor :user
+  attr_reader :current_user, :session
 
   def initialize(user, session=nil)
-    @user = user || Hydra::Ability.user_class.new # guest user (not logged in)
+    @current_user = user || Hydra::Ability.user_class.new # guest user (not logged in)
+    @user = @current_user # just in case someone was using this in an override. Just don't.
     @session = session
     hydra_default_permissions()
   end
@@ -34,8 +35,8 @@ module Hydra::Ability
     return @user_groups if @user_groups
     
     @user_groups = default_user_groups
-    @user_groups |= @user.groups if @user and @user.respond_to? :groups
-    @user_groups |= ['registered'] unless @user.new_record?
+    @user_groups |= current_user.groups if current_user and current_user.respond_to? :groups
+    @user_groups |= ['registered'] unless current_user.new_record?
     @user_groups
   end
 
@@ -109,9 +110,9 @@ module Hydra::Ability
   def test_edit(pid, deprecated_user=nil, deprecated_session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to test_edit, use the instance_variables", caller()) if deprecated_user || deprecated_session
     permissions_doc(pid)
-    logger.debug("[CANCAN] Checking edit permissions for user: #{@user.user_key} with groups: #{user_groups.inspect}")
+    logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & edit_groups
-    result = !group_intersection.empty? || edit_persons.include?(@user.user_key)
+    result = !group_intersection.empty? || edit_persons.include?(current_user.user_key)
     logger.debug("[CANCAN] decision: #{result}")
     result
   end   
@@ -119,9 +120,9 @@ module Hydra::Ability
   def test_read(pid, deprecated_user=nil, deprecated_session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller()) if deprecated_user || deprecated_session
     permissions_doc(pid)
-    logger.debug("[CANCAN] Checking edit permissions for user: #{@user.user_key} with groups: #{user_groups.inspect}")
+    logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & read_groups
-    result = !group_intersection.empty? || read_persons.include?(@user.user_key)
+    result = !group_intersection.empty? || read_persons.include?(current_user.user_key)
     logger.debug("[CANCAN] decision: #{result}")
     result
   end 
