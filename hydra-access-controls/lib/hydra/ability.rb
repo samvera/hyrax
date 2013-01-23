@@ -19,6 +19,8 @@ module Hydra::Ability
     Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
   end
 
+  attr_accessor :user
+
   def initialize(user, session=nil)
     @user = user || Hydra::Ability.user_class.new # guest user (not logged in)
     @session = session
@@ -30,8 +32,10 @@ module Hydra::Ability
     ActiveSupport::Deprecation.warn("No need to pass user or session to user_groups, use the instance_variables", caller()) if user || session
 
     return @user_groups if @user_groups
-    @user_groups = RoleMapper.roles(@user.user_key) + default_user_groups
-    @user_groups << 'registered' unless (@user.new_record? || @user_groups.include?('registered'))
+    
+    @user_groups = default_user_groups
+    @user_groups |= @user.groups if @user and @user.respond_to? :groups
+    @user_groups |= ['registered'] unless @user.new_record?
     @user_groups
   end
 

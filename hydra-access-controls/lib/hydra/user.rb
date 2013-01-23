@@ -13,6 +13,10 @@ module Hydra::User
   def user_key
     send(Devise.authentication_keys.first)
   end
+
+  def groups
+    RoleMapper.roles(user_key)
+  end
   
   module ClassMethods
     # This method should find User objects using the user_key you've chosen.
