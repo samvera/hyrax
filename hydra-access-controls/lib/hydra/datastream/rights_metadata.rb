@@ -175,20 +175,36 @@ module Hydra
       def to_solr(solr_doc=Hash.new)
         super(solr_doc)
         vals = edit_access.machine.group
-        solr_doc['edit_access_group_t'] = vals unless vals.empty?
+        solr_doc[ActiveFedora::SolrService.solr_name('edit_access_group', indexer)] = vals unless vals.empty?
         vals = discover_access.machine.group
-        solr_doc['discover_access_group_t'] = vals unless vals.empty?
+        solr_doc[ActiveFedora::SolrService.solr_name('discover_access_group', indexer)] = vals unless vals.empty?
         vals = read_access.machine.group
-        solr_doc['read_access_group_t'] = vals unless vals.empty?
+        solr_doc[ActiveFedora::SolrService.solr_name('read_access_group', indexer)] = vals unless vals.empty?
         vals = edit_access.machine.person
-        solr_doc['edit_access_person_t'] = vals unless vals.empty?
+        solr_doc[ActiveFedora::SolrService.solr_name('edit_access_person', indexer)] = vals unless vals.empty?
         vals = discover_access.machine.person
-        solr_doc['discover_access_person_t'] = vals unless vals.empty?
+        solr_doc[ActiveFedora::SolrService.solr_name('discover_access_person', indexer)] = vals unless vals.empty?
         vals = read_access.machine.person
-        solr_doc['read_access_person_t'] = vals unless vals.empty?
+        solr_doc[ActiveFedora::SolrService.solr_name('read_access_person', indexer)] = vals unless vals.empty?
 
         ::Solrizer::Extractor.insert_solr_field_value(solr_doc, "embargo_release_date_dt", embargo_release_date(:format=>:solr_date)) if embargo_release_date
         solr_doc
+      end
+
+      def indexer
+        self.class.indexer
+      end
+
+      def self.indexer
+        @indexer ||= Solrizer::Descriptor.new(:text, :stored, :indexed, :multivalued)
+      end
+
+      def date_indexer
+        self.class.date_indexer
+      end
+
+      def self.date_indexer
+        @date_indexer ||= Solrizer::Descriptor.new(:date, :stored, :indexed)
       end
 
       # Completely clear the permissions

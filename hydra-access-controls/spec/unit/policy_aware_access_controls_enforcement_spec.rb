@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
   before(:all) do
-    class MockController
+    class PolicyMockController
       include Hydra::AccessControlsEnforcement
       include Hydra::PolicyAwareAccessControlsEnforcement
       attr_accessor :params
       
-      def user_key
-        current_user.user_key
+      def current_ability
+        @current_ability ||= Ability.new(current_user)
       end
 
       def session
@@ -64,7 +64,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     @sample_policies.each {|p| p.delete }
   end
   
-  subject { MockController.new }
+  subject { PolicyMockController.new }
   
   before do
     @solr_parameters = {}
@@ -96,12 +96,12 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       policy_pids = (1..6).map {|n| "test:policy#{n}"}
       subject.should_receive(:policies_with_access).and_return(policy_pids)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      @solr_parameters[:fq].first.should include(" OR (is_governed_by_s:info\\:fedora/test\\:policy1 OR is_governed_by_s:info\\:fedora/test\\:policy2 OR is_governed_by_s:info\\:fedora/test\\:policy3 OR is_governed_by_s:info\\:fedora/test\\:policy4 OR is_governed_by_s:info\\:fedora/test\\:policy5 OR is_governed_by_s:info\\:fedora/test\\:policy6)")
+      @solr_parameters[:fq].first.should include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy6)")
     end
     it "should not change anything if there are no clauses to add" do
       subject.stub(:policy_clauses).and_return(nil)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      @solr_parameters[:fq].first.should_not include(" OR (is_governed_by_s:info\\:fedora/test\\:policy1 OR is_governed_by_s:info\\:fedora/test\\:policy2 OR is_governed_by_s:info\\:fedora/test\\:policy3 OR is_governed_by_s:info\\:fedora/test\\:policy4 OR is_governed_by_s:info\\:fedora/test\\:policy5 OR is_governed_by_s:info\\:fedora/test\\:policy6)")
+      @solr_parameters[:fq].first.should_not include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora/test\\:policy6)")
     end
   end
 end

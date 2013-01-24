@@ -95,7 +95,7 @@ module Hydra::AccessControlsEnforcement
     user_access_filters = []
     
     permission_types.each do |type|
-      user_access_filters << "#{type}_access_group_t:public"
+      user_access_filters << ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer) + ":public"
     end
     
     # Grant access based on user id & role
@@ -135,9 +135,11 @@ module Hydra::AccessControlsEnforcement
   # @param [Hash] opts (optional, not currently used)
   def enforce_show_permissions(opts={})
     load_permissions_from_solr
-    unless @permissions_solr_document['access_t'] && (@permissions_solr_document['access_t'].first == "public" || @permissions_solr_document['access_t'].first == "Public")
-      if @permissions_solr_document["embargo_release_date_dt"] 
-        embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
+    access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
+    embargo_key = ActiveFedora::SolrService.solr_name("embargo_release_date", Hydra::Datastream::RightsMetadata.date_indexer)
+    unless @permissions_solr_document[access_key] && (@permissions_solr_document[access_key].first == "public" || @permissions_solr_document[access_key].first == "Public")
+      if @permissions_solr_document[embargo_key] 
+        embargo_date = Date.parse(@permissions_solr_document[embargo_key].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
           unless can?(:edit, params[:id])
             raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
@@ -237,7 +239,7 @@ module Hydra::AccessControlsEnforcement
       user_access_filters = []
       current_ability.user_groups.each_with_index do |role, i|
         permission_types.each do |type|
-          user_access_filters << escape_filter("#{type}_access_group_t", role)
+          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer), role)
         end
       end
       user_access_filters
@@ -250,9 +252,9 @@ module Hydra::AccessControlsEnforcement
   def apply_individual_permissions(permission_types)
       # for individual person access
       user_access_filters = []
-      if user_key.present?
+      if current_user && current_user.user_key.present?
         permission_types.each do |type|
-          user_access_filters << escape_filter("#{type}_access_person_t", user_key)
+          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer), current_user.user_key)
         end
       end
       user_access_filters
@@ -279,6 +281,6 @@ module Hydra::AccessControlsEnforcement
   # @param user_parameters the current user-subitted parameters
   def exclude_unwanted_models(solr_parameters, user_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "-has_model_s:\"info:fedora/afmodel:FileAsset\""
+    solr_parameters[:fq] << "-#{ActiveFedora::SolrService.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:FileAsset\""
   end
 end

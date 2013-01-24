@@ -3,18 +3,18 @@ require 'spec_helper'
 describe Hydra::AdminPolicy do
   before do
     Hydra.stub(:config).and_return({:permissions=>{
-      :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
-      :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
-      :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
-      :owner => "depositor_t",
-      :embargo_release_date => "embargo_release_date_dt",
+      :discover => {:group =>"discover_access_group_tsim", :individual=>"discover_access_person_tsim"},
+      :read => {:group =>"read_access_group_tsim", :individual=>"read_access_person_tsim"},
+      :edit => {:group =>"edit_access_group_tsim", :individual=>"edit_access_person_tsim"},
+      :owner => "depositor_tsim",
+      :embargo_release_date => "embargo_release_date_dtsi",
       
       :inheritable => {
-        :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
-        :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
-        :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},
-        :owner => "inheritable_depositor_t",
-        :embargo_release_date => "inheritable_embargo_release_date_dt"
+        :discover => {:group =>"inheritable_discover_access_group_tsim", :individual=>"inheritable_discover_access_person_tsim"},
+        :read => {:group =>"inheritable_read_access_group_tsim", :individual=>"inheritable_read_access_person_tsim"},
+        :edit => {:group =>"inheritable_edit_access_group_tsim", :individual=>"inheritable_edit_access_person_tsim"},
+        :owner => "inheritable_depositor_tsim",
+        :embargo_release_date => "inheritable_embargo_release_date_dtsi"
       }
     }})
   end
@@ -40,11 +40,8 @@ describe Hydra::AdminPolicy do
 
   describe "to_solr" do
     subject { Hydra::AdminPolicy.new(:title=>"Foobar").to_solr }
-    it "should have title_t" do
-      subject["title_t"].should == ['Foobar']
-    end
-    it "should have title_display" do
-      subject["title_display"].should == 'Foobar'
+    it "should have title_tsim" do
+      subject[ActiveFedora::SolrService.solr_name('title', type: :string)].should == ["Foobar"]
     end
   end
 

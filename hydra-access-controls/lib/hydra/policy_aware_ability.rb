@@ -26,9 +26,10 @@ module Hydra::PolicyAwareAbility
   # Returns nil if no policy associated with the object
   def policy_pid_for(object_pid)
     return @policy_pid if @policy_pid
-    solr_result = ActiveFedora::Base.find_with_conditions({:id=>object_pid}, :fl=>'is_governed_by_s')
+    #is_governed_by_ssim
+    solr_result = ActiveFedora::Base.find_with_conditions({:id=>object_pid}, :fl=>ActiveFedora::SolrService.solr_name('is_governed_by', :symbol))
     begin
-      @policy_pid = value_from_solr_field(solr_result, 'is_governed_by_s').first.gsub("info:fedora/", "")
+      @policy_pid = value_from_solr_field(solr_result, ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)).first.gsub("info:fedora/", "")
     rescue NoMethodError
       @policy_pid = nil
     end

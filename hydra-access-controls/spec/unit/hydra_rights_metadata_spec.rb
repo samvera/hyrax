@@ -153,10 +153,10 @@ describe Hydra::Datastream::RightsMetadata do
       @sample.update_values(params)
       solr_doc = @sample.to_solr
       
-      solr_doc["edit_access_person_t"].should == ["Lil Kim"]
-      solr_doc["edit_access_group_t"].sort.should == ["group1", "group2"]
-      solr_doc["discover_access_person_t"].should == ["Joe Schmoe"]
-      solr_doc["discover_access_group_t"].should == ["public"]
+      solr_doc["edit_access_person_tsim"].should == ["Lil Kim"]
+      solr_doc["edit_access_group_tsim"].sort.should == ["group1", "group2"]
+      solr_doc["discover_access_person_tsim"].should == ["Joe Schmoe"]
+      solr_doc["discover_access_group_tsim"].should == ["public"]
     end
     it "should solrize fixture content correctly" do
       lsample = Hydra::Datastream::RightsMetadata.new(nil, nil)
@@ -164,10 +164,10 @@ describe Hydra::Datastream::RightsMetadata do
                                   'group' => {'archivist' => 'edit', 'public' =>'read', 'bob'=>'discover'}})
 
       solr_doc = lsample.to_solr
-      solr_doc["edit_access_person_t"].should == ["researcher1"]
-      solr_doc["edit_access_group_t"].should == ["archivist"]
-      solr_doc["read_access_group_t"].should == ["public"]
-      solr_doc["discover_access_group_t"].should == ["bob"]
+      solr_doc["edit_access_person_tsim"].should == ["researcher1"]
+      solr_doc["edit_access_group_tsim"].should == ["archivist"]
+      solr_doc["read_access_group_tsim"].should == ["public"]
+      solr_doc["discover_access_group_tsim"].should == ["bob"]
     end
   end
   describe "embargo_release_date=" do

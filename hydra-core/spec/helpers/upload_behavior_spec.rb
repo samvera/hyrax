@@ -12,7 +12,6 @@ describe Hydra::Controller::UploadBehavior do
       file_name = "Posted Filename.foo"
       helper.stub(:params).and_return( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
       mock_fa = mock("file asset")
-#      mock_file.should_receive(:original_filename).and_return(file_name)
       helper.stub(:datastream_id).and_return('bar')
       mock_fa.should_receive(:add_file).with(mock_file, 'bar', file_name)
       helper.add_posted_blob_to_asset(mock_fa,mock_file, file_name) # this is the deprecated 2 argument method
@@ -23,7 +22,6 @@ describe Hydra::Controller::UploadBehavior do
       file_name = "Posted Filename.foo"
       helper.stub(:params).and_return( :Filedata=>[mock_file], :Filename=>file_name, "container_id"=>"hydrangea:2973" )      
       mock_fa = mock("file asset")
-#      mock_file.should_receive(:original_filename).and_return(file_name)
       mock_fa.should_receive(:add_file).with(mock_file, 'content', file_name)
       helper.add_posted_blob_to_asset(mock_fa,mock_file, file_name)
     end
@@ -31,7 +29,6 @@ describe Hydra::Controller::UploadBehavior do
       mock_file = mock("File")
       file_name = "Posted Filename.foo"
       helper.stub(:params).and_return( :Filedata=>[mock_file], :container_id=>"hydrangea:2973" )      
-#      mock_file.should_receive(:original_filename).and_return(file_name)
       mock_fa = mock("file asset")
       mock_fa.should_receive(:add_file).with(mock_file, 'content', file_name)
       helper.add_posted_blob_to_asset(mock_fa,mock_file, file_name)

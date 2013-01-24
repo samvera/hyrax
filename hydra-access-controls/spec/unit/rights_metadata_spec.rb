@@ -61,11 +61,11 @@ describe Hydra::ModelMixins::RightsMetadata do
       result = subject.rightsMetadata.to_solr
       result.size.should == 4
       ## Wrote the test in this way, because the implementation uses a hash, and the hash order is not deterministic (especially in ruby 1.8.7)
-      result['read_access_group_t'].size.should == 2
-      result['read_access_group_t'].should include('group-6', 'group-7')
-      result['edit_access_group_t'].should == ['group-8']
-      result['discover_access_person_t'].should == ['person2']
-      result['read_access_person_t'].should == ['person1']
+      result['read_access_group_tsim'].size.should == 2
+      result['read_access_group_tsim'].should include('group-6', 'group-7')
+      result['edit_access_group_tsim'].should == ['group-8']
+      result['discover_access_person_tsim'].should == ['person2']
+      result['read_access_person_tsim'].should == ['person1']
     end
   end
 

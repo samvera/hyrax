@@ -16,7 +16,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   def policy_clauses 
     policy_pids = policies_with_access
     return nil if policy_pids.empty?
-    '(' + policy_pids.map {|pid| "is_governed_by_s:info\\:fedora/#{pid.gsub(/:/, '\\\\:')}"}.join(' OR ') + ')'
+    '(' + policy_pids.map {|pid| ActiveFedora::SolrService.solr_name("is_governed_by", :symbol) + ":info\\:fedora/#{pid.gsub(/:/, '\\\\:')}"}.join(' OR ') + ')'
   end
   
   
@@ -39,7 +39,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       user_access_filters = []
       current_ability.user_groups.each_with_index do |role, i|
         discovery_permissions.each do |type|
-          user_access_filters << "inheritable_#{type}_access_group_t:#{role}"
+          user_access_filters << ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer ) + ":#{role}"
         end
       end
       user_access_filters
@@ -49,7 +49,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       # for individual person access
       user_access_filters = []
       discovery_permissions.each do |type|
-        user_access_filters << "inheritable_#{type}_access_person_t:#{user_key}"        
+        user_access_filters << ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ) + ":#{current_user.user_key}"        
       end
       user_access_filters
   end

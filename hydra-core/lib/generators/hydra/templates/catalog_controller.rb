@@ -12,13 +12,13 @@ class CatalogController < ApplicationController
     }
 
     # solr field configuration for search results/index views
-    config.index.show_link = 'title_t'
-    config.index.record_display_type = 'has_model_s'
+    config.index.show_link = 'title_tesim'
+    config.index.record_tsim_type = 'has_model_ssim'
 
     # solr field configuration for document/show views
-    config.show.html_title = 'title_t'
-    config.show.heading = 'title_t'
-    config.show.display_type = 'has_model_s'
+    config.show.html_title = 'title_tesim'
+    config.show.heading = 'title_tesim'
+    config.show.display_type = 'has_model_ssim'
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -27,7 +27,7 @@ class CatalogController < ApplicationController
     # * If left unset, then all facet values returned by solr will be displayed.
     # * If set to an integer, then "f.somefield.facet.limit" will be added to
     # solr request, with actual solr request being +1 your configured limit --
-    # you configure the number of items you actually want _displayed_ in a page.    
+    # you configure the number of items you actually want _tsimed_ in a page.    
     # * If set to 'true', then no additional parameters will be sent to solr,
     # but any 'sniffed' request limit parameters will be used for paging, with
     # paging at requested limit -1. Can sniff from facet.limit or 
@@ -39,13 +39,13 @@ class CatalogController < ApplicationController
     #
     # :show may be set to false if you don't want the facet to be drawn in the 
     # facet bar
-    config.add_facet_field 'object_type_facet', :label => 'Format' 
-    config.add_facet_field 'pub_date', :label => 'Publication Year' 
-    config.add_facet_field 'subject_topic_facet', :label => 'Topic', :limit => 20 
-    config.add_facet_field 'language_facet', :label => 'Language', :limit => true 
-    config.add_facet_field 'lc_1letter_facet', :label => 'Call Number' 
-    config.add_facet_field 'subject_geo_facet', :label => 'Region' 
-    config.add_facet_field 'subject_era_facet', :label => 'Era'  
+    config.add_facet_field 'object_type_tsim', :label => 'Format' 
+    config.add_facet_field 'pub_tsim', :label => 'Publication Year' 
+    config.add_facet_field 'subject_topic_tsim', :label => 'Topic', :limit => 20 
+    config.add_facet_field 'language_tsim', :label => 'Language', :limit => true 
+    config.add_facet_field 'lc_1letter_tsim', :label => 'Call Number' 
+    config.add_facet_field 'subject_geo_tsim', :label => 'Region' 
+    config.add_facet_field 'subject_era_tsim', :label => 'Era'  
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -57,32 +57,32 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display 
-    config.add_index_field 'title_display', :label => 'Title:' 
-    config.add_index_field 'title_vern_display', :label => 'Title:' 
-    config.add_index_field 'author_display', :label => 'Author:' 
-    config.add_index_field 'author_vern_display', :label => 'Author:' 
+    config.add_index_field 'title_tsim', :label => 'Title:' 
+    config.add_index_field 'title_vern_tsim', :label => 'Title:' 
+    config.add_index_field 'author_tsim', :label => 'Author:' 
+    config.add_index_field 'author_vern_tsim', :label => 'Author:' 
     config.add_index_field 'format', :label => 'Format:' 
     config.add_index_field 'language_facet', :label => 'Language:'
-    config.add_index_field 'published_display', :label => 'Published:'
-    config.add_index_field 'published_vern_display', :label => 'Published:'
-    config.add_index_field 'lc_callnum_display', :label => 'Call number:'
+    config.add_index_field 'published_tsim', :label => 'Published:'
+    config.add_index_field 'published_vern_tsim', :label => 'Published:'
+    config.add_index_field 'lc_callnum_tsim', :label => 'Call number:'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config.add_show_field 'title_display', :label => 'Title:' 
-    config.add_show_field 'title_vern_display', :label => 'Title:' 
-    config.add_show_field 'subtitle_display', :label => 'Subtitle:' 
-    config.add_show_field 'subtitle_vern_display', :label => 'Subtitle:' 
-    config.add_show_field 'author_display', :label => 'Author:' 
-    config.add_show_field 'author_vern_display', :label => 'Author:' 
+    config.add_show_field 'title_tsim', :label => 'Title:' 
+    config.add_show_field 'title_vern_tsim', :label => 'Title:' 
+    config.add_show_field 'subtitle_tsim', :label => 'Subtitle:' 
+    config.add_show_field 'subtitle_vern_tsim', :label => 'Subtitle:' 
+    config.add_show_field 'author_tsim', :label => 'Author:' 
+    config.add_show_field 'author_vern_tsim', :label => 'Author:' 
     config.add_show_field 'format', :label => 'Format:' 
-    config.add_show_field 'url_fulltext_display', :label => 'URL:'
-    config.add_show_field 'url_suppl_display', :label => 'More Information:'
+    config.add_show_field 'url_fulltext_tsim', :label => 'URL:'
+    config.add_show_field 'url_suppl_tsim', :label => 'More Information:'
     config.add_show_field 'language_facet', :label => 'Language:'
-    config.add_show_field 'published_display', :label => 'Published:'
-    config.add_show_field 'published_vern_display', :label => 'Published:'
-    config.add_show_field 'lc_callnum_display', :label => 'Call number:'
-    config.add_show_field 'isbn_t', :label => 'ISBN:'
+    config.add_show_field 'published_tsim', :label => 'Published:'
+    config.add_show_field 'published_vern_tsim', :label => 'Published:'
+    config.add_show_field 'lc_callnum_tsim', :label => 'Call number:'
+    config.add_show_field 'isbn_tsim', :label => 'ISBN:'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -147,10 +147,10 @@ class CatalogController < ApplicationController
     # label in pulldown is followed by the name of the SOLR field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
-    config.add_sort_field 'score desc, pub_date_sort desc, title_sort asc', :label => 'relevance'
-    config.add_sort_field 'pub_date_sort desc, title_sort asc', :label => 'year'
-    config.add_sort_field 'author_sort asc, title_sort asc', :label => 'author'
-    config.add_sort_field 'title_sort asc, pub_date_sort desc', :label => 'title'
+    config.add_sort_field 'score desc, pub_date_dtsi desc, title_tesi asc', :label => 'relevance'
+    config.add_sort_field 'pub_date_dtsi desc, title_tesi asc', :label => 'year'
+    config.add_sort_field 'author_tesi asc, title_tesi asc', :label => 'author'
+    config.add_sort_field 'title_tesi asc, pub_date_dtsi desc', :label => 'title'
 
     # If there are more than this many search results, no spelling ("did you 
     # mean") suggestion is offered.

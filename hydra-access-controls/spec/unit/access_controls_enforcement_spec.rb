@@ -10,10 +10,6 @@ describe Hydra::AccessControlsEnforcement do
         @current_ability ||= Ability.new(current_user)
       end
 
-      def user_key
-        current_user.user_key
-      end
-
       def session
       end
     end
@@ -32,7 +28,7 @@ describe Hydra::AccessControlsEnforcement do
       end
       it "Then I should be treated as a member of the 'public' group" do
         ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:public/)      
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:public/)      
         end
       end
       it "Then I should not be treated as a member of the 'registered' group" do
@@ -52,19 +48,19 @@ describe Hydra::AccessControlsEnforcement do
       end
       it "Then I should be treated as a member of the 'public' and 'registered' groups" do
         ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:public/)  
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:registered/)      
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:public/)  
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:registered/)      
         end
       end
       it "Then I should see assets that I have discover, read, or edit access to" do
         ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@user.user_key}/)      
+          @solr_parameters[:fq].first.should match(/#{type}_access_person_tsim\:#{@user.user_key}/)      
         end
       end
       it "Then I should see assets that my groups have discover, read, or edit access to" do
         ["faculty", "africana-faculty"].each do |group_id|
           ["discover","edit","read"].each do |type|
-            @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:#{group_id}/)      
+            @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:#{group_id}/)      
           end
         end
       end
@@ -94,7 +90,7 @@ describe Hydra::AccessControlsEnforcement do
       subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(true)
       subject.stub(:can?).with(:read, nil).and_return(true)
-      subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
+      subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
 
       subject.params = {}
       subject.should_receive(:load_permissions_from_solr) #This is what normally sets @permissions_solr_document
@@ -107,7 +103,7 @@ describe Hydra::AccessControlsEnforcement do
       subject.should_receive(:can?).with(:edit, nil).and_return(false)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.params = {}
-      subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
+      subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
       subject.should_receive(:load_permissions_from_solr) #This is what normally sets @permissions_solr_document
       lambda {subject.send(:enforce_show_permissions, {})}.should raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
     end
@@ -123,14 +119,14 @@ describe Hydra::AccessControlsEnforcement do
     it "should set query fields for the user id checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@stub_user.user_key}/)      
+        @solr_parameters[:fq].first.should match(/#{type}_access_person_tsim\:#{@stub_user.user_key}/)      
       end
     end
     it "should set query fields for all roles the user is a member of checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:archivist/)        
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:researcher/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:archivist/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:researcher/)        
       end
     end
 
@@ -138,8 +134,8 @@ describe Hydra::AccessControlsEnforcement do
       RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["abc/123","cde/567"])
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:abc\\\/123/)        
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:cde\\\/567/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:abc\\\/123/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:cde\\\/567/)        
       end
     end
   end
@@ -153,7 +149,7 @@ describe Hydra::AccessControlsEnforcement do
     end
     it "should set solr query parameters to filter out FileAssets" do
       subject.send(:exclude_unwanted_models, @solr_parameters, @user_parameters)
-      @solr_parameters[:fq].should include("-has_model_s:\"info:fedora/afmodel:FileAsset\"")  
+      @solr_parameters[:fq].should include("-#{ActiveFedora::SolrService.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:FileAsset\"")  
     end
   end
 
