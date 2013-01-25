@@ -120,7 +120,7 @@ module Hydra::Ability
   def test_read(pid, deprecated_user=nil, deprecated_session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller()) if deprecated_user || deprecated_session
     permissions_doc(pid)
-    logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
+    logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & read_groups
     result = !group_intersection.empty? || read_persons.include?(current_user.user_key)
     logger.debug("[CANCAN] decision: #{result}")
