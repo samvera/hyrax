@@ -168,17 +168,6 @@ module Sufia
       self.descMetadata.class.config.keys
     end
 
-    def get_values
-      terms = get_terms
-      values = {}
-      terms.each do |t|
-          next if t.empty?
-          next if ['part_of', 'date_modified', 'date_uploaded'].include?(t)
-          values[t] = self.send(key) if self.respond_to?(key)
-      end        
-      values          
-    end
-
     # Is this file in the middle of being processed by a batch?
     def processing?
        return false if self.batch.blank?

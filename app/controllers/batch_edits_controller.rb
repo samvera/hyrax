@@ -6,7 +6,7 @@ class BatchEditsController < ApplicationController
        super 
        @generic_file = GenericFile.new
        @generic_file.depositor = current_user.user_key
-       @terms = @generic_file.editable_terms - [:title] # +:format, :resource_type 
+       @terms = @generic_file.terms_for_editing - [:title] # +:format, :resource_type 
 
        # do we want to show the original values for anything...
        @show_file = GenericFile.new
@@ -14,19 +14,24 @@ class BatchEditsController < ApplicationController
        h  = {}
        @names = []
        permissions = []
+
+       # For each of the files in the batch, set the attributes to be the concatination of all the attributes
        batch.each do |doc_id|
           gf = GenericFile.find(doc_id)
-          h = h.merge(gf.get_values) {|key, v1, v2| (v1+v2).uniq }
+          gf.terms_for_editing.each do |key|
+            h[key] ||= []
+            h[key] = (h[key] + gf.send(key)).uniq 
+          end
           @names << display_title(gf)    
           permissions =  (permissions+gf.permissions).uniq
        end
        
        # why am I doing this you may ask... Well... if truth be told I have no idea, but if I use just a single item in the batch
        # my h arrays get converted into strings in update attributes unless I do this first....
-       h.keys.each {|key| h[key] = h[key].to_a} if (batch.size == 1)        
+       #h.keys.each {|key| h[key] = h[key].to_a} if (batch.size == 1)        
        # end of wierd fix...
        
-       @show_file.update_attributes(h)
+       @show_file.attributes = h
        # map the permissions to parameter like input so that the assign will work
        # todo sort the access level some how...
        perm_param ={'user'=>{},'group'=>{"public"=>"1"}}
