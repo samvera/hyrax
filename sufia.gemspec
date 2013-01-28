@@ -18,8 +18,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rails', '~> 3.2.8'
   gem.add_dependency 'blacklight', '~> 4.0.0'
   gem.add_dependency 'blacklight_advanced_search'
-  gem.add_dependency "hydra-head", "~> 5.3"
-  gem.add_dependency "active-fedora", "~> 5.5.0"
+  gem.add_dependency "hydra-head", ">= 5.3"
+  gem.add_dependency "active-fedora", ">= 5.5"
 
   gem.add_dependency 'noid', '0.5.5'
   gem.add_dependency 'hydra-batch-edit', '~> 0.1.0'
@@ -29,11 +29,9 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'resque-pool', '0.3.0'
 # NOTE: the :require arg is necessary on Linux-based hosts
   gem.add_dependency 'rmagick', '2.13.1'#, :require => 'RMagick'
-  gem.add_dependency 'devise', '2.1.2'
+  gem.add_dependency 'devise'
   gem.add_dependency 'paperclip', '3.3.0'
   gem.add_dependency 'daemons', '1.1.9'
-  gem.add_dependency 'execjs', '1.4.0'
-  gem.add_dependency 'therubyracer', '0.10.2'
   gem.add_dependency 'zipruby', '0.3.6'
   gem.add_dependency 'mail_form'
   gem.add_dependency 'rails_autolink', '1.0.9'
