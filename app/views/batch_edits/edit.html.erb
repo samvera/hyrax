@@ -6,7 +6,7 @@
     var clearState = $.ajax({
       headers: {Accept : "application/javascript"},      
       type: 'POST',
-      url: '<%=batch_edits_clear_path %>',
+      url: '<%=sufia.batch_edits_clear_path %>',
       async: false,
     });
   }  
@@ -259,11 +259,6 @@ h2 small {
                     <%=get_label(term)%>&nbsp;<i class="toggle icon-chevron-right grey"></i>
                  </a>
               </th>
-              <!--td  width="30%" class="scrollx" id="data_<%= key%>">
-                 <% vals.each do |val| %>
-                    <%= val%><br />
-                  <% end %>
-              </td -->
               <td  width="50%" class="scrolly">
     
                   <div id="collapse_<%=term.to_s%>" class="accordion-body collapse scrolly">
