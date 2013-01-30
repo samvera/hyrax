@@ -25,7 +25,7 @@ class ContentNewVersionEventJob < EventJob
     # Log the event to the GF's stream
     gf.log_event(event)
     # Fan out the event to all followers who have access
-    depositor.followers.select { |user| user.can? :read, get_permissions_solr_response_for_doc_id(gf.pid)[1] }.each do |follower|
+    depositor.followers.select { |user| user.can? :read, gf }.each do |follower|
       follower.log_event(event)
     end
   end

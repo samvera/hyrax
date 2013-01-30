@@ -54,7 +54,7 @@ class BatchUpdateJob
   end
 
   def update_file(gf, user)
-    unless user.can? :edit, get_permissions_solr_response_for_doc_id(gf.pid)[1]
+    unless user.can? :edit, gf
       logger.error "User #{user.user_key} DEEEENIED access to #{gf.pid}!"
       @denied << gf
       return

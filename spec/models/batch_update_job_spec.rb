@@ -34,8 +34,8 @@ describe BatchUpdateJob do
   end
   describe "failing update" do
     it "should check permissions for each file before updating" do
-      BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
-      User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times
+      User.any_instance.should_receive(:can?).with(:edit, @file).and_return(false)
+      User.any_instance.should_receive(:can?).with(:edit, @file2).and_return(false)
        params = {'generic_file' => {'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}.with_indifferent_access
       BatchUpdateJob.new(@user.user_key, params).run
       @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload permission denied"
@@ -45,8 +45,8 @@ describe BatchUpdateJob do
   end
   describe "passing update" do
     it "should log a content update event" do
-      BatchUpdateJob.any_instance.stub(:get_permissions_solr_response_for_doc_id).and_return(["","mock solr permissions"])       
-      User.any_instance.should_receive(:can?).with(:edit, "mock solr permissions").exactly(2).times.and_return(true)
+      User.any_instance.should_receive(:can?).with(:edit, @file).and_return(true)
+      User.any_instance.should_receive(:can?).with(:edit, @file2).and_return(true)
       s1 = stub('one')
       ContentUpdateEventJob.should_receive(:new).with(@file.pid, @user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
