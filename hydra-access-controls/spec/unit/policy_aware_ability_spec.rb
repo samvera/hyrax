@@ -51,7 +51,7 @@ describe Hydra::PolicyAwareAbility do
 
   describe "policy_permissions_doc" do
     it "should retrieve the permissions doc for the current object's policy and store for re-use" do
-      subject.should_receive(:get_permissions_solr_response_for_doc_id).with(@policy.pid).once.and_return(["response", "mock solr doc"])
+      subject.should_receive(:get_permissions_solr_response_for_doc_id).with(@policy.pid).once.and_return("mock solr doc")
       subject.policy_permissions_doc(@policy.pid).should == "mock solr doc"
       subject.policy_permissions_doc(@policy.pid).should == "mock solr doc"
       subject.policy_permissions_doc(@policy.pid).should == "mock solr doc"

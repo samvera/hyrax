@@ -90,10 +90,10 @@ describe Hydra::AccessControlsEnforcement do
       subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(true)
       subject.stub(:can?).with(:read, nil).and_return(true)
-      subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
+      stub_doc = SolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
 
       subject.params = {}
-      subject.should_receive(:load_permissions_from_solr) #This is what normally sets @permissions_solr_document
+      subject.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
       lambda {subject.send(:enforce_show_permissions, {}) }.should_not raise_error Hydra::AccessDenied
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
@@ -103,8 +103,8 @@ describe Hydra::AccessControlsEnforcement do
       subject.should_receive(:can?).with(:edit, nil).and_return(false)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.params = {}
-      subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
-      subject.should_receive(:load_permissions_from_solr) #This is what normally sets @permissions_solr_document
+      stub_doc = SolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
+      subject.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
       lambda {subject.send(:enforce_show_permissions, {})}.should raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
     end
   end

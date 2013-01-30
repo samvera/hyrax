@@ -76,14 +76,13 @@ module Hydra::AccessControlsEnforcement
     solr_response = Blacklight::SolrResponse.new(force_to_utf8(response), solr_opts)
 
     raise Blacklight::Exceptions::InvalidSolrID.new("The solr permissions search handler didn't return anything for id \"#{id}\"") if solr_response.docs.empty?
-    document = SolrDocument.new(solr_response.docs.first, solr_response)
-    [solr_response, document]
+    SolrDocument.new(solr_response.docs.first, solr_response)
   end
   
   # Loads permissions info into @permissions_solr_response and @permissions_solr_document
   def load_permissions_from_solr(id=params[:id], extra_controller_params={})
-    unless !@permissions_solr_document.nil? && !@permissions_solr_response.nil?
-      @permissions_solr_response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(id, extra_controller_params)
+    if @permissions_solr_document.nil?
+      @permissions_solr_document = get_permissions_solr_response_for_doc_id(id, extra_controller_params)
     end
   end
   
@@ -104,6 +103,23 @@ module Hydra::AccessControlsEnforcement
     end
     user_access_filters
   end
+
+  def under_embargo?
+    load_permissions_from_solr
+    embargo_key = ActiveFedora::SolrService.solr_name("embargo_release_date", Hydra::Datastream::RightsMetadata.date_indexer)
+    if @permissions_solr_document[embargo_key] 
+      embargo_date = Date.parse(@permissions_solr_document[embargo_key].split(/T/)[0])
+      return embargo_date > Date.parse(Time.now.to_s)
+    end
+    false
+  end
+
+  def is_public?
+    load_permissions_from_solr
+    access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
+    @permissions_solr_document[access_key].present? && @permissions_solr_document[access_key].first.downcase == "public"
+  end
+  
 
   # If someone hits the show action while their session's viewing_context is in edit mode, 
   # this will redirect them to the edit action.
@@ -134,17 +150,10 @@ module Hydra::AccessControlsEnforcement
   # Controller "before" filter for enforcing access controls on show actions
   # @param [Hash] opts (optional, not currently used)
   def enforce_show_permissions(opts={})
-    load_permissions_from_solr
-    access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
-    embargo_key = ActiveFedora::SolrService.solr_name("embargo_release_date", Hydra::Datastream::RightsMetadata.date_indexer)
-    unless @permissions_solr_document[access_key] && (@permissions_solr_document[access_key].first == "public" || @permissions_solr_document[access_key].first == "Public")
-      if @permissions_solr_document[embargo_key] 
-        embargo_date = Date.parse(@permissions_solr_document[embargo_key].split(/T/)[0])
-        if embargo_date > Date.parse(Time.now.to_s)
-          unless can?(:edit, params[:id])
-            raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
-          end
-        end
+    unless is_public?
+      #its not 'public'
+      if under_embargo? && !can?(:edit, params[:id])
+        raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
       end
       unless can? :read, params[:id] 
         raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])

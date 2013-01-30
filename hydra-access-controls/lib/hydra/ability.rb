@@ -94,10 +94,7 @@ module Hydra::Ability
   protected
 
   def permissions_doc(pid)
-    return @permission_doc_cache[pid] if @permission_doc_cache[pid]
-    _, doc = get_permissions_solr_response_for_doc_id(pid)
-    #puts  "PERM: #{@permissions_solr_document.inspect}"
-    @permission_doc_cache[pid] = doc
+    @permission_doc_cache[pid] ||= get_permissions_solr_response_for_doc_id(pid)
   end
 
   def test_edit(pid)
