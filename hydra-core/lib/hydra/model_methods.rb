@@ -1,13 +1,4 @@
-# will move to lib/hydra/model/model_behavior.rb  (with appropriate namespace changes) in release 5.x
 module Hydra::ModelMethods
-  extend ActiveSupport::Concern
-  extend Deprecation
-
-  included do
-    unless self.class ==  Module
-      self.has_many :parts, :class_name=>'ActiveFedora::Base', :property=>:is_part_of
-    end
-  end
   
   #
   # Adds metadata about the depositor to the asset
@@ -42,16 +33,6 @@ module Hydra::ModelMethods
   end
 
 
-  #
-  # Set the collection type (e.g. hydrangea_article) for the asset
-  #
-  def set_collection_type(collection)
-    prop_ds = self.datastreams["properties"]
-    if !prop_ds.nil? && prop_ds.respond_to?(:collection_values)
-      prop_ds.collection_values = collection
-    end
-  end
-  deprecation_deprecate :set_collection_type
   
   # Set the title and label on the current object
   #
@@ -86,35 +67,5 @@ module Hydra::ModelMethods
       end
     end
   end
-
-  # Call to remove file objects
-  def destroy_child_assets
-    destroyable_child_assets.each.inject([]) do |destroyed,fo|
-        destroyed << fo.pid
-        fo.delete
-        destroyed
-    end
-
-  end
-  deprecation_deprecate :destroy_child_assets
-  
-
-  def destroyable_child_assets
-    return [] unless self.parts
-    self.parts.each.inject([]) do |file_assets, fo|
-      parents = fo.ids_for_outbound(:is_part_of)
-      if parents.length == 1 && parents.first.match(/#{self.pid}$/)
-        file_assets << fo
-      end
-      file_assets
-    end
-  end
-  deprecation_deprecate :destroyable_child_assets
-
-  def file_asset_count
-    ### TODO switch to AF::Base.count
-    parts.length
-  end
-  deprecation_deprecate :file_asset_count
 
 end
