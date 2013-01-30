@@ -5,6 +5,7 @@ module Hydra::PermissionsQuery
   end
 
   def permissions_doc(pid)
+    @permission_doc_cache ||= {}
     @permission_doc_cache[pid] ||= get_permissions_solr_response_for_doc_id(pid)
   end
 

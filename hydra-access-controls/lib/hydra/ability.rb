@@ -25,7 +25,6 @@ module Hydra::Ability
     @current_user = user || Hydra::Ability.user_class.new # guest user (not logged in)
     @user = @current_user # just in case someone was using this in an override. Just don't.
     @session = session
-    @permission_doc_cache = {}
     hydra_default_permissions()
   end
 
