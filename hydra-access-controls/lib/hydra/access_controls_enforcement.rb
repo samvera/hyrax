@@ -1,7 +1,5 @@
 module Hydra::AccessControlsEnforcement
   extend ActiveSupport::Concern
-  extend Deprecation 
-  self.deprecation_horizon = "hydra-access-controls 6.0"
 
   included do
     include Hydra::AccessControlsEvaluation
@@ -17,32 +15,6 @@ module Hydra::AccessControlsEnforcement
     self.solr_access_filters_logic = [:apply_role_permissions, :apply_individual_permissions, :apply_superuser_permissions ]
 
   end
-  
-  #
-  #   Access Controls Enforcement Filters
-  #
-  
-  # Controller "before" filter that delegates enforcement based on the controller action
-  # Action-specific implementations are enforce_index_permissions, enforce_show_permissions, etc.
-  # @param [Hash] opts (optional, not currently used)
-  #
-  # @example
-  #   class CatalogController < ApplicationController  
-  #     before_filter :enforce_access_controls
-  #   end
-  #
-  # @deprecated HYDRA-886 Blacklight is now using Catalog#update to store pagination info, so we don't want to enforce_edit_permissions on it. Instead just call before_filter :enforce_show_permissions, :only=>:show. Move all Edit/Update/Delete methods into non-catalog backed controllers.
-  def enforce_access_controls(opts={})
-    controller_action = params[:action].to_s
-    delegate_method = "enforce_#{controller_action}_permissions"
-    if self.respond_to?(delegate_method.to_sym, true)
-      self.send(delegate_method.to_sym)
-    else
-      true
-    end
-  end
-  deprecation_deprecate :enforce_access_controls
-  
   
   #
   #  Solr integration
@@ -121,28 +93,6 @@ module Hydra::AccessControlsEnforcement
   end
   
 
-  # If someone hits the show action while their session's viewing_context is in edit mode, 
-  # this will redirect them to the edit action.
-  # If they do not have sufficient privileges to edit documents, it will silently switch their session to browse mode.
-  # @deprecated this is a vestige of the old workflow, which is being removed from hydra-head
-  def enforce_viewing_context_for_show_requests
-    if params[:viewing_context] == "browse"
-      session[:viewing_context] = params[:viewing_context]
-    elsif session[:viewing_context] == "edit"
-      if can? :edit, params[:id]
-        logger.debug("enforce_viewing_context_for_show_requests redirecting to edit")
-        if params[:files]
-          redirect_to :action=>:edit, :files=>true
-        else
-          redirect_to :action=>:edit
-        end
-      else
-        session[:viewing_context] = "browse"
-      end
-    end
-  end
-  deprecation_deprecate :enforce_viewing_context_for_show_requests
-  
   #
   # Action-specific enforcement
   #
@@ -161,53 +111,6 @@ module Hydra::AccessControlsEnforcement
     end
   end
   
-  # Controller "before" filter for enforcing access controls on edit actions
-  # @param [Hash] opts (optional, not currently used)
-  def enforce_edit_permissions(opts={})
-    logger.debug("Enforcing edit permissions")
-    load_permissions_from_solr
-    if !can? :edit, params[:id]
-      session[:viewing_context] = "browse"
-      raise Hydra::AccessDenied.new("You do not have sufficient privileges to edit this document. You have been redirected to the read-only view.", :edit, params[:id])
-    else
-      session[:viewing_context] = "edit"
-    end
-  end
-  deprecation_deprecate :enforce_edit_permissions
-
-  ##  This method is here for you to override
-  def enforce_create_permissions(opts={})
-    logger.debug("Enforcing create permissions")
-    if !can? :create, ActiveFedora::Base.new
-      raise Hydra::AccessDenied.new "You do not have sufficient privileges to create a new document."
-    end
-  end
-  deprecation_deprecate :enforce_create_permissions
-
-  ## proxies to enforce_edit_permssions.  This method is here for you to override
-  def enforce_update_permissions(opts={})
-    enforce_edit_permissions(opts)
-  end
-
-  ## proxies to enforce_edit_permssions.  This method is here for you to override
-  def enforce_destroy_permissions(opts={})
-    enforce_edit_permissions(opts)
-  end
-
-  ## proxies to enforce_edit_permssions.  This method is here for you to override
-  def enforce_new_permissions(opts={})
-    enforce_create_permissions(opts)
-  end
-
-  # Controller "before" filter for enforcing access controls on index actions
-  # Currently does nothing, instead relies on 
-  # @param [Hash] opts (optional, not currently used)
-  def enforce_index_permissions(opts={})
-    # Do nothing. Relies on add_access_controls_to_solr_params being in the Controller's solr_search_params_logic
-    return true
-  end
-  
-  #
   # Solr query modifications
   #
   
@@ -273,16 +176,6 @@ module Hydra::AccessControlsEnforcement
   # override to apply super user permissions
   def apply_superuser_permissions(permission_types)
     []
-  end
-  
-  # proxy for {enforce_index_permissions}
-  def enforce_search_permissions
-    enforce_index_permissions
-  end
-
-  # proxy for {enforce_show_permissions}
-  def enforce_read_permissions
-    enforce_show_permissions
   end
   
   # This filters out objects that you want to exclude from search results.  By default it only excludes FileAssets
