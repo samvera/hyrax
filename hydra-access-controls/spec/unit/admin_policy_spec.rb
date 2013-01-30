@@ -124,5 +124,121 @@ describe Hydra::AdminPolicy do
 
   end
 
+  #
+  # Policy-based Access Controls
+  #
+  describe "When accessing assets with Policies associated" do
+    before do
+      @user = FactoryGirl.build(:martia_morocco)
+      RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+    end
+    subject { Ability.new(@user) }
+    context "Given a policy grants read access to a group I belong to" do
+      before do
+        @policy = Hydra::AdminPolicy.new
+        @policy.default_permissions = [{:type=>"group", :access=>"read", :name=>"africana-faculty"}]
+        @policy.save
+      end
+      after { @policy.delete }
+    	context "And a subscribing asset does not grant access" do
+    	  before do
+          @asset = ModsAsset.new()
+          @asset.admin_policy = @policy
+          @asset.save
+        end
+        after { @asset.delete }
+    		it "Then I should be able to view the asset" do
+    		  subject.can?(:read, @asset).should be_true
+  		  end
+        it "Then I should not be able to edit, update and destroy the asset" do
+          subject.can?(:edit, @asset).should be_false
+          subject.can?(:update, @asset).should be_false
+          subject.can?(:destroy, @asset).should be_false
+        end
+      end
+    end
+    context "Given a policy grants edit access to a group I belong to" do
+      before do
+        @policy = Hydra::AdminPolicy.new
+        @policy.default_permissions = [{:type=>"group", :access=>"edit", :name=>"africana-faculty"}]
+        @policy.save
+      end
+      after { @policy.delete }
+    	context "And a subscribing asset does not grant access" do
+    	  before do
+          @asset = ModsAsset.new()
+          @asset.admin_policy = @policy
+          @asset.save
+        end
+        after { @asset.delete }
+    		it "Then I should be able to view the asset" do
+    		  subject.can?(:read, @asset).should be_true
+  		  end
+    		it "Then I should be able to edit/update/destroy the asset" do
+          subject.can?(:edit, @asset).should be_true
+          subject.can?(:update, @asset).should be_true
+          subject.can?(:destroy, @asset).should be_true
+        end
+  		end
+    	context "And a subscribing asset grants read access to me as an individual" do
+    	  before do
+          @asset = ModsAsset.new()
+          @asset.read_users = [@user.uid]
+          @asset.admin_policy = @policy
+          @asset.save
+        end
+        after { @asset.delete }
+    		it "Then I should be able to view the asset" do
+    		  subject.can?(:read, @asset).should be_true
+  		  end
+        it "Then I should be able to edit/update/destroy the asset" do
+          subject.can?(:edit, @asset).should be_true
+          subject.can?(:update, @asset).should be_true
+          subject.can?(:destroy, @asset).should be_true
+        end
+      end
+    end
+
+    context "Given a policy does not grant access to any group I belong to" do
+      before do
+        @policy = Hydra::AdminPolicy.new
+        @policy.save
+      end
+      after { @policy.delete }
+      context "And a subscribing asset does not grant access" do
+        before do
+          @asset = ModsAsset.new()
+          @asset.admin_policy = @policy
+          @asset.save
+        end
+        after { @asset.delete }
+  		  it "Then I should not be able to view the asset" do
+    		  subject.can?(:read, @asset).should be_false
+  		  end
+        it "Then I should not be able to edit/update/destroy the asset" do
+          subject.can?(:edit, @asset).should be_false
+          subject.can?(:update, @asset).should be_false
+          subject.can?(:destroy, @asset).should be_false
+        end
+      end
+      context "And a subscribing asset grants read access to me as an individual" do
+        before do
+          @asset = ModsAsset.new()
+          @asset.read_users = [@user.uid]
+          @asset.admin_policy = @policy
+          @asset.save
+        end
+        after { @asset.delete }
+  		  it "Then I should be able to view the asset" do
+    		  subject.can?(:read, @asset).should be_true
+  		  end
+        it "Then I should not be able to edit/update/destroy the asset" do
+          subject.can?(:edit, @asset).should be_false
+          subject.can?(:update, @asset).should be_false
+          subject.can?(:destroy, @asset).should be_false
+        end
+      end
+    end
+  end
 
 end

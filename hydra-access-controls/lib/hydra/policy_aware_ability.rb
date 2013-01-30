@@ -39,11 +39,12 @@ module Hydra::PolicyAwareAbility
   
   # Returns the permissions solr document for policy_pid
   # The document is stored in an instance variable, so calling this multiple times will only query solr once.
-  # To force reload, set @policy_permissions_solr_document to nil
+  # To force reload, set @policy_permissions_solr_cache to {} 
   def policy_permissions_doc(policy_pid)
-    return @policy_permissions_solr_document if @policy_permissions_solr_document
-    response, @policy_permissions_solr_document = get_permissions_solr_response_for_doc_id(policy_pid)
-    @policy_permissions_solr_document
+    @policy_permissions_solr_cache ||= {}
+    return @policy_permissions_solr_cache[policy_pid] if @policy_permissions_solr_cache[policy_pid]
+    _, doc = get_permissions_solr_response_for_doc_id(policy_pid)
+    @policy_permissions_solr_cache[policy_pid] = doc
   end
   
   # Tests whether the object's governing policy object grants edit access for the current user

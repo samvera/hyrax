@@ -25,6 +25,7 @@ module Hydra::Ability
     @current_user = user || Hydra::Ability.user_class.new # guest user (not logged in)
     @user = @current_user # just in case someone was using this in an override. Just don't.
     @session = session
+    @permission_doc_cache = {}
     hydra_default_permissions()
   end
 
@@ -71,7 +72,7 @@ module Hydra::Ability
     end
  
     can :edit, SolrDocument do |obj|
-      @permissions_solr_document = obj
+      @permission_doc_cache[obj.id] = obj
       test_edit(obj.id)
     end       
   end
@@ -87,7 +88,7 @@ module Hydra::Ability
     end 
     
     can :read, SolrDocument do |obj|
-      @permissions_solr_document = obj
+      @permission_doc_cache[obj.id] = obj
       test_read(obj.id)
     end 
   end
@@ -101,18 +102,18 @@ module Hydra::Ability
   protected
 
   def permissions_doc(pid)
-    return @permissions_solr_document if @permissions_solr_document
-    response, @permissions_solr_document = get_permissions_solr_response_for_doc_id(pid)
-    @permissions_solr_document
+    return @permission_doc_cache[pid] if @permission_doc_cache[pid]
+    _, doc = get_permissions_solr_response_for_doc_id(pid)
+    #puts  "PERM: #{@permissions_solr_document.inspect}"
+    @permission_doc_cache[pid] = doc
   end
 
 
   def test_edit(pid, deprecated_user=nil, deprecated_session=nil)
     ActiveSupport::Deprecation.warn("No need to pass user or session to test_edit, use the instance_variables", caller()) if deprecated_user || deprecated_session
-    permissions_doc(pid)
     logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
-    group_intersection = user_groups & edit_groups
-    result = !group_intersection.empty? || edit_persons.include?(current_user.user_key)
+    group_intersection = user_groups & edit_groups(pid)
+    result = !group_intersection.empty? || edit_persons(pid).include?(current_user.user_key)
     logger.debug("[CANCAN] decision: #{result}")
     result
   end   
@@ -121,38 +122,42 @@ module Hydra::Ability
     ActiveSupport::Deprecation.warn("No need to pass user or session to test_read, use the instance_variables", caller()) if deprecated_user || deprecated_session
     permissions_doc(pid)
     logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
-    group_intersection = user_groups & read_groups
-    result = !group_intersection.empty? || read_persons.include?(current_user.user_key)
+    group_intersection = user_groups & read_groups(pid)
+    result = !group_intersection.empty? || read_persons(pid).include?(current_user.user_key)
     logger.debug("[CANCAN] decision: #{result}")
     result
   end 
   
-  def edit_groups
+  def edit_groups(pid)
     edit_group_field = Hydra.config[:permissions][:edit][:group]
-    eg = ((@permissions_solr_document == nil || @permissions_solr_document.fetch(edit_group_field,nil) == nil) ? [] : @permissions_solr_document.fetch(edit_group_field,nil))
+    doc = permissions_doc(pid)
+    eg = ((doc == nil || doc.fetch(edit_group_field,nil) == nil) ? [] : doc.fetch(edit_group_field,nil))
     logger.debug("[CANCAN] edit_groups: #{eg.inspect}")
     return eg
   end
 
   # edit implies read, so read_groups is the union of edit and read groups
-  def read_groups
+  def read_groups(pid)
     read_group_field = Hydra.config[:permissions][:read][:group]
-    rg = edit_groups | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_group_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_group_field,nil))
+    doc = permissions_doc(pid)
+    rg = edit_groups(pid) | ((doc == nil || doc.fetch(read_group_field,nil) == nil) ? [] : doc.fetch(read_group_field,nil))
     logger.debug("[CANCAN] read_groups: #{rg.inspect}")
     return rg
   end
 
-  def edit_persons
+  def edit_persons(pid)
     edit_person_field = Hydra.config[:permissions][:edit][:individual]
-    ep = ((@permissions_solr_document == nil || @permissions_solr_document.fetch(edit_person_field,nil) == nil) ? [] : @permissions_solr_document.fetch(edit_person_field,nil))
+    doc = permissions_doc(pid)
+    ep = ((doc == nil || doc.fetch(edit_person_field,nil) == nil) ? [] : doc.fetch(edit_person_field,nil))
     logger.debug("[CANCAN] edit_persons: #{ep.inspect}")
     return ep
   end
 
   # edit implies read, so read_persons is the union of edit and read persons
-  def read_persons
+  def read_persons(pid)
     read_individual_field = Hydra.config[:permissions][:read][:individual]
-    rp = edit_persons | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_individual_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_individual_field,nil))
+    doc = permissions_doc(pid)
+    rp = edit_persons(pid) | ((doc == nil || doc.fetch(read_individual_field,nil) == nil) ? [] : doc.fetch(read_individual_field,nil))
     logger.debug("[CANCAN] read_persons: #{rp.inspect}")
     return rp
   end
