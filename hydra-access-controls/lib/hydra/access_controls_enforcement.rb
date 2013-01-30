@@ -3,7 +3,6 @@ module Hydra::AccessControlsEnforcement
 
   included do
     include Hydra::AccessControlsEvaluation
-    include Blacklight::SolrHelper # for force_to_utf8
     include Hydra::PermissionsQuery
     class_attribute :solr_access_filters_logic
 

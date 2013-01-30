@@ -1,5 +1,9 @@
 module Hydra::PermissionsQuery
-  
+  extend ActiveSupport::Concern
+  included do 
+    include Blacklight::SolrHelper # for force_to_utf8
+  end
+
   def permissions_doc(pid)
     @permission_doc_cache[pid] ||= get_permissions_solr_response_for_doc_id(pid)
   end
