@@ -9,7 +9,7 @@ module Hydra::Ability
   
   included do
     include CanCan::Ability
-    include Hydra::AccessControlsEnforcement
+    include Hydra::PermissionsQuery
     include Blacklight::SolrHelper
     class_attribute :ability_logic
     self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :custom_permissions]
@@ -92,10 +92,6 @@ module Hydra::Ability
   end
   
   protected
-
-  def permissions_doc(pid)
-    @permission_doc_cache[pid] ||= get_permissions_solr_response_for_doc_id(pid)
-  end
 
   def test_edit(pid)
     permissions_doc(pid)

@@ -4,6 +4,7 @@ module Hydra::AccessControlsEnforcement
   included do
     include Hydra::AccessControlsEvaluation
     include Blacklight::SolrHelper # for force_to_utf8
+    include Hydra::PermissionsQuery
     class_attribute :solr_access_filters_logic
 
     # Set defaults. Each symbol identifies a _method_ that must be in
@@ -14,48 +15,6 @@ module Hydra::AccessControlsEnforcement
     # CatalogController.solr_access_filters_logic.delete(:we_dont_want)
     self.solr_access_filters_logic = [:apply_role_permissions, :apply_individual_permissions, :apply_superuser_permissions ]
 
-  end
-  
-  #
-  #  Solr integration
-  #
-  
-  # returns a params hash with the permissions info for a single solr document 
-  # If the id arg is nil, then the value is fetched from params[:id]
-  # This method is primary called by the get_permissions_solr_response_for_doc_id method.
-  # Modeled on Blacklight::SolrHelper.solr_doc_params
-  # @param [String] id of the documetn to retrieve
-  def permissions_solr_doc_params(id=nil)
-    id ||= params[:id]
-    # just to be consistent with the other solr param methods:
-    {
-      :qt => :permissions,
-      :id => id # this assumes the document request handler will map the 'id' param to the unique key field
-    }
-  end
-  
-  # a solr query method
-  # retrieve a solr document, given the doc id
-  # Modeled on Blacklight::SolrHelper.get_permissions_solr_response_for_doc_id
-  # @param [String] id of the documetn to retrieve
-  # @param [Hash] extra_controller_params (optional)
-  def get_permissions_solr_response_for_doc_id(id=nil, extra_controller_params={})
-    raise Blacklight::Exceptions::InvalidSolrID.new("The application is trying to retrieve permissions without specifying an asset id") if id.nil?
-    #solr_response = Blacklight.solr.get permissions_solr_doc_params(id).merge(extra_controller_params)
-    #path = blacklight_config.solr_path
-    solr_opts = permissions_solr_doc_params(id).merge(extra_controller_params)
-    response = Blacklight.solr.get('select', :params=> solr_opts)
-    solr_response = Blacklight::SolrResponse.new(force_to_utf8(response), solr_opts)
-
-    raise Blacklight::Exceptions::InvalidSolrID.new("The solr permissions search handler didn't return anything for id \"#{id}\"") if solr_response.docs.empty?
-    SolrDocument.new(solr_response.docs.first, solr_response)
-  end
-  
-  # Loads permissions info into @permissions_solr_response and @permissions_solr_document
-  def load_permissions_from_solr(id=params[:id], extra_controller_params={})
-    if @permissions_solr_document.nil?
-      @permissions_solr_document = get_permissions_solr_response_for_doc_id(id, extra_controller_params)
-    end
   end
   
   protected
@@ -100,12 +59,13 @@ module Hydra::AccessControlsEnforcement
   # Controller "before" filter for enforcing access controls on show actions
   # @param [Hash] opts (optional, not currently used)
   def enforce_show_permissions(opts={})
-    unless is_public?
+    permissions = permissions_doc(params[:id])
+    unless permissions.is_public?
       #its not 'public'
-      if under_embargo? && !can?(:edit, params[:id])
+      if permissions.under_embargo? && !can?(:edit, permissions)
         raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
       end
-      unless can? :read, params[:id] 
+      unless can? :read, permissions 
         raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
       end
     end
