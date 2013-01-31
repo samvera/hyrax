@@ -6,7 +6,11 @@ gem 'sqlite3'
 
 gem 'devise' #BL adds this later, so check to see if we can remove this
 gem 'blacklight'
-gem "hydra-head"
+gem 'hydra-head', github: 'projecthydra/hydra-head', branch: '6.x' #need pre5+
+gem 'active-fedora', github: 'projecthydra/active_fedora', branch: '6.x' 
+gem 'solrizer', github: 'projecthydra/solrizer', branch: 'solrizer-3' 
+
+
 
 gem 'sufia', :path=>'../../'
 gem 'rspec-rails', :group=>:test

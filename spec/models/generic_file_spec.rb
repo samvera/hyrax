@@ -211,25 +211,25 @@ describe GenericFile do
     @file.format_label = "JPEG Image"
     local = @file.to_solr
     local.should_not be_nil
-    local["desc_metadata__part_of_t"].should be_nil
-    local["desc_metadata__date_uploaded_t"].should be_nil
-    local["desc_metadata__date_modified_t"].should be_nil
-    local["desc_metadata__rights_t"].should == ["Wide open, buddy."]
-    local["desc_metadata__related_url_t"].should be_nil
-    local["desc_metadata__contributor_t"].should == ["Mohammad"]
-    local["desc_metadata__creator_t"].should == ["Allah"]
-    local["desc_metadata__title_t"].should == ["The Work"]
-    local["desc_metadata__description_t"].should == ["The work by Allah"]
-    local["desc_metadata__publisher_t"].should == ["Vertigo Comics"]
-    local["desc_metadata__subject_t"].should == ["Theology"]
-    local["desc_metadata__language_t"].should == ["Arabic"]
-    local["desc_metadata__date_created_t"].should == ["1200-01-01"]
-    local["desc_metadata__resource_type_t"].should == ["Book"]
-    local["file_format_t"].should == "jpeg (JPEG Image)"
-    local["desc_metadata__identifier_t"].should == ["urn:isbn:1234567890"]
-    local["desc_metadata__based_near_t"].should == ["Medina, Saudi Arabia"]
-    local["mime_type_t"].should == ["image/jpeg"]    
-    local["noid_s"].should == "__DO_NOT_USE__"
+    local[Solrizer.solr_name("desc_metadata__part_of")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__date_uploaded")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__date_modified")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__rights")].should == ["Wide open, buddy."]
+    local[Solrizer.solr_name("desc_metadata__related_url")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__contributor")].should == ["Mohammad"]
+    local[Solrizer.solr_name("desc_metadata__creator")].should == ["Allah"]
+    local[Solrizer.solr_name("desc_metadata__title")].should == ["The Work"]
+    local[Solrizer.solr_name("desc_metadata__description")].should == ["The work by Allah"]
+    local[Solrizer.solr_name("desc_metadata__publisher")].should == ["Vertigo Comics"]
+    local[Solrizer.solr_name("desc_metadata__subject")].should == ["Theology"]
+    local[Solrizer.solr_name("desc_metadata__language")].should == ["Arabic"]
+    local[Solrizer.solr_name("desc_metadata__date_created")].should == ["1200-01-01"]
+    local[Solrizer.solr_name("desc_metadata__resource_type")].should == ["Book"]
+    local[Solrizer.solr_name("file_format")].should == "jpeg (JPEG Image)"
+    local[Solrizer.solr_name("desc_metadata__identifier")].should == ["urn:isbn:1234567890"]
+    local[Solrizer.solr_name("desc_metadata__based_near")].should == ["Medina, Saudi Arabia"]
+    local[Solrizer.solr_name("mime_type")].should == ["image/jpeg"]    
+    local["noid_tsi"].should == "__DO_NOT_USE__"
   end
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]

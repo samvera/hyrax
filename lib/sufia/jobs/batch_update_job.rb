@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class BatchUpdateJob
-  include Hydra::AccessControlsEnforcement
+  include Hydra::PermissionsQuery
   include GenericFileHelper
   include Rails.application.routes.url_helpers 
 

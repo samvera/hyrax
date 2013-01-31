@@ -1,57 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
-
-<!-- 
-     For more details about configurations options that may appear in
-     this file, see http://wiki.apache.org/solr/SolrConfigXml. 
--->
 <config>
-  <!-- In all configuration below, a prefix of "solr." for class names
-       is an alias that causes solr to search appropriate packages,
-       including org.apache.solr.(search|update|request|core|analysis)
-
-       You may also specify a fully qualified Java classname if you
-       have your own custom plugins.
-    -->
-
-  <!-- Set this to 'false' if you want solr to continue working after
-       it has encountered an severe configuration error.  In a
-       production environment, you may want solr to keep working even
-       if one handler is mis-configured.
-
-       You may also set this to false using by setting the system
-       property:
-
-         -Dsolr.abortOnConfigurationError=false
-    -->
+  <!-- NOTE: various comments and unused configuration possibilities have been purged
+     from this file.  Please refer to http://wiki.apache.org/solr/SolrConfigXml,
+     as well as the default solrconfig file included with Solr -->
+  
   <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
   
-  <!-- Controls what version of Lucene various components of Solr
-       adhere to.  Generally, you want to use the latest version to
-       get all bug fixes and improvements. It is highly recommended
-       that you fully re-index after changing this setting as it can
-       affect both how text is indexed and queried.
-    -->
   <luceneMatchVersion>LUCENE_40</luceneMatchVersion>
 
-  <!--  The DirectoryFactory to use for indexes.
-        solr.StandardDirectoryFactory, the default, is filesystem based.
-        solr.RAMDirectoryFactory is memory based, not persistent, and doesn't work with replication. -->
   <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.StandardDirectoryFactory}"/>
 
   <!-- solr lib dirs -->
@@ -60,40 +16,18 @@
   
   <dataDir>${solr.data.dir:}</dataDir>
 
-  <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" /> 
-
-  <requestDispatcher handleSelect="true" >
-    <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048" />
-  </requestDispatcher>
-
-  <requestHandler name="/analysis/field" startup="lazy" class="solr.FieldAnalysisRequestHandler" />
-  <requestHandler name="/update" class="solr.UpdateRequestHandler"  />
-  <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
-     
-  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
-    <lst name="invariants">
-      <str name="q">solrpingquery</str>
-    </lst>
-    <lst name="defaults">
-      <str name="echoParams">all</str>
-    </lst>
-  </requestHandler>
-
-  <!-- config for the admin interface --> 
-  <admin>
-    <defaultQuery>search</defaultQuery>
-  </admin>
-
-
   <requestHandler name="search" class="solr.SearchHandler" default="true">
     <!-- default values for query parameters can be specified, these
          will be overridden by parameters in the request
       -->
      <lst name="defaults">
-       <str name="defType">dismax</str>
+       <str name="defType">edismax</str>
        <str name="echoParams">explicit</str>
        <str name="q.alt">*:*</str>
        <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
+       <int name="qs">1</int>
+       <int name="ps">2</int>
+       <float name="tie">0.01</float>
        <!-- this qf and pf are used by default, if not otherwise specified by
             client. The default blacklight_config will use these for the
             "keywords" search. See the author_qf/author_pf, title_qf, etc 
@@ -103,93 +37,37 @@
        -->
         <str name="qf">
           id
-          title_t^25000
-          text
-          active_fedora_model_s
-          object_type_facet
+          all_text_timv
+          active_fedora_model_ssi
+          object_type_si
         </str>
         <str name="pf">
-          id
-          title_t^250000
-          text^10
-          active_fedora_model_s
-          object_type_facet
+          all_text_timv^10
         </str>
 
        <str name="author_qf">
-         author_unstem_search^200
-         author_addl_unstem_search^50
-         author_t^20
-         author_addl_t
        </str>
        <str name="author_pf">
-         author_unstem_search^2000
-         author_addl_unstem_search^500
-         author_t^200
-         author_addl_t^10
        </str>
        <str name="title_qf">
-         title_unstem_search^50000
-         subtitle_unstem_search^25000
-         title_addl_unstem_search^10000
-         title_t^5000
-         subtitle_t^2500
-         title_addl_t^100
-         title_added_entry_unstem_search^50
-         title_added_entry_t^10
-         title_series_unstem_search^5
-         title_series_t
        </str>
        <str name="title_pf">
-         title_unstem_search^500000
-         subtitle_unstem_search^250000
-         title_addl_unstem_search^100000
-         title_t^50000
-         subtitle_t^25000
-         title_addl_t^1000
-         title_added_entry_unstem_search^500
-         title_added_entry_t^100
-         title_series_t^50
-         title_series_unstem_search^10
        </str>
        <str name="subject_qf">
-         subject_topic_unstem_search^200
-         subject_unstem_search^125
-         subject_topic_facet^100
-         subject_t^50
-         subject_addl_unstem_search^10
-         subject_addl_t
        </str>
        <str name="subject_pf">
-         subject_topic_unstem_search^2000
-         subject_unstem_search^1250
-         subject_t^1000
-         subject_topic_facet^500
-         subject_addl_unstem_search^100
-         subject_addl_t^10
        </str>
        
-       <int name="ps">3</int>
-       <float name="tie">0.01</float>
-
-       <!-- NOT using marc_display because it is large and will slow things down for search results -->
        <str name="fl">
          *, 
-         score,
+         score
        </str>
 
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
        <str name="facet.limit">10</str>
-       <str name="facet.field">format</str>
-       <str name="facet.field">lc_1letter_facet</str>
-       <str name="facet.field">lc_alpha_facet</str>
-       <str name="facet.field">lc_b4cutter_facet</str>
-       <str name="facet.field">language_facet</str>
-       <str name="facet.field">pub_date</str>
-       <str name="facet.field">subject_era_facet</str>
-       <str name="facet.field">subject_geo_facet</str>
-       <str name="facet.field">subject_topic_facet</str>
+       <str name="facet.field">active_fedora_model_ssi</str>
+       <str name="facet.field">object_type_si</str>
        
        <str name="spellcheck">true</str>
        <str name="spellcheck.dictionary">default</str>
@@ -202,16 +80,6 @@
     <arr name="last-components">
       <str>spellcheck</str>
     </arr>
-      
-  </requestHandler>
-
-
-<!-- Hydra Additions Start -->
-
-  <requestHandler name="standard" class="solr.SearchHandler">
-     <lst name="defaults">
-       <str name="echoParams">explicit</str>
-     </lst>
   </requestHandler>
 
   <requestHandler name="permissions" class="solr.SearchHandler" >
@@ -221,22 +89,28 @@
       <str name="rows">1</str>
       <str name="q">{!raw f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
       <str name="fl">
-        id,access_t,
-        discover_access_group_t,discover_access_person_t,
-        read_access_group_t,read_access_person_t,
-        edit_access_group_t,edit_access_person_t,
-        depositor_t,
-        embargo_release_date_dt,
-        inheritable_access_t,
-        inheritable_discover_access_group_t,inheritable_discover_access_person_t,
-        inheritable_read_access_group_t,inheritable_read_access_person_t,
-        inheritable_edit_access_group_t,inheritable_edit_access_person_t,
-        inheritable_embargo_release_date_dt
+        id,
+        access_tsim,
+        discover_access_group_tsim,discover_access_person_tsim,
+        read_access_group_tsim,read_access_person_tsim,
+        edit_access_group_tsim,edit_access_person_tsim,
+        depositor_ti,
+        embargo_release_date_dtsi
+        inheritable_access_tsim,
+        inheritable_discover_access_group_tsim,inheritable_discover_access_person_tsim,
+        inheritable_read_access_group_tsim,inheritable_read_access_person_tsim,
+        inheritable_edit_access_group_tsim,inheritable_edit_access_person_tsim,
+        inheritable_embargo_release_date_dtsi
       </str>
     </lst>
   </requestHandler>
-
-<!-- Hydra Additions End -->
+  
+  <requestHandler name="standard" class="solr.SearchHandler">
+     <lst name="defaults">
+       <str name="echoParams">explicit</str>
+       <str name="defType">lucene</str>
+     </lst>
+  </requestHandler>
 
   <!-- for requests to get a single document; use id=666 instead of q=id:666 -->
   <requestHandler name="document" class="solr.SearchHandler" >
@@ -249,24 +123,10 @@
   </requestHandler>
 
 
-
-   <!-- Spell Check
-
-        The spell check component can return a list of alternative spelling
-        suggestions.  
-
-        http://wiki.apache.org/solr/SpellCheckComponent
-     -->
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
-
     <str name="queryAnalyzerFieldType">textSpell</str>
-
-    <!-- Multiple "Spell Checkers" can be declared and used by this
-         component
-      -->
-
-    <!-- a spellchecker built from a field of the main index, and
-         written to disk
+    <!-- Multiple "Spell Checkers" can be declared and used by this component
+      (e.g. for title_spell field)
       -->
     <lst name="spellchecker">
       <str name="name">default</str>
@@ -274,26 +134,30 @@
       <str name="spellcheckIndexDir">./spell</str>
       <str name="buildOnOptimize">true</str>
     </lst>
-    <lst name="spellchecker">
-      <str name="name">author</str>
-      <str name="field">author_spell</str>
-      <str name="spellcheckIndexDir">./spell_author</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">subject</str>
-      <str name="field">subject_spell</str>
-      <str name="spellcheckIndexDir">./spell_subject</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">title</str>
-      <str name="field">title_spell</str>
-      <str name="spellcheckIndexDir">./spell_title</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
   </searchComponent>
+  
+  <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" /> 
+  
+  <requestDispatcher handleSelect="true" >
+    <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048" />
+  </requestDispatcher>
+  
+  <requestHandler name="/analysis/field" startup="lazy" class="solr.FieldAnalysisRequestHandler" />
+  <requestHandler name="/update" class="solr.UpdateRequestHandler"  />
+  <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
+  
+  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
+    <lst name="invariants">
+      <str name="q">solrpingquery</str>
+    </lst>
+    <lst name="defaults">
+      <str name="echoParams">all</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- config for the admin interface --> 
+  <admin>
+    <defaultQuery>search</defaultQuery>
+  </admin>
+  
 </config>

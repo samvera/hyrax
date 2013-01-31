@@ -111,21 +111,25 @@ module Sufia
       relateds = begin
                    self.batch.generic_files
                  rescue NoMethodError => e
-                   #batch is nil
+                   #batch is nil - When would this ever happen?
                    batch_id = self.object_relations["isPartOf"].first || self.object_relations[:is_part_of].first
                    return [] if batch_id.nil?
-                   self.class.find(:is_part_of_s => batch_id)
+                   self.class.find(Solrizer.solr_name('is_part_of', :symbol) => batch_id)
                  end
       relateds.reject { |gf| gf.pid == self.pid }
     end
 
+    # Unstemmed, searchable, stored
+    def self.noid_indexer
+      @noid_indexer ||= Solrizer::Descriptor.new(:text, :indexed, :stored)
+    end 
 
     def to_solr(solr_doc={}, opts={})
       super(solr_doc, opts)
-      solr_doc["label_t"] = self.label
-      solr_doc["noid_s"] = noid
-      solr_doc["file_format_t"] = file_format
-      solr_doc["file_format_facet"] = solr_doc["file_format_t"]
+      solr_doc[Solrizer.solr_name('label')] = self.label
+      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
+      solr_doc[Solrizer.solr_name('file_format')] = file_format
+      solr_doc[Solrizer.solr_name('file_format', :facetable)] = file_format
       return solr_doc
     end
 

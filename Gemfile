@@ -3,7 +3,9 @@ source 'http://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
-gem 'hydra-head'
+gem 'hydra-head', github: 'projecthydra/hydra-head', branch: '6.x' #need pre5+
+gem 'active-fedora', github: 'projecthydra/active_fedora', branch: '6.x' 
+gem 'solrizer', github: 'projecthydra/solrizer', branch: 'solrizer-3' #need pre+
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 group :development, :test do
   gem 'activerecord-import', '0.3.0'

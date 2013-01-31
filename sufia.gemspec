@@ -18,8 +18,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rails', '~> 3.2.11'
   gem.add_dependency 'blacklight', '~> 4.0.0'
   gem.add_dependency 'blacklight_advanced_search'
-  gem.add_dependency "hydra-head", ">= 5.4"
-  gem.add_dependency "active-fedora", ">= 5.5"
+  gem.add_dependency "hydra-head", ">= 6.0.0.pre4"
+  gem.add_dependency "active-fedora", ">= 6.0.0.pre7"
 
   gem.add_dependency 'noid', '0.5.5'
   gem.add_dependency 'hydra-batch-edit', '~> 0.1.0'
