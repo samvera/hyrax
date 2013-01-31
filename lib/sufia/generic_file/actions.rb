@@ -1,8 +1,7 @@
 module Sufia::GenericFile
   # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
   module Actions
-    def self.create(generic_file, file, batch_id, file_name, dsid, user)
-      generic_file.add_file(file, dsid, file_name)
+    def self.create_metadata(generic_file, user, batch_id)
 
       generic_file.apply_depositor_metadata(user.user_key)
       generic_file.date_uploaded = Date.today
@@ -14,6 +13,11 @@ module Sufia::GenericFile
       else
         logger.warn "unable to find batch to attach to"
       end
+      generic_file.save!
+    end
+    
+    def self.create_content(generic_file, file, file_name, dsid, user)
+      generic_file.add_file(file, dsid, file_name)
 
       save_tries = 0
       begin

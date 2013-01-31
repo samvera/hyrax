@@ -98,7 +98,8 @@ module Sufia
             @generic_file = ::GenericFile.new
             # Relative path is set by the jquery uploader when uploading a directory
             @generic_file.relative_path = params[:relative_path] if params[:relative_path]
-            Sufia::GenericFile::Actions.create(@generic_file, file, params[:batch_id], file.original_filename, datastream_id, current_user)
+            Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
+            Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
             respond_to do |format|
               format.html {
                 retval = render :json => [@generic_file.to_jq_upload].to_json,
@@ -110,7 +111,6 @@ module Sufia
               }
             end
           else
-          puts "Returned false"
             retval = render :json => [{:error => "Error creating generic file."}].to_json
           end
         end
