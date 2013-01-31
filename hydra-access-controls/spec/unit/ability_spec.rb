@@ -20,6 +20,14 @@ describe Ability do
     }})
   end
 
+  describe "class methods" do
+    subject { Ability }
+    its(:read_group_field) { should == 'read_access_group_tsim'}
+    its(:read_person_field) { should == 'read_access_person_tsim'}
+    its(:edit_group_field) { should == 'edit_access_group_tsim'}
+    its(:edit_person_field) { should == 'edit_access_person_tsim'}
+  end
+
   context "for a not-signed in user" do
     before do
       User.any_instance.stub(:email).and_return(nil)

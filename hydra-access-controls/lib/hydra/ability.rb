@@ -93,7 +93,6 @@ module Hydra::Ability
   protected
 
   def test_edit(pid)
-    permissions_doc(pid)
     logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & edit_groups(pid)
     result = !group_intersection.empty? || edit_persons(pid).include?(current_user.user_key)
@@ -102,46 +101,62 @@ module Hydra::Ability
   end   
   
   def test_read(pid)
-    permissions_doc(pid)
     logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
     group_intersection = user_groups & read_groups(pid)
     result = !group_intersection.empty? || read_persons(pid).include?(current_user.user_key)
-    logger.debug("[CANCAN] decision: #{result}")
     result
   end 
   
   def edit_groups(pid)
-    edit_group_field = Hydra.config[:permissions][:edit][:group]
     doc = permissions_doc(pid)
-    eg = ((doc == nil || doc.fetch(edit_group_field,nil) == nil) ? [] : doc.fetch(edit_group_field,nil))
+    return [] if doc.nil?
+    eg = doc[self.class.edit_group_field] || []
     logger.debug("[CANCAN] edit_groups: #{eg.inspect}")
     return eg
   end
 
   # edit implies read, so read_groups is the union of edit and read groups
   def read_groups(pid)
-    read_group_field = Hydra.config[:permissions][:read][:group]
     doc = permissions_doc(pid)
-    rg = edit_groups(pid) | ((doc == nil || doc.fetch(read_group_field,nil) == nil) ? [] : doc.fetch(read_group_field,nil))
+    return [] if doc.nil?
+    rg = doc[self.class.read_group_field] || []
     logger.debug("[CANCAN] read_groups: #{rg.inspect}")
     return rg
   end
 
   def edit_persons(pid)
-    edit_person_field = Hydra.config[:permissions][:edit][:individual]
     doc = permissions_doc(pid)
-    ep = ((doc == nil || doc.fetch(edit_person_field,nil) == nil) ? [] : doc.fetch(edit_person_field,nil))
+    return [] if doc.nil?
+    ep = doc[self.class.edit_person_field] ||  []
     logger.debug("[CANCAN] edit_persons: #{ep.inspect}")
     return ep
   end
 
   # edit implies read, so read_persons is the union of edit and read persons
   def read_persons(pid)
-    read_individual_field = Hydra.config[:permissions][:read][:individual]
     doc = permissions_doc(pid)
-    rp = edit_persons(pid) | ((doc == nil || doc.fetch(read_individual_field,nil) == nil) ? [] : doc.fetch(read_individual_field,nil))
+    return [] if doc.nil?
+    rp = edit_persons(pid) | (doc[self.class.read_person_field] || [])
     logger.debug("[CANCAN] read_persons: #{rp.inspect}")
     return rp
+  end
+
+  module ClassMethods
+    def read_group_field 
+      Hydra.config[:permissions][:read][:group]
+    end
+
+    def edit_person_field 
+      Hydra.config[:permissions][:edit][:individual]
+    end
+
+    def read_person_field 
+      Hydra.config[:permissions][:read][:individual]
+    end
+
+    def edit_group_field
+      Hydra.config[:permissions][:edit][:group]
+    end
   end
 
 end
