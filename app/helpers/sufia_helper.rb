@@ -45,7 +45,7 @@ module SufiaHelper
 
   def link_to_facet_list(list, field_string, emptyText="No value entered", separator=", ")
     facet_field = Solrizer.solr_name(field_string, :facetable)
-    return list.map{ |item| link_to_facet(item, field_string) }.join(separator) unless list.blank?
+    return list.map{ |item| link_to_facet(item, facet_field) }.join(separator) unless list.blank?
     return emptyText
   end
 
