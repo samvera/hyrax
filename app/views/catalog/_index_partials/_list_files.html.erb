@@ -1,36 +1,34 @@
-<% if document.has_key?(:noid_s) %>
 <li>
   <h2>
-    <%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(document[:noid_s].first) %>
-    <small>[<%= link_to 'Download', sufia.download_path(document[:noid_s].first), :target => '_new' %>]</small>
+    <%= link_to document.title_or_label, sufia.generic_file_path(document.noid) %>
+    <small>[<%= link_to 'Download', sufia.download_path(document.noid), :target => '_new' %>]</small>
   </h2>
   <table class="table">
     <tr>
       <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %>
       </td>
       <th><h4>Title:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__title_display") %></td>
+      <td><%= document.title %></td>
     </tr>
     <tr>
       <th><h4>Depositor:<h4></div>
-      <td><%= link_to_profile get_depositor_from_document(document) %></td>
+      <td><%= link_to_profile recent_document.depositor("no depositor value") %></td>
     </tr>
     <tr>
       <th><h4>Creator:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__creator_display") %></td>
+      <td><%= document.creator %></td>
     </tr>
     <tr>
       <th><h4>Description:</h4></th>
-      <td><%= iconify_auto_link(render_document_show_field_value(:document=>document, :field=>"desc_metadata__description_display")) %></th>
+      <td><%= iconify_auto_link(document.description) %></th>
     </tr>
     <tr>
       <th><h4>Keywords:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__tag_display") %></td>
+      <td><%= document.tags.join(', ') %></td>
     </tr>
     <tr>
       <th><h4>Date Uploaded:</h4></th>
-      <td><%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__date_uploaded_display") %></td>
+      <td><%= document.date_uploaded %></td>
     </tr>
   </table>
 </li>
-<% end %>

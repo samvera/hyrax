@@ -37,7 +37,7 @@ limitations under the License.
       <dt><i class="icon-calendar"></i> Active Since</dt>
       <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
       <dt><i class="icon-folder-open"></i> Deposited Files</dt>
-      <dd><%= link_to_field('depositor', @user.to_s, GenericFile.find(:depositor_t => @user.to_s).count) %></dd>
+      <dd><%= link_to_field('depositor', @user.to_s, GenericFile.where(:depositor => @user.to_s).count) %></dd>
       <dt><i class="icon-trophy trophy-on" ></i> Highlighted Files</dt>
       <% @trophies.each do |t| %>
         <dd> <%= link_to display_title(t), sufia.generic_file_path(t) %></dd>

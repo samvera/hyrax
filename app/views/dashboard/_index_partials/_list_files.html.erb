@@ -17,8 +17,7 @@ limitations under the License.
 <!-- scholarsphere over ride -->
 <!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':'
 on element ids -->
-<% if document.has_key?(:noid_s) %>
-<% noid = document[:noid_s].first %>
+<% noid = document.noid %>
 <tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
   <% gf = GenericFile.find(document.id) %>
   <td width="6%"><%= batch_edit_select(document) %>&nbsp;</td> 
@@ -32,13 +31,13 @@ on element ids -->
   <td width="37%">
     <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="icon-plus icon-large fleft"></i></a>&nbsp;
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <span class=center><%= link_to render_document_show_field_value(:document=>document, :field=>document.title_or_label), sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
+    <span class=center><%= link_to document.title_or_label, sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
   </td>
-  <td width="17%"><%= document.fetch(:desc_metadata__date_uploaded_dt,'').to_time.strftime("%m/%d/%Y") unless document.fetch(:desc_metadata__date_uploaded_dt,'').blank? %> </td>
+  <td width="17%"><%= document.date_uploaded %> </td>
   <td width="5%" align="center">
-    <% if !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('registered') %>
+    <% if document.registered? %>
       <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
-    <% elsif !document[:read_access_group_t].blank? and document[:read_access_group_t].include?('public') %>
+    <% elsif document.public? %>
       <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
       <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-important" title="Private">Private</span></a>
@@ -59,23 +58,22 @@ on element ids -->
   <td colspan="6">
     <table class="expanded-details">
       <tr>
-        <td><strong>File Name: </strong> <%= link_to render_document_show_field_value(:document=>document, :field=>"label_t"), sufia.generic_file_path(noid) %> </td>
-        <td><strong>File Format: </strong> <%= render_document_show_field_value(:document=>document, :field=>"file_format_t") %> </td>
+        <td><strong>File Name: </strong> <%= link_to document.label, sufia.generic_file_path(noid) %> </td>
+        <td><strong>File Format: </strong> <%= document.file_format %> </td>
       </tr>
       <tr>
-        <td><strong>Creator: </strong> <%= render_document_show_field_value(:document=>document, :field=>"desc_metadata__creator_display") %> </td>
-        <td><strong>Depositor: </strong> <%= link_to_profile render_document_show_field_value(:document=>document, :field=>"depositor_t") %> </td>
+        <td><strong>Creator: </strong> <%= document.creator %> </td>
+        <td><strong>Depositor: </strong> <%= link_to_profile document.depositor %> </td>
       </tr>
       <tr>
         <td colspan="2"><strong>Edit Access: </strong>
-          <% if !document[:edit_access_group_t].nil?%>
-            Groups: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_group_t") %>
+          <% if document.edit_groups.present? %>
+            Groups: <%= document.edit_groups.join(', ') %>
             <br />
           <% end %>
-          Users: <%= render_document_show_field_value(:document=>document, :field=>"edit_access_person_t") %>
+          Users: <%= document.edit_people.join(', ') %>
         </td>
       </tr>
     </table>
   </td>
 </tr>
-<% end %>

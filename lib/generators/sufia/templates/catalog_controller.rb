@@ -167,9 +167,12 @@ class CatalogController < ApplicationController
     # solr request handler? The one set in config[:default_solr_parameters][:qt],
     # since we aren't specifying it otherwise.
     config.add_search_field('all_fields', :label => 'All Fields', :include_in_advanced_search => false) do |field|
+      title_name = Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string)
+      label_name = Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string)
+      contributor_name = Solrizer.solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
       field.solr_parameters = {
-        :qf => "desc_metadata__title_tesim noid_tsi label_tesim file_format_tesim desc_metadata__contributor_tesim",
-        :pf => "desc_metadata__title_tesim"
+        :qf => "#{title_name} noid_tsi #{label_name} file_format_tesim #{contributor_name}",
+        :pf => "#{title_name}"
       }
     end
     
@@ -187,17 +190,21 @@ class CatalogController < ApplicationController
       # syntax, as eg {! qf=$title_qf }. This is neccesary to use
       # Solr parameter de-referencing like $title_qf.
       # See: http://wiki.apache.org/solr/LocalParams
+      solr_name = Solrizer.solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__contributor_t",
-        :pf => "desc_metadata__contributor_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
+
+
     config.add_search_field('creator') do |field|
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
+      solr_name = Solrizer.solr_name("desc_metadata__creator", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__creator_t",
-        :pf => "desc_metadata__creator_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -217,9 +224,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "description"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__description", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__description_t",
-        :pf => "desc_metadata__description_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -227,9 +235,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "publisher"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__publisher", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__publisher_t",
-        :pf => "desc_metadata__publisher_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -237,9 +246,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "date_created"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__created", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__date_created_t",
-        :pf => "desc_metadata__date_created_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -247,9 +257,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "subject"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__subject", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__subject_t",
-        :pf => "desc_metadata__subject_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -257,9 +268,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "language"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__language", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__language_t",
-        :pf => "desc_metadata__language_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -267,9 +279,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "resource_type"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__resource_type", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__resource_type_t",
-        :pf => "desc_metadata__resource_type_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -278,9 +291,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "format"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__format", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "file_format_t",
-        :pf => "file_format_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -289,9 +303,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "identifier"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__id", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "id_t",
-        :pf => "id_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -300,9 +315,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "based_near"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__based_near", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__based_near_t",
-        :pf => "desc_metadata__based_near_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -310,23 +326,26 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "tag"
       }
+      solr_name = Solrizer.solr_name("desc_metadata__tag", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__tag_t",
-        :pf => "desc_metadata__tag_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
     config.add_search_field('depositor') do |field|
+      solr_name = Solrizer.solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "depositor_t",
-        :pf => "depositor_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
     config.add_search_field('rights') do |field|
+      solr_name = Solrizer.solr_name("desc_metadata__rights", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__rights_t",
-        :pf => "desc_metadata__rights_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 

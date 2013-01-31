@@ -34,8 +34,8 @@ limitations under the License.
       <audio src="<%= sufia.download_path(document["id"], format:'audio')
 						  %>" > </audio>
   <% else %>
-    <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document) %>
   <% end %>
 <% else %>
- <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document[:noid_s].first) %> 
+ <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document) %> 
 <% end %>
