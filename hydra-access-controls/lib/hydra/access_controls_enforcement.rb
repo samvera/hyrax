@@ -89,6 +89,22 @@ module Hydra::AccessControlsEnforcement
   
   protected
 
+  def gated_discovery_filters
+    # Grant access to public content
+    permission_types = discovery_permissions
+    user_access_filters = []
+    
+    permission_types.each do |type|
+      user_access_filters << "#{type}_access_group_t:public"
+    end
+    
+    # Grant access based on user id & role
+    solr_access_filters_logic.each do |method_name|
+      user_access_filters += send(method_name, permission_types)
+    end
+    user_access_filters
+  end
+
   # If someone hits the show action while their session's viewing_context is in edit mode, 
   # this will redirect them to the edit action.
   # If they do not have sufficient privileges to edit documents, it will silently switch their session to browse mode.
@@ -211,21 +227,10 @@ module Hydra::AccessControlsEnforcement
   # @param user_parameters the current user-subitted parameters
   def apply_gated_discovery(solr_parameters, user_parameters)
     solr_parameters[:fq] ||= []
-    # Grant access to public content
-    permission_types = discovery_permissions
-    user_access_filters = []
-    
-    permission_types.each do |type|
-      user_access_filters << "#{type}_access_group_t:public"
-    end
-    
-    # Grant access based on user id & role
-    solr_access_filters_logic.each do |method_name|
-      user_access_filters += send(method_name, permission_types)
-    end
-    solr_parameters[:fq] << user_access_filters.join(" OR ")
+    solr_parameters[:fq] << gated_discovery_filters.join(" OR ")
     logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
+
   
   def apply_role_permissions(permission_types)
       # for roles

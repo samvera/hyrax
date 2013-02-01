@@ -3,15 +3,15 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   
   # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access
   # appends the result of policy_clauses into the :fq
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
   def apply_gated_discovery(solr_parameters, user_parameters)
-    super
-    additional_clauses = policy_clauses
-    unless additional_clauses.nil? || additional_clauses.empty?
-      solr_parameters[:fq].first << " OR " + additional_clauses
-      logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
-    end
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << gated_discovery_filters.join(" OR ")
+    logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
   end
-  
+
+
   # returns solr query for finding all objects whose policies grant discover access to current_user
   def policy_clauses 
     policy_pids = policies_with_access
@@ -63,6 +63,17 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     else
       return Hydra.config[:permissions][:policy_class]
     end
+  end
+
+  protected 
+
+  def gated_discovery_filters
+    filters = super
+    additional_clauses = policy_clauses
+    unless additional_clauses.blank?
+      filters << additional_clauses
+    end
+    filters
   end
   
 end
