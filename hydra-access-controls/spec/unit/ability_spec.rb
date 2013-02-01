@@ -174,10 +174,9 @@ describe Ability do
 
   describe "Given an asset with collaborator" do
     before do
-      @asset = FactoryGirl.build(:org_read_access_asset)
-      @asset.save
+      @asset = FactoryGirl.create(:group_edit_asset)
     end
-    context "Then a collaborator with edit access" do
+    context "Then a collaborator with edit access (user permision)" do
       before do
         @user = FactoryGirl.build(:calvin_collaborator)
       end
@@ -193,6 +192,17 @@ describe Ability do
       end
       it "should not be able to see the admin view of the asset" do
         subject.can?(:admin, @asset).should be_false
+      end
+    end
+    context "Then a collaborator with edit access (group permision)" do
+      before do
+        @user = FactoryGirl.build(:martia_morocco)
+        RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+      end
+      subject { Ability.new(@user) }
+
+      it "should be able to view the asset" do
+        subject.can?(:read, @asset).should be_true
       end
     end
   end

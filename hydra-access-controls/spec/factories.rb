@@ -88,6 +88,10 @@ FactoryGirl.define do
   factory :dept_access_asset, :parent=>:asset do |a|
     permissions [{:name=>"africana-faculty", :access=>"read", :type=>"group"}, {:name=>"joe_creator", :access=>"edit", :type=>"user"}]
   end
+
+  factory :group_edit_asset, :parent=>:asset do |a|
+    permissions [{:name=>"africana-faculty", :access=>"edit", :type=>"group"}, {:name=>"calvin_collaborator", :access=>"edit", :type=>"user"}]
+  end
   
   factory :org_read_access_asset, :parent=>:asset do |a|
     permissions [{:name=>"registered", :access=>"read", :type=>"group"}, {:name=>"joe_creator", :access=>"edit", :type=>"user"}, {:name=>"calvin_collaborator", :access=>"edit", :type=>"user"}]

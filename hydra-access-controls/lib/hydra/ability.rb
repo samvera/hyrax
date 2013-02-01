@@ -119,7 +119,7 @@ module Hydra::Ability
   def read_groups(pid)
     doc = permissions_doc(pid)
     return [] if doc.nil?
-    rg = doc[self.class.read_group_field] || []
+    rg = edit_groups(pid) | (doc[self.class.read_group_field] || [])
     logger.debug("[CANCAN] read_groups: #{rg.inspect}")
     return rg
   end
