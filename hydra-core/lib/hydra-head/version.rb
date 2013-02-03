@@ -1,4 +1,4 @@
 module HydraHead
-  VERSION = "6.0.0.pre5"
+  VERSION = "6.0.0.pre6"
 end
 
