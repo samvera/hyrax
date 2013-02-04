@@ -34,8 +34,5 @@ limitations under the License.
 <div class="<%= params[:action]%>_details">
   <%= render :partial => "#{params[:controller]}/_#{params[:action]}_partials/default_details", :locals => {:document => document}%>
 </div>
-<% sidebar_items << capture do %>
-  <%#= render :partial=>"catalog/_show_partials/facets", :locals=>{:document=>document, :facets_display_heading => "This document refers to:"} %>
-<% end %>
 
 <%= async_load_tag(hydra_asset_downloads_path(params[:id]), 'downloads') %>

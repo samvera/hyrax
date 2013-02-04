@@ -179,7 +179,7 @@ z-index:1;
   <%= render 'sort_and_per_page' %>
 
   <%= render :partial=>'dashboard/document_list'  %>  
-	<% sidebar_items << capture do %>
+	<% content_for :sidebar do %>
 	  <%= render :partial=>'facets' %>
 	<%  end %>
 

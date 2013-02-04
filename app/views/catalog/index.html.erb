@@ -3,10 +3,9 @@
     //$.ui.dialog.prototype.options["height"]=window.innerHeight  *0.75
 <% end %>
 
-<!--div id="sidebar" class="span3">
- <%#= render :partial=>'facets' %>
-</div--><!--/well -->
-
+<% content_for :sidebar do %>
+  <%= render :partial=>'facets' %>
+<% end %>
 
 <% unless has_search_parameters? %>
 	<%# if there are no input/search related params, display the "home" partial -%>
@@ -35,10 +34,6 @@
   <%= render 'results_pagination' %>
   
 	<%= render :partial => 'document_list' %>
-
-	<% sidebar_items << capture do %>
-	  <%= render :partial=>'facets' %>
-	<% end %>
 
   <%= render 'results_pagination' %>
 
