@@ -52,7 +52,7 @@ class TranscodeVideoJob
   def encode_datastream(dest_dsid, mime_type, options)
     file_suffix = dest_dsid
     out_file = nil
-    output_file = Dir::Tmpname.create('sufia'){} + ".#{file_suffix}"
+    output_file = Dir::Tmpname.create(['sufia', ".#{file_suffix}"], Sufia::Engine.config.temp_file_base){}
     @datastream.to_tempfile do |f|
       self.class.encode(f.path, options, output_file)
     end
