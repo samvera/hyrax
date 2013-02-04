@@ -59,6 +59,10 @@ module Sufia
       Array(self[Solrizer.solr_name('desc_metadata__title')]).first
     end
 
+    def description
+      Array(self[Solrizer.solr_name('desc_metadata__description')]).first
+    end
+
     def label
       Array(self[Solrizer.solr_name('label')]).first
     end

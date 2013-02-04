@@ -11,7 +11,7 @@
     <%= f.label key, get_label(key), :class=>"control-label"%>
   <% end %>
 
-  <% vals.each_with_index do |v, index| %>
+  <% vals.to_ary.each_with_index do |v, index| %>
     <%= render_edit_field_partial(key, f:f,  v: v, index: index, render_req: render_req) %>
   <% end %>
  </div><!-- /control-group -->
