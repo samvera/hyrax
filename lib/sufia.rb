@@ -24,11 +24,12 @@ module Sufia
   class Engine < ::Rails::Engine
     engine_name 'sufia'
 
+    # Set some configuration defaults
     config.queue = Sufia::Resque::Queue
     config.enable_ffmpeg = false
     config.ffmpeg_path = 'ffmpeg'
     config.fits_message_length = 5
-    
+    config.temp_file_base = nil
 
     config.autoload_paths << File.expand_path("../sufia/jobs", __FILE__)
     

@@ -14,6 +14,7 @@ module Sufia
 
       def to_tempfile &block
         return if content.nil?
+        tmp_base = Sufia::Engine.config.temp_file_base
         f = Tempfile.new("#{pid}-#{dsVersionID}")
         f.binmode
         if content.respond_to? :read
