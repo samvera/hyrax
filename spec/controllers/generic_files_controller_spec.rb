@@ -74,6 +74,8 @@ describe GenericFilesController do
     end
 
     it "should create and save a file asset from the given params" do
+      date_today = Date.today
+      Date.stub(:today).and_return(date_today)
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
       response.should be_success
@@ -87,8 +89,8 @@ describe GenericFilesController do
       saved_file.content.dsChecksumValid.should be_true
 
       # Confirming that date_uploaded and date_modified were set
-      saved_file.date_uploaded.should have_at_least(1).items
-      saved_file.date_modified.should have_at_least(1).items
+      saved_file.date_uploaded.should == date_today
+      saved_file.date_modified.should == date_today
     end
 
     it "should record what user created the first version of content" do
