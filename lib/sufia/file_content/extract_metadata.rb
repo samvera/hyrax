@@ -13,7 +13,7 @@ module Sufia
       end
 
       def to_tempfile &block
-        return if content.nil?
+        return unless has_content?
         tmp_base = Sufia::Engine.config.temp_file_base
         f = Tempfile.new("#{pid}-#{dsVersionID}")
         f.binmode
@@ -26,7 +26,12 @@ module Sufia
         content.rewind if content.respond_to? :rewind
         yield(f)
         f.unlink
+      end
 
+      # Return true if the content is present
+      # You can override this method if your content is an external datastream
+      def has_content?
+        !content.nil?
       end
 
       private 
