@@ -25,6 +25,7 @@ module Sufia
     engine_name 'sufia'
 
     config.queue = Sufia::Resque::Queue
+    config.enable_ffmpeg = false
     config.ffmpeg_path = 'ffmpeg'
     config.fits_message_length = 5
     
