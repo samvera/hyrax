@@ -21,6 +21,12 @@ require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
 
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start 'rails'
+  SimpleCov.command_name "spec"
+end
+
 Resque.inline = Rails.env.test?
 
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
