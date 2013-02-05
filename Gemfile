@@ -16,4 +16,5 @@ group :development, :test do
   gem 'bcrypt-ruby'
   gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.1.0"
+  gem "simplecov", :require => false
 end # (leave this comment here to catch a stray line inserted by blacklight!)
