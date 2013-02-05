@@ -13,7 +13,7 @@ describe TranscodeVideoJob do
   end
 
   subject { TranscodeVideoJob.new(@generic_file.id, 'content')}
-  it "should put content in datastream_out" do
+  it "should put content in datastream_out", :if => Sufia::Engine.config.enable_ffmpeg do
     subject.run
     reloaded = GenericFile.find(@generic_file.pid)
     derivative = reloaded.datastreams['webm']
@@ -27,4 +27,3 @@ describe TranscodeVideoJob do
     derivative2.mimeType.should == 'video/mp4'
   end
 end
-

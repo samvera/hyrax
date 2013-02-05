@@ -18,6 +18,7 @@ class TranscodeVideoJob
   end
 
   def run
+    return unless Sufia::Engine.config.enable_ffmpeg
     @generic_file = GenericFile.find(generic_file_id)
     @datastream = @generic_file.datastreams[datastream_in]
     if @datastream
