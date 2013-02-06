@@ -261,6 +261,7 @@ describe GenericFile do
         Magick::ImageList.should_receive(:new).and_return(@mock_image)
         @f.create_thumbnail
         @f.thumbnail.content.should == 'fake content'
+        @f.thumbnail.mimeType.should == 'image/png'
       end
     end
   end

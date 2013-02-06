@@ -24,8 +24,9 @@ module Sufia
             first.format = "PNG"
             thumb = first.scale(338, 493)
             self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
+            self.thumbnail.mimeType = 'image/png'
             #logger.debug "Has the content changed before saving? #{self.content.changed?}"
-            stat = self.save
+            self.save
             break
           rescue => e
             logger.warn "Rescued an error #{e.inspect} retry count = #{retryCnt}"
@@ -40,23 +41,23 @@ module Sufia
         # horizontal img
         height = Float(self.height.first.to_i)
         width = Float(self.width.first.to_i)
+        self.thumbnail.content = scale_image(height, width).to_blob { self.format = "PNG" }
+        self.thumbnail.mimeType = 'image/png'
+        #logger.debug "Has the content before saving? #{self.content.changed?}"
+        self.save
+      end
+
+      def scale_image(height, width)
         if width > height && width > 150 && height > 105
           scale  = 150 / width
-          thumb = img.scale(150, height * scale)
-          self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
-          self.thumbnail.mimeType = 'image/png'
+          img.scale(150, height * scale)
         elsif height >= width && width > 150 && height > 200
           scale  = 200 / height
           puts "How did we get here? #{width} #{height}"
-          thumb = img.scale(width*scale, 200)
-          self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
-          self.thumbnail.mimeType = 'image/png'
+          img.scale(width*scale, 200)
         else
-          self.thumbnail.content = img.to_blob { self.format = "PNG" }
-          self.thumbnail.mimeType = 'image/png'
+          img
         end
-        #logger.debug "Has the content before saving? #{self.content.changed?}"
-        self.save
       end
 
       # Override this method if you want a different transformer, or need to load the 
