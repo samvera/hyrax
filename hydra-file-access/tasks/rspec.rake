@@ -5,8 +5,9 @@ require 'jettywrapper'
 
 desc "Run specs"
 task :spec => [:generate, :fixtures] do |t|
+  focused_spec = ENV['SPEC'] ? " SPEC=#{File.join(APP_ROOT, ENV['SPEC'])}" : ''
   within_test_app do
-    system('rake myspec')
+    system("rake myspec#{focused_spec}")
     abort "Error running hydra-file-access" unless $?.success?
   end
 end
