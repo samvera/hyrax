@@ -1,3 +1,9 @@
+h3. 5.4.0
+* Hydra::Ability should use a separate cache for each permission document
+* Fixed bug with policy access enforcement which occurs when you select a facet.
+* Fixed logging typo
+* Hydra::User now has a groups method. Use this instead of RoleMapper.
+
 h3. 5.3.0
 * add Hydra::ModelMethods.add_file
 * Don't generate solr_mappings.yml by default
