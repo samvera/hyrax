@@ -1,6 +1,6 @@
 <info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/publisher> "<%= @user %>" .
 <info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/description> "<%= @title %> Description" .
-<info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/created> "<%= Time.now.strftime("%m/%d/%Y") %>" .
+<info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/created> "<%= Time.now.ctime %>" .
 <info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/contributor> "<%= @user %>" .
 <info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/title> "<%= @title %>" .
 <info:fedora/sufia:<%= @id %>> <http://purl.org/dc/terms/relation> "test" .
