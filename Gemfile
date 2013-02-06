@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
-gem 'hydra-head', github: 'projecthydra/hydra-head'
+gem 'hydra-head'
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 group :development, :test do
   gem 'sqlite3'
