@@ -25,7 +25,7 @@ module Sufia
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
       has_metadata :name => "properties", :type => PropertiesDatastream
       has_file_datastream :name => "content", :type => FileContentDatastream
-      has_file_datastream :name => "thumbnail", :type => FileContentDatastream
+      has_file_datastream :name => "thumbnail"
 
       belongs_to :batch, :property => :is_part_of
 
