@@ -60,6 +60,4 @@ module Sufia::Controller
     true
   end
 
-  # include Sufia::HttpHeaderAuth
-
 end

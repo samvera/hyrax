@@ -1,27 +1,26 @@
 require 'spec_helper'
 
 describe SingleUseLinkController do
-  before(:all) do
+  before do
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
     @file.set_title_and_label('world.png')
     @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content', :mimeType => 'image/png')
     @file.apply_depositor_metadata(@user.user_key)
+    @file.stub(:characterize_if_changed).and_yield #don't run characterization
     @file.save
     @file2 = GenericFile.new
     @file2.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content', :mimeType => 'image/png')
     @file2.apply_depositor_metadata('mjg36')
+    @file2.stub(:characterize_if_changed).and_yield #don't run characterization
     @file2.save
   end
-  after(:all) do
-    SingleUseLink.find(:all).each{ |l| l.delete}
-    @user.delete
+  after do
     @file.delete
     @file2.delete
   end
   before do
     controller.stub(:has_access?).and_return(true)
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
   describe "logged in user" do
     before do
@@ -31,11 +30,6 @@ describe SingleUseLinkController do
       DateTime.stub(:now).and_return(@now)
       @hash = "sha2hash"+@now.to_f.to_s 
       Digest::SHA2.should_receive(:new).and_return(@hash)
-    end
-    after do
-      sign_out @user
-      SingleUseLink.find(:all).each{ |l| l.delete}
-      @user.delete
     end
     describe "GET 'generate_download'" do
       it "and_return http success" do
@@ -78,9 +72,6 @@ describe SingleUseLinkController do
       @shash=  assigns[:su].downloadKey
       sign_out @user
     end    
-    before (:each) do
-      @user.delete
-    end
     describe "GET 'download'" do
       it "and_return http success" do
         controller.stub(:render)

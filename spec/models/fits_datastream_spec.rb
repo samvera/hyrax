@@ -16,7 +16,6 @@ require 'spec_helper'
 
 describe FitsDatastream do
   before(:all) do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
     @file.apply_depositor_metadata('mjg36')

@@ -16,19 +16,17 @@ require 'spec_helper'
 
 describe FileContentDatastream do
   before do
-    @subject = FileContentDatastream.new(nil, 'content')
-    @subject.stub(:pid=>'my_pid')
-    @subject.stub(:dsVersionID=>'content.7')
+    Sufia.queue.stub(:push).with(an_instance_of CharacterizeJob) #don't run characterization
   end
   describe "version control" do
-    before(:all) do
+    before do
       f = GenericFile.new
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata('mjg36')
       f.save
       @file = GenericFile.find(f.pid)
     end
-    after(:all) do
+    after do
       @file.delete
     end
     it "should have a list of versions with one entry" do
@@ -47,7 +45,7 @@ describe FileContentDatastream do
       @file.content.get_version("foobar").should be_nil
     end
     describe "add a version" do
-      before(:all) do
+      before do
         @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
         @file.save
       end
@@ -63,6 +61,11 @@ describe FileContentDatastream do
     end
   end
   describe "extract_metadata" do
+    before do
+      @subject = FileContentDatastream.new(nil, 'content')
+      @subject.stub(:pid=>'my_pid')
+      @subject.stub(:dsVersionID=>'content.7')
+    end
     it "should have the path" do
       @subject.send(:fits_path).should be_present
     end

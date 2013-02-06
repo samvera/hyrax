@@ -260,7 +260,6 @@ describe GenericFile do
         @mock_image.should_receive(:to_blob).and_return('fake content')
         Magick::ImageList.should_receive(:new).and_return(@mock_image)
         @f.create_thumbnail
-        @f.content.changed?.should be_false
         @f.thumbnail.content.should == 'fake content'
       end
     end
@@ -269,12 +268,11 @@ describe GenericFile do
     before(:each) do
       u = FactoryGirl.create(:user)
       f = GenericFile.new
-      f.stub(:characterize).and_return(true)
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata(u.user_key)
+      f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save!
       @f = GenericFile.find(f.pid)
-      @f.stub(:characterize).and_return(true)
     end
     it "should schedule a audit job for each datastream" do
       s1 = stub('one')
@@ -292,12 +290,6 @@ describe GenericFile do
       s5 = stub('five')
       AuditJob.should_receive(:new).with(@f.pid, 'content', "content.0").and_return(s5)
       Sufia.queue.should_receive(:push).with(s5)
-      s6 = stub('six')
-      AuditJob.should_receive(:new).with(@f.pid, 'characterization', "characterization.0").and_return(s6)
-      Sufia.queue.should_receive(:push).with(s6)
-      s7 = stub('seven')
-      AuditJob.should_receive(:new).with(@f.pid, 'thumbnail', "thumbnail.0").and_return(s7)
-      Sufia.queue.should_receive(:push).with(s7)
       @f.audit!
     end
     it "should log a failing audit" do
@@ -322,6 +314,7 @@ describe GenericFile do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @f.apply_depositor_metadata('mjg36')
+      Sufia.queue.stub(:push).with(an_instance_of CharacterizeJob) #don't run characterization
       @f.save!
       @version = @f.datastreams['content'].versions.first
       @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
@@ -478,19 +471,12 @@ describe GenericFile do
         myfile = GenericFile.new
         myfile.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
-        myfile.thumbnail.size.nil?.should be_true
         myfile.apply_depositor_metadata('mjg36')
         myfile.save
         @myfile = GenericFile.find(myfile.pid)
       end
       after(:all) do
-        unless @myfile.inner_object.kind_of? ActiveFedora::UnsavedDigitalObject
-          begin
-            @myfile.delete
-          rescue ActiveFedora::ObjectNotFoundError
-            # do nothing
-          end
-        end
+        @myfile.delete
       end
       it "should return expected results after a save" do
         @myfile.file_size.should == ['218882']
@@ -509,7 +495,7 @@ describe GenericFile do
         @myfile.filename[0].should == @myfile.label
       end
       it "should include thumbnail generation in characterization job" do
-        @myfile.thumbnail.size.nil?.should be_false
+        @myfile.thumbnail.size.should_not be_nil
       end
       it "should append each term only once" do
         @myfile.append_metadata
