@@ -10,7 +10,7 @@
       <table class="table table-striped"><!-- class="verticalheadings"> -->
       <tbody>
       <% @terms.each do |term| %>
-        <% vals =  @generic_file.send(term) %>
+        <% vals =  Array( @generic_file.send(term)) %>
             <tr id='row_<%=term.to_s%>' class="expandable">
               <th width="20%">
                 <%=get_label(term)%>
