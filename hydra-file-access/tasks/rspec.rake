@@ -5,11 +5,9 @@ require 'jettywrapper'
 
 desc "Run specs"
 task :spec => [:generate, :fixtures] do |t|
-  Bundler.with_clean_env do
-    within_test_app do
-      system('rake myspec')
-      abort "Error running hydra-file-access" unless $?.success?
-    end
+  within_test_app do
+    system('rake myspec')
+    abort "Error running hydra-file-access" unless $?.success?
   end
 end
 
@@ -29,16 +27,14 @@ task :generate do
     `cp spec/support/Gemfile spec/internal`
     puts "Copying generator"
     `cp -r spec/support/lib/generators spec/internal/lib`
-    Bundler.with_clean_env do
-      within_test_app do
-        puts "Bundle install"
-        `bundle install`
-        puts "running test_app_generator"
-        system "rails generate test_app"
+    within_test_app do
+      puts "Bundle install"
+      `bundle install`
+      puts "running test_app_generator"
+      system "rails generate test_app"
 
-        puts "running migrations"
-        puts `rake db:migrate db:test:prepare`
-      end
+      puts "running migrations"
+      puts `rake db:migrate db:test:prepare`
     end
   end
   puts "Running specs"
@@ -52,6 +48,8 @@ end
 
 def within_test_app
   FileUtils.cd('spec/internal')
-  yield
+  Bundler.with_clean_env do
+    yield
+  end
   FileUtils.cd('../..')
 end
