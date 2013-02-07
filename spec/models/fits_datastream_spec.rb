@@ -18,12 +18,7 @@ describe FitsDatastream do
   before(:all) do
     @file = GenericFile.new
     @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
-    @file.apply_depositor_metadata('mjg36')
-    @file.save
-    @file = GenericFile.find(@file.pid)
-  end
-  after(:all) do
-    @file.delete
+    @file.characterize
   end
   it "should have a format label" do
     @file.format_label.should == ["Portable Network Graphics"]
