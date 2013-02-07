@@ -42,22 +42,21 @@ module Sufia
         # horizontal img
         height = Float(self.height.first.to_i)
         width = Float(self.width.first.to_i)
-        scale = height / width
-        if width > height
-          if width > 150 and height > 105
-            thumb = img.scale(150, height/scale)
-          else
-            thumb = img.scale(width, height)
-          end
-        # vertical img
+        if width > height && width > 150 && height > 105
+          scale  = 150 / width
+          thumb = img.scale(150, height * scale)
+          self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
+          self.thumbnail.mimeType = 'image/png'
+        elsif height >= width && width > 150 && height > 200
+          scale  = 200 / height
+          puts "How did we get here? #{width} #{height}"
+          thumb = img.scale(width*scale, 200)
+          self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
+          self.thumbnail.mimeType = 'image/png'
         else
-          if width > 150 and height > 200
-            thumb = img.scale(150*scale, 200)
-          else
-            thumb = img.scale(width, height)
-          end
+          self.thumbnail.content = img.to_blob { self.format = "PNG" }
+          self.thumbnail.mimeType = 'image/png'
         end
-        self.thumbnail.content = thumb.to_blob
         #logger.debug "Has the content before saving? #{self.content.changed?}"
         self.save
       end
