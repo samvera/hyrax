@@ -73,7 +73,7 @@ module SufiaHelper
       login
     end
 
-    link_to text, Sufia::Engine.routes.url_helpers.profile_path(login)
+    link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)
   end
 
   def linkify_chat_id(chat_id)
