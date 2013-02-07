@@ -286,7 +286,7 @@ describe GenericFilesController do
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       file = fixture_file_upload('/image.jp2','image/jp2')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''] }
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world"
 
       edited_file = GenericFile.find(@generic_file.pid)
       version2 = edited_file.content.latest_version
@@ -304,7 +304,7 @@ describe GenericFilesController do
       s2 = stub('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
-      post :update, :id=>@generic_file.pid, :revision=>'content.0', :generic_file=>{:tag=>['']}
+      post :update, :id=>@generic_file.pid, :revision=>'content.0'
 
       restored_file = GenericFile.find(@generic_file.pid)
       version3 = restored_file.content.latest_version

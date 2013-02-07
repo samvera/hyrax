@@ -164,7 +164,12 @@ module Sufia
         Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
       end
 
-      update_metadata
+      # only update metadata if there is a generic_file object which is not the case for version updates
+      update_metadata if params[:generic_file]
+
+      #always save the file so the new version or metadata gets recorded
+      @generic_file.save!
+      
 
       # do not trigger an update event if a version event has already been triggered
       Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
@@ -186,7 +191,6 @@ module Sufia
       @generic_file.attributes = valid_attributes
       @generic_file.set_visibility(params[:visibility])
       @generic_file.date_modified = DateTime.now
-      @generic_file.save!
     end
 
 
