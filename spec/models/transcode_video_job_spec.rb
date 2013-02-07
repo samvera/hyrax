@@ -5,6 +5,7 @@ describe TranscodeVideoJob do
     @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('jcoyne@example.com')
     @generic_file.add_file_datastream(File.new(fixture_path + '/countdown.avi'), :dsid=>'content')
+    @generic_file.stub(:characterize_if_changed).and_yield
     @generic_file.save!
   end
 

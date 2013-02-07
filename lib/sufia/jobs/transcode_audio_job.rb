@@ -15,12 +15,24 @@ class TranscodeAudioJob < FfmpegTranscodeJob
   private 
     def encode_ogg
       opts = ""
-      encode_datastream('ogg', 'audio/ogg', opts)
+      if generic_file.mime_type == 'audio/ogg'
+        # Don't re-encode, just copy
+        generic_file.add_file_datastream(generic_file.content.read, :dsid=>'ogg', :mimeType=>'audio/ogg')
+        #generic_file.content.rewind
+      else
+        encode_datastream('ogg', 'audio/ogg', opts)
+      end
     end
 
     def encode_mp3
       opts = ""
-      encode_datastream('mp3', 'audio/mp3', opts)
+      if generic_file.mime_type == 'audio/mpeg'
+        # Don't re-encode, just copy
+        generic_file.add_file_datastream(generic_file.content.read, :dsid=>'mp3', :mimeType=>'audio/mp3')
+        #generic_file.content.rewind
+      else
+        encode_datastream('mp3', 'audio/mp3', opts)
+      end
     end
 
 

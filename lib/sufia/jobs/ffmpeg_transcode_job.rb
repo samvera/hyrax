@@ -7,7 +7,7 @@ require 'tmpdir'
 class FfmpegTranscodeJob
   extend Open3
 
-  attr_accessor :generic_file_id, :datastream_in
+  attr_accessor :generic_file_id, :datastream_in, :datastream, :generic_file
 
   def initialize(generic_file_id, datastream_in)
     self.generic_file_id = generic_file_id
@@ -20,11 +20,11 @@ class FfmpegTranscodeJob
 
   def run
     return unless Sufia::Engine.config.enable_ffmpeg
-    @generic_file = GenericFile.find(generic_file_id)
-    @datastream = @generic_file.datastreams[datastream_in]
-    if @datastream
+    self.generic_file = GenericFile.find(generic_file_id)
+    self.datastream = generic_file.datastreams[datastream_in]
+    if datastream
       process 
-      @generic_file.save!
+      generic_file.save!
     else
       logger.warn "No datastream for transcoding!!!!! pid: #{generic_file_id} dsid: #{datastream_in}"
     end
@@ -34,11 +34,11 @@ class FfmpegTranscodeJob
     file_suffix = dest_dsid
     out_file = nil
     output_file = Dir::Tmpname.create(['sufia', ".#{file_suffix}"], Sufia::Engine.config.temp_file_base){}
-    @datastream.to_tempfile do |f|
+    datastream.to_tempfile do |f|
       self.class.encode(f.path, options, output_file)
     end
     out_file = File.open(output_file, "rb")
-    @generic_file.add_file_datastream(out_file.read, :dsid=>dest_dsid, :mimeType=>mime_type)
+    generic_file.add_file_datastream(out_file.read, :dsid=>dest_dsid, :mimeType=>mime_type)
     File.unlink(output_file)
   end
 
