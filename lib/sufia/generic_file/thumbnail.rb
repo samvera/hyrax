@@ -14,6 +14,8 @@ module Sufia
         end
       end
 
+      protected
+
       def create_pdf_thumbnail
         retryCnt = 0
         stat = false;
@@ -37,24 +39,26 @@ module Sufia
       end
 
       def create_image_thumbnail
-        img = load_image_transformer
-        # horizontal img
-        height = Float(self.height.first.to_i)
-        width = Float(self.width.first.to_i)
-        self.thumbnail.content = scale_image(height, width).to_blob { self.format = "PNG" }
+        self.thumbnail.content = scale_image.to_blob { self.format = "PNG" }
         self.thumbnail.mimeType = 'image/png'
         #logger.debug "Has the content before saving? #{self.content.changed?}"
         self.save
       end
 
-      def scale_image(height, width)
+      def scale_image
+        img = load_image_transformer
+        height = Float(self.height.first.to_i)
+        width = Float(self.width.first.to_i)
         if width > height && width > 150 && height > 105
+          # horizontal img
           scale  = 150 / width
           img.scale(150, height * scale)
         elsif height >= width && width > 150 && height > 200
+          # vertical or square
           scale  = 200 / height
           img.scale(width*scale, 200)
         else
+          # Too small to bother scaling
           img
         end
       end

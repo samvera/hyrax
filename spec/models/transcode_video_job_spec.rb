@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TranscodeVideoJob do
+describe TranscodeVideoJob, :if => Sufia::Engine.config.enable_ffmpeg do
   before do
     @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('jcoyne@example.com')
@@ -14,7 +14,7 @@ describe TranscodeVideoJob do
   end
 
   subject { TranscodeVideoJob.new(@generic_file.id, 'content')}
-  it "should put content in datastream_out", :if => Sufia::Engine.config.enable_ffmpeg do
+  it "should put content in datastream_out" do
     subject.run
     reloaded = GenericFile.find(@generic_file.pid)
     derivative = reloaded.datastreams['webm']
