@@ -9,8 +9,6 @@ module Sufia
           create_pdf_thumbnail
         elsif image?
           create_image_thumbnail
-        # elsif video?
-        #   create_video_thumbnail
         end
       end
 
@@ -58,7 +56,7 @@ module Sufia
           scale  = 200 / height
           img.scale(width*scale, 200)
         else
-          # Too small to bother scaling
+          # Too small to worry about resizing
           img
         end
       end
