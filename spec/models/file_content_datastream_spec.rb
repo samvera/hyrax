@@ -23,8 +23,9 @@ describe FileContentDatastream do
       f = GenericFile.new
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata('mjg36')
+      f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save
-      @file = GenericFile.find(f.pid)
+      @file = f.reload
     end
     after do
       @file.delete
@@ -47,6 +48,7 @@ describe FileContentDatastream do
     describe "add a version" do
       before do
         @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+        @file.stub(:characterize_if_changed).and_yield #don't run characterization
         @file.save
       end
       it "should return two versions" do
@@ -99,6 +101,7 @@ describe FileContentDatastream do
     before do
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata('mjg36')
+      @generic_file.stub(:characterize_if_changed).and_yield #don't run characterization
     end
     after do
       @generic_file.delete
@@ -114,7 +117,7 @@ describe FileContentDatastream do
       @generic_file.thumbnail.changed?.should be_true
       @generic_file.content.changed?.should be_false
 
-      retrieved_file = GenericFile.find(@generic_file.pid)
+      retrieved_file = @generic_file.reload
       retrieved_file.content.changed?.should be_false
     end
   end

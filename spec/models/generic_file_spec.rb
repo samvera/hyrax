@@ -217,7 +217,7 @@ describe GenericFile do
       end
       it "should have activity stream-related methods defined" do
         @file.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.should respond_to(:stream)
         f.should respond_to(:events)
         f.should respond_to(:create_event)
@@ -228,7 +228,7 @@ describe GenericFile do
         @file.creator = "John Doe"
         @file.title = "New work"
         @file.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.related_url.should == ["http://example.org/"]
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
@@ -237,13 +237,13 @@ describe GenericFile do
         @file.creator = "John Doe"
         @file.title = "New work"
         @file.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
         f.creator = "Jane Doe"
         f.title << "Newer work"
         f.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.creator.should == ["Jane Doe"]
         f.title.should == ["New work", "Newer work"]
       end
@@ -332,7 +332,7 @@ describe GenericFile do
       f.apply_depositor_metadata(u.user_key)
       f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save!
-      @f = GenericFile.find(f.pid)
+      @f = f.reload
     end
     it "should schedule a audit job for each datastream" do
       s1 = stub('one')
@@ -374,7 +374,7 @@ describe GenericFile do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @f.apply_depositor_metadata('mjg36')
-      Sufia.queue.stub(:push).with(an_instance_of CharacterizeJob) #don't run characterization
+      @f.stub(:characterize_if_changed).and_yield #don't run characterization
       @f.save!
       @version = @f.datastreams['content'].versions.first
       @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
@@ -533,7 +533,7 @@ describe GenericFile do
         myfile.label = 'label123'
         myfile.apply_depositor_metadata('mjg36')
         myfile.save
-        @myfile = GenericFile.find(myfile.pid)
+        @myfile = myfile.reload
       end
       after(:all) do
         @myfile.delete
