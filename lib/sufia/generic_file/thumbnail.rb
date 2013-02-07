@@ -53,7 +53,6 @@ module Sufia
           img.scale(150, height * scale)
         elsif height >= width && width > 150 && height > 200
           scale  = 200 / height
-          puts "How did we get here? #{width} #{height}"
           img.scale(width*scale, 200)
         else
           img
