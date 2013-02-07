@@ -47,10 +47,14 @@ module Sufia
           thumb = img.scale(150, height * scale)
           self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
           self.thumbnail.mimeType = 'image/png'
-        else height >= width && width > 150 && height > 200
+        elsif height >= width && width > 150 && height > 200
           scale  = 200 / height
+          puts "How did we get here? #{width} #{height}"
           thumb = img.scale(width*scale, 200)
           self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
+          self.thumbnail.mimeType = 'image/png'
+        else
+          self.thumbnail.content = img.to_blob { self.format = "PNG" }
           self.thumbnail.mimeType = 'image/png'
         end
         #logger.debug "Has the content before saving? #{self.content.changed?}"

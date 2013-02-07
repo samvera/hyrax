@@ -254,8 +254,11 @@ describe GenericFile do
       after do
         @f.delete
       end
-      it "should scale the thumbnail to original size" do
-        @mock_image.should_receive(:scale).with(50, 50).and_return(stub(:to_blob=>'fake content'))
+      it "should keep the thumbnail at the original size (but transform to png)" do
+        @mock_image = mock("image", :from_blob=>true)
+        @mock_image.should_not_receive(:scale)
+        @mock_image.should_receive(:to_blob).and_return('fake content')
+        Magick::ImageList.should_receive(:new).and_return(@mock_image)
         @f.create_thumbnail
         @f.content.changed?.should be_false
         @f.thumbnail.content.should == 'fake content'
