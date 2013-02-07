@@ -18,9 +18,9 @@ limitations under the License.
 <%- width = 36 if width.blank? -%>
 <% if (document.mime_type) %>
   <% if ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/jpg'].include?(document.mime_type) %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), sufia.generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), sufia.generic_file_path(document.noid) %>
   <% elsif ['application/pdf'].include?(document.mime_type) %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width,:height=>height}),sufia.generic_file_path(document[:noid_s].first) %>
+    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width,:height=>height}),sufia.generic_file_path(document.noid) %>
   <% elsif ['video/mp4'].include?(document.mime_type) %>
       <video controls="controls" height="80" width="140"
 	      class="video-js vjs-default-skin" data-setup="{}"
