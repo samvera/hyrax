@@ -55,15 +55,21 @@ module Sufia
     end
 
     def pdf?
-      ["application/pdf"].include? self.mime_type
+      ['application/pdf'].include? self.mime_type
     end
 
     def image?
-      ["image/png","image/jpeg", 'image/jpg', 'image/bmp', "image/gif"].include? self.mime_type
+      ['image/png','image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif'].include? self.mime_type
     end
 
     def video?
-      ["video/mpeg", "video/mp4", "video/x-msvideo", "video/avi", "video/quicktime"].include? self.mime_type
+      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime'].include? self.mime_type
+    end
+
+    def audio?
+      # audio/x-wave is the mime type that fits 0.6.0 returns for a wav file.
+      # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
+      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/ogg'].include? self.mime_type
     end
 
     def persistent_url

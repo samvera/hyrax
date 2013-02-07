@@ -16,8 +16,8 @@ require 'spec_helper'
 
 describe GenericFile do
   before do
-    @file = GenericFile.new
-    @file.apply_depositor_metadata('jcoyne')
+    subject.apply_depositor_metadata('jcoyne')
+    @file = subject #TODO remove this line someday (use subject instead)
   end
 
   describe "terms_for_editing" do
@@ -31,6 +31,65 @@ describe GenericFile do
       @file.terms_for_display.should == [ :part_of, :contributor, :creator, :title, :description, 
         :publisher, :date_created, :date_uploaded, :date_modified,:subject, :language, :rights, 
         :resource_type, :identifier, :based_near, :tag, :related_url]
+    end
+  end
+
+  describe "mime type recognition" do
+    describe "image?" do
+      it "should be true for jpeg2000" do
+        subject.mime_type = 'image/jp2'
+        subject.should be_image
+      end
+      it "should be true for jpeg" do
+        subject.mime_type = 'image/jpg'
+        subject.should be_image
+      end
+      it "should be true for png" do
+        subject.mime_type = 'image/png'
+        subject.should be_image
+      end
+    end
+    describe "pdf?" do
+      it "should be true for pdf" do
+        subject.mime_type = 'application/pdf'
+        subject.should be_pdf
+      end
+    end
+    describe "audio?" do
+      it "should be true for wav" do
+        subject.mime_type = 'audio/x-wave'
+        subject.should be_audio
+      end
+      it "should be true for mpeg" do
+        subject.mime_type = 'audio/mpeg'
+        subject.should be_audio
+        subject.mime_type = 'audio/mp3'
+        subject.should be_audio
+      end
+      it "should be true for ogg" do
+        subject.mime_type = 'audio/ogg'
+        subject.should be_audio
+      end
+    end
+    describe "video?" do
+      it "should be true for avi" do
+        subject.mime_type = 'video/avi'
+        subject.should be_video
+      end
+      it "should be true for webm" do
+        subject.mime_type = 'video/webm'
+        subject.should be_video
+      end
+      it "should be true for mpeg" do
+        subject.mime_type = 'video/mp4'
+        subject.should be_video
+        subject.mime_type = 'video/mpeg'
+        subject.should be_video
+      end
+      it "should be true for quicktime" do
+        subject.mime_type = 'video/quicktime'
+        subject.should be_video
+      end
     end
   end
 
@@ -527,19 +586,19 @@ describe GenericFile do
     it "should have read groups writer" do
       subject.read_groups = ['group-2', 'group-3']
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
 
     it "should have read groups string writer" do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
       subject.rightsMetadata.groups.should == {'umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
     it "should only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
   end
   describe "permissions validation" do
