@@ -59,6 +59,8 @@ describe GenericFile do
       it "should be true for wav" do
         subject.mime_type = 'audio/x-wave'
         subject.should be_audio
+        subject.mime_type = 'audio/x-wav'
+        subject.should be_audio
       end
       it "should be true for mpeg" do
         subject.mime_type = 'audio/mpeg'
