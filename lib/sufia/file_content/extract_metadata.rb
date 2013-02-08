@@ -39,13 +39,14 @@ module Sufia
 
         def run_fits!(file_path)
             command = "#{fits_path} -i #{file_path}"
-            stdin, stdout, stderr = popen3(command)
+            stdin, stdout, stderr, wait_thr = popen3(command)
             stdin.close
             out = stdout.read
             stdout.close
             err = stderr.read
             stderr.close
-            raise "Unable to execute command \"#{command}\"\n#{err}" unless err.empty? or err.include? "Error parsing Exiftool XML Output"
+            exit_status = wait_thr.value
+            raise "Unable to execute command \"#{command}\"\n#{err}" unless exit_status.success?
             out
         end
 
