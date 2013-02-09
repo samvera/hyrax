@@ -49,14 +49,14 @@ class HeadGenerator < Rails::Generators::Base
     begin
       invoke('active_fedora:config')
     rescue NoMethodError
-      # Looks like we are falling back on the old way of doing this
+      # Fall back on the old way of doing this
       copy_file "config/fedora.yml", "config/fedora.yml"
       copy_file "config/solr.yml", "config/solr.yml"
-      copy_file "config/jetty.yml", "config/jetty.yml"
       # Fedora & Solr Config files
       directory "fedora_conf"
       directory "solr_conf"
     end
+    copy_file "config/jetty.yml", "config/jetty.yml"
   end
   
   # Register mimetypes required by hydra-head
