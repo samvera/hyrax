@@ -20,7 +20,5 @@ if Hydra.respond_to?(:configure)
       :embargo_release_date => ActiveFedora::SolrService.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
     }
     
-    # specify the user model
-    config[:user_model] = 'User'
   end
 end

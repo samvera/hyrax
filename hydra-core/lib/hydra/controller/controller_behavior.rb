@@ -34,5 +34,11 @@ module Hydra::Controller::ControllerBehavior
   def user_key
     current_user.user_key if current_user
   end
-  
+
+  module ClassMethods
+    # get the solr name for a field with this name and using the given solrizer descriptor
+    def solr_name(name, *opts)
+      ActiveFedora::SolrService.solr_name(name, *opts)
+    end
+  end
 end

@@ -26,7 +26,6 @@ class HeadGenerator < Rails::Generators::Base
          
   # Copy all files in templates/config directory to host config
   def create_configuration_files
-    #CatalogController
     copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
 
     # Initializers
@@ -36,7 +35,6 @@ class HeadGenerator < Rails::Generators::Base
         "\n    config[:user_model] = '#{model_name.classify}'" 
     end
     
-
     copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
 
     # Role Mappings
@@ -46,50 +44,10 @@ class HeadGenerator < Rails::Generators::Base
     copy_file "config/role_map_test.yml", "config/role_map_test.yml"
    
     # Fedora & Solr YAML files
-    begin
-      invoke('active_fedora:config')
-    rescue NoMethodError
-      # Fall back on the old way of doing this
-      copy_file "config/fedora.yml", "config/fedora.yml"
-      copy_file "config/solr.yml", "config/solr.yml"
-      # Fedora & Solr Config files
-      directory "fedora_conf"
-      directory "solr_conf"
-    end
+    invoke('active_fedora:config')
     copy_file "config/jetty.yml", "config/jetty.yml"
   end
   
-  # Register mimetypes required by hydra-head
-  def add_mime_types
-    puts "Updating Mime Types"
-    insert_into_file "config/initializers/mime_types.rb", :before => 'Mime::Type.register_alias "text/plain", :refworks_marc_txt' do <<EOF
-# Mime Types Added By Hydra Head:
-
-# Mime::Type.register "text/html", :html
-# Mime::Type.register "application/pdf", :pdf
-# Mime::Type.register "image/jpeg2000", :jp2
-Mime::Type.register_alias "text/html", :textile
-Mime::Type.register_alias "text/html", :inline
-
-EOF
-    end
-  end
-  
-  #
-  # Migrations
-  #
-  
-  # Implement the required interface for Rails::Generators::Migration.
-  # taken from http://github.com/rails/rails/blob/master/activerecord/lib/generators/active_record.rb
-  def self.next_migration_number(dirname)
-    unless @prev_migration_nr
-      @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-    else
-      @prev_migration_nr += 1
-    end
-    @prev_migration_nr.to_s
-  end
-
   # Add Hydra behaviors to the user model
   def inject_hydra_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
@@ -103,28 +61,6 @@ EOF
     end    
   end
   
-  # Add Hydra behaviors and Filters to CatalogController
-  def inject_hydra_catalog_behavior
-    puts "Adding Hydra behaviors to CatalogController"
-    controller_name = "catalog_controller"
-    file_path = "app/controllers/#{controller_name.underscore}.rb"
-    if File.exists?(file_path) 
-      insert_into_file file_path, :after => 'include Blacklight::Catalog' do      
-        "\n  # Extend Blacklight::Catalog with Hydra behaviors (primarily editing)." +
-        "\n  include Hydra::Controller::ControllerBehavior\n"  +
-        "\n  # These before_filters apply the hydra access controls" +
-        "\n  before_filter :enforce_show_permissions, :only=>:show" +
-        "\n  # This applies appropriate access controls to all solr queries" +  
-        "\n  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]" +  
-        "\n  # This filters out objects that you want to exclude from search results, like FileAssets" +  
-        "\n  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]" 
-
-      end
-    else
-      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller::ControllerBehavior module in the Controller class definition.  See the Hydra::Controller::ControllerBehavior section in the Hydra API Docs for more info." 
-    end    
-  end
-  
   # Inject call to HydraHead.add_routes in config/routes.rb
   def inject_hydra_routes
     insert_into_file "config/routes.rb", :after => 'Blacklight.add_routes(self)' do
@@ -132,24 +68,6 @@ EOF
       "\n  HydraHead.add_routes(self)"
     end
   end
-  
-  # Add Hydra to the application controller
-  def inject_hydra_controller_behavior    
-    puts "Adding Hydra behaviors to ApplicationController"
-    controller_name = "ApplicationController"
-    file_path = "app/controllers/#{controller_name.underscore}.rb"
-    if File.exists?(file_path) 
-      insert_into_file file_path, :after => 'include Blacklight::Controller' do 
-        "  \n# Adds Hydra behaviors into the application controller \n" +        
-        "  include Hydra::Controller::ControllerBehavior\n"
-      end
-    else
-      puts "     \e[31mFailure\e[0m  Could not find #{model_name.underscore}.rb.  To add Hydra behaviors to your Blacklight::Catalog Controllers, you must include the Hydra::Controller::ControllerBehavior module in the Controller class definition.  See the Hydra::Controller::ControllerBehavior section in the Hydra API Docs for more info." 
-    end
-  end
-  
-  
-
   
 end # HeadGenerator
 end # Hydra
