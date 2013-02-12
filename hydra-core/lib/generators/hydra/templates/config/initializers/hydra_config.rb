@@ -6,6 +6,10 @@
 #   User.send(:include, MyLocalLDAPAttributes)
 # As long as your module includes methods for full_name, affiliation, and photo the personalization_helper should function correctly
 #
+
+# windows doesn't properly require hydra-head (from the gemfile), so we need to require it explicitly here:
+require 'hydra/head' 
+
 if Hydra.respond_to?(:configure)
   Hydra.configure(:shared) do |config|
     # This specifies the solr field names of permissions-related fields.
