@@ -1,6 +1,6 @@
 # properties datastream: catch-all for info that didn't have another home.  Particularly depositor.
 module Hydra::Datastream
-  class Properties < ActiveFedora::NokogiriDatastream
+  class Properties < ActiveFedora::OmDatastream
     set_terminology do |t|
       t.root(:path=>"fields", :xmlns => '', :namespace_prefix => nil) 
 

@@ -2,7 +2,7 @@ require 'active_support/core_ext/string'
 module Hydra
   module Datastream
     # Implements Hydra RightsMetadata XML terminology for asserting access permissions
-    class RightsMetadata < ActiveFedora::NokogiriDatastream       
+    class RightsMetadata < ActiveFedora::OmDatastream       
       
       set_terminology do |t|
         t.root(:path=>"rightsMetadata", :xmlns=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
