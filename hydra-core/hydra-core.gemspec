@@ -21,21 +21,14 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "rails", '~>3.2.3' 
   gem.add_dependency "blacklight", '~> 4.0'  
-  gem.add_dependency "devise"
   gem.add_dependency "active-fedora"
-  gem.add_dependency 'RedCloth', '=4.2.9'
   gem.add_dependency 'block_helpers'
-  gem.add_dependency 'sanitize'
-  gem.add_dependency 'hydra-mods', ">= 0.0.6"
   gem.add_dependency 'deprecation', ">= 0.0.5"
-  gem.add_dependency 'jquery-rails'
   gem.add_dependency 'hydra-access-controls', version
   
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'jettywrapper', ">=1.3.1"
   gem.add_development_dependency 'rspec-rails'
-  gem.add_development_dependency 'cucumber-rails', '>=1.2.0'
   gem.add_development_dependency 'factory_girl_rails'
-  gem.add_development_dependency 'solrizer-fedora', '>=2.1.0'
 end
