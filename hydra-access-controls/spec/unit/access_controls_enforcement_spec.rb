@@ -81,6 +81,7 @@ describe Hydra::AccessControlsEnforcement do
       lambda {subject.send(:enforce_show_permissions, {}) }.should_not raise_error Hydra::AccessDenied
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
+      Hydra::PermissionsCache.clear()
       user = User.new :uid=>'testuser@example.com'
       RoleMapper.stub(:roles).with(user.user_key).and_return([])
       subject.stub(:current_user).and_return(user)

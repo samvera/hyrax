@@ -15,6 +15,7 @@ module Hydra
   autoload :AdminPolicy
   autoload :RoleMapperBehavior
   autoload :PermissionsQuery
+  autoload :PermissionsCache
   autoload :PermissionsSolrDocument
   class Engine < Rails::Engine
   end
