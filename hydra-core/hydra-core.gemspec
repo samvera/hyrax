@@ -28,7 +28,6 @@ Gem::Specification.new do |gem|
   
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'redcloth' # for textile formatting
   gem.add_development_dependency 'jettywrapper', ">=1.3.1"
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'factory_girl_rails'

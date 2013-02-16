@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "jettywrapper" 
   s.add_development_dependency "yard" 
+  s.add_development_dependency "RedCloth" 
 
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'factory_girl_rails'
