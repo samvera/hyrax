@@ -40,7 +40,7 @@ describe 'event jobs' do
     count_user = @user.events.length
     count_another = @another_user.events.length
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has edited his or her profile', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has edited his or her profile', timestamp: '1' }
     UserEditProfileEventJob.new(@user.user_key).run
     @user.events.length.should == count_user + 1
     @user.events.first.should == event
@@ -54,7 +54,7 @@ describe 'event jobs' do
     @another_user.events.length.should == 0
     @third_user.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> is now following <a href="/users/archivist1@example.com">archivist1@example.com</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> is now following <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
     UserFollowEventJob.new(@user.user_key, @another_user.user_key).run
     @user.events.length.should == 1
     @user.events.first.should == event
@@ -71,7 +71,7 @@ describe 'event jobs' do
     @another_user.events.length.should == 0
     @third_user.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = { action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has unfollowed <a href="/users/archivist1@example.com">archivist1@example.com</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has unfollowed <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
     UserUnfollowEventJob.new(@user.user_key, @another_user.user_key).run
     @user.events.length.should == 1
     @user.events.first.should == event
@@ -90,7 +90,7 @@ describe 'event jobs' do
     @third_user.events.length.should == 0
     @gf.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has deposited <a href="/files/123">Hamlet</a>', timestamp: '1' }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/files/123">Hamlet</a>', timestamp: '1' }
     ContentDepositEventJob.new('test:123', @user.user_key).run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
@@ -111,7 +111,7 @@ describe 'event jobs' do
     @third_user.events.length.should == 0
     @gf.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has updated <a href="/files/123">Hamlet</a>', timestamp: '1' }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/123">Hamlet</a>', timestamp: '1' }
     ContentUpdateEventJob.new('test:123', @user.user_key).run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
@@ -132,7 +132,7 @@ describe 'event jobs' do
     @third_user.events.length.should == 0
     @gf.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has added a new version of <a href="/files/123">Hamlet</a>', timestamp: '1' }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/files/123">Hamlet</a>', timestamp: '1' }
     ContentNewVersionEventJob.new('test:123', @user.user_key).run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
@@ -153,7 +153,7 @@ describe 'event jobs' do
     @third_user.events.length.should == 0
     @gf.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/files/123">Hamlet</a>', timestamp: '1' }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/files/123">Hamlet</a>', timestamp: '1' }
     ContentRestoredVersionEventJob.new('test:123', @user.user_key, 'content.0').run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
@@ -172,7 +172,7 @@ describe 'event jobs' do
     @another_user.events.length.should == 0
     @third_user.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has deleted file \'test:123\'', timestamp: '1' }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deleted file \'test:123\'', timestamp: '1' }
     ContentDeleteEventJob.new('test:123', @user.user_key).run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
@@ -191,7 +191,7 @@ describe 'event jobs' do
     @gf.events.length.should == 0
     @now = Time.now
     Time.should_receive(:now).at_least(:once).and_return(@now)
-    event = {action: 'User <a href="/users/jilluser@example.com">jilluser@example.com</a> has updated <a href="/files/123">Hamlet</a>', timestamp: @now.to_i.to_s }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/123">Hamlet</a>', timestamp: @now.to_i.to_s }
     ContentUpdateEventJob.new('test:123', @user.user_key).run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
