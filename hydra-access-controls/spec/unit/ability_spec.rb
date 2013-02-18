@@ -4,17 +4,17 @@ describe Ability do
   before do
     Hydra.stub(:config).and_return({
       :permissions=>{
-        :discover => {:group =>"discover_access_group_tsim", :individual=>"discover_access_person_tsim"},
-        :read => {:group =>"read_access_group_tsim", :individual=>"read_access_person_tsim"},
-        :edit => {:group =>"edit_access_group_tsim", :individual=>"edit_access_person_tsim"},
+        :discover => {:group =>"discover_access_group_ssim", :individual=>"discover_access_person_ssim"},
+        :read => {:group =>"read_access_group_ssim", :individual=>"read_access_person_ssim"},
+        :edit => {:group =>"edit_access_group_ssim", :individual=>"edit_access_person_ssim"},
         :owner => "depositor_t",
         :embargo_release_date => "embargo_release_date_dtsi",
       
         :inheritable => {
-          :discover => {:group =>"inheritable_discover_access_group_tsim", :individual=>"inheritable_discover_access_person_tsim"},
-          :read => {:group =>"inheritable_read_access_group_tsim", :individual=>"inheritable_read_access_person_tsim"},
-          :edit => {:group =>"inheritable_edit_access_group_tsim", :individual=>"inheritable_edit_access_person_tsim"},
-          :owner => "inheritable_depositor_tsim",
+          :discover => {:group =>"inheritable_discover_access_group_ssim", :individual=>"inheritable_discover_access_person_ssim"},
+          :read => {:group =>"inheritable_read_access_group_ssim", :individual=>"inheritable_read_access_person_ssim"},
+          :edit => {:group =>"inheritable_edit_access_group_ssim", :individual=>"inheritable_edit_access_person_ssim"},
+          :owner => "inheritable_depositor_ssim",
           :embargo_release_date => "inheritable_embargo_release_date_dtsi"
         }
     }})
@@ -22,10 +22,10 @@ describe Ability do
 
   describe "class methods" do
     subject { Ability }
-    its(:read_group_field) { should == 'read_access_group_tsim'}
-    its(:read_person_field) { should == 'read_access_person_tsim'}
-    its(:edit_group_field) { should == 'edit_access_group_tsim'}
-    its(:edit_person_field) { should == 'edit_access_person_tsim'}
+    its(:read_group_field) { should == 'read_access_group_ssim'}
+    its(:read_person_field) { should == 'read_access_person_ssim'}
+    its(:edit_group_field) { should == 'edit_access_group_ssim'}
+    its(:edit_person_field) { should == 'edit_access_person_ssim'}
   end
 
   context "for a not-signed in user" do

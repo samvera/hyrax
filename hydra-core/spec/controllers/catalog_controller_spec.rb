@@ -54,7 +54,7 @@ describe CatalogController do
     
     describe "access controls" do
       before(:all) do
-        fq = "read_access_group_tsim:public OR edit_access_group_tsim:public OR discover_access_group_tsim:public"
+        fq = "read_access_group_ssim:public OR edit_access_group_ssim:public OR discover_access_group_ssim:public"
         solr_opts = {:fq=>fq}
         response = Blacklight.solr.get('select', :params=> solr_opts)
         @public_only_results = Blacklight::SolrResponse.new(response, solr_opts)

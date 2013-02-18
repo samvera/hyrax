@@ -196,7 +196,7 @@ module Hydra
       end
 
       def self.indexer
-        @indexer ||= Solrizer::Descriptor.new(:text, :stored, :indexed, :multivalued)
+        @indexer ||= Solrizer::Descriptor.new(:string, :stored, :indexed, :multivalued)
       end
 
       def date_indexer

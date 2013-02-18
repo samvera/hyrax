@@ -28,7 +28,7 @@ describe Hydra::AccessControlsEnforcement do
       end
       it "Then I should be treated as a member of the 'public' group" do
         ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:public/)      
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:public/)      
         end
       end
       it "Then I should not be treated as a member of the 'registered' group" do
@@ -48,19 +48,19 @@ describe Hydra::AccessControlsEnforcement do
       end
       it "Then I should be treated as a member of the 'public' and 'registered' groups" do
         ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:public/)  
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:registered/)      
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:public/)  
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:registered/)      
         end
       end
       it "Then I should see assets that I have discover, read, or edit access to" do
         ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_person_tsim\:#{@user.user_key}/)      
+          @solr_parameters[:fq].first.should match(/#{type}_access_person_ssim\:#{@user.user_key}/)      
         end
       end
       it "Then I should see assets that my groups have discover, read, or edit access to" do
         ["faculty", "africana-faculty"].each do |group_id|
           ["discover","edit","read"].each do |type|
-            @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:#{group_id}/)      
+            @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:#{group_id}/)      
           end
         end
       end
@@ -73,7 +73,7 @@ describe Hydra::AccessControlsEnforcement do
       RoleMapper.stub(:roles).with(user.user_key).and_return(["archivist"])
       subject.stub(:current_user).and_return(user)
       subject.stub(:can?).with(:read, nil).and_return(true)
-      stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
+      stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_ssim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
 
       subject.params = {}
       subject.should_receive(:can?).with(:edit, stub_doc).and_return(true)
@@ -87,7 +87,7 @@ describe Hydra::AccessControlsEnforcement do
       subject.stub(:current_user).and_return(user)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.params = {}
-      stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_tsim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
+      stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_ssim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
       subject.should_receive(:can?).with(:edit, stub_doc).and_return(false)
       subject.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
       lambda {subject.send(:enforce_show_permissions, {})}.should raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
@@ -104,14 +104,14 @@ describe Hydra::AccessControlsEnforcement do
     it "should set query fields for the user id checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_person_tsim\:#{@stub_user.user_key}/)      
+        @solr_parameters[:fq].first.should match(/#{type}_access_person_ssim\:#{@stub_user.user_key}/)      
       end
     end
     it "should set query fields for all roles the user is a member of checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:archivist/)        
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:researcher/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:archivist/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:researcher/)        
       end
     end
 
@@ -119,8 +119,8 @@ describe Hydra::AccessControlsEnforcement do
       RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["abc/123","cde/567"])
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:abc\\\/123/)        
-        @solr_parameters[:fq].first.should match(/#{type}_access_group_tsim\:cde\\\/567/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:abc\\\/123/)        
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:cde\\\/567/)        
       end
     end
   end
