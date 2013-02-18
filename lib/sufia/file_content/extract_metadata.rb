@@ -38,7 +38,7 @@ module Sufia
 
 
         def run_fits!(file_path)
-            command = "#{fits_path} -i #{file_path}"
+            command = "#{fits_path} -i \"#{file_path}\""
             stdin, stdout, stderr, wait_thr = popen3(command)
             stdin.close
             out = stdout.read

@@ -43,7 +43,7 @@ class FfmpegTranscodeJob
   end
 
   def self.encode(path, options, output_file)
-    command = "#{ffmpeg_path} -y -i #{path} #{options} #{output_file}"
+    command = "#{ffmpeg_path} -y -i \"#{path}\" #{options} #{output_file}"
     stdin, stdout, stderr, wait_thr = popen3(command)
     stdin.close
     out = stdout.read
