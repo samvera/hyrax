@@ -3,7 +3,6 @@ source 'http://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
-gem 'hydra-head', '6.0.0.pre7'
 group :development, :test do
   gem 'activerecord-import', '0.3.0'
   gem 'sqlite3'
