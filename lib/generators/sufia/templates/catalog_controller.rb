@@ -377,7 +377,8 @@ class CatalogController < ApplicationController
   end
 
   def depositor 
-    Solrizer.solr_name('depositor', :searchable, type: :string)
+    #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+    Solrizer.solr_name('depositor', :stored_searchable, type: :string)
   end
 
   def sort_field
