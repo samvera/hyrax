@@ -90,16 +90,16 @@
       <str name="q">{!raw f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
       <str name="fl">
         id,
-        access_tsim,
-        discover_access_group_tsim,discover_access_person_tsim,
-        read_access_group_tsim,read_access_person_tsim,
-        edit_access_group_tsim,edit_access_person_tsim,
+        access_ssim,
+        discover_access_group_ssim,discover_access_person_ssim,
+        read_access_group_ssim,read_access_person_ssim,
+        edit_access_group_ssim,edit_access_person_ssim,
         depositor_ti,
         embargo_release_date_dtsi
-        inheritable_access_tsim,
-        inheritable_discover_access_group_tsim,inheritable_discover_access_person_tsim,
-        inheritable_read_access_group_tsim,inheritable_read_access_person_tsim,
-        inheritable_edit_access_group_tsim,inheritable_edit_access_person_tsim,
+        inheritable_access_ssim,
+        inheritable_discover_access_group_ssim,inheritable_discover_access_person_ssim,
+        inheritable_read_access_group_ssim,inheritable_read_access_person_ssim,
+        inheritable_edit_access_group_ssim,inheritable_edit_access_person_ssim,
         inheritable_embargo_release_date_dtsi
       </str>
     </lst>

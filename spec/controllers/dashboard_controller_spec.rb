@@ -69,7 +69,7 @@ describe DashboardController do
         response.should render_template('dashboard/index')
       end
       it "should return an array of documents I can edit" do
-        user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_tsim:public OR edit_access_person_tsim:#{@user.user_key}"]}
+        user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
         assigns(:document_list).count.should eql(user_results["response"]["numFound"])
       end
     end
