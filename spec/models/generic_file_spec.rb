@@ -304,16 +304,32 @@ describe GenericFile do
     @file.relative_path.should == "documents/research/NSF/2010"
   end
   describe "create_thumbnail" do
-    describe "with an image that doesn't get resized" do
+    before do
+      @f = GenericFile.new
+      #@f.stub(:characterize_if_changed).and_yield #don't run characterization
+      @f.apply_depositor_metadata('mjg36')
+    end
+    after do
+      @f.delete
+    end
+    describe "with a video" do
       before do
-        @f = GenericFile.new
-        @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
-        @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
-        @f.apply_depositor_metadata('mjg36')
+        @f.stub(:mime_type=>'video/quicktime')  #Would get set by the characterization job
+        @f.add_file_datastream(File.new("#{fixture_path}/countdown.avi", 'rb'), :dsid=>'content')
         @f.save
       end
-      after do
-        @f.delete
+      it "should make a png thumbnail" do
+        @f.create_thumbnail
+        @f.thumbnail.content.size.should == 4768 # this is a bad test. I just want to show that it did something.
+        @f.thumbnail.mimeType.should == 'image/png'
+      end
+    end
+
+    describe "with an image that doesn't get resized" do
+      before do
+        @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
+        @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
+        @f.save
       end
       it "should keep the thumbnail at the original size (but transform to png)" do
         @mock_image = mock("image", :from_blob=>true)

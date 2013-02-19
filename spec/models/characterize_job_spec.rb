@@ -25,6 +25,10 @@ describe CharacterizeJob do
       Sufia.queue.should_receive(:push).with(job)
       subject.run
     end
+    it "should create a thumbnail" do
+      GenericFile.any_instance.should_receive(:create_thumbnail)
+      subject.run
+    end
   end
 
   describe "with a WAV (audio) file" do
@@ -63,7 +67,7 @@ describe CharacterizeJob do
       @generic_file.save!
     end
 
-    it "should create a thumnail" do
+    it "should create a thumbnail" do
       GenericFile.any_instance.should_receive(:create_thumbnail)
       subject.run
     end

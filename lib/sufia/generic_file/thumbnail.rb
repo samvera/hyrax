@@ -9,10 +9,28 @@ module Sufia
           create_pdf_thumbnail
         elsif image?
           create_image_thumbnail
+        elsif video?
+          create_video_thumbnail
         end
       end
 
       protected
+      def create_video_thumbnail
+        return unless Sufia::Engine.config.enable_ffmpeg
+      
+        output_file = Dir::Tmpname.create(['sufia', ".png"], Sufia::Engine.config.temp_file_base){}
+        content.to_tempfile do |f|
+          # we could use something like this in order to find a frame in the middle.
+          #ffprobe -show_files video.avi 2> /dev/null | grep duration | cut -d= -f2 53.399999  
+          command = "#{Sufia::Engine.config.ffmpeg_path} -i \"#{f.path}\" -loglevel quiet -vf \"scale=338:-1\"  -r  1  -t  1 #{output_file}"
+          system(command)
+          raise "Unable to execute command \"#{command}\"\n#{err}" unless $?.success?
+        end
+
+        self.thumbnail.content = File.open(output_file, 'rb').read
+        self.thumbnail.mimeType = 'image/png'
+        self.save
+      end
 
       def create_pdf_thumbnail
         retryCnt = 0
@@ -25,7 +43,6 @@ module Sufia
             thumb = first.scale(338, 493)
             self.thumbnail.content = thumb.to_blob { self.format = "PNG" }
             self.thumbnail.mimeType = 'image/png'
-            #logger.debug "Has the content changed before saving? #{self.content.changed?}"
             self.save
             break
           rescue => e
