@@ -1,16 +1,18 @@
-module Hydra::PermissionsCache
-  @@cache = {}
-
-  def self.get(pid)
-    @@cache[pid]
+class Hydra::PermissionsCache
+  def initialize
+    clear 
   end
 
-  def self.put(pid, doc)
-    @@cache[pid] = doc 
+  def get(pid)
+    @cache[pid]
   end
 
-  def self.clear
-    @@cache = {}
+  def put(pid, doc)
+    @cache[pid] = doc 
+  end
+
+  def clear
+    @cache = {}
   end
 
 end

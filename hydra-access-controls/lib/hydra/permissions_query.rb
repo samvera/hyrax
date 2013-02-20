@@ -6,10 +6,10 @@ module Hydra
     end
 
     def permissions_doc(pid)
-      doc = Hydra::PermissionsCache.get(pid)
+      doc = cache.get(pid)
       unless doc
         doc = get_permissions_solr_response_for_doc_id(pid)
-        Hydra::PermissionsCache.put(pid, doc)
+        cache.put(pid, doc)
       end
       doc
     end

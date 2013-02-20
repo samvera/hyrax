@@ -3,7 +3,6 @@ module Hydra::AccessControlsEnforcement
 
   included do
     include Hydra::AccessControlsEvaluation
-    include Hydra::PermissionsQuery
     class_attribute :solr_access_filters_logic
 
     # Set defaults. Each symbol identifies a _method_ that must be in
@@ -58,7 +57,7 @@ module Hydra::AccessControlsEnforcement
   # Controller "before" filter for enforcing access controls on show actions
   # @param [Hash] opts (optional, not currently used)
   def enforce_show_permissions(opts={})
-    permissions = permissions_doc(params[:id])
+    permissions = current_ability.permissions_doc(params[:id])
     unless permissions.is_public?
       #its not 'public'
       if permissions.under_embargo? && !can?(:edit, permissions)

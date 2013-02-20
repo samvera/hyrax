@@ -77,19 +77,18 @@ describe Hydra::AccessControlsEnforcement do
 
       subject.params = {}
       subject.should_receive(:can?).with(:edit, stub_doc).and_return(true)
-      subject.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
+      subject.current_ability.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
       lambda {subject.send(:enforce_show_permissions, {}) }.should_not raise_error Hydra::AccessDenied
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
-      Hydra::PermissionsCache.clear()
       user = User.new :uid=>'testuser@example.com'
       RoleMapper.stub(:roles).with(user.user_key).and_return([])
       subject.stub(:current_user).and_return(user)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.params = {}
       stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_ssim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
+      subject.current_ability.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
       subject.should_receive(:can?).with(:edit, stub_doc).and_return(false)
-      subject.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
       lambda {subject.send(:enforce_show_permissions, {})}.should raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
     end
   end

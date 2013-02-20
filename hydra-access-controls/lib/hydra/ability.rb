@@ -20,12 +20,13 @@ module Hydra
       Hydra.config[:user_model] ?  Hydra.config[:user_model].constantize : ::User
     end
 
-    attr_reader :current_user, :session
+    attr_reader :current_user, :session, :cache
 
     def initialize(user, session=nil)
       @current_user = user || Hydra::Ability.user_class.new # guest user (not logged in)
       @user = @current_user # just in case someone was using this in an override. Just don't.
       @session = session
+      @cache = Hydra::PermissionsCache.new
       hydra_default_permissions()
     end
 
@@ -66,7 +67,7 @@ module Hydra
       end
    
       can :edit, SolrDocument do |obj|
-        PermissionsCache.put(obj.id, obj)
+        cache.put(obj.id, obj)
         test_edit(obj.id)
       end       
     end
@@ -81,7 +82,7 @@ module Hydra
       end 
       
       can :read, SolrDocument do |obj|
-        PermissionsCache.put(obj.id, obj)
+        cache.put(obj.id, obj)
         test_read(obj.id)
       end 
     end
