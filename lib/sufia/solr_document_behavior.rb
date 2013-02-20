@@ -76,7 +76,7 @@ module Sufia
     end
 
     def tags
-      self[Solrizer.solr_name("desc_metadata__tag")]
+      Array(self[Solrizer.solr_name("desc_metadata__tag")])
     end
 
     def mime_type
