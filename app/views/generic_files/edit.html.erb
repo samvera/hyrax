@@ -50,14 +50,6 @@ $("a[rel=popover]").popover();
 
 <% end %>
 
-<% content_for :local_css do %>
-.audiojs {
-  width: 338px;
-}
-
-label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
-<% end %>
-  
 <%= render :partial => 'breadcrumbs' %>
 
 <h1 class="lower">Edit <%= display_title(@generic_file) %></h1>

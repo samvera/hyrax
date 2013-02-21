@@ -14,13 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% content_for :local_css do %>
-  label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
-<% end %> 
-
-
-  
-
 <% content_for :local_js do %>
    if (navigator.userAgent.match("MSIE")){
       $("#new_generic_file").validate();

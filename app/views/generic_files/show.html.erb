@@ -17,18 +17,15 @@ limitations under the License.
 
 <% content_for :js_head do  %>
   <% javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
+  <script type="text/javascript">
+    var addthis_config = {"data_track_addressbar":true};
+  </script>
 <% end %>
 
 <% content_for :local_js do %>
-initialize_audio();
-var addthis_config = {"data_track_addressbar":true};
+  initialize_audio();
 <% end %>
 
-<% content_for :local_css do %>
-.audiojs {
-  width: 338px;
-}
-<% end %>
 <%= render :partial => 'generic_files/breadcrumbs' %>
 
 <h1 class="lower"><%= display_title(@generic_file) %></h1>
