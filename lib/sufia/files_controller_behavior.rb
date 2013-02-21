@@ -131,11 +131,10 @@ module Sufia
 
     # routed to /files/:id
     def show
-      @can_edit =  can? :edit, @generic_file
-      @events = @generic_file.events(100)
-
       respond_to do |format|
-        format.html
+        format.html {
+          @events = @generic_file.events(100)
+        }
         format.endnote { render :text => @generic_file.export_as_endnote }
       end
     end
