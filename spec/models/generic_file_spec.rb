@@ -248,8 +248,6 @@ describe GenericFile do
         @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
         @f.apply_depositor_metadata('mjg36')
         @f.save
-        @mock_image = mock("image", :from_blob=>true)
-        Magick::ImageList.should_receive(:new).and_return(@mock_image)
       end
       after do
         @f.delete
