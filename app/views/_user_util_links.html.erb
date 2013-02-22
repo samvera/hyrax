@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
-<% if current_user %>
+<% if user_signed_in? %>
    <%= render :partial => 'users/notify_link' %>
   <a href="<%= sufia.profile_path(current_user) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
   <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>

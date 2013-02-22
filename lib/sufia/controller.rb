@@ -25,11 +25,11 @@ module Sufia::Controller
   end
 
   def current_ability
-    current_user ? current_user.ability : super
+    user_signed_in? ? current_user.ability : super
   end
 
   def groups
-    @groups ||= current_user ? current_user.groups : []
+    @groups ||= user_signed_in? ? current_user.groups : []
   end
 
   def render_404(exception)
@@ -47,7 +47,7 @@ module Sufia::Controller
     @notify_number=0
     @batches=[]
     return if action_name == "index" && controller_name == "mailbox"
-    if current_user 
+    if user_signed_in? 
       @notify_number= current_user.mailbox.inbox(:unread => true).count(:id, :distinct => true)
       @batches=current_user.mailbox.inbox.map {|msg| msg.last_message.body[/<a class="batchid ui-helper-hidden">(.*)<\/a>The file(.*)/,1]}.select{|val| !val.blank?}
     end

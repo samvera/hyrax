@@ -16,7 +16,7 @@ class MailboxController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    if current_user
+    if user_signed_in?
       inbox = current_user.mailbox.inbox
       @messages = inbox.all
       current_user.mark_as_read @messages
