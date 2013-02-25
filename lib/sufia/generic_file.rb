@@ -179,7 +179,7 @@ module Sufia
 
     def terms_for_editing
       terms_for_display -
-       [:part_of, :date_modified, :date_uploaded, :format, :resource_type]
+       [:part_of, :date_modified, :date_uploaded, :format] #, :resource_type]
     end
 
     def terms_for_display
