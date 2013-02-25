@@ -53,7 +53,6 @@ module Sufia
 
     # routed to /files/:id/edit
     def edit
-      @terms = @generic_file.terms_for_editing
       initialize_fields(@generic_file)
       @groups = current_user.groups
     end

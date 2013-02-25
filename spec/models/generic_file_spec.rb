@@ -23,7 +23,7 @@ describe GenericFile do
   describe "terms_for_editing" do
     it "should return a list" do
       @file.terms_for_editing.should == [ :contributor, :creator, :title, :description, :publisher,
-       :date_created, :subject, :language, :rights, :identifier, :based_near, :tag, :related_url]
+       :date_created, :subject, :language, :rights, :resource_type, :identifier, :based_near, :tag, :related_url]
     end
   end
   describe "terms_for_display" do
