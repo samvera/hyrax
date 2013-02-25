@@ -54,11 +54,7 @@ module Sufia
     # routed to /files/:id/edit
     def edit
       @terms = @generic_file.terms_for_editing
-      @generic_file.terms_for_editing.each do |key|
-        # if value is empty, we create an one element array to loop over for output 
-        @generic_file[key] = [''] if @generic_file[key].empty?
-      end
-
+      initialize_fields(@generic_file)
       @groups = current_user.groups
     end
 
@@ -182,7 +178,16 @@ module Sufia
 
     end
 
+
     protected
+
+    # override this method if you need to initialize more complex RDF assertions (b-nodes)
+    def initialize_fields(file)
+      file.terms_for_editing.each do |key|
+        # if value is empty, we create an one element array to loop over for output 
+        file[key] = [''] if file[key].empty?
+      end
+    end
 
     # The name of the datastream where we store the file data
     def datastream_id

@@ -78,6 +78,7 @@ module Sufia
   autoload :HttpHeaderAuth
   autoload :SolrDocumentBehavior
   autoload :FilesControllerBehavior
+  autoload :BatchEditsControllerBehavior
   autoload :DownloadsControllerBehavior
   autoload :FileContent
 end
