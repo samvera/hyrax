@@ -67,6 +67,8 @@ module SufiaHelper
 
   def link_to_profile(login)
     user = User.find_by_user_key(login)
+    return login if user.nil?
+
     text = if user.respond_to? :name
       user.name
     else
