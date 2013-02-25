@@ -54,6 +54,11 @@ module Sufia
     # routed to /files/:id/edit
     def edit
       @terms = @generic_file.terms_for_editing
+      @generic_file.terms_for_editing.each do |key|
+        # if value is empty, we create an one element array to loop over for output 
+        @generic_file[key] = [''] if @generic_file[key].empty?
+      end
+
       @groups = current_user.groups
     end
 

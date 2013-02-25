@@ -25,11 +25,11 @@ class BatchEditsController < ApplicationController
           @names << display_title(gf)    
           permissions =  (permissions+gf.permissions).uniq
        end
-       
-       # why am I doing this you may ask... Well... if truth be told I have no idea, but if I use just a single item in the batch
-       # my h arrays get converted into strings in update attributes unless I do this first....
-       #h.keys.each {|key| h[key] = h[key].to_a} if (batch.size == 1)        
-       # end of wierd fix...
+
+       @show_file.terms_for_editing.each do |key|
+         # if value is empty, we create an one element array to loop over for output 
+         h[key] = [''] if h[key].empty?
+       end
        
        @show_file.attributes = h
        # map the permissions to parameter like input so that the assign will work
