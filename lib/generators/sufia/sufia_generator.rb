@@ -58,7 +58,7 @@ add_groups_to_users.rb		create_local_authorities.rb	create_trophies.rb}.each do 
     controller_name = "ApplicationController"
     file_path = "app/controllers/application_controller.rb"
     if File.exists?(file_path) 
-      insert_into_file file_path, :after => 'include Hydra::Controller::ControllerBehavior' do 
+      insert_into_file file_path, :after => 'include Blacklight::Controller' do 
         "  \n# Adds Sufia behaviors into the application controller \n" +        
         "  include Sufia::Controller\n"
       end

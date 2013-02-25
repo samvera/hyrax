@@ -1,9 +1,6 @@
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
 <div class="control-group">
-  <% vals =  generic_file.send(key) %>
-  <%# if vals is empty we create an one element array to loop over for output %>
-  <% vals = [''] if vals.count == 0 %>
-  
+  <% vals =  generic_file[key] %>
   <% if render_req && required?(key) %>
     <% tmp = '<span class="error">*</span>' + get_label(key) %>
     <%= f.label key, tmp.html_safe, :class=>"control-label"  %>
