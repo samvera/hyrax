@@ -36,11 +36,19 @@ module Sufia
                                   :publisher, :date_created, :subject,
                                   :resource_type, :identifier, :language]
       around_save :characterize_if_changed, :retry_warming
+      before_save :remove_blank_assertions
+
     end
 
     def delete
        self.cleanup_trophies
        super
+    end
+
+    def remove_blank_assertions
+      terms_for_editing.each do |key|
+        self[key] = nil if self[key] == ['']
+      end
     end
 
 
