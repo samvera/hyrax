@@ -50,7 +50,17 @@ module GenericFileHelper
   end
 
   def render_edit_field_partial(key, locals)
-    ["generic_files/edit_fields/#{key}", "generic_files/edit_fields/default"].each do |str|
+    render_edit_field_partial_with_action('generic_files', key, locals)
+  end
+
+  def render_batch_edit_field_partial(key, locals)
+    render_edit_field_partial_with_action('batch_edit', key, locals)
+  end
+
+ private 
+
+  def render_edit_field_partial_with_action(action, key, locals)
+    ["#{action}/edit_fields/#{key}", "#{action}/edit_fields/default"].each do |str|
       # XXX rather than handling this logic through exceptions, maybe there's a Rails internals method
       # for determining if a partial template exists..
       begin
@@ -60,8 +70,6 @@ module GenericFileHelper
       end
     end
   end
-
- private 
 
  def more_or_less_button(key, html_class, symbol)
    # TODO, there could be more than one element with this id on the page, but the fuctionality doesn't work without it.

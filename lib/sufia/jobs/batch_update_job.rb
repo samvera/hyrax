@@ -55,7 +55,7 @@ class BatchUpdateJob
 
   def update_file(gf, user)
     unless user.can? :edit, gf
-      logger.error "User #{user.user_key} DEEEENIED access to #{gf.pid}!"
+      logger.error "User #{user.user_key} DENIED access to #{gf.pid}!"
       @denied << gf
       return
     end

@@ -45,7 +45,7 @@ function confirmExit(){
 </div>
 <%= form_for([@batch, @generic_file], :url => sufia.batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 
-<%= render :partial => 'batch_edits/metadata', :formats => [:html], :locals => {:f => f, :gf => @generic_file} %>
+<%= render :partial => 'metadata', :formats => [:html], :locals => {:f => f} %>
 
 <%= render :partial => 'generic_files/permission', :formats => [:html], :locals => { :gf => @generic_file, :batch => @batch } %>
 

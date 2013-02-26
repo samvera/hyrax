@@ -25,6 +25,7 @@ class BatchController < ApplicationController
     @generic_file = GenericFile.new
     @generic_file.creator = current_user.name
     @generic_file.title =  @batch.generic_files.map(&:label)
+    initialize_fields(@generic_file)
   end
 
   def update
@@ -35,5 +36,15 @@ class BatchController < ApplicationController
     Sufia.queue.push(BatchUpdateJob.new(current_user.user_key, params))
     flash[:notice] = 'Your files are being processed by ' + t('sufia.product_name') + ' in the background. The metadata and access controls you specified are being applied. Files will be marked <span class="label label-important" title="Private">Private</span> until this process is complete (shouldn\'t take too long, hang in there!). You may need to refresh your dashboard to see these updates.'
     redirect_to sufia.dashboard_index_path
+  end
+
+  protected
+
+  # override this method if you need to initialize more complex RDF assertions (b-nodes)
+  def initialize_fields(file)
+    file.terms_for_editing.each do |key|
+      # if value is empty, we create an one element array to loop over for output 
+      file[key] = [''] if file[key].empty?
+    end
   end
 end
