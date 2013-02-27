@@ -3,6 +3,9 @@ source 'http://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
+# Required for doing pagination inside an engine. See https://github.com/amatsuda/kaminari/pull/322
+gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
+
 group :development, :test do
   gem 'activerecord-import', '0.3.0'
   gem 'sqlite3'
