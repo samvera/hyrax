@@ -106,6 +106,8 @@ task :ci => ['jetty:config'] do
 
 end
 
+task :default => [:ci]
+
 FRAMEWORKS = ['hydra-access-controls', 'hydra-core']
 
 root    = File.expand_path('../', __FILE__)
