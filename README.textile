@@ -1,5 +1,5 @@
 h1. Hydra-Head
-"!https://travis-ci.org/projecthydra/hydra-head.png!":https://travis-ci.org/projecthydra/hydra-head
+!https://travis-ci.org/projecthydra/hydra-head.png?branch=master!:https://travis-ci.org/projecthydra/hydra-head
 
 Hydra-Head is a Ruby-on-Rails 3 gem containing the core code for a web application using the full stack of hydra building blocks.
 
