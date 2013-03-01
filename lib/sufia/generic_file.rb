@@ -71,7 +71,7 @@ module Sufia
     end
 
     def video?
-      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime'].include? self.mime_type
+      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf'].include? self.mime_type
     end
 
     def audio?

@@ -92,6 +92,10 @@ describe GenericFile do
         subject.mime_type = 'video/quicktime'
         subject.should be_video
       end
+      it "should be true for mxf" do
+        subject.mime_type = 'application/mxf'
+        subject.should be_video
+      end
     end
   end
 
