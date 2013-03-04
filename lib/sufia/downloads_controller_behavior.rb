@@ -36,35 +36,28 @@ module Sufia
     end
 
     protected
-    
-    def send_content (asset)
+
+    def datastream_name
+      @datastream_name ||= params[:datastream_id] || DownloadsController.default_content_dsid
+    end
+
+    def send_content(asset)
         opts = {}
-        ds = nil
-        opts[:filename] = params["filename"] || asset.label
-        opts[:disposition] = 'inline' 
-        if params.has_key?(:datastream_id)
+        if datastream_name == self.class.default_content_dsid
+          opts[:filename] = params["filename"] || asset.label
+        else
           opts[:filename] = params[:datastream_id]
-          ds = asset.datastreams[params[:datastream_id]]
         end
-        ds = default_content_ds(asset) if ds.nil?
+        opts[:disposition] = 'inline' 
+        ds = asset.datastreams[datastream_name]
         raise ActionController::RoutingError.new('Not Found') if ds.nil?
         data = ds.content
         opts[:type] = ds.mimeType
         send_data data, opts
-        return
     end
     
     
     private 
-    
-    def default_content_ds(asset)
-      ActiveFedora::ContentModel.known_models_for(asset).each do |model_class|
-        return model_class.default_content_ds if model_class.respond_to?(:default_content_ds)
-      end
-      if asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
-        return asset.datastreams[DownloadsController.default_content_dsid]
-      end
-    end
     
     module ClassMethods
       def default_content_dsid
