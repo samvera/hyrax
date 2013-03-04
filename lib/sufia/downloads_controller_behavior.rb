@@ -42,13 +42,12 @@ module Sufia
     end
 
     def send_content(asset)
-        opts = {}
-        if datastream_name == self.class.default_content_dsid
+        opts = {disposition: 'inline'}
+        if default_datastream?
           opts[:filename] = params["filename"] || asset.label
         else
           opts[:filename] = params[:datastream_id]
         end
-        opts[:disposition] = 'inline' 
         ds = asset.datastreams[datastream_name]
         raise ActionController::RoutingError.new('Not Found') if ds.nil?
         data = ds.content
@@ -56,6 +55,9 @@ module Sufia
         send_data data, opts
     end
     
+    def default_datastream?
+      datastream_name == self.class.default_content_dsid
+    end
     
     private 
     
