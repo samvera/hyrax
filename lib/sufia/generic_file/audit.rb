@@ -89,7 +89,7 @@ module Sufia
         end
 
         def audit_everything(force = false)
-          ::GenericFile.find(:all, :rows => ::GenericFile.count).each do |gf|
+          ::GenericFile.find_each do |gf|
             gf.per_version do |ver|
               ::GenericFile.audit(ver, force)
             end
