@@ -41,5 +41,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'mailboxer', '0.8.0'
   gem.add_dependency 'rainbow', '1.1.4'
   gem.add_dependency 'activerecord-import', '0.3.0' # 0.3.1 caused a bug in testing: "SQLite3::SQLException: near ",": syntax error: INSERT INTO..."
-  gem.add_dependency 'font-awesome-sass-rails', '~>2.0'
+  gem.add_dependency 'font-awesome-sass-rails', '~>3.0'
 end
