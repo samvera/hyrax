@@ -1,4 +1,27 @@
 # Sufia
+
+## What is Sufia?
+Sufia is a web application that serves as a self-deposit institutional repository.
+Sufia created with Ruby on Rails and builds on the Hydra Framework.
+
+Sufia has the following features:
+
+*. Multiple file upload
+*. Access controls
+*. Transcoding of audio and video files 
+*. Characterization of uploaded files
+*. A basic set of metadata
+*. Search (based on Blacklight)
+*. Social media interaction
+
+Sufia needs the following software to work:
+*. Solr
+*. Fedora Commons
+*. Redis
+*. Ruby
+
+
+
 ## Creating an application
 ### Generate base Rails install
 ```rails new my_app```
