@@ -47,7 +47,7 @@ module Sufia
       field = self[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)]
       return unless field.present?
       begin
-        Date.parse(field.first).to_formatted_s(:standard)
+        Date.parse(field).to_formatted_s(:standard)
       rescue
         logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
       end
