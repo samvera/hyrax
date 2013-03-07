@@ -279,8 +279,8 @@ describe GenericFile do
     local[Solrizer.solr_name("desc_metadata__part_of")].should be_nil
     local[Solrizer.solr_name("desc_metadata__date_uploaded")].should be_nil
     local[Solrizer.solr_name("desc_metadata__date_modified")].should be_nil
-    local[Solrizer.solr_name("desc_metadata__date_uploaded", type: :date)].should == ['2011-01-01T00:00:00Z']
-    local[Solrizer.solr_name("desc_metadata__date_modified", type: :date)].should == ['2012-01-01T00:00:00Z']
+    local[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)].should == ['2011-01-01T00:00:00Z']
+    local[Solrizer.solr_name("desc_metadata__date_modified", :stored_sortable, type: :date)].should == ['2012-01-01T00:00:00Z']
     local[Solrizer.solr_name("desc_metadata__rights")].should == ["Wide open, buddy."]
     local[Solrizer.solr_name("desc_metadata__related_url")].should be_nil
     local[Solrizer.solr_name("desc_metadata__contributor")].should == ["Mohammad"]
