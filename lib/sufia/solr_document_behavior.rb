@@ -44,7 +44,7 @@ module Sufia
 
 
     def date_uploaded
-      field = self[Solrizer.solr_name("desc_metadata__date_uploaded", type: :date)]
+      field = self[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)]
       return unless field.present?
       Date.parse(field.first).to_formatted_s(:standard)
     end
