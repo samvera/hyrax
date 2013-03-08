@@ -6,17 +6,29 @@ Sufia created with Ruby on Rails and builds on the Hydra Framework.
 
 Sufia has the following features:
 
-* Multiple file upload
-* Access controls
+* Multiple file, or folder, upload
+* Flexible user- and group-based access controls
 * Transcoding of audio and video files 
+* Generation and validation of identifiers
+* Fixity checking
+* Version control
 * Characterization of uploaded files
-* A basic set of metadata
-* Search (based on Blacklight)
+* Forms for batch editing metadata
+* Faceted search and browse (based on Blacklight)
 * Social media interaction
+* User profiles
+* User dashboard for file management
+* Highlighted files on profile
+* Sharing w/ groups and users
+* User notifications
+* Activity streams
+* Background jobs
+* Single-use links
 
 Sufia needs the following software to work:
 * Solr
 * Fedora Commons
+* A SQL RDBMS (MySQL, SQLite)
 * Redis
 * Ruby
 
