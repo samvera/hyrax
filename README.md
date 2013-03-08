@@ -1,8 +1,8 @@
 # Sufia
 
 ## What is Sufia?
-Sufia is a web application that serves as a self-deposit institutional repository.
-Sufia created with Ruby on Rails and builds on the Hydra Framework.
+Sufia is a component that adds self-deposit institutional repository features to a Rails app. 
+Sufia is created with Ruby on Rails and builds on the Hydra Framework.
 
 Sufia has the following features:
 
