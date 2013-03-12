@@ -4,10 +4,10 @@ source 'http://rubygems.org'
 gemspec
 
 gem 'hydra-head'
-gem 'activerecord-import', '0.3.0'
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 group :development, :test do
-  gem 'sqlite3', '1.3.7'
+  gem 'activerecord-import', '0.3.0'
+  gem 'sqlite3'
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 2.12.0'
   gem 'cucumber-rails', '~> 1.0', :require => false
