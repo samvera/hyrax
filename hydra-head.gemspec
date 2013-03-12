@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency('hydra-access-controls',   version)
   s.add_dependency('hydra-core',   version)
 
-  s.add_development_dependency "jettywrapper" 
+  s.add_development_dependency "jettywrapper", '>= 1.4.0'
   s.add_development_dependency "yard" 
   s.add_development_dependency "RedCloth" 
 

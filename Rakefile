@@ -51,45 +51,6 @@ namespace :jetty do
       puts "#{fcfg} file not found -- skipping fedora config"
     end
   end
-
-  # desc "Copies the default SOLR config files and starts up the fedora instance."
-  # task :load => [:config, 'jetty:start']
-
-  # desc "return development jetty to its pristine state, as pulled from git"
-  # task :reset => ['jetty:stop'] do
-  #   system("cd jetty && git reset --hard HEAD && git clean -dfx && cd ..")
-  #   sleep 2
-  # end
-  # 
-  JETTY_URL = 'https://github.com/projecthydra/hydra-jetty/archive/new-solr-schema.zip'
-  JETTY_ZIP = File.join 'tmp', JETTY_URL.split('/').last
-  JETTY_DIR = 'jetty'
-
-  desc "download the jetty zip file"
-  task :download do
-    system 'mkdir tmp' unless File.directory? 'tmp'
-    puts "Downloading jetty..."
-    system "curl -L #{JETTY_URL} -o #{JETTY_ZIP}"
-    abort "Unable to download jetty from #{JETTY_URL}" unless $?.success?
-  end
-
-  task :unzip do
-    Rake::Task["jetty:download"].invoke unless File.exists? JETTY_ZIP
-    puts "Unpacking jetty..."
-    tmp_save_dir = File.join 'tmp', 'jetty_generator'
-    system "unzip -d #{tmp_save_dir} -qo #{JETTY_ZIP}"
-    abort "Unable to unzip #{JETTY_ZIP} into tmp_save_dir/" unless $?.success?
-
-    expanded_dir = Dir[File.join(tmp_save_dir, "hydra-jetty-*")].first        
-
-    system "mv #{expanded_dir} #{JETTY_DIR}"
-    abort "Unable to move #{expanded_dir} into #{JETTY_DIR}/" unless $?.success?
-  end
-
-  task :clean do
-    system "rm -rf #{JETTY_DIR}"
-    Rake::Task["jetty:unzip"].invoke
-  end
 end
 
 desc "Run Continuous Integration"

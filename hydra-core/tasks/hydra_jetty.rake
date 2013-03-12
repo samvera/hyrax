@@ -5,9 +5,7 @@ require 'jettywrapper'
 namespace :hydra do
   namespace :jetty do
     desc "Copies the default Solr & Fedora configs into the bundled Hydra Testing Server"
-    task :config do
-      Rake::Task["hydra:jetty:reset"].reenable
-      Rake::Task["hydra:jetty:reset"].invoke
+    task :config => ['jetty:stop', 'jetty:clean'] do
       Rake::Task["hydra:jetty:config_fedora"].reenable
       Rake::Task["hydra:jetty:config_fedora"].invoke
       Rake::Task["hydra:jetty:config_solr"].reenable
@@ -45,9 +43,5 @@ namespace :hydra do
     desc "Copies the default SOLR config files and starts up the fedora instance."
     task :load => [:config, 'jetty:start']
 
-    desc "return development jetty to its pristine state, as pulled from git"
-    task :reset => ['jetty:stop'] do
-      system("cd jetty && git reset --hard HEAD && git clean -dfx && cd ..")
-    end
   end
 end
