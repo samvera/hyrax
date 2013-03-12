@@ -1,5 +1,7 @@
 ENV["environment"] ||= "test"
 
+require 'rspec/mocks'
+
 module Hydra
   # Stubbing Hydra.config[:policy_aware] so Hydra::PolicyAwareAbility will be loaded for tests.
   def self.config
