@@ -8,3 +8,8 @@
 button.close {
     display: block;
 }
+
+.related-files {
+height: 100px;
+overflow-x: auto;
+}

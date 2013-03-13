@@ -6,6 +6,7 @@ gemspec
 gem 'hydra-head'
 #gem 'mail_form', :git => 'git://github.com/psu-stewardship/mail_form.git', :ref => '50c00f0'
 group :development, :test do
+  gem 'activerecord-import', '0.3.0'
   gem 'sqlite3'
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 2.12.0'
