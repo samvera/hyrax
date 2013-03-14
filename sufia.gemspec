@@ -16,7 +16,8 @@ Gem::Specification.new do |gem|
   gem.version       = Sufia::VERSION
 
   gem.add_dependency 'rails', '~> 3.2.12'
-  gem.add_dependency 'blacklight', '~> 4.0.0'
+  gem.add_dependency 'jquery-rails', '~> 2.1.4' # https://github.com/curationexperts/sufia/issues/44
+  gem.add_dependency 'blacklight', '~> 4.0'
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency "hydra-head", ">= 6.0.0.rc3"
 
