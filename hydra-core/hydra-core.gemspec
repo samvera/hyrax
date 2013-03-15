@@ -25,10 +25,10 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'block_helpers'
   gem.add_dependency 'deprecation', ">= 0.0.5"
   gem.add_dependency 'hydra-access-controls', version
+  gem.add_dependency 'jettywrapper', ">=1.4.1"
   
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'jettywrapper', ">=1.3.1"
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'factory_girl_rails'
 end
