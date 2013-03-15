@@ -14,26 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% content_for :js_head do %>
-
-  <script type = "text/javascript"> 
-
-    // function to hide or show the batch update buttons based on how may items are checked
-    function toggleButtons(forceOn, otherPage ){
-      forceOn = typeof forceOn !== 'undefined' ? forceOn : false
-      otherPage = typeof otherPage !== 'undefined' ? otherPage : <%= !@batch_part_on_other_page %>
-      var n = $(".batch_toggle:checked").length;
-      if ((n>0) || (forceOn)) {
-          $('.batch-select-all').show();
-          $('.button_to').show();
-      } else if ( otherPage){
-          $('.batch-select-all').hide();
-          $('.button_to').hide();
-      }
-      $("body").css("cursor", "auto");
-    }
-  </script>
-<% end %>
 <% content_for :local_js do %>
 
   initialize_audio();
@@ -83,16 +63,14 @@ limitations under the License.
            return false;
         });
       }
-  
-      // hide or show the batch update buttons file selections
-      $(".batch_toggle").bind('click', function(e) {
-           e.preventDefault();
-           toggleButtons();
-       });
   });
 
 
   // hide or show the batch update buttons on page startup
+  window.batch_part_on_other_page = <%= @batch_part_on_other_page%>;
+  window.batch_size_on_other_page = <%= @batch_size_on_other_page%>;
+  window.result_set_size = <%= @result_set_size%>;
+  window.document_list_count = <%= @document_list.count %>;
   toggleButtons(<%= !@empty_batch %>);
       
 
