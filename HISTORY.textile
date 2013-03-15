@@ -1,3 +1,8 @@
+h3. 6.0.0 (unreleased)
+* Added a jetty generator
+* Using new solr schema
+
+
 h3. 5.4.0
 * Hydra::Ability should use a separate cache for each permission document
 * Fixed bug with policy access enforcement which occurs when you select a facet.
