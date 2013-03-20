@@ -72,10 +72,13 @@ Sufia::Engine.routes.draw do
   match 'contact' => 'contact_form#create', :via => :post, :as => :contact_form_index
   match 'contact' => 'contact_form#new', :via => :get, :as => :contact_form_index
 
-  # Resque monitoring routes
-  namespace :admin do
-    constraints Sufia::ResqueAdmin do
-      mount Resque::Server, :at => "queues"
+  # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin
+  # has been defined in the initalizers.
+  if defined?(Sufia::ResqueAdmin)
+    namespace :admin do
+      constraints Sufia::ResqueAdmin do
+        mount Resque::Server, :at => "queues"
+      end
     end
   end
 
