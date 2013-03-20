@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rails', '~> 3.2.12'
   gem.add_dependency 'blacklight', '~> 4.0'
   gem.add_dependency 'blacklight_advanced_search'
-  gem.add_dependency "hydra-head", ">= 6.0.0.rc3"
+  gem.add_dependency "hydra-head", ">= 6.0.0.rc4"
 
   gem.add_dependency 'noid', '0.5.5'
   gem.add_dependency 'hydra-batch-edit', '~> 0.2.0'
