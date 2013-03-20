@@ -1,4 +1,11 @@
+jQuery.fn.exists = function(){return this.length>0;}
+
 $(function () {
+    if (!$('#terms_of_service').exists()) {
+      // deactivate if there is no checkbox, which allows installations to skip the agreement.
+      return;
+    }
+    
     $('#main_upload_start').attr('disabled', true);
     $("#upload_tooltip").hide();
     $("#main_upload_start_span").mousemove(function(e){

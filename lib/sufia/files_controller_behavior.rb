@@ -89,7 +89,7 @@ module Sufia
            retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
         elsif ((file.respond_to?(:size)) && (file.size == 0))
            retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
-        elsif (params[:terms_of_service] != '1')
+        elsif (!terms_accepted?)
            retval = render :json => [{ :name => file.original_filename, :error => "You must accept the terms of service!"}].to_json
 
         # process file
@@ -179,6 +179,11 @@ module Sufia
 
 
     protected
+
+    # override this method if you want to change how the terms are accepted on upload. 
+    def terms_accepted?
+      params[:terms_of_service] == '1'
+    end
 
     # override this method if you need to initialize more complex RDF assertions (b-nodes)
     def initialize_fields(file)
