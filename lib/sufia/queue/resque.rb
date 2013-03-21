@@ -14,7 +14,7 @@ module Sufia
       def push(job)
         queue = job.respond_to?(:queue_name) ? job.queue_name : default_queue_name
         begin
-          ::Resque.enqueue_to queue, MarshaledJob, Marshal.dump(job)
+          ::Resque.enqueue_to queue, MarshaledJob, Base64.encode64(Marshal.dump(job))
         rescue Redis::CannotConnectError
           logger.error "Redis is down!"
         end
@@ -23,7 +23,7 @@ module Sufia
 
     class MarshaledJob
       def self.perform(marshaled_job)
-        Marshal.load(marshaled_job).run
+        Marshal.load(Base64.decode64(marshaled_job)).run
       end
     end
   end
