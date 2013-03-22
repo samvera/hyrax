@@ -24,7 +24,7 @@ module Sufia
           #ffprobe -show_files video.avi 2> /dev/null | grep duration | cut -d= -f2 53.399999  
           command = "#{Sufia::Engine.config.ffmpeg_path} -i \"#{f.path}\" -loglevel quiet -vf \"scale=338:-1\"  -r  1  -t  1 #{output_file}"
           system(command)
-          raise "Unable to execute command \"#{command}\"\n#{err}" unless $?.success?
+          raise "Unable to execute command \"#{command}\"" unless $?.success?
         end
 
         self.thumbnail.content = File.open(output_file, 'rb').read
