@@ -15,7 +15,10 @@ class TranscodeVideoJob < FfmpegTranscodeJob
   private 
 
   def encode_webm
-    opts = "#{size_attributes}  -b:v 345k -acodec libvorbis #{audio_attributes}"
+    # -g 30 enforces keyframe generation every second (30fps)
+    # -b:v is the video bitrate
+    # -acodec is the audio codec
+    opts = "#{size_attributes}  -g 30 -b:v 345k -acodec libvorbis #{audio_attributes}"
     encode_datastream('webm', 'video/webm', opts)
   end
 
