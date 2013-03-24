@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'resque', '~> 1.23.0'#, :require => 'resque/server'
   gem.add_dependency 'resque-pool', '0.3.0'
 # NOTE: the :require arg is necessary on Linux-based hosts
-  gem.add_dependency 'rmagick', '2.13.1'#, :require => 'RMagick'
+  gem.add_dependency 'rmagick', '~> 2.13.2'#, :require => 'RMagick'
   gem.add_dependency 'devise'
   gem.add_dependency 'paperclip', '3.3.0'
   gem.add_dependency 'daemons', '1.1.9'
