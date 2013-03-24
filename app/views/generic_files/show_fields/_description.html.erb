@@ -2,7 +2,10 @@
           <th>Abstract or Summary</th>
           <td>
             <% @generic_file.description.each do |desc| %>
-              <%= iconify_auto_link(desc) %><br />
+              <span itemprop="description">
+              <%= iconify_auto_link(desc) %>
+              </span>
+              <br />
             <% end %>
           </td>
         </tr>

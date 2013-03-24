@@ -2,7 +2,10 @@
           <th>Subject</th>
           <td>
             <% @generic_file.subject.each do |sub| %>
-              <%= link_to_facet(sub, 'desc_metadata__subject_facet') %><br />
+              <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="url"><%= link_to_facet(sub, 'desc_metadata__subject_facet') %></span>
+              </span>
+              <br />
             <% end %>
           </td>
         </tr>

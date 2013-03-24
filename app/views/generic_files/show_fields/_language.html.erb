@@ -2,7 +2,7 @@
           <th>Language</th>
           <td>
             <% @generic_file.language.each do |lang| %>
-              <%= link_to_facet(lang,'desc_metadata__language_facet') %><br />
+              <span itemprop="inLanguage"><%= link_to_facet(lang,'desc_metadata__language_facet') %></span><br />
             <% end %>
           </td>
         </tr>

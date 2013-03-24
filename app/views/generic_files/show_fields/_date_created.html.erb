@@ -2,7 +2,10 @@
           <th>Date Created</th>
           <td>
             <% @generic_file.date_created.each do |dc| %>
-              <%= dc %><br />
+              <span itemprop="dateCreated">
+              <%= dc %>
+			  </span>
+              <br />
             <% end %>
           </td>
         </tr>

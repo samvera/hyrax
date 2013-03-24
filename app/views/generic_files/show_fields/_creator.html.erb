@@ -2,7 +2,10 @@
           <th>Creator</th>
           <td>
             <% @generic_file.creator.each do |creator| %>
-              <%= link_to_facet(creator, 'desc_metadata__creator_facet') %><br />
+			  <span itemprop="creator" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="url"><%= link_to_facet(creator, 'desc_metadata__creator_facet') %></span>
+			  </span>
+              <br />
             <% end %>
           </td>
         </tr>

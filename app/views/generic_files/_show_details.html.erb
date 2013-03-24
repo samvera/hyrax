@@ -3,17 +3,17 @@
       <tbody>
         <tr>
           <th>Depositor</th>
-          <td><%= link_to_profile @generic_file.depositor %></td>
+          <td itemprop="accountablePerson" itemscope itemtype="http://schema.org/Person"><span itemprop="url"><%= link_to_profile @generic_file.depositor %></span></td>
         </tr>
         <tr>
           <th>Date Uploaded</th>
-          <td>
+          <td itemprop="datePublished">
             <%= @generic_file.date_uploaded %>
           </td>
         </tr>
         <tr>
           <th>Date Modified</th>
-          <td>
+          <td itemprop="dateModified">
             <%= @generic_file.date_modified %>
           </td>
         </tr>
