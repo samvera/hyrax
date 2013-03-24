@@ -3,7 +3,7 @@
           <td>
             <% @generic_file.contributor.each do |contributor| %>
 			  <span itemprop="contributor" itemscope itemtype="http://schema.org/Thing">
-                <span itemprop="url"><%= link_to_field('contributor', contributor) %></span>
+                <span itemprop="name"><%= link_to_field('contributor', contributor) %></span>
 			  </span>
               <br />
             <% end %>

@@ -3,7 +3,7 @@
           <td>
             <% @generic_file.based_near.each do |bn| %>
               <span itemprop="contentLocation" itemscope itemtype="http://schema.org/Place">
-              	<span itemprop="url"><%= link_to_facet(bn, 'desc_metadata__based_near_facet') %></span>
+              	<span itemprop="name"><%= link_to_facet(bn, 'desc_metadata__based_near_facet') %></span>
               </span>
               <br />
             <% end %>

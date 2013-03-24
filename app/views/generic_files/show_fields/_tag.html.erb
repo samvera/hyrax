@@ -1,8 +1,8 @@
         <tr>
           <th>Keyword</th>
-          <td itemprop="keywords">
+          <td>
             <% @generic_file.tag.each do |t| %>
-              <%= link_to_facet(t, 'desc_metadata__tag_facet') %><br />
+              <span itemprop="keywords"><%= link_to_facet(t, 'desc_metadata__tag_facet') %></span><br />
             <% end %>
           </td>
         </tr>

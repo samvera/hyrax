@@ -3,8 +3,8 @@
           <td>
             <% @generic_file.publisher.each do |pub| %>
               <span itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-                <span itemprop="url"><%= link_to_facet(pub,'desc_metadata__publisher_facet') %></span>
-			  </span>
+                <span itemprop="name"><%= link_to_facet(pub,'desc_metadata__publisher_facet') %></span>
+			        </span>
               <br />
             <% end %>
           </td>
