@@ -15,5 +15,8 @@ gem 'capybara', :group=>:test
 gem 'factory_girl'
 
 group :assets do
-gem 'sass-rails', '~> 3.2.0'
+  gem 'coffee-rails', '~> 3.2.1'
+  gem 'jquery-rails'
+  gem 'sass-rails', '~> 3.2.0'
+  gem 'font-awesome-sass-rails'
 end
