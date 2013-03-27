@@ -30,11 +30,25 @@ module Sufia
       end
       return pid
     end
+
     protected
+
     def self.next_id
-      # seed with process id so that if two processes are running they do not come up with the same id.
-      @@minter.seed($$)
-      return  "#{@@namespace}:#{@@minter.mint}"
+      pid = ''
+      File.open("tmp/minter-state", File::RDWR|File::CREAT, 0644) {|f|
+        f.flock(File::LOCK_EX)
+        yaml = YAML::load(f.read)
+        yaml = {:template => '.reeddeeddk'} unless yaml
+        minter = ::Noid::Minter.new(yaml)
+        pid =  "#{@@namespace}:#{minter.mint}"
+        f.rewind
+        yaml = YAML::dump(minter.dump)
+        f.write yaml
+        f.flush
+        f.truncate(f.pos)
+      }
+      return pid
     end
+    
   end
 end
