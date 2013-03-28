@@ -1,6 +1,6 @@
 module Hydra
   module Controller
-    module DownloadController
+    module DownloadBehavior
       extend ActiveSupport::Concern
 
       included do

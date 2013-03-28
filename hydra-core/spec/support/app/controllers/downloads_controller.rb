@@ -1,3 +1,3 @@
 class DownloadsController < ApplicationController
-  include Hydra::Controller::DownloadController
+  include Hydra::Controller::DownloadBehavior
 end
