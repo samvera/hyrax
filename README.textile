@@ -23,7 +23,7 @@ h3. Install Rails
 Currently hydra-head is compatible with Rails 3.2
 
 <pre>
-gem install 'rails' --version '~>3.2.12'
+gem install 'rails' --version '~>3.2.13'
 </pre>
 
 h3. Generate a new rails application:
@@ -40,7 +40,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
 <pre>
   source 'http://rubygems.org'
 
-  gem 'rails', '3.2.12'
+  gem 'rails', '3.2.13'
 
   gem 'blacklight'
   gem 'hydra-head', '~> 6.0.0'
