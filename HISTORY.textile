@@ -1,6 +1,47 @@
-h3. 6.0.0 (unreleased)
+h3. 6.0.0 (2013-03-28)
 * Added a jetty generator
+  If you want to install a version of jetty on your local machine to develop you project,
+  you can now do: 'rails generate hydra:jetty'
+
 * Using new solr schema
+  The new solr schema is written to be a more efficient (smaller document size) and easier to configure
+  in your OmDatastream or RDFDatastreams. 
+
+  You need to put in place the new schema.xml and solrconfig.xml.  Then restart solr and reindex using:
+  'ActiveFedora::Base.reindex_everything'
+
+  You're going to want to search your project to make sure you don't have any fields coded like: *_t or *_s 
+  These field names have changed to *_tesim and *_ssim respectively.  
+
+  Finally change your config/initializer/hydra_config.rb to look something like this:
+  https://github.com/projecthydra/hydra-head/blob/master/hydra-core/lib/generators/hydra/templates/config/initializers/hydra_config.rb
+
+
+  For more information about the new index see the Solrizer 3.0.0 docs:
+  https://github.com/projecthydra/hydra-head/wiki/Solr-Schema
+  https://github.com/projecthydra/solrizer/blob/master/README.textile
+
+
+* Added a Hydra::Controllers::DownloadBehavior which allows you to easily create 
+  a controller to serve the content of datastreams.  
+
+  class DownloadsController < ApplicationController
+    include Hydra::Controller::DownloadBehavior
+  end
+
+  then in config/routes.rb add ```resources :downloads```
+
+  then you can do a GET /downloads/{pid}?datastream_id=thumbnail  to get the thumnail datastream
+  
+  By default this allows any user with read access to the object identified by pid to download any
+  of the datatreams.  If you want to control which datastreams a user has access to, overwrite the
+  can_download? method.
+  
+  This example allows anyone to download a 'thumnail' datastream:
+
+  def can_download?
+    datastream.dsid == 'thumnail'
+  end 
 
 
 h3. 5.4.0
