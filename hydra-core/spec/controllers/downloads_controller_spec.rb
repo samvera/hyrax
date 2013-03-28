@@ -25,6 +25,7 @@ describe Hydra::Controller::DownloadController do
 
   describe "with a file" do
     before (:all) do
+      @user = User.create!(email: 'email@example.com', password: 'password')
       @obj = ActiveFedora::Base.new
       @obj = ModsAsset.new
       @obj.label = "world.png"
@@ -35,7 +36,6 @@ describe Hydra::Controller::DownloadController do
     end
     describe "when logged in as reader" do
       before do
-        @user = User.create!(email: 'email@example.com', password: 'password')
         sign_in @user
         User.any_instance.stub(:groups).and_return([])
       end
