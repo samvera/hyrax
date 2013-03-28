@@ -1,20 +1,10 @@
 require 'spec_helper'
 
-describe Hydra::Controller::DownloadController do
-
-  before(:all) do
-    class DownloadsController < ApplicationController
-      include Hydra::Controller::DownloadController
-    end
+describe DownloadsController do
+  before do
     Rails.application.routes.draw do
       resources :downloads
     end
-    @controller = DownloadsController.new
-  end
-
-  after(:all) do
-    @f.destroy
-    Object.send(:remove_const, :DownloadsController)
   end
 
   describe "routing" do
@@ -24,7 +14,7 @@ describe Hydra::Controller::DownloadController do
   end
 
   describe "with a file" do
-    before (:all) do
+    before do
       @user = User.create!(email: 'email@example.com', password: 'password')
       @obj = ActiveFedora::Base.new
       @obj = ModsAsset.new
@@ -34,6 +24,9 @@ describe Hydra::Controller::DownloadController do
       @obj.read_users = [@user.user_key]
       @obj.save!
     end
+    after do
+      @obj.destroy
+    end 
     describe "when logged in as reader" do
       before do
         sign_in @user
@@ -74,6 +67,9 @@ describe Hydra::Controller::DownloadController do
 
     describe "when not logged in as reader" do
       describe "show" do
+        before do
+          sign_in User.create!(email: 'email2@example.com', password: 'password')
+        end
         it "should deny access" do
           lambda { get "show", :id =>@obj.pid }.should raise_error Hydra::AccessDenied
         end

@@ -13,6 +13,10 @@ class TestAppGenerator < Rails::Generators::Base
 
   def copy_test_fixtures
     copy_file "app/models/generic_content.rb"
+
+    # Download controller
+    copy_file "app/controllers/downloads_controller.rb"
+
     copy_file "spec/fixtures/hydrangea_fixture_mods_article1.foxml.xml" 
 
     # For testing Hydra::SubmissionWorkflow
