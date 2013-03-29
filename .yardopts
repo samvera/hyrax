@@ -1,0 +1,3 @@
+--quiet
+hydra-*/lib/**/*.rb
+lib/**/*.rb
