@@ -1,4 +1,0 @@
-Upgrading to HydraHead 6.0.0
-
-Create a new config/initializer/hydra_config.rb to use the new solr schema
-Reindex everything after upgrading
