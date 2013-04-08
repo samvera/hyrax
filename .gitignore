@@ -7,6 +7,10 @@ config/hydra-ldap.yml
 config/redis.yml
 
 # bad gem etiquette, man
+.ruby-version
+.ruby-gemset
+ruby-version
+ruby-gemset
 .rvmrc
 Gemfile.lock
 
