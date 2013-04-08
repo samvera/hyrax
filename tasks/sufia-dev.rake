@@ -4,8 +4,19 @@ APP_ROOT="." # for jettywrapper
 require 'jettywrapper'
 ENV["RAILS_ROOT"] ||= 'spec/internal'
 
+desc 'Spin up hydra-jetty and run specs'
+task :ci => ['jetty:config'] do
+  puts 'running continuous integration'
+  jetty_params = Jettywrapper.load_config
+  error = Jettywrapper.wrap(jetty_params) do
+    Rake::Task['spec'].invoke
+  end
+  raise "test failures: #{error}" if error
+end
+
 desc "Run specs"
 RSpec::Core::RakeTask.new(:spec => [:generate]) do |t|
+  puts 'running specs'
   # if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.8/
   #   t.rcov = true
   #   t.rcov_opts = %w{--exclude spec\/*,gems\/*,ruby\/* --aggregate coverage.data}
@@ -45,7 +56,7 @@ task :generate do
       end
     end
   end
-  puts "Running specs"
+  puts "Done generating test app"
 end
 
 desc "Clean out the test rails app"
@@ -59,7 +70,7 @@ def within_test_app
   yield
   FileUtils.cd('../..')
 end
-  
+
 namespace :meme do
   desc "configure jetty to generate checksums"
   task :config do
