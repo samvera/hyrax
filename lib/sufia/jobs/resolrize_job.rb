@@ -18,6 +18,6 @@ class ResolrizeJob
   end
 
   def run
-    Solrizer::Fedora::Solrizer.new.solrize_objects(:suppress_errors => false)
+    ActiveFedora::Base.reindex_everything
   end
 end
