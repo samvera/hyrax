@@ -13,11 +13,11 @@
 # limitations under the License.
 
 # properties datastream: catch-all for info that didn't have another home.  Particularly depositor.
-class PropertiesDatastream < ActiveFedora::NokogiriDatastream
+class PropertiesDatastream < ActiveFedora::OmDatastream
   set_terminology do |t|
     t.root(:path=>"fields", :xmlns => '', :namespace_prefix => nil) 
     # This is where we put the user id of the object depositor -- impacts permissions/access controls
-    t.depositor :xmlns => '', :namespace_prefix => nil, :index_as=>[:searchable]
+    t.depositor :xmlns => '', :namespace_prefix => nil, :index_as=>[:stored_searchable]
     # This is where we put the relative path of the file if submitted as a folder
     t.relative_path :xmlns => '', :namespace_prefix => nil
   end

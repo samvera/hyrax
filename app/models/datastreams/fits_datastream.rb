@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class FitsDatastream < ActiveFedora::NokogiriDatastream
+class FitsDatastream < ActiveFedora::OmDatastream
   include OM::XML::Document
 
   set_terminology do |t|
@@ -22,7 +22,7 @@ class FitsDatastream < ActiveFedora::NokogiriDatastream
     t.identification {
       t.identity {
         t.format_label(:path=>{:attribute=>"format"})
-        t.mime_type(:path=>{:attribute=>"mimetype"}, index_as: [:searchable])
+        t.mime_type(:path=>{:attribute=>"mimetype"}, index_as: [:stored_searchable])
       }
     }
     t.fileinfo {

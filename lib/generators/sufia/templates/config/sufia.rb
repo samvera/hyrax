@@ -61,6 +61,14 @@ Sufia.config do |config|
     # Map hostnames onto Google Analytics tracking IDs
     #config.google_analytics_id = 'UA-99999999-1'
 
+    
+    # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
+    #config.temp_file_base = '/home/developer1'
+
+    # If you have ffmpeg installed and want to transcode audio and video uncomment this line
+    #config.enable_ffmpeg = true
+
 end
 
+Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
 

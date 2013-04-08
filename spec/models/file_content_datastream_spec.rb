@@ -16,19 +16,18 @@ require 'spec_helper'
 
 describe FileContentDatastream do
   before do
-    @subject = FileContentDatastream.new(nil, 'content')
-    @subject.stub(:pid=>'my_pid')
-    @subject.stub(:dsVersionID=>'content.7')
+    Sufia.queue.stub(:push).with(an_instance_of CharacterizeJob) #don't run characterization
   end
   describe "version control" do
-    before(:all) do
+    before do
       f = GenericFile.new
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata('mjg36')
+      f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save
-      @file = GenericFile.find(f.pid)
+      @file = f.reload
     end
-    after(:all) do
+    after do
       @file.delete
     end
     it "should have a list of versions with one entry" do
@@ -47,8 +46,9 @@ describe FileContentDatastream do
       @file.content.get_version("foobar").should be_nil
     end
     describe "add a version" do
-      before(:all) do
+      before do
         @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+        @file.stub(:characterize_if_changed).and_yield #don't run characterization
         @file.save
       end
       it "should return two versions" do
@@ -63,6 +63,11 @@ describe FileContentDatastream do
     end
   end
   describe "extract_metadata" do
+    before do
+      @subject = FileContentDatastream.new(nil, 'content')
+      @subject.stub(:pid=>'my_pid')
+      @subject.stub(:dsVersionID=>'content.7')
+    end
     it "should have the path" do
       @subject.send(:fits_path).should be_present
     end
@@ -96,6 +101,7 @@ describe FileContentDatastream do
     before do
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata('mjg36')
+      @generic_file.stub(:characterize_if_changed).and_yield #don't run characterization
     end
     after do
       @generic_file.delete
@@ -111,7 +117,7 @@ describe FileContentDatastream do
       @generic_file.thumbnail.changed?.should be_true
       @generic_file.content.changed?.should be_false
 
-      retrieved_file = GenericFile.find(@generic_file.pid)
+      retrieved_file = @generic_file.reload
       retrieved_file.content.changed?.should be_false
     end
   end

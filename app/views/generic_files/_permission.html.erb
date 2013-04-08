@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% depositor = gf.depositor || GenericFile.find(:is_part_of_s => "info:fedora/#{batch.pid}").first.depositor %>
+<% depositor = gf.depositor || batch.generic_files.first.depositor %>
 <% public_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "public"}.compact.first %>
 <% public_perm = true if params[:controller] == 'batch' %>
 <% psu_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "registered"}.compact.first %>

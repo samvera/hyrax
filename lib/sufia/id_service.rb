@@ -15,20 +15,23 @@
 require 'noid'
 
 module Sufia
-  class IdService
-    @@minter = ::Noid::Minter.new(:template => '.reeddeeddk')
-    @@namespace = Sufia::Engine.config.id_namespace
+  module IdService
+    @minter = ::Noid::Minter.new(:template => '.reeddeeddk')
+    @pid = $$
+    @namespace = Sufia::Engine.config.id_namespace
+    @semaphore = Mutex.new
     def self.valid?(identifier)
       # remove the fedora namespace since it's not part of the noid
       noid = identifier.split(":").last
-      return @@minter.valid? noid
+      return @minter.valid? noid
     end
     def self.mint
-      while true
-        pid = self.next_id
-        break unless ActiveFedora::Base.exists?(pid)
+      @semaphore.synchronize do
+        while true
+          pid = self.next_id
+          return pid unless ActiveFedora::Base.exists?(pid)
+        end
       end
-      return pid
     end
 
     protected
@@ -40,7 +43,7 @@ module Sufia
         yaml = YAML::load(f.read)
         yaml = {:template => '.reeddeeddk'} unless yaml
         minter = ::Noid::Minter.new(yaml)
-        pid =  "#{@@namespace}:#{minter.mint}"
+        pid =  "#{@namespace}:#{minter.mint}"
         f.rewind
         yaml = YAML::dump(minter.dump)
         f.write yaml

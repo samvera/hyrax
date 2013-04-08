@@ -20,7 +20,7 @@ limitations under the License.
   <ul class="dropdown-menu">
       <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), sufia.dashboard_index_path, :id => 'dashboard_nav_link'  %></li>
       <li><%= link_to raw('<i class="icon-upload-alt"></i> upload'), sufia.new_generic_file_path, :id => 'upload_nav_link'  %></li>
-      <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), sufia.edit_profile_path(current_user.user_key), :id => 'upload_nav_link'  %></li>
+      <li><%= link_to raw('<i class="icon-cog"></i> edit profile'), sufia.edit_profile_path(current_user), :id => 'upload_nav_link'  %></li>
       <li class="divider"></li>
       <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
   </ul>

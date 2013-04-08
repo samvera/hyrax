@@ -41,6 +41,7 @@ limitations under the License.
 //= require sufia/permissions
 //= require sufia/tabs
 //= require sufia/trophy
+//= require sufia/batch_select_all
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change

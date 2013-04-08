@@ -46,54 +46,30 @@ class CatalogController < ApplicationController
   def recent
     if user_signed_in?
       # grab other people's documents
-      (resp, doc_list) = get_search_results(:q =>'{!lucene q.op=AND df=depositor_t}-'+current_user.user_key, :sort=>"system_create_dt desc", :rows=>3)      
+      (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
+                                        :sort=>sort_field, :rows=>4)      
     else 
       # grab any documents we do not know who you are
-      (resp, doc_list) = get_search_results(:q =>'', :sort=>"system_create_dt desc", :rows=>3)
+      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
     end
-    @recent_documents = doc_list[0..3]
   end
 
   def recent_me
     if user_signed_in?
-      (resp, doc_list) = get_search_results(:q =>'{!lucene q.op=AND df=depositor_t}'+current_user.user_key, :sort=>"system_create_dt desc", :rows=>3)
-      @recent_user_documents = doc_list[0..3]
-    else 
-       @recent_user_documents = nil
+      (_, @recent_user_documents) = get_search_results(:q =>filter_not_mine,
+                                        :sort=>sort_field, :rows=>4)
     end
   end
 
-
-#####################
-# jgm testing start #
-#####################
-  if Rails.env == "integration"
-    # COPIED AND MODIFIED from:
-    #	/usr/local/rvm/gems/ree-1.8.7-2011.03@scholarsphere/gems/blacklight-3.3.2/lib/blacklight/catalog.rb
-    #
-    # when solr (RSolr) throws an error (RSolr::RequestError), this method is executed.
-    def rsolr_request_error(exception)
-      #if Rails.env == "development"
-      if ['development', 'integration'].include?(Rails.env)
-        raise exception # Rails own code will catch and give usual Rails error page with stack trace
-      else
-        flash_notice = "Sorry, I don't understand your search."
-        # Set the notice flag if the flash[:notice] is already set to the error that we are setting.
-        # This is intended to stop the redirect loop error
-        notice = flash[:notice] if flash[:notice] == flash_notice
-        unless notice
-          flash[:notice] = flash_notice
-          redirect_to root_path, :status => 500
-        else
-          render :template => "public/500.html", :layout => false, :status => 500
-        end
-      end
-    end
-  #
+  def self.uploaded_field
+#  system_create_dtsi
+    solr_name('desc_metadata__date_uploaded', :stored_sortable, type: :date)
   end
-###################
-# jgm testing end #
-###################
+
+  def self.modified_field
+    solr_name('desc_metadata__date_modified', :stored_sortable, type: :date)
+  end
+
 
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
@@ -103,25 +79,24 @@ class CatalogController < ApplicationController
     }
 
     # solr field configuration for search results/index views
-    config.index.show_link = "desc_metadata__title_display"
+    config.index.show_link = solr_name("desc_metadata__title", :displayable)
     config.index.record_display_type = "id"
 
     # solr field configuration for document/show views
-    config.show.html_title = "desc_metadata__title_display"
-    config.show.heading = "desc_metadata__title_display"
-    config.show.display_type = "has_model_s"
+    config.show.html_title = solr_name("desc_metadata__title", :displayable)
+    config.show.heading = solr_name("desc_metadata__title", :displayable)
+    config.show.display_type = solr_name("has_model", :symbol)
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
-    config.add_facet_field "desc_metadata__resource_type_facet", :label => "Resource Type", :limit => 5
-    #config.add_facet_field "desc_metadata__contributor_facet", :label => "Contributor", :limit => 5
-    config.add_facet_field "desc_metadata__creator_facet", :label => "Creator", :limit => 5
-    config.add_facet_field "desc_metadata__tag_facet", :label => "Keyword", :limit => 5
-    config.add_facet_field "desc_metadata__subject_facet", :label => "Subject", :limit => 5
-    config.add_facet_field "desc_metadata__language_facet", :label => "Language", :limit => 5
-    config.add_facet_field "desc_metadata__based_near_facet", :label => "Location", :limit => 5
-    config.add_facet_field "desc_metadata__publisher_facet", :label => "Publisher", :limit => 5
-    config.add_facet_field "file_format_facet", :label => "File Format", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__resource_type", :facetable), :label => "Resource Type", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__creator", :facetable), :label => "Creator", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__tag", :facetable), :label => "Keyword", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__subject", :facetable), :label => "Subject", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__language", :facetable), :label => "Language", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__based_near", :facetable), :label => "Location", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__publisher", :facetable), :label => "Publisher", :limit => 5
+    config.add_facet_field solr_name("file_format", :facetable), :label => "File Format", :limit => 5
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -130,41 +105,41 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
-    config.add_index_field "desc_metadata__title_display", :label => "Title"
-    config.add_index_field "desc_metadata__description_display", :label => "Description"
-    config.add_index_field "desc_metadata__tag_display", :label => "Keyword"
-    config.add_index_field "desc_metadata__subject_display", :label => "Subject"
-    config.add_index_field "desc_metadata__creator_display", :label => "Creator"
-    config.add_index_field "desc_metadata__contributor_display", :label => "Contributor"
-    config.add_index_field "desc_metadata__publisher_display", :label => "Publisher"
-    config.add_index_field "desc_metadata__based_near_display", :label => "Location"
-    config.add_index_field "desc_metadata__language_display", :label => "Language"
-    config.add_index_field "desc_metadata__date_uploaded_display", :label => "Date Uploaded"
-    config.add_index_field "desc_metadata__date_modified_display", :label => "Date Modified"
-    config.add_index_field "desc_metadata__date_created_display", :label => "Date Created"
-    config.add_index_field "desc_metadata__rights_display", :label => "Rights"
-    config.add_index_field "desc_metadata__resource_type_display", :label => "Resource Type"
-    config.add_index_field "desc_metadata__format_display", :label => "File Format"
-    config.add_index_field "desc_metadata__identifier_display", :label => "Identifier"
+    config.add_index_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
+    config.add_index_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
+    config.add_index_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), :label => "Keyword"
+    config.add_index_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), :label => "Subject"
+    config.add_index_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), :label => "Creator"
+    config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), :label => "Contributor"
+    config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), :label => "Publisher"
+    config.add_index_field solr_name("desc_metadata__based_near", :stored_searchable, type: :string), :label => "Location"
+    config.add_index_field solr_name("desc_metadata__language", :stored_searchable, type: :string), :label => "Language"
+    config.add_index_field solr_name("desc_metadata__date_uploaded", :stored_searchable, type: :string), :label => "Date Uploaded"
+    config.add_index_field solr_name("desc_metadata__date_modified", :stored_searchable, type: :string), :label => "Date Modified"
+    config.add_index_field solr_name("desc_metadata__date_created", :stored_searchable, type: :string), :label => "Date Created"
+    config.add_index_field solr_name("desc_metadata__rights", :stored_searchable, type: :string), :label => "Rights"
+    config.add_index_field solr_name("desc_metadata__resource_type", :stored_searchable, type: :string), :label => "Resource Type"
+    config.add_index_field solr_name("desc_metadata__format", :stored_searchable, type: :string), :label => "File Format"
+    config.add_index_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), :label => "Identifier"
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
-    config.add_show_field "desc_metadata__title_display", :label => "Title"
-    config.add_show_field "desc_metadata__description_display", :label => "Description"
-    config.add_show_field "desc_metadata__tag_display", :label => "Keyword"
-    config.add_show_field "desc_metadata__subject_display", :label => "Subject"
-    config.add_show_field "desc_metadata__creator_display", :label => "Creator"
-    config.add_show_field "desc_metadata__contributor_display", :label => "Contributor"
-    config.add_show_field "desc_metadata__publisher_display", :label => "Publisher"
-    config.add_show_field "desc_metadata__based_near_display", :label => "Location"
-    config.add_show_field "desc_metadata__language_display", :label => "Language"
-    config.add_show_field "desc_metadata__date_uploaded_display", :label => "Date Uploaded"
-    config.add_show_field "desc_metadata__date_modified_display", :label => "Date Modified"
-    config.add_show_field "desc_metadata__date_created_display", :label => "Date Created"
-    config.add_show_field "desc_metadata__rights_display", :label => "Rights"
-    config.add_show_field "desc_metadata__resource_type_display", :label => "Resource Type"
-    config.add_show_field "desc_metadata__file_format_display", :label => "File Format"
-    config.add_show_field "desc_metadata__identifier_display", :label => "Identifier"
+    config.add_show_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
+    config.add_show_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
+    config.add_show_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), :label => "Keyword"
+    config.add_show_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), :label => "Subject"
+    config.add_show_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), :label => "Creator"
+    config.add_show_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), :label => "Contributor"
+    config.add_show_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), :label => "Publisher"
+    config.add_show_field solr_name("desc_metadata__based_near", :stored_searchable, type: :string), :label => "Location"
+    config.add_show_field solr_name("desc_metadata__language", :stored_searchable, type: :string), :label => "Language"
+    config.add_show_field solr_name("desc_metadata__date_uploaded", :stored_searchable, type: :string), :label => "Date Uploaded"
+    config.add_show_field solr_name("desc_metadata__date_modified", :stored_searchable, type: :string), :label => "Date Modified"
+    config.add_show_field solr_name("desc_metadata__date_created", :stored_searchable, type: :string), :label => "Date Created"
+    config.add_show_field solr_name("desc_metadata__rights", :stored_searchable, type: :string), :label => "Rights"
+    config.add_show_field solr_name("desc_metadata__resource_type", :stored_searchable, type: :string), :label => "Resource Type"
+    config.add_show_field solr_name("desc_metadata__format", :stored_searchable, type: :string), :label => "File Format"
+    config.add_show_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), :label => "Identifier"
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -183,7 +158,15 @@ class CatalogController < ApplicationController
     # This one uses all the defaults set by the solr request handler. Which
     # solr request handler? The one set in config[:default_solr_parameters][:qt],
     # since we aren't specifying it otherwise.
-    config.add_search_field 'all_fields', :label => 'All Fields', :include_in_advanced_search => false
+    config.add_search_field('all_fields', :label => 'All Fields', :include_in_advanced_search => false) do |field|
+      title_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
+      label_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
+      contributor_name = solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
+      field.solr_parameters = {
+        :qf => "#{title_name} noid_tsi #{label_name} file_format_tesim #{contributor_name}",
+        :pf => "#{title_name}"
+      }
+    end
     
 
     # Now we see how to over-ride Solr request handler defaults, in this
@@ -199,17 +182,21 @@ class CatalogController < ApplicationController
       # syntax, as eg {! qf=$title_qf }. This is neccesary to use
       # Solr parameter de-referencing like $title_qf.
       # See: http://wiki.apache.org/solr/LocalParams
+      solr_name = solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__contributor_t",
-        :pf => "desc_metadata__contributor_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
+
+
     config.add_search_field('creator') do |field|
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
+      solr_name = solr_name("desc_metadata__creator", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__creator_t",
-        :pf => "desc_metadata__creator_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -217,9 +204,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "title"
       }
+      solr_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__title_t",
-        :pf => "desc_metadata__title_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -228,9 +216,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "description"
       }
+      solr_name = solr_name("desc_metadata__description", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__description_t",
-        :pf => "desc_metadata__description_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -238,9 +227,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "publisher"
       }
+      solr_name = solr_name("desc_metadata__publisher", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__publisher_t",
-        :pf => "desc_metadata__publisher_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -248,9 +238,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "date_created"
       }
+      solr_name = solr_name("desc_metadata__created", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__date_created_t",
-        :pf => "desc_metadata__date_created_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -258,9 +249,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "subject"
       }
+      solr_name = solr_name("desc_metadata__subject", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__subject_t",
-        :pf => "desc_metadata__subject_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -268,9 +260,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "language"
       }
+      solr_name = solr_name("desc_metadata__language", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__language_t",
-        :pf => "desc_metadata__language_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -278,9 +271,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "resource_type"
       }
+      solr_name = solr_name("desc_metadata__resource_type", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__resource_type_t",
-        :pf => "desc_metadata__resource_type_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -289,9 +283,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "format"
       }
+      solr_name = solr_name("desc_metadata__format", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "file_format_t",
-        :pf => "file_format_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -300,9 +295,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "identifier"
       }
+      solr_name = solr_name("desc_metadata__id", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "id_t",
-        :pf => "id_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -311,9 +307,10 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "based_near"
       }
+      solr_name = solr_name("desc_metadata__based_near", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__based_near_t",
-        :pf => "desc_metadata__based_near_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
@@ -321,39 +318,68 @@ class CatalogController < ApplicationController
       field.solr_parameters = {
         :"spellcheck.dictionary" => "tag"
       }
+      solr_name = solr_name("desc_metadata__tag", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__tag_t",
-        :pf => "desc_metadata__tag_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
     config.add_search_field('depositor') do |field|
+      solr_name = solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "depositor_t",
-        :pf => "depositor_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
 
     config.add_search_field('rights') do |field|
+      solr_name = solr_name("desc_metadata__rights", :stored_searchable, type: :string)
       field.solr_local_parameters = {
-        :qf => "desc_metadata__rights_t",
-        :pf => "desc_metadata__rights_t"
+        :qf => solr_name,
+        :pf => solr_name
       }
     end
+
 
     # "sort results by" select (pulldown)
     # label in pulldown is followed by the name of the SOLR field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     # label is key, solr field is value
-    config.add_sort_field 'score desc, desc_metadata__date_uploaded_dt desc', :label => "relevance \u25BC"
-    config.add_sort_field 'desc_metadata__date_uploaded_dt desc', :label => "date uploaded \u25BC"
-    config.add_sort_field 'desc_metadata__date_uploaded_dt asc', :label => "date uploaded \u25B2"
-    config.add_sort_field 'desc_metadata__date_modified_dt desc', :label => "date modified \u25BC"
-    config.add_sort_field 'desc_metadata__date_modified_dt asc', :label => "date modified \u25B2"
+    config.add_sort_field "score desc, #{uploaded_field} desc", :label => "relevance \u25BC"
+    config.add_sort_field "#{uploaded_field} desc", :label => "date uploaded \u25BC"
+    config.add_sort_field "#{uploaded_field} asc", :label => "date uploaded \u25B2"
+    config.add_sort_field "#{modified_field} desc", :label => "date modified \u25BC"
+    config.add_sort_field "#{modified_field} asc", :label => "date modified \u25B2"
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
     config.spell_max = 5
   end
+
+  protected
+
+  # Limits search results just to GenericFiles
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
+  def exclude_unwanted_models(solr_parameters, user_parameters)
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:GenericFile\""
+  end
+
+  def depositor 
+    #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+    Solrizer.solr_name('depositor', :stored_searchable, type: :string)
+  end
+
+  def filter_not_mine 
+    "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
+  end
+
+  def sort_field
+    "#{Solrizer.solr_name('system_create', :sortable)} desc"
+  end
+
+
 end

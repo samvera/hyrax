@@ -46,15 +46,16 @@ describe CatalogController do
       it "should find pdf files" do
         response.should be_success
         response.should render_template('catalog/index')
-        assigns(:document_list).map(&:id) == [@gf1.id]
+        assigns(:document_list).map(&:id).should == [@gf1.id]
         
         assigns(:document_list).count.should eql(1)
-        assigns(:document_list)[0].fetch(:desc_metadata__title_t)[0].should eql('Test Document PDF')
+        assigns(:document_list).first['desc_metadata__title_tesim'].should == ['Test Document PDF']
       end
     end
     describe "facet search" do
       before do
-        xhr :get, :index, :q=>"{f=desc_metadata__contributor_facet}Contrib1"
+        # TODO: this is not how a facet query is done.
+        xhr :get, :index, :q=>"{f=desc_metadata__contributor_tesim}Contrib1"
       end
       it "should find facet files" do
         response.should be_success
@@ -97,16 +98,15 @@ describe CatalogController do
       assigns(:recent_documents).count.should eql(4)
       # the order is reversed since the first in should be the last out in descending time order
       #assigns(:recent_documents).each {|doc| logger.info doc.fetch(:desc_metadata__title_t)[0]}
-      lgf4 = assigns(:recent_documents)[0]
-      lgf3 = assigns(:recent_documents)[1]
-      lgf2 = assigns(:recent_documents)[2]
-      lgf1 = assigns(:recent_documents)[3]
-      lgf4.fetch(:desc_metadata__title_t)[0].should eql(@gf4.title[0])
-      lgf4.fetch(:desc_metadata__contributor_t)[0].should eql(@gf4.contributor[0])
-      lgf4.fetch(:desc_metadata__resource_type_t)[0].should eql(@gf4.resource_type[0])
-      lgf1.fetch(:desc_metadata__title_t)[0].should eql(@gf1.title[0])
-      lgf1.fetch(:desc_metadata__contributor_t)[0].should eql(@gf1.contributor[0])
-      lgf1.fetch(:desc_metadata__resource_type_t)[0].should eql(@gf1.resource_type[0])
+      lgf1 = assigns(:recent_documents)[0]
+      lgf4 = assigns(:recent_documents)[3]
+      lgf4['desc_metadata__title_tesim'].should == ['Generic File 4']
+      lgf4['desc_metadata__contributor_tesim'].should == ['contributor 4']
+      lgf4['desc_metadata__resource_type_tesim'].should == ['type 4']
+
+      lgf1['desc_metadata__title_tesim'].should == ['Generic File 1']
+      lgf1['desc_metadata__contributor_tesim'].should == ['contributor 1']
+      lgf1['desc_metadata__resource_type_tesim'].should == ['type 1']
     end
   end
 end

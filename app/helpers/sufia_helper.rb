@@ -35,12 +35,8 @@ module SufiaHelper
   end
 
   def display_user_name(recent_document)
-    return "no display name" unless recent_document[:depositor_t]
-    return User.find_by_user_key(recent_document[:depositor_t][0]).name rescue recent_document[:depositor_t][0]
-  end
-
-  def get_depositor_from_document(doc)
-    doc[:depositor_t] ? doc[:depositor_t][0] : "no depositor value"
+    return "no display name" unless recent_document.depositor
+    return User.find_by_user_key(recent_document.depositor).name rescue recent_document.depositor
   end
 
   def link_to_facet(field, field_string)
@@ -48,7 +44,8 @@ module SufiaHelper
   end
 
   def link_to_facet_list(list, field_string, emptyText="No value entered", separator=", ")
-    return list.map{ |item| link_to_facet(item, field_string) }.join(separator) unless list.blank?
+    facet_field = Solrizer.solr_name(field_string, :facetable)
+    return list.map{ |item| link_to_facet(item, facet_field) }.join(separator) unless list.blank?
     return emptyText
   end
 
@@ -70,9 +67,15 @@ module SufiaHelper
 
   def link_to_profile(login)
     user = User.find_by_user_key(login)
-    link_to user.name, Sufia::Engine.routes.url_helpers.profile_path(login)
-  rescue
-    link_to login, Sufia::Engine.routes.url_helpers.profile_path(login)
+    return login if user.nil?
+
+    text = if user.respond_to? :name
+      user.name
+    else
+      login
+    end
+
+    link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)
   end
 
   def linkify_chat_id(chat_id)

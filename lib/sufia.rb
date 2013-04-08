@@ -24,11 +24,12 @@ module Sufia
   class Engine < ::Rails::Engine
     engine_name 'sufia'
 
+    # Set some configuration defaults
     config.queue = Sufia::Resque::Queue
     config.enable_ffmpeg = false
     config.ffmpeg_path = 'ffmpeg'
     config.fits_message_length = 5
-    
+    config.temp_file_base = nil
 
     config.autoload_paths << File.expand_path("../sufia/jobs", __FILE__)
     
@@ -36,23 +37,10 @@ module Sufia
       require 'sufia/active_fedora/redis'
     end
 
-    initializer "Patch kaminari" do
-      require "kaminari/helpers/tag"
-    end
-
     initializer "Patch active_record" do
       require 'sufia/active_record/redis'
     end
 
-  end
-
-  class ResqueAdmin
-    def self.matches?(request)
-      current_user = request.env['warden'].user
-      return false if current_user.blank?
-      # TODO code a group here that makes sense
-      #current_user.groups.include? 'umg/up.dlt.scholarsphere-admin'
-    end
   end
 
   def self.config(&block)
@@ -77,6 +65,7 @@ module Sufia
   autoload :HttpHeaderAuth
   autoload :SolrDocumentBehavior
   autoload :FilesControllerBehavior
+  autoload :BatchEditsControllerBehavior
   autoload :DownloadsControllerBehavior
   autoload :FileContent
 end

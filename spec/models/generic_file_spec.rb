@@ -16,14 +16,14 @@ require 'spec_helper'
 
 describe GenericFile do
   before do
-    @file = GenericFile.new
-    @file.apply_depositor_metadata('jcoyne')
+    subject.apply_depositor_metadata('jcoyne')
+    @file = subject #TODO remove this line someday (use subject instead)
   end
 
   describe "terms_for_editing" do
     it "should return a list" do
       @file.terms_for_editing.should == [ :contributor, :creator, :title, :description, :publisher,
-       :date_created, :subject, :language, :rights, :identifier, :based_near, :tag, :related_url]
+       :date_created, :subject, :language, :rights, :resource_type, :identifier, :based_near, :tag, :related_url]
     end
   end
   describe "terms_for_display" do
@@ -31,6 +31,71 @@ describe GenericFile do
       @file.terms_for_display.should == [ :part_of, :contributor, :creator, :title, :description, 
         :publisher, :date_created, :date_uploaded, :date_modified,:subject, :language, :rights, 
         :resource_type, :identifier, :based_near, :tag, :related_url]
+    end
+  end
+
+  describe "mime type recognition" do
+    describe "image?" do
+      it "should be true for jpeg2000" do
+        subject.mime_type = 'image/jp2'
+        subject.should be_image
+      end
+      it "should be true for jpeg" do
+        subject.mime_type = 'image/jpg'
+        subject.should be_image
+      end
+      it "should be true for png" do
+        subject.mime_type = 'image/png'
+        subject.should be_image
+      end
+    end
+    describe "pdf?" do
+      it "should be true for pdf" do
+        subject.mime_type = 'application/pdf'
+        subject.should be_pdf
+      end
+    end
+    describe "audio?" do
+      it "should be true for wav" do
+        subject.mime_type = 'audio/x-wave'
+        subject.should be_audio
+        subject.mime_type = 'audio/x-wav'
+        subject.should be_audio
+      end
+      it "should be true for mpeg" do
+        subject.mime_type = 'audio/mpeg'
+        subject.should be_audio
+        subject.mime_type = 'audio/mp3'
+        subject.should be_audio
+      end
+      it "should be true for ogg" do
+        subject.mime_type = 'audio/ogg'
+        subject.should be_audio
+      end
+    end
+    describe "video?" do
+      it "should be true for avi" do
+        subject.mime_type = 'video/avi'
+        subject.should be_video
+      end
+      it "should be true for webm" do
+        subject.mime_type = 'video/webm'
+        subject.should be_video
+      end
+      it "should be true for mpeg" do
+        subject.mime_type = 'video/mp4'
+        subject.should be_video
+        subject.mime_type = 'video/mpeg'
+        subject.should be_video
+      end
+      it "should be true for quicktime" do
+        subject.mime_type = 'video/quicktime'
+        subject.should be_video
+      end
+      it "should be true for mxf" do
+        subject.mime_type = 'application/mxf'
+        subject.should be_video
+      end
     end
   end
 
@@ -158,7 +223,7 @@ describe GenericFile do
       end
       it "should have activity stream-related methods defined" do
         @file.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.should respond_to(:stream)
         f.should respond_to(:events)
         f.should respond_to(:create_event)
@@ -169,7 +234,7 @@ describe GenericFile do
         @file.creator = "John Doe"
         @file.title = "New work"
         @file.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.related_url.should == ["http://example.org/"]
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
@@ -178,13 +243,13 @@ describe GenericFile do
         @file.creator = "John Doe"
         @file.title = "New work"
         @file.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
         f.creator = "Jane Doe"
         f.title << "Newer work"
         f.save
-        f = GenericFile.find(@file.pid)
+        f = @file.reload
         f.creator.should == ["Jane Doe"]
         f.title.should == ["New work", "Newer work"]
       end
@@ -198,8 +263,8 @@ describe GenericFile do
     @file.description = "The work by Allah"
     @file.publisher = "Vertigo Comics"
     @file.date_created = "1200-01-01"
-    @file.date_uploaded = "2011-01-01"
-    @file.date_modified = "2012-01-01"
+    @file.date_uploaded = Date.parse("2011-01-01")
+    @file.date_modified = Date.parse("2012-01-01")
     @file.subject = "Theology"
     @file.language = "Arabic"
     @file.rights = "Wide open, buddy."
@@ -211,25 +276,27 @@ describe GenericFile do
     @file.format_label = "JPEG Image"
     local = @file.to_solr
     local.should_not be_nil
-    local["desc_metadata__part_of_t"].should be_nil
-    local["desc_metadata__date_uploaded_t"].should be_nil
-    local["desc_metadata__date_modified_t"].should be_nil
-    local["desc_metadata__rights_t"].should == ["Wide open, buddy."]
-    local["desc_metadata__related_url_t"].should be_nil
-    local["desc_metadata__contributor_t"].should == ["Mohammad"]
-    local["desc_metadata__creator_t"].should == ["Allah"]
-    local["desc_metadata__title_t"].should == ["The Work"]
-    local["desc_metadata__description_t"].should == ["The work by Allah"]
-    local["desc_metadata__publisher_t"].should == ["Vertigo Comics"]
-    local["desc_metadata__subject_t"].should == ["Theology"]
-    local["desc_metadata__language_t"].should == ["Arabic"]
-    local["desc_metadata__date_created_t"].should == ["1200-01-01"]
-    local["desc_metadata__resource_type_t"].should == ["Book"]
-    local["file_format_t"].should == "jpeg (JPEG Image)"
-    local["desc_metadata__identifier_t"].should == ["urn:isbn:1234567890"]
-    local["desc_metadata__based_near_t"].should == ["Medina, Saudi Arabia"]
-    local["mime_type_t"].should == ["image/jpeg"]    
-    local["noid_s"].should == "__DO_NOT_USE__"
+    local[Solrizer.solr_name("desc_metadata__part_of")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__date_uploaded")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__date_modified")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)].should == ['2011-01-01T00:00:00Z']
+    local[Solrizer.solr_name("desc_metadata__date_modified", :stored_sortable, type: :date)].should == ['2012-01-01T00:00:00Z']
+    local[Solrizer.solr_name("desc_metadata__rights")].should == ["Wide open, buddy."]
+    local[Solrizer.solr_name("desc_metadata__related_url")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__contributor")].should == ["Mohammad"]
+    local[Solrizer.solr_name("desc_metadata__creator")].should == ["Allah"]
+    local[Solrizer.solr_name("desc_metadata__title")].should == ["The Work"]
+    local[Solrizer.solr_name("desc_metadata__description")].should == ["The work by Allah"]
+    local[Solrizer.solr_name("desc_metadata__publisher")].should == ["Vertigo Comics"]
+    local[Solrizer.solr_name("desc_metadata__subject")].should == ["Theology"]
+    local[Solrizer.solr_name("desc_metadata__language")].should == ["Arabic"]
+    local[Solrizer.solr_name("desc_metadata__date_created")].should == ["1200-01-01"]
+    local[Solrizer.solr_name("desc_metadata__resource_type")].should == ["Book"]
+    local[Solrizer.solr_name("file_format")].should == "jpeg (JPEG Image)"
+    local[Solrizer.solr_name("desc_metadata__identifier")].should == ["urn:isbn:1234567890"]
+    local[Solrizer.solr_name("desc_metadata__based_near")].should == ["Medina, Saudi Arabia"]
+    local[Solrizer.solr_name("mime_type")].should == ["image/jpeg"]    
+    local["noid_tsi"].should == "__DO_NOT_USE__"
   end
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]
@@ -241,16 +308,32 @@ describe GenericFile do
     @file.relative_path.should == "documents/research/NSF/2010"
   end
   describe "create_thumbnail" do
-    describe "with an image that doesn't get resized" do
+    before do
+      @f = GenericFile.new
+      #@f.stub(:characterize_if_changed).and_yield #don't run characterization
+      @f.apply_depositor_metadata('mjg36')
+    end
+    after do
+      @f.delete
+    end
+    describe "with a video", :if => Sufia::Engine.config.enable_ffmpeg do
       before do
-        @f = GenericFile.new
-        @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
-        @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
-        @f.apply_depositor_metadata('mjg36')
+        @f.stub(:mime_type=>'video/quicktime')  #Would get set by the characterization job
+        @f.add_file_datastream(File.new("#{fixture_path}/countdown.avi", 'rb'), :dsid=>'content')
         @f.save
       end
-      after do
-        @f.delete
+      it "should make a png thumbnail" do
+        @f.create_thumbnail
+        @f.thumbnail.content.size.should == 4768 # this is a bad test. I just want to show that it did something.
+        @f.thumbnail.mimeType.should == 'image/png'
+      end
+    end
+
+    describe "with an image that doesn't get resized" do
+      before do
+        @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
+        @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
+        @f.save
       end
       it "should keep the thumbnail at the original size (but transform to png)" do
         @mock_image = mock("image", :from_blob=>true)
@@ -258,8 +341,8 @@ describe GenericFile do
         @mock_image.should_receive(:to_blob).and_return('fake content')
         Magick::ImageList.should_receive(:new).and_return(@mock_image)
         @f.create_thumbnail
-        @f.content.changed?.should be_false
         @f.thumbnail.content.should == 'fake content'
+        @f.thumbnail.mimeType.should == 'image/png'
       end
     end
   end
@@ -267,12 +350,11 @@ describe GenericFile do
     before(:each) do
       u = FactoryGirl.create(:user)
       f = GenericFile.new
-      f.stub(:characterize).and_return(true)
       f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       f.apply_depositor_metadata(u.user_key)
+      f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save!
-      @f = GenericFile.find(f.pid)
-      @f.stub(:characterize).and_return(true)
+      @f = f.reload
     end
     it "should schedule a audit job for each datastream" do
       s1 = stub('one')
@@ -290,12 +372,6 @@ describe GenericFile do
       s5 = stub('five')
       AuditJob.should_receive(:new).with(@f.pid, 'content', "content.0").and_return(s5)
       Sufia.queue.should_receive(:push).with(s5)
-      s6 = stub('six')
-      AuditJob.should_receive(:new).with(@f.pid, 'characterization', "characterization.0").and_return(s6)
-      Sufia.queue.should_receive(:push).with(s6)
-      s7 = stub('seven')
-      AuditJob.should_receive(:new).with(@f.pid, 'thumbnail', "thumbnail.0").and_return(s7)
-      Sufia.queue.should_receive(:push).with(s7)
       @f.audit!
     end
     it "should log a failing audit" do
@@ -320,6 +396,7 @@ describe GenericFile do
       @f = GenericFile.new
       @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @f.apply_depositor_metadata('mjg36')
+      @f.stub(:characterize_if_changed).and_yield #don't run characterization
       @f.save!
       @version = @f.datastreams['content'].versions.first
       @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
@@ -476,19 +553,12 @@ describe GenericFile do
         myfile = GenericFile.new
         myfile.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test4.pdf'), :dsid=>'content')
         myfile.label = 'label123'
-        myfile.thumbnail.size.nil?.should be_true
         myfile.apply_depositor_metadata('mjg36')
         myfile.save
-        @myfile = GenericFile.find(myfile.pid)
+        @myfile = myfile.reload
       end
       after(:all) do
-        unless @myfile.inner_object.kind_of? ActiveFedora::UnsavedDigitalObject
-          begin
-            @myfile.delete
-          rescue ActiveFedora::ObjectNotFoundError
-            # do nothing
-          end
-        end
+        @myfile.delete
       end
       it "should return expected results after a save" do
         @myfile.file_size.should == ['218882']
@@ -507,7 +577,7 @@ describe GenericFile do
         @myfile.filename[0].should == @myfile.label
       end
       it "should include thumbnail generation in characterization job" do
-        @myfile.thumbnail.size.nil?.should be_false
+        @myfile.thumbnail.size.should_not be_nil
       end
       it "should append each term only once" do
         @myfile.append_metadata
@@ -538,19 +608,19 @@ describe GenericFile do
     it "should have read groups writer" do
       subject.read_groups = ['group-2', 'group-3']
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
 
     it "should have read groups string writer" do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
       subject.rightsMetadata.groups.should == {'umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
     it "should only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read"}
+      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
   end
   describe "permissions validation" do

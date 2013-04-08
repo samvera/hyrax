@@ -1,34 +1,25 @@
-<%- keywords = link_to_facet_list(recent_document[:desc_metadata__tag_t], 'desc_metadata__tag_facet', 'no keywords specified') -%>
-<%- filename = render_document_show_field_value(:document=>recent_document, :field=>"label_t") -%>
-<%- title = render_document_show_field_value(:document=>recent_document, :field=>"desc_metadata__title_t") -%>
-<%- title = filename if title.empty? -%>
-<%- short_title = truncate(title, :length => 28, :separator => ' ') -%>
-<%- depositor = get_depositor_from_document(recent_document) -%>
     <tr>
       <% if display_thumbs %>
-        <td class="span10"><%= link_to_profile depositor %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
+        <td class="span10"><%= link_to_profile recent_document.depositor("no depositor value") %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
       <% end %>
       <td>
         <h3>
-          <%= link_to short_title, sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => title  %>
+          <%= link_to truncate(recent_document.title_or_label, :length => 28, :separator => ' '), sufia.generic_file_path(recent_document.noid), :title => recent_document.title_or_label  %>
 
           <% if display_access %>
-              <% if !recent_document[:read_access_group_t].blank? and recent_document[:read_access_group_t].include?('registered') %>
+              <% if recent_document.registered? %>
                  <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span>
-              <% elsif recent_document[:read_access_group_t].nil? or (recent_document[:read_access_group_t] & ['public']).empty? %>
-                <span class="label label-important">Private</span>
-              <% else %>
+              <% elsif recent_document.public? %>
                 <span class="label label-success">Open Access</span>
+              <% else %>
+                <span class="label label-important">Private</span>
               <% end %>
           <% end %>
         </h3>
         <p> 
-          <% if filename.length > 25 %>
-            <%= link_to "#{filename[0..24]}...", sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
-          <% else %>
-            <%= link_to filename, sufia.generic_file_path(recent_document.fetch(:noid_s, :id)), :title => filename %><br />
-          <% end %>
-            <%= keywords.html_safe %>
+          <%= link_to truncate(recent_document.label, :length=>25),
+              sufia.generic_file_path(recent_document.noid), :title => recent_document.label %><br />
+          <%= link_to_facet_list(recent_document.tags, 'desc_metadata__tag', 'no keywords specified').html_safe %>
         </p>
       </td>
     </tr>

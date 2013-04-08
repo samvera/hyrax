@@ -15,16 +15,16 @@
 require 'spec_helper'
 
 describe UnzipJob do
-  before(:all) do
+  before do
     @batch = Batch.create
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @generic_file = GenericFile.new(:batch=>@batch)
     @generic_file.add_file_datastream(File.new(fixture_path + '/icons.zip'), :dsid=>'content')
     @generic_file.apply_depositor_metadata('mjg36')
+    @generic_file.stub(:characterize_if_changed).and_yield #don't run characterization
     @generic_file.save
   end
 
-  after(:all) do
+  after do
     @batch.delete
     @generic_file.delete
   end

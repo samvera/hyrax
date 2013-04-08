@@ -53,7 +53,7 @@ module Sufia
 
     # routed to /files/:id/edit
     def edit
-      @terms = @generic_file.terms_for_editing
+      initialize_fields(@generic_file)
       @groups = current_user.groups
     end
 
@@ -74,55 +74,26 @@ module Sufia
     # routed to /files (POST)
     def create
       begin
-        retval = " "
         # check error condition No files
-        return render(:json => [{:error => "Error! No file to save"}].to_json) if !params.has_key?(:files)
+        return json_error("Error! No file to save") if !params.has_key?(:files)
 
         file = params[:files].detect {|f| f.respond_to?(:original_filename) }
         if !file
-          render :json => [{:name => 'unknown file', :error => "Error! No file for upload"}], :status => :unprocessable_entity
-          return false
-        end
-
-        # check error condition empty file
-        if ((file.respond_to?(:tempfile)) && (file.tempfile.size == 0))
-           retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
-        elsif ((file.respond_to?(:size)) && (file.size == 0))
-           retval = render :json => [{ :name => file.original_filename, :error => "Error! Zero Length File!"}].to_json
-        elsif (params[:terms_of_service] != '1')
-           retval = render :json => [{ :name => file.original_filename, :error => "You must accept the terms of service!"}].to_json
-
-        # process file
+          json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
+        elsif (empty_file?(file))
+          json_error "Error! Zero Length File!", file.original_filename 
+        elsif (!terms_accepted?)
+          json_error "You must accept the terms of service!", file.original_filename
         else
-          if virus_check(file) == 0 
-            @generic_file = ::GenericFile.new
-            # Relative path is set by the jquery uploader when uploading a directory
-            @generic_file.relative_path = params[:relative_path] if params[:relative_path]
-            Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
-            Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
-            respond_to do |format|
-              format.html {
-                retval = render :json => [@generic_file.to_jq_upload].to_json,
-                  :content_type => 'text/html',
-                  :layout => false
-              }
-              format.json {
-                retval = render :json => [@generic_file.to_jq_upload].to_json
-              }
-            end
-          else
-            retval = render :json => [{:error => "Error creating generic file."}].to_json
-          end
+          process_file(file)
         end
       rescue => error
         logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
-        retval = render :json => [{:error => "Error occurred while creating generic file."}].to_json
+        json_error "Error occurred while creating generic file." 
       ensure
         # remove the tempfile (only if it is a temp file)
         file.tempfile.delete if file.respond_to?(:tempfile)
       end
-
-      return retval
     end
 
     # routed to /files/:id/citation
@@ -131,11 +102,10 @@ module Sufia
 
     # routed to /files/:id
     def show
-      @can_edit =  can? :edit, @generic_file
-      @events = @generic_file.events(100)
-
       respond_to do |format|
-        format.html
+        format.html {
+          @events = @generic_file.events(100)
+        }
         format.endnote { render :text => @generic_file.export_as_endnote }
       end
     end
@@ -179,6 +149,51 @@ module Sufia
     end
 
     protected
+
+    def json_error(error, name=nil, additional_arguments={})
+      args = {:error => error}
+      args[:name] = name if name
+      render additional_arguments.merge({:json => [args]})
+    end
+
+    def empty_file?(file)
+      (file.respond_to?(:tempfile) && file.tempfile.size == 0) || (file.respond_to?(:size) && file.size == 0)
+    end
+
+    def process_file(file)
+      if virus_check(file) == 0 
+        @generic_file = ::GenericFile.new
+        # Relative path is set by the jquery uploader when uploading a directory
+        @generic_file.relative_path = params[:relative_path] if params[:relative_path]
+        Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
+        Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
+        respond_to do |format|
+          format.html {
+            render :json => [@generic_file.to_jq_upload],
+              :content_type => 'text/html',
+              :layout => false
+          }
+          format.json {
+            render :json => [@generic_file.to_jq_upload]
+          }
+        end
+      else
+        render :json => [{:error => "Error creating generic file."}]
+      end
+    end
+
+    # override this method if you want to change how the terms are accepted on upload. 
+    def terms_accepted?
+      params[:terms_of_service] == '1'
+    end
+
+    # override this method if you need to initialize more complex RDF assertions (b-nodes)
+    def initialize_fields(file)
+      file.terms_for_editing.each do |key|
+        # if value is empty, we create an one element array to loop over for output 
+        file[key] = [''] if file[key].empty?
+      end
+    end
 
     # The name of the datastream where we store the file data
     def datastream_id

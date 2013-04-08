@@ -3,7 +3,7 @@
       <%= link_to "Download", sufia.download_path(@generic_file.noid) %>
       <!-- &nbsp;|&nbsp; -->
       <%# link_to "Cite", citation_generic_file_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
-      <% if @can_edit %>
+      <% if can? :edit, @generic_file %>
           &nbsp;|&nbsp;
           <%= link_to "Edit", sufia.edit_generic_file_path unless @generic_file.processing?   %>
           <%= "File is being processed you may edit once it is complete" if @generic_file.processing?   %>

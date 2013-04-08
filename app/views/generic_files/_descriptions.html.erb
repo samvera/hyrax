@@ -21,8 +21,8 @@ limitations under the License.
     <div class="well">
 
       <%= render :partial=>'generic_files/edit_fields/type', :locals => {f:f} %>
-      <% @terms.each do |term| %>
-        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @generic_file, :f =>f, :render_req => true, :key => term } %>        
+      <% (@generic_file.terms_for_editing - [:resource_type]).each do |term| %>
+        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @generic_file, :f =>f, :render_req => true, :key => term } %>
       <% end %>
  
     </div><!-- /well -->

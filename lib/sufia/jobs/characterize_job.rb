@@ -18,18 +18,26 @@ class CharacterizeJob
     :characterize
   end
 
-  attr_accessor :generic_file_id
+  attr_accessor :generic_file_id, :generic_file
 
   def initialize(generic_file_id)
     self.generic_file_id = generic_file_id
   end
 
   def run
-    generic_file = GenericFile.find(generic_file_id)
+    self.generic_file = GenericFile.find(generic_file_id)
     generic_file.characterize
-    generic_file.create_thumbnail
+    after_characterize
+  end
+
+  def after_characterize
+    if generic_file.pdf? || generic_file.image? || generic_file.video?
+      generic_file.create_thumbnail
+    end
     if generic_file.video?
       Sufia.queue.push(TranscodeVideoJob.new(generic_file_id, 'content'))
+    elsif generic_file.audio?
+      Sufia.queue.push(TranscodeAudioJob.new(generic_file_id, 'content'))
     end
   end
 end

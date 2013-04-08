@@ -126,12 +126,12 @@ describe GenericFilesController do
       #TODO make sure this is moved to scholarsphere:
       #saved_file.depositor.should == 'jilluser'
       saved_file.depositor.should == 'jilluser@example.com'
-      saved_file.properties.to_solr.keys.should include('depositor_t')
+      saved_file.properties.to_solr.keys.should include('depositor_tesim')
       #TODO make sure this is moved to scholarsphere:
       #saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
-      saved_file.properties.to_solr['depositor_t'].should == ['jilluser@example.com']
-      saved_file.to_solr.keys.should include('depositor_t')
-      saved_file.to_solr['depositor_t'].should == ['jilluser@example.com']
+      saved_file.properties.to_solr['depositor_tesim'].should == ['jilluser@example.com']
+      saved_file.to_solr.keys.should include('depositor_tesim')
+      saved_file.to_solr['depositor_tesim'].should == ['jilluser@example.com']
     end
     it "Should call virus check" do
       controller.should_receive(:virus_check).and_return(0)      

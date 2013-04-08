@@ -204,35 +204,6 @@ $("a[rel=popover]").popover();
 
 <% end %>
 
-<% content_for :local_css do %>
-    #upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
-
-.fileHeight {
-  max-height: 50px
-}
-
-.scrollx {
-  overflow-x: auto;
-}
-
-.scrolly {
-  overflow-y: auto;
-}
-
-h2 small {
-   color: red;   
-}
-
-
-.status {
-   color: green; 
-   padding:5px 5px 5px;  
-}
-
-.loading { 
- background: white url('/assets/loading.gif') center bottom no-repeat; 
-}
-<% end %>
 
 <%= render :partial => 'generic_files/breadcrumbs', :locals => {:include_file=>false} %>
 <h2 class="non lower">Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit file descriptions.</small> </h2>

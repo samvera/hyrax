@@ -2,7 +2,7 @@
           <th>Resource Type</th>
           <td>
             <% @generic_file.resource_type.each do |rtype| %>
-              <%= link_to_facet(rtype, 'desc_metadata__resource_type_facet') %><br />
+              <%= link_to_facet(rtype, Solrizer.solr_name("desc_metadata__resource_type", :facetable)) %><br />
             <% end %>
           </td>
         </tr>

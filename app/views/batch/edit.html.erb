@@ -14,13 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% content_for :local_css do %>
-  label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
-<% end %> 
-
-
-  
-
 <% content_for :local_js do %>
    if (navigator.userAgent.match("MSIE")){
       $("#new_generic_file").validate();
@@ -52,7 +45,7 @@ function confirmExit(){
 </div>
 <%= form_for([@batch, @generic_file], :url => sufia.batch_generic_files_path, :html => {:multipart => true, :class => 'form-horizontal'}) do |f| %>
 
-<%= render :partial => 'batch_edits/metadata', :formats => [:html], :locals => {:f => f, :gf => @generic_file} %>
+<%= render :partial => 'metadata', :formats => [:html], :locals => {:f => f} %>
 
 <%= render :partial => 'generic_files/permission', :formats => [:html], :locals => { :gf => @generic_file, :batch => @batch } %>
 
