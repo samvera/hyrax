@@ -43,7 +43,7 @@ module Sufia
         yaml = YAML::load(f.read)
         yaml = {:template => '.reeddeeddk'} unless yaml
         minter = ::Noid::Minter.new(yaml)
-        pid =  "#{@@namespace}:#{minter.mint}"
+        pid =  "#{@namespace}:#{minter.mint}"
         f.rewind
         yaml = YAML::dump(minter.dump)
         f.write yaml
