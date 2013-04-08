@@ -46,26 +46,18 @@ class CatalogController < ApplicationController
   def recent
     if user_signed_in?
       # grab other people's documents
-      (resp, doc_list) = get_search_results(:q =>"{!lucene q.op=AND df=#{depositor}}-"+current_user.user_key,
-        :sort=>sort_field,
-        :rows=>3)      
+      (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
+                                        :sort=>sort_field, :rows=>4)      
     else 
       # grab any documents we do not know who you are
-      (resp, doc_list) = get_search_results(:q =>'',
-      :sort=>sort_field, 
-      :rows=>3)
+      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
     end
-    @recent_documents = doc_list[0..3]
   end
 
   def recent_me
     if user_signed_in?
-      (resp, doc_list) = get_search_results(:q =>"{!lucene q.op=AND df=#{depositor}}"+current_user.user_key,
-      :sort=>sort_field,
-      :rows=>3)
-      @recent_user_documents = doc_list[0..3]
-    else 
-      @recent_user_documents = nil
+      (_, @recent_user_documents) = get_search_results(:q =>filter_not_mine,
+                                        :sort=>sort_field, :rows=>4)
     end
   end
 
@@ -379,6 +371,10 @@ class CatalogController < ApplicationController
   def depositor 
     #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
     Solrizer.solr_name('depositor', :stored_searchable, type: :string)
+  end
+
+  def filter_not_mine 
+    "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
   end
 
   def sort_field
