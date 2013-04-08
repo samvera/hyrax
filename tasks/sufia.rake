@@ -103,7 +103,7 @@ namespace :sufia do
 
   desc "Re-solrize all objects"
   task :resolrize => :environment do
-    Resque.enqueue(ResolrizeJob)
+    Sufia.queue.push(ResolrizeJob.new)
   end
 
   namespace :export do
