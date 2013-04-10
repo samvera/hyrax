@@ -1,5 +1,6 @@
 require 'active_support'
 require 'active-fedora'
+require 'blacklight'
 require 'cancan'
 require 'rails'
 
