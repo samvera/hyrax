@@ -21,6 +21,10 @@ describe CharacterizeJob do
     end
     it "should create a transcode job" do
       job = stub("stub video job")
+      if $in_travis
+        @generic_file.stub(:video?).and_return(true)
+        GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
+      end
       TranscodeVideoJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
       Sufia.queue.should_receive(:push).with(job)
       subject.run
@@ -39,6 +43,10 @@ describe CharacterizeJob do
     end
     it "should create a transcode job" do
       job = stub("stub audio job")
+      if $in_travis
+        @generic_file.stub(:audio?).and_return(true)
+        GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
+      end
       TranscodeAudioJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
       Sufia.queue.should_receive(:push).with(job)
       subject.run
@@ -54,6 +62,10 @@ describe CharacterizeJob do
     it "should create a transcode job. (we'd like ogg too)" do
       # TODO just copy the 'content' datastream to the mp3 datastream if it's an mp3, and then transcode to ogg
       job = stub("stub audio job")
+      if $in_travis
+        @generic_file.stub(:audio?).and_return(true)
+        GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
+      end
       TranscodeAudioJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
       Sufia.queue.should_receive(:push).with(job)
       subject.run

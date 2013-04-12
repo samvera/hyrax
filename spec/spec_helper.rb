@@ -27,6 +27,21 @@ if ENV['COVERAGE']
   SimpleCov.command_name "spec"
 end
 
+$in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
+
+if $in_travis
+  # Monkey-patches the FITS runner to return the PDF FITS fixture
+  module Sufia
+    module FileContent
+      module ExtractMetadata
+        def run_fits!(path)
+          File.open(File.join(File.expand_path('../fixtures', __FILE__), 'pdf_fits.xml')).read
+        end
+      end
+    end
+  end
+end
+
 Resque.inline = Rails.env.test?
 
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]

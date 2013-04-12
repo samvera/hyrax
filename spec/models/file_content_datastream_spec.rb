@@ -71,7 +71,7 @@ describe FileContentDatastream do
     it "should have the path" do
       @subject.send(:fits_path).should be_present
     end
-    it "should return an xml document" do
+    it "should return an xml document", :unless => $in_travis do
       repo = mock("repo")
       repo.stub(:config=>{})
       f = File.new(fixture_path + '/world.png')
@@ -83,7 +83,7 @@ describe FileContentDatastream do
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
-    it "should return expected results when invoked via HTTP" do
+    it "should return expected results when invoked via HTTP", :unless => $in_travis do
       repo = mock("repo")
       repo.stub(:config=>{})
       f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(fixture_path + '/world.png'),
