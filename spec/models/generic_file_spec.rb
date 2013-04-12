@@ -533,7 +533,7 @@ describe GenericFile do
     end
   end
   describe "characterize" do
-    it "should return expected results when called" do
+    it "should return expected results when called", :unless => $in_travis do
       @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
       @file.characterize
       doc = Nokogiri::XML.parse(@file.characterization.content)

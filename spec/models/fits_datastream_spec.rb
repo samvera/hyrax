@@ -14,7 +14,7 @@
 
 require 'spec_helper'
 
-describe FitsDatastream do
+describe FitsDatastream, :unless => $in_travis do
   before(:all) do
     @file = GenericFile.new
     @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
