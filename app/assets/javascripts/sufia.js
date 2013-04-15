@@ -42,6 +42,8 @@ limitations under the License.
 //= require sufia/tabs
 //= require sufia/trophy
 //= require sufia/batch_select_all
+//= require sufia/multiForm
+//= require sufia/edit_metadata
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
@@ -158,49 +160,6 @@ $(function() {
         })
         .autocomplete( get_autocomplete_opts(autocomplete_vocab.url_var[i]) );
 
-  }
-
-  /*
-   * adds additional metadata elements
-   */
-  $('.adder').click(function() {
-    var cloneId = this.id.replace("submit", "clone");
-    var newId = this.id.replace("submit", "elements");
-    var cloneElem = $('#'+cloneId).clone();
-    // change the add button to a remove button
-    var plusbttn = cloneElem.find('#'+this.id);
-    plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
-    plusbttn.on('click',removeField);
-
-    // remove the help tag on subsequent added fields
-    cloneElem.find('.formHelp').remove();
-    cloneElem.find('i').remove();
-    cloneElem.find('.modal-div').remove();
-
-    //clear out the value for the element being appended
-    //so the new element has a blank value
-    cloneElem.find('input[type=text]').attr("value", "");
-    cloneElem.find('input[type=text]').attr("required", false);
-
-    // should we attach an auto complete based on the input
-    if (this.id == 'additional_based_near_submit') {
-      cloneElem.find('input[type=text]').autocomplete(cities_autocomplete_opts);
-    }
-    else if ( (index = $.inArray(this.id, autocomplete_vocab.add_btn_id)) != -1 ) {
-      cloneElem.find('input[type=text]').autocomplete(get_autocomplete_opts(autocomplete_vocab.url_var[index]));
-    }
-
-    $('#'+newId).append(cloneElem);
-    cloneElem.find('input[type=text]').focus();
-    return false;
-  });
-
-  $('.remover').click(removeField);
-
-  function removeField () {
-    // get parent and remove it
-    $(this).parent().remove();
-    return false;
   }
 
   // show/hide more information on the dashboard when clicking
