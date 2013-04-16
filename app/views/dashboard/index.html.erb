@@ -73,8 +73,8 @@ limitations under the License.
   window.document_list_count = <%= @document_list.count %>;
   toggleButtons(<%= !@empty_batch %>);
       
-
-  $('#documents').batchEdit();
+  // initialize hydra batch edit and set up select all button toggle after checkboxes have been created 
+  $('#documents').batchEdit({afterCheckboxUpdate: setup_buttontoggle});
 
 
  <% end %>
