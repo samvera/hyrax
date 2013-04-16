@@ -167,10 +167,13 @@ $(document).ready(function() {
       }
     });
   
-    // hide or show the batch update buttons file selections
-    $(".batch_toggle").bind('click', function(e) {
+});
+
+  // hide or show the batch update buttons file selections
+  function setup_buttontoggle(checkbox) {
+    checkbox.bind('click', function(e) {
          e.preventDefault();
          toggleButtons();
-     });
-});
+     });  
+  }
 

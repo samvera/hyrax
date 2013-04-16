@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "hydra-head", "~> 6.0"
 
   gem.add_dependency 'noid', '~> 0.6.6'
-  gem.add_dependency 'hydra-batch-edit', '~> 0.1'
+  gem.add_dependency 'hydra-batch-edit', '~> 0.3'
 
   gem.add_dependency 'resque', '~> 1.23.0'#, :require => 'resque/server'
   gem.add_dependency 'resque-pool', '0.3.0'
