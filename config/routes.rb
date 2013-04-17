@@ -85,6 +85,10 @@ Sufia::Engine.routes.draw do
   # Static page routes (workaround)
   match ':action' => 'static#:action', :constraints => { :action => /about|help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, :as => :static
 
+  #Single use link errors
+  match 'single_use_link/not_found' => 'errors#single_use_error'
+  match 'single_use_link/expired' => 'errors#single_use_error'
+
   # Catch-all (for routing errors)
   match '*error' => 'errors#routing'
   

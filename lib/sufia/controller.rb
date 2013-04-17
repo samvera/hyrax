@@ -42,6 +42,10 @@ module Sufia::Controller
     render :template => '/error/500', :layout => "error", :formats => [:html], :status => 500
   end
 
+  def render_single_use_error(exception)
+    logger.error("Rendering PAGE due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
+    render :template => '/error/single_use_error', :layout => "error", :formats => [:html], :status => 404
+  end
 
   def notifications_number
     @notify_number=0

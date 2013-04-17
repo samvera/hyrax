@@ -1,7 +1,10 @@
+require 'sufia/single_use_error'
+
 class SingleUseLinkController < DownloadsController
   before_filter :authenticate_user!, :except => [:show, :download]
   skip_filter :normalize_identifier
   prepend_before_filter :normalize_identifier, :except => [:download, :show]
+  rescue_from Sufia::SingleUseError, :with => :render_single_use_error
   
   def generate_download
     @generic_file = GenericFile.find(params[:id])
@@ -76,11 +79,12 @@ class SingleUseLinkController < DownloadsController
     
     return link
   end
-  
-  def not_found 
-    raise ActionController::RoutingError.new('Not Found') 
-  end 
-  def expired 
-    raise ActionController::RoutingError.new('expired') 
-  end 
+ 
+  def not_found
+    raise Sufia::SingleUseError.new('Single Use Link Not Found')
+  end
+  def expired
+    raise Sufia::SingleUseError.new('Single Use Link Expired')
+  end
+ 
 end
