@@ -18,14 +18,14 @@ limitations under the License.
 <%- width = 36 if width.blank? -%>
 <% if (document.mime_type) %>
   <% if document.image? %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width, :height=>height}), sufia.generic_file_path(document.noid) %>
+    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width}), sufia.generic_file_path(document.noid) %>
   <% elsif document.pdf? %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width,:height=>height}),sufia.generic_file_path(document.noid) %>
+    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width}),sufia.generic_file_path(document.noid) %>
   <% elsif document.video? %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width,:height=>height}),sufia.generic_file_path(document.noid) %>
+    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width}),sufia.generic_file_path(document.noid) %>
   <% else %>
-    <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document) %>
+    <%= link_to image_tag("/assets/default.png", {:width=>width}), sufia.generic_file_path(document) %>
   <% end %>
 <% else %>
- <%= link_to image_tag("/assets/default.png", {:width=>width,:height=>height}), sufia.generic_file_path(document) %> 
+ <%= link_to image_tag("/assets/default.png", {:width=>width}), sufia.generic_file_path(document) %> 
 <% end %>
