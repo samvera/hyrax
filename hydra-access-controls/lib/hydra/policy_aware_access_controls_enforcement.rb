@@ -16,7 +16,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   def policy_clauses 
     policy_pids = policies_with_access
     return nil if policy_pids.empty?
-    '(' + policy_pids.map {|pid| ActiveFedora::SolrService.solr_name("is_governed_by", :symbol) + ":info\\:fedora/#{pid.gsub(/:/, '\\\\:')}"}.join(' OR ') + ')'
+    '(' + policy_pids.map {|pid| ActiveFedora::SolrService.construct_query_for_rel(is_governed_by: "info:fedora/#{pid}")}.join(' OR ') + ')'
   end
   
   
