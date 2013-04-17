@@ -15,7 +15,7 @@ limitations under the License.
 %>
 
 <% if @generic_file.image? %>
-  <a href="<%= sufia.download_path(@generic_file) %>" target="_new"><img src="<%= sufia.download_path(@generic_file, {:datastream_id => 'thumbnail'}) %>" width="338" /></a>
+  <a href="<%= sufia.download_path(@generic_file) %>" target="_new" title="Download the full-sized image"><img src="<%= sufia.download_path(@generic_file, {:datastream_id => 'thumbnail'}) %>" width="338" alt="Download the full-sized image of <%= @generic_file.title.first %>"/>Download the full-sized image</a>
 <% elsif @generic_file.video? %>
   <video controls="controls" class="video-js vjs-default-skin" data-setup="{}" preload="auto">
     <source src="<%= sufia.download_path(@generic_file, datastream_id: 'webm') %>" type="video/webm" />
@@ -29,7 +29,7 @@ limitations under the License.
     Your browser does not support the audio tag.
   </audio>
 <% elsif @generic_file.pdf?%>
-  <a href="<%= sufia.download_path(@generic_file) %>" target="_new"><img src="<%= sufia.download_path(@generic_file, datastream_id: 'thumbnail') %>" width="338" /></a>
+  <a href="<%= sufia.download_path(@generic_file) %>" target="_new" title="Download the full-sized PDF"><img src="<%= sufia.download_path(@generic_file, datastream_id: 'thumbnail') %>" width="338" alt="Download the full-sized PDF of <%= @generic_file.title.first %>"/>Download the full-sized PDF</a>
 <% else %>
   <a href="<%= sufia.download_path(@generic_file) %>" target="_new"><img src="/assets/default.png" alt="No preview available" width="338" height="493" /></a>
 <% end %>
