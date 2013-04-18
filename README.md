@@ -2,8 +2,8 @@
 
 ## Code Status
 
-[![Build Status](https://travis-ci.org/curationexperts/sufia.png?branch=master)](https://travis-ci.org/curationexperts/sufia)
-[![Dependencies Status](https://gemnasium.com/curationexperts/sufia.png)](https://gemnasium.com/curationexperts/sufia)
+[![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
+[![Dependencies Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 
 ## What is Sufia?
 Sufia is a component that adds self-deposit institutional repository features to a Rails app. 
