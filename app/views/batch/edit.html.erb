@@ -23,7 +23,7 @@ limitations under the License.
 $('#permissions_display').show();
 
 // initialize popover helpers
-$("a[rel=popover]").popover();
+$("a[rel=popover]").popover({ html: true });
 
 confirmation_needed = true;
 window.onbeforeunload = confirmExit;
