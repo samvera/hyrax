@@ -12,7 +12,7 @@
   }  
 
 // initialize popover helpers
-$("a[rel=popover]").popover();
+$("a[rel=popover]").popover({ html: true });
   <% @terms.each do |term| %>
     <% vals =  @show_file.send(term) %>
     <% next if vals.blank? %>    
