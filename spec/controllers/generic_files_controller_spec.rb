@@ -344,6 +344,14 @@ describe GenericFilesController do
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
     end
 
+    it "should go back to edit on an error" do
+      GenericFile.any_instance.should_receive(:valid?).and_return(false)
+      post :update, :id=>@generic_file.pid, :generic_file=>{:tag=>['']}
+      response.should be_successful 
+      response.should render_template('edit')
+      assigns[:generic_file].should == @generic_file
+    end
+
   end
 
   describe "someone elses files" do
