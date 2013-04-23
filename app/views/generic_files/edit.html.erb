@@ -33,15 +33,6 @@ function confirmExit(){
          return "Your metadata has not been saved.";
       }
  }  
-
-<% if params[:tab] == 'versions' %>
-  versions_tab();
-<% elsif params[:tab] == 'permissions' %>
-  permissions_tab();
-<% else %>
-  descriptions_tab();
-<% end %>
-
 // only valid for perm tab
 set_access_levels();
 
@@ -62,17 +53,14 @@ $("a[rel=popover]").popover({ html: true });
   <div class="span68">
     <%= link_to "&lt;&lt;Browse view".html_safe, sufia.generic_file_path %></li>
     <ul class="nav nav-tabs">
-      <li id="edit_descriptions_link"><a href="#"><i class="icon-tags"></i> Descriptions</a></li>
-      <li id="edit_versioning_link"><a href="#"><i class="icon-sitemap"></i> Versions</a></li>
-      <li id="edit_permissions_link"><a href="#"><i class="icon-key"></i> Permissions</a></li>
+      <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><i class="icon-tags"></i> Descriptions</a></li>
+      <li id="edit_versioning_link"><a href="#versioning_display" data-toggle="tab"><i class="icon-sitemap"></i> Versions</a></li>
+      <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="icon-key"></i> Permissions</a></li>
     </ul>
-    <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
-
-    <%= form_for @generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal', :id => 'permission'} do |f| %>
-      <%= hidden_field_tag('redirect_tab', 'permissions') %>
-      <%= render :partial => "permission", :locals => { :gf => @generic_file, :f=> f } %>
-    <% end %>
-
-    <%= render :partial => "versioning", :locals => { :generic_file => @generic_file } %>
+    <div class="tab-content">
+      <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
+      <%= render :partial => "permission", :locals => { :gf => @generic_file} %>
+      <%= render :partial => "versioning", :locals => { :generic_file => @generic_file } %>
+    </div>
   </div> <!-- /.span68-->
 </div><!-- /.row -->

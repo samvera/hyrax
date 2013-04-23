@@ -20,9 +20,6 @@ $("a[rel=popover]").popover({ html: true });
 
   <% end %>
 
-//  $(".ajax-form").bind('ajax:success', function(){
-//     var form_id = "#"+this.id;
-//     var key = this.id.replace("form_","");
   function after_ajax(form_id){
       var key = form_id.replace("form_","");
       var save_button = "#"+key+"_save";
@@ -33,9 +30,6 @@ $("a[rel=popover]").popover({ html: true });
       $('#'+form_id).children([".control-group"]).removeClass('hidden')
   }
 
-//  $(".ajax-form").bind('ajax:before', function(){
-//       var form_id = "#"+this.id;
-//       var key = this.id.replace("form_","");
   function before_ajax(form_id){
         var key = form_id.replace("form_","");
         var save_button = "#"+key+"_save";
@@ -44,32 +38,6 @@ $("a[rel=popover]").popover({ html: true });
         $(outer_div).addClass("loading");
         $('#'+form_id).children([".control-group"]).addClass('hidden')        
     }
-
-  // hide permissions to begin with
-  $('#permissions_display').hide();
-  $('#permissions_submit').hide();
-
-
-  // called from edit object view 
-  $('#batch_descriptions_link').on('click', function() {
-    $('#batch_descriptions_link').attr('class', 'active');
-    $('#batch_permissions_link').attr('class', '');
-
-    $('#descriptions_display').show();
-    $('#permissions_display').hide();
-    $('#permissions_submit').hide();
-      descriptions_tab();
-    });
-
-  // called from edit object view
-  $('#batch_permissions_link').on('click', function() {
-    $('#batch_permissions_link').attr('class', 'active');
-    $('#batch_descriptions_link').attr('class', '');
-
-    $('#descriptions_display').hide();
-    $('#permissions_display').show();
-    $('#permissions_submit').hide();
-  });
 
 
     $("tr.expandable").click(function(){
@@ -216,52 +184,54 @@ $("a[rel=popover]").popover({ html: true });
   <h3> Descriptions:</h3>
 
     <ul class="nav nav-tabs">
-      <li id="batch_descriptions_link"><a href="#"><i class="icon-tags"></i> Descriptions</a></li>
-      <li id="batch_permissions_link"><a href="#"><i class="icon-key"></i> Permissions</a></li>
+      <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><i class="icon-tags"></i> Descriptions</a></li>
+      <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="icon-key"></i> Permissions</a></li>
     </ul>
-  <div class="well active" id="descriptions_display"> 
-      <table class="table table-striped"><!-- class="verticalheadings"> -->
-      <tbody>
-      <% @terms.each do |term| %>
-        <% vals =  @show_file.send(term) %>
-            <tr id='row_<%=term.to_s%>' class="expandable">
-              <th width="20%">
-                 <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%=term.to_s%>" href="#collapse_<%=term.to_s%>">
-                    <%=get_label(term)%>&nbsp;<i class="toggle icon-chevron-right grey"></i>
-                 </a>
-              </th>
-              <td  width="50%" class="scrolly">
-    
-                  <div id="collapse_<%=term.to_s%>" class="accordion-body collapse scrolly">
-                    <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_"+term.to_s, :class=>"ajax-form"} do |f| %>
-                        <%= hidden_field_tag('update_type', 'update') %>
-                        <%= hidden_field_tag('key', term.to_s) %>
-                        <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => term } %>
-                      <div class="row">
-                         <%= f.submit "Save changes", :class=>'btn btn-primary field-save' , :id=>term.to_s+'_save'%>
-                         <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%=term.to_s%>" href="#collapse_<%=term.to_s%>">Cancel </a>
-                         <div id="status_<%=term.to_s%>" class="status fleft"></div>
-                      </div>
-                    <% end %>
-                  </div>
-              </td>          
-            </tr>
+    <div class="tab-content">
+      <div class="well tab-pane active" id="descriptions_display"> 
+        <table class="table table-striped"><!-- class="verticalheadings"> -->
+        <tbody>
+        <% @terms.each do |term| %>
+          <% vals =  @show_file.send(term) %>
+              <tr id='row_<%=term.to_s%>' class="expandable">
+                <th width="20%">
+                   <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%=term.to_s%>" href="#collapse_<%=term.to_s%>">
+                      <%=get_label(term)%>&nbsp;<i class="toggle icon-chevron-right grey"></i>
+                   </a>
+                </th>
+                <td  width="50%" class="scrolly">
+      
+                    <div id="collapse_<%=term.to_s%>" class="accordion-body collapse scrolly">
+                      <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_"+term.to_s, :class=>"ajax-form"} do |f| %>
+                          <%= hidden_field_tag('update_type', 'update') %>
+                          <%= hidden_field_tag('key', term.to_s) %>
+                          <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @show_file, :f =>f, :render_req => false, :key => term } %>
+                        <div class="row">
+                           <%= f.submit "Save changes", :class=>'btn btn-primary field-save' , :id=>term.to_s+'_save'%>
+                           <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%=term.to_s%>" href="#collapse_<%=term.to_s%>">Cancel </a>
+                           <div id="status_<%=term.to_s%>" class="status fleft"></div>
+                        </div>
+                      <% end %>
+                    </div>
+                </td>          
+              </tr>
+         <% end %>
+          </tbody></table> <!-- class="verticalheadings"> -->
+      </div><!-- /well -->
+      <div id="permissions_display" class="tab-pane">
+        <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_permissions", :class=>"ajax-form"} do |f| %>
+           <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
+           <%= hidden_field_tag('update_type', 'update') %>
+           <%= hidden_field_tag('key', 'permissions') %>
+           <%= render :partial => "generic_files/permission_form", :locals => { :gf => @show_file } %>
+         <div class="row">
+            <%= f.submit "Save changes", :class=>'btn btn-primary', :id=>'permissions_save' %>
+            <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_permissions" href="#collapse_permissions">Cancel </a>
+            <div id="status_permissions" class="status fleft"></div>
+         </div>
        <% end %>
-        </tbody></table> <!-- class="verticalheadings"> -->
-    </div><!-- /well -->
-    <div id="permissions_display">
-      <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_permissions", :class=>"ajax-form"} do |f| %>
-         <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
-         <%= hidden_field_tag('update_type', 'update') %>
-         <%= hidden_field_tag('key', 'permissions') %>
-         <%= render :partial => "generic_files/permission", :locals => { :gf => @show_file, :f=> f } %>
-       <div class="row">
-          <%= f.submit "Save changes", :class=>'btn btn-primary', :id=>'permissions_save' %>
-          <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_permissions" href="#collapse_permissions">Cancel </a>
-          <div id="status_permissions" class="status fleft"></div>
-       </div>
-     <% end %>
-   </div>
+     </div>
+   </div> <!-- .tab-content -->
 
 <!-- Ajax call to clear the batch before page uload. -->
 <%= button_to "Clear Batch", { :controller => :batch_edits, :action=>:clear  }, :form_class=>'hidden' , :remote => true, :id=>'clear_batch' %> 
