@@ -5,10 +5,10 @@
     var n = $(".batch_toggle:checked").length;
     if ((n>0) || (forceOn)) {
         $('.batch-select-all').show();
-        $('.button_to').show();
+        $('#batch-edit').show();
     } else if ( otherPage){
         $('.batch-select-all').hide();
-        $('.button_to').hide();
+        $('#batch-edit').hide();
     }
     $("body").css("cursor", "auto");
   }
