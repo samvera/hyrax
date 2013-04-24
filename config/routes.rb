@@ -90,7 +90,9 @@ Sufia::Engine.routes.draw do
   match 'single_use_link/expired' => 'errors#single_use_error'
 
   # Catch-all (for routing errors)
-  match '*error' => 'errors#routing'
+  unless Rails.env.development? || Rails.env.test?
+    match '*error' => 'errors#routing'
+  end
   
 end
 

@@ -215,6 +215,7 @@ describe 'Routes' do
 
   describe "Catch-all" do
     it "should route non-existent routes to errors" do
+      pending "The default route is turned off in testing, so that errors are raised"
       { get: '/awesome' }.should route_to(controller: 'errors', action: 'routing', error: 'awesome')
     end
   end
