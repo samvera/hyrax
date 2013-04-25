@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     sort_val = get_sort
     query = params[:uq].blank? ? nil : "%"+params[:uq].downcase+"%"
     if query.blank?
-      @users = User.order(sort_val).page(params[:page]).per(10) if query.blank? 
+      @users = User.order(sort_val).page(params[:page]).per(10) 
     else
       @users = User.where("(login like lower(?) OR display_name like lower(?))",query,query).order(sort_val).page(params[:page]).per(10)
     end
