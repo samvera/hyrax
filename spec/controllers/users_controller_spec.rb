@@ -58,6 +58,7 @@ describe UsersController do
         get :index, format: :json
         response.should be_successful
         json = JSON.parse(response.body)
+        json.map{|u| u['id']}.should include(@u1.email, @u2.email)
         json.map{|u| u['text']}.should include(@u1.email, @u2.email)
       end
     end
