@@ -31,7 +31,11 @@ module Sufia
     config.fits_message_length = 5
     config.temp_file_base = nil
 
-    config.autoload_paths << File.expand_path("../sufia/jobs", __FILE__)
+    config.autoload_paths += %W(
+      #{config.root}/lib/sufia/jobs
+      #{config.root}/app/controllers/concerns
+      #{config.root}/app/models/concerns
+    )
     
     initializer "Patch active_fedora" do
       require 'sufia/active_fedora/redis'

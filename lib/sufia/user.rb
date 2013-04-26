@@ -43,14 +43,10 @@ module Sufia::User
 
   end
 
-  # This method should display the unique identifier for this user as defined by devise.
-  # The unique identifier is what access controls will be enforced against.
-  def user_key
-    send(Devise.authentication_keys.first)
-  end
-
-  def to_s
-    user_key
+  # Format the json for select2 which requires just an id and a field called text. 
+  # If we need an alternate format we should probably look at a json template gem
+  def as_json(opts = nil)
+    {id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key}
   end
 
   def email_address

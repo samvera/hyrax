@@ -41,6 +41,28 @@ describe UsersController do
       flash[:alert].should include ("User 'johndoe666' does not exist")
     end
   end
+  describe "#index" do
+    before do
+      @u1 = FactoryGirl.find_or_create(:archivist)
+      @u2 = FactoryGirl.find_or_create(:curator)
+    end
+    describe "requesting html" do
+      it "should test users" do
+        get :index
+        assigns[:users].should include(@u1, @u2)
+        response.should be_successful
+      end
+    end
+    describe "requesting json" do
+      it "should display users" do
+        get :index, format: :json
+        response.should be_successful
+        json = JSON.parse(response.body)
+        json.map{|u| u['id']}.should include(@u1.email, @u2.email)
+        json.map{|u| u['text']}.should include(@u1.email, @u2.email)
+      end
+    end
+  end
   describe "#edit" do
     it "show edit form when user edits own profile" do
       get :edit, uid: @user.user_key
