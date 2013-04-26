@@ -34,7 +34,7 @@ limitations under the License.
 //= require audio.min
 //= require jquery.validate
 //= require swfobject
-//= require jquery.zclip.min
+//= require ZeroClipboard.min
 
 //= require batch_edit
 //= require terms_of_service
@@ -65,7 +65,7 @@ function notify_update_link() {
 // short hand for $(document).ready();
 $(function() {
 
-  // set up global batch edit options to override the ones in the gem 
+  // set up global batch edit options to override the ones in the gem
   window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};
 
   setInterval(notify_update_link, 30*1000);
@@ -194,4 +194,3 @@ function initialize_audio() {
     });
   };
 }
-
