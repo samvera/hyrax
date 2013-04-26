@@ -34,7 +34,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rails_autolink', '1.0.9'
   gem.add_dependency 'acts_as_follower', '0.1.1'
   gem.add_dependency 'nest', '1.1.1'
-  gem.add_dependency 'sitemap', '0.3.2'
   gem.add_dependency 'yaml_db', '0.2.3'
   gem.add_dependency 'mailboxer', '0.8.0'
   gem.add_dependency 'rainbow', '1.1.4'
