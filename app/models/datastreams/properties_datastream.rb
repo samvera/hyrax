@@ -15,11 +15,13 @@
 # properties datastream: catch-all for info that didn't have another home.  Particularly depositor.
 class PropertiesDatastream < ActiveFedora::OmDatastream
   set_terminology do |t|
-    t.root(:path=>"fields", :xmlns => '', :namespace_prefix => nil) 
+    t.root(:path=>"fields" ) 
     # This is where we put the user id of the object depositor -- impacts permissions/access controls
-    t.depositor :xmlns => '', :namespace_prefix => nil, :index_as=>[:stored_searchable]
+    t.depositor :index_as=>[:stored_searchable]
     # This is where we put the relative path of the file if submitted as a folder
-    t.relative_path :xmlns => '', :namespace_prefix => nil
+    t.relative_path
+
+    t.proxy_depositor path: 'proxyDepositor', :index_as=>:symbol
   end
 
   def self.xml_template

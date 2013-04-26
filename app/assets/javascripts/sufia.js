@@ -28,6 +28,7 @@ limitations under the License.
 //= require bootstrap-collapse
 //= require bootstrap-tooltip
 //= require bootstrap-popover
+//= require bootstrap-tab
 
 //= require video
 //= require audio.min
@@ -39,7 +40,6 @@ limitations under the License.
 //= require terms_of_service
 //= require fileupload
 //= require sufia/permissions
-//= require sufia/tabs
 //= require sufia/trophy
 //= require sufia/batch_select_all
 //= require sufia/multiForm

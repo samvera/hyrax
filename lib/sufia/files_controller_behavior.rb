@@ -138,14 +138,14 @@ module Sufia
       update_metadata if params[:generic_file]
 
       #always save the file so the new version or metadata gets recorded
-      @generic_file.save!
-      
-
-      # do not trigger an update event if a version event has already been triggered
-      Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
-      @generic_file.record_version_committer(current_user)
-      redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
-
+      if @generic_file.save
+        # do not trigger an update event if a version event has already been triggered
+        Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
+        @generic_file.record_version_committer(current_user)
+        redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+      else
+        render action: 'edit'
+      end
     end
 
     protected
