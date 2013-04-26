@@ -17,6 +17,11 @@ module Sufia::UsersControllerBehavior
       base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", query, query)
     end
     @users = base.order(sort_val).page(params[:page]).per(10)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @users.to_json(only: [:id, Devise.authentication_keys.first], methods: :name) }
+    end
     
   end
 
