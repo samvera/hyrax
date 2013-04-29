@@ -1,3 +1,12 @@
+h3. 6.1.0 (2013-04-29)
+* Fixed Solr 4 compatibility issue in construction of policy clauses in Hydra::PolicyAwareAccessControlsEnforcement.
+* Removed references to dictionaries that are not in the default solrconfig.
+* Config templates are now in active-fedora.
+* hydra-access-controls requires blacklight.
+* Upgrade guide removed -- see wiki for upgrade notes.
+* Added .yardopts so that rdoc.info generates correct API documentation.
+* active-fedora upgraded to 6.1.
+
 h3. 6.0.0 (2013-03-28)
 * Added a jetty generator
   If you want to install a version of jetty on your local machine to develop you project,
