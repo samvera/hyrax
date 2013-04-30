@@ -26,7 +26,7 @@ module Sufia
     
     def show
       if can? :read, params["id"]
-        asset = ActiveFedora::Base.find(params[:id], :cast=>true)
+        asset = ActiveFedora::Base.load_instance_from_solr(params[:id])
         # we can now examine @asset and determine if we should send_content, or some other action.
         send_content (asset)
       else 
