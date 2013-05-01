@@ -16,12 +16,6 @@ require 'spec_helper'
 
 describe DownloadsController do
 
-  describe "routing" do
-    it "should route" do
-      assert_recognizes( {:controller=>"downloads", :action=>"show", "id"=>"test1"}, "/downloads/test1?filename=my%20dog.jpg" )
-    end
-  end
-
   describe "default_datastream?" do
     it "should be true when no datastram_id is passed" do
       controller.should be_default_datastream
