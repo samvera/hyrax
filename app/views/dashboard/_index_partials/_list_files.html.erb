@@ -20,11 +20,11 @@ on element ids -->
 <% noid = document.noid %>
 <tr id="document_<%= noid.gsub(":", "_") %>" class="<%= cycle("","zebra") %>">
   <% gf = GenericFile.find(document.id) %>
-  <td width="6%"><%= batch_edit_select(document) %>&nbsp;</td> 
+  <td width="6%"><%= batch_edit_select(document) %>&nbsp;</td>
   <td width="1%">
   <% if gf.processing? %>
      <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
-  <% elsif gf.depositor  != @user.user_key %>
+  <% elsif gf.depositor != @user.user_key %>
      <i class="icon-gift icon-large"/>
   <% end %>
   </td>
@@ -36,22 +36,35 @@ on element ids -->
   <td width="17%"><%= document.date_uploaded %> </td>
   <td width="5%" align="center">
     <% if document.registered? %>
-      <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
+      <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a>
     <% elsif document.public? %>
       <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
       <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-important" title="Private">Private</span></a>
     <% end %>
   </td>
-  <td width="23%" class="center">
-    <span style="position: relative; display: inline-block">
-     <%= link_to raw('<!--i class="icon-unlock under"></i--><i class="icon-link icon-large over"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Single Use Link to File', :id => "copy_link_#{noid}" %>
-    </span>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-pencil icon-large"></i>'), sufia.edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-download-alt icon-large"></i>'), sufia.download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>&nbsp;&nbsp;&nbsp;
-    <%= link_to raw('<i class="icon-trash icon-large"></i>'), sufia.generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation"} %>&nbsp;&nbsp;&nbsp;
-
-  <%= display_trophy_link(@user, noid) %>&nbsp;&nbsp;&nbsp;
+  <td width="23%">
+    <div class="btn-group">
+      <button class="btn btn-small" href="#"><i class="icon-wrench"></i> Select an action</button>
+      <button class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></button>
+      <ul class="dropdown-menu">
+       <li>
+         <%= link_to raw('<i class="icon-link over"></i> Single-Use Link to File'), '#', :class => "copypaste itemicon itemcode", :title => "Single-Use Link to File", :id => "copy_link_#{noid}" %>
+       </li>
+       <li>
+         <%= link_to raw('<i class="icon-pencil"></i> Edit File'), sufia.edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
+       </li>
+       <li>
+         <%= link_to raw('<i class="icon-download-alt"></i> Download File'), sufia.download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
+       </li>
+       <li>
+         <%= link_to raw('<i class="icon-trash"></i> Delete File'), sufia.generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation"} %>
+       </li>
+       <li>
+         <%= display_trophy_link(@user, noid) %>
+       </li>
+      </ul>
+    </div>
   </td>
 </tr>
 <tr class="hide" id="detail_<%= noid.gsub(":", "_") %>"> <!--  document detail"> -->

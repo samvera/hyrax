@@ -16,12 +16,11 @@
 module TrophyHelper
  def display_trophy_link(user, noid)
    trophyclass = "trophy-off"
-   trophytitle= "Highlight work "
+   trophytitle= "Highlight File on Profile"
    if user.trophies.map(&:generic_file_id).include? noid
      trophyclass = "trophy-on"
-     trophytitle= "Unhighlight work"
    end
 
-   return link_to raw("<i class='#{trophyclass} icon-trophy icon-large'></i>"),"", :class=> 'trophy-class', :title => trophytitle, :id => noid,  :remote=>true # link to trophy
+   return link_to raw("<i class='#{trophyclass} icon-trophy'></i> #{trophytitle}"),"", :class=> 'trophy-class', :title => trophytitle, :id => noid,  :remote=>true # link to trophy
  end
 end

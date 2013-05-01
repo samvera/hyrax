@@ -17,54 +17,39 @@ limitations under the License.
 <% content_for :local_js do %>
 
   initialize_audio();
-  
-  function getSingleUse( id){
+
+  function getSingleUse(id) {
     <% rurl = root_url %>
-    <% rurl = rurl.slice(0,rurl.length-1) if rurl[rurl.length-1] == '/' %>
+    <% rurl = rurl.slice(0, rurl.length-1) if rurl[rurl.length-1] == "/" %>
     var resp = $.ajax({
-      headers: {Accept : "application/javascript"},      
+      headers: { Accept: "application/javascript" },
       type: 'get',
-      url: '<%=rurl %>/single_use_link/generate_show/'+id.slice(10),
+      url: "<%= rurl %>/single_use_link/generate_show/" + id.slice(10),
       async: false,
     });
-    $('#'+id).attr('singleUse',resp.responseText);
-   return resp;
- }
-  
-  
-  // Load clipboard swif 
-  $(document).ready(function(){
-      var singleUse;
-      <% rurl = root_url %>
-      <% rurl = rurl.slice(0,rurl.length-1) if rurl[rurl.length-1] == '/' %>
-      if (typeof swfobject !== 'undefined' && swfobject.getFlashPlayerVersion().major !== 0){       
-        copy_links = $('a.copypaste');
-        for(var i=0; i < copy_links.length; i++) 
-        {
-          setTimeout(getSingleUse(copy_links[i].id),1);                
-          $('#'+ copy_links[i].id).zclip({
-            path: '/assets/ZeroClipboard.swf',
-            copy: function() {            
-                var singleUse = $('#'+this.id).attr('singleUse');
-                return '<%=rurl%>' + singleUse;
-            },
-            afterCopy: function(f) {
-              alert("A single use link to "+$('#src_copy_link'+this.id.slice(10))[0].text+" was copied to your clip board.");
-              setTimeout(getSingleUse(this.id),5);                
-            }
-            
-          });
-        }
-      } else {
-        $('a.copypaste').click(function(){
-           var singleUse = getSingleUse(this.id);
-           var url = '<%=rurl%>' + singleUse.responseText;
-           alert('Your Single Use Link: '+url);
-           return false;
-        });
-      }
-  });
+    return "<%= rurl %>/" + resp.responseText;
+  }
 
+  // Load clipboard swf
+  $(document).ready(function() {
+    ZeroClipboard.setDefaults({ moviePath: "/assets/ZeroClipboard.swf" });
+    $.each($(".copypaste"), function() {
+      var clip = new ZeroClipboard();
+      clip.on("dataRequested", function(client, args) {
+        clip.setText(getSingleUse(this.id));
+      })
+      clip.on("complete", function(client, args) {
+        alert("A single use link to " + args.text + " was copied to your clipboard.")
+      })
+      clip.on("noflash", function(client, args) {
+        alert("Your single-use link: " + getSingleUse(this.id))
+      })
+      clip.on("wrongflash", function(client, args) {
+        alert("Your single-use link: " + getSingleUse(this.id))
+      })
+      clip.glue($("#" + this.id))
+    })
+  });
 
   // hide or show the batch update buttons on page startup
   window.batch_part_on_other_page = <%= @batch_part_on_other_page%>;
@@ -72,8 +57,8 @@ limitations under the License.
   window.result_set_size = <%= @result_set_size%>;
   window.document_list_count = <%= @document_list.count %>;
   toggleButtons(<%= !@empty_batch %>);
-      
-  // initialize hydra batch edit and set up select all button toggle after checkboxes have been created 
+
+  // initialize hydra batch edit and set up select all button toggle after checkboxes have been created
   $('#documents').batchEdit({afterCheckboxUpdate: setup_buttontoggle});
 
 
