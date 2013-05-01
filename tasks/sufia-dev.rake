@@ -10,6 +10,7 @@ task :ci => ['jetty:config'] do
   jetty_params = Jettywrapper.load_config
   error = Jettywrapper.wrap(jetty_params) do
     Rake::Task['spec'].invoke
+    Rake::Task['cucumber:all'].invoke
   end
   raise "test failures: #{error}" if error
 end
