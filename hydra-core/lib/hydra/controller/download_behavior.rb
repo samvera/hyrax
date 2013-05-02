@@ -108,7 +108,7 @@ module Hydra
       
       def default_content_ds
         ActiveFedora::ContentModel.known_models_for(asset).each do |model_class|
-          return model_class.default_content_ds if model_class.respond_to?(:default_content_ds)
+          return asset.datastreams[model_class.default_content_ds] if model_class.respond_to?(:default_content_ds)
         end
         if asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
           return asset.datastreams[DownloadsController.default_content_dsid]

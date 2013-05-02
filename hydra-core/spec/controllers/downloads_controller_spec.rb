@@ -19,6 +19,7 @@ describe DownloadsController do
       @obj = ActiveFedora::Base.new
       @obj = ModsAsset.new
       @obj.label = "world.png"
+      @obj.add_file_datastream('fizz', :dsid=>'buzz', :mimeType => 'image/png')
       @obj.add_file_datastream('foobarfoobarfoobar', :dsid=>'content', :mimeType => 'image/png')
       @obj.add_file_datastream("It's a stream", :dsid=>'descMetadata', :mimeType => 'text/plain')
       @obj.read_users = [@user.user_key]
@@ -33,7 +34,15 @@ describe DownloadsController do
         User.any_instance.stub(:groups).and_return([])
       end
       describe "show" do
-        it "should default to returning configured default download" do
+        it "should default to returning default download configured by object" do
+          ModsAsset.stub(:default_content_ds).and_return('buzz')
+          get "show", :id => @obj.pid
+          response.should be_success
+          response.headers['Content-Type'].should == "image/png"
+          response.headers["Content-Disposition"].should == "inline; filename=\"world.png\""
+          response.body.should == 'fizz'
+        end
+        it "should default to returning default download configured by controller" do
           DownloadsController.default_content_dsid.should == "content"
           get "show", :id => @obj.pid
           response.should be_success

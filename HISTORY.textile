@@ -1,5 +1,6 @@
 h3. 6.1.1 (unreleased)
 * Correct typo in CatalogController template
+* Fix bug where default_content_ds, was not being checked in DownloadController
 
 h3. 6.1.0 (2013-04-29)
 * Fixed Solr 4 compatibility issue in construction of policy clauses in Hydra::PolicyAwareAccessControlsEnforcement.
