@@ -53,6 +53,7 @@ module Hydra
       def datastream_to_show
         ds = asset.datastreams[params[:datastream_id]] if params.has_key?(:datastream_id)
         ds = default_content_ds if ds.nil?
+        raise "Unable to find a datastream for #{asset}" if ds.nil?
         ds
       end
       
