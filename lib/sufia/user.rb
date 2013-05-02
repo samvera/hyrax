@@ -65,18 +65,13 @@ module Sufia::User
 
   # method needed for trophies
   def trophies
-     trophies = Trophy.where(user_id:self.id)
+    trophies = Trophy.where(:user_id => self.id)
     return trophies
   end
-  
+
   #method to get the trophy ids without the namespace included
   def trophy_ids
-    trophies=[]
-    trophies.each do |t|
-      @trophies << GenericFile.find("#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}")
- 
-    end
-    return trophies
+    trophies.map { |t| "#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}" }
   end
 
   # method needed for messaging
@@ -84,7 +79,7 @@ module Sufia::User
     return nil
   end
 
-  # The basic groups method, override or will fallback to Sufia::Ldap::User 
+  # The basic groups method, override or will fallback to Sufia::Ldap::User
   def groups
     return self.group_list ? self.group_list.split(";?;") : []
   end
@@ -93,7 +88,7 @@ module Sufia::User
     @ability ||= Ability.new(self)
   end
 
-  module ClassMethods 
+  module ClassMethods
     def current
       Thread.current[:user]
     end

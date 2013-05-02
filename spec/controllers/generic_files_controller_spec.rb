@@ -33,8 +33,8 @@ describe GenericFilesController do
       begin
         Batch.find("sample:batch_id").delete
       rescue
-      end                                         
-      @mock.delete unless @mock.inner_object.class == ActiveFedora::UnsavedDigitalObject 
+      end
+      @mock.delete unless @mock.inner_object.class == ActiveFedora::UnsavedDigitalObject
     end
 
     it "should render error the file wasn't actually a file" do
