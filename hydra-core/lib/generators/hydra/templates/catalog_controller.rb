@@ -21,7 +21,7 @@ class CatalogController < ApplicationController
 
     # solr field configuration for search results/index views
     config.index.show_link = 'title_tesim'
-    config.index.record_tsim_type = 'has_model_ssim'
+    config.index.record_display_type = 'has_model_ssim'
 
     # solr field configuration for document/show views
     config.show.html_title = 'title_tesim'
