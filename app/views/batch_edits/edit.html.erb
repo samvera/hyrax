@@ -220,7 +220,6 @@ $("a[rel=popover]").popover({ html: true });
       </div><!-- /well -->
       <div id="permissions_display" class="tab-pane">
         <%= form_for @generic_file, :url=>batch_edits_path, :method=>:put, :remote => true, :html => { :id=>"form_permissions", :class=>"ajax-form"} do |f| %>
-           <%= hidden_field_tag('generic_file[terms_of_service]', '1') %>
            <%= hidden_field_tag('update_type', 'update') %>
            <%= hidden_field_tag('key', 'permissions') %>
            <%= render :partial => "generic_files/permission_form", :locals => { :gf => @show_file } %>
