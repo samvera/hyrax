@@ -44,6 +44,8 @@ limitations under the License.
 //= require sufia/batch_select_all
 //= require sufia/multiForm
 //= require sufia/edit_metadata
+//= require hydra/batch_select
+//= require hydra_collections
 
 //over ride the blacklight default to submit
 //form when sort by or show per page change
