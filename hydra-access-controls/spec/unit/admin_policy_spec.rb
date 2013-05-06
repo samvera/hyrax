@@ -41,7 +41,7 @@ describe Hydra::AdminPolicy do
   describe "to_solr" do
     subject { Hydra::AdminPolicy.new(:title=>"Foobar").to_solr }
     it "should have title_ssim" do
-      subject[ActiveFedora::SolrService.solr_name('title', type: :string)].should == ["Foobar"]
+      subject[ActiveFedora::SolrService.solr_name('title', type: :string)].should == "Foobar"
     end
   end
 
