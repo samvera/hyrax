@@ -25,13 +25,13 @@ module Sufia
     end
     
     def show
-      if can? :read, params["id"]
+      if can? :read, params[:id]
         asset = ActiveFedora::Base.load_instance_from_solr(params[:id])
         # we can now examine @asset and determine if we should send_content, or some other action.
         send_content (asset)
       else 
-        logger.info "Can not read #{params['id']}"
-        redirect_to "/assets/NoAccess.png"
+        logger.info "Can not read #{params[:id]}"
+        raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
       end
     end
 
