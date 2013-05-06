@@ -39,6 +39,10 @@ module SufiaHelper
     return User.find_by_user_key(recent_document.depositor).name rescue recent_document.depositor
   end
 
+  def number_of_deposits(user)
+    ActiveFedora::SolrService.query("#{Solrizer.solr_name('depositor', :stored_searchable, :type => :string)}:#{user.user_key}").count
+  end
+
   def link_to_facet(field, field_string)
     link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
   end

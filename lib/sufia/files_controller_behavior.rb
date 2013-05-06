@@ -57,12 +57,6 @@ module Sufia
       @groups = current_user.groups
     end
 
-    # routed to /files/:id
-    def index
-      @generic_files = ::GenericFile.find(:all, :rows => ::GenericFile.count)
-      render :json => @generic_files.map(&:to_jq_upload).to_json
-    end
-
     # routed to /files/:id (DELETE)
     def destroy
       pid = @generic_file.noid
@@ -81,7 +75,7 @@ module Sufia
         if !file
           json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
         elsif (empty_file?(file))
-          json_error "Error! Zero Length File!", file.original_filename 
+          json_error "Error! Zero Length File!", file.original_filename
         elsif (!terms_accepted?)
           json_error "You must accept the terms of service!", file.original_filename
         else
@@ -89,7 +83,7 @@ module Sufia
         end
       rescue => error
         logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
-        json_error "Error occurred while creating generic file." 
+        json_error "Error occurred while creating generic file."
       ensure
         # remove the tempfile (only if it is a temp file)
         file.tempfile.delete if file.respond_to?(:tempfile)

@@ -19,18 +19,16 @@ module Sufia
       title || label
     end
 
-
     ##
     # Give our SolrDocument an ActiveModel::Naming appropriate route_key
     def route_key
-      get('has_model_ssim').split(':').last.downcase
+      get(Solrizer.solr_name('has_model', :symbol)).split(':').last.downcase
     end
 
-
     ##
-    # Offer the source (ActiveFedora-based) model to Rails for some of the 
-    # Rails methods (e.g. link_to). 
-    # @example 
+    # Offer the source (ActiveFedora-based) model to Rails for some of the
+    # Rails methods (e.g. link_to).
+    # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
       m = ActiveFedora::Base.load_instance_from_solr(id, self)
@@ -42,7 +40,6 @@ module Sufia
       self[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)]
     end
 
-
     def date_uploaded
       field = self[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)]
       return unless field.present?
@@ -52,7 +49,6 @@ module Sufia
         logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
       end
     end
-
 
     def depositor(default = '')
       val = Array(self[Solrizer.solr_name("depositor")]).first

@@ -13,13 +13,12 @@ module Sufia
     autoload :Actions
     autoload :Permissions
     include Sufia::ModelMethods
-    include Sufia::Noid  
+    include Sufia::Noid
     include Sufia::GenericFile::Thumbnail
     include Sufia::GenericFile::Export
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Audit
     include Sufia::GenericFile::Permissions
-                                                
 
     included do
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -35,14 +34,14 @@ module Sufia
                                   :contributor, :title, :tag, :description, :rights,
                                   :publisher, :date_created, :subject,
                                   :resource_type, :identifier, :language]
+
       around_save :characterize_if_changed, :retry_warming
       before_save :remove_blank_assertions
-
     end
 
     def delete
-       self.cleanup_trophies
-       super
+      self.cleanup_trophies
+      super
     end
 
     def remove_blank_assertions
@@ -95,7 +94,7 @@ module Sufia
           # fail for good if the tries is greater than 3
           raise if save_tries >=3
           sleep 0.01
-          retry      
+          retry
         rescue  ActiveResource::ResourceConflict => error
           conflict_tries += 1
           logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
@@ -111,15 +110,13 @@ module Sufia
             retry
           else
             raise
-          end          
-        
+          end
         end
     end
 
     def cleanup_trophies
       Trophy.destroy_all(generic_file_id: self.noid)
     end
-
 
     def related_files
       relateds = begin
@@ -136,7 +133,7 @@ module Sufia
     # Unstemmed, searchable, stored
     def self.noid_indexer
       @noid_indexer ||= Solrizer::Descriptor.new(:text, :indexed, :stored)
-    end 
+    end
 
     def to_solr(solr_doc={}, opts={})
       super(solr_doc, opts)
@@ -192,6 +189,5 @@ module Sufia
        return false if !self.batch.methods.include? :status
        return (!self.batch.status.empty?) && (self.batch.status.count == 1) && (self.batch.status[0] == "processing")
     end
-
   end
 end

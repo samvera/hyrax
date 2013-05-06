@@ -36,10 +36,9 @@ limitations under the License.
                    <td ><a href="<%= sufia.profile_path(URI.escape(user.user_key,'@.')) %>"  ><%= user.name %><a></td> 
                    <td><a href="<%= sufia.profile_path(URI.escape(user.user_key,'@.')) %>"  ><%= user.user_key %><a></td>
                    <td><%= user.department %> </td> 
-                   <td><%= GenericFile.find(:depositor => user.to_s).count %> </td> 
+                   <td><%= number_of_deposits(user) %> </td>
                 </tr> 
- 
-            <% end %> 
+             <% end %> 
         </tbody> 
     </table> 
     <div class="pager">
