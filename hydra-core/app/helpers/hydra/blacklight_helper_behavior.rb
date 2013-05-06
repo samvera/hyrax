@@ -8,7 +8,7 @@ module Hydra
 
       return 'default' unless display_type 
 
-      display_type.first.gsub(/^[^\/]+\/[^:]+:/,"").underscore
+      Array(display_type).first.gsub(/^[^\/]+\/[^:]+:/,"").underscore
     end    
 
   #   COPIED from vendor/plugins/blacklight/app/helpers/application_helper.rb
