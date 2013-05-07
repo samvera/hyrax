@@ -1,7 +1,6 @@
 # Returns an array containing the vhost 'CoSign service' value and URL
 Sufia.config do |config|
-  config.id_namespace = "sufia"
-  config.fits_path = "fits.sh"
+
   config.fits_to_desc_mapping= {
       :file_title => :title,
       :file_author => :creator
@@ -59,14 +58,20 @@ Sufia.config do |config|
     config.queue = Sufia::Resque::Queue
 
     # Map hostnames onto Google Analytics tracking IDs
-    #config.google_analytics_id = 'UA-99999999-1'
+    # config.google_analytics_id = 'UA-99999999-1'
 
     
     # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
-    #config.temp_file_base = '/home/developer1'
+    # config.temp_file_base = '/home/developer1'
 
     # If you have ffmpeg installed and want to transcode audio and video uncomment this line
-    #config.enable_ffmpeg = true
+    # config.enable_ffmpeg = true
+    
+    # Specify the Fedora pid prefix:
+    # config.id_namespace = "sufia"
+    
+    # Specify the path to the file characterization tool:
+    # config.fits_path = "fits.sh"
 
 end
 

@@ -30,6 +30,8 @@ module Sufia
     config.ffmpeg_path = 'ffmpeg'
     config.fits_message_length = 5
     config.temp_file_base = nil
+    config.id_namespace = "sufia"
+    config.fits_path = "fits.sh"
 
     config.autoload_paths += %W(
       #{config.root}/lib/sufia/jobs
