@@ -55,7 +55,7 @@ module Sufia
       elsif type == "delete_all"
         batch.each do |doc_id|
           gf = ::GenericFile.load_instance_from_solr(doc_id)
-          gf.delete
+          gf.destroy
         end
         clear_batch!
         after_update
