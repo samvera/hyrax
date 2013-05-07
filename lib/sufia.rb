@@ -35,6 +35,7 @@ module Sufia
       #{config.root}/lib/sufia/jobs
       #{config.root}/app/controllers/concerns
       #{config.root}/app/models/concerns
+      #{config.root}/app/models/datastreams
     )
     
     initializer "Patch active_fedora" do
