@@ -29,7 +29,7 @@ class ChecksumAuditLog < ActiveRecord::Base
     logs = GenericFile.load_instance_from_solr(version.pid).logs(version.dsid)
     list = logs.limit(2)
     if list.size > 1 && (list[0].pass == 1) && (list[1].pass == 1)
-      list[0].delete
+      list[0].destroy
     end
   end
 end

@@ -37,11 +37,7 @@ module Sufia
 
       around_save :characterize_if_changed, :retry_warming
       before_save :remove_blank_assertions
-    end
-
-    def delete
-      self.cleanup_trophies
-      super
+      before_destroy :cleanup_trophies
     end
 
     def remove_blank_assertions

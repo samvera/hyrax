@@ -74,7 +74,7 @@ module Sufia::UsersControllerBehavior
        t = Trophy.create(:generic_file_id => params[:file_id], :user_id => current_user.id)
        return false unless t.persisted?
      else
-       t.delete  
+       t.destroy  
        #TODO do this better says Mike
        return false if t.persisted?  
      end
