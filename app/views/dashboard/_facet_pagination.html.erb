@@ -2,10 +2,10 @@
  It implements the facets in the same manner as blacklight does for the main catalog for the individual's dashbord 
 -->
     <div class="prev_next_links btn-group pull-left">
-      <%= link_to_previous_page @pagination, raw(t('views.pagination.previous')), :params => params, :param_name => Blacklight::Solr::FacetPaginator.request_keys[:page], :class => 'btn' do %>
+      <%= link_to_previous_page @pagination, raw(t('views.pagination.previous')), :route_set=>sufia, :params => params, :param_name => Blacklight::Solr::FacetPaginator.request_keys[:page], :class => 'btn' do %>
        <span class="disabled btn"><%= raw(t('views.pagination.previous')) %></span>
      <% end %>
-      <%= link_to_next_page @pagination, raw(t('views.pagination.next')), :params => params, :param_name => Blacklight::Solr::FacetPaginator.request_keys[:page], :class => 'btn' do %>
+     <%= link_to_next_page @pagination, raw(t('views.pagination.next')), :route_set=>sufia, :params => params, :param_name => Blacklight::Solr::FacetPaginator.request_keys[:page], :class => 'btn' do %>
        
        <span class="disabled btn"><%= raw(t('views.pagination.next')) %></span>
       <% end %>
