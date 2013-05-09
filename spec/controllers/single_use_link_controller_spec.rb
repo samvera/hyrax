@@ -85,8 +85,9 @@ describe SingleUseLinkController do
       it "and_return http success" do
         controller.stub(:render)
         expected_content = ActiveFedora::Base.find(@file.pid).content.content
-        controller.should_receive(:send_data).with(expected_content, {:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
+        controller.should_receive(:send_file_headers!).with({:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
         get :download, id:@dhash 
+        response.body.should == expected_content
         response.should be_success
       end
       it "and_return 404 on second attempt" do

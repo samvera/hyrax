@@ -4,7 +4,7 @@ class SingleUseLinkController < DownloadsController
   before_filter :authenticate_user!, :except => [:download, :show]
   before_filter :find_file, :only => [:generate_download, :generate_show]
   before_filter :authorize_user!, :only => [:generate_download, :generate_show]
-  skip_filter :normalize_identifier
+  skip_filter :normalize_identifier, :load_asset, :load_datastream
   prepend_before_filter :normalize_identifier, :except => [:download, :show]
   rescue_from Sufia::SingleUseError, :with => :render_single_use_error
 
@@ -37,7 +37,8 @@ class SingleUseLinkController < DownloadsController
     not_found if link.path != sufia.download_path(id)
 
     # send the data content
-    asset = GenericFile.find(id)
+    @asset = GenericFile.find(id)
+    @ds = datastream_to_show
     send_content(asset)
   end
 
