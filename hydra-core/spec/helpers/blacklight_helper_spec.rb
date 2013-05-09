@@ -17,6 +17,14 @@ describe BlacklightHelper do
       helper.stub(:blacklight_config).and_return(@config)
       helper.document_partial_name('active_fedora_model_ssi' => "Chicken").should == "chicken" 
     end
+
+    it "should handle periods" do
+      @config = Blacklight::Configuration.new.configure do |config|
+        config.show.display_type = 'has_model_s'
+      end
+      helper.stub(:blacklight_config).and_return(@config)
+      helper.document_partial_name('has_model_s' => ["info:fedora/afmodel:text.PDF"]).should == "text_pdf"
+    end
   end
   
 end
