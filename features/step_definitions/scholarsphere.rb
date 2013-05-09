@@ -34,7 +34,7 @@ Then /^I reset the mail server$/ do
   ContactForm.any_instance.unstub(:deliver)
 end
 
-When /^I follow the link within$/ do |selector|
+When /^I follow the link within "(.*?)"$/ do |selector|
   find(selector).click
 end
 
