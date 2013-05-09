@@ -22,7 +22,7 @@ module Hydra
       protected
 
       def load_asset
-        @asset = ActiveFedora::Base.find(params[:id], :cast=>true)
+        @asset = ActiveFedora::Base.load_instance_from_solr(params[:id])
       end
 
       def load_datastream
