@@ -37,8 +37,8 @@ class SingleUseLinkController < DownloadsController
     not_found if link.path != sufia.download_path(id)
 
     # send the data content
-    @asset = GenericFile.find(id)
-    @ds = datastream_to_show
+    @asset = GenericFile.load_instance_from_solr(id)
+    load_datastream
     send_content(asset)
   end
 
