@@ -1,6 +1,11 @@
-h3. 6.1.1 (unreleased)
+h3. 6.1.1 (2013-05-09)
 * Correct typo in CatalogController template
 * Fix bug where default_content_ds, was not being checked in DownloadController
+* BlacklightHelperBehavior#document_partial_name should work on single values fields
+* BlacklightHelperBehavior#document_partial_name should replace periods in partial name
+* Use AF::Base.load_instance_from_solr in the DownloadController
+* DownloadController raises an error if no datastream can be loaded
+* Solrizer 3.1.0 compatible tests
 
 h3. 6.1.0 (2013-04-29)
 * Fixed Solr 4 compatibility issue in construction of policy clauses in Hydra::PolicyAwareAccessControlsEnforcement.
