@@ -20,8 +20,7 @@ describe BatchEditsController do
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
-      put :add, :id =>@one.pid
-      put :add, :id =>@two.pid
+      controller.batch = [@one.pid, @two.pid]
       controller.should_receive(:can?).with(:edit, @one.pid).and_return(true)
       controller.should_receive(:can?).with(:edit, @two.pid).and_return(true)
     end
