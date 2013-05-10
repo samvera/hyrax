@@ -35,6 +35,14 @@ describe Hydra::AccessControlsEnforcement do
         @solr_parameters[:fq].first.should_not match(/registered/) 
       end
       it "Then I should not have individual or group permissions"
+      it "Should changed based on the discovery_perissions" do
+        @solr_parameters = {}
+        discovery_permissions = ["read","edit"]
+        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+        ["edit","read"].each do |type|
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:public/)      
+        end
+      end
     end
     context "Given I am a registered user" do
       before do
@@ -60,6 +68,16 @@ describe Hydra::AccessControlsEnforcement do
       it "Then I should see assets that my groups have discover, read, or edit access to" do
         ["faculty", "africana-faculty"].each do |group_id|
           ["discover","edit","read"].each do |type|
+            @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:#{group_id}/)      
+          end
+        end
+      end
+      it "Should changed based on the discovery_perissions" do
+        @solr_parameters = {}
+        discovery_permissions = ["read","edit"]
+        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+        ["faculty", "africana-faculty"].each do |group_id|
+          ["edit","read"].each do |type|
             @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:#{group_id}/)      
           end
         end
