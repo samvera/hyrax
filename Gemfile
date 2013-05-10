@@ -19,4 +19,5 @@ group :development, :test do
   gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
   gem "simplecov", :require => false
+  gem 'hydra-collections', '~>0.0.1'
 end # (leave this comment here to catch a stray line inserted by blacklight!)
