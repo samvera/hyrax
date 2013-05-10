@@ -89,9 +89,13 @@ module Hydra::AccessControlsEnforcement
 
   
   # Which permission levels (logical OR) will grant you the ability to discover documents in a search.
+
   # Override this method if you want it to be something other than the default
   def discovery_permissions
-    ["edit","discover","read"]
+    @discovery_permissions ||= ["edit","discover","read"]
+  end
+  def disocvery_permissions= (permissions)
+    @discovery_permissions = permissions
   end
 
   # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
