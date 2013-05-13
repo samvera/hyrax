@@ -16,27 +16,17 @@ Gem::Specification.new do |gem|
   gem.version       = Sufia::VERSION
 
   gem.add_dependency 'rails', '~> 3.2.13'
+  gem.add_dependency 'sufia-models'
   gem.add_dependency 'blacklight', '~> 4.0'
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency "hydra-head", "~> 6.0"
 
-  gem.add_dependency 'noid', '~> 0.6.6'
   gem.add_dependency 'hydra-batch-edit', '~> 1.0'
 
-  gem.add_dependency 'resque', '~> 1.23.0'#, :require => 'resque/server'
-  gem.add_dependency 'resque-pool', '0.3.0'
-  gem.add_dependency 'rmagick'
-  gem.add_dependency 'devise'
-  gem.add_dependency 'paperclip', '3.3.0'
   gem.add_dependency 'daemons', '1.1.9'
-  gem.add_dependency 'zipruby', '0.3.6'
   gem.add_dependency 'mail_form'
   gem.add_dependency 'rails_autolink', '1.0.9'
-  gem.add_dependency 'acts_as_follower', '0.1.1'
-  gem.add_dependency 'nest', '1.1.1'
   gem.add_dependency 'yaml_db', '0.2.3'
-  gem.add_dependency 'mailboxer', '0.8.0'
   gem.add_dependency 'rainbow', '1.1.4'
-  gem.add_dependency 'activerecord-import', '0.3.0' # 0.3.1 caused a bug in testing: "SQLite3::SQLException: near ",": syntax error: INSERT INTO..."
   gem.add_dependency 'font-awesome-sass-rails', '~>3.0'
 end

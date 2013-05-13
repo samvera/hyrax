@@ -78,7 +78,7 @@
       <div class="input-append">
         <p class="help-block">Enter <%=t('sufia.account_label') %> (one at a time)</p>
         <%= text_field_tag 'new_user_name_skel', nil, :class => "span29" %><span class="add-on"><%=t('sufia.directory.suffix') %></span>
-        <%= select_tag 'new_user_permission_skel', options_for_select(Sufia::Engine.config.permission_levels), :class=> 'span17' %>
+        <%= select_tag 'new_user_permission_skel', options_for_select(Sufia.config.permission_levels), :class=> 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i> Add</button>
         <br /> <span id="directory_user_result"></span> 
       </div>
@@ -88,7 +88,7 @@
     <div id="new-group" >
       <div class="input-append">
         <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + groups), :class => 'span38' %>
-        <%= select_tag 'new_group_permission_skel', options_for_select(Sufia::Engine.config.permission_levels), :class => 'span17' %>
+        <%= select_tag 'new_group_permission_skel', options_for_select(Sufia.config.permission_levels), :class => 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i> Add</button>
         <br /><span id="directory_group_result"></span>
       </div>
@@ -103,7 +103,7 @@
   <tr id="file_permissions">
     <td><%= label_tag :owner_access, "Depositor (<span id=\"file_owner\">#{link_to_profile depositor}</span>)".html_safe, :class=>"control-label" %></td>
     <td>
-    <%= Sufia::Engine.config.owner_permission_levels.keys[0] %>
+    <%= Sufia.config.owner_permission_levels.keys[0] %>
     </td>
   </tr>
   <% gf.permissions.each do |permission| %>
@@ -114,7 +114,7 @@
     <tr>
       <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], :class=>"control-label" %></td>
       <td>
-      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia::Engine.config.permission_levels, permission[:access]), :class=>'span20 select_perm' %>
+      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia.config.permission_levels, permission[:access]), :class=>'span20 select_perm' %>
       <button class="btn close remove_perm">X</button>
       </td>
     </tr>

@@ -1,8 +1,6 @@
 en:
   sufia:
-    product_name:       "ScholarSphere"
     account_name:       "Penn State Access Account Id"
-    institution_name:   "Penn State"
     deposit_agreement:  "ScholarSphere's Deposit Agreement"
     upload_tooltip:     "Please accept Deposit Agreement before you can upload."
     share_button:       "Share Your Work"

@@ -35,8 +35,8 @@ class ContactForm < MailForm::Base
   def headers
     {
       :subject => "Contact Form:#{subject}",
-      :to => Sufia::Engine.config.contact_email, 
-      :from => Sufia::Engine.config.from_email
+      :to => Sufia.config.contact_email, 
+      :from => Sufia.config.from_email
     }
   end
 end

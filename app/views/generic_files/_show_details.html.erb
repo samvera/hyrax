@@ -51,14 +51,14 @@
               <% label = label.humanize %>
               <% if values.is_a? Array %>
                 <% length = values.length %>
-                <% length = Sufia::Engine.config.fits_message_length-1  if term == :status_message && values.length > Sufia::Engine.config.fits_message_length-1  %>
+                <% length = Sufia.config.fits_message_length-1  if term == :status_message && values.length > Sufia.config.fits_message_length-1  %>
                 <% values[0..length].each_with_index do |value, idx| %>
                   <% next if value.empty? %>
                   <%= "#{label}: #{value.truncate(250)}" %>
                   <%= "<br />".html_safe unless idx == length %> 
                 <% end %>
                 <% if length != values.length %>
-                   <%= render :partial => "generic_files/extra_fields_modal", :locals=>{:name=>term, :values=> values, :start=>Sufia::Engine.config.fits_message_length}%>
+                   <%= render :partial => "generic_files/extra_fields_modal", :locals=>{:name=>term, :values=> values, :start=>Sufia.config.fits_message_length}%>
                 <% end %>
               <% else %>
                 <%= "#{label}: #{values.truncate(250)}" %><br />

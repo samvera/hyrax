@@ -77,7 +77,7 @@ module Sufia
             #logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
             days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
             #logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
-            if days_since_last_audit < Sufia::Engine.config.max_days_between_audits
+            if days_since_last_audit < Sufia.config.max_days_between_audits
               #logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{latest_audit.updated_at})"
               return false
             end

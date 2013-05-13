@@ -102,9 +102,7 @@ namespace :sufia do
   end
 
   desc "Re-solrize all objects"
-  task :resolrize => :environment do
-    Sufia.queue.push(ResolrizeJob.new)
-  end
+  task :resolrize => ['solr:reindex']
 
   namespace :export do
     desc "Dump metadata as RDF/XML for e.g. Summon integration"

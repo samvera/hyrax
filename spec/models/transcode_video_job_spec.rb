@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TranscodeVideoJob, :if => Sufia::Engine.config.enable_ffmpeg do
+describe TranscodeVideoJob, :if => Sufia.config.enable_ffmpeg do
   before do
     @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('jcoyne@example.com')

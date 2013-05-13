@@ -14,7 +14,7 @@ module Sufia
 
       def to_tempfile &block
         return unless has_content?
-        tmp_base = Sufia::Engine.config.temp_file_base
+        tmp_base = Sufia.config.temp_file_base
         f = Tempfile.new("#{pid}-#{dsVersionID}")
         f.binmode
         if content.respond_to? :read
@@ -52,7 +52,7 @@ module Sufia
 
 
         def fits_path
-          Sufia::Engine.config.fits_path
+          Sufia.config.fits_path
         end
 
       end

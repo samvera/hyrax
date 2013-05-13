@@ -43,7 +43,7 @@ module Sufia
       # Populate descMetadata with fields from FITS (e.g. Author from pdfs)
       def append_metadata
         terms = self.characterization_terms
-        Sufia::Engine.config.fits_to_desc_mapping.each_pair do |k, v|
+        Sufia.config.fits_to_desc_mapping.each_pair do |k, v|
           if terms.has_key?(k)
             # coerce to array to remove a conditional
             terms[k] = [terms[k]] unless terms[k].is_a? Array

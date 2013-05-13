@@ -63,7 +63,7 @@ module Sufia::UsersControllerBehavior
 
   def toggle_trophy    
      id = params[:file_id]
-     id = "#{Sufia::Engine.config.id_namespace}:#{id}" unless id.include?(":")
+     id = "#{Sufia.config.id_namespace}:#{id}" unless id.include?(":")
      unless current_user.can? :edit, id
        redirect_to root_path, alert: "You do not have permissions to the file"
        return false

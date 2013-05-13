@@ -36,7 +36,7 @@ module Sufia
 
     protected
     def Noid.namespace
-      Sufia::Engine.config.id_namespace
+      Sufia.config.id_namespace
     end
   end
 end

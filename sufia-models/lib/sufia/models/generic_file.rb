@@ -78,7 +78,7 @@ module Sufia
     end
 
     def persistent_url
-      "#{Sufia::Engine.config.persistent_hostpath}#{noid}"
+      "#{Sufia.config.persistent_hostpath}#{noid}"
     end
 
     def retry_warming
