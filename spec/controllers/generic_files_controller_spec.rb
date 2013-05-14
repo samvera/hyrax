@@ -260,6 +260,38 @@ describe GenericFilesController do
       @user.delete
     end
 
+    it "should change mime type when restoring a revision with a different mime type" do
+      @user = FactoryGirl.find_or_create(:user)
+      sign_in @user
+
+      file = fixture_file_upload('/world.png','image/png')
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1@example.com'=>'edit'}}}
+
+      posted_file = GenericFile.find(@generic_file.pid)
+      version1 = posted_file.content.latest_version
+      posted_file.content.version_committer(version1).should == @user.user_key
+      
+      file = fixture_file_upload('/image.jp2','image/jp2')
+      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1@example.com'=>'edit'}}}
+
+      posted_file = GenericFile.find(@generic_file.pid)
+      version2 = posted_file.content.latest_version
+      posted_file.content.version_committer(version2).should == @user.user_key
+
+      posted_file.content.mimeType.should == "image/jp2"
+      post :update, :id=>@generic_file.pid, :revision=>'content.0'
+
+
+      restored_file = GenericFile.find(@generic_file.pid)
+      version3 = restored_file.content.latest_version
+      version3.versionID.should_not == version2.versionID
+      version3.versionID.should_not == version1.versionID
+      restored_file.content.version_committer(version3).should == @user.user_key
+      restored_file.content.mimeType.should == "image/png"
+      @user.delete
+    end
+
+
     it "should record what user added a new version" do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
