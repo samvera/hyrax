@@ -34,4 +34,25 @@ describe BatchEditsController do
       assigns[:show_file].language.should == ["en"]
     end
   end
+  
+  describe "update" do
+    before do
+      @one = GenericFile.new(:creator=>"Fred", :language=>'en')
+      @one.apply_depositor_metadata('mjg36')
+      @two = GenericFile.new(:creator=>"Wilma", :publisher=>'Rand McNally', :language=>'en')
+      @two.apply_depositor_metadata('mjg36')
+      @one.save!
+      @two.save!
+      controller.batch = [@one.pid, @two.pid]
+      controller.should_receive(:can?).with(:edit, @one.pid).and_return(true)
+      controller.should_receive(:can?).with(:edit, @two.pid).and_return(true)
+    end
+    it "should be successful" do
+      put :update , update_type:"delete_all"
+      response.should be_redirect
+      expect {GenericFIle.find(@one.id)}.to raise_error
+      expect {GenericFIle.find(@two.id)}.to raise_error
+    end
+  end
+
 end
