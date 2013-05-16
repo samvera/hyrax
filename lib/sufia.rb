@@ -12,6 +12,7 @@ require 'nest'
 require 'RMagick'
 require 'activerecord-import'
 require 'rails_autolink'
+require 'sufia/dashboard_controller_behavior'
 
 autoload :Zip, 'zipruby'
 module Sufia
