@@ -12,6 +12,7 @@ require 'nest'
 require 'RMagick'
 require 'activerecord-import'
 require 'rails_autolink'
+require "sufia/contact_form_controller_behavior"
 
 autoload :Zip, 'zipruby'
 module Sufia
@@ -32,7 +33,8 @@ module Sufia
     config.temp_file_base = nil
     config.id_namespace = "sufia"
     config.fits_path = "fits.sh"
-
+    config.enable_contact_form_delivery = false
+ 
     config.autoload_paths += %W(
       #{config.root}/lib/sufia/jobs
       #{config.root}/app/controllers/concerns
