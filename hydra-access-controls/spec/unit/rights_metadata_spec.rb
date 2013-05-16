@@ -54,18 +54,21 @@ describe Hydra::ModelMixins::RightsMetadata do
   end
 
   context "to_solr" do
+    let(:embargo_release_date) { "2010-12-01" }
     before do
+      subject.rightsMetadata.embargo_release_date = embargo_release_date
       subject.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
     end
     it "should produce a solr document" do
       result = subject.rightsMetadata.to_solr
-      result.size.should == 4
+      result.size.should == 5
       ## Wrote the test in this way, because the implementation uses a hash, and the hash order is not deterministic (especially in ruby 1.8.7)
       result['read_access_group_ssim'].size.should == 2
       result['read_access_group_ssim'].should include('group-6', 'group-7')
       result['edit_access_group_ssim'].should == ['group-8']
       result['discover_access_person_ssim'].should == ['person2']
       result['read_access_person_ssim'].should == ['person1']
+      result['embargo_release_date_dtsi'].should == subject.rightsMetadata.embargo_release_date(:format => :solr_date)
     end
   end
 
