@@ -45,7 +45,6 @@ class HeadGenerator < Rails::Generators::Base
    
     # Fedora & Solr YAML files
     invoke('active_fedora:config')
-    copy_file "config/jetty.yml", "config/jetty.yml"
   end
   
   # Add Hydra behaviors to the user model
