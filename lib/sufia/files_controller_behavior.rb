@@ -115,7 +115,7 @@ module Sufia
 
       if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
         revision = @generic_file.content.get_version(params[:revision])
-        @generic_file.add_file_datastream(revision.content, :dsid => 'content')
+        @generic_file.add_file_datastream(revision.content, :dsid => 'content', :mimeType => revision.mimeType)
         version_event = true
         Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
       end
