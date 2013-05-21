@@ -139,6 +139,19 @@ describe UsersController do
       u.facebook_handle.should == 'face'
       u.googleplus_handle.should == 'goo'
     end
+    it "should remove a trophy" do
+      f = GenericFile.create(title:"myFile")
+      f.apply_depositor_metadata(@user.user_key)
+      f.save
+      file_id = f.pid.split(":").last
+      Trophy.create(:generic_file_id => file_id, :user_id => @user.id)
+      @user.trophy_ids.length.should == 1
+      post :update, uid: @user.user_key,  'remove_trophy_'+file_id=> 'yes' 
+      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      flash[:notice].should include("Your profile has been updated")
+      @user.trophy_ids.length.should == 0
+      f.destroy 
+    end
   end
   describe "#follow" do
     after(:all) do

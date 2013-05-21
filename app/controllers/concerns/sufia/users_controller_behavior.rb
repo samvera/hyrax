@@ -55,7 +55,7 @@ module Sufia::UsersControllerBehavior
     delete_trophy = params.keys.reject{|k,v|k.slice(0,'remove_trophy'.length)!='remove_trophy'}
     delete_trophy = delete_trophy.map{|v| v.slice('remove_trophy_'.length..-1)}
     delete_trophy.each do | smash_trophy |
-      Trophy.where(user_id: current_user.id, generic_file_id: smash_trophy.slice("#{Sufia::Engine.config.id_namespace}:".length..-1)).each.map(&:delete)
+      Trophy.where(user_id: current_user.id, generic_file_id: smash_trophy).each.map(&:delete)
     end
     Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
     redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "Your profile has been updated"
