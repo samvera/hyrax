@@ -1,3 +1,3 @@
 <h1>Single Use Link</h1>
 <p>Anyone can use the following link once to download the file</p>
-<%= link_to display_title(@generic_file), @link %> <%= link_to raw('<i class="icon-link icon-large"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{@generic_file.pid}" %>
+<%= link_to @generic_file, @link %> <%= link_to raw('<i class="icon-link icon-large"></i>'), '#', :class => 'copypaste itemicon itemcode', :title => 'Copy File URL', :id => "copy_link_#{@generic_file.pid}" %>

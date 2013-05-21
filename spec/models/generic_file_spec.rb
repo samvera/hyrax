@@ -20,6 +20,25 @@ describe GenericFile do
     @file = subject #TODO remove this line someday (use subject instead)
   end
 
+  describe '#to_s' do
+    it 'uses the provided titles' do
+      subject.title = ["Hello", "World"]
+      expect(subject.to_s).to eq("Hello | World")
+    end
+
+    it 'falls back on label if no titles are given' do
+      subject.title = []
+      subject.label = 'Spam'
+      expect(subject.to_s).to eq("Spam")
+    end
+
+    it 'with no label or titles it is "No Title"' do
+      subject.title = []
+      subject.label = nil
+      expect(subject.to_s).to eq("No Title")
+    end
+  end
+
   describe "terms_for_editing" do
     it "should return a list" do
       @file.terms_for_editing.should == [ :contributor, :creator, :title, :description, :publisher,
