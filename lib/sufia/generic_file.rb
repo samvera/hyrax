@@ -12,6 +12,7 @@ module Sufia
     autoload :Audit
     autoload :Actions
     autoload :Permissions
+    autoload :WebForm
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::Thumbnail
@@ -19,6 +20,7 @@ module Sufia
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Audit
     include Sufia::GenericFile::Permissions
+    include Sufia::GenericFile::WebForm
 
     included do
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
