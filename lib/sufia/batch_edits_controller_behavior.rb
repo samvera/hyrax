@@ -22,7 +22,7 @@ module Sufia
             h[key] ||= []
             h[key] = (h[key] + gf.send(key)).uniq
           end
-          @names << display_title(gf)
+          @names << gf.to_s
           permissions = (permissions + gf.permissions).uniq
        end
 

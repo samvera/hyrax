@@ -16,7 +16,7 @@ limitations under the License.
 
 The file(s)
 <% generic_files.first(20).each do |gf|%>
-<%= link_to(display_title(gf), generic_file_url(gf.noid)) %><%= ',' unless gf == generic_files.last %>
+<%= link_to(gf, generic_file_url(gf.noid)) %><%= ',' unless gf == generic_files.last %>
 <% end %>
 <%= '...' if generic_files.length > 20 %>
 have been saved.

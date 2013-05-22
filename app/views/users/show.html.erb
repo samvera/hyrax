@@ -40,7 +40,7 @@ limitations under the License.
       <dd><%= link_to_field('depositor', @user.to_s, GenericFile.where(:depositor => @user.to_s).count) %></dd>
       <dt><i class="icon-trophy trophy-on" ></i> Highlighted Files</dt>
       <% @trophies.each do |t| %>
-        <dd> <%= link_to display_title(t), sufia.generic_file_path(t) %></dd>
+        <dd> <%= link_to t, sufia.generic_file_path(t) %></dd>
       <% end %>
     </dl>
 

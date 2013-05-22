@@ -14,7 +14,6 @@
 
 class BatchUpdateJob
   include Hydra::PermissionsQuery
-  include GenericFileHelper
   include Rails.application.routes.url_helpers 
 
   def queue_name
@@ -79,7 +78,7 @@ class BatchUpdateJob
   end
   
   def file_list ( files)
-    return files.map {|gf| '<a href="'+Sufia::Engine.routes.url_helpers.generic_files_path+'/'+gf.noid+'">'+display_title(gf)+'</a>'}.join(', ')
+    return files.map {|gf| '<a href="'+Sufia::Engine.routes.url_helpers.generic_files_path+'/'+gf.noid+'">'+gf.to_s+'</a>'}.join(', ')
     
   end
   

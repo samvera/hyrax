@@ -15,10 +15,7 @@
 
 module GenericFileHelper
   def display_title(gf)
-    title =  gf.title.join(' | ')
-    title = gf.label if title.blank?
-    title = 'No Title' if title.blank?
-    title
+    gf.to_s
   end
 
   def add_field (key)
