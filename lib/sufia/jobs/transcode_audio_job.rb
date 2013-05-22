@@ -28,10 +28,9 @@ class TranscodeAudioJob < FfmpegTranscodeJob
       opts = ""
       if generic_file.mime_type == 'audio/mpeg'
         # Don't re-encode, just copy
-        generic_file.add_file_datastream(generic_file.content.read, :dsid=>'mp3', :mimeType=>'audio/mp3')
-        #generic_file.content.rewind
+        generic_file.add_file_datastream(generic_file.content.read, :dsid=>'mp3', :mimeType=>'audio/mpeg')
       else
-        encode_datastream('mp3', 'audio/mp3', opts)
+        encode_datastream('mp3', 'audio/mpeg', opts)
       end
     end
 
