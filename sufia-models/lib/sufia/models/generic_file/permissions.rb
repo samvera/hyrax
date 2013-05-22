@@ -1,4 +1,3 @@
-require 'datastreams/paranoid_rights_datastream'
 module Sufia
   module GenericFile
     module Permissions

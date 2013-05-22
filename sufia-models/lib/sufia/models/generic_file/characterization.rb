@@ -1,4 +1,3 @@
-require 'datastreams/fits_datastream'
 module Sufia
   module GenericFile
     module Characterization
