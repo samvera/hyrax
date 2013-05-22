@@ -75,6 +75,7 @@ https://wiki.duraspace.org/display/hydra/Hydra+Project+Intellectual+Property+Lic
 
 ### Submitting Changes
 
+* Read the article ["Using Pull Requests"](https://help.github.com/articles/using-pull-requests) on GitHub.
 * Make sure your branch is up to date with its parent branch (i.e. master)
   * `git checkout master`
   * `git pull --rebase`
@@ -103,4 +104,5 @@ https://wiki.duraspace.org/display/hydra/Hydra+Project+Intellectual+Property+Lic
 
 * [General GitHub documentation](http://help.github.com/)
 * [GitHub pull request documentation](http://help.github.com/send-pull-requests/)
+* [Pro Git](http://git-scm.com/book) is both a free and excellent book about Git.
 * [A Git Config for Contributing](http://ndlib.github.io/practices/my-typical-per-project-git-config/)
