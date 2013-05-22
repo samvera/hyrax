@@ -25,7 +25,7 @@ class BatchController < ApplicationController
     @generic_file = GenericFile.new
     @generic_file.creator = current_user.name
     @generic_file.title =  @batch.generic_files.map(&:label)
-    initialize_fields(@generic_file)
+    @generic_file.initialize_fields
   end
 
   def update
@@ -42,9 +42,8 @@ class BatchController < ApplicationController
 
   # override this method if you need to initialize more complex RDF assertions (b-nodes)
   def initialize_fields(file)
-    file.terms_for_editing.each do |key|
-      # if value is empty, we create an one element array to loop over for output 
-      file[key] = [''] if file[key].empty?
-    end
+    file.initialize_fields
   end
+
+  ActiveSupport::Deprecation.deprecate_methods(BatchController, :initialize_fields)
 end
