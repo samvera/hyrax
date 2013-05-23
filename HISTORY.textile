@@ -1,3 +1,8 @@
+h3. 6.2.0 (2013-05-23)
+* Fix mismatched arguments in DownloadBehavior
+* Allow discovery_permissions to be set in AccessControlsEnforcement
+* Fix solr name for the embargo release date
+
 h3. 6.1.1 (2013-05-09)
 * Correct typo in CatalogController template
 * Fix bug where default_content_ds, was not being checked in DownloadController
