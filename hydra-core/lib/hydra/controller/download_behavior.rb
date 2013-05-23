@@ -62,9 +62,9 @@ module Hydra
         response.headers['Accept-Ranges'] = 'bytes'
 
         if request.head?
-          content_head(datastream)
+          content_head
         elsif request.headers["Range"]
-          send_range(datastream)
+          send_range
         else
           send_file_headers! content_options
           self.response_body = datastream.stream

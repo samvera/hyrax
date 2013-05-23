@@ -72,6 +72,61 @@ describe DownloadsController do
           response.body.should == 'foobarfoobarfoobar'
         end
       end
+      describe "stream" do
+        before do
+          stub_response = stub()
+          stub_response.stub(:read_body).and_yield("one1").and_yield('two2').and_yield('thre').and_yield('four')
+          stub_repo = stub()
+          stub_repo.stub(:datastream_dissemination).and_yield(stub_response)
+          stub_ds = ActiveFedora::Datastream.new
+          stub_ds.stub(:repository).and_return(stub_repo)
+          stub_ds.stub(:mimeType).and_return('video/webm')
+          stub_ds.stub(:dsSize).and_return(16)
+          stub_ds.stub(:dsid).and_return('webm')
+          stub_ds.stub(:pid).and_return('changeme:test')
+          stub_file = stub('stub object', datastreams: {'webm' => stub_ds}, pid:'changeme:test', label: "MyVideo.webm")
+          ActiveFedora::Base.should_receive(:load_instance_from_solr).with('changeme:test').and_return(stub_file)
+          controller.stub(:can?).with(:read, 'changeme:test').and_return(true)
+          controller.stub(:log_download)
+        end
+        it "head request" do
+          request.env["Range"] = 'bytes=0-15'
+          head :show, id: 'changeme:test', datastream_id: 'webm'
+          response.headers['Content-Length'].should == 16
+          response.headers['Accept-Ranges'].should == 'bytes'
+          response.headers['Content-Type'].should == 'video/webm'
+        end
+        it "should send the whole thing" do
+          request.env["Range"] = 'bytes=0-15'
+          get :show, id: 'changeme:test', datastream_id: 'webm'
+          response.body.should == 'one1two2threfour'
+          response.headers["Content-Range"].should == 'bytes 0-15/16'
+          response.headers["Content-Length"].should == '16'
+          response.headers['Accept-Ranges'].should == 'bytes'
+          response.headers['Content-Type'].should == "video/webm"
+          response.headers["Content-Disposition"].should == "inline; filename=\"MyVideo.webm\""
+          response.status.should == 206
+        end
+        it "should send the whole thing when the range is open ended" do
+          request.env["Range"] = 'bytes=0-'
+          get :show, id: 'changeme:test', datastream_id: 'webm'
+          response.body.should == 'one1two2threfour'
+        end
+        it "should get a range not starting at the beginning" do
+          request.env["Range"] = 'bytes=3-15'
+          get :show, id: 'changeme:test', datastream_id: 'webm'
+          response.body.should == '1two2threfour'
+          response.headers["Content-Range"].should == 'bytes 3-15/16'
+          response.headers["Content-Length"].should == '13'
+        end
+        it "should get a range not ending at the end" do
+          request.env["Range"] = 'bytes=4-11'
+          get :show, id: 'changeme:test', datastream_id: 'webm'
+          response.body.should == 'two2thre'
+          response.headers["Content-Range"].should == 'bytes 4-11/16'
+          response.headers["Content-Length"].should == '8'
+        end
+      end
     end
 
     describe "when not logged in as reader" do
