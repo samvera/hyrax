@@ -37,6 +37,7 @@ https://wiki.duraspace.org/display/hydra/Hydra+Project+Intellectual+Property+Lic
   * Please avoid working directly on the `master` branch.
   * You may find the [hub suite of commands](https://github.com/defunkt/hub) helpful
 * Make commits of logical units.
+  * Your commit should include a high level description of your work in HISTORY.textile 
 * Check for unnecessary whitespace with `git diff --check` before committing.
 * Make sure your commit messages are [well formed](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 * If you created an issue, you can close it by including "Closes #issue" in your commit message. See [Github's blog post for more details](https://github.com/blog/1386-closing-issues-via-commit-messages)
