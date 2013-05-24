@@ -32,9 +32,9 @@ class Batch < ActiveFedora::Base
 
   def self.find_or_create(pid)
     begin
-      @batch = Batch.find(pid)
+      Batch.find(pid)
     rescue ActiveFedora::ObjectNotFoundError
-      @batch = Batch.create({pid: pid})
+      Batch.create({pid: pid})
     end
   end
 
