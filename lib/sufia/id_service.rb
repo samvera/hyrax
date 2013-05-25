@@ -38,20 +38,19 @@ module Sufia
 
     def self.next_id
       pid = ''
-      File.open("tmp/minter-state", File::RDWR|File::CREAT, 0644) {|f|
+      File.open(Sufia::Engine.config.minter_statefile, File::RDWR|File::CREAT, 0644) do |f|
         f.flock(File::LOCK_EX)
         yaml = YAML::load(f.read)
         yaml = {:template => '.reeddeeddk'} unless yaml
         minter = ::Noid::Minter.new(yaml)
-        pid =  "#{@namespace}:#{minter.mint}"
+        pid = "#{@namespace}:#{minter.mint}"
         f.rewind
         yaml = YAML::dump(minter.dump)
         f.write yaml
         f.flush
         f.truncate(f.pos)
-      }
+      end
       return pid
     end
-    
   end
 end
