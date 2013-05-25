@@ -32,6 +32,7 @@ module Sufia
     config.ffmpeg_path = 'ffmpeg'
     config.fits_message_length = 5
     config.temp_file_base = nil
+    config.minter_statefile = '/tmp/minter-state'
     config.id_namespace = "sufia"
     config.fits_path = "fits.sh"
     config.enable_contact_form_delivery = false
