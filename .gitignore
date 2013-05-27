@@ -14,9 +14,6 @@ ruby-gemset
 .rvmrc
 Gemfile.lock
 
-# This file is generated automatically by: rake scholarsphere:generate_secret
-config/initializers/secret_token.rb
-
 ## MAC OS
 .DS_Store
 

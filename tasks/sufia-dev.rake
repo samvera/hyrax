@@ -25,7 +25,7 @@ RSpec::Core::RakeTask.new(:spec => [:generate]) do |t|
   t.rspec_opts = "--colour"
 end
 
-desc "Load scholarsphere fixtures"
+desc "Load fixtures"
 task :fixtures => :generate do# => ['sufia:fixtures:refresh'] do
   #NOTE do we need fixtures:create, fixtures:generate
   within_test_app do

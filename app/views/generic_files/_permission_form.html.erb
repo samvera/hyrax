@@ -107,7 +107,7 @@
     </td>
   </tr>
   <% gf.permissions.each do |permission| %>
-    <%-# skip the public, penn state (aka registered), and depositor perms as they are displayed first at the top -%>
+    <%# skip the public, penn state (aka registered), and depositor perms as they are displayed first at the top %>
     <% next if permission[:name].downcase == 'public' %>
     <% next if permission[:name].downcase == 'registered' %>
     <% next if permission[:name].downcase == depositor %>

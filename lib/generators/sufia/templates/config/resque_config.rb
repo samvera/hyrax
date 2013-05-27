@@ -19,4 +19,4 @@ config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml')
 Resque.redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true)
 
 Resque.inline = rails_env == 'test'
-Resque.redis.namespace = "scholarsphere:#{rails_env}"
+Resque.redis.namespace = "#{Sufia::Engine.config.id_namespace}:#{rails_env}"
