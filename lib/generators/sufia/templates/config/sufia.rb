@@ -6,6 +6,9 @@ Sufia.config do |config|
       :file_author => :creator
     }
 
+  # Specify a different template for your repositories unique identifiers
+  # config.noid_template = ".reeddeeddk"
+
   config.max_days_between_audits = 7
 
       config.cc_licenses = {

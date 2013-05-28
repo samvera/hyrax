@@ -29,6 +29,7 @@ module Sufia
     # Set some configuration defaults
     config.queue = Sufia::Resque::Queue
     config.enable_ffmpeg = false
+    config.noid_template = '.reeddeeddk'
     config.ffmpeg_path = 'ffmpeg'
     config.fits_message_length = 5
     config.temp_file_base = nil
