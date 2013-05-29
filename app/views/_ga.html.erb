@@ -15,8 +15,8 @@ limitations under the License.
 %>
 
 <%
-if Sufia::Engine.config.respond_to? :google_analytics_id
-tracking_id = Sufia::Engine.config.google_analytics_id
+if Sufia.config.respond_to? :google_analytics_id
+tracking_id = Sufia.config.google_analytics_id
 %>
 <script type="text/javascript">
   var _gaq = _gaq || [];

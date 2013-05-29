@@ -335,7 +335,7 @@ describe GenericFile do
     after do
       @f.delete
     end
-    describe "with a video", :if => Sufia::Engine.config.enable_ffmpeg do
+    describe "with a video", :if => Sufia.config.enable_ffmpeg do
       before do
         @f.stub(:mime_type=>'video/quicktime')  #Would get set by the characterization job
         @f.add_file_datastream(File.new("#{fixture_path}/countdown.avi", 'rb'), :dsid=>'content')

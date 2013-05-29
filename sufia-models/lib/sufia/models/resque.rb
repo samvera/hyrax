@@ -1,5 +1,3 @@
-require 'active_support/core_ext/marshal'
-
 # Borrowed from:
 # https://github.com/jeremy/resque-rails/blob/master/lib/resque/rails/queue.rb
 module Sufia

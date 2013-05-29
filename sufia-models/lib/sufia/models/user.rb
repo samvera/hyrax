@@ -71,7 +71,7 @@ module Sufia::User
 
   #method to get the trophy ids without the namespace included
   def trophy_ids
-    trophies.map { |t| "#{Sufia::Engine.config.id_namespace}:#{t.generic_file_id}" }
+    trophies.map { |t| "#{Sufia.config.id_namespace}:#{t.generic_file_id}" }
   end
 
   # method needed for messaging

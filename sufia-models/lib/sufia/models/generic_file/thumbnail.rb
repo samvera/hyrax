@@ -16,13 +16,13 @@ module Sufia
 
       protected
       def create_video_thumbnail
-        return unless Sufia::Engine.config.enable_ffmpeg
+        return unless Sufia.config.enable_ffmpeg
       
-        output_file = Dir::Tmpname.create(['sufia', ".png"], Sufia::Engine.config.temp_file_base){}
+        output_file = Dir::Tmpname.create(['sufia', ".png"], Sufia.config.temp_file_base){}
         content.to_tempfile do |f|
           # we could use something like this in order to find a frame in the middle.
           #ffprobe -show_files video.avi 2> /dev/null | grep duration | cut -d= -f2 53.399999  
-          command = "#{Sufia::Engine.config.ffmpeg_path} -i \"#{f.path}\" -loglevel quiet -vf \"scale=338:-1\"  -r  1  -t  1 #{output_file}"
+          command = "#{Sufia.config.ffmpeg_path} -i \"#{f.path}\" -loglevel quiet -vf \"scale=338:-1\"  -r  1  -t  1 #{output_file}"
           system(command)
           raise "Unable to execute command \"#{command}\"" unless $?.success?
         end

@@ -13,6 +13,7 @@ module Sufia::GenericFile
       else
         logger.warn "unable to find batch to attach to"
       end
+      yield(generic_file) if block_given?
       generic_file.save!
     end
     
@@ -33,7 +34,9 @@ module Sufia::GenericFile
 
       generic_file.record_version_committer(user)
       Sufia.queue.push(UnzipJob.new(generic_file.pid)) if generic_file.content.mimeType == 'application/zip'
-      Sufia.queue.push(ContentDepositEventJob.new(generic_file.pid, user.user_key))
+      if Sufia.config.respond_to?(:after_create_content)
+        Sufia.config.after_create_content.call(generic_file, user)
+      end
     end
   end
 end

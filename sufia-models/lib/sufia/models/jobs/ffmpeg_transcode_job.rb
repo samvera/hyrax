@@ -19,7 +19,7 @@ class FfmpegTranscodeJob
   end
 
   def run
-    return unless Sufia::Engine.config.enable_ffmpeg
+    return unless Sufia.config.enable_ffmpeg
     self.generic_file = GenericFile.find(generic_file_id)
     self.datastream = generic_file.datastreams[datastream_in]
     if datastream
@@ -33,7 +33,7 @@ class FfmpegTranscodeJob
   def encode_datastream(dest_dsid, mime_type, options)
     file_suffix = dest_dsid
     out_file = nil
-    output_file = Dir::Tmpname.create(['sufia', ".#{file_suffix}"], Sufia::Engine.config.temp_file_base){}
+    output_file = Dir::Tmpname.create(['sufia', ".#{file_suffix}"], Sufia.config.temp_file_base){}
     datastream.to_tempfile do |f|
       self.class.encode(f.path, options, output_file)
     end
@@ -54,7 +54,7 @@ class FfmpegTranscodeJob
   end
 
   def self.ffmpeg_path
-    Sufia::Engine.config.ffmpeg_path
+    Sufia.config.ffmpeg_path
   end
 end
 
