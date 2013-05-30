@@ -1,7 +1,3 @@
-require 'datastreams/generic_file_rdf_datastream'
-require 'datastreams/properties_datastream'
-require 'datastreams/file_content_datastream'
-
 module Sufia
   module GenericFile
     extend ActiveSupport::Concern
