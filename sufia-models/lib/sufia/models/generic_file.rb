@@ -8,7 +8,7 @@ module Sufia
     autoload :Audit
     autoload :Actions
     autoload :Permissions
-    autoload :WebForm
+    autoload :WebForm, 'sufia/models/generic_file/web_form'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::Thumbnail
