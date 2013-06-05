@@ -24,6 +24,20 @@ class HeadGenerator < Rails::Generators::Base
   # Config Files & Initializers
   #
 
+  def inject_test_framework
+    application("\n" <<
+      "    config.generators do |g|\n" <<
+      "      g.test_framework :rspec, :spec => true\n" <<
+      "    end\n\n"
+    )
+
+    gem_group :development, :test do
+      gem "rspec-rails"
+      gem 'jettywrapper'
+    end
+
+  end
+
   # Copy all files in templates/config directory to host config
   def create_configuration_files
     copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"

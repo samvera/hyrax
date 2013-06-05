@@ -55,13 +55,6 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
     gem 'sass-rails', '~> 3.2.3'
     gem 'jquery-rails'
   end
-
-  # You will probably want to use these to run the tests you write for your hydra head
-  # For testing with rspec
-  group :development, :test do
-    gem 'rspec-rails'
-    gem 'jettywrapper'
-  end
 </pre>
 
 To install all of the dependencies, run:
