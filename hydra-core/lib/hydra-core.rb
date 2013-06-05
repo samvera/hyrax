@@ -1,7 +1,7 @@
 require 'hydra'
 
 module HydraHead 
-  require 'hydra-head/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  require 'hydra-head/engine' if defined?(Rails)
   require 'hydra-head/routes'
   # If you put this in your application's routes.rb, it will add the Hydra Head routes to the app.
   # The hydra:head generator puts this in routes.rb for you by default.
