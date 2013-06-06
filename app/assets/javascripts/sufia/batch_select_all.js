@@ -4,9 +4,11 @@
     otherPage = typeof otherPage !== 'undefined' ? otherPage : !window.batch_part_on_other_page;
     var n = $(".batch_document_selector:checked").length;
     if ((n>0) || (forceOn)) {
+        $('.batch-toggle').show();
         $('.batch-select-all').show();
         $('#batch-edit').show();
     } else if ( otherPage){
+        $('.batch-toggle').hide();
         $('.batch-select-all').hide();
         $('#batch-edit').hide();
     }
