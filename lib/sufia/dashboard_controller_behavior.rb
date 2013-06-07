@@ -25,11 +25,12 @@ module Sufia
       include Blacklight::Catalog
       include Blacklight::Configurable # comply with BL 3.7
       include ActionView::Helpers::DateHelper
+      # This is needed as of BL 3.7
+      self.copy_blacklight_config_from(CatalogController)
+
       include BlacklightAdvancedSearch::ParseBasicQ
       include BlacklightAdvancedSearch::Controller
     
-      # This is needed as of BL 3.7
-      self.copy_blacklight_config_from(CatalogController)
     
       before_filter :authenticate_user!
       before_filter :enforce_show_permissions, :only=>:show
