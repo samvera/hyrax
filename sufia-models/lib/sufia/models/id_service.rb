@@ -43,7 +43,7 @@ module Sufia
 
     def self.next_id
       pid = ''
-      File.open(Sufia::Engine.config.minter_statefile, File::RDWR|File::CREAT, 0644) do |f|
+      File.open(Sufia.config.minter_statefile, File::RDWR|File::CREAT, 0644) do |f|
         f.flock(File::LOCK_EX)
         yaml = YAML::load(f.read)
         yaml = {:template => noid_template} unless yaml
