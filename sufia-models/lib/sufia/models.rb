@@ -14,14 +14,8 @@ module Sufia
   extend ActiveSupport::Autoload
 
   module Models
-
-    extend ActiveSupport::Autoload
-
-    autoload :Resque, 'sufia/models/queue/resque'
-    autoload :User, 'sufia/models/user'
   end
 
-  autoload :Resque, 'sufia/models/resque'
   autoload :Utils, 'sufia/models/utils'
 
   attr_writer :queue

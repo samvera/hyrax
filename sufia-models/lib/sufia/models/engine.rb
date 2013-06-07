@@ -1,3 +1,4 @@
+require 'sufia/models/resque'
 module Sufia
   module Models
     def self.config(&block)
@@ -9,6 +10,19 @@ module Sufia
     end
 
     class Engine < ::Rails::Engine
+
+      # Set some configuration defaults
+      config.enable_ffmpeg = false
+      config.noid_template = '.reeddeeddk'
+      config.ffmpeg_path = 'ffmpeg'
+      config.fits_message_length = 5
+      config.temp_file_base = nil
+      config.minter_statefile = '/tmp/minter-state'
+      config.id_namespace = "sufia"
+      config.fits_path = "fits.sh"
+      config.enable_contact_form_delivery = false
+      config.queue = Sufia::Resque::Queue
+
       config.autoload_paths += %W(
         #{config.root}/lib/sufia/models/jobs
         #{config.root}/app/models/datastreams
