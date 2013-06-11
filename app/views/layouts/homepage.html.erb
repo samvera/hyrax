@@ -1,0 +1,53 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render :partial => "layouts/head-tag-content"%>
+  </head>
+
+<body> 
+<div  id="wrapper"> 
+  <div class="container">
+    <div id="page-positioner">
+      <%= render :partial => '/masthead', :formats => [:html] %>
+      <%= render :partial => '/flash_msg' %>
+      <div id="content-wrapper"> 
+        <div id="content" class="row">
+          
+          <div class="span63">
+            <%= yield %>
+          </div><!-- /.span63 -->
+
+          <div class="span30 offset2">
+            <h2 class="heading1">Contribute</h2> 
+            <%= link_to "<i class=\"icon-file\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %>
+            <div class="row center"> <a href="/terms/">Terms of Use</a></div><br />                
+            <div class="row">&nbsp;</div>
+            <h2 class="heading1">My Latest</h2> 
+            <%= render :partial=>'/catalog/recents', :locals => {:recent_documents=>@recent_user_documents, :display_thumbs=>false, :display_access=>true} %>
+          </div> <!-- /.span30 -->
+          
+        </div><!-- /#content -->
+      </div><!-- /#content-wrapper -->
+    </div><!-- /#page-positioner -->
+  </div><!-- /.container -->
+</div><!-- /#wrapper -->
+<%= render partial: '/footer' %>
+<div id="ajax-modal" class="modal hide" tabindex="-1"></div>
+</body>
+</html>

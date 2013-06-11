@@ -1,0 +1,22 @@
+<%= csrf_meta_tag %>
+
+<meta charset="utf-8" />
+
+<title><%= h(@page_title || application_name) %></title>
+<!-- application css -->
+<%= stylesheet_link_tag 'application' %>
+<%= yield(:css_head) %>
+
+<!-- application js -->
+<%= javascript_include_tag 'application' %>
+
+<!-- controller specific uploader -->
+<%= yield(:js_head) %>
+
+<script type="text/javascript">
+  $(function() {
+    <%= yield(:local_js) %>
+  });
+</script>
+
+<%= render :partial => '/ga', :formats => [:html] %>

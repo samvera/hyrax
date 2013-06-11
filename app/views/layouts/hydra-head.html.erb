@@ -14,84 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <%= csrf_meta_tag %>
+<%#
+This file should only be triggered if your controller doesn't declare its layout.
+In most cases you will want to explicitly declare the layout in the controller. 
+Sufia provides three default layouts: 
 
-    <meta charset="utf-8" />
+* sufia-one-column: does not include a sidebar
+* sufia-two-column: this includes a sidebar for facets
+* homepage: three-column homepage with 
 
-    <title><%= h(@page_title || application_name) %></title>
-    <!-- application css -->
-    <%= stylesheet_link_tag 'application' %>
-    <%= yield(:css_head) %>
-
-    <!-- application js -->
-    <%= javascript_include_tag 'application' %>
-
-    <!-- controller specific uploader -->
-    <%= yield(:js_head) %>
-
-    <script type="text/javascript">
-      $(function() {
-        <%= yield(:local_js) %>
-      });
-    </script>
-
-    <%= render :partial => '/ga', :formats => [:html] %>
-  </head>
-
-<%# need a better way to determine if we are on the home page and using three col layout %>
+@example:
+  class MyController < ApplicationController  
+     layout "sufia-one-column"
+     ... etc ...
+  end
+%>
 <% if params[:controller].eql?("catalog") and !has_search_parameters? %> 
-  <% column_class = "three" %>
-<% elsif not ['generic_files', 'batch', 'advanced', 'users', 'batch_edits'].include?(params[:controller]) %>
-  <% column_class = "two" %>
+  <%= render file: "layouts/homepage"%>
 <% else %>
-  <% column_class = "one" %>
+  <%= render file: "layouts/sufia-two-column"%>
 <% end %>
-<body> 
-<div  id="wrapper"> 
-  <div class="container">
-    <div id="page-positioner">
-      <%= render :partial => '/masthead', :formats => [:html] %>
-      <%= render :partial => '/flash_msg' %>
-      <div id="content-wrapper"> 
-        <div id="content" class="row">
-          <!-- 110 rows -->
-          <% if column_class == "one" %>
-            <div class="span110">
-              <%= yield %>
-            </div>
-          <% else %>
-            <div class="span17">
-              <%= yield :sidebar %>
-            </div><!-- /.span17 -->
-            <% if column_class == "three" %>
-              <div class="span63">
-                <%= yield %>
-              </div><!-- /.span63 -->
-
-              <div class="span30 offset2">
-                <h2 class="heading1">Contribute</h2> 
-                <%= link_to "<i class=\"icon-file\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %>
-                <div class="row center"> <a href="/terms/">Terms of Use</a></div><br />                
-                <div class="row">&nbsp;</div>
-                <h2 class="heading1">My Latest</h2> 
-                <%= render :partial=>'/catalog/recents', :locals => {:recent_documents=>@recent_user_documents, :display_thumbs=>false, :display_access=>true} %>
-              </div> <!-- /.span30 -->
-            <% else %>
-              <div class="span93">
-                <%= yield %>
-              </div><!-- /.span93 -->
-            <% end %>
-          <% end %>
-
-        </div><!-- /#content -->
-      </div><!-- /#content-wrapper -->
-    </div><!-- /#page-positioner -->
-  </div><!-- /.container -->
-</div><!-- /#wrapper -->
-<%= render partial: '/footer' %>
-<div id="ajax-modal" class="modal hide" tabindex="-1"></div>
-</body>
-</html>

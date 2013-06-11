@@ -1,6 +1,10 @@
 module Sufia
   module BatchEditsControllerBehavior
     extend ActiveSupport::Concern
+    
+    included do
+      layout "sufia-one-column"
+    end
 
     def edit
        super

@@ -21,7 +21,8 @@ module Sufia
       include Hydra::Controller::ControllerBehavior
       include Blacklight::Configurable # comply with BL 3.7
       include Sufia::Noid # for normalize_identifier method
-
+      layout "sufia-one-column"
+      
       # This is needed as of BL 3.7
       self.copy_blacklight_config_from(CatalogController)
 
