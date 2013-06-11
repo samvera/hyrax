@@ -23,7 +23,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # find all the policies that grant discover/read/edit permissions to this user or any of it's groups
   def policies_with_access
     #### TODO -- Memoize this and put it in the session?
-    return [] unless current_user
+    #return [] unless current_user
     user_access_filters = []
     # Grant access based on user id & role
     user_access_filters += apply_policy_role_permissions(discovery_permissions)
@@ -46,12 +46,14 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   end
 
   def apply_policy_individual_permissions(permission_types)
-      # for individual person access
-      user_access_filters = []
+    # for individual person access
+    user_access_filters = []
+    if current_user
       discovery_permissions.each do |type|
         user_access_filters << ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ) + ":#{current_user.user_key}"        
       end
-      user_access_filters
+    end
+    user_access_filters
   end
   
   # Returns the Model used for AdminPolicy objects.
