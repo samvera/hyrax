@@ -13,6 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
+
+<%# convert class variable to a local variable if the local hasn't been set %>
+<% generic_file = @generic_file unless generic_file  %>
+
 <div class="breadcrumbs">
   <%
      include_file = true if include_file.blank?
@@ -28,7 +32,7 @@ limitations under the License.
        crumbs << link_to('Back to search results', request.referer)
      end
 
-     crumbs << @generic_file.title.first if include_file
+     crumbs << generic_file.title.first if include_file
 
      crumbs.each do |crumb| %>
        <% if crumb == crumbs.last %>

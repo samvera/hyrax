@@ -14,15 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
+<%# convert class variable to a local variable if the local hasn't been set %>
+<% generic_file = @generic_file unless generic_file  %>
+
 <div id="descriptions_display" class="tab-pane active">
-  <%= form_for @generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
+  <%= form_for generic_file, :url => sufia.generic_file_path, :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
     <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
       <div class="well">
 
-        <%= render :partial=>'generic_files/edit_fields/type', :locals => {f:f} %>
-        <% (@generic_file.terms_for_editing - [:resource_type]).each do |term| %>
-          <%= render :partial => "generic_files/field_form", :locals => { :generic_file => @generic_file, :f =>f, :render_req => true, :key => term } %>
+        <% (generic_file.terms_for_editing).each do |term| %>
+          <%= render :partial => "generic_files/field_form", :locals => { generic_file: generic_file, f: f, render_req: true, key: term } %>
         <% end %>
    
       </div><!-- /well -->

@@ -1,0 +1,12 @@
+  <% vals =  Array(generic_file[key]) %>
+  <tr>
+    <th><%= get_label(key) %></th>
+    <td>
+      <% vals.each do |v| %>
+        <span itemprop="name">
+          <%= v %>
+        </span>
+        <br />
+      <% end %>
+    </td>
+  </tr>
