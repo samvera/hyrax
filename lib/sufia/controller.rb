@@ -56,6 +56,19 @@ module Sufia::Controller
       @batches=current_user.mailbox.inbox.map {|msg| msg.last_message.body[/<a class="batchid ui-helper-hidden">(.*)<\/a>The file(.*)/,1]}.select{|val| !val.blank?}
     end
   end
+  
+  def search_layout
+    if has_search_parameters? 
+      "sufia-two-column"
+    else
+      "homepage"
+    end
+  end
+  
+  # This repeats has_search_parameters? method from Blacklight::CatalogHelperBehavior 
+  def has_search_parameters?
+    !params[:q].blank? or !params[:f].blank? or !params[:search_field].blank?
+  end
 
   protected
 
