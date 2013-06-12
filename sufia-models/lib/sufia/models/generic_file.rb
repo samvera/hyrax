@@ -34,14 +34,7 @@ module Sufia
                                   :resource_type, :identifier, :language]
 
       around_save :characterize_if_changed, :retry_warming
-      before_save :remove_blank_assertions
       before_destroy :cleanup_trophies
-    end
-
-    def remove_blank_assertions
-      terms_for_editing.each do |key|
-        self[key] = nil if self[key] == ['']
-      end
     end
 
 
@@ -155,26 +148,6 @@ module Sufia
       if self.title.empty?
         self.title = new_label
       end
-    end
-
-    def to_jq_upload
-      return {
-        "name" => self.title,
-        "size" => self.file_size,
-        "url" => "/files/#{noid}",
-        "thumbnail_url" => self.pid,
-        "delete_url" => "deleteme", # generic_file_path(:id => id),
-        "delete_type" => "DELETE"
-      }
-    end
-
-    def terms_for_editing
-      terms_for_display -
-       [:part_of, :date_modified, :date_uploaded, :format] #, :resource_type]
-    end
-
-    def terms_for_display
-      self.descMetadata.class.config.keys
     end
 
     # Is this file in the middle of being processed by a batch?
