@@ -15,17 +15,26 @@
 class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   map_predicates do |map|
     map.part_of(:to => "isPartOf", :in => RDF::DC)
-    map.contributor(:in => RDF::DC) do |index|
-      index.as :stored_searchable, :facetable
-    end
-    map.creator(:in => RDF::DC) do |index|
+    map.resource_type(:to => "type", :in => RDF::DC) do |index|
       index.as :stored_searchable, :facetable
     end
     map.title(:in => RDF::DC) do |index|
       index.as :stored_searchable
     end
+    map.creator(:in => RDF::DC) do |index|
+      index.as :stored_searchable, :facetable
+    end
+    map.contributor(:in => RDF::DC) do |index|
+      index.as :stored_searchable, :facetable
+    end
     map.description(:in => RDF::DC) do |index|
       index.type :text
+      index.as :stored_searchable
+    end
+    map.tag(:to => "relation", :in => RDF::DC) do |index|
+      index.as :stored_searchable, :facetable
+    end
+    map.rights(:in => RDF::DC) do |index|
       index.as :stored_searchable
     end
     map.publisher(:in => RDF::DC) do |index|
@@ -48,19 +57,10 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.language(:in => RDF::DC) do |index|
       index.as :stored_searchable, :facetable
     end
-    map.rights(:in => RDF::DC) do |index|
-      index.as :stored_searchable
-    end
-    map.resource_type(:to => "type", :in => RDF::DC) do |index|
-      index.as :stored_searchable, :facetable
-    end
     map.identifier(:in => RDF::DC) do |index|
       index.as :stored_searchable
     end
     map.based_near(:in => RDF::FOAF) do |index|
-      index.as :stored_searchable, :facetable
-    end
-    map.tag(:to => "relation", :in => RDF::DC) do |index|
       index.as :stored_searchable, :facetable
     end
     map.related_url(:to => "seeAlso", :in => RDF::RDFS)

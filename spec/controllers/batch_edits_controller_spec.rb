@@ -27,8 +27,8 @@ describe BatchEditsController do
     it "should be successful" do
       get :edit
       response.should be_successful
-      assigns[:terms].should == [:contributor, :creator, :description, :publisher,
-        :date_created, :subject, :language, :rights, :identifier, :based_near, :tag, :related_url]
+      assigns[:terms].should == [:creator, :contributor, :description, :tag, :rights, :publisher, 
+                        :date_created, :subject, :language, :identifier, :based_near, :related_url]
       assigns[:show_file].creator.should == ["Fred", "Wilma"]
       assigns[:show_file].publisher.should == ["Rand McNally"]
       assigns[:show_file].language.should == ["en"]

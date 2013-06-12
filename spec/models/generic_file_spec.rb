@@ -41,15 +41,15 @@ describe GenericFile do
 
   describe "terms_for_editing" do
     it "should return a list" do
-      @file.terms_for_editing.should == [ :contributor, :creator, :title, :description, :publisher,
-       :date_created, :subject, :language, :rights, :resource_type, :identifier, :based_near, :tag, :related_url]
+      @file.terms_for_editing.should == [:resource_type, :title, :creator, :contributor, :description, :tag, 
+                    :rights, :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url]
     end
   end
   describe "terms_for_display" do
     it "should return a list" do
-      @file.terms_for_display.should == [ :part_of, :contributor, :creator, :title, :description, 
-        :publisher, :date_created, :date_uploaded, :date_modified,:subject, :language, :rights, 
-        :resource_type, :identifier, :based_near, :tag, :related_url]
+      @file.terms_for_display.should == [:part_of, :resource_type, :title, :creator, :contributor, :description, 
+        :tag, :rights, :publisher, :date_created, :date_uploaded, :date_modified, :subject, :language, :identifier, 
+        :based_near, :related_url]
     end
   end
 
