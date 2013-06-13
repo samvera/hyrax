@@ -146,12 +146,6 @@ $(function() {
     $('input[name="sort"]').attr('value', sort);
     $(".icon-search").parent().click();
   });
-
-
-  $(function() {
-    $('#fileupload').sufiaUploader();
-  });
-
 }); //closing function at the top of the page
 
 
