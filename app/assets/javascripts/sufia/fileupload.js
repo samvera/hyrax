@@ -1,14 +1,9 @@
-/*
- * jQuery File Upload Plugin JS Example 5.0.2
- * https://github.com/blueimp/jQuery-File-Upload
- *
- * Copyright 2010, Sebastian Tschan
- * https://blueimp.net
- *
- * Licensed under the MIT license:
- * http://creativecommons.org/licenses/MIT/
- */
-
+//= require fileupload/tmpl
+//= require fileupload/jquery.iframe-transport
+//= require fileupload/jquery.fileupload.js
+//= require fileupload/jquery.fileupload-ui.js
+//= require fileupload/locale.js
+//
 /*jslint nomen: true */
 /*global $ */
 
@@ -30,7 +25,7 @@ $(function () {
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload();
     
-        // Enable iframe cross-domain access via redirect option:
+    // Enable iframe cross-domain access via redirect option:
     $('#fileupload').fileupload(
         'option',
         'redirect',
@@ -44,29 +39,14 @@ $(function () {
         'option',
         'acceptFileTypes',
         /^[^\.].*$/i
-        ///^[^\.][\w\.]*$/i
-//        /(\.|\/)(gif|jpe?g|png)$/i
     );
 
-    // Load existing files:
-    $('#fileupload').each(function () {
-      var that = this;
-        /*$.getJSON(this.action, function (result) {
-          if (result && result.length) {
-            $(that).fileupload('option', 'done')
-              .call(that, null, {result: result});
-          }
-        });*/ 
-    });
-    
-    
     $('#fileupload').bind("fileuploadstop", function(){
       if ((files_done == filestoupload)&&(files_done >0)){
-         //var loc = $("#redirect-loc").html()+"?file_count="+filestoupload
          var loc = $("#redirect-loc").html()
          $(location).attr('href',loc);
-      // some error occured       
       } else if (error_string.length > 0){
+        // an error occured       
          if (files_done == 0) {
             $("#fail").fadeIn('slow')
          } else {
@@ -117,16 +97,15 @@ $(function () {
 
     // count the number of files completed and ready to send to edit                          
     $('#fileupload').bind("fileuploaddone", function(e, data){
-     var file = ($.isArray(data.result) && data.result[0]) || {error: 'emptyResult'};
-     if (!file.error) {
-       files_done++;     
-     }else {
-       if (error_string.length > 0) {
-          error_string +='<br/>';
-       }
-       error_string +=file.error;
-     }
-    
+      var file = ($.isArray(data.result) && data.result[0]) || {error: 'emptyResult'};
+      if (!file.error) {
+        files_done++;     
+      } else {
+        if (error_string.length > 0) {
+          error_string += '<br/>';
+        }
+        error_string += file.error;
+      }
     });
 
 
@@ -159,20 +138,6 @@ $(function () {
        error_string +=data.errorThrown+": "+data.textStatus;
       }
     });
-/*    
-    
-    // Load existing files:
-    $.getJSON($('#fileupload form').prop('action'), function (files) {
-        var fu = $('#fileupload').data('fileupload');
-        fu._adjustMaxNumberOfFiles(-files.length);
-        fu._renderDownload(files)
-            .appendTo($('#fileupload .files'))
-            .fadeIn(function () {
-                // Fix for IE7 and lower:
-                $(this).show();
-            });
-    });
-*/
 
     // Open download dialogs via iframes,
     // to prevent aborting current uploads:
