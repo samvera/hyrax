@@ -123,30 +123,34 @@ $(function() {
   /*
    * facets lists
    */
-    $("li.expandable").click(function(){
-       $(this).next("ul").slideToggle();
+  $("li.expandable").click(function(){
+    $(this).next("ul").slideToggle();
+    $(this).find('i').toggleClass("icon-chevron-down");
+  });
 
-       $(this).find('i').toggleClass("icon-chevron-down");
-    });
+  $("li.expandable_new").click(function(){
+    $(this).find('i').toggleClass("icon-chevron-down");
+  });
 
-    $("li.expandable_new").click(function(){
-       $(this).find('i').toggleClass("icon-chevron-down");
-    });
+  $(".sorts-dash").click(function(){
+    var itag =$(this).find('i');
+    toggle_icon(itag);
+    sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id') +' asc';
+    $('#sort').val(sort).selected = true;
+    $(".icon-refresh").parent().click();
+  });
+  $(".sorts").click(function(){
+    var itag =$(this).find('i');
+    toggle_icon(itag);
+    sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id');
+    $('input[name="sort"]').attr('value', sort);
+    $(".icon-search").parent().click();
+  });
 
-    $(".sorts-dash").click(function(){
-       var itag =$(this).find('i');
-       toggle_icon(itag);
-       sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id') +' asc';
-       $('#sort').val(sort).selected = true;
-       $(".icon-refresh").parent().click();
-    });
-    $(".sorts").click(function(){
-       var itag =$(this).find('i');
-       toggle_icon(itag);
-        sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id');
-        $('input[name="sort"]').attr('value', sort);
-        $(".icon-search").parent().click();
-    });
+
+  $(function() {
+    $('#fileupload').sufiaUploader();
+  });
 
 }); //closing function at the top of the page
 
