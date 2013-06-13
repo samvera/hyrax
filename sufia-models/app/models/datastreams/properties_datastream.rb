@@ -21,7 +21,6 @@ class PropertiesDatastream < ActiveFedora::OmDatastream
     # This is where we put the relative path of the file if submitted as a folder
     t.relative_path
 
-    t.proxy_depositor path: 'proxyDepositor', :index_as=>:symbol
   end
 
   def self.xml_template
