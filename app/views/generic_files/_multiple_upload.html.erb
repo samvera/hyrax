@@ -1,4 +1,6 @@
 <%= render partial: 'generic_files/upload/agreement' %>
 <%= render partial: 'generic_files/upload/alerts' %>
-<%= render partial: 'generic_files/upload/form' %>
+<%= form_for(@generic_file, :url => sufia.generic_files_path, :html => {:multipart => true, :class => 'form-horizontal well', :id => 'fileupload'}) do |f| %>
+  <%= render partial: 'generic_files/upload/form' %>
+<% end %>
 <%= render partial: 'generic_files/upload/script_templates' %>
