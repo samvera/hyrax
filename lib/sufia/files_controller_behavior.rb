@@ -158,8 +158,7 @@ module Sufia
     def process_file(file)
       if virus_check(file) == 0 
         @generic_file = ::GenericFile.new
-        # Relative path is set by the jquery uploader when uploading a directory
-        @generic_file.relative_path = params[:relative_path] if params[:relative_path]
+        update_metadata_from_upload_screen
         Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
         Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
         respond_to do |format|
@@ -194,6 +193,13 @@ module Sufia
     def datastream_id
       'content'
     end
+
+    # this is provided so that implementing application can override this behavior and map params to different attributes
+    def update_metadata_from_upload_screen
+      # Relative path is set by the jquery uploader when uploading a directory
+      @generic_file.relative_path = params[:relative_path] if params[:relative_path]
+    end
+
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
