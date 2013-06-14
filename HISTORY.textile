@@ -1,3 +1,6 @@
+h3. 6.2.2 (2013-06-14)
+* Rights metadata should only update the user you tell it to update. [Justin Coyne]
+
 h3. 6.2.1 (2013-06-14)
 * Removed commented out line that was changed in commit bd53011b3f1fd2f20703b703db67385e100e67d6. [David Chandek-Stark]
 * Adding CONTRIBUTORS.md [Jeremy Friesen]
