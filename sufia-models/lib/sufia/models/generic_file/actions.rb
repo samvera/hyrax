@@ -38,5 +38,17 @@ module Sufia::GenericFile
         Sufia.config.after_create_content.call(generic_file, user)
       end
     end
+
+    def self.virus_check(file)
+      if defined? ClamAV
+        stat = ClamAV.instance.scanfile(file.path)
+        logger.warn "Virus checking did not pass for #{file.inspect} status = #{stat}" unless stat == 0
+        stat
+      else
+        logger.warn "Virus checking disabled for #{file.inspect}"
+        0
+      end
+    end 
+
   end
 end

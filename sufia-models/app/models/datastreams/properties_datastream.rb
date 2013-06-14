@@ -20,7 +20,7 @@ class PropertiesDatastream < ActiveFedora::OmDatastream
     t.depositor :index_as=>[:stored_searchable]
     # This is where we put the relative path of the file if submitted as a folder
     t.relative_path
-
+    t.import_url path: 'importUrl', :index_as=>:symbol
   end
 
   def self.xml_template

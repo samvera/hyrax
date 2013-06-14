@@ -1,35 +1,41 @@
 jQuery.fn.exists = function(){return this.length>0;}
 
 $(function () {
-    if (!$('#terms_of_service').exists()) {
-      // deactivate if there is no checkbox, which allows installations to skip the agreement.
-      return;
-    }
-    
-    $('#main_upload_start').attr('disabled', true);
-    $("#upload_tooltip").hide();
-    $("#main_upload_start_span").mousemove(function(e){
-       if ( !$('#terms_of_service').is(':checked') ){
-           $('#main_upload_start').attr('disabled', true);
-        $("#upload_tooltip").show();
-        $("#upload_tooltip").css({
-            top: (e.clientY+5)+ "px",
-            left: (e.clientX+5) + "px"
-        });
-       } else {
-         if (filestoupload > 0) $('#main_upload_start').attr('disabled', false);
-         $("#upload_tooltip").hide();
-       }
+  // all activate-submit buttons are disabled by default
+  $('.activate-submit').each(function() {
+    $(this).prop('disabled', true);
+  });
+  // set up tooltip
+  $('.activate-container').tooltip({
+    'placement': 'bottom',
+    'delay': {show: 500, hide: 100}
     });
-    $("#main_upload_start_span").mouseout(function(e){
-        $("#upload_tooltip").hide();
-    });
-    $("#main_upload_start_span").mouseleave(function(e){
-        $("#upload_tooltip").hide();
-    });
-    $('#terms_of_service').click(function () {
-        $('#main_upload_start').attr('disabled', !((this.checked) && (filestoupload > 0)));
-        $("#upload_tooltip").hide();
-    });
-});
 
+  // when data-activate checkbox is clicked, change the
+  // disable state of all activate-submit buttons
+  $('input[data-activate]').on("click", function () {
+    // get the checked state of the checkbox clicked and 
+    // set  all other tos checkboxes to same state
+    var bool = $(this).is(":checked");
+    // if box is checked - enable submit, otherwise disable 
+    var disable = (bool) ? false : true;
+    $('input[data-activate]').attr('checked', bool);
+    $('.activate-submit').attr('disabled', disable);
+  })
+
+  // show/hide the tooltip depending if the agreement is already checked
+  $('.activate-container').mousemove(function(e){
+    if ($('input[data-activate]').is(':checked')) {
+      $('.activate-container').tooltip('hide')
+    }
+    else {
+      $('.activate-container').tooltip('show')
+    }
+  });
+  $('.activate-container').mouseout(function(e){
+      $('.activate-container').tooltip('hide')
+  });
+  $('.activate-container').mouseleave(function(e){
+      $('.activate-container').tooltip('hide')
+  });
+});

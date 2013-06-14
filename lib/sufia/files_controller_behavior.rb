@@ -68,6 +68,28 @@ module Sufia
 
     # routed to /files (POST)
     def create
+      case params['file_coming_from']
+      when 'dropbox'
+        create_from_url(params)
+      else
+        create_from_local(params)
+      end
+    end
+
+    def create_from_url(params)
+      params[:dropbox_urls].each do |db_file|
+        next if db_file.blank?
+        # do not remove :: 
+        @generic_file = ::GenericFile.new
+        @generic_file.import_url = db_file
+        @generic_file.label = File.basename(db_file)
+        Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
+        Sufia.queue.push(ImportUrlJob.new(@generic_file.pid)) 
+      end
+      redirect_to sufia.batch_edit_path(params[:batch_id])
+    end
+
+    def create_from_local(params)
       begin
         # check error condition No files
         return json_error("Error! No file to save") if !params.has_key?(:files)
@@ -211,15 +233,9 @@ module Sufia
 
 
     def virus_check( file)
-      if defined? ClamAV
-        stat = ClamAV.instance.scanfile(file.path)
-        flash[:error] = "Virus checking did not pass for #{file.original_filename} status = #{stat}" unless stat == 0
-        logger.warn "Virus checking did not pass for #{file.inspect} status = #{stat}" unless stat == 0
-        stat
-      else
-        logger.warn "Virus checking disabled for #{file.inspect}"
-        0
-      end
+      stat = Sufia::GenericFile::Actions.virus_check(file)
+      flash[:error] = "Virus checking did not pass for #{File.basename(file.path)} status = #{stat}" unless stat == 0
+      stat
     end 
 
   end
