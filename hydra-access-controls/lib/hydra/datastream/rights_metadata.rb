@@ -98,7 +98,7 @@ module Hydra
         type = selector.keys.first.to_sym
         actor = selector.values.first
         if new_access_level.nil?
-          xpath = self.class.terminology.xpath_for(:access, type, actor)
+          xpath = xpath(type, actor)
           nodeset = self.find_by_terms(xpath)
           if nodeset.empty?
             return "none"
@@ -224,9 +224,21 @@ module Hydra
         return unless ng_xml
         type = selector.keys.first.to_sym
         actor = selector.values.first
-        xpath = self.class.terminology.xpath_for(:access, type, actor)
+        xpath = xpath(type, actor)
         nodes_to_purge = self.find_by_terms(xpath)
         nodes_to_purge.each {|node| node.remove}
+      end
+
+      # @param [Symbol] type (:group, :person)
+      # @param [String,TrueClass] actor the user we want to find. If actor is true, then don't query.
+      def xpath(type, actor)
+        raise ArgumentError, "Type must either be ':group' or ':person'. You provided: '#{type.inspect}'" unless [:group, :person].include?(type)
+        path = "//oxns:access/oxns:machine/oxns:#{type}"
+        if actor.is_a? String
+          clean_actor = actor.gsub("'", '')
+          path += "[text() = '#{clean_actor}']" 
+        end
+        path
       end
       
     end
