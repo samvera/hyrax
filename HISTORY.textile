@@ -1,3 +1,13 @@
+h3. 6.2.1 (2013-06-14)
+* Removed commented out line that was changed in commit bd53011b3f1fd2f20703b703db67385e100e67d6. [David Chandek-Stark]
+* Adding CONTRIBUTORS.md [Jeremy Friesen]
+* Patched Hydra::PolicyAwareAccessControlsEnforcement to properly handle anonymous users by amending #policies_with_access (previously returned empty list when current_user is nil) and #apply_policy_individual_permissions. [David Chandek-Stark]
+* Change the version of hydra-head in the readme [Justin Coyne]
+* Updating hydra generator for rspec [Jeremy Friesen]
+* Removing trailing whitespace from generators [Jeremy Friesen]
+* Update CONTRIBUTING.md [Justin Coyne]
+
+
 h3. 6.2.0 (2013-05-23)
 * Fix mismatched arguments in DownloadBehavior
 * Allow discovery_permissions to be set in AccessControlsEnforcement
