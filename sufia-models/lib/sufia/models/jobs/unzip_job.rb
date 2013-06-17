@@ -26,26 +26,38 @@ class UnzipJob
   def run
     Zip::Archive.open_buffer(zip_file.content.content) do |archive|
       archive.each do |f|
-        create_file(f)
+        if f.directory?
+          create_directory(f)
+        else
+          create_file(f)
+        end
       end
     end
   end
 
   protected
 
-  def create_file(f)
+  # Creates a GenericFile object based on +file+
+  # @param file [Zip::File]
+  def create_file(file)
     @generic_file = GenericFile.new
     @generic_file.batch_id = zip_file.batch.pid
-    file_name = f.name
+    file_name = file.name
     mime_types = MIME::Types.of(file_name)
     mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
     options = {:label=>file_name, :dsid=>'content', :mimeType=>mime_type}
-    @generic_file.add_file_datastream(f.read, options)
+    @generic_file.add_file_datastream(file.read, options)
     @generic_file.set_title_and_label( file_name, :only_if_blank=>true )
     @generic_file.apply_depositor_metadata(zip_file.edit_users.first)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
+  end
+  
+  # Creates representation of directory corresponding to +file+
+  # Default behavior: _do nothing_
+  # @param file [Zip::File]
+  def create_directory(file)
   end
 
   def zip_file
