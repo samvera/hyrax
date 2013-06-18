@@ -26,7 +26,7 @@ module Sufia
 
       belongs_to :batch, :property => :is_part_of
 
-      delegate_to :properties, [:relative_path, :depositor], :unique => true
+      delegate_to :properties, [:relative_path, :depositor, :import_url], :unique => true
       delegate_to :descMetadata, [:date_uploaded, :date_modified], :unique => true
       delegate_to :descMetadata, [:related_url, :based_near, :part_of, :creator,
                                   :contributor, :title, :tag, :description, :rights,

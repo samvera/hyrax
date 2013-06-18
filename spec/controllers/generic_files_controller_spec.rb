@@ -73,6 +73,42 @@ describe GenericFilesController do
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
     end
 
+    it "should download and import a file from a given url" do
+      date_today = Date.today
+      Date.stub(:today).and_return(date_today)
+      generic_file = GenericFile.new      #find(self.pid)
+      Sufia::GenericFile::Actions.create_metadata(generic_file, @user, '1234')
+      #generic_file.import_url = "https://dl.dropboxusercontent.com/1/view/kcb4j1dtkw0td3z/ArticleCritique.doc"
+      generic_file.import_url =  "https://dl.dropboxusercontent.com/1/view/m4og1xrgbk3ihw6/Getting%20Started.pdf"
+      generic_file.save
+      f = Tempfile.new(generic_file.pid)  #self.pid)
+      f.binmode
+      # download file from url
+      uri = URI(generic_file.import_url)
+      http = Net::HTTP.new(uri.host, uri.port) 
+      http.use_ssl = uri.scheme == "https"  # enable SSL/TLS
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+      http.start do  
+        http.request_get(uri.to_s) do |resp|
+          resp.read_body do |segment|
+            f.write(segment)
+          end 
+        end 
+      end 
+      job_user = User.batchuser()
+      user = User.find_by_user_key(generic_file.depositor)
+      # check for virus
+      if Sufia::GenericFile::Actions.virus_check(f) != 0
+        message = "The file (#{File.basename(uri.path)}) was unable to be imported because it contained a virus."
+        job_user.send_message(user, message, 'File Import Error') 
+        return
+      end 
+      f.rewind
+      # attach downloaded file to generic file stubbed out
+      Sufia::GenericFile::Actions.create_content(generic_file, f, File.basename(uri.path), 'content', user)
+    end
+
     it "should create and save a file asset from the given params" do
       date_today = Date.today
       Date.stub(:today).and_return(date_today)

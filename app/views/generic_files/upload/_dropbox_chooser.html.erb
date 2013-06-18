@@ -1,0 +1,39 @@
+<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="<%= Sufia.config.dropbox_api_key %>"></script>
+<%= form_for(@generic_file, :url => sufia.generic_files_path, :html => {:id => 'new_generic_file_dropbox', :class => 'form-horizontal well'}) do |f| %>
+<%= hidden_field_tag "file_coming_from", "dropbox" %>
+<%= hidden_field_tag "dropbox_urls[]" %>
+<%= hidden_field_tag(:batch_id, @batch_noid) %>
+<%= render partial: 'generic_files/upload/tos_checkbox' %>
+<div class="fileupload-buttonbar">
+  <span id="main_upload_start_span" class="activate-container" data-toggle="tooltip" data-title="<%= t('sufia.upload_tooltip') %>">
+    <button type="submit" class="activate-submit btn btn-primary start" id="main_import_start">
+      <i class="icon-upload icon-white"></i>
+      <span>Start import</span>
+  </button>
+  </span>
+  <button type="reset" class="btn btn-warning cancel">
+      <i class="icon-ban-circle icon-white"></i>
+      <span>Cancel import</span>
+  </button>
+</div>
+<br />
+<input type="dropbox-chooser" id="db-chooser" name="selected-file" style="visibility: hidden;" data-multiselect="true" data-link-type="direct" />
+<div>
+  <ul id="selected-files" class="unstyled">
+  </ul>
+</div>
+<% end %>
+<script type="text/javascript">
+  $('#db-chooser').on("DbxChooserSuccess", function(e) {
+    e = e.originalEvent;
+    var items = [];
+    var dropbox_urls = [];
+    $.each(e.files, function(i, item) {
+      var mb = (item.bytes / (1024*1024)).toFixed(2);
+      items.push('<li><img src="'+item.icon+'"/>'+item.name+'(' + mb + ' MB)</li>')
+      dropbox_urls.push('<input type="hidden" name="dropbox_urls[]" value="'+item.link+'" />')
+    });
+    $('#selected-files').append( items.join('') );
+    $('#new_generic_file_dropbox').append(dropbox_urls);
+});
+</script>

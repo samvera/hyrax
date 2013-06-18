@@ -2,11 +2,8 @@
       <%= hidden_field_tag(:total_upload_size, 0) %>
       <%= hidden_field_tag(:relative_path) %>
       <%= hidden_field_tag(:batch_id, @batch_noid) %>
-      <label class="checkbox">
-      <%= check_box_tag 'terms_of_service' %> I have read and do agree
-      to <%= link_to t('sufia.deposit_agreement'),
-        '/agreement/', :target => "_blank" %>.
-    </label>
+      <%= hidden_field_tag "file_coming_from", "local" %>
+      <%= render partial: 'generic_files/upload/tos_checkbox' %>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="span70">
@@ -24,8 +21,8 @@
                     <input type="file" name="files[]" directory webkitdirectory mozdirectory />
                 </span>
                 <% end %>
-                <span id="main_upload_start_span">
-                <button type="submit" class="btn btn-primary start" id='main_upload_start'>
+                <span id="main_upload_start_span" class="activate-container" data-toggle="tooltip" data-title="<%= t('sufia.upload_tooltip') %>">
+                  <button type="submit" class="activate-submit btn btn-primary start" id="main_upload_start">
                     <i class="icon-upload icon-white"></i>
                     <span>Start upload</span>
                 </button>
