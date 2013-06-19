@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/sufia/version', __FILE__)
+version = File.read(File.expand_path("../SUFIA_VERSION",__FILE__)).strip
+
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Coyne"]
@@ -13,10 +14,10 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "sufia"
   gem.require_paths = ["lib"]
-  gem.version       = Sufia::VERSION
+  gem.version       = version 
 
   gem.add_dependency 'rails', '~> 3.2.13'
-  gem.add_dependency 'sufia-models', '~> 0.1.2'
+  gem.add_dependency 'sufia-models', version
   gem.add_dependency 'blacklight', '~> 4.0'
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency "hydra-head", "~> 6.0"
