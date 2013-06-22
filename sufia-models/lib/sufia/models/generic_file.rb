@@ -9,6 +9,7 @@ module Sufia
     autoload :Actions
     autoload :Permissions
     autoload :WebForm, 'sufia/models/generic_file/web_form'
+    autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::Thumbnail
@@ -35,6 +36,8 @@ module Sufia
 
       around_save :characterize_if_changed, :retry_warming
       before_destroy :cleanup_trophies
+
+      attr_accessible *(ds_specs['descMetadata'][:type].fields + [:permissions])
     end
 
 

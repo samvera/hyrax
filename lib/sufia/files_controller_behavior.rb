@@ -225,8 +225,7 @@ module Sufia
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      valid_attributes = params[:generic_file].select { |k,v| (@generic_file.terms_for_editing + [:permissions]).include? k.to_sym}
-      @generic_file.attributes = valid_attributes
+      @generic_file.attributes = @generic_file.sanitize_attributes(params[:generic_file])
       @generic_file.set_visibility(params[:visibility])
       @generic_file.date_modified = DateTime.now
     end
