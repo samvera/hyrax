@@ -2,6 +2,7 @@ module Sufia
   module GenericFile
     module WebForm
       extend ActiveSupport::Concern
+      include Sufia::GenericFile::AccessibleAttributes
       included do
         before_save :remove_blank_assertions
       end
@@ -26,7 +27,9 @@ module Sufia
       end
 
       def terms_for_display
-        self.descMetadata.class.config.keys
+        # 'type' is the RDF.type assertion, which is not present by default, but may be
+        # provided in some RDF schemas
+        self.descMetadata.class.fields
       end
 
       def to_jq_upload
