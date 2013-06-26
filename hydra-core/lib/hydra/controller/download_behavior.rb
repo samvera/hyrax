@@ -63,7 +63,7 @@ module Hydra
 
         if request.head?
           content_head
-        elsif request.headers["Range"]
+        elsif request.headers['HTTP_RANGE']
           send_range
         else
           send_file_headers! content_options
@@ -93,7 +93,7 @@ module Hydra
 
       # render an HTTP Range response
       def send_range
-        _, range = request.headers["Range"].split('bytes=')
+        _, range = request.headers['HTTP_RANGE'].split('bytes=')
         from, to = range.split('-').map(&:to_i)
         to = datastream.dsSize - 1 unless to
         length = to - from + 1

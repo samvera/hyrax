@@ -1,0 +1,12 @@
+source "http://rubygems.org"
+
+gemspec :path=>"../"
+
+gem 'rails', '4.0.0'
+gem 'sass-rails', '4.0.0'
+
+
+group :development, :test do
+  gem 'simplecov', :platform => :mri_19
+  gem 'simplecov-rcov', :platform => :mri_19
+end

@@ -23,8 +23,10 @@ task :generate do
   unless File.exists?('spec/internal/Rakefile')
     puts "Generating rails app"
     `rails new spec/internal`
-    puts "Copying gemfile"
-    `cp spec/support/Gemfile spec/internal`
+    puts "Updating gemfile"
+    `echo " gem 'hydra-access-controls', :path=>'../../../hydra-access-controls'" >> spec/internal/Gemfile`
+    `echo " gem 'hydra-core', :path=>'../../', :require=>'hydra-core'" >> spec/internal/Gemfile`
+    `echo " gem 'factory_girl_rails'" >> spec/internal/Gemfile`
     puts "Copying generator"
     `cp -r spec/support/lib/generators spec/internal/lib`
     within_test_app do

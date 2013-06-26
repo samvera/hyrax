@@ -90,14 +90,14 @@ describe DownloadsController do
           controller.stub(:log_download)
         end
         it "head request" do
-          request.env["Range"] = 'bytes=0-15'
+          request.env["HTTP_RANGE"] = 'bytes=0-15'
           head :show, id: 'changeme:test', datastream_id: 'webm'
           response.headers['Content-Length'].should == 16
           response.headers['Accept-Ranges'].should == 'bytes'
           response.headers['Content-Type'].should == 'video/webm'
         end
         it "should send the whole thing" do
-          request.env["Range"] = 'bytes=0-15'
+          request.env["HTTP_RANGE"] = 'bytes=0-15'
           get :show, id: 'changeme:test', datastream_id: 'webm'
           response.body.should == 'one1two2threfour'
           response.headers["Content-Range"].should == 'bytes 0-15/16'
@@ -113,14 +113,14 @@ describe DownloadsController do
           response.body.should == 'one1two2threfour'
         end
         it "should get a range not starting at the beginning" do
-          request.env["Range"] = 'bytes=3-15'
+          request.env["HTTP_RANGE"] = 'bytes=3-15'
           get :show, id: 'changeme:test', datastream_id: 'webm'
           response.body.should == '1two2threfour'
           response.headers["Content-Range"].should == 'bytes 3-15/16'
           response.headers["Content-Length"].should == '13'
         end
         it "should get a range not ending at the end" do
-          request.env["Range"] = 'bytes=4-11'
+          request.env["HTTP_RANGE"] = 'bytes=4-11'
           get :show, id: 'changeme:test', datastream_id: 'webm'
           response.body.should == 'two2thre'
           response.headers["Content-Range"].should == 'bytes 4-11/16'
