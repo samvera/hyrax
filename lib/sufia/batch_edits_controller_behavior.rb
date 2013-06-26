@@ -34,7 +34,7 @@ module Sufia
 
        # map the permissions to parameter like input so that the assign will work
        # todo sort the access level some how...
-       perm_param ={'user'=>{},'group'=>{"public"=>"1"}}
+       perm_param ={'user'=>{},'group'=>{"public"=>"read"}}
        permissions.each{ |perm| perm_param[perm[:type]][perm[:name]] = perm[:access]}
        @show_file.permissions = HashWithIndifferentAccess.new(perm_param)
     end
