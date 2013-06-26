@@ -1,3 +1,7 @@
+h3. 6.3.0.rc1 
+* Use Om in a way that is compatible with 3.0.1 [Justin Coyne]
+* Rails 4 support [Justin Coyne]
+
 h3. 6.2.2 (2013-06-14)
 * Rights metadata should only update the user you tell it to update. [Justin Coyne]
 
