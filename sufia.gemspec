@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'blacklight_advanced_search'
   gem.add_dependency "hydra-head", "6.3.0.rc1"
 
-  gem.add_dependency 'active-fedora', "6.4.0.rc3"
+  gem.add_dependency 'active-fedora', "6.4.0.rc4"
 
   gem.add_dependency 'hydra-batch-edit', '~> 1.0'
 
