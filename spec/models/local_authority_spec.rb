@@ -14,6 +14,8 @@
 
 require 'spec_helper'
 
+# Don't run the tests if activerecord-import isn't installed.
+# The 0.3.1 version doesn't work with rails 4, so suppress these tests
 describe LocalAuthority do
   before(:all) do
     @tsv = [fixture_path + '/cities15000.tsv']

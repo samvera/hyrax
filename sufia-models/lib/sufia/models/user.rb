@@ -33,8 +33,12 @@ module Sufia::User
     acts_as_followable
 
     # Setup accessible (or protected) attributes for your model
-    attr_accessible :email, :login, :display_name, :address, :admin_area, :department, :title, :office, :chat_id, :website, :affiliation, :telephone, :avatar, 
-    :group_list, :groups_last_update, :facebook_handle, :twitter_handle, :googleplus_handle
+    if Rails::VERSION::MAJOR == 3
+      attr_accessible :email, :login, :display_name, :address, :admin_area, 
+        :department, :title, :office, :chat_id, :website, :affiliation, 
+        :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
+        :twitter_handle, :googleplus_handle
+    end
 
     # Add user avatar (via paperclip library)
     has_attached_file :avatar, :styles => { medium: "300x300>", thumb: "100x100>" }, :default_url => '/assets/missing_:style.png'

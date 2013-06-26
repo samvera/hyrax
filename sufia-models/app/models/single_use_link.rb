@@ -1,7 +1,6 @@
 class SingleUseLink < ActiveRecord::Base
 
-  attr_accessible :downloadKey, :expires, :itemId, :path
-
+  attr_accessible :downloadKey, :expires, :itemId, :path if Rails::VERSION::MAJOR == 3
     
   
   def self.create_show(item_id)

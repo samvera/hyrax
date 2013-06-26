@@ -7,7 +7,12 @@ require 'mailboxer'
 require 'acts_as_follower'
 require 'paperclip'
 require 'RMagick'
-require 'activerecord-import'
+begin
+  # activerecord-import 0.3.1 does not support rails 4, so we don't require it.
+  require 'activerecord-import'
+rescue LoadError
+  $stderr.puts "Sufia-models is unable to load activerecord-import"
+end
 require 'resque/server'
 
 module Sufia

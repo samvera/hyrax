@@ -7,8 +7,11 @@ gemspec
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'sufia-models', path: './sufia-models'
 
+gem 'blacklight_advanced_search', github: 'projectblacklight/blacklight_advanced_search', branch: 'rails4'
+
 group :development, :test do
-  gem 'activerecord-import', '0.3.0'
+  # https://github.com/zdennis/activerecord-import/pull/79
+  #gem 'activerecord-import', '0.3.0'
   gem 'sqlite3'
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 2.13.1'
