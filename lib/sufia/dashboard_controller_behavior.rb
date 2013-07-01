@@ -21,6 +21,7 @@ module Sufia
     include Blacklight::Catalog
 
     included do
+      layout "sufia-two-column"
       include Hydra::BatchEditBehavior
       include Blacklight::Catalog
       include Blacklight::Configurable # comply with BL 3.7
