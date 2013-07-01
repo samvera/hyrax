@@ -1,4 +1,4 @@
-h3. 6.3.0.rc1 
+h3. 6.3.0 (2013-07-01) 
 * Use Om in a way that is compatible with 3.0.1 [Justin Coyne]
 * Rails 4 support [Justin Coyne]
 
