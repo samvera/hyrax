@@ -139,14 +139,6 @@ describe Hydra::Datastream::RightsMetadata do
     end
   end
   
-  describe "update_indexed_attributes" do
-    it "should update the declared properties" do
-      @sample.find_by_terms(*[:edit_access, :person]).length.should == 0
-      @sample.update_values([:edit_access, :person]=>"user id").should == {"edit_access_person"=>{"0"=>"user id"}}
-      @sample.find_by_terms(*[:edit_access, :person]).length.should == 1
-      @sample.find_by_terms(*[:edit_access, :person]).first.text.should == "user id"
-    end
-  end
   describe "to_solr" do
     it "should populate solr doc with the correct fields" do
       params = {[:edit_access, :person]=>"Lil Kim", [:edit_access, :group]=>["group1","group2"], [:discover_access, :group]=>["public"],[:discover_access, :person]=>["Joe Schmoe"]}
