@@ -60,6 +60,12 @@ rails g sufia -f
 rake db:migrate
 ```
 
+### Get a copy of hydra-jetty
+```
+rails g hydra:jetty
+rake jetty:config
+rake jetty:start
+```
 
 ### If you want to use the assets that ship with Sufia...
 #### add the following to application.css
@@ -96,8 +102,7 @@ See https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 This information is for people who want to modify the engine itself, not an application that uses the engine:
 ### Create fixtures
 ```
-# start jetty
-git submodule init && git submodule update
+# configure jetty & start jetty (if you haven't already)
 rake jetty:config
 rake jetty:start
 
