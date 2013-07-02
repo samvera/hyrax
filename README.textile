@@ -12,6 +12,8 @@ Further questions?  Ask the "hydra-tech list":http://groups.google.com/group/hyd
 
 h2. Installation/Setup
 
+This process is covered step-by-step in the "Tutorial: Dive Into Hydra":https://github.com/projecthydra/hydra-head/wiki/Dive-into-Hydra
+
 h3. Installation Prerequisites
 
 See "http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites":http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites
@@ -78,6 +80,12 @@ Run the database migrations
 
 <pre>
 rake db:migrate
+</pre>
+
+If you need a copy of jetty (very likely)
+
+<pre>
+rails g hydra:jetty
 </pre>
 
 h3. You're done.
