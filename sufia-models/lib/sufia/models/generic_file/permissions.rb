@@ -37,7 +37,8 @@ module Sufia
         params[:new_group_name].each { |name, access| perm_hash['group'][name] = access } if params[:new_group_name].present?
 
         params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
-        params[:group].each { |name, access| perm_hash['group'][name] = access} if params[:group]
+        params[:group].each { |name, access| perm_hash['group'][name] = access if ['read', 'edit'].include?(access)} if params[:group]
+
         rightsMetadata.update_permissions(perm_hash)
       end
 

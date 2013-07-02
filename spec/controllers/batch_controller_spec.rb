@@ -63,7 +63,15 @@ describe BatchController do
         flash[:notice].should include("Your files are being processed")
       end
     end
+    
     describe "when user has edit permissions on a file" do
+      it "should set the groups" do
+        post :update, :id=>@batch.pid, "generic_file"=>{"permissions"=>{"group"=>{"public"=>"1", "registered"=>"2"}}}
+        @file.reload.read_groups.should == []
+        @file.reload.edit_groups.should == []
+        response.should redirect_to @routes.url_helpers.dashboard_index_path
+      end
+
       it "should set the users with read access" do
         post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
         file = GenericFile.find(@file.pid)
