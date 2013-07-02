@@ -86,9 +86,11 @@ add_groups_to_users.rb		create_local_authorities.rb	create_trophies.rb}.each do 
     sentinel = /HydraHead.add_routes\(self\)/
     inject_into_file 'config/routes.rb', "\n  #{routing_code}\n", { :after => sentinel, :verbose => false }
 
-    routing_code = "mount Sufia::Engine => '/'"
+    routing_code = "\n  # This must be the very last route in the file because it has a catch all route for 404 errors.
+  # This behavior seems to show up only in production mode.
+  mount Sufia::Engine => '/'\n"
     sentinel = /devise_for :users/
-    inject_into_file 'config/routes.rb', "\n  #{routing_code}\n", { :after => sentinel, :verbose => false }
+    inject_into_file 'config/routes.rb', routing_code, { :after => sentinel, :verbose => false }
     
   end
 
