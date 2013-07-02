@@ -68,19 +68,27 @@ rake jetty:start
 ```
 
 ### If you want to use the assets that ship with Sufia...
-#### add the following to application.css
+#### Modify app/assets/application.css
+Add this line:
 ```
  *= require sufia
 ```
-You'll want to ensure you're not loading the blacklight.css, so remove this line ```*= require_tree .```
+**Remove** this line:  
+```*= require_tree .```  
 
-#### Add the following to application.js
+_Removing the require_tree from application.css will ensure you're not loading the blacklight.css.  This is because blacklight's css styling does not mix well with sufia's default styling._ 
+
+
+#### Modify app/assets/application.js
+
+Add this line:
 ```
 //= require sufia
 ```
 
 ### Install Fits.sh
 http://code.google.com/p/fits/downloads/list
+Download a copy of fits & unpack it somewhere on your PATH.
 
 ### Start background workers
 ```
