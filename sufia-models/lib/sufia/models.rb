@@ -1,7 +1,6 @@
 require "sufia/models/version"
 require "sufia/models/engine"
 require 'hydra/head'
-require 'devise'
 require 'nest'
 require 'mailboxer'
 require 'acts_as_follower'
