@@ -56,16 +56,17 @@ module Blacklight::RenderConstraintsHelperBehavior
   end 
 
   def render_filter_element(facet, values, localized_params)
+    facet_configuration_for_field(facet)
     values.map do |val|
-      if params[:controller] == 'dashboard'       
+      if params[:controller] == 'dashboard'
         render_constraint_element( facet_field_labels[facet],
-                  val, 
+                                   facet_display_value(facet, val),
                   :remove => dashboard_index_path(remove_facet_params(facet, val, localized_params)),
                   :classes => ["filter", "filter-" + facet.parameterize] 
                 ) + "\n"    
       else
         render_constraint_element( facet_field_labels[facet],
-                  val, 
+                                   facet_display_value(facet, val),
                   :remove => catalog_index_path(remove_facet_params(facet, val, localized_params)),
                   :classes => ["filter", "filter-" + facet.parameterize] 
                 ) + "\n"    
