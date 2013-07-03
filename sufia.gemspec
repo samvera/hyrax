@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'sufia-models', version
   gem.add_dependency 'blacklight', '~> 4.0'
-  gem.add_dependency 'blacklight_advanced_search'
+  gem.add_dependency 'blacklight_advanced_search', '2.1.0.rc1'
 
   gem.add_dependency 'hydra-batch-edit', '~> 1.0'
 
