@@ -15,7 +15,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.13.1'
   gem 'cucumber-rails', '~> 1.0', :require => false
   gem 'database_cleaner'
-  gem 'devise'
   gem 'capybara', '~>2.1.0'
   gem 'bcrypt-ruby'
   gem "jettywrapper"
