@@ -3,7 +3,7 @@
       <%= check_box_tag 'check_all', 'yes', @all_checked, :disabled => ((@batch_size_on_other_page + @document_list.count) > @max_batch_size) %>
       <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="icon-cog" title="click for selection options"></span></a>
       <ul class="dropdown-menu">
-        <%= render partial:'batch_edits_actions' %>
+        <%= render partial: 'batch_edits_actions' %>
       </ul>
     </div>
   <% end %>
