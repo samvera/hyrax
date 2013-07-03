@@ -14,7 +14,7 @@ describe SingleUseLinkController do
     @file2.save
   end
   after(:all) do
-    SingleUseLink.find(:all).each{ |l| l.delete}
+    SingleUseLink.delete_all
     @user.delete
     @file.delete
     @file2.delete
