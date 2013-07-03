@@ -42,6 +42,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'zipruby', '0.3.6'
   # https://github.com/zdennis/activerecord-import/pull/79
   #spec.add_dependency 'activerecord-import', '0.3.0' # 0.3.1 caused a bug in testing: "SQLite3::SQLException: near ",": syntax error: INSERT INTO..."
-  spec.add_dependency 'devise'
-
 end
