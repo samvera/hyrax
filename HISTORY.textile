@@ -1,3 +1,9 @@
+h3. 6.3.1 (2013-07-04)
+* Run 'bundle install' after adding gems to the gemfile [Justin Coyne]
+* Update README.textile [Matt Zumwalt]
+* Add version badge to the Readme [Justin Coyne]
+* Removed test that did not actually test any hydra code [Justin Coyne]
+
 h3. 6.3.0 (2013-07-01) 
 * Use Om in a way that is compatible with 3.0.1 [Justin Coyne]
 * Rails 4 support [Justin Coyne]
