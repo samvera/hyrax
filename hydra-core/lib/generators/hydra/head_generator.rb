@@ -36,6 +36,9 @@ class HeadGenerator < Rails::Generators::Base
       gem 'jettywrapper'
     end
 
+    Bundler.with_clean_env do
+      run "bundle install"
+    end
   end
 
   # Copy all files in templates/config directory to host config
