@@ -42,10 +42,13 @@ Sufia needs the following software to work:
 gem 'blacklight'
 gem 'hydra-head'
 gem 'sufia'
+gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'jettywrapper'
 gem 'font-awesome-sass-rails'
 ```
 Then `bundle install`
+
+Note the line with kaminari listed as a dependency.  This is a temporary fix to address a problem in the current release of kaminari.  Technically you should not have to list kaminari, which is a dependency of blacklight and sufia. 
 
 ### Run the blacklight, hydra and sufia generators
 ```
