@@ -7,8 +7,10 @@ require "rake"
 
 #require 'capybara'
 ENV["RAILS_ENV"] ||= "test"
+puts "RAILS ROOT0: #{ENV['RAILS_ROOT']}"
 require File.expand_path("../../../spec/internal/config/environment.rb",  __FILE__)
-ENV["RAILS_ROOT"] ||= File.dirname(__FILE__) + "../../../spec/internal"
+ENV["RAILS_ROOT"] = File.dirname(__FILE__) + "../../../spec/internal"
+puts "RAILS ROOT: #{ENV['RAILS_ROOT']}"
 
 
 FactoryGirl.definition_file_paths = [File.expand_path("../../../spec/factories", __FILE__)]
@@ -74,8 +76,8 @@ end
 def load_rake
   @rake = Rake::Application.new
   Rake.application = @rake
-    Rake.application.rake_require("tasks/sufia-fixtures", ["."], loaded_files_excluding_current_rake_file)
-    Rake.application.rake_require("lib/tasks/fixtures", ["."], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("sufia-fixtures", ["#{Sufia::Engine.root}/tasks"], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("fixtures", ["#{Sufia::Engine.root}/lib/tasks"], loaded_files_excluding_current_rake_file)
     Rake.application.rake_require("lib/tasks/active_fedora", [activefedora_path], loaded_files_excluding_current_rake_file)
   Rake::Task.define_task(:environment)
 end

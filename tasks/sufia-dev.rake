@@ -25,18 +25,9 @@ end
 
 gem_home = File.expand_path('../../', __FILE__)
 
-puts "gem home #{gem_home}"
 desc "Run specs"
 RSpec::Core::RakeTask.new(:rspec) do |t|
-  # puts 'running specs' +gem_home + '/spec/**/*_spec.rb'
-  # t.pattern = gem_home + '/spec/**/*_spec.rb'
   t.pattern = '../**/*_spec.rb'
-#  t.ruby_opts = "-I#{gem_home}/spec"
-  
-  # if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.8/
-  #   t.rcov = true
-  #   t.rcov_opts = %w{--exclude spec\/*,gems\/*,ruby\/* --aggregate coverage.data}
-  # end
   t.rspec_opts = "--colour"
 end
 
@@ -59,6 +50,8 @@ task :generate do
     puts "Updating gemfile"
 
     `echo "gem 'sufia', :path=>'../../../sufia'
+gem 'cucumber-rails', group: :test
+gem 'database_cleaner'
 gem 'capybara'
 gem 'factory_girl_rails'" >> spec/internal/Gemfile`
     puts "Copying generator"
