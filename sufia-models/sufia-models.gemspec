@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
 
   spec.add_dependency 'rails', '>= 3.2.13', '< 5.0'
+  spec.add_dependency 'activeresource' # No longer a dependency of rails 4.0
   spec.add_dependency "hydra-head", "~> 6.3.0"
   spec.add_dependency 'active-fedora', "~> 6.4.0"
 
