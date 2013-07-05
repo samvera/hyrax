@@ -7,10 +7,9 @@ require "rake"
 
 #require 'capybara'
 ENV["RAILS_ENV"] ||= "test"
-puts "RAILS ROOT0: #{ENV['RAILS_ROOT']}"
-require File.expand_path("../../../spec/internal/config/environment.rb",  __FILE__)
 ENV["RAILS_ROOT"] = File.dirname(__FILE__) + "../../../spec/internal"
 puts "RAILS ROOT: #{ENV['RAILS_ROOT']}"
+require File.expand_path("../../../spec/internal/config/environment.rb",  __FILE__)
 
 
 FactoryGirl.definition_file_paths = [File.expand_path("../../../spec/factories", __FILE__)]
