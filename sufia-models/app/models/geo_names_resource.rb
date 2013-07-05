@@ -1,4 +1,4 @@
-require 'activeresource'
+require 'active_resource'
 
 class GeoNamesResource < ActiveResource::Base
   self.site = "http://api.geonames.org/"
