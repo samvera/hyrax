@@ -80,8 +80,9 @@ describe DashboardController do
         response.should render_template('dashboard/index')
       end
       it "should return an array of documents I can edit" do
-        user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
-        assigns(:response)["response"]["numFound"].should eql(user_results["response"]["numFound"])
+        editable_docs_response = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
+        assigns(:result_set_size).should eql(editable_docs_response["response"]["numFound"])
+        assigns(:document_list).each {|doc| doc.should be_kind_of SolrDocument}
       end
       context "with render views" do
         render_views
