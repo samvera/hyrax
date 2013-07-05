@@ -70,13 +70,8 @@ describe SingleUseLinkController do
   end
   describe "retrieval links" do
     before (:each) do
-      @user = FactoryGirl.find_or_create(:user)
-      sign_in @user
-      get 'generate_download', id:@file.pid
-      @dhash =  assigns[:su].downloadKey
-      get 'generate_show', id:@file.pid
-      @shash=  assigns[:su].downloadKey
-      sign_out @user
+      @dhash = SingleUseLink.create_download(@file.pid).downloadKey
+      @shash = SingleUseLink.create_show(@file.pid).downloadKey
     end    
     before (:each) do
       @user.delete
@@ -116,10 +111,8 @@ describe SingleUseLinkController do
         get :show, id:@shash
         response.should render_template('error/single_use_error')
       end
-      it "and_return 404 on attempt to get show with download" do
-        get :show, id:@shash
-        response.should be_success
-        get :show, id:@shash
+      it "and_return 404 on attempt to get show path with download hash" do
+        get :show, id:@dhash
         response.should render_template('error/single_use_error')
       end
     end
