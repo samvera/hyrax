@@ -56,7 +56,7 @@ class CatalogController < ApplicationController
 
   def recent_me
     if user_signed_in?
-      (_, @recent_user_documents) = get_search_results(:q =>filter_not_mine,
+      (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
                                         :sort=>sort_field, :rows=>4)
     end
   end
@@ -375,6 +375,10 @@ class CatalogController < ApplicationController
 
   def filter_not_mine 
     "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
+  end
+
+  def filter_mine 
+    "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
   end
 
   def sort_field
