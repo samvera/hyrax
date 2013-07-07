@@ -6,6 +6,7 @@
     var settings = $.extend( { }, options);
 
     function addField() {
+      count = $(this).closest('.control-group').find('.controls').size();
       var cloneId = this.id.replace("submit", "clone");
       var newId = this.id.replace("submit", "elements");
       var cloneElem = $('#'+cloneId).clone();
@@ -14,6 +15,7 @@
       plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
       plusbttn.on('click',removeField);
 
+
       // remove the help tag on subsequent added fields
       cloneElem.find('.formHelp').remove();
       cloneElem.find('i').remove();
@@ -21,8 +23,14 @@
 
       //clear out the value for the element being appended
       //so the new element has a blank value
-      cloneElem.find('input[type=text]').attr("value", "");
-      cloneElem.find('input[type=text]').attr("required", false);
+      // Note: there may be more than one input field. Example:
+      //   creator_name
+      //   creator_role
+      textFields = cloneElem.find('input[type=text]')
+      $.each(textFields, function(n, tf) {
+        newName = $(tf).attr('name').replace('[0]', '['+count+']');
+        $(tf).attr('name', newName).attr("value", "").attr("required", false)
+      })
 
       if (settings.afterAdd) {
         settings.afterAdd(this, cloneElem)
