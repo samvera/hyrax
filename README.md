@@ -51,7 +51,9 @@ Then `bundle install`
 ```
 rails g blacklight --devise
 rails g hydra:head -f
+bundle install 
 rails g sufia -f
+rm public/index.html
 ```
 
 ### Run the migrations
