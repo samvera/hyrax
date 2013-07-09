@@ -54,7 +54,9 @@ Note the line with kaminari listed as a dependency.  This is a temporary fix to 
 ```
 rails g blacklight --devise
 rails g hydra:head -f
+bundle install 
 rails g sufia -f
+rm public/index.html
 ```
 
 ### Run the migrations
