@@ -15,14 +15,6 @@ task :ci => ['jetty:config'] do
   raise "test failures: #{error}" if error
 end
 
-task :spec => :generate do
-  Bundler.with_clean_env do
-    within_test_app do
-      Rake::Task['rspec'].invoke
-    end
-  end
-end
-
 desc "Run specs"
 task :spec => :generate do
   focused_spec = ENV['SPEC'] ? " SPEC=#{File.join(GEM_ROOT, ENV['SPEC'])}" : ''
