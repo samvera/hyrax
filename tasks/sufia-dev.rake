@@ -14,12 +14,11 @@ task :ci => ['jetty:config'] do
   raise "test failures: #{error}" if error
 end
 
-desc "Run specs"
 task :spec => :generate do
-  focused_spec = ENV['SPEC'] ? " SPEC=#{File.join(GEM_ROOT, ENV['SPEC'])}" : ''
-  within_test_app do
-    Bundler.clean_exec("rake myspec#{focused_spec}")
-    abort "Error running hydra-core" unless $?.success?
+  Bundler.with_clean_env do
+    within_test_app do
+      Rake::Task['rspec'].invoke
+    end
   end
 end
 
