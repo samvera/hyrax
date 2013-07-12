@@ -58,10 +58,10 @@ describe FileContentDatastream do
       @subject.send(:fits_path).should be_present
     end
     it "should return an xml document", :unless => $in_travis do
-      repo = mock("repo")
+      repo = double("repo")
       repo.stub(:config=>{})
       f = File.new(fixture_path + '/world.png')
-      content = mock("file")
+      content = double("file")
       content.stub(:read=>f.read)
       content.stub(:rewind=>f.rewind)
       @subject.should_receive(:content).exactly(5).times.and_return(f)
@@ -70,11 +70,11 @@ describe FileContentDatastream do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should return expected results when invoked via HTTP", :unless => $in_travis do
-      repo = mock("repo")
+      repo = double("repo")
       repo.stub(:config=>{})
       f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(fixture_path + '/world.png'),
                                                  :filename => 'world.png')
-      content = mock("file")
+      content = double("file")
       content.stub(:read=>f.read)
       content.stub(:rewind=>f.rewind)
       @subject.should_receive(:content).exactly(5).times.and_return(f)

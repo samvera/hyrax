@@ -32,11 +32,11 @@ describe GenericFilesController do
 
     it "should spawn a content deposit event job" do
       file = fixture_file_upload('/world.png','image/png')
-      s1 = stub('one')
+      s1 = double('one')
       ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
 
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
@@ -44,15 +44,15 @@ describe GenericFilesController do
 
     it "should expand zip files" do
       file = fixture_file_upload('/icons.zip','application/zip')
-      s1 = stub('one')
+      s1 = double('one')
       ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
 
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
 
-      s3 = stub('one')
+      s3 = double('one')
       UnzipJob.should_receive(:new).with('test:123').and_return(s3)
       Sufia.queue.should_receive(:push).with(s3).once
 
@@ -159,11 +159,11 @@ describe GenericFilesController do
       controller.should_receive(:virus_check).and_return(0)      
       file = fixture_file_upload('/world.png','image/png')
 
-      s1 = stub('one')
+      s1 = double('one')
       ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
 
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
@@ -239,7 +239,7 @@ describe GenericFilesController do
       lambda { GenericFile.find(@generic_file.pid) }.should raise_error(ActiveFedora::ObjectNotFoundError)
     end
     it "should spawn a content delete event job" do
-      s1 = stub('one')
+      s1 = double('one')
       ContentDeleteEventJob.should_receive(:new).with(@generic_file.noid, @user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       delete :destroy, :id=>@generic_file.pid
@@ -258,7 +258,7 @@ describe GenericFilesController do
     end
 
     it "should spawn a content update event job" do
-      s1 = stub('one')
+      s1 = double('one')
       ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       @user = FactoryGirl.find_or_create(:user)
@@ -268,10 +268,10 @@ describe GenericFilesController do
     end
 
     it "should spawn a content new version event job" do
-      s1 = stub('one')
+      s1 = double('one')
       ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       @user = FactoryGirl.find_or_create(:user)
@@ -332,11 +332,11 @@ describe GenericFilesController do
 
       ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
 
-      s1 = stub('one')
+      s1 = double('one')
       ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, archivist.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
 
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       file = fixture_file_upload('/image.jp2','image/jp2')
@@ -351,11 +351,11 @@ describe GenericFilesController do
       controller.stub(:current_user).and_return(@user)
       sign_in @user
       ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
-      s1 = stub('one')
+      s1 = double('one')
       ContentRestoredVersionEventJob.should_receive(:new).with(@generic_file.pid, @user.user_key, 'content.0').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
 
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       post :update, :id=>@generic_file.pid, :revision=>'content.0'
@@ -384,11 +384,11 @@ describe GenericFilesController do
     it "should spawn a virus check" do
       # The expectation is in the begin block
       controller.should_receive(:virus_check).and_return(0)      
-      s1 = stub('one')
+      s1 = double('one')
       ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
 
-      s2 = stub('one')
+      s2 = double('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       GenericFile.stub(:save).and_return({})

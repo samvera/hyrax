@@ -70,7 +70,7 @@ describe UsersController do
     end
     it "should set an avatar and redirect to profile" do
       @user.avatar.file?.should be_false
-      s1 = stub('one')
+      s1 = double('one')
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       f = fixture_file_upload('/world.png', 'image/png')
@@ -96,7 +96,7 @@ describe UsersController do
       flash[:alert].should include("Avatar file size must be less than 2097152 Bytes")
     end
     it "should delete an avatar" do
-      s1 = stub('one')
+      s1 = double('one')
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :update, id: @user.user_key, delete_avatar: true
@@ -105,7 +105,7 @@ describe UsersController do
       @user.avatar.file?.should be_false
     end
     it "should refresh directory attributes" do
-      s1 = stub('one')
+      s1 = double('one')
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       User.any_instance.should_receive(:populate_attributes).once
@@ -145,7 +145,7 @@ describe UsersController do
     end
     it "should follow another user if not already following, and log an event" do
       @user.following?(@another_user).should be_false
-      s1 = stub('one')
+      s1 = double('one')
       UserFollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :follow, id: @another_user.user_key
@@ -171,7 +171,7 @@ describe UsersController do
   describe "#unfollow" do
     it "should unfollow another user if already following, and log an event" do
       User.any_instance.stub(:following?).with(@another_user).and_return(true)
-      s1 = stub('one')
+      s1 = double('one')
       UserUnfollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :unfollow, id: @another_user.user_key
