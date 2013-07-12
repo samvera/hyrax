@@ -10,7 +10,6 @@ task :ci => ['jetty:config'] do
   jetty_params = Jettywrapper.load_config
   error = Jettywrapper.wrap(jetty_params) do
     Rake::Task['spec'].invoke
-    Rake::Task['cucumber:all'].invoke
   end
   raise "test failures: #{error}" if error
 end
@@ -51,8 +50,6 @@ task :generate do
     puts "Updating gemfile"
 
     `echo "gem 'sufia', :path=>'../../../sufia'
-gem 'cucumber-rails', group: :test
-gem 'database_cleaner'
 gem 'capybara'
 gem 'factory_girl_rails'" >> spec/internal/Gemfile`
     puts "Copying generator"

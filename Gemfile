@@ -13,7 +13,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 2.14'
-  gem 'cucumber-rails', '~> 1.0', :require => false
+  gem 'launchy'
   gem 'database_cleaner'
   gem 'capybara', '~>2.1.0'
   gem 'bcrypt-ruby'
