@@ -23,6 +23,15 @@ task :spec => :generate do
   end
 end
 
+desc "Run specs"
+task :spec => :generate do
+  focused_spec = ENV['SPEC'] ? " SPEC=#{File.join(GEM_ROOT, ENV['SPEC'])}" : ''
+  within_test_app do
+    Bundler.clean_exec("rake myspec#{focused_spec}")
+    abort "Error running hydra-core" unless $?.success?
+  end
+end
+
 gem_home = File.expand_path('../../', __FILE__)
 
 desc "Run specs"
