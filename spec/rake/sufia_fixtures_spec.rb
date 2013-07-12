@@ -1,6 +1,6 @@
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
 # Used to test the sufia-fixtures rake task
-#
-require "spec_helper"
 require "rake"
 
 describe "sufia:fixtures" do
