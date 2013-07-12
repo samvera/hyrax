@@ -16,13 +16,13 @@ describe UsersController do
   end
   describe "#show" do
     it "show the user profile if user exists" do
-      get :show, uid: @user.user_key
+      get :show, id: @user.user_key
       response.should be_success
       response.should_not redirect_to(root_path)
       flash[:alert].should be_nil
     end
     it "redirects to root if user does not exist" do
-      get :show, uid: 'johndoe666'
+      get :show, id: 'johndoe666'
       response.should redirect_to(root_path)
       flash[:alert].should include ("User 'johndoe666' does not exist")
     end
@@ -51,20 +51,20 @@ describe UsersController do
   end
   describe "#edit" do
     it "show edit form when user edits own profile" do
-      get :edit, uid: @user.user_key
+      get :edit, id: @user.user_key
       response.should be_success
       response.should render_template('users/edit')
       flash[:alert].should be_nil
     end
     it "redirects to show profile when user attempts to edit another profile" do
-      get :edit, uid: @another_user.user_key
+      get :edit, id: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:alert].should include("Permission denied: cannot access this page.")
     end
   end
   describe "#update" do
     it "should not allow other users to update" do
-      post :update, uid: @another_user.user_key, user: { avatar: nil }
+      post :update, id: @another_user.user_key, user: { avatar: nil }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:alert].should include("Permission denied: cannot access this page.")
     end
@@ -74,7 +74,7 @@ describe UsersController do
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       f = fixture_file_upload('/world.png', 'image/png')
-      post :update, uid: @user.user_key, user: { avatar: f }
+      post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       User.find_by_user_key(@user.user_key).avatar.file?.should be_true
@@ -83,7 +83,7 @@ describe UsersController do
       #Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
       Sufia.queue.should_receive(:push).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
-      post :update, uid: @user.user_key, user: { avatar: f }
+      post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("Avatar content type is invalid")
     end
@@ -91,7 +91,7 @@ describe UsersController do
       f = fixture_file_upload('/4-20.png', 'image/png')
       #Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
       Sufia.queue.should_receive(:push).never
-      post :update, uid: @user.user_key, user: { avatar: f }
+      post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("Avatar file size must be less than 2097152 Bytes")
     end
@@ -99,7 +99,7 @@ describe UsersController do
       s1 = stub('one')
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      post :update, uid: @user.user_key, delete_avatar: true
+      post :update, id: @user.user_key, delete_avatar: true
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       @user.avatar.file?.should be_false
@@ -109,7 +109,7 @@ describe UsersController do
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       User.any_instance.should_receive(:populate_attributes).once
-      post :update, uid: @user.user_key, update_directory: true
+      post :update, id: @user.user_key, update_directory: true
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
     end
@@ -117,7 +117,7 @@ describe UsersController do
       @user.twitter_handle.blank?.should be_true
       @user.facebook_handle.blank?.should be_true
       @user.googleplus_handle.blank?.should be_true
-      post :update, uid: @user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo' }
+      post :update, id: @user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo' }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       u = User.find_by_user_key(@user.user_key)
@@ -132,7 +132,7 @@ describe UsersController do
       file_id = f.pid.split(":").last
       Trophy.create(:generic_file_id => file_id, :user_id => @user.id)
       @user.trophy_ids.length.should == 1
-      post :update, uid: @user.user_key,  'remove_trophy_'+file_id=> 'yes' 
+      post :update, id: @user.user_key,  'remove_trophy_'+file_id=> 'yes' 
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       @user.trophy_ids.length.should == 0
@@ -148,7 +148,7 @@ describe UsersController do
       s1 = stub('one')
       UserFollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      post :follow, uid: @another_user.user_key
+      post :follow, id: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
@@ -156,14 +156,14 @@ describe UsersController do
       User.any_instance.stub(:following?).with(@another_user).and_return(true)
       #Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).never
       Sufia.queue.should_receive(:push).never
-      post :follow, uid: @another_user.user_key
+      post :follow, id: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       #Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @user.user_key).never
       Sufia.queue.should_receive(:push).never
-      post :follow, uid: @user.user_key
+      post :follow, id: @user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
@@ -174,7 +174,7 @@ describe UsersController do
       s1 = stub('one')
       UserUnfollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      post :unfollow, uid: @another_user.user_key
+      post :unfollow, id: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
@@ -182,14 +182,14 @@ describe UsersController do
       @user.stub(:following?).with(@another_user).and_return(false)
       #Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).never
       Sufia.queue.should_receive(:push).never
-      post :unfollow, uid: @another_user.user_key
+      post :unfollow, id: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       #Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @user.user_key).never
       Sufia.queue.should_receive(:push).never
-      post :unfollow, uid: @user.user_key
+      post :unfollow, id: @user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
@@ -205,18 +205,18 @@ describe UsersController do
        @file.delete
      end
      it "should trophy a file" do
-      post :toggle_trophy, {uid: @user.user_key, file_id: @file_id}
+      post :toggle_trophy, {id: @user.user_key, file_id: @file_id}
       JSON.parse(response.body)['user_id'].should == @user.id
       JSON.parse(response.body)['generic_file_id'].should == @file_id
     end
      it "should not trophy a file for a different user" do
-      post :toggle_trophy, {uid: @another_user.user_key, file_id: @file_id}
+      post :toggle_trophy, {id: @another_user.user_key, file_id: @file_id}
       response.should_not be_success
     end
      it "should not trophy a file with no edit privs" do
       sign_out @user
       sign_in @another_user
-      post :toggle_trophy, {uid: @another_user.user_key, file_id: @file_id}
+      post :toggle_trophy, {id: @another_user.user_key, file_id: @file_id}
       response.should_not be_success
     end
   end

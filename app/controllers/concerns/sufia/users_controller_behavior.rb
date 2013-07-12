@@ -115,8 +115,8 @@ module Sufia::UsersControllerBehavior
   end
 
   def find_user
-    @user = User.from_url_component(params[:uid])
-    redirect_to root_path, alert: "User '#{params[:uid]}' does not exist" if @user.nil?
+    @user = User.from_url_component(params[:id])
+    redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
   end
 
   def user_is_current_user
