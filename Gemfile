@@ -12,7 +12,7 @@ group :development, :test do
   #gem 'activerecord-import', '0.3.0'
   gem 'sqlite3'
   gem 'selenium-webdriver'
-  gem 'rspec-rails', '~> 2.13.1'
+  gem 'rspec-rails', '~> 2.14'
   gem 'cucumber-rails', '~> 1.0', :require => false
   gem 'database_cleaner'
   gem 'capybara', '~>2.1.0'
