@@ -4,7 +4,7 @@ describe User do
 
   describe "user_key" do
     before do
-      @user = User.new(:email=>"foo@example.com")
+      @user = User.new.tap {|u| u.email = "foo@example.com"}
       @user.stub(:username =>'foo')
     end
 
