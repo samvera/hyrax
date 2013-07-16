@@ -94,7 +94,7 @@ module Hydra::AccessControlsEnforcement
   def discovery_permissions
     @discovery_permissions ||= ["edit","discover","read"]
   end
-  def disocvery_permissions= (permissions)
+  def discovery_permissions= (permissions)
     @discovery_permissions = permissions
   end
 
