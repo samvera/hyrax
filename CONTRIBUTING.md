@@ -10,6 +10,8 @@ If the contributor works for an institution, the institution must have a Corpora
 
 https://wiki.duraspace.org/display/hydra/Hydra+Project+Intellectual+Property+Licensing+and+Ownership
 
+You should also add yourself to the `CONTRIBUTORS.md` file in the root of the project.
+
 ## Contribution Tasks
 
 * Reporting Issues
