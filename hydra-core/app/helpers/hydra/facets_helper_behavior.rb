@@ -14,11 +14,11 @@ module Hydra
         render_array_facet_value(facet_solr_field, item, options)
       end
 
-      (link_to_unless(options[:suppress_link], item.value, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " " + render_facet_count(item.hits)).html_safe
+      (link_to_unless(options[:suppress_link], facet_display_value(facet_solr_field, item), add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " " + render_facet_count(item.hits)).html_safe
     end
 
     def render_array_facet_value(facet_solr_field, item, options)
-      (link_to_unless(options[:suppress_link], item[0], add_facet_params_and_redirect(facet_solr_field, item[0]), :class=>"facet_select") + " (" + format_num(item[1]) + ")").html_safe 
+      (link_to_unless(options[:suppress_link], facet_display_value(facet_solr_field, item[0]), add_facet_params_and_redirect(facet_solr_field, item[0]), :class=>"facet_select") + " (" + format_num(item[1]) + ")").html_safe 
     end
   end
 end
