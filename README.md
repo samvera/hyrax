@@ -73,7 +73,7 @@ rake jetty:start
 ```
 
 ### If you want to use the assets that ship with Sufia...
-#### Modify app/assets/application.css
+#### Modify app/assets/stylesheets/application.css
 Add this line:
 ```
  *= require sufia
@@ -84,7 +84,7 @@ Add this line:
 _Removing the require_tree from application.css will ensure you're not loading the blacklight.css.  This is because blacklight's css styling does not mix well with sufia's default styling._ 
 
 
-#### Modify app/assets/application.js
+#### Modify app/assets/javascripts/application.js
 
 Add this line:
 ```
