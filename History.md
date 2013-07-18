@@ -1,4 +1,15 @@
 # History of Sufia releases
+## 2.0.1
+* Fix version of sufia-models
+
+## 2.0.0
+* Dropbox support
+* Multiple layouts
+* UnzipJob can handle directories
+* Support for sufia and hydra-editor in the same app
+* Subdividing the upload partial
+* Lots of code cleanup
+
 
 ## 1.3.0
 * Depends on Hydra::Controller::DownloadBehavior
