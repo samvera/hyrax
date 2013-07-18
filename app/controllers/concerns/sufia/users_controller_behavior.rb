@@ -46,7 +46,13 @@ module Sufia::UsersControllerBehavior
 
   # Process changes from profile form
   def update
-    @user.update_attributes(params[:user])
+    if params[:user]
+      if Rails::VERSION::MAJOR == 3
+        @user.update_attributes(params[:user])
+      else
+        @user.update_attributes(params.require(:user).permit(*User.permitted_attributes))
+      end
+    end
     @user.populate_attributes if params[:update_directory]
     @user.avatar = nil if params[:delete_avatar]
     unless @user.save
@@ -109,8 +115,8 @@ module Sufia::UsersControllerBehavior
   end
 
   def find_user
-    @user = User.from_url_component(params[:uid])
-    redirect_to root_path, alert: "User '#{params[:uid]}' does not exist" if @user.nil?
+    @user = User.from_url_component(params[:id])
+    redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
   end
 
   def user_is_current_user

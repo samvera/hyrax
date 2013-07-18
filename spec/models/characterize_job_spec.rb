@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe CharacterizeJob do
   before do
@@ -20,7 +20,7 @@ describe CharacterizeJob do
       @generic_file.save!
     end
     it "should create a transcode job" do
-      job = stub("stub video job")
+      job = double("stub video job")
       if $in_travis
         @generic_file.stub(:video?).and_return(true)
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
@@ -42,7 +42,7 @@ describe CharacterizeJob do
       @generic_file.save!
     end
     it "should create a transcode job" do
-      job = stub("stub audio job")
+      job = double("stub audio job")
       if $in_travis
         @generic_file.stub(:audio?).and_return(true)
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
@@ -61,7 +61,7 @@ describe CharacterizeJob do
     end
     it "should create a transcode job. (we'd like ogg too)" do
       # TODO just copy the 'content' datastream to the mp3 datastream if it's an mp3, and then transcode to ogg
-      job = stub("stub audio job")
+      job = double("stub audio job")
       if $in_travis
         @generic_file.stub(:audio?).and_return(true)
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)

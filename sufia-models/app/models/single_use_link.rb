@@ -1,7 +1,6 @@
 class SingleUseLink < ActiveRecord::Base
 
-  attr_accessible :downloadKey, :expires, :itemId, :path
-
+  attr_accessible :downloadKey, :expires, :itemId, :path if Rails::VERSION::MAJOR == 3
     
   
   def self.create_show(item_id)
@@ -20,7 +19,7 @@ class SingleUseLink < ActiveRecord::Base
   protected
   def self.create_path(itemId, path)
      expires = DateTime.now.advance(hours:24)
-     key = Digest::SHA2.new << DateTime.now.to_f.to_s      
+     key = Digest::SHA2.new << rand(1000000000).to_s
      return create({downloadKey:key.to_s, expires:expires, path:path, itemId:itemId} )
   end
 end

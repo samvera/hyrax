@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe GenericFileHelper do
   it "draws add button" do
@@ -12,8 +12,15 @@ describe GenericFileHelper do
   end
 
   it "draws help_icon" do
-    helper.help_icon(:tag).should == 
-      "<a href=\"#\" data-content=\"Words or phrases you select to describe what the file is about. These are used to search for content. &lt;em&gt;This is a required field&lt;/em&gt;.\" data-original-title=\"Keyword\" id=\"generic_file_tag_help\" rel=\"popover\"><i class=\"icon-question-sign icon-large\"></i></a>"
+    str = String.new(helper.help_icon(:tag))
+    doc = Nokogiri::HTML(str)
+    a = doc.xpath('//a').first
+    
+    a.attr('data-content').should == "Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>."
+    a.attr('data-original-title').should == "Keyword"
+    a.attr('id').should == "generic_file_tag_help"
+    i = a.children.first
+    i.attr('class').should == 'icon-question-sign icon-large'
   end
 
 end

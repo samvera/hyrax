@@ -1,20 +1,6 @@
-# Copyright © 2012 The Pennsylvania State University
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 # Used to test the sufia-fixtures rake task
-#
-require "spec_helper"
 require "rake"
 
 describe "sufia:fixtures" do
@@ -56,8 +42,8 @@ describe "sufia:fixtures" do
   before(:each) do
     @rake = Rake::Application.new 
     Rake.application = @rake
-    Rake.application.rake_require("tasks/sufia-fixtures", ["."], loaded_files_excluding_current_rake_file)
-    Rake.application.rake_require("lib/tasks/fixtures", ["."], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("sufia-fixtures", ["#{Sufia::Engine.root}/tasks/"], loaded_files_excluding_current_rake_file)
+    Rake.application.rake_require("fixtures", ["#{Sufia::Engine.root}/lib/tasks/"], loaded_files_excluding_current_rake_file)
     Rake.application.rake_require("lib/tasks/active_fedora", [activefedora_path], loaded_files_excluding_current_rake_file)      
     Rake::Task.define_task(:environment)
   end

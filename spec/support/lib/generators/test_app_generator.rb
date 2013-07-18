@@ -26,5 +26,9 @@ class TestAppGenerator < Rails::Generators::Base
   def remove_index_page
     remove_file 'public/index.html'
   end
+
+  def copy_rspec_rake_task
+    copy_file "lib/tasks/rspec.rake"
+  end
   
 end

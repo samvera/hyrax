@@ -73,7 +73,7 @@ class SingleUseLinkController < DownloadsController
   def lookup_hash
     id = params[:id]
     # invalid hash send not found
-    link = SingleUseLink.find_by_downloadKey(id) ||  not_found
+    link = SingleUseLink.where(downloadKey:id).first || not_found
 
     # expired hash send not found
     now = DateTime.now

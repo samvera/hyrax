@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe GenericFile do
   before do
@@ -327,7 +327,7 @@ describe GenericFile do
         @f.save
       end
       it "should keep the thumbnail at the original size (but transform to png)" do
-        @mock_image = mock("image", :from_blob=>true)
+        @mock_image = double("image", :from_blob=>true)
         @mock_image.should_not_receive(:scale)
         @mock_image.should_receive(:to_blob).and_return('fake content')
         Magick::ImageList.should_receive(:new).and_return(@mock_image)
@@ -370,31 +370,31 @@ describe GenericFile do
       @f = f.reload
     end
     it "should schedule a audit job for each datastream" do
-      s1 = stub('one')
+      s1 = double('one')
       AuditJob.should_receive(:new).with(@f.pid, 'DC', "DC1.0").and_return(s1)
       Sufia.queue.should_receive(:push).with(s1)
-      s2 = stub('two')
+      s2 = double('two')
       AuditJob.should_receive(:new).with(@f.pid, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
       Sufia.queue.should_receive(:push).with(s2)
-      s3 = stub('three')
+      s3 = double('three')
       AuditJob.should_receive(:new).with(@f.pid, 'rightsMetadata', "rightsMetadata.0").and_return(s3)
       Sufia.queue.should_receive(:push).with(s3)
-      s4 = stub('four')
+      s4 = double('four')
       AuditJob.should_receive(:new).with(@f.pid, 'properties', "properties.0").and_return(s4)
       Sufia.queue.should_receive(:push).with(s4)
-      s5 = stub('five')
+      s5 = double('five')
       AuditJob.should_receive(:new).with(@f.pid, 'content', "content.0").and_return(s5)
       Sufia.queue.should_receive(:push).with(s5)
       @f.audit!
     end
     it "should log a failing audit" do
       @f.datastreams.each { |ds| ds.stub(:dsChecksumValid).and_return(false) }
-      GenericFile.stub(:run_audit).and_return(stub(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
+      GenericFile.stub(:run_audit).and_return(double(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
       @f.audit!
       ChecksumAuditLog.all.all? { |cal| cal.pass == 0 }.should be_true
     end
     it "should log a passing audit" do
-      GenericFile.stub(:run_audit).and_return(stub(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
+      GenericFile.stub(:run_audit).and_return(double(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
       @f.audit!
       ChecksumAuditLog.all.all? { |cal| cal.pass == 1 }.should be_true
     end
@@ -488,7 +488,7 @@ describe GenericFile do
       @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
       @f1.save
       @f2.save
-      mock_batch = mock("batch")
+      mock_batch = double("batch")
       mock_batch.stub(:generic_files => [@f1, @f2])
       @f1.should_receive(:batch).and_return(mock_batch)
       @f1.related_files.should == [@f2]
@@ -516,7 +516,7 @@ describe GenericFile do
       @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
       @f1.save
       @f2.save
-      mock_batch = mock("batch")
+      mock_batch = double("batch")
       mock_batch.stub(:generic_files).and_raise(NoMethodError)
       @f1.should_receive(:batch).twice
       lambda { @f1.related_files }.should_not raise_error

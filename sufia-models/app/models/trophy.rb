@@ -1,5 +1,5 @@
 class Trophy < ActiveRecord::Base
-  attr_accessible :generic_file_id, :user_id
+  attr_accessible :generic_file_id, :user_id if Rails::VERSION::MAJOR == 3
 
   validate :count_within_limit, :on => :create
 

@@ -1,18 +1,4 @@
-# Copyright © 2012 The Pennsylvania State University
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe FileContentDatastream do
   before do
@@ -72,10 +58,10 @@ describe FileContentDatastream do
       @subject.send(:fits_path).should be_present
     end
     it "should return an xml document", :unless => $in_travis do
-      repo = mock("repo")
+      repo = double("repo")
       repo.stub(:config=>{})
       f = File.new(fixture_path + '/world.png')
-      content = mock("file")
+      content = double("file")
       content.stub(:read=>f.read)
       content.stub(:rewind=>f.rewind)
       @subject.should_receive(:content).exactly(5).times.and_return(f)
@@ -84,11 +70,11 @@ describe FileContentDatastream do
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
     it "should return expected results when invoked via HTTP", :unless => $in_travis do
-      repo = mock("repo")
+      repo = double("repo")
       repo.stub(:config=>{})
       f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(fixture_path + '/world.png'),
                                                  :filename => 'world.png')
-      content = mock("file")
+      content = double("file")
       content.stub(:read=>f.read)
       content.stub(:rewind=>f.rewind)
       @subject.should_receive(:content).exactly(5).times.and_return(f)

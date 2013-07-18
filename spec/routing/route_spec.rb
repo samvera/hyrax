@@ -1,18 +1,4 @@
-# Copyright © 2012 The Pennsylvania State University
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe 'Routes' do
   before(:each) do
@@ -116,26 +102,26 @@ describe 'Routes' do
 
   describe 'Users' do
     it 'should route to user trophies' do
-      { post: '/users/bob135/trophy' }.should route_to(controller: 'users', action: 'toggle_trophy', uid: 'bob135')
+      { post: '/users/bob135/trophy' }.should route_to(controller: 'users', action: 'toggle_trophy', id: 'bob135')
     end
     it 'should route to user profile' do
-      { get: '/users/bob135' }.should route_to(controller: 'users', action: 'show', uid: 'bob135')
+      { get: '/users/bob135' }.should route_to(controller: 'users', action: 'show', id: 'bob135')
     end
 
     it "should route to edit profile" do
-      { get: '/users/bob135/edit' }.should route_to(controller: 'users', action: 'edit', uid: 'bob135')
+      { get: '/users/bob135/edit' }.should route_to(controller: 'users', action: 'edit', id: 'bob135')
     end
 
     it "should route to update profile" do
-      { put: '/users/bob135/update' }.should route_to(controller: 'users', action: 'update', uid: 'bob135')
+      { put: '/users/bob135' }.should route_to(controller: 'users', action: 'update', id: 'bob135')
     end
 
     it "should route to user follow" do
-      { post: '/users/bob135/follow' }.should route_to(controller: 'users', action: 'follow', uid: 'bob135')
+      { post: '/users/bob135/follow' }.should route_to(controller: 'users', action: 'follow', id: 'bob135')
     end
 
     it "should route to user unfollow" do
-      { post: '/users/bob135/unfollow' }.should route_to(controller: 'users', action: 'unfollow', uid: 'bob135')
+      { post: '/users/bob135/unfollow' }.should route_to(controller: 'users', action: 'unfollow', id: 'bob135')
     end
   end
 
