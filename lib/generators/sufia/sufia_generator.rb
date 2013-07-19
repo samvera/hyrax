@@ -73,6 +73,7 @@ add_groups_to_users.rb		create_local_authorities.rb	create_trophies.rb}.each do 
     copy_file "config/redis.yml", "config/redis.yml"
     copy_file "config/redis_config.rb", "config/initializers/redis_config.rb"
     copy_file "config/resque_admin.rb", "config/initializers/resque_admin.rb"
+    copy_file "config/resque_config.rb", "config/initializers/resque_config.rb"
   end
 
   def catalog_controller
