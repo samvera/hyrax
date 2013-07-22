@@ -1,3 +1,7 @@
+h3. 6.3.2 (2013-07-22)
+* render_selected_facet_value should make use of Blacklight's facet_display_value method [Justin Coyne]
+* added contribution guidelines [Jeremey Friesen]
+
 h3. 6.3.1 (2013-07-04)
 * Run 'bundle install' after adding gems to the gemfile [Justin Coyne]
 * Update README.textile [Matt Zumwalt]
