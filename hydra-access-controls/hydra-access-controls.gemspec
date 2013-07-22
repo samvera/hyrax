@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "hydra-access-controls"
   gem.require_paths = ["lib"]
   gem.version       = version
+  gem.license       = "APACHE2"
 
   gem.required_ruby_version = '>= 1.9.3'
 
