@@ -14,13 +14,17 @@
 # limitations under the License.
 
 module Sufia
+  module FilesController
+    autoload :LocalIngestBehavior, 'sufia/files_controller/local_ingest_behavior'
+  end
   module FilesControllerBehavior
     extend ActiveSupport::Concern
 
     included do
       include Hydra::Controller::ControllerBehavior
       include Blacklight::Configurable # comply with BL 3.7
-      include Sufia::Noid # for normalize_identifier method
+      include Sufia::Noid # for normalize_identifier method    
+      include Sufia::FilesController::LocalIngestBehavior  
       layout "sufia-one-column"
       
       # This is needed as of BL 3.7
@@ -68,11 +72,15 @@ module Sufia
 
     # routed to /files (POST)
     def create
-      case params['file_coming_from']
-      when 'dropbox'
-        create_from_url(params)
+      if params[:local_file].present?
+        perform_local_ingest
       else
-        create_from_local(params)
+        case params['file_coming_from']
+        when 'dropbox'
+          create_from_url(params)
+        else
+          create_from_local(params)
+        end
       end
     end
 
