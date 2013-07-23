@@ -21,6 +21,9 @@ limitations under the License.
   <% if Sufia.config.dropbox_api_key %>
     <li><a href="#dropbox" data-toggle="tab"><i class="icon-inbox"></i> Dropbox</a></li>
   <% end %>
+  <% if Sufia.config.enable_local_ingest %>
+    <li><a href="#ingest" data-toggle="tab"><i class="icon-hdd"></i> Network/Server Location</a></li>
+  <% end %>
 </ul>
 
 <div class="tab-content">
@@ -33,4 +36,11 @@ limitations under the License.
       <%= render partial: 'dropbox_import' %>
     </div>
   <% end %>
+  
+  <% if Sufia.config.enable_local_ingest %>
+    <div class="tab-pane active" id="ingest">
+      <%= render partial: 'generic_files/upload/local_file_import' %>
+    </div>
+  <% end %>
+  
 </div>

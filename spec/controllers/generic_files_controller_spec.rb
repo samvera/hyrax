@@ -16,6 +16,7 @@ describe GenericFilesController do
       GenericFile.stub(:new).and_return(@mock)
     end
     after do
+      GenericFile.unstub(:new)
       begin
         Batch.find("sample:batch_id").delete
       rescue
@@ -168,30 +169,7 @@ describe GenericFilesController do
       Sufia.queue.should_receive(:push).with(s2).once
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
     end
-
-    describe "#virus_check" do
-      before do
-        unless defined? ClamAV
-          class ClamAV
-            def self.instance
-              new
-            end
-          end
-          @stubbed_clamav = true
-        end
-      end
-      after do
-        Object.send(:remove_const, :ClamAV) if @stubbed_clamav
-      end
-      it "failing virus check should create flash" do
-        GenericFile.any_instance.stub(:to_solr).and_return({})
-        ClamAV.any_instance.should_receive(:scanfile).and_return(1)      
-        file = fixture_file_upload('/world.png','image/png')
-        controller.send :virus_check, file
-        flash[:error].should_not be_empty
-      end
-    end
-
+    
     it "should error out of create and save after on continuos rsolr error" do
       GenericFile.any_instance.stub(:save).and_raise(RSolr::Error::Http.new({},{}))  
           
@@ -199,7 +177,87 @@ describe GenericFilesController do
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
       response.body.should include("Error occurred while creating generic file.")
     end
-
+  end
+    
+  describe "#create with local_file" do
+    before do
+      Sufia.config.enable_local_ingest = true
+      GenericFile.delete_all
+      @mock_upload_directory = 'spec/mock_upload_directory'
+      # Dir.mkdir @mock_upload_directory unless File.exists? @mock_upload_directory
+      FileUtils.mkdir_p([File.join(@mock_upload_directory, "import/files"),File.join(@mock_upload_directory, "import/metadata")])   
+      FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), @mock_upload_directory)
+      FileUtils.copy(File.expand_path('../../fixtures/image.jp2', __FILE__), @mock_upload_directory)
+      FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(@mock_upload_directory, "import/metadata"))
+      FileUtils.copy(File.expand_path('../../fixtures/icons.zip', __FILE__), File.join(@mock_upload_directory, "import/files"))
+      FileUtils.copy(File.expand_path('../../fixtures/Example.ogg', __FILE__), File.join(@mock_upload_directory, "import/files"))
+    end
+    after do
+      Sufia.config.enable_local_ingest = false
+      FileContentDatastream.any_instance.stub(:live?).and_return(true)
+      GenericFile.destroy_all
+    end
+    context "when User model defines a directory path" do
+      before do 
+        User.any_instance.stub(:directory).and_return(@mock_upload_directory)
+      end
+      it "should ingest files from the filesystem" do
+        lambda { post :create, local_file: ["world.png", "image.jp2"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
+        response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
+        # These files should have been moved out of the upload directory
+        File.exist?("#{@mock_upload_directory}/image.jp2").should be_false
+        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        # And into the storage directory
+        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
+        files.each do |gf|
+          # File.exist?(gf.content.filename).should be_true
+          # gf.thumbnail.mimeType.should == 'image/png'
+        end
+        files.first.label.should == 'world.png'
+        files.last.label.should == 'image.jp2'
+      end
+      it "should ingest directories from the filesystem" do
+        #TODO this test is very slow because it kicks off CharacterizeJob.
+        lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
+        response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
+        # These files should have been moved out of the upload directory
+        File.exist?("#{@mock_upload_directory}/import/files/Example.ogg").should be_false
+        File.exist?("#{@mock_upload_directory}/import/files/icons.zip").should be_false
+        File.exist?("#{@mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt").should be_false
+        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        # And into the storage directory
+        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
+        files.first.label.should == 'world.png'
+        ['icons.zip', 'Example.ogg'].each do |filename|
+          files.select{|f| f.label == filename}.first.relative_path.should == "import/files/#{filename}"
+        end
+        files.select{|f| f.label == 'dublin_core_rdf_descMetadata.nt'}.first.relative_path.should == 'import/metadata/dublin_core_rdf_descMetadata.nt'
+      end
+    end
+    context "when User model does not define directory path" do
+      it "should return an error message and redirect to file upload page" do
+        lambda { post :create, local_file: ["world.png", "image.jp2"], batch_id: "xw42n7934"}.should_not change(GenericFile, :count)
+        response.should render_template :new
+        flash[:alert].should == 'Your account is not configured for importing files from a user-directory on the server.'
+      end
+    end
+  end
+  
+  describe "#virus_check" do
+    it "passing virus check should not create flash error" do
+      GenericFile.any_instance.stub(:to_solr).and_return({})
+      file = fixture_file_upload('/world.png','image/png')  
+      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file).and_return(0)    
+      controller.send :virus_check, file
+      flash[:error].should be_nil
+    end
+    it "failing virus check should create flash" do
+      GenericFile.any_instance.stub(:to_solr).and_return({})
+      file = fixture_file_upload('/world.png','image/png')  
+      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file).and_return(1)    
+      controller.send :virus_check, file
+      flash[:error].should_not be_empty
+    end
   end
 
   describe "audit" do

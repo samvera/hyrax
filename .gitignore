@@ -48,6 +48,8 @@ spec/dummy/log/*.log
 spec/dummy/tmp/
 
 
+spec/mock_upload_directory
+
 ## PROJECT::GENERAL
 coverage
 rdoc

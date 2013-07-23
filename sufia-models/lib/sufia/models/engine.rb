@@ -22,6 +22,7 @@ module Sufia
       config.fits_path = "fits.sh"
       config.enable_contact_form_delivery = false
       config.dropbox_api_key = nil
+      config.enable_local_ingest = nil      
       config.queue = Sufia::Resque::Queue
 
       config.autoload_paths += %W(
@@ -53,6 +54,7 @@ module Sufia
         require 'sufia/models/generic_file/thumbnail'
         require 'sufia/models/generic_file'
         require 'sufia/models/user'
+        require 'sufia/models/user_local_directory_behavior'
         require 'sufia/models/id_service'
         require 'sufia/models/solr_document_behavior'
       end

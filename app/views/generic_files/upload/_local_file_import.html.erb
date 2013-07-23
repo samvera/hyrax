@@ -1,0 +1,24 @@
+<% if current_user.directory.present? %>
+  <h2>Deposit files you've uploaded into your user directory on the server</h2>
+
+  <div class="well">
+    <%= form_for @generic_file, :url => sufia.generic_files_path, :html => { :class => 'form-horizontal well'} do |f| %>
+      <table class="table table-striped">
+        <thead>
+          <tr><th>File</th></tr>
+        </thead>
+        <tbody>
+        <%current_user.files.each do |f| %>
+          <tr>
+            <td>
+              <label><%= check_box_tag 'local_file[]', f[:name] %> <%= f[:directory] ? '<i class="icon-folder-close"></i>'.html_safe : '<i class="icon-file"></i>'.html_safe %> <%= f[:name] %></label>
+            </td>
+          </tr>
+        <%end%>
+        </tbody>
+      </table>
+      <%= hidden_field_tag(:batch_id, @batch_noid) %>
+      <%=f.button 'Import', :class => 'btn btn-primary' %>
+    <% end %>
+  </div>
+<% end %>
