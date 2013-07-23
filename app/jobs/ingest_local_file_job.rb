@@ -13,11 +13,15 @@ class IngestLocalFileJob
   end
 
   def run
+    filedata = File.new( File.join(directory, filename) )
     generic_file = GenericFile.find(generic_file_id)
     user = User.find_by_user_key(user_key)
     raise "Unable to find user for #{user_key}" unless user
-    #TODO virus check?
-
+    
+    # virus check
+    virus_stat = Sufia::GenericFile::Actions.virus_check(filedata)
+    raise "Virus checking did not pass for #{File.basename(filedata.path)} status = #{virus_stat}" unless virus_stat == 0
+    
     generic_file.label = File.basename(filename)
     generic_file.add_file(File.join(directory, filename), 'content', generic_file.label)
     generic_file.record_version_committer(user)
