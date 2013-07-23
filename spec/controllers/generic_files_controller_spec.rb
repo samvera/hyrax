@@ -244,23 +244,17 @@ describe GenericFilesController do
   end
   
   describe "#virus_check" do
-    before do
-      unless defined? ClamAV
-        class ClamAV
-          def self.instance
-            new
-          end
-        end
-        @stubbed_clamav = true
-      end
-    end
-    after do
-      Object.send(:remove_const, :ClamAV) if @stubbed_clamav
+    it "passing virus check should not create flash error" do
+      GenericFile.any_instance.stub(:to_solr).and_return({})
+      file = fixture_file_upload('/world.png','image/png')  
+      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file).and_return(0)    
+      controller.send :virus_check, file
+      flash[:error].should be_nil
     end
     it "failing virus check should create flash" do
       GenericFile.any_instance.stub(:to_solr).and_return({})
-      ClamAV.any_instance.should_receive(:scanfile).and_return(1)      
-      file = fixture_file_upload('/world.png','image/png')
+      file = fixture_file_upload('/world.png','image/png')  
+      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file).and_return(1)    
       controller.send :virus_check, file
       flash[:error].should_not be_empty
     end
