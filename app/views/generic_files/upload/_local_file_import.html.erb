@@ -1,5 +1,5 @@
 <% if current_user.directory.present? %>
-  <h2>Ingest files you've uploaded into your user directory</h2>
+  <h2>Deposit files you've uploaded into your user directory on the server</h2>
 
   <div class="well">
     <%= form_for @generic_file, :url => sufia.generic_files_path, :html => { :class => 'form-horizontal well'} do |f| %>
