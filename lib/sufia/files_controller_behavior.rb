@@ -79,7 +79,7 @@ module Sufia
         when 'dropbox'
           create_from_url(params)
         else
-          create_from_local(params)
+          create_from_upload(params)
         end
       end
     end
@@ -97,7 +97,7 @@ module Sufia
       redirect_to sufia.batch_edit_path(params[:batch_id])
     end
 
-    def create_from_local(params)
+    def create_from_upload(params)
       begin
         # check error condition No files
         return json_error("Error! No file to save") if !params.has_key?(:files)
