@@ -228,9 +228,10 @@ describe GenericFilesController do
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
         files.first.label.should == 'world.png'
-        # files.first.thumbnail.mimeType.should == 'image/png'
-        files.last.relative_path.should == 'import/metadata/dublin_core_rdf_descMetadata.nt'
-        files.last.label.should == 'dublin_core_rdf_descMetadata.nt'
+        ['icons.zip', 'Example.ogg'].each do |filename|
+          files.select{|f| f.label == filename}.first.relative_path.should == "import/files/#{filename}"
+        end
+        files.select{|f| f.label == 'dublin_core_rdf_descMetadata.nt'}.first.relative_path.should == 'import/metadata/dublin_core_rdf_descMetadata.nt'
       end
     end
     context "when User model does not define directory path" do
