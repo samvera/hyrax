@@ -61,6 +61,7 @@ describe GenericFilesController do
     end
 
     it "should download and import a file from a given url" do
+      pending "This is just downloading a 401 error page"
       date_today = Date.today
       Date.stub(:today).and_return(date_today)
       generic_file = GenericFile.new      #find(self.pid)

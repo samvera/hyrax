@@ -41,10 +41,10 @@ module Sufia
       end
 
       initializer 'requires' do
+        require 'hydra/derivatives'
         require 'sufia/models/model_methods'
         require 'sufia/models/noid'
         require 'sufia/models/file_content'
-        require 'sufia/models/file_content/extract_metadata'
         require 'sufia/models/file_content/versions'
         require 'sufia/models/generic_file/actions'
         require 'sufia/models/generic_file/audit'
@@ -57,6 +57,13 @@ module Sufia
         require 'sufia/models/user_local_directory_behavior'
         require 'sufia/models/id_service'
         require 'sufia/models/solr_document_behavior'
+      end
+
+      initializer 'configure' do
+        Hydra::Derivatives.ffmpeg_path    = Sufia.config.ffmpeg_path
+        Hydra::Derivatives.temp_file_base = Sufia.config.temp_file_base
+        Hydra::Derivatives.fits_path      = Sufia.config.fits_path
+        Hydra::Derivatives.enable_ffmpeg  = Sufia.config.enable_ffmpeg
       end
     end
   end

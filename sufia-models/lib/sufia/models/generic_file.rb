@@ -12,6 +12,7 @@ module Sufia
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
     include Sufia::ModelMethods
     include Sufia::Noid
+    include Hydra::Derivatives
     include Sufia::GenericFile::Thumbnail
     include Sufia::GenericFile::Export
     include Sufia::GenericFile::Characterization
@@ -66,7 +67,7 @@ module Sufia
     def audio?
       # audio/x-wave is the mime type that fits 0.6.0 returns for a wav file.
       # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
-      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? self.mime_type
+      ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? self.mime_type
     end
 
     def persistent_url

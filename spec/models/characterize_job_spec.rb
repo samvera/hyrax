@@ -22,7 +22,8 @@ describe CharacterizeJob do
     it "should create a transcode job" do
       job = double("stub video job")
       if $in_travis
-        @generic_file.stub(:video?).and_return(true)
+        # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf, fixing that.
+        @generic_file.stub(:mime_type).and_return('video/avi')
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
       end
       TranscodeVideoJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
@@ -44,7 +45,8 @@ describe CharacterizeJob do
     it "should create a transcode job" do
       job = double("stub audio job")
       if $in_travis
-        @generic_file.stub(:audio?).and_return(true)
+        # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf, fixing that.
+        @generic_file.stub(:mime_type).and_return('audio/wav')
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
       end
       TranscodeAudioJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
@@ -63,7 +65,8 @@ describe CharacterizeJob do
       # TODO just copy the 'content' datastream to the mp3 datastream if it's an mp3, and then transcode to ogg
       job = double("stub audio job")
       if $in_travis
-        @generic_file.stub(:audio?).and_return(true)
+        # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf, fixing that.
+        @generic_file.stub(:mime_type).and_return('audio/mpeg')
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
       end
       TranscodeAudioJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)

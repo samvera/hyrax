@@ -319,23 +319,6 @@ describe GenericFile do
         @f.thumbnail.mimeType.should == 'image/png'
       end
     end
-
-    describe "with an image that doesn't get resized" do
-      before do
-        @f.stub(:mime_type=>'image/png', :width=>['50'], :height=>['50'])  #Would get set by the characterization job
-        @f.add_file_datastream(File.new("#{fixture_path}/world.png", 'rb'), :dsid=>'content')
-        @f.save
-      end
-      it "should keep the thumbnail at the original size (but transform to png)" do
-        @mock_image = double("image", :from_blob=>true)
-        @mock_image.should_not_receive(:scale)
-        @mock_image.should_receive(:to_blob).and_return('fake content')
-        Magick::ImageList.should_receive(:new).and_return(@mock_image)
-        @f.create_thumbnail
-        @f.thumbnail.content.should == 'fake content'
-        @f.thumbnail.mimeType.should == 'image/png'
-      end
-    end
   end
   describe "trophies" do
     before(:all) do
