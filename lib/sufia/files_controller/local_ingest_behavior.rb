@@ -19,7 +19,7 @@ module Sufia
     private
     
     def perform_local_ingest
-      if current_user.respond_to?(:directory)
+      if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
         if ingest_local_file
           redirect_to sufia.batch_edit_path(params[:batch_id])
         else
