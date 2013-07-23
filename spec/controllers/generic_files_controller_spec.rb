@@ -187,50 +187,61 @@ describe GenericFilesController do
       FileUtils.copy('spec/fixtures/world.png', @mock_upload_directory)
       FileUtils.copy('spec/fixtures/sheepb.jpg', @mock_upload_directory)
       FileUtils.cp_r('spec/fixtures/import', @mock_upload_directory)
-      User.any_instance.stub(:directory).and_return(@mock_upload_directory)
     end
     after do
       FileContentDatastream.any_instance.stub(:live?).and_return(true)
       GenericFile.destroy_all
     end
-    it "should ingest files from the filesystem" do
-      #TODO this test is very slow because it kicks off CharacterizeJob.
-
-      # s1 = stub()
-      # s2 = stub()
-      # CharacterizeJob.should_receive(:new).and_return(s1, s2)
-      # Sufia.queue.should_receive(:push).with(s1)
-      # Sufia.queue.should_receive(:push).with(s2)
-
-      lambda { post :create, local_file: ["world.png", "sheepb.jpg"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
-      response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
-      # These files should have been moved out of the upload directory
-      File.exist?("#{@mock_upload_directory}/sheepb.jpg").should be_false
-      File.exist?("#{@mock_upload_directory}/world.png").should be_false
-      # And into the storage directory
-      files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
-      files.each do |gf|
-        # File.exist?(gf.content.filename).should be_true
-        # gf.thumbnail.mimeType.should == 'image/png'
+    context "when User model defines a directory path" do
+      before do 
+        User.any_instance.stub(:directory).and_return(@mock_upload_directory)
       end
-      files.first.label.should == 'world.png'
-      files.last.label.should == 'sheepb.jpg'
+      it "should ingest files from the filesystem" do
+        #TODO this test is very slow because it kicks off CharacterizeJob.
+
+        # s1 = stub()
+        # s2 = stub()
+        # CharacterizeJob.should_receive(:new).and_return(s1, s2)
+        # Sufia.queue.should_receive(:push).with(s1)
+        # Sufia.queue.should_receive(:push).with(s2)
+
+        lambda { post :create, local_file: ["world.png", "sheepb.jpg"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
+        response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
+        # These files should have been moved out of the upload directory
+        File.exist?("#{@mock_upload_directory}/sheepb.jpg").should be_false
+        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        # And into the storage directory
+        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
+        files.each do |gf|
+          # File.exist?(gf.content.filename).should be_true
+          # gf.thumbnail.mimeType.should == 'image/png'
+        end
+        files.first.label.should == 'world.png'
+        files.last.label.should == 'sheepb.jpg'
+      end
+      it "should ingest directories from the filesystem" do
+        #TODO this test is very slow because it kicks off CharacterizeJob.
+        lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
+        response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
+        # These files should have been moved out of the upload directory
+        File.exist?("#{@mock_upload_directory}/import/manifests/manifest-broadway-or-bust.txt").should be_false
+        File.exist?("#{@mock_upload_directory}/import/manifests/manifest-nova-smartest-machine-1.txt").should be_false
+        File.exist?("#{@mock_upload_directory}/import/metadata/broadway_or_bust.pbcore.xml").should be_false
+        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        # And into the storage directory
+        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
+        files.first.label.should == 'world.png'
+        # files.first.thumbnail.mimeType.should == 'image/png'
+        files.last.relative_path.should == 'import/metadata/broadway_or_bust.pbcore.xml'
+        files.last.label.should == 'broadway_or_bust.pbcore.xml'
+      end
     end
-    it "should ingest directories from the filesystem" do
-      #TODO this test is very slow because it kicks off CharacterizeJob.
-      lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
-      response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
-      # These files should have been moved out of the upload directory
-      File.exist?("#{@mock_upload_directory}/import/manifests/manifest-broadway-or-bust.txt").should be_false
-      File.exist?("#{@mock_upload_directory}/import/manifests/manifest-nova-smartest-machine-1.txt").should be_false
-      File.exist?("#{@mock_upload_directory}/import/metadata/broadway_or_bust.pbcore.xml").should be_false
-      File.exist?("#{@mock_upload_directory}/world.png").should be_false
-      # And into the storage directory
-      files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
-      files.first.label.should == 'world.png'
-      # files.first.thumbnail.mimeType.should == 'image/png'
-      files.last.relative_path.should == 'import/metadata/broadway_or_bust.pbcore.xml'
-      files.last.label.should == 'broadway_or_bust.pbcore.xml'
+    context "when User model does not define directory path" do
+      it "should return an error message and redirect to file upload page" do
+        lambda { post :create, local_file: ["world.png", "sheepb.jpg"], batch_id: "xw42n7934"}.should_not change(GenericFile, :count)
+        response.should render_template :new
+        flash[:alert].should == 'Your account is not configured for importing files from a user-directory on the server.'
+      end
     end
   end
   

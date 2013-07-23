@@ -19,10 +19,15 @@ module Sufia
     private
     
     def perform_local_ingest
-      if ingest_local_file
-        redirect_to sufia.batch_edit_path(params[:batch_id])
+      if current_user.respond_to?(:directory)
+        if ingest_local_file
+          redirect_to sufia.batch_edit_path(params[:batch_id])
+        else
+          flash[:alert] = "Error importing files from user directory."
+          render :new
+        end
       else
-        flash[:alert] = "Error creating generic file."
+        flash[:alert] = "Your account is not configured for importing files from a user-directory on the server."
         render :new
       end
     end
