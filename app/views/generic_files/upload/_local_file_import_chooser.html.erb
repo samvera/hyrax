@@ -1,9 +1,9 @@
 <% if current_user.directory.present? %>
-  <h2>Deposit files you've uploaded into your user directory on the server</h2>
-
   <div class="well">
+    <%= render partial: 'generic_files/upload/tos_checkbox' %>
     <%= form_for @generic_file, :url => sufia.generic_files_path, :html => { :class => 'form-horizontal well'} do |f| %>
       <table class="table table-striped">
+        <caption>Select files to deposit from your user directory on the server.</caption>
         <thead>
           <tr><th>File</th></tr>
         </thead>
@@ -18,7 +18,10 @@
         </tbody>
       </table>
       <%= hidden_field_tag(:batch_id, @batch_noid) %>
-      <%=f.button 'Import', :class => 'btn btn-primary' %>
+      <button type="submit" class="activate-submit btn btn-primary start" id="main_upload_start">
+        <i class="icon-upload icon-white"></i>
+        <span>Deposit Selected Files</span>
+      </button>
     <% end %>
   </div>
 <% end %>
