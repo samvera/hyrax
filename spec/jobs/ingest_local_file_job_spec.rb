@@ -1,19 +1,26 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe IngestLocalFileJob do
+  let(:user) { FactoryGirl.find_or_create(:user) }
+
+  let (:generic_file) do 
+    GenericFile.new.tap { |f| f.apply_depositor_metadata(user.user_key); f.save } 
+  end 
+
   before do
-    @user = FactoryGirl.find_or_create(:user)
-    @generic_file = GenericFile.new
-    @generic_file.apply_depositor_metadata(@user.user_key)
-    @generic_file.save
     @mock_upload_directory = 'spec/mock_upload_directory'
     Dir.mkdir @mock_upload_directory unless File.exists? @mock_upload_directory
     FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), @mock_upload_directory)
   end
   after do
-    @generic_file.delete
+    generic_file.destroy
   end
-  subject { IngestLocalFileJob.new(@generic_file.id, @mock_upload_directory, "world.png", @user.user_key) }
+  subject { IngestLocalFileJob.new(generic_file.id, @mock_upload_directory, "world.png", user.user_key) }
+
+  it "should have attached a file" do
+    subject.run
+    generic_file.reload.content.size.should == 4218
+  end
   
   describe "virus checking" do
     it "should run virus check" do

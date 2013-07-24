@@ -23,7 +23,7 @@ class IngestLocalFileJob
     raise "Virus checking did not pass for #{File.basename(filedata.path)} status = #{virus_stat}" unless virus_stat == 0
     
     generic_file.label = File.basename(filename)
-    generic_file.add_file(File.join(directory, filename), 'content', generic_file.label)
+    generic_file.add_file(File.open(File.join(directory, filename)), 'content', generic_file.label)
     generic_file.record_version_committer(user)
     generic_file.save!
 
