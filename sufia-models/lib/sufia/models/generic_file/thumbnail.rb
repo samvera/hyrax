@@ -2,13 +2,6 @@ module Sufia
   module GenericFile
     module Thumbnail
       extend ActiveSupport::Concern
-      included do
-        makes_derivatives_of :content, based_on: :mime_type, when: ['image/png', 'image/jpg'],
-             derivatives: { :thumbnail => {size: "200x150>", datastream: 'thumbnail'} }
-        makes_derivatives_of :content, based_on: :mime_type, when: ['application/pdf'],
-             derivatives: { :thumbnail => {size: "338x493", datastream: 'thumbnail'} }
-      end
-
       # Create thumbnail requires that the characterization has already been run (so mime_type, width and height is available)
       # and that the object is already has a pid set
       def create_thumbnail

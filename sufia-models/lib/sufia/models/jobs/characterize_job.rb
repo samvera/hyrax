@@ -35,9 +35,9 @@ class CharacterizeJob
       generic_file.create_thumbnail
     end
     if generic_file.video?
-      Sufia.queue.push(TranscodeVideoJob.new(generic_file_id, 'content'))
+      Sufia.queue.push(TranscodeVideoJob.new(generic_file_id))
     elsif generic_file.audio?
-      Sufia.queue.push(TranscodeAudioJob.new(generic_file_id, 'content'))
+      Sufia.queue.push(TranscodeAudioJob.new(generic_file_id))
     end
   end
 end

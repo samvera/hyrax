@@ -26,7 +26,7 @@ describe CharacterizeJob do
         @generic_file.stub(:mime_type).and_return('video/avi')
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
       end
-      TranscodeVideoJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
+      TranscodeVideoJob.should_receive(:new).with(@generic_file.id).and_return(job)
       Sufia.queue.should_receive(:push).with(job)
       subject.run
     end
@@ -49,7 +49,7 @@ describe CharacterizeJob do
         @generic_file.stub(:mime_type).and_return('audio/wav')
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
       end
-      TranscodeAudioJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
+      TranscodeAudioJob.should_receive(:new).with(@generic_file.id).and_return(job)
       Sufia.queue.should_receive(:push).with(job)
       subject.run
     end
@@ -69,7 +69,7 @@ describe CharacterizeJob do
         @generic_file.stub(:mime_type).and_return('audio/mpeg')
         GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
       end
-      TranscodeAudioJob.should_receive(:new).with(@generic_file.id, 'content').and_return(job)
+      TranscodeAudioJob.should_receive(:new).with(@generic_file.id).and_return(job)
       Sufia.queue.should_receive(:push).with(job)
       subject.run
     end
