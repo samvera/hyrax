@@ -6,6 +6,7 @@ describe TranscodeVideoJob, :if => Sufia.config.enable_ffmpeg do
     @generic_file.apply_depositor_metadata('jcoyne@example.com')
     @generic_file.add_file_datastream(File.new(fixture_path + '/countdown.avi'), :dsid=>'content')
     @generic_file.stub(:characterize_if_changed).and_yield
+    @generic_file.mime_type = 'video/avi'
     @generic_file.save!
   end
 
@@ -13,7 +14,7 @@ describe TranscodeVideoJob, :if => Sufia.config.enable_ffmpeg do
     @generic_file.delete
   end
 
-  subject { TranscodeVideoJob.new(@generic_file.id, 'content')}
+  subject { TranscodeVideoJob.new(@generic_file.id)}
   it "should put content in datastream_out" do
     subject.run
     reloaded = GenericFile.find(@generic_file.pid)

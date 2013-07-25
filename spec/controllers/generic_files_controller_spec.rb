@@ -61,6 +61,7 @@ describe GenericFilesController do
     end
 
     it "should download and import a file from a given url" do
+      pending "This is just downloading a 401 error page"
       date_today = Date.today
       Date.stub(:today).and_return(date_today)
       generic_file = GenericFile.new      #find(self.pid)
@@ -202,6 +203,11 @@ describe GenericFilesController do
         User.any_instance.stub(:directory).and_return(@mock_upload_directory)
       end
       it "should ingest files from the filesystem" do
+        if $in_travis
+          # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf.
+          # In order to avoid an invalid derivative creation, just stub out the derivatives.
+          GenericFile.any_instance.stub(:create_derivatives)
+        end
         lambda { post :create, local_file: ["world.png", "image.jp2"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
@@ -209,15 +215,16 @@ describe GenericFilesController do
         File.exist?("#{@mock_upload_directory}/world.png").should be_false
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
-        files.each do |gf|
-          # File.exist?(gf.content.filename).should be_true
-          # gf.thumbnail.mimeType.should == 'image/png'
-        end
         files.first.label.should == 'world.png'
         files.last.label.should == 'image.jp2'
       end
       it "should ingest directories from the filesystem" do
         #TODO this test is very slow because it kicks off CharacterizeJob.
+        if $in_travis
+          # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf.
+          # In order to avoid an invalid derivative creation, just stub out the derivatives.
+          GenericFile.any_instance.stub(:create_derivatives)
+        end
         lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory

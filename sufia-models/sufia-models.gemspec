@@ -38,9 +38,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'noid', '~> 0.6.6'
   spec.add_dependency 'curationexperts-mailboxer', '0.10.3'
   spec.add_dependency 'acts_as_follower', '0.1.1'
-  spec.add_dependency 'rmagick'
   spec.add_dependency 'paperclip', '~> 3.4.0'
   spec.add_dependency 'zipruby', '0.3.6'
+  spec.add_dependency 'hydra-derivatives', '0.0.4'
   # https://github.com/zdennis/activerecord-import/pull/79
   #spec.add_dependency 'activerecord-import', '0.3.0' # 0.3.1 caused a bug in testing: "SQLite3::SQLException: near ",": syntax error: INSERT INTO..."
 end

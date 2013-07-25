@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 # Please see sufia.gemspec for dependency information.
 gemspec

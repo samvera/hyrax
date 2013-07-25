@@ -2,22 +2,20 @@ module Sufia
   module GenericFile
     extend ActiveSupport::Concern
     extend ActiveSupport::Autoload
-    autoload :Export
-    autoload :Thumbnail
-    autoload :Characterization
-    autoload :Audit
     autoload :Actions
     autoload :Permissions
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
     include Sufia::ModelMethods
     include Sufia::Noid
+    include Sufia::GenericFile::MimeTypes
     include Sufia::GenericFile::Thumbnail
     include Sufia::GenericFile::Export
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Audit
     include Sufia::GenericFile::Permissions
     include Sufia::GenericFile::WebForm
+    include Sufia::GenericFile::Derivatives
 
     included do
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -52,21 +50,19 @@ module Sufia
     end
 
     def pdf?
-      ['application/pdf'].include? self.mime_type
+      self.class.pdf_mime_types.include? self.mime_type
     end
 
     def image?
-      ['image/png','image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif'].include? self.mime_type
+      self.class.image_mime_types.include? self.mime_type
     end
 
     def video?
-      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf'].include? self.mime_type
+      self.class.video_mime_types.include? self.mime_type
     end
 
     def audio?
-      # audio/x-wave is the mime type that fits 0.6.0 returns for a wav file.
-      # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
-      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? self.mime_type
+      self.class.audio_mime_types.include? self.mime_type
     end
 
     def persistent_url

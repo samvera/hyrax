@@ -2,38 +2,21 @@
 # 7 Feb 2013
 # An asyncronous job for transcoding audio files using FFMpeg
 
-class TranscodeAudioJob < FfmpegTranscodeJob
+class TranscodeAudioJob
   def queue_name
     :audio
   end
 
-  def process
-    encode_mp3()
-    encode_ogg()
+  attr_accessor :generic_file_id
+
+  def initialize(generic_file_id)
+    self.generic_file_id = generic_file_id
   end
 
-  private 
-    def encode_ogg
-      opts = ""
-      if generic_file.mime_type == 'audio/ogg'
-        # Don't re-encode, just copy
-        generic_file.add_file_datastream(generic_file.content.read, :dsid=>'ogg', :mimeType=>'audio/ogg')
-        #generic_file.content.rewind
-      else
-        encode_datastream('ogg', 'audio/ogg', opts)
-      end
-    end
-
-    def encode_mp3
-      opts = ""
-      if generic_file.mime_type == 'audio/mpeg'
-        # Don't re-encode, just copy
-        generic_file.add_file_datastream(generic_file.content.read, :dsid=>'mp3', :mimeType=>'audio/mpeg')
-      else
-        encode_datastream('mp3', 'audio/mpeg', opts)
-      end
-    end
-
+  def run
+    generic_file = GenericFile.find(generic_file_id)
+    generic_file.create_derivatives
+    generic_file.save
+  end
 
 end
-
