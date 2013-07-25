@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe FitsDatastream, :unless => $in_travis do
   before(:all) do
     @file = GenericFile.new
-    @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+    @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
     @file.characterize
   end
   it "should have a format label" do

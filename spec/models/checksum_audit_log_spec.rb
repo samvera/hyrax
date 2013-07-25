@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe ChecksumAuditLog do
   before(:all) do
     @f = GenericFile.new
-    @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+    @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
     @f.apply_depositor_metadata('mjg36')
     @f.stub(:characterize_if_changed).and_yield #don't run characterization
     @f.save!
