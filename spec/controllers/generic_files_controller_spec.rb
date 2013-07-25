@@ -271,7 +271,7 @@ describe GenericFilesController do
     before do
       #GenericFile.any_instance.stub(:to_solr).and_return({})
       @generic_file = GenericFile.new
-      @generic_file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      @generic_file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @generic_file.apply_depositor_metadata('mjg36')
       @generic_file.save
     end
@@ -477,8 +477,7 @@ describe GenericFilesController do
     before do
       f = GenericFile.new(:pid => 'sufia:test5')
       f.apply_depositor_metadata('archivist1@example.com')
-      f.set_title_and_label('world.png')
-      f.add_file_datastream(File.new(fixture_path +  '/world.png'))
+      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       # grant public read access explicitly
       f.read_groups = ['public']
       f.should_receive(:characterize_if_changed).and_yield

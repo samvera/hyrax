@@ -15,7 +15,7 @@ describe CharacterizeJob do
 
   describe "with a AVI (video) file" do
     before do
-      @generic_file.add_file_datastream(File.new(fixture_path + '/countdown.avi'), :dsid=>'content', :mime_type=>'video/avi')
+      @generic_file.add_file(File.open(fixture_path + '/countdown.avi'), 'content', 'countdown.avi')
       @generic_file.stub(:characterize_if_changed).and_yield
       @generic_file.save!
     end
@@ -38,7 +38,7 @@ describe CharacterizeJob do
 
   describe "with a WAV (audio) file" do
     before do
-      @generic_file.add_file_datastream(File.new(fixture_path + '/piano_note.wav'), :dsid=>'content', :mime_type=>'audio/wav')
+      @generic_file.add_file(File.open(fixture_path + '/piano_note.wav'), 'content', 'piano_note.wav')
       @generic_file.stub(:characterize_if_changed).and_yield
       @generic_file.save!
     end
@@ -57,7 +57,7 @@ describe CharacterizeJob do
 
   describe "with an mp3 (audio) file" do
     before do
-      @generic_file.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test5.mp3'), :dsid=>'content', :mime_type=>'audio/mp3')
+      @generic_file.add_file(File.open(fixture_path + '/sufia/sufia_test5.mp3'), 'content', 'sufia_test5.mp3')
       @generic_file.stub(:characterize_if_changed).and_yield
       @generic_file.save!
     end
@@ -77,7 +77,7 @@ describe CharacterizeJob do
 
   describe "with an jpeg2000 (image) file" do
     before do
-      @generic_file.add_file_datastream(File.new(fixture_path + '/image.jp2'), :dsid=>'content', :mime_type=>'image/jp2')
+      @generic_file.add_file(File.open(fixture_path + '/image.jp2'), 'content', 'image.jp2')
       @generic_file.stub(:characterize_if_changed).and_yield
       @generic_file.save!
     end

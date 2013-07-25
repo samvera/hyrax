@@ -156,7 +156,7 @@ describe GenericFile do
       @file.descMetadata.should be_kind_of GenericFileRdfDatastream
     end
     it "should have content datastream" do
-      @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @file.content.should be_kind_of FileContentDatastream
     end
   end
@@ -310,7 +310,7 @@ describe GenericFile do
     describe "with a video", :if => Sufia.config.enable_ffmpeg do
       before do
         @f.stub(:mime_type=>'video/quicktime')  #Would get set by the characterization job
-        @f.add_file_datastream(File.new("#{fixture_path}/countdown.avi", 'rb'), :dsid=>'content')
+        @f.add_file(File.open("#{fixture_path}/countdown.avi", 'rb'), 'content', 'countdown.avi')
         @f.save
       end
       it "should make a png thumbnail" do
@@ -346,13 +346,16 @@ describe GenericFile do
     before(:each) do
       u = FactoryGirl.create(:user)
       f = GenericFile.new
-      f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       f.apply_depositor_metadata(u.user_key)
       f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save!
       @f = f.reload
     end
     it "should schedule a audit job for each datastream" do
+      s0 = double('zero')
+      AuditJob.should_receive(:new).with(@f.pid, 'descMetadata', "descMetadata.0").and_return(s0)
+      Sufia.queue.should_receive(:push).with(s0)
       s1 = double('one')
       AuditJob.should_receive(:new).with(@f.pid, 'DC', "DC1.0").and_return(s1)
       Sufia.queue.should_receive(:push).with(s1)
@@ -390,7 +393,7 @@ describe GenericFile do
   describe "run_audit" do
     before do
       @f = GenericFile.new
-      @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @f.apply_depositor_metadata('mjg36')
       @f.stub(:characterize_if_changed).and_yield #don't run characterization
       @f.save!
@@ -424,7 +427,7 @@ describe GenericFile do
       @file.delete
     end
     it "should schedule a characterization job" do
-      @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       Sufia.queue.should_receive(:push).once
       @file.save
     end
@@ -530,7 +533,7 @@ describe GenericFile do
   end
   describe "characterize" do
     it "should return expected results when called", :unless => $in_travis do
-      @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @file.characterize
       doc = Nokogiri::XML.parse(@file.characterization.content)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
@@ -547,7 +550,7 @@ describe GenericFile do
     describe "after job runs" do
       before(:all) do
         myfile = GenericFile.new
-        myfile.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test4.pdf'), :dsid=>'content')
+        myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf'), 'content', 'sufia_test4.pdf')
         myfile.label = 'label123'
         myfile.apply_depositor_metadata('mjg36')
         myfile.save

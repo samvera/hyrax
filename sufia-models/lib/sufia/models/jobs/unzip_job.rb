@@ -42,12 +42,7 @@ class UnzipJob
   def create_file(file)
     @generic_file = GenericFile.new
     @generic_file.batch_id = zip_file.batch.pid
-    file_name = file.name
-    mime_types = MIME::Types.of(file_name)
-    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
-    options = {:label=>file_name, :dsid=>'content', :mimeType=>mime_type}
-    @generic_file.add_file_datastream(file.read, options)
-    @generic_file.set_title_and_label( file_name, :only_if_blank=>true )
+    @generic_file.add_file(file.read, 'content', file.name)
     @generic_file.apply_depositor_metadata(zip_file.edit_users.first)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime

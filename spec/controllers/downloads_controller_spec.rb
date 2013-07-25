@@ -1,3 +1,4 @@
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe DownloadsController do
@@ -6,8 +7,7 @@ describe DownloadsController do
     before do
       @f = GenericFile.new(:pid => 'sufia:test1')
       @f.apply_depositor_metadata('archivist1@example.com')
-      @f.set_title_and_label('world.png')
-      @f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content', :mimeType => 'image/png')
+      @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @f.should_receive(:characterize_if_changed).and_yield
       @f.save!
     end

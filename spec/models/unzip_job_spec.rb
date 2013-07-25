@@ -4,7 +4,7 @@ describe UnzipJob do
   before do
     @batch = Batch.create
     @generic_file = GenericFile.new(:batch=>@batch)
-    @generic_file.add_file_datastream(File.new(fixture_path + '/icons.zip'), :dsid=>'content')
+    @generic_file.add_file(File.open(fixture_path + '/icons.zip'), 'content', 'icons.zip')
     @generic_file.apply_depositor_metadata('mjg36')
     @generic_file.stub(:characterize_if_changed).and_yield #don't run characterization
     @generic_file.save

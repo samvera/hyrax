@@ -4,12 +4,11 @@ describe SingleUseLinkController do
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
-    @file.set_title_and_label('world.png')
-    @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content', :mimeType => 'image/png')
+    @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
     @file.apply_depositor_metadata(@user.user_key)
     @file.save
     @file2 = GenericFile.new
-    @file2.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content', :mimeType => 'image/png')
+    @file2.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
     @file2.apply_depositor_metadata('mjg36')
     @file2.save
   end

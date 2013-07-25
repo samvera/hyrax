@@ -7,7 +7,7 @@ describe FileContentDatastream do
   describe "version control" do
     before do
       f = GenericFile.new
-      f.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       f.apply_depositor_metadata('mjg36')
       f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save
@@ -33,7 +33,7 @@ describe FileContentDatastream do
     end
     describe "add a version" do
       before do
-        @file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'content')
+        @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         @file.stub(:characterize_if_changed).and_yield #don't run characterization
         @file.save
       end
@@ -93,13 +93,13 @@ describe FileContentDatastream do
       @generic_file.delete
     end
     it "should only return true when the datastream has actually changed" do
-      @generic_file.add_file_datastream(File.new(fixture_path + '/world.png', 'rb'), :dsid=>'content')
+      @generic_file.add_file(File.open(fixture_path + '/world.png', 'rb'), 'content', 'world.png')
       @generic_file.content.changed?.should be_true
       @generic_file.save!
       @generic_file.content.changed?.should be_false
 
       # Add a thumbnail ds
-      @generic_file.add_file_datastream(File.new(fixture_path + '/world.png'), :dsid=>'thumbnail')
+      @generic_file.add_file(File.open(fixture_path + '/world.png'), 'thumbnail', 'world.png')
       @generic_file.thumbnail.changed?.should be_true
       @generic_file.content.changed?.should be_false
 

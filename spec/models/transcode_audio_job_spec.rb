@@ -12,8 +12,7 @@ describe TranscodeAudioJob, :if => Sufia.config.enable_ffmpeg do
 
   describe "with a wav file" do
     before do
-      @generic_file.add_file_datastream(File.new(fixture_path + '/piano_note.wav'), :dsid=>'content')
-      @generic_file.mime_type = 'audio/wav'
+      @generic_file.add_file(File.open(fixture_path + '/piano_note.wav'), 'content', 'piano_note.wav')
       @generic_file.save!
     end
     after do
@@ -39,7 +38,7 @@ describe TranscodeAudioJob, :if => Sufia.config.enable_ffmpeg do
   describe "with an mp3 file" do
     # Uncomment when this is nolonger pending
     # before do
-    #   @generic_file.add_file_datastream(File.new(fixture_path + '/sufia/sufia_test5.mp3'), :dsid=>'content')
+    #   @generic_file.add_file(File.open(fixture_path + '/sufia/sufia_test5.mp3'), 'content', 'sufia_test5.mp3')
     #   @generic_file.characterize # so that the mime_type is set
     #   @generic_file.save!
     # end
@@ -62,7 +61,7 @@ describe TranscodeAudioJob, :if => Sufia.config.enable_ffmpeg do
   describe "with an ogg file" do
     # Uncomment when this is nolonger pending
     # before do
-    #   @generic_file.add_file_datastream(File.new(fixture_path + '/Example.ogg'), :dsid=>'content')
+    #   @generic_file.add_file(File.open(fixture_path + '/Example.ogg'), 'content', 'Example.ogg')
     #   @generic_file.characterize # so that the mime_type is set
     #   @generic_file.save!
     # end
