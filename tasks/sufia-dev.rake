@@ -27,7 +27,7 @@ gem_home = File.expand_path('../../', __FILE__)
 desc "Run specs"
 RSpec::Core::RakeTask.new(:rspec) do |t|
   t.pattern = '../**/*_spec.rb'
-  t.rspec_opts = "--colour"
+  t.rspec_opts = "--colour -I ../"
 end
 
 desc "Load fixtures"

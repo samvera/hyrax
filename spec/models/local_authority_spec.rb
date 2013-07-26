@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 # Don't run the tests if activerecord-import isn't installed.
 # The 0.3.1 version doesn't work with rails 4, so suppress these tests

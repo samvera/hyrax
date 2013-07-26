@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe ActiveFedora::UnsavedDigitalObject do
   it "should have an ARK-style pid" do    
