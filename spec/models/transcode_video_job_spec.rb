@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe TranscodeVideoJob, :if => Sufia.config.enable_ffmpeg do
   before do
