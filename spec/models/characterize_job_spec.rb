@@ -24,7 +24,7 @@ describe CharacterizeJob do
       if $in_travis
         # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf, fixing that.
         @generic_file.stub(:mime_type).and_return('video/avi')
-        GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
+        ActiveFedora::Base.should_receive(:find).with(@generic_file.id, cast:true).and_return(@generic_file)
       end
       TranscodeVideoJob.should_receive(:new).with(@generic_file.id).and_return(job)
       Sufia.queue.should_receive(:push).with(job)
@@ -47,7 +47,7 @@ describe CharacterizeJob do
       if $in_travis
         # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf, fixing that.
         @generic_file.stub(:mime_type).and_return('audio/wav')
-        GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
+        ActiveFedora::Base.should_receive(:find).with(@generic_file.id, cast:true).and_return(@generic_file)
       end
       TranscodeAudioJob.should_receive(:new).with(@generic_file.id).and_return(job)
       Sufia.queue.should_receive(:push).with(job)
@@ -67,7 +67,7 @@ describe CharacterizeJob do
       if $in_travis
         # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf, fixing that.
         @generic_file.stub(:mime_type).and_return('audio/mpeg')
-        GenericFile.should_receive(:find).with(@generic_file.id).and_return(@generic_file)
+        ActiveFedora::Base.should_receive(:find).with(@generic_file.id, cast:true).and_return(@generic_file)
       end
       TranscodeAudioJob.should_receive(:new).with(@generic_file.id).and_return(job)
       Sufia.queue.should_receive(:push).with(job)
