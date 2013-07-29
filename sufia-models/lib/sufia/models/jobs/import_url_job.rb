@@ -2,20 +2,13 @@ require 'net/https'
 require 'uri'
 require 'tempfile'
 
-class ImportUrlJob 
+class ImportUrlJob < ActiveFedoraPidBasedJob
 
   def queue_name
     :import_url
   end
 
-  attr_accessor :pid
-
-  def initialize(pid)
-    self.pid = pid 
-  end
-
   def run
-    generic_file = GenericFile.find(self.pid)
     f = Tempfile.new(self.pid)
     f.binmode
 

@@ -12,20 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class CharacterizeJob
+class CharacterizeJob < ActiveFedoraPidBasedJob
 
   def queue_name
     :characterize
   end
 
-  attr_accessor :generic_file_id, :generic_file
-
-  def initialize(generic_file_id)
-    self.generic_file_id = generic_file_id
-  end
-
   def run
-    self.generic_file = GenericFile.find(generic_file_id)
     generic_file.characterize
     after_characterize
   end

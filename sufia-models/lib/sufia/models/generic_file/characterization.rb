@@ -36,7 +36,7 @@ module Sufia
         self.characterization.ng_xml = self.content.extract_metadata
         self.append_metadata
         self.filename = self.label
-        save unless self.new_object?
+        save
       end
 
       # Populate descMetadata with fields from FITS (e.g. Author from pdfs)

@@ -12,19 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class UnzipJob
+class UnzipJob < ActiveFedoraPidBasedJob
   def queue_name
     :unzip
   end
 
-  attr_accessor :pid
-
-  def initialize(pid)
-    self.pid = pid
-  end
-
   def run
-    Zip::Archive.open_buffer(zip_file.content.content) do |archive|
+    Zip::Archive.open_buffer(object.content.content) do |archive|
       archive.each do |f|
         if f.directory?
           create_directory(f)
@@ -41,9 +35,9 @@ class UnzipJob
   # @param file [Zip::File]
   def create_file(file)
     @generic_file = GenericFile.new
-    @generic_file.batch_id = zip_file.batch.pid
+    @generic_file.batch_id = object.batch.pid
     @generic_file.add_file(file.read, 'content', file.name)
-    @generic_file.apply_depositor_metadata(zip_file.edit_users.first)
+    @generic_file.apply_depositor_metadata(object.edit_users.first)
     @generic_file.date_uploaded = Time.now.ctime
     @generic_file.date_modified = Time.now.ctime
     @generic_file.save
@@ -55,7 +49,4 @@ class UnzipJob
   def create_directory(file)
   end
 
-  def zip_file
-    @zip_file ||= GenericFile.find(pid)
-  end
 end

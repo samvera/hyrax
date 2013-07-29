@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class AuditJob
+class AuditJob < ActiveFedoraPidBasedJob
   def queue_name
     :audit
   end
@@ -20,16 +20,15 @@ class AuditJob
   PASS = 'Passing Audit Run'
   FAIL = 'Failing Audit Run'
 
-  attr_accessor :generic_file_id, :datastream_id, :version_id
+  attr_accessor :pid, :datastream_id, :version_id
 
-  def initialize(generic_file_id, datastream_id, version_id)
-    self.generic_file_id = generic_file_id
+  def initialize(pid, datastream_id, version_id)
+    super(pid)
     self.datastream_id = datastream_id
     self.version_id = version_id
   end
 
   def run
-    generic_file = GenericFile.find(generic_file_id)
     #logger.info "GF is #{generic_file.pid}"
     if generic_file
       datastream = generic_file.datastreams[datastream_id]
@@ -37,7 +36,7 @@ class AuditJob
       if datastream
         #logger.info "Datastream for audit = #{datastream.inspect}"
         version =  datastream.versions.select { |v| v.versionID == version_id}.first
-        log = GenericFile.run_audit(version)
+        log = run_audit(version)
 
         # look up the user for sending the message to
         login = generic_file.depositor
@@ -56,10 +55,15 @@ class AuditJob
           end 
         end
       else
-        logger.warn "No datastream for audit!!!!! pid: #{generic_file_id} dsid: #{datastream_id}"
+        logger.warn "No datastream for audit!!!!! pid: #{pid} dsid: #{datastream_id}"
       end
     else
-      logger.warn "No generic file for data stream audit!!!!! pid: #{generic_file_id} dsid: #{datastream_id}"
+      logger.warn "No generic file for data stream audit!!!!! pid: #{pid} dsid: #{datastream_id}"
     end
+  end
+
+  private
+  def run_audit(version)
+    object.class.run_audit(version)
   end
 end
