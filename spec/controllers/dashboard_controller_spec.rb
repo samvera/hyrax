@@ -54,7 +54,7 @@ describe DashboardController do
           files_count = assigns(:document_list).count
           until files_count == 3
             gf = GenericFile.new()
-            gf.apply_depositor_metadata(@user.user_key)
+            gf.apply_depositor_metadata(@user)
             gf.save
             files_count += 1
           end

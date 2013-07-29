@@ -4,7 +4,7 @@ describe IngestLocalFileJob do
   let(:user) { FactoryGirl.find_or_create(:user) }
 
   let (:generic_file) do 
-    GenericFile.new.tap { |f| f.apply_depositor_metadata(user.user_key); f.save } 
+    GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save } 
   end 
 
   before do

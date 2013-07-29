@@ -127,7 +127,7 @@ describe UsersController do
     end
     it "should remove a trophy" do
       f = GenericFile.create(title:"myFile")
-      f.apply_depositor_metadata(@user.user_key)
+      f.apply_depositor_metadata(@user)
       f.save
       file_id = f.pid.split(":").last
       Trophy.create(:generic_file_id => file_id, :user_id => @user.id)
@@ -197,7 +197,7 @@ describe UsersController do
   describe "#toggle_trophy" do
      before do
        @file = GenericFile.new()
-       @file.apply_depositor_metadata(@user.user_key)
+       @file.apply_depositor_metadata(@user)
        @file.save
        @file_id = @file.pid.split(":").last
      end

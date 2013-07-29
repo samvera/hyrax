@@ -3,7 +3,7 @@ module Sufia::GenericFile
   module Actions
     def self.create_metadata(generic_file, user, batch_id)
 
-      generic_file.apply_depositor_metadata(user.user_key)
+      generic_file.apply_depositor_metadata(user)
       generic_file.date_uploaded = Date.today
       generic_file.date_modified = Date.today
       generic_file.creator = user.name
