@@ -321,17 +321,14 @@ describe GenericFile do
     end
   end
   describe "trophies" do
-    before(:all) do
-      @u = FactoryGirl.create(:user)
+    before do
+      u = FactoryGirl.create(:user)
       @f = GenericFile.new.tap do |gf|
-        gf.apply_depositor_metadata(@u.user_key)
+        gf.apply_depositor_metadata(u)
         gf.stub(:characterize_if_changed).and_yield #don't run characterization
         gf.save!
       end
-      @t = Trophy.create(user_id: @u.id, generic_file_id: @f.pid)
-    end
-    after(:all) do
-      @u.destroy
+      @t = Trophy.create(user_id: u.id, generic_file_id: @f.pid)
     end
     it "should have a trophy" do
       Trophy.where(generic_file_id: @f.pid).count.should == 1
@@ -347,7 +344,7 @@ describe GenericFile do
       u = FactoryGirl.create(:user)
       f = GenericFile.new
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      f.apply_depositor_metadata(u.user_key)
+      f.apply_depositor_metadata(u)
       f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save!
       @f = f.reload

@@ -290,7 +290,7 @@ describe GenericFilesController do
   describe "destroy" do
     before(:each) do
       @generic_file = GenericFile.new
-      @generic_file.apply_depositor_metadata(@user.user_key)
+      @generic_file.apply_depositor_metadata(@user)
       @generic_file.save
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
@@ -315,7 +315,7 @@ describe GenericFilesController do
     before do
       #controller.should_receive(:virus_check).and_return(0)      
       @generic_file = GenericFile.new
-      @generic_file.apply_depositor_metadata(@user.user_key)
+      @generic_file.apply_depositor_metadata(@user)
       @generic_file.save
     end
     after do

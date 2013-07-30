@@ -5,7 +5,7 @@ describe SingleUseLinkController do
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
     @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-    @file.apply_depositor_metadata(@user.user_key)
+    @file.apply_depositor_metadata(@user)
     @file.save
     @file2 = GenericFile.new
     @file2.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')

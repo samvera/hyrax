@@ -16,7 +16,7 @@ describe BatchController do
       @batch = Batch.new
       @batch.save
       @file = GenericFile.new(:batch=>@batch)
-      @file.apply_depositor_metadata(@user.user_key)
+      @file.apply_depositor_metadata(@user)
       @file.save
       @file2 = GenericFile.new(:batch=>@batch)
       @file2.apply_depositor_metadata('otherUser')
@@ -118,10 +118,10 @@ describe BatchController do
       @b1 = Batch.new
       @b1.save
       @file = GenericFile.new(:batch=>@b1, :label=>'f1')
-      @file.apply_depositor_metadata(@user.user_key)
+      @file.apply_depositor_metadata(@user)
       @file.save
       @file2 = GenericFile.new(:batch=>@b1, :label=>'f2')
-      @file2.apply_depositor_metadata(@user.user_key)
+      @file2.apply_depositor_metadata(@user)
       @file2.save
     end
     after do

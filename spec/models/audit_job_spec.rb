@@ -7,7 +7,7 @@ describe AuditJob do
     GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
     GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
-    @file.apply_depositor_metadata(@user.user_key)
+    @file.apply_depositor_metadata(@user)
     @file.save
     @ds = @file.datastreams.first
   end
