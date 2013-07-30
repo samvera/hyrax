@@ -19,7 +19,7 @@ class ImportUrlJob < ActiveFedoraPidBasedJob
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     http.start do  
-      http.request_get(uri) do |resp|
+      http.request_get(uri.request_uri) do |resp|
         resp.read_body do |segment|
           f.write(segment)
         end
