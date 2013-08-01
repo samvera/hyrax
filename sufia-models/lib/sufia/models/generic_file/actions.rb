@@ -2,7 +2,6 @@ module Sufia::GenericFile
   # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
   module Actions
     def self.create_metadata(generic_file, user, batch_id)
-
       generic_file.apply_depositor_metadata(user)
       generic_file.date_uploaded = Date.today
       generic_file.date_modified = Date.today
@@ -16,7 +15,7 @@ module Sufia::GenericFile
       yield(generic_file) if block_given?
       generic_file.save!
     end
-    
+
     def self.create_content(generic_file, file, file_name, dsid, user)
       generic_file.add_file(file, dsid, file_name)
 
@@ -40,15 +39,13 @@ module Sufia::GenericFile
     end
 
     def self.virus_check(file)
-      if defined? ClamAV
-        stat = ClamAV.instance.scanfile(file.path)
-        logger.warn "Virus checking did not pass for #{file.inspect} status = #{stat}" unless stat == 0
-        stat
-      else
-        logger.warn "Virus checking disabled for #{file.inspect}"
-        0
+      path = file.is_a?(String) ? file : file.path
+      unless defined?(ClamAV)
+        logger.warn "Virus checking disabled, #{path} not checked"
+        return
       end
-    end 
-
+      scan_result = ClamAV.instance.scanfile(path)
+      raise Sufia::VirusFoundError.new("A virus was found in #{path}: #{scan_result}") unless scan_result == 0
+    end
   end
 end

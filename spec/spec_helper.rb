@@ -36,6 +36,22 @@ if $in_travis
   end
 end
 
+if defined?(ClamAV)
+  ClamAV.instance.loaddb
+else
+  class ClamAV
+    def self.instance
+      new
+    end
+    def scanfile(f)
+      0
+    end
+    def loaddb
+      nil
+    end
+  end
+end
+
 Resque.inline = Rails.env.test?
 
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
@@ -64,7 +80,6 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
   config.include EngineRoutes, :type => :controller
 end
-
 
 module FactoryGirl
   def self.find_or_create(handle, by=:email)

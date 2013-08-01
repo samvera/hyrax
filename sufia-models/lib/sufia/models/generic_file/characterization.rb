@@ -43,7 +43,6 @@ module Sufia
       def characterize_if_changed
         content_changed = self.content.changed?
         yield
-        #logger.debug "DOING CHARACTERIZE ON #{self.pid}"
         Sufia.queue.push(CharacterizeJob.new(self.pid)) if content_changed
       end
 

@@ -79,7 +79,7 @@ module Sufia
     def create_from_url(params)
       params[:dropbox_urls].each do |db_file|
         next if db_file.blank?
-        # do not remove :: 
+        # do not remove ::
         @generic_file = ::GenericFile.new
         @generic_file.import_url = db_file
         @generic_file.label = File.basename(db_file)
@@ -90,27 +90,25 @@ module Sufia
     end
 
     def create_from_upload(params)
-      begin
-        # check error condition No files
-        return json_error("Error! No file to save") if !params.has_key?(:files)
+      # check error condition No files
+      return json_error("Error! No file to save") if !params.has_key?(:files)
 
-        file = params[:files].detect {|f| f.respond_to?(:original_filename) }
-        if !file
-          json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
-        elsif (empty_file?(file))
-          json_error "Error! Zero Length File!", file.original_filename
-        elsif (!terms_accepted?)
-          json_error "You must accept the terms of service!", file.original_filename
-        else
-          process_file(file)
-        end
-      rescue => error
-        logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
-        json_error "Error occurred while creating generic file."
-      ensure
-        # remove the tempfile (only if it is a temp file)
-        file.tempfile.delete if file.respond_to?(:tempfile)
+      file = params[:files].detect {|f| f.respond_to?(:original_filename) }
+      if !file
+        json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
+      elsif (empty_file?(file))
+        json_error "Error! Zero Length File!", file.original_filename
+      elsif (!terms_accepted?)
+        json_error "You must accept the terms of service!", file.original_filename
+      else
+        process_file(file)
       end
+    rescue => error
+      logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
+      json_error "Error occurred while creating generic file."
+    ensure
+      # remove the tempfile (only if it is a temp file)
+      file.tempfile.delete if file.respond_to?(:tempfile)
     end
 
     # routed to /files/:id/citation
@@ -145,10 +143,8 @@ module Sufia
 
       if params.has_key?(:filedata)
         file = params[:filedata]
-        return unless virus_check(file) == 0
         @generic_file.add_file(file, datastream_id, file.original_filename)
         version_event = true
-        Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
       end
 
       # only update metadata if there is a generic_file object which is not the case for version updates
@@ -157,12 +153,20 @@ module Sufia
       #always save the file so the new version or metadata gets recorded
       if @generic_file.save
         # do not trigger an update event if a version event has already been triggered
-        Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key)) unless version_event
+        if version_event
+          Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key)) if params.has_key?(:filedata)
+        else
+          Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
+        end
         @generic_file.record_version_committer(current_user)
         redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
       else
         render action: 'edit'
       end
+    rescue => error
+      flash[:error] = error.message
+      logger.error "GenericFilesController::update rescued #{error.class}\n\t#{error.message}\n #{error.backtrace.join("\n")}\n\n"
+      render action: 'edit'
     end
 
     protected
@@ -179,27 +183,26 @@ module Sufia
     end
 
     def process_file(file)
-      if virus_check(file) == 0 
-        @generic_file = ::GenericFile.new
-        update_metadata_from_upload_screen
-        create_metadata(@generic_file)
-        Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
-        respond_to do |format|
-          format.html {
-            render :json => [@generic_file.to_jq_upload],
-              :content_type => 'text/html',
-              :layout => false
-          }
-          format.json {
-            render :json => [@generic_file.to_jq_upload]
-          }
-        end
-      else
-        render :json => [{:error => "Error creating generic file."}]
+      @generic_file = ::GenericFile.new
+      update_metadata_from_upload_screen
+      create_metadata(@generic_file)
+      Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
+      respond_to do |format|
+        format.html {
+          render :json => [@generic_file.to_jq_upload],
+          :content_type => 'text/html',
+          :layout => false
+        }
+        format.json {
+          render :json => [@generic_file.to_jq_upload]
+        }
       end
+    rescue ActiveFedora::RecordInvalid => af
+      flash[:error] = af.message
+      json_error "Error creating generic file: #{af.message}"
     end
 
-    # override this method if you want to change how the terms are accepted on upload. 
+    # override this method if you want to change how the terms are accepted on upload.
     def terms_accepted?
       params[:terms_of_service] == '1'
     end
@@ -230,14 +233,6 @@ module Sufia
       @generic_file.visibility = params[:visibility]
       @generic_file.date_modified = DateTime.now
     end
-
-
-    def virus_check( file)
-      stat = Sufia::GenericFile::Actions.virus_check(file)
-      flash[:error] = "Virus checking did not pass for #{File.basename(file.path)} status = #{stat}" unless stat == 0
-      stat
-    end
-
 
     def create_metadata(file)
       Sufia::GenericFile::Actions.create_metadata(file, current_user, params[:batch_id])
