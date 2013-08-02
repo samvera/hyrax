@@ -16,15 +16,19 @@
 module Sufia
   module FilesController
     autoload :LocalIngestBehavior, 'sufia/files_controller/local_ingest_behavior'
+    autoload :UploadCompleteBehavior, 'sufia/files_controller/upload_complete_behavior'
   end
   module FilesControllerBehavior
     extend ActiveSupport::Concern
+    extend Sufia::FilesController::UploadCompleteBehavior
 
     included do
       include Hydra::Controller::ControllerBehavior
       include Blacklight::Configurable # comply with BL 3.7
       include Sufia::Noid # for normalize_identifier method    
-      include Sufia::FilesController::LocalIngestBehavior  
+      include Sufia::FilesController::LocalIngestBehavior
+      extend Sufia::FilesController::UploadCompleteBehavior
+
       layout "sufia-one-column"
       
       # This is needed as of BL 3.7
@@ -48,6 +52,7 @@ module Sufia
       prepend_before_filter :normalize_identifier, :except => [:index, :create, :new]
       load_resource :only=>[:audit]
       load_and_authorize_resource :except=>[:index, :audit]
+
     end
 
     # routed to /files/new
@@ -84,6 +89,8 @@ module Sufia
       end
     end
 
+
+
     def create_from_url(params)
       params[:dropbox_urls].each do |db_file|
         next if db_file.blank?
@@ -91,10 +98,10 @@ module Sufia
         @generic_file = ::GenericFile.new
         @generic_file.import_url = db_file
         @generic_file.label = File.basename(db_file)
-        Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
+        create_metadata(@generic_file)
         Sufia.queue.push(ImportUrlJob.new(@generic_file.pid)) 
       end
-      redirect_to sufia.batch_edit_path(params[:batch_id])
+      redirect_to self.class.upload_complete_path( params[:batch_id])
     end
 
     def create_from_upload(params)
@@ -189,7 +196,7 @@ module Sufia
       if virus_check(file) == 0 
         @generic_file = ::GenericFile.new
         update_metadata_from_upload_screen
-        Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id])
+        create_metadata(@generic_file)
         Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
         respond_to do |format|
           format.html {
@@ -243,7 +250,12 @@ module Sufia
       stat = Sufia::GenericFile::Actions.virus_check(file)
       flash[:error] = "Virus checking did not pass for #{File.basename(file.path)} status = #{stat}" unless stat == 0
       stat
-    end 
+    end
+
+
+    def create_metadata(file)
+      Sufia::GenericFile::Actions.create_metadata(file, current_user, params[:batch_id])
+    end
 
   end
 end
