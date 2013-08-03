@@ -60,6 +60,9 @@ class HeadGenerator < Rails::Generators::Base
     copy_file "config/role_map_production.yml", "config/role_map_production.yml"
     copy_file "config/role_map_test.yml", "config/role_map_test.yml"
 
+    # CanCan ability.rb
+    copy_file "ability.rb", "app/models/ability.rb"
+
     # Fedora & Solr YAML files
     invoke('active_fedora:config')
   end
