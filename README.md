@@ -25,12 +25,15 @@ Sufia has the following features:
 * Background jobs
 * Single-use links
 
+## System Dependencies
+
 Sufia needs the following software to work:
+* Ruby
 * Solr
 * Fedora Commons
 * A SQL RDBMS (MySQL, SQLite)
 * Redis
-* Ruby
+
 
 
 
@@ -95,11 +98,15 @@ Add this line:
 http://code.google.com/p/fits/downloads/list
 Download a copy of fits & unpack it somewhere on your PATH.
 
+
 ### Start background workers
+**Note:** Resque relies on the [redis](http://redis.io/) key-value store.  You must install [redis](http://redis.io/) on your system in order for this command to work.
+
 ```
 COUNT=4 QUEUE=* rake environment resque:work
 ```
 See https://github.com/defunkt/resque for more options
+
 
 ### If you want to enable transcoding of video, instal ffmpeg version 1.0+
 #### On a mac
