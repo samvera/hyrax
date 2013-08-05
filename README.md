@@ -100,7 +100,8 @@ Download a copy of fits & unpack it somewhere on your PATH.
 
 
 ### Start background workers
-**Note:** Resque relies on the [redis](http://redis.io/) key-value store.  You must install [redis](http://redis.io/) on your system in order for this command to work.
+**Note:** Resque relies on the [redis](http://redis.io/) key-value store.  You must install [redis](http://redis.io/) on your system and *have redis running* in order for this command to work.
+To start redis, you usually want to call the `redis-server` command.
 
 ```
 COUNT=4 QUEUE=* rake environment resque:work
