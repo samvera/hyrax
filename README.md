@@ -32,7 +32,7 @@ Sufia needs the following software to work:
 * Solr
 * Fedora Commons
 * A SQL RDBMS (MySQL, SQLite)
-* Redis
+* [Redis](http://redis.io/) key-value store
 
 
 
