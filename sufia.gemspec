@@ -14,7 +14,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "sufia"
   gem.require_paths = ["lib"]
-  gem.version       = version 
+  gem.version       = version
+  gem.license       = 'APACHE2'
 
   gem.add_dependency 'sufia-models', version
   gem.add_dependency 'blacklight', '~> 4.0'
