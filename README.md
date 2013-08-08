@@ -25,17 +25,13 @@ Sufia has the following features:
 * Background jobs
 * Single-use links
 
-## System Dependencies
-
-Sufia needs the following software to work:
-* Ruby
-* Solr
-* Fedora Commons
-* A SQL RDBMS (MySQL, SQLite)
-* [Redis](http://redis.io/) key-value store
-
-
-
+## Sufia needs the following software to work:
+1. Solr
+1. Fedora Commons
+1. A SQL RDBMS (MySQL, SQLite)
+1. [Redis](http://redis.io/) key-value store
+1. Ruby
+## !! Ensure that you have all of the above components installed before you continue. !!
 
 ## Creating an application
 ### Generate base Rails install
@@ -95,19 +91,30 @@ Add this line:
 ```
 
 ### Install Fits.sh
-http://code.google.com/p/fits/downloads/list
-Download a copy of fits & unpack it somewhere on your PATH.
-
+1. Go to http://code.google.com/p/fits/downloads/list and download a copy of fits & unpack it somewhere on your Machine.
+1. Give your system access to fits
+    1. By adding the path to fits.sh to your excutable PATH. (ex. in your .bashrc)
+        * OR
+    1. By adding/changing config/initializers/sufia.rb to point to your fits location:   `config.fits_path = "/<your full path>/fits.sh"`
+1. You may additionally need to chmod the fits.sh (chmod a+x fits.sh)
+1. You may need to restart your shell to pick up the changes to you path
+1. You should be able to run "fits.sh" from the command line and see a help message
 
 ### Start background workers
 **Note:** Resque relies on the [redis](http://redis.io/) key-value store.  You must install [redis](http://redis.io/) on your system and *have redis running* in order for this command to work.
 To start redis, you usually want to call the `redis-server` command.
 
 ```
-COUNT=4 QUEUE=* rake environment resque:work
+QUEUE=* rake environment resque:work
 ```
-See https://github.com/defunkt/resque for more options
 
+For production you may want to set up a config/resque-pool.yml and run resque pool in daemon mode
+
+```
+resque-pool --daemon --environment development start
+```
+
+See https://github.com/defunkt/resque for more options
 
 ### If you want to enable transcoding of video, instal ffmpeg version 1.0+
 #### On a mac
