@@ -6,7 +6,7 @@ module Sufia
     def perform_local_ingest
       if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
         if ingest_local_file
-          redirect_to sufia.batch_edit_path(params[:batch_id])
+          redirect_to GenericFilesController.upload_complete_path( params[:batch_id])
         else
           flash[:alert] = "Error importing files from user directory."
           render :new
@@ -46,7 +46,7 @@ module Sufia
       basename = File.basename(filename)
       @generic_file.label = basename
       @generic_file.relative_path = filename if filename != basename
-      Sufia::GenericFile::Actions.create_metadata(@generic_file, current_user, params[:batch_id] )
+      create_metadata(@generic_file)
       Sufia.queue.push(IngestLocalFileJob.new(@generic_file.id, current_user.directory, filename, current_user.user_key))
     end
     

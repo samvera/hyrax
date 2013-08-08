@@ -31,6 +31,8 @@ describe GenericFilesController do
       JSON.parse(response.body).first['error'].should match(/no file for upload/i)
     end
 
+
+
     it "should spawn a content deposit event job" do
       file = fixture_file_upload('/world.png','image/png')
       s1 = double('one')
@@ -181,6 +183,7 @@ describe GenericFilesController do
   end
     
   describe "#create with local_file" do
+    let (:mock_url) {"http://example.com"}
     before do
       Sufia.config.enable_local_ingest = true
       GenericFile.delete_all
@@ -217,6 +220,21 @@ describe GenericFilesController do
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
         files.first.label.should == 'world.png'
         files.last.label.should == 'image.jp2'
+      end
+      it "should ingest redirect to another location" do
+        if $in_travis
+          # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf.
+          # In order to avoid an invalid derivative creation, just stub out the derivatives.
+          GenericFile.any_instance.stub(:create_derivatives)
+        end
+        GenericFilesController.should_receive(:upload_complete_path).and_return(mock_url)
+        lambda { post :create, local_file: ["world.png"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(1)
+        response.should redirect_to mock_url
+        # These files should have been moved out of the upload directory
+        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        # And into the storage directory
+        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
+        files.first.label.should == 'world.png'
       end
       it "should ingest directories from the filesystem" do
         #TODO this test is very slow because it kicks off CharacterizeJob.
