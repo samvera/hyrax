@@ -1,5 +1,82 @@
 # History of Sufia releases
 
+## 3.1.0
+* Make fits instructions more verbose [Carolyn Cole]
+
+* Adding one location to define/ override where the upload redirects to after a
+sucessfull upload [Carolyn Cole]
+
+* Added license to the gemspec [Justin Coyne]
+
+* fixed typo in require statement [Matt Zumwalt]
+
+* requires active_resource more cleanly [Matt Zumwalt]
+
+* updating facet views so that the blacklight helper_method will get called
+[Carolyn Cole]
+
+* Adds a spec for the ImportUrlJob [Michael J. Giarlo]
+
+* Fixed expecations for travis tests for #169 [Justin Coyne]
+
+* ModelMethods#apply_depositor_metadata should accept a user or a string like the
+method it overrides in HydraHead.  See:
+https://github.com/projecthydra/hydra-head/blob/9a5b2728be2046125d09376a6d78ad06d26548c3/hydra-core/lib/hydra/model_methods.rb#L12
+[Justin Coyne]
+
+* Remove expand_path jazz from remaining specs [Michael J. Giarlo]
+
+* Codifying a pid based job [Jeremy Friesen]
+
+* Removing characterization save unless new_object? [Jeremy Friesen]
+
+* Adding $LOAD_PATH variable to dev rake task [Jeremy Friesen]
+
+* Bump dependency on hydra-derivatives [Justin Coyne]
+
+* Use add_file() rather than add_file_datastream() to ensure object label is set
+[Michael J. Giarlo]
+
+* Audio and video transcoding with hydra-derivatives [Justin Coyne]
+
+* Use hydra-derivatives for generating thumbnails [Justin Coyne]
+
+* ingest_local_file should ingest the file, not the filename [Justin Coyne]
+
+* Including deposit agreement on local import page [Matt Zumwalt]
+
+* UI for local ingest only appears in local ingest tab on upload page [Matt
+Zumwalt]
+
+* Putting test coverage for virus check into the right place [Matt Zumwalt]
+
+* local file ingest runs virus check [Matt Zumwalt]
+
+* testing outputs without relying on consistent array ordering [Matt Zumwalt]
+
+* UI text changes for local ingest [Matt Zumwalt]
+
+* removing unused fixtures [Matt Zumwalt]
+
+* cleanup of tests and method names around local ingest [Matt Zumwalt]
+
+* Display local ingest tab in Upload page when local import enabled [Matt
+Zumwalt]
+
+* Local ingest renders graceful error message if User does not define a directory
+path [Matt Zumwalt]
+
+* fixing scope of describe blocks in this test [Matt Zumwalt]
+
+* LocalFileIngestBehavior for FilesController [Matt Zumwalt]
+
+* The generator should create config/initializers/resque_config.rb [Justin Coyne]
+
+* Reindex everything scopes to sufia's namespace [Jeremy Friesen]
+
+* Remove css that doesn't appear to be used [Justin Coyne]
+
+
 ## 3.0.0
 * Update README.md paths for Sufia assets application.css and application.js [Jim
 Coble]
