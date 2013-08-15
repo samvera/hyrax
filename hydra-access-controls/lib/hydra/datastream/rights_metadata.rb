@@ -107,7 +107,9 @@ module Hydra
           end
         else
           remove_all_permissions(selector)
-          unless new_access_level == "none" 
+          if new_access_level == "none" 
+            self.content = self.to_xml
+          else
             access_type_symbol = "#{new_access_level}_access".to_sym
             current_values = term_values(access_type_symbol, type)
             self.update_values([access_type_symbol, type] => current_values + [actor] )
