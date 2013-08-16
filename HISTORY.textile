@@ -1,3 +1,6 @@
+h3. 6.3.3 (2013-08-16)
+* Fix serialization of empty permissions lists [Michael Klein]
+
 h3. 6.3.2 (2013-07-22)
 * render_selected_facet_value should make use of Blacklight's facet_display_value method [Justin Coyne]
 * added contribution guidelines [Jeremey Friesen]
