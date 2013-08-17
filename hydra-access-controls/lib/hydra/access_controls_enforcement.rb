@@ -44,6 +44,7 @@ module Hydra::AccessControlsEnforcement
   end
 
   def is_public?
+    ActiveSupport::Deprecation.warn("Hydra::AccessControlsEnforcement.is_public? has been deprecated. Use can? instead.") 
     load_permissions_from_solr
     access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
     @permissions_solr_document[access_key].present? && @permissions_solr_document[access_key].first.downcase == "public"
@@ -58,14 +59,11 @@ module Hydra::AccessControlsEnforcement
   # @param [Hash] opts (optional, not currently used)
   def enforce_show_permissions(opts={})
     permissions = current_ability.permissions_doc(params[:id])
-    unless permissions.is_public?
-      #its not 'public'
-      if permissions.under_embargo? && !can?(:edit, permissions)
-        raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
-      end
-      unless can? :read, permissions 
-        raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
-      end
+    if permissions.under_embargo? && !can?(:edit, permissions)
+      raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
+    end
+    unless can? :read, permissions 
+      raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
     end
   end
   
