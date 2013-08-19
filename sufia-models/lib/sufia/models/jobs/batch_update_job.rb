@@ -44,10 +44,10 @@ class BatchUpdateJob
     
     job_user = User.batchuser()
     
-    message = '<a class="batchid ui-helper-hidden">ss-'+batch.noid+'</a>The file(s) '+ file_list(@saved)+ " have been saved." unless @saved.empty?
+    message = '<span class="batchid ui-helper-hidden">ss-'+batch.noid+'</span>The file(s) '+ file_list(@saved)+ " have been saved." unless @saved.empty?
     job_user.send_message(user, message, 'Batch upload complete') unless @saved.empty?
  
-    message = '<a class="batchid ui-helper-hidden">'+batch.noid+'</a>The file(s) '+ file_list(@denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless @denied.empty?
+    message = '<span class="batchid ui-helper-hidden">'+batch.noid+'</span>The file(s) '+ file_list(@denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless @denied.empty?
     job_user.send_message(user, message, 'Batch upload permission denied') unless @denied.empty?
      
   end
