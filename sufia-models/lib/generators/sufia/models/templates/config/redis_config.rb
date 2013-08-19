@@ -7,7 +7,7 @@ if defined?(PhusionPassenger)
       config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
 
       # The important two lines
-      $redis.client.disconnect if $redis 
+      $redis.client.disconnect if $redis
       $redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
       Resque.redis = $redis
       Resque.redis.client.reconnect if Resque.redis
