@@ -10,6 +10,7 @@ class Hydra::PermissionsSolrDocument < SolrDocument
   end
 
   def is_public?
+    ActiveSupport::Deprecation.warn("Hydra::PermissionsSolrDocument.is_public? has been deprecated. Use can? instead.") 
     access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
     self[access_key].present? && self[access_key].first.downcase == "public"
   end
