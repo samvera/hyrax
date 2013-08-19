@@ -22,7 +22,6 @@ task :spec => :generate do
   end
 end
 
-gem_home = File.expand_path('../../', __FILE__)
 
 desc "Run specs"
 RSpec::Core::RakeTask.new(:rspec) do |t|
