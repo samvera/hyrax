@@ -1,5 +1,15 @@
 # History of Sufia releases
 
+## 3.1.1
+* Extracting sufia generator behavior [Jeremy Friesen]
+
+* Don't use Sufia::Engine in the generated initializer [Justin Coyne]
+
+* Removed unused code [Justin Coyne]
+
+* Changed from a tag to span. fixes #32 [Carolyn Cole]
+
+
 ## 3.1.0
 * Make fits instructions more verbose [Carolyn Cole]
 
