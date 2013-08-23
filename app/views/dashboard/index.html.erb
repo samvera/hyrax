@@ -70,7 +70,7 @@ limitations under the License.
   <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
   <div class="row">
     <%= render :partial => 'search_form' %>
-    <h2 class="heading1">My Dashboard</h2>
+    <%= render :partial => 'heading' %>
   </div>
 
   <% extra_head_content << render_opensearch_response_metadata.html_safe %>
