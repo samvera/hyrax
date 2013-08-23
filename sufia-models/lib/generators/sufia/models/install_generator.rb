@@ -20,10 +20,14 @@ This generator makes the following changes to your application:
   # Implement the required interface for Rails::Generators::Migration.
   # taken from http://github.com/rails/rails/blob/master/activerecord/lib/generators/active_record.rb
   def self.next_migration_number(path)
-    unless @prev_migration_nr
-      @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-    else
+    if @prev_migration_nr
       @prev_migration_nr += 1
+    else
+      if last_migration = Dir[File.join(path, '*.rb')].sort.last
+        @prev_migration_nr = last_migration.sub(File.join(path, '/'), '').to_i + 1
+      else
+        @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+      end
     end
     @prev_migration_nr.to_s
   end
@@ -42,8 +46,8 @@ This generator makes the following changes to your application:
       "add_groups_to_users.rb",
       "create_local_authorities.rb",
       "create_trophies.rb"
-    ].each do |f|
-      better_migration_template f
+    ].each do |file|
+      better_migration_template file
     end
   end
 
@@ -88,12 +92,7 @@ This generator makes the following changes to your application:
   private
 
   def better_migration_template(file)
-    begin
-      migration_template "migrations/#{file}", "db/migrate/#{file}"
-      sleep 1 # ensure scripts have different time stamps
-    rescue
-      puts "  \e[1m\e[34mMigrations\e[0m  " + $!.message
-    end
+    migration_template "migrations/#{file}", "db/migrate/#{file}"
   end
 
 end
