@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'resque', '~> 1.23.0'#, :require => 'resque/server'
   spec.add_dependency 'resque-pool', '0.3.0'
   spec.add_dependency 'noid', '~> 0.6.6'
-  spec.add_dependency 'curationexperts-mailboxer', '0.10.3'
+  spec.add_dependency 'mailboxer', '~> 0.11.0'
   spec.add_dependency 'acts_as_follower', '0.1.1'
   spec.add_dependency 'paperclip', '~> 3.4.0'
   spec.add_dependency 'zipruby', '0.3.6'
