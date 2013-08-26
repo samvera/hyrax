@@ -33,28 +33,28 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   end
   
   
-  def apply_policy_role_permissions(permission_types)
+  def apply_policy_role_permissions(permission_types = discovery_permissions)
       # for roles
       user_access_filters = []
       current_ability.user_groups.each_with_index do |role, i|
-        discovery_permissions.each do |type|
-          user_access_filters << ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer ) + ":#{role}"
+        permission_types.each do |type|
+          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer ), role)
         end
       end
       user_access_filters
   end
 
-  def apply_policy_individual_permissions(permission_types)
+  def apply_policy_individual_permissions(permission_types = discovery_permissions)
     # for individual person access
     user_access_filters = []
     if current_user
-      discovery_permissions.each do |type|
-        user_access_filters << ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ) + ":#{current_user.user_key}"        
+      permission_types.each do |type|
+        user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ), current_user.user_key)
       end
     end
     user_access_filters
   end
-  
+
   # Returns the Model used for AdminPolicy objects.
   # You can set this by overriding this method or setting Hydra.config[:permissions][:policy_class]
   # Defults to Hydra::AdminPolicy

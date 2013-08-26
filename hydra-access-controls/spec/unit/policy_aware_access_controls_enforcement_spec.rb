@@ -129,4 +129,25 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       @solr_parameters[:fq].first.should_not include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
     end
   end
+
+  describe "apply_policy_role_permissions" do
+    it "should escape slashes in the group names" do
+      RoleMapper.stub(:roles).with(@user.user_key).and_return(["abc/123","cde/567"])
+      subject.stub(:current_user).and_return(@user)
+      user_access_filters = subject.apply_policy_role_permissions
+      ["edit","discover","read"].each do |type|
+        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\\/123")
+        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cde\\\/567")
+      end
+    end
+    it "should escape spaces in the group names" do
+      RoleMapper.stub(:roles).with(@user.user_key).and_return(["abc 123","cd/e 567"])
+      subject.stub(:current_user).and_return(@user)
+      user_access_filters = subject.apply_policy_role_permissions
+      ["edit","discover","read"].each do |type|
+        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\ 123")
+        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cd\\\/e\\ 567")
+      end
+    end
+  end
 end

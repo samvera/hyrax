@@ -118,7 +118,7 @@ module Hydra::AccessControlsEnforcement
   end
 
   def escape_filter(key, value)
-    [key, value.gsub('/', '\/')].join(':')
+    [key, value.gsub(/[ \/]/, ' ' => '\ ', '/' => '\/')].join(':')
   end
 
   def apply_individual_permissions(permission_types)
