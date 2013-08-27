@@ -49,7 +49,7 @@ module Sufia
       end
 
       def set_visibility(visibility)
-        Deprecation.warn Permissions, "set_visibility is deprecated, use visibility= instead.  set_visibility will be removed in sufia 3.0", caller
+        Deprecation.warn Visibility, "set_visibility is deprecated, use visibility= instead.  set_visibility will be removed in sufia 3.0", caller
         self.visibility= visibility
       end
     end
