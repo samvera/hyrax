@@ -90,22 +90,38 @@ describe GenericFile do
     end
   end
 
+  describe "visibility" do
+    it "should not be changed when it's new" do
+      subject.should_not be_visibility_changed
+    end
+    it "should be changed when it has been changed" do
+      subject.visibility= 'open'
+      subject.should be_visibility_changed
+    end
+
+    it "should not be changed when it's set to its previous value" do
+      subject.visibility= 'private'
+      subject.should_not be_visibility_changed
+    end
+
+  end
+
   describe "attributes" do
     it "should have rightsMetadata" do
-      @file.rightsMetadata.should be_instance_of ParanoidRightsDatastream
+      subject.rightsMetadata.should be_instance_of ParanoidRightsDatastream
     end
     it "should have properties datastream for depositor" do
-      @file.properties.should be_instance_of PropertiesDatastream
+      subject.properties.should be_instance_of PropertiesDatastream
     end
     it "should have apply_depositor_metadata" do
-      @file.rightsMetadata.edit_access.should == ['jcoyne']
-      @file.depositor.should == 'jcoyne'
+      subject.rightsMetadata.edit_access.should == ['jcoyne']
+      subject.depositor.should == 'jcoyne'
     end
     it "should have a set of permissions" do
-      @file.read_groups=['group1', 'group2']
-      @file.edit_users=['user1']
-      @file.read_users=['user2', 'user3']
-      @file.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
+      subject.read_groups=['group1', 'group2']
+      subject.edit_users=['user1']
+      subject.read_users=['user2', 'user3']
+      subject.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
           {:type=>"group", :access=>"read", :name=>"group2"},
           {:type=>"user", :access=>"read", :name=>"user2"},
           {:type=>"user", :access=>"read", :name=>"user3"},
@@ -113,51 +129,51 @@ describe GenericFile do
     end
     describe "updating permissions" do
       it "should create new group permissions" do
-        @file.permissions = {:new_group_name => {'group1'=>'read'}}
-        @file.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
+        subject.permissions = {:new_group_name => {'group1'=>'read'}}
+        subject.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should create new user permissions" do
-        @file.permissions = {:new_user_name => {'user1'=>'read'}}
-        @file.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
+        subject.permissions = {:new_user_name => {'user1'=>'read'}}
+        subject.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should not replace existing groups" do
-        @file.permissions = {:new_group_name=> {'group1' => 'read'}}
-        @file.permissions = {:new_group_name=> {'group2' => 'read'}}
-        @file.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
+        subject.permissions = {:new_group_name=> {'group1' => 'read'}}
+        subject.permissions = {:new_group_name=> {'group2' => 'read'}}
+        subject.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
                                      {:type=>"group", :access=>"read", :name=>"group2"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should not replace existing users" do
-        @file.permissions = {:new_user_name=>{'user1'=>'read'}}
-        @file.permissions = {:new_user_name=>{'user2'=>'read'}}
-        @file.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
+        subject.permissions = {:new_user_name=>{'user1'=>'read'}}
+        subject.permissions = {:new_user_name=>{'user2'=>'read'}}
+        subject.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
                                      {:type=>"user", :access=>"read", :name=>"user2"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should update permissions on existing users" do
-        @file.permissions = {:new_user_name=>{'user1'=>'read'}}
-        @file.permissions = {:user=>{'user1'=>'edit'}}
-        @file.permissions.should == [{:type=>"user", :access=>"edit", :name=>"user1"},
+        subject.permissions = {:new_user_name=>{'user1'=>'read'}}
+        subject.permissions = {:user=>{'user1'=>'edit'}}
+        subject.permissions.should == [{:type=>"user", :access=>"edit", :name=>"user1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
       it "should update permissions on existing groups" do
-        @file.permissions = {:new_group_name=>{'group1'=>'read'}}
-        @file.permissions = {:group=>{'group1'=>'edit'}}
-        @file.permissions.should == [{:type=>"group", :access=>"edit", :name=>"group1"},
+        subject.permissions = {:new_group_name=>{'group1'=>'read'}}
+        subject.permissions = {:group=>{'group1'=>'edit'}}
+        subject.permissions.should == [{:type=>"group", :access=>"edit", :name=>"group1"},
                                      {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
       end
     end
     it "should have a characterization datastream" do
-      @file.characterization.should be_kind_of FitsDatastream
+      subject.characterization.should be_kind_of FitsDatastream
     end
     it "should have a dc desc metadata" do
-      @file.descMetadata.should be_kind_of GenericFileRdfDatastream
+      subject.descMetadata.should be_kind_of GenericFileRdfDatastream
     end
     it "should have content datastream" do
-      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      @file.content.should be_kind_of FileContentDatastream
+      subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      subject.content.should be_kind_of FileContentDatastream
     end
   end
   describe "delegations" do
