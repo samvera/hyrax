@@ -2,6 +2,7 @@ module Sufia
   module GenericFile
     module Permissions
       extend ActiveSupport::Concern
+      extend Deprecation
       #we're overriding the permissions= method which is in RightsMetadata
       include Hydra::ModelMixins::RightsMetadata
       included do
@@ -9,7 +10,7 @@ module Sufia
         validate :paranoid_permissions
       end
 
-      def set_visibility(visibility)
+      def visibility= (visibility)
         # only set explicit permissions
         case visibility
         when "open"
@@ -23,6 +24,10 @@ module Sufia
         end
       end
 
+      def set_visibility(visibility)
+        Deprecation.warn Permissions, "set_visibility is deprecated, use visibility= instead.  set_visibility will be removed in sufia 3.0", caller
+        self.visibility= visibility
+      end
 
       def paranoid_permissions
         # let the rightsMetadata ds make this determination
