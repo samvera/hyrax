@@ -1,3 +1,12 @@
+h3. 6.3.4 (2013-08-27)
+* Default ability shouldn't have policy methods [Justin Coyne]
+* Escape spaces in group names in solr query conditions [Chris Colvard]
+* Deprecating and removing calls to .is_puublic? [Adam Wead]
+* Issue 78: Adding blank custom_permissions method with comments [Adam Wead]
+* Updating README [Adam Wead]
+* Add an ability.rb file when running the generator [Adam Wead]
+
+
 h3. 6.3.3 (2013-08-16)
 * Fix serialization of empty permissions lists [Michael Klein]
 
