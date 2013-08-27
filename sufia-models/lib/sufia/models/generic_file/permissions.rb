@@ -2,31 +2,13 @@ module Sufia
   module GenericFile
     module Permissions
       extend ActiveSupport::Concern
-      extend Deprecation
       #we're overriding the permissions= method which is in RightsMetadata
       include Hydra::ModelMixins::RightsMetadata
+      include Sufia::GenericFile::Visibility
+
       included do
         has_metadata :name => "rightsMetadata", :type => ParanoidRightsDatastream
         validate :paranoid_permissions
-      end
-
-      def visibility= (visibility)
-        # only set explicit permissions
-        case visibility
-        when "open"
-          self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "read")
-        when "psu"
-          self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "read")
-          self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-        when "restricted" 
-          self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "none")
-          self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-        end
-      end
-
-      def set_visibility(visibility)
-        Deprecation.warn Permissions, "set_visibility is deprecated, use visibility= instead.  set_visibility will be removed in sufia 3.0", caller
-        self.visibility= visibility
       end
 
       def paranoid_permissions
@@ -62,8 +44,6 @@ module Sufia
         end
         {'person'=>user_perms, 'group'=>group_perms}
       end
-
-
     end
   end
 end
