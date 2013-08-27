@@ -60,7 +60,7 @@ class BatchUpdateJob
     end
     gf.title = title[gf.pid] if title[gf.pid] rescue gf.label
     gf.attributes=file_attributes
-    gf.set_visibility(visibility)
+    gf.visibility= visibility
 
     save_tries = 0
     begin
