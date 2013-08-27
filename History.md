@@ -1,4 +1,15 @@
 # History of Sufia releases
+## 3.1.2
+* Track changes on visibility [Justin Coyne]
+
+* Use an ideomatic setter for visibility [Justin Coyne]
+
+* Upgrade mailboxer [Justin Coyne]
+
+* Adding a partial for the header of the dashboard to make the wording easier to
+override. [Carolyn Cole]
+
+* Improving the better migration template [Jeremy Friesen]
 
 ## 3.1.1
 * Extracting sufia generator behavior [Jeremy Friesen]
