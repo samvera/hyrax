@@ -72,7 +72,7 @@ module Sufia
       pid = @generic_file.noid
       @generic_file.destroy
       Sufia.queue.push(ContentDeleteEventJob.new(pid, current_user.user_key))
-      redirect_to sufia.dashboard_index_path, :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
+      redirect_to self.class.destroy_complete_path(params), :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
     end
 
     # routed to /files (POST)
@@ -181,6 +181,7 @@ module Sufia
     end
 
     protected
+
 
     def json_error(error, name=nil, additional_arguments={})
       args = {:error => error}
