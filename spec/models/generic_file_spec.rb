@@ -100,7 +100,7 @@ describe GenericFile do
     end
 
     it "should not be changed when it's set to its previous value" do
-      subject.visibility= 'private'
+      subject.visibility= 'restricted'
       subject.should_not be_visibility_changed
     end
 

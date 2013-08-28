@@ -10,41 +10,27 @@ module Sufia
       end
 
       def visibility= (value)
+        return if value.nil?
         # only set explicit permissions
         case value
-        when "open"
+        when Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           public_visibility!
-        when "psu"
+        when Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           registered_visibility!
-        when "restricted" 
+        when Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE 
           private_visibility!
+        else
+          raise ArgumentError, "Invalid visibility: #{value.inspect}"
         end
       end
 
-      def public_visibility!
-        visibility_will_change! unless visibility == 'public'
-        self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "read")
-      end
-
-      def registered_visibility!
-        visibility_will_change! unless visibility == 'registered'
-        self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "read")
-        self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-      end
-
-      def private_visibility!
-        visibility_will_change! unless visibility == 'private'
-        self.datastreams["rightsMetadata"].permissions({:group=>"registered"}, "none")
-        self.datastreams["rightsMetadata"].permissions({:group=>"public"}, "none")
-      end
-
       def visibility
-        if read_groups.include? 'public'
-          'public'
-        elsif read_groups.include? 'registered'
-          'registered'
+        if read_groups.include? Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
+          Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        elsif read_groups.include? Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
+          Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         else
-          'private'
+          Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         end
       end
 
@@ -52,6 +38,24 @@ module Sufia
         Deprecation.warn Visibility, "set_visibility is deprecated, use visibility= instead.  set_visibility will be removed in sufia 3.0", caller
         self.visibility= visibility
       end
+
+      private 
+        def public_visibility!
+          visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "read")
+        end
+
+        def registered_visibility!
+          visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "read")
+          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
+        end
+
+        def private_visibility!
+          visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "none")
+          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
+        end
     end
   end
 end
