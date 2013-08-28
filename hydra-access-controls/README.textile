@@ -87,18 +87,14 @@ Object-level permissions and Policy-level permissions are combined to produce th
 
 To turn on Policy-based enforcement, 
 
-* include the Hydra::PolicyAwareAbility module in your Ability class (Make sure to include it _after_ Hydra::Ability because it overrides some of the methods provided by that module.)
+* include the Hydra::PolicyAwareAbility module in your Ability class (Make sure to remove `include Hydra::Ability`)
 * include the Hydra::PolicyAwareAccessControlsEnforcement module into any appropriate Controllers (or into ApplicationController)
  
 
 Example app/models/ability.rb
 
 <pre>
-  # Allows you to use CanCan to control access to Models
-  require 'cancan'
   class Ability
-    include CanCan::Ability
-    include Hydra::Ability
     include Hydra::PolicyAwareAbility
   end
 </pre>

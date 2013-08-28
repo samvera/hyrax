@@ -21,8 +21,6 @@ describe Hydra::PolicyAwareAbility do
   end
   before(:all) do
     class PolicyAwareClass
-      include CanCan::Ability
-      include Hydra::Ability
       include Hydra::PolicyAwareAbility
     end
     @policy = Hydra::AdminPolicy.new
@@ -40,7 +38,11 @@ describe Hydra::PolicyAwareAbility do
     @asset.admin_policy = @policy
     @asset.save
   end
-  after(:all) { @policy.delete; @asset.delete }
+  after(:all) do
+    @policy.delete
+    @asset.delete 
+    Object.send(:remove_const, :PolicyAwareClass)
+  end 
   subject { PolicyAwareClass.new( User.new ) }
   
   describe "policy_pid_for" do

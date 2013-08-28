@@ -1,5 +1,7 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAbility
+  extend ActiveSupport::Concern
+  include Hydra::Ability
   
   # Extends Hydra::Ability.test_edit to try policy controls if object-level controls deny access
   def test_edit(pid)
