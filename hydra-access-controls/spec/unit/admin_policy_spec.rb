@@ -131,7 +131,6 @@ describe Hydra::AdminPolicy do
     end
     before(:all) do
       class TestAbility
-        include Hydra::Ability
         include Hydra::PolicyAwareAbility
       end
     end
