@@ -129,7 +129,17 @@ describe Hydra::AdminPolicy do
       @user = FactoryGirl.build(:martia_morocco)
       RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
     end
-    subject { Ability.new(@user) }
+    before(:all) do
+      class TestAbility
+        include Hydra::Ability
+        include Hydra::PolicyAwareAbility
+      end
+    end
+
+    after(:all) do
+      Object.send(:remove_const, :TestAbility)
+    end
+    subject { TestAbility.new(@user) }
     context "Given a policy grants read access to a group I belong to" do
       before do
         @policy = Hydra::AdminPolicy.new
