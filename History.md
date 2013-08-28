@@ -1,4 +1,15 @@
 # History of Sufia releases
+## 3.1.3
+* Removed old PSU licence [Justin Coyne]
+
+* Moved access rights from curate [Justin Coyne]
+
+* Adding an operride path where to redirect for when a file gets destroyed.
+[Carolyn Cole]
+
+* Use the deprecation settings on the correct module [Justin Coyne]
+
+
 ## 3.1.2
 * Track changes on visibility [Justin Coyne]
 
