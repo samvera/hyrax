@@ -34,12 +34,13 @@ module Sufia
         self.visibility= visibility
       end
 
+      def visibility_changed?
+        @visibility_will_change
+      end
+
       private
       def visibility_will_change!
         @visibility_will_change = true
-      end
-      def visibility_changed?
-        @visibility_will_change
       end
 
       def public_visibility!
