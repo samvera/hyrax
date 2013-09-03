@@ -3,13 +3,8 @@ module Sufia
     module Visibility
       extend ActiveSupport::Concern
       extend Deprecation
-      include ActiveModel::Dirty
 
-      included do
-        define_attribute_methods :visibility
-      end
-
-      def visibility= (value)
+      def visibility=(value)
         return if value.nil?
         # only set explicit permissions
         case value
@@ -17,7 +12,7 @@ module Sufia
           public_visibility!
         when Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           registered_visibility!
-        when Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE 
+        when Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           private_visibility!
         else
           raise ArgumentError, "Invalid visibility: #{value.inspect}"
@@ -39,25 +34,31 @@ module Sufia
         self.visibility= visibility
       end
 
-      private 
-        def public_visibility!
-          visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "read")
-        end
+      private
+      def visibility_will_change!
+        @visibility_will_change = true
+      end
+      def visibility_changed?
+        @visibility_will_change
+      end
 
-        def registered_visibility!
-          visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "read")
-          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
-        end
+      def public_visibility!
+        visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "read")
+      end
 
-        def private_visibility!
-          visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "none")
-          self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
-        end
+      def registered_visibility!
+        visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "read")
+        self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
+      end
+
+      def private_visibility!
+        visibility_will_change! unless visibility == Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "none")
+        self.datastreams["rightsMetadata"].permissions({:group=>Sufia::Models::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
+      end
+
     end
   end
 end
-
-
