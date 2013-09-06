@@ -92,7 +92,11 @@ This generator makes the following changes to your application:
   private
 
   def better_migration_template(file)
-    migration_template "migrations/#{file}", "db/migrate/#{file}"
+    begin
+      migration_template "migrations/#{file}", "db/migrate/#{file}"
+    rescue Rails::Generators::Error => e
+      say_status("warning", e.message, :yellow)
+    end
   end
 
 end
