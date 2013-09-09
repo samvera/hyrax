@@ -16,10 +16,10 @@ Gem::Specification.new do |spec|
 
   # This is a temporary homepage until we've had a chance to review the
   # process
-  spec.homepage      = "https://github.com/jeremyf/sufia"
+  spec.homepage      = "https://github.com/projecthydra/sufia"
   spec.license       = "Apache"
 
-  spec.files         = `git ls-files`.split($/)
+  spec.files         = `git ls-files`.split($/).grep(%r{\Asufia-models})
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
