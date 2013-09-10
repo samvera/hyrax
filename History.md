@@ -1,6 +1,9 @@
 # History of Sufia releases
 
-## 3.2.0
+## 3.2.1
+* Updating gemspec to not limit on sufia-models [Jeremy Friesen]
+
+## 3.2.0 - YANKED
 * Including on sufia-models subdir in gemspec [Jeremy Friesen]
 * Restoring the exception catching for migrations [Jeremy Friesen]
 * Publicizing #visibility_changed? [Jeremy Friesen]
