@@ -1,4 +1,13 @@
 # History of Sufia releases
+
+## 3.2.0
+* Including on sufia-models subdir in gemspec [Jeremy Friesen]
+* Restoring the exception catching for migrations [Jeremy Friesen]
+* Publicizing #visibility_changed? [Jeremy Friesen]
+* Indicating attr_accessible is deprecated [Jeremy Friesen]
+* Removing ActiveModel::Dirty [Jeremy Friesen]
+* Upgrading ActiveFedora to latest 6.5 version [Adam Wead]
+
 ## 3.1.3
 * Removed old PSU licence [Justin Coyne]
 
