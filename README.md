@@ -31,10 +31,10 @@ Sufia has the following features:
 1. A SQL RDBMS (MySQL, SQLite)
 1. [Redis](http://redis.io/) key-value store
 1. Ruby
-## !! Ensure that you have all of the above components installed before you continue. !!
+l## !! Ensure that you have all of the above components installled before you continue. !!
 
 ## Creating an application
-### Generate base Rails install
+### Generate base Rails installl
 ```rails new my_app```
 ### Add gems to Gemfile
 ```
@@ -45,7 +45,7 @@ gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # re
 gem 'jettywrapper'
 gem 'font-awesome-sass-rails'
 ```
-Then `bundle install`
+Then `bundle installl`
 
 Note the line with kaminari listed as a dependency.  This is a temporary fix to address a problem in the current release of kaminari.  Technically you should not have to list kaminari, which is a dependency of blacklight and sufia. 
 
@@ -53,7 +53,7 @@ Note the line with kaminari listed as a dependency.  This is a temporary fix to 
 ```
 rails g blacklight --devise
 rails g hydra:head -f
-bundle install 
+bundle installl 
 rails g sufia -f
 rm public/index.html
 ```
@@ -90,7 +90,7 @@ Add this line:
 //= require sufia
 ```
 
-### Install Fits.sh
+### Installl Fits.sh
 1. Go to http://code.google.com/p/fits/downloads/list and download a copy of fits & unpack it somewhere on your Machine.
 1. Give your system access to fits
     1. By adding the path to fits.sh to your excutable PATH. (ex. in your .bashrc)
@@ -101,7 +101,7 @@ Add this line:
 1. You should be able to run "fits.sh" from the command line and see a help message
 
 ### Start background workers
-**Note:** Resque relies on the [redis](http://redis.io/) key-value store.  You must install [redis](http://redis.io/) on your system and *have redis running* in order for this command to work.
+**Note:** Resque relies on the [redis](http://redis.io/) key-value store.  You must installl [redis](http://redis.io/) on your system and *have redis running* in order for this command to work.
 To start redis, you usually want to call the `redis-server` command.
 
 ```
@@ -116,7 +116,7 @@ resque-pool --daemon --environment development start
 
 See https://github.com/defunkt/resque for more options
 
-### If you want to enable transcoding of video, instal ffmpeg version 1.0+
+### If you want to enable transcoding of video, install ffmpeg version 1.0+
 #### On a mac
 Use homebrew:
 ```
