@@ -13,8 +13,6 @@ describe SingleUseLinkController do
     @file2.save
   end
   after(:all) do
-    SingleUseLink.delete_all
-    @user.delete
     @file.delete
     @file2.delete
   end
@@ -28,20 +26,17 @@ describe SingleUseLinkController do
       sign_in @user
       @now = DateTime.now
       DateTime.stub(:now).and_return(@now)
-      @hash = "sha2hash"+@now.to_f.to_s 
+      @hash = "some-dummy-sha2-hash" 
       Digest::SHA2.should_receive(:new).and_return(@hash)
     end
-    after do
-      sign_out @user
-      SingleUseLink.find(:all).each{ |l| l.delete}
-      @user.delete
-    end
+
     describe "GET 'generate_download'" do
       it "and_return http success" do
         get 'generate_download', id:@file.pid
         response.should be_success
         assigns[:link].should == @routes.url_helpers.download_single_use_link_path(@hash)
       end
+
     end
   
     describe "GET 'generate_show'" do
@@ -50,8 +45,10 @@ describe SingleUseLinkController do
         response.should be_success
         assigns[:link].should == @routes.url_helpers.show_single_use_link_path(@hash)
       end
+
     end   
   end
+
   describe "unkown user" do
     describe "GET 'generate_download'" do
       it "and_return http failure" do
@@ -68,10 +65,22 @@ describe SingleUseLinkController do
     end   
   end
   describe "retrieval links" do
-    before (:each) do
-      @dhash = SingleUseLink.create_download(@file.pid).downloadKey
-      @shash = SingleUseLink.create_show(@file.pid).downloadKey
-    end    
+    let :show_link do
+      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(@file.pid)
+    end
+
+    let :download_link do
+      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.download_path(@file.pid)
+    end
+
+    let :show_link_hash do
+      show_link.downloadKey
+    end
+
+    let :download_link_hash do
+      download_link.downloadKey
+    end
+
     before (:each) do
       @user.delete
     end
@@ -80,40 +89,63 @@ describe SingleUseLinkController do
         controller.stub(:render)
         expected_content = ActiveFedora::Base.find(@file.pid).content.content
         controller.should_receive(:send_file_headers!).with({:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
-        get :download, id:@dhash 
+        get :download, id:download_link_hash 
         response.body.should == expected_content
         response.should be_success
       end
       it "and_return 404 on second attempt" do
-        get :download, id:@dhash 
+        get :download, id:download_link_hash
         response.should be_success
-        get :download, id:@dhash
+        get :download, id:download_link_hash
         response.should render_template('error/single_use_error') 
       end
       it "and_return 404 on attempt to get download with show" do
-        get :download, id:@dhash
+        get :download, id:download_link_hash
         response.should be_success
-        get :download, id:@dhash
+        get :download, id:download_link_hash
         response.should render_template('error/single_use_error')
       end
     end
 
     describe "GET 'show'" do
       it "and_return http success" do
-        get 'show', id:@shash
+
+        get 'show', id:show_link_hash
         response.should be_success
         assigns[:generic_file].pid.should == @file.pid
       end
       it "and_return 404 on second attempt" do
-        get :show, id:@shash 
+        get :show, id:show_link_hash
         response.should be_success
-        get :show, id:@shash
+        get :show, id:show_link_hash
         response.should render_template('error/single_use_error')
       end
       it "and_return 404 on attempt to get show path with download hash" do
-        get :show, id:@dhash
+        get :show, id:download_link_hash
         response.should render_template('error/single_use_error')
       end
     end
   end
+
+  describe "round-trip integration tests" do
+    before do
+      @user = FactoryGirl.find_or_create(:user)
+      sign_in @user
+    end
+
+    it "should be valid to retrieve the download" do
+      get 'generate_download', id:@file.pid
+      response.should be_success
+      get :download, id:assigns[:su].downloadKey
+      response.should be_success
+    end
+
+    it "should be valid to retrieve the page" do
+      get 'generate_show', id:@file.pid
+      response.should be_success
+      get :show, id:assigns[:su].downloadKey
+      response.should be_success
+    end
+  end
+
 end
