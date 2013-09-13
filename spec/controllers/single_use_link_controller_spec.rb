@@ -15,6 +15,7 @@ describe SingleUseLinkController do
   after(:all) do
     @file.delete
     @file2.delete
+    SingleUseLink.delete_all
   end
   before do
     controller.stub(:has_access?).and_return(true)
@@ -66,11 +67,11 @@ describe SingleUseLinkController do
   end
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(@file.pid)
+      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(:id => @file)
     end
 
     let :download_link do
-      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.download_path(@file.pid)
+      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.download_path(:id => @file)
     end
 
     let :show_link_hash do
@@ -112,7 +113,7 @@ describe SingleUseLinkController do
 
         get 'show', id:show_link_hash
         response.should be_success
-        assigns[:generic_file].pid.should == @file.pid
+        assigns[:object].pid.should == @file.pid
       end
       it "and_return 404 on second attempt" do
         get :show, id:show_link_hash

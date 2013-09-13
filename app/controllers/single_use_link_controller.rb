@@ -12,7 +12,7 @@ class SingleUseLinkController < DownloadsController
   before_filter :load_link, :except => [:generate_download, :generate_show]
 
   def generate_download
-    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.download_path(params[:id])
+    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.download_path(:id => @object)
     @link = sufia.download_single_use_link_path(@su.downloadKey)
 
     respond_to do |format|
@@ -22,7 +22,7 @@ class SingleUseLinkController < DownloadsController
   end
 
   def generate_show
-    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.generic_file_path(params[:id])
+    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.polymorphic_path(@object)
     @link = sufia.show_single_use_link_path(@su.downloadKey)
 
     respond_to do |format|
@@ -34,12 +34,12 @@ class SingleUseLinkController < DownloadsController
   def download
     #grab the item id
     id = @link.itemId
+    @asset = ActiveFedora::Base.load_instance_from_solr(id)
 
     #check to make sure the path matches
-    raise not_found_exception unless @link.path == sufia.download_path(id)
+    raise not_found_exception unless @link.path == sufia.download_path(:id => @asset)
 
     # send the data content
-    @asset = GenericFile.load_instance_from_solr(id)
     load_datastream
     send_content(asset)
   end
@@ -47,26 +47,25 @@ class SingleUseLinkController < DownloadsController
   def show
     #grab the item id
     id = @link.itemId
-
+    @object = ActiveFedora::Base.load_instance_from_solr(id)
     #check to make sure the path matches
-    raise not_found_exception unless @link.path == sufia.generic_file_path(id)
+    raise not_found_exception unless @link.path == sufia.polymorphic_path(@object)
 
     #show the file
-    @generic_file = GenericFile.load_instance_from_solr(id)
-    @terms = @generic_file.terms_for_display
+    @terms = @object.terms_for_display
 
     # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
-    @su = @link.create_for_path sufia.download_path(params[:id])
+    @su = @link.create_for_path sufia.download_path(:id => @object)
     @download_link = sufia.download_single_use_link_path(@su.downloadKey)
   end
 
   protected
   def authorize_user!
-    authorize! :read, @generic_file
+    authorize! :read, @object
   end
 
   def find_file
-    @generic_file = GenericFile.load_instance_from_solr(params[:id])
+    @object = ActiveFedora::Base.load_instance_from_solr(params[:id])
   end
 
   def load_link
