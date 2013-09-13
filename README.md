@@ -30,6 +30,7 @@ Sufia has the following features:
 1. Fedora Commons
 1. A SQL RDBMS (MySQL, SQLite)
 1. [Redis](http://redis.io/) key-value store
+1. [ImageMagick](http://www.imagemagick.org/)
 1. Ruby
 
 #### !! Ensure that you have all of the above components installed before you continue. !!
