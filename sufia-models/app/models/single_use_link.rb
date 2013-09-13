@@ -12,6 +12,10 @@ class SingleUseLink < ActiveRecord::Base
     DateTime.now > expires
   end
 
+  def to_param
+    downloadKey
+  end
+
   protected
   def set_defaults
     if new_record?

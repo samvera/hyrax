@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SingleUseLinkController do
+describe SingleUseLinksViewerController do
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
     @file = GenericFile.new
@@ -21,50 +21,7 @@ describe SingleUseLinkController do
     controller.stub(:has_access?).and_return(true)
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
-  describe "logged in user" do
-    before do
-      @user = FactoryGirl.find_or_create(:user)
-      sign_in @user
-      @now = DateTime.now
-      DateTime.stub(:now).and_return(@now)
-      @hash = "some-dummy-sha2-hash" 
-      Digest::SHA2.should_receive(:new).and_return(@hash)
-    end
-
-    describe "GET 'generate_download'" do
-      it "and_return http success" do
-        get 'generate_download', id:@file.pid
-        response.should be_success
-        assigns[:link].should == @routes.url_helpers.download_single_use_link_path(@hash)
-      end
-
-    end
   
-    describe "GET 'generate_show'" do
-      it "and_return http success" do
-        get 'generate_show', id:@file.pid
-        response.should be_success
-        assigns[:link].should == @routes.url_helpers.show_single_use_link_path(@hash)
-      end
-
-    end   
-  end
-
-  describe "unkown user" do
-    describe "GET 'generate_download'" do
-      it "and_return http failure" do
-        get 'generate_download', id:@file.pid
-        response.should_not be_success
-      end
-    end
-  
-    describe "GET 'generate_show'" do
-      it "and_return http failure" do
-        get 'generate_show', id:@file.pid
-        response.should_not be_success
-      end
-    end   
-  end
   describe "retrieval links" do
     let :show_link do
       SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(:id => @file)
@@ -125,27 +82,6 @@ describe SingleUseLinkController do
         get :show, id:download_link_hash
         response.should render_template('error/single_use_error')
       end
-    end
-  end
-
-  describe "round-trip integration tests" do
-    before do
-      @user = FactoryGirl.find_or_create(:user)
-      sign_in @user
-    end
-
-    it "should be valid to retrieve the download" do
-      get 'generate_download', id:@file.pid
-      response.should be_success
-      get :download, id:assigns[:su].downloadKey
-      response.should be_success
-    end
-
-    it "should be valid to retrieve the page" do
-      get 'generate_show', id:@file.pid
-      response.should be_success
-      get :show, id:assigns[:su].downloadKey
-      response.should be_success
     end
   end
 
