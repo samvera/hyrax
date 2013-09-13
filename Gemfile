@@ -20,5 +20,9 @@ group :development, :test do
   gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
   gem "devise"
+  gem 'jquery-rails'
+  gem 'sass-rails'
+  gem 'turbolinks'
+  gem "bootstrap-sass"
   gem "simplecov", :require => false
 end # (leave this comment here to catch a stray line inserted by blacklight!)
