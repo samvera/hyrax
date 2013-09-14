@@ -1,5 +1,5 @@
 <div >
-  <h1 class="lower"><%= @object %></h1>
+  <h1 class="lower"><%= @asset %></h1>
     <h2 class="non lower">Actions</h2>
     <p>
       <%= link_to "Download (can only be used once)", @download_link %>
@@ -10,7 +10,7 @@
       <table class="table table-striped"><!-- class="verticalheadings"> -->
       <tbody>
       <% @terms.each do |term| %>
-        <% vals =  Array( @object.send(term)) %>
+        <% vals =  Array( @asset.send(term)) %>
             <tr id='row_<%=term.to_s%>' class="expandable">
               <th width="20%">
                 <%=get_label(term)%>

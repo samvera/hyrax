@@ -1,14 +1,15 @@
 require 'sufia/single_use_error'
 
-class SingleUseLinksController < DownloadsController
-  before_filter :authenticate_user!
-  before_filter :find_file
-  before_filter :authorize_user!
-  skip_filter :normalize_identifier, :load_asset, :load_datastream
+class SingleUseLinksController < ApplicationController
+  include Sufia::Noid
+
   prepend_before_filter :normalize_identifier
+  before_filter :load_asset
+  before_filter :authenticate_user!
+  before_filter :authorize_user!
 
   def new_download
-    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.download_path(:id => @object)
+    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.download_path(:id => @asset)
     @link = sufia.download_single_use_link_path(@su.downloadKey)
 
     respond_to do |format|
@@ -18,7 +19,7 @@ class SingleUseLinksController < DownloadsController
   end
 
   def new_show
-    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.polymorphic_path(@object)
+    @su = SingleUseLink.create :itemId => params[:id], :path => sufia.polymorphic_path(@asset)
     @link = sufia.show_single_use_link_path(@su.downloadKey)
 
     respond_to do |format|
@@ -29,11 +30,11 @@ class SingleUseLinksController < DownloadsController
 
   protected
   def authorize_user!
-    authorize! :read, @object
+    authorize! :read, @asset
   end
 
-  def find_file
-    @object = ActiveFedora::Base.load_instance_from_solr(params[:id])
+  def load_asset
+    @asset = ActiveFedora::Base.load_instance_from_solr(params[:id])
   end
 
 end

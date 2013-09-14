@@ -60,7 +60,7 @@ describe SingleUseLinksViewerController do
       it "and_return 404 on attempt to get download with show" do
         get :download, id:download_link_hash
         response.should be_success
-        get :download, id:download_link_hash
+        get :show, id:download_link_hash
         response.should render_template('error/single_use_error')
       end
     end
@@ -70,7 +70,7 @@ describe SingleUseLinksViewerController do
 
         get 'show', id:show_link_hash
         response.should be_success
-        assigns[:object].pid.should == @file.pid
+        assigns[:asset].pid.should == @file.pid
       end
       it "and_return 404 on second attempt" do
         get :show, id:show_link_hash

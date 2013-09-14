@@ -1,60 +1,73 @@
 require 'sufia/single_use_error'
 
-class SingleUseLinksViewerController < DownloadsController
-  skip_filter :normalize_identifier, :load_asset, :load_datastream
-  before_filter :load_link
+class SingleUseLinksViewerController < ApplicationController
+
+  include Sufia::DownloadsControllerBehavior
+
+  skip_filter :normalize_identifier
+  skip_before_filter :load_datastream, :except => :download
+
+  before_filter :authorize_single_use_link!
+
+  class Ability
+    include CanCan::Ability
+
+    attr_reader :single_use_link
+
+    def initialize(user, single_use_link)
+      @user = user || User.new
+
+      @single_use_link = single_use_link
+
+      can :read, ActiveFedora::Base do |obj|
+        single_use_link.valid? and
+          single_use_link.itemId == obj.pid and single_use_link.destroy!
+      end if single_use_link
+
+    end
+  end
 
   rescue_from Sufia::SingleUseError, :with => :render_single_use_error
+  rescue_from CanCan::AccessDenied, :with => :render_single_use_error
   rescue_from ActiveRecord::RecordNotFound, :with => :render_single_use_error
 
 
   def download
-    #grab the item id
-    id = @link.itemId
-    @asset = ActiveFedora::Base.load_instance_from_solr(id)
-
-    #check to make sure the path matches
-    raise not_found_exception unless @link.path == sufia.download_path(:id => @asset)
-
     # send the data content
-    load_datastream
+    raise not_found_exception unless single_use_link.path == sufia.download_path(:id => @asset)
     send_content(asset)
   end
 
   def show
-    #grab the item id
-    id = @link.itemId
-    @object = ActiveFedora::Base.load_instance_from_solr(id)
-    #check to make sure the path matches
-    raise not_found_exception unless @link.path == sufia.polymorphic_path(@object)
+    raise not_found_exception unless single_use_link.path == sufia.polymorphic_path(@asset)
 
     #show the file
-    @terms = @object.terms_for_display
+    @terms = @asset.terms_for_display
 
     # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
-    @su = @link.create_for_path sufia.download_path(:id => @object)
+    @su = single_use_link.create_for_path sufia.download_path(:id => @asset)
     @download_link = sufia.download_single_use_link_path(@su.downloadKey)
   end
 
   protected
-  def load_link
-    # invalid hash send not found
-    @link = SingleUseLink.find_by_downloadKey! params[:id]
 
-    # expired hash send not found
-    raise expired_exception if @link.expired?
+  def authorize_single_use_link!
+    authorize! :read, @asset
+  end
 
-    # delete the link since it has been used
-    @link.destroy
-
-    return @link
+  def single_use_link
+    @single_use_link ||= SingleUseLink.find_by_downloadKey! params[:id]
   end
 
   def not_found_exception
     Sufia::SingleUseError.new('Single-Use Link Not Found')
   end
 
-  def expired_exception
-    Sufia::SingleUseError.new('Single-Use Link Expired')
+  def load_asset
+    @asset = ActiveFedora::Base.load_instance_from_solr(single_use_link.itemId)
+  end
+
+  def current_ability
+    @current_ability ||= SingleUseLinksViewerController::Ability.new current_user, single_use_link
   end
 end
