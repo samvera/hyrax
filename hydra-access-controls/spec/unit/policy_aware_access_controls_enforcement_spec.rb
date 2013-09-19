@@ -65,6 +65,14 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     policy8.save
     @sample_policies << policy8
 
+    # user discover policies for testing that all are applied when over 10 are applicable
+    (9..11).each do |i|
+      policy = Hydra::AdminPolicy.create(:pid => "test:policy#{i}")
+      policy.default_permissions = [{:type=>"user", :access=>"discover", :name=>"sara_student"}]
+      policy.save
+      @sample_policies << policy
+    end
+
     # no access 
     policy_no_access = Hydra::AdminPolicy.create(:pid=>"test:policy_no_access")
     @sample_policies << policy_no_access
