@@ -78,6 +78,8 @@ You should also add yourself to the `CONTRIBUTORS.md` file in the root of the pr
 
 ### Submitting Changes
 
+[Detailed Walkthrough of One Pull Request per Commit](http://ndlib.github.io/practices/one-commit-per-pull-request/)
+
 * Read the article ["Using Pull Requests"](https://help.github.com/articles/using-pull-requests) on GitHub.
 * Make sure your branch is up to date with its parent branch (i.e. master)
   * `git checkout master`
