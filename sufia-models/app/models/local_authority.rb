@@ -63,7 +63,7 @@ class LocalAuthority < ActiveRecord::Base
     authority = self.find_by_name(name)
     return if authority.blank?
     model = model.to_s.sub(/RdfDatastream$/, '').underscore.pluralize
-    domain_term = DomainTerm.find_or_create_by_model_and_term(:model => model, :term => term)
+    domain_term = DomainTerm.find_or_create_by(model: model, term: term)
     return if domain_term.local_authorities.include? authority
     domain_term.local_authorities << authority
   end
