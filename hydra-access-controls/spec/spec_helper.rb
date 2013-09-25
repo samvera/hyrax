@@ -1,6 +1,8 @@
 ENV["environment"] ||= "test"
 
 require 'rspec/mocks'
+require 'rspec/autorun'
+require 'hydra-access-controls'
 
 module Hydra
   # Stubbing Hydra.config[:policy_aware] so Hydra::PolicyAwareAbility will be loaded for tests.
@@ -12,6 +14,7 @@ end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+Hydra::Engine.config.autoload_paths.each { |path| $LOAD_PATH.unshift path }
 
 if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov'
@@ -21,8 +24,6 @@ if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   SimpleCov.start
 end
 
-require 'rspec/autorun'
-require 'hydra-access-controls'
 require 'support/mods_asset'
 require 'support/solr_document'
 require "support/user"
