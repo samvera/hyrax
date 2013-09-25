@@ -1,5 +1,22 @@
 # History of Sufia releases
 
+## 3.3.0
+* Fix authorities deprecations [Justin Coyne]
+* Fix deprecation on MailboxController [Justin Coyne]
+* blacklight 4.4.1/0 doesn't work with kaminari > 0.14.1 See projectblacklight/blacklight#614 [Justin Coyne]
+* Allow acts_as_follower to be 0.2.0 for Rails 4 support [Justin Coyne]
+* Don't run blacklight and hydra generator twice [Justin Coyne]
+* Remove deprecation warning on Rails 4 [Justin Coyne]
+* Updating CONTRIBUTING.md as per Hydra v6.0.0 [Jeremy Friesen]
+* use cancan to authorize and validate single-use tokens. [Chris Beer]
+* Add ImageMagick as a software requirement in the README. [Jessie Keck]
+* split SingleUseLinkController into the authenticated controller that creates links, and a viewer that handles retrieving content for token-bearing users [Chris Beer]
+* remove explicit GenericFile references, and replace them with Rails magic [Chris Beer]
+* Refactor single-use links for style and clarity [Chris Beer]
+* add more gems to the gemfile for running tests from the gem root [Chris Beer]
+* add redis-server to the .travis.yml list of  services [Chris Beer]
+* Fix typos in README.md [Jessie Keck]
+
 ## 3.2.1
 * Updating gemspec to not limit on sufia-models [Jeremy Friesen]
 
