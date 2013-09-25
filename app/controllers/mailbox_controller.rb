@@ -3,8 +3,7 @@ class MailboxController < ApplicationController
 
   def index
     if user_signed_in?
-      inbox = current_user.mailbox.inbox
-      @messages = inbox.all
+      @messages = current_user.mailbox.inbox
       current_user.mark_as_read @messages
     else
       @messages =[]
