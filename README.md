@@ -27,7 +27,7 @@ Sufia has the following features:
 
 ## Sufia needs the following software to work:
 1. Solr
-1. Fedora Commons
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository
 1. A SQL RDBMS (MySQL, SQLite)
 1. [Redis](http://redis.io/) key-value store
 1. [ImageMagick](http://www.imagemagick.org/)
