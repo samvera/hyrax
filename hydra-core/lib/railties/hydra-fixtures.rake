@@ -7,7 +7,6 @@ namespace :hydra do
 
   desc "Load hydra-head models"
   task :load_models do
-    require "hydra"
     Dir.glob(File.join(File.expand_path(File.dirname(__FILE__)), "..",'app','models', '*.rb')).each do |model|
       load model
     end
