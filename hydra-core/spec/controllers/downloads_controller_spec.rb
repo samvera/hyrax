@@ -74,9 +74,9 @@ describe DownloadsController do
       end
       describe "stream" do
         before do
-          stub_response = stub()
+          stub_response = double()
           stub_response.stub(:read_body).and_yield("one1").and_yield('two2').and_yield('thre').and_yield('four')
-          stub_repo = stub()
+          stub_repo = double()
           stub_repo.stub(:datastream_dissemination).and_yield(stub_response)
           stub_ds = ActiveFedora::Datastream.new
           stub_ds.stub(:repository).and_return(stub_repo)
@@ -84,7 +84,7 @@ describe DownloadsController do
           stub_ds.stub(:dsSize).and_return(16)
           stub_ds.stub(:dsid).and_return('webm')
           stub_ds.stub(:pid).and_return('changeme:test')
-          stub_file = stub('stub object', datastreams: {'webm' => stub_ds}, pid:'changeme:test', label: "MyVideo.webm")
+          stub_file = double('stub object', datastreams: {'webm' => stub_ds}, pid:'changeme:test', label: "MyVideo.webm")
           ActiveFedora::Base.should_receive(:load_instance_from_solr).with('changeme:test').and_return(stub_file)
           controller.stub(:can?).with(:read, 'changeme:test').and_return(true)
           controller.stub(:log_download)
