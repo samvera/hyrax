@@ -1,11 +1,14 @@
 module Hydra
   module AccessControls
     class AccessRight
+      # What these groups are called in the Hydra rightsMetadata XML:
       PERMISSION_TEXT_VALUE_PUBLIC = 'public'.freeze
       PERMISSION_TEXT_VALUE_AUTHENTICATED = 'registered'.freeze
+
+      # The values that get drawn to the page
       VISIBILITY_TEXT_VALUE_PUBLIC = 'open'.freeze
       VISIBILITY_TEXT_VALUE_EMBARGO = 'open_with_embargo_release_date'.freeze
-      VISIBILITY_TEXT_VALUE_AUTHENTICATED = 'psu'.freeze
+      VISIBILITY_TEXT_VALUE_AUTHENTICATED = 'authenticated'.freeze
       VISIBILITY_TEXT_VALUE_PRIVATE = 'restricted'.freeze
 
       # @param permissionable [#visibility, #permissions]
