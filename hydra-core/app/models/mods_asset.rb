@@ -1,4 +1,3 @@
-require 'hydra'
 # An EXAMPLE   Basic Model for Assets that conform to Hydra commonMetadata cModel and have basic MODS metadata (currently "Article" is the MODS exemplar)
 class ModsAsset < ActiveFedora::Base
   
