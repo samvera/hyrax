@@ -14,15 +14,21 @@ module Hydra
           # we can now examine asset and determine if we should send_content, or some other action.
           send_content (asset)
         else 
-          logger.info "Can not read #{params['id']}"
-          raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
+          logger.info "Can not read #{params[asset_param_key]}"
+          raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[asset_param_key])
         end
       end
 
       protected
 
+      # Override this method if asset PID is not passed in params[:id],
+      # for example, in a nested resource.
+      def asset_param_key
+        :id
+      end
+
       def load_asset
-        @asset = ActiveFedora::Base.load_instance_from_solr(params[:id])
+        @asset = ActiveFedora::Base.load_instance_from_solr(params[asset_param_key])
       end
 
       def load_datastream

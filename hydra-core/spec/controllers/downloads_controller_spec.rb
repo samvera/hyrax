@@ -139,5 +139,22 @@ describe DownloadsController do
         end
       end
     end
+
+    describe "overriding the default asset param key" do
+      before do
+        Rails.application.routes.draw do
+          scope 'objects/:object_id' do
+            get 'download' => 'downloads#show'
+          end
+        end
+        sign_in @user
+      end
+      it "should use the custom param value to retrieve the asset" do
+        controller.stub(:asset_param_key).and_return(:object_id)
+        get "show", :object_id => @obj.pid
+        response.should be_successful
+      end
+    end
+
   end
 end
