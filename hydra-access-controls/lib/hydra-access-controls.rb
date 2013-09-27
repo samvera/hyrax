@@ -6,6 +6,7 @@ require 'rails'
 
 module Hydra
   extend ActiveSupport::Autoload
+  autoload :AccessControls
   autoload :User
   autoload :AccessControlsEnforcement
   autoload :PolicyAwareAccessControlsEnforcement
@@ -19,6 +20,9 @@ module Hydra
   autoload :PermissionsCache
   autoload :PermissionsSolrDocument
   class Engine < Rails::Engine
+    config.autoload_paths += %W(
+      #{config.root}/app/models/concerns
+    )
   end
 
   module ModelMixins
@@ -30,5 +34,4 @@ module Hydra
   # This usually happens within a call to AccessControlsEnforcement#enforce_access_controls but can be
   # raised manually.
   class AccessDenied < ::CanCan::AccessDenied; end
-
 end
