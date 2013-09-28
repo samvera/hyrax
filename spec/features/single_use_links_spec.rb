@@ -32,7 +32,7 @@ describe "Create and use single-use links" do
 
     expect(page).to have_css '.download-link'
     find('.download-link').click
-    expected_content = ActiveFedora::Base.find(@file.pid).content.content
+    expected_content = ActiveFedora::Base.find(@file.pid, cast: true).content.content
     expect(page.body).to eq expected_content
   end
 end

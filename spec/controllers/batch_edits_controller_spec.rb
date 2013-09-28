@@ -8,9 +8,9 @@ describe BatchEditsController do
     User.any_instance.stub(:groups).and_return([])
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session
     request.env["HTTP_REFERER"] = 'test.host/original_page'
-    @routes = Internal::Application.routes
-    
   end
+
+  routes { Internal::Application.routes }
 
   describe "edit" do
     before do

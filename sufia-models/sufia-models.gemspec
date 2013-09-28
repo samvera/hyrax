@@ -29,8 +29,12 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rails', '>= 3.2.13', '< 5.0'
   spec.add_dependency 'activeresource' # No longer a dependency of rails 4.0
-  spec.add_dependency "hydra-head", "~> 6.3.0"
-  spec.add_dependency 'active-fedora', "~> 6.5.0"
+
+  # spec.add_dependency "hydra", "6.1.0.rc1"
+  # Since hydra 6.1 isn't out yet, we'll just build it so that it's compatible 
+  # without an explicit dependency
+  spec.add_dependency "hydra-head", "~> 6.4.0.rc1"
+  spec.add_dependency 'active-fedora', "~> 6.6.0.rc1"
 
   spec.add_dependency 'nest', '~> 1.1.1'
   spec.add_dependency 'resque', '~> 1.23.0'#, :require => 'resque/server'

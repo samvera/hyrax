@@ -45,7 +45,7 @@ describe SingleUseLinksViewerController do
     describe "GET 'download'" do
       it "and_return http success" do
         controller.stub(:render)
-        expected_content = ActiveFedora::Base.find(@file.pid).content.content
+        expected_content = ActiveFedora::Base.find(@file.pid, cast: true).content.content
         controller.should_receive(:send_file_headers!).with({:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
         get :download, id:download_link_hash 
         response.body.should == expected_content
