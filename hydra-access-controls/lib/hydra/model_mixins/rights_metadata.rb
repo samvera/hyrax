@@ -1,6 +1,13 @@
 module Hydra
   module ModelMixins
     module RightsMetadata
+      extend ActiveSupport::Concern
+      extend Deprecation
+
+      included do
+        Deprecation.warn(RightsMetadata, "Hydra::ModelMixins::RightsMetadata has been deprecated and will be removed in hydra-head 7.0. Use Hydra::AccessControls::Permissions instead", caller(3));
+      end
+
 
 
       ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided

@@ -20,7 +20,7 @@ class Hydra::AdminPolicy < ActiveFedora::Base
   delegate :license_url, :to=>'rightsMetadata', :at=>[:license, :url], :unique=>true
 
   # easy access to edit_groups, etc
-  include Hydra::ModelMixins::RightsMetadata 
+  include Hydra::AccessControls::Permissions 
 
   def self.readable_by_user(user)
     where_user_has_permissions(user, [:read, :edit])
