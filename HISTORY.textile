@@ -1,3 +1,17 @@
+h3. 6.4.0 (2013-09-30)
+
+* Remove duplicate code [Justin Coyne]
+* Remove lib/hydra.rb so that the hydra gem can load normally [Justin Coyne]
+* Substituted double for the now deprecated mock() and stub() [Justin Coyne]
+* Adds #asset_param_key method to DownloadBehavior to support overriding 
+  the default params key (:id) for the asset PID. [David Chandek-Stark]
+* Added the derived property visibility, from sufia [Justin Coyne]
+* Added nested attributes for permissions [Justin Coyne]
+* PolicyAwareAbility should include Ability so you don't have to [Justin Coyne]
+* All policies should be applied to gated discovery when more than 10 
+  are applicable [Chris Colvar]
+* Deprecated Hydra::ModelMixins::RightsMetadata [Justin Coyne]
+
 h3. 6.3.4 (2013-08-27)
 * Default ability shouldn't have policy methods [Justin Coyne]
 * Escape spaces in group names in solr query conditions [Chris Colvard]
