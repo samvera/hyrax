@@ -1,5 +1,12 @@
 # History of Sufia releases
 
+## 3.4.0.rc1
+* 2013-10-01: Remove Visibility, which was moved into hydra-head [Justin Coyne]
+* 2013-10-01: Fix deprecation warnings by switching to
+  Hydra::AccessControls::Permissions [Justin Coyne]
+* 2013-09-27: Works with hydra 6.1.0.rc1 [Justin Coyne]
+
+
 ## 3.3.0
 * Fix authorities deprecations [Justin Coyne]
 * Fix deprecation on MailboxController [Justin Coyne]
