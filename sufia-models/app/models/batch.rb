@@ -1,6 +1,5 @@
 class Batch < ActiveFedora::Base
-  include Hydra::ModelMixins::CommonMetadata
-  include Hydra::ModelMixins::RightsMetadata
+  include Hydra::AccessControls::Permissions
   include Sufia::ModelMethods
   include Sufia::Noid
 
@@ -9,10 +8,10 @@ class Batch < ActiveFedora::Base
   belongs_to :user, :property => "creator"
   has_many :generic_files, :property => :is_part_of
 
-  delegate :title, :to => :descMetadata
-  delegate :creator, :to => :descMetadata
-  delegate :part, :to => :descMetadata
-  delegate :status, :to => :descMetadata
+  delegate :title, :to => :descMetadata, multiple: true
+  delegate :creator, :to => :descMetadata, multiple: true
+  delegate :part, :to => :descMetadata, multiple: true
+  delegate :status, :to => :descMetadata, multiple: true
 
   def self.find_or_create(pid)
     begin

@@ -4,7 +4,7 @@ module Sufia
       extend ActiveSupport::Concern
       included do
         has_metadata :name => "characterization", :type => FitsDatastream
-        delegate :mime_type, :to => :characterization, :unique => true
+        delegate :mime_type, :to => :characterization, multiple: false
         delegate_to :characterization, [:format_label, :file_size, :last_modified,
                                         :filename, :original_checksum, :rights_basis,
                                         :copyright_basis, :copyright_note,
@@ -20,7 +20,7 @@ module Sufia
                                         :gps_timestamp, :latitude, :longitude,
                                         :character_set, :markup_basis,
                                         :markup_language, :duration, :bit_depth,
-                                        :sample_rate, :channels, :data_format, :offset]
+                                        :sample_rate, :channels, :data_format, :offset], multiple: true
 
       end
 

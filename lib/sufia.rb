@@ -6,8 +6,6 @@ require 'hydra-batch-edit'
 require 'sufia/models'
 
 require 'rails_autolink'
-require 'sufia/dashboard_controller_behavior'
-require "sufia/contact_form_controller_behavior"
 
 autoload :Zip, 'zipruby'
 module Sufia
@@ -20,7 +18,9 @@ module Sufia
       #{config.root}/app/controllers/concerns
       #{config.root}/app/models/concerns
       #{config.root}/app/models/datastreams
+      #{Hydra::Engine.root}/app/models/concerns
     )
+    puts "concern #{Hydra::Engine.root}/app/models/concerns"
 
   end
 
