@@ -1,6 +1,5 @@
 class Batch < ActiveFedora::Base
-  include Hydra::ModelMixins::CommonMetadata
-  include Hydra::ModelMixins::RightsMetadata
+  include Hydra::AccessControls::Permissions
   include Sufia::ModelMethods
   include Sufia::Noid
 

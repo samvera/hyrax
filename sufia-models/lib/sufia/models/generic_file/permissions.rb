@@ -2,12 +2,12 @@ module Sufia
   module GenericFile
     module Permissions
       extend ActiveSupport::Concern
-      #we're overriding the permissions= method which is in RightsMetadata
-      include Hydra::ModelMixins::RightsMetadata
+      #we're overriding the permissions= method which is in Hydra::AccessControls::Permissions
+      include Hydra::AccessControls::Permissions
       include Sufia::GenericFile::Visibility
 
       included do
-        has_metadata :name => "rightsMetadata", :type => ParanoidRightsDatastream
+        has_metadata "rightsMetadata", :type => ParanoidRightsDatastream
         validate :paranoid_permissions
       end
 
@@ -27,6 +27,11 @@ module Sufia
         params[:group].each { |name, access| perm_hash['group'][name] = access if ['read', 'edit'].include?(access)} if params[:group]
 
         rightsMetadata.update_permissions(perm_hash)
+      end
+
+      def permissions
+        perms = super
+        perms.map {|p| { name: p.name, access: p.access, type:p.type } }
       end
 
       private
