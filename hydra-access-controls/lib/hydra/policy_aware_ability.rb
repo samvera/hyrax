@@ -24,18 +24,18 @@ module Hydra::PolicyAwareAbility
   end
   
   # Returns the pid of policy object (is_governed_by) for the specified object
-  # Assumes that the policy object is associated by an is_governed_by relationship (Whis is stored as "is_governed_by_s" in object's solr document)
+  # Assumes that the policy object is associated by an is_governed_by relationship 
+  # (which is stored as "is_governed_by_ssim" in object's solr document)
   # Returns nil if no policy associated with the object
   def policy_pid_for(object_pid)
-    return @policy_pid if @policy_pid
-    #is_governed_by_ssim
+    policy_pid = policy_pid_cache[object_pid]
+    return policy_pid if policy_pid
     solr_result = ActiveFedora::Base.find_with_conditions({:id=>object_pid}, :fl=>ActiveFedora::SolrService.solr_name('is_governed_by', :symbol))
     begin
-      @policy_pid = value_from_solr_field(solr_result, ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)).first.gsub("info:fedora/", "")
+      policy_pid_cache[object_pid] = policy_pid = value_from_solr_field(solr_result, ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)).first.gsub("info:fedora/", "")
     rescue NoMethodError
-      @policy_pid = nil
     end
-    return @policy_pid
+    return policy_pid
   end
   
   # Returns the permissions solr document for policy_pid
@@ -127,4 +127,9 @@ module Hydra::PolicyAwareAbility
       return field_from_result[field_name]
     end
   end
+
+  def policy_pid_cache
+    @policy_pid_cache ||= {}
+  end
+
 end
