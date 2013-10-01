@@ -38,7 +38,7 @@ describe Hydra::AccessControls::AccessRight do
     TEXT
 
     it spec_text do
-      permissions = [{access: :edit, name: givin_permission}]
+      permissions = [Hydra::AccessControls::Permission.new({access: :edit, name: givin_permission})]
       permissionable = double(
         'permissionable',
         permissions: permissions,

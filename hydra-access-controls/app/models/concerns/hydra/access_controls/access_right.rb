@@ -45,12 +45,16 @@ module Hydra
           has_visibility_text_for?(VISIBILITY_TEXT_VALUE_AUTHENTICATED)
       end
 
+      alias :authenticated_only_access? :authenticated_only?
+
       def private?
         return false if open_access?
         return false if authenticated_only?
         return false if open_access_with_embargo_release_date?
         true
       end
+
+      alias :private_access? :private?
 
       private
 
@@ -75,7 +79,7 @@ module Hydra
           visibility == text
         end
         def has_permission_text_for?(text)
-          !!permissions.detect { |perm| perm[:name] == text }
+          !!permissions.detect { |perm| perm.name == text }
         end
     end
   end
