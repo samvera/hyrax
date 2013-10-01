@@ -4,7 +4,7 @@ module Sufia
       extend ActiveSupport::Concern
       #we're overriding the permissions= method which is in Hydra::AccessControls::Permissions
       include Hydra::AccessControls::Permissions
-      include Sufia::GenericFile::Visibility
+      include Hydra::AccessControls::Visibility
 
       included do
         has_metadata "rightsMetadata", :type => ParanoidRightsDatastream

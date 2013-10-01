@@ -4,7 +4,6 @@ module Sufia
     extend ActiveSupport::Autoload
     autoload :Actions, 'sufia/models/generic_file/actions'
     autoload :Permissions, 'sufia/models/generic_file/permissions'
-    autoload :Visibility, 'sufia/models/generic_file/visibility'
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
     include Sufia::ModelMethods
