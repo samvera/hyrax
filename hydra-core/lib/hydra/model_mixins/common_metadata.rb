@@ -10,16 +10,15 @@
 #   RELS-EXT datastream -- Handled by ActiveFedora::Base & ActiveFedora::RelsExtDatastream
 #   optional datastreams (contentMetadata, technicalMetadata, provenanceMetadata, sourceMetadata)
 #
-# will move to lib/hydra/model/common_metadata_behavior in release 5.x
 module Hydra::ModelMixins
   module CommonMetadata
+    extend Deprecation
+    extend ActiveSupport::Concern
   
-    def self.included(klazz)
+    included do
       # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
-      klazz.has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
-    
-      # Ensure that objects assert the commonMetadata cModel
-      # klazz.relationships << :has_model => "info:fedora/hydra-cModel:commonMetadata"
+      has_metadata "rightsMetadata", type: Hydra::Datastream::RightsMetadata
+      Deprecation.warn(CommonMetadata, "Hydra::ModelMixins::CommonMetadata is deprecated and will be removed in hydra-head 7.  Use Hydra::AccessControls::Permissions instead.", caller(1))
     end
   end
 end
