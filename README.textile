@@ -1,7 +1,7 @@
 h1. Hydra-Head
 !https://travis-ci.org/projecthydra/hydra-head.png?branch=master!:https://travis-ci.org/projecthydra/hydra-head !https://badge.fury.io/rb/hydra-head.png!:http://badge.fury.io/rb/hydra-head
 
-Hydra-Head is a Ruby-on-Rails 3 gem containing the core code for a web application using the full stack of hydra building blocks.
+Hydra-Head is a Ruby-on-Rails gem containing the core code for a web application using the full stack of hydra building blocks.
 
 See the github wikis for information targeted to developers: "http://github.com/projecthydra/hydra-head/wiki":http://github.com/projecthydra/hydra-head/wiki
 See the duraspace hydra wikis for information at the architecture level: "http://wiki.duraspace.org/display/hydra/":http://wiki.duraspace.org/display/hydra/
@@ -18,14 +18,13 @@ h3. Installation Prerequisites
 
 See "http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites":http://github.com/projecthydra/hydra-head/wiki/Installation-Prerequisites
 
-Ruby 1.9.3+ is required by Hydra-Head release 6.0; RVM is strongly suggested.
+Ruby 1.9.3+ is required by Hydra-Head release 6+; RVM is strongly suggested.
 
 h3. Install Rails
 
-Currently hydra-head is compatible with Rails 3.2
 
 <pre>
-gem install 'rails' --version '~>3.2.13'
+gem install 'rails' --version '~>4.0.0'
 </pre>
 
 h3. Generate a new rails application:
@@ -37,26 +36,16 @@ cd my_hydra_head
 
 h3. Install Dependencies
 
-First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your application.  You may already have a Gemfile in the new rails application you just generated; in that case, be sure to add blacklight, hydra-head, devise and the development/test group per below:
+First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your application.  The new rails application you just generated will have generated a Gemfile; add blacklight and hydra-head as below:
 
 <pre>
   source 'http://rubygems.org'
 
-  gem 'rails', '3.2.13'
+  gem 'rails', '4.0.0'
 
   gem 'blacklight'
-  gem 'hydra-head', '~> 6.2.0'
+  gem 'hydra-head', '~> 6.3.0'
 
-  # We will assume that you're using sqlite3 for testing/demo,
-  # but in a production setup you probably want to use a real sql database like mysql or postgres
-  gem 'sqlite3'
-
-  # Rails uses asset pipeline.  You will need these gems for used your assets in development.
-  # However, you won't need them in production because they will be precompiled.
-  group :assets do
-    gem 'sass-rails', '~> 3.2.3'
-    gem 'jquery-rails'
-  end
 </pre>
 
 To install all of the dependencies, run:
