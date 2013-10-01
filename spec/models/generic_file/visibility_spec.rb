@@ -13,7 +13,7 @@ describe Sufia::GenericFile do
 
   it 'allows for overrides of visibility' do
     expect{
-      MockParent.new(visibility: Sufia::Models::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+      MockParent.new(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
     }.to_not raise_error
   end
 end
