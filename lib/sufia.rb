@@ -20,8 +20,6 @@ module Sufia
       #{config.root}/app/models/datastreams
       #{Hydra::Engine.root}/app/models/concerns
     )
-    puts "concern #{Hydra::Engine.root}/app/models/concerns"
-
   end
 
   autoload :Controller
