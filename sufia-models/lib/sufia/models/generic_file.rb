@@ -49,22 +49,6 @@ module Sufia
                               :committer_login => user.user_key)
     end
 
-    def pdf?
-      self.class.pdf_mime_types.include? self.mime_type
-    end
-
-    def image?
-      self.class.image_mime_types.include? self.mime_type
-    end
-
-    def video?
-      self.class.video_mime_types.include? self.mime_type
-    end
-
-    def audio?
-      self.class.audio_mime_types.include? self.mime_type
-    end
-
     def persistent_url
       "#{Sufia.config.persistent_hostpath}#{noid}"
     end
@@ -128,13 +112,6 @@ module Sufia
       solr_doc[Solrizer.solr_name('file_format')] = file_format
       solr_doc[Solrizer.solr_name('file_format', :facetable)] = file_format
       return solr_doc
-    end
-
-    def file_format
-      return nil if self.mime_type.blank? and self.format_label.blank?
-      return self.mime_type.split('/')[1]+ " ("+self.format_label.join(", ")+")" unless self.mime_type.blank? or self.format_label.blank?
-      return self.mime_type.split('/')[1] unless self.mime_type.blank?
-      return self.format_label
     end
 
     # Redefine this for more intuitive keys in Redis
