@@ -1,5 +1,17 @@
 h3. 6.4.0 (2013-09-30)
 
+* Removed RedCloth dependency [Justin Coyne]
+* Some of the delegated methods weren't pointing at their intended
+  target [Justin Coyne]
+* Pin to active-fedora >= 6.6.0.rc1 and refactor usage of delegate to
+  avoid deprecation warnings [Justin Coyne]
+* Update rail [Justin Coyne]
+* Hydra::PolicyAwareAbility#policy_pid_for modified to handle
+  multiple objects having different policies (Fixes #101). Implemented pending
+  tests for Hydra::PolicyAwareAbility#test_read_from_policy and
+  #test_read_from_policy. [David Chandek-Stark]
+* Deprecate Hydra::ModelMixins::SolrDocumentExtension [Justin Coyne]
+* Deprecate Hydra::ModelMixins::CommonMetadata [Justin Coyne]
 * Remove duplicate code [Justin Coyne]
 * Remove lib/hydra.rb so that the hydra gem can load normally [Justin Coyne]
 * Substituted double for the now deprecated mock() and stub() [Justin Coyne]
