@@ -6,6 +6,7 @@ module Sufia
     autoload :Permissions, 'sufia/models/generic_file/permissions'
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
+    autoload :Metadata, 'sufia/models/generic_file/metadata'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
@@ -16,21 +17,10 @@ module Sufia
     include Sufia::GenericFile::Permissions
     include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives
+    include Sufia::GenericFile::Metadata
 
     included do
-      has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-      has_metadata :name => "properties", :type => PropertiesDatastream
-      has_file_datastream :name => "content", :type => FileContentDatastream
-      has_file_datastream :name => "thumbnail"
-
       belongs_to :batch, :property => :is_part_of
-
-      delegate_to :properties, [:relative_path, :depositor, :import_url], multiple: false
-      delegate_to :descMetadata, [:date_uploaded, :date_modified], multiple: false 
-      delegate_to :descMetadata, [:related_url, :based_near, :part_of, :creator,
-                                  :contributor, :title, :tag, :description, :rights,
-                                  :publisher, :date_created, :subject,
-                                  :resource_type, :identifier, :language], multiple: true
 
       around_save :characterize_if_changed, :retry_warming
       before_destroy :cleanup_trophies
