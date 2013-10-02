@@ -6,6 +6,8 @@ module Sufia
     autoload :Permissions, 'sufia/models/generic_file/permissions'
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
+    autoload :Metadata, 'sufia/models/generic_file/metadata'
+    autoload :Versions, 'sufia/models/generic_file/versions'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
@@ -16,21 +18,11 @@ module Sufia
     include Sufia::GenericFile::Permissions
     include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives
+    include Sufia::GenericFile::Metadata
+    include Sufia::GenericFile::Versions
 
     included do
-      has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
-      has_metadata :name => "properties", :type => PropertiesDatastream
-      has_file_datastream :name => "content", :type => FileContentDatastream
-      has_file_datastream :name => "thumbnail"
-
       belongs_to :batch, :property => :is_part_of
-
-      delegate_to :properties, [:relative_path, :depositor, :import_url], multiple: false
-      delegate_to :descMetadata, [:date_uploaded, :date_modified], multiple: false 
-      delegate_to :descMetadata, [:related_url, :based_near, :part_of, :creator,
-                                  :contributor, :title, :tag, :description, :rights,
-                                  :publisher, :date_created, :subject,
-                                  :resource_type, :identifier, :language], multiple: true
 
       around_save :characterize_if_changed, :retry_warming
       before_destroy :cleanup_trophies
@@ -39,14 +31,20 @@ module Sufia
     end
 
 
-    def record_version_committer(user)
-      version = content.latest_version
-      # content datastream not (yet?) present
-      return if version.nil?
-      VersionCommitter.create(:obj_id => version.pid,
-                              :datastream_id => version.dsid,
-                              :version_id => version.versionID,
-                              :committer_login => user.user_key)
+    def pdf?
+      self.class.pdf_mime_types.include? self.mime_type
+    end
+
+    def image?
+      self.class.image_mime_types.include? self.mime_type
+    end
+
+    def video?
+      self.class.video_mime_types.include? self.mime_type
+    end
+
+    def audio?
+      self.class.audio_mime_types.include? self.mime_type
     end
 
     def persistent_url
