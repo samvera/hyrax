@@ -4,20 +4,20 @@ class Hydra::AdminPolicy < ActiveFedora::Base
   # include Hydra::ModelMethods
 
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
-  has_metadata :name => "defaultRights", :type => Hydra::Datastream::InheritableRightsMetadata 
+  has_metadata "defaultRights", type: Hydra::Datastream::InheritableRightsMetadata 
 
   # Uses the Hydra Rights Metadata Schema for tracking access permissions & copyright
-  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata 
+  has_metadata "rightsMetadata", type: Hydra::Datastream::RightsMetadata 
 
-  has_metadata :name =>'descMetadata', :type => ActiveFedora::QualifiedDublinCoreDatastream do |m|
+  has_metadata 'descMetadata', type: ActiveFedora::QualifiedDublinCoreDatastream do |m|
     m.title :type=> :text, :index_as=>[:searchable]
     
   end
 
-  delegate_to :descMetadata, [:title, :description], :unique=>true
-  delegate :license_title, :to=>'rightsMetadata', :at=>[:license, :title], :unique=>true
-  delegate :license_description, :to=>'rightsMetadata', :at=>[:license, :description], :unique=>true
-  delegate :license_url, :to=>'rightsMetadata', :at=>[:license, :url], :unique=>true
+  delegate_to :descMetadata, [:title, :description], multiple: false
+  delegate :license_title, to: 'rightsMetadata', at: [:license, :title], multiple: false
+  delegate :license_description, to: 'rightsMetadata', at: [:license, :description], multiple: false
+  delegate :license_url, to: 'rightsMetadata', at: [:license, :url], multiple: false
 
   # easy access to edit_groups, etc
   include Hydra::AccessControls::Permissions 
