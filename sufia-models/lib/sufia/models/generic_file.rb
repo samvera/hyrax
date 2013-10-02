@@ -6,6 +6,7 @@ module Sufia
     autoload :Permissions, 'sufia/models/generic_file/permissions'
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
+    autoload :Trophies, 'sufia/models/generic_file/trophies'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
@@ -16,6 +17,7 @@ module Sufia
     include Sufia::GenericFile::Permissions
     include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives
+    include Sufia::GenericFile::Trophies
 
     included do
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -33,7 +35,6 @@ module Sufia
                                   :resource_type, :identifier, :language], multiple: true
 
       around_save :characterize_if_changed, :retry_warming
-      before_destroy :cleanup_trophies
 
       attr_accessible *(ds_specs['descMetadata'][:type].fields + [:permissions])
     end
@@ -98,10 +99,6 @@ module Sufia
             raise
           end
         end
-    end
-
-    def cleanup_trophies
-      Trophy.destroy_all(generic_file_id: self.noid)
     end
 
     def related_files
