@@ -6,6 +6,7 @@ module Sufia
     autoload :Permissions, 'sufia/models/generic_file/permissions'
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
+    autoload :Versions, 'sufia/models/generic_file/versions'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
@@ -16,6 +17,7 @@ module Sufia
     include Sufia::GenericFile::Permissions
     include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives
+    include Sufia::GenericFile::Versions
 
     included do
       has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
@@ -38,16 +40,6 @@ module Sufia
       attr_accessible *(ds_specs['descMetadata'][:type].fields + [:permissions])
     end
 
-
-    def record_version_committer(user)
-      version = content.latest_version
-      # content datastream not (yet?) present
-      return if version.nil?
-      VersionCommitter.create(:obj_id => version.pid,
-                              :datastream_id => version.dsid,
-                              :version_id => version.versionID,
-                              :committer_login => user.user_key)
-    end
 
     def pdf?
       self.class.pdf_mime_types.include? self.mime_type
