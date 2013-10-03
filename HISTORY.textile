@@ -1,5 +1,5 @@
 h3. 6.4.0 (2013-09-30)
-
+* Removed deprecated modules from ModsAsset [Justin Coyne]
 * Removed RedCloth dependency [Justin Coyne]
 * Some of the delegated methods weren't pointing at their intended
   target [Justin Coyne]
