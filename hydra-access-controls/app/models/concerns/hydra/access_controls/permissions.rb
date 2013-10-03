@@ -2,12 +2,18 @@ module Hydra
   module AccessControls
     module Permissions
       extend ActiveSupport::Concern
+      extend Deprecation
       include Hydra::AccessControls::Visibility
 
       included do
         has_metadata "rightsMetadata", type: Hydra::Datastream::RightsMetadata
       end
 
+      # permissions= added for backward compatibility of Hydra::AdminPolicy for hydra-head < 6.4
+      def permissions= attributes_collection
+        Deprecation.warn(Permissions, "The permissions= method is deprecated and will be removed from Hydra::AccessControls::Permissions in hydra-head 7.0", caller)
+        self.permissions_attributes = attributes_collection
+      end
 
       ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
       # @example
