@@ -1,8 +1,15 @@
 # History of Sufia releases
 
-## 3.4.0.rc1
-* 2013-10-01: Remove Visibility, which was moved into hydra-head [Justin Coyne]
-* 2013-10-01: Fix deprecation warnings by switching to
+## 3.4.0.rc2
+* Moved trophies related methods to Trophies module [Justin Coyne]
+* Move mime type related methods into MimeTypes module [Justin Coyne]
+* Extract version methods into its own module [Justin Coyne]
+* Extract metadata into its own module [Justin Coyne]
+* Update to latest rc of hydra-head [Justin Coyne]
+* AccessRight has moved into HydraHead [Justin Coyne]
+* Remove cruft [ci skip] [Justin Coyne]
+* Remove Visibility, which was moved into hydra-head [Justin Coyne]
+* Fix deprecation warnings by switching to
   Hydra::AccessControls::Permissions [Justin Coyne]
 * 2013-09-27: Works with hydra 6.1.0.rc1 [Justin Coyne]
 
