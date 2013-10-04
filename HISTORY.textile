@@ -1,4 +1,8 @@
 h3. 6.4.0 (2013-09-30)
+* Added #permissions= as deprecated to maintain backward compatibility
+  of Hydra::AdminPolicy with hydra-head < 6.4. (In hydra-head < 6.4
+  Hydra::AdminPolicy included Hydra::ModelMixins::RightsMetadata, which provided
+  #permissions=.) [David Chandek-Stark]
 * Removed deprecated modules from ModsAsset [Justin Coyne]
 * Removed RedCloth dependency [Justin Coyne]
 * Some of the delegated methods weren't pointing at their intended
