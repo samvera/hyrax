@@ -49,11 +49,8 @@ Then `bundle install`
 
 Note the line with kaminari listed as a dependency.  This is a temporary fix to address a problem in the current release of kaminari.  Technically you should not have to list kaminari, which is a dependency of blacklight and sufia. 
 
-### Run the blacklight, hydra and sufia generators
+### Run the sufia generator
 ```
-rails g blacklight --devise
-rails g hydra:head -f
-bundle install
 rails g sufia -f
 rm public/index.html
 ```
