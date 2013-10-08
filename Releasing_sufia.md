@@ -1,6 +1,6 @@
 Update /SUFIA_VERSION
 
-rake all:release
+`rake all:release`
 
-# make sure all the changes get to everyone else:
-git push
+### make sure all the changes get to everyone else:
+`git push`
