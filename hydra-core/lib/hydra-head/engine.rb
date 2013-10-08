@@ -3,6 +3,10 @@ module HydraHead
   class Engine < Rails::Engine
     # Config defaults
     config.mount_at = '/'
+
+    config.autoload_paths += %W(
+      #{config.root}/app/controllers/concerns
+    )
     
     # Load rake tasks
     rake_tasks do
