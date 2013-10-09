@@ -87,6 +87,13 @@ Add this line:
 //= require sufia
 ```
 
+**Remove** this line, if present (typically, when using Rails 4):
+```
+//= require turbolinks
+```
+
+Turbolinks does not mix well with Blacklight.
+
 ### Install Fits.sh
 1. Go to http://code.google.com/p/fits/downloads/list and download a copy of fits & unpack it somewhere on your Machine.
 1. Give your system access to fits
