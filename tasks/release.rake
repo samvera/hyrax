@@ -2,6 +2,8 @@ root    = File.expand_path('../../', __FILE__)
 version = File.read("#{root}/SUFIA_VERSION").strip
 tag     = "v#{version}"
 
+directory 'pkg'
+
 ['sufia-models', 'sufia'].each do |framework|
   namespace framework do
     gem     = "pkg/#{framework}-#{version}.gem"
