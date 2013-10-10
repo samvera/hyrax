@@ -88,7 +88,7 @@ describe Hydra::AccessControlsEnforcement do
   describe "enforce_show_permissions" do
     it "should allow a user w/ edit permissions to view an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
-      RoleMapper.stub(:roles).with(user.user_key).and_return(["archivist"])
+      RoleMapper.stub(:roles).with(user).and_return(["archivist"])
       subject.stub(:current_user).and_return(user)
       subject.stub(:can?).with(:read, nil).and_return(true)
       stub_doc = Hydra::PermissionsSolrDocument.new({"edit_access_person_ssim"=>["testuser@example.com"], "embargo_release_date_dtsi"=>(Date.parse(Time.now.to_s)+2).to_s})
@@ -100,7 +100,7 @@ describe Hydra::AccessControlsEnforcement do
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
-      RoleMapper.stub(:roles).with(user.user_key).and_return([])
+      RoleMapper.stub(:roles).with(user).and_return([])
       subject.stub(:current_user).and_return(user)
       subject.stub(:can?).with(:read, nil).and_return(true)
       subject.params = {}
@@ -113,7 +113,7 @@ describe Hydra::AccessControlsEnforcement do
   describe "apply_gated_discovery" do
     before(:each) do
       @stub_user = User.new :uid=>'archivist1@example.com'
-      RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["archivist","researcher"])
+      RoleMapper.stub(:roles).with(@stub_user).and_return(["archivist","researcher"])
       subject.stub(:current_user).and_return(@stub_user)
       @solr_parameters = {}
       @user_parameters = {}
@@ -133,7 +133,7 @@ describe Hydra::AccessControlsEnforcement do
     end
 
     it "should escape slashes in the group names" do
-      RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["abc/123","cde/567"])
+      RoleMapper.stub(:roles).with(@stub_user).and_return(["abc/123","cde/567"])
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
         @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:abc\\\/123/)        
@@ -141,7 +141,7 @@ describe Hydra::AccessControlsEnforcement do
       end
     end
     it "should escape spaces in the group names" do
-      RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["abc 123","cd/e 567"])
+      RoleMapper.stub(:roles).with(@stub_user).and_return(["abc 123","cd/e 567"])
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
         @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:abc\\ 123/)

@@ -95,7 +95,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   describe "policies_with_access" do
     context "Authenticated user" do
       before do
-        RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+        RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
         subject.stub(:current_user).and_return(@user)
       end
       it "should return the policies that provide discover permissions" do
@@ -120,7 +120,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   
   describe "apply_gated_discovery" do
     before do
-      RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+      RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
       subject.stub(:current_user).and_return(@user)
     end
     it "should include policy-aware query" do
@@ -140,7 +140,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
   describe "apply_policy_role_permissions" do
     it "should escape slashes in the group names" do
-      RoleMapper.stub(:roles).with(@user.user_key).and_return(["abc/123","cde/567"])
+      RoleMapper.stub(:roles).with(@user).and_return(["abc/123","cde/567"])
       subject.stub(:current_user).and_return(@user)
       user_access_filters = subject.apply_policy_role_permissions
       ["edit","discover","read"].each do |type|
@@ -149,7 +149,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       end
     end
     it "should escape spaces in the group names" do
-      RoleMapper.stub(:roles).with(@user.user_key).and_return(["abc 123","cd/e 567"])
+      RoleMapper.stub(:roles).with(@user).and_return(["abc 123","cd/e 567"])
       subject.stub(:current_user).and_return(@user)
       user_access_filters = subject.apply_policy_role_permissions
       ["edit","discover","read"].each do |type|
