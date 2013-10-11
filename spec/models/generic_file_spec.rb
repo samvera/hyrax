@@ -263,6 +263,7 @@ describe GenericFile do
     end
   end
   it "should support to_solr" do
+    @file.stub(:pid).and_return('stubbed_pid')
     @file.part_of = "Arabiana"
     @file.contributor = "Mohammad"
     @file.creator = "Allah"
@@ -303,7 +304,7 @@ describe GenericFile do
     local[Solrizer.solr_name("desc_metadata__identifier")].should == ["urn:isbn:1234567890"]
     local[Solrizer.solr_name("desc_metadata__based_near")].should == ["Medina, Saudi Arabia"]
     local[Solrizer.solr_name("mime_type")].should == ["image/jpeg"]    
-    local["noid_tsi"].should == "__DO_NOT_USE__"
+    local["noid_tsi"].should eq('stubbed_pid')
   end
   it "should support multi-valued fields in solr" do
     @file.tag = ["tag1", "tag2"]
@@ -547,6 +548,10 @@ describe GenericFile do
   describe "characterize" do
     it "should return expected results when called", :unless => $in_travis do
       @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      # Without the stub(:save), the after save callback was being triggered
+      # which resulted the characterize_if_changed method being called; which
+      # enqueued a job for characterizing
+      @file.stub(:save)
       @file.characterize
       doc = Nokogiri::XML.parse(@file.characterization.content)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'

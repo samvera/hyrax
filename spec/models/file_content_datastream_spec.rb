@@ -54,9 +54,6 @@ describe FileContentDatastream do
       @subject.stub(:pid=>'my_pid')
       @subject.stub(:dsVersionID=>'content.7')
     end
-    it "should have the path" do
-      @subject.send(:fits_path).should be_present
-    end
     it "should return an xml document", :unless => $in_travis do
       repo = double("repo")
       repo.stub(:config=>{})
@@ -64,7 +61,7 @@ describe FileContentDatastream do
       content = double("file")
       content.stub(:read=>f.read)
       content.stub(:rewind=>f.rewind)
-      @subject.should_receive(:content).exactly(5).times.and_return(f)
+      @subject.stub(:content).and_return(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
@@ -77,7 +74,7 @@ describe FileContentDatastream do
       content = double("file")
       content.stub(:read=>f.read)
       content.stub(:rewind=>f.rewind)
-      @subject.should_receive(:content).exactly(5).times.and_return(f)
+      @subject.stub(:content).and_return(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:identity/@mimetype', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).first.value.should == 'image/png'
