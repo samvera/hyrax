@@ -15,7 +15,7 @@ module Hydra::User
   end
 
   def groups
-    RoleMapper.roles(user_key)
+    RoleMapper.roles(self)
   end
   
   module ClassMethods

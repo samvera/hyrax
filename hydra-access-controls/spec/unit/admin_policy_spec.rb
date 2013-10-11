@@ -127,7 +127,7 @@ describe Hydra::AdminPolicy do
   describe "When accessing assets with Policies associated" do
     before do
       @user = FactoryGirl.build(:martia_morocco)
-      RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+      RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
     end
     before(:all) do
       class TestAbility

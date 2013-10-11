@@ -197,7 +197,7 @@ describe Ability do
     context "Then a collaborator with edit access (group permision)" do
       before do
         @user = FactoryGirl.build(:martia_morocco)
-        RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+        RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
       end
       subject { Ability.new(@user) }
 
@@ -233,7 +233,7 @@ describe Ability do
     context "Then someone whose role/group has read access" do
       before do
         @user = FactoryGirl.build(:martia_morocco)
-        RoleMapper.stub(:roles).with(@user.user_key).and_return(@user.roles)
+        RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
       end
       subject { Ability.new(@user) }
 
