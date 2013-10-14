@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   # Since hydra 6.1 isn't out yet, we'll just build it so that it's compatible 
   # without an explicit dependency
   spec.add_dependency "hydra-head", "~> 6.4.0.rc2"
-  spec.add_dependency 'active-fedora', "~> 6.6.0.rc1"
+  spec.add_dependency 'active-fedora', "~> 6.6.0"
 
   spec.add_dependency 'nest', '~> 1.1.1'
   spec.add_dependency 'resque', '~> 1.23.0'#, :require => 'resque/server'
@@ -45,6 +45,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'paperclip', '~> 3.4.0'
   spec.add_dependency 'zipruby', '0.3.6'
   spec.add_dependency 'hydra-derivatives', '~> 0.0.5'
-  # https://github.com/zdennis/activerecord-import/pull/79
-  #spec.add_dependency 'activerecord-import', '0.3.0' # 0.3.1 caused a bug in testing: "SQLite3::SQLException: near ",": syntax error: INSERT INTO..."
+  spec.add_dependency 'activerecord-import'
 end

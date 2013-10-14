@@ -42,6 +42,7 @@ module Sufia
       end
 
       initializer 'requires' do
+        require 'activerecord-import'
         require 'hydra/derivatives'
         require 'sufia/models/model_methods'
         require 'sufia/models/noid'
