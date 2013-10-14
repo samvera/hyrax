@@ -1,4 +1,7 @@
 h3. 6.4.0 (2013-09-30)
+* Amended Hydra::User#groups to pass self to RoleMapper.roles in order to avoid
+  redundant user lookup. Fixes #111. [David Chandek-Stark]
+* Moved controller mixins into concerns [Justin Coyne]
 * Added #permissions= as deprecated to maintain backward compatibility
   of Hydra::AdminPolicy with hydra-head < 6.4. (In hydra-head < 6.4
   Hydra::AdminPolicy included Hydra::ModelMixins::RightsMetadata, which provided
