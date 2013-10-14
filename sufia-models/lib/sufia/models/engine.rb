@@ -28,6 +28,7 @@ module Sufia
       config.autoload_paths += %W(
         #{config.root}/lib/sufia/models/jobs
         #{config.root}/app/models/datastreams
+        #{config.root}/app/models/concerns
       )
 
       rake_tasks do
@@ -55,7 +56,6 @@ module Sufia
         require 'sufia/models/generic_file/mime_types'
         require 'sufia/models/generic_file/thumbnail'
         require 'sufia/models/generic_file'
-        require 'sufia/models/user'
         require 'sufia/models/user_local_directory_behavior'
         require 'sufia/models/id_service'
         require 'sufia/models/solr_document_behavior'
