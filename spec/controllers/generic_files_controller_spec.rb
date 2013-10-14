@@ -191,7 +191,7 @@ describe GenericFilesController do
       # Dir.mkdir @mock_upload_directory unless File.exists? @mock_upload_directory
       FileUtils.mkdir_p([File.join(@mock_upload_directory, "import/files"),File.join(@mock_upload_directory, "import/metadata")])   
       FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), @mock_upload_directory)
-      FileUtils.copy(File.expand_path('../../fixtures/image.jp2', __FILE__), @mock_upload_directory)
+      FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), @mock_upload_directory)
       FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(@mock_upload_directory, "import/metadata"))
       FileUtils.copy(File.expand_path('../../fixtures/icons.zip', __FILE__), File.join(@mock_upload_directory, "import/files"))
       FileUtils.copy(File.expand_path('../../fixtures/Example.ogg', __FILE__), File.join(@mock_upload_directory, "import/files"))
@@ -203,30 +203,24 @@ describe GenericFilesController do
     end
     context "when User model defines a directory path" do
       before do 
-        User.any_instance.stub(:directory).and_return(@mock_upload_directory)
-      end
-      it "should ingest files from the filesystem" do
         if $in_travis
-          # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf.
           # In order to avoid an invalid derivative creation, just stub out the derivatives.
           GenericFile.any_instance.stub(:create_derivatives)
         end
-        lambda { post :create, local_file: ["world.png", "image.jp2"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
+        User.any_instance.stub(:directory).and_return(@mock_upload_directory)
+      end
+      it "should ingest files from the filesystem" do
+        lambda { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
-        File.exist?("#{@mock_upload_directory}/image.jp2").should be_false
+        File.exist?("#{@mock_upload_directory}/image.jpg").should be_false
         File.exist?("#{@mock_upload_directory}/world.png").should be_false
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
         files.first.label.should == 'world.png'
-        files.last.label.should == 'image.jp2'
+        files.last.label.should == 'image.jpg'
       end
       it "should ingest redirect to another location" do
-        if $in_travis
-          # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf.
-          # In order to avoid an invalid derivative creation, just stub out the derivatives.
-          GenericFile.any_instance.stub(:create_derivatives)
-        end
         GenericFilesController.should_receive(:upload_complete_path).and_return(mock_url)
         lambda { post :create, local_file: ["world.png"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(1)
         response.should redirect_to mock_url
@@ -237,12 +231,6 @@ describe GenericFilesController do
         files.first.label.should == 'world.png'
       end
       it "should ingest directories from the filesystem" do
-        #TODO this test is very slow because it kicks off CharacterizeJob.
-        if $in_travis
-          # This is in place because we stub fits for travis, and the stub sets the mime to application/pdf.
-          # In order to avoid an invalid derivative creation, just stub out the derivatives.
-          GenericFile.any_instance.stub(:create_derivatives)
-        end
         lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
@@ -261,7 +249,7 @@ describe GenericFilesController do
     end
     context "when User model does not define directory path" do
       it "should return an error message and redirect to file upload page" do
-        lambda { post :create, local_file: ["world.png", "image.jp2"], batch_id: "xw42n7934"}.should_not change(GenericFile, :count)
+        lambda { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.should_not change(GenericFile, :count)
         response.should render_template :new
         flash[:alert].should == 'Your account is not configured for importing files from a user-directory on the server.'
       end
@@ -375,15 +363,15 @@ describe GenericFilesController do
       posted_file = GenericFile.find(@generic_file.pid)
       version1 = posted_file.content.latest_version
       posted_file.content.version_committer(version1).should == @user.user_key
-      
-      file = fixture_file_upload('/image.jp2','image/jp2')
+
+      file = fixture_file_upload('/image.jpg','image/jpg')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1@example.com'=>'edit'}}}
 
       posted_file = GenericFile.find(@generic_file.pid)
       version2 = posted_file.content.latest_version
       posted_file.content.version_committer(version2).should == @user.user_key
 
-      posted_file.content.mimeType.should == "image/jp2"
+      posted_file.content.mimeType.should == "image/jpeg"
       post :update, :id=>@generic_file.pid, :revision=>'content.0'
 
 
@@ -422,7 +410,7 @@ describe GenericFilesController do
       s2 = double('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
-      file = fixture_file_upload('/image.jp2','image/jp2')
+      file = fixture_file_upload('/image.jpg','image/jpg')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world"
 
       edited_file = GenericFile.find(@generic_file.pid)

@@ -1,7 +1,7 @@
 module Sufia
   module Noid
     def Noid.noidify(identifier)
-      identifier.split(":").last
+      String(identifier).split(":").last
     end
 
     def Noid.namespaceize(identifier)
