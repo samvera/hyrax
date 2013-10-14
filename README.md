@@ -124,7 +124,7 @@ See https://github.com/defunkt/resque for more options
 #### On a mac
 Use homebrew:
 ```
-brew install ffmpeg --with-libvpx --with-libvorbis
+brew install ffmpeg --with-fdk-aac --with-libvpx --with-libvorbis
 ```
 
 #### On Ubuntu Linux
