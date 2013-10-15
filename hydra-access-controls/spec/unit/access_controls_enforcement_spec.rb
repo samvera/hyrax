@@ -148,6 +148,14 @@ describe Hydra::AccessControlsEnforcement do
         @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:cd\\\/e\\ 567/)
       end
     end
+    it "should escape colons in the group names" do
+      RoleMapper.stub(:roles).with(@stub_user).and_return(["abc:123","cde:567"])
+      subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      ["discover","edit","read"].each do |type|
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:abc\\:123/)
+        @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:cde\\:567/)
+      end
+    end
   end
   
   describe "exclude_unwanted_models" do
