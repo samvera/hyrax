@@ -86,7 +86,7 @@ describe DownloadsController do
           stub_ds.stub(:pid).and_return('changeme:test')
           stub_file = double('stub object', datastreams: {'webm' => stub_ds}, pid:'changeme:test', label: "MyVideo.webm")
           ActiveFedora::Base.should_receive(:load_instance_from_solr).with('changeme:test').and_return(stub_file)
-          controller.stub(:can?).with(:read, 'changeme:test').and_return(true)
+          controller.stub(:authorize!).with(:download, stub_ds).and_return(true)
           controller.stub(:log_download)
         end
         it "head request" do
@@ -129,17 +129,6 @@ describe DownloadsController do
       end
     end
 
-    describe "when not logged in as reader" do
-      describe "show" do
-        before do
-          sign_in User.new.tap {|u| u.email = 'email2@example.com'; u.password = 'password'; u.save}
-        end
-        it "should deny access" do
-          lambda { get "show", :id =>@obj.pid }.should raise_error Hydra::AccessDenied
-        end
-      end
-    end
-
     describe "overriding the default asset param key" do
       before do
         Rails.application.routes.draw do
@@ -153,6 +142,29 @@ describe DownloadsController do
         controller.stub(:asset_param_key).and_return(:object_id)
         get "show", :object_id => @obj.pid
         response.should be_successful
+      end
+    end
+
+    describe "overriding the can_download? method" do
+      before { sign_in @user }
+      context "current_ability.can? returns true / can_download? returns false" do
+        it "should authorize according to can_download?" do
+          controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be_true
+          controller.stub(:can_download?).and_return(false)
+          expect { get :show, id: @obj, datastream_id: 'buzz' }.to raise_error(CanCan::AccessDenied)
+        end
+      end
+      context "current_ability.can? returns false / can_download? returns true" do
+        before do
+          @obj.rightsMetadata.clear_permissions!
+          @obj.save
+        end
+        it "should authorize according to can_download?" do
+          controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be_false
+          controller.stub(:can_download?).and_return(true)
+          get :show, id: @obj, datastream_id: 'buzz'
+          response.should be_successful           
+        end
       end
     end
 

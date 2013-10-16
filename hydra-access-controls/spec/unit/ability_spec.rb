@@ -173,9 +173,8 @@ describe Ability do
   end
 
   describe "Given an asset with collaborator" do
-    before do
-      @asset = FactoryGirl.create(:group_edit_asset)
-    end
+    before { @asset = FactoryGirl.create(:group_edit_asset) }
+    after { @asset.destroy }
     context "Then a collaborator with edit access (user permision)" do
       before do
         @user = FactoryGirl.build(:calvin_collaborator)
@@ -273,13 +272,14 @@ describe Ability do
           can :accept, ActiveFedora::Base
         end
       end
+      @user = FactoryGirl.create(:staff)
     end
 
     after do
       Object.send(:remove_const, :MyAbility)
     end
 
-    subject { MyAbility.new(FactoryGirl.create(:staff)) }
+    subject { MyAbility.new(@user) }
 
     it "should be set the custom permission" do
       subject.can?(:accept, ActiveFedora::Base).should be_true
@@ -293,11 +293,44 @@ describe Ability do
       @asset2 = FactoryGirl.create(:asset)
       @user = FactoryGirl.build(:calvin_collaborator) # has access to @asset1, but not @asset2
     end
+    after do
+      @asset1.destroy
+      @asset2.destroy
+    end
     subject { Ability.new(@user) }
     it "should be readable in the first instance and not in the second instance" do
       # We had a bug around this where it keeps returning the access for the first object queried
       subject.can?(:edit, @asset1).should be_true  
       subject.can?(:edit, @asset2).should be_false  
+    end
+  end
+
+  describe "download permissions" do
+    subject { Ability.new(@user) }
+    before do
+      @asset = FactoryGirl.create(:asset)
+      @user = FactoryGirl.build(:user)
+    end
+    after { @asset.destroy }
+    context "user has read permission on the object" do
+      before do
+        @asset.read_users = [@user.user_key]
+        @asset.save
+      end
+      it "should permit the user to download the object's datastreams" do
+        subject.can?(:read, @asset).should be_true
+        @asset.datastreams.each_value do |ds|
+          subject.can?(:download, ds).should be_true
+        end
+      end
+    end
+    context "user lacks read permission on the object" do
+      it "should not permit the user to download the object's datastreams" do
+        subject.can?(:read, @asset).should be_false
+        @asset.datastreams.each_value do |ds|
+          subject.can?(:download, ds).should be_false
+        end
+      end
     end
   end
 
