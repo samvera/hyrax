@@ -1,4 +1,7 @@
 h3. 6.4.0 (2013-09-30)
+* Patch Hydra::AccessControlsEnforcement#escape_filter to support
+  group/role names containing colons. [David Chandek-Stark]
+* Fixed Solr field name [David Chandek-Stark]
 * Amended Hydra::User#groups to pass self to RoleMapper.roles in order to avoid
   redundant user lookup. Fixes #111. [David Chandek-Stark]
 * Moved controller mixins into concerns [Justin Coyne]
