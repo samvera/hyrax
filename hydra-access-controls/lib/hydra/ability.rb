@@ -13,7 +13,7 @@ module Hydra
       include Hydra::PermissionsQuery
       include Blacklight::SolrHelper
       class_attribute :ability_logic
-      self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :custom_permissions]
+      self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :download_permissions, :custom_permissions]
     end
 
     def self.user_class
@@ -87,6 +87,12 @@ module Hydra
       end 
     end
 
+    # Download permissions are exercised in Hydra::Controller::DownloadBehavior
+    def download_permissions
+      can :download, ActiveFedora::Datastream do |ds|
+        can? :read, ds.pid # i.e, can download ds if can read object
+      end
+    end
 
     ## Override custom permissions in your own app to add more permissions beyond what is defined by default.
     def custom_permissions

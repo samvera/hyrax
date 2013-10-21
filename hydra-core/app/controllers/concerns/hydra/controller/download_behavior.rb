@@ -2,21 +2,17 @@ module Hydra
   module Controller
     module DownloadBehavior
       extend ActiveSupport::Concern
+      extend Deprecation
 
       included do
         before_filter :load_asset
         before_filter :load_datastream
+        before_filter :authorize_download!
       end
       
       # Responds to http requests to show the datastream
       def show
-        if can_download?
-          # we can now examine asset and determine if we should send_content, or some other action.
-          send_content (asset)
-        else 
-          logger.info "Can not read #{params[asset_param_key]}"
-          raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[asset_param_key])
-        end
+        send_content
       end
 
       protected
@@ -35,6 +31,15 @@ module Hydra
         @ds = datastream_to_show
       end
 
+      # Customize the :download ability in your Ability class, or override this method
+      def authorize_download!
+        if self.respond_to?(:can_download?)
+          Deprecation.warn(DownloadBehavior, "The `can_download?' method is deprecated and will not be supported in hydra-head 8.0.  Implement special authorization behavior by customizing the :download permission on ActiveFedora::Datastream in your Ability class.", caller)
+          current_ability.send(can_download? ? :can : :cannot, :download, ActiveFedora::Datastream, dsid: datastream.dsid, pid: datastream.pid)
+        end
+        authorize! :download, datastream
+      end
+
       def asset
         @asset
       end
@@ -42,14 +47,6 @@ module Hydra
       def datastream
         @ds
       end
-
-      # Override this method to enforce access controls. By default it allows
-      # any datastream on an object the current user has read access to.
-      # @return [Boolean] can the curent user view this object/datastream
-      def can_download?
-        can? :read, datastream.pid
-      end 
-
 
       # Override this method to change which datastream is shown.
       # Loads the datastream specified by the HTTP parameter `:datastream_id`. 
@@ -64,7 +61,9 @@ module Hydra
       end
       
       # Handle the HTTP show request
-      def send_content(asset)
+      def send_content(asset_ = nil)
+        Deprecation.warn(DownloadBehavior, "The `asset' parameter of the `send_content' method is deprecated and will be removed from Hydra::Controller::DownloadBehavior in hydra-head 8.0", caller) if asset_
+
         response.headers['Accept-Ranges'] = 'bytes'
 
         if request.head?
