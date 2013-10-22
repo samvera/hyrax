@@ -31,6 +31,12 @@ describe Hydra::Datastream::RightsMetadata do
   
   describe "permissions" do
     describe "setter" do
+      it "should set person permissions" do
+        @sample.permissions = {"person"=>{"maria"=>"read","marcus"=>"discover"}}
+      end
+      it "should set group permissions" do
+        @sample.permissions = {"group"=>{"librarians"=>"read","students"=>"discover"}}
+      end
       it "should create/update/delete permissions for the given user/group" do
         @sample.class.terminology.xpath_for(:access, :person, "person_123").should == '//oxns:access/oxns:machine/oxns:person[contains(., "person_123")]'
         
