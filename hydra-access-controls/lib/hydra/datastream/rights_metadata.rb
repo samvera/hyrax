@@ -143,9 +143,11 @@ module Hydra
       # @param params ex. {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}}
       # Restricts actor type to group or person.  Any others will be ignored
       def permissions= (params)
-        group_ids = groups.keys | params['group'].keys
+        groups_for_update = params['group'] ? params['group'].keys : []
+        group_ids = groups.keys | groups_for_update
         group_ids.each {|group_id| self.permissions({"group"=>group_id}, params['group'].fetch(group_id, 'none'))}
-        user_ids = individuals.keys | params['person'].keys
+        users_for_update = params['person'] ? params['person'].keys : []
+        user_ids = individuals.keys | users_for_update
         user_ids.each {|person_id| self.permissions({"person"=>person_id}, params['person'].fetch(person_id, 'none'))}
       end
       
