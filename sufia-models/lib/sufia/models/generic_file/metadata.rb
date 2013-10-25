@@ -10,12 +10,12 @@ module Sufia
         has_file_datastream "thumbnail"
 
 
-        delegate_to :properties, [:relative_path, :depositor, :import_url], multiple: false
-        delegate_to :descMetadata, [:date_uploaded, :date_modified], multiple: false 
-        delegate_to :descMetadata, [:related_url, :based_near, :part_of, :creator,
+        has_attributes :relative_path, :depositor, :import_url, datastream: :properties, multiple: false
+        has_attributes :date_uploaded, :date_modified, datastream: :descMetadata, multiple: false 
+        has_attributes :related_url, :based_near, :part_of, :creator,
                                     :contributor, :title, :tag, :description, :rights,
                                     :publisher, :date_created, :subject,
-                                    :resource_type, :identifier, :language], multiple: true
+                                    :resource_type, :identifier, :language, datastream: :descMetadata, multiple: true
       end
     end
   end
