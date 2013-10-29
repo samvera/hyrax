@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   # spec.add_dependency "hydra", "6.1.0.rc2"
   # Since hydra 6.1 isn't out yet, we'll just build it so that it's compatible 
   # without an explicit dependency
-  spec.add_dependency "active-fedora", "~> 6.7.0.rc1"
+  spec.add_dependency "active-fedora", "~> 6.7.0"
   spec.add_dependency "blacklight", "~> 4.5.0"
   spec.add_dependency "hydra-head", "~> 6.4.0"
 
