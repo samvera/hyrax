@@ -22,4 +22,10 @@ describe "User Profile" do
     page.should have_content "Your profile has been updated"
     page.should have_content "curatorOfData"
   end
+
+  it "should display all users" do
+    click_link "curator1@example.com"
+    click_link "View Users"
+    page.should have_xpath("//td/a[@href='/users/curator1@example-dot-com']")
+  end
 end
