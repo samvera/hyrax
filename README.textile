@@ -5,7 +5,10 @@ Hydra-Head is a Ruby-on-Rails gem containing the core code for a web application
 
 See the github wikis for information targeted to developers: "http://github.com/projecthydra/hydra-head/wiki":http://github.com/projecthydra/hydra-head/wiki
 See the duraspace hydra wikis for information at the architecture level: "http://wiki.duraspace.org/display/hydra/":http://wiki.duraspace.org/display/hydra/
+
 Additionally, new adopters and potential adopters may find the pages here useful: "http://projecthydra.org/":http://projecthydra.org/
+
+If you are new to Hydra and looking to start a new Hydra head with a set of components that have been tested for compatibility, and for which there will be a documented upgrade path to the next versions, we recommend you use the Hydra gem: https://github.com/projecthydra/hydra
 
 Further questions?  Ask the "hydra-tech list":http://groups.google.com/group/hydra-tech or join the freenode #projecthydra IRC channel.
 
