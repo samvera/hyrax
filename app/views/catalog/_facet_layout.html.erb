@@ -1,5 +1,5 @@
 <li class="expandable_new grey">
-   <% id = facet_field.label.sub(" ","_") %>
+   <% id = facet_field.label.gsub(" ","_") %>
    <!--button class="btn dropdown" data-toggle="collapse" data-target="#collapse_<%= id%>" data-parent="#facet_group"><i class="icon-chevron-right"></i> <%= facet_field.label%></button--> 
 
     <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#facet_group" data-target="#collapse_<%= id%>">
