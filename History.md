@@ -1,6 +1,14 @@
 # History of Sufia releases
 
-## 3.4.0.rc3
+## 3.4.0
+* Handle facets with 3 or more words [Jeremy Friesen]
+* Fixed show links in Users#index [Andrew Curley]
+* Update to AF 6.7.0 [Justin Coyne]
+* Adding more verbose logging to specs [Jeremy Friesen]
+* Update to Blacklight 4.5.0 [Justin Coyne]
+* Removing migration templates from Sufia (they are in sufia-models) [Justin Coyne]
+* Removed HTML align property from views [Justin Coyne]
+* Relax the Resque spec [Justin Coyne]
 * Pinned to hydra-head ~> 6.4.0 [Justin Coyne]
 * Moved trophies related methods to Trophies module [Justin Coyne]
 * Move mime type related methods into MimeTypes module [Justin Coyne]
