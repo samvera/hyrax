@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["justin.coyne@yourmediashelf.com"]
   gem.description   = %q{Sufia is a Rails engine for creating a self-deposit institutional repository}
   gem.summary       = %q{Sufia was extracted from ScholarSphere developed by Penn State University}
-  gem.homepage      = ""
+  gem.homepage      = "http://github.com/projecthydra/sufia"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
