@@ -13,15 +13,31 @@ module Sufia
                                         :file_language, :word_count, :character_count,
                                         :paragraph_count, :line_count, :table_count,
                                         :graphics_count, :byte_order, :compression,
-                                        :width, :height, :color_space, :profile_name,
+                                        :color_space, :profile_name,
                                         :profile_version, :orientation, :color_map,
                                         :image_producer, :capture_device,
                                         :scanning_software, :exif_version,
                                         :gps_timestamp, :latitude, :longitude,
                                         :character_set, :markup_basis,
-                                        :markup_language, :duration, :bit_depth,
-                                        :sample_rate, :channels, :data_format, :offset, datastream: :characterization, multiple: true
+                                        :markup_language, :bit_depth,
+                                        :channels, :data_format, :offset, :frame_rate, datastream: :characterization, multiple: true
 
+      end
+
+      def width
+        characterization.width.blank? ? characterization.video_width : characterization.width
+      end
+
+      def height
+        characterization.height.blank? ? characterization.video_height : characterization.height
+      end
+
+      def duration
+        characterization.duration.blank? ? characterization.video_duration : characterization.duration
+      end
+
+      def sample_rate
+        characterization.sample_rate.blank? ? characterization.video_sample_rate : characterization.sample_rate
       end
 
       def characterize_if_changed

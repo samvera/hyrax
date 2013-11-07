@@ -70,7 +70,11 @@ class FitsDatastream < ActiveFedora::OmDatastream
         t.offset(:path=>"offset")
       }
       t.video {
-        # Not yet implemented in FITS
+        t.width(:path=>"imageWidth")
+        t.height(:path=>"imageHeight")
+        t.duration(:path=>"duration")
+        t.sample_rate(:path=>"sampleRate")
+        t.frame_rate(:path=>"frameRate")
       }
     }
     t.format_label(:proxy=>[:identification, :identity, :format_label])
@@ -98,7 +102,9 @@ class FitsDatastream < ActiveFedora::OmDatastream
     t.byte_order(:proxy=>[:metadata, :image, :byte_order])
     t.compression(:proxy=>[:metadata, :image, :compression])
     t.width(:proxy=>[:metadata, :image, :width])
+    t.video_width( :proxy=>[:metadata, :video, :width])
     t.height(:proxy=>[:metadata, :image, :height])
+    t.video_height(:proxy=>[:metadata, :video, :height])
     t.color_space(:proxy=>[:metadata, :image, :color_space])
     t.profile_name(:proxy=>[:metadata, :image, :profile_name])
     t.profile_version(:proxy=>[:metadata, :image, :profile_version])
@@ -115,11 +121,14 @@ class FitsDatastream < ActiveFedora::OmDatastream
     t.markup_basis(:proxy=>[:metadata, :text, :markup_basis])
     t.markup_language(:proxy=>[:metadata, :text, :markup_language])
     t.duration(:proxy=>[:metadata, :audio, :duration])
+    t.video_duration(:proxy=>[:metadata, :video, :duration])
     t.bit_depth(:proxy=>[:metadata, :audio, :bit_depth])
     t.sample_rate(:proxy=>[:metadata, :audio, :sample_rate])
+    t.video_sample_rate(:proxy=>[:metadata, :video, :sample_rate])
     t.channels(:proxy=>[:metadata, :audio, :channels])
     t.data_format(:proxy=>[:metadata, :audio, :data_format])
     t.offset(:proxy=>[:metadata, :audio, :offset])
+    t.frame_rate(:proxy=>[:metadata, :video, :frame_rate])
   end
 
   def self.xml_template
