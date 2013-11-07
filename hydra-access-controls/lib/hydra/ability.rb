@@ -3,6 +3,7 @@ require 'cancan'
 module Hydra
   module Ability
     extend ActiveSupport::Concern
+    extend Deprecation
     
     # once you include Hydra::Ability you can add custom permission methods by appending to ability_logic like so:
     #
@@ -103,7 +104,7 @@ module Hydra
     def test_edit(pid)
       logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
       group_intersection = user_groups & edit_groups(pid)
-      result = !group_intersection.empty? || edit_persons(pid).include?(current_user.user_key)
+      result = !group_intersection.empty? || edit_users(pid).include?(current_user.user_key)
       logger.debug("[CANCAN] decision: #{result}")
       result
     end   
@@ -111,7 +112,7 @@ module Hydra
     def test_read(pid)
       logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
       group_intersection = user_groups & read_groups(pid)
-      result = !group_intersection.empty? || read_persons(pid).include?(current_user.user_key)
+      result = !group_intersection.empty? || read_users(pid).include?(current_user.user_key)
       result
     end 
     
@@ -132,20 +133,20 @@ module Hydra
       return rg
     end
 
-    def edit_persons(pid)
+    def edit_users(pid)
       doc = permissions_doc(pid)
       return [] if doc.nil?
-      ep = doc[self.class.edit_person_field] ||  []
-      logger.debug("[CANCAN] edit_persons: #{ep.inspect}")
+      ep = doc[self.class.edit_user_field] ||  []
+      logger.debug("[CANCAN] edit_users: #{ep.inspect}")
       return ep
     end
 
-    # edit implies read, so read_persons is the union of edit and read persons
-    def read_persons(pid)
+    # edit implies read, so read_users is the union of edit and read users
+    def read_users(pid)
       doc = permissions_doc(pid)
       return [] if doc.nil?
-      rp = edit_persons(pid) | (doc[self.class.read_person_field] || [])
-      logger.debug("[CANCAN] read_persons: #{rp.inspect}")
+      rp = edit_users(pid) | (doc[self.class.read_user_field] || [])
+      logger.debug("[CANCAN] read_users: #{rp.inspect}")
       return rp
     end
 
@@ -154,11 +155,21 @@ module Hydra
         Hydra.config[:permissions][:read][:group]
       end
 
-      def edit_person_field 
+      def edit_person_field
+        Deprecation.warn(Ability, "The edit_person_field class method is deprecated and will be removed from Hydra::Ability in hydra-head 8.0.  Use edit_user_field instead.", caller)
+        edit_user_field
+      end
+
+      def edit_user_field 
         Hydra.config[:permissions][:edit][:individual]
       end
 
-      def read_person_field 
+      def read_person_field
+        Deprecation.warn(Ability, "The read_person_field class method is deprecated and will be removed from Hydra::Ability in hydra-head 8.0.  Use read_user_field instead.", caller)
+        read_user_field
+      end
+
+      def read_user_field 
         Hydra.config[:permissions][:read][:individual]
       end
 
