@@ -1,6 +1,7 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAbility
   extend ActiveSupport::Concern
+  extend Deprecation
   include Hydra::Ability
   
   # Extends Hydra::Ability.test_edit to try policy controls if object-level controls deny access
@@ -54,7 +55,7 @@ module Hydra::PolicyAwareAbility
     else
       logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide EDIT permissions for #{current_user.user_key}?")
       group_intersection = user_groups & edit_groups_from_policy( policy_pid )
-      result = !group_intersection.empty? || edit_persons_from_policy( policy_pid ).include?(current_user.user_key)
+      result = !group_intersection.empty? || edit_users_from_policy( policy_pid ).include?(current_user.user_key)
       logger.debug("[CANCAN] -policy- decision: #{result}")
       return result
     end
@@ -68,7 +69,7 @@ module Hydra::PolicyAwareAbility
     else
       logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide READ permissions for #{current_user.user_key}?")
       group_intersection = user_groups & read_groups_from_policy( policy_pid )
-      result = !group_intersection.empty? || read_persons_from_policy( policy_pid ).include?(current_user.user_key)
+      result = !group_intersection.empty? || read_users_from_policy( policy_pid ).include?(current_user.user_key)
       logger.debug("[CANCAN] -policy- decision: #{result}")
       result
     end
@@ -93,23 +94,33 @@ module Hydra::PolicyAwareAbility
     return rg
   end
 
-  # Returns the list of individuals granted edit access by the policy object identified by policy_pid
   def edit_persons_from_policy(policy_pid)
+    Deprecation.warn(Hydra::PolicyAwareAbility, "The edit_persons_from_policy method is deprecated and will be removed from Hydra::PolicyAwareAbility in hydra-head 8.0.  Use edit_users_from_policy instead.", caller)
+    edit_users_from_policy(policy_pid)
+  end
+
+  # Returns the list of individuals granted edit access by the policy object identified by policy_pid
+  def edit_users_from_policy(policy_pid)
     policy_permissions = policy_permissions_doc(policy_pid)
-    edit_person_field = Hydra.config[:permissions][:inheritable][:edit][:individual]
-    ep = ((policy_permissions == nil || policy_permissions.fetch(edit_person_field,nil) == nil) ? [] : policy_permissions.fetch(edit_person_field,nil))
-    logger.debug("[CANCAN] -policy- edit_persons: #{ep.inspect}")
-    return ep
+    edit_user_field = Hydra.config[:permissions][:inheritable][:edit][:individual]
+    eu = ((policy_permissions == nil || policy_permissions.fetch(edit_user_field,nil) == nil) ? [] : policy_permissions.fetch(edit_user_field,nil))
+    logger.debug("[CANCAN] -policy- edit_users: #{eu.inspect}")
+    return eu
+  end
+
+  def read_persons_from_policy(policy_pid)
+    Deprecation.warn(Hydra::PolicyAwareAbility, "The read_persons_from_policy method is deprecated and will be removed from Hydra::PolicyAwareAbility in hydra-head 8.0.  Use read_users_from_policy instead.", caller)
+    read_users_from_policy(policy_pid)
   end
 
   # Returns the list of individuals granted read access by the policy object identified by policy_pid
-  # Noate: edit implies read, so read_persons is the union of edit and read persons
-  def read_persons_from_policy(policy_pid)
+  # Note: edit implies read, so read_users is the union of edit and read users
+  def read_users_from_policy(policy_pid)
     policy_permissions = policy_permissions_doc(policy_pid)
     read_individual_field = Hydra.config[:permissions][:inheritable][:read][:individual]
-    rp = edit_persons_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_individual_field,nil) == nil) ? [] : policy_permissions.fetch(read_individual_field,nil))
-    logger.debug("[CANCAN] -policy- read_persons: #{rp.inspect}")
-    return rp
+    ru = edit_users_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_individual_field,nil) == nil) ? [] : policy_permissions.fetch(read_individual_field,nil))
+    logger.debug("[CANCAN] -policy- read_users: #{ru.inspect}")
+    return ru
   end
   
   private
