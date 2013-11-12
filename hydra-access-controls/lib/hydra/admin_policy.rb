@@ -48,7 +48,7 @@ class Hydra::AdminPolicy < ActiveFedora::Base
   #  obj.default_permissions= [{:name=>"group1", :access=>"discover", :type=>'group'},
   #  {:name=>"group2", :access=>"discover", :type=>'group'}]
   def default_permissions=(params)
-    perm_hash = {'person' => defaultRights.individuals, 'group'=> defaultRights.groups}
+    perm_hash = {'person' => defaultRights.users, 'group'=> defaultRights.groups}
 
     params.each do |row|
       if row[:type] == 'user' || row[:type] == 'person'
@@ -72,7 +72,7 @@ class Hydra::AdminPolicy < ActiveFedora::Base
   #  {:name=>"user3", :access=>"read", :type=>'user'}]
   def default_permissions
     (defaultRights.groups.map {|x| {:type=>'group', :access=>x[1], :name=>x[0] }} + 
-      defaultRights.individuals.map {|x| {:type=>'user', :access=>x[1], :name=>x[0]}})
+      defaultRights.users.map {|x| {:type=>'user', :access=>x[1], :name=>x[0]}})
 
   end
 

@@ -18,7 +18,7 @@ module Hydra
       #  {:name=>"user3", :access=>"read", :type=>'user'}]
       def permissions
         (rightsMetadata.groups.map {|x| {:type=>'group', :access=>x[1], :name=>x[0] }} + 
-          rightsMetadata.individuals.map {|x| {:type=>'user', :access=>x[1], :name=>x[0]}})
+          rightsMetadata.users.map {|x| {:type=>'user', :access=>x[1], :name=>x[0]}})
 
       end
     
