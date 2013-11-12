@@ -55,7 +55,7 @@ This generator makes the following changes to your application:
   def inject_sufia_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exists?(file_path)
-      inject_into_class file_path, model_name.classify do
+      inject_into_file file_path, after: /include Hydra\:\:User.*$/ do
         "# Connects this user object to Sufia behaviors. " +
           "\n include Sufia::User\n"
       end
