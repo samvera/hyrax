@@ -20,7 +20,7 @@ module Hydra
       #  obj.permissions_attributes= [{:name=>"group1", :access=>"discover", :type=>'group'},
       #  {:name=>"group2", :access=>"discover", :type=>'group'}]
       def permissions_attributes= attributes_collection
-        perm_hash = {'person' => rightsMetadata.individuals, 'group'=> rightsMetadata.groups}
+        perm_hash = {'person' => rightsMetadata.users, 'group'=> rightsMetadata.groups}
 
         if attributes_collection.is_a? Hash
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
@@ -52,7 +52,7 @@ module Hydra
       ## Returns a list with all the permissions on the object.
       def permissions
         (rightsMetadata.groups.map {|x| Permission.new(type: 'group', access: x[1], name: x[0] )} + 
-          rightsMetadata.individuals.map {|x|  Permission.new(type: 'user', access: x[1], name: x[0] )})
+          rightsMetadata.users.map {|x|  Permission.new(type: 'user', access: x[1], name: x[0] )})
       end
 
       # Return a list of groups that have discover permission
@@ -107,7 +107,7 @@ module Hydra
       end
 
       def discover_users
-        rightsMetadata.individuals.map {|k, v| k if v == 'discover'}.compact
+        rightsMetadata.users.map {|k, v| k if v == 'discover'}.compact
       end
 
       # Grant discover permissions to the users specified. Revokes discover permission for all other users.
@@ -208,7 +208,7 @@ module Hydra
       end
 
       def read_users
-        rightsMetadata.individuals.map {|k, v| k if v == 'read'}.compact
+        rightsMetadata.users.map {|k, v| k if v == 'read'}.compact
       end
 
       # Grant read permissions to the users specified. Revokes read permission for all other users.
@@ -310,7 +310,7 @@ module Hydra
       end
 
       def edit_users
-        rightsMetadata.individuals.map {|k, v| k if v == 'edit'}.compact
+        rightsMetadata.users.map {|k, v| k if v == 'edit'}.compact
       end
 
       # Grant edit permissions to the groups specified. Revokes edit permission for all other groups.
@@ -350,8 +350,6 @@ module Hydra
       end
 
       private 
-
-
 
       # @param  permission either :discover, :read or :edit
       # @param  type either :person or :group

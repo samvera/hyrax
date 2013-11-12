@@ -11,7 +11,7 @@ module Hydra::AccessControlsEnforcement
     # CatalogController.include ModuleDefiningNewMethod
     # CatalogController.solr_access_filters_logic += [:new_method]
     # CatalogController.solr_access_filters_logic.delete(:we_dont_want)
-    self.solr_access_filters_logic = [:apply_role_permissions, :apply_individual_permissions, :apply_superuser_permissions ]
+    self.solr_access_filters_logic = [:apply_group_permissions, :apply_user_permissions, :apply_superuser_permissions ]
 
   end
   
@@ -26,7 +26,7 @@ module Hydra::AccessControlsEnforcement
       user_access_filters << ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer) + ":public"
     end
     
-    # Grant access based on user id & role
+    # Grant access based on user id & group
     solr_access_filters_logic.each do |method_name|
       user_access_filters += send(method_name, permission_types)
     end
@@ -106,12 +106,12 @@ module Hydra::AccessControlsEnforcement
   end
 
   
-  def apply_role_permissions(permission_types)
-      # for roles
+  def apply_group_permissions(permission_types)
+      # for groups
       user_access_filters = []
-      current_ability.user_groups.each_with_index do |role, i|
+      current_ability.user_groups.each_with_index do |group, i|
         permission_types.each do |type|
-          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer), role)
+          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer), group)
         end
       end
       user_access_filters
@@ -121,8 +121,8 @@ module Hydra::AccessControlsEnforcement
     [key, value.gsub(/[ :\/]/, ' ' => '\ ', '/' => '\/', ':' => '\:')].join(':')
   end
 
-  def apply_individual_permissions(permission_types)
-      # for individual person access
+  def apply_user_permissions(permission_types)
+      # for individual user access
       user_access_filters = []
       if current_user && current_user.user_key.present?
         permission_types.each do |type|
@@ -131,7 +131,6 @@ module Hydra::AccessControlsEnforcement
       end
       user_access_filters
   end
-
 
   # override to apply super user permissions
   def apply_superuser_permissions(permission_types)

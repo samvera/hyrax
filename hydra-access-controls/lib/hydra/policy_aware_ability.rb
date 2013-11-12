@@ -99,7 +99,7 @@ module Hydra::PolicyAwareAbility
     edit_users_from_policy(policy_pid)
   end
 
-  # Returns the list of individuals granted edit access by the policy object identified by policy_pid
+  # Returns the list of users granted edit access by the policy object identified by policy_pid
   def edit_users_from_policy(policy_pid)
     policy_permissions = policy_permissions_doc(policy_pid)
     edit_user_field = Hydra.config[:permissions][:inheritable][:edit][:individual]
@@ -113,12 +113,12 @@ module Hydra::PolicyAwareAbility
     read_users_from_policy(policy_pid)
   end
 
-  # Returns the list of individuals granted read access by the policy object identified by policy_pid
+  # Returns the list of users granted read access by the policy object identified by policy_pid
   # Note: edit implies read, so read_users is the union of edit and read users
   def read_users_from_policy(policy_pid)
     policy_permissions = policy_permissions_doc(policy_pid)
-    read_individual_field = Hydra.config[:permissions][:inheritable][:read][:individual]
-    ru = edit_users_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_individual_field,nil) == nil) ? [] : policy_permissions.fetch(read_individual_field,nil))
+    read_user_field = Hydra.config[:permissions][:inheritable][:read][:individual]
+    ru = edit_users_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_user_field, nil) == nil) ? [] : policy_permissions.fetch(read_user_field, nil))
     logger.debug("[CANCAN] -policy- read_users: #{ru.inspect}")
     return ru
   end
