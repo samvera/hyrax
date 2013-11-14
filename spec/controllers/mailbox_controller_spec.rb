@@ -17,11 +17,11 @@ describe MailboxController do
   end
   describe "#index" do
     it "should show message" do
-      User.any_instance.should_receive(:mark_as_read)
       get :index
       response.should be_success
       assigns[:messages].first.last_message.body.should == 'Test Message'
       assigns[:messages].first.last_message.subject.should == 'Test Subject'
+      @user.mailbox.inbox(:unread => true).count.should == 0
     end
   end
   describe "#delete" do

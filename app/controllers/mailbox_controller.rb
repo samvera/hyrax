@@ -4,7 +4,7 @@ class MailboxController < ApplicationController
   def index
     if user_signed_in?
       @messages = current_user.mailbox.inbox
-      current_user.mark_as_read @messages
+      @messages.each{|m| m.mark_as_read(current_user)}
     else
       @messages =[]
     end 
