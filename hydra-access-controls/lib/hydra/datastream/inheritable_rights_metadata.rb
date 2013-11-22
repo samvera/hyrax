@@ -7,13 +7,11 @@ module Hydra
       @terminology = Hydra::Datastream::RightsMetadata.terminology
   
       def to_solr(solr_doc=Hash.new)
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_discover_access_group', indexer)] = discover_access.machine.group
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_discover_access_person', indexer)] = discover_access.machine.person
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_read_access_group', indexer)] = read_access.machine.group
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_read_access_person', indexer)] = read_access.machine.person
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_edit_access_group', indexer)] = edit_access.machine.group
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_edit_access_person', indexer)] = edit_access.machine.person
-        solr_doc[ActiveFedora::SolrService.solr_name('inheritable_embargo_release_date', date_indexer)] = embargo_release_date
+        [:discover, :read, :edit].each do |access|
+          solr_doc[Hydra.config[:permissions][:inheritable][access][:group]] = send("#{access}_access").machine.group
+          solr_doc[Hydra.config[:permissions][:inheritable][access][:individual]] = send("#{access}_access").machine.person
+        end
+        solr_doc[Hydra.config[:permissions][:inheritable][:embargo_release_date]] = embargo_release_date
         return solr_doc
       end
     end

@@ -195,22 +195,14 @@ module Hydra
 
       def to_solr(solr_doc=Hash.new)
         super(solr_doc)
-        vals = edit_access.machine.group
-        solr_doc[ActiveFedora::SolrService.solr_name('edit_access_group', indexer)] = vals unless vals.empty?
-        vals = discover_access.machine.group
-        solr_doc[ActiveFedora::SolrService.solr_name('discover_access_group', indexer)] = vals unless vals.empty?
-        vals = read_access.machine.group
-        solr_doc[ActiveFedora::SolrService.solr_name('read_access_group', indexer)] = vals unless vals.empty?
-        vals = edit_access.machine.person
-        solr_doc[ActiveFedora::SolrService.solr_name('edit_access_person', indexer)] = vals unless vals.empty?
-        vals = discover_access.machine.person
-        solr_doc[ActiveFedora::SolrService.solr_name('discover_access_person', indexer)] = vals unless vals.empty?
-        vals = read_access.machine.person
-        solr_doc[ActiveFedora::SolrService.solr_name('read_access_person', indexer)] = vals unless vals.empty?
-
+        [:discover, :read, :edit].each do |access|
+          vals = send("#{access}_access").machine.group
+          solr_doc[Hydra.config[:permissions][access][:group]] = vals unless vals.empty?
+          vals = send("#{access}_access").machine.person
+          solr_doc[Hydra.config[:permissions][access][:individual]] = vals unless vals.empty?
+        end
         if embargo_release_date
-          embargo_release_date_solr_key_name = ActiveFedora::SolrService.solr_name("embargo_release_date", date_indexer)
-          ::Solrizer::Extractor.insert_solr_field_value(solr_doc, embargo_release_date_solr_key_name , embargo_release_date(:format=>:solr_date))
+          ::Solrizer::Extractor.insert_solr_field_value(solr_doc, Hydra.config[:permissions][:embargo_release_date], embargo_release_date(:format=>:solr_date))
         end
         solr_doc
       end
