@@ -11,8 +11,12 @@ module Hydra
       # Responds to http requests to show the datastream
       def show
         if can_download?
-          # we can now examine asset and determine if we should send_content, or some other action.
-          send_content (asset)
+          if datastream.new?
+            render_404
+          else
+            # we can now examine asset and determine if we should send_content, or some other action.
+            send_content (asset)
+          end
         else 
           logger.info "Can not read #{params[asset_param_key]}"
           raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[asset_param_key])
@@ -20,6 +24,13 @@ module Hydra
       end
 
       protected
+
+      def render_404
+        respond_to do |format|
+          format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
+          format.any  { head :not_found }
+        end
+      end
 
       # Override this method if asset PID is not passed in params[:id],
       # for example, in a nested resource.
@@ -55,7 +66,7 @@ module Hydra
       # Loads the datastream specified by the HTTP parameter `:datastream_id`. 
       # If this object does not have a datastream by that name, return the default datastream
       # as returned by {#default_content_ds}
-      # @return [ActiveFedora::Datastream] the datastr
+      # @return [ActiveFedora::Datastream] the datastream
       def datastream_to_show
         ds = asset.datastreams[params[:datastream_id]] if params.has_key?(:datastream_id)
         ds = default_content_ds if ds.nil?

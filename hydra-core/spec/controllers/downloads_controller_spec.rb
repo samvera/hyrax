@@ -15,9 +15,12 @@ describe DownloadsController do
 
   describe "with a file" do
     before do
+      class ContentHolder < ActiveFedora::Base
+        include Hydra::AccessControls::Permissions
+        has_file_datastream 'thumbnail'
+      end
       @user = User.new.tap {|u| u.email = 'email@example.com'; u.password = 'password'; u.save}
-      @obj = ActiveFedora::Base.new
-      @obj = ModsAsset.new
+      @obj = ContentHolder.new
       @obj.label = "world.png"
       @obj.add_file_datastream('fizz', :dsid=>'buzz', :mimeType => 'image/png')
       @obj.add_file_datastream('foobarfoobarfoobar', :dsid=>'content', :mimeType => 'image/png')
@@ -27,6 +30,7 @@ describe DownloadsController do
     end
     after do
       @obj.destroy
+      Object.send(:remove_const, :ContentHolder)
     end 
     describe "when logged in as reader" do
       before do
@@ -35,7 +39,7 @@ describe DownloadsController do
       end
       describe "show" do
         it "should default to returning default download configured by object" do
-          ModsAsset.stub(:default_content_ds).and_return('buzz')
+          ContentHolder.stub(:default_content_ds).and_return('buzz')
           get "show", :id => @obj.pid
           response.should be_success
           response.headers['Content-Type'].should == "image/png"
@@ -50,12 +54,23 @@ describe DownloadsController do
           response.headers["Content-Disposition"].should == "inline; filename=\"world.png\""
           response.body.should == 'foobarfoobarfoobar'
         end
-        it "should return requested datastreams" do
-          get "show", :id => @obj.pid, :datastream_id => "descMetadata"
-          response.should be_success
-          response.headers['Content-Type'].should == "text/plain"
-          response.headers["Content-Disposition"].should == "inline; filename=\"world.png\""
-          response.body.should == "It's a stream"
+
+        context "when a specific datastream is requested" do
+          context "and it doesn't exist" do
+            it "should return :not_found when the datastream doesn't exist" do
+              get "show", :id => @obj.pid, :datastream_id => "thumbnail"
+              response.should be_not_found
+            end
+          end
+          context "and it exists" do
+            it "should return it" do
+              get "show", :id => @obj.pid, :datastream_id => "descMetadata"
+              response.should be_success
+              response.headers['Content-Type'].should == "text/plain"
+              response.headers["Content-Disposition"].should == "inline; filename=\"world.png\""
+              response.body.should == "It's a stream"
+            end
+          end
         end
         it "should support setting disposition to inline" do
           get "show", :id => @obj.pid, :disposition => "inline"
@@ -83,6 +98,7 @@ describe DownloadsController do
           stub_ds.stub(:mimeType).and_return('video/webm')
           stub_ds.stub(:dsSize).and_return(16)
           stub_ds.stub(:dsid).and_return('webm')
+          stub_ds.stub(:new?).and_return(false)
           stub_ds.stub(:pid).and_return('changeme:test')
           stub_file = double('stub object', datastreams: {'webm' => stub_ds}, pid:'changeme:test', label: "MyVideo.webm")
           ActiveFedora::Base.should_receive(:load_instance_from_solr).with('changeme:test').and_return(stub_file)
