@@ -12,10 +12,21 @@ module Hydra
       
       # Responds to http requests to show the datastream
       def show
-        send_content
+        if datastream.new?
+          render_404
+        else
+          send_content
+        end
       end
 
       protected
+
+      def render_404
+        respond_to do |format|
+          format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
+          format.any  { head :not_found }
+        end
+      end
 
       # Override this method if asset PID is not passed in params[:id],
       # for example, in a nested resource.
@@ -52,7 +63,7 @@ module Hydra
       # Loads the datastream specified by the HTTP parameter `:datastream_id`. 
       # If this object does not have a datastream by that name, return the default datastream
       # as returned by {#default_content_ds}
-      # @return [ActiveFedora::Datastream] the datastr
+      # @return [ActiveFedora::Datastream] the datastream
       def datastream_to_show
         ds = asset.datastreams[params[:datastream_id]] if params.has_key?(:datastream_id)
         ds = default_content_ds if ds.nil?
