@@ -22,10 +22,6 @@ module Hydra::AccessControlsEnforcement
     permission_types = discovery_permissions
     user_access_filters = []
     
-    permission_types.each do |type|
-      user_access_filters << ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer) + ":public"
-    end
-    
     # Grant access based on user id & group
     solr_access_filters_logic.each do |method_name|
       user_access_filters += send(method_name, permission_types)
