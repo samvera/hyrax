@@ -27,9 +27,7 @@ describe Hydra::AccessControlsEnforcement do
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       end
       it "Then I should be treated as a member of the 'public' group" do
-        ["discover","edit","read"].each do |type|
-          @solr_parameters[:fq].first.should match(/#{type}_access_group_ssim\:public/)      
-        end
+        expect(@solr_parameters[:fq].first).to eq 'edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public'
       end
       it "Then I should not be treated as a member of the 'registered' group" do
         @solr_parameters[:fq].first.should_not match(/registered/) 
