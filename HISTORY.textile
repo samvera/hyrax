@@ -1,3 +1,7 @@
+h3. 6.4.1 (2013-11-25)
+* Remove duplicate public group query [Justin Coyne]
+* Return a 404 when the datastream doesn't have content. Fixes #126 [Justin Coyne]
+
 h3. 6.4.0 (2013-09-30)
 * Patch Hydra::AccessControlsEnforcement#escape_filter to support
   group/role names containing colons. [David Chandek-Stark]
