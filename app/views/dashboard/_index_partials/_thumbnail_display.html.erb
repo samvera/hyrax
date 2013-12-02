@@ -1,31 +1,7 @@
-<%#
-Copyright © 2012 The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-%>
-
-<%- height = 42 if height.blank? -%>
-<%- width = 36 if width.blank? -%>
-<% if (document.mime_type) %>
-  <% if document.image? %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width}), sufia.generic_file_path(document.noid) %>
-  <% elsif document.pdf? %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width}),sufia.generic_file_path(document.noid) %>
-  <% elsif document.video? %>
-    <%= link_to image_tag(sufia.download_path(document["id"], {:datastream_id => 'thumbnail'}), {:width=>width}),sufia.generic_file_path(document.noid) %>
-  <% else %>
-    <%= link_to image_tag("/assets/default.png", {:width=>width}), sufia.generic_file_path(document) %>
-  <% end %>
+<% width = 36 if width.blank? %>
+<%  if document.image? || document.pdf? || document.video? %>
+  <% path = sufia.download_path(document["id"], {datastream_id: 'thumbnail'}) %>
 <% else %>
- <%= link_to image_tag("/assets/default.png", {:width=>width}), sufia.generic_file_path(document) %> 
+  <% path = "/assets/default.png" %>
 <% end %>
+<%= link_to image_tag(path, {width: width}), sufia.generic_file_path(document) %>
