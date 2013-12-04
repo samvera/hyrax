@@ -9,17 +9,13 @@ gem 'sufia-models', path: './sufia-models'
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'selenium-webdriver'
   gem 'rspec-rails'
-  gem 'launchy'
-  gem 'database_cleaner'
+  gem 'launchy' unless ENV['TRAVIS']
   gem 'capybara'
-  gem 'bcrypt-ruby'
   gem "jettywrapper"
   gem "factory_girl_rails"
   gem "devise"
   gem 'jquery-rails'
-  gem 'sass-rails'
   gem 'turbolinks'
   gem "bootstrap-sass"
   gem "simplecov", :require => false
