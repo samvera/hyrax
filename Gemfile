@@ -10,13 +10,13 @@ gem 'sufia-models', path: './sufia-models'
 group :development, :test do
   gem 'sqlite3'
   gem 'selenium-webdriver'
-  gem 'rspec-rails', '~> 2.14'
+  gem 'rspec-rails'
   gem 'launchy'
   gem 'database_cleaner'
-  gem 'capybara', '~>2.1.0'
+  gem 'capybara'
   gem 'bcrypt-ruby'
   gem "jettywrapper"
-  gem "factory_girl_rails", "~> 4.2.1"
+  gem "factory_girl_rails"
   gem "devise"
   gem 'jquery-rails'
   gem 'sass-rails'
