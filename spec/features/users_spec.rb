@@ -3,9 +3,6 @@ require 'spec_helper'
 describe "User Profile" do
 
   before do
-    # FactoryGirl.create(:user)
-    # FactoryGirl.create(:archivist)
-    # FactoryGirl.create(:curator)
     sign_in :curator
   end
 
