@@ -139,6 +139,12 @@ describe 'Routes' do
     end
   end
 
+  describe "Notifications" do
+    it "should allow deleting" do
+      expect( delete: '/notifications/123/delete').to route_to(controller: 'mailbox', action: 'delete', uid: '123')
+    end
+  end
+
   describe "Contact Form" do
     it "should route to new" do
       { get: '/contact' }.should route_to(controller: 'contact_form', action: 'new')
@@ -147,26 +153,6 @@ describe 'Routes' do
     it "should route to create" do
       { post: '/contact' }.should route_to(controller: 'contact_form', action: 'create')
     end
-  end
-
-  describe "Queues" do
-  # TODO: figure out how to test mounted routes in Rails 3.2
-  #   before do
-  #     @routes = Resque::Server.routes
-  #     warden_mock = mock('warden')
-  #     warden_mock.stub(:user).returns(FactoryGirl.find_or_create(:archivist))
-  #     ActionDispatch::Request.any_instance.stub(:env).returns({'warden': warden_mock})
-  #   end
-
-    it "should route to queues if group is set properly" #do
-  #     User.any_instance.stub(:groups).returns(['umg/up.dlt.scholarsphere-admin'])
-  #     { get: '/admin/queues' }.should route_to('resque/server#index')
-  #   end
-
-    it "should *not* route to queues if group is not set properly" #do
-  #     User.any_instance.stub(:groups).returns(['something'])
-  #     { get: '/admin/queues' }.should_not route_to('resque/server#index')
-  #   end
   end
 
   describe "Static Pages" do

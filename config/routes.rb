@@ -29,7 +29,7 @@ Sufia::Engine.routes.draw do
   # Messages
   get 'notifications' => 'mailbox#index', :as => :mailbox
   match 'notifications/delete_all' => 'mailbox#delete_all', as: :mailbox_delete_all, via: [:get, :post]
-  match 'notifications/:uid/delete' => 'mailbox#delete', as: :mailbox_delete, via: [:get, :post]
+  delete 'notifications/:uid/delete' => 'mailbox#delete', as: :mailbox_delete
 
   # User profile & follows
   resources :users, only: [:index, :show, :edit, :update], as: :profiles
