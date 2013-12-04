@@ -22,14 +22,13 @@ module Sufia
       end
 
       def terms_for_editing
-        terms_for_display -
-         [:part_of, :date_modified, :date_uploaded, :format] #, :resource_type]
+        terms_for_display - [:date_modified, :date_uploaded, :format]
       end
 
       def terms_for_display
         # 'type' is the RDF.type assertion, which is not present by default, but may be
         # provided in some RDF schemas
-        self.descMetadata.class.fields
+        self.descMetadata.class.fields - [:part_of]
       end
 
       def to_jq_upload
