@@ -26,7 +26,7 @@ end
 desc "Run specs"
 RSpec::Core::RakeTask.new(:rspec) do |t|
   t.pattern = '../**/*_spec.rb'
-  t.rspec_opts = ["--colour -I ../", '--backtrace']
+  t.rspec_opts = ["--colour -I ../", '--backtrace', '--profile 20']
 end
 
 desc "Load fixtures"
