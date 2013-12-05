@@ -140,8 +140,17 @@ describe 'Routes' do
   end
 
   describe "Notifications" do
+    it "should have index" do
+      expect( get: '/notifications').to route_to(controller: 'mailbox', action: 'index')
+      expect(notifications_path).to eq '/notifications'
+    end
     it "should allow deleting" do
-      expect( delete: '/notifications/123/delete').to route_to(controller: 'mailbox', action: 'delete', uid: '123')
+      expect( delete: '/notifications/123').to route_to(controller: 'mailbox', action: 'destroy', id: '123')
+      expect(notification_path(123)).to eq '/notifications/123'
+    end
+    it "should allow deleting all of them" do
+      expect( delete: '/notifications/delete_all').to route_to(controller: 'mailbox', action: 'delete_all')
+      expect(delete_all_notifications_path).to eq '/notifications/delete_all'
     end
   end
 

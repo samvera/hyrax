@@ -1,21 +1,6 @@
-<%#
-Copyright © 2012 The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-%>
-<a id="notify_link"  href="<%= sufia.mailbox_path %>" class="icon-btn btn btn-small" title="click for User Notifications">
+<%= link_to sufia.notifications_path, id: "notify_link", class: "icon-btn btn btn-small", title: "User Notifications" do %>
  <%= render :partial => 'users/notify_number' %>
-</a>  
+<% end %>  
 <div class='hide'> 
   <%= link_to "notify", sufia.user_notify_path, :remote => true, :id => 'notify_update_link' %>
 </div> 

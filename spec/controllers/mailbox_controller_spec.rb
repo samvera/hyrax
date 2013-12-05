@@ -27,22 +27,18 @@ describe MailboxController do
   describe "#delete" do
     it "should delete message" do
       rec = @another_user.send_message(@user, 'message 2', 'subject 2')
-      @user.mailbox.inbox.count.should == 2
-      get :index
-      assigns[:messages].first.last_message.body.should == 'message 2'
-      get :delete, :uid=> rec.conversation.id
-      response.should redirect_to(@routes.url_helpers.mailbox_path)
-      @user.mailbox.inbox.count.should ==1
+      expect {
+        delete :destroy, :id=> rec.conversation.id
+        response.should redirect_to(@routes.url_helpers.notifications_path)
+      }.to change {@user.mailbox.inbox.count}.by(-1)
     end
     it "should not delete message" do
       @curator = FactoryGirl.find_or_create(:curator)
       rec = @another_user.send_message(@curator, 'message 3', 'subject 3')
-      @curator.mailbox.inbox.count.should == 1
-      get :delete, :uid=> rec.conversation.id
-      response.should redirect_to(@routes.url_helpers.mailbox_path)
-      @curator.mailbox.inbox.count.should ==1
-      rec.delete
-      @curator.delete       
+      expect {
+        delete :destroy, :id=> rec.conversation.id
+        response.should redirect_to(@routes.url_helpers.notifications_path)
+      }.to_not change { @curator.mailbox.inbox.count}
     end
   end
   describe "#delete_all" do
