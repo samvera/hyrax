@@ -40,9 +40,7 @@ if defined?(ClamAV)
   ClamAV.instance.loaddb
 else
   class ClamAV
-    def self.instance
-      new
-    end
+    include Singleton
     def scanfile(f)
       0
     end
