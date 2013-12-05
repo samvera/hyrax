@@ -15,20 +15,20 @@ class MailboxController < ApplicationController
         delete_message(msg)
      end
      empty_trash(current_user)
-     redirect_to sufia.mailbox_path
+     redirect_to sufia.notifications_path
   end
 
-  def delete
-    if (current_user)
-      msg = Conversation.find(params[:uid])
+  def destroy
+    if current_user
+      msg = Conversation.find(params[:id])
       if (msg.participants[0] == current_user) || (msg.participants[1] == current_user)
          delete_message(msg)
          empty_trash(msg.participants[0])
       end
-   else 
+    else 
       flash[:alert] = "You do not have privileges to delete the notification..."
-   end
-   redirect_to sufia.mailbox_path
+    end
+    redirect_to sufia.notifications_path
   end
 
 private 

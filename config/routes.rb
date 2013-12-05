@@ -27,9 +27,11 @@ Sufia::Engine.routes.draw do
   resources :downloads, :only => "show"
 
   # Messages
-  get 'notifications' => 'mailbox#index', :as => :mailbox
-  match 'notifications/delete_all' => 'mailbox#delete_all', as: :mailbox_delete_all, via: [:get, :post]
-  delete 'notifications/:uid/delete' => 'mailbox#delete', as: :mailbox_delete
+  resources :notifications, only: [:destroy, :index], controller: :mailbox do
+    collection do
+      delete 'delete_all'
+    end
+  end
 
   # User profile & follows
   resources :users, only: [:index, :show, :edit, :update], as: :profiles
