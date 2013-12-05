@@ -1038,10 +1038,7 @@ describe GenericFile do
   end
   describe "file content validation" do
     before do
-      if $in_travis
-        # In order to avoid an invalid derivative creation, just stub out the derivatives.
-        GenericFile.any_instance.stub(:create_derivatives)
-      end
+      GenericFile.any_instance.stub(:create_derivatives)
     end
     context "when file contains a virus" do
       let(:f) { File.new(fixture_path + '/small_file.txt') }
@@ -1049,7 +1046,7 @@ describe GenericFile do
         subject.destroy if subject.persisted?
       end
       it "populates the errors hash during validation" do
-        ClamAV.instance.stub(:scanfile).and_return("EL CRAPO VIRUS")
+        allow(Sufia::GenericFile::Actions).to receive(:virus_check).and_raise(Sufia::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
         subject.add_file(f, 'content', 'small_file.txt')
         subject.save
         subject.should_not be_persisted
@@ -1058,10 +1055,9 @@ describe GenericFile do
       it "does not save a new version of a GenericFile" do
         subject.add_file(f, 'content', 'small_file.txt')
         subject.save
-        ClamAV.instance.stub(:scanfile).and_return("EL CRAPO VIRUS")
+        allow(Sufia::GenericFile::Actions).to receive(:virus_check).and_raise(Sufia::VirusFoundError)
         subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , 'content', 'sufia_generic_stub.txt')
         subject.save
-        subject.errors.get(:content).first.should match(/A virus was found/)
         subject.reload.content.content.should == "small\n"
       end
     end
