@@ -155,7 +155,6 @@ To change what happens to files that fail validation add an after_validation hoo
     def dump_infected_files
       if Array(errors.get(:content)).any? { |msg| msg =~ /A virus was found/ }
         content.content = errors.get(:content)
-        ClamAV.instance.stub(:scanfile).and_return(0)
         save
       end
     end
