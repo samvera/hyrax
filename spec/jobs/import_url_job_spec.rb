@@ -15,7 +15,7 @@ describe ImportUrlJob do
     generic_file.destroy
   end
 
-  subject { ImportUrlJob.new(generic_file.id) }
+  subject(:job) { ImportUrlJob.new(generic_file.id) }
 
   it "should have no content at the outset" do
     generic_file.content.size.should be_nil
@@ -23,23 +23,23 @@ describe ImportUrlJob do
 
   it "should create a content datastream" do
     http_res = double('response')
+    http_res.stub(:start).and_yield
     http_res.stub(:read_body).and_yield(File.open(File.expand_path('../../fixtures/world.png', __FILE__)).read)
     Net::HTTP.any_instance.stub(:request_get).and_yield(http_res)
     Net::HTTP.any_instance.should_receive(:request_get).with(URI(generic_file.import_url).request_uri)
-    subject.run
+    job.run
     generic_file.reload.content.size.should == 4218
   end
 
   describe "virus checking" do
     it "should run virus check" do
-      Sufia::GenericFile::Actions.should_receive(:virus_check).and_return(0)
-      Sufia::GenericFile::Actions.should_receive(:create_content).once
-      subject.run
+      expect(Sufia::GenericFile::Actions).to receive(:virus_check).twice.and_return(0)
+      job.run
     end
     it "should abort if virus check fails" do
-      Sufia::GenericFile::Actions.should_receive(:virus_check).and_return(1)
-      User.any_instance.should_receive(:send_message).with(user, 'The file (world.png) was unable to be imported because it contained a virus.', 'File Import Error')
-      subject.run
+      Sufia::GenericFile::Actions.stub(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      job.run
+      expect(user.mailbox.inbox.first.subject).to eq("File Import Error")
     end
   end
 end

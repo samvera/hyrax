@@ -1,3 +1,4 @@
+require 'sufia/virus_found_error'
 module Sufia
   module GenericFile
     extend ActiveSupport::Concern
@@ -9,6 +10,7 @@ module Sufia
     autoload :Trophies, 'sufia/models/generic_file/trophies'
     autoload :Metadata, 'sufia/models/generic_file/metadata'
     autoload :Versions, 'sufia/models/generic_file/versions'
+    autoload :VirusCheck, 'sufia/models/generic_file/virus_check'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
@@ -22,6 +24,7 @@ module Sufia
     include Sufia::GenericFile::Trophies
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Versions
+    include Sufia::GenericFile::VirusCheck
 
     included do
       belongs_to :batch, :property => :is_part_of

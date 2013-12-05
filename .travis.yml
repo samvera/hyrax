@@ -1,4 +1,6 @@
 language: ruby
+before_install:
+  - sudo apt-get install libclamav-dev clamav-data
 rvm:
   - "1.9.3"
   - "2.0.0"

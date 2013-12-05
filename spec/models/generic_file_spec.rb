@@ -4,6 +4,7 @@ describe GenericFile do
   before do
     subject.apply_depositor_metadata('jcoyne')
     @file = subject #TODO remove this line someday (use subject instead)
+
   end
 
   describe '#to_s' do
@@ -1032,6 +1033,36 @@ describe GenericFile do
         @file.new_object?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
+      end
+    end
+  end
+  describe "file content validation" do
+    before do
+      if $in_travis
+        # In order to avoid an invalid derivative creation, just stub out the derivatives.
+        GenericFile.any_instance.stub(:create_derivatives)
+      end
+    end
+    context "when file contains a virus" do
+      let(:f) { File.new(fixture_path + '/small_file.txt') }
+      after(:each) do
+        subject.destroy if subject.persisted?
+      end
+      it "populates the errors hash during validation" do
+        ClamAV.instance.stub(:scanfile).and_return("EL CRAPO VIRUS")
+        subject.add_file(f, 'content', 'small_file.txt')
+        subject.save
+        subject.should_not be_persisted
+        subject.errors.messages.should == { content: ["A virus was found in #{f.path}: EL CRAPO VIRUS"] }
+      end
+      it "does not save a new version of a GenericFile" do
+        subject.add_file(f, 'content', 'small_file.txt')
+        subject.save
+        ClamAV.instance.stub(:scanfile).and_return("EL CRAPO VIRUS")
+        subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , 'content', 'sufia_generic_stub.txt')
+        subject.save
+        subject.errors.get(:content).first.should match(/A virus was found/)
+        subject.reload.content.content.should == "small\n"
       end
     end
   end

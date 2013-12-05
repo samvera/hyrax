@@ -3,7 +3,6 @@ require 'spec_helper'
 describe GenericFilesController do
   before do
     controller.stub(:has_access?).and_return(true)
-
     @user = FactoryGirl.find_or_create(:user)
     sign_in @user
     User.any_instance.stub(:groups).and_return([])
@@ -17,10 +16,7 @@ describe GenericFilesController do
     end
     after do
       GenericFile.unstub(:new)
-      begin
-        Batch.find("sample:batch_id").delete
-      rescue
-      end
+      Batch.find("sample:batch_id").delete rescue
       @mock.delete unless @mock.inner_object.class == ActiveFedora::UnsavedDigitalObject
     end
 
@@ -43,6 +39,15 @@ describe GenericFilesController do
       CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
+      flash[:error].should be_nil
+    end
+
+    it "displays a flash error when file has a virus" do
+      file = fixture_file_upload('/world.png', 'image/png')
+      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
+      flash[:error].should_not be_blank
+      flash[:error].should include('A virus was found')
     end
 
     it "should expand zip files" do
@@ -60,43 +65,6 @@ describe GenericFilesController do
       Sufia.queue.should_receive(:push).with(s3).once
 
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
-    end
-
-    it "should download and import a file from a given url" do
-      pending "This is just downloading a 401 error page"
-      date_today = Date.today
-      Date.stub(:today).and_return(date_today)
-      generic_file = GenericFile.new      #find(self.pid)
-      Sufia::GenericFile::Actions.create_metadata(generic_file, @user, '1234')
-      #generic_file.import_url = "https://dl.dropboxusercontent.com/1/view/kcb4j1dtkw0td3z/ArticleCritique.doc"
-      generic_file.import_url =  "https://dl.dropboxusercontent.com/1/view/m4og1xrgbk3ihw6/Getting%20Started.pdf"
-      generic_file.save
-      f = Tempfile.new(generic_file.pid)  #self.pid)
-      f.binmode
-      # download file from url
-      uri = URI(generic_file.import_url)
-      http = Net::HTTP.new(uri.host, uri.port) 
-      http.use_ssl = uri.scheme == "https"  # enable SSL/TLS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-      http.start do  
-        http.request_get(uri.to_s) do |resp|
-          resp.read_body do |segment|
-            f.write(segment)
-          end 
-        end 
-      end 
-      job_user = User.batchuser()
-      user = User.find_by_user_key(generic_file.depositor)
-      # check for virus
-      if Sufia::GenericFile::Actions.virus_check(f) != 0
-        message = "The file (#{File.basename(uri.path)}) was unable to be imported because it contained a virus."
-        job_user.send_message(user, message, 'File Import Error') 
-        return
-      end 
-      f.rewind
-      # attach downloaded file to generic file stubbed out
-      Sufia::GenericFile::Actions.create_content(generic_file, f, File.basename(uri.path), 'content', user)
     end
 
     it "should create and save a file asset from the given params" do
@@ -159,19 +127,6 @@ describe GenericFilesController do
       saved_file.to_solr.keys.should include('depositor_tesim')
       saved_file.to_solr['depositor_tesim'].should == ['jilluser@example.com']
     end
-    it "Should call virus check" do
-      controller.should_receive(:virus_check).and_return(0)      
-      file = fixture_file_upload('/world.png','image/png')
-
-      s1 = double('one')
-      ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
-
-      s2 = double('one')
-      CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
-    end
     
     it "should error out of create and save after on continuos rsolr error" do
       GenericFile.any_instance.stub(:save).and_raise(RSolr::Error::Http.new({},{}))  
@@ -181,7 +136,7 @@ describe GenericFilesController do
       response.body.should include("Error occurred while creating generic file.")
     end
   end
-    
+  
   describe "#create with local_file" do
     let (:mock_url) {"http://example.com"}
     before do
@@ -255,27 +210,9 @@ describe GenericFilesController do
       end
     end
   end
-  
-  describe "#virus_check" do
-    it "passing virus check should not create flash error" do
-      GenericFile.any_instance.stub(:to_solr).and_return({})
-      file = fixture_file_upload('/world.png','image/png')  
-      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file).and_return(0)    
-      controller.send :virus_check, file
-      flash[:error].should be_nil
-    end
-    it "failing virus check should create flash" do
-      GenericFile.any_instance.stub(:to_solr).and_return({})
-      file = fixture_file_upload('/world.png','image/png')  
-      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file).and_return(1)    
-      controller.send :virus_check, file
-      flash[:error].should_not be_empty
-    end
-  end
 
   describe "audit" do
     before do
-      #GenericFile.any_instance.stub(:to_solr).and_return({})
       @generic_file = GenericFile.new
       @generic_file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @generic_file.apply_depositor_metadata('mjg36')
@@ -303,7 +240,7 @@ describe GenericFilesController do
     end
     after do
       @user.delete
-    end    
+    end
     it "should delete the file" do
       GenericFile.find(@generic_file.pid).should_not be_nil
       delete :destroy, :id=>@generic_file.pid
@@ -319,7 +256,6 @@ describe GenericFilesController do
 
   describe "update" do
     before do
-      #controller.should_receive(:virus_check).and_return(0)      
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata(@user)
       @generic_file.save
@@ -374,7 +310,6 @@ describe GenericFilesController do
       posted_file.content.mimeType.should == "image/jpeg"
       post :update, :id=>@generic_file.pid, :revision=>'content.0'
 
-
       restored_file = GenericFile.find(@generic_file.pid)
       version3 = restored_file.content.latest_version
       version3.versionID.should_not == version2.versionID
@@ -396,7 +331,7 @@ describe GenericFilesController do
       version1 = posted_file.content.latest_version
       posted_file.content.version_committer(version1).should == @user.user_key
 
-      # other user uploads new version 
+      # other user uploads new version
       # TODO this should be a separate test
       archivist = FactoryGirl.find_or_create(:archivist)
       controller.stub(:current_user).and_return(archivist)
@@ -454,7 +389,7 @@ describe GenericFilesController do
     end
     it "should spawn a virus check" do
       # The expectation is in the begin block
-      controller.should_receive(:virus_check).and_return(0)      
+      Sufia::GenericFile::Actions.should_receive(:virus_check).and_return(0)
       s1 = double('one')
       ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
