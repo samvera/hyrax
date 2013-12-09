@@ -5,14 +5,16 @@
 <div id="Data">
     <table class="table table-striped"> 
         <thead> 
-            <tr> 
-                <th>Subject</th> 
+            <tr>
+                <th>Date</th>
+                <th>Subject</th>
                 <th>Message</th> 
             </tr> 
         </thead> 
         <tbody> 
             <% @messages.each do |msg| %> 
-                <tr class="<%= cycle("","zebra") %>"> 
+                <tr class="<%= cycle("","zebra") %>">
+                   <td><%= time_ago_in_words(msg.last_message.created_at) %> ago </td>
                    <td><%= msg.last_message.subject.html_safe  %></td> 
                    <td><%= msg.last_message.body.html_safe  %></td> 
                    <td><%= link_to raw('<i class="icon-trash icon-large"></i>'),
