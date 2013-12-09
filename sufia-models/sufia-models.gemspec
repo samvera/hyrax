@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
 
-  spec.add_dependency 'rails', '>= 3.2.13', '< 5.0'
+  spec.add_dependency 'rails', '> 4.0.0', '< 5.0'
   spec.add_dependency 'activeresource' # No longer a dependency of rails 4.0
 
   # spec.add_dependency "hydra", "6.1.0.rc2"
