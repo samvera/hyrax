@@ -8,15 +8,21 @@ $(function() {
          type:"post",
          data: "file_id="+this.id,
          success:function(data) {
-           var oldclass = $('#'+data.trophy.generic_file_id).find('i').attr("class");
+           gid = data.generic_file_id;
+           var oldclass = $('#'+gid).find('i').attr("class");
            if (oldclass.indexOf("trophy-on") != -1){
-             $('#'+data.trophy.generic_file_id).find('i').attr("title", "Highlight work");
+             $('#'+gid).find('i').attr("title", "Highlight work");
            } else {
-             $('#'+data.trophy.generic_file_id).find('i').attr("title", "Unhighlight work");
+             $('#'+gid).find('i').attr("title", "Unhighlight work");
            }
 
-           $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-on");
-           $('#'+data.trophy.generic_file_id).find('i').toggleClass("trophy-off");
+           $('#'+gid).find('i').toggleClass("trophy-on");
+           $('#'+gid).find('i').toggleClass("trophy-off");
+           if ($('#'+gid).data('removerow')) {
+             $('#trophyrow_'+gid).fadeOut(1000, function() {
+              $('#trophyrow_'+gid).remove();
+              });
+           }
          }
       })
     });
