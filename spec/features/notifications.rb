@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "Uploading files via web form" do
+describe "Notifications page" do
 
   before do
     sign_in :user_with_fixtures
   end
 
-  it "should have an ingest screen" do
+  it "should list notifications with date, subject and message" do
     visit "/notifications"
     page.should have_content "User Notifications"
     page.find(:xpath, '//thead/tr').should have_content "Date"
