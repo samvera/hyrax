@@ -28,9 +28,19 @@ class SingleUseLinksController < ApplicationController
     end
   end
 
+  # Catch permission errors
+  rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
+    if current_user and current_user.persisted?
+      redirect_to root_url, :alert => "You do not have sufficient privileges to create links to this document"
+    else
+      session["user_return_to"] = request.url
+      redirect_to new_user_session_url, :alert => exception.message
+    end
+  end
+
   protected
   def authorize_user!
-    authorize! :read, @asset
+    authorize! :edit, @asset
   end
 
   def load_asset

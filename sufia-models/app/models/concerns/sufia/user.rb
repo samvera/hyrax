@@ -70,7 +70,7 @@ module Sufia::User
   end
 
   def ability
-    @ability ||= Ability.new(self)
+    @ability ||= ::Ability.new(self)
   end
 
   module ClassMethods
