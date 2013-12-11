@@ -25,4 +25,16 @@ describe "User Profile" do
     click_link "View Users"
     page.should have_xpath("//td/a[@href='/users/curator1@example-dot-com']")
   end
+
+  it "should be searchable" do
+    @archivist = FactoryGirl.find_or_create(:archivist)
+    click_link "curator1@example.com"
+    click_link "View Users"
+    page.should have_xpath("//td/a[@href='/users/curator1@example-dot-com']")
+    page.should have_xpath("//td/a[@href='/users/archivist1@example-dot-com']")
+    fill_in 'user_search', with: 'archivist1@example.com'
+    click_button "user_submit"
+    page.should_not have_xpath("//td/a[@href='/users/curator1@example-dot-com']")
+    page.should have_xpath("//td/a[@href='/users/archivist1@example-dot-com']")
+  end
 end
