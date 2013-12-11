@@ -21,9 +21,8 @@ describe SingleUseLinksController do
     controller.stub(:has_access?).and_return(true)
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
-  describe "logged in user" do
+  describe "logged in user with edit permission" do
     before do
-      @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       @now = DateTime.now
       DateTime.stub(:now).and_return(@now)
@@ -48,6 +47,31 @@ describe SingleUseLinksController do
       end
 
     end   
+  end
+
+  describe "logged in user without edit permission" do
+    before do
+      @other_user = FactoryGirl.find_or_create(:archivist)
+      @file.read_users << @other_user
+      @file.save
+      sign_in @other_user
+    end
+
+    describe "GET 'download'" do
+      it "and_return http success" do
+        get 'new_download', id:@file.pid
+        response.should_not be_success
+      end
+
+    end
+
+    describe "GET 'show'" do
+      it "and_return http success" do
+        get 'new_show', id:@file.pid
+        response.should_not be_success
+      end
+
+    end
   end
 
   describe "unkown user" do
