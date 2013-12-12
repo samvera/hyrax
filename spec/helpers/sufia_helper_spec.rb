@@ -10,6 +10,29 @@ describe SufiaHelper do
     end
   end
 
+  describe "number_of_deposits" do
+    let(:conn) { ActiveFedora::SolrService.instance.conn }
+    before do
+      # More than 10 times, because the pagination threshold is 10
+      12.times do |t|
+        conn.add  :id => "199#{t}", Solrizer.solr_name('depositor', :stored_searchable) => user.user_key
+      end
+      conn.commit
+    end
+    after do
+      12.times do |t|
+        conn.delete_by_id "199#{t}"
+      end
+      conn.commit
+    end
+
+    let(:user) { double(user_key: 'justin') }
+
+    it "should return the correct number" do
+      expect(number_of_deposits(user)).to eq 12
+    end
+  end
+
   describe "selected facet" do
     let(:blacklight_config) { Blacklight::Configuration.new }
 

@@ -3,7 +3,7 @@
       <hr /> 
         <i class="icon-time"></i> Joined on <%= @user.created_at.to_date.strftime("%b %d, %Y") %> <br />
         <i class="icon-folder-open"></i> Deposited Files
-        <%= link_to_field('depositor', @user.to_s, ActiveFedora::SolrService.query("#{Solrizer.solr_name('depositor', :stored_searchable, :type => :string)}:#{@user.user_key}").count) %> <br />
+        <%= link_to_field('depositor', @user.to_s, number_of_deposits(@user)) %> <br />
       <!-- following -->
       <hr />
 

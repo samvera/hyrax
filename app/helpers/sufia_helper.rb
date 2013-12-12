@@ -25,7 +25,7 @@ module SufiaHelper
   end
 
   def number_of_deposits(user)
-    ActiveFedora::SolrService.query("#{Solrizer.solr_name('depositor', :stored_searchable, :type => :string)}:#{user.user_key}").count
+    ActiveFedora::Base.where(Solrizer.solr_name('depositor', :stored_searchable) => user.user_key).count
   end
 
   def link_to_facet(field, field_string)
