@@ -50,8 +50,14 @@ describe BatchEditsController do
     it "should be successful" do
       put :update , update_type:"delete_all"
       response.should be_redirect
-      expect {GenericFIle.find(@one.id)}.to raise_error
-      expect {GenericFIle.find(@two.id)}.to raise_error
+      expect {GenericFile.find(@one.id)}.to raise_error(ActiveFedora::ObjectNotFoundError)
+      expect {GenericFile.find(@two.id)}.to raise_error(ActiveFedora::ObjectNotFoundError)
+    end
+    it "should update the records" do
+      put :update , update_type:"update", "generic_file"=>{"subject"=>["zzz"]}
+      response.should be_redirect
+      GenericFile.find(@one.id).subject.should == ["zzz"]
+      GenericFile.find(@two.id).subject.should == ["zzz"]
     end
   end
 
