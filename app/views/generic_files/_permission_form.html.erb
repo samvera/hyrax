@@ -87,7 +87,7 @@
   <div class="row control-group">
     <div id="new-group" >
       <div class="input-append">
-        <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + groups), :class => 'span38' %>
+        <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), :class => 'span38' %>
         <%= select_tag 'new_group_permission_skel', options_for_select(Sufia.config.permission_levels), :class => 'span17' %>
         <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i> Add</button>
         <br /><span id="directory_group_result"></span>
