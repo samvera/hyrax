@@ -1,63 +1,99 @@
-  <h1 class="span110">
-    <span class="span60">
-    <%= image_tag @user.avatar.url(:thumb), :width => 100 %>
-    <%= @user.name %> (<%= @user.user_key %>)
-    </span>
+<% content_for :local_js do %>
 
-    <span class="span20 offset20">
+$('#myTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+})
+
+<% end %>
+<div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
+  <div class="span110"> 
+    <div class="pull-right">
+    <!-- profile and view buttons -->
       <% if not signed_in? %>
         <!-- sign in to access social functions -->
       <% elsif current_user == @user %>
-        <a class="btn btn-primary" href="<%= sufia.edit_profile_path(@user) %>"><i class="icon-edit"></i> Edit Your Profile </a>
+        <a class="btn" href="<%= sufia.edit_profile_path(@user) %>"><i class="icon-edit"></i> Edit Your Profile </a>
       <% elsif current_user.following?(@user) %>
-        <a class="btn btn-primary" href="<%= sufia.unfollow_user_path(@user.to_s) %>"><i class="icon-eye-close"></i> Unfollow </a>
+        <a class="btn btn-primary" href="<%= sufia.unfollow_user_path(@user) %>"><i class="icon-eye-close"></i> Unfollow </a>
       <% else %>
-        <a class="btn btn-primary" href="<%= sufia.follow_user_path(@user.to_s) %>"><i class="icon-eye-open"></i> Follow</a>
+        <a class="btn btn-primary" href="<%= sufia.follow_user_path(@user) %>"><i class="icon-eye-open"></i> Follow</a>
       <% end %>
+    </div>
+    <span class="span20">
+      <%= image_tag @user.avatar.url(:thumb), :width => 100 %>
+      <h3><%= @user.name %><br /><%= @user.user_key %> </h3>
+      <hr /> 
+        <i class="icon-time"></i> Joined on <%= @user.created_at.to_date.strftime("%b %d, %Y") %> <br />
+        <i class="icon-folder-open"></i> Deposited Files
+        <%= link_to_field('depositor', @user.to_s, ActiveFedora::SolrService.query("#{Solrizer.solr_name('depositor', :stored_searchable, :type => :string)}:#{@user.user_key}").count) %> <br />
+      <!-- following -->
+      <hr />
+
+      <%= render :partial => "users/follower_modal" %>
+      <%= render :partial => "users/following_modal" %>
+ 
+      <br />
       <a class="btn btn-primary" href="<%= sufia.profiles_path %>"><i class="icon-globe"></i> View Users</a>
-    </span>
-  </h1>
-    <dl>
-      <dt><i class="icon-calendar"></i> Active Since</dt>
-      <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
-      <dt><i class="icon-folder-open"></i> Deposited Files</dt>
-      <dd><%= link_to_field('depositor', @user.to_s, GenericFile.where(:depositor => @user.to_s).count) %></dd>
-      <dt><i class="icon-trophy trophy-on" ></i> Highlighted Files</dt>
-      <% @trophies.each do |t| %>
-        <dd> <%= link_to t, sufia.generic_file_path(t) %></dd>
-      <% end %>
-    </dl>
+    </span> <!-- /close span60 -->
 
-<hr />
+<!-- right col -->
+    <span class="span78 offset2"> 
 
-<h2>User Info</h2>
-<div class="span44">
-  <div>
-    <h4><i class="icon-hand-left"></i> Follower(s): <%= @followers.count %></h4>
-    <ul class="thumbnails">
-      <% @followers.each do |f| %>
-        <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
-          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
-        <li>
-      <% end %>
-    </ul>
-  </div>
+      <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a href="#contributions"><i class="icon-trophy"></i> Contributions</a></li>
+        <li><a href="#profile"><i class="icon-info-sign"></i> Profile</a></li>
+        <li><a href="#activity_log" ><i class="icon-rss"></i> Activity</a></li>
+      </ul>
+       
+      <div class="tab-content">
 
-  <div>
-    <h4><i class="icon-hand-right"></i> Following: <%= @following.count %></h4>
-    <ul class="thumbnails">
-      <% @following.each do |f| %>
-        <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
-          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
-        <li>
-      <% end %>
-    </ul>
-  </div>
-  <%= render :partial => 'user_info', :locals => {:user => @user} %>
-</div><!-- close span44 -->
+        <div class="tab-pane active" id="contributions">
+		      <i class="icon-trophy trophy-on" ></i> <strong>Highlighted Files</strong>
+		      <% if @trophies.count > 0 %>
+		        <table>
+		        <% @trophies.each do |t| %>
+              <tr id="trophyrow_<%= Sufia::Noid.noidify(t.pid) %>">   
+		          <% if t.image? || t.pdf? %>
+		            <% temp_thumbnail_path = sufia.download_path(t) + "?datastream_id=thumbnail" %>
+		            <% temp_href = "<a href=\"" + sufia.download_path(t) + "\"> <img src=\"" + temp_thumbnail_path + "\" width=\"90\" alt=\"Download the full-sized image\"/></a>" %>
+		          <% else %>
+		            <% temp_href = "<a href=\"" + sufia.download_path(t) + "\"> <img src=\"/assets/default.png\"  width=\"90\" alt=\"Download file\"/></a>" %>
+		          <% end %>                                 
+		          <td>  
+                <%= temp_href.html_safe() %> 
+		          </td>
+		          <td>
+		            <%= link_to display_title(t), sufia.generic_file_path(t) %>
+                <% if current_user == @user %>
+                  <%= link_to raw("<i class='trophy-on icon-remove'></i>"),"", class: 'trophy-on trophy-class', title: "Click to remove from Highlighted files.", id: Sufia::Noid.noidify(t.pid),  remote: true, data: {removerow: "true" }  %>
+                <% end %>
+		          </td>
+		          </tr>
+		        <% end %>
+		        </table>
+		      <% else %>
+		        <%= @user.name %> has no highlighted files.
+		      <% end %>
+        </div> <!-- /contributions -->
 
-<div class="span60 offset5">
-  <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
-</div>
+        <div class="tab-pane" id="profile">
+          <h2>User Info</h2>
+             <dl id="user_info"> 
+                <%= render :partial => 'social_media_info', :locals => {:user => @user} %>
+                <%= render :partial => 'user_info', :locals => {:user => @user} %>
+             </dl>
+        </div> <!-- /profile -->
+
+
+        <div class="tab-pane" id="activity_log">
+          <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+        </div> <!-- /activity -->
+
+      </div> <!-- /tab-content -->
+
+    </span> <!-- /close span50 -->
+  </div><!-- /close span110 -->
+
+
+
