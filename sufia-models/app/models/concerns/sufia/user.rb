@@ -66,7 +66,7 @@ module Sufia::User
 
   # The basic groups method, override or will fallback to Sufia::Ldap::User
   def groups
-    return self.group_list ? self.group_list.split(";?;") : []
+    @groups ||= self.group_list ? self.group_list.split(";?;") : []
   end
 
   def ability
