@@ -1,0 +1,11 @@
+    <!-- profile and view buttons -->
+      <% if not signed_in? %>
+        <!-- sign in to access social functions -->
+      <% elsif current_user == @user %>
+        <a class="btn" href="<%= sufia.edit_profile_path(@user) %>"><i class="icon-edit"></i> Edit Your Profile </a>
+      <% elsif current_user.following?(@user) %>
+        <a class="btn btn-primary" href="<%= sufia.unfollow_user_path(@user) %>"><i class="icon-eye-close"></i> Unfollow </a>
+      <% else %>
+        <a class="btn btn-primary" href="<%= sufia.follow_user_path(@user) %>"><i class="icon-eye-open"></i> Follow</a>
+      <% end %>
+
