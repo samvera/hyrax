@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Notifications page" do
 
   before do
-    sign_in :user_with_fixtures
+    sign_in :user_with_mail
   end
 
   it "should list notifications with date, subject and message" do

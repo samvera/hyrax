@@ -94,6 +94,6 @@ describe "Sending an email via the contact form" do
     fill_in "contact_form_message", with: "I am contacting you regarding ScholarSphere."
     select "Depositing content", from: "contact_form_category"
     click_button "Send"
-    page.should have_content "Sorry, this message was not delivered"
+    page.should have_content "Sorry, this message was not sent successfully"
   end
 end
