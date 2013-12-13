@@ -1,6 +1,8 @@
 <% width = 36 if width.blank? %>
-<%  if document.image? || document.pdf? || document.video? %>
+<% if document.image? || document.pdf? || document.video? %>
   <% path = sufia.download_path(document.noid, {datastream_id: 'thumbnail'}) %>
+<% elsif document.audio? %>
+  <% path = "/assets/audio.png" %>
 <% else %>
   <% path = "/assets/default.png" %>
 <% end %>
