@@ -4,7 +4,7 @@ require 'hydra/head'
 require 'nest'
 require 'mailboxer'
 require 'acts_as_follower'
-require 'paperclip'
+require 'carrierwave'
 require "active_resource" # used by GenericFile to catch errors & by GeoNamesResource
 require 'resque/server'
 

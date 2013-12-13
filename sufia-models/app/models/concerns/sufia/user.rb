@@ -21,14 +21,11 @@ module Sufia::User
     # Setup accessible (or protected) attributes for your model
     deprecated_attr_accessible  *permitted_attributes
 
-    # Add user avatar (via paperclip library)
-    has_attached_file :avatar, :styles => { medium: "300x300>", thumb: "100x100>" }, :default_url => '/assets/missing_:style.png'
-    validates :avatar, :attachment_content_type => { :content_type => /^image\/(jpg|jpeg|pjpeg|png|x-png|gif)$/ }, :if => Proc.new { |p| p.avatar.file? }
-    validates :avatar, :attachment_size => { :less_than => 2.megabytes }, :if => Proc.new { |p| p.avatar.file? }
-
+    mount_uploader :avatar, AvatarUploader, :mount_on => :avatar_file_name
+    validates_with AvatarValidator
   end
 
-  # Format the json for select2 which requires just an id and a field called text. 
+  # Format the json for select2 which requires just an id and a field called text.
   # If we need an alternate format we should probably look at a json template gem
   def as_json(opts = nil)
     {id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key}
@@ -76,8 +73,8 @@ module Sufia::User
   module ClassMethods
 
     def permitted_attributes
-      [:email, :login, :display_name, :address, :admin_area, 
-        :department, :title, :office, :chat_id, :website, :affiliation, 
+      [:email, :login, :display_name, :address, :admin_area,
+        :department, :title, :office, :chat_id, :website, :affiliation,
         :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
         :twitter_handle, :googleplus_handle]
     end

@@ -69,7 +69,7 @@ describe UsersController do
       flash[:alert].should include("Permission denied: cannot access this page.")
     end
     it "should set an avatar and redirect to profile" do
-      @user.avatar.file?.should be_false
+      @user.avatar?.should be_false
       s1 = double('one')
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
@@ -77,23 +77,21 @@ describe UsersController do
       post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
-      User.find_by_user_key(@user.user_key).avatar.file?.should be_true
+      User.find_by_user_key(@user.user_key).avatar?.should be_true
     end
     it "should validate the content type of an avatar" do
-      #Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
       Sufia.queue.should_receive(:push).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
       post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
-      flash[:alert].should include("Avatar content type is invalid")
+      flash[:alert].should include("Avatar You are not allowed to upload \"jp2\" files, allowed types: jpg, jpeg, png, gif, bmp, tif, tiff")
     end
     it "should validate the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
-      #Resque.should_receive(:enqueue).with(UserEditProfileEventJob, @user.user_key).never
       Sufia.queue.should_receive(:push).never
       post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
-      flash[:alert].should include("Avatar file size must be less than 2097152 Bytes")
+      flash[:alert].should include("Avatar file size must be less than 2MB")
     end
     it "should delete an avatar" do
       s1 = double('one')
@@ -102,7 +100,7 @@ describe UsersController do
       post :update, id: @user.user_key, delete_avatar: true
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
-      @user.avatar.file?.should be_false
+      @user.avatar?.should be_false
     end
     it "should refresh directory attributes" do
       s1 = double('one')
@@ -132,11 +130,11 @@ describe UsersController do
       file_id = f.pid.split(":").last
       Trophy.create(:generic_file_id => file_id, :user_id => @user.id)
       @user.trophy_ids.length.should == 1
-      post :update, id: @user.user_key,  'remove_trophy_'+file_id=> 'yes' 
+      post :update, id: @user.user_key,  'remove_trophy_'+file_id=> 'yes'
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       @user.trophy_ids.length.should == 0
-      f.destroy 
+      f.destroy
     end
   end
   describe "#follow" do
