@@ -86,9 +86,6 @@ db/schema.rb
 
 ## PROJECT::SPECIFIC
 
-## fixtures for dev
-spec/fixtures/sufia/sufia_sufia1.*
-
 ## ASSET PIPELINE
 .sass-cache/
 public/assets/

@@ -29,16 +29,6 @@ RSpec::Core::RakeTask.new(:rspec) do |t|
   t.rspec_opts = ["--colour -I ../", '--backtrace', '--profile 20']
 end
 
-desc "Load fixtures"
-task :fixtures => :generate do# => ['sufia:fixtures:refresh'] do
-  #NOTE do we need fixtures:create, fixtures:generate
-  within_test_app do
-    puts "Loading fixtures "
-    ENV["RAILS_ENV"] = 'test'
-    puts `rake sufia:fixtures:refresh`
-  end
-end
-
 
 desc "Create the test rails app"
 task :generate do
