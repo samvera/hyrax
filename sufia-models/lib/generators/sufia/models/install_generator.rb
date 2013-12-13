@@ -45,7 +45,8 @@ This generator makes the following changes to your application:
       "create_version_committers.rb",
       "add_groups_to_users.rb",
       "create_local_authorities.rb",
-      "create_trophies.rb"
+      "create_trophies.rb",
+      'add_linkedin_to_users.rb'
     ].each do |file|
       better_migration_template file
     end

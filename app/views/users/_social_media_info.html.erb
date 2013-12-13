@@ -1,0 +1,20 @@
+  <% if !user.facebook_handle.blank?() %>
+    <dt><i class="icon-facebook"></i> Facebook Handle</dt>
+    <dd><%= link_to "http://facebook.com/#{user.facebook_handle}", "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+  <% end %>
+
+  <% if !user.twitter_handle.blank?() %>
+    <dt><i class="icon-twitter"></i> Twitter Handle</dt>
+    <dd><%= link_to "http://twitter.com/#{user.twitter_handle}", "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
+  <% end %>
+
+  <!-- 
+
+  <dt><i class="icon-google-plus"></i> Google+ Handle</dt>
+  <dd><%# link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+  --> 
+
+  <% if !user.linkedin_handle.blank?() %>
+    <dt><i class="icon-linkedin"></i> Linked In</dt>
+    <dd><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", {target:'_blank'} %></dd>
+  <% end %>

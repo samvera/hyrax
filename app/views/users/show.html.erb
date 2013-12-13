@@ -1,63 +1,26 @@
-  <h1 class="span110">
-    <span class="span60">
-    <%= image_tag @user.avatar.url(:thumb), :width => 100 %>
-    <%= @user.name %> (<%= @user.user_key %>)
-    </span>
+<% content_for :local_js do %>
 
-    <span class="span20 offset20">
-      <% if not signed_in? %>
-        <!-- sign in to access social functions -->
-      <% elsif current_user == @user %>
-        <a class="btn btn-primary" href="<%= sufia.edit_profile_path(@user) %>"><i class="icon-edit"></i> Edit Your Profile </a>
-      <% elsif current_user.following?(@user) %>
-        <a class="btn btn-primary" href="<%= sufia.unfollow_user_path(@user.to_s) %>"><i class="icon-eye-close"></i> Unfollow </a>
-      <% else %>
-        <a class="btn btn-primary" href="<%= sufia.follow_user_path(@user.to_s) %>"><i class="icon-eye-open"></i> Follow</a>
-      <% end %>
-      <a class="btn btn-primary" href="<%= sufia.profiles_path %>"><i class="icon-globe"></i> View Users</a>
-    </span>
-  </h1>
-    <dl>
-      <dt><i class="icon-calendar"></i> Active Since</dt>
-      <dd><%= @user.created_at.to_date.to_formatted_s(:long_ordinal) %></dd>
-      <dt><i class="icon-folder-open"></i> Deposited Files</dt>
-      <dd><%= link_to_field('depositor', @user.to_s, GenericFile.where(:depositor => @user.to_s).count) %></dd>
-      <dt><i class="icon-trophy trophy-on" ></i> Highlighted Files</dt>
-      <% @trophies.each do |t| %>
-        <dd> <%= link_to t, sufia.generic_file_path(t) %></dd>
-      <% end %>
-    </dl>
+$('#myTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+})
 
-<hr />
+<% end %>
+  <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
+  <div class="span110"> 
+    <div class="pull-right">
+      <%= render 'profile_actions' %>
+    </div>
+    <span class="span20">
+      <%= render 'left_sidebar' %>
+    </span> <!-- /close span20 -->
 
-<h2>User Info</h2>
-<div class="span44">
-  <div>
-    <h4><i class="icon-hand-left"></i> Follower(s): <%= @followers.count %></h4>
-    <ul class="thumbnails">
-      <% @followers.each do |f| %>
-        <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
-          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
-        <li>
-      <% end %>
-    </ul>
-  </div>
+<!-- right col -->
+    <span class="span78 offset2"> 
 
-  <div>
-    <h4><i class="icon-hand-right"></i> Following: <%= @following.count %></h4>
-    <ul class="thumbnails">
-      <% @following.each do |f| %>
-        <li class="span8">
-          <%= link_to(image_tag(f.avatar.url(:thumb)), sufia.profile_path(f.user_key), { :title => f.name } ) %>
-          <%= link_to(f.name, sufia.profile_path(f.user_key), { :title => f.name } ) %>
-        <li>
-      <% end %>
-    </ul>
-  </div>
-  <%= render :partial => 'user_info', :locals => {:user => @user} %>
-</div><!-- close span44 -->
+      <%= render 'profile_tabs' %>
+    </span> <!-- /close span50 -->
+  </div><!-- /close span110 -->
 
-<div class="span60 offset5">
-  <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
-</div>
+
+

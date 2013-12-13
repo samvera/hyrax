@@ -1,0 +1,29 @@
+        <div class="tab-pane active" id="contributions">
+		      <i class="icon-trophy trophy-on" ></i> <strong>Highlighted Files</strong>
+		      <% if @trophies.count > 0 %>
+		        <table>
+		        <% @trophies.each do |t| %>
+              <tr id="trophyrow_<%= Sufia::Noid.noidify(t.pid) %>">   
+		          <% if t.image? || t.pdf? %>
+		            <% temp_thumbnail_path = sufia.download_path(t) + "?datastream_id=thumbnail" %>
+		            <% temp_href = "<a href=\"" + sufia.download_path(t) + "\"> <img src=\"" + temp_thumbnail_path + "\" width=\"90\" alt=\"Download the full-sized image\"/></a>" %>
+		          <% else %>
+		            <% temp_href = "<a href=\"" + sufia.download_path(t) + "\"> <img src=\"/assets/default.png\"  width=\"90\" alt=\"Download file\"/></a>" %>
+		          <% end %>                                 
+		          <td>  
+                <%= temp_href.html_safe() %> 
+		          </td>
+		          <td>
+		            <%= link_to display_title(t), sufia.generic_file_path(t) %>
+                <% if current_user == @user %>
+                  <%= link_to raw("<i class='trophy-on icon-remove'></i>"),"", class: 'trophy-on trophy-class', title: "Click to remove from Highlighted files.", id: Sufia::Noid.noidify(t.pid),  remote: true, data: {removerow: "true" }  %>
+                <% end %>
+		          </td>
+		          </tr>
+		        <% end %>
+		        </table>
+		      <% else %>
+		        <%= @user.name %> has no highlighted files.
+		      <% end %>
+        </div>
+
