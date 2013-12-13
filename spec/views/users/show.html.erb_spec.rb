@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe 'users/show.html.erb' do
 
+  let(:join_date) { 5.days.ago }
   before do
     allow(view).to receive(:signed_in?).and_return(true)
     allow(view).to receive(:current_user).and_return(stub_model(User, user_key: 'mjg'))
-    assign(:user, stub_model(User, user_key: 'cam156', created_at: 5.days.ago, title: 'mrs'))
+    assign(:user, stub_model(User, user_key: 'cam156', created_at: join_date))
     assign(:followers, [])
     assign(:following, [])
     assign(:trophies, [])
@@ -21,5 +22,10 @@ describe 'users/show.html.erb' do
     expect(page).to have_selector(".tab-content > div#contributions.tab-pane")
     expect(page).to have_selector(".tab-content > div#profile.tab-pane")
     expect(page).to have_selector(".tab-content > div#activity_log.tab-pane")
+  end
+
+  it "should have the vitals" do
+    render
+    rendered.should match /Joined on #{join_date.strftime("%b %d, %Y")}/
   end
 end
