@@ -25,7 +25,7 @@ describe SufiaHelper do
 
     it "should build a link tag to bookmarks using session[:search] for query params" do
       helper.stub(:current_search_session).and_return double(:query_params => dashboard_query_params)
-      tag = helper.link_back_to_catalog
+      tag = helper.link_back_to_catalog(route_set: sufia)
       tag.should =~ /Back to Search/
       tag.should =~ /\/dashboard\/page\/2/
     end

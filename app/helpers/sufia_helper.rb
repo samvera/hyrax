@@ -80,8 +80,9 @@ module SufiaHelper
   # @example
   #   link_back_to_catalog(:label=>'Back to Search')
   def link_back_to_catalog(opts={:label=>nil})
+    scope = opts.delete(:route_set) || self
     query_params = current_search_session.try(:query_params) || {}
-    link_url = sufia.url_for(query_params)
+    link_url = scope.url_for(query_params)
     opts[:label] ||= t('blacklight.back_to_search')
     link_to opts[:label], link_url
   end
