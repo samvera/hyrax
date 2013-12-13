@@ -16,8 +16,8 @@ describe "Uploading files via web form" do
 
   it "should require checking the terms of service" do
     click_link "upload"
-    attach_file("files[]", "spec/fixtures/image.jp2")
-    attach_file("files[]", "spec/fixtures/jp2_fits.xml")
+    attach_file("files[]", File.dirname(__FILE__)+"/../../spec/fixtures/image.jp2")
+    attach_file("files[]", File.dirname(__FILE__)+"/../../spec/fixtures/jp2_fits.xml")
     click_button 'Start upload'
     page.should have_content "You must accept the terms of service!"
   end

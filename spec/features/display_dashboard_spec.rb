@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Display Dashboard files" do
 
   before do
-    sign_in :user
+    sign_in :user_with_fixtures
   end
 
   it "should display the dashboard and have search" do
@@ -13,12 +13,6 @@ describe "Display Dashboard files" do
     page.should have_content "Dashboard"
     page.should have_content "You searched for: dash search"
     find_field("search-field-header").value.should be_nil
-  end
-
-  it "should display the dashboard and want to upload files" do
-    click_link 'dashboard'
-    click_link 'Upload File(s)'
-    page.should have_content "Upload"
   end
 
   it "should display the dashboard and want to upload files" do

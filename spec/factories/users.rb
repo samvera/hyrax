@@ -4,12 +4,12 @@ FactoryGirl.define do
     password 'password'
   end
 
-  factory :archivist, :class => User do |u|
+  factory :archivist, aliases: [:user_with_fixtures], :class => User do |u|
     email 'archivist1@example.com'
     password 'password'
   end
 
-  factory :user_with_fixtures, :class => User do |u|
+  factory :user_with_mail, :class => User do |u|
     email 'archivist2@example.com'
     password 'password'
     after(:create) do |user|

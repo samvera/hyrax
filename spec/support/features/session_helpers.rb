@@ -11,7 +11,15 @@ module Features
     end
 
     def sign_in(who = :user)
-      user = FactoryGirl.create(who)
+      if who.instance_of?(User)
+        user = who
+      else
+        user = FactoryGirl.find_or_create(who)
+        if user.password.nil?   # get the password from the factory if user was retrieved from database
+          tmpl = FactoryGirl.build(who)
+          user.password = tmpl.password
+        end
+      end
       visit new_user_session_path
       fill_in 'Email', with: user.email
       fill_in 'Password', with: user.password
