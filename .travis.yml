@@ -1,17 +1,17 @@
 language: ruby
 before_install:
-  - sudo apt-get install libclamav-dev clamav-data
+  - sudo apt-get install libclamav-dev clamav-data clamav-daemon
+  - sudo freshclam -v
 rvm:
-  - "1.9.3"
   - "2.0.0"
+  - "2.1.0-preview2"
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 notifications:
   email:
     recipients:
-      - "ul-dlt-applications@lists.psu.edu"
-      - "michael@psu.edu"
+      - "ul-dlt-hydra@lists.psu.edu"
     on_success: "change"
     on_failure: "always"
   irc:
