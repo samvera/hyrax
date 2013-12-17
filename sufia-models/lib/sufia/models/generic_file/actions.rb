@@ -32,7 +32,6 @@ module Sufia::GenericFile
       end
 
       generic_file.record_version_committer(user)
-      Sufia.queue.push(UnzipJob.new(generic_file.pid)) if generic_file.content.mimeType == 'application/zip'
       if Sufia.config.respond_to?(:after_create_content)
         Sufia.config.after_create_content.call(generic_file, user)
       end

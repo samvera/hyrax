@@ -7,13 +7,12 @@ require 'sufia/models'
 
 require 'rails_autolink'
 
-autoload :Zip, 'zipruby'
 module Sufia
   extend ActiveSupport::Autoload
 
   class Engine < ::Rails::Engine
     engine_name 'sufia'
- 
+
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
       #{config.root}/app/models/concerns
@@ -28,4 +27,3 @@ module Sufia
   autoload :BatchEditsControllerBehavior
   autoload :DownloadsControllerBehavior
 end
-

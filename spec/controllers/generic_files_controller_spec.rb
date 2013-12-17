@@ -27,8 +27,6 @@ describe GenericFilesController do
       JSON.parse(response.body).first['error'].should match(/no file for upload/i)
     end
 
-
-
     it "should spawn a content deposit event job" do
       file = fixture_file_upload('/world.png','image/png')
       s1 = double('one')
@@ -48,23 +46,6 @@ describe GenericFilesController do
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
       flash[:error].should_not be_blank
       flash[:error].should include('A virus was found')
-    end
-
-    it "should expand zip files" do
-      file = fixture_file_upload('/icons.zip','application/zip')
-      s1 = double('one')
-      ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
-
-      s2 = double('one')
-      CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
-
-      s3 = double('one')
-      UnzipJob.should_receive(:new).with('test:123').and_return(s3)
-      Sufia.queue.should_receive(:push).with(s3).once
-
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
     end
 
     it "should create and save a file asset from the given params" do
@@ -127,16 +108,16 @@ describe GenericFilesController do
       saved_file.to_solr.keys.should include('depositor_tesim')
       saved_file.to_solr['depositor_tesim'].should == ['jilluser@example.com']
     end
-    
+
     it "should error out of create and save after on continuos rsolr error" do
-      GenericFile.any_instance.stub(:save).and_raise(RSolr::Error::Http.new({},{}))  
-          
+      GenericFile.any_instance.stub(:save).and_raise(RSolr::Error::Http.new({},{}))
+
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service=>"1"
       response.body.should include("Error occurred while creating generic file.")
     end
   end
-  
+
   describe "#create with local_file" do
     let (:mock_url) {"http://example.com"}
     before do
@@ -144,7 +125,7 @@ describe GenericFilesController do
       GenericFile.delete_all
       @mock_upload_directory = 'spec/mock_upload_directory'
       # Dir.mkdir @mock_upload_directory unless File.exists? @mock_upload_directory
-      FileUtils.mkdir_p([File.join(@mock_upload_directory, "import/files"),File.join(@mock_upload_directory, "import/metadata")])   
+      FileUtils.mkdir_p([File.join(@mock_upload_directory, "import/files"),File.join(@mock_upload_directory, "import/metadata")])
       FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), @mock_upload_directory)
       FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), @mock_upload_directory)
       FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(@mock_upload_directory, "import/metadata"))
@@ -157,7 +138,7 @@ describe GenericFilesController do
       GenericFile.destroy_all
     end
     context "when User model defines a directory path" do
-      before do 
+      before do
         if $in_travis
           # In order to avoid an invalid derivative creation, just stub out the derivatives.
           GenericFile.any_instance.stub(:create_derivatives)
@@ -271,7 +252,7 @@ describe GenericFilesController do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
       post :update, :id=>@generic_file.pid, :generic_file=>{:title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
-      @user.delete      
+      @user.delete
     end
 
     it "should spawn a content new version event job" do
@@ -318,7 +299,6 @@ describe GenericFilesController do
       restored_file.content.mimeType.should == "image/png"
       @user.delete
     end
-
 
     it "should record what user added a new version" do
       @user = FactoryGirl.find_or_create(:user)
@@ -407,7 +387,7 @@ describe GenericFilesController do
     it "should go back to edit on an error" do
       GenericFile.any_instance.should_receive(:valid?).and_return(false)
       post :update, :id=>@generic_file.pid, :generic_file=>{:tag=>['']}
-      response.should be_successful 
+      response.should be_successful
       response.should render_template('edit')
       assigns[:generic_file].should == @generic_file
     end
