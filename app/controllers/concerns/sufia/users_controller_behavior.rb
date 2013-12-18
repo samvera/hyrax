@@ -33,7 +33,7 @@ module Sufia::UsersControllerBehavior
     else 
       @events = []
     end
-    @trophies = @user.trophy_ids
+    @trophies = @user.trophy_files
     @followers = @user.followers
     @following = @user.all_following
   end
@@ -41,17 +41,13 @@ module Sufia::UsersControllerBehavior
   # Display form for users to edit their profile information
   def edit
     @user = current_user
-    @trophies = @user.trophy_ids
+    @trophies = @user.trophy_files
   end
 
   # Process changes from profile form
   def update
     if params[:user]
-      if Rails::VERSION::MAJOR == 3
-        @user.update_attributes(params[:user])
-      else
-        @user.update_attributes(params.require(:user).permit(*User.permitted_attributes))
-      end
+      @user.update_attributes(params.require(:user).permit(*User.permitted_attributes))
     end
     @user.populate_attributes if params[:update_directory]
     @user.avatar = nil if params[:delete_avatar]
@@ -59,31 +55,29 @@ module Sufia::UsersControllerBehavior
       redirect_to sufia.edit_profile_path(URI.escape(@user.to_s,'@.')), alert: @user.errors.full_messages
       return
     end
-    delete_trophy = params.keys.reject{|k,v|k.slice(0,'remove_trophy'.length)!='remove_trophy'}
-    delete_trophy = delete_trophy.map{|v| v.slice('remove_trophy_'.length..-1)}
-    delete_trophy.each do | smash_trophy |
-      Trophy.where(user_id: current_user.id, generic_file_id: smash_trophy).each.map(&:delete)
+    params.keys.select {|k, v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
+      smash_trophy = smash_trophy.sub /^remove_trophy_/, ''
+      current_user.trophies.where(generic_file_id: smash_trophy).destroy_all
     end
     Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
     redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "Your profile has been updated"
   end
 
   def toggle_trophy    
-     id = params[:file_id]
-     id = "#{Sufia.config.id_namespace}:#{id}" unless id.include?(":")
+     id = Sufia::Noid.namespaceize params[:file_id]
      unless current_user.can? :edit, id
        redirect_to root_path, alert: "You do not have permissions to the file"
        return false
      end
      # TODO  make sure current user has access to file
-     t = Trophy.where(:generic_file_id => params[:file_id], :user_id => current_user.id).first
-     if t.blank? 
-       t = Trophy.create(:generic_file_id => params[:file_id], :user_id => current_user.id)
-       return false unless t.persisted?
-     else
+     t = current_user.trophies.where(generic_file_id: params[:file_id]).first
+     if t 
        t.destroy  
        #TODO do this better says Mike
        return false if t.persisted?  
+     else
+       t = current_user.trophies.create(generic_file_id: params[:file_id])
+       return false unless t.persisted?
      end
      render :json => t
   end 

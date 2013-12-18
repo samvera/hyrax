@@ -34,14 +34,13 @@ Sufia::Engine.routes.draw do
   end
 
   # User profile & follows
-  resources :users, only: [:index, :show, :edit, :update], as: :profiles
-  # get 'users' => 'users#index', :as => :profiles
-  # get 'users/:uid' => 'users#show', :as => :profile
-  # get 'users/:uid/edit' => 'users#edit', :as => :edit_profile
-  # put 'users/:uid/update' => 'users#update', :as => :update_profile
-  post "users/:id/trophy" => "users#toggle_trophy", :as => :update_trophy_user
-  match 'users/:id/follow' => 'users#follow', :as => :follow_user, via: [:get, :post]
-  match 'users/:id/unfollow' => 'users#unfollow', :as => :unfollow_user, via: [:get, :post]
+  resources :users, only: [:index, :show, :edit, :update], as: :profiles do
+    member do
+      post 'trophy' => 'users#toggle_trophy' #used by trophy.js
+      post 'follow' => 'users#follow'
+      post 'unfollow' => 'users#unfollow'
+    end
+  end
 
   # Dashboard routes (based partly on catalog routes)
   resources 'dashboard', :only=>:index do
