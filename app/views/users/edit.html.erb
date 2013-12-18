@@ -9,10 +9,9 @@ $("a[rel=popover]").popover({ html: true });
     <div class="control-group">
       <%= f.label :avatar, '<i class="icon-camera-retro"></i> Change picture'.html_safe, :class => "control-label" %>
       <div class="controls">
-        <% if @user.avatar? %>
-          <%= image_tag @user.avatar.url(:thumb) %>
-        <% end %>
+        <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
         <%= f.file_field :avatar %>
+        <%= f.hidden_field :avatar_cache %>
         <span class="label label-important">JPG, GIF, or PNG (less than 2MB)</span>
       </div>
     </div>
@@ -21,7 +20,7 @@ $("a[rel=popover]").popover({ html: true });
       <%= f.label :delete_avatar, '<i class="icon-remove"></i> Delete picture'.html_safe, :class => 'control-label' %>
       <div class="controls">
         <label class="checkbox">
-          <%= check_box_tag 'delete_avatar' %> Yes
+          <%= f.check_box :remove_avatar %> Yes
           <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="icon-question-sign icon-large"></i></a>
         </label>
       </div>
@@ -60,7 +59,6 @@ $("a[rel=popover]").popover({ html: true });
 
     <%= render :partial => 'trophy_edit', :locals => {:trophies => @trophies} %>
 
-
     <div class="form-actions">
       <%= f.button '<i class="icon-save"></i> Save Profile'.html_safe, :type => 'submit', :class => "btn-primary btn-large" %>
     </div>
@@ -78,4 +76,3 @@ $("a[rel=popover]").popover({ html: true });
     <i class="icon-caret-right"></i> <%= g %><br />
   <% end %>
 </div>
-
