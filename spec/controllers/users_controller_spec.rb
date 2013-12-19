@@ -26,6 +26,23 @@ describe UsersController do
       response.should redirect_to(root_path)
       flash[:alert].should include ("User 'johndoe666' does not exist")
     end
+
+    describe "when the user has trophies" do
+      let(:user) { @user } 
+      let(:file1) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      let(:file2) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      let(:file3) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      let!(:trophy1) { user.trophies.create!(generic_file_id: file1.noid) }
+      let!(:trophy2) { user.trophies.create!(generic_file_id: file2.noid) }
+      let!(:trophy3) { user.trophies.create!(generic_file_id: file3.noid) }
+
+      it "show the user profile if user exists" do
+        get :show, id: user.user_key
+        response.should be_success
+        assigns[:trophies].should match_array([file1, file2, file3])
+      end
+
+    end
   end
   describe "#index" do
     before do
@@ -60,6 +77,22 @@ describe UsersController do
       get :edit, id: @another_user.user_key
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
       flash[:alert].should include("Permission denied: cannot access this page.")
+    end
+    describe "when the user has trophies" do
+      let(:user) { @user } 
+      let(:file1) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      let(:file2) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      let(:file3) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      let!(:trophy1) { user.trophies.create!(generic_file_id: file1.noid) }
+      let!(:trophy2) { user.trophies.create!(generic_file_id: file2.noid) }
+      let!(:trophy3) { user.trophies.create!(generic_file_id: file3.noid) }
+
+      it "show the user profile if user exists" do
+        get :edit, id: @user.user_key
+        response.should be_success
+        assigns[:trophies].should match_array([file1, file2, file3])
+      end
+
     end
   end
   describe "#update" do
@@ -123,20 +156,23 @@ describe UsersController do
       u.facebook_handle.should == 'face'
       u.googleplus_handle.should == 'goo'
     end
-    it "should remove a trophy" do
-      f = GenericFile.create(title:"myFile")
-      f.apply_depositor_metadata(@user)
-      f.save
-      file_id = f.pid.split(":").last
-      Trophy.create(:generic_file_id => file_id, :user_id => @user.id)
-      @user.trophy_ids.length.should == 1
-      post :update, id: @user.user_key,  'remove_trophy_'+file_id=> 'yes'
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
-      flash[:notice].should include("Your profile has been updated")
-      @user.trophy_ids.length.should == 0
-      f.destroy
+
+    context "when removing a trophy" do
+      let(:user) { @user }
+      let(:file) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+      before do
+        user.trophies.create!(generic_file_id: file.noid)
+      end
+      it "should remove a trophy" do
+        expect {
+          post :update, id: user.user_key,  'remove_trophy_'+file.noid => 'yes'
+        }.to change { user.trophies.count }.by(-1)
+        response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(user.user_key,'@.')))
+        flash[:notice].should include("Your profile has been updated")
+      end
     end
   end
+
   describe "#follow" do
     after(:all) do
       @user.unfollow(@another_user) rescue nil

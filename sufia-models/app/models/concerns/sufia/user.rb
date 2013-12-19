@@ -23,6 +23,7 @@ module Sufia::User
 
     mount_uploader :avatar, AvatarUploader, :mount_on => :avatar_file_name
     validates_with AvatarValidator
+    has_many :trophies
   end
 
   # Format the json for select2 which requires just an id and a field called text.
@@ -45,15 +46,10 @@ module Sufia::User
     user_key.gsub(/\./, '-dot-')
   end
 
-  # method needed for trophies
-  def trophies
-    trophies = Trophy.where(:user_id => self.id)
-    return trophies
-  end
-
-  #method to get the trophy ids without the namespace included
-  def trophy_ids
-    trophies.map { |t| "#{Sufia.config.id_namespace}:#{t.generic_file_id}" }
+  def trophy_files
+    trophies.map do |t|
+      GenericFile.load_instance_from_solr(Sufia::Noid.namespaceize(t.generic_file_id))
+    end
   end
 
   # method needed for messaging
