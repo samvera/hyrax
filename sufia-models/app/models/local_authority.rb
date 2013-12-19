@@ -1,15 +1,7 @@
-require 'rdf'
-require 'rdf/rdfxml'
-
 class LocalAuthority < ActiveRecord::Base
-  deprecated_attr_accessible :name
 
-  if Rails::VERSION::MAJOR >= 4
-    # TODO we should add an index on this join table and remove the uniq query
-    has_and_belongs_to_many :domain_terms, -> { uniq }
-  else
-    has_and_belongs_to_many :domain_terms, :uniq=> true 
-  end
+  # TODO we should add an index on this join table and remove the uniq query
+  has_and_belongs_to_many :domain_terms, -> { uniq }
   
   has_many :local_authority_entries
 

@@ -1,7 +1,5 @@
 class SingleUseLink < ActiveRecord::Base
 
-  deprecated_attr_accessible :downloadKey, :path, :expires, :itemId
-    
   validate :expiration_date_cannot_be_in_the_past
   validate :cannot_be_destroyed
 
