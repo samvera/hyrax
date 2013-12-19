@@ -18,9 +18,6 @@ module Sufia::User
     # Users should be followable
     acts_as_followable
 
-    # Setup accessible (or protected) attributes for your model
-    deprecated_attr_accessible  *permitted_attributes
-
     mount_uploader :avatar, AvatarUploader, :mount_on => :avatar_file_name
     validates_with AvatarValidator
     has_many :trophies

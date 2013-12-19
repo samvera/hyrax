@@ -1,5 +1,4 @@
 class ChecksumAuditLog < ActiveRecord::Base
-  deprecated_attr_accessible :pass, :pid, :dsid, :version, :created_at
 
   def ChecksumAuditLog.get_audit_log(version)
     ChecksumAuditLog.find_or_create_by_pid_and_dsid_and_version(:pid => version.pid,

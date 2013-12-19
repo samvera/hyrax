@@ -38,8 +38,6 @@ module Sufia
       initializer "patches" do
         require 'sufia/models/active_fedora/redis'
         require 'sufia/models/active_record/redis'
-        require 'sufia/models/active_record/deprecated_attr_accessible'
-        require 'sufia/models/active_support/core_ext/marshal' unless Rails::VERSION::MAJOR == 4
       end
 
       initializer 'requires' do

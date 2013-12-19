@@ -1,6 +1,4 @@
 class Trophy < ActiveRecord::Base
-  deprecated_attr_accessible  :generic_file_id, :user_id
-
   validate :count_within_limit, :on => :create
 
   def count_within_limit
