@@ -26,6 +26,7 @@ task :generate do
     puts "Updating gemfile"
     `echo " gem 'hydra-access-controls', :path=>'../../../hydra-access-controls'" >> spec/internal/Gemfile`
     `echo " gem 'hydra-core', :path=>'../../', :require=>'hydra-core'" >> spec/internal/Gemfile`
+    `echo " eval File.read('../test_app_templates/Gemfile.extra'), nil, '../test_app_templates/Gemfile.extra'" >> spec/internal/Gemfile`
     `echo " gem 'factory_girl_rails'" >> spec/internal/Gemfile`
     puts "Copying generator"
     `cp -r spec/support/lib/generators spec/internal/lib`

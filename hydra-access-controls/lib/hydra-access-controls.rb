@@ -1,8 +1,7 @@
-require 'active_support'
+require 'rails'
 require 'active-fedora'
 require 'blacklight'
 require 'cancan'
-require 'rails'
 
 module Hydra
   extend ActiveSupport::Autoload
