@@ -14,10 +14,10 @@ class Hydra::AdminPolicy < ActiveFedora::Base
     
   end
 
-  delegate_to :descMetadata, [:title, :description], multiple: false
-  delegate :license_title, to: 'rightsMetadata', at: [:license, :title], multiple: false
-  delegate :license_description, to: 'rightsMetadata', at: [:license, :description], multiple: false
-  delegate :license_url, to: 'rightsMetadata', at: [:license, :url], multiple: false
+  has_attributes :title, :description, datastream: 'descMetadata', multiple: false
+  has_attributes :license_title, datastream: 'rightsMetadata', at: [:license, :title], multiple: false
+  has_attributes :license_description, datastream: 'rightsMetadata', at: [:license, :description], multiple: false
+  has_attributes :license_url, datastream: 'rightsMetadata', at: [:license, :url], multiple: false
 
   # easy access to edit_groups, etc
   include Hydra::AccessControls::Permissions 

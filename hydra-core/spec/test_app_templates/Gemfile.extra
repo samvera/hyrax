@@ -1,0 +1,4 @@
+group :develop do
+  gem 'active-fedora', github: "projecthydra/active_fedora"
+end
+
