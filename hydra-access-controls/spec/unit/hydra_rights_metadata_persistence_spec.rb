@@ -3,8 +3,7 @@ require 'spec_helper'
 describe Hydra::Datastream::RightsMetadata do
   before :all do
     class RightsTest < ActiveFedora::Base
-      include Hydra::ModelMixins::RightsMetadata
-      has_metadata name: 'rightsMetadata', type: Hydra::Datastream::RightsMetadata
+      include Hydra::AccessControls::Permissions
     end
   end
 
@@ -15,7 +14,7 @@ describe Hydra::Datastream::RightsMetadata do
   describe "rightsMetadata" do
     let!(:thing) {RightsTest.new}
 
-    [:discover,:read,:edit].each do |mode|
+    [:discover,:read, :edit].each do |mode|
       describe "##{mode}_users" do
         let(:get_method) {"#{mode}_users".to_sym}
         let(:set_method) {"#{mode}_users=".to_sym}
