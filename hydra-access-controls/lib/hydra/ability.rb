@@ -55,7 +55,7 @@ module Hydra
     end
 
     def create_permissions
-      can :create, :all if user_groups.include? 'registered'
+      # no op -- this is automatically run as part of self.ability_logic. Override in your own Ability class to set default create permissions.
     end
 
     def edit_permissions
