@@ -67,7 +67,7 @@ module Hydra
         test_edit(obj.pid)
       end
    
-      can :edit, SolrDocument do |obj|
+      can [:edit, :update, :destroy], SolrDocument do |obj|
         cache.put(obj.id, obj)
         test_edit(obj.id)
       end       

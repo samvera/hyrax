@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'cancan/matchers'
 
 describe Ability do
   before do
@@ -23,9 +24,9 @@ describe Ability do
   describe "class methods" do
     subject { Ability }
     its(:read_group_field) { should == 'read_access_group_ssim'}
-    its(:read_person_field) { should == 'read_access_person_ssim'}
+    its(:read_user_field) { should == 'read_access_person_ssim'}
     its(:edit_group_field) { should == 'edit_access_group_ssim'}
-    its(:edit_person_field) { should == 'edit_access_person_ssim'}
+    its(:edit_user_field) { should == 'edit_access_person_ssim'}
   end
 
   context "for a not-signed in user" do
@@ -94,56 +95,33 @@ describe Ability do
   end
   
   describe "Given an asset with no custom access set" do
-    before do
-      @asset = FactoryGirl.build(:default_access_asset)
-      @asset.save
-    end
+    let(:asset) { FactoryGirl.create(:default_access_asset) }
+    let(:solr_doc) { SolrDocument.new(asset.rightsMetadata.to_solr.merge(id: asset.pid)) }
     context "Then a not-signed-in user" do
-      before do
-        @user = User.new
-        @user.new_record = true
-      end
-      subject { Ability.new(@user) }
-      it "should not be able to view the asset" do
-        subject.can?(:read, @asset).should be_false
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
-      end
+      let(:user) { User.new.tap {|u| u.new_record = true } }
+      subject { Ability.new(user) }
+      it { should_not be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
     end
     context "Then a registered user" do
-      before do
-        @user = FactoryGirl.build(:registered_user)
-      end
-      subject { Ability.new(@user) }
-      it "should not be able to view the asset" do
-        subject.can?(:read, @asset).should be_false
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
-      end
+      subject { Ability.new(FactoryGirl.build(:registered_user)) }
+      it { should_not be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
     end
     context "Then the Creator" do
-      before do
-        @user = FactoryGirl.build(:joe_creator)
-      end
-      subject { Ability.new(@user) }
-
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
-      end
-      it "should be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_true
-        subject.can?(:update, @asset).should be_true
-        subject.can?(:destroy, @asset).should be_true
-      end
-      it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be_false
-      end
+      subject { Ability.new(FactoryGirl.build(:joe_creator)) }
+      it { should     be_able_to(:read, asset) }
+      it { should     be_able_to(:edit, asset) }
+      it { should     be_able_to(:edit, solr_doc) }
+      it { should     be_able_to(:update, asset) }
+      it { should     be_able_to(:update, solr_doc) }
+      it { should     be_able_to(:destroy, asset) }
+      it { should     be_able_to(:destroy, solr_doc) }
+      it { should_not be_able_to(:admin, asset) }
     end
   end
 
