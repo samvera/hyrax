@@ -49,6 +49,19 @@ module Hydra
           rightsMetadata.users.map {|x|  Permission.new(type: 'user', access: x[1], name: x[0] )})
       end
 
+      # @param values [Array<Permission>] a list of permission objects to set
+      def permissions= values
+        perm_hash = {'person' => {}, 'group'=> {}}
+        values.each do |perm|
+          if perm.type == 'user'
+            perm_hash['person'][perm.name] = perm.access
+          else
+            perm_hash['group'][perm.name] = perm.access
+          end
+        end
+        rightsMetadata.permissions = perm_hash
+      end
+
       # Return a list of groups that have discover permission
       def discover_groups
         rightsMetadata.groups.map {|k, v| k if v == 'discover'}.compact
