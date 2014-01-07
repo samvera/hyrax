@@ -39,17 +39,18 @@ describe Ability do
       Ability.any_instance.should_receive(:custom_permissions)
       subject.can?(:delete, 7)
     end
-    it "should not be able to create objects" do
-      subject.can?(:create, :any).should be_false
+    it "should not be able to create ActiveFedora::Base objects" do
+      subject.should_not be_able_to(:create, ActiveFedora::Base)
     end
   end
+
   context "for a signed in user" do
     before do
       @user = FactoryGirl.build(:registered_user)
     end
     subject { Ability.new(@user) }
-    it "should be able to create objects" do
-      subject.can?(:create, :any).should be_true
+    it "should not be able to create ActiveFedora::Base objects" do
+      subject.should_not be_able_to(:create, ActiveFedora::Base)
     end
   end
 
@@ -228,17 +229,6 @@ describe Ability do
     end
   end
 
-  describe "a user" do
-    before do
-      @user = FactoryGirl.create(:staff)
-    end
-    subject { Ability.new(@user) }
-
-    it "should be able to create admin policies" do
-      subject.can?(:create, Hydra::AdminPolicy).should be_true
-    end
-
-  end
 
   describe "custom method" do
     before do
