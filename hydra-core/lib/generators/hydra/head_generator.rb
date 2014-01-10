@@ -79,14 +79,5 @@ class HeadGenerator < Rails::Generators::Base
       puts "     \e[31mFailure\e[0m  Hydra requires a user object in order to apply access controls. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g hydra:head client"
     end
   end
-
-  # Inject call to HydraHead.add_routes in config/routes.rb
-  def inject_hydra_routes
-    insert_into_file "config/routes.rb", :after => 'Blacklight.add_routes(self)' do
-      "\n  # Add Hydra routes.  For options, see API docs for HydraHead.routes"
-      "\n  HydraHead.add_routes(self)"
-    end
-  end
-
 end # HeadGenerator
 end # Hydra
