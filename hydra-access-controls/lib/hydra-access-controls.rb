@@ -11,6 +11,7 @@ module Hydra
   autoload :PolicyAwareAccessControlsEnforcement
   autoload :AccessControlsEvaluation
   autoload :Ability
+  autoload :Config
   autoload :Datastream
   autoload :PolicyAwareAbility
   autoload :AdminPolicy
@@ -18,7 +19,18 @@ module Hydra
   autoload :PermissionsQuery
   autoload :PermissionsCache
   autoload :PermissionsSolrDocument
+
+  class << self
+    def configure(_ = nil)
+      @config ||= Config.new
+      yield @config if block_given?
+      @config
+    end
+    alias :config :configure
+  end
+
   class Engine < Rails::Engine
+    # autoload_paths is only necessary for Rails 3
     config.autoload_paths += %W(
       #{config.root}/app/models/concerns
     )

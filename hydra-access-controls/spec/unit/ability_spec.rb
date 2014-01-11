@@ -2,25 +2,6 @@ require 'spec_helper'
 require 'cancan/matchers'
 
 describe Ability do
-  before do
-    Hydra.stub(:config).and_return({
-      :permissions=>{
-        :discover => {:group =>"discover_access_group_ssim", :individual=>"discover_access_person_ssim"},
-        :read => {:group =>"read_access_group_ssim", :individual=>"read_access_person_ssim"},
-        :edit => {:group =>"edit_access_group_ssim", :individual=>"edit_access_person_ssim"},
-        :owner => "depositor_t",
-        :embargo_release_date => "embargo_release_date_dtsi",
-      
-        :inheritable => {
-          :discover => {:group =>"inheritable_discover_access_group_ssim", :individual=>"inheritable_discover_access_person_ssim"},
-          :read => {:group =>"inheritable_read_access_group_ssim", :individual=>"inheritable_read_access_person_ssim"},
-          :edit => {:group =>"inheritable_edit_access_group_ssim", :individual=>"inheritable_edit_access_person_ssim"},
-          :owner => "inheritable_depositor_ssim",
-          :embargo_release_date => "inheritable_embargo_release_date_dtsi"
-        }
-    }})
-  end
-
   describe "class methods" do
     subject { Ability }
     its(:read_group_field) { should == 'read_access_group_ssim'}

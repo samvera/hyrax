@@ -1,12 +1,6 @@
 require 'hydra-access-controls'
 require 'deprecation'
 
-module Hydra
-  extend ActiveSupport::Autoload
-  autoload :GlobalConfigurable
-  extend GlobalConfigurable
-end
-
 module HydraHead 
   extend Deprecation
   require 'hydra-head/engine' if defined?(Rails)

@@ -152,7 +152,7 @@ module Hydra
 
     module ClassMethods
       def read_group_field 
-        Hydra.config[:permissions][:read][:group]
+        Hydra.config.permissions.read.group
       end
 
       def edit_person_field
@@ -161,7 +161,7 @@ module Hydra
       end
 
       def edit_user_field 
-        Hydra.config[:permissions][:edit][:individual]
+        Hydra.config.permissions.edit.individual
       end
 
       def read_person_field
@@ -170,11 +170,11 @@ module Hydra
       end
 
       def read_user_field 
-        Hydra.config[:permissions][:read][:individual]
+        Hydra.config.permissions.read.individual
       end
 
       def edit_group_field
-        Hydra.config[:permissions][:edit][:group]
+        Hydra.config.permissions.edit.group
       end
     end
   end

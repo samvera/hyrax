@@ -48,8 +48,10 @@ class HeadGenerator < Rails::Generators::Base
     # Initializers
     file_path = "config/initializers/hydra_config.rb"
     copy_file "config/initializers/hydra_config.rb", file_path
-    insert_into_file file_path, :after => '# specify the user model' do
-        "\n    config[:user_model] = '#{model_name.classify}'"
+    unless model_name == 'user'
+      insert_into_file file_path, :after => 'Hydra.configure do |config|' do
+          "\n  config.user_model = '#{model_name.classify}'"
+      end
     end
 
     copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
