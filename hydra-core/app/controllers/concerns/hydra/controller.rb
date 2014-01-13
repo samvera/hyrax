@@ -1,0 +1,2 @@
+module Hydra::Controller
+end

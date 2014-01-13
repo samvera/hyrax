@@ -6,6 +6,7 @@ module HydraHead
 
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
+      #{config.root}/app/models/concerns
     )
     
     # Load rake tasks
