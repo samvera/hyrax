@@ -1,23 +1,6 @@
 require 'spec_helper'
 
 describe Hydra::AdminPolicy do
-  before do
-    Hydra.stub(:config).and_return({:permissions=>{
-      :discover => {:group =>"discover_access_group_ssim", :individual=>"discover_access_person_ssim"},
-      :read => {:group =>"read_access_group_ssim", :individual=>"read_access_person_ssim"},
-      :edit => {:group =>"edit_access_group_ssim", :individual=>"edit_access_person_ssim"},
-      :owner => "depositor_ssim",
-      :embargo_release_date => "embargo_release_date_dtsi",
-      
-      :inheritable => {
-        :discover => {:group =>"inheritable_discover_access_group_ssim", :individual=>"inheritable_discover_access_person_ssim"},
-        :read => {:group =>"inheritable_read_access_group_ssim", :individual=>"inheritable_read_access_person_ssim"},
-        :edit => {:group =>"inheritable_edit_access_group_ssim", :individual=>"inheritable_edit_access_person_ssim"},
-        :owner => "inheritable_depositor_ssim",
-        :embargo_release_date => "inheritable_embargo_release_date_dtsi"
-      }
-    }})
-  end
   its(:defaultRights) { should be_kind_of Hydra::Datastream::InheritableRightsMetadata}
   its(:rightsMetadata) { should be_kind_of Hydra::Datastream::RightsMetadata}
   its(:descMetadata) { should be_kind_of ActiveFedora::QualifiedDublinCoreDatastream}
