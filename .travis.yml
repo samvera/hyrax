@@ -3,8 +3,8 @@ before_install:
   - sudo apt-get install libclamav-dev clamav-data clamav-daemon
   - sudo freshclam
 rvm:
+  - "2.1.0"
   - "2.0.0"
-  - "2.1.0-preview2"
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
