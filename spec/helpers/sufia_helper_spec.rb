@@ -10,6 +10,27 @@ describe SufiaHelper do
     end
   end
 
+  describe "link_back_to_catalog" do
+    let(:query_params)  {{:q => "query", :f => "facets", :per_page => "10", :page => "2", :controller=>'catalog'}}
+    let(:dashboard_query_params) {{ :page => "2", :controller=>'dashboard'}}
+
+    it "should build a link tag to catalog using session[:search] for query params" do
+      helper.stub(:current_search_session).and_return double(:query_params => query_params)
+      tag = helper.link_back_to_catalog
+      tag.should =~ /q=query/
+      tag.should =~ /f=facets/
+      tag.should =~ /per_page=10/
+      tag.should =~ /page=2/
+    end
+
+    it "should build a link tag to bookmarks using session[:search] for query params" do
+      helper.stub(:current_search_session).and_return double(:query_params => dashboard_query_params)
+      tag = helper.link_back_to_catalog
+      tag.should =~ /Back to Search/
+      tag.should =~ /\/dashboard\/page\/2/
+    end
+  end
+
   describe "number_of_deposits" do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     before do
