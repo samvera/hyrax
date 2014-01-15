@@ -7,8 +7,6 @@ module Sufia
     include Blacklight::Catalog
 
     included do
-      include Hydra::BatchEditBehavior
-      include Blacklight::Catalog
       include Blacklight::Configurable # comply with BL 3.7
       include ActionView::Helpers::DateHelper
       # This is needed as of BL 3.7
