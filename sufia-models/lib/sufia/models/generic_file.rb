@@ -69,6 +69,13 @@ module Sufia
         end
     end
 
+    # Get the files with a sibling relationship (belongs_to :batch)
+    # The batch id is minted when visiting the upload screen and attached
+    # to each file when it is done uploading.  The Batch object is not created
+    # until all objects are done uploading and the user is redirected to
+    # BatchController#edit.  Therefore, we must handle the case where
+    # self.batch_id is set but self.batch returns nil. 
+    # This can get a major overhaul with ActiveFedora 7
     def related_files
       relateds = begin
                    self.batch.generic_files
