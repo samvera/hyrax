@@ -24,6 +24,7 @@ describe User do
     @user.should respond_to(:twitter_handle)
     @user.should respond_to(:facebook_handle)
     @user.should respond_to(:googleplus_handle)
+    @user.should respond_to(:linkedin_handle)
   end
   it "should redefine to_param to make redis keys more recognizable (and useable within Rails URLs)" do
     @user.to_param.should == "jilluser@example-dot-com"
