@@ -42,8 +42,6 @@ module Sufia
       @last_event_timestamp = @user.events.first[:timestamp].to_i || 0 rescue 0
       @filters = params[:f] || []
   
-      # adding a key to the session so that the history will be saved so that batch_edits select all will work
-      search_session[:dashboard] = true 
       respond_to do |format|
         format.html { }
         format.rss  { render :layout => false }

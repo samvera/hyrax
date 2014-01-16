@@ -1,4 +1,3 @@
-require 'blacklight/catalog'
 class DashboardController < ApplicationController
-  include  Sufia::DashboardControllerBehavior
+  include Sufia::DashboardControllerBehavior
 end

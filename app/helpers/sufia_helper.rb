@@ -76,13 +76,13 @@ module SufiaHelper
   end
 
   # Create a link back to the index screen, keeping the user's facet, query and paging choices intact by using session.
+  # We should be able to do away with this method in Blacklight 5
   # @example
   #   link_back_to_catalog(:label=>'Back to Search')
-  def link_back_to_catalog(opts={:label=>t('blacklight.back_to_search')})
-    query_params = session[:search] ? session[:search].dup : {}
-    query_params.delete :counter
-    query_params.delete :total
+  def link_back_to_catalog(opts={:label=>nil})
+    query_params = current_search_session.try(:query_params) || {}
     link_url = sufia.url_for(query_params)
+    opts[:label] ||= t('blacklight.back_to_search')
     link_to opts[:label], link_url
   end
 end
