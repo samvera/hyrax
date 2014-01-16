@@ -148,13 +148,15 @@ describe UsersController do
       @user.twitter_handle.blank?.should be_true
       @user.facebook_handle.blank?.should be_true
       @user.googleplus_handle.blank?.should be_true
-      post :update, id: @user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo' }
+      @user.linkedin_handle.blank?.should be_true
+      post :update, id: @user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle:"link" }
       response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
       flash[:notice].should include("Your profile has been updated")
       u = User.find_by_user_key(@user.user_key)
       u.twitter_handle.should == 'twit'
       u.facebook_handle.should == 'face'
       u.googleplus_handle.should == 'goo'
+      u.linkedin_handle.should == 'link'
     end
 
     context "when removing a trophy" do

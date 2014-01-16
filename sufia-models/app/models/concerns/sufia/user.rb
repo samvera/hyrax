@@ -69,7 +69,7 @@ module Sufia::User
       [:email, :login, :display_name, :address, :admin_area,
         :department, :title, :office, :chat_id, :website, :affiliation,
         :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
-        :twitter_handle, :googleplus_handle]
+        :twitter_handle, :googleplus_handle, :linkedin_handle]
     end
 
     def current
