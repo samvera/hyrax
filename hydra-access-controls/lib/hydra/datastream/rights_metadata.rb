@@ -194,7 +194,6 @@ module Hydra
       end
 
       def to_solr(solr_doc=Hash.new)
-        super(solr_doc)
         [:discover, :read, :edit].each do |access|
           vals = send("#{access}_access").machine.group
           solr_doc[Hydra.config[:permissions][access][:group]] = vals unless vals.empty?
