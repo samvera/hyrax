@@ -38,7 +38,6 @@ task :generate do
     puts "Updating gemfile"
 
     `echo "gem 'sufia', :path=>'../../../sufia'
-gem 'clamav'
 gem 'capybara'
 gem 'factory_girl_rails'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'" >> spec/internal/Gemfile`
