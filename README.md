@@ -42,7 +42,6 @@ Sufia has the following features:
 ```
 gem 'sufia'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
-gem 'jettywrapper'
 gem 'font-awesome-sass-rails'
 ```
 Then `bundle install`
@@ -52,7 +51,6 @@ Note the line with kaminari listed as a dependency.  This is a temporary fix to 
 ### Run the sufia generator
 ```
 rails g sufia -f
-rm public/index.html
 ```
 
 ### Run the migrations
@@ -63,7 +61,7 @@ rake db:migrate
 
 ### Get a copy of hydra-jetty
 ```
-rails g hydra:jetty
+rake jetty:clean
 rake jetty:config
 rake jetty:start
 ```
@@ -95,7 +93,7 @@ Add this line:
 Turbolinks does not mix well with Blacklight.
 
 ### Install Fits.sh
-1. Go to http://code.google.com/p/fits/downloads/list and download a copy of fits & unpack it somewhere on your Machine.
+1. Go to http://code.google.com/p/fits/downloads/list and download a copy of fits & unpack it somewhere on your machine.  You can also install fits on OSX with homebrew `brew install fits` (you may also have to create a symlink from `fits.sh -> fits` in the next step).
 1. Give your system access to fits
     1. By adding the path to fits.sh to your excutable PATH. (ex. in your .bashrc)
         * OR
