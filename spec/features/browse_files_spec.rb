@@ -3,28 +3,30 @@ require 'spec_helper'
 describe "Browse files" do
 
   before(:all) do
-    find_or_create_file_fixtures
+    @fixtures = find_or_create_file_fixtures
+    (1..25).each do |i|
+      @fixtures[0].tag << i
+    end
+    @fixtures[0].save
   end
 
   describe "when not logged in" do
     it "should let us browse some of the fixtures" do
       visit '/'
-      #click_link "more Keywords"
-      #click_link "test"
-      #page.should have_content "1 - 5 of 5"
-      click_link "Fake Document Title"
+      click_link "more Keywords"
+      click_link "18"
+      page.should have_content "1 Search Results"
+      click_link @fixtures[0].title[0]
       page.should have_content "Download"
       page.should_not have_content "Edit"
     end
-    it "should allow you to browse facets" do
+    it "should allow you to click next" do
       # TODO: fix more facets link!
-      pending "Until more facets link is fixed..."
       visit '/'
-      click_link "more Subjects"
-      click_link "consectetur"
-      click_link "Test Document MP3.mp3"
-      page.should have_content "Download"
-      page.should_not have_content "Edit"
+      click_link "more Keywords"
+      first(:link, 'Next').click
+      page.should have_content "5"
+      page.should_not have_content "11"
     end
   end
 end
