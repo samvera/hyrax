@@ -8,9 +8,6 @@ gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'sufia-models', path: './sufia-models'
 
 group :development, :test do
-  gem 'devise'
-#  gem 'byebug'
-  gem 'clamav'
   gem 'sqlite3'
   gem 'rspec-rails'
   gem 'launchy' unless ENV['TRAVIS']
