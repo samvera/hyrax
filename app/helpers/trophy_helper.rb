@@ -7,6 +7,6 @@ module TrophyHelper
      trophyclass = "trophy-on"
    end
 
-   link_to raw("<i class='#{trophyclass} icon-trophy'></i> #{trophytitle}"),"", :class=> 'trophy-class', :title => trophytitle, :id => noid,  :remote=>true # link to trophy
+   link_to raw("<i class='#{trophyclass} glyphicon glyphicon-star'></i> #{trophytitle}"),"", :class=> 'trophy-class', :title => trophytitle, :id => noid,  :remote=>true # link to trophy
  end
 end

@@ -20,47 +20,46 @@ limitations under the License.
 
 <% content_for :local_js do %>
 
-  initialize_audio();
+    initialize_audio();
 
 
-  // hide or show the batch update buttons on page startup
-  window.batch_part_on_other_page = <%= @batch_part_on_other_page%>;
-  window.batch_size_on_other_page = <%= @batch_size_on_other_page%>;
-  window.result_set_size = <%= @result_set_size%>;
-  window.document_list_count = <%= @document_list.count %>;
-  toggleButtons(<%= !@empty_batch %>);
+    // hide or show the batch update buttons on page startup
+    window.batch_part_on_other_page = <%= @batch_part_on_other_page %>;
+    window.batch_size_on_other_page = <%= @batch_size_on_other_page %>;
+    window.result_set_size = <%= @result_set_size %>;
+    window.document_list_count = <%= @document_list.count %>;
+    toggleButtons(<%= !@empty_batch %>);
 
-  // initialize hydra batch edit and set up select all button toggle after checkboxes have been created
-  $('#documents').batchEdit({afterCheckboxUpdate: setup_buttontoggle});
-
-
- <% end %>
+    // initialize hydra batch edit and set up select all button toggle after checkboxes have been created
+    $('#documents').batchEdit({afterCheckboxUpdate: setup_buttontoggle});
 
 
-  <% @page_title = application_name + " Dashboard" %>
-
-  <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
-  <div class="row">
-    <%= render :partial => 'search_form' %>
-    <%= render :partial => 'heading' %>
-  </div>
+<% end %>
 
 
-  <% if params.has_key?("q") %>
-    <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
-  <% end %>
+<% @page_title = application_name + " Dashboard" %>
 
-  <%= render :partial => 'did_you_mean' %>
-  <%= render :partial => 'facet_selected' %>
 
-	<%= render 'constraints', :localized_params=>params %>
 
-  <%= render 'sort_and_per_page' %>
 
-  <%= render :partial=>'dashboard/document_list'  %>  
-	<% content_for :sidebar do %>
-	  <%= render :partial=>'facets' %>
-	<%  end %>
+<% if params.has_key?("q") %>
+    <div class="alert alert-info"><i class="glyphicon glyphicon-search icon-large"></i> You searched for:
+      <strong><%= params[:q] %></strong></div>
+<% end %>
 
-  <%= render 'results_pagination' %>
-  <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+<%= render :partial => 'did_you_mean' %>
+<%= render :partial => 'facet_selected' %>
+
+<%= render 'constraints', :localized_params => params %>
+
+<%= render 'sort_and_per_page' %>
+
+<%= render :partial => 'dashboard/document_list' %>
+<% content_for :sidebar do %>
+    <%= render :partial => 'facets' %>
+<% end %>
+
+<%= render 'results_pagination' %>
+<% if @events.present? %>
+    <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+<% end %>

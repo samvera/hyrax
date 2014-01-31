@@ -13,7 +13,7 @@
   <div class="row">
     <p class="pull-right">
     <!-- Button to trigger modal -->
-    <a href="#myModal" role="button" class="btn btn-warning" data-toggle="modal">What's this <i class="icon-question-sign icon-large"></i></a>
+    <a href="#myModal" role="button" class="btn btn-warning" data-toggle="modal">What's this <i class="glyphicon glyphicon-question-sign icon-large"></i></a>
 <!-- Modal -->
 <div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
@@ -32,7 +32,7 @@
     <p>
     Permissions in <%=t('sufia.product_name') %> are hierarchical.  This means that you cannot set the visibility of a file to <span class="label label-success">Open Access</span> or 
     <span class="label label-info"><%=t('sufia.institution_name') %></span> and simultaneously try to restrict the access of a single user. However, you may mark the visibility of
-    a file as <span class="label label-important">Private</span> and then grant access to particular users and/or groups for that file in the &quot;Share With&quot;
+    a file as <span class="label label-danger">Private</span> and then grant access to particular users and/or groups for that file in the &quot;Share With&quot;
     section.
     </p>
 
@@ -56,9 +56,9 @@
 </div>
     </p>
   </div>
-  <div class="control-group">
-    <h3>Visibility - <small>who should have the ability to read and download</small></h3>
-      <div class="controls">
+  <h3>Visibility - <small>who should have the ability to read and download</small></h3>
+  <div class="form-group">
+     <div class="controls">
         <label class="radio">
           <input type="radio" id="visibility_open" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
         </label>

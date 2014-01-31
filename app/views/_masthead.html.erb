@@ -15,24 +15,35 @@ limitations under the License.
 %>
 
 <div id="masthead">
-  <%= render partial: '/logo' %>
-  <div class="navbar">
-    <div class="nav-inner">
-      <div class="container">
-        <ul class="nav pull-right">
-          <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
-          <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
-          <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
-          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>" class="top_nav">Contact</a></li>
-          <li>
-            <div class="btn-group">
-              <%= render partial: '/user_util_links' %>
-            </div><!-- /.btn-group -->
+  <div class="row">
+    <div class="col-xs-3">
+      <%= render partial: '/logo' %>
+    </div><!-- /.col-sm-4 -->
+
+    <div class="col-xs-9">
+      <div class="navbar navbar-right" role="navigation">
+        <ul class="nav nav-pills navbar-left">
+          <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>>
+            <a href="/" class="top_nav">Home</a>
           </li>
-        </ul><!-- /.nav /.pull-right -->
-      </div><!-- /.container -->
-    </div><!-- /.nav-inner -->
-  </div><!-- /.navbar -->
-  <%= render :partial => 'catalog/search_form' %>
+          <li <%= 'class=active' if action_name == "about" %>>
+            <a href="/about/" class="top_nav">About</a>
+          </li>
+          <li <%= 'class=active' if action_name == "help" %>>
+            <a href="/help/" class="top_nav">Help</a>
+          </li>
+          <li <%= 'class=active' if params[:controller] == "contact_form" %>>
+            <a href="<%= sufia.contact_form_index_path %>" class="top_nav">Contact</a>
+          </li>
+          <li>
+            <%= render partial: '/user_util_links' %>
+          </li>
+        </ul><!-- /.nav-pills -->
+      </div><!-- /.navbar -->
+    </div>
+  </div>
+  <div class="row">
+    <%= render :partial => 'catalog/search_form' %>
+  </div>
 </div> <!-- /masthead -->
 

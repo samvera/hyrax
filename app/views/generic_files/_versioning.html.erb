@@ -1,21 +1,25 @@
 <div id="versioning_display" class="tab-pane">
-  <h2 class="non lower">Versions</h2>
+  <h2>Versions</h2>
   <div class="well">
     <%= form_for @generic_file, :url => sufia.generic_file_path(@generic_file), :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
       <%= hidden_field_tag('redirect_tab', 'versions') %>
     <h3>Upload New Version</h3>
-    <p>Upload a new version of this file from your computer.</p>
-    <p id="upload_field">
-      <%= file_field_tag "filedata"  %>
-    </p>
-    <%= f.button '<i class="icon-upload-alt"></i> Upload New Version'.html_safe, :name => "update_versioning", :id => "upload_submit", :onclick => "confirmation_needed = false;", :class => "btn-primary btn-mini" %>
+        <div class="form-group">
+          <div class="col-xs-12">
+            <p>Upload a new version of this file from your computer.</p>
+            <p id="upload_field">
+                <%= file_field_tag "filedata"  %>
+             </p>
+            <%= f.button '<i class="glyphicon glyphicon-upload"></i> Upload New Version'.html_safe, :name => "update_versioning", :id => "upload_submit", :onclick => "confirmation_needed = false;", :class => "btn-primary btn-mini" %>
+          </div>
+        </div>
     <hr />
     <h3>Restore Previous Version</h3>
     <% @generic_file.content.versions.each_with_index do |version, index| %>
-      <div class="control-group">
-        <div>
+      <div class="form-group">
+        <div class="col-xs-12">
           <label class="radio">
-          <%= radio_button_tag(:revision, version.versionID, index == 0) %>
+            <%= radio_button_tag(:revision, version.versionID, index == 0) %>
           <%# label_tag("revision_#{version.versionID}".to_sym, "Restore from #{version.dsCreated.localtime.to_formatted_s(:long_ordinal)} [by #{@generic_file.content.version_committer(version)}]") %>
           Restore from <%= version.dsCreateDate.localtime.to_formatted_s(:long_ordinal) %> [by <%= @generic_file.content.version_committer(version) %>]
           </label>
@@ -23,7 +27,7 @@
       </div>
     <% end %>
     <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
-    <%= f.button '<i class="icon-save"></i> Save Revision'.html_safe, :type => 'submit', :class => 'btn-primary btn-mini', :onclick => "confirmation_needed = false;", :name => "revert_submit", :id => "revert_submit" %>
+    <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Revision'.html_safe, :type => 'submit', :class => 'btn-primary btn-mini', :onclick => "confirmation_needed = false;", :name => "revert_submit", :id => "revert_submit" %>
   <% end %>
   </div> <!-- /well -->
 </div> <!-- /row -->

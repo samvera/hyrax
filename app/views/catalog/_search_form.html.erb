@@ -1,12 +1,20 @@
 <%# only display the q parameter if the controller is not the dashboard.  If they are in the dashboard controller, then the search is of the dashboard. %>
 <% q = params[:controller] == 'dashboard' ? nil : params[:q] %>
 
-<%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
-  <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8)) %>
-  <div class="controls">
-    <div class="input-append">
-    <label class="accessible-hidden"><%= t('sufia.search.form.q.label') %></label> 
-    <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => t('sufia.search.form.q.placeholder') %><button type="submit" class="btn btn-info" id="search-submit-header"><i class="icon-search"></i> Go</button>
-    </div>
-  </div>
-<% end %>
+<div class="col-xs-12 col-md-offset-3 col-md-9">
+  <div class="row">
+    <%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
+      <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8)) %>
+      <div class="input-group">
+        <label class="sr-only" for="search-field-header"><%= t('sufia.search.form.q.label') %></label>
+        <%= text_field_tag :q, q, :class => "q form-control", :id => "search-field-header", :placeholder => t('sufia.search.form.q.placeholder') %>
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-default" id="search-submit-header">
+            <i class="glyphicon glyphicon-search"></i> Go
+          </button>
+        </span>
+      </div>
+    <% end %>
+  </div><!-- /.row -->                                                                                                
+</div><!-- /.col-xs-12 -->                                                                                            
+  

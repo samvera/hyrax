@@ -41,13 +41,12 @@ limitations under the License.
 
 <body>
 <div  id="wrapper">
-  <div class="container">
+  <div class="container-fluid">
     <div id="page-positioner">
       <%= render :partial => '/masthead', :formats => [:html] %>
       <div id="content-wrapper">
         <div id="content" class="row">
-          <!-- 110 rows -->
-            <div class="span110">
+            <div class="col-sm-8 col-md-8 col-lg-8">
               <%= yield %>
             </div>
         </div><!-- /#content -->

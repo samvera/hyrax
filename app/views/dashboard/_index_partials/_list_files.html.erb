@@ -1,74 +1,77 @@
 <% noid = document.noid %>
-<tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
+<tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
   <% gf = GenericFile.load_instance_from_solr(document.id) %>
-  <td width="6%"><%= batch_edit_select(document) %>&nbsp;</td>
-  <td width="1%">
-  <%# This block is for adding/removing the magic wand while batch updates are processing %>
-  <% if gf.processing? %>
-     <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
-  <% elsif gf.depositor != @user.user_key %>
-     <i class="icon-gift icon-large"/>
-  <% end %>
+  <td width="1%"><%= batch_edit_select(document) %>&nbsp;</td>
+  <td width="2%">
+    <%# This block is for adding/removing the magic wand while batch updates are processing %>
+    <% if gf.processing? %>
+        <i class="glyphicon glyphicon-magic <%= 'ss-'+gf.batch.noid %>"/>
+    <% elsif gf.depositor != @user.user_key %>
+        <i class="glyphicon glyphicon-gift"/>
+    <% end %>
   </td>
-  <td width="37%">
-    <a href="" title="Click for more details"><i id="expand_<%= noid %>" class="icon-plus icon-large fleft"></i></a>&nbsp;
-    <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <span class=center><%= link_to document.title_or_label, sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
+  <td width="41%">
+    <a href="#" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-plus"></i></a>&nbsp;
+    <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document => document} %>
+    <span class=center>
+      <%= link_to document.title_or_label, sufia.generic_file_path(noid), :id => "src_copy_link#{noid}", :class => "#{'document-title' if document.title_or_label == document.label}" %><br/>
+    </span>
   </td>
   <td width="17%"><%= document.date_uploaded %> </td>
   <td width="5%">
-    <% if document.registered? %>
-      <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a>
-    <% elsif document.public? %>
-      <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-success" title="Open Access">Open Access</span></a>
-    <% else %>
-      <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>"><span class="label label-important" title="Private">Private</span></a>
-    <% end %>
+    <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>" class="visibility-link">
+      <% if document.registered? %>
+          <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
+      <% elsif document.public? %>
+          <span class="label label-success" title="Open Access">Open Access</span>
+      <% else %>
+          <span class="label label-danger" title="Private">Private</span>
+      <% end %>
+    </a>
   </td>
   <td width="23%">
     <div class="btn-group">
-      <button class="btn btn-small" href="#"><i class="icon-wrench"></i> Select an action</button>
-      <button class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></button>
-      <ul class="dropdown-menu">
-       <li>
-         <%= link_to raw('<i class="icon-link over"></i> Single-Use Link to File'), '#', :class => "copypaste itemicon itemcode", :title => "Single-Use Link to File", :id => "copy_link_#{noid}" %>
-       </li>
-       <li>
-         <%= link_to raw('<i class="icon-pencil"></i> Edit File'), sufia.edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
-       </li>
-       <li>
-         <%= link_to raw('<i class="icon-download-alt"></i> Download File'), sufia.download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
-       </li>
-       <li>
-         <%= link_to raw('<i class="icon-trash"></i> Delete File'), sufia.generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation"} %>
-       </li>
-       <li>
-         <%= display_trophy_link(@user, noid) %>
-       </li>
+      <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">Select an action <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li>
+          <%= link_to raw('<i class="glyphicon glyphicon-link over"></i> Single-Use Link to File'), '#', :class => "copypaste itemicon itemcode", :title => "Single-Use Link to File", :id => "copy_link_#{noid}" %>
+        </li>
+        <li>
+          <%= link_to raw('<i class="glyphicon glyphicon-pencil"></i> Edit File'), sufia.edit_generic_file_path(noid), :class => 'itemicon itemedit', :title => 'Edit File' %>
+        </li>
+        <li>
+          <%= link_to raw('<i class="glyphicon glyphicon-download-alt"></i> Download File'), sufia.download_path(noid), :class => 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
+        </li>
+        <li>
+          <%= link_to raw('<i class="glyphicon glyphicon-trash"></i> Delete File'), sufia.generic_file_path(noid), :class => 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => {:confirm => "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation"} %>
+        </li>
+        <li>
+          <%= display_trophy_link(@user, noid) %>
+        </li>
       </ul>
     </div>
   </td>
 </tr>
-<tr class="hide" id="detail_<%= noid %>"> <!--  document detail"> -->
+<tr id="detail_<%= noid %>"> <!--  document detail"> -->
   <td colspan="6">
-    <table class="expanded-details">
-      <tr>
-        <td><strong>File Name: </strong> <%= link_to document.label, sufia.generic_file_path(noid) %> </td>
-        <td><strong>File Format: </strong> <%= document.file_format %> </td>
-      </tr>
-      <tr>
-        <td><strong>Creator: </strong> <%= document.creator %> </td>
-        <td><strong>Depositor: </strong> <%= link_to_profile document.depositor %> </td>
-      </tr>
-      <tr>
-        <td colspan="2"><strong>Edit Access: </strong>
-          <% if document.edit_groups.present? %>
+    <dl class="expanded-details row">
+      <dt class="col-xs-3 col-lg-2">File Name:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= link_to document.label, sufia.generic_file_path(noid) %></dd>
+      <dt class="col-xs-3 col-lg-2">File Format:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= document.file_format %>JPG</dd>
+      <dt class="col-xs-3 col-lg-2">Creator:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= document.creator %></dd>
+      <dt class="col-xs-3 col-lg-2">Depositor:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= link_to_profile document.depositor %></dd>
+      <dt class="col-xs-3 col-lg-2">Edit Access:</dt>
+      <dd class="col-xs-9 col-lg-10">
+        <% if document.edit_groups.present? %>
             Groups: <%= document.edit_groups.join(', ') %>
-            <br />
-          <% end %>
-          Users: <%= document.edit_people.join(', ') %>
-        </td>
-      </tr>
-    </table>
+            <br/>
+        <% end %>
+        Users: <%= document.edit_people.join(', ') %>
+      </dd>
+    </dl>
   </td>
 </tr>

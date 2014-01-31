@@ -1,59 +1,59 @@
-<dl id="user_info">
-  <dt><i class="icon-facebook"></i> Facebook Handle</dt>
-  <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+<dl id="user_info" class="row">
+  <dt class="col-xs-5"><i class="glyphicon glyphicon-facebook"></i> Facebook Handle</dt>
+  <dd class="col-xs-7"><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
 
-  <dt><i class="icon-twitter"></i> Twitter Handle</dt>
-  <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
+  <dt class="col-xs-5"><i class="glyphicon glyphicon-twitter"></i> Twitter Handle</dt>
+  <dd class="col-xs-7"><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
  
-  <dt><i class="icon-google-plus"></i> Google+ Handle</dt>
-  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+  <dt class="col-xs-5"><i class="glyphicon glyphicon-google-plus"></i> Google+ Handle</dt>
+  <dd class="col-xs-7"><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
  
-  <dt><i class="icon-envelope-alt"></i> Email</dt>
-  <dd><%= mail_to user.email %></dd>
+  <dt class="col-xs-5"><i class="glyphicon glyphicon-envelope-alt"></i> Email</dt>
+  <dd class="col-xs-7"><%= mail_to user.email %></dd>
 
   <% if user.chat_id %>
-    <dt><i class="icon-bullhorn"></i> Chat ID</dt>
-    <dd><%= user.chat_id %></dd>
+    <dt class="col-xs-5"><i class="glyphicon glyphicon-bullhorn"></i> Chat ID</dt>
+    <dd class="col-xs-7"><%= user.chat_id %></dd>
   <% end %>
 
   <% if user.website %>
-    <dt><i class="icon-globe"></i> Website(s)</dt>
-    <dd><%= iconify_auto_link(user.website) %></dd>
+    <dt class="col-xs-5"><i class="glyphicon glyphicon-globe"></i> Website(s)</dt>
+    <dd class="col-xs-7"><%= iconify_auto_link(user.website) %></dd>
   <% end %>
 
   <% if user.title %>
-    <dt>Title</dt>
-    <dd><%= user.title.titleize %></dd>
+    <dt class="col-xs-5">Title</dt>
+    <dd class="col-xs-7"><%= user.title.titleize %></dd>
   <% end %>
 
   <% if user.admin_area %>
-    <dt>Administrative Area</dt>
-    <dd><%= user.admin_area.titleize %></dd>
+    <dt class="col-xs-5">Administrative Area</dt>
+    <dd class="col-xs-7"><%= user.admin_area.titleize %></dd>
   <% end %>
 
   <% if user.department %>
-    <dt>Department</dt>
-    <dd><%= user.department.titleize %></dd>
+    <dt class="col-xs-5">Department</dt>
+    <dd class="col-xs-7"><%= user.department.titleize %></dd>
   <% end %>
 
   <% if user.office %>
-    <dt>Office</dt>
-    <dd><%= user.office.titleize %></dd>
+    <dt class="col-xs-5">Office</dt>
+    <dd class="col-xs-7"><%= user.office.titleize %></dd>
   <% end %>
 
   <% if user.address %>
-    <dt><i class="icon-map-marker"></i> Address</dt>
-    <dd><%= user.address.titleize %></dd>
+    <dt class="col-xs-5"><i class="glyphicon glyphicon-map-marker"></i> Address</dt>
+    <dd class="col-xs-7"><%= user.address.titleize %></dd>
   <% end %>
 
   <% if user.affiliation %>
-    <dt>Affiliation</dt>
-    <dd><%= user.affiliation.titleize %></dd>
+    <dt class="col-xs-5">Affiliation</dt>
+    <dd class="col-xs-7"><%= user.affiliation.titleize %></dd>
   <% end %>
 
   <% if user.telephone %>
-    <dt><i class="icon-phone"></i> Telephone</dt>
-    <dd><%= link_to user.telephone, "wtai://wp/mc;#{user.telephone}" %><%# user.telephone %></dd>
+    <dt class="col-xs-5"><i class="glyphicon glyphicon-phone"></i> Telephone</dt>
+    <dd class="col-xs-7"><%= link_to user.telephone, "wtai://wp/mc;#{user.telephone}" %><%# user.telephone %></dd>
   <% end %>
 
 </dl>
