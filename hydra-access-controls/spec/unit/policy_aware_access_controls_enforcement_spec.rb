@@ -113,7 +113,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     context "Anonymous user" do
       before { subject.stub(:current_user).and_return(nil) }
       it "should return the policies that provide discover permissions" do
-        subject.policies_with_access.should == ["test:policy7", "test:policy8"]
+        subject.policies_with_access.should match_array ["test:policy7", "test:policy8"]
       end
     end
   end
