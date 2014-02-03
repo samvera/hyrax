@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% if paginate_params(@response).num_pages > 1 %>
+<% if @response.total_pages > 1 %>
     <div class="pager"> 
       <%= paginate_rsolr_response @response, :outer_window => 2, :theme => 'blacklight', :route_set=> sufia %>
       <div class="clearfix"></div>

@@ -28,14 +28,6 @@ module Sufia
     end
 
     def index
-      if params[:controller] == "dashboard"
-        extra_head_content << view_context.auto_discovery_link_tag(:rss, sufia.url_for(params.merge(:format => 'rss')), :title => "RSS for results")
-        extra_head_content << view_context.auto_discovery_link_tag(:atom, sufia.url_for(params.merge(:format => 'atom')), :title => "Atom for results")
-      else
-        # This is for controllers that use this behavior that are defined outside Sufia
-        extra_head_content << view_context.auto_discovery_link_tag(:rss, url_for(params.merge(:format => 'rss')), :title => "RSS for results")
-        extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => "Atom for results")
-      end
       (@response, @document_list) = get_search_results
       @user = current_user
       @events = @user.events(100)

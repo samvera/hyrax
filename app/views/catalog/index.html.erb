@@ -14,8 +14,6 @@
 
 	<% @page_title = application_name + " Search Results" %>
 
-  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
-
   <h3>Search Results</h3>
   <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= render_constraints(params) %></strong></div>	
   <%= render :partial => 'did_you_mean' %>
@@ -23,7 +21,6 @@
 	<%# render 'constraints', :localized_params=>params %>
   
   <div class="row"> 
-    <%= render_pagination_info @response, :entry_name=>'item' %>
     <%= render 'sort_and_per_page' %>
     <div class="row offset80">
       <%= link_to "New Search", catalog_index_path, :id=>"startOverLink", :class=>"btn btn-info btn-medium" %>

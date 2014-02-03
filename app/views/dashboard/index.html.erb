@@ -13,6 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
+<% content_for :head do %>
+    <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(:format => 'rss')), :title => "RSS for results") %>
+    <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(:format => 'atom')), :title => "Atom for results") %>
+<% end %>
 
 <% content_for :local_js do %>
 
@@ -73,7 +77,7 @@ limitations under the License.
     <%= render :partial => 'heading' %>
   </div>
 
-  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+
   <% if params.has_key?("q") %>
     <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
   <% end %>
@@ -82,8 +86,6 @@ limitations under the License.
   <%= render :partial => 'facet_selected' %>
 
 	<%= render 'constraints', :localized_params=>params %>
-  
-  <% render_pagination_info @response, :entry_name=>'item' %>
 
   <%= render 'sort_and_per_page' %>
 
