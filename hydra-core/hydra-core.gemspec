@@ -21,10 +21,7 @@ Gem::Specification.new do |gem|
 
 
   gem.add_dependency "rails", '>= 3.2.3', '< 5' 
-  gem.add_dependency "blacklight", '~> 4.0'  
-  gem.add_dependency "active-fedora"
   gem.add_dependency 'block_helpers'
-  gem.add_dependency 'deprecation', ">= 0.0.5"
   gem.add_dependency 'hydra-access-controls', version
   gem.add_dependency 'jettywrapper', ">=1.4.1"
   
