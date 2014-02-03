@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'cancan'
   gem.add_dependency 'deprecation'
   #gem.add_dependency "blacklight", '>= 4.0', '< 6'
-  gem.add_dependency "blacklight", '5.0.0.pre1'
+  gem.add_dependency "blacklight", '5.0.0.pre4'
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency 'rspec'
