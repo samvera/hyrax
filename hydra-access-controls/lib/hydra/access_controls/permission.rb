@@ -8,8 +8,12 @@ module Hydra::AccessControls
       false
     end
 
+    def to_hash
+      @vals
+    end
+
     def [] var
-      @vals[var]
+      to_hash[var]
     end
 
     def name
