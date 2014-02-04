@@ -20,13 +20,9 @@ class CatalogController < ApplicationController
     }
 
     # solr field configuration for search results/index views
-    config.index.show_link = 'title_tesim'
-    config.index.record_display_type = 'has_model_ssim'
+    config.index.title_field = 'title_tesim'
+    config.index.display_type_field = 'has_model_ssim'
 
-    # solr field configuration for document/show views
-    config.show.html_title = 'title_tesim'
-    config.show.heading = 'title_tesim'
-    config.show.display_type = 'has_model_ssim'
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display

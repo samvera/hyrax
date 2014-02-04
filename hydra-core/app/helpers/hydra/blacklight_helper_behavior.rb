@@ -12,7 +12,7 @@ module Hydra
     #   document_partial_name('has_model_s' => ["info:fedora/hull-cModel:text.pdf"])
     #    => "text_pdf"
     def document_partial_name(document)
-      display_type = document[blacklight_config.show.display_type]
+      display_type = document[blacklight_config.show.display_type_field]
 
       return 'default' unless display_type 
 
