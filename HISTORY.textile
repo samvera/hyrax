@@ -1,3 +1,9 @@
+h3. 6.5.0 (unreleased)
+* Added Hydra::AccessControls::Permission#to_hash for better compatibility with hash-based permissions [David Chandek-Stark]
+* Added unit test module for Hydra::AccessControls::Permission [David Chandek-Stark]
+* Hydra::Admin policy updated to use has_attributes instead of deprecated delegate/delegate_to [David Chandek-Stark]
+* Require ActiveFedora ~> 6.7 in hydra-access-controls for #has_attributes [David Chandek-Stark]
+
 h3. 6.4.1 (2013-11-25)
 * Remove duplicate public group query [Justin Coyne]
 * DownloadsController returns a 404 when the datastream doesn't have content. [Justin Coyne]
