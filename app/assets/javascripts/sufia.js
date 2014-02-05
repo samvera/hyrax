@@ -44,6 +44,7 @@ limitations under the License.
 //= require sufia/batch_select_all
 //= require sufia/multiForm
 //= require sufia/edit_metadata
+//= require sufia/single_use_link
 //= require hydra/batch_select
 //= require hydra_collections
 
