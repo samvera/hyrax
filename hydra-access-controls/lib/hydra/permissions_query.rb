@@ -24,10 +24,8 @@ module Hydra
     # @param [Hash] extra_controller_params (optional)
     def get_permissions_solr_response_for_doc_id(id=nil, extra_controller_params={})
       raise Blacklight::Exceptions::InvalidSolrID.new("The application is trying to retrieve permissions without specifying an asset id") if id.nil?
-      #solr_response = Blacklight.solr.get permissions_solr_doc_params(id).merge(extra_controller_params)
-      #path = blacklight_config.solr_path
       solr_opts = permissions_solr_doc_params(id).merge(extra_controller_params)
-      response = Blacklight.solr.get('select', :params=> solr_opts)
+      response = ActiveFedora::SolrService.instance.conn.get('select', :params=> solr_opts)
       solr_response = Blacklight::SolrResponse.new(force_to_utf8(response), solr_opts)
 
       raise Blacklight::Exceptions::InvalidSolrID.new("The solr permissions search handler didn't return anything for id \"#{id}\"") if solr_response.docs.empty?
