@@ -12,7 +12,7 @@ function getSingleUse(id) {
 // short hand for $(document).ready();
 $(function() {
     ZeroClipboard.setDefaults({ moviePath: "/assets/ZeroClipboard.swf" });
-    $.each($(".copypaste"), function() {
+    $.each($(".copypaste"), function(idx, item) {
         var clip = new ZeroClipboard();
         clip.on("dataRequested", function(client, args) {
             clip.setText(getSingleUse(this.id));
@@ -21,10 +21,14 @@ $(function() {
             alert("A single use link to " + args.text + " was copied to your clipboard.")
         })
         clip.on("noflash", function(client, args) {
-            alert("Your single-use link: " + getSingleUse(this.id))
+            $(item).bind('click', function(e) {
+                alert("Your single-use link (please copy): " + getSingleUse(item.id));
+            } );
         })
         clip.on("wrongflash", function(client, args) {
-            alert("Your single-use link: " + getSingleUse(this.id))
+            $(item).bind('click', function(e) {
+                alert("Your single-use link (please copy): " + getSingleUse(item.id));
+            } );
         })
         clip.glue($("#" + this.id))
     })
