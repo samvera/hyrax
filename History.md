@@ -1,4 +1,33 @@
 # History of Sufia releases
+## 3.7.0
+
+* The UsersController needs to set @trophies to a list of GenericFiles [Justin Coyne]
+* Removed patches for rails 3	 [Justin Coyne]
+* Short-circuit freshclam for a faster build	 [Michael J. Giarlo]
+* Use blacklight 4.5 methods for accessing the search_session. Fixes #296	  [Justin Coyne]
+* Test with ruby 2.1.0 final release	  [Justin Coyne]
+* Simplify tests for GenericFile#related_files	  [Justin Coyne]
+* Remove duplicate includes. Fixes #289	  [Justin Coyne]
+* Remove non-functioning rake tasks …	  [Justin Coyne]
+* Better documentation for GenericFile#related_files [ci skip]	[Justin Coyne]
+* Linked in handle seems to have been missed in the permitted attibiute… …	[Carolyn Cole]
+* Updated: - Don't need to exlicity add 'jettywrapper' to Gemfile b/c added by hydra:head generator (called by sufia generator)
+           - Don't need to remove public/index.html (Rails 4 presumably)
+           - Run `rake jetty:clean` instead of hydra:jetty generator -- does the same thing
+           - Added note that fits can be installed with homebrew (and may require adding a symlink)
+           	 [David Chandek-Stark]
+* Upgrade blacklight to 4.6	  [Justin Coyne]
+* Allowing the link to either be sufia based or blacklight based	 [Carolyn Cole]
+* Removing extra_head_content, and paginate deprication warnings	 [Carolyn Cole]
+* Remove deprecated method paginate_rsolr_response. Fixes #312	 [Justin Coyne]
+* Moving single use link java script into asset pipeline.	 [Carolyn Cole]
+* Update to blacklight 4.7	 [Justin Coyne]
+* Modifying how zclip works when a flash player is not present, since t… …	 [Carolyn Cole]
+* Upgrading video.js to the latest version so it will work in firefox, … …	 [Carolyn Cole]
+* Removing hard coded asset paths, which do not work in production. Whi… …	 [Carolyn Cole]
+* Fixing audiojs to only display if audio is not supported by the brows… …	 [Carolyn Cole]
+
+## 3.6.0
 
 ## 3.4.0
 * Handle facets with 3 or more words [Jeremy Friesen]
