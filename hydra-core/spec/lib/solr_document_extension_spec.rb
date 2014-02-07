@@ -6,7 +6,7 @@ describe Hydra::ModelMixins::SolrDocumentExtension do
   end
 
   it "should get_file_asset_count" do
-
+    Deprecation.stub(:warn).and_return(nil)
     mock_result = {'response'=>{'numFound'=>0}}
     ActiveFedora::SolrService.should_receive(:query).with("is_part_of_t:\"changeme\\:99\"", :rows=>0, :raw=>true).and_return(mock_result)
     @doc.get_file_asset_count.should == 0

@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "active-fedora", '~> 6.7'
   gem.add_dependency 'cancan'
   gem.add_dependency 'deprecation'
-  gem.add_dependency 'blacklight', '~> 4.0' 
+  gem.add_dependency 'blacklight', '~> 4.7'
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency 'rspec'

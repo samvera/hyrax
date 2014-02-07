@@ -6,50 +6,50 @@ describe Hydra::ModelMixins::RightsMetadata do
     subject.discover_groups=['group1', 'group2']
     subject.edit_users=['user1']
     subject.read_users=['user2', 'user3']
-    subject.permissions.should include({:type=>"group", :access=>"discover", :name=>"group1"},
-        {:type=>"group", :access=>"discover", :name=>"group2"},
-        {:type=>"user", :access=>"read", :name=>"user2"},
-        {:type=>"user", :access=>"read", :name=>"user3"},
-        {:type=>"user", :access=>"edit", :name=>"user1"})
+    subject.permissions.should include(Hydra::AccessControls::Permission.new({:type=>"group", :access=>"discover", :name=>"group1"}),
+        Hydra::AccessControls::Permission.new({:type=>"group", :access=>"discover", :name=>"group2"}),
+        Hydra::AccessControls::Permission.new({:type=>"user", :access=>"read", :name=>"user2"}),
+        Hydra::AccessControls::Permission.new({:type=>"user", :access=>"read", :name=>"user3"}),
+        Hydra::AccessControls::Permission.new({:type=>"user", :access=>"edit", :name=>"user1"}))
   end
 
   describe "updating permissions" do
     it "should create new group permissions" do
-      subject.permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
-      subject.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
+      subject.permissions_attributes = [{:name=>'group1', :access=>'discover', :type=>'group'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'group', :access=>'discover', :name=>'group1'})]
     end
     it "should create new user permissions" do
-      subject.permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
-      subject.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+      subject.permissions_attributes = [{:name=>'user1', :access=>'discover', :type=>'user'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'user', :access=>'discover', :name=>'user1'})]
     end
     it "should not replace existing groups" do
-      subject.permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
-      subject.permissions = [{:name=>'group2', :access=>'discover', :type=>'group'}]
-      subject.permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
-                                   {:type=>'group', :access=>'discover', :name=>'group2'}]
+      subject.permissions_attributes = [{:name=>'group1', :access=>'discover', :type=>'group'}]
+      subject.permissions_attributes = [{:name=>'group2', :access=>'discover', :type=>'group'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'group', :access=>'discover', :name=>'group1'}),
+                                   Hydra::AccessControls::Permission.new({:type=>'group', :access=>'discover', :name=>'group2'})]
     end
     it "should not replace existing users" do
-      subject.permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
-      subject.permissions = [{:name=>'user2', :access=>'discover', :type=>'user'}]
-      subject.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
-                                   {:type=>'user', :access=>'discover', :name=>'user2'}]
+      subject.permissions_attributes = [{:name=>'user1', :access=>'discover', :type=>'user'}]
+      subject.permissions_attributes = [{:name=>'user2', :access=>'discover', :type=>'user'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'user', :access=>'discover', :name=>'user1'}),
+                                   Hydra::AccessControls::Permission.new({:type=>'user', :access=>'discover', :name=>'user2'})]
     end
     it "should update permissions on existing users" do
-      subject.permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
-      subject.permissions = [{:name=>'user1', :access=>'edit', :type=>'user'}]
-      subject.permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
+      subject.permissions_attributes = [{:name=>'user1', :access=>'discover', :type=>'user'}]
+      subject.permissions_attributes = [{:name=>'user1', :access=>'edit', :type=>'user'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'user', :access=>'edit', :name=>'user1'})]
     end
     it "should update permissions on existing groups" do
-      subject.permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
-      subject.permissions = [{:name=>'group1', :access=>'edit', :type=>'group'}]
-      subject.permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
+      subject.permissions_attributes = [{:name=>'group1', :access=>'discover', :type=>'group'}]
+      subject.permissions_attributes = [{:name=>'group1', :access=>'edit', :type=>'group'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'group', :access=>'edit', :name=>'group1'})]
     end
     it "should assign user permissions when :type == 'person'" do
-      subject.permissions = [{:name=>'user1', :access=>'discover', :type=>'person'}]
-      subject.permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+      subject.permissions_attributes = [{:name=>'user1', :access=>'discover', :type=>'person'}]
+      subject.permissions.should == [Hydra::AccessControls::Permission.new({:type=>'user', :access=>'discover', :name=>'user1'})]
     end
     it "should raise an ArgumentError when the :type hashkey is invalid" do
-      expect{subject.permissions = [{:name=>'user1', :access=>'read', :type=>'foo'}]}.to raise_error(ArgumentError)
+      expect{subject.permissions_attributes = [{:name=>'user1', :access=>'read', :type=>'foo'}]}.to raise_error(ArgumentError)
     end
   end
 

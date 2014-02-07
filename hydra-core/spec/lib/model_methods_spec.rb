@@ -4,7 +4,7 @@ describe Hydra::ModelMethods do
   
   before :all do
     class TestModel < ActiveFedora::Base
-      include Hydra::ModelMixins::CommonMetadata
+      include Hydra::AccessControls::Permissions
       include Hydra::ModelMethods
       has_metadata :name => "properties", :type => Hydra::Datastream::Properties
     end

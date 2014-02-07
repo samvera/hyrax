@@ -3,8 +3,7 @@ require 'spec_helper'
 describe Hydra::Datastream::RightsMetadata do
   before :all do
     class RightsTest < ActiveFedora::Base
-      include Hydra::ModelMixins::RightsMetadata
-      has_metadata name: 'rightsMetadata', type: Hydra::Datastream::RightsMetadata
+      include Hydra::AccessControls::Permissions
     end
   end
 

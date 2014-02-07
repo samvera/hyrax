@@ -115,6 +115,7 @@ describe Hydra::AccessControls::Permissions do
     it "should behave like #permissions_attributes=" do
       foo1 = Foo.new
       foo2 = Foo.new
+      Deprecation.stub(:warn).and_return(nil)
       foo1.permissions = [{type: "user", access: "edit", name: "editor"}]
       foo2.permissions_attributes = [{type: "user", access: "edit", name: "editor"}]
       foo1.permissions.should == foo2.permissions
