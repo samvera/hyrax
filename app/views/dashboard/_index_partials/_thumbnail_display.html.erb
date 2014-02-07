@@ -2,8 +2,8 @@
 <% if document.image? || document.pdf? || document.video? %>
   <% path = sufia.download_path(document.noid, {datastream_id: 'thumbnail'}) %>
 <% elsif document.audio? %>
-  <% path = "/assets/audio.png" %>
+  <% path = "audio.png" %>
 <% else %>
-  <% path = "/assets/default.png" %>
+  <% path = "default.png" %>
 <% end %>
 <%= link_to image_tag(path, {width: width}), sufia.generic_file_path(document) %>
