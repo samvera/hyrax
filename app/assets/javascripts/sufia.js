@@ -45,6 +45,7 @@ limitations under the License.
 //= require sufia/multiForm
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
+//= require sufia/audio
 //= require hydra/batch_select
 //= require hydra_collections
 
@@ -174,24 +175,4 @@ function preg_quote( str ) {
     // *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
 
     return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
-}
-
-
-function initialize_audio() {
-
-  if (navigator.userAgent.match("Chrome")){
-      $('audio').each(function() {
-         this.controls = true;
-      });
-  }else {
-      $('audio').each(function() {
-         $(this).attr("preload","auto");
-      });
-    audiojs.events.ready(function() {
-          var as = audiojs.createAll({
-                 imageLocation: '/assets/player-graphics.gif',
-                 swfLocation: '/assets/audiojs.swf'
-          });
-    });
-  };
 }

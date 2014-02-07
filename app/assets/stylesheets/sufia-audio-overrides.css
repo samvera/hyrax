@@ -1,0 +1,9 @@
+
+.no-audio-background {
+    background: none;
+    box-shadow: none;
+}
+
+.span40 .audiojs audio {
+    left: 10px;
+}
