@@ -1,22 +1,6 @@
-<%#
-Copyright © 2012 The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-%>
-
 <%= form_tag catalog_index_path, :class => 'form-horizontal', :method => :get do  %>
 
-  <%= search_as_hidden_fields(:params => advanced_search_context ) %>  
+  <%= render_hash_as_hidden_fields(params_for_search(advanced_search_context)) %>
 
   <div> 
 	      
@@ -32,14 +16,6 @@ limitations under the License.
           <%= render 'advanced/advanced_search_fields' %>
         </div>        
     </div>
-    <!-- 
-    <div class="limit_column column">      
-      <div class="alert alert-info"><strong>AND</strong> have these attributes:</div>
-      <div> 
-          <%# render 'advanced_search_facets' %>
-      </div>
-    </div>
-    -->
   </div>
   
   <% unless (search_context_str = render_search_to_s( advanced_search_context)).blank? %>
@@ -50,7 +26,7 @@ limitations under the License.
   <% end %>
   
   
-  <div class="form-actions"
+  <div class="form-actions">
     <%= label_tag(:sort, "Sort results by") %> 
     <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>
     <%= hidden_field_tag(:search_field, blacklight_config.advanced_search[:url_key]) %>
