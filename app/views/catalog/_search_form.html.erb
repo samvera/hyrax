@@ -2,15 +2,11 @@
 <% q = params[:controller] == 'dashboard' ? nil : params[:q] %>
 
 <%= form_tag catalog_index_path, :method => :get, :id => "search-form-header" do %>
-  <%= search_as_hidden_fields(:omit_keys => [:q, :search_field, :qt, :page]).html_safe %>
-            <div class="controls">
-              <div class="input-append">
-              <label class="accessible-hidden"><%= t('sufia.search.form.q.label') %></label> 
-              <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => t('sufia.search.form.q.placeholder') %><button type="submit" class="btn btn-info" id="search-submit-header"><i class="icon-search"></i> Go</button>
-  <!-- <input type="submit" class="btn btn-info" id="search-submit-header" value="GO"><i class="icon-search"></i></input>
-&nbsp; -->
- <%# link_to 'more options', params.merge(:controller=>"advanced", :action=>"index") , :class=>"advanced_search" if ! current_page?(advanced_path)%>
- <%# link_to 'less options', :back , :class=>"advanced_search" if current_page?(advanced_path)%>
-              </div>
-            </div>
+  <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8)) %>
+  <div class="controls">
+    <div class="input-append">
+    <label class="accessible-hidden"><%= t('sufia.search.form.q.label') %></label> 
+    <%= text_field_tag :q, q, :class => "q span50", :id => "search-field-header", :placeholder => t('sufia.search.form.q.placeholder') %><button type="submit" class="btn btn-info" id="search-submit-header"><i class="icon-search"></i> Go</button>
+    </div>
+  </div>
 <% end %>
