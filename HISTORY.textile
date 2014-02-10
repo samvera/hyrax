@@ -1,4 +1,6 @@
 h3. 6.5.0 (unreleased)
+* Blacklight upgraded to version ~> 4.7 and resolved hydra-head 7.0 deprecation warnings. [David Chandek-Stark]
+* Removed GenericContent test model. [David Chandek-Stark]
 * Added Hydra::AccessControls::Permission#to_hash for better compatibility with hash-based permissions [David Chandek-Stark]
 * Added unit test module for Hydra::AccessControls::Permission [David Chandek-Stark]
 * Hydra::Admin policy updated to use has_attributes instead of deprecated delegate/delegate_to [David Chandek-Stark]
