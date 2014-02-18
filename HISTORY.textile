@@ -1,4 +1,4 @@
-h3. 6.5.0 (unreleased)
+h3. 6.5.0 (2014-02-18)
 * Blacklight upgraded to version ~> 4.7 and resolved hydra-head 7.0 deprecation warnings. [David Chandek-Stark]
 * Removed GenericContent test model. [David Chandek-Stark]
 * Added Hydra::AccessControls::Permission#to_hash for better compatibility with hash-based permissions [David Chandek-Stark]
