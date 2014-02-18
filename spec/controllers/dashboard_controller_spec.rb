@@ -70,13 +70,10 @@ describe DashboardController do
         assigns(:result_set_size).should eql(editable_docs_response["response"]["numFound"])
         assigns(:document_list).each {|doc| doc.should be_kind_of SolrDocument}
       end
-      context "with render views" do
-        render_views
-        it "should paginate" do          
-          xhr :get, :index, per_page: 2
-          response.should be_success
-          response.should render_template('dashboard/index')
-        end
+      it "should paginate" do          
+        xhr :get, :index, per_page: 2
+        response.should be_success
+        response.should render_template('dashboard/index')
       end
     end
   end
