@@ -66,7 +66,7 @@ describe DashboardController do
         response.should render_template('dashboard/index')
       end
       it "should return an array of documents I can edit" do
-        editable_docs_response = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
+        editable_docs_response = ActiveFedora::SolrService.instance.conn.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
         assigns(:result_set_size).should eql(editable_docs_response["response"]["numFound"])
         assigns(:document_list).each {|doc| doc.should be_kind_of SolrDocument}
       end
