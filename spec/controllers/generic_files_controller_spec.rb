@@ -438,7 +438,6 @@ describe GenericFilesController do
         flash[:alert].should be_nil
       end
       describe "failing audit" do
-        render_views
         before do
           ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(false)
           @archivist = FactoryGirl.find_or_create(:archivist)
@@ -449,7 +448,6 @@ describe GenericFilesController do
           AuditJob.new(@file.pid, @ds[0], @ds[1].versionID).run
           get :show, id:"test5"
           assigns[:notify_number].should == 1
-          response.body.should include('<span id="notify_number" class="overlay"> 1</span>') # notify should be 1 for failing job
           @archivist.mailbox.inbox[0].messages[0].subject.should == "Failing Audit Run"
         end
       end

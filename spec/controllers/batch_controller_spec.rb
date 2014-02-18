@@ -39,15 +39,12 @@ describe BatchController do
       Sufia.queue.should_receive(:push).with(s1).once
       post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}     
     end
-    describe "when views are shown" do
-      render_views
-      it "should show flash messages" do
-        post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"","read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
-        response.should redirect_to @routes.url_helpers.dashboard_index_path
-        flash[:notice].should_not be_nil
-        flash[:notice].should_not be_empty
-        flash[:notice].should include("Your files are being processed")
-      end
+    it "should show flash messages" do
+      post :update, :id=>@batch.pid, "generic_file"=>{"read_groups_string"=>"","read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
+      response.should redirect_to @routes.url_helpers.dashboard_index_path
+      flash[:notice].should_not be_nil
+      flash[:notice].should_not be_empty
+      flash[:notice].should include("Your files are being processed")
     end
     
     describe "when user has edit permissions on a file" do

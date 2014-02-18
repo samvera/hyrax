@@ -3,7 +3,6 @@ require 'spec_helper'
 describe StaticController do
   routes { Sufia::Engine.routes }
   describe "#mendeley" do
-    render_views
     it "renders page" do
       get "mendeley"
       response.should be_success
@@ -17,7 +16,6 @@ describe StaticController do
   end
 
   describe "#zotero" do
-    render_views
     it "renders page" do
       get "zotero"
       response.should be_success
