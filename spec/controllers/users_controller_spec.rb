@@ -65,6 +65,37 @@ describe UsersController do
         json.map{|u| u['text']}.should include(@u1.email, @u2.email)
       end
     end
+    describe "query users"  do
+      it "finds the expected user via email" do
+        get :index,  uq: @u1.email
+        assigns[:users].should include(@u1)
+        assigns[:users].should_not include(@u2)
+        response.should be_successful
+      end
+      it "finds the expected user via display name" do
+        @u1.display_name = "Dr. Curator"
+        @u1.save
+        @u2.display_name = "Jr. Architect"
+        @u2.save
+        User.any_instance.stub(:display_name).and_return("Dr. Curator", "Jr.Archivist")
+        get :index,  uq: @u1.display_name
+        assigns[:users].should include(@u1)
+        assigns[:users].should_not include(@u2)
+        response.should be_successful
+        @u1.display_name = nil
+        @u1.save
+        @u2.display_name = nil
+        @u2.save
+      end
+      it "uses the base query" do
+        u3 = FactoryGirl.find_or_create(:user)
+        controller.stub(:base_query).and_return(['email == "jilluser@example.com"'])
+        get :index
+        assigns[:users].should include(u3)
+        assigns[:users].should_not include(@u1, @u2)
+        u3.destroy
+      end
+    end
   end
   describe "#edit" do
     it "show edit form when user edits own profile" do
