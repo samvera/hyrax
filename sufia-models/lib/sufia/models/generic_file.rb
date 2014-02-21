@@ -11,6 +11,7 @@ module Sufia
     autoload :Metadata, 'sufia/models/generic_file/metadata'
     autoload :Versions, 'sufia/models/generic_file/versions'
     autoload :VirusCheck, 'sufia/models/generic_file/virus_check'
+    autoload :ReloadOnSave, 'sufia/models/generic_file/reload_on_save'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
@@ -25,6 +26,7 @@ module Sufia
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck
+    include Sufia::GenericFile::ReloadOnSave
 
     included do
       belongs_to :batch, :property => :is_part_of

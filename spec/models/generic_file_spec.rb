@@ -1020,4 +1020,28 @@ describe GenericFile do
       end
     end
   end
+
+  describe "should create a full to_solr record" do
+    before do
+      subject.save
+    end
+    after do
+      subject.destroy
+    end
+    it "gets both sets of data into solr" do
+     f1= GenericFile.find(subject.id)
+     f2 = GenericFile.find(subject.id)
+     f2.reload_on_save = true
+     f1.mime_type = "video/abc123"
+     f2.title = "abc123"
+     f1.save
+     mime_type_key = Solrizer.solr_name("mime_type")
+     title_key = Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string)
+     expect(f1.to_solr[mime_type_key]).to eq([f1.mime_type])
+     expect(f1.to_solr[title_key]).to_not eq(f2.title)
+     f2.save
+     expect(f2.to_solr[mime_type_key]).to eq([f1.mime_type])
+     expect(f2.to_solr[title_key]).to eq(f2.title)
+    end
+  end
 end
