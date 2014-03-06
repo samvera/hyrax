@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'activesupport'
   gem.add_dependency "active-fedora", '~> 7.0.0.rc2'
-  gem.add_dependency 'cancan'
+  gem.add_dependency 'cancancan'
   gem.add_dependency 'deprecation'
   gem.add_dependency "blacklight", '~> 5.0'
 
