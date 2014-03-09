@@ -9,7 +9,6 @@ module Hydra
   autoload :User
   autoload :AccessControlsEnforcement
   autoload :PolicyAwareAccessControlsEnforcement
-  autoload :AccessControlsEvaluation
   autoload :Ability
   autoload :Config
   autoload :Datastream

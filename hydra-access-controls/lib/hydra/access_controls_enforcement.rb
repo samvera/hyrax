@@ -2,7 +2,6 @@ module Hydra::AccessControlsEnforcement
   extend ActiveSupport::Concern
 
   included do
-    include Hydra::AccessControlsEvaluation
     class_attribute :solr_access_filters_logic
 
     # Set defaults. Each symbol identifies a _method_ that must be in
