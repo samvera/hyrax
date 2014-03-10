@@ -40,3 +40,5 @@ module Hydra
   # raised manually.
   class AccessDenied < ::CanCan::AccessDenied; end
 end
+
+require 'active_fedora/accessible_by'

@@ -16,14 +16,12 @@ module Hydra::AccessControlsEnforcement
   
   protected
 
-  def gated_discovery_filters
-    # Grant access to public content
-    permission_types = discovery_permissions
+  def gated_discovery_filters(ability = current_ability, permission_types = discovery_permissions)
     user_access_filters = []
     
     # Grant access based on user id & group
     solr_access_filters_logic.each do |method_name|
-      user_access_filters += send(method_name, permission_types)
+      user_access_filters += send(method_name, permission_types, ability)
     end
     user_access_filters
   end
@@ -101,10 +99,10 @@ module Hydra::AccessControlsEnforcement
   end
 
   
-  def apply_group_permissions(permission_types)
+  def apply_group_permissions(permission_types, ability = current_ability)
       # for groups
       user_access_filters = []
-      current_ability.user_groups.each_with_index do |group, i|
+      ability.user_groups.each_with_index do |group, i|
         permission_types.each do |type|
           user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer), group)
         end
@@ -116,19 +114,20 @@ module Hydra::AccessControlsEnforcement
     [key, value.gsub(/[ :\/]/, ' ' => '\ ', '/' => '\/', ':' => '\:')].join(':')
   end
 
-  def apply_user_permissions(permission_types)
+  def apply_user_permissions(permission_types, ability = current_ability)
       # for individual user access
       user_access_filters = []
-      if current_user && current_user.user_key.present?
+      user = ability.current_user
+      if user && user.user_key.present?
         permission_types.each do |type|
-          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer), current_user.user_key)
+          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer), user.user_key)
         end
       end
       user_access_filters
   end
 
   # override to apply super user permissions
-  def apply_superuser_permissions(permission_types)
+  def apply_superuser_permissions(permission_types, ability = current_ability)
     []
   end
   
