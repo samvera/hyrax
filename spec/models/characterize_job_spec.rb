@@ -5,6 +5,7 @@ describe CharacterizeJob do
     @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('jcoyne@example.com')
     @generic_file.save!
+    GenericFile.any_instance.stub(:reload_on_save?).and_return(false)
   end
 
   after do
