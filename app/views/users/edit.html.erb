@@ -5,7 +5,7 @@ $("a[rel=popover]").popover({ html: true });
 
 <h1>Edit Profile</h1>
 <div class="span45 well">
-  <%= form_for @user, :url => sufia.profile_path(URI.escape(@user.to_s, '@.')), :html => {:multipart => true, :class => 'form-horizontal' } do |f| %>
+  <%= form_for @user, :url => sufia.profile_path(URI.escape(@user.to_param, '@')), :html => {:multipart => true, :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
       <%= f.label :avatar, '<i class="icon-camera-retro"></i> Change picture'.html_safe, :class => "control-label" %>
       <div class="controls">
