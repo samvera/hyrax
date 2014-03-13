@@ -16,7 +16,7 @@ module Hydra::AccessControlsEnforcement
   
   protected
 
-  def gated_discovery_filters(ability = current_ability, permission_types = discovery_permissions)
+  def gated_discovery_filters(permission_types = discovery_permissions, ability = current_ability)
     user_access_filters = []
     
     # Grant access based on user id & group
