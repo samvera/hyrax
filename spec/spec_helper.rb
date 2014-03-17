@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'equivalent-xml/rspec_matchers'
 
 require File.expand_path('../support/features', __FILE__)
 
@@ -77,6 +78,7 @@ RSpec.configure do |config|
 
   config.include Devise::TestHelpers, :type => :controller
   config.include EngineRoutes, :type => :controller
+  config.include EquivalentXml::RSpecMatchers
 end
 
 module FactoryGirl
