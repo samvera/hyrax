@@ -106,7 +106,7 @@ describe UsersController do
     end
     it "redirects to show profile when user attempts to edit another profile" do
       get :edit, id: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.to_param))
       flash[:alert].should include("Permission denied: cannot access this page.")
     end
     describe "when the user has trophies" do
@@ -129,7 +129,7 @@ describe UsersController do
   describe "#update" do
     it "should not allow other users to update" do
       post :update, id: @another_user.user_key, user: { avatar: nil }
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.to_param))
       flash[:alert].should include("Permission denied: cannot access this page.")
     end
     it "should set an avatar and redirect to profile" do
@@ -139,7 +139,7 @@ describe UsersController do
       Sufia.queue.should_receive(:push).with(s1).once
       f = fixture_file_upload('/world.png', 'image/png')
       post :update, id: @user.user_key, user: { avatar: f }
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:notice].should include("Your profile has been updated")
       User.find_by_user_key(@user.user_key).avatar?.should be_true
     end
@@ -147,14 +147,14 @@ describe UsersController do
       Sufia.queue.should_receive(:push).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
       post :update, id: @user.user_key, user: { avatar: f }
-      response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.edit_profile_path(@user.to_param))
       flash[:alert].should include("Avatar You are not allowed to upload \"jp2\" files, allowed types: jpg, jpeg, png, gif, bmp, tif, tiff")
     end
     it "should validate the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
       Sufia.queue.should_receive(:push).never
       post :update, id: @user.user_key, user: { avatar: f }
-      response.should redirect_to(@routes.url_helpers.edit_profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.edit_profile_path(@user.to_param))
       flash[:alert].should include("Avatar file size must be less than 2MB")
     end
     it "should delete an avatar" do
@@ -162,7 +162,7 @@ describe UsersController do
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :update, id: @user.user_key, delete_avatar: true
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:notice].should include("Your profile has been updated")
       @user.avatar?.should be_false
     end
@@ -172,7 +172,7 @@ describe UsersController do
       Sufia.queue.should_receive(:push).with(s1).once
       User.any_instance.should_receive(:populate_attributes).once
       post :update, id: @user.user_key, update_directory: true
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:notice].should include("Your profile has been updated")
     end
     it "should set an social handles" do
@@ -181,7 +181,7 @@ describe UsersController do
       @user.googleplus_handle.blank?.should be_true
       @user.linkedin_handle.blank?.should be_true
       post :update, id: @user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle:"link" }
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:notice].should include("Your profile has been updated")
       u = User.find_by_user_key(@user.user_key)
       u.twitter_handle.should == 'twit'
@@ -200,7 +200,7 @@ describe UsersController do
         expect {
           post :update, id: user.user_key,  'remove_trophy_'+file.noid => 'yes'
         }.to change { user.trophies.count }.by(-1)
-        response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(user.user_key,'@.')))
+        response.should redirect_to(@routes.url_helpers.profile_path(user.to_param))
         flash[:notice].should include("Your profile has been updated")
       end
     end
@@ -216,7 +216,7 @@ describe UsersController do
       UserFollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :follow, id: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.to_param))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if already following and not log an event" do
@@ -224,14 +224,14 @@ describe UsersController do
       #Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @another_user.user_key).never
       Sufia.queue.should_receive(:push).never
       post :follow, id: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.to_param))
       flash[:notice].should include("You are following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       #Resque.should_receive(:enqueue).with(UserFollowEventJob, @user.user_key, @user.user_key).never
       Sufia.queue.should_receive(:push).never
       post :follow, id: @user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end
@@ -242,7 +242,7 @@ describe UsersController do
       UserUnfollowEventJob.should_receive(:new).with(@user.user_key, @another_user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       post :unfollow, id: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.to_param))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if not following and not log an event" do
@@ -250,14 +250,14 @@ describe UsersController do
       #Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @another_user.user_key).never
       Sufia.queue.should_receive(:push).never
       post :unfollow, id: @another_user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@another_user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@another_user.to_param))
       flash[:notice].should include("You are no longer following #{@another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
       #Resque.should_receive(:enqueue).with(UserUnfollowEventJob, @user.user_key, @user.user_key).never
       Sufia.queue.should_receive(:push).never
       post :unfollow, id: @user.user_key
-      response.should redirect_to(@routes.url_helpers.profile_path(URI.escape(@user.user_key,'@.')))
+      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:alert].should include("You cannot follow or unfollow yourself")
     end
   end

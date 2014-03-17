@@ -14,7 +14,7 @@ describe "User Profile" do
   it "should be editable" do
     click_link "curator1@example.com"
     click_link "Edit Your Profile"
-    page.should have_xpath("//form[@action='/users/curator1%40example-dot-com']")
+    page.should have_xpath("//form[@action='/users/curator1@example-dot-com']")
     fill_in 'user_twitter_handle', with: 'curatorOfData'
     click_button 'Save Profile'
     page.should have_content "Your profile has been updated"

@@ -52,7 +52,7 @@ module Sufia::UsersControllerBehavior
     @user.populate_attributes if params[:update_directory]
     @user.avatar = nil if params[:delete_avatar]
     unless @user.save
-      redirect_to sufia.edit_profile_path(URI.escape(@user.to_s,'@.')), alert: @user.errors.full_messages
+      redirect_to sufia.edit_profile_path(@user.to_param), alert: @user.errors.full_messages
       return
     end
     params.keys.select {|k, v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
@@ -60,7 +60,7 @@ module Sufia::UsersControllerBehavior
       current_user.trophies.where(generic_file_id: smash_trophy).destroy_all
     end
     Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
-    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "Your profile has been updated"
+    redirect_to sufia.profile_path(@user.to_param), notice: "Your profile has been updated"
   end
 
   def toggle_trophy    
@@ -89,7 +89,7 @@ module Sufia::UsersControllerBehavior
       current_user.follow(@user)
       Sufia.queue.push(UserFollowEventJob.new(current_user.user_key, @user.user_key))
     end
-    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "You are following #{@user.to_s}"
+    redirect_to sufia.profile_path(@user.to_param), notice: "You are following #{@user.to_s}"
   end
 
   # Unfollow a user
@@ -98,7 +98,7 @@ module Sufia::UsersControllerBehavior
       current_user.stop_following(@user)
       Sufia.queue.push(UserUnfollowEventJob.new(current_user.user_key, @user.user_key))
     end
-    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), notice: "You are no longer following #{@user.to_s}"
+    redirect_to sufia.profile_path(@user.to_param), notice: "You are no longer following #{@user.to_s}"
   end
 
   protected
@@ -114,11 +114,11 @@ module Sufia::UsersControllerBehavior
   end
 
   def user_is_current_user
-    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), alert: "Permission denied: cannot access this page." unless @user == current_user
+    redirect_to sufia.profile_path(@user.to_param), alert: "Permission denied: cannot access this page." unless @user == current_user
   end
 
   def user_not_current_user
-    redirect_to sufia.profile_path(URI.escape(@user.to_s,'@.')), alert: "You cannot follow or unfollow yourself" if @user == current_user
+    redirect_to sufia.profile_path(@user.to_param), alert: "You cannot follow or unfollow yourself" if @user == current_user
   end
 
   def get_sort
