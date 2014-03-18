@@ -170,7 +170,6 @@ describe GenericFilesController do
         lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
-        File.exist?("#{@mock_upload_directory}/import/files/Example.ogg").should be_false
         File.exist?("#{@mock_upload_directory}/import/files/icons.zip").should be_false
         File.exist?("#{@mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt").should be_false
         File.exist?("#{@mock_upload_directory}/world.png").should be_false

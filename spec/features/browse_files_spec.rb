@@ -15,7 +15,7 @@ describe "Browse files" do
       visit '/'
       click_link "more Keywords"
       click_link "18"
-      page.should have_content "1 Search Results"
+      page.should have_content "Search Results"
       click_link @fixtures[0].title[0]
       page.should have_content "Download"
       page.should_not have_content "Edit"

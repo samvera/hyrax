@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 version = File.read(File.expand_path("../SUFIA_VERSION",__FILE__)).strip
 
-
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Coyne"]
   gem.email         = ["justin.coyne@yourmediashelf.com"]
@@ -18,8 +17,8 @@ Gem::Specification.new do |gem|
   gem.license       = 'APACHE2'
 
   gem.add_dependency 'sufia-models', version
-  gem.add_dependency 'blacklight_advanced_search', '~> 2.1.0'
-  gem.add_dependency 'blacklight', '>= 4.5'
+  gem.add_dependency 'blacklight_advanced_search', '~> 5.0'
+  gem.add_dependency 'blacklight', '~> 5.0'
 
   # sass-rails is typically generated into the app's gemfile by `rails new`
   # In rails 3 it's put into the "assets" group and thus not available to the

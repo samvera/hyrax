@@ -1,6 +1,5 @@
 class BatchController < ApplicationController
   include Hydra::Controller::ControllerBehavior
-  include Hydra::Controller::UploadBehavior
   include Sufia::Noid # for normalize_identifier method
   layout "sufia-one-column"
 

@@ -7,8 +7,6 @@ class SingleUseLinksViewerController < ApplicationController
   skip_filter :normalize_identifier
   skip_before_filter :load_datastream, :except => :download
 
-  before_filter :authorize_single_use_link!
-
   class Ability
     include CanCan::Ability
 
@@ -31,11 +29,10 @@ class SingleUseLinksViewerController < ApplicationController
   rescue_from CanCan::AccessDenied, :with => :render_single_use_error
   rescue_from ActiveRecord::RecordNotFound, :with => :render_single_use_error
 
-
   def download
     # send the data content
     raise not_found_exception unless single_use_link.path == sufia.download_path(:id => @asset)
-    send_content(asset)
+    send_content
   end
 
   def show
@@ -51,7 +48,7 @@ class SingleUseLinksViewerController < ApplicationController
 
   protected
 
-  def authorize_single_use_link!
+  def authorize_download!
     authorize! :read, @asset
   end
 

@@ -1,5 +1,8 @@
 class FitsDatastream < ActiveFedora::OmDatastream
   include OM::XML::Document
+  def prefix
+    ""
+  end
 
   set_terminology do |t|
     t.root(:path => "fits", 

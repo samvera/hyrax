@@ -68,16 +68,17 @@ describe DownloadsController do
         User.any_instance.stub(:groups).and_return([])
         controller.stub(:clear_session_user) ## Don't clear out the authenticated session
       end
+
       after do
         user = FactoryGirl.find(:user) rescue
         user.delete if user
       end
-      
+
       describe "show" do
         it "should deny access" do
           get "show", :id => "test1"
           response.should redirect_to root_path
-          flash[:alert].should == "You do not have sufficient access privileges to read this document, which has been marked private."
+          flash[:alert].should == 'You are not authorized to access this page.'
         end
       end
     end

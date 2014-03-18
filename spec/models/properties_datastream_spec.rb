@@ -10,9 +10,9 @@ describe PropertiesDatastream do
 
   describe "to_solr" do
     before do
-      @doc = PropertiesDatastream.new.tap do |ds|
+      @doc = PropertiesDatastream.new(nil, 'properties').tap do |ds|
         ds.import_url = 'http://example.com/somefile.txt'
-      end 
+      end
     end
     subject { @doc.to_solr}
     it "should have import_url" do
