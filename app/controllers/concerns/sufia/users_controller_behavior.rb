@@ -50,7 +50,7 @@ module Sufia::UsersControllerBehavior
       @user.update_attributes(params.require(:user).permit(*User.permitted_attributes))
     end
     @user.populate_attributes if params[:update_directory]
-    @user.avatar = nil if params[:delete_avatar]
+    @user.remove_avatar = true if params[:delete_avatar]
     unless @user.save
       redirect_to sufia.edit_profile_path(@user.to_param), alert: @user.errors.full_messages
       return
