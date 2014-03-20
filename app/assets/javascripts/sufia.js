@@ -49,6 +49,9 @@ limitations under the License.
 //= require hydra/batch_select
 //= require hydra_collections
 
+// this needs to be after batch_select so that the form ids get setup correctly
+//= require sufia/batch_edit
+
 //over ride the blacklight default to submit
 //form when sort by or show per page change
 Blacklight.do_select_submit = function() {
