@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
 
   spec.add_dependency 'rails', '> 4.0.0', '< 5.0'
-  spec.add_dependency 'activeresource' # No longer a dependency of rails 4.0
+  spec.add_dependency 'activeresource', "~>4.0.0" # No longer a dependency of rails 4.0
 
   spec.add_dependency "blacklight", "~> 4.7.0"
   spec.add_dependency "hydra-head", "~> 6.5.0"
