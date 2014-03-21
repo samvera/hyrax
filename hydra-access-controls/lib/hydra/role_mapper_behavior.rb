@@ -32,11 +32,8 @@ module Hydra::RoleMapperBehavior
 
 
     def byname
-      return @byname if @byname
-      m = Hash.new{|h,k| h[k]= [] }
-      @byname = map.inject(m) do |memo, (role,usernames)|
-        ((usernames if usernames.respond_to?(:each)) || [usernames]).each { |x| memo[x] << role }
-        memo
+      @byname ||= map.each_with_object(Hash.new{ |h,k| h[k] = [] }) do |(role, usernames), memo| 
+        Array(usernames).each { |x| memo[x] << role}
       end
     end
 
