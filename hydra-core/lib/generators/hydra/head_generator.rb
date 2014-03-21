@@ -57,10 +57,7 @@ class HeadGenerator < Rails::Generators::Base
     copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
 
     # Role Mappings
-    copy_file "config/role_map_cucumber.yml", "config/role_map_cucumber.yml"
-    copy_file "config/role_map_development.yml", "config/role_map_development.yml"
-    copy_file "config/role_map_production.yml", "config/role_map_production.yml"
-    copy_file "config/role_map_test.yml", "config/role_map_test.yml"
+    copy_file "config/role_map.yml", "config/role_map.yml"
 
     # CanCan ability.rb
     copy_file "ability.rb", "app/models/ability.rb"
