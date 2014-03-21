@@ -22,7 +22,6 @@ require "support/user"
 require "factory_girl"
 require "factories"
 
-require 'support/blacklight'
 require 'support/rails'
 Object.logger = Logger.new(File.expand_path('../test.log', __FILE__))
 
