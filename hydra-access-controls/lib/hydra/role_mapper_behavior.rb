@@ -1,5 +1,3 @@
-# this code will be moved/renamed to Hydra::AccessControl::RoleMapperBehavior (with the appropriate namespace changes) in Hydra 5.0
-require 'yaml'
 module Hydra::RoleMapperBehavior
   extend ActiveSupport::Concern
 
@@ -25,23 +23,50 @@ module Hydra::RoleMapperBehavior
     end
     
     def whois(r)
-      map[r]||[]
+      map[r] || []
     end
 
     def map
-      @map ||= YAML.load(File.open(File.join(Rails.root, "config/role_map_#{Rails.env}.yml")))
+      @map ||= load_role_map
     end
 
 
     def byname
       return @byname if @byname
-      m = Hash.new{|h,k| h[k]=[]}
-      @byname = map.inject(m) do|memo, (role,usernames)| 
-        ((usernames if usernames.respond_to?(:each)) || [usernames]).each { |x| memo[x]<<role}
+      m = Hash.new{|h,k| h[k]= [] }
+      @byname = map.inject(m) do |memo, (role,usernames)|
+        ((usernames if usernames.respond_to?(:each)) || [usernames]).each { |x| memo[x] << role }
         memo
       end
     end
-    
+
+    private
+      def load_role_map
+        require 'erb'
+        require 'yaml'
+
+        filename = 'config/role_map.yml'
+        file = File.join(Rails.root, filename)
+
+        unless File.exists?(file)
+          raise "You are missing a role map configuration file: #{filename}. Have you run \"rails generate hydra:head\"?"
+        end
+
+        begin
+          erb = ERB.new(IO.read(file)).result(binding)
+        rescue
+          raise("#{file} was found, but could not be parsed with ERB. \n#{$!.inspect}")
+        end
+
+        begin
+          yml = YAML::load(erb)
+        rescue
+          raise("#{filename} was found, but could not be parsed.\n")
+        end
+        return yml[Rails.env] if yml.is_a? Hash
+
+        raise("#{filename} was found, but was blank or malformed.\n")
+      end
   end
 end
 
