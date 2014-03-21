@@ -54,8 +54,6 @@ class HeadGenerator < Rails::Generators::Base
       end
     end
 
-    copy_file "config/initializers/action_dispatch_http_upload_monkey_patch.rb", "config/initializers/action_dispatch_http_upload_monkey_patch.rb"
-
     # Role Mappings
     copy_file "config/role_map.yml", "config/role_map.yml"
 
