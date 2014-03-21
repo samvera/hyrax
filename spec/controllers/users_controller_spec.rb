@@ -157,14 +157,21 @@ describe UsersController do
       response.should redirect_to(@routes.url_helpers.edit_profile_path(@user.to_param))
       flash[:alert].should include("Avatar file size must be less than 2MB")
     end
-    it "should delete an avatar" do
-      s1 = double('one')
-      UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
-      post :update, id: @user.user_key, delete_avatar: true
-      response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
-      flash[:notice].should include("Your profile has been updated")
-      @user.avatar?.should be_false
+    context "user with existing avatar" do
+      before do
+        f = fixture_file_upload('/world.png', 'image/png')
+        @user.avatar = f
+        @user.save
+      end
+      it "should delete an avatar" do
+        s1 = double('one')
+        UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
+        Sufia.queue.should_receive(:push).with(s1).once
+        post :update, id: @user.user_key, delete_avatar: true
+        response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
+        flash[:notice].should include("Your profile has been updated")
+        User.find_by_user_key(@user.user_key).avatar?.should be_false
+      end
     end
     it "should refresh directory attributes" do
       s1 = double('one')
