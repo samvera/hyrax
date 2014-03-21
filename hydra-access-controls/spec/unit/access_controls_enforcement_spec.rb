@@ -155,19 +155,6 @@ describe Hydra::AccessControlsEnforcement do
       end
     end
   end
-  
-  describe "exclude_unwanted_models" do
-    before(:each) do
-      stub_user = User.new :uid=>'archivist1@example.com'
-      subject.stub(:current_user).and_return(stub_user)
-      @solr_parameters = {}
-      @user_parameters = {}
-    end
-    it "should set solr query parameters to filter out FileAssets" do
-      subject.send(:exclude_unwanted_models, @solr_parameters, @user_parameters)
-      @solr_parameters[:fq].should include("-#{ActiveFedora::SolrService.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:FileAsset\"")  
-    end
-  end
 
   describe "apply_user_permissions" do
     describe "when the user is a guest user (user key nil)" do
