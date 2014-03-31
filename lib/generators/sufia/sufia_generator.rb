@@ -7,7 +7,7 @@ class SufiaGenerator < Rails::Generators::Base
 
   source_root File.expand_path('../templates', __FILE__)
 
-  argument     :model_name, :type => :string , :default => "user"
+  argument :model_name, :type => :string , :default => "user"
   desc """
 This generator makes the following changes to your application:
  1. Runs sufia-models:install
@@ -32,7 +32,7 @@ This generator makes the following changes to your application:
       end
       gsub_file file_path, "layout 'blacklight'", "layout :search_layout"
     else
-      puts "     \e[31mFailure\e[0m  Could not find #{file_path}.  To add Sufia behaviors to your  Controllers, you must include the Sufia::Controller module in the Controller class definition."
+      puts "     \e[31mFailure\e[0m  Could not find #{file_path}.  To add Sufia behaviors to your Controllers, you must include the Sufia::Controller module in the Controller class definition."
     end
   end
 
