@@ -6,6 +6,7 @@ require 'hydra-batch-edit'
 require 'sufia/models'
 
 require 'rails_autolink'
+require 'font-awesome-sass-rails'
 
 module Sufia
   extend ActiveSupport::Autoload
