@@ -15,6 +15,7 @@ This generator makes the following changes to your application:
  3. Creates the sufia.rb configuration file
  4. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
  5. Generates mailboxer
+ 6. Generates usage stats config
        """
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -30,6 +31,10 @@ This generator makes the following changes to your application:
       end
     end
     @prev_migration_nr.to_s
+  end
+
+  def banner
+    say_status("warning", "GENERATING SUFIA MODELS", :yellow)
   end
 
   # Setup the database migrations
@@ -72,11 +77,11 @@ This generator makes the following changes to your application:
     inject_into_file 'config/initializers/mime_types.rb',
                      "\nMime::Type.register 'application/x-endnote-refer', :endnote",
                      { :after => /# Mime::Type.register_alias "text\/html", :iphone/, :verbose => false }
-    copy_file "config/sufia.rb", "config/initializers/sufia.rb"
-    copy_file "config/redis.yml", "config/redis.yml"
-    copy_file "config/redis_config.rb", "config/initializers/redis_config.rb"
-    copy_file "config/resque_admin.rb", "config/initializers/resque_admin.rb"
-    copy_file "config/resque_config.rb", "config/initializers/resque_config.rb"
+    copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
+    copy_file 'config/redis.yml', 'config/redis.yml'
+    copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
+    copy_file 'config/resque_admin.rb', 'config/initializers/resque_admin.rb'
+    copy_file 'config/resque_config.rb', 'config/initializers/resque_config.rb'
   end
 
   # Add behaviors to the SolrDocument model
@@ -94,6 +99,10 @@ This generator makes the following changes to your application:
 
   def install_mailboxer
     generate "mailboxer:install"
+  end
+
+  def configure_usage_stats
+    generate 'sufia:models:usagestats'
   end
 
   private

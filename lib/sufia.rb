@@ -23,6 +23,8 @@ module Sufia
       #{config.root}/app/models/datastreams
       #{Hydra::Engine.root}/app/models/concerns
     )
+
+    config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
   end
 
   autoload :Catalog

@@ -38,5 +38,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'acts_as_follower', '>= 0.1.1', '< 0.3'
   spec.add_dependency 'carrierwave', '~> 0.9.0'
   spec.add_dependency 'hydra-derivatives', '~> 0.0.5'
+  spec.add_dependency 'oauth2', '~> 0.9.3'
+  spec.add_dependency 'google-api-client', '~> 0.7.1'
+  spec.add_dependency 'legato', '~> 0.3.0'
   spec.add_dependency 'activerecord-import'
 end

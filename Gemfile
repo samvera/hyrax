@@ -13,6 +13,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails'
   gem 'launchy' unless ENV['TRAVIS']
+  gem 'byebug' unless ENV['TRAVIS']
   gem 'capybara'
   gem "jettywrapper"
   gem "factory_girl_rails"

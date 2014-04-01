@@ -1,6 +1,10 @@
     <h2 class="non lower">Actions</h2>
     <p>
       <%= link_to "Download", sufia.download_path(@generic_file.noid) %>
+      <% if Sufia.config.usage_statistics %>
+        &nbsp;|&nbsp;
+        <%= link_to "Statistics", sufia.stats_generic_file_path(@generic_file), id: 'stats' %>
+      <% end %>
       <% if can? :edit, @generic_file %>
           &nbsp;|&nbsp;
           <%= link_to "Edit", sufia.edit_generic_file_path(@generic_file) unless @generic_file.processing?   %>
@@ -36,4 +40,3 @@
 
     <!-- COinS hook for Zotero -->
     <span class="Z3988" title="<%= @generic_file.export_as_openurl_ctx_kev %>"></span>
-

@@ -16,7 +16,6 @@ overflow-x: auto;
 
 label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
 
-
 /* These were from batch_edit/edit.html.erb */
 #upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
 
@@ -33,14 +32,14 @@ label.error { float: left; color: red; padding-left: .5em; vertical-align: top; 
 }
 
 h2 small {
-   color: red;   
+   color: red;
 }
 
 .status {
-   color: green; 
-   padding:5px 5px 5px;  
+   color: green;
+   padding:5px 5px 5px;
 }
 
-.loading { 
- background: white url('/assets/loading.gif') center bottom no-repeat; 
+.loading {
+   background: white url(<%= image_path('loading.gif') %>) center bottom no-repeat;
 }

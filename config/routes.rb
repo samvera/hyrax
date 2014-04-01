@@ -8,7 +8,7 @@ Sufia::Engine.routes.draw do
 
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
-  
+
   # "Notifications" route for catalog index view
   get "users/notifications_number" => "users#notifications_number", :as => :user_notify
 
@@ -16,7 +16,8 @@ Sufia::Engine.routes.draw do
   resources :generic_files, path: :files, except: :index do
     member do
       resource :featured_work, only: [:create, :destroy]
-      get 'citation', :as => :citation
+      get 'citation'
+      get 'stats'
       post 'audit'
     end
   end
@@ -48,7 +49,6 @@ Sufia::Engine.routes.draw do
       get 'facet/:id', :action => :facet, :as => :dashboard_facet
     end
   end
-    
 
   # advanced routes for advanced search
   get 'search' => 'advanced#index', :as => :advanced
@@ -82,7 +82,7 @@ Sufia::Engine.routes.draw do
   resources :content_blocks, only: 'update'
   post '/tinymce_assets' => 'tinymce_assets#create'
 
-  get 'about' => 'pages#show', id: 'about_page' 
+  get 'about' => 'pages#show', id: 'about_page'
   # Static page routes (workaround)
   get ':action' => 'static#:action', :constraints => { :action => /help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, :as => :static
 
@@ -94,6 +94,5 @@ Sufia::Engine.routes.draw do
   unless Rails.env.development? || Rails.env.test?
     match '*error' => 'errors#routing', via: [:get, :post]
   end
-  
-end
 
+end

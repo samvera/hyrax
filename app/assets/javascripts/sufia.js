@@ -20,6 +20,11 @@
 //= require swfobject
 //= require ZeroClipboard.min
 
+//= require flot/excanvas
+//= require flot/jquery.flot
+//= require flot/jquery.flot.time
+//= require flot/jquery.flot.selection
+
 //= require batch_edit
 //= require terms_of_service
 //= require sufia/fileupload
@@ -114,8 +119,8 @@ Blacklight.onLoad(function() {
     cssHooks: {granularity: 15},
     // color: {start: '#cde', end: '#f52'}
   });
-  
-  
+
+
   /*
    * facets lists
    */
@@ -144,8 +149,6 @@ Blacklight.onLoad(function() {
     $("#user_submit").click();
   });
 }); //closing function at the top of the page
-
-
 
 /*
  * begin functions
