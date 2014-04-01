@@ -4,6 +4,8 @@ describe DownloadsController do
   before do
     Rails.application.routes.draw do
       resources :downloads
+      devise_for :users
+      root to: 'catalog#index'
     end
   end
 
@@ -32,12 +34,35 @@ describe DownloadsController do
       @obj.destroy
       Object.send(:remove_const, :ContentHolder)
     end 
-    describe "when logged in as reader" do
+    context "when not logged in" do
+      context "when a specific datastream is requested" do
+        it "should redirect to the root path and display an error" do
+          get "show", id: @obj.pid, datastream_id: "descMetadata"
+          expect(response).to redirect_to new_user_session_path
+          expect(flash[:alert]).to eq "You are not authorized to access this page."
+        end
+      end
+    end
+    context "when logged in, but without read access" do
+      let(:user) { User.new.tap {|u| u.email = 'email2@example.com'; u.password = 'password'; u.save} }
+      before do
+        sign_in user
+      end
+      context "when a specific datastream is requested" do
+        it "should redirect to the root path and display an error" do
+          get "show", id: @obj.pid, datastream_id: "descMetadata"
+          expect(response).to redirect_to root_path
+          expect(flash[:alert]).to eq "You are not authorized to access this page."
+        end
+      end
+    end
+
+    context "when logged in as reader" do
       before do
         sign_in @user
         User.any_instance.stub(:groups).and_return([])
       end
-      describe "show" do
+      describe "#show" do
         it "should default to returning default download configured by object" do
           ContentHolder.stub(:default_content_ds).and_return('buzz')
           get "show", :id => @obj.pid
@@ -167,7 +192,10 @@ describe DownloadsController do
         it "should authorize according to can_download?" do
           controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be_true
           controller.stub(:can_download?).and_return(false)
-          expect { get :show, id: @obj, datastream_id: 'buzz' }.to raise_error(CanCan::AccessDenied)
+          Deprecation.silence(Hydra::Controller::DownloadBehavior) do
+            get :show, id: @obj, datastream_id: 'buzz'
+          end
+          expect(response).to redirect_to root_url
         end
       end
       context "current_ability.can? returns false / can_download? returns true" do
@@ -178,7 +206,9 @@ describe DownloadsController do
         it "should authorize according to can_download?" do
           controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be_false
           controller.stub(:can_download?).and_return(true)
-          get :show, id: @obj, datastream_id: 'buzz'
+          Deprecation.silence(Hydra::Controller::DownloadBehavior) do
+            get :show, id: @obj, datastream_id: 'buzz'
+          end
           response.should be_successful           
         end
       end

@@ -16,14 +16,14 @@ module Hydra::Controller::ControllerBehavior
     include Hydra::AccessControlsEnforcement
   
     # Catch permission errors
-    rescue_from Hydra::AccessDenied do |exception|
+    rescue_from CanCan::AccessDenied do |exception|
       if (exception.action == :edit)
         redirect_to({:action=>'show'}, :alert => exception.message)
       elsif current_user and current_user.persisted?
-        redirect_to root_url, :alert => exception.message
+        redirect_to root_path, :alert => exception.message
       else
         session["user_return_to"] = request.url
-        redirect_to new_user_session_url, :alert => exception.message
+        redirect_to new_user_session_path, :alert => exception.message
       end
     end
   end
