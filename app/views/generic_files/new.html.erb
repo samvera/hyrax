@@ -18,6 +18,9 @@ limitations under the License.
 <%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
 <ul class="nav nav-tabs">
   <li class="active"><a href="#local" data-toggle="tab"><i class="icon-desktop"></i> My Computer</a></li>
+  <% if Sufia.config.browse_everything %>
+    <li><a href="#browse_everything" data-toggle="tab"><i class="icon-cloud"></i> Cloud Providers</a></li>
+  <% end %>
   <% if Sufia.config.dropbox_api_key %>
     <li><a href="#dropbox" data-toggle="tab"><i class="icon-inbox"></i> Dropbox</a></li>
   <% end %>
@@ -36,6 +39,13 @@ limitations under the License.
       <%= render partial: 'dropbox_import' %>
     </div>
   <% end %>
+  
+  <% if Sufia.config.browse_everything %>
+    <div class="tab-pane" id="browse_everything">
+      <%= render partial: 'browse_everything' %>
+    </div>
+  <% end %>
+  
   
   <% if Sufia.config.enable_local_ingest %>
     <div class="tab-pane" id="ingest">

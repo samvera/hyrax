@@ -65,7 +65,7 @@ rake jetty:config
 rake jetty:start
 ```
 
-### If you want to use the assets that ship with Sufia...
+### If you want to use the CSS and JavaScript and other assets that ship with Sufia...
 #### Modify app/assets/stylesheets/application.css
 Add this line:
 ```
@@ -90,6 +90,28 @@ Add this line:
 ```
 
 Turbolinks does not mix well with Blacklight.
+
+### If you want to use browse-everything
+Sufia provides built-in support for the [browse-everything](https://github.com/projecthydra/browse-everything) gem, which provides a consolidated file picker experience for selecting files from [DropBox](http://www.dropbox.com), 
+[Skydrive](https://skydrive.live.com/), [Google Drive](http://drive.google.com), 
+[Box](http://www.box.com), and a server-side directory share.
+
+To activate browse-everything in your sufia app, run the browse-everything config generator
+
+```
+rails g browse_everything:config
+```
+
+This will generate a file at _config/browse_everything_providers.yml_.  Open that file and enter the API keys for the providers that you want to support in your app.  For more info on configuring browse-everything, go to the [project page](https://github.com/projecthydra/browse-everything) on github.
+
+After running the browse-everything config generator and setting the API keys for the desired providers, an extra tab will appear in your app's Upload page allowing users to pick files from those providers and submit them into your app's repository.
+
+*Note*: If you want to use the built-in browse-everything support, _you need to include the browse-everything css and javascript files_.  If you already included the sufia css and javascript (see [above](#if-you-want-to-use-the-css-and-javascript-and-other-assets-that-ship-with-sufia)), then you don't need to do anything.  Otherwise, follow the instructions in the [browse-everything README page](https://github.com/projecthydra/browse-everything)
+
+*If your config/initializers/sufia.rb was generated with sufia 3.7.2 or older*, then you need to add this line to an initializer (probably _config/initializers/sufia.rb _):
+```ruby
+config.browse_everything = BrowseEverything.config
+```
 
 ### Install Fits.sh
 1. Go to http://code.google.com/p/fits/downloads/list and download a copy of fits & unpack it somewhere on your machine.  You can also install fits on OSX with homebrew `brew install fits` (you may also have to create a symlink from `fits.sh -> fits` in the next step).

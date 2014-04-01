@@ -3,6 +3,7 @@ require 'blacklight'
 require 'blacklight_advanced_search'
 require 'hydra/head'
 require 'hydra-batch-edit'
+require 'browse-everything'
 require 'sufia/models'
 
 require 'rails_autolink'

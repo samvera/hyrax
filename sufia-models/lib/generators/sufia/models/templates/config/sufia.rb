@@ -75,6 +75,13 @@ Sufia.config do |config|
 
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"
+  
+  # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
+  begin
+    config.browse_everything = BrowseEverything.config
+  rescue Errno::ENOENT
+    config.browse_everything = nil
+  end
 
 end
 

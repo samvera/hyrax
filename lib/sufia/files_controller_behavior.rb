@@ -63,6 +63,8 @@ module Sufia
     def create
       if params[:local_file].present?
         perform_local_ingest
+      elsif params[:selected_files].present?
+        create_from_browse_everything(params)
       else
         case params['file_coming_from']
         when 'dropbox'
@@ -72,18 +74,33 @@ module Sufia
         end
       end
     end
-
-    def create_from_url(params)
+    
+    def create_from_browse_everything(params)
+      params[:selected_files].each_pair do |index, file_info| 
+        next if file_info.blank? || file_info["url"].blank?
+        create_file_from_url(file_info["url"])
+      end
+      redirect_to self.class.upload_complete_path( params[:batch_id])
+    end
+    
+    def create_from_dropbox(params)
       params[:dropbox_urls].each do |db_file|
         next if db_file.blank?
         # do not remove ::
-        @generic_file = ::GenericFile.new
-        @generic_file.import_url = db_file
-        @generic_file.label = File.basename(db_file)
-        create_metadata(@generic_file)
-        Sufia.queue.push(ImportUrlJob.new(@generic_file.pid))
+        create_file_from_url(db_file)
       end
       redirect_to self.class.upload_complete_path( params[:batch_id])
+    end
+    
+    # Generic utility for creating GenericFile from a URL
+    # Used in to import files using URLs from a file picker like browse_everything 
+    def create_file_from_url(url, batch_id=nil)
+      @generic_file = ::GenericFile.new
+      @generic_file.import_url = url
+      @generic_file.label = File.basename(url)
+      create_metadata(@generic_file)
+      Sufia.queue.push(ImportUrlJob.new(@generic_file.pid))
+      return @generic_file
     end
 
     def create_from_upload(params)

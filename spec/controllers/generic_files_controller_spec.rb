@@ -117,7 +117,23 @@ describe GenericFilesController do
       response.body.should include("Error occurred while creating generic file.")
     end
   end
-
+  
+  describe "#create with browse-everything" do
+    before do
+      GenericFile.delete_all
+      @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
+    end
+    it "should ingest files from provide URLs" do
+      ImportUrlJob.should_receive(:new).twice {"ImportJob"}
+      Sufia.queue.should_receive(:push).with("ImportJob").twice
+      lambda { post :create, selected_files: @json_from_browse_everything, :batch_id => "sample:batch_id"}.should change(GenericFile, :count).by(2)
+      created_files = GenericFile.all
+      ["https://dl.dropbox.com/fake/Getting%20Started.pdf", "https://dl.dropbox.com/fake/filepicker-demo.txt.txt"].each do |url|
+        created_files.map {|f| f.import_url}.should include(url)  
+      end
+    end    
+  end
+  
   describe "#create with local_file" do
     let (:mock_url) {"http://example.com"}
     before do

@@ -48,6 +48,7 @@ limitations under the License.
 //= require sufia/audio
 //= require hydra/batch_select
 //= require hydra_collections
+//= require browse_everything
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require sufia/batch_edit
