@@ -5,6 +5,7 @@ module Hydra
       extend Deprecation
 
       included do
+        include Hydra::Controller::ControllerBehavior
         before_filter :load_asset
         before_filter :load_datastream
         before_filter :authorize_download!
