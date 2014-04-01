@@ -291,7 +291,7 @@ describe GenericFile do
     local[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)].should == '2011-01-01T00:00:00Z'
     local[Solrizer.solr_name("desc_metadata__date_modified", :stored_sortable, type: :date)].should == '2012-01-01T00:00:00Z'
     local[Solrizer.solr_name("desc_metadata__rights")].should == ["Wide open, buddy."]
-    local[Solrizer.solr_name("desc_metadata__related_url")].should be_nil
+    local[Solrizer.solr_name("desc_metadata__related_url")].should == ["http://example.org/TheWork/"]
     local[Solrizer.solr_name("desc_metadata__contributor")].should == ["Mohammad"]
     local[Solrizer.solr_name("desc_metadata__creator")].should == ["Allah"]
     local[Solrizer.solr_name("desc_metadata__title")].should == ["The Work"]
@@ -304,7 +304,7 @@ describe GenericFile do
     local[Solrizer.solr_name("file_format")].should == "jpeg (JPEG Image)"
     local[Solrizer.solr_name("desc_metadata__identifier")].should == ["urn:isbn:1234567890"]
     local[Solrizer.solr_name("desc_metadata__based_near")].should == ["Medina, Saudi Arabia"]
-    local[Solrizer.solr_name("mime_type")].should == ["image/jpeg"]    
+    local[Solrizer.solr_name("mime_type")].should == ["image/jpeg"]
     local["noid_tsi"].should eq('stubbed_pid')
   end
   it "should support multi-valued fields in solr" do
@@ -584,19 +584,19 @@ describe GenericFile do
     it "should have read groups writer" do
       subject.read_groups = ['group-2', 'group-3']
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
+      subject.rightsMetadata.users.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
 
     it "should have read groups string writer" do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
       subject.rightsMetadata.groups.should == {'umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
+      subject.rightsMetadata.users.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
     it "should only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
       subject.rightsMetadata.groups.should == {'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'}
-      subject.rightsMetadata.individuals.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
+      subject.rightsMetadata.users.should == {"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'}
     end
   end
   describe "permissions validation" do
@@ -637,7 +637,7 @@ describe GenericFile do
       it "should work via permissions=()" do
         @file.permissions = {:user => {'mjg36' => 'read'}}
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -645,7 +645,7 @@ describe GenericFile do
       it "should work via update_attributes" do
         # automatically triggers save
         lambda { @file.update_attributes(:read_users_string => 'mjg36') }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -653,7 +653,7 @@ describe GenericFile do
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:edit_access, :person] => '')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -661,7 +661,7 @@ describe GenericFile do
       it "should work via permissions()" do
         @rightsmd.permissions({:person => "mjg36"}, "read")
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -669,7 +669,7 @@ describe GenericFile do
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"person" => {"mjg36" => "read"}})
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -677,7 +677,7 @@ describe GenericFile do
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -685,7 +685,7 @@ describe GenericFile do
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -693,7 +693,7 @@ describe GenericFile do
       it "should work via update_values()" do
         @rightsmd.update_values([:edit_access, :person] => '')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
         @file.valid?.should be_false
@@ -737,7 +737,7 @@ describe GenericFile do
       it "should work via permissions=()" do
         @file.permissions = {:group => {'public' => 'edit'}}
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -745,7 +745,7 @@ describe GenericFile do
       it "should work via update_attributes" do
         # automatically triggers save
         lambda { @file.update_attributes(:edit_groups_string => 'public') }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -753,7 +753,7 @@ describe GenericFile do
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:edit_access, :group] => 'public')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -761,7 +761,7 @@ describe GenericFile do
       it "should work via permissions()" do
         @rightsmd.permissions({:group => "public"}, "edit")
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -769,7 +769,7 @@ describe GenericFile do
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"group" => {"public" => "edit"}})
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -777,7 +777,7 @@ describe GenericFile do
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -785,7 +785,7 @@ describe GenericFile do
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -793,7 +793,7 @@ describe GenericFile do
       it "should work via update_values()" do
         @rightsmd.update_values([:edit_access, :group] => 'public')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
         @file.valid?.should be_false
@@ -837,7 +837,7 @@ describe GenericFile do
       it "should work via permissions=()" do
         @file.permissions = {:group => {'registered' => 'edit'}}
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -845,7 +845,7 @@ describe GenericFile do
       it "should work via update_attributes" do
         # automatically triggers save
         lambda { @file.update_attributes(:edit_groups_string => 'registered') }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -853,7 +853,7 @@ describe GenericFile do
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:edit_access, :group] => 'registered')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -861,7 +861,7 @@ describe GenericFile do
       it "should work via permissions()" do
         @rightsmd.permissions({:group => "registered"}, "edit")
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -869,7 +869,7 @@ describe GenericFile do
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"group" => {"registered" => "edit"}})
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -877,7 +877,7 @@ describe GenericFile do
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -885,7 +885,7 @@ describe GenericFile do
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -893,7 +893,7 @@ describe GenericFile do
       it "should work via update_values()" do
         @rightsmd.update_values([:edit_access, :group] => 'registered')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_true
+        @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
         @file.valid?.should be_false
@@ -939,56 +939,56 @@ describe GenericFile do
       it "should work via permissions=()" do
         @file.permissions = {:group => {'registered' => 'read'}}
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via update_attributes" do
         # automatically triggers save
         lambda { @file.update_attributes(:read_groups_string => 'registered') }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:read_access, :group] => 'registered')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via permissions()" do
         @rightsmd.permissions({:group => "registered"}, "read")
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"group" => {"registered" => "read"}})
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end
       it "should work via update_values()" do
         @rightsmd.update_values([:read_access, :group] => 'registered')
         lambda { @file.save }.should_not raise_error
-        @file.new_object?.should be_false
+        @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
       end

@@ -9,14 +9,13 @@ module Sufia
 
     included do
       include Hydra::Controller::ControllerBehavior
-      include Blacklight::Configurable # comply with BL 3.7
-      include Sufia::Noid # for normalize_identifier method    
+      include Blacklight::Configurable
+      include Sufia::Noid # for normalize_identifier method
       include Sufia::FilesController::LocalIngestBehavior
       extend Sufia::FilesController::UploadCompleteBehavior
 
       layout "sufia-one-column"
-      
-      # This is needed as of BL 3.7
+
       self.copy_blacklight_config_from(CatalogController)
 
       # Catch permission errors
@@ -74,8 +73,6 @@ module Sufia
       end
     end
 
-
-
     def create_from_url(params)
       params[:dropbox_urls].each do |db_file|
         next if db_file.blank?
@@ -84,7 +81,7 @@ module Sufia
         @generic_file.import_url = db_file
         @generic_file.label = File.basename(db_file)
         create_metadata(@generic_file)
-        Sufia.queue.push(ImportUrlJob.new(@generic_file.pid)) 
+        Sufia.queue.push(ImportUrlJob.new(@generic_file.pid))
       end
       redirect_to self.class.upload_complete_path( params[:batch_id])
     end
@@ -171,7 +168,6 @@ module Sufia
 
     protected
 
-
     def json_error(error, name=nil, additional_arguments={})
       args = {:error => error}
       args[:name] = name if name
@@ -225,7 +221,6 @@ module Sufia
       # Relative path is set by the jquery uploader when uploading a directory
       @generic_file.relative_path = params[:relative_path] if params[:relative_path]
     end
-
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata

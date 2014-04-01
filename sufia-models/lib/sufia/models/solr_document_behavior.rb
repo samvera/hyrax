@@ -78,7 +78,7 @@ module Sufia
     end
 
     def edit_people
-      Array(self[Ability.edit_person_field])
+      Array(self[Ability.edit_user_field])
     end
 
     def public?
@@ -88,7 +88,6 @@ module Sufia
     def registered?
       read_groups.include?('registered')
     end
-
 
     def pdf?
       ['application/pdf'].include? self.mime_type

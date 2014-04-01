@@ -1,9 +1,6 @@
 class BatchRdfDatastream < ActiveFedora::NtriplesRDFDatastream
-  map_predicates do |map|
-    map.part(:to => "hasPart", :in => RDF::DC)
-    map.creator(:to => "creator", :in => RDF::DC)
-    map.title(:to => "title", :in => RDF::DC)
-    map.status(:to => "type", :in => RDF::DC)
-  end
+  property :part, predicate: RDF::DC.hasPart
+  property :creator, predicate: RDF::DC.creator
+  property :title, predicate: RDF::DC.title
+  property :status, predicate: RDF::DC.type
 end
-

@@ -4,7 +4,7 @@ require 'blacklight/catalog'
 require 'blacklight_advanced_search'
 
 # bl_advanced_search 1.2.4 is doing unitialized constant on these because we're calling ParseBasicQ directly
-require 'parslet'  
+require 'parslet'
 require 'parsing_nesting/tree'
 
 class CatalogController < ApplicationController
@@ -26,15 +26,15 @@ class CatalogController < ApplicationController
     super
     recent
     #also grab my recent docs too
-    recent_me    
+    recent_me
   end
 
   def recent
     if user_signed_in?
       # grab other people's documents
       (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>4)      
-    else 
+                                        :sort=>sort_field, :rows=>4)
+    else
       # grab any documents we do not know who you are
       (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
     end
@@ -48,14 +48,12 @@ class CatalogController < ApplicationController
   end
 
   def self.uploaded_field
-#  system_create_dtsi
     solr_name('desc_metadata__date_uploaded', :stored_sortable, type: :date)
   end
 
   def self.modified_field
     solr_name('desc_metadata__date_modified', :stored_sortable, type: :date)
   end
-
 
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
@@ -65,13 +63,12 @@ class CatalogController < ApplicationController
     }
 
     # solr field configuration for search results/index views
-    config.index.show_link = solr_name("desc_metadata__title", :displayable)
-    config.index.record_display_type = "id"
+    config.index.title_field = solr_name("desc_metadata__title", :displayable)
+    config.index.display_type_field = "id"
 
     # solr field configuration for document/show views
-    config.show.html_title = solr_name("desc_metadata__title", :displayable)
-    config.show.heading = solr_name("desc_metadata__title", :displayable)
-    config.show.display_type = solr_name("has_model", :symbol)
+    config.show.title_field = solr_name("desc_metadata__title", :displayable)
+    config.show.display_type_field = solr_name("has_model", :symbol)
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -153,7 +150,6 @@ class CatalogController < ApplicationController
         :pf => "#{title_name}"
       }
     end
-    
 
     # Now we see how to over-ride Solr request handler defaults, in this
     # case for a BL "search field", which is really a dismax aggregate
@@ -174,8 +170,6 @@ class CatalogController < ApplicationController
         :pf => solr_name
       }
     end
-
-
 
     config.add_search_field('creator') do |field|
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
@@ -327,7 +321,6 @@ class CatalogController < ApplicationController
       }
     end
 
-
     # "sort results by" select (pulldown)
     # label in pulldown is followed by the name of the SOLR field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
@@ -354,22 +347,20 @@ class CatalogController < ApplicationController
     solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:GenericFile\""
   end
 
-  def depositor 
-    #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+  def depositor
     Solrizer.solr_name('depositor', :stored_searchable, type: :string)
   end
 
-  def filter_not_mine 
+  def filter_not_mine
     "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
   end
 
-  def filter_mine 
+  def filter_mine
     "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
   end
 
   def sort_field
     "#{Solrizer.solr_name('system_create', :sortable)} desc"
   end
-
 
 end

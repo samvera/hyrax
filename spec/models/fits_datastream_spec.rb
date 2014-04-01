@@ -72,8 +72,7 @@ describe FitsDatastream, :unless => $in_travis do
       @file.duration.should == ["4.97 s"]
     end
     it "should have a frame_rate" do
-      @file.frame_rate.should == ["30"]
+      @file.frame_rate.should == ["30.0"]
     end
   end
 end
-

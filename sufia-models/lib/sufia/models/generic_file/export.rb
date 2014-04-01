@@ -64,7 +64,7 @@ module Sufia
           values = self.send(element)
           next if values.empty? or values.first.nil?
           values.each do |value|
-            export_text << "rft.#{kev}=#{CGI::escape(value)}"
+            export_text << "rft.#{kev}=#{CGI::escape(value.to_s)}"
           end
         end
         export_text.join('&') unless export_text.blank?
