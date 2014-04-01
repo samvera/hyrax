@@ -1,6 +1,6 @@
 /*!
 Video.js Default Styles (http://videojs.com)
-Version 4.3.0
+Version 4.5.1
 Create your own skin at http://designer.videojs.com
 */
 /* SKIN
@@ -20,11 +20,8 @@ The control icons are from a custom font. Each icon corresponds to a character
 */
 @font-face {
   font-family: 'VideoJS';
-  src:url(<%= asset_path 'vjs.eot' %>);
-  src:url(<%= asset_path 'vjs.eot?#iefix' %>) format('embedded-opentype'),
-          url(<%= asset_path 'vjs.woff' %>) format('woff'),
-          url(<%= asset_path 'vjs.ttf' %>) format('truetype'),
-          url(<%= asset_path 'vjs.svg#VideoJS' %>) format('svg');
+  src: url(<%= asset_path 'vjs.eot' %>);
+  src: url(<%= asset_path 'vjs.eot?#iefix' %>) format('embedded-opentype'), url(<%= asset_path 'vjs.woff' %>) format('woff'), url(<%= asset_path 'vjs.ttf' %>) format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -734,6 +731,10 @@ body.vjs-full-window {
   /* Leave padding on left and right */
   left: 1em;
   right: 1em;
+}
+/* Move captions down when controls aren't being shown */
+.video-js.vjs-user-inactive.vjs-playing .vjs-text-track-display {
+  bottom: 1em;
 }
 /* Individual tracks */
 .video-js .vjs-text-track {
