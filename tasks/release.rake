@@ -87,6 +87,7 @@ namespace :all do
     sh "git push --tags"
   end
 
+  desc "Release both sufia and sufia-models and update the version to #{version} in all locations"
   task :release => %w(ensure_clean_state build commit tag push)
 end
 
