@@ -1,0 +1,24 @@
+<%= render partial: 'generic_files/upload/agreement' %>
+<%= render partial: 'generic_files/upload/alerts' %>
+<div class="well">
+  <%= form_tag(sufia.generic_files_path, id: 'browse_everything_form', method: 'post') do %>
+      <%= render partial: 'generic_files/upload/tos_checkbox' %>
+      <%= hidden_field_tag(:batch_id, @batch_noid) %>
+      <%= button_tag("Browse cloud files", type: 'button', class: 'btn btn-large btn-success', id: "browse-btn",
+        'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
+        'data-target' => '#browse_everything_form' ) %>
+      <%= button_tag("Submit selected files", type: 'submit', class: 'activate-submit btn btn-large btn-primary', id: "submit-btn") %>
+  <% end %>
+
+  <p id="status">0 items selected</p>
+</div>
+<script>
+  // Update the count in #status element when user selects files.
+  $(document).ready(function() {
+    $('#browse-btn').browseEverything()
+      .done(function(data) { 
+        $('#status').html(data.length.toString() + " files selected") 
+        $('#submit-btn').html("Submit "+data.length.toString() + " selected files") 
+      })
+  });
+</script>

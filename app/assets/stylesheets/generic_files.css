@@ -3,6 +3,7 @@
 *= require_directory ./fileupload
 *= require reset_body
 */
+
 #upload_tooltip { background: #ff0; padding: 5px; border: 1px solid #ddd; position: absolute; }
 
 button.close {

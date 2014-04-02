@@ -27,6 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sass-rails'
 
   gem.add_dependency 'hydra-batch-edit', '>= 1.1.1', '< 2.0.0'
+  gem.add_dependency 'browse-everything', '>= 0.4.0'
 
   gem.add_dependency 'daemons', '1.1.9'
   gem.add_dependency 'mail_form'
