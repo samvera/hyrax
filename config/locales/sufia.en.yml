@@ -11,7 +11,15 @@ en:
         q:
           label:        "Search Scholarsphere"
           placeholder:  "Type keywords in here"
-
+    upload:
+      my_computer:
+        tab_label: "My Computer"
+      browse_everything:
+        tab_label: "Cloud Providers" 
+        browse_files_button: "Browse cloud files"
+        files_selected: "files selected"
+      local_ingest:
+        tab_label: "Network/Server Location"     
     field_label:
       based_near:       "Location"
       description:      "Abstract or Summary"
