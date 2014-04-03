@@ -176,7 +176,7 @@ module Hydra
       def embargo_release_date=(release_date)
         release_date = release_date.to_s if release_date.is_a? Date
         begin
-          Date.parse(release_date)
+          release_date.nil? || Date.parse(release_date)
         rescue 
           return "INVALID DATE"
         end
