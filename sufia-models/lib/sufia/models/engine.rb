@@ -21,7 +21,6 @@ module Sufia
       config.id_namespace = "sufia"
       config.fits_path = "fits.sh"
       config.enable_contact_form_delivery = false
-      config.dropbox_api_key = nil
       config.browse_everything = nil
       config.enable_local_ingest = nil
       config.queue = Sufia::Resque::Queue
