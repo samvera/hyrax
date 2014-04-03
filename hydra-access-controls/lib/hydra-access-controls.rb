@@ -14,6 +14,7 @@ module Hydra
   autoload :Datastream
   autoload :PolicyAwareAbility
   autoload :AdminPolicy
+  autoload :AdminPolicyBehavior
   autoload :RoleMapperBehavior
   autoload :PermissionsQuery
   autoload :PermissionsCache
