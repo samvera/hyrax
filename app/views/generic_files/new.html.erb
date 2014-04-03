@@ -21,9 +21,6 @@ limitations under the License.
   <% if Sufia.config.browse_everything %>
     <li><a href="#browse_everything" data-toggle="tab"><i class="icon-cloud"></i> Cloud Providers</a></li>
   <% end %>
-  <% if Sufia.config.dropbox_api_key %>
-    <li><a href="#dropbox" data-toggle="tab"><i class="icon-inbox"></i> Dropbox</a></li>
-  <% end %>
   <% if Sufia.config.enable_local_ingest %>
     <li><a href="#ingest" data-toggle="tab"><i class="icon-hdd"></i> Network/Server Location</a></li>
   <% end %>
@@ -33,12 +30,6 @@ limitations under the License.
   <div class="tab-pane active" id="local">
     <%= render partial: 'multiple_upload' %>
   </div>
-
-  <% if Sufia.config.dropbox_api_key %>
-    <div class="tab-pane" id="dropbox">
-      <%= render partial: 'dropbox_import' %>
-    </div>
-  <% end %>
   
   <% if Sufia.config.browse_everything %>
     <div class="tab-pane" id="browse_everything">

@@ -66,12 +66,7 @@ module Sufia
       elsif params[:selected_files].present?
         create_from_browse_everything(params)
       else
-        case params['file_coming_from']
-        when 'dropbox'
-          create_from_url(params)
-        else
-          create_from_upload(params)
-        end
+        create_from_upload(params)
       end
     end
     
@@ -79,15 +74,6 @@ module Sufia
       params[:selected_files].each_pair do |index, file_info| 
         next if file_info.blank? || file_info["url"].blank?
         create_file_from_url(file_info["url"])
-      end
-      redirect_to self.class.upload_complete_path( params[:batch_id])
-    end
-    
-    def create_from_dropbox(params)
-      params[:dropbox_urls].each do |db_file|
-        next if db_file.blank?
-        # do not remove ::
-        create_file_from_url(db_file)
       end
       redirect_to self.class.upload_complete_path( params[:batch_id])
     end
