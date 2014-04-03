@@ -6,17 +6,17 @@ $('#myTab a').click(function (e) {
 })
 
 <% end %>
-  <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
-  <div class="span110"> 
+  <div class="sr-only" id="current_user"><%=@user.user_key%></div>
+  <div class="col-xs-12">
     <div class="pull-right">
       <%= render 'profile_actions' %>
     </div>
-    <span class="span20">
+    <span class="col-xs-3">
       <%= render 'left_sidebar' %>
     </span> <!-- /close span20 -->
 
 <!-- right col -->
-    <span class="span78 offset2"> 
+    <span class="col-xs-9">
 
       <%= render 'profile_tabs' %>
     </span> <!-- /close span50 -->

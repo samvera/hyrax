@@ -1,11 +1,11 @@
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
-<div class="control-group">
+<div class="form-group">
   <% vals =  generic_file[key] %>
   <% if render_req && required?(key) %>
-    <% tmp = '<span class="error">*</span>' + get_label(key) %>
-    <%= f.label key, tmp.html_safe, :class=>"control-label"  %>
+    <% tmp = '<span class="required-field">*</span>' + get_label(key) %>
+    <%= f.label key, tmp.html_safe, :class=>"col-sm-3 control-label"  %>
   <% else %>
-    <%= f.label key, get_label(key), :class=>"control-label"%>
+    <%= f.label key, get_label(key), :class=>"col-sm-3 control-label"%>
   <% end %>
 
   <% if key == :resource_type %>
@@ -16,4 +16,4 @@
       <%= render_edit_field_partial(key, record: generic_file, f:f,  v: v, index: index, render_req: render_req) %>
     <% end %>
   <% end %>
- </div><!-- /control-group -->
+ </div><!-- /.form-group -->

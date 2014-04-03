@@ -23,8 +23,8 @@ flash_types_to_classes = {
 %>
 <% [:notice, :error, :alert].each do |type| %>
   <% if flash[type] %>
-    <div class="alert <%= flash_types_to_classes[type] rescue '' %> ui-corner-all <%= type.to_s %>">
-      <a class="close" data-dismiss="alert" href="#">×</a>
+    <div class="alert alert-dismissable <%= flash_types_to_classes[type] rescue '' %> ui-corner-all <%= type.to_s %>">
+      <a class="close" data-dismiss="alert" href="#">&times;</a>
       <% if flash[type].respond_to? :join %>
         <%= flash[type].join("<br/>").html_safe %>
       <% else %>

@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<table class="table table-striped dashboard">
-  <caption class="accessible-hidden">Listing of files you have deposited in <%= t('sufia.product_name') %></caption>
+<table class="table table-zebra-striped table-bordered">
+  <caption class="sr-only">Listing of files you have deposited in <%= t('sufia.product_name') %></caption>
 <% unless params[:display_type] == 'list' %>
   <thead> 
   <tr>
     <th class="sm"><%= render :partial => 'batch_edits/check_all' %></th>
     <th>&nbsp;</th>
     <th class="center">Title</th>
-    <th class="sorts-dash"><i id="desc_metadata__date_uploaded_dt" class="<%=params[:sort]== "desc_metadata__date_uploaded_dt desc" ? 'icon-caret-down' : params[:sort]== "desc_metadata__date_uploaded_dt asc" ? 'icon-caret-up' : ''%>"></i>Date Uploaded</th>
+    <th class="sorts-dash"><i id="desc_metadata__date_uploaded_dtsi" class="<%=params[:sort]== "desc_metadata__date_uploaded_dtsi desc" ? 'caret' : params[:sort]== "desc_metadata__date_uploaded_dtsi asc" ? 'caret up' : ''%>"></i>Date Uploaded</th>
     <th>Visibility</th>
     <th class="center">Action</th>
   </tr>

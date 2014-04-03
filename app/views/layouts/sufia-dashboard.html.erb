@@ -8,9 +8,21 @@
 <div  id="wrapper"> 
   <div class="container-fluid">
     <div id="page-positioner">
-      <%= render :partial => '/masthead', :formats => [:html] %>
+      <%= render :partial => '/masthead' %>
       <%= render :partial => '/flash_msg' %>
       <div id="content-wrapper">
+        <div id="content-header" class="row">
+          <div class="col-xs-12 col-sm-3">
+            <%= link_to '<i class="glyphicon glyphicon-upload"></i> Upload File(s)'.html_safe, sufia.new_generic_file_path, {:class => "btn btn-primary"}  %><br />
+          </div>
+          <div class="col-xs-12 col-sm-9">
+            <div class="sr-only" id="current_user"><%=@user.user_key%></div>
+            <div class="row">
+              <%= render :partial => 'heading' %>
+              <%= render :partial => 'search_form' %>
+            </div>
+          </div>
+        </div><!-- /#content -->
         <div id="content" class="row">
           <div class="col-xs-12 col-sm-3">
             <%= yield :sidebar %>

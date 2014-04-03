@@ -1,4 +1,4 @@
-      <div class="controls" <% if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
+      <div class="col-sm-9" <% if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
               <% choices = Sufia.config.cc_licenses %>
               <% choices = {""=>""}.merge(choices) %>
               <%= f.select "rights", options_for_select(choices, v) %>

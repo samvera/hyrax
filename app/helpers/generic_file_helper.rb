@@ -16,7 +16,7 @@ module GenericFileHelper
     link_to '#', id: "generic_file_#{key.to_s}_help", rel: 'popover', 
       'data-content' => metadata_help(key),
       'data-original-title' => get_label(key) do
-        content_tag 'i', '', class: "icon-question-sign icon-large"
+        content_tag 'i', '', class: "glyphicon glyphicon-question-sign icon-large"
     end
   end
 
@@ -75,7 +75,7 @@ module GenericFileHelper
    # TODO, there could be more than one element with this id on the page, but the fuctionality doesn't work without it.
    content_tag('button', class: "#{html_class} btn", id: "additional_#{key}_submit", name: "additional_#{key}") do
      (symbol + 
-     content_tag('span', class: 'accessible-hidden') do
+     content_tag('span', class: 'sr-only') do
        "add another #{key.to_s}"
      end).html_safe
    end

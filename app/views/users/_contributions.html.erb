@@ -9,7 +9,7 @@
           </td>
           <td>
             <%= link_to display_title(t), sufia.generic_file_path(t) %>
-            <%= link_to raw("<i class='trophy-on icon-remove'></i>"), "", class: 'trophy-on trophy-class', title: "Click to remove from Highlighted files.", id: Sufia::Noid.noidify(t.pid), remote: true, data: {removerow: "true"} if current_user == @user%>
+            <%= link_to raw("<i class='trophy-on icon-remove'></i>"), "", class: 'glyphicon glyphicon-trophy trophy-on', title: "Click to remove from Highlighted files.", id: Sufia::Noid.noidify(t.pid), remote: true, data: {removerow: "true"} if current_user == @user%>
           </td>
         </tr>
       <% end %>

@@ -40,7 +40,7 @@
       <%= f.label :tag, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %> 
       <div class="controls" id="additional_tag_clone">
           <%= f.text_field :tag, :name=>"generic_file[tag][]", :value=>"", :required=> true  %> 
-          <button class="adder btn" name="additional_tag" id="additional_tag_submit">+<span class="accessible-hidden">add another Tag</span></button>
+          <button class="adder btn" name="additional_tag" id="additional_tag_submit">+<span class="sr-only">add another Tag</span></button>
           &nbsp;
           <%= help_icon(:tag) %>
       </div>
@@ -51,7 +51,7 @@
       <%= f.label :creator, "<span class='error'>*</span> Creator".html_safe, :class=>"control-label" %>
       <div class="controls" id="additional_creator_clone">
         <%= f.text_field :creator, :name=>"generic_file[creator][]", :value=>"", :required=> true %>
-          <button class="adder btn" name="additional_creator" id="additional_creator_submit">+<span class="accessible-hidden">add another Creator</span></button>
+          <button class="adder btn" name="additional_creator" id="additional_creator_submit">+<span class="sr-only">add another Creator</span></button>
           &nbsp;
           <%= help_icon(:creator) %>
       </div>
@@ -62,7 +62,7 @@
       <%= f.label :rights, '<span class="error">*</span> Rights'.html_safe, :class=>"control-label" %>
       <div class="controls" id="additional_rights_clone">
         <%= f.select "rights", options_for_select(Sufia::Engine::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), :required => true %>
-          <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="accessible-hidden">add another Rights</span></button>
+          <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="sr-only">add another Rights</span></button>
         &nbsp;
         <%= help_icon(:rights) %>
         <%= render :partial => "generic_files/rights_modal" %>

@@ -1,0 +1,143 @@
+$gray-lightish: #bbb;
+$gray-lighter: #eee;
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: $gray-lighter;
+}
+
+.caret.up {
+  border-top: 0;
+  border-bottom: 4px solid;
+  content: "";
+}
+
+.tr-detail {
+  display: none;
+}
+
+.visibility-link:hover {
+  text-decoration: none;
+}
+
+#masthead {
+  background-color: #e1e1e1;
+  margin-bottom: 0.8em;
+
+  .navbar {
+    min-height: 0px;
+    margin-bottom: 0.8em;
+  }
+
+  #user_utility_links {
+    margin-top: .3em;
+
+    &.open {
+      > a {
+        background-color: inherit;
+        border-color: #ccc;
+
+        &.dropdown-toggle {
+          background-color: $gray-lighter;
+          border-color: #428bca;
+        }
+      }
+    }
+  }
+
+  #profile_link {
+    margin-left: -1px;
+  }
+}
+
+#footer-wrapper {
+  margin-top: 2em;
+}
+
+.table {
+  > tbody {
+    > tr[id*='detail_'] {
+      > td {
+        padding: 0px;
+
+        .expanded-details {
+          display: none;
+          padding: 0.8em;
+          font-size: 0.9em;
+
+          dt {
+            text-align: right;
+          }
+          dd {
+            margin-left: -15px;
+          }
+        }
+      }
+    }
+
+    .document-title {
+      word-break: break-all;
+    }
+  }
+}
+
+.table-zebra-striped tbody > tr.zebra:nth-child(odd) > td,
+.table-zebra-striped tbody > tr.zebra:nth-child(odd) + tr > td,
+.table-zebra-striped tbody > tr.zebra:nth-child(odd) > th {
+  background-color: #f9f9f9;
+}
+
+.nav > li > a.accordion-toggle {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.slide-list {
+  list-style: none;
+  padding: 0px 0px 0px 15px;
+
+  li {
+    @extend .clearfix;
+    margin-bottom: 0.4em;
+    border-bottom: 1px solid $gray-lighter;
+    padding-bottom: 0.4em;
+
+    &:first-child {
+      border-top: 1px solid $gray-lighter;
+      padding-top: 0.4em;
+    }
+  }
+
+  .facet_select {
+
+  }
+
+  .facet-count {
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    background: $gray-lighter;
+    float: right;
+    display: block;
+  }
+
+}
+
+.batch-info {
+  margin-bottom: 0.8em;
+}
+
+.sorts-dash, .sorts, .expandable_new {
+  cursor: pointer;
+}
+
+.required-field {
+  color: red;
+  font-size: small;
+}
+
+
+
+

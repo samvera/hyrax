@@ -22,14 +22,13 @@ limitations under the License.
 
 <body> 
 <div  id="wrapper"> 
-  <div class="container">
+  <div class="container-fluid">
     <div id="page-positioner">
       <%= render :partial => '/masthead', :formats => [:html] %>
       <%= render :partial => '/flash_msg' %>
       <div id="content-wrapper"> 
         <div id="content" class="row">
-          <!-- 110 rows -->
-          <div class="span110">
+          <div class="col-xs-12">
             <%= yield %>
           </div>
         </div><!-- /#content -->

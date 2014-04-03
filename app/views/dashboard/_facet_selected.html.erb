@@ -21,7 +21,7 @@ limitations under the License.
       <% link_options = remove_facet_params(k, selected_facet, params).merge!Hash["controller" => "dashboard", :action=> "index"] %>
       <div class="alert alert-warning">
         <%= link_to 'X', sufia.url_for(link_options), {:class=>'close', :'data-dismiss' => "alert" } %>
-        <i class="icon-ok icon-large"></i> <strong><%= selected_facet %></strong>
+        <i class="glyphicon glyphicon-ok"></i> <strong><%= selected_facet %></strong>
       </div>
     <% end %>
   <% end %>

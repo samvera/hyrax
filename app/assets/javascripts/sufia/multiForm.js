@@ -12,7 +12,7 @@
       var cloneElem = $('#'+cloneId).clone();
       // change the add button to a remove button
       var plusbttn = cloneElem.find('#'+this.id);
-      plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
+      plusbttn.html('-<span class="sr-only">remove this '+ this.name.replace("_", " ") +'</span>');
       plusbttn.on('click',removeField);
 
 

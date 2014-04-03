@@ -4,7 +4,7 @@
 <div id="descriptions_display" class="tab-pane active">
   <%= form_for generic_file, :url => sufia.generic_file_path(@generic_file), :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
-    <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
+    <h1>Descriptions <span class="pull-right required-field">* indicates required fields</span></h1>
       <div class="well">
 
         <% (generic_file.terms_for_editing).each do |term| %>

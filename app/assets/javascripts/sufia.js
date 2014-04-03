@@ -100,18 +100,14 @@ $(function() {
 
   // show/hide more information on the dashboard when clicking
   // plus/minus
-  $('.icon-plus').on('click', function() {
+  $('.glyphicon-plus').on('click', function() {
+    var button = $(this);
     //this.id format: "expand_NNNNNNNNNN"
-    var a = this.id.split("expand_");
-    if (a.length > 1) {
-      var docId = a[1];
-      $("#detail_"+docId).toggle();
-      if( $("#detail_"+docId).is(":hidden") ) {
-        $("#expand_"+docId).attr("class", "icon-plus icon-large");
-      }
-      else {
-        $("#expand_"+docId).attr("class", "icon-minus icon-large");
-      }
+    var array = this.id.split("expand_");
+    if (array.length > 1) {
+      var docId = array[1];
+      $("#detail_" + docId + " .expanded-details").slideToggle();
+      button.toggleClass('glyphicon-plus glyphicon-minus');
     }
     return false;
   });
@@ -141,16 +137,17 @@ $(function() {
   $(".sorts-dash").click(function(){
     var itag =$(this).find('i');
     toggle_icon(itag);
-    sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id') +' asc';
+    sort = itag.attr('class') == "caret" ? itag.attr('id')+' desc' :  itag.attr('id') +' asc';
     $('#sort').val(sort).selected = true;
-    $(".icon-refresh").parent().click();
+    $("#dashboard_sort_submit").click();
   });
+
   $(".sorts").click(function(){
     var itag =$(this).find('i');
     toggle_icon(itag);
-    sort = itag.attr('class') == "icon-caret-down" ? itag.attr('id')+' desc':  itag.attr('id');
+    sort = itag.attr('class') == "caret up" ? itag.attr('id')+' desc':  itag.attr('id');
     $('input[name="sort"]').attr('value', sort);
-    $(".icon-search").parent().click();
+    $("#user_submit").click();
   });
 }); //closing function at the top of the page
 
@@ -161,8 +158,8 @@ $(function() {
  */
 
 function toggle_icon(itag){
-       itag.toggleClass("icon-caret-down");
-       itag.toggleClass("icon-caret-up");
+       itag.toggleClass("caret");
+       itag.toggleClass("caret up");
 }
 
 function preg_quote( str ) {
