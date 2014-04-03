@@ -1,0 +1,7 @@
+<ul class="tag-cloud list-unstyled">
+  <% display_facet.items[0..limit-1].each do |item| -%>
+    <li class="weight-<%=tag_weight_for(item, scale_factor)%>"> 
+      <%= render_facet_value(display_facet, item) %>              
+    </li>
+  <% end %>
+</ul>
