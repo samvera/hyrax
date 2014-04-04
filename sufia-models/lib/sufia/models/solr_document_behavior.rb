@@ -70,15 +70,15 @@ module Sufia
     end
 
     def read_groups
-      Array(self[Ability.read_group_field])
+      Array(self[::Ability.read_group_field])
     end
 
     def edit_groups
-      Array(self[Ability.edit_group_field])
+      Array(self[::Ability.edit_group_field])
     end
 
     def edit_people
-      Array(self[Ability.edit_user_field])
+      Array(self[::Ability.edit_user_field])
     end
 
     def public?

@@ -19,6 +19,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sufia-models', version
   gem.add_dependency 'blacklight_advanced_search', '~> 5.0'
   gem.add_dependency 'blacklight', '~> 5.0'
+  gem.add_dependency 'tinymce-rails', '~> 4.0.19'
+  gem.add_dependency 'tinymce-rails-imageupload', '~> 4.0.16.beta'
 
   # sass-rails is typically generated into the app's gemfile by `rails new`
   # In rails 3 it's put into the "assets" group and thus not available to the

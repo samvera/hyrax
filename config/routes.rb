@@ -9,9 +9,6 @@ Sufia::Engine.routes.draw do
   # Route path-less requests to the index view of catalog
   root :to => "catalog#index"
   
-  # "Recently added files" route for catalog index view
-  get "catalog/recent" => "catalog#recent", :as => :catalog_recent
-
   # "Notifications" route for catalog index view
   get "users/notifications_number" => "users#notifications_number", :as => :user_notify
 
@@ -80,6 +77,9 @@ Sufia::Engine.routes.draw do
       end
     end
   end
+
+  resources :content_blocks, only: 'update'
+  post '/tinymce_assets' => 'tinymce_assets#create'
 
   # Static page routes (workaround)
   get ':action' => 'static#:action', :constraints => { :action => /about|help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, :as => :static

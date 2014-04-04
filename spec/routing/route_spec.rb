@@ -12,10 +12,6 @@ describe 'Routes' do
     it 'should route the root url to the catalog controller' do
       { get: '/' }.should route_to(controller: 'catalog', action: 'index')
     end
-
-    it 'should route to recently added files' do
-      { get: '/catalog/recent' }.should route_to(controller: 'catalog', action: 'recent')
-    end
   end
 
   describe 'GenericFile' do

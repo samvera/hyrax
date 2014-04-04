@@ -1,4 +1,10 @@
 FactoryGirl.define do
+  # TODO the normal_user should be renamed to :user and :user should be renamed to :jill
+  factory :normal_user, :class => User do |u|
+    sequence(:email) { |n| "user#{n}@example.com" }
+    password 'password'
+  end
+
   factory :user, :class => User do |u|
     email 'jilluser@example.com'
     password 'password'

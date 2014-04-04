@@ -11,14 +11,21 @@ class SufiaGenerator < Rails::Generators::Base
   desc """
 This generator makes the following changes to your application:
  1. Runs sufia-models:install
- 2. Adds controller behavior to the application controller
- 3. Copies the catalog controller into the local app
+ 2. Adds Sufia's abilities into the Ability class
+ 3. Adds controller behavior to the application controller
+ 4. Copies the catalog controller into the local app
        """
 
   def run_required_generators
     generate "blacklight:install --devise"
     generate "hydra:head -f"
     generate "sufia:models:install"
+  end
+
+  def insert_abilities
+    insert_into_file 'app/models/ability.rb', after: /Hydra::Ability/ do
+      "\n  include Sufia::Ability\n"
+    end
   end
 
   # Add behaviors to the application controller
@@ -38,6 +45,10 @@ This generator makes the following changes to your application:
 
   def catalog_controller
     copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
+  end
+
+  def tinymce_config
+    copy_file "config/tinymce.yml", "config/tinymce.yml"
   end
 
   # The engine routes have to come after the devise routes so that /users/sign_in will work

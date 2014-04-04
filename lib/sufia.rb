@@ -8,6 +8,8 @@ require 'sufia/models'
 
 require 'rails_autolink'
 require 'font-awesome-sass-rails'
+require 'tinymce-rails'
+require 'tinymce-rails-imageupload'
 
 module Sufia
   extend ActiveSupport::Autoload
@@ -23,7 +25,9 @@ module Sufia
     )
   end
 
+  autoload :Catalog
   autoload :Controller
+  autoload :Ability
   autoload :HttpHeaderAuth
   autoload :FilesControllerBehavior
   autoload :BatchEditsControllerBehavior
