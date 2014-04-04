@@ -14,8 +14,7 @@ class TestAppGenerator < Rails::Generators::Base
     insert_into_file 'app/assets/stylesheets/application.css', after: ' *= require_self' do
       "\n *= require sufia"
     end
-    insert_into_file 'app/assets/javascripts/application.js', before: '//= require_tree .' do
-      "//= require sufia\n"
-    end  
+    gsub_file 'app/assets/javascripts/application.js',
+              '//= require_tree .', '//= require sufia'
   end
 end
