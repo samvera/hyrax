@@ -47,7 +47,7 @@ First, add them to the "Gemfile":http://gembundler.com/gemfile.html of your appl
   gem 'rails', '4.0.0'
 
   gem 'blacklight'
-  gem 'hydra-head', '~> 6.3.0'
+  gem 'hydra-head', '~> 7.0.1'
 
 </pre>
 
@@ -62,7 +62,7 @@ h3. Run the generators and migrations:
 
 Run the blacklight generator
 
-<pre>rails g blacklight --devise</pre>
+<pre>rails g blacklight:install --devise</pre>
 
 Run the hydra-head generator
 
