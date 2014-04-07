@@ -1,11 +1,2 @@
 <h2>Featured Researcher</h2>
-<% if can? :update, @featured_researcher %>
-  <%= form_for [sufia, @featured_researcher] do |f| %>
-    <%= f.text_area :value, class: "tinymce", rows: 20, cols: 120 %>
-    <%= f.submit 'Save', class: "btn btn-primary" %>
-  <% end %>
-  <%= tinymce_assets %>
-  <%= tinymce %>
-<% else %>
-  <%= raw(@featured_researcher.value) %>
-<% end %>
+<%= editable_content_block @featured_researcher %>

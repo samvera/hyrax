@@ -160,11 +160,13 @@ describe 'Routes' do
     end
   end
 
-  describe "Static Pages" do
+  describe "Dynamically edited pages" do
     it "should route to about" do
-      { get: '/about' }.should route_to(controller: 'static', action: 'about')
+      { get: '/about' }.should route_to(controller: 'pages', action: 'show', id: 'about_page')
     end
+  end
 
+  describe "Static Pages" do
     it "should route to help" do
       { get: '/help' }.should route_to(controller: 'static', action: 'help')
     end
