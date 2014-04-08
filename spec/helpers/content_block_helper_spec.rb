@@ -10,8 +10,9 @@ describe ContentBlockHelper do
       expect(helper).to receive(:can?).with(:update, content_block).and_return(true)
     end
     let(:node) { Capybara::Node::Simple.new(subject) }
-    it "should show the form" do
-      expect(node).to have_selector "form[action='#{sufia.content_block_path(content_block)}']" 
+    it "should show the preview and the form" do
+      expect(node).to have_selector "button[data-target='#edit_content_block_1'][data-behavior='reveal-editor']" 
+      expect(node).to have_selector "form#edit_content_block_1[action='#{sufia.content_block_path(content_block)}']" 
       expect(subject).to be_html_safe
     end
   end
