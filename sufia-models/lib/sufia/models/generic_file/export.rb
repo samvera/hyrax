@@ -22,7 +22,7 @@ module Sufia
           '%[' => [:date_modified],
           '%9' => [:resource_type],
           '%~' => Application.config.application_name,
-          '%W' => 'Penn State University'
+          '%W' => t('sufia.institution_name')
         }
         text = []
         text << "%0 GenericFile"
@@ -32,7 +32,7 @@ module Sufia
           else
             values = self.send(mapping[0]) if self.respond_to? mapping[0]
             values = mapping[1].call(values) if mapping.length == 2
-            values = [values] unless values.is_a? Array
+            values = Array(values)
           end
           next if values.empty? or values.first.nil?
           spaced_values = values.join("; ")

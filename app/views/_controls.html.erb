@@ -1,0 +1,17 @@
+<div id="masthead_controls" class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-sm-5 col-md-6">
+      <nav class="navbar navbar-default" role="navigation">
+        <ul class="nav navbar-nav">
+            <li <%= 'class=active' if current_page?(root_path) %>><a href="/" >Home</a></li>
+                <li <%= 'class=active' if current_page?(sufia.about_path) %>><a href="/about/" >About</a></li>
+                <li <%= 'class=active' if action_name == "help" %>><a href="/help/" >Help</a></li>
+            <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_form_index_path %>" >Contact</a></li>
+        </ul><!-- /.nav -->
+      </nav><!-- /.navbar -->
+    </div>
+    <div class="col-xs-12 col-sm-7 col-md-6">
+      <%= render :partial => 'catalog/search_form' %>
+    </div>
+  </div> <!-- /.row -->
+</div><!-- /#masthead_controls -->

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <%= render :partial => "layouts/head_tag_content"%>
   </head>
 
@@ -9,8 +10,10 @@
   <div class="container-fluid">
     <div id="page-positioner">
       <%= render :partial => '/masthead' %>
+      <%= render :partial => '/controls' %>
       <%= render :partial => '/flash_msg' %>
       <div id="content-wrapper">
+        <div class="container-fluid">
         <div id="content-header" class="row">
           <div class="col-xs-12 col-sm-3">
             <%= link_to '<i class="glyphicon glyphicon-upload"></i> Upload File(s)'.html_safe, sufia.new_generic_file_path, {:class => "btn btn-primary"}  %><br />
@@ -21,7 +24,9 @@
               <%= render :partial => 'search_form' %>
             </div>
           </div>
-        </div><!-- /#content -->
+        </div>
+        </div><!-- /.container-fluid -->
+        <div class="container-fluid">
         <div id="content" class="row">
           <div class="col-xs-12 col-sm-3">
             <%= yield :sidebar %>
@@ -30,11 +35,12 @@
             <%= yield %>
           </div>
         </div><!-- /#content -->
+        </div><!-- /.container-fluid -->
       </div><!-- /#content-wrapper -->
+      <%= render partial: '/footer' %>
     </div><!-- /#page-positioner -->
   </div><!-- /.container -->
 </div><!-- /#wrapper -->
-<%= render partial: '/footer' %>
 <div id="ajax-modal" class="modal hide" tabindex="-1"></div>
 </body>
 </html>

@@ -1,24 +1,7 @@
-<%#
-Copyright © 2012 The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-%>
-
 <% content_for :local_js do %>
    if (navigator.userAgent.match("MSIE")){
       $("#new_generic_file").validate();
    }
-
 
 $('#permissions_display').show();
 
@@ -28,18 +11,18 @@ $("a[rel=popover]").popover({ html: true });
 confirmation_needed = true;
 window.onbeforeunload = confirmExit;
 function confirmExit(){
-      if(confirmation_needed){ 
+      if(confirmation_needed){
       // if you return a string it will be displayed in between "don't navigate away"
       // and "click Ok to navigate away or cancel to stay put" in the confirm dialog
          return "Your metadata has not been saved.";
       }
- }  
+ }
 <% end %>
 
 <h1>Apply Metadata</h1>
 <br />
-<div class="alert">The information you provide for Title will be applied to the corresponding file only; however all other 
-  information you provide will be applied <em>to the entire batch of files</em> you have just deposited into <%= t('sufia.product_name') %>.  
+<div class="alert">The information you provide for Title will be applied to the corresponding file only; however all other
+  information you provide will be applied <em>to the entire batch of files</em> you have just deposited into <%= t('sufia.product_name') %>.
   You may edit individual files from <%= link_to '<i class="icon-dashboard"></i> my dashboard'.html_safe, sufia.dashboard_index_path %> once
   this step is finished.
 </div>

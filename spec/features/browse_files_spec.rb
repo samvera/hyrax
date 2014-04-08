@@ -4,16 +4,22 @@ describe "Browse files" do
 
   before(:all) do
     @fixtures = find_or_create_file_fixtures
+    @fixtures[0].tag = "key"
     (1..25).each do |i|
       @fixtures[0].tag << i
     end
     @fixtures[0].save
   end
 
+  before do
+    visit '/'
+    fill_in "search-field-header", with: "key"
+    click_button "search-submit-header"
+    click_link "more Keywords"
+  end
+
   describe "when not logged in" do
     it "should let us browse some of the fixtures" do
-      visit '/'
-      click_link "more Keywords"
       click_link "18"
       page.should have_content "Search Results"
       click_link @fixtures[0].title[0]
@@ -21,9 +27,6 @@ describe "Browse files" do
       page.should_not have_content "Edit"
     end
     it "should allow you to click next" do
-      # TODO: fix more facets link!
-      visit '/'
-      click_link "more Keywords"
       first(:link, 'Next').click
       page.should have_content "5"
       page.should_not have_content "11"
