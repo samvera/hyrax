@@ -18,16 +18,9 @@
             <div class="col-sm-6 col-md-6 col-lg-6">
               <%= yield %>
             </div><!-- /.span6 -->
-
             <div class="col-sm-3 col-md-3 col-lg-3">
-              <h2 class="heading1">Contribute</h2>
-              <%= link_to "<i class=\"icon-file\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_generic_file_path, :class => "btn btn-primary btn-large", :id => "contribute_link" %>
-              <div class="row center"> <a href="/terms/">Terms of Use</a></div><br />
-              <div class="row">&nbsp;</div>
-              <h2 class="heading1">My Latest</h2>
-              <%= render :partial=>'/catalog/recents', :locals => {:recent_documents=>@recent_user_documents, :display_thumbs=>false, :display_access=>true} %>
-            </div> <!-- /.span3 -->
-              
+              <%= render partial: 'layouts/homepage_sidebar2'%>
+            </div> <!-- /.span3 -->         
         </div><!-- /#content -->
       </div><!-- /#content-wrapper -->
     </div><!-- /#page-positioner -->
