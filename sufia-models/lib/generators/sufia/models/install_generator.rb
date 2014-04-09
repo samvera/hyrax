@@ -48,7 +48,8 @@ This generator makes the following changes to your application:
       "create_trophies.rb",
       'add_linkedin_to_users.rb',
       'create_tinymce_assets.rb',
-      'create_content_blocks.rb'
+      'create_content_blocks.rb',
+      'create_featured_works.rb'
     ].each do |file|
       better_migration_template file
     end
@@ -82,8 +83,8 @@ This generator makes the following changes to your application:
   def inject_sufia_solr_document_behavior
     file_path = "app/models/solr_document.rb"
     if File.exists?(file_path)
-      inject_into_class file_path, "SolrDocument" do
-        "  # Adds Sufia behaviors to the SolrDocument.\n" +
+      inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
+        "\n  # Adds Sufia behaviors to the SolrDocument.\n" +
           "  include Sufia::SolrDocumentBehavior\n"
       end
     else

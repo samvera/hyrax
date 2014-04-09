@@ -32,10 +32,14 @@ module SufiaHelper
     link_to(field, add_facet_params(field_string, field).merge!({"controller" => "catalog", :action=> "index"}))
   end
 
-  def link_to_facet_list(list, field_string, emptyText="No value entered", separator=", ")
-    facet_field = Solrizer.solr_name(field_string, :facetable)
-    return list.map{ |item| link_to_facet(item, facet_field) }.join(separator) unless list.blank?
-    return emptyText
+  # @param values [Array] The values to display
+  # @param solr_field [String] The name of the solr field to link to without its suffix (:facetable) 
+  # @param empty_message [String] ('No value entered') The message to display if no values are passed in.
+  # @param separator [String] (', ') The value to join with. 
+  def link_to_facet_list(values, solr_field, empty_message="No value entered", separator=", ")
+    return empty_message if values.blank?
+    facet_field = Solrizer.solr_name(solr_field, :facetable)
+    safe_join(values.map{ |item| link_to_facet(item, facet_field) }, separator)
   end
 
 

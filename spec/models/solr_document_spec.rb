@@ -18,4 +18,13 @@ describe SolrDocument do
       subject.date_uploaded.should == '03/14/2013'
     end
   end
+
+  describe "to_param" do
+    before do
+      subject['noid_tsi'] = '1v53kn56d'
+    end
+    it "should be noid" do
+      expect(subject.to_param).to eq '1v53kn56d'
+    end
+  end
 end

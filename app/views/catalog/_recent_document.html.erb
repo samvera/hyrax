@@ -1,6 +1,6 @@
     <tr>
       <% if display_thumbs %>
-        <td class="span10"><%= link_to_profile recent_document.depositor("no depositor value") %> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>recent_document, :height=>60, :width=>45} %> </td>
+        <td class="span10"><%= link_to_profile recent_document.depositor("no depositor value") %> <%= render partial: 'dashboard/_index_partials/thumbnail_display', locals: {document: recent_document, width: 45} %> </td>
       <% end %>
       <td>
         <h3>

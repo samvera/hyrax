@@ -8,6 +8,7 @@ module Sufia
     autoload :WebForm, 'sufia/models/generic_file/web_form'
     autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
     autoload :Trophies, 'sufia/models/generic_file/trophies'
+    autoload :Featured, 'sufia/models/generic_file/featured'
     autoload :Metadata, 'sufia/models/generic_file/metadata'
     autoload :Versions, 'sufia/models/generic_file/versions'
     autoload :VirusCheck, 'sufia/models/generic_file/virus_check'
@@ -23,6 +24,7 @@ module Sufia
     include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Trophies
+    include Sufia::GenericFile::Featured
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck

@@ -11,6 +11,10 @@ module Sufia
       get(Solrizer.solr_name('has_model', :symbol)).split(':').last.downcase
     end
 
+    def to_param
+      noid
+    end
+
     ##
     # Offer the source (ActiveFedora-based) model to Rails for some of the
     # Rails methods (e.g. link_to).
@@ -63,6 +67,10 @@ module Sufia
 
     def tags
       Array(self[Solrizer.solr_name("desc_metadata__tag")])
+    end
+
+    def resource_type
+      Array(self[Solrizer.solr_name("desc_metadata__resource_type")])
     end
 
     def mime_type
