@@ -12,40 +12,14 @@ class CatalogController < ApplicationController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
+  include Sufia::Catalog
 
   # These before_filters apply the hydra access controls
-  before_filter :enforce_show_permissions, :only=>:show
+  before_filter :enforce_show_permissions, only: :show
   # This applies appropriate access controls to all solr queries
   CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
-  # This filters out objects that you want to exclude from search results, like FileAssets
-  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
 
   skip_before_filter :default_html_head
-
-  def index
-    super
-    recent
-    #also grab my recent docs too
-    recent_me
-  end
-
-  def recent
-    if user_signed_in?
-      # grab other people's documents
-      (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>4)
-    else
-      # grab any documents we do not know who you are
-      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
-    end
-  end
-
-  def recent_me
-    if user_signed_in?
-      (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
-                                        :sort=>sort_field, :rows=>4)
-    end
-  end
 
   def self.uploaded_field
     solr_name('desc_metadata__date_uploaded', :stored_sortable, type: :date)
@@ -62,13 +36,9 @@ class CatalogController < ApplicationController
       :rows => 10
     }
 
-    # solr field configuration for search results/index views
-    config.index.title_field = solr_name("desc_metadata__title", :displayable)
-    config.index.display_type_field = "id"
-
     # solr field configuration for document/show views
-    config.show.title_field = solr_name("desc_metadata__title", :displayable)
-    config.show.display_type_field = solr_name("has_model", :symbol)
+    config.index.title_field = solr_name("desc_metadata__title", :displayable)
+    config.index.display_type_field = solr_name("has_model", :symbol)
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -335,32 +305,6 @@ class CatalogController < ApplicationController
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
     config.spell_max = 5
-  end
-
-  protected
-
-  # Limits search results just to GenericFiles
-  # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
-  def exclude_unwanted_models(solr_parameters, user_parameters)
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:GenericFile\""
-  end
-
-  def depositor
-    Solrizer.solr_name('depositor', :stored_searchable, type: :string)
-  end
-
-  def filter_not_mine
-    "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
-  end
-
-  def filter_mine
-    "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
-  end
-
-  def sort_field
-    "#{Solrizer.solr_name('system_create', :sortable)} desc"
   end
 
 end

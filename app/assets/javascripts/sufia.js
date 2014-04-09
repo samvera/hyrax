@@ -46,6 +46,7 @@ limitations under the License.
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
 //= require sufia/audio
+//= require sufia/editor
 //= require hydra/batch_select
 //= require hydra_collections
 //= require browse_everything

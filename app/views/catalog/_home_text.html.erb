@@ -7,4 +7,5 @@
       <hr class="grey"/>
       <h2 class="heading1">Recently Uploaded <span class="heading1 label label-success">Open Access</span></h2>
       <%= render :partial=>'/catalog/recents', :locals => {:recent_documents=>@recent_documents, :msg=>"No public work has been contributed.", :display_thumbs=>true, :display_access=>false} %>
+      <%= render 'featured_researcher' %>
 

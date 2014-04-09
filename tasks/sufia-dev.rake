@@ -26,7 +26,11 @@ end
 desc "Run specs"
 RSpec::Core::RakeTask.new(:rspec) do |t|
   t.pattern = '../**/*_spec.rb'
-  t.rspec_opts = ["--colour -I ../", '--backtrace', '--profile 20']
+  if ENV["TRAVIS"]
+    t.rspec_opts = ["--colour -I ../", '--backtrace', '--profile 20']
+  else
+    t.rspec_opts = ["--colour -I ../"]
+  end
 end
 
 

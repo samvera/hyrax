@@ -12,10 +12,6 @@ describe 'Routes' do
     it 'should route the root url to the catalog controller' do
       { get: '/' }.should route_to(controller: 'catalog', action: 'index')
     end
-
-    it 'should route to recently added files' do
-      { get: '/catalog/recent' }.should route_to(controller: 'catalog', action: 'recent')
-    end
   end
 
   describe 'GenericFile' do
@@ -164,11 +160,13 @@ describe 'Routes' do
     end
   end
 
-  describe "Static Pages" do
+  describe "Dynamically edited pages" do
     it "should route to about" do
-      { get: '/about' }.should route_to(controller: 'static', action: 'about')
+      { get: '/about' }.should route_to(controller: 'pages', action: 'show', id: 'about_page')
     end
+  end
 
+  describe "Static Pages" do
     it "should route to help" do
       { get: '/help' }.should route_to(controller: 'static', action: 'help')
     end
