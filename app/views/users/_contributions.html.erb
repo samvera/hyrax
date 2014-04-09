@@ -3,13 +3,17 @@
   <% if @trophies.count > 0 %>
     <table>
       <% @trophies.each do |t| %>
-        <tr id="trophyrow_<%= Sufia::Noid.noidify(t.pid) %>">
+        <tr id="trophyrow_<%= t.noid %>">
           <td>
             <%= render partial: "dashboard/_index_partials/thumbnail_display", locals: {document: t, width: 90} %>
           </td>
           <td>
             <%= link_to display_title(t), sufia.generic_file_path(t) %>
-            <%= link_to raw("<i class='trophy-on icon-remove'></i>"), "", class: 'glyphicon glyphicon-trophy trophy-on', title: "Click to remove from Highlighted files.", id: Sufia::Noid.noidify(t.pid), remote: true, data: {removerow: "true"} if current_user == @user%>
+            <% if current_user == @user %>
+              <%= display_trophy_link current_user, t.noid, class: 'glyphicon glyphicon-trophy', data: {removerow: true} do %>
+                <i class='trophy-on icon-remove'></i>
+              <% end %>
+            <% end %>
           </td>
         </tr>
       <% end %>
