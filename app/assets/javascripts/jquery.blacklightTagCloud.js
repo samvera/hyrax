@@ -1,4 +1,5 @@
 //= require jquery.tagcloud
+//= require jquery.tinysort.min
 
 (function( $ ){
 
@@ -13,13 +14,28 @@
 
     return this.each(function() {  
       var facet_name = $(this).data("facet");
-      var $element = $(this)
+      var $tagCloud = $(this)
       $.ajax({url:"/catalog/facet/"+facet_name+".json"}).done(function(data) {
         data.response.facets.items.map(function(item) {
-          $element.append('<li rel="'+item.hits+'" title="'+item.value+'"><a href="/?f['+facet_name+'][]='+item.value+'">'+item.value+'</a><span class="facet-count">('+item.hits+')</span></li>');
+          $tagCloud.append('<li rel="'+item.hits+'" title="'+item.value+'"><a href="/?f['+facet_name+'][]='+item.value+'">'+item.value+'</a><span class="badge facet-count">'+item.hits+'</span></li>');
         });
-        $element.tagcloud(options);
+        $tagCloud.tagcloud(options);
+        $tagCloud.children().tsort({attr:'title', order:'asc'});
       });
+      $tagCloud.siblings('.tag-sort').children().each(function() {
+        $btn = $(this)
+        if ($btn.hasClass('tag-sort-az')) { var opts = {attr:'title', order:'asc'} }
+        else if ($btn.hasClass('tag-sort-za')) { var opts = {attr:'title', order:'desc'} }
+        else if ($btn.hasClass('tag-sort-numerical')) { var opts = {attr:'rel', order:'desc'} }
+        if (opts) {
+          $btn.click(function() { $tagCloud.children().tsort(opts); });
+        };
+        
+        if ($btn.hasClass('tag-toggle-list')) { 
+          $btn.click(function() { $tagCloud.toggleClass("list"); })       
+        };
+        
+      })
     });
 
   };

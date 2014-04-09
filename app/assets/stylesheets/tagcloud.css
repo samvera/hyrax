@@ -1,5 +1,16 @@
+.tagcloud {
+    padding-left: 0px;
+    text-align: justify;
+}
 .tagcloud li{
     display: inline;
+    margin-right:0.25em;
+}
+.tagcloud.list li {
+    display: block;
+}
+.tagcloud li .badge {
+    display:none;
 }
 
 .weight-15 {
