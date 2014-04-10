@@ -16,7 +16,6 @@
             <%= link_to '<i class="glyphicon glyphicon-upload"></i> Upload File(s)'.html_safe, sufia.new_generic_file_path, {:class => "btn btn-primary"}  %><br />
           </div>
           <div class="col-xs-12 col-sm-9">
-            <div class="sr-only" id="current_user"><%=@user.user_key%></div>
             <div class="row">
               <%= render :partial => 'heading' %>
               <%= render :partial => 'search_form' %>

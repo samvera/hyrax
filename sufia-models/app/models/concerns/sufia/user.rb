@@ -45,7 +45,7 @@ module Sufia::User
 
   def trophy_files
     trophies.map do |t|
-      GenericFile.load_instance_from_solr(Sufia::Noid.namespaceize(t.generic_file_id))
+      ::GenericFile.load_instance_from_solr(Sufia::Noid.namespaceize(t.generic_file_id))
     end
   end
 

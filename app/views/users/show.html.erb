@@ -6,21 +6,19 @@ $('#myTab a').click(function (e) {
 })
 
 <% end %>
-  <div class="sr-only" id="current_user"><%=@user.user_key%></div>
   <div class="col-xs-12">
     <div class="pull-right">
       <%= render 'profile_actions' %>
     </div>
     <span class="col-xs-3">
       <%= render 'left_sidebar' %>
-    </span> <!-- /close span20 -->
+    </span>
 
-<!-- right col -->
+    <!-- right col -->
     <span class="col-xs-9">
-
       <%= render 'profile_tabs' %>
-    </span> <!-- /close span50 -->
-  </div><!-- /close span110 -->
+    </span>
+  </div>
 
 
 

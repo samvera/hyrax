@@ -1,32 +1,47 @@
-// short hand for $(document).ready();
-$(function() {
+function toggleTrophy(url, anchor) {
+  $.ajax({
+     url: url,
+     type: "post",
+     success: function(data) {
+       gid = data.generic_file_id;
+       if (anchor.hasClass("trophy-on")){
+         // we've just removed the trophy
+         trophyOff(anchor);
+       } else {
+         trophyOn(anchor);
+       }
 
-   $('.trophy-class').click(function(){
-      var uid=$("#current_user").html();
-      $.ajax({
-         url:"/users/"+uid+"/trophy",
-         type:"post",
-         data: "file_id="+this.id,
-         success:function(data) {
-           gid = data.generic_file_id;
-           var oldclass = $('#'+gid).find('i').attr("class");
-           if (oldclass.indexOf("trophy-on") != -1){
-             $('#'+gid).find('i').attr("title", "Highlight work");
-           } else {
-             $('#'+gid).find('i').attr("title", "Unhighlight work");
-           }
-
-           $('#'+gid).find('i').toggleClass("trophy-on");
-           $('#'+gid).find('i').toggleClass("trophy-off");
-           if ($('#'+gid).data('removerow')) {
-             $('#trophyrow_'+gid).fadeOut(1000, function() {
-              $('#trophyrow_'+gid).remove();
-              });
-           }
-         }
-      })
+       anchor.toggleClass("trophy-on");
+       anchor.toggleClass("trophy-off");
+     }
+  });
+}
+// Trophy will be removed
+function trophyOff(anchor) {
+  if (anchor.data('removerow')) {
+    $('#trophyrow_'+gid).fadeOut(1000, function() {
+      $('#trophyrow_'+gid).remove();
     });
+  } else {
+    anchor.attr("title", "Highlight work");
+    $nodes = anchor.contents()
+    $nodes[$nodes.length - 1].nodeValue = anchor.data('add-text')
+  }
+}
 
-}); //closing function at the top of the page
+function trophyOn(anchor) {
+  anchor.attr("title", "Unhighlight work");
+  $nodes = anchor.contents()
+  $nodes[$nodes.length - 1].nodeValue = anchor.data('remove-text')
+}
+
+Blacklight.onLoad( function() {
+  // #this method depends on a "current_user" global variable having been set.
+  $('.trophy-class').click(function(evt){
+    evt.preventDefault();
+    anchor = $(this);
+    toggleTrophy(anchor.data('url'), anchor);
+  });
+});
 
 
