@@ -2,18 +2,13 @@ require 'spec_helper'
 
 describe UsersController do
   before(:each) do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
     sign_in @user
     User.any_instance.stub(:groups).and_return([])
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
-  after(:all) do
-    @user = FactoryGirl.find(:user) rescue
-    @user.delete if @user
-    @another_user = FactoryGirl.find(:archivist) rescue
-    @another_user.delete if @user
-  end
+
   describe "#show" do
     it "show the user profile if user exists" do
       get :show, id: @user.user_key
@@ -88,7 +83,7 @@ describe UsersController do
         @u2.save
       end
       it "uses the base query" do
-        u3 = FactoryGirl.find_or_create(:user)
+        u3 = FactoryGirl.find_or_create(:jill)
         controller.stub(:base_query).and_return(['email == "jilluser@example.com"'])
         get :index
         assigns[:users].should include(u3)

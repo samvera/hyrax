@@ -4,7 +4,7 @@ describe TinymceAssetsController do
   let(:file) { fixture_file_upload('/world.png','image/png') }
 
   context "when logged in" do
-    let(:user) { FactoryGirl.create(:normal_user) }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in user }
 
     context "as a user who can upload" do

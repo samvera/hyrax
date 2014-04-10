@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe IngestLocalFileJob do
-  let(:user) { FactoryGirl.find_or_create(:user) }
+  let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let (:generic_file) do
     GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save }

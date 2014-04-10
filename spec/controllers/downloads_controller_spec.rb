@@ -21,10 +21,6 @@ describe DownloadsController do
         User.any_instance.stub(:groups).and_return([])
         controller.stub(:clear_session_user) ## Don't clear out the authenticated session
       end
-      after do
-        arch = FactoryGirl.find(:archivist) rescue
-        arch.delete if arch
-      end
       describe "show" do
         it "should default to returning configured default download" do
           DownloadsController.default_content_dsid.should == "content"
@@ -64,14 +60,9 @@ describe DownloadsController do
 
     describe "when not logged in as reader" do
       before do
-        sign_in FactoryGirl.find_or_create(:user)
+        sign_in FactoryGirl.find_or_create(:jill)
         User.any_instance.stub(:groups).and_return([])
         controller.stub(:clear_session_user) ## Don't clear out the authenticated session
-      end
-
-      after do
-        user = FactoryGirl.find(:user) rescue
-        user.delete if user
       end
 
       describe "show" do

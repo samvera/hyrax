@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe BatchUpdateJob do
   before do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     @batch = Batch.new
     @batch.save
     @file = GenericFile.new(:batch=>@batch)

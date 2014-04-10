@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Batch do
   before(:all) do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
     GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new

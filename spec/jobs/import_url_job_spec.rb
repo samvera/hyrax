@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ImportUrlJob do
-  let(:user) { FactoryGirl.find_or_create(:user) }
+  let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:generic_file) do
     GenericFile.new.tap do |f|

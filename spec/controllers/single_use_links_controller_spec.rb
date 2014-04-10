@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SingleUseLinksController do
   before(:all) do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     @file = GenericFile.new
     @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
     @file.apply_depositor_metadata(@user)

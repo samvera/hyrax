@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
   before(:all) do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
   end
   after(:all) do
@@ -38,7 +38,7 @@ describe User do
   end
   describe "follow/unfollow" do
     before(:all) do
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       @another_user = FactoryGirl.find_or_create(:archivist)
       @user.follow(@another_user)
     end
