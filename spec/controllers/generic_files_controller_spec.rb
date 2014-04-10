@@ -3,7 +3,7 @@ require 'spec_helper'
 describe GenericFilesController do
   before do
     controller.stub(:has_access?).and_return(true)
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     sign_in @user
     User.any_instance.stub(:groups).and_return([])
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session
@@ -231,7 +231,7 @@ describe GenericFilesController do
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata(@user)
       @generic_file.save
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
     end
     after do
@@ -264,7 +264,7 @@ describe GenericFilesController do
       s1 = double('one')
       ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       post :update, :id=>@generic_file.pid, :generic_file=>{:title=>'new_title', :tag=>[''], :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
       @user.delete
@@ -277,7 +277,7 @@ describe GenericFilesController do
       s2 = double('one')
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
@@ -286,7 +286,7 @@ describe GenericFilesController do
     end
 
     it "should change mime type when restoring a revision with a different mime type" do
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
@@ -316,7 +316,7 @@ describe GenericFilesController do
     end
 
     it "should record what user added a new version" do
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
@@ -393,7 +393,7 @@ describe GenericFilesController do
       CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
       Sufia.queue.should_receive(:push).with(s2).once
       GenericFile.stub(:save).and_return({})
-      @user = FactoryGirl.find_or_create(:user)
+      @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       file = fixture_file_upload('/world.png','image/png')
       post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}

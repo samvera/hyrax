@@ -340,7 +340,7 @@ describe GenericFile do
   end
   describe "trophies" do
     before do
-      u = FactoryGirl.create(:user)
+      u = FactoryGirl.create(:jill)
       @f = GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata(u)
         gf.stub(:characterize_if_changed).and_yield #don't run characterization
@@ -357,9 +357,10 @@ describe GenericFile do
       Trophy.where(generic_file_id: @f.pid).count.should == 0
     end
   end
+
   describe "audit" do
-    before(:each) do
-      u = FactoryGirl.create(:user)
+    before do
+      u = FactoryGirl.create(:jill)
       f = GenericFile.new
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       f.apply_depositor_metadata(u)

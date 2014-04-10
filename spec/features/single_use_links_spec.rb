@@ -6,10 +6,9 @@ describe "Create and use single-use links" do
   include Sufia::Engine.routes.url_helpers
 
   before do
-    user = User.find_by_email('jilluser@example.com') || FactoryGirl.create(:user)
+    user = FactoryGirl.find_or_create(:jill)
     
-    login_as(user, :scope => :user)
-
+    login_as(user)
     
     @file = GenericFile.new
     @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')

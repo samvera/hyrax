@@ -13,7 +13,7 @@ describe ContentBlocksController do
     end
 
     context "when logged in" do
-      let(:user) { FactoryGirl.create(:normal_user) }
+      let(:user) { FactoryGirl.create(:user) }
       before { controller.stub(current_user: user) }
 
       context "as a user in the admin group" do

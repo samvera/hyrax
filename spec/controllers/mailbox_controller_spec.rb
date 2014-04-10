@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe MailboxController do
   before(:each) do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
     @message = "Test Message"
     @subject = "Test Subject"

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'event jobs' do
   before(:each) do
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
     @third_user = FactoryGirl.find_or_create(:curator)
     GenericFile.any_instance.stub(:terms_of_service).and_return('1')

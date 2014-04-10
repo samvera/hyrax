@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CatalogController do
-  let(:user) { FactoryGirl.find_or_create(:user) }
+  let(:user) { FactoryGirl.find_or_create(:jill) }
   before do
     GenericFile.any_instance.stub(:characterize_if_changed).and_yield
     sign_in user

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe BatchEditsController do
   before do
     controller.stub(:has_access?).and_return(true)
-    @user = FactoryGirl.find_or_create(:user)
+    @user = FactoryGirl.find_or_create(:jill)
     sign_in @user
     User.any_instance.stub(:groups).and_return([])
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session

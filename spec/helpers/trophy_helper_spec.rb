@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TrophyHelper do
   describe "#display_trophy_link" do
-    let(:user) { FactoryGirl.create(:normal_user) }
+    let(:user) { FactoryGirl.create(:user) }
     let(:noid) { '9999' }
 
     let(:text_attributes) { '[data-add-text="Highlight File on Profile"][data-remove-text="Unhighlight File"]' }
