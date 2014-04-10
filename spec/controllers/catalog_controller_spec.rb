@@ -10,10 +10,10 @@ describe CatalogController do
   describe "#index" do
     before (:all) do
       GenericFile.delete_all
-      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', read_groups:['public'])
+      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', tag:'rocks', read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
-      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', contributor:'Contrib1', read_groups:['public'])
+      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', tag:'clouds', contributor:'Contrib1', read_groups:['public'])
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
     end
@@ -24,17 +24,17 @@ describe CatalogController do
     end
 
     describe "term search" do
-      before do
-         get :index, q: "pdf"
-      end
       it "should find records" do
+        get :index, q: "pdf"
         expect(response).to be_success
         response.should render_template('catalog/index')
         assigns(:document_list).map(&:id).should == [@gf1.id]
-        
         assigns(:document_list).count.should eql(1)
         assigns(:document_list).first['desc_metadata__title_tesim'].should == ['Test Document PDF']
-
+      end
+      it "should search keywords" do
+        get :index, q: "rocks"
+        assigns(:document_list).map(&:id).should == [@gf1.id]
       end
     end
 

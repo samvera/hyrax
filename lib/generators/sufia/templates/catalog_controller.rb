@@ -112,11 +112,10 @@ class CatalogController < ApplicationController
     # solr request handler? The one set in config[:default_solr_parameters][:qt],
     # since we aren't specifying it otherwise.
     config.add_search_field('all_fields', :label => 'All Fields', :include_in_advanced_search => false) do |field|
+      all_names = config.show_fields.values.map{|val| val.field}.join(" ")
       title_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
-      label_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
-      contributor_name = solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
       field.solr_parameters = {
-        :qf => "#{title_name} noid_tsi #{label_name} file_format_tesim #{contributor_name}",
+        :qf => "#{all_names} noid_tsi file_format_tesim",
         :pf => "#{title_name}"
       }
     end
