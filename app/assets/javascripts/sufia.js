@@ -72,8 +72,7 @@ function notify_update_link() {
    $('#notify_update_link').click();
 }
 
-// short hand for $(document).ready();
-$(function() {
+Blacklight.onLoad(function() {
 
   // set up global batch edit options to override the ones in the gem
   window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};

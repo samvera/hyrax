@@ -9,8 +9,7 @@ function getSingleUse(id) {
     return rurl  + resp.responseText;
 }
 
-// short hand for $(document).ready();
-$(function() {
+Blacklight.onLoad(function() {
     ZeroClipboard.setDefaults({ moviePath: "/assets/ZeroClipboard.swf" });
     $.each($(".copypaste"), function(idx, item) {
         var clip = new ZeroClipboard();

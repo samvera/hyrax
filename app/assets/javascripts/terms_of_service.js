@@ -1,6 +1,6 @@
 jQuery.fn.exists = function(){return this.length>0;}
 
-$(function () {
+Blacklight.onLoad(function () {
   // all activate-submit buttons are disabled by default
   $('.activate-submit').each(function() {
     $(this).prop('disabled', true);
