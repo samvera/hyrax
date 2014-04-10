@@ -12,7 +12,7 @@
       <h3>Follower(s)</h3>
       <ul>
       <% @followers.each do |f| %>
-        <li> <a href="<%= sufia.profile_path(f.login) %>" title="View user's profile"><%= f.name %></a></li>
+        <li><%= link_to f.name, sufia.profile_path(f), title: "View user's profile" %></li>
       <% end %>
       </ul>
     <%else%>
