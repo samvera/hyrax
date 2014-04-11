@@ -6,6 +6,11 @@
     display: inline;
     margin-right:0.25em;
 }
+.tag-toggle-list {
+    margin-top: 1.25em;
+    margin-left: 0.5em;
+    margin-bottom: 1em;
+}
 .tagcloud.list li {
     display: block;
 }

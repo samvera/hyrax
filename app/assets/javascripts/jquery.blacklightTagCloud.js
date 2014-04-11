@@ -22,20 +22,22 @@
         $tagCloud.tagcloud(options);
         $tagCloud.children().tsort({attr:'title', order:'asc'});
       });
+      $tagCloud.siblings('.tag-toggle-list').each(function() { 
+        var $toggle = $(this)
+        $toggle.click(function() { 
+          $tagCloud.toggleClass("list"); 
+          $toggle.text( $toggle.text()=="Cloud"?"List":"Cloud");
+        });
+      });
       $tagCloud.siblings('.tag-sort').children().each(function() {
-        $btn = $(this)
+        var $btn = $(this)
         if ($btn.hasClass('tag-sort-az')) { var opts = {attr:'title', order:'asc'} }
         else if ($btn.hasClass('tag-sort-za')) { var opts = {attr:'title', order:'desc'} }
         else if ($btn.hasClass('tag-sort-numerical')) { var opts = {attr:'rel', order:'desc'} }
         if (opts) {
           $btn.click(function() { $tagCloud.children().tsort(opts); });
-        };
-        
-        if ($btn.hasClass('tag-toggle-list')) { 
-          $btn.click(function() { $tagCloud.toggleClass("list"); })       
-        };
-        
-      })
+        }; 
+      });
     });
 
   };

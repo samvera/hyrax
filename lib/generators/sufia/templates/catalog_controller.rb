@@ -61,6 +61,10 @@ class CatalogController < ApplicationController
       :qt => "search",
       :rows => 10
     }
+    
+    # Specify which field to use in the tag cloud on the homepage.  
+    # To disable the tag cloud, comment out this line.
+    config.tag_cloud_field_name = Solrizer.solr_name("desc_metadata__tag", :facetable)
 
     # solr field configuration for search results/index views
     config.index.title_field = solr_name("desc_metadata__title", :displayable)
