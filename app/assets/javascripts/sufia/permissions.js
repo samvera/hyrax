@@ -8,7 +8,7 @@
    * submitted
    */
 
-$(function() {
+Blacklight.onLoad(function() {
   // input for uids -  attach function to verify uid
   $('#new_user_name_skel').on('blur', function() {
       // clear out any existing messages

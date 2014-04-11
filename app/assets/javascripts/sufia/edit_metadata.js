@@ -1,4 +1,4 @@
-$(function() {
+Blacklight.onLoad(function() {
   function get_autocomplete_opts(field) {
     var autocomplete_opts = {
       minLength: 2,
