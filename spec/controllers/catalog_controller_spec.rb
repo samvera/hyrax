@@ -60,6 +60,19 @@ describe CatalogController do
         end
       end
 
+      context "with featured works" do
+        before do
+          FeaturedWork.create!(generic_file_id: @gf1.id)
+        end
+
+        it "should set featured works" do
+          get :index
+          expect(response).to be_success
+          expect(assigns(:featured_works).first).to be_kind_of SolrDocument
+          expect(assigns(:featured_works).first.id).to eq @gf1.id
+        end
+      end
+
     end
   end
 end

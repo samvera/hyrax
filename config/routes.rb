@@ -13,8 +13,9 @@ Sufia::Engine.routes.draw do
   get "users/notifications_number" => "users#notifications_number", :as => :user_notify
 
   # Generic file routes
-  resources :generic_files, :path => :files, :except => :index do
+  resources :generic_files, path: :files, except: :index do
     member do
+      resource :featured_work, only: [:create, :destroy]
       get 'citation', :as => :citation
       post 'audit'
     end

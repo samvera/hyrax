@@ -1,0 +1,35 @@
+<li data-id="<%= featured.noid %>">
+  <div class="row">
+    <div class="col-sm-2">
+      <%= render partial: 'dashboard/_index_partials/thumbnail_display', locals: {document: featured, width: 90} %>
+    </div>
+    <div class="col-sm-10">
+      <% if can? :destroy, FeaturedWork %>
+        <h3 class="pull-right">
+          <%= link_to sufia.featured_work_path(featured, format: :json),
+            title: "Remove work from feature section",
+            data: {behavior: 'unfeature'} do %>
+            <i class='icon-remove'></i>
+          <% end %>
+        </h3>
+      <% end %>
+      <h3>
+        <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '),
+          sufia.generic_file_path(featured), title: featured.title_or_label  %>
+      </h3>
+      <div> 
+        <%= link_to_profile featured.depositor("no depositor value") %>
+      </div>
+      <div> 
+        <%= link_to truncate(featured.label, length: 25),
+            sufia.generic_file_path(featured), title: featured.label %>
+      </div>
+      <div> 
+        <%= link_to_facet_list(featured.resource_type, 'desc_metadata__resource_type', 'no resource specified') %>
+      </div>
+      <div> 
+        <%= link_to_facet_list(featured.tags, 'desc_metadata__tag', 'no keywords specified') %>
+      </div>
+    </div>
+  </div>
+</li>
