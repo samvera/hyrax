@@ -3,7 +3,7 @@ require 'spec_helper'
 describe FeaturedWorksController do
   describe "#create" do
     before do
-      sign_in FactoryGirl.create(:normal_user)
+      sign_in FactoryGirl.create(:user)
       expect(controller).to receive(:authorize!).with(:create, FeaturedWork).and_return(true)
     end
 
@@ -36,7 +36,7 @@ describe FeaturedWorksController do
     let!(:featured_work) { FactoryGirl.create(:featured_work, generic_file_id: '1234abcd') }
 
     before do
-      sign_in FactoryGirl.create(:normal_user)
+      sign_in FactoryGirl.create(:user)
       expect(controller).to receive(:authorize!).with(:destroy, FeaturedWork).and_return(true)
     end
 
