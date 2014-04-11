@@ -60,9 +60,11 @@ Sufia.config do |config|
 
   config.queue = Sufia::Resque::Queue
 
-  # Map hostnames onto Google Analytics tracking IDs
-  # config.google_analytics_id = 'UA-99999999-1'
+  # Enable displaying usage statistics in the UI
+  config.usage_statistics = true
 
+  # Specify a Google Analytics tracking ID to gather usage statistics
+  # config.google_analytics_id = 'UA-99999999-1'
 
   # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
@@ -75,7 +77,7 @@ Sufia.config do |config|
 
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"
-  
+
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     config.browse_everything = BrowseEverything.config

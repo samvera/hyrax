@@ -1,0 +1,9 @@
+#
+# To integrate your app with Google Analytics, uncomment the lines below and add your API key information.
+#
+# analytics:
+#   :app_name: GOOGLE_OAUTH_APP_NAME
+#   :app_version: GOOGLE_OAUTH_APP_VERSION
+#   :privkey_path: GOOGLE_OAUTH_PRIVATE_KEY_PATH
+#   :privkey_secret: GOOGLE_OAUTH_PRIVATE_KEY_SECRET
+#   :client_email: GOOGLE_OAUTH_CLIENT_EMAIL

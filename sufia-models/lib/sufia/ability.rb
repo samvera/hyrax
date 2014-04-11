@@ -9,6 +9,7 @@ module Sufia
       generic_file_abilities
       featured_work_abilities
       editor_abilities
+      stats_abilities
     end
 
     def featured_work_abilities
@@ -24,6 +25,10 @@ module Sufia
         can :create, TinymceAsset
         can :update, ContentBlock
       end
+    end
+
+    def stats_abilities
+      alias_action :stats, to: :read
     end
   end
 end

@@ -20,7 +20,7 @@ module Sufia
 
       # Catch permission errors
       rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-        if (exception.action == :edit)
+        if exception.action == :edit
           redirect_to(sufia.url_for({:action=>'show'}), :alert => "You do not have sufficient privileges to edit this document")
         elsif current_user and current_user.persisted?
           redirect_to root_url, :alert => exception.message
@@ -30,13 +30,13 @@ module Sufia
         end
       end
 
-      # actions: audit, index, create, new, edit, show, update, destroy, permissions, citation
+      # actions: audit, index, create, new, edit, show, update,
+      #          destroy, permissions, citation, stats
       before_filter :authenticate_user!, :except => [:show, :citation]
       before_filter :has_access?, :except => [:show]
       prepend_before_filter :normalize_identifier, :except => [:index, :create, :new]
       load_resource :only=>[:audit]
       load_and_authorize_resource :except=>[:index, :audit]
-
     end
 
     # routed to /files/new
@@ -49,6 +49,19 @@ module Sufia
     def edit
       @generic_file.initialize_fields
       @groups = current_user.groups
+    end
+
+    # routed to /files/:id/stats
+    def stats
+      path = sufia.generic_file_path(Sufia::Noid.noidify(params[:id]))
+      # Pull back results from GA, filter them for path, and hashify
+      @created = DateTime.parse(::GenericFile.find(params[:id]).create_date)
+      results_list = Sufia::UsageStatistics.profile.pageview(
+        start_date: @created,
+        end_date: DateTime.now,
+        sort: 'date').for_path(path)
+      @stats_json = Sufia::UsageStatistics.as_flot_json(results_list)
+      @pageviews = Sufia::UsageStatistics.total_pageviews(results_list)
     end
 
     # routed to /files/:id (DELETE)

@@ -2,9 +2,8 @@ require 'spec_helper'
 
 describe 'Routes' do
   routes { Sufia::Engine.routes }
-  
+
   describe 'Catalog' do
-  
     it 'should route the root url to the catalog controller' do
       { get: '/' }.should route_to(controller: 'catalog', action: 'index')
     end
@@ -13,6 +12,10 @@ describe 'Routes' do
   describe 'GenericFile' do
     it 'should route to citation' do
       { get: '/files/1/citation' }.should route_to(controller: 'generic_files', action: 'citation', id: '1')
+    end
+
+    it 'should route to stats' do
+      { get: '/files/1/stats' }.should route_to(controller: 'generic_files', action: 'stats', id: '1')
     end
 
     it 'should route to audit' do
@@ -72,8 +75,6 @@ describe 'Routes' do
     it "should route to dashboard facet" do
       { get: '/dashboard/facet/1' }.should route_to(controller: 'dashboard', action: 'facet', id: '1')
     end
-
-  
 
     it "should route to dashboard activity" do
       { get: '/dashboard/activity' }.should route_to(controller: 'dashboard', action: 'activity')

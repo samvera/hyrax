@@ -8,12 +8,14 @@ describe GenericFilesController do
     User.any_instance.stub(:groups).and_return([])
     controller.stub(:clear_session_user) ## Don't clear out the authenticated session
   end
+
   describe "#create" do
     before do
       @file_count = GenericFile.count
       @mock = GenericFile.new({:pid => 'test:123'})
       GenericFile.stub(:new).and_return(@mock)
     end
+
     after do
       GenericFile.unstub(:new)
       Batch.find("sample:batch_id").delete rescue
@@ -247,6 +249,54 @@ describe GenericFilesController do
       ContentDeleteEventJob.should_receive(:new).with(@generic_file.noid, @user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       delete :destroy, :id=>@generic_file.pid
+    end
+  end
+
+  describe 'stats' do
+    before do
+      @generic_file = GenericFile.new.tap do |gf|
+        gf.apply_depositor_metadata(@user)
+        gf.save
+      end
+    end
+
+    after do
+      @generic_file.destroy
+    end
+
+    context 'when user has access to file' do
+      before do
+        sign_in @user
+        mock_query = double('query')
+        allow(mock_query).to receive(:for_path).and_return([
+            OpenStruct.new(date: '2014-01-01', pageviews: 4),
+            OpenStruct.new(date: '2014-01-02', pageviews: 8),
+            OpenStruct.new(date: '2014-01-03', pageviews: 6),
+            OpenStruct.new(date: '2014-01-04', pageviews: 10),
+            OpenStruct.new(date: '2014-01-05', pageviews: 2)])
+        allow(mock_query).to receive(:map).and_return(mock_query.for_path.map(&:marshal_dump))
+        profile = double('profile')
+        allow(profile).to receive(:pageview).and_return(mock_query)
+        allow(Sufia::UsageStatistics).to receive(:profile).and_return(profile)
+       end
+
+      it 'renders the stats view' do
+        get :stats, id: @generic_file.noid
+        expect(response).to be_success
+        expect(response).to render_template(:stats)
+      end
+    end
+
+    context 'when user lacks access to file' do
+      before do
+        @archivist = FactoryGirl.find_or_create(:archivist)
+        sign_in @archivist
+      end
+
+      it 'redirects to root_url' do
+        get :stats, id: @generic_file.pid
+        expect(response).to redirect_to(Sufia::Engine.routes.url_helpers.root_path)
+      end
     end
   end
 

@@ -44,7 +44,6 @@ module Sufia
         require 'activerecord-import'
         require 'hydra/derivatives'
         require 'sufia/models/model_methods'
-        require 'sufia/models/noid'
         require 'sufia/models/file_content'
         require 'sufia/models/file_content/versions'
         require 'sufia/models/generic_file/audit'
@@ -55,8 +54,11 @@ module Sufia
         require 'sufia/models/generic_file/thumbnail'
         require 'sufia/models/generic_file'
         require 'sufia/models/user_local_directory_behavior'
-        require 'sufia/models/id_service'
         require 'sufia/models/solr_document_behavior'
+        require 'sufia/noid'
+        require 'sufia/id_service'
+        require 'sufia/usage_statistics'
+        require 'sufia/pageview'
       end
 
       initializer 'configure' do

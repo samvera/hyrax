@@ -1,14 +1,14 @@
 # Sufia [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia) [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia) [![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 
 ## What is Sufia?
-Sufia is a component that adds self-deposit institutional repository features to a Rails app. 
+Sufia is a component that adds self-deposit institutional repository features to a Rails app.
 Sufia is created with Ruby on Rails and builds on the Hydra Framework.
 
 Sufia has the following features:
 
 * Multiple file, or folder, upload
 * Flexible user- and group-based access controls
-* Transcoding of audio and video files 
+* Transcoding of audio and video files
 * Generation and validation of identifiers
 * Fixity checking
 * Version control
@@ -24,6 +24,7 @@ Sufia has the following features:
 * Activity streams
 * Background jobs
 * Single-use links
+* Usage statistics
 
 ## Sufia needs the following software to work:
 1. Solr
@@ -45,7 +46,7 @@ gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # re
 ```
 Then `bundle install`
 
-Note the line with kaminari listed as a dependency.  This is a temporary fix to address a problem in the current release of kaminari.  Technically you should not have to list kaminari, which is a dependency of blacklight and sufia. 
+Note the line with kaminari listed as a dependency.  This is a temporary fix to address a problem in the current release of kaminari. Technically you should not have to list kaminari, which is a dependency of blacklight and sufia.
 
 ### Run the sufia generator
 ```
@@ -65,18 +66,17 @@ rake jetty:config
 rake jetty:start
 ```
 
-### If you want to use the CSS and JavaScript and other assets that ship with Sufia...
+### To use the CSS and JavaScript and other assets that ship with Sufia...
+
 #### Modify app/assets/stylesheets/application.css
 Add this line:
 ```
  *= require sufia
 ```
-**Remove** this line:  
-```*= require_tree .```  
+**Remove** this line:
+```*= require_tree .```
 
-_Removing the require_tree from application.css will ensure you're not loading the blacklight.css.  This is because blacklight's css styling does not mix well with sufia's default styling._ 
-
-
+_Removing the require_tree from application.css will ensure you're not loading the blacklight.css.  This is because blacklight's css styling does not mix well with sufia's default styling._
 #### Modify app/assets/javascripts/application.js
 
 Add this line:
@@ -91,9 +91,50 @@ Add this line:
 
 Turbolinks does not mix well with Blacklight.
 
-### If you want to use browse-everything
-Sufia provides built-in support for the [browse-everything](https://github.com/projecthydra/browse-everything) gem, which provides a consolidated file picker experience for selecting files from [DropBox](http://www.dropbox.com), 
-[Skydrive](https://skydrive.live.com/), [Google Drive](http://drive.google.com), 
+### Usage statistics
+
+Sufia provides support for capturing usage information via Google Analytics and for displaying usage stats in the UI.
+
+#### Capturing usage
+
+To enable the Google Analytics javascript snippet, make sure that `config.google_analytics_id` is set in your app within the `config/initializers/sufia.rb` file. A Google Analytics ID typically looks like _UA-99999999-1_.
+
+#### Displaying usage
+
+To display usage statistics in the UI, first head to the Google Developers Console and create a new project:
+
+https://console.developers.google.com/project
+
+Let's assume for now Google assigns it a project ID of _foo-bar-123_. It may take a few seconds for this to complete (watch the Activities bar near the bottom of the browser).  Once it's complete, enable the Google+ and Google Analytics APIs here (note: this is an example URL -- you'll have to change the project ID to match yours):
+
+https://console.developers.google.com/project/apps~foo-bar-123/apiui/api
+
+Finally, head to this URL (note: this is an example URL -- you'll have to change the project ID to match yours):
+
+https://console.developers.google.com/project/apps~foo-bar-537/apiui/credential
+
+And create a new OAuth client ID.  When prompted for the type, use the "Service Account" type.  This will give you the OAuth client ID, a client email address, a private key file, a private key secret/password, which you will need in the next step.
+
+Then run this generator:
+
+```
+rails g sufia:models:usagestats
+```
+
+The generator will create a configuration file at _config/analytics.yml_.  Edit that file to reflect the information that the Google Developer Console gave you earlier, namely you'll need to provide it:
+
+* The path to the private key
+* The password/secret for the privatekey
+* The OAuth client email
+* An application name (you can make this up)
+* An application version (you can make this up)
+
+Finally, you will need to set `config.usage_statistics = true` in _config/initializers/sufia.rb_.
+
+### To use browse-everything
+
+Sufia provides built-in support for the [browse-everything](https://github.com/projecthydra/browse-everything) gem, which provides a consolidated file picker experience for selecting files from [DropBox](http://www.dropbox.com),
+[Skydrive](https://skydrive.live.com/), [Google Drive](http://drive.google.com),
 [Box](http://www.box.com), and a server-side directory share.
 
 To activate browse-everything in your sufia app, run the browse-everything config generator
@@ -102,11 +143,11 @@ To activate browse-everything in your sufia app, run the browse-everything confi
 rails g browse_everything:config
 ```
 
-This will generate a file at _config/browse_everything_providers.yml_.  Open that file and enter the API keys for the providers that you want to support in your app.  For more info on configuring browse-everything, go to the [project page](https://github.com/projecthydra/browse-everything) on github.
+This will generate a file at _config/browse_everything_providers.yml_. Open that file and enter the API keys for the providers that you want to support in your app.  For more info on configuring browse-everything, go to the [project page](https://github.com/projecthydra/browse-everything) on github.
 
 After running the browse-everything config generator and setting the API keys for the desired providers, an extra tab will appear in your app's Upload page allowing users to pick files from those providers and submit them into your app's repository.
 
-*Note*: If you want to use the built-in browse-everything support, _you need to include the browse-everything css and javascript files_.  If you already included the sufia css and javascript (see [above](#if-you-want-to-use-the-css-and-javascript-and-other-assets-that-ship-with-sufia)), then you don't need to do anything.  Otherwise, follow the instructions in the [browse-everything README page](https://github.com/projecthydra/browse-everything)
+*Note*: If you want to use the built-in browse-everything support, _you need to include the browse-everything css and javascript files_. If you already included the sufia css and javascript (see [above](#if-you-want-to-use-the-css-and-javascript-and-other-assets-that-ship-with-sufia)), then you don't need to do anything.  Otherwise, follow the instructions in the [browse-everything README page](https://github.com/projecthydra/browse-everything)
 
 *If your config/initializers/sufia.rb was generated with sufia 3.7.2 or older*, then you need to add this line to an initializer (probably _config/initializers/sufia.rb _):
 ```ruby
@@ -152,7 +193,7 @@ See https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 ## Developers:
 This information is for people who want to modify the engine itself, not an application that uses the engine:
 
-# run the tests
+### run the tests
 rake clean spec
 ```
 
