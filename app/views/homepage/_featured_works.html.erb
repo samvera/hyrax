@@ -1,0 +1,17 @@
+<h2>Featured Works</h2>
+<% if can? :update, FeaturedWork %>
+  <%= form_for [sufia, @featured_work_list] do |f| %>
+    <div class="panel-group dd" id="dd">
+      <ol id="featured_works">
+        <%= f.fields_for :featured_works do |featured| %>
+          <%= render partial: 'homepage/sortable_featured', locals: {f: featured} %>
+        <% end %>
+      </ol>
+    </div>
+    <%= f.submit "Save order", class: 'btn btn-default' %>
+  <% end %>
+<% else %>
+  <ol id="featured_works">
+    <%= render partial: 'homepage/featured', collection: @featured_work_list.featured_works %>
+  </ol>
+<% end %>

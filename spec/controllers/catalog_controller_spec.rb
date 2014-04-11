@@ -68,8 +68,7 @@ describe CatalogController do
         it "should set featured works" do
           get :index
           expect(response).to be_success
-          expect(assigns(:featured_works).first).to be_kind_of SolrDocument
-          expect(assigns(:featured_works).first.id).to eq @gf1.id
+          expect(assigns(:featured_work_list)).to be_kind_of FeaturedWorkList
         end
       end
 

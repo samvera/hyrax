@@ -13,7 +13,7 @@ module Sufia
     protected
       def setup_front_page
         @featured_researcher = ContentBlock.find_or_create_by(name: 'featured_researcher')
-        @featured_works = FeaturedWork.generic_files
+        @featured_work_list = FeaturedWorkList.new
         recent
         recent_me # also grab my recent docs too
       end

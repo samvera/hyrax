@@ -1,0 +1,26 @@
+<% featured = f.object.generic_file_solr_document %>
+<li class="dd-item dd3-item featured-item" data-id="<%= featured.noid %>">
+  <div class="dd-handle dd3-handle"><%= t :drag %></div>
+  <div class="dd3-content panel panel-default">
+    <%= f.hidden_field :id %>
+    <%= f.hidden_field :order, data: {property: "order"} %>
+    <div class="main row">
+      <div class="col-sm-3">
+        <%= render partial: 'dashboard/_index_partials/thumbnail_display', locals: {document: featured, width: 90} %>
+      </div>
+      <div class="col-sm-9">
+        <% if can? :destroy, FeaturedWork %>
+          <h3 class="pull-right">
+            <%= link_to sufia.featured_work_path(featured, format: :json),
+              title: "Remove work from feature section",
+              data: {behavior: 'unfeature'} do %>
+              <i class='icon-remove'></i>
+            <% end %>
+          </h3>
+        <% end %>
+        <%= render partial: 'homepage/featured_fields', locals: {featured: featured} %>
+      </div>
+    </div>
+  </div>
+</li>
+

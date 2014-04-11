@@ -13,7 +13,7 @@ module Sufia
     end
 
     def featured_work_abilities
-      can [:create, :destroy], FeaturedWork if user_groups.include? 'admin'
+      can [:create, :destroy, :update], FeaturedWork if user_groups.include? 'admin'
     end
 
     def generic_file_abilities

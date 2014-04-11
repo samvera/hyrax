@@ -22,6 +22,8 @@ Sufia::Engine.routes.draw do
     end
   end
 
+  resources :featured_work_lists, path: 'featured_works', only: :create
+
   # Downloads controller route
   resources :downloads, :only => "show"
 

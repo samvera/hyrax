@@ -41,6 +41,7 @@
 //= require hydra_collections
 //= require browse_everything
 //= require jquery.blacklightTagCloud
+//= require nestable
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require sufia/batch_edit
@@ -148,6 +149,7 @@ Blacklight.onLoad(function() {
     $('input[name="sort"]').attr('value', sort);
     $("#user_submit").click();
   });
+
 }); //closing function at the top of the page
 
 /*
