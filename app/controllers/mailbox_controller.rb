@@ -20,7 +20,7 @@ class MailboxController < ApplicationController
 
   def destroy
     if current_user
-      msg = Conversation.find(params[:id])
+      msg = Mailboxer::Conversation.find(params[:id])
       if (msg.participants[0] == current_user) || (msg.participants[1] == current_user)
          delete_message(msg)
          empty_trash(msg.participants[0])
