@@ -69,6 +69,8 @@ end
 
 task :default => [:ci]
 
+directory 'pkg'
+
 FRAMEWORKS = ['hydra-access-controls', 'hydra-core']
 
 root    = File.expand_path('../', __FILE__)
