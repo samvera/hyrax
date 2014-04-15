@@ -27,7 +27,6 @@ module Sufia
     config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
   end
 
-  autoload :Catalog
   autoload :Controller
   autoload :Ability
   autoload :HttpHeaderAuth
