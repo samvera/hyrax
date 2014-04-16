@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Browse Dashboard files" do
 
   before do
-    find_or_create_file_fixtures
+    @fixtures = find_or_create_file_fixtures
     sign_in :user_with_fixtures
   end
 
@@ -18,14 +18,13 @@ describe "Browse Dashboard files" do
 
   it "should allow you to browse facets" do
     # TODO: fix more facets link!
-    pending "Until more facets link is fixed..."
-    visit '/'
+    click_link "dashboard"
     click_link "more Subjects"
     click_link "consectetur"
-    #page.should have_content "1 - 5 of 5"
-    click_link "Test Document MP3.mp3"
-    page.should have_content "Download"
-    page.should_not have_content "Edit"
+    within("#document_#{@fixtures[1].noid}") do
+      click_link "Test Document MP3.mp3"
+    end
+    page.should have_content "File Details"
   end
 
   it "should allow me to edit files (from the fixtures)" do
