@@ -1,25 +1,25 @@
 en:
   sufia:
-    account_name:       "Penn State Access Account Id"
-    deposit_agreement:  "ScholarSphere's Deposit Agreement"
+    account_name:       "My Institution Account Id"
+    deposit_agreement:  "Sufia's Deposit Agreement"
     upload_tooltip:     "Please accept Deposit Agreement before you can upload."
     share_button:       "Share Your Work"
     directory:
-      suffix:           "@psu.edu"
+      suffix:           "@example.org"
     search:
       form:
         q:
-          label:        "Search Scholarsphere"
+          label:        "Search Sufia"
           placeholder:  "Type keywords in here"
     upload:
       my_computer:
         tab_label: "My Computer"
       browse_everything:
-        tab_label: "Cloud Providers" 
+        tab_label: "Cloud Providers"
         browse_files_button: "Browse cloud files"
         files_selected: "files selected"
       local_ingest:
-        tab_label: "Network/Server Location"     
+        tab_label: "Network/Server Location"
     field_label:
       based_near:       "Location"
       description:      "Abstract or Summary"
@@ -40,6 +40,6 @@ en:
       description: "Free-text notes about the file itself. Examples include abstracts of a paper, citation information for a journal article, or a tag indicating a larger collection to which the file belongs."
       identifier: "A unique handle describing the file. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
       language: " The language of the file content."
-      publisher: "The person or group making the file available. Generally this is Penn State."
+      publisher: "The person or group making the file available. Generally this is the institution."
       rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. <em>This is a required field</em>."
-
+    background_attribution: "Background image courtesy of Penn State University"

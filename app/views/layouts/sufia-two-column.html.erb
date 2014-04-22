@@ -8,9 +8,10 @@
 <div  id="wrapper"> 
   <div class="container-fluid">
     <div id="page-positioner">
-      <%= render :partial => '/masthead', :formats => [:html] %>
+      <%= render :partial => '/masthead' %>
+      <%= render :partial => '/controls' %>
       <%= render :partial => '/flash_msg' %>
-      <div id="content-wrapper">
+      <div id="content-wrapper" class="container-fluid">
         <div id="content" class="row">
           <div class="col-xs-12 col-sm-3">
             <%= yield :sidebar %>
@@ -20,10 +21,10 @@
           </div>
         </div><!-- /#content -->
       </div><!-- /#content-wrapper -->
+      <%= render partial: '/footer' %>
     </div><!-- /#page-positioner -->
   </div><!-- /.container -->
 </div><!-- /#wrapper -->
-<%= render partial: '/footer' %>
 <div id="ajax-modal" class="modal hide" tabindex="-1"></div>
 </body>
 </html>

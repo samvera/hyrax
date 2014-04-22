@@ -17,7 +17,7 @@ describe 'users/index.html.erb' do
   it "should draw user list" do
     render
     page = Capybara::Node::Simple.new(rendered)
-    expect(page).to have_content("ScholarSphere Users")
+    expect(page).to have_content("Sufia Users")
     (1..10).each  do |i|
       expect(page).to have_content("user#{i}")
     end

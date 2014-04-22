@@ -1,19 +1,3 @@
-<%#
-Copyright © 2012 The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-%>
-
 <% @page_title = "More Search Options - #{application_name}" %>
 <% content_for :local_js do %>
   $(document).ready(function(){$("form.advanced input:first").focus();});
@@ -28,8 +12,8 @@ limitations under the License.
   <div class="well">
 <ul id="advanced_search_tips">
     <li><i class="icon-caret-right"></i> Select "match all" to require all fields.</li>
-    <li><i class="icon-caret-right"></i> Select "match any" to find at least one field.</li> 
-    <li><i class="icon-caret-right"></i> Combine keywords and attributes to find specific items.</li> 
+    <li><i class="icon-caret-right"></i> Select "match any" to find at least one field.</li>
+    <li><i class="icon-caret-right"></i> Combine keywords and attributes to find specific items.</li>
     <li><i class="icon-caret-right"></i> Use quotation marks to search as a phrase.  </li>
     <li><i class="icon-caret-right"></i> Use "+" before a term to make it required. (Otherwise results matching only some of your terms may be included).</li>
     <li><i class="icon-caret-right"></i> Use "-" before a word or phrase to exclude. </li>

@@ -8,25 +8,20 @@
 <div  id="wrapper"> 
   <div class="container-fluid">
     <div id="page-positioner">
-      <%= render :partial => '/masthead', :formats => [:html] %>
+      <%= render :partial => '/masthead' %>
+      <%= render :partial => '/controls' %>
       <%= render :partial => '/flash_msg' %>
       <div id="content-wrapper"> 
-        <div id="content" class="row">
-            <div class="col-sm-3 col-md-3 col-lg-3">
-              <%= yield :sidebar %>
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
-              <%= yield %>
-            </div><!-- /.span6 -->
-            <div class="col-sm-3 col-md-3 col-lg-3">
-              <%= render partial: 'layouts/homepage_sidebar2'%>
-            </div> <!-- /.span3 -->         
+        <div id="content">
+          <div class="col-xs-12">
+            <%= yield %>
+          </div>
         </div><!-- /#content -->
       </div><!-- /#content-wrapper -->
+      <%= render partial: '/footer' %>
     </div><!-- /#page-positioner -->
   </div><!-- /.container -->
 </div><!-- /#wrapper -->
-<%= render partial: '/footer' %>
 <div id="ajax-modal" class="modal hide" tabindex="-1"></div>
 </body>
 </html>

@@ -37,7 +37,6 @@ Blacklight.onLoad(function() {
 
   });
 
-
   // add button for new user
   $('#add_new_user_skel').on('click', function() {
       if ($('#new_user_name_skel').val() == "" || $('#new_user_permission_skel :selected').index() == "0") {
@@ -112,7 +111,6 @@ Blacklight.onLoad(function() {
 
 	});
 
-
   function addPerm(un, perm_form, perm, perm_type)
   {
       var tr = $(document.createElement('tr'));
@@ -153,15 +151,15 @@ Blacklight.onLoad(function() {
 
 });
 
-// return the files visibility level (penn state, open, restricted);
+// return the files visibility level (institution, open, restricted);
 function get_visibility(){
   return $("input[name='visibility']:checked").val()
 }
 
 /*
- * if visibility is Open or Penn State then we can't selectively
+ * if visibility is Open or Institution then we can't selectively
  * set other users/groups to 'read' (it would be over ruled by the
- * visibility of Open or Penn State) so disable the Read option
+ * visibility of Open or Institution) so disable the Read option
  */
 function set_access_levels()
 {
@@ -212,5 +210,3 @@ function is_permission_duplicate(user_or_group_name)
   // rather than setting this flag var
   return (flag ? true : false);
 }
-
-
