@@ -1,3 +1,5 @@
+require "deprecation"
+
 module Hydra
   module AccessControls
     module Permissions
