@@ -27,7 +27,7 @@ describe Hydra::Datastream::InheritableRightsMetadata do
     # The way RubyDora loads objects prevents us from stubbing the fedora connection :(
     # ActiveFedora::RubydoraConnection.stubs(:instance).returns(stub_everything())
     obj = ActiveFedora::Base.new
-    @sample = Hydra::Datastream::InheritableRightsMetadata.new(obj.inner_object, nil)
+    @sample = Hydra::Datastream::InheritableRightsMetadata.new(obj, nil)
     @sample.stub(:content).and_return('')
 
     @sample.permissions({:group=>"africana-faculty"}, "edit")

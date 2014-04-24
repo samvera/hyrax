@@ -151,7 +151,7 @@ describe Hydra::Datastream::RightsMetadata do
       solr_doc["discover_access_group_ssim"].should == ["public"]
     end
     it "should solrize fixture content correctly" do
-      lsample = Hydra::Datastream::RightsMetadata.new(nil, nil)
+      lsample = Hydra::Datastream::RightsMetadata.new(ActiveFedora::Base.new, nil)
       lsample.update_permissions({'person' => {'researcher1' => 'edit'},
                                   'group' => {'archivist' => 'edit', 'public' =>'read', 'bob'=>'discover'}})
 
