@@ -1,4 +1,3 @@
 module HydraHead
-  VERSION = "7.2.2"
+  VERSION = "8.0.0.alpha"
 end
-
