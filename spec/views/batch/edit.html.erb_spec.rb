@@ -7,7 +7,7 @@ describe 'batch/edit.html.erb', :type => :view do
 
   let(:generic_file) {
     content = double('content', versions: [], mimeType: 'application/pdf')
-    stub_model(GenericFile, noid: '123',
+    stub_model(GenericFile, id: '321', noid: '321',
                depositor: 'bob',
                content: content)
   }

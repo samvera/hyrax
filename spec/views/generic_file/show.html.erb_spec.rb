@@ -12,7 +12,7 @@ describe 'generic_files/show.html.erb', :type => :view do
   end
 
   let(:generic_file) do
-    stub_model(GenericFile, noid: '123',
+    stub_model(GenericFile, id: '123', noid: '123',
       depositor: depositor.user_key,
       audit_stat: 1,
       title: ['My Title'],

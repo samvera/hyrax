@@ -4,7 +4,7 @@ describe 'generic_files/edit.html.erb', :type => :view do
   describe 'when the file has two or more resource types' do
     let(:generic_file) {
       content = double('content', versions: [], mimeType: 'application/pdf')
-      stub_model(GenericFile, noid: '123',
+      stub_model(GenericFile, id: '123', noid: '123',
         depositor: 'bob',
         resource_type: ['Book', 'Dataset'],
         content: content)

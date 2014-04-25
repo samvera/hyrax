@@ -25,7 +25,9 @@ class BatchUpdateJob
     batch.generic_files.each do |gf|
       update_file(gf, user)
     end
-    batch.update_attributes({status:["Complete"]})
+
+    batch.update(status: ["Complete"])
+
     if denied.empty?
       send_user_success_message(user, batch) unless saved.empty?
     else
@@ -67,5 +69,4 @@ class BatchUpdateJob
     message = denied.count > 1 ? multiple_failure(batch.noid, denied) : single_failure(batch.noid, denied.first)
     User.batchuser.send_message(user, message, failure_subject, sanitize_text = false)
   end
-  
 end

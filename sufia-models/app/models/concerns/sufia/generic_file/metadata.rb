@@ -15,6 +15,7 @@ module Sufia
                                     :contributor, :title, :tag, :description, :rights,
                                     :publisher, :date_created, :subject,
                                     :resource_type, :identifier, :language, datastream: :descMetadata, multiple: true
+        attribute :label, [ RDF::DC.title, FedoraLens::Lenses.single, FedoraLens::Lenses.literal_to_string]
       end
 
       # Add a schema.org itemtype

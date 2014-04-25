@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "hydra-head", "~> 8.0.0.alpha"
   spec.add_dependency "active-fedora", "~> 8.0.0.alpha"
   spec.add_dependency "hydra-collections", "~> 3.0.0.alpha"
+  spec.add_dependency 'hydra-derivatives', '~> 1.0.0.alpha'
   spec.add_dependency 'nest', '~> 1.1'
   spec.add_dependency 'resque', '~> 1.23'
   spec.add_dependency 'resque-pool', '~> 0.3'
@@ -39,7 +40,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'acts_as_follower', '>= 0.1.1', '< 0.3'
   spec.add_dependency 'carrierwave', '~> 0.9'
-  spec.add_dependency 'hydra-derivatives', '~> 0.1'
   spec.add_dependency 'oauth2', '~> 0.9'
   spec.add_dependency 'google-api-client', '~> 0.7'
   spec.add_dependency 'legato', '~> 0.3'
