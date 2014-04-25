@@ -61,7 +61,9 @@ Sufia.config do |config|
   config.queue = Sufia::Resque::Queue
 
   # Enable displaying usage statistics in the UI
-  config.usage_statistics = true
+  # Defaults to FALSE
+  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
+  config.analytics = false
 
   # Specify a Google Analytics tracking ID to gather usage statistics
   # config.google_analytics_id = 'UA-99999999-1'

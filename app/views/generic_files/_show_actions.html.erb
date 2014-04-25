@@ -1,9 +1,9 @@
     <h2 class="non lower">Actions</h2>
     <p>
-      <%= link_to "Download", sufia.download_path(@generic_file.noid) %>
-      <% if Sufia.config.usage_statistics %>
+      <%= render_download_link %>
+      <% if Sufia.config.analytics %>
         &nbsp;|&nbsp;
-        <%= link_to "Statistics", sufia.stats_generic_file_path(@generic_file), id: 'stats' %>
+        <%= link_to "Analytics", sufia.stats_generic_file_path(@generic_file), id: 'stats' %>
       <% end %>
       <% if can? :edit, @generic_file %>
           &nbsp;|&nbsp;

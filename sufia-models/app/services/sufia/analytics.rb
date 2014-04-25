@@ -3,7 +3,7 @@ require 'oauth2'
 require 'legato'
 
 module Sufia
-  module UsageStatistics
+  module Analytics
     # Loads configuration options from config/analytics.yml. Expected structure:
     # `analytics:`
     # `  app_name: GOOGLE_OAUTH_APP_NAME`
@@ -14,29 +14,6 @@ module Sufia
     # @return [Hash] A hash containing five keys: 'app_name', 'app_version', 'client_email', 'privkey_path', 'privkey_secret'
     def self.config
       @config ||= YAML.load(File.read(File.join(Rails.root, 'config', 'analytics.yml')))['analytics']
-    end
-
-    # Convert query results into json for plotting in JQuery Flot
-    # @param [Legato::Query] A Legato query object containing the results
-    # @return [Array] An array of arrays represented in JSON: `[[1388563200000,4],[1388649600000,8],...]`
-    def self.as_flot_json(ga_results)
-      # Convert Legato query to hash
-      results_list = ga_results.map(&:marshal_dump)
-      # Results should look like: [[DATE_INT, NUM_HITS], ...]
-      values = results_list.map do |result_hash|
-        result_hash[:date] = Date.parse(result_hash[:date]).to_time.to_i * 1000
-        result_hash[:pageviews] = result_hash[:pageviews].to_i
-        result_hash.values
-      end
-
-      values.to_json
-    end
-
-    # Calculate total pageviews based on query results
-    # @param [Legato::Query] A Legato query object containing the results
-    # @return [Fixnum] An integer representing how many pageviews were recorded
-    def self.total_pageviews(ga_results)
-      ga_results.map(&:marshal_dump).reduce(0) { |total, result| total + result[:pageviews].to_i }
     end
 
     # Generate an OAuth2 token for Google Analytics

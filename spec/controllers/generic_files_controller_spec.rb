@@ -277,8 +277,15 @@ describe GenericFilesController do
         allow(mock_query).to receive(:map).and_return(mock_query.for_path.map(&:marshal_dump))
         profile = double('profile')
         allow(profile).to receive(:pageview).and_return(mock_query)
-        allow(Sufia::UsageStatistics).to receive(:profile).and_return(profile)
-       end
+        allow(Sufia::Analytics).to receive(:profile).and_return(profile)
+        
+        download_query = double('query')
+        allow(download_query).to receive(:for_file).and_return([
+          OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:123456789", totalEvents: "3")
+        ])
+        allow(download_query).to receive(:map).and_return(download_query.for_file.map(&:marshal_dump))
+        allow(profile).to receive(:download).and_return(download_query)
+      end
 
       it 'renders the stats view' do
         get :stats, id: @generic_file.noid

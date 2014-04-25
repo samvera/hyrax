@@ -1,0 +1,53 @@
+class FileUsage
+
+  attr_accessor :id, :created, :path, :downloads, :pageviews
+
+  def initialize id
+    self.id = id
+    self.path = Sufia::Engine.routes.url_helpers.generic_file_path(Sufia::Noid.noidify(id))
+    self.created = DateTime.parse(::GenericFile.find(id).create_date)
+    self.downloads = download_statistics
+    self.pageviews = pageview_statistics
+  end
+
+  def total_downloads
+    self.downloads.map(&:marshal_dump).reduce(0) { |total, result| total + result[:totalEvents].to_i }
+  end
+
+  def total_pageviews
+    self.pageviews.map(&:marshal_dump).reduce(0) { |total, result| total + result[:pageviews].to_i }
+  end
+  
+  # Package data for visualization using JQuery Flot 
+  def to_flot
+    [
+      { label: "Pageviews",  data: pageviews_to_flot },
+      { label: "Downloads",  data: downloads_to_flot }
+    ]
+  end
+
+  private
+
+  def download_statistics
+    Sufia::Analytics.profile.download(sort: 'date').for_file(self.id)
+  end
+
+  def pageview_statistics
+    Sufia::Analytics.profile.pageview(sort: 'date').for_path(self.path)
+  end
+
+  def pageviews_to_flot values = Array.new
+    self.pageviews.map(&:marshal_dump).map do |result_hash|
+      values << [ (Date.parse(result_hash[:date]).to_time.to_i * 1000), result_hash[:pageviews].to_i ]
+    end
+    return values
+  end
+
+  def downloads_to_flot values = Array.new
+    self.downloads.map(&:marshal_dump).map do |result_hash|
+      values << [ (Date.parse(result_hash[:date]).to_time.to_i * 1000), result_hash[:totalEvents].to_i ]
+    end
+    return values
+  end
+
+end

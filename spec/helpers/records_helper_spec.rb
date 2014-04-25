@@ -23,6 +23,39 @@ describe RecordsHelper do
     i.attr('class').should == 'glyphicon glyphicon-question-sign icon-large'
   end
 
+  describe "download links" do
+
+    before :all do
+      @file = GenericFile.new(:pid => "fake:1")
+      assign :generic_file, @file
+    end
+
+    describe "#render_download_link" do    
+      it "has default text" do
+        helper.render_download_link.should have_selector("#file_download")
+        helper.render_download_link.should have_content("Download")
+      end
+
+      it "includes user-supplied text" do
+        content = helper.render_download_link("Download Fake")
+        content.should have_selector("#file_download")
+        content.should have_content("Download Fake")
+      end
+    end
+
+    describe "#render_download_icon" do
+      it "has default text" do
+        helper.render_download_icon.should have_selector("#file_download")
+        helper.render_download_icon.should match("Download the document")
+      end
+
+      it "includes user-supplied text" do
+        content = helper.render_download_icon("Download the full-sized Fake")
+        content.should have_selector("#file_download")
+        content.should match("Download the full-sized Fake")
+      end
+    end
+
+  end
+
 end
-
-

@@ -57,8 +57,9 @@ module Sufia
         require 'sufia/models/user_local_directory_behavior'
         require 'sufia/noid'
         require 'sufia/id_service'
-        require 'sufia/usage_statistics'
+        require 'sufia/analytics'
         require 'sufia/pageview'
+        require 'sufia/download'
       end
 
       initializer 'configure' do
