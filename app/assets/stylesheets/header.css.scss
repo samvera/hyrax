@@ -1,0 +1,93 @@
+$gray-lightish: #bbb;
+$gray-lighter: #eee;
+
+#masthead {
+  background: #0071BC; /* Old browsers */
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, #0071BC),
+      color-stop(1, #003457)
+  );
+  background-image: -o-linear-gradient(bottom, #0071BC 0%, #003457 100%);
+  background-image: -moz-linear-gradient(bottom, #0071BC 0%, #003457 100%);
+  background-image: -webkit-linear-gradient(bottom, #0071BC 0%, #003457 100%);
+  background-image: -ms-linear-gradient(bottom, #0071BC 0%, #003457 100%);
+  background-image: linear-gradient(to bottom, #0071BC 0%, #003457 100%);
+  min-height: 4em;
+
+  .navbar {
+    min-height: 0px;
+    margin-bottom: 0.8em;
+  }
+
+  #user_utility_links {
+    margin-top: 1.75em;
+
+    &.open {
+      > a {
+        border-color: #ccc;
+
+        &.dropdown-toggle {
+          background-color: $gray-lighter;
+          border-color: #428bca;
+        }
+      }
+    }
+  }
+
+  #profile_link {
+    margin-left: -1px;
+  }
+}
+
+#masthead_controls {
+  background-color: #D2B48C;
+  border-top: 1px solid #0071BC;
+  border-bottom: 1px solid #B89972;
+  .navbar {
+    background-color: #D2B48C;
+    margin-bottom: 0;
+    text-align: center;
+  }
+  .navbar li {
+    border-right: 1px solid #B89972;
+  }
+  .navbar a:link, .navbar a:visited {
+    color: #FFF;
+  }
+  .navbar a:hover {
+    background-color: #7D5D55;
+  }
+  .navbar-default {
+    border: 0;
+  }
+  .navbar-default .navbar-nav>.active>a,
+  .navbar-default .navbar-nav>.active>a:hover,
+  .navbar-default .navbar-nav>.active>a:focus {
+    background-color: #F7EEDE;
+    color: #555;
+  }
+}
+
+#logo span.glyphicon {
+  color: #FFF;
+  font-size: 4em;
+  margin: .25em 0 0 .25em;
+}
+.institution_name {
+  color: #FFF;
+  font-family: 'Lato', Verdana, Arial, Helvetica;
+  font-size: 4em;
+  font-weight: 300;
+  margin: 0 0 0 .25em;
+}
+
+.login_button {
+  margin: 1.75em 3em 0 0;
+}
+
+#search-form-header {
+  margin-top: 7px;
+}
