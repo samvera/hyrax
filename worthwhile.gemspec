@@ -18,7 +18,15 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'hydra', '7.0.0.rc1'
+ # spec.add_dependency 'sufia-models', '4.0.0.beta1'
+
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "engine_cart", "~> 0.3.4"
+  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "capybara"
+  spec.add_development_dependency "poltergeist", ">= 1.5.0"
+  spec.add_development_dependency "factory_girl"
 end
