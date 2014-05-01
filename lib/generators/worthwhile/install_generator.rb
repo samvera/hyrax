@@ -21,8 +21,13 @@ module Worthwhile
       remove_file('app/controllers/catalog_controller.rb')
     end
 
-    def inject_spotlight_routes
+    def inject_routes
       route "mount Worthwhile::Engine, at: '/'"
+    end
+
+    def assets
+      copy_file "worthwhile.css.scss", "app/assets/stylesheets/worthwhile.css.scss"
+      copy_file "worthwhile.js", "app/assets/javascripts/worthwhile.js"
     end
 
     def add_helper

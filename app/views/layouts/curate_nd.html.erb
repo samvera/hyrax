@@ -9,14 +9,14 @@
   <% if content_for?(:page_header) %>
     <div class="row">
     <% if content_for?(:page_actions) %>
-      <div class="span10 main-header ">
+      <div class="col-md-10 main-header ">
         <%= yield(:page_header) %>
       </div>
-      <div class="span2 page-actions">
+      <div class="col-md-2 page-actions">
         <%= yield(:page_actions) %>
       </div>
     <% else %>
-      <div class="span12 main-header ">
+      <div class="col-md-12 main-header ">
         <%= yield(:page_header) %>
       </div>
     <% end %>

@@ -4,21 +4,21 @@
   <div class="row">
   <% if content_for?(:sidebar) %>
 
-    <div class="span3 sidebar">
+    <div class="col-md-3 sidebar">
       <%= yield(:sidebar) %>
     </div>
 
     <% if content_for?(:call_to_action) %>
-      <div class="span6 <%= yield(:content_class) %>">
+      <div class="col-md-6 <%= yield(:content_class) %>">
     <% else %>
-      <div class="span9 <%= yield(:content_class) %>">
+      <div class="col-md-9 <%= yield(:content_class) %>">
     <% end %>
       <%= yield %>
     </div>
 
     <% if content_for?(:call_to_action) %>
 
-    <div class="span3 call-to-action">
+    <div class="col-md-3 call-to-action">
       <%= yield(:call_to_action) %>
     </div>
 
@@ -26,7 +26,7 @@
 
   <% else %>
 
-    <div class="span12">
+    <div class="col-md-12">
       <%= yield %>
     </div>
 

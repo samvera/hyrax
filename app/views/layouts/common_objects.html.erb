@@ -12,19 +12,19 @@
   <div id="main" role="main" class="container <%= yield(:page_class) if content_for?(:page_class)%>">
     <% if content_for?(:page_header) %>
       <div class="row">
-        <div class="span12 main-header">
+        <div class="col-md-12 main-header">
           <%= yield(:page_header) %>
         </div>
       </div>
     <% end %>
     <div class="row">
-      <div class="<%= content_for?(:main_column_class) ? yield(:main_column_class) : "span12" %>">
+      <div class="<%= content_for?(:main_column_class) ? yield(:main_column_class) : "col-md-12" %>">
         <%= yield %>
       </div>
     </div>
     <% if content_for?(:second_row) %>
       <div class="row">
-        <div class="span12">
+        <div class="col-md-12">
           <%= yield(:second_row) %>
         </div>
       </div>

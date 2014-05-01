@@ -1,7 +1,7 @@
 <% unless flash.blank? %>
   <div class="container flash-message">
     <div class="row">
-      <div class="span12">
+      <div class="col-md-12">
         <% [[:notice, 'alert-success'],[:error, 'alert-error'],[:alert, 'alert-info']].each do |type, flash_dom_class| %>
           <% if flash[type] %>
             <div class="alert <%= flash_dom_class %> ui-corner-all <%= type.to_s %>">
