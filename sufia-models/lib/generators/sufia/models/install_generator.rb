@@ -74,9 +74,8 @@ This generator makes the following changes to your application:
   end
 
   def create_configuration_files
-    inject_into_file 'config/initializers/mime_types.rb',
-                     "\nMime::Type.register 'application/x-endnote-refer', :endnote",
-                     { :after => /# Mime::Type.register_alias "text\/html", :iphone/, :verbose => false }
+    append_file 'config/initializers/mime_types.rb',
+                     "\nMime::Type.register 'application/x-endnote-refer', :endnote", {verbose: false }
     copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
     copy_file 'config/redis.yml', 'config/redis.yml'
     copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
