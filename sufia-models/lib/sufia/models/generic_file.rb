@@ -1,5 +1,6 @@
-require 'sufia/virus_found_error'
 module Sufia
+  autoload :VirusFoundError, 'sufia/models/virus_found_error'
+
   module GenericFile
     extend ActiveSupport::Concern
     extend ActiveSupport::Autoload
