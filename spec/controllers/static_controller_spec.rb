@@ -9,7 +9,7 @@ describe StaticController do
       response.should render_template "layouts/homepage"
     end
     it "renders no layout with javascript" do
-      get "mendeley" ,{format:"js"}
+      xhr :get, :mendeley
       response.should be_success
       response.should_not render_template "layouts/homepage"
     end
@@ -22,7 +22,7 @@ describe StaticController do
       response.should render_template "layouts/homepage"
     end
     it "renders no layout with javascript" do
-      get "zotero" ,{format:"js"}
+      xhr :get, :zotero
       response.should be_success
       response.should_not render_template "layouts/homepage"
     end
