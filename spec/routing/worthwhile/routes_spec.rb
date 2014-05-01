@@ -14,6 +14,7 @@ module Worthwhile
     describe "generic work" do
       it 'routes to #new' do
         expect(new_curation_concern_generic_work_path).to eq '/concern/generic_works/new'
+        get("/concern/generic_works/new").should route_to("worthwhile/curation_concern/generic_works#new")
       end
     end
   end

@@ -1,0 +1,42 @@
+<fieldset id="set-access-controls">
+  <legend>
+    Access Rights
+    <small>Who should be able to view or download this content?</small>
+  </legend>
+
+  <section class="help-block">
+    <p>
+      <strong>Please note</strong>, making something visible to the world (i.e.
+      marking this as <span class="label label-success">Open Access</span>) may be
+      viewed as publishing which could impact your ability to:
+    </p>
+    <ul>
+      <li>Patent your work</li>
+      <li>Publish your work in a journal</li>
+    </ul>
+    <p>
+      Check out <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> for more
+      information about publisher copyright policies.
+    </p>
+  </section>
+
+  <div class="control-group">
+    <label class="radio">
+      <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if curation_concern.open_access? %> checked="true"<% end %>/>
+      <span class="label label-success">Open Access</span> Visible to the world.
+    </label>
+    <label class="radio">
+      <input type="radio" id="visibility_embargo" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" <% if curation_concern.open_access_with_embargo_release_date? %> checked="true"<% end %>/>
+      <span class="label label-warning">Open Access with Embargo</span> Treated as <span class="label label-important">Private</span> until <%= f.input :embargo_release_date, wrapper: :inline, input_html: { placeholder: Date.tomorrow, class: 'input-small datepicker' } %> then it is <span class="label label-success">Open Access</span>.
+    </label>
+    <label class="radio">
+      <input type="radio" id="visibility_ndu" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if curation_concern.authenticated_only_access? %> checked="true"<% end %> />
+      <span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
+    </label>
+    <label class="radio">
+      <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if curation_concern.private_access? %> checked="true"<% end %>/>
+      <span class="label label-important">Private</span> Only visible to you and your delegates.
+    </label>
+  </div>
+
+</fieldset>

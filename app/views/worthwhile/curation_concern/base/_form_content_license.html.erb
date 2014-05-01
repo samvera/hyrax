@@ -1,0 +1,16 @@
+<fieldset id="set-license">
+  <legend>Choose a License for your Content</legend>
+  <p>
+    What do you want others to be able to do with your work?
+  </p>
+  <p>
+    <a href="http://creativecommons.org/licenses/" target="_blank">Here's some help</a> if you don't know which license to choose.
+  </p>
+
+  <%= f.input :rights,
+    as: :select,
+    collection: Sufia.config.cc_licenses,
+    input_html: { class: 'input-xxlarge' },
+    label: 'Content License'
+  %>
+</fieldset>

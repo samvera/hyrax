@@ -1,0 +1,9 @@
+<fieldset class="optional prompt">
+  <legend>Additional Information</legend>
+  <%= f.input :subject,                as: :multi_value, input_html: { class: 'input-xlarge' } %>
+  <%= f.input :publisher,              as: :multi_value, input_html: { class: 'input-xlarge' } %>
+  <%# Coming in sufia pr #400 %>
+  <%# <%= f.input :bibliographic_citation, as: :multi_value, input_html: { class: 'input-xlarge' } %>
+  <%# <%= f.input :source,                 as: :multi_value, input_html: { class: 'input-xlarge' } %>
+  <%= f.input :language,               as: :multi_value, input_html: { class: 'input-xlarge' } %>
+</fieldset>
