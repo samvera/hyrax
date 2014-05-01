@@ -2,6 +2,10 @@ module CurationConcern
   module HumanReadableType
     extend ActiveSupport::Concern
 
+    included do
+      class_attribute :human_readable_short_description
+    end
+
     module ClassMethods
       def human_readable_type
         name.demodulize.titleize

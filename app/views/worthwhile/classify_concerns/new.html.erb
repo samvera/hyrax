@@ -20,16 +20,6 @@
         </li>
       <% end %>
     <% end %>
-    <% classify_concern.upcoming_concerns.each do |name, description| %>
-      <li class="upcoming work-type">
-        <h3 class="title"><%= name %></h3>
-        <p class="short-description"><%= description %></p>
-        <%= link_to 'Add New',
-          'javascript:void(null);',
-          class: "add-button btn btn-primary disabled"
-        %>
-      </li>
-    <%- end -%>
     <li class="work-type placeholder" aria-hidden="true"></li>
     <li class="work-type placeholder" aria-hidden="true"></li>
     <li class="work-type placeholder" aria-hidden="true"></li>

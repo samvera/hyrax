@@ -1,4 +1,4 @@
-<%= form_tag catalog_index_path, :method => :get, :class => "search-form" do %>
+<%= form_tag main_app.catalog_index_path, :method => :get, :class => "search-form" do %>
   <fieldset>
     <legend class="accessible-hidden">Search <%=t('sufia.product_name')%></legend>
     <%= label_tag :catalog_search, t('sufia.search.form.q.label'), :class => "accessible-hidden" %>

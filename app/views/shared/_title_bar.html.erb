@@ -1,19 +1,15 @@
         <div class="container">
           <div id="title-bar" class="row">
             <div id="site-search" class="col-md-4">
-
-<%= render 'shared/site_search' if show_site_search? %>
-
+              <%= render 'shared/site_search' if show_site_search? %>
             </div>
 
             <div id="site-title" class="col-md-4">
-              <h1><%= link_to t('sufia.product_name'), root_path, id: 'home-link' %></h1>
+              <h1><%= link_to t('sufia.product_name'), main_app.root_path, id: 'home-link' %></h1>
             </div>
 
             <nav id="site-actions" class="col-md-4" role="menu">
-
-<%= render 'shared/site_actions' if show_site_actions? %>
-
+              <%= render 'shared/site_actions' if show_site_actions? %>
             </nav>
           </div>
         </div>

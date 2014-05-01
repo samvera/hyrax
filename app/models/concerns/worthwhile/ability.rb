@@ -7,7 +7,11 @@ module Worthwhile
 
     def worthwhile_permissions
       
-      can :create, Worthwhile::ClassifyConcern unless current_user.new_record?
+      unless current_user.new_record?
+        can :create, Worthwhile::ClassifyConcern
+        can :create, Worthwhile::GenericWork  #TODO move this to the host app
+        can :create, Worthwhile::GenericFile  #TODO move this to the host app
+      end
       # alias_action :confirm, :copy, :to => :update
 # 
 #       if user_groups.include? 'admin'
