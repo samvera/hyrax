@@ -5,6 +5,7 @@ module Worthwhile
   class Engine < ::Rails::Engine
     isolate_namespace Worthwhile
     require 'breadcrumbs_on_rails'
+
     
 
   end

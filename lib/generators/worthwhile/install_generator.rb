@@ -25,6 +25,12 @@ module Worthwhile
       route "mount Worthwhile::Engine, at: '/'"
     end
 
+    def inject_ability
+      inject_into_file 'app/models/ability.rb', :after => /Hydra::Ability\s*\n/ do
+        "  include Worthwhile::Ability\n\n"
+      end
+    end
+
     def assets
       copy_file "worthwhile.css.scss", "app/assets/stylesheets/worthwhile.css.scss"
       copy_file "worthwhile.js", "app/assets/javascripts/worthwhile.js"

@@ -1,6 +1,8 @@
 require "worthwhile/version"
 require 'worthwhile/engine'
+require 'worthwhile/configuration'
 
 module Worthwhile
-  # Your code goes here...
+  # TODO move this into a generated initialize or something.
+  configuration.register_curation_concern 'GenericWork'
 end

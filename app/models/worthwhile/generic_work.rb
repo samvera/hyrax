@@ -12,5 +12,6 @@ module Worthwhile
                                 :resource_type, :identifier, :language, datastream: :descMetadata, multiple: true
 
     include CurationConcern::WithGenericFiles
+    include CurationConcern::HumanReadableType
   end
 end

@@ -331,7 +331,7 @@ class CatalogController < ApplicationController
       super
     end
 
-    # Overriding blacklight so that the search results can be displayed in a way compatible with
+    # Overriding Blacklight so that the search results can be displayed in a way compatible with
     # tokenInput javascript library.  This is used for suggesting "Related Works" to attach.
     def render_search_results_as_json
       {"docs" => @response["response"]["docs"].map {|solr_doc| serialize_work_from_solr(solr_doc) }}
