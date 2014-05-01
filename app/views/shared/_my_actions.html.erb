@@ -1,0 +1,18 @@
+<div class="btn-group my-actions">
+  <a class="btn btn-primary dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
+    <%= current_user.name.blank? ? 'Me' : current_user.name %>
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li><%= link_to 'My Works',       catalog_index_path(:'f[generic_type_sim][]' => 'Work', works: 'mine'), class: 'my-works',       role: 'menuitem' %></li>
+    <li><%= link_to 'My Collections', collections_path,                                                      class: 'my-collections', role: 'menuitem' %></li>
+    <li><%= link_to 'My Groups',      hydramata_groups_path,                                                 class: 'my-groups',      role: 'menuitem' %></li>
+    <li><%= link_to 'My Profile',     user_profile_path,                                                     class: 'my-account',     role: 'menuitem' %></li>
+    <% if current_user.repository_noid? %>
+    <li><%= link_to 'My Delegates',     person_depositors_path(current_user.repository_noid),                  class: 'my-proxies',     role: 'menuitem' %></li>
+    <% end %>
+    <li class="divider"></li>
+    <li><%= link_to 'Log Out',        destroy_user_session_path,                                             class: 'log-out',        role: 'menuitem' %></li>
+  </ul>
+</div>
+

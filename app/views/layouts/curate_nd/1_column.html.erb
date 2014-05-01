@@ -1,0 +1,22 @@
+<% content_for :layout_name, 'one_column, ' %>
+<% content_for :main do %>
+
+  <div class="row">
+    <div class="<%= content_for?(:main_column_class) ? yield(:main_column_class) : "span12" %>">
+      <%= yield %>
+    </div>
+  </div>
+
+  <% if content_for?(:second_row) %>
+
+    <div class="row">
+      <div class="span12">
+        <%= yield(:second_row) %>
+      </div>
+    </div>
+
+  <% end %>
+
+<% end %>
+
+<%= render template: "layouts/#{theme}" %>

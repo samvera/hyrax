@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'hydra', '7.0.0.rc1'
+  spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
  # spec.add_dependency 'sufia-models', '4.0.0.beta1'
 
   spec.add_development_dependency "devise", "~> 3.0"

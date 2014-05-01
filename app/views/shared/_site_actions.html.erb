@@ -1,0 +1,8 @@
+<% if current_user %>
+  <%= render 'shared/add_content' %>
+  <%= render 'shared/my_actions' %>
+  <%= link_to 'Help!', new_help_request_path, class: 'btn btn-primary request-help', role: 'menuitem' %>
+<% else %>
+  <%= link_to 'Log In', new_user_session_path, class: 'btn btn-primary login', role: 'menuitem' %>
+<% end %>
+
