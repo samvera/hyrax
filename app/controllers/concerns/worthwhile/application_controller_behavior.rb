@@ -6,7 +6,11 @@ module Worthwhile
     
     included do
       rescue_from CanCan::AccessDenied do |exception|
-        redirect_to main_app.root_url, :alert => exception.message
+        if [:show, :edit].include? exception.action
+          render 'unauthorized', status: :unauthorized
+        else
+          redirect_to main_app.root_url, alert: exception.message
+        end
       end
     end
   end
