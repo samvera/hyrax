@@ -80,7 +80,11 @@ Sufia.config do |config|
 
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
-    config.browse_everything = BrowseEverything.config
+    if defined? BrowseEverything
+      config.browse_everything = BrowseEverything.config
+    else
+      logger.warn "BrowseEverything is not installed"
+    end
   rescue Errno::ENOENT
     config.browse_everything = nil
   end
