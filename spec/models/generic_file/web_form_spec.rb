@@ -22,9 +22,9 @@ describe GenericFile do
 
   describe "accessible_attributes" do
     it "should have a list" do
-      subject.accessible_attributes.should == [:part_of, :resource_type, :title, :creator, :contributor, :description,
+      subject.accessible_attributes.should include(:part_of, :resource_type, :title, :creator, :contributor, :description,
         :tag, :rights, :publisher, :date_created, :date_uploaded, :date_modified, :subject, :language, :identifier,
-        :based_near, :related_url, :permissions]
+        :based_near, :related_url, :permissions)
     end
 
     it "should sanitize them" do

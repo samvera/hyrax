@@ -51,6 +51,12 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   property :related_url, predicate: RDF::RDFS.seeAlso do |index|
     index.as :stored_searchable
   end
+  property :bibliographic_citation, predicate: RDF::DC.bibliographicCitation do |index|
+    index.as :stored_searchable
+  end
+  property :source, predicate: RDF::DC.source do |index|
+    index.as :stored_searchable
+  end
 
   # TODO: Move this somewhere more appropriate
   begin
