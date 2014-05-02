@@ -327,7 +327,7 @@ class CatalogController < ApplicationController
 
     # Override Hydra::PolicyAwareAccessControlsEnforcement
     def gated_discovery_filters
-      return if current_user.groups.include? 'admin'
+      return if current_user && (current_user.groups.include? 'admin')
       super
     end
 

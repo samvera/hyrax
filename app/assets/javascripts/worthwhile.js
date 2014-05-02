@@ -1,0 +1,1 @@
+// Javascripts provided by worthwhile Rails Engine
