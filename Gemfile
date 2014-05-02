@@ -17,6 +17,12 @@ gem 'sprockets', '2.11.0'
 # it'll want sass 3.2.0 and we'll have a conflict
 gem 'sass', '~> 3.2.0'
 
+group :test do
+  # Peg simplecov to < 0.8 until this is resolved:
+  # https://github.com/colszowka/simplecov/issues/281
+  gem 'simplecov', '~> 0.7.1', require: false
+end
+
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))
 if File.exists?(file)
   puts "Loading #{file} ..." if $DEBUG # `ruby -d` or `bundle -v`

@@ -12,6 +12,17 @@ require 'rspec/autorun'
 # Capybara.javascript_driver = :poltergeist
 # Capybara.default_wait_time = 5
 
+
+if ENV["COVERAGE"] or ENV["CI"]
+  require 'simplecov'
+  # require 'coveralls' if ENV["CI"]
+
+  # SimpleCov.formatter = Coveralls::SimpleCov::Formatter if ENV["CI"]
+  SimpleCov.start do
+    add_filter "/spec/"
+  end
+end
+
 require 'worthwhile'
 
 
