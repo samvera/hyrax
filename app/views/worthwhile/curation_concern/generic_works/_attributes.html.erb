@@ -1,0 +1,23 @@
+<table class="table table-striped <%= dom_class(curation_concern) %> attributes">
+  <caption class="table-heading"><h2>Attributes</h2></caption>
+  <thead>
+    <tr><th>Attribute Name</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+  <%= curation_concern_attribute_to_html(curation_concern, :description, 'Abstract') %>
+  <%= curation_concern_attribute_to_html(curation_concern, :contributor, 'Contributors') %>
+  <%= curation_concern_attribute_to_html(curation_concern, :subject, "Subject") %>
+  <%= curation_concern_attribute_to_html(curation_concern, :publisher, "Publisher") %>
+  <%#= curation_concern_attribute_to_html(curation_concern, :bibliographic_citation, "Bibliographic Citation") %>
+  <%#= curation_concern_attribute_to_html(curation_concern, :source, "Source") %>
+  <%= curation_concern_attribute_to_html(curation_concern, :language, "Language") %>
+  <tr>
+    <th>Access Rights</th>
+    <td>
+      <%= permission_badge_for(curation_concern) %>
+    </td>
+  </tr>
+  <%= curation_concern_attribute_to_html(curation_concern, :embargo_release_date, "Embargo Release Date") %>
+  <%= curation_concern_attribute_to_html(curation_concern, :rights, "Content License") %>
+  </tbody>
+</table>

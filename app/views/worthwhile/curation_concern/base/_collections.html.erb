@@ -1,0 +1,21 @@
+<% if curation_concern.collections.present? %>
+<table class="table table-striped <%= dom_class(curation_concern) %> collections with-headroom">
+  <caption class="table-heading">
+    <h2>Collections</h2>
+  </caption>
+  <thead>
+    <tr>
+      <th>Collections Featuring this <%= curation_concern.human_readable_type %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% curation_concern.collections.each do |collection| %>
+      <tr class="collection attributes">
+        <%= content_tag :td, class: 'attribute title', data: { noid: collection.noid } do %>
+          <%= link_to collection.title, collection %>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
