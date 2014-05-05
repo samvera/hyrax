@@ -1,3 +1,3 @@
 module Sufia
-  VERSION = "3.7.2"
+  VERSION = "4.0.0.beta2"
 end
