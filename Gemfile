@@ -22,4 +22,5 @@ group :development, :test do
   gem 'turbolinks'
   gem "bootstrap-sass"
   gem "simplecov", :require => false
+  gem "spring"
 end # (leave this comment here to catch a stray line inserted by blacklight!)

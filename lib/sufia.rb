@@ -25,6 +25,7 @@ module Sufia
     )
 
     config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
+    config.assets.precompile << %r(vjs\.(?:eot|ttf|woff)$)
   end
 
   autoload :Controller
