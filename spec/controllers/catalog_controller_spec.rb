@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe CatalogController do
+  routes { Rails.application.class.routes }
+
   let(:user) { FactoryGirl.find_or_create(:jill) }
   before do
     GenericFile.any_instance.stub(:characterize_if_changed).and_yield

@@ -34,4 +34,5 @@ module Sufia
   autoload :FilesControllerBehavior
   autoload :BatchEditsControllerBehavior
   autoload :DownloadsControllerBehavior
+  autoload :HomepageController
 end

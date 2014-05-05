@@ -53,10 +53,12 @@ This generator makes the following changes to your application:
 
   # The engine routes have to come after the devise routes so that /users/sign_in will work
   def inject_routes
+    gsub_file 'config/routes.rb', 'root :to => "catalog#index"', ''
+
     routing_code = "\n  Hydra::BatchEdit.add_routes(self)\n" +
       "  # This must be the very last route in the file because it has a catch-all route for 404 errors.
   # This behavior seems to show up only in production mode.
-  mount Sufia::Engine => '/'\n"
+  mount Sufia::Engine => '/'\nroot :to => 'homepage#index'\n"
 
     sentinel = /devise_for :users/
     inject_into_file 'config/routes.rb', routing_code, { :after => sentinel, :verbose => false }
