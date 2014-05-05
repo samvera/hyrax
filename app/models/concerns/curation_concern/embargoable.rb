@@ -28,7 +28,7 @@ module CurationConcern
     include VisibilityOverride
 
     included do
-      validates :embargo_release_date, future_date: true
+      validates :embargo_release_date, :'worthwhile/future_date' => true
       before_save :write_embargo_release_date, prepend: true
 
         # unless self.class.included_modules.include?('Hydra::AccessControls::Permissions')

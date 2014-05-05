@@ -66,7 +66,7 @@ module Worthwhile
     private
 
     def normalize_concern_name(c)
-      c
+      c.to_s
     end
   end
 

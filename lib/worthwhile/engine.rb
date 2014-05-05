@@ -1,5 +1,6 @@
 #Load blacklight which will give worthwhile views a higher preference than those in blacklight
 require 'blacklight'
+require 'sufia/models'  
 
 module Worthwhile
   class Engine < ::Rails::Engine
