@@ -9,8 +9,15 @@ en:
     search:
       form:
         q:
-          label:        "Search Sufia"
-          placeholder:  "Type keywords in here"
+          label:          "Search Sufia"
+          placeholder:    "Enter search terms"
+        option:
+          all:
+            label_short:  "All"
+            label_long:   "All of Sufia"
+          mine:
+            label_short:  "My Files" 
+            label_long:   "My Files"
     upload:
       my_computer:
         tab_label: "My Computer"
