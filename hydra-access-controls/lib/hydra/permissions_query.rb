@@ -1,9 +1,6 @@
 module Hydra
   module PermissionsQuery
     extend ActiveSupport::Concern
-    included do 
-      include Blacklight::SolrHelper # for force_to_utf8
-    end
 
     def permissions_doc(pid)
       doc = cache.get(pid)
@@ -26,7 +23,7 @@ module Hydra
       raise Blacklight::Exceptions::InvalidSolrID.new("The application is trying to retrieve permissions without specifying an asset id") if id.nil?
       solr_opts = permissions_solr_doc_params(id).merge(extra_controller_params)
       response = ActiveFedora::SolrService.instance.conn.get('select', :params=> solr_opts)
-      solr_response = Blacklight::SolrResponse.new(force_to_utf8(response), solr_opts)
+      solr_response = Blacklight::SolrResponse.new(response, solr_opts)
 
       raise Blacklight::Exceptions::InvalidSolrID.new("The solr permissions search handler didn't return anything for id \"#{id}\"") if solr_response.docs.empty?
       Hydra::PermissionsSolrDocument.new(solr_response.docs.first, solr_response)
