@@ -36,7 +36,11 @@ module Worthwhile
 
     def self.to_class(type)
       # TODO we may want to allow a different (or nil) namespace
-      "Worthwhile::#{type}".constantize
+      begin
+        type.camelize.constantize
+      rescue NameError
+        "Worthwhile::#{type}".constantize
+      end
     end
   end
 end

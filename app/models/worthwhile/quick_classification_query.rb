@@ -17,7 +17,7 @@ module Worthwhile
       puts "User is #{user}"
       puts "try is #{normalized_curation_concern_names.first}"
       puts "can is  #{user.can?(:create, normalized_curation_concern_names.first)}"
-      normalized_curation_concern_names.sort.select {|klass| user.can?(:create, klass)}
+      normalized_curation_concern_names.select {|klass| user.can?(:create, klass)}
     end
 
     private
