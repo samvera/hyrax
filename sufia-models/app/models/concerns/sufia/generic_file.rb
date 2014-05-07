@@ -6,7 +6,6 @@ module Sufia
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
-    include Sufia::GenericFile::Thumbnail
     include Sufia::GenericFile::Export
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Audit

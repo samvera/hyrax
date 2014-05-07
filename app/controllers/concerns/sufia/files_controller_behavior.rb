@@ -71,7 +71,7 @@ module Sufia
     def create
       create_from_upload(params)
     end
-    
+
     def create_from_upload(params)
       # check error condition No files
       return json_error("Error! No file to save") if !params.has_key?(:files)
@@ -214,7 +214,8 @@ module Sufia
     end
 
     def create_metadata(file)
-      Sufia::GenericFile::Actions.create_metadata(file, current_user, params[:batch_id])
+      Sufia::GenericFile::Actions.create_metadata(file, current_user,
+        params[:batch_id])
     end
   end
 end

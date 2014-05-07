@@ -89,7 +89,6 @@ module Sufia
         h
       end
 
-
     end
   end
 end
