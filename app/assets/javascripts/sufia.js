@@ -27,6 +27,8 @@
 
 //= require batch_edit
 //= require terms_of_service
+//
+//= require sufia/app
 //= require sufia/fileupload
 //= require sufia/permissions
 //= require sufia/trophy
@@ -36,6 +38,7 @@
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
 //= require sufia/audio
+//= require sufia/search
 //= require sufia/editor
 //= require hydra/batch_select
 //= require hydra_collections
