@@ -11,19 +11,18 @@ module Features
     end
 
     def sign_in(who = :user)
-      if who.instance_of?(User)
-        user = who
+      user = if who.instance_of?(User)
+        who
       else
-        user = FactoryGirl.find_or_create(who)
-        if user.password.nil?   # get the password from the factory if user was retrieved from database
-          tmpl = FactoryGirl.build(who)
-          user.password = tmpl.password
+        FactoryGirl.build(:user).tap do |u|
+          u.save!
         end
       end
       visit new_user_session_path
       fill_in 'Email', with: user.email
       fill_in 'Password', with: user.password
       click_button 'Sign in'
+      expect(page).to_not have_text 'Invalid email or password.'
     end
   end
 end

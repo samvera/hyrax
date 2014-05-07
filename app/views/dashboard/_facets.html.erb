@@ -1,5 +1,7 @@
 <% # main container for facets/limits menu -%>
 <div>
+  <%= render partial: 'collections/button_for_creating_empty_collection', locals: {label: 'Create Collection'} %>
+  <div class="row">&nbsp;</div>
   <h2>Browse By</h2>
   <ul class="nav nav-list" id="facets">
     <%= render_facet_partials %>

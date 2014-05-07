@@ -4,7 +4,7 @@ describe "Browse Dashboard files" do
 
   before do
     @fixtures = find_or_create_file_fixtures
-    sign_in :user_with_fixtures
+    sign_in FactoryGirl.create :user_with_fixtures
   end
 
   it "should show me some files (from the fixtures)" do

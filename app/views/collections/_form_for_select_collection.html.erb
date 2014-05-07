@@ -1,0 +1,28 @@
+<div>
+  <div class="collection-list-container">
+    <div class="vertical-offset">
+      <div class="collection-list-box">
+        <a href="#" onclick="modal_collection_list('close', event)"><div id="modalClose">&#10006;</div></a>       
+        <% if user_collections.blank? %>
+          <em> You do not have access to any existing collections. You may create a new collection.</em><br><br><br><br>
+          <%= button_for_create_collection %>
+        <% else %>
+          Select the collection to add your files to:
+          <%= form_tag collections.collection_path('collection_replace_id'), method: :put do %>
+            <div class="collection-list">
+              <ul>
+                <% user_collections.sort! { |c1,c2| c1['desc_metadata__date_modified_dtsi'] <=> c2['desc_metadata__date_modified_dtsi'] }  %>
+                <% user_collections.each do |collection| %>
+                  <li> <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %><%= label_tag(:collection, collection.title) %> </li>
+                <% end %>
+              </ul>
+            </div><!-- collection-list -->
+            <%= button_for_update_collection %>
+            <%= button_for_create_collection "Add to new Collection" %>
+          <% end %> <!-- form -->
+        <% end %> <!-- else -->
+      </div><!-- collection-list-box -->
+    </div><!-- vertical-offest -->
+  </div><!-- collection-list-container -->
+</div>
+

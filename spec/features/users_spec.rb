@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "User Profile" do
 
   before do
-    sign_in :curator
+    sign_in FactoryGirl.create(:curator)
   end
 
   it "should be displayed" do

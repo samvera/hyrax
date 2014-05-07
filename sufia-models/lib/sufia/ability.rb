@@ -17,7 +17,7 @@ module Sufia
     end
 
     def generic_file_abilities
-      can :create, GenericFile if user_groups.include? 'registered'
+      can :create, [GenericFile, Collection] if user_groups.include? 'registered'
     end
 
     def editor_abilities

@@ -14,7 +14,14 @@
   <% end %>
   <tbody>
   <% docs.each_with_index do |document,counter| %>
-    <%= render :partial => 'dashboard/_index_partials/list_files', :locals => {:document => document, :counter => counter} %>
+    <% case document.hydra_model %>
+    <% when "GenericFile" %>
+      <%= render partial: 'dashboard/_index_partials/list_files', locals: {document: document, counter: counter} %>
+    <% when "Collection" %>
+      <%= render partial: 'dashboard/_index_partials/list_collections', locals: {document: document, counter: counter} %>
+    <% else %>
+      <tr><td colspan='6'><%= document.hydra_model %> : <%= document.id %></td></tr>
+    <% end %>
   <% end %>
   </tbody>
 </table>

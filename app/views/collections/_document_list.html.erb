@@ -1,0 +1,10 @@
+<% @document_list = documents %>
+<% @batch_size_on_other_page = 0 %>
+<% @all_checked = false %>
+<% @max_batch_size = 100 %>
+<% @user = current_user %>
+<% if params[:action] == "edit" %>
+  <%= render partial:'dashboard/_index_partials/default_group', locals:{documents: documents, docs:documents} %>
+<% else %>
+  <%= render partial:'catalog/_index_partials/default_group', locals:{documents: documents, docs:documents} %>
+<% end %>

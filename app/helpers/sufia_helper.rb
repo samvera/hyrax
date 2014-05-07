@@ -19,6 +19,10 @@ module SufiaHelper
     link_to(query, link_url)
   end
 
+  def has_collection_search_parameters?
+    !params[:cq].blank?
+  end
+
   def display_user_name(recent_document)
     return "no display name" unless recent_document.depositor
     return User.find_by_user_key(recent_document.depositor).name rescue recent_document.depositor

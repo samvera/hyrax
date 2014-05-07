@@ -1,0 +1,31 @@
+<% @page_title = "Edit Collection #{display_title(@collection)} - #{application_name}" %>
+<%= render partial: 'generic_files/breadcrumbs', locals: {
+  include_file: false, generic_file: GenericFile.new(title: @collection.title) } %>
+
+<h1>Edit Collection: <%= display_title(@collection) %></h1>
+
+<% unless has_collection_search_parameters? %>
+  <div class="row">
+    <div class="span40">
+      <%= render partial: 'collections/media_display', locals: { collection: @collection } %>
+    </div>
+    <div class="span2">&nbsp;</div>
+    <div class="span68"><!-- class="column second"> -->
+      <%= render partial: 'collections/edit_actions' %>
+      <%= render partial: 'collections/form', locals: { record: @collection } %>
+    </div><!-- /columns second -->
+  </div> <!-- /columns two-b -->
+<% end %>
+  
+
+  <h2>Manage Items in this Collection</h2>
+  <%= render partial: 'search_collection_dashboard_form'%>
+  <%= render partial: 'dashboard/did_you_mean' %>
+  <%= render partial: 'dashboard/facet_selected' %>
+
+	<%= render 'dashboard/constraints', localized_params: params %>
+
+  <%= render 'collections/sort_and_per_page' %>
+  <%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
+
+<%= render partial:'paginate' %>

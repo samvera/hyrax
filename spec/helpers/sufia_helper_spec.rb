@@ -24,4 +24,18 @@ describe SufiaHelper do
       end
     end
   end
+
+  describe "has_collection_search_parameters?" do
+    subject { helper }
+    context "when cq is set" do
+      before { helper.stub(params: { cq: 'foo'})  }
+      it { should have_collection_search_parameters }
+    end
+
+    context "when cq is not set" do
+      before { helper.stub(params: { cq: ''})  }
+      it { should_not have_collection_search_parameters }
+    end
+  end
+
 end
