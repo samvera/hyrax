@@ -176,6 +176,11 @@ describe Hydra::Datastream::RightsMetadata do
     it "should only accept valid date values" do
       
     end
+    it "should accept a nil value after having a date value" do
+      @sample.embargo_release_date=("2010-12-01")
+      @sample.embargo_release_date=(nil)
+      @sample.embargo_release_date.should == nil
+    end
   end
   describe "embargo_release_date" do
     it "should return solr formatted date" do
