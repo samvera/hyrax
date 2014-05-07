@@ -9,8 +9,8 @@ describe SufiaHelper do
       subject { helper.link_to_facet_list(['car', 'truck'], 'vehicle_type') }
 
       it "should join the values" do
-        car_link = root_path(f: {'vehicle_type_sim' => ['car']})
-        truck_link = root_path(f: {'vehicle_type_sim' => ['truck']})
+        car_link = catalog_index_path(f: {'vehicle_type_sim' => ['car']})
+        truck_link = catalog_index_path(f: {'vehicle_type_sim' => ['truck']})
         expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
         expect(subject).to be_html_safe
       end
