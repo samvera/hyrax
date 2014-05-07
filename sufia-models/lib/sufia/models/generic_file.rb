@@ -36,7 +36,8 @@ module Sufia
 
       around_save :characterize_if_changed, :retry_warming
 
-      attr_accessible *(ds_specs['descMetadata'][:type].fields + [:permissions])
+      #attr_accessible *(ds_specs['descMetadata'][:type].fields + [:permissions])
+      attr_accessible *(terms_for_display + [:part_of, :permissions])
     end
 
     def persistent_url

@@ -28,7 +28,14 @@ module Sufia
       def terms_for_display
         # 'type' is the RDF.type assertion, which is not present by default, but may be
         # provided in some RDF schemas
-        self.descMetadata.class.fields - [:part_of]
+        self.class.terms_for_display
+      end
+
+      module ClassMethods
+        def terms_for_display
+          [:resource_type, :title, :creator, :contributor, :description, :tag, :rights, :publisher, :date_created,
+           :date_uploaded, :date_modified, :subject, :language, :identifier, :based_near, :related_url]
+        end
       end
 
       def to_jq_upload
