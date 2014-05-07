@@ -64,29 +64,5 @@ describe CatalogController do
         assigns(:document_list).count.should eql(1)
       end
     end
-
-    describe "without search" do
-      it "should set featured researcher" do
-        get :index
-        expect(response).to be_success
-        assigns(:featured_researcher).tap do |researcher|
-          expect(researcher).to be_kind_of ContentBlock
-          expect(researcher.name).to eq 'featured_researcher'
-        end
-      end
-
-      context "with featured works" do
-        before do
-          FeaturedWork.create!(generic_file_id: @gf1.id)
-        end
-
-        it "should set featured works" do
-          get :index
-          expect(response).to be_success
-          expect(assigns(:featured_work_list)).to be_kind_of FeaturedWorkList
-        end
-      end
-
-    end
   end
 end
