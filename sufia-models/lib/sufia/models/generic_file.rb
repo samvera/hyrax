@@ -30,6 +30,7 @@ module Sufia
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::ReloadOnSave
+    include Hydra::Collections::Collectible
 
     included do
       belongs_to :batch, :property => :is_part_of
@@ -100,12 +101,13 @@ module Sufia
     end
 
     def to_solr(solr_doc={}, opts={})
-      solr_doc = super(solr_doc, opts)
-      solr_doc[Solrizer.solr_name('label')] = self.label
-      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
-      solr_doc[Solrizer.solr_name('file_format')] = file_format
-      solr_doc[Solrizer.solr_name('file_format', :facetable)] = file_format
-      return solr_doc
+      super(solr_doc, opts).tap do |solr_doc|
+        solr_doc[Solrizer.solr_name('label')] = self.label
+        solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
+        solr_doc[Solrizer.solr_name('file_format')] = file_format
+        solr_doc[Solrizer.solr_name('file_format', :facetable)] = file_format
+        solr_doc = index_collection_pids(solr_doc)
+      end
     end
 
     # Redefine this for more intuitive keys in Redis

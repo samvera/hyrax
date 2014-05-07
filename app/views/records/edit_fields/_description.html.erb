@@ -1,0 +1,10 @@
+      <div class="controls" <%  if index == 0 %> id="additional_<%= key.to_s %>_clone" <% end %>>
+        <% required = render_req && (index == 0) && f.object.required?(key) %>
+        <%= text_area_tag "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", v, 
+          id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", class: "input-large", required: required  %>
+        
+        <% unless f.object.class.unique?(key) %>
+          <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
+        <% end %>
+      </div>
+      <div id="additional_<%= key %>_elements"></div>

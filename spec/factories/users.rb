@@ -12,7 +12,6 @@ FactoryGirl.define do
     end
 
     factory :user_with_mail do
-      email 'archivist2@example.com'
       after(:create) do |user|
         message = '<span class="batchid ui-helper-hidden">fake_batch_noid</span>You\'ve got mail.'
         User.batchuser().send_message(user, message, "Sample notification.")

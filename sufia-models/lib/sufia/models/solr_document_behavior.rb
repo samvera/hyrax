@@ -26,6 +26,11 @@ module Sufia
       m
     end
 
+    # Method to return the ActiveFedora model
+    def hydra_model
+      self[Solrizer.solr_name('active_fedora_model', Solrizer::Descriptor.new(:string, :stored, :indexed))]
+    end
+
     def noid
       self[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)]
     end

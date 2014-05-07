@@ -2,13 +2,20 @@
 ENV["RAILS_ENV"] ||= 'test'
 
 require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../internal", __FILE__))
+
+require 'database_cleaner'
+
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+Capybara.default_wait_time = 5
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'equivalent-xml/rspec_matchers'
 
 require File.expand_path('../support/features', __FILE__)
+
 
 if ENV['COVERAGE']
   require 'simplecov'
@@ -69,19 +76,34 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = File.expand_path("../fixtures", __FILE__)
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
+
+  config.before :each do
+    if Capybara.current_driver == :rack_test
+      DatabaseCleaner.strategy = :transaction
+    else
+      DatabaseCleaner.strategy = :truncation
+    end
+    DatabaseCleaner.start
+  end
+
+  config.after do
+    DatabaseCleaner.clean
+  end
+
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
 
-  config.include Devise::TestHelpers, :type => :controller
-  config.include EngineRoutes, :type => :controller
+  config.include Devise::TestHelpers, type: :controller
+  config.include EngineRoutes, type: :controller
   config.include EquivalentXml::RSpecMatchers
+
+  config.include Warden::Test::Helpers, type: :feature
+  config.after(:each, type: :feature) { Warden.test_reset! }
+  
 end
 
 module FactoryGirl

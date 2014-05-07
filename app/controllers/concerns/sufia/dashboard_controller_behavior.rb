@@ -6,6 +6,8 @@ module Sufia
     include Hydra::BatchEditBehavior
     include Blacklight::Catalog
 
+    include Hydra::Collections::SelectsCollections
+  
     included do
       include Blacklight::Configurable
       include ActionView::Helpers::DateHelper
@@ -16,8 +18,12 @@ module Sufia
       include BlacklightAdvancedSearch::Controller
 
       before_filter :authenticate_user!
-      before_filter :enforce_show_permissions, :only=>:show
-      before_filter :enforce_viewing_context_for_show_requests, :only=>:show
+      before_filter :enforce_show_permissions, only: :show
+      before_filter :enforce_viewing_context_for_show_requests, only: :show
+
+      # not filtering further with a specific access level since the catalog controller already gets the colections with edit access
+      #  if we include other access levels in this controller we will need to modify this.
+      before_filter :find_collections, only: :index
 
       # This applies appropriate access controls to all solr queries (the internal method of this is overidden bellow to only include edit files)
       self.solr_search_params_logic += [:add_access_controls_to_solr_params]
@@ -34,8 +40,8 @@ module Sufia
 
       respond_to do |format|
         format.html { }
-        format.rss  { render :layout => false }
-        format.atom { render :layout => false }
+        format.rss  { render layout: false }
+        format.atom { render layout: false }
       end
 
       # set up some parameters for allowing the batch controls to show appropiately
@@ -61,6 +67,14 @@ module Sufia
     rescue
       render :json => []
     end
+
+    # TODO: This can be removed after we upgrade to hydra-collections 2.0.1 or greater
+    def add_collection_filter(solr_parameters, user_parameters)
+      super(solr_parameters, user_parameters)
+      solr_parameters[:rows] = 100
+    end
+
+
 
     def search_action_url *args
       sufia.dashboard_index_path *args

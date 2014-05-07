@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GenericFileHelper do
+describe RecordsHelper do
   it "draws add button" do
     helper.add_field(:test).should == 
       "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\">+<span class=\"sr-only\">add another test</span></button>"

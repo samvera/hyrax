@@ -75,6 +75,8 @@ Sufia::Engine.routes.draw do
   post 'contact' => 'contact_form#create', :as => :contact_form_index
   get 'contact' => 'contact_form#new'
 
+  mount Hydra::Collections::Engine => '/'
+
   # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin
   # has been defined in the initalizers.
   if defined?(Sufia::ResqueAdmin)

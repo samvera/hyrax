@@ -1,0 +1,7 @@
+<h2 class="non lower">Actions</h2>
+<p>
+  <% if can? :edit, @collection %>
+      <%= link_to "Edit", collections.edit_collection_path %> &nbsp;&nbsp;
+      <%= link_to "Add files from your dashboard",  sufia.dashboard_index_path %>
+  <%end %>
+</p>
