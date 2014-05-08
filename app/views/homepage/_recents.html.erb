@@ -1,5 +1,3 @@
-<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
-<% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
 <div>
   <% if recent_documents.blank? %>
     <% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
@@ -7,11 +5,11 @@
     <h3><%= msg %></h3>
   <% else %>
 
-      <div id="recent_docs">
-        <table class="table table-bordered table-striped"> 
-          <%= render :partial => "recent_document", :collection => recent_documents, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access} %>
-        </table>
-      </div>
-   <% end %>
+    <div id="recent_docs">
+      <table class="table table-bordered table-striped">
+        <%= render partial: "recent_document", collection: recent_documents, locals: {display_thumbs: display_thumbs, display_access: display_access} %>
+      </table>
+    </div>
+  <% end %>
 
 </div>
