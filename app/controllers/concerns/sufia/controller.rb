@@ -38,18 +38,9 @@ module Sufia::Controller
   end
   
   def search_layout
-    if has_search_parameters? 
-      "sufia-two-column"
-    else
-      "homepage"
-    end
+    "sufia-two-column"
   end
   
-  # This repeats has_search_parameters? method from Blacklight::CatalogHelperBehavior 
-  def has_search_parameters?
-    !params[:q].blank? or !params[:f].blank? or !params[:search_field].blank?
-  end
-
   protected
 
   ### Hook which is overridden in Sufia::Ldap::Controller

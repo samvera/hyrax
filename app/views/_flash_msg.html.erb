@@ -1,13 +1,7 @@
-<%
-flash_types_to_classes = {
-   :notice => 'alert-success',
-   :error => 'alert',
-   :alert => 'alert-error'
-}
-%>
+<% flash_types_to_classes = { notice: 'alert-success', error: 'alert-danger', alert: 'alert-warning' } %>
 <% [:notice, :error, :alert].each do |type| %>
   <% if flash[type] %>
-    <div class="alert alert-dismissable <%= flash_types_to_classes[type] rescue '' %> ui-corner-all <%= type.to_s %>">
+    <div class="alert <%= flash_types_to_classes[type] rescue '' %>">
       <a class="close" data-dismiss="alert" href="#">&times;</a>
       <% if flash[type].respond_to? :join %>
         <%= flash[type].join("<br/>").html_safe %>

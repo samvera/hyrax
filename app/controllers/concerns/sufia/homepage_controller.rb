@@ -7,11 +7,11 @@ module Sufia::HomepageController
     include Sufia::Controller
     include Blacklight::SolrHelper
 
-    before_filter :setup_front_page, only: :index
     self.solr_search_params_logic += [:only_generic_files]
+    layout 'homepage'
   end
 
-  def setup_front_page
+  def index
     @featured_researcher = ContentBlock.find_or_create_by(name: 'featured_researcher')
     @marketing_text = ContentBlock.find_or_create_by(name: 'marketing_text')
     @featured_work_list = FeaturedWorkList.new

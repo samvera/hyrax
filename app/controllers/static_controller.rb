@@ -1,5 +1,6 @@
 class StaticController < ApplicationController
   rescue_from AbstractController::ActionNotFound, :with => :render_404
+  layout 'homepage'
 
   def zotero
     respond_to do |format|
