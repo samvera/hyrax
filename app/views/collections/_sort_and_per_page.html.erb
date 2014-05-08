@@ -23,6 +23,7 @@
             <%= render_hash_as_hidden_fields(params_for_search.except(:per_page, :sort)) %>
             &nbsp;&nbsp;&nbsp;
             <button class="btn btn-primary"><i class="icon-refresh"></i> Refresh</button>
+            <%= render 'view_type_group' %>
          <% end %>
       <% end unless sort_fields.empty? %>
    </div>

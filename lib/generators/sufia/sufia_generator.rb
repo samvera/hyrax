@@ -47,6 +47,10 @@ This generator makes the following changes to your application:
     copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
   end
 
+  def copy_helper
+    copy_file 'sufia_helper.rb', 'app/helpers/sufia_helper.rb'
+  end
+
   def tinymce_config
     copy_file "config/tinymce.yml", "config/tinymce.yml"
   end

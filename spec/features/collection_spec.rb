@@ -85,8 +85,8 @@ describe 'collection', describe_options do
   end
 
   describe 'show collection' do
-    before (:each) do
-      @collection = Collection.new title:'collection title'
+    before do
+      @collection = Collection.new title: 'collection title'
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
       @collection.members = [@gf1,@gf2]
@@ -108,6 +108,10 @@ describe 'collection', describe_options do
       page.should have_content(@gf1.title.first)
       page.should have_content(@gf2.title.first)
       page.should_not have_css(".pager")
+
+      click_link "Gallery"
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
     end
 
     it "should hide collection descriptive metadata when searching a collection" do

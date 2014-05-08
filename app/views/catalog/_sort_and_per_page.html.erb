@@ -1,15 +1,9 @@
-<% unless @response.response['numFound'] < 2 %>
-  <%= form_tag catalog_index_path, :method => :get, :class => "well form-inline" do %>
-    <div class="sorting">
-      <%= label_tag(:sort, "<strong>Sort by</strong> ".html_safe) %>
-      <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort])), :class => "input-medium") %>
+<div id="sortAndPerPage" class="clearfix">
+  <%= render partial: "paginate_compact", object: @response %>
+  <div class="search-widgets pull-right">
+    <%= render 'sort_widget' %>
+    <%= render 'per_page_widget' %>
+    <%= render 'view_type_group' %>
+  </div>
+</div>
 
-      <%= label_tag(:per_page) do %>
-        <strong>Show</strong> <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), :title => "Number of results to display per page", :class => "input-small")  %> per page
-        <% end %>
-      <%= render_hash_as_hidden_fields(params_for_search().except(:per_page, :sort, :utf8)) %>
-      <button class="btn btn-primary"><i class="icon-refresh"></i> Refresh</button>
-
-    </div>
-  <% end %>
-<% end %>

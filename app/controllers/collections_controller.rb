@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class CollectionsController < ApplicationController
   include Hydra::CollectionsControllerBehavior
+  include Blacklight::Catalog::SearchContext
   include BlacklightAdvancedSearch::ParseBasicQ
   include BlacklightAdvancedSearch::Controller
   include Sufia::Noid # for normalize_identifier method
@@ -11,6 +12,8 @@ class CollectionsController < ApplicationController
   CollectionsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
   layout "sufia-one-column"
+
+  protected 
 
   def query_collection_members
     flash[:notice]=nil if flash[:notice] == "Select something first"
@@ -32,6 +35,10 @@ class CollectionsController < ApplicationController
   
   def initialize_fields_for_edit
     @collection.initialize_fields
+  end
+
+  def _prefixes
+    @_prefixes ||= super + ['catalog']
   end
 
 end

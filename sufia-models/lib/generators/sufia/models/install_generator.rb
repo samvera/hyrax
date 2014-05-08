@@ -104,6 +104,10 @@ This generator makes the following changes to your application:
     generate 'sufia:models:usagestats'
   end
 
+  def install_blacklight_gallery
+    generate "blacklight_gallery:install"
+  end
+
   private
 
   def better_migration_template(file)

@@ -5,7 +5,9 @@
       <% @trophies.each do |t| %>
         <tr id="trophyrow_<%= t.noid %>">
           <td>
-            <%= render partial: "dashboard/_index_partials/thumbnail_display", locals: {document: t, width: 90} %>
+            <%= link_to sufia.generic_file_path(t) do %>
+              <%= render_thumbnail_tag t, { width: 90 } %>
+            <% end %>
           </td>
           <td>
             <%= link_to display_title(t), sufia.generic_file_path(t) %>

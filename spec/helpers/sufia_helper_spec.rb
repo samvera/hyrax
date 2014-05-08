@@ -38,4 +38,28 @@ describe SufiaHelper do
     end
   end
 
+  describe "sufia_thumbnail_tag" do
+    context "for an image object" do
+      let(:document) { SolrDocument.new( mime_type_tesim: 'image/jpeg', noid_tsi: '1234') }
+      it "should show the audio thumbnail" do
+        rendered = helper.sufia_thumbnail_tag(document, { width: 90 })
+        rendered.should match /src="\/downloads\/1234\?datastream_id=thumbnail"/
+        rendered.should match /width="90"/
+      end
+    end
+    context "for an audio object" do
+      let(:document) { SolrDocument.new( mime_type_tesim: 'audio/x-wave') }
+      it "should show the audio thumbnail" do
+        rendered = helper.sufia_thumbnail_tag(document, {})
+        rendered.should match /src="\/assets\/audio.png"/
+      end
+    end
+    context "for an document object" do
+      let(:document) { SolrDocument.new( mime_type_tesim: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') }
+      it "should show the default thumbnail" do
+        rendered = helper.sufia_thumbnail_tag(document, {})
+        rendered.should match /src="\/assets\/default.png"/
+      end
+    end
+  end
 end

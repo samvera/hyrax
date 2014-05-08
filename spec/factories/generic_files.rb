@@ -7,6 +7,10 @@ FactoryGirl.define do
       gf.apply_depositor_metadata evaluator.depositor
     end
 
+    factory :public_file do
+      read_groups ["public"]
+    end
+
     factory :fixture do
       factory :public_pdf do
         ignore do

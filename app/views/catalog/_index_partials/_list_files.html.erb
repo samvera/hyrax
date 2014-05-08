@@ -5,7 +5,10 @@
   </h2>
   <table class="table">
     <tr>
-      <td rowspan="6" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %>
+      <td rowspan="6" class="span20">
+        <%= link_to sufia.generic_file_path(document) do %>
+          <%= render_thumbnail_tag document, { width: 150 } %>
+        <% end %>
       </td>
       <th><h4>Title:</h4></th>
       <td><%= document.title %></td>
