@@ -4,3 +4,4 @@
 <div id="home_content" class="row">
   <%= render partial: 'home_content' %>
 </div>
+<%= tiny_mce_stuff if can? :update, ContentBlock%>
