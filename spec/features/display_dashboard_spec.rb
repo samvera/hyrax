@@ -8,6 +8,7 @@ describe "Display Dashboard files" do
 
   it "should display the dashboard and have search" do
     click_link 'dashboard'
+    click_link 'Files'
     fill_in "dashboard_search", with: "dash search"
     click_button "dashboard_submit"
     page.should have_content "Dashboard"

@@ -1,20 +1,20 @@
 Sufia::Engine.routes.draw do
 
   # Downloads controller route
-  resources :homepage, :only => "index"
+  resources :homepage, only: "index"
 
   # Route the home page as the root
-  root :to => "homepage#index"
+  root to: "homepage#index"
 
-  get 'single_use_link/generate_download/:id' => 'single_use_links#new_download', :as => :generate_download_single_use_link
-  get 'single_use_link/generate_show/:id' => 'single_use_links#new_show', :as => :generate_show_single_use_link
-  get 'single_use_link/show/:id' => 'single_use_links_viewer#show', :as => :show_single_use_link
-  get 'single_use_link/download/:id' => 'single_use_links_viewer#download', :as => :download_single_use_link
+  get 'single_use_link/generate_download/:id' => 'single_use_links#new_download', as: :generate_download_single_use_link
+  get 'single_use_link/generate_show/:id' => 'single_use_links#new_show', as: :generate_show_single_use_link
+  get 'single_use_link/show/:id' => 'single_use_links_viewer#show', as: :show_single_use_link
+  get 'single_use_link/download/:id' => 'single_use_links_viewer#download', as: :download_single_use_link
 
-  match 'batch_edits/clear' => 'batch_edits#clear', :as => :batch_edits_clear, via: [:get, :post]
+  match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
 
   # "Notifications" route for catalog index view
-  get "users/notifications_number" => "users#notifications_number", :as => :user_notify
+  get "users/notifications_number" => "users#notifications_number", as: :user_notify
 
   # Generic file routes
   resources :generic_files, path: :files, except: :index do
@@ -29,7 +29,7 @@ Sufia::Engine.routes.draw do
   resources :featured_work_lists, path: 'featured_works', only: :create
 
   # Downloads controller route
-  resources :downloads, :only => "show"
+  resources :downloads, only: "show"
 
   # Messages
   resources :notifications, only: [:destroy, :index], controller: :mailbox do
@@ -50,14 +50,44 @@ Sufia::Engine.routes.draw do
   # Dashboard routes (based partly on catalog routes)
   resources 'dashboard', :only=>:index do
     collection do
-      get 'page/:page', :action => :index
-      get 'activity', :action => :activity, :as => :dashboard_activity
-      get 'facet/:id', :action => :facet, :as => :dashboard_facet
+      get 'page/:page', action: :index
+      get 'activity', action: :activity, as: :dashboard_activity
+      get 'facet/:id', action: :facet, as: :dashboard_facet
+    end
+  end
+  namespace :dashboard do
+    resources :files, only: :index do
+      collection do
+        get 'page/:page', action: :index
+        get 'activity', action: :activity, as: :dashboard_activity
+        get 'facet/:id', action: :facet, as: :dashboard_facet
+      end
+    end
+    resources :collections, only: :index do
+      collection do
+        get 'page/:page', action: :index
+        get 'activity', action: :activity, as: :dashboard_activity
+        get 'facet/:id', action: :facet, as: :dashboard_facet
+      end
+    end
+    resources :highlights, only: :index do
+      collection do
+        get 'page/:page', action: :index
+        get 'activity', action: :activity, as: :dashboard_activity
+        get 'facet/:id', action: :facet, as: :dashboard_facet
+      end
+    end
+    resources :shares, only: :index do
+      collection do
+        get 'page/:page', action: :index
+        get 'activity', action: :activity, as: :dashboard_activity
+        get 'facet/:id', action: :facet, as: :dashboard_facet
+      end
     end
   end
 
   # advanced routes for advanced search
-  get 'search' => 'advanced#index', :as => :advanced
+  get 'search' => 'advanced#index', as: :advanced
 
   # Authority vocabulary queries route
   get 'authorities/:model/:term' => 'authorities#query'
@@ -65,14 +95,14 @@ Sufia::Engine.routes.draw do
   # LDAP-related routes for group and user lookups
   get 'directory/user/:uid' => 'directory#user'
   get 'directory/user/:uid/:attribute' => 'directory#user_attribute'
-  get 'directory/group/:cn' => 'directory#group', :constraints => { :cn => /.*/ }
+  get 'directory/group/:cn' => 'directory#group', constraints: { cn: /.*/ }
 
   # Batch edit routes
-  get 'batches/:id/edit' => 'batch#edit', :as => :batch_edit
-  post 'batches/:id/' => 'batch#update', :as => :batch_generic_files
+  get 'batches/:id/edit' => 'batch#edit', as: :batch_edit
+  post 'batches/:id/' => 'batch#update', as: :batch_generic_files
 
   # Contact form routes
-  post 'contact' => 'contact_form#create', :as => :contact_form_index
+  post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'
 
   mount Hydra::Collections::Engine => '/'
@@ -82,7 +112,7 @@ Sufia::Engine.routes.draw do
   if defined?(Sufia::ResqueAdmin)
     namespace :admin do
       constraints Sufia::ResqueAdmin do
-        mount Resque::Server, :at => "queues"
+        mount Resque::Server, at: "queues"
       end
     end
   end
@@ -92,7 +122,7 @@ Sufia::Engine.routes.draw do
 
   get 'about' => 'pages#show', id: 'about_page'
   # Static page routes (workaround)
-  get ':action' => 'static#:action', :constraints => { :action => /help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, :as => :static
+  get ':action' => 'static#:action', constraints: { action: /help|terms|zotero|mendeley|agreement|subject_libraries|versions/ }, as: :static
 
   #Single use link errors
   get 'single_use_link/not_found' => 'errors#single_use_error'

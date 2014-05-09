@@ -1,5 +1,5 @@
 <div class="col-xs-12 col-md-6">
-  <%= form_tag sufia.dashboard_index_path, :method => :get, :role => "search" do %>
+  <%= form_tag search_action_url, method: :get, role: "search" do %>
     <label for="dashboard_search" class="sr-only">Search My Dashboard</label>
     <%= hidden_field_tag :search_field, 'all_fields' %>
     <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8)) %>

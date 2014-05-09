@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-lg-10">
           <div class="input-group">
-            <% q = params[:controller] == 'dashboard' ? nil : params[:q] %>
+            <% q = params[:controller].match(/^dashboard/) ? nil : params[:q] %>
             <%= text_field_tag :q, q, :class => "q form-control", :id => "search-field-header", :placeholder => t('sufia.search.form.q.placeholder') %>
             <%# if this label goes before the search field, it'll mess up the rounded corners %>
             <label class="sr-only" for="search-field-header"><%= t('sufia.search.form.q.label') %></label>
