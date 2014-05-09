@@ -1,6 +1,7 @@
 require "sufia/version"
 require 'blacklight'
 require 'blacklight_advanced_search'
+require 'blacklight/gallery'
 require 'hydra/head'
 require 'hydra-batch-edit'
 require 'hydra-editor'

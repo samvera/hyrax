@@ -6,7 +6,9 @@
     <%= f.hidden_field :order, data: {property: "order"} %>
     <div class="main row">
       <div class="col-sm-3">
-        <%= render partial: 'dashboard/_index_partials/thumbnail_display', locals: {document: featured, width: 90} %>
+        <%= link_to sufia.generic_file_path(featured) do %>
+          <%= render_thumbnail_tag featured, {width: 90} %>
+        <% end %>
       </div>
       <div class="col-sm-9">
         <% if can? :destroy, FeaturedWork %>
