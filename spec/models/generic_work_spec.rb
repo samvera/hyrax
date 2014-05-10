@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Worthwhile::GenericWork do
+describe GenericWork do
   it "should have a title" do
     subject.title = 'foo'
     expect(subject.title).to eq 'foo'
@@ -11,7 +11,7 @@ describe Worthwhile::GenericWork do
 
     it "should have two files" do
       expect(subject.generic_files.size).to eq 2
-      expect(subject.generic_files.first).to be_kind_of GenericFile
+      expect(subject.generic_files.first).to be_kind_of Worthwhile::GenericFile
     end
   end
 end

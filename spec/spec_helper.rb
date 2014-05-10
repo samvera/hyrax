@@ -13,18 +13,25 @@ require 'rspec/autorun'
 # Capybara.default_wait_time = 5
 
 
-if ENV["COVERAGE"] or ENV["CI"]
+if ENV['COVERAGE']
   require 'simplecov'
-  # require 'coveralls' if ENV["CI"]
 
-  # SimpleCov.formatter = Coveralls::SimpleCov::Formatter if ENV["CI"]
-  SimpleCov.start do
-    add_filter "/spec/"
+  ENGINE_ROOT = File.expand_path('../..', __FILE__)
+
+  # Out of the box, SimpleCov was looking at file in ENGINE_ROOT/spec/internal;
+  # After all that was where Rails was pointed at.
+  SimpleCov.root(ENGINE_ROOT)
+  SimpleCov.start 'rails' do
+    filters.clear
+    add_filter do |src|
+      src.filename !~ /^#{ENGINE_ROOT}/
+    end
+    add_filter '/spec/'
   end
+  SimpleCov.command_name "spec"
 end
 
 require 'worthwhile'
-
 
 Dir["./spec/support/**/*.rb"].sort.each {|f| require f}
 

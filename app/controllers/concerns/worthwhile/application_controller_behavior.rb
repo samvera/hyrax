@@ -5,6 +5,8 @@ module Worthwhile
     extend ActiveSupport::Concern
     
     included do
+      helper Worthwhile::MainAppHelpers
+      
       rescue_from CanCan::AccessDenied do |exception|
         if [:show, :edit].include? exception.action
           render 'unauthorized', status: :unauthorized

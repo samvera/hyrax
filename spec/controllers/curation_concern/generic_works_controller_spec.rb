@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Worthwhile::CurationConcern::GenericWorksController do
-  routes { Worthwhile::Engine.routes }
+describe CurationConcern::GenericWorksController do
+  # routes { Worthwhile::Engine.routes }
   let(:public_work_factory_name) { :public_generic_work }
   let(:private_work_factory_name) { :work }
 
@@ -46,9 +46,8 @@ describe Worthwhile::CurationConcern::GenericWorksController do
     it "should create a work" do
       expect {
         post :create, accept_contributor_agreement: "accept", generic_work: {  }
-      }.to change { Worthwhile::GenericWork.count }.by(1)
-
-      response.should redirect_to [:curation_concern, assigns[:generic_work]]
+      }.to change { GenericWork.count }.by(1)
+      response.should redirect_to [:curation_concern, assigns[:curation_concern]]
     end
   end
 
@@ -82,7 +81,7 @@ describe Worthwhile::CurationConcern::GenericWorksController do
     let(:a_work) { FactoryGirl.create(private_work_factory_name, user: user) }
     it "should update the work " do
       patch :update, id: a_work, generic_work: {  }
-      response.should redirect_to [:curation_concern, assigns[:generic_work]]
+      response.should redirect_to [:curation_concern, assigns[:curation_concern]]
     end
     describe "changing rights" do
       it "should prompt to change the files access" do

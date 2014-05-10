@@ -4,6 +4,7 @@ class Worthwhile::PropertiesDatastream < ActiveFedora::OmDatastream
     t.root(:path=>"fields" ) 
     # This is where we put the user id of the object depositor
     t.depositor index_as: :stored_searchable
+    t.owner
 
     # Although we aren't using these fields, they are required because sufia-models delegates to them.
     t.relative_path 

@@ -20,14 +20,25 @@ module Worthwhile
       say_status("warning", "Removing Blacklight's generated CatalogController...", :yellow)
       remove_file('app/controllers/catalog_controller.rb')
     end
+    
+    def inject_application_controller_behavior
+      inject_into_file 'app/controllers/application_controller.rb', :after => /Blacklight::Controller\s*\n/ do
+        "  include Worthwhile::ApplicationControllerBehavior\n"
+      end
+    end
 
     def inject_routes
-      route "mount Worthwhile::Engine, at: '/'"
+      inject_into_file 'config/routes.rb', :after => /devise_for :users\s*\n/ do
+        "  worthwhile_collections\n"\
+        "  worthwhile_curation_concerns\n"\
+        "  mount Worthwhile::Engine, at: '/'\n"
+      end
     end
 
     def inject_ability
       inject_into_file 'app/models/ability.rb', :after => /Hydra::Ability\s*\n/ do
-        "  include Worthwhile::Ability\n\n"
+        "  include Worthwhile::Ability\n"\
+        "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
       end
     end
 

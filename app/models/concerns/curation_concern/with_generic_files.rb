@@ -4,7 +4,7 @@ module CurationConcern
     extend ActiveSupport::Concern
 
     included do
-      has_many :generic_files, property: :is_part_of
+      has_many :generic_files, property: :is_part_of, class_name: "Worthwhile::GenericFile"
       before_destroy :before_destroy_cleanup_generic_files
     end
 

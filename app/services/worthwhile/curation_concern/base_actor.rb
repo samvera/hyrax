@@ -4,7 +4,7 @@ module Worthwhile
     # * #create
     # * #update
     # * #delete
-    class BaseActor
+    module BaseActor
       attr_reader :curation_concern, :user, :attributes, :cloud_resources
       def initialize(curation_concern, user, input_attributes)
         @curation_concern = curation_concern

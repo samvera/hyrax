@@ -16,8 +16,7 @@ module CurationConcern
       end
 
       def visibility
-        if read_groups.include?(Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC) &&
-          embargo_release_date
+        if read_groups.include?(Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC) && embargo_release_date
           return Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
         end
         super

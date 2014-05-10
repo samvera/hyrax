@@ -1,6 +1,12 @@
 module Worthwhile
   module CurationConcern
-    class GenericWorkActor < BaseActor
+    module GenericWorkActor 
+      extend ActiveSupport::Concern
+      
+      included do
+        include Worthwhile::CurationConcern::BaseActor
+      end
+      
       def create
         assign_pid && super && attach_files && assign_representative
       end
@@ -52,7 +58,7 @@ module Worthwhile
 
       private
       def attach_file(file)
-        generic_file = GenericFile.new
+        generic_file = Worthwhile::GenericFile.new
         generic_file.file = file
         generic_file.batch = curation_concern
         Sufia::GenericFile::Actions.create_metadata(

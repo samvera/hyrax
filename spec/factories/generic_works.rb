@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :work, class: Worthwhile::GenericWork do
+  factory :work, aliases:[:generic_work], class: GenericWork do
     ignore do
       user {FactoryGirl.create(:user)}
     end

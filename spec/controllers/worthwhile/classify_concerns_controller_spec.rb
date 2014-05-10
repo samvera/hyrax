@@ -24,6 +24,9 @@ describe Worthwhile::ClassifyConcernsController do
 
     it 'requires authentication' do
       sign_in(user)
+      # Had to stub the actual handling of curation_concern paths since those paths live outside the engine while the path to this controller lives inside the engine.
+      new_curation_concern_generic_work_path = "/stub/path"
+      subject.should_receive(:new_polymorphic_path).with([:curation_concern, GenericWork]).and_return(new_curation_concern_generic_work_path)
       post :create, classify_concern: { curation_concern_type: 'GenericWork' }
       expect(response).to redirect_to(new_curation_concern_generic_work_path)
     end
