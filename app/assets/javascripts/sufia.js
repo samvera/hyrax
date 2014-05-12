@@ -41,6 +41,7 @@
 //= require sufia/search
 //= require sufia/editor
 //= require sufia/collections
+//= require sufia/ga_events
 //= require hydra/batch_select
 //= require hydra_collections
 //= require browse_everything

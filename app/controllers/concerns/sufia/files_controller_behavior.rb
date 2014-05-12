@@ -53,15 +53,7 @@ module Sufia
 
     # routed to /files/:id/stats
     def stats
-      path = sufia.generic_file_path(Sufia::Noid.noidify(params[:id]))
-      # Pull back results from GA, filter them for path, and hashify
-      @created = DateTime.parse(::GenericFile.find(params[:id]).create_date)
-      results_list = Sufia::UsageStatistics.profile.pageview(
-        start_date: @created,
-        end_date: DateTime.now,
-        sort: 'date').for_path(path)
-      @stats_json = Sufia::UsageStatistics.as_flot_json(results_list)
-      @pageviews = Sufia::UsageStatistics.total_pageviews(results_list)
+      @stats = FileUsage.new(params[:id])
     end
 
     # routed to /files/:id (DELETE)

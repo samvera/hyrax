@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'generic_files/show.html.erb' do
-  describe 'usage statistics' do
+  describe 'analytics' do
     let(:generic_file) {
       content = double('content', versions: [])
       stub_model(GenericFile, noid: '123',
@@ -19,7 +19,7 @@ describe 'generic_files/show.html.erb' do
 
     context 'when enabled' do
       before do
-        Sufia.config.usage_statistics = true
+        Sufia.config.analytics = true
       end
 
       it 'appears on page' do
@@ -31,7 +31,7 @@ describe 'generic_files/show.html.erb' do
 
     context 'when disabled' do
       before do
-        Sufia.config.usage_statistics = false
+        Sufia.config.analytics = false
       end
 
       it 'does not appear on page' do

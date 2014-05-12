@@ -24,7 +24,7 @@ Sufia has the following features:
 * Activity streams
 * Background jobs
 * Single-use links
-* Usage statistics
+* Analytics
 
 ## Sufia needs the following software to work:
 1. Solr
@@ -91,7 +91,7 @@ Add this line:
 
 Turbolinks does not mix well with Blacklight.
 
-### Usage statistics
+### Analytics
 
 Sufia provides support for capturing usage information via Google Analytics and for displaying usage stats in the UI.
 
@@ -101,7 +101,7 @@ To enable the Google Analytics javascript snippet, make sure that `config.google
 
 #### Displaying usage
 
-To display usage statistics in the UI, first head to the Google Developers Console and create a new project:
+To display data from Google Analytics in the UI, first head to the Google Developers Console and create a new project:
 
 https://console.developers.google.com/project
 
@@ -129,7 +129,9 @@ The generator will create a configuration file at _config/analytics.yml_.  Edit 
 * An application name (you can make this up)
 * An application version (you can make this up)
 
-Finally, you will need to set `config.usage_statistics = true` in _config/initializers/sufia.rb_.
+Lastly, you will need to set `config.analytics = true` in _config/initializers/sufia.rb_ and ensure that the OAuth client email
+has the proper access within your Google Analyics account.  To do so, go to the _Admin_ tab for your Google Analytics account.
+Click on _User Management_, in the _Account_ column, and add "Read & Analyze" permissions for the OAuth client email address.
 
 ### To use browse-everything
 

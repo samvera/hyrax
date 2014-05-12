@@ -1,135 +1,19 @@
-<%= render :partial => 'generic_files/breadcrumbs' %>
+<%= render partial: 'generic_files/breadcrumbs' %>
 
 <!-- Adapted from jquery-flot examples https://github.com/flot/flot/blob/master/examples/visitors/index.html -->
 <!--[if lte IE 8]><%= javascript_include_tag 'excanvas' %><![endif]-->
-<script type="text/javascript">
-$(function() {
+<%= javascript_tag do %>
+  <%= render partial: 'generic_files/flot_stats', formats: [:js] %>
+<% end %>
 
-  var d = <%= @stats_json.html_safe %>;
-
-  function weekendAreas(axes) {
-      var markings = [],
-        d = new Date(axes.xaxis.min);
-
-      // go to the first Saturday
-
-      d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
-      d.setUTCSeconds(0);
-      d.setUTCMinutes(0);
-      d.setUTCHours(0);
-
-      var i = d.getTime();
-
-      // when we don't set yaxis, the rectangle automatically
-      // extends to infinity upwards and downwards
-
-      do {
-        markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
-        i += 7 * 24 * 60 * 60 * 1000;
-      } while (i < axes.xaxis.max);
-
-      return markings;
-  }
-
-  var options = {
-    xaxis: {
-      mode: "time",
-      tickLength: 5
-    },
-    yaxis: {
-      tickDecimals: 0,
-      min: 0
-    },
-    series: {
-      lines: {
-        show: true,
-        fill: true
-      },
-      points: {
-        show: true,
-        fill: true
-      }
-    },
-    selection: {
-      mode: "x"
-    },
-    grid: {
-      hoverable: true,
-      clickable: true,
-      markings: weekendAreas
-    }
-  };
-
-  var plot = $.plot("#usage-stats", [d], options);
-
-  $("<div id='tooltip'></div>").css({
-    position: "absolute",
-    display: "none",
-    border: "1px solid #bce8f1",
-    padding: "2px",
-    "background-color": "#d9edf7",
-    opacity: 0.80
-  }).appendTo("body");
-
-  $("#usage-stats").bind("plothover", function (event, pos, item) {
-    if (item) {
-      date = new Date(item.datapoint[0]);
-      months = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"]
-      $("#tooltip").html("<strong>Views: " + item.datapoint[1] + "</strong><br/>" + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear())
-            .css({top: item.pageY+5, left: item.pageX+5})
-            .fadeIn(200);
-    } else {
-      $("#tooltip").fadeOut(100)
-    }
-  });
-
-  var overview = $.plot("#overview", [d], {
-    series: {
-      lines: {
-        show: true,
-        lineWidth: 1
-      },
-      shadowSize: 0
-    },
-    xaxis: {
-      ticks: [],
-      mode: "time",
-      minTickSize: [1, "day"]
-    },
-    yaxis: {
-      ticks: [],
-      min: 0,
-      autoscaleMargin: 0.1
-    },
-    selection: {
-      mode: "x"
-    }
-  });
-
-  $("#usage-stats").bind("plotselected", function(event, ranges) {
-    plot = $.plot("#usage-stats", [d], $.extend(true, {}, options, {
-      xaxis: {
-        min: ranges.xaxis.from,
-        max: ranges.xaxis.to
-      }
-    }));
-    overview.setSelection(ranges, true);
-  });
-
-  $("#overview").bind("plotselected", function(event, ranges) {
-    plot.setSelection(ranges);
-  });
-});
-</script>
-
-<h1 class="lower"><%= @generic_file %></h1>
+<%= content_tag :h1, @generic_file, class: "lower" %>
 
 <div class="row">
   <div class="span110">
-    <h2>Usage Statistics</h2>
+    <%= content_tag :h2, "Analytics" %>
     <div class="alert alert-info">
-      <i class="icon-bar-chart icon-large"></i> <strong><%= @pageviews %></strong> views since <%= @created.strftime("%B %-d, %Y") %>
+      <i class="icon-bar-chart icon-large"></i>
+      <%= content_tag :strong, @stats.total_pageviews %> views and <%= content_tag :strong, @stats.total_downloads %> downloads since <%= @stats.created.strftime("%B %-d, %Y") %>
     </div>
     <div class="stats-container">
         <div id="usage-stats" class="stats-placeholder"></div>

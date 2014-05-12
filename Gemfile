@@ -23,4 +23,6 @@ group :development, :test do
   gem "bootstrap-sass"
   gem "simplecov", :require => false
   gem "spring"
+  gem 'database_cleaner'
+  gem 'poltergeist'
 end # (leave this comment here to catch a stray line inserted by blacklight!)
