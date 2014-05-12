@@ -2,6 +2,7 @@ module Worthwhile
   class GenericFile < ActiveFedora::Base
     include Sufia::ModelMethods
     include Hydra::AccessControls::Permissions
+    include Sufia::Noid
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::Audit

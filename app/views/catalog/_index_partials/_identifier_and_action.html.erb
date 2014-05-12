@@ -1,0 +1,32 @@
+<% solr_doc          ||= document.inner_object.solr_doc                                                    %>
+<% title_link_target ||= polymorphic_path([:curation_concern, document])                                   %>
+<% title_link_text   ||= render_index_field_value(document: solr_doc, field: 'desc_metadata__title_tesim') %>
+<% edit_path         ||= edit_polymorphic_path([:curation_concern, document])                              %>
+<div class="row-fluid identifier-and-action">
+  <div class="span2 list-number">
+    <%= document_counter_with_offset(counter) if defined?(counter) %>
+    <%= render :partial => 'catalog/_index_partials/type_display', locals: {document: document} %>
+  </div>
+
+  <div class="span6 search-result-link">
+    <%# Minimize Fedora hits by using solr_doc rather than document %>
+    <%= link_to title_link_text, title_link_target, :id => "src_copy_link_#{solr_doc.noid}" %>
+  </div>
+
+  <div class="span4 search-result-actions">
+    <% if current_user -%>
+      <% if can?( :edit, document ) && edit_path.present? %>
+      <%= link_to(
+        raw('<i class="icon-pencil icon-large"></i>'),
+          edit_path,
+          class: 'itemicon itemedit btn',
+          title: "Edit #{document.human_readable_type}"
+        )%>
+      <% end %>
+      <% if can? :collect, document %>
+        <%= render 'add_to_collection_gui', collectible: document %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+

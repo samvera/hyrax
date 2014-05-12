@@ -1,0 +1,7 @@
+<p class="resource-type">
+  <% if document.inner_object.solr_doc.has?('desc_metadata__resource_type_tesim') %>
+    <%= render_index_field_value document: document.inner_object.solr_doc, field: 'desc_metadata__resource_type_tesim' %>
+  <% else %>
+    <%= render_index_field_value document: document.inner_object.solr_doc, field: 'human_readable_type_tesim' %>
+  <% end %>
+</p>

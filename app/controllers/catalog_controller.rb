@@ -9,18 +9,21 @@ class CatalogController < ApplicationController
   include Worthwhile::ThemedLayoutController
 
   with_themed_layout 'catalog'
+  helper BlacklightHelper
+  helper Worthwhile::CatalogHelper
+  
 
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, :only=>:show
   # This applies appropriate access controls to all solr queries
-  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  # CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
   # This filters out objects that you want to exclude from search results, like FileAssets
-  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
-  CatalogController.solr_search_params_logic += [:show_only_works]
+  # CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
+  # CatalogController.solr_search_params_logic += [:show_only_works]
 
   skip_before_filter :default_html_head
-
+  
   def self.uploaded_field
     #  system_create_dtsi
     solr_name('desc_metadata__date_uploaded', :stored_sortable, type: :date)
@@ -62,6 +65,7 @@ class CatalogController < ApplicationController
     config.add_facet_field solr_name("desc_metadata__based_near", :facetable), label: "Location", limit: 5
     config.add_facet_field solr_name("desc_metadata__publisher", :facetable), label: "Publisher", limit: 5
     config.add_facet_field solr_name("file_format", :facetable), label: "File Format", limit: 5
+    config.add_facet_field "generic_type_sim", label: "Type", limit: 5
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request

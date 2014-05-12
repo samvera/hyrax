@@ -16,4 +16,11 @@ module CurationConcern::Work
     
     attr_accessor :files
   end
+  
+  def to_solr(solr_doc={}, opts={})
+    super(solr_doc, opts)
+    Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)
+    return solr_doc
+  end
+  
 end

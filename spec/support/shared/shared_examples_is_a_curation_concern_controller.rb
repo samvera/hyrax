@@ -21,7 +21,7 @@ shared_examples 'is_a_curation_concern_controller' do |curation_concern_class, o
   before { sign_in user }
 
   def path_to_curation_concern
-    public_send("curation_concern_#{curation_concern_type_underscore}_path", controller.curation_concern.id)
+    public_send("curation_concern_#{curation_concern_type_underscore}_path", controller.curation_concern.pid)
   end
 
   render_views
@@ -78,8 +78,11 @@ shared_examples 'is_a_curation_concern_controller' do |curation_concern_class, o
   if optionally_include_specs(actions, :create)
     describe "#create" do
       it "should create a work" do
-        controller.curation_concern.stub(:persisted?).and_return(true)
-        controller.curation_concern.stub(:pid).and_return("fake:pid")
+        fake_curation_concern = curation_concern_class.new
+        fake_curation_concern.stub(:persisted?).and_return(true)
+        fake_curation_concern.stub(:pid).and_return("fake:pid")
+        # load_and_authorize_resource calls this and sets controller.curation_concern: 
+        curation_concern_class.stub(:new).and_return(fake_curation_concern) 
         controller.actor = double(:create => true)
         post :create, accept_contributor_agreement: "accept"
         response.should redirect_to path_to_curation_concern

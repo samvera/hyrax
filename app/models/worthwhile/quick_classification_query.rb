@@ -14,9 +14,9 @@ module Worthwhile
     end
 
     def all
-      puts "User is #{user}"
-      puts "try is #{normalized_curation_concern_names.first}"
-      puts "can is  #{user.can?(:create, normalized_curation_concern_names.first)}"
+      logger.debug "User is #{user}"
+      logger.debug "try is #{normalized_curation_concern_names.first}"
+      logger.debug "can is  #{user.can?(:create, normalized_curation_concern_names.first)}"
       normalized_curation_concern_names.select {|klass| user.can?(:create, klass)}
     end
 

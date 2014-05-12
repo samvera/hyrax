@@ -1,0 +1,5 @@
+<h3 id="document-list-heading" class="accessible-hidden">List of files deposited in <%= t('sufia.product_name') %> that match your search criteria</h3>
+<ul id="documents" class="container-fluid search-results-list" aria-labeled-by="document-list-heading">
+  <%= render @document_list.map(&:to_model), :as => :document %>
+</ul>
+
