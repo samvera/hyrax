@@ -10,9 +10,9 @@ module ContentBlockHelper
         }
       } 
       concat form_for([sufia, content_block] ) { |f|
-        concat f.text_area :value, class: "tinymce", rows: 20, cols: 120
+        concat f.text_area :value, id: "text_area_#{content_block.name}", class: "tinymce", rows: 20, cols: 120
         concat f.submit 'Save', class: "btn btn-primary"
-      } 
+      }
 
       concat tinymce_assets
       concat tinymce
