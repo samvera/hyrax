@@ -22,5 +22,4 @@ module CurationConcern::Work
     Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)
     return solr_doc
   end
-  
 end
