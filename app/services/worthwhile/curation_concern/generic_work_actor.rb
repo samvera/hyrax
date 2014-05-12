@@ -8,12 +8,12 @@ module Worthwhile
       end
       
       def create
-        assign_pid && super && attach_files && assign_representative
+        assign_pid && super && attach_files && create_linked_resources && assign_representative
       end
 
       def update
         add_to_collections(attributes.delete(:collection_ids)) &&
-          super && attach_files
+          super && attach_files && create_linked_resources
       end
 
       delegate :visibility_changed?, to: :curation_concern
@@ -49,6 +49,29 @@ module Worthwhile
         #add to new
         curation_concern.collection_ids = new_collection_ids
         true
+      end
+      
+      def linked_resource_urls
+        @linked_resource_urls ||= Array(attributes[:linked_resource_urls]).flatten.compact
+      end
+
+      def create_linked_resources
+        linked_resource_urls.all? do |link_resource_url|
+          create_linked_resource(link_resource_url)
+        end
+      end
+
+      def create_linked_resource(link_resource_url)
+        return true if ! link_resource_url.present?
+        resource = LinkedResource.new.tap do |link|
+          link.url = link_resource_url
+          link.batch = curation_concern
+          link.label = curation_concern.human_readable_type
+        end
+        Sufia::GenericFile::Actions.create_metadata(resource, user, curation_concern.pid)
+        true
+      rescue ActiveFedora::RecordInvalid
+        false
       end
 
       def assign_representative
