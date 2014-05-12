@@ -1,18 +1,34 @@
 <div class="batch-info"> 
-  <% session[:batch_edit_state] = "on" %>
-  <%=batch_delete%> <%=batch_edit_continue("Edit Selected") %>   
+  <div>
+    <%= render partial: 'collections/form_for_select_collection', locals: {user_collections: @user_collections}  %>
+  </div>
+
+  <div class="batch-toggle">
+    <% session[:batch_edit_state] = "on" %>
+    <%= batch_edit_continue "Edit Selected" %>
+    <%= batch_delete %>
+    <%= form_tag sufia.dashboard_index_path  do %>
+      <%= hidden_field_tag :type, nil, value: "Add to Collection" %>
+      <div>
+      </div>
+    <% end %>
+        <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
+          data: { toggle: "modal", target: "#collection-list-container" } %>
+  </div>
+  <div class="sort-toggle">
     <% unless @response.response['numFound'] < 2 %>
-      <%= form_tag sufia.dashboard_index_path, :method=>:get, :class=>'per_page form-inline' do %>
+      <%= form_tag sufia.dashboard_index_path, method: :get, class: 'per_page form-inline' do %>
         <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
         <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>			      
         &nbsp;&nbsp;&nbsp;
-        <%= label_tag(:per_page) do %>
-          Show <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), :title => "Number of results to display per page") %> per page
+        <%= label_tag :per_page do %>
+          Show <%= select_tag :per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), 
+                              title: "Number of results to display per page" %> per page
         <% end %>
-        <%= render_hash_as_hidden_fields(params_for_search().except(:per_page, :sort, :utf8)) %>
+        <%= render_hash_as_hidden_fields params_for_search().except(:per_page, :sort, :utf8) %>
         &nbsp;&nbsp;&nbsp;
         <button class="btn btn-primary" id="dashboard_sort_submit"><i class="glyphicon glyphicon-refresh"></i> Refresh</button>
+      <% end %>
     <% end unless sort_fields.empty? %>
-
-  <% end %>
+  </div>
 </div>

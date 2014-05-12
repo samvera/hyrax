@@ -6,7 +6,6 @@
   <% if  params[:action] == "edit" %>
   <div class="batch-toggle">
      <% session[:batch_edit_state] = "on" %>
-     <!--a href="#" class="btn btn-primary submits-batches-add" onclick="modal_collection_list('open', event)">Add to Another Collection</a-->
     <%= button_for_remove_selected_from_collection @collection %>
    </div>
   <%end %>

@@ -9,7 +9,7 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
-Capybara.default_wait_time = 5
+Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'equivalent-xml/rspec_matchers'

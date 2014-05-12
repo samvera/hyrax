@@ -60,8 +60,7 @@
     check_all_page();  
   }
 
-$(document).ready(function() { 
-
+Blacklight.onLoad(function() {
   // check the select all page cog menu item and select the entire page
   $("[data-behavior='batch-edit-select-page']").bind('click', function(e) {
     e.preventDefault();

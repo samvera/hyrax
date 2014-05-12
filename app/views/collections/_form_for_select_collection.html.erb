@@ -1,14 +1,15 @@
-<div>
-  <div class="collection-list-container">
-    <div class="vertical-offset">
-      <div class="collection-list-box">
-        <a href="#" onclick="modal_collection_list('close', event)"><div id="modalClose">&#10006;</div></a>       
-        <% if user_collections.blank? %>
-          <em> You do not have access to any existing collections. You may create a new collection.</em><br><br><br><br>
-          <%= button_for_create_collection %>
-        <% else %>
-          Select the collection to add your files to:
-          <%= form_tag collections.collection_path('collection_replace_id'), method: :put do %>
+<div class="modal fade" id="collection-list-container">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Add to collection</h4>
+        </div>
+        <div class="modal-body">
+          <% if user_collections.blank? %>
+            <em> You do not have access to any existing collections. You may create a new collection.</em><br><br><br><br>
+          <% else %>
+            Select the collection to add your files to:
             <div class="collection-list">
               <ul>
                 <% user_collections.sort! { |c1,c2| c1['desc_metadata__date_modified_dtsi'] <=> c2['desc_metadata__date_modified_dtsi'] }  %>
@@ -17,12 +18,17 @@
                 <% end %>
               </ul>
             </div><!-- collection-list -->
+          <% end %> <!-- else -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <% if user_collections.blank? %>
+            <%= button_for_create_collection %>
+          <% else %> 
             <%= button_for_update_collection %>
             <%= button_for_create_collection "Add to new Collection" %>
-          <% end %> <!-- form -->
-        <% end %> <!-- else -->
-      </div><!-- collection-list-box -->
-    </div><!-- vertical-offest -->
-  </div><!-- collection-list-container -->
-</div>
-
+          <% end %> 
+        </div>
+      </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

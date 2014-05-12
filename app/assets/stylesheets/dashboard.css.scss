@@ -90,3 +90,17 @@ $gray-lighter: #eee;
 .visibility-link:hover {
   text-decoration: none;
 }
+
+#collection-list-container {
+  .collection-list {
+    li {
+      list-style: none;
+    }
+  }
+  .modal-footer {
+    div, form {
+      display: inline;
+    }
+  }
+}
+

@@ -1,10 +1,7 @@
 require 'spec_helper'
 
-describe_options = { type: :feature }
-describe_options[:js] = true if ENV['JS']
-
-describe 'collection', describe_options do
-  def create_collection (title, description)
+describe 'collection' do
+  def create_collection(title, description)
     first('#hydra-collection-add').click
     expect(page).to have_content 'Create New Collection'
     fill_in('Title', with: title)
@@ -15,15 +12,15 @@ describe 'collection', describe_options do
     expect(page).to have_content description
   end
 
-  let (:title1) {"Test Collection 1"}
-  let (:description1) {"Description for collection 1 we are testing."}
-  let (:title2) {"Test Collection 2"}
-  let (:description2) {"Description for collection 2 we are testing."}
+  let(:title1) {"Test Collection 1"}
+  let(:description1) {"Description for collection 1 we are testing."}
+  let(:title2) {"Test Collection 2"}
+  let(:description2) {"Description for collection 2 we are testing."}
 
   let(:user) { FactoryGirl.create(:user, email: 'user1@example.com') }
   let(:user_key) { user.user_key }
 
-  before (:all) do
+  before(:all) do
     @old_resque_inline_value = Resque.inline
     Resque.inline = true
 
@@ -41,27 +38,27 @@ describe 'collection', describe_options do
 
   after(:all) do
     Resque.inline = @old_resque_inline_value
-    User.destroy_all
     Batch.destroy_all
     GenericFile.destroy_all
     Collection.destroy_all
   end
 
+
   describe 'create collection' do
-
-    it "should create and empty collection from the dashboard" do
+    before do
       sign_in user
-      go_to_dashboard
-      click_link 'Collections'
-      create_collection(title1, description1)
+      visit '/dashboard/collections'
     end
-
-    it "should create collection from the dashboard and include files" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
-      first('input#check_all').click
+    it "should create collection from the dashboard and include files", js: true do
       create_collection(title2, description2)
+
+      visit '/dashboard/files'
+      first('input#check_all').click
+      click_button "Add to Collection" # opens the modal
+      # since there is only one collection, it's not necessary to choose a radio button
+      click_button "Update Collection"
+      expect(page).to have_content "Items in this Collection"
+      expect(page).to have_selector "ol.catalog li:nth-child(9)" # at least 9 files in this collection
     end
   end
 
@@ -71,12 +68,11 @@ describe 'collection', describe_options do
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
       @collection.save
+      sign_in user
+      visit '/dashboard/collections'
     end
 
     it "should delete a collection" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click
@@ -94,12 +90,11 @@ describe 'collection', describe_options do
       @collection.apply_depositor_metadata(user_key)
       @collection.members = [@gf1,@gf2]
       @collection.save
+      sign_in user
+      visit '/dashboard/collections'
     end
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")
@@ -119,9 +114,6 @@ describe 'collection', describe_options do
     end
 
     it "should hide collection descriptive metadata when searching a collection" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link("collection title")
@@ -151,12 +143,11 @@ describe 'collection', describe_options do
       @collection.apply_depositor_metadata(user_key)
       @collection.members = [@gf1, @gf2]
       @collection.save
+      sign_in user
+      visit '/dashboard/collections'
     end
 
     it "should edit and update collection metadata" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         find('button.dropdown-toggle').click
@@ -170,10 +161,8 @@ describe 'collection', describe_options do
       fill_in('Title', with: new_title)
       fill_in('Description', with: new_description)
       fill_in('Creator', with: creators.first)
-      within('.span68') do
-        within('.form-actions') do
-          click_button('Update Collection')
-        end
+      within('.form-actions') do
+        click_button('Update Collection')
       end
       page.should_not have_content(@collection.title)
       page.should_not have_content(@collection.description)
@@ -183,9 +172,6 @@ describe 'collection', describe_options do
     end
 
     it "should remove a file from a collection" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         first('button.dropdown-toggle').click
@@ -206,9 +192,6 @@ describe 'collection', describe_options do
     end
 
     it "should remove all files from a collection", js: true do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click
@@ -234,12 +217,11 @@ describe 'collection', describe_options do
       @collection.apply_depositor_metadata(user_key)
       @collection.members = @gfs
       @collection.save!
+      sign_in user
+      visit '/dashboard/collections'
     end
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      sign_in user
-      go_to_dashboard
-      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")
