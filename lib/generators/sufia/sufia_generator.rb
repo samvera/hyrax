@@ -51,6 +51,10 @@ This generator makes the following changes to your application:
     copy_file 'sufia_helper.rb', 'app/helpers/sufia_helper.rb'
   end
 
+  def remove_blacklight_scss
+    remove_file 'app/assets/stylesheets/blacklight.css.scss'
+  end
+
   def tinymce_config
     copy_file "config/tinymce.yml", "config/tinymce.yml"
   end

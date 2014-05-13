@@ -14,6 +14,11 @@ module ContentBlockHelper
         concat f.submit 'Save', class: "btn btn-primary"
       }
 
+    end
+  end
+
+  def tiny_mce_stuff
+    capture do
       concat tinymce_assets
       concat tinymce
     end
