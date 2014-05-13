@@ -14,6 +14,10 @@ module Worthwhile
           redirect_to main_app.root_url, alert: exception.message
         end
       end
+
+      rescue_from ActiveFedora::ObjectNotFoundError do |exception|
+        render file: "#{Rails.root}/public/404", format: :html, status: :not_found, layout: false
+      end
     end
   end
 end

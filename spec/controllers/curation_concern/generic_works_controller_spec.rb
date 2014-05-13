@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe CurationConcern::GenericWorksController do
-  # routes { Worthwhile::Engine.routes }
   let(:public_work_factory_name) { :public_generic_work }
   let(:private_work_factory_name) { :work }
 

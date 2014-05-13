@@ -12,13 +12,6 @@ module Worthwhile
      #{config.root}/app/inputs
     )
     
-    config.action_dispatch.rescue_responses["ActionController::RoutingError"] = :not_found
-    config.action_dispatch.rescue_responses["ActiveFedora::ObjectNotFoundError"] = :not_found
-    config.action_dispatch.rescue_responses["ActiveFedora::ActiveObjectNotFoundError"] = :not_found
-    config.action_dispatch.rescue_responses["Hydra::AccessDenied"] = :unauthorized
-    config.action_dispatch.rescue_responses["CanCan::AccessDenied"] = :unauthorized
-    config.action_dispatch.rescue_responses["Rubydora::RecordNotFound"] = :not_found
-
     initializer 'worthwhile.initialize' do
       require 'worthwhile/rails/routes' 
     end

@@ -13,24 +13,29 @@ describe DownloadsController do
     }
 
     it "raise not_found if the object does not exist" do
-      expect {
-        get :show, id: '8675309'
-      }.to raise_rescue_response_type(:not_found)
+      get :show, id: '8675309'
+      expect(response).to be_not_found
     end
 
-    it "responds :unauthorized if user doesn't have access" do
-      generic_file
-      sign_in another_user
-      expect {
+    context "when user doesn't have access" do
+      before do
+        generic_file
+        sign_in another_user
+      end
+      it "redirects to root" do
         get :show, id: generic_file.to_param
-      }.to raise_rescue_response_type(:unauthorized)
+        expect(response).to redirect_to root_path
+        expect(flash["alert"]).to eq "You are not authorized to access this page."
+      end
     end
 
-    it "responds :unauthorized if you aren't logged in" do
-      generic_file
-      expect {
+    context "when user isn't logged in" do
+      before { generic_file }
+      it "redirects to sign in" do
         get :show, id: generic_file.to_param
-      }.to raise_rescue_response_type(:unauthorized)
+        expect(response).to redirect_to new_user_session_path
+        expect(flash["alert"]).to eq "You are not authorized to access this page."
+      end
     end
 
     it 'sends the file if the user has access' do
