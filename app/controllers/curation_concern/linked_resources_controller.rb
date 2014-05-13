@@ -5,9 +5,6 @@ class CurationConcern::LinkedResourcesController < ApplicationController
   respond_to(:html)
 
   include Worthwhile::ParentContainer
-  before_filter :parent
-  before_filter :authorize_edit_parent_rights!, except: [:show]
-
 
   def new
     respond_with(curation_concern)

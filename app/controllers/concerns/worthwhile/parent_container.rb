@@ -3,25 +3,29 @@ module Worthwhile::ParentContainer
 
   included do
     helper_method :parent
+    before_filter :authorize_edit_parent_rights!, except: [:show]
   end
 
   def parent
-    @parent ||=
-    if params[:id]
-      curation_concern.batch
-    else
-      ActiveFedora::Base.find(namespaced_parent_id,cast: true)
+    @parent ||= new_or_create? ? ActiveFedora::Base.find(parent_id) : curation_concern.batch
+  end
+
+  def parent_id
+    @parent_id ||= new_or_create? ? namespaced_parent_id : curation_concern.batch_id
+  end
+
+  protected
+
+    def new_or_create?
+      ['create', 'new'].include? action_name
     end
-  end
 
-  def namespaced_parent_id
-    Sufia::Noid.namespaceize(params[:parent_id])
-  end
-  protected :namespaced_parent_id
+    def namespaced_parent_id
+      Sufia::Noid.namespaceize(params[:parent_id])
+    end
 
-  def authorize_edit_parent_rights!
-    authorize! :edit, parent
-  end
-  protected :authorize_edit_parent_rights!
+    def authorize_edit_parent_rights!
+      authorize! :edit, parent_id
+    end
 
 end

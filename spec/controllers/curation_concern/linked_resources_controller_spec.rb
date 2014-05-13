@@ -26,10 +26,9 @@ describe CurationConcern::LinkedResourcesController do
         sign_in(another_user)
         parent
       end
-      it "redirects to root" do
+      it "shows the unauthorized page" do
         get :new, parent_id: parent.to_param
-        expect(response).to redirect_to root_path
-        expect(flash["alert"]).to eq "You are not authorized to access this page."
+        expect(response.code).to eq '401'
       end
     end
   end
