@@ -15,7 +15,7 @@ module Worthwhile::CurationConcernController
   
   module ClassMethods
     def set_curation_concern_type(curation_concern_type)
-      load_and_authorize_resource class: curation_concern_type, :instance_name=>:curation_concern
+      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern
       self.curation_concern_type = curation_concern_type
     end
   end

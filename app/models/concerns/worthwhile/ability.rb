@@ -9,8 +9,7 @@ module Worthwhile
       
       unless current_user.new_record?
         can :create, Worthwhile::ClassifyConcern
-        can :create, GenericWork  #TODO move this to the host app
-        can :create, Worthwhile::GenericFile  #TODO move this to the host app
+        can :create, [Worthwhile::GenericFile, Worthwhile::LinkedResource]
       end
       # alias_action :confirm, :copy, :to => :update
 # 
