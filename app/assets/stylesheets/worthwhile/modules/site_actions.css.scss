@@ -1,0 +1,53 @@
+#site-actions {
+  .dropdown-menu {
+    text-align:left;
+  }
+
+  // Overriding default boostrap behavior
+  .btn-group + .btn-group {
+    margin-left:0;
+  }
+}
+
+.dropdown-menu {
+  .item-with-options,
+  .item-option {
+    display:block;
+    padding:3px 20px;
+    line-height:20px;
+    color:#333;
+  }
+
+  .item-options{
+    margin:0;
+    padding:0;
+    list-style-type:none;
+  }
+
+  .item-option{
+    padding-left:30px;
+  }
+
+  /* TODO: convert this from compiled bootstrap styles to SASS mixins if available. */
+  .item-option:hover,
+  .item-option:focus {
+    text-decoration: none;
+    color: white;
+    background-color: #0056b7;
+    background-image: -moz-linear-gradient(top, #005bc1, #004fa8);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#005bc1), to(#004fa8));
+    background-image: -webkit-linear-gradient(top, #005bc1, #004fa8);
+    background-image: -o-linear-gradient(top, #005bc1, #004fa8);
+    background-image: linear-gradient(to bottom, #005bc1, #004fa8);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF005BC1', endColorstr='#FF004FA8', GradientType=0);
+  }
+
+  .menu-heading {
+    font-weight:bold;
+  }
+
+  .link-to-full-list {
+    font-style:italic;
+  }
+}

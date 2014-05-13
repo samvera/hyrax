@@ -1,0 +1,46 @@
+.search-results-list {
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
+
+.search-result {
+  border-top: 1px solid $grayLighter;
+  margin-top: 1em;
+  padding-top:.5em;
+
+  .canonical-image {
+    width:80%;
+    margin-left:20%;
+  }
+
+  .list-number {
+    position: relative;
+  }
+
+  .resource-type {
+    margin-bottom:0;
+    position:absolute;
+    right:0;
+    text-align:center;
+    top:0;
+    width:80%;
+  }
+
+  .modal {
+    text-align:left;
+  }
+}
+
+.search-result:first-child {
+  border-top:none;
+  margin-top:0;
+  padding-top:0;
+}
+
+.search-result-details {
+}
+
+.search-result-actions {
+  text-align:right;
+}

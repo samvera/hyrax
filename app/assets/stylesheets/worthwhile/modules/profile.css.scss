@@ -1,0 +1,66 @@
+/*
+ * This file contains special styles for use on the detailed profile page of
+ * a user.  See app/views/curate/people for uses.
+ */
+
+#person_profile .collection-listing .collection-listing {
+  list-style-type:none;
+  margin:0;
+
+  .with-controls {
+    line-height:2;
+  }
+}
+
+#person_profile .collection-listing .collection-listing .collection-member {
+  padding-bottom:.5em;
+  margin-left:0;
+}
+
+#person_profile .collection-member .collection-listing {
+  padding-top:1em;
+  border-top: 1px solid $grayLighter;
+}
+
+#person_profile .profile-title {
+  border-bottom: 1px solid $grayLighter;
+}
+
+#profile_details {
+  max-width: 350px;
+}
+
+#profile_details .person-attribtues {
+  float:left;
+  width:92%;
+  margin:0 4% 4%;
+}
+
+#profile_details .attribute,
+#profile_details .value {
+  display:inline-block;
+  float:left;
+}
+
+#profile_details .attribute {
+  width: 6em;
+  text-align:right;
+  clear:both;
+}
+
+#profile_details .value + #profile_details .value {
+  padding-left:6em;
+}
+
+.profile-picture {
+  padding: 2em 2em 2.5em 2em;
+}
+
+.framed-picture  {
+  width:100%;
+}
+
+.profile-details {
+  background-color: $blueLight;
+}
+

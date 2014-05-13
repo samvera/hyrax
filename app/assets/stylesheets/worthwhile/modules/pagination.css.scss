@@ -1,0 +1,6 @@
+@import 'global-variables';
+
+.pager .active a {
+  background-color: $paginationBorder;
+  color: $paginationBackground;
+}

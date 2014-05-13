@@ -1,0 +1,92 @@
+.input-xxxlarge {
+  box-sizing:border-box;
+  width:100%;
+}
+
+legend small {
+  margin-left:.5em;
+}
+
+.label-large {
+  font-size: 110%;
+  line-height: 1.2;
+  padding: .3em .6em;
+  white-space: normal;
+  position: relative;
+
+
+  input[type="checkbox"]{
+    margin:-2px 0 0;
+    position: absolute;
+    left:.5em;
+    top:38%;
+  }
+}
+
+.label-checkbox .label-text {
+  display:block;
+  padding-left:1.2em;
+}
+
+.control-group.error input,
+.control-group.error option,
+.control-group.error textarea {
+  color:$grayDark;
+}
+
+.form-actions .btn-link {
+  color: $blue;
+}
+
+.control-label {
+  display: block;
+  label { display: inline; }
+}
+
+.control-label.required {
+  abbr {
+    font-size: 1.25em;
+    font-weight: bold;
+  }
+}
+
+.control-group input.inline {
+  display: inline-block;
+}
+
+.field-choice {
+  padding-bottom:1em;
+  padding-top:1em;
+  text-align:center;
+  font-size:1.3em;
+  line-height:1;
+}
+
+.accept-contributor-agreement {
+  padding-top:1em;
+  input, label {
+    font-size:1.3em;
+  }
+}
+
+#edit_related_works {
+  ul.token-input-list-facebook {
+    float:left;
+  }
+  .btn {
+    margin-left:1em;
+  }
+}
+
+form.button-to {
+  margin:0 .3em;
+}
+
+form.pull-right {
+  margin-right:0;
+}
+
+.inline-checkbox {
+  display: inline-block;
+  padding-right:1em;
+}
