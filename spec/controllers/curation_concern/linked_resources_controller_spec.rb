@@ -21,12 +21,16 @@ describe CurationConcern::LinkedResourcesController do
       response.should be_successful
     end
 
-    it 'redirects if you cannot edit the parent' do
-      sign_in(another_user)
-      parent
-      expect {
+    context "when user doesn't have access to the parent" do
+      before do
+        sign_in(another_user)
+        parent
+      end
+      it "redirects to root" do
         get :new, parent_id: parent.to_param
-      }.to raise_rescue_response_type(:unauthorized)
+        expect(response).to redirect_to root_path
+        expect(flash["alert"]).to eq "You are not authorized to access this page."
+      end
     end
   end
 
