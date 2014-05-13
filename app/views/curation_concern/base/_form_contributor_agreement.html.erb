@@ -1,18 +1,18 @@
 <% unless curation_concern.persisted? %>
   <fieldset class="row contributor_agreement with-headroom" id="contributor-agreement">
-    <div class="span12">
+    <div class="col-md-12">
       <legend>
         <%= t('sufia.product_name') %> Content Submission Terms
       </legend>
     </div>
 
-    <div class="span12">
+    <div class="col-md-12">
       <article class="lawyer_readable contributor_agreement wide-text">
         <%= render partial: 'legally_binding_text' %>
       </article>
     </div>
 
-    <div class="span12 accept-contributor-agreement">
+    <div class="col-md-12 accept-contributor-agreement">
       <%= label_tag contributor_agreement.param_key, class: 'checkbox', for:  'accept_contributor_agreement' do %>
         <%= check_box_tag(
             contributor_agreement.param_key,

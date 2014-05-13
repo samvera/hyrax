@@ -5,13 +5,13 @@
 
   <%= render :partial => 'catalog/_index_partials/identifier_and_action', locals: {document: document, counter: document_counter} %>
 
-  <div class="row-fluid">
+  <div class="row">
 
-    <div class="span2">
+    <div class="col-md-2">
       <%= render :partial => 'catalog/_index_partials/thumbnail_display', locals: {document: document} %>
     </div>
 
-    <div class="span10">
+    <div class="col-md-10">
       <dl class="attribute-list">
         <% if solr_doc.has?('desc_metadata__contributor_tesim') %>
           <dt>Author(s):</dt>

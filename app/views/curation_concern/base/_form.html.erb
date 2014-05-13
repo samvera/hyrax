@@ -14,7 +14,7 @@
   <%= render 'form_contributor_agreement', curation_concern: curation_concern, contributor_agreement: contributor_agreement %>
 
   <div class="row">
-    <div class="span12 form-actions">
+    <div class="col-md-12 form-actions">
       <%= f.submit class: 'btn btn-primary require-contributor-agreement' %>
       <%- if curation_concern.new_record? -%>
         <%= link_to 'Cancel', main_app.root_path, class: 'btn btn-link' %>

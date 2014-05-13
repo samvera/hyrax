@@ -6,7 +6,7 @@
 <% end %>
 
 
-<div class="row-fluid">
+<div class="row">
   <ul class="classify-work">
     <% classify_concern.all_curation_concern_classes.each do |klass| %>
       <% if can? :create, klass %>
