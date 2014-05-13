@@ -52,12 +52,14 @@ describe 'collection', describe_options do
     it "should create and empty collection from the dashboard" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       create_collection(title1, description1)
     end
 
     it "should create collection from the dashboard and include files" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       first('input#check_all').click
       create_collection(title2, description2)
     end
@@ -74,6 +76,7 @@ describe 'collection', describe_options do
     it "should delete a collection" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click
@@ -96,6 +99,7 @@ describe 'collection', describe_options do
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")
@@ -117,6 +121,7 @@ describe 'collection', describe_options do
     it "should hide collection descriptive metadata when searching a collection" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link("collection title")
@@ -151,6 +156,7 @@ describe 'collection', describe_options do
     it "should edit and update collection metadata" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         find('button.dropdown-toggle').click
@@ -179,6 +185,7 @@ describe 'collection', describe_options do
     it "should remove a file from a collection" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         first('button.dropdown-toggle').click
@@ -201,6 +208,7 @@ describe 'collection', describe_options do
     it "should remove all files from a collection", js: true do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click
@@ -231,6 +239,7 @@ describe 'collection', describe_options do
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       sign_in user
       go_to_dashboard
+      click_link 'Collections'
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")

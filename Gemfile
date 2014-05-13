@@ -15,6 +15,7 @@ group :development, :test do
   gem 'launchy' unless ENV['TRAVIS']
   gem 'byebug' unless ENV['TRAVIS']
   gem 'capybara'
+  gem 'poltergeist'
   gem "jettywrapper"
   gem "factory_girl_rails"
   gem "devise"
@@ -24,5 +25,4 @@ group :development, :test do
   gem "simplecov", :require => false
   gem "spring"
   gem 'database_cleaner'
-  gem 'poltergeist'
 end # (leave this comment here to catch a stray line inserted by blacklight!)

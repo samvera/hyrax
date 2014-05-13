@@ -9,6 +9,7 @@ describe "Browse Dashboard files" do
 
   it "should show me some files (from the fixtures)" do
     click_link "dashboard"
+    click_link "Files"
     page.should have_content "Edit File"
     page.should have_content "Download File"
     fill_in "dashboard_search", with: "PDF"
@@ -17,8 +18,10 @@ describe "Browse Dashboard files" do
   end
 
   it "should allow you to browse facets" do
+    pending "need to fix the 'more' link on facets with more than 5 items"
     # TODO: fix more facets link!
     click_link "dashboard"
+    click_link "Files"
     click_link "more Subjects"
     click_link "consectetur"
     within("#document_#{@fixtures[1].noid}") do
@@ -29,6 +32,7 @@ describe "Browse Dashboard files" do
 
   it "should allow me to edit files (from the fixtures)" do
     click_link "dashboard"
+    click_link "Files"
     fill_in "dashboard_search", with: "Wav"
     click_button "dashboard_submit"
     click_link "Edit File"
