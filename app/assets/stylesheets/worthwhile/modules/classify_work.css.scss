@@ -1,4 +1,4 @@
-@import 'global-variables';
+@import 'worthwhile/global-variables';
 
 /* Aligning content types by leveraging text-align:justify
   http://www.barrelny.com/blog/text-align-justify-and-rwd/
@@ -16,7 +16,7 @@
   border:1px solid #EEE;
   box-sizing:border-box;
   display:inline-block;
-  font-size:$baseFontSize;
+  font-size: $font-size-base;
   padding:.5em;
   position:relative;
   text-align:center;
