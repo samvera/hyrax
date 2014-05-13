@@ -2,10 +2,12 @@ body {
   padding:0 1em 1em;
 }
 
-#brand-bar-wrapper,
-#title-bar-wrapper {
+#brand-bar-wrapper, #title-bar-wrapper {
   margin-left:-1em;
   margin-right:-1em;
+  h2, h3 {
+    line-height: 40px;
+  }
 }
 
 .form-actions > form.button_to {
@@ -89,7 +91,7 @@ dl.stacked {
 }
 
 .main-header {
-  border-bottom: 1px solid $grayLighter;
+  border-bottom: 1px solid $gray-lighter;
 }
 
 .page-actions {

@@ -1,5 +1,5 @@
 #brand-bar-wrapper {
-  background-color:$blueDark;
+  background-color: $blue-dark;
   background-image: linear-gradient(#0d407b,#07366c 85%,#001834);
   border-bottom:1px solid #001834;
 
@@ -38,9 +38,9 @@
 }
 
 #footer {
-  color:$grayLight;
+  color: $gray-light;
 
   .footer-text {
-    border-top:1px solid $grayLighter;
+    border-top:1px solid $gray-lighter;
   }
 }

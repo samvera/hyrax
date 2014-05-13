@@ -11,7 +11,7 @@
 }
 
 #brand-bar-wrapper {
-  font-family:$serifFontFamily;
+  font-family: $font-family-serif;
   letter-spacing:.2em;
   padding:.15em 0;
   text-transform:uppercase;
@@ -33,7 +33,7 @@
 }
 
 #site-title h1 {
-  font-family:$serifFontFamily;
+  font-family: $font-family-serif;
   font-size:2.4em;
   line-height:1.2em;
   text-align:center;
@@ -42,7 +42,7 @@
 #main,
 .modal-header {
   h1,h2,h3,h4,h5,h6 {
-    font-family:$headerFontFamily;
+    font-family:$headings-font-family;
     font-weight:normal;
     text-rendering: optimizeLegibility;
   }
@@ -55,10 +55,10 @@
 }
 
 legend {
-  font-family:$headerFontFamily;
+  font-family: $headings-font-family
 
   a {
-    font-family:$sansFontFamily;
+    font-family: $font-family-sans-serif;
   }
 }
 
@@ -71,7 +71,7 @@ legend {
 }
 
 .nested-field-heading {
-  font-family:$sansFontFamily;
+  font-family: $font-family-sans-serif;
   font-size: 14px;
   font-weight:normal;
 }
