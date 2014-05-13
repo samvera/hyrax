@@ -5,8 +5,8 @@
   _settings =
     default: 'cool!'
     
-  _remover = $("<button class=\"btn btn-danger remove\"><i class=\"icon-white icon-minus\"></i><span>Remove</span></button>")
-  _adder   = $("<button class=\"btn btn-success add\"><i class=\"icon-white icon-plus\"></i><span>Add</span></button>")
+  _remover = $("<button class=\"btn btn-danger remove\"><i class=\"icon-white glyphicon-minus\"></i><span>Remove</span></button>")
+  _adder   = $("<button class=\"btn btn-success add\"><i class=\"icon-white glyphicon-plus\"></i><span>Add</span></button>")
   
  
   # This is your public API (no leading underscore, see?)

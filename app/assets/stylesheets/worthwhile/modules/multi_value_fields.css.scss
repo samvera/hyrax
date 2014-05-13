@@ -4,8 +4,12 @@
   }
 
   .listing {
-    margin-left:0;
-    max-width:20em;
+    margin-left: 0;
+    max-width: 40em;
+    padding-left: 0px;
+    .input-group {
+      margin-bottom: 1px;
+    }
   }
 
   .field-controls span {

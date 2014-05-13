@@ -17,7 +17,7 @@
     <% if current_user -%>
       <% if can?( :edit, document ) && edit_path.present? %>
       <%= link_to(
-        raw('<i class="icon-pencil icon-large"></i>'),
+        raw('<i class="glyphicon-pencil icon-large"></i>'),
           edit_path,
           class: 'itemicon itemedit btn',
           title: "Edit #{document.human_readable_type}"
