@@ -4,7 +4,7 @@ class TestAppGenerator < Rails::Generators::Base
   source_root "../../spec/test_app_templates"
 
   def add_gems
-    gem 'sufia-models', github: 'projecthydra/sufia', branch: 'dce_dev'
+    gem 'sufia-models', github: 'projecthydra/sufia'
     # gem "jettywrapper"
     Bundler.with_clean_env do
       run "bundle install"
