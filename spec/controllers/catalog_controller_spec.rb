@@ -33,22 +33,13 @@ describe CatalogController do
     end
 
     describe "term search" do
-      context "searching everything" do
-        it "should find records" do
-          get :index, q: "pdf", owner: 'all'
-          expect(response).to be_success
-          response.should render_template('catalog/index')
-          assigns(:document_list).map(&:id).should == [@gf1.id]
-          assigns(:document_list).count.should eql(1)
-          assigns(:document_list).first['desc_metadata__title_tesim'].should == ['Test Document PDF']
-        end
-      end
-      context "searching only documents editable to me" do
-        it "should only have records I can edit" do
-          get :index, q: "", owner: 'mine'
-          assigns(:document_list).map(&:id).should == [@editable_file.id]
-          expect(response).to be_success
-        end
+      it "should find records" do
+        get :index, q: "pdf", owner: 'all'
+        expect(response).to be_success
+        response.should render_template('catalog/index')
+        assigns(:document_list).map(&:id).should == [@gf1.id]
+        assigns(:document_list).count.should eql(1)
+        assigns(:document_list).first['desc_metadata__title_tesim'].should == ['Test Document PDF']
       end
     end
 

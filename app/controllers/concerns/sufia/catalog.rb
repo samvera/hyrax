@@ -15,14 +15,5 @@ module Sufia
         solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:GenericFile\""
       end
 
-      # If they've selected "owner=mine" then restrict to files I have edit access to
-      def discovery_permissions
-        if params['owner'] == 'mine'
-          ["edit"]
-        else
-          super
-        end
-      end
-
   end
 end

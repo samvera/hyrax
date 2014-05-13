@@ -1,41 +1,74 @@
 require 'spec_helper'
 
 describe DashboardController do
-  before do
-    User.any_instance.stub(:groups).and_return([])
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
-  end
-  # This doesn't really belong here, but it works for now
-  describe "authenticate!" do
-    # move to scholarsphere
-    # before(:each) do
-    #   @user = FactoryGirl.find_or_create(:archivist)
-    #   request.stub(:headers).and_return('REMOTE_USER' => @user.login).at_least(:once)
-    #   @strategy = Devise::Strategies::HttpHeaderAuthenticatable.new(nil)
-    #   @strategy.should_receive(:request).and_return(request).at_least(:once)
-    # end
-    # after(:each) do
-    #   @user.delete
-    # end
-    it "should populate LDAP attrs if user is new" do
-      pending "This should only be in scholarsphere"
-      User.stub(:find_by_login).with(@user.login).and_return(nil)
-      User.should_receive(:create).with(login: @user.login).and_return(@user).once
-      User.any_instance.should_receive(:populate_attributes).once
-      @strategy.should be_valid
-      @strategy.authenticate!.should == :success
-      sign_in @user
+  
+  context "with an unauthenticated user" do
+
+    it "redirects to sign-in page" do
       get :index
+      expect(response).to be_redirect
+      expect(flash[:alert]).to eq("You need to sign in or sign up before continuing.")
     end
-    it "should not populate LDAP attrs if user is not new" do
-      pending "This should only be in scholarsphere"
-      User.stub(:find_by_login).with(@user.login).and_return(@user)
-      User.should_receive(:create).with(login: @user.login).never
-      User.any_instance.should_receive(:populate_attributes).never
-      @strategy.should be_valid
-      @strategy.authenticate!.should == :success
-      sign_in @user
-      get :index
-    end
+
   end
+
+  context "with an authenticated user" do
+
+    before do
+      @user = FactoryGirl.find_or_create(:user_with_mail)
+      sign_in @user
+    end
+
+    it "renders the dashboard with the user's info" do
+      get :index
+      expect(response).to be_successful
+      expect(assigns(:user)).to eq(@user)
+    end
+
+    it "gathers the user's recent activity" do
+      get :index
+      expect(assigns(:activity)).to be_empty
+    end
+
+    it "gathers the user's notifications" do
+      get :index
+      expect(assigns(:notifications)).to be_true
+    end
+
+    context "with activities" do
+
+      before :all do
+        @now = DateTime.now.to_i
+      end
+
+      before do
+        allow_any_instance_of(User).to receive(:events).and_return(activities)
+      end
+
+      def activities
+        [
+          { action: 'so and so edited their profile', timestamp: @now },
+          { action: 'so and so uploaded a file', timestamp: (@now - 360 ) }
+        ]
+      end
+
+      it "gathers the user's recent activity within the default amount of time" do
+        get :index
+        expect(assigns(:activity)).to eq(activities.reverse)
+      end
+
+      it "gathers the user's recent activity within a given timestamp" do
+        get :index, { since: (@now - 60 ) }
+        expect(assigns(:activity)).to eq([activities.first])
+      end
+
+      it "returns results in JSON" do
+        get :activity
+        expect(response).to be_successful
+      end 
+
+    end
+
+  end
+
 end

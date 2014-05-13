@@ -4,6 +4,8 @@ en:
     deposit_agreement:  "Sufia's Deposit Agreement"
     upload_tooltip:     "Please accept Deposit Agreement before you can upload."
     share_button:       "Share Your Work"
+    view_profile:       "View Profile"
+    edit_profile:       "Edit Profile"
     directory:
       suffix:           "@example.org"
     search:
@@ -15,9 +17,18 @@ en:
           all:
             label_short:  "All"
             label_long:   "All of Sufia"
-          mine:
+          my_files:
             label_short:  "My Files" 
             label_long:   "My Files"
+          my_collections:
+            label_short:  "My Collections" 
+            label_long:   "My Collections"
+          my_highlights:
+            label_short:  "My Highlights" 
+            label_long:   "My Highlights"
+          my_shares:
+            label_short:  "My Shares" 
+            label_long:   "My Shares"      
     upload:
       my_computer:
         tab_label: "My Computer"
@@ -33,6 +44,20 @@ en:
       tag:              "Keyword"
       date_created:     "Date Created"
       related_url:      "Related URL"
+
+    dashboard:
+      title:                "My Dashboard"
+      greeting:             "Hello, "
+      upload:               "Upload"
+      create_collection:    "Create Collection"
+      view_files:           "View Files"
+      user_activity:        "User Activity"
+      user_notiticiations:  "User Notifications"
+      stats:
+        heading:    "Your Statistics"
+        deposits:   "Files you've deposited into Sufia"
+        following:  "People you follow"
+        followers:  "People who are following you"
 
     metadata_help:
       resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."

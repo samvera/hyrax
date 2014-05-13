@@ -1,5 +1,6 @@
-module Dashboard
-  class HighlightsController < ListsController
+module My
+  class HighlightsController < MyController
+
     self.solr_search_params_logic += [
       :show_only_highlighted_files
     ]

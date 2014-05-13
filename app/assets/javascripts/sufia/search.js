@@ -5,7 +5,6 @@
     this.init = function() {
       this.$label = this.$element.find('[data-search-element="label"]');
       this.$items = this.$element.find('[data-search-option]');
-      this.$hidden = this.$element.find('input#owner[type="hidden"]');
       this.setDefault();
     }
 
@@ -26,12 +25,11 @@
 
     clicked: function($anchor) {
       this.setLabel($anchor.data('search-label'));
-      this.$hidden.val($anchor.data('search-option'));
+      this.setFormAction($anchor.data('search-option'));
     },
 
-    // Grab the "owner" value out of the hidden field 
-    getDefaultValue: function () {
-      return this.$hidden.val();
+    setFormAction: function(path) {
+      this.$element.attr('action', path);
     },
 
     getLabelForValue: function(value) {
@@ -40,7 +38,7 @@
     },
 
     setDefault: function() {
-      this.setLabel(this.getLabelForValue(this.getDefaultValue()));
+      this.setLabel(this.getLabelForValue(this.$element.attr('action')));
     },
 
     setLabel: function(label) {

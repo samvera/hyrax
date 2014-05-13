@@ -1,5 +1,6 @@
-module Dashboard
-  class CollectionsController < ListsController
+module My
+  class CollectionsController < MyController
+
     self.solr_search_params_logic += [
       :show_only_collections
     ]

@@ -37,4 +37,5 @@ module Sufia
   autoload :BatchEditsControllerBehavior
   autoload :DownloadsControllerBehavior
   autoload :HomepageController
+  autoload :MyControllerBehavior
 end

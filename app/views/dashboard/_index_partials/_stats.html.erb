@@ -1,0 +1,16 @@
+<h3><%= t("sufia.dashboard.stats.heading") %></h3>
+
+<table class="table table-condensed">
+  <tr>
+    <td><span class="label label-default"><%= number_of_deposits(@user) %></span></td>
+    <td><%= t("sufia.dashboard.stats.deposits") %></td>
+  </tr>
+  <tr>
+    <td><span class="label label-default"><%= @user.all_following.count %></span></td>
+    <td><%= t("sufia.dashboard.stats.following") %></td>
+  </tr>
+  <tr>
+    <td><span class="label label-default"><%= @user.followers.count %></span></td>
+    <td><%= t("sufia.dashboard.stats.followers") %></td>
+  </tr>
+</table>

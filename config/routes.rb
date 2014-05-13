@@ -47,40 +47,36 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  # Dashboard routes (based partly on catalog routes)
+  # Dashboard page
   resources 'dashboard', only: :index do
     collection do
-      get 'page/:page', action: :index
       get 'activity', action: :activity, as: :dashboard_activity
-      get 'facet/:id', action: :facet, as: :dashboard_facet
     end
   end
+
+  # Routes for user's files, collections, highlights and shares
   namespace :dashboard do
-    resources :files, only: :index do
+    resources :files, only: :index, controller: "/my/files" do
       collection do
         get 'page/:page', action: :index
-        get 'activity', action: :activity, as: :dashboard_activity
         get 'facet/:id', action: :facet, as: :dashboard_facet
       end
     end
-    resources :collections, only: :index do
+    resources :collections, only: :index, controller: "/my/collections" do
       collection do
         get 'page/:page', action: :index
-        get 'activity', action: :activity, as: :dashboard_activity
         get 'facet/:id', action: :facet, as: :dashboard_facet
       end
     end
-    resources :highlights, only: :index do
+    resources :highlights, only: :index, controller: "/my/highlights" do
       collection do
         get 'page/:page', action: :index
-        get 'activity', action: :activity, as: :dashboard_activity
         get 'facet/:id', action: :facet, as: :dashboard_facet
       end
     end
-    resources :shares, only: :index do
+    resources :shares, only: :index, controller: "/my/shares" do
       collection do
         get 'page/:page', action: :index
-        get 'activity', action: :activity, as: :dashboard_activity
         get 'facet/:id', action: :facet, as: :dashboard_facet
       end
     end

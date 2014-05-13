@@ -72,28 +72,24 @@ describe 'Routes' do
       { get: '/dashboard' }.should route_to(controller: 'dashboard', action: 'index')
     end
 
-    it "should route to dashboard files tab" do
-      { get: '/dashboard/files' }.should route_to(controller: 'dashboard/files', action: 'index')
-    end
-
-    it "should route to dashboard collections tab" do
-      { get: '/dashboard/collections' }.should route_to(controller: 'dashboard/collections', action: 'index')
-    end
-
-    it "should route to dashboard highlighted tab" do
-      { get: '/dashboard/highlights' }.should route_to(controller: 'dashboard/highlights', action: 'index')
-    end
-
-    it "should route to dashboard shared tab" do
-      { get: '/dashboard/shares' }.should route_to(controller: 'dashboard/shares', action: 'index')
-    end
-
-    it "should route to dashboard facet" do
-      { get: '/dashboard/facet/1' }.should route_to(controller: 'dashboard', action: 'facet', id: '1')
-    end
-
-    it "should route to dashboard activity" do
+      it "should route to dashboard activity" do
       { get: '/dashboard/activity' }.should route_to(controller: 'dashboard', action: 'activity')
+    end
+
+    it "should route to my files tab" do
+      { get: '/dashboard/files' }.should route_to(controller: 'my/files', action: 'index')
+    end
+
+    it "should route to my collections tab" do
+      { get: '/dashboard/collections' }.should route_to(controller: 'my/collections', action: 'index')
+    end
+
+    it "should route to my highlighted tab" do
+      { get: '/dashboard/highlights' }.should route_to(controller: 'my/highlights', action: 'index')
+    end
+
+    it "should route to my shared tab" do
+      { get: '/dashboard/shares' }.should route_to(controller: 'my/shares', action: 'index')
     end
   end
 
