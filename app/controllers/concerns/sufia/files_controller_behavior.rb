@@ -44,7 +44,6 @@ module Sufia
 
     # routed to /files/new
     def new
-      @generic_file = ::GenericFile.new
       @batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
     end
 
@@ -162,7 +161,6 @@ module Sufia
     end
 
     def process_file(file)
-      @generic_file = ::GenericFile.new
       update_metadata_from_upload_screen
       create_metadata(@generic_file)
       if Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
