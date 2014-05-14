@@ -997,7 +997,7 @@ describe GenericFile do
   end
   describe "file content validation" do
     before do
-      GenericFile.any_instance.stub(:create_derivatives)
+      allow(Sufia.queue).to receive(:push).with(an_instance_of CharacterizeJob) # don't run characterization
     end
     context "when file contains a virus" do
       let(:f) { File.new(fixture_path + '/small_file.txt') }
@@ -1009,7 +1009,7 @@ describe GenericFile do
         subject.add_file(f, 'content', 'small_file.txt')
         subject.save
         subject.should_not be_persisted
-        subject.errors.messages.should == { content: ["A virus was found in #{f.path}: EL CRAPO VIRUS"] }
+        expect(subject.errors.messages).to eq(base: ["A virus was found in #{f.path}: EL CRAPO VIRUS"])
       end
       it "does not save a new version of a GenericFile" do
         subject.add_file(f, 'content', 'small_file.txt')

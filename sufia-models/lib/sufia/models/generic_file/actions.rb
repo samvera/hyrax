@@ -13,7 +13,6 @@ module Sufia::GenericFile
         logger.warn "unable to find batch to attach to"
       end
       yield(generic_file) if block_given?
-      generic_file.save!
     end
 
     def self.create_content(generic_file, file, file_name, dsid, user)
@@ -21,7 +20,7 @@ module Sufia::GenericFile
 
       save_tries = 0
       begin
-        generic_file.save!
+        return false unless generic_file.save
       rescue RSolr::Error::Http => error
         logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
         save_tries+=1
@@ -35,6 +34,7 @@ module Sufia::GenericFile
       if Sufia.config.respond_to?(:after_create_content)
         Sufia.config.after_create_content.call(generic_file, user)
       end
+      true
     end
 
     def self.revert_content(generic_file, revision_id, datastream_id, current_user)

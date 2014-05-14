@@ -165,20 +165,22 @@ module Sufia
       @generic_file = ::GenericFile.new
       update_metadata_from_upload_screen
       create_metadata(@generic_file)
-      Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
-      respond_to do |format|
-        format.html {
-          render :json => [@generic_file.to_jq_upload],
-          :content_type => 'text/html',
-          :layout => false
-        }
-        format.json {
-          render :json => [@generic_file.to_jq_upload]
-        }
+      if Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
+        respond_to do |format|
+          format.html {
+            render :json => [@generic_file.to_jq_upload],
+            :content_type => 'text/html',
+            :layout => false
+          }
+          format.json {
+            render :json => [@generic_file.to_jq_upload]
+          }
+        end
+      else
+        msg = @generic_file.errors.full_messages.join(', ')
+        flash[:error] = msg
+        json_error "Error creating generic file: #{msg}"
       end
-    rescue ActiveFedora::RecordInvalid => af
-      flash[:error] = af.message
-      json_error "Error creating generic file: #{af.message}"
     end
 
     # override this method if you want to change how the terms are accepted on upload.
