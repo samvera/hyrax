@@ -39,8 +39,6 @@ module Worthwhile
         json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
       elsif (empty_file?(file))
         json_error "Error! Zero Length File!", file.original_filename
-      elsif (!terms_accepted?)
-        json_error "You must accept the terms of service!", file.original_filename
       else
         process_file(file)
       end
@@ -112,7 +110,11 @@ module Worthwhile
         Sufia.queue.push(CharacterizeJob.new(@generic_file.pid)) # TODO put this in the Actions.create_content
         respond_to do |format|
           format.html {
-            render json: [@generic_file.to_jq_upload], content_type: 'text/html', layout: false
+            if request.xhr?
+              render json: [@generic_file.to_jq_upload], content_type: 'text/html', layout: false
+            else
+              redirect_to [:curation_concern, @generic_file.batch]
+            end
           }
           format.json {
             render json: [@generic_file.to_jq_upload]
@@ -123,11 +125,6 @@ module Worthwhile
         flash[:error] = msg
         json_error "Error creating generic file: #{msg}"
       end
-    end
-
-    # override this method if you want to change how the terms are accepted on upload.
-    def terms_accepted?
-      params[:terms_of_service] == '1'
     end
 
     # The name of the datastream where we store the file data

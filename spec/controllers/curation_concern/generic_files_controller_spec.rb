@@ -30,7 +30,7 @@ describe CurationConcern::GenericFilesController do
           expect(Sufia.queue).to receive(:push).with(s2).once
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
-                 permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+                 permission: { group: { 'public' => 'read' } }
           }.to change { Worthwhile::GenericFile.count }.by(1)
           expect(response).to be_success
           expect(flash[:error]).to be_nil

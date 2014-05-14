@@ -1,4 +1,4 @@
-<%= simple_form_for [:curation_concern, curation_concern] do |f| %>
+<%= simple_form_for [:curation_concern, curation_concern], html: { multipart: true } do |f| %>
   <div class="row">
     <div class="col-md-6">
       <fieldset class="required">
@@ -15,10 +15,8 @@
           Attach Your File
           <small>A PDF copy is preferred.</small>
         </legend>
-          <%= f.input :file,
-                      as: :file,
-                      label: 'Upload a file'
-          %>
+          <input type="file" name="files[]" multiple />
+          <%#= f.input :file, as: :file, label: 'Upload a file' %>
       </fieldset>
     </div>
 
