@@ -1,0 +1,39 @@
+<%= simple_form_for [:curation_concern, curation_concern] do |f| %>
+  <div class="row">
+    <div class="col-md-6">
+      <fieldset class="required">
+        <legend>Your File&#8217;s Title</legend>
+        <span class="control-label">
+          <label class="string optional" for="generic_file_title">Title</label>
+        </span>
+        <%= text_field_tag 'generic_file[title]', curation_concern.title.first,
+                    input_html: { class: 'input-xlarge' }
+        %>
+      </fieldset>
+      <fieldset class="required">
+        <legend>
+          Attach Your File
+          <small>A PDF copy is preferred.</small>
+        </legend>
+          <%= f.input :file,
+                      as: :file,
+                      label: 'Upload a file'
+          %>
+      </fieldset>
+    </div>
+
+    <div class="col-md-6">
+      <%= render "form_permission", curation_concern: curation_concern, f: f %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <%= f.submit(
+        (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{parent.human_readable_type})),
+        class: 'btn btn-primary'
+      ) %>
+      <%= link_to 'Cancel', polymorphic_path([:curation_concern, parent]), class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>

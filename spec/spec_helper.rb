@@ -42,6 +42,7 @@ FactoryGirl.find_definitions
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
+  config.fixture_path = File.expand_path("../fixtures", __FILE__)
 
   config.before :each do
     if Capybara.current_driver == :rack_test

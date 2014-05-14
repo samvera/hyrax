@@ -10,6 +10,7 @@ module Worthwhile
     include Sufia::GenericFile::Thumbnail
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
+    include Sufia::GenericFile::WebForm
     include ::CurationConcern::Embargoable
     include Worthwhile::GenericFile::VersionedContent
     
