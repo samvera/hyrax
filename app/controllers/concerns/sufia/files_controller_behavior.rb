@@ -119,6 +119,7 @@ module Sufia
 
       version_event = if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
         Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
+        Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key,  params[:revision]))
         true
       elsif params.has_key?(:filedata)
         Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
