@@ -37,6 +37,16 @@ module Sufia::GenericFile
       end
     end
 
+    def self.revert_content(generic_file, revision_id, datastream_id, current_user)
+      revision = generic_file.content.get_version(revision_id)
+      generic_file.add_file(revision.content, datastream_id, revision.label)
+      Sufia.queue.push(ContentRestoredVersionEventJob.new(generic_file.pid, current_user.user_key, revision_id))
+    end
+
+    def self.update_content(generic_file, file, datastream_id, current_user)
+      generic_file.add_file(file, datastream_id, file.original_filename)
+    end
+
     def self.virus_check(file)
       path = file.is_a?(String) ? file : file.path
       unless defined?(ClamAV)
