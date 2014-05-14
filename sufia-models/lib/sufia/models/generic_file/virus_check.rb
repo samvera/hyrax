@@ -24,7 +24,7 @@ module Sufia
         true
       rescue Sufia::VirusFoundError => virus
         logger.warn(virus.message)
-        errors.add(:content, virus.message)
+        errors.add(:base, virus.message)
         false
       end
 

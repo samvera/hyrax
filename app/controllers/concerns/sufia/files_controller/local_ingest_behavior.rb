@@ -51,13 +51,14 @@ module Sufia
     end
 
     def ingest_one(filename, unarranged)
-      # do not remove :: 
-      @generic_file = ::GenericFile.new
       basename = File.basename(filename)
-      @generic_file.label = basename
-      @generic_file.relative_path = filename if filename != basename
-      create_metadata(@generic_file)
-      Sufia.queue.push(IngestLocalFileJob.new(@generic_file.id, current_user.directory, filename, current_user.user_key))
+      # do not remove ::
+      @generic_file = ::GenericFile.new(label: basename).tap do |gf|
+        gf.relative_path = filename if filename != basename
+        create_metadata(gf)
+        gf.save!
+        Sufia.queue.push(IngestLocalFileJob.new(gf.id, current_user.directory, filename, current_user.user_key))
+      end
     end
     
   end # /FilesController::LocalIngestBehavior

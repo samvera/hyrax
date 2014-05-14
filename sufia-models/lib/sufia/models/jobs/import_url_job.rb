@@ -12,32 +12,37 @@ class ImportUrlJob < ActiveFedoraPidBasedJob
     user = User.find_by_user_key(generic_file.depositor)
 
     Tempfile.open(self.pid) do |f|
-      f.binmode
+      path = copy_remote_file(generic_file.import_url, f)
+      # attach downloaded file to generic file stubbed out
+      if Sufia::GenericFile::Actions.create_content(generic_file, f, path, 'content', user)
+        Sufia.queue.push(ContentDepositEventJob.new(generic_file.pid, generic_file.depositor))
+        # add message to user for downloaded file
+        message = "The file (#{File.basename(path)}) was successfully imported."
+        job_user.send_message(user, message, 'File Import')
+      else
+        job_user.send_message(user, generic_file.errors.full_messages.join(', '), 'File Import Error')
+      end
+    end
+  end
 
-      # download file from url
-      uri = URI(generic_file.import_url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == "https"  # enable SSL/TLS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  def copy_remote_file(import_url, f)
+    f.binmode
+    # download file from url
+    uri = URI(generic_file.import_url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme == "https"  # enable SSL/TLS
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-      http.start do
-        http.request_get(uri.request_uri) do |resp|
-          resp.read_body do |segment|
-            f.write(segment)
-          end
+    http.start do
+      http.request_get(uri.request_uri) do |resp|
+        resp.read_body do |segment|
+          f.write(segment)
         end
       end
-
-      f.rewind
-      # attach downloaded file to generic file stubbed out
-      Sufia::GenericFile::Actions.create_content(generic_file, f, File.basename(uri.path), 'content', user)
-      Sufia.queue.push(ContentDepositEventJob.new(generic_file.pid, generic_file.depositor))
-      # add message to user for downloaded file
-      message = "The file (#{File.basename(uri.path)}) was successfully imported."
-      job_user.send_message(user, message, 'File Import')
     end
-  rescue => error
-    job_user.send_message(user, error.message, 'File Import Error')
+
+    f.rewind
+    uri.path
   end
 
   def job_user
