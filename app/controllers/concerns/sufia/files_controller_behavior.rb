@@ -1,7 +1,9 @@
 module Sufia
   module FilesController
-    autoload :LocalIngestBehavior, 'sufia/files_controller/local_ingest_behavior'
-    autoload :UploadCompleteBehavior, 'sufia/files_controller/upload_complete_behavior'
+    extend ActiveSupport::Autoload
+    autoload :BrowseEverything
+    autoload :LocalIngestBehavior
+    autoload :UploadCompleteBehavior
   end
   module FilesControllerBehavior
     extend ActiveSupport::Concern
@@ -11,6 +13,7 @@ module Sufia
       include Hydra::Controller::ControllerBehavior
       include Blacklight::Configurable
       include Sufia::Noid # for normalize_identifier method
+      include Sufia::FilesController::BrowseEverything
       include Sufia::FilesController::LocalIngestBehavior
       extend Sufia::FilesController::UploadCompleteBehavior
 
@@ -61,46 +64,22 @@ module Sufia
       pid = @generic_file.noid
       @generic_file.destroy
       Sufia.queue.push(ContentDeleteEventJob.new(pid, current_user.user_key))
-      redirect_to self.class.destroy_complete_path(params), :notice => render_to_string(:partial=>'generic_files/asset_deleted_flash', :locals => { :generic_file => @generic_file })
+      redirect_to self.class.destroy_complete_path(params), notice:
+        render_to_string(partial: 'generic_files/asset_deleted_flash', locals: { generic_file: @generic_file })
     end
 
     # routed to /files (POST)
     def create
-      if params[:local_file].present?
-        perform_local_ingest
-      elsif params[:selected_files].present?
-        create_from_browse_everything(params)
-      else
-        create_from_upload(params)
-      end
+      create_from_upload(params)
     end
     
-    def create_from_browse_everything(params)
-      params[:selected_files].each_pair do |index, file_info| 
-        next if file_info.blank? || file_info["url"].blank?
-        create_file_from_url(file_info["url"])
-      end
-      redirect_to self.class.upload_complete_path( params[:batch_id])
-    end
-    
-    # Generic utility for creating GenericFile from a URL
-    # Used in to import files using URLs from a file picker like browse_everything 
-    def create_file_from_url(url, batch_id=nil)
-      @generic_file = ::GenericFile.new
-      @generic_file.import_url = url
-      @generic_file.label = File.basename(url)
-      create_metadata(@generic_file)
-      Sufia.queue.push(ImportUrlJob.new(@generic_file.pid))
-      return @generic_file
-    end
-
     def create_from_upload(params)
       # check error condition No files
       return json_error("Error! No file to save") if !params.has_key?(:files)
 
       file = params[:files].detect {|f| f.respond_to?(:original_filename) }
       if !file
-        json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
+        json_error "Error! No file for upload", 'unknown file', status: :unprocessable_entity
       elsif (empty_file?(file))
         json_error "Error! Zero Length File!", file.original_filename
       elsif (!terms_accepted?)
@@ -132,7 +111,7 @@ module Sufia
 
     # routed to /files/:id/audit (POST)
     def audit
-      render :json=>@generic_file.audit
+      render json: @generic_file.audit
     end
 
     # routed to /files/:id (PUT)
@@ -173,9 +152,9 @@ module Sufia
     protected
 
     def json_error(error, name=nil, additional_arguments={})
-      args = {:error => error}
+      args = {error: error}
       args[:name] = name if name
-      render additional_arguments.merge({:json => [args]})
+      render additional_arguments.merge(json: [args])
     end
 
     def empty_file?(file)
@@ -236,6 +215,5 @@ module Sufia
     def create_metadata(file)
       Sufia::GenericFile::Actions.create_metadata(file, current_user, params[:batch_id])
     end
-
   end
 end

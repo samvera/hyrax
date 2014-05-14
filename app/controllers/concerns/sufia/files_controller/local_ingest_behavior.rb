@@ -1,5 +1,15 @@
 module Sufia
   module FilesController::LocalIngestBehavior
+    include ActiveSupport::Concern
+
+    def create
+      if params[:local_file].present?
+        perform_local_ingest
+      else
+        super
+      end
+    end
+
   
     private
     
