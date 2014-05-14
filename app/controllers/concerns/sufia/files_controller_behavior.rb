@@ -137,19 +137,15 @@ module Sufia
 
     # routed to /files/:id (PUT)
     def update
-      version_event = false
 
-      if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
-        revision = @generic_file.content.get_version(params[:revision])
-        @generic_file.add_file(revision.content, datastream_id, revision.label)
-        version_event = true
-        Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
-      end
-
-      if params.has_key?(:filedata)
-        file = params[:filedata]
-        @generic_file.add_file(file, datastream_id, file.original_filename)
-        version_event = true
+      version_event = if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
+        Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
+        true
+      elsif params.has_key?(:filedata)
+        Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
+        true
+      else
+        false
       end
 
       # only update metadata if there is a generic_file object which is not the case for version updates
