@@ -3,17 +3,6 @@ module Sufia
 
   module GenericFile
     extend ActiveSupport::Concern
-    extend ActiveSupport::Autoload
-    autoload :Actions, 'sufia/models/generic_file/actions'
-    autoload :Permissions, 'sufia/models/generic_file/permissions'
-    autoload :WebForm, 'sufia/models/generic_file/web_form'
-    autoload :AccessibleAttributes, 'sufia/models/generic_file/accessible_attributes'
-    autoload :Trophies, 'sufia/models/generic_file/trophies'
-    autoload :Featured, 'sufia/models/generic_file/featured'
-    autoload :Metadata, 'sufia/models/generic_file/metadata'
-    autoload :Versions, 'sufia/models/generic_file/versions'
-    autoload :VirusCheck, 'sufia/models/generic_file/virus_check'
-    autoload :ReloadOnSave, 'sufia/models/generic_file/reload_on_save'
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes
