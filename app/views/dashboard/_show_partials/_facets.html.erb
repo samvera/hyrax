@@ -16,11 +16,11 @@
               <% if facet_in_params? solr_fname, item.value %>
                 <li>
                   <span class="selected"><%= h(item.value) %> (<%= format_num facet_count_for_value %>)</span>
-                  <% link_options = remove_facet_params(solr_fname, item.value, params).merge!Hash["controller" => "catalog", :action=> "index"] %>
-                  [<%= link_to 'remove', url_for(link_options), :class=>'remove' %>]
+                  <% link_options = remove_facet_params(solr_fname, item.value, params).merge!({ controller: "catalog", action: "index" }) %>
+                  [<%= link_to 'remove', url_for(link_options), class: 'remove' %>]
                 </li>
                 <% else %>
-                               <%- if item_counter > Blacklight.config[:facet_more_num]-1 -%>
+                               <%- if item_counter > Blacklight.config[:facet_more_num] - 1 -%>
                   <li class="more">
                                <%- else -%>
                                  <li>
@@ -34,8 +34,8 @@
               <% if facet_in_params? solr_fname, item.value %>
                 <li>
                   <span class="selected"><%= h(item.value) %> (<%= format_num facet_count_for_value %>)</span>
-                  <% link_options = remove_facet_params(solr_fname, item.value, params).merge!Hash["controller" =>"catalog", :action=> "index"] %>
-                  [<%= link_to 'remove', url_for(link_options), :class=>'remove' %>]
+                  <% link_options = remove_facet_params(solr_fname, item.value, params).merge!({ controller: "catalog", action: "index" }) %>
+                  [<%= link_to 'remove', url_for(link_options), class: 'remove' %>]
                 </li>
                 <% else %>
                                <%- if item_counter > Blacklight.config[:facet_more_num]-1 -%>
@@ -43,7 +43,7 @@
                                <%- else -%>
                                  <li>
                                <%- end -%>
-                  <% link_options = add_facet_params(solr_fname, item.value).merge!Hash["controller" =>"catalog", :action=> "index"] %>
+                  <% link_options = add_facet_params(solr_fname, item.value).merge!({ controller: "catalog", action: "index" }) %>
                   <%= link_to h(item.value), url_for(link_options) %> (<%= format_num facet_count_for_value %>)
                 </li>
               <% end -%>

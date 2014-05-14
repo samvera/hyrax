@@ -19,20 +19,28 @@
         </tr>
         <tr>
           <th>Audit Status</th>
-          <%- stat= @generic_file.audit_stat(false)  %>
-          <td> <%= (stat == 1 ? 'passing' : (stat == 0 ? 'failing' : stat)) %></td>
+          <%- stat = @generic_file.audit_stat(false)
+              audit = case stat
+                      when 0
+                        'failing'
+                      when 1
+                        'passing'
+                      else
+                        stat
+                      end
+           -%>
+          <td><%= audit %></td>
         </tr>
 <% unless @generic_file.related_files.empty? %>
-  <tr>
-          
+        <tr>
           <th>Related Files</th>
           <td>
               <div class="related-files">
-                  <dl><dt>         
+                  <dl><dt>
 	              <% @generic_file.related_files.each do |f| %>
 	                <dd><%= link_to(f.label, sufia.generic_file_url(f.noid)) %></dd>
 	              <% end %>
-                  </dt></dl>         
+                  </dt></dl>
               </div>
           </td>
         </tr>
@@ -55,10 +63,10 @@
                 <% values[0..length].each_with_index do |value, idx| %>
                   <% next if value.empty? %>
                   <%= "#{label}: #{value.truncate(250)}" %>
-                  <%= "<br />".html_safe unless idx == length %> 
+                  <%= "<br />".html_safe unless idx == length %>
                 <% end %>
                 <% if length != values.length %>
-                   <%= render :partial => "generic_files/extra_fields_modal", :locals=>{:name=>term, :values=> values, :start=>Sufia.config.fits_message_length}%>
+                   <%= render partial: "generic_files/extra_fields_modal", locals: {name: term, values: values, start: Sufia.config.fits_message_length}%>
                 <% end %>
               <% else %>
                 <%= "#{label}: #{values.truncate(250)}" %><br />
@@ -69,4 +77,3 @@
         </tr>
       </tbody>
     </table> <!-- /verticalheadings -->
-

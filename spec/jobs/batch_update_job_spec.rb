@@ -5,10 +5,10 @@ describe BatchUpdateJob do
     @user = FactoryGirl.find_or_create(:jill)
     @batch = Batch.new
     @batch.save
-    @file = GenericFile.new(:batch=>@batch)
+    @file = GenericFile.new(batch: @batch)
     @file.apply_depositor_metadata(@user)
     @file.save
-    @file2 = GenericFile.new(:batch=>@batch)
+    @file2 = GenericFile.new(batch: @batch)
     @file2.apply_depositor_metadata('otherUser')
     @file2.save
   end

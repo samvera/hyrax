@@ -8,9 +8,9 @@ describe Batch do
     @file = GenericFile.new
     @file.apply_depositor_metadata('mjg36')
     @file.save
-    @batch = Batch.create(:title => "test collection",
-                          :creator => @user.user_key,
-                          :part => @file.pid)
+    @batch = Batch.create(title: "test collection",
+                          creator: @user.user_key,
+                          part: @file.pid)
   end
   after(:all) do
     @user.delete

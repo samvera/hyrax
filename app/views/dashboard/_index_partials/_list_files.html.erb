@@ -16,7 +16,7 @@
       <%= render_thumbnail_tag document %>
     <% end %>
     <span class=center>
-      <%= link_to document.title_or_label, sufia.generic_file_path(noid), :id => "src_copy_link#{noid}", :class => "#{'document-title' if document.title_or_label == document.label}" %><br/>
+      <%= link_to document.title_or_label, sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" %><br/>
     </span>
   </td>
   <td width="17%"><%= document.date_uploaded %> </td>

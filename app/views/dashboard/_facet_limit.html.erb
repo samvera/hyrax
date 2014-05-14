@@ -1,4 +1,4 @@
-<% paginator = Blacklight::Solr::FacetPaginator.new(display_facet.items,        
+<% paginator = Blacklight::Solr::FacetPaginator.new(display_facet.items,
         limit: facet_limit_for(solr_field)) %>
 <ul class="slide-list">
   <% paginator.items.each do |item| -%>
@@ -12,6 +12,6 @@
   <% end %>
 
   <% if(paginator.has_next?)  %>
-    <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»', sufia.url_for(params.merge(:id => solr_field, :action=>"facet", :path_only=>true)), :class => "more_facets_link" %></li>
+    <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»', sufia.url_for(params.merge(id: solr_field, action: "facet", path_only: true)), class: "more_facets_link" %></li>
   <% end %>
 </ul> <!-- /slide-list -->

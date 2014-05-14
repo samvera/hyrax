@@ -1,7 +1,7 @@
 module Sufia::HomepageController
   extend ActiveSupport::Concern
 
-  included do 
+  included do
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
     include Blacklight::Catalog::SearchContext
@@ -23,7 +23,7 @@ module Sufia::HomepageController
 
   def recent
     # grab any recent documents
-    (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
+    (_, @recent_documents) = get_search_results(q: '', sort:sort_field, rows: 4)
   end
 
   def sort_field

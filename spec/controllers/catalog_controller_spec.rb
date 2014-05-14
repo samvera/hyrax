@@ -56,7 +56,7 @@ describe CatalogController do
     describe "facet search" do
       before do
         # TODO: this is not how a facet query is done.
-        get :index, :q=>"{f=desc_metadata__contributor_tesim}Contrib1"
+        get :index, q: "{f=desc_metadata__contributor_tesim}Contrib1"
       end
       it "should find facet files" do
         expect(response).to be_success

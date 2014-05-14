@@ -1,4 +1,4 @@
-$("#notify_link").html("<%= escape_javascript(render :partial => "notify_number")  %>");
+$("#notify_link").html("<%= escape_javascript(render partial: "notify_number")  %>");
 <% @batches.each do |batch|%>
   $(".<%=batch%>").attr('class', '');;
 <% end %>

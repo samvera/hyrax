@@ -7,7 +7,7 @@ module Sufia
       include Hydra::AccessControls::Visibility
 
       included do
-        has_metadata "rightsMetadata", :type => ParanoidRightsDatastream
+        has_metadata "rightsMetadata", type: ParanoidRightsDatastream
         validate :paranoid_permissions
       end
 

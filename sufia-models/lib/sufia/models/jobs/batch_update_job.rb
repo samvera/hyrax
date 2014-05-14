@@ -1,6 +1,6 @@
 class BatchUpdateJob
   include Hydra::PermissionsQuery
-  include Rails.application.routes.url_helpers 
+  include Rails.application.routes.url_helpers
 
   def queue_name
     :batch_update
@@ -14,7 +14,6 @@ class BatchUpdateJob
     self.file_attributes = params[:generic_file]
     self.visibility = params[:visibility]
     self.batch_id = params[:id]
-
   end
 
   def run
@@ -27,15 +26,14 @@ class BatchUpdateJob
       update_file(gf, user)
     end
     batch.update_attributes({status:["Complete"]})
-    
+
     job_user = User.batchuser()
-    
+
     message = '<span class="batchid ui-helper-hidden">ss-'+batch.noid+'</span>The file(s) '+ file_list(@saved)+ " have been saved." unless @saved.empty?
     job_user.send_message(user, message, 'Batch upload complete') unless @saved.empty?
- 
+
     message = '<span class="batchid ui-helper-hidden">'+batch.noid+'</span>The file(s) '+ file_list(@denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless @denied.empty?
     job_user.send_message(user, message, 'Batch upload permission denied') unless @denied.empty?
-     
   end
 
   def update_file(gf, user)
@@ -62,10 +60,8 @@ class BatchUpdateJob
     Sufia.queue.push(ContentUpdateEventJob.new(gf.pid, login))
     @saved << gf
   end
-  
+
   def file_list ( files)
-    return files.map {|gf| '<a href="'+Sufia::Engine.routes.url_helpers.generic_files_path+'/'+gf.noid+'">'+gf.to_s+'</a>'}.join(', ')
-    
+    files.map { |gf| '<a href="'+Sufia::Engine.routes.url_helpers.generic_files_path+'/'+gf.noid+'">'+gf.to_s+'</a>' }.join(', ')
   end
-  
 end

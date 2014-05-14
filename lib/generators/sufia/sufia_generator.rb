@@ -7,7 +7,7 @@ class SufiaGenerator < Rails::Generators::Base
 
   source_root File.expand_path('../templates', __FILE__)
 
-  argument :model_name, :type => :string , :default => "user"
+  argument :model_name, type: :string , default: "user"
   desc """
 This generator makes the following changes to your application:
  1. Runs sufia-models:install
@@ -33,7 +33,7 @@ This generator makes the following changes to your application:
     controller_name = "ApplicationController"
     file_path = "app/controllers/application_controller.rb"
     if File.exists?(file_path)
-      insert_into_file file_path, :after => 'include Blacklight::Controller' do
+      insert_into_file file_path, after: 'include Blacklight::Controller' do
         "  \n# Adds Sufia behaviors into the application controller \n" +
         "  include Sufia::Controller\n"
       end
@@ -66,9 +66,9 @@ This generator makes the following changes to your application:
     routing_code = "\n  Hydra::BatchEdit.add_routes(self)\n" +
       "  # This must be the very last route in the file because it has a catch-all route for 404 errors.
   # This behavior seems to show up only in production mode.
-  mount Sufia::Engine => '/'\nroot :to => 'homepage#index'\n"
+  mount Sufia::Engine => '/'\n  root to: 'homepage#index'\n"
 
     sentinel = /devise_for :users/
-    inject_into_file 'config/routes.rb', routing_code, { :after => sentinel, :verbose => false }
+    inject_into_file 'config/routes.rb', routing_code, { after: sentinel, verbose: false }
   end
 end

@@ -1,6 +1,6 @@
 <% content_for :head do %>
-    <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(:format => 'rss')), :title => "RSS for results") %>
-    <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(:format => 'atom')), :title => "Atom for results") %>
+    <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(format: 'rss')), title: "RSS for results") %>
+    <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(format: 'atom')), title: "Atom for results") %>
 <% end %>
 
 <% content_for :local_js do %>
@@ -41,19 +41,19 @@
   </li>
 </ul>
 
-<%= render :partial => 'did_you_mean' %>
-<%= render :partial => 'facet_selected' %>
+<%= render partial: 'did_you_mean' %>
+<%= render partial: 'facet_selected' %>
 
-<%= render 'constraints', :localized_params => params %>
+<%= render 'constraints', localized_params: params %>
 
 <%= render 'sort_and_per_page' %>
 
-<%= render :partial => 'dashboard/document_list' %>
+<%= render partial: 'dashboard/document_list' %>
 <% content_for :sidebar do %>
-    <%= render :partial => 'facets' %>
+    <%= render partial: 'facets' %>
 <% end %>
 
 <%= render 'results_pagination' %>
 <% if @events.present? %>
-    <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+    <%= render partial: 'users/activity_log', locals: {events: @events} %>
 <% end %>

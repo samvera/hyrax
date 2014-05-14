@@ -26,7 +26,7 @@ describe RecordsHelper do
   describe "download links" do
 
     before :all do
-      @file = GenericFile.new(:pid => "fake:1")
+      @file = GenericFile.new(pid: "fake:1")
       assign :generic_file, @file
     end
 

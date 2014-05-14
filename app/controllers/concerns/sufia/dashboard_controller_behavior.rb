@@ -63,9 +63,9 @@ module Sufia
       # filter events to include only those that have occurred since params[:since]
       events.select! { |event| event[:timestamp].to_i > params[:since].to_i } if params[:since]
       # return the event, a formatted date string, and a numerical timestamp
-      render :json => events.map { |event| [event[:action], "#{time_ago_in_words(Time.at(event[:timestamp].to_i))} ago", event[:timestamp].to_i] }
+      render json: events.map { |event| [event[:action], "#{time_ago_in_words(Time.at(event[:timestamp].to_i))} ago", event[:timestamp].to_i] }
     rescue
-      render :json => []
+      render json: []
     end
 
     # TODO: This can be removed after we upgrade to hydra-collections 2.0.1 or greater

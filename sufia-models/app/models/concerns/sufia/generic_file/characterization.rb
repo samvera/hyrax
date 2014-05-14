@@ -3,7 +3,7 @@ module Sufia
     module Characterization
       extend ActiveSupport::Concern
       included do
-        has_metadata "characterization", :type => FitsDatastream
+        has_metadata "characterization", type: FitsDatastream
         has_attributes :mime_type, datastream: :characterization, multiple: false
         has_attributes :format_label, :file_size, :last_modified,
                                         :filename, :original_checksum, :rights_basis,

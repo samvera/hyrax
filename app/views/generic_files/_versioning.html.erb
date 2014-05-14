@@ -1,7 +1,7 @@
 <div id="versioning_display" class="tab-pane">
   <h2>Versions</h2>
   <div class="well">
-    <%= form_for @generic_file, :url => sufia.generic_file_path(@generic_file), :html => {:multipart => true, :class => 'form-horizontal'} do |f| %>
+    <%= form_for @generic_file, url: sufia.generic_file_path(@generic_file), html: {multipart: true, class: 'form-horizontal'} do |f| %>
       <%= hidden_field_tag('redirect_tab', 'versions') %>
     <h3>Upload New Version</h3>
         <div class="form-group">
@@ -10,7 +10,7 @@
             <p id="upload_field">
                 <%= file_field_tag "filedata"  %>
              </p>
-            <%= f.button '<i class="glyphicon glyphicon-upload"></i> Upload New Version'.html_safe, :name => "update_versioning", :id => "upload_submit", :onclick => "confirmation_needed = false;", :class => "btn-primary btn-mini" %>
+            <%= f.button '<i class="glyphicon glyphicon-upload"></i> Upload New Version'.html_safe, name: "update_versioning", id: "upload_submit", onclick: "confirmation_needed = false;", class: "btn-primary btn-mini" %>
           </div>
         </div>
     <hr />
@@ -27,7 +27,7 @@
       </div>
     <% end %>
     <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
-    <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Revision'.html_safe, :type => 'submit', :class => 'btn-primary btn-mini', :onclick => "confirmation_needed = false;", :name => "revert_submit", :id => "revert_submit" %>
+    <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Revision'.html_safe, type: 'submit', class: 'btn-primary btn-mini', onclick: "confirmation_needed = false;", name: "revert_submit", id: "revert_submit" %>
   <% end %>
   </div> <!-- /well -->
 </div> <!-- /row -->

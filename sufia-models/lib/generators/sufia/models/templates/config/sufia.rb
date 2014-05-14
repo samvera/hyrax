@@ -2,8 +2,8 @@
 Sufia.config do |config|
 
   config.fits_to_desc_mapping= {
-    :file_title => :title,
-    :file_author => :creator
+    file_title: :title,
+    file_author: :creator
   }
 
   # Specify a different template for your repositories unique identifiers

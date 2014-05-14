@@ -1,5 +1,5 @@
 <%# only display the q parameter if the controller is not the dashboard.  If they are in the dashboard controller, then the search is of the dashboard. %>
-    <%= form_tag catalog_index_path, :method => :get, :id => "search-form-header", :class => "col-xs-12", :role => "search" do %>
+    <%= form_tag catalog_index_path, method: :get, id: "search-form-header", class: "col-xs-12", role: "search" do %>
       <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8, :owner)) %>
       <%= hidden_field_tag 'owner', params[:owner] %>
 
@@ -7,7 +7,7 @@
         <div class="col-lg-10">
           <div class="input-group">
             <% q = params[:controller].match(/^dashboard/) ? nil : params[:q] %>
-            <%= text_field_tag :q, q, :class => "q form-control", :id => "search-field-header", :placeholder => t('sufia.search.form.q.placeholder') %>
+            <%= text_field_tag :q, q, class: "q form-control", id: "search-field-header", placeholder: t('sufia.search.form.q.placeholder') %>
             <%# if this label goes before the search field, it'll mess up the rounded corners %>
             <label class="sr-only" for="search-field-header"><%= t('sufia.search.form.q.label') %></label>
 

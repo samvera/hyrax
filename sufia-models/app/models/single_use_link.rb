@@ -6,7 +6,7 @@ class SingleUseLink < ActiveRecord::Base
   after_initialize :set_defaults
 
   def create_for_path path
-    self.class.create :itemId => itemId, :path => path
+    self.class.create itemId: itemId, path: path
   end
 
   def expired?

@@ -5,7 +5,7 @@ module Sufia
     # example:
     #   config.index.thumbnail_method = :sufia_thumbnail_tag
     def sufia_thumbnail_tag(document, options)
-      path = if document.image? || document.pdf? || document.video? 
+      path = if document.image? || document.pdf? || document.video?
         sufia.download_path document.noid, datastream_id: 'thumbnail'
       elsif document.audio?
         "audio.png"
@@ -28,7 +28,7 @@ module Sufia
       p = params.dup
       p.delete :page
       p.delete :action
-      p[:q]=query
+      p[:q] = query
       link_url = dashboard_index_path(p)
       link_to(query, link_url)
     end
@@ -51,28 +51,25 @@ module Sufia
     end
 
     # @param values [Array] The values to display
-    # @param solr_field [String] The name of the solr field to link to without its suffix (:facetable) 
+    # @param solr_field [String] The name of the solr field to link to without its suffix (:facetable)
     # @param empty_message [String] ('No value entered') The message to display if no values are passed in.
-    # @param separator [String] (', ') The value to join with. 
+    # @param separator [String] (', ') The value to join with.
     def link_to_facet_list(values, solr_field, empty_message="No value entered", separator=", ")
       return empty_message if values.blank?
       facet_field = Solrizer.solr_name(solr_field, :facetable)
       safe_join(values.map{ |item| link_to_facet(item, facet_field) }, separator)
     end
 
-
     def link_to_field(fieldname, fieldvalue, displayvalue = nil)
       p = { search_field: 'advanced', fieldname => '"'+fieldvalue+'"' }
       link_url = catalog_index_path(p)
-      display = displayvalue.blank? ? fieldvalue: displayvalue
+      display = displayvalue.blank? ? fieldvalue : displayvalue
       link_to(display, link_url)
     end
 
     def iconify_auto_link(text, showLink = true)
       auto_link(text) do |value|
-        link = "<i class='icon-external-link'></i>&nbsp;#{value}<br />" if showLink
-        link = "<i class='icon-external-link'></i>&nbsp;<br />" unless showLink
-        link
+        "<i class='icon-external-link'></i>&nbsp;#{value if showLink}<br />"
       end
     end
 
@@ -100,7 +97,7 @@ module Sufia
     # Create a link back to the index screen, keeping the user's facet, query and paging choices intact by using session.
     # We should be able to do away with this method in Blacklight 5
     # @example
-    #   link_back_to_catalog(:label=>'Back to Search')
+    #   link_back_to_catalog(label: 'Back to Search')
     def link_back_to_catalog(opts = { label: nil })
       scope = opts.delete(:route_set) || self
       query_params = current_search_session.try(:query_params) || {}

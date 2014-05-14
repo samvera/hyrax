@@ -1,9 +1,9 @@
 class ChecksumAuditLog < ActiveRecord::Base
 
   def ChecksumAuditLog.get_audit_log(version)
-    ChecksumAuditLog.find_or_create_by_pid_and_dsid_and_version(:pid => version.pid,
-                                                                :dsid => version.dsid,
-                                                                :version => version.versionID)
+    ChecksumAuditLog.find_or_create_by_pid_and_dsid_and_version(pid: version.pid,
+                                                                dsid: version.dsid,
+                                                                version: version.versionID)
   end
 
   def ChecksumAuditLog.prune_history(version)

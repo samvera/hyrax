@@ -5,10 +5,10 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane fade in" id="highlighted_resources">
-      <%= render :partial=>'/homepage/featured_works' %>
+      <%= render partial: '/homepage/featured_works' %>
     </div>
      <div class="tab-pane fade" id="recently_uploaded">
-       <%= render :partial=>'recents', :locals => {:recent_documents=>@recent_documents, :msg=>"No public work has been contributed.", :display_thumbs=>true, :display_access=>false} %>
+       <%= render partial: 'recents', locals: { recent_documents: @recent_documents, msg: "No public work has been contributed.", display_thumbs: true, display_access: false } %>
      </div>
   </div>
 </div><!-- /.col-xs-6 -->
@@ -17,12 +17,12 @@
     <%- if blacklight_config.respond_to?(:tag_cloud_field_name) && blacklight_config.tag_cloud_field_name %>
         <div class="row">
           <h2 class="heading1 pull-left">Explore</h2>
-          <%= render partial:'tagcloud', locals:{tag_cloud_field_name:blacklight_config.tag_cloud_field_name}%>
+          <%= render partial: 'tagcloud', locals: { tag_cloud_field_name: blacklight_config.tag_cloud_field_name } %>
         </div>
     <%- end %>
   </div>
   <div>
-    <%= render :partial=>'featured_researcher' %>
+    <%= render partial: 'featured_researcher' %>
   </div>
 </div>
 <script>

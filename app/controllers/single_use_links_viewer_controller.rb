@@ -5,7 +5,7 @@ class SingleUseLinksViewerController < ApplicationController
   include Sufia::DownloadsControllerBehavior
 
   skip_filter :normalize_identifier
-  skip_before_filter :load_datastream, :except => :download
+  skip_before_filter :load_datastream, except: :download
 
   class Ability
     include CanCan::Ability
@@ -25,13 +25,13 @@ class SingleUseLinksViewerController < ApplicationController
     end
   end
 
-  rescue_from Sufia::SingleUseError, :with => :render_single_use_error
-  rescue_from CanCan::AccessDenied, :with => :render_single_use_error
-  rescue_from ActiveRecord::RecordNotFound, :with => :render_single_use_error
+  rescue_from Sufia::SingleUseError, with: :render_single_use_error
+  rescue_from CanCan::AccessDenied, with: :render_single_use_error
+  rescue_from ActiveRecord::RecordNotFound, with: :render_single_use_error
 
   def download
     # send the data content
-    raise not_found_exception unless single_use_link.path == sufia.download_path(:id => @asset)
+    raise not_found_exception unless single_use_link.path == sufia.download_path(id: @asset)
     send_content
   end
 
@@ -42,7 +42,7 @@ class SingleUseLinksViewerController < ApplicationController
     @terms = @asset.terms_for_display
 
     # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
-    @su = single_use_link.create_for_path sufia.download_path(:id => @asset)
+    @su = single_use_link.create_for_path sufia.download_path(id: @asset)
     @download_link = sufia.download_single_use_link_path(@su.downloadKey)
   end
 

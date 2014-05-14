@@ -21,11 +21,10 @@ module Sufia
     include Hydra::Collections::Collectible
 
     included do
-      belongs_to :batch, :property => :is_part_of
+      belongs_to :batch, property: :is_part_of
 
       around_save :characterize_if_changed, :retry_warming
 
-      #attr_accessible *(ds_specs['descMetadata'][:type].fields + [:permissions])
       attr_accessible *(terms_for_display + [:part_of, :permissions])
     end
 
@@ -34,34 +33,34 @@ module Sufia
     end
 
     def retry_warming
-        save_tries = 0
-        conflict_tries = 0
-        begin
-          yield
-        rescue RSolr::Error::Http => error
-          save_tries += 1
-          logger.warn "Retry Solr caught RSOLR error on #{self.pid}: #{error.inspect}"
-          # fail for good if the tries is greater than 3
-          raise if save_tries >=3
-          sleep 0.01
-          retry
-        rescue  ActiveResource::ResourceConflict => error
+      save_tries = 0
+      conflict_tries = 0
+      begin
+        yield
+      rescue RSolr::Error::Http => error
+        save_tries += 1
+        logger.warn "Retry Solr caught RSOLR error on #{self.pid}: #{error.inspect}"
+        # fail for good if the tries is greater than 3
+        raise if save_tries >=3
+        sleep 0.01
+        retry
+      rescue  ActiveResource::ResourceConflict => error
+        conflict_tries += 1
+        logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
+        raise if conflict_tries >=10
+        sleep 0.01
+        retry
+      rescue => error
+        if error.to_s.downcase.include? "conflict"
           conflict_tries += 1
           logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
           raise if conflict_tries >=10
           sleep 0.01
           retry
-        rescue =>error
-          if (error.to_s.downcase.include? "conflict")
-            conflict_tries += 1
-            logger.warn "Retry caught Active Resource Conflict #{self.pid}: #{error.inspect}"
-            raise if conflict_tries >=10
-            sleep 0.01
-            retry
-          else
-            raise
-          end
+        else
+          raise
         end
+      end
     end
 
     # Get the files with a sibling relationship (belongs_to :batch)

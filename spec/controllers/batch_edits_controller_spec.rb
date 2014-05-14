@@ -14,9 +14,9 @@ describe BatchEditsController do
 
   describe "edit" do
     before do
-      @one = GenericFile.new(:creator=>"Fred", :language=>'en')#, :resource_type=>'foo')
+      @one = GenericFile.new(creator: "Fred", language: 'en')#, resource_type: 'foo')
       @one.apply_depositor_metadata('mjg36')
-      @two = GenericFile.new(:creator=>"Wilma", :publisher=>'Rand McNally', :language=>'en', :resource_type=>'bar')
+      @two = GenericFile.new(creator: "Wilma", publisher: 'Rand McNally', language: 'en', resource_type: 'bar')
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
@@ -37,9 +37,9 @@ describe BatchEditsController do
 
   describe "update" do
     before do
-      @one = GenericFile.new(:creator=>"Fred", :language=>'en')
+      @one = GenericFile.new(creator: "Fred", language: 'en')
       @one.apply_depositor_metadata('mjg36')
-      @two = GenericFile.new(:creator=>"Wilma", :publisher=>'Rand McNally', :language=>'en')
+      @two = GenericFile.new(creator: "Wilma", publisher: 'Rand McNally', language: 'en')
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!

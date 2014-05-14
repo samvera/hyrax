@@ -3,10 +3,10 @@ class Batch < ActiveFedora::Base
   include Sufia::ModelMethods
   include Sufia::Noid
 
-  has_metadata :name => "descMetadata", :type => BatchRdfDatastream
+  has_metadata name: "descMetadata", type: BatchRdfDatastream
 
-  belongs_to :user, :property => "creator"
-  has_many :generic_files, :property => :is_part_of
+  belongs_to :user, property: "creator"
+  has_many :generic_files, property: :is_part_of
 
   has_attributes :title, :creator, :part, :status, datastream: :descMetadata, multiple: true
 

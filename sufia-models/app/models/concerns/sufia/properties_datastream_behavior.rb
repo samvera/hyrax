@@ -4,12 +4,12 @@ module Sufia
 
     included do
       set_terminology do |t|
-        t.root(:path=>"fields" )
+        t.root(path: "fields")
         # This is where we put the user id of the object depositor -- impacts permissions/access controls
         t.depositor index_as: [:symbol, :stored_searchable]
         # This is where we put the relative path of the file if submitted as a folder
         t.relative_path
-        t.import_url path: 'importUrl', :index_as=>:symbol
+        t.import_url path: 'importUrl', index_as: :symbol
       end
     end
 
@@ -25,6 +25,5 @@ module Sufia
     def prefix
       ""
     end
-
   end
 end

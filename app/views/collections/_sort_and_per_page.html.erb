@@ -10,7 +10,7 @@
    </div>
   <%end %>
    <div class="sort-toggle">
-     <%-# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {:action=>"index"} but I'm not sure -%>
+     <%# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {action: "index"} but I'm not sure -%>
      <% unless @response.response['numFound'] < 2 %>
         <%= form_tag collections.collection_path(@collection.noid), method: :get, class: 'per_page form-inline' do %>
           <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>

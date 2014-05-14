@@ -41,14 +41,14 @@ directory 'pkg'
       sh cmd
     end
 
-    task :build => [:clean, gem]
-    task :install => :build do
+    task build: [:clean, gem]
+    task install: :build do
       sh "gem install #{gem}"
     end
 
-    task :prep_release => [:ensure_clean_state, :build]
+    task prep_release: [:ensure_clean_state, :build]
 
-    task :push => :build do
+    task push: :build do
       sh "gem push #{gem}"
     end
   end
@@ -56,9 +56,9 @@ end
 
 
 namespace :all do
-  task :build   => ['sufia-models:build', 'sufia:build']
-  task :install => ['sufia-models:install', 'sufia:install']
-  task :push    => ['sufia-models:push', 'sufia:push']
+  task build: ['sufia-models:build', 'sufia:build']
+  task install: ['sufia-models:install', 'sufia:install']
+  task push: ['sufia-models:push', 'sufia:push']
 
   task :ensure_clean_state do
     unless `git status -s | grep -v SUFIA_VERSION | grep -v History.md`.strip.empty?
@@ -88,6 +88,6 @@ namespace :all do
   end
 
   desc "Release both sufia and sufia-models and update the version to #{version} in all locations"
-  task :release => %w(ensure_clean_state build commit tag push)
+  task release: %w(ensure_clean_state build commit tag push)
 end
 

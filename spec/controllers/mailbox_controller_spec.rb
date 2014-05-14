@@ -21,14 +21,14 @@ describe MailboxController do
       response.should be_success
       assigns[:messages].first.last_message.body.should == 'Test Message'
       assigns[:messages].first.last_message.subject.should == 'Test Subject'
-      @user.mailbox.inbox(:unread => true).count.should == 0
+      @user.mailbox.inbox(unread: true).count.should == 0
     end
   end
   describe "#delete" do
     it "should delete message" do
       rec = @another_user.send_message(@user, 'message 2', 'subject 2')
       expect {
-        delete :destroy, :id=> rec.conversation.id
+        delete :destroy, id: rec.conversation.id
         response.should redirect_to(@routes.url_helpers.notifications_path)
       }.to change {@user.mailbox.inbox.count}.by(-1)
     end
@@ -36,7 +36,7 @@ describe MailboxController do
       @curator = FactoryGirl.find_or_create(:curator)
       rec = @another_user.send_message(@curator, 'message 3', 'subject 3')
       expect {
-        delete :destroy, :id=> rec.conversation.id
+        delete :destroy, id: rec.conversation.id
         response.should redirect_to(@routes.url_helpers.notifications_path)
       }.to_not change { @curator.mailbox.inbox.count}
     end

@@ -46,19 +46,19 @@ module Sufia
         export_text = []
         export_text << "url_ver=Z39.88-2004&ctx_ver=Z39.88-2004&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adc&rfr_id=info%3Asid%2Fblacklight.rubyforge.org%3Agenerator"
         field_map = {
-          :title => 'title',
-          :creator => 'creator',
-          :subject => 'subject',
-          :description => 'description',
-          :publisher => 'publisher',
-          :contributor => 'contributor',
-          :date_created => 'date',
-          :resource_type => 'format',
-          :identifier => 'identifier',
-          :language => 'language',
-          :tag => 'relation',
-          :based_near => 'coverage',
-          :rights => 'rights'
+          title: 'title',
+          creator: 'creator',
+          subject: 'subject',
+          description: 'description',
+          publisher: 'publisher',
+          contributor: 'contributor',
+          date_created: 'date',
+          resource_type: 'format',
+          identifier: 'identifier',
+          language: 'language',
+          tag: 'relation',
+          based_near: 'coverage',
+          rights: 'rights'
         }
         field_map.each do |element, kev|
           values = self.send(element)
