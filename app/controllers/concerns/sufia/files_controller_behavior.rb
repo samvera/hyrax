@@ -115,31 +115,17 @@ module Sufia
 
     # routed to /files/:id (PUT)
     def update
-
-      version_event = if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
-        Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
-        Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key,  params[:revision]))
-        true
-      elsif params.has_key?(:filedata)
-        Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
-        true
-      else
-        false
+      success = if params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+        update_version
+      elsif params.has_key? :filedata
+        update_file
+      elsif params.has_key? :generic_file
+        update_metadata
       end
 
-      # only update metadata if there is a generic_file object which is not the case for version updates
-      update_metadata if params[:generic_file]
-
-      #always save the file so the new version or metadata gets recorded
-      if @generic_file.save
-        # do not trigger an update event if a version event has already been triggered
-        if version_event
-          Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key)) if params.has_key?(:filedata)
-        else
-          Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
-        end
-        @generic_file.record_version_committer(current_user)
-        redirect_to sufia.edit_generic_file_path(tab: params[:redirect_tab]), notice: render_to_string(partial: 'generic_files/asset_updated_flash', locals: { generic_file: @generic_file })
+      if success
+        redirect_to sufia.edit_generic_file_path(tab: params[:redirect_tab]), notice:
+          render_to_string(partial: 'generic_files/asset_updated_flash', locals: { generic_file: @generic_file })
       else
         render action: 'edit'
       end
@@ -150,6 +136,30 @@ module Sufia
     end
 
     protected
+
+    def update_version
+      Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
+      return false unless @generic_file.save
+      Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
+      @generic_file.record_version_committer(current_user)
+    end
+
+    def update_file
+      Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
+      return false unless @generic_file.save
+      Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
+      @generic_file.record_version_committer(current_user)
+    end
+
+    # this is provided so that implementing application can override this behavior and map params to different attributes
+    def update_metadata
+      @generic_file.attributes = @generic_file.sanitize_attributes(params[:generic_file])
+      @generic_file.visibility = params[:visibility]
+      @generic_file.date_modified = DateTime.now
+      return false unless @generic_file.save
+      Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
+      @generic_file.record_version_committer(current_user)
+    end
 
     def json_error(error, name=nil, additional_arguments={})
       args = {error: error}
@@ -201,16 +211,10 @@ module Sufia
     end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
+    # called when creating or updating metadata
     def update_metadata_from_upload_screen
       # Relative path is set by the jquery uploader when uploading a directory
       @generic_file.relative_path = params[:relative_path] if params[:relative_path]
-    end
-
-    # this is provided so that implementing application can override this behavior and map params to different attributes
-    def update_metadata
-      @generic_file.attributes = @generic_file.sanitize_attributes(params[:generic_file])
-      @generic_file.visibility = params[:visibility]
-      @generic_file.date_modified = DateTime.now
     end
 
     def create_metadata(file)

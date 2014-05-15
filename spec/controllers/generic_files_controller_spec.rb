@@ -308,38 +308,40 @@ describe GenericFilesController do
   end
 
   describe "update" do
-    before do
-      @generic_file = GenericFile.new
-      @generic_file.apply_depositor_metadata(@user)
-      @generic_file.save
+    let(:generic_file) do
+      GenericFile.new.tap do |gf|
+        gf.apply_depositor_metadata(@user)
+        gf.save!
+      end
     end
+
     after do
-      @generic_file.destroy
+      generic_file.destroy
     end
 
     it "should spawn a content update event job" do
       s1 = double('one')
-      ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      ContentUpdateEventJob.should_receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
-      post :update, id: @generic_file.pid, generic_file: {title: 'new_title', tag: [''], permissions: {new_user_name: {'archivist1'=>'edit'}}}
+      post :update, id: generic_file, generic_file: {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
       @user.delete
     end
 
     it "spawns a content new version event job" do
       s1 = double('one')
-      allow(ContentNewVersionEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
+      allow(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
       expect(Sufia.queue).to receive(:push).with(s2).once
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
 
       file = fixture_file_upload('/world.png', 'image/png')
-      post :update, id: @generic_file.pid, filedata: file, 'Filename' => 'The world', generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
+      post :update, id: generic_file, filedata: file, generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
       @user.destroy
     end
 
@@ -348,23 +350,23 @@ describe GenericFilesController do
       sign_in @user
 
       file = fixture_file_upload('/world.png','image/png')
-      post :update, id: @generic_file.pid, filedata:file, Filename: "The world", generic_file: {tag: [''],  permissions: {new_user_name: {'archivist1@example.com'=>'edit'}}}
+      post :update, id: generic_file, filedata: file, generic_file: { tag: [''], permissions: { new_user_name: { 'archivist1@example.com'=>'edit' } } }
 
-      posted_file = GenericFile.find(@generic_file.pid)
+      posted_file = GenericFile.find(generic_file.pid)
       version1 = posted_file.content.latest_version
       posted_file.content.version_committer(version1).should == @user.user_key
 
       file = fixture_file_upload('/image.jpg','image/jpg')
-      post :update, id: @generic_file.pid, filedata:file, Filename: "The world", generic_file: {tag: [''],  permissions: {new_user_name: {'archivist1@example.com'=>'edit'}}}
+      post :update, id: generic_file, filedata: file, generic_file: { tag: [''], permissions: { new_user_name: { 'archivist1@example.com'=>'edit' } } }
 
-      posted_file = GenericFile.find(@generic_file.pid)
+      posted_file = GenericFile.find(generic_file.pid)
       version2 = posted_file.content.latest_version
       posted_file.content.version_committer(version2).should == @user.user_key
 
       posted_file.content.mimeType.should == "image/jpeg"
-      post :update, id: @generic_file.pid, revision: 'content.0'
+      post :update, id: generic_file, revision: 'content.0'
 
-      restored_file = GenericFile.find(@generic_file.pid)
+      restored_file = GenericFile.find(generic_file.pid)
       version3 = restored_file.content.latest_version
       version3.versionID.should_not == version2.versionID
       version3.versionID.should_not == version1.versionID
@@ -373,96 +375,111 @@ describe GenericFilesController do
       @user.delete
     end
 
-    it "records what user added a new version" do
-      @user = FactoryGirl.find_or_create(:jill)
-      sign_in @user
+    context "when two users edit a file" do
+      let(:archivist) { FactoryGirl.find_or_create(:archivist) }
+      let(:user) { FactoryGirl.find_or_create(:jill) }
+      let(:generic_file) do
+        GenericFile.new.tap do |gf|
+          gf.apply_depositor_metadata(user)
+          gf.edit_users = [user.user_key, archivist.user_key]
+          gf.save!
+        end
+      end
+      before do
+        GenericFile.any_instance.stub(:characterize_if_changed).and_yield
+        sign_in user
+      end
 
-      file = fixture_file_upload('/world.png','image/png')
-      post :update, id: @generic_file.pid, filedata:file, Filename: "The world", generic_file: {tag: [''],  permissions: {new_user_name: {'archivist1@example.com'=>'edit'}}}
+      it "records which user added a new version" do
+        file = fixture_file_upload('/world.png','image/png')
+        post :update, id: generic_file, filedata: file
 
-      posted_file = GenericFile.find(@generic_file.pid)
-      version1 = posted_file.content.latest_version
-      expect(posted_file.content.version_committer(version1)).to eq(@user.user_key)
+        posted_file = GenericFile.find(generic_file.pid)
+        version1 = posted_file.content.latest_version
+        expect(posted_file.content.version_committer(version1)).to eq(user.user_key)
 
-      # other user uploads new version
-      # TODO this should be a separate test
-      archivist = FactoryGirl.find_or_create(:archivist)
-      allow(controller).to receive(:current_user).and_return(archivist)
+        # other user uploads new version
+        # TODO this should be a separate test
+        allow(controller).to receive(:current_user).and_return(archivist)
 
-      expect(ContentUpdateEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
+        expect(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').never
 
-      s1 = double('one')
-      allow(ContentNewVersionEventJob).to receive(:new).with(@generic_file.pid, archivist.user_key).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+        s1 = double('one')
+        allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, archivist.user_key).and_return(s1)
+        expect(Sufia.queue).to receive(:push).with(s1).once
 
-      s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
-      expect(Sufia.queue).to receive(:push).with(s2).once
-      file = fixture_file_upload('/image.jpg', 'image/jpg')
-      post :update, id: @generic_file.pid, filedata: file, 'Filename' => 'The world'
+        file = fixture_file_upload('/image.jpg', 'image/jpg')
+        post :update, id: generic_file, filedata: file
 
-      edited_file = @generic_file.reload
-      version2 = edited_file.content.latest_version
-      expect(version2.versionID).not_to eq(version1.versionID)
-      expect(edited_file.content.version_committer(version2)).to eq(archivist.user_key)
+        edited_file = generic_file.reload
+        version2 = edited_file.content.latest_version
+        expect(version2.versionID).not_to eq(version1.versionID)
+        expect(edited_file.content.version_committer(version2)).to eq(archivist.user_key)
 
-      # original user restores his or her version
-      allow(controller).to receive(:current_user).and_return(@user)
-      sign_in @user
-      expect(ContentUpdateEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
-      s1 = double('one')
-      allow(ContentRestoredVersionEventJob).to receive(:new).with(@generic_file.pid, @user.user_key, 'content.0').and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+        # original user restores his or her version
+        allow(controller).to receive(:current_user).and_return(user)
+        sign_in user
+        expect(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').never
+        s1 = double('one')
+        allow(ContentRestoredVersionEventJob).to receive(:new).with(generic_file.pid, user.user_key, 'content.0').and_return(s1)
+        expect(Sufia.queue).to receive(:push).with(s1).once
 
-      s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
-      expect(Sufia.queue).to receive(:push).with(s2).once
-      post :update, id: @generic_file.pid, revision: 'content.0'
+        post :update, id: generic_file, revision: 'content.0'
 
-      restored_file = @generic_file.reload
-      version3 = restored_file.content.latest_version
-      expect(version3.versionID).not_to eq(version2.versionID)
-      expect(version3.versionID).not_to eq(version1.versionID)
-      expect(restored_file.content.version_committer(version3)).to eq(@user.user_key)
-      @user.destroy
+        restored_file = generic_file.reload
+        version3 = restored_file.content.latest_version
+        expect(version3.versionID).not_to eq(version2.versionID)
+        expect(version3.versionID).not_to eq(version1.versionID)
+        expect(restored_file.content.version_committer(version3)).to eq(user.user_key)
+      end
     end
 
-    it "should add a new groups and users" do
-      post :update, id: @generic_file.pid, generic_file: {tag: [''], permissions: {new_group_name: {'group1'=>'read'}, new_user_name: {'user1'=>'edit'}}}
+    it "should add new groups and users" do
+      post :update, id: generic_file, generic_file: { tag: [''], permissions:
+        { new_group_name: { 'group1' => 'read' }, new_user_name: { 'user1' => 'edit' }}}
 
       assigns[:generic_file].read_groups.should == ["group1"]
       assigns[:generic_file].edit_users.should include("user1", @user.user_key)
     end
     it "should update existing groups and users" do
-      @generic_file.read_groups = ['group3']
-      @generic_file.save
-      post :update, id: @generic_file.pid, generic_file: {tag: [''], permissions: {new_group_name: '', new_group_permission: '', new_user_name: '', new_user_permission: '', group: {'group3' =>'read'}}}
+      generic_file.read_groups = ['group3']
+      generic_file.save
+      post :update, id: generic_file, generic_file: { tag: [''], permissions:
+        { new_group_name: '', new_group_permission: '', new_user_name: '', new_user_permission: '', group: { 'group3' => 'read' }}}
 
       assigns[:generic_file].read_groups.should == ["group3"]
     end
 
     it "spawns a virus check" do
       s1 = double('one')
-      allow(ContentNewVersionEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
-      allow(CreateDerivativesJob).to receive(:new).with(@generic_file.pid).and_return(s2)
+      allow(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
+      allow(CreateDerivativesJob).to receive(:new).with(generic_file.pid).and_return(s2)
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       file = fixture_file_upload('/world.png', 'image/png')
       expect(Sufia::GenericFile::Actions).to receive(:virus_check).and_return(0)
       expect(Sufia.queue).to receive(:push).with(s2).once
-      post :update, id: @generic_file.pid, filedata: file, 'Filename' => 'The world', generic_file: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
+      post :update, id: generic_file.pid, filedata: file, 'Filename' => 'The world', generic_file: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
     end
 
-    it "should go back to edit on an error" do
-      GenericFile.any_instance.should_receive(:valid?).and_return(false)
-      post :update, id: @generic_file.pid, generic_file: {tag: ['']}
-      response.should be_successful
-      response.should render_template('edit')
-      assigns[:generic_file].should == @generic_file
+    context "when there's an error saving" do
+      let!(:generic_file) do
+        GenericFile.new.tap do |gf|
+          gf.apply_depositor_metadata(@user)
+          gf.save!
+        end
+      end
+      it "redirects to edit" do
+        GenericFile.any_instance.should_receive(:valid?).and_return(false)
+        post :update, id: generic_file, generic_file: {:tag=>['']}
+        response.should be_successful
+        response.should render_template('edit')
+        expect(assigns[:generic_file]).to eq generic_file
+      end
     end
   end
 
