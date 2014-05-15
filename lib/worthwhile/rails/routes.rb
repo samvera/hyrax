@@ -1,14 +1,5 @@
 module ActionDispatch::Routing
   class Mapper
-    def worthwhile_collections
-      resources 'collections' do
-        collection do
-          get :add_member_form
-          put :add_member
-          put :remove_member
-        end
-      end
-    end
     
     def worthwhile_curation_concerns 
       resources :downloads, only: [:show]
@@ -30,6 +21,25 @@ module ActionDispatch::Routing
             get :versions
             put :rollback
           end
+        end
+      end
+    end
+
+    # Used in conjunction with Hydra::Collections::Engine routes.
+    # Adds routes for doing paginated searches within a collection's contents
+    # @example in routes.rb:
+    #     mount Hydra::Collections::Engine => '/'
+    #     worthwhile_collections
+    def worthwhile_collections
+      resources :collections, only: :show do
+        member do
+          get 'page/:page', action: :index
+          get 'facet/:id', action: :facet, as: :dashboard_facet
+        end
+        collection do
+          get :add_member_form
+          put '', action: :update
+          put :remove_member
         end
       end
     end

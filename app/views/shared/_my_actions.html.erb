@@ -4,7 +4,8 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
-    <li><%= link_to 'My Works', main_app.catalog_index_path(:'f[generic_type_sim][]' => 'Work', works: 'mine'), class: 'my-works',       role: 'menuitem' %></li>
+    <li><%= link_to 'My Works', search_path_for_my_works, class: 'my-works',       role: 'menuitem' %></li>
+    <li><%= link_to 'My Collections', search_path_for_my_collections, class: 'my-collections',       role: 'menuitem' %></li>
     <li class="divider"></li>
     <li><%= link_to 'Log Out', main_app.destroy_user_session_path, class: 'log-out', role: 'menuitem' %></li>
   </ul>

@@ -8,9 +8,11 @@ EngineCart.load_application!
 
 require 'rspec/rails'
 require 'rspec/autorun'
-# require 'capybara/poltergeist'
-# Capybara.javascript_driver = :poltergeist
-# Capybara.default_wait_time = 5
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
+require 'capybara/rspec'
+require 'capybara/rails'
 
 
 if ENV['COVERAGE']

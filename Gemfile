@@ -5,6 +5,7 @@ gemspec
 
 
 gem 'sufia-models', github: 'projecthydra/sufia'
+gem 'hydra-collections', path:'../hydra-collections'
 gem 'byebug' unless ENV['TRAVIS']
 
 # If we don't specify 2.11.0 we'll end up with sprockets 2.12.0 in the main
@@ -21,6 +22,8 @@ group :test do
   # Peg simplecov to < 0.8 until this is resolved:
   # https://github.com/colszowka/simplecov/issues/281
   gem 'simplecov', '~> 0.7.1', require: false
+  gem 'capybara'
+  gem 'poltergeist'
 end
 
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))

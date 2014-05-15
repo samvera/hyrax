@@ -3,7 +3,7 @@
 <% solr_doc = collection.inner_object.solr_doc %>
 <li id="document_<%= noid %>" class="search-result">
 
-  <%= render :partial => 'catalog/_index_partials/identifier_and_action', locals: { document: collection, counter: collection_counter, title_link_target: collection, edit_path: edit_collection_path(collection), solr_doc: solr_doc } %>
+  <%= render :partial => 'catalog/_index_partials/identifier_and_action', locals: { document: collection, counter: collection_counter, title_link_target: collections.collection_path(collection), edit_path: collections.edit_collection_path(collection), solr_doc: solr_doc } %>
 
   <div class="row">
 

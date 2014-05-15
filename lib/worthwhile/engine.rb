@@ -2,6 +2,7 @@
 require 'blacklight'
 require 'sufia/models'  
 require 'hydra-collections'
+require 'blacklight_advanced_search'
 
 module Worthwhile
   class Engine < ::Rails::Engine

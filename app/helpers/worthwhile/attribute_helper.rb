@@ -2,27 +2,29 @@ module Worthwhile
   module AttributeHelper
     # options[:include_empty]
     def curation_concern_attribute_to_html(curation_concern, method_name, label = nil, options = {})
-      markup = ""
-      label ||= derived_label_for(curation_concern, method_name)
-      subject = curation_concern.send(method_name)
-      return markup if !subject.present? && !options[:include_empty]
-      markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
-      [subject].flatten.compact.each do |value|
-        if method_name == :rights
-          # Special treatment for license/rights.  A URL from the Sufia gem's config/sufia.rb is stored in the descMetadata of the
-          # curation_concern.  If that URL is valid in form, then it is used as a link.  If it is not valid, it is used as plain text.
-          parsedUri = URI.parse(value) rescue nil
-          if parsedUri.nil?
-            markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
+      if curation_concern.respond_to?(method_name)
+        markup = ""
+        label ||= derived_label_for(curation_concern, method_name)
+        subject = curation_concern.send(method_name)
+        return markup if !subject.present? && !options[:include_empty]
+        markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
+        [subject].flatten.compact.each do |value|
+          if method_name == :rights
+            # Special treatment for license/rights.  A URL from the Sufia gem's config/sufia.rb is stored in the descMetadata of the
+            # curation_concern.  If that URL is valid in form, then it is used as a link.  If it is not valid, it is used as plain text.
+            parsedUri = URI.parse(value) rescue nil
+            if parsedUri.nil?
+              markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
+            else
+              markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(Sufia.config.cc_licenses_reverse[value])}</a></li>\n)
+            end
           else
-            markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(Sufia.config.cc_licenses_reverse[value])}</a></li>\n)
+            markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
           end
-        else
-          markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
         end
+        markup << %(</ul></td></tr>)
+        markup.html_safe
       end
-      markup << %(</ul></td></tr>)
-      markup.html_safe
     end
 
     def permission_badge_for(curation_concern, solr_document = nil)

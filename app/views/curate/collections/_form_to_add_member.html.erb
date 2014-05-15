@@ -1,0 +1,27 @@
+<% fieldset_class  ||= '' %>
+<% select_label_id ||= '' %>
+
+<%= form_tag collections.collections_path, method: :put do %>
+  <fieldset class="required <%= fieldset_class %>">
+    <%= hidden_field_tag 'collection[members]', 'add' %>
+    <%= hidden_field_tag 'batch_document_ids[]', collectible.pid %>
+
+    <div class="control-group collection_id">
+      <div class="controls">
+        <% options = "" %>
+        <% collections = available_collections(collectible) %>
+        <% if collections.any? -%>
+          <% options << '<optgroup label="Your Collections">'.html_safe %>
+          <% options << options_from_collection_for_select(collections, "pid", "title") %>
+          <% options << '</optgroup>'.html_safe %>
+        <% end %>
+        <%= select_tag :id, options, prompt: 'Make a Selection', class: 'input-xlarge', :'aria-labelledby' => select_label_id %>
+      </div>
+    </div>
+
+  </fieldset>
+  <div class="form-actions">
+    <%= submit_tag "Add It!", class: 'btn btn-primary' %>
+    <%= link_to 'never mind', root_path, class: 'btn btn-link', data: { dismiss: 'modal' } %>
+  </div>
+<% end %>

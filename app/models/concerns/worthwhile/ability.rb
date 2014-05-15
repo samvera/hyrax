@@ -27,7 +27,8 @@ module Worthwhile
     
     # Add this to your ability_logic if you want all logged in users to be able to submit content
     def everyone_can_create_curation_concerns
-      can :create, [Worthwhile.configuration.curation_concerns]  
+      can :create, [Worthwhile.configuration.curation_concerns]
+      can :create, Collection
     end
 
   end
