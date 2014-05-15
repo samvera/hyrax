@@ -20,7 +20,7 @@ module Sufia
                    t.path
                  end
                end
-        Sufia::GenericFile::Actions.virus_check(path)
+        Sufia::GenericFile::Actor.virus_check(path)
         true
       rescue Sufia::VirusFoundError => virus
         logger.warn(virus.message)

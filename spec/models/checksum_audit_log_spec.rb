@@ -5,7 +5,6 @@ describe ChecksumAuditLog do
     @f = GenericFile.new
     @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
     @f.apply_depositor_metadata('mjg36')
-    @f.stub(:characterize_if_changed).and_yield #don't run characterization
     @f.save!
     @version = @f.datastreams['content'].versions.first
     @old = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)

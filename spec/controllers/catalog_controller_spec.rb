@@ -6,7 +6,6 @@ describe CatalogController do
   let(:user) { @user }
 
   before do
-    GenericFile.any_instance.stub(:characterize_if_changed).and_yield
     sign_in user
   end
 

@@ -5,7 +5,6 @@ describe FeaturedWorkList do
   let(:file2) { FactoryGirl.create(:generic_file) }
 
   before do
-    GenericFile.any_instance.stub(:characterize_if_changed).and_yield
     FeaturedWork.create(generic_file_id: file1.noid)
     FeaturedWork.create(generic_file_id: file2.noid)
   end

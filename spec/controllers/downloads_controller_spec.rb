@@ -7,7 +7,6 @@ describe DownloadsController do
       @f = GenericFile.new(pid: 'sufia:test1')
       @f.apply_depositor_metadata('archivist1@example.com')
       @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      @f.should_receive(:characterize_if_changed).and_yield
       @f.save!
     end
 

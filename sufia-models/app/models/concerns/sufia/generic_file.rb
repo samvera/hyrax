@@ -23,7 +23,7 @@ module Sufia
     included do
       belongs_to :batch, property: :is_part_of
 
-      around_save :characterize_if_changed, :retry_warming
+      around_save :retry_warming
 
       attr_accessible *(terms_for_display + [:part_of, :permissions])
     end

@@ -111,7 +111,6 @@ describe BatchController do
   describe "#edit" do
     before do
       User.any_instance.stub(:display_name).and_return("Jill Z. User")
-      GenericFile.any_instance.stub(:characterize_if_changed).and_yield
       @b1 = Batch.new
       @b1.save
       @file = GenericFile.new(batch: @b1, label: 'f1')

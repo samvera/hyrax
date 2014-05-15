@@ -44,7 +44,7 @@ describe GenericFilesController do
 
     it "displays a flash error when file has a virus" do
       file = fixture_file_upload('/world.png', 'image/png')
-      Sufia::GenericFile::Actions.should_receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      Sufia::GenericFile::Actor.should_receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
       flash[:error].should_not be_blank
       flash[:error].should include('A virus was found')
@@ -386,7 +386,7 @@ describe GenericFilesController do
         end
       end
       before do
-        GenericFile.any_instance.stub(:characterize_if_changed).and_yield
+        allow_any_instance_of(Sufia::GenericFile::Actor).to receive(:push_characterize_job)
         sign_in user
       end
 
@@ -401,6 +401,8 @@ describe GenericFilesController do
         # other user uploads new version
         # TODO this should be a separate test
         allow(controller).to receive(:current_user).and_return(archivist)
+        # reset controller:
+        controller.instance_variable_set(:@actor, nil)
 
         expect(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').never
 
@@ -423,6 +425,9 @@ describe GenericFilesController do
         s1 = double('one')
         allow(ContentRestoredVersionEventJob).to receive(:new).with(generic_file.pid, user.user_key, 'content.0').and_return(s1)
         expect(Sufia.queue).to receive(:push).with(s1).once
+
+        # reset controller:
+        controller.instance_variable_set(:@actor, nil)
 
         post :update, id: generic_file, revision: 'content.0'
 
@@ -461,7 +466,7 @@ describe GenericFilesController do
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       file = fixture_file_upload('/world.png', 'image/png')
-      expect(Sufia::GenericFile::Actions).to receive(:virus_check).and_return(0)
+      expect(Sufia::GenericFile::Actor).to receive(:virus_check).and_return(0)
       expect(Sufia.queue).to receive(:push).with(s2).once
       post :update, id: generic_file.pid, filedata: file, 'Filename' => 'The world', generic_file: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
     end
@@ -490,9 +495,9 @@ describe GenericFilesController do
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       # grant public read access explicitly
       f.read_groups = ['public']
-      f.should_receive(:characterize_if_changed).and_yield
       f.save
       @file = f
+      allow_any_instance_of(Sufia::GenericFile::Actor).to receive(:push_characterize_job)
     end
     after do
       GenericFile.find('sufia:test5').destroy

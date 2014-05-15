@@ -21,7 +21,6 @@ describe HomepageController do
 
     let(:user) { FactoryGirl.find_or_create(:jill) }
     before do
-      allow_any_instance_of(GenericFile).to receive(:characterize_if_changed).and_yield
       sign_in user
     end
 

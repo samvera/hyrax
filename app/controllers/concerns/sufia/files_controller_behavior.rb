@@ -137,28 +137,27 @@ module Sufia
 
     protected
 
+    def actor
+      @actor ||= Sufia::GenericFile::Actor.new(@generic_file, current_user)
+    end
+
     def update_version
-      Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
-      return false unless @generic_file.save
-      Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
-      @generic_file.record_version_committer(current_user)
+      if actor.revert_content(params[:revision], datastream_id)
+        Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
+      end
     end
 
     def update_file
-      Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
-      return false unless @generic_file.save
-      Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
-      @generic_file.record_version_committer(current_user)
+      if actor.update_content(params[:filedata], datastream_id)
+        Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
+      end
     end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      @generic_file.attributes = @generic_file.sanitize_attributes(params[:generic_file])
-      @generic_file.visibility = params[:visibility]
-      @generic_file.date_modified = DateTime.now
-      return false unless @generic_file.save
-      Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
-      @generic_file.record_version_committer(current_user)
+      if actor.update_metadata(params[:generic_file], params[:visibility])
+        Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
+      end
     end
 
     def json_error(error, name=nil, additional_arguments={})
@@ -173,8 +172,8 @@ module Sufia
 
     def process_file(file)
       update_metadata_from_upload_screen
-      create_metadata(@generic_file)
-      if Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
+      actor.create_metadata(params[:batch_id])
+      if actor.create_content(file, file.original_filename, datastream_id)
         respond_to do |format|
           format.html {
             render json: [@generic_file.to_jq_upload],
@@ -215,11 +214,6 @@ module Sufia
     def update_metadata_from_upload_screen
       # Relative path is set by the jquery uploader when uploading a directory
       @generic_file.relative_path = params[:relative_path] if params[:relative_path]
-    end
-
-    def create_metadata(file)
-      Sufia::GenericFile::Actions.create_metadata(file, current_user,
-        params[:batch_id])
     end
   end
 end
