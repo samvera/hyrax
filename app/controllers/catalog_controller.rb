@@ -14,13 +14,13 @@ class CatalogController < ApplicationController
   
 
   # These before_filters apply the hydra access controls
-  before_filter :enforce_show_permissions, :only=>:show
+  before_filter :enforce_show_permissions, only: :show
   # This applies appropriate access controls to all solr queries
-  # CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
   # This filters out objects that you want to exclude from search results, like FileAssets
-  # CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
-  # CatalogController.solr_search_params_logic += [:show_only_works]
+  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
+  CatalogController.solr_search_params_logic += [:show_only_works]
 
   skip_before_filter :default_html_head
   
@@ -374,9 +374,11 @@ class CatalogController < ApplicationController
     # This is included as part of blacklight search solr params logic
     def show_only_works(solr_parameters, user_parameters)
       if params.has_key?(:f) and params[:f].to_a.flatten == ["generic_type_sim","Work"]
-        solr_parameters[:fq] ||= []
-        solr_parameters[:fq] << "-has_model_ssim:\"info:fedora/afmodel:Collection\""
-        solr_parameters[:fq] << "-has_model_ssim:\"info:fedora/afmodel:Person\""
+        solr_parameters[:fq] = []  #overwrite default facets
+        clauses = Worthwhile.configuration.registered_curation_concern_types.map(&:constantize).map do |klass|
+          ActiveFedora::SolrService.construct_query_for_rel(has_model: klass.to_class_uri)
+        end
+        solr_parameters[:fq] << '(' + clauses.join(' OR ') + ')'
       end
     end
 
