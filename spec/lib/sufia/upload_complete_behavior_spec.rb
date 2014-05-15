@@ -22,7 +22,7 @@ describe Sufia::FilesController::UploadCompleteBehavior do
       UploadThing.upload_complete_path(test_id).should == Sufia::Engine.routes.url_helpers.batch_edit_path(test_id)
     end
     it "respond with the dashboard path" do
-      UploadThing.destroy_complete_path({}).should ==   Sufia::Engine.routes.url_helpers.dashboard_index_path
+      UploadThing.destroy_complete_path({}).should ==   Sufia::Engine.routes.url_helpers.dashboard_files_path
     end
   end
   context "overriden path" do

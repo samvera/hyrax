@@ -40,7 +40,7 @@ module Sufia
     end
 
     def after_update
-      redirect_to sufia.dashboard_index_path unless request.xhr?
+      redirect_to sufia.dashboard_files_path unless request.xhr?
     end
 
     def update_document(obj)
