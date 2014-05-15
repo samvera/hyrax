@@ -3,9 +3,7 @@ module Worthwhile
     module GenericWorkActor 
       extend ActiveSupport::Concern
       
-      included do
-        include Worthwhile::CurationConcern::BaseActor
-      end
+      include Worthwhile::CurationConcern::BaseActor
       
       def create
         assign_pid && super && attach_files && create_linked_resources && assign_representative
@@ -40,7 +38,7 @@ module Worthwhile
       # to new collections, but not remove from old collections.
       # This method ensures it's removed from the old collections.
       def add_to_collections(new_collection_ids)
-        return true if new_collection_ids.nil?
+        return true unless new_collection_ids
         #remove from old collections
         (curation_concern.collection_ids - new_collection_ids).each do |old_id|
           Collection.find(old_id).members.delete(curation_concern)
@@ -62,16 +60,14 @@ module Worthwhile
       end
 
       def create_linked_resource(link_resource_url)
-        return true if ! link_resource_url.present?
+        return true unless link_resource_url.present?
         resource = LinkedResource.new.tap do |link|
           link.url = link_resource_url
           link.batch = curation_concern
           link.label = curation_concern.human_readable_type
         end
         Sufia::GenericFile::Actions.create_metadata(resource, user, curation_concern.pid)
-        true
-      rescue ActiveFedora::RecordInvalid
-        false
+        resource.save
       end
 
       def assign_representative

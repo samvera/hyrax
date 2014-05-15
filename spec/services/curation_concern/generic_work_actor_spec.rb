@@ -85,7 +85,6 @@ describe CurationConcern::GenericWorkActor do
         }
 
         it 'should stamp each link with the access rights' do
-          pending "Need to decide what to do with linked resources.  See https://github.com/curationexperts/absolute/issues/65 and https://github.com/curationexperts/worthwhile/tree/curate_linked_resources"
           subject.create.should be_true
           expect(curation_concern).to be_persisted
           curation_concern.date_uploaded.should == Date.today
@@ -93,7 +92,7 @@ describe CurationConcern::GenericWorkActor do
           curation_concern.depositor.should == user.user_key
 
           curation_concern.generic_files.count.should == 0
-          # curation_concern.linked_resources.count.should == 2
+          curation_concern.linked_resources.count.should == 2
           # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
           link = curation_concern.linked_resources.first
           expect(link.url).to eq 'http://www.youtube.com/watch?v=oHg5SJYRHA0'
