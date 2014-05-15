@@ -63,8 +63,7 @@ module Worthwhile
     def update
 
       if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
-        revision = @generic_file.content.get_version(params[:revision])
-        @generic_file.add_file(revision.content, datastream_id, revision.label)
+        Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
       elsif params.has_key?(:filedata)
         Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
         Sufia.queue.push(CharacterizeJob.new(@generic_file.pid)) # TODO put this in the Actions.update_content

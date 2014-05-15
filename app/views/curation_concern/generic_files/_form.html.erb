@@ -15,8 +15,9 @@
           Attach Your File
           <small>A PDF copy is preferred.</small>
         </legend>
-          <input type="file" name="files[]" multiple />
-          <%#= f.input :file, as: :file, label: 'Upload a file' %>
+          
+          <%= label_tag 'files[]', 'Upload a file' %>
+          <%= file_field_tag "files[]" %>
       </fieldset>
     </div>
 

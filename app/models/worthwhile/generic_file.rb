@@ -7,7 +7,6 @@ module Worthwhile
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::Audit
     include Sufia::GenericFile::MimeTypes
-    include Sufia::GenericFile::Thumbnail
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::WebForm
