@@ -1048,4 +1048,17 @@ describe GenericFile do
      expect(f2.to_solr[title_key]).to eq(f2.title)
     end
   end
+
+  describe "public?" do
+    it "is true when read group is set to public" do
+      subject.read_groups = ['public']
+      expect(subject.public?).to be_true
+    end
+
+    it "is false when read group is not set to public" do
+      subject.read_groups = ['foo']
+      expect(subject.public?).to be_false
+    end
+
+  end
 end
