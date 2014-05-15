@@ -62,18 +62,15 @@ module Worthwhile
     # routed to /files/:id (PUT)
     def update
 
-      if params.has_key?(:revision) and params[:revision] !=  @generic_file.content.latest_version.versionID
-        Sufia::GenericFile::Actions.revert_content(@generic_file, params[:revision], datastream_id, current_user)
-      elsif params.has_key?(:filedata)
-        Sufia::GenericFile::Actions.update_content(@generic_file, params[:filedata], datastream_id, current_user)
-        Sufia.queue.push(CharacterizeJob.new(@generic_file.pid)) # TODO put this in the Actions.update_content
-      else
-        # only update metadata if there is a generic_file object which is not the case for version updates
-        update_metadata if params[:generic_file]
+      success = if wants_to_revert?
+        actor.revert_content(params[:revision], datastream_id)
+      elsif params.has_key? :filedata
+        actor.update_content(params[:filedata], datastream_id)
+      elsif params.has_key? :generic_file
+        actor.update_metadata(params[:generic_file], params[:visibility])
       end
 
-      if @generic_file.save
-        @generic_file.record_version_committer(current_user)
+      if success 
         redirect_to [:curation_concern, @generic_file], notice:
           "The file #{view_context.link_to(@generic_file, [main_app, :curation_concern, @generic_file])} has been updated."
       else
@@ -86,6 +83,14 @@ module Worthwhile
     end
 
     protected
+
+    def wants_to_revert?
+      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+    end
+
+    def actor
+      @actor ||= Sufia::GenericFile::Actor.new(@generic_file, current_user)
+    end
 
     def json_error(error, name=nil, additional_arguments={})
       args = {:error => error}
@@ -104,9 +109,8 @@ module Worthwhile
 
     def process_file(file)
       update_metadata_from_upload_screen
-      create_metadata(@generic_file)
-      if Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
-        Sufia.queue.push(CharacterizeJob.new(@generic_file.pid)) # TODO put this in the Actions.create_content
+      actor.create_metadata(params[:parent_id])
+      if actor.create_content(file, file.original_filename, datastream_id)
         respond_to do |format|
           format.html {
             if request.xhr?
@@ -137,15 +141,5 @@ module Worthwhile
       @generic_file.relative_path = params[:relative_path] if params[:relative_path]
     end
 
-    # this is provided so that implementing application can override this behavior and map params to different attributes
-    def update_metadata
-      @generic_file.attributes = @generic_file.sanitize_attributes(params[:generic_file])
-      @generic_file.visibility = params[:visibility]
-      @generic_file.date_modified = DateTime.now
-    end
-
-    def create_metadata(file)
-      Sufia::GenericFile::Actions.create_metadata(file, current_user, params[:parent_id])
-    end
   end
 end

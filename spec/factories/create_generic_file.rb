@@ -13,21 +13,16 @@ def FactoryGirl.create_generic_file(container_factory_name_or_object, user, file
   generic_file.visibility ||= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
 
 
-  Sufia::GenericFile::Actions.create_metadata(generic_file, user, curation_concern.pid) do |gf|
-    gf.batch = curation_concern
+  actor = Sufia::GenericFile::Actor.new(generic_file, user)
+  actor.create_metadata(curation_concern.pid) do |gf|
+    gf.batch = curation_concern # I'm fairly certain we can remove this line
     gf.visibility = (generic_file.visibility)
   end
 
   if file
     file ||= Rack::Test::UploadedFile.new(__FILE__, 'text/plain', false)
     generic_file.file ||= file
-    Sufia::GenericFile::Actions.create_content(
-      generic_file,
-      file,
-      file.original_filename,
-      'content',
-      user
-    )
+    actor.create_content( file, file.original_filename, 'content')
   end
   return generic_file
 end

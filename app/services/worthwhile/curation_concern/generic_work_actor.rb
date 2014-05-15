@@ -66,7 +66,7 @@ module Worthwhile
           link.batch = curation_concern
           link.label = curation_concern.human_readable_type
         end
-        Sufia::GenericFile::Actions.create_metadata(resource, user, curation_concern.pid)
+        Sufia::GenericFile::Actor.new(resource, user).create_metadata(curation_concern.pid)
         resource.save
       end
 
@@ -80,9 +80,7 @@ module Worthwhile
         generic_file = Worthwhile::GenericFile.new
         generic_file.file = file
         generic_file.batch = curation_concern
-        Sufia::GenericFile::Actions.create_metadata(
-          generic_file, user, curation_concern.pid
-        )
+        Sufia::GenericFile::Actor.new(generic_file, user).create_metadata(curation_concern.pid)
         generic_file.embargo_release_date = curation_concern.embargo_release_date
         generic_file.visibility = visibility
         CurationConcern.attach_file(generic_file, user, file)

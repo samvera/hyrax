@@ -14,9 +14,6 @@ describe CurationConcern::GenericFilesController do
         allow(Worthwhile::GenericFile).to receive(:new).and_return(Worthwhile::GenericFile.new(pid: 'test:123'))
       end
 
-      #allow(Sufia.queue).to receive(:push) # don't run characterization or event jobs
-      
-
       context "on the happy path" do
         let(:date_today) { Date.today }
 
@@ -24,7 +21,7 @@ describe CurationConcern::GenericFilesController do
           allow(Date).to receive(:today).and_return(date_today)
         end
 
-        it "should spawn a CharacterizeJob" do
+        it "spawns a CharacterizeJob" do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with('test:123').and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once

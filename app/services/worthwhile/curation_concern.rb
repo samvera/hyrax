@@ -14,17 +14,7 @@ module Worthwhile
     end
     
     def attach_file(generic_file, user, file_to_attach)
-      Sufia::GenericFile::Actions.create_content(
-        generic_file,
-        file_to_attach,
-        file_to_attach.original_filename,
-        'content',
-        user
-      )
-      Sufia.queue.push(CharacterizeJob.new(generic_file.pid))
-      true
-    rescue ActiveFedora::RecordInvalid
-      false
+      Sufia::GenericFile::Actor.new(generic_file, user).create_content(file_to_attach, file_to_attach.original_filename, 'content')
     end
     
   end
