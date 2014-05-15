@@ -17,19 +17,16 @@ describe CurationConcern::LinkedResourcesController do
       sign_in(user)
       parent
       get :new, parent_id: parent.to_param
-      expect(response).to render_template(:new)
       response.should be_successful
+      expect(response).to render_template(:new)
     end
 
-    context "when user doesn't have access to the parent" do
-      before do
-        sign_in(another_user)
-        parent
-      end
-      it "shows the unauthorized page" do
-        get :new, parent_id: parent.to_param
-        expect(response.code).to eq '401'
-      end
+    it 'redirects if you cannot edit the parent' do
+      sign_in(another_user)
+      parent
+      get :new, parent_id: parent.to_param
+      expect(response.status).to eq 401
+      expect(response).to render_template(:unauthorized)
     end
   end
 
@@ -109,7 +106,7 @@ describe CurationConcern::LinkedResourcesController do
         expect(response.status).to eq(302)
         expect(response).to(
           redirect_to(
-            controller.polymorphic_path([:curation_concern, linked_resource])
+            controller.polymorphic_path([:curation_concern, linked_resource.batch])
           )
         )
       end

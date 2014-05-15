@@ -1,10 +1,11 @@
 class CurationConcern::LinkedResourcesController < ApplicationController
-  include Worthwhile::CurationConcernController
-  set_curation_concern_type Worthwhile::LinkedResource
 
   respond_to(:html)
 
+  load_and_authorize_resource class: Worthwhile::LinkedResource, instance_name: :curation_concern
   include Worthwhile::ParentContainer
+
+  # self.excluded_actions_for_curation_concern_authorization = [:new, :create]
 
   def new
     respond_with(curation_concern)
@@ -27,7 +28,7 @@ class CurationConcern::LinkedResourcesController < ApplicationController
 
   def update
     if actor.update
-      respond_with([:curation_concern, curation_concern])
+      respond_with([:curation_concern, curation_concern.batch])
     else
       respond_with([:curation_concern, curation_concern]) { |wants|
         wants.html { render 'edit', status: :unprocessable_entity }
@@ -46,5 +47,20 @@ class CurationConcern::LinkedResourcesController < ApplicationController
     add_breadcrumb "#{parent.human_readable_type}", polymorphic_path([:curation_concern, parent])
     super
   end
+
+  attr_writer :actor
+  def actor
+    @actor ||= Worthwhile::CurationConcern.actor(curation_concern, current_user, params[:linked_resource])
+  end
+
+  def curation_concern
+    @curation_concern
+  end
+
+  protected
+    def _prefixes
+      # This allows us to use the unauthorized template in curation_concern/base
+      @_prefixes ||= super + ['curation_concern/base']
+    end
 
 end
