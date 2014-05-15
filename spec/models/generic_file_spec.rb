@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe GenericFile do
+
+  subject { GenericFile.new }
+
   before do
     subject.apply_depositor_metadata('jcoyne')
-    @file = subject #TODO remove this line someday (use subject instead)
-
   end
 
   describe '#to_s' do
@@ -27,7 +28,7 @@ describe GenericFile do
   end
 
   describe "mime type recognition" do
-    describe "image?" do
+    context "when image?" do
       it "should be true for jpeg2000" do
         subject.mime_type = 'image/jp2'
         subject.should be_image
@@ -41,13 +42,13 @@ describe GenericFile do
         subject.should be_image
       end
     end
-    describe "pdf?" do
+    context "when pdf?" do
       it "should be true for pdf" do
         subject.mime_type = 'application/pdf'
         subject.should be_pdf
       end
     end
-    describe "audio?" do
+    context "when audio?" do
       it "should be true for wav" do
         subject.mime_type = 'audio/x-wave'
         subject.should be_audio
@@ -65,7 +66,7 @@ describe GenericFile do
         subject.should be_audio
       end
     end
-    describe "video?" do
+    context "when video?" do
       it "should be true for avi" do
         subject.mime_type = 'video/avi'
         subject.should be_video
@@ -179,41 +180,41 @@ describe GenericFile do
   end
   describe "delegations" do
     it "should delegate methods to properties metadata" do
-      @file.should respond_to(:relative_path)
-      @file.should respond_to(:depositor)
+      subject.should respond_to(:relative_path)
+      subject.should respond_to(:depositor)
     end
     it "should delegate methods to descriptive metadata" do
-      @file.should respond_to(:related_url)
-      @file.should respond_to(:based_near)
-      @file.should respond_to(:part_of)
-      @file.should respond_to(:contributor)
-      @file.should respond_to(:creator)
-      @file.should respond_to(:title)
-      @file.should respond_to(:description)
-      @file.should respond_to(:publisher)
-      @file.should respond_to(:date_created)
-      @file.should respond_to(:date_uploaded)
-      @file.should respond_to(:date_modified)
-      @file.should respond_to(:subject)
-      @file.should respond_to(:language)
-      @file.should respond_to(:rights)
-      @file.should respond_to(:resource_type)
-      @file.should respond_to(:identifier)
+      subject.should respond_to(:related_url)
+      subject.should respond_to(:based_near)
+      subject.should respond_to(:part_of)
+      subject.should respond_to(:contributor)
+      subject.should respond_to(:creator)
+      subject.should respond_to(:title)
+      subject.should respond_to(:description)
+      subject.should respond_to(:publisher)
+      subject.should respond_to(:date_created)
+      subject.should respond_to(:date_uploaded)
+      subject.should respond_to(:date_modified)
+      subject.should respond_to(:subject)
+      subject.should respond_to(:language)
+      subject.should respond_to(:rights)
+      subject.should respond_to(:resource_type)
+      subject.should respond_to(:identifier)
     end
     it "should delegate methods to characterization metadata" do
-      @file.should respond_to(:format_label)
-      @file.should respond_to(:mime_type)
-      @file.should respond_to(:file_size)
-      @file.should respond_to(:last_modified)
-      @file.should respond_to(:filename)
-      @file.should respond_to(:original_checksum)
-      @file.should respond_to(:well_formed)
-      @file.should respond_to(:file_title)
-      @file.should respond_to(:file_author)
-      @file.should respond_to(:page_count)
+      subject.should respond_to(:format_label)
+      subject.should respond_to(:mime_type)
+      subject.should respond_to(:file_size)
+      subject.should respond_to(:last_modified)
+      subject.should respond_to(:filename)
+      subject.should respond_to(:original_checksum)
+      subject.should respond_to(:well_formed)
+      subject.should respond_to(:file_title)
+      subject.should respond_to(:file_author)
+      subject.should respond_to(:page_count)
     end
     it "should redefine to_param to make redis keys more recognizable" do
-      @file.to_param.should == @file.noid
+      subject.to_param.should == subject.noid
     end
     describe "that have been saved" do
       # This file has no content, so it doesn't characterize
@@ -221,69 +222,69 @@ describe GenericFile do
       #   Sufia.queue.should_receive(:push).once
       # end
       after(:each) do
-        unless @file.inner_object.class == ActiveFedora::UnsavedDigitalObject
+        unless subject.inner_object.class == ActiveFedora::UnsavedDigitalObject
           begin
-            @file.delete
+            subject.delete
           rescue ActiveFedora::ObjectNotFoundError
             # do nothing
           end
         end
       end
       it "should have activity stream-related methods defined" do
-        @file.save
-        f = @file.reload
+        subject.save
+        f = subject.reload
         f.should respond_to(:stream)
         f.should respond_to(:events)
         f.should respond_to(:create_event)
         f.should respond_to(:log_event)
       end
       it "should be able to set values via delegated methods" do
-        @file.related_url = "http://example.org/"
-        @file.creator = "John Doe"
-        @file.title = "New work"
-        @file.save
-        f = @file.reload
+        subject.related_url = "http://example.org/"
+        subject.creator = "John Doe"
+        subject.title = "New work"
+        subject.save
+        f = subject.reload
         f.related_url.should == ["http://example.org/"]
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
       end
       it "should be able to be added to w/o unexpected graph behavior" do
-        @file.creator = "John Doe"
-        @file.title = "New work"
-        @file.save
-        f = @file.reload
+        subject.creator = "John Doe"
+        subject.title = "New work"
+        subject.save
+        f = subject.reload
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
         f.creator = "Jane Doe"
         f.title << "Newer work"
         f.save
-        f = @file.reload
+        f = subject.reload
         f.creator.should == ["Jane Doe"]
         f.title.should == ["New work", "Newer work"]
       end
     end
   end
-  it "should support to_solr" do
-    @file.stub(:pid).and_return('stubbed_pid')
-    @file.part_of = "Arabiana"
-    @file.contributor = "Mohammad"
-    @file.creator = "Allah"
-    @file.title = "The Work"
-    @file.description = "The work by Allah"
-    @file.publisher = "Vertigo Comics"
-    @file.date_created = "1200-01-01"
-    @file.date_uploaded = Date.parse("2011-01-01")
-    @file.date_modified = Date.parse("2012-01-01")
-    @file.subject = "Theology"
-    @file.language = "Arabic"
-    @file.rights = "Wide open, buddy."
-    @file.resource_type = "Book"
-    @file.identifier = "urn:isbn:1234567890"
-    @file.based_near = "Medina, Saudi Arabia"
-    @file.related_url = "http://example.org/TheWork/"
-    @file.mime_type = "image/jpeg"
-    @file.format_label = "JPEG Image"
-    local = @file.to_solr
+  it "supports to_solr" do
+    allow(subject).to receive(:pid).and_return('stubbed_pid')
+    subject.part_of = "Arabiana"
+    subject.contributor = "Mohammad"
+    subject.creator = "Allah"
+    subject.title = "The Work"
+    subject.description = "The work by Allah"
+    subject.publisher = "Vertigo Comics"
+    subject.date_created = "1200-01-01"
+    subject.date_uploaded = Date.parse("2011-01-01")
+    subject.date_modified = Date.parse("2012-01-01")
+    subject.subject = "Theology"
+    subject.language = "Arabic"
+    subject.rights = "Wide open, buddy."
+    subject.resource_type = "Book"
+    subject.identifier = "urn:isbn:1234567890"
+    subject.based_near = "Medina, Saudi Arabia"
+    subject.related_url = "http://example.org/TheWork/"
+    subject.mime_type = "image/jpeg"
+    subject.format_label = "JPEG Image"
+    local = subject.to_solr
     local.should_not be_nil
     local[Solrizer.solr_name("desc_metadata__part_of")].should be_nil
     local[Solrizer.solr_name("desc_metadata__date_uploaded")].should be_nil
@@ -308,13 +309,13 @@ describe GenericFile do
     local["noid_tsi"].should eq('stubbed_pid')
   end
   it "should support multi-valued fields in solr" do
-    @file.tag = ["tag1", "tag2"]
-    lambda { @file.save }.should_not raise_error
-    @file.delete
+    subject.tag = ["tag1", "tag2"]
+    lambda { subject.save }.should_not raise_error
+    subject.delete
   end
   it "should support setting and getting the relative_path value" do
-    @file.relative_path = "documents/research/NSF/2010"
-    @file.relative_path.should == "documents/research/NSF/2010"
+    subject.relative_path = "documents/research/NSF/2010"
+    subject.relative_path.should == "documents/research/NSF/2010"
   end
   describe "create_thumbnail" do
     before do
@@ -439,13 +440,15 @@ describe GenericFile do
   end
 
   describe "save" do
-    after(:each) do
-      @file.delete
+    after do
+      subject.destroy
     end
     it "should schedule a characterization job" do
-      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      Sufia.queue.should_receive(:push).once
-      @file.save
+      subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      s1 = double('one')
+      allow(CharacterizeJob).to receive(:new).and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
+      subject.save
     end
   end
   describe "related_files" do
@@ -507,23 +510,23 @@ describe GenericFile do
   end
   describe "characterize" do
     it "should return expected results when called", :unless => $in_travis do
-      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       # Without the stub(:save), the after save callback was being triggered
       # which resulted the characterize_if_changed method being called; which
       # enqueued a job for characterizing
-      @file.stub(:save)
-      @file.characterize
-      doc = Nokogiri::XML.parse(@file.characterization.content)
+      subject.stub(:save)
+      subject.characterize
+      doc = Nokogiri::XML.parse(subject.characterization.content)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
-    it "should not be triggered unless the content ds is changed" do
-      Sufia.queue.should_receive(:push).once
-      @file.content.content = "hey"
-      @file.save
-      @file.related_url = 'http://example.com'
-      Sufia.queue.should_receive(:push).never
-      @file.save
-      @file.delete
+    it "is not triggered unless the content datastream is changed" do
+      expect(Sufia.queue).to receive(:push).once
+      subject.content.content = "hey"
+      subject.save
+      subject.related_url = 'http://example.com'
+      expect(Sufia.queue).to receive(:push).never
+      subject.save
+      subject.destroy
     end
     describe "after job runs" do
       before(:all) do
@@ -565,8 +568,8 @@ describe GenericFile do
   end
   describe "label" do
     it "should set the inner label" do
-      @file.label = "My New Label"
-      @file.inner_object.label.should == "My New Label"
+      subject.label = "My New Label"
+      subject.inner_object.label.should == "My New Label"
     end
   end
   context "with rightsMetadata" do

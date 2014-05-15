@@ -4,11 +4,15 @@ class ActiveFedoraPidBasedJob
   end
 
   attr_accessor :pid
+
   def initialize(pid)
     self.pid = pid
   end
+
   def object
-    @object ||= ActiveFedora::Base.find(pid, cast:true).tap{|f| f.reload_on_save = true}
+    @object ||= ActiveFedora::Base.find(pid, cast: true).tap do |f|
+      f.reload_on_save = true
+    end
   end
   alias_method :generic_file, :object
   alias_method :generic_file_id, :pid

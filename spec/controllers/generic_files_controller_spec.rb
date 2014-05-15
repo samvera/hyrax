@@ -29,17 +29,17 @@ describe GenericFilesController do
       JSON.parse(response.body).first['error'].should match(/no file for upload/i)
     end
 
-    it "should spawn a content deposit event job" do
+    it "spawns a content deposit event job" do
       file = fixture_file_upload('/world.png','image/png')
       s1 = double('one')
-      ContentDepositEventJob.should_receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      allow(ContentDepositEventJob).to receive(:new).with('test:123', 'jilluser@example.com').and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      CharacterizeJob.should_receive(:new).with('test:123').and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
-      xhr :post, :create, :files=>[file], :Filename=>"The world", :batch_id => "sample:batch_id", :permission=>{"group"=>{"public"=>"read"} }, :terms_of_service => '1'
-      flash[:error].should be_nil
+      allow(CharacterizeJob).to receive(:new).with('test:123').and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
+      xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: 'sample:batch_id', permission: {group: { public: 'read' } }, terms_of_service: '1'
+      expect(flash[:error]).to be_nil
     end
 
     it "displays a flash error when file has a virus" do
@@ -119,7 +119,7 @@ describe GenericFilesController do
       response.body.should include("Error occurred while creating generic file.")
     end
   end
-  
+
   describe "#create with browse-everything" do
     before do
       GenericFile.delete_all
@@ -131,11 +131,11 @@ describe GenericFilesController do
       lambda { post :create, selected_files: @json_from_browse_everything, :batch_id => "sample:batch_id"}.should change(GenericFile, :count).by(2)
       created_files = GenericFile.all
       ["https://dl.dropbox.com/fake/Getting%20Started.pdf", "https://dl.dropbox.com/fake/filepicker-demo.txt.txt"].each do |url|
-        created_files.map {|f| f.import_url}.should include(url)  
+        created_files.map {|f| f.import_url}.should include(url)
       end
-    end    
+    end
   end
-  
+
   describe "#create with local_file" do
     let (:mock_url) {"http://example.com"}
     before do
@@ -278,7 +278,7 @@ describe GenericFilesController do
         profile = double('profile')
         allow(profile).to receive(:pageview).and_return(mock_query)
         allow(Sufia::Analytics).to receive(:profile).and_return(profile)
-        
+
         download_query = double('query')
         allow(download_query).to receive(:for_file).and_return([
           OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:123456789", totalEvents: "3")
@@ -314,7 +314,7 @@ describe GenericFilesController do
       @generic_file.save
     end
     after do
-      @generic_file.delete
+      @generic_file.destroy
     end
 
     it "should spawn a content update event job" do
@@ -327,19 +327,20 @@ describe GenericFilesController do
       @user.delete
     end
 
-    it "should spawn a content new version event job" do
+    it "spawns a content new version event job" do
       s1 = double('one')
-      ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      allow(ContentNewVersionEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
+
       s2 = double('one')
-      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
+      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
 
-      file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
-      @user.delete
+      file = fixture_file_upload('/world.png', 'image/png')
+      post :update, id: @generic_file.pid, filedata: file, 'Filename' => 'The world', generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
+      @user.destroy
     end
 
     it "should change mime type when restoring a revision with a different mime type" do
@@ -372,7 +373,7 @@ describe GenericFilesController do
       @user.delete
     end
 
-    it "should record what user added a new version" do
+    it "records what user added a new version" do
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
 
@@ -381,49 +382,49 @@ describe GenericFilesController do
 
       posted_file = GenericFile.find(@generic_file.pid)
       version1 = posted_file.content.latest_version
-      posted_file.content.version_committer(version1).should == @user.user_key
+      expect(posted_file.content.version_committer(version1)).to eq(@user.user_key)
 
       # other user uploads new version
       # TODO this should be a separate test
       archivist = FactoryGirl.find_or_create(:archivist)
-      controller.stub(:current_user).and_return(archivist)
+      allow(controller).to receive(:current_user).and_return(archivist)
 
-      ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
+      expect(ContentUpdateEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
 
       s1 = double('one')
-      ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, archivist.user_key).and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      allow(ContentNewVersionEventJob).to receive(:new).with(@generic_file.pid, archivist.user_key).and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
-      file = fixture_file_upload('/image.jpg','image/jpg')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world"
+      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
+      file = fixture_file_upload('/image.jpg', 'image/jpg')
+      post :update, id: @generic_file.pid, filedata: file, 'Filename' => 'The world'
 
-      edited_file = GenericFile.find(@generic_file.pid)
+      edited_file = @generic_file.reload
       version2 = edited_file.content.latest_version
-      version2.versionID.should_not == version1.versionID
-      edited_file.content.version_committer(version2).should == archivist.user_key
+      expect(version2.versionID).not_to eq(version1.versionID)
+      expect(edited_file.content.version_committer(version2)).to eq(archivist.user_key)
 
       # original user restores his or her version
-      controller.stub(:current_user).and_return(@user)
+      allow(controller).to receive(:current_user).and_return(@user)
       sign_in @user
-      ContentUpdateEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
+      expect(ContentUpdateEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').never
       s1 = double('one')
-      ContentRestoredVersionEventJob.should_receive(:new).with(@generic_file.pid, @user.user_key, 'content.0').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      allow(ContentRestoredVersionEventJob).to receive(:new).with(@generic_file.pid, @user.user_key, 'content.0').and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
-      post :update, :id=>@generic_file.pid, :revision=>'content.0'
+      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
+      post :update, id: @generic_file.pid, revision: 'content.0'
 
-      restored_file = GenericFile.find(@generic_file.pid)
+      restored_file = @generic_file.reload
       version3 = restored_file.content.latest_version
-      version3.versionID.should_not == version2.versionID
-      version3.versionID.should_not == version1.versionID
-      restored_file.content.version_committer(version3).should == @user.user_key
-      @user.delete
+      expect(version3.versionID).not_to eq(version2.versionID)
+      expect(version3.versionID).not_to eq(version1.versionID)
+      expect(restored_file.content.version_committer(version3)).to eq(@user.user_key)
+      @user.destroy
     end
 
     it "should add a new groups and users" do
@@ -439,21 +440,21 @@ describe GenericFilesController do
 
       assigns[:generic_file].read_groups.should == ["group3"]
     end
-    it "should spawn a virus check" do
-      # The expectation is in the begin block
-      Sufia::GenericFile::Actions.should_receive(:virus_check).and_return(0)
+
+    it "spawns a virus check" do
       s1 = double('one')
-      ContentNewVersionEventJob.should_receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      allow(ContentNewVersionEventJob).to receive(:new).with(@generic_file.pid, 'jilluser@example.com').and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      CharacterizeJob.should_receive(:new).with(@generic_file.pid).and_return(s2)
-      Sufia.queue.should_receive(:push).with(s2).once
-      GenericFile.stub(:save).and_return({})
+      allow(CharacterizeJob).to receive(:new).with(@generic_file.pid).and_return(s2)
+      allow(CreateDerivativesJob).to receive(:new).with(@generic_file.pid).and_return(s2)
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
-      file = fixture_file_upload('/world.png','image/png')
-      post :update, :id=>@generic_file.pid, :filedata=>file, :Filename=>"The world", :generic_file=>{:tag=>[''],  :permissions=>{:new_user_name=>{'archivist1'=>'edit'}}}
+      file = fixture_file_upload('/world.png', 'image/png')
+      expect(Sufia::GenericFile::Actions).to receive(:virus_check).and_return(0)
+      expect(Sufia.queue).to receive(:push).with(s2).once
+      post :update, id: @generic_file.pid, filedata: file, 'Filename' => 'The world', generic_file: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
     end
 
     it "should go back to edit on an error" do

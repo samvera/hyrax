@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'generic_files/show.html.erb' do
   describe 'analytics' do
     let(:generic_file) {
-      content = double('content', versions: [])
+      content = double('content', versions: [], mimeType: 'application/pdf')
       stub_model(GenericFile, noid: '123',
         depositor: 'bob',
         audit_stat: 1,

@@ -3,11 +3,11 @@ require 'spec_helper'
 describe 'generic_files/edit.html.erb' do
   describe 'when the file has two or more resource types' do
     let(:generic_file) {
-      content = double('content', versions: [])
+      content = double('content', versions: [], mimeType: 'application/pdf')
       stub_model(GenericFile, noid: '123',
-                                       depositor: 'bob',
-                                       resource_type: ['Book', 'Dataset'],
-                                       content: content)
+        depositor: 'bob',
+        resource_type: ['Book', 'Dataset'],
+        content: content)
     }
 
     before do
