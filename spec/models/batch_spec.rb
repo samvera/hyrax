@@ -3,8 +3,6 @@ require 'spec_helper'
 describe Batch do
   before(:all) do
     @user = FactoryGirl.find_or_create(:jill)
-    GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
     @file = GenericFile.new
     @file.apply_depositor_metadata('mjg36')
     @file.save
@@ -36,11 +34,7 @@ describe Batch do
     @batch.part.should == [@file.pid]
   end
   it "should be able to have more than one file" do
-    # not sure why this is needed here too, but when the test runs alone it is not needed but when run in the group it is needed
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
-    #logger.info "before create"
     gf = GenericFile.new
-    #logger.info "after create"
     gf.apply_depositor_metadata('mjg36')
     gf.save
     @batch.part << gf.pid

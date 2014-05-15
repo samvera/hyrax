@@ -21,7 +21,6 @@ describe CreateDerivativesJob do
     context 'with a video (.avi) file', unless: $in_travis do
       before do
         @generic_file.add_file(File.open(fixture_path + '/countdown.avi'), 'content', 'countdown.avi')
-        allow(@generic_file).to receive(:characterize_if_changed).and_yield
         allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('video/avi')
         @generic_file.save!
       end
@@ -41,7 +40,6 @@ describe CreateDerivativesJob do
     context 'with an audio (.wav) file', unless: $in_travis do
       before do
         @generic_file.add_file(File.open(fixture_path + '/piano_note.wav'), 'content', 'piano_note.wav')
-        allow(@generic_file).to receive(:characterize_if_changed).and_yield
         allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('audio/wav')
         @generic_file.save!
       end
@@ -60,7 +58,6 @@ describe CreateDerivativesJob do
     context 'with an image (.jp2) file' do
       before do
         @generic_file.add_file(File.open(fixture_path + '/image.jp2'), 'content', 'image.jp2')
-        allow(@generic_file).to receive(:characterize_if_changed).and_yield
         allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('image/jp2')
         @generic_file.save!
       end
@@ -80,7 +77,6 @@ describe CreateDerivativesJob do
     context 'with an office document (.docx) file', unless: $in_travis do
       before do
         @generic_file.add_file(File.open(fixture_path + '/charter.docx'), 'content', 'charter.docx')
-        allow(@generic_file).to receive(:characterize_if_changed).and_yield
         allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         @generic_file.save!
       end
@@ -102,7 +98,6 @@ describe CreateDerivativesJob do
     context 'with a video (.avi) file', unless: $in_travis do
       before do
         @generic_file.add_file(File.open(fixture_path + '/countdown.avi'), 'content', 'countdown.avi')
-        allow(@generic_file).to receive(:characterize_if_changed).and_yield
         allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('video/avi')
         @generic_file.save!
       end
@@ -125,7 +120,6 @@ describe CreateDerivativesJob do
     context 'with an audio (.wav) file', unless: $in_travis do
       before do
         @generic_file.add_file(File.open(fixture_path + '/piano_note.wav'), 'content', 'piano_note.wav')
-        allow(@generic_file).to receive(:characterize_if_changed).and_yield
         allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('audio/wav')
         @generic_file.save!
       end
@@ -149,7 +143,6 @@ describe CreateDerivativesJob do
       # Uncomment when this is no longer pending
       # before do
       #   @generic_file.add_file(File.open(fixture_path + '/sufia/sufia_test5.mp3'), 'content', 'sufia_test5.mp3')
-      #   allow(@generic_file).to receive(:characterize_if_changed).and_yield
       #   @generic_file.save!
       # end
 
@@ -171,7 +164,6 @@ describe CreateDerivativesJob do
       # Uncomment when this is no longer pending
       # before do
       #   @generic_file.add_file(File.open(fixture_path + '/Example.ogg'), 'content', 'Example.ogg')
-      #   allow(@generic_file).to receive(:characterize_if_changed).and_yield
       #   @generic_file.save!
       # end
 

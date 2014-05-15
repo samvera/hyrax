@@ -26,11 +26,11 @@ describe IngestLocalFileJob do
 
   describe "virus checking" do
     it "should run virus check" do
-      expect(Sufia::GenericFile::Actions).to receive(:virus_check).twice.and_return(0)
+      expect(Sufia::GenericFile::Actor).to receive(:virus_check).twice.and_return(0)
       job.run
     end
     it "should abort if virus check fails" do
-      Sufia::GenericFile::Actions.stub(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
       job.run
       expect(user.mailbox.inbox.first.subject).to eq("Local file ingest error")
     end

@@ -1,15 +1,11 @@
 require 'spec_helper'
 
 describe FileContentDatastream do
-  before do
-    Sufia.queue.stub(:push).with(an_instance_of CharacterizeJob) #don't run characterization
-  end
   describe "version control" do
     before do
       f = GenericFile.new
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       f.apply_depositor_metadata('mjg36')
-      f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save
       @file = f.reload
     end
@@ -34,7 +30,6 @@ describe FileContentDatastream do
     describe "add a version" do
       before do
         @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-        @file.stub(:characterize_if_changed).and_yield #don't run characterization
         @file.save
       end
       it "should return two versions" do
@@ -77,7 +72,6 @@ describe FileContentDatastream do
     before do
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata('mjg36')
-      @generic_file.stub(:characterize_if_changed).and_yield #don't run characterization
     end
     after do
       @generic_file.delete

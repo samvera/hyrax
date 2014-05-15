@@ -20,10 +20,6 @@ describe ImportUrlJob do
     end
   end
 
-  before do
-    allow(Sufia.queue).to receive(:push) # don't run characterization or event jobs
-  end
-
   after do
     generic_file.destroy
   end
@@ -34,20 +30,36 @@ describe ImportUrlJob do
     generic_file.content.size.should be_nil
   end
 
-  it "should create a content datastream" do
-    Net::HTTP.any_instance.should_receive(:request_get).with(file_path).and_yield(mock_response)
-    job.run
-    generic_file.reload.content.size.should == 4218
-  end
+  context "after running the job" do
+    before do
+      s1 = double('content deposit event')
+      allow(ContentDepositEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1).once
+      expect(Sufia.queue).to receive(:push).with(s1).once
 
-  describe "virus checking" do
-    it "should run virus check" do
-      expect(Sufia::GenericFile::Actions).to receive(:virus_check).and_return(false)
-      job.run
+      s2 = double('characterize')
+      allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
+
+      expect(Sufia::GenericFile::Actor).to receive(:virus_check).and_return(false)
     end
 
+    it "should create a content datastream" do
+      Net::HTTP.any_instance.should_receive(:request_get).with(file_path).and_yield(mock_response)
+      job.run
+      generic_file.reload.content.size.should == 4218
+    end
+  end
+
+  context "when the file has a virus" do
+    before do
+      s1 = double('content deposit event')
+      allow(ContentDepositEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').never
+
+      s2 = double('characterize')
+      allow(CharacterizeJob).to receive(:new).with(generic_file.id).never
+    end
     it "should abort if virus check fails" do
-      Sufia::GenericFile::Actions.stub(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
       job.run
       expect(user.mailbox.inbox.first.subject).to eq("File Import Error")
     end

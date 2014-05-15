@@ -320,7 +320,6 @@ describe GenericFile do
   describe "create_thumbnail" do
     before do
       @f = GenericFile.new
-      #@f.stub(:characterize_if_changed).and_yield #don't run characterization
       @f.apply_depositor_metadata('mjg36')
     end
     after do
@@ -344,7 +343,6 @@ describe GenericFile do
       u = FactoryGirl.create(:jill)
       @f = GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata(u)
-        gf.stub(:characterize_if_changed).and_yield #don't run characterization
         gf.save!
       end
       @t = Trophy.create(user_id: u.id, generic_file_id: @f.pid)
@@ -365,7 +363,6 @@ describe GenericFile do
       f = GenericFile.new
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       f.apply_depositor_metadata(u)
-      f.stub(:characterize_if_changed).and_yield #don't run characterization
       f.save!
       @f = f.reload
     end
@@ -412,7 +409,6 @@ describe GenericFile do
       @f = GenericFile.new
       @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @f.apply_depositor_metadata('mjg36')
-      @f.stub(:characterize_if_changed).and_yield #don't run characterization
       @f.save!
       @version = @f.datastreams['content'].versions.first
       @old = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)
@@ -439,18 +435,6 @@ describe GenericFile do
 
   end
 
-  describe "save" do
-    after do
-      subject.destroy
-    end
-    it "should schedule a characterization job" do
-      subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      s1 = double('one')
-      allow(CharacterizeJob).to receive(:new).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
-      subject.save
-    end
-  end
   describe "related_files" do
     let(:batch_id) { "foobar:100" }
     before(:each) do
@@ -488,7 +472,6 @@ describe GenericFile do
   end
   describe "noid integration" do
     before(:all) do
-      GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
       @new_file = GenericFile.new(pid: 'ns:123')
       @new_file.apply_depositor_metadata('mjg36')
       @new_file.save
@@ -511,29 +494,17 @@ describe GenericFile do
   describe "characterize" do
     it "should return expected results when called", unless: $in_travis do
       subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      # Without the stub(:save), the after save callback was being triggered
-      # which resulted the characterize_if_changed method being called; which
-      # enqueued a job for characterizing
-      subject.stub(:save)
       subject.characterize
       doc = Nokogiri::XML.parse(subject.characterization.content)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
-    it "is not triggered unless the content datastream is changed" do
-      expect(Sufia.queue).to receive(:push).once
-      subject.content.content = "hey"
-      subject.save
-      subject.related_url = 'http://example.com'
-      expect(Sufia.queue).to receive(:push).never
-      subject.save
-      subject.destroy
-    end
-    describe "after job runs" do
+    context "after characterization" do
       before(:all) do
         myfile = GenericFile.new
-        myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf'), 'content', 'sufia_test4.pdf')
+        myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, 'content', 'sufia_test4.pdf')
         myfile.label = 'label123'
         myfile.apply_depositor_metadata('mjg36')
+        myfile.characterize
         myfile.save
         @myfile = myfile.reload
       end
@@ -556,9 +527,7 @@ describe GenericFile do
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
         @myfile.filename[0].should == @myfile.label
       end
-      it "should include thumbnail generation in characterization job" do
-        @myfile.thumbnail.size.should_not be_nil
-      end
+
       it "should append each term only once" do
         @myfile.append_metadata
         @myfile.format_label.should == ["Portable Document Format"]
@@ -999,16 +968,13 @@ describe GenericFile do
     end
   end
   describe "file content validation" do
-    before do
-      allow(Sufia.queue).to receive(:push).with(an_instance_of CharacterizeJob) # don't run characterization
-    end
     context "when file contains a virus" do
       let(:f) { File.new(fixture_path + '/small_file.txt') }
       after(:each) do
         subject.destroy if subject.persisted?
       end
       it "populates the errors hash during validation" do
-        allow(Sufia::GenericFile::Actions).to receive(:virus_check).and_raise(Sufia::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
+        allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
         subject.add_file(f, 'content', 'small_file.txt')
         subject.save
         subject.should_not be_persisted
@@ -1017,7 +983,7 @@ describe GenericFile do
       it "does not save a new version of a GenericFile" do
         subject.add_file(f, 'content', 'small_file.txt')
         subject.save
-        allow(Sufia::GenericFile::Actions).to receive(:virus_check).and_raise(Sufia::VirusFoundError)
+        allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError)
         subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , 'content', 'sufia_generic_stub.txt')
         subject.save
         subject.reload.content.content.should == "small\n"
