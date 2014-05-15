@@ -41,7 +41,7 @@ describe BatchController do
     end
     it "should show flash messages" do
       post :update, id: @batch.pid, "generic_file" => {"read_groups_string" => "","read_users_string" => "archivist1, archivist2", "tag" => [""]}
-      response.should redirect_to @routes.url_helpers.dashboard_index_path
+      response.should redirect_to @routes.url_helpers.dashboard_files_path
       flash[:notice].should_not be_nil
       flash[:notice].should_not be_empty
       flash[:notice].should include("Your files are being processed")
@@ -52,7 +52,7 @@ describe BatchController do
         post :update, id: @batch.pid, "generic_file"=>{"permissions"=>{"group"=>{"public"=>"1", "registered"=>"2"}}}
         @file.reload.read_groups.should == []
         @file.reload.edit_groups.should == []
-        response.should redirect_to @routes.url_helpers.dashboard_index_path
+        response.should redirect_to @routes.url_helpers.dashboard_files_path
       end
 
       it "should set the users with read access" do
@@ -60,7 +60,7 @@ describe BatchController do
         file = GenericFile.find(@file.pid)
         file.read_users.should == ['archivist1', 'archivist2']
 
-        response.should redirect_to @routes.url_helpers.dashboard_index_path
+        response.should redirect_to @routes.url_helpers.dashboard_files_path
       end
       it "should set the groups with read access" do
         post :update, id: @batch.pid, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}

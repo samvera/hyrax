@@ -50,3 +50,7 @@ en:
       publisher: "The person or group making the file available. Generally this is the institution."
       rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. <em>This is a required field</em>."
     background_attribution: "Background image courtesy of Penn State University"
+    bread_crumb:
+      file_list: "Your File Listing"
+      previous:  "Back to Previous"
+      search_results: "Back to search results"
