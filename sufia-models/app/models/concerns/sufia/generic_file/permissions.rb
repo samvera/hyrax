@@ -34,6 +34,10 @@ module Sufia
         perms.map {|p| { name: p.name, access: p.access, type:p.type } }
       end
 
+      def public?
+        read_groups.include?('public')
+      end
+
       private
 
       def permission_hash
