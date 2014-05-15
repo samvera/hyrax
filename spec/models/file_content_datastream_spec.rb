@@ -51,22 +51,22 @@ describe FileContentDatastream do
   describe "extract_metadata" do
     before do
       @subject = FileContentDatastream.new(nil, 'content')
-      @subject.stub(:pid=>'my_pid')
-      @subject.stub(:dsVersionID=>'content.7')
+      @subject.stub(pid: 'my_pid')
+      @subject.stub(dsVersionID: 'content.7')
     end
-    it "should return an xml document", :unless => $in_travis do
+    it "should return an xml document", unless: $in_travis do
       f = File.new(fixture_path + '/world.png', 'rb')
       @subject.content = f.read
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
       doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
     end
-    it "should return expected results when invoked via HTTP", :unless => $in_travis do
-      f = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(fixture_path + '/world.png'),
-                                                 :filename => 'world.png')
+    it "should return expected results when invoked via HTTP", unless: $in_travis do
+      f = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(fixture_path + '/world.png'),
+                                                 filename: 'world.png')
       content = double("file")
-      content.stub(:read=>f.read)
-      content.stub(:rewind=>f.rewind)
+      content.stub(read: f.read)
+      content.stub(rewind: f.rewind)
       @subject.stub(:content).and_return(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)

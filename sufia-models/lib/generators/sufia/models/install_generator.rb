@@ -7,7 +7,7 @@ class Sufia::Models::InstallGenerator < Rails::Generators::Base
 
   source_root File.expand_path('../templates', __FILE__)
 
-  argument     :model_name, :type => :string , :default => "user"
+  argument     :model_name, type: :string , default: "user"
   desc """
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
@@ -117,5 +117,4 @@ This generator makes the following changes to your application:
       say_status("warning", e.message, :yellow)
     end
   end
-
 end

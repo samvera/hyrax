@@ -12,44 +12,44 @@
 <% end %>
 
 <h2>Contact Form</h2>
-<%= form_for(@contact_form, :url => sufia.contact_form_index_path, :html => {:class => 'form-horizontal well'}) do |f| %>
-  <%= f.text_field :contact_method, :class => 'hide' %>
+<%= form_for(@contact_form, url: sufia.contact_form_index_path, html: {class: 'form-horizontal well'}) do |f| %>
+  <%= f.text_field :contact_method, class: 'hide' %>
   <div class="control-group">
-    <%= f.label :category, 'Issue Type', :class => "control-label" %>
+    <%= f.label :category, 'Issue Type', class: "control-label" %>
     <div class="controls">
       <% issue_types = ContactForm::ISSUE_TYPES.dup %>
       <% issue_types.unshift(['Select an Issue Type', nil]) %>
-      <%= f.select 'category', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true } %>
+      <%= f.select 'category', options_for_select(issue_types), {}, {class: 'input-large', required: true } %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :name, 'Your Name', :class=>"control-label" %>
-    <div class="controls"><%= f.text_field :name, :class=>"input-xlarge", :value => nm, :required => true %>  </div>
+    <%= f.label :name, 'Your Name', class: "control-label" %>
+    <div class="controls"><%= f.text_field :name, class: "input-xlarge", value: nm, required: true %>  </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :email, 'Your Email', :class=>"control-label" %>
+    <%= f.label :email, 'Your Email', class: "control-label" %>
     <div class="controls">
-    <%= f.text_field :email, :class=>"input-xlarge", :value => em, :required => true %>
+    <%= f.text_field :email, class: "input-xlarge", value: em, required: true %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :subject, 'Subject', :class=>"control-label" %>
+    <%= f.label :subject, 'Subject', class: "control-label" %>
     <div class="controls">
-      <%= f.text_field :subject, :class=>"input-xlarge", :value=>"", :required => true %>
+      <%= f.text_field :subject, class: "input-xlarge", value: "", required: true %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :message, 'Message', :class=>"control-label" %>
+    <%= f.label :message, 'Message', class: "control-label" %>
     <div class="controls">
-    <%= f.text_area :message, :class=>"input-xlarge", :value=>"", :required => true %>
+    <%= f.text_area :message, class: "input-xlarge", value: "", required: true %>
     </div>
   </div>
 
   <div class="form-actions">
-    <%= f.submit :value => "Send", :class => "btn-primary btn-large"  %>
+    <%= f.submit value: "Send", class: "btn-primary btn-large"  %>
   </div>
 <% end %>

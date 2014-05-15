@@ -123,48 +123,48 @@ describe GenericFile do
       subject.read_groups=['group1', 'group2']
       subject.edit_users=['user1']
       subject.read_users=['user2', 'user3']
-      subject.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
-          {:type=>"group", :access=>"read", :name=>"group2"},
-          {:type=>"user", :access=>"read", :name=>"user2"},
-          {:type=>"user", :access=>"read", :name=>"user3"},
-          {:type=>"user", :access=>"edit", :name=>"user1"}]
+      subject.permissions.should == [{type: "group", access: "read", name: "group1"},
+          {type: "group", access: "read", name: "group2"},
+          {type: "user", access: "read", name: "user2"},
+          {type: "user", access: "read", name: "user3"},
+          {type: "user", access: "edit", name: "user1"}]
     end
     describe "updating permissions" do
       it "should create new group permissions" do
-        subject.permissions = {:new_group_name => {'group1'=>'read'}}
-        subject.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
-                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions = {new_group_name: {'group1'=>'read'}}
+        subject.permissions.should == [{type: "group", access: "read", name: "group1"},
+                                     {type: "user", access: "edit", name: "jcoyne"}]
       end
       it "should create new user permissions" do
-        subject.permissions = {:new_user_name => {'user1'=>'read'}}
-        subject.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
-                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions = {new_user_name: {'user1'=>'read'}}
+        subject.permissions.should == [{type: "user", access: "read", name: "user1"},
+                                     {type: "user", access: "edit", name: "jcoyne"}]
       end
       it "should not replace existing groups" do
-        subject.permissions = {:new_group_name=> {'group1' => 'read'}}
-        subject.permissions = {:new_group_name=> {'group2' => 'read'}}
-        subject.permissions.should == [{:type=>"group", :access=>"read", :name=>"group1"},
-                                     {:type=>"group", :access=>"read", :name=>"group2"},
-                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions = {new_group_name: {'group1' => 'read'}}
+        subject.permissions = {new_group_name: {'group2' => 'read'}}
+        subject.permissions.should == [{type: "group", access: "read", name: "group1"},
+                                     {type: "group", access: "read", name: "group2"},
+                                     {type: "user", access: "edit", name: "jcoyne"}]
       end
       it "should not replace existing users" do
-        subject.permissions = {:new_user_name=>{'user1'=>'read'}}
-        subject.permissions = {:new_user_name=>{'user2'=>'read'}}
-        subject.permissions.should == [{:type=>"user", :access=>"read", :name=>"user1"},
-                                     {:type=>"user", :access=>"read", :name=>"user2"},
-                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions = {new_user_name:{'user1'=>'read'}}
+        subject.permissions = {new_user_name:{'user2'=>'read'}}
+        subject.permissions.should == [{type: "user", access: "read", name: "user1"},
+                                     {type: "user", access: "read", name: "user2"},
+                                     {type: "user", access: "edit", name: "jcoyne"}]
       end
       it "should update permissions on existing users" do
-        subject.permissions = {:new_user_name=>{'user1'=>'read'}}
-        subject.permissions = {:user=>{'user1'=>'edit'}}
-        subject.permissions.should == [{:type=>"user", :access=>"edit", :name=>"user1"},
-                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions = {new_user_name:{'user1'=>'read'}}
+        subject.permissions = {user:{'user1'=>'edit'}}
+        subject.permissions.should == [{type: "user", access: "edit", name: "user1"},
+                                     {type: "user", access: "edit", name: "jcoyne"}]
       end
       it "should update permissions on existing groups" do
-        subject.permissions = {:new_group_name=>{'group1'=>'read'}}
-        subject.permissions = {:group=>{'group1'=>'edit'}}
-        subject.permissions.should == [{:type=>"group", :access=>"edit", :name=>"group1"},
-                                     {:type=>"user", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions = {new_group_name:{'group1'=>'read'}}
+        subject.permissions = {group:{'group1'=>'edit'}}
+        subject.permissions.should == [{type: "group", access: "edit", name: "group1"},
+                                     {type: "user", access: "edit", name: "jcoyne"}]
       end
     end
     it "should have a characterization datastream" do
@@ -326,9 +326,9 @@ describe GenericFile do
     after do
       @f.delete
     end
-    describe "with a video", :if => Sufia.config.enable_ffmpeg do
+    describe "with a video", if: Sufia.config.enable_ffmpeg do
       before do
-        @f.stub(:mime_type=>'video/quicktime')  #Would get set by the characterization job
+        @f.stub(mime_type: 'video/quicktime')  #Would get set by the characterization job
         @f.add_file(File.open("#{fixture_path}/countdown.avi", 'rb'), 'content', 'countdown.avi')
         @f.save
       end
@@ -392,12 +392,12 @@ describe GenericFile do
     end
     it "should log a failing audit" do
       @f.datastreams.each { |ds| ds.stub(:dsChecksumValid).and_return(false) }
-      GenericFile.stub(:run_audit).and_return(double(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
+      GenericFile.stub(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
       @f.audit!
       ChecksumAuditLog.all.all? { |cal| cal.pass == 0 }.should be_true
     end
     it "should log a passing audit" do
-      GenericFile.stub(:run_audit).and_return(double(:respose, :pass=>1, :created_at=>'2005-12-20', :pid=>'foo:123', :dsid=>'foo', :version=>'1'))
+      GenericFile.stub(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
       @f.audit!
       ChecksumAuditLog.all.all? { |cal| cal.pass == 1 }.should be_true
     end
@@ -415,8 +415,8 @@ describe GenericFile do
       @f.stub(:characterize_if_changed).and_yield #don't run characterization
       @f.save!
       @version = @f.datastreams['content'].versions.first
-      @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
-      @new = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>0)
+      @old = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)
+      @new = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 0)
     end
     it "should not prune failed audits" do
       @version.should_receive(:dsChecksumValid).and_return(true)
@@ -489,7 +489,7 @@ describe GenericFile do
   describe "noid integration" do
     before(:all) do
       GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
-      @new_file = GenericFile.new(:pid => 'ns:123')
+      @new_file = GenericFile.new(pid: 'ns:123')
       @new_file.apply_depositor_metadata('mjg36')
       @new_file.save
     end
@@ -509,7 +509,7 @@ describe GenericFile do
     end
   end
   describe "characterize" do
-    it "should return expected results when called", :unless => $in_travis do
+    it "should return expected results when called", unless: $in_travis do
       subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       # Without the stub(:save), the after save callback was being triggered
       # which resulted the characterize_if_changed method being called; which
@@ -639,7 +639,7 @@ describe GenericFile do
       RIGHTS
       end
       it "should work via permissions=()" do
-        @file.permissions = {:user => {'mjg36' => 'read'}}
+        @file.permissions = {user: {'mjg36' => 'read'}}
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
@@ -648,7 +648,7 @@ describe GenericFile do
       end
       it "should work via update_attributes" do
         # automatically triggers save
-        lambda { @file.update_attributes(:read_users_string => 'mjg36') }.should_not raise_error
+        lambda { @file.update_attributes(read_users_string: 'mjg36') }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
         @file.errors[:edit_users].should include('Depositor must have edit access')
@@ -663,7 +663,7 @@ describe GenericFile do
         @file.valid?.should be_false
       end
       it "should work via permissions()" do
-        @rightsmd.permissions({:person => "mjg36"}, "read")
+        @rightsmd.permissions({person: "mjg36"}, "read")
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_users)
@@ -739,7 +739,7 @@ describe GenericFile do
         RIGHTS
       end
       it "should work via permissions=()" do
-        @file.permissions = {:group => {'public' => 'edit'}}
+        @file.permissions = {group: {'public' => 'edit'}}
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
@@ -748,7 +748,7 @@ describe GenericFile do
       end
       it "should work via update_attributes" do
         # automatically triggers save
-        lambda { @file.update_attributes(:edit_groups_string => 'public') }.should_not raise_error
+        lambda { @file.update_attributes(edit_groups_string: 'public') }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Public cannot have edit access')
@@ -763,7 +763,7 @@ describe GenericFile do
         @file.valid?.should be_false
       end
       it "should work via permissions()" do
-        @rightsmd.permissions({:group => "public"}, "edit")
+        @rightsmd.permissions({group: "public"}, "edit")
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
@@ -839,7 +839,7 @@ describe GenericFile do
         RIGHTS
       end
       it "should work via permissions=()" do
-        @file.permissions = {:group => {'registered' => 'edit'}}
+        @file.permissions = {group: {'registered' => 'edit'}}
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
@@ -848,7 +848,7 @@ describe GenericFile do
       end
       it "should work via update_attributes" do
         # automatically triggers save
-        lambda { @file.update_attributes(:edit_groups_string => 'registered') }.should_not raise_error
+        lambda { @file.update_attributes(edit_groups_string: 'registered') }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
         @file.errors[:edit_groups].should include('Registered cannot have edit access')
@@ -863,7 +863,7 @@ describe GenericFile do
         @file.valid?.should be_false
       end
       it "should work via permissions()" do
-        @rightsmd.permissions({:group => "registered"}, "edit")
+        @rightsmd.permissions({group: "registered"}, "edit")
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_true
         @file.errors.should include(:edit_groups)
@@ -941,7 +941,7 @@ describe GenericFile do
       RIGHTS
       end
       it "should work via permissions=()" do
-        @file.permissions = {:group => {'registered' => 'read'}}
+        @file.permissions = {group: {'registered' => 'read'}}
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_false
         @file.errors.should be_empty
@@ -949,7 +949,7 @@ describe GenericFile do
       end
       it "should work via update_attributes" do
         # automatically triggers save
-        lambda { @file.update_attributes(:read_groups_string => 'registered') }.should_not raise_error
+        lambda { @file.update_attributes(read_groups_string: 'registered') }.should_not raise_error
         @file.new_record?.should be_false
         @file.errors.should be_empty
         @file.valid?.should be_true
@@ -962,7 +962,7 @@ describe GenericFile do
         @file.valid?.should be_true
       end
       it "should work via permissions()" do
-        @rightsmd.permissions({:group => "registered"}, "read")
+        @rightsmd.permissions({group: "registered"}, "read")
         lambda { @file.save }.should_not raise_error
         @file.new_record?.should be_false
         @file.errors.should be_empty

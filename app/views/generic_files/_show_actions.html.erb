@@ -7,9 +7,12 @@
       <% end %>
       <% if can? :edit, @generic_file %>
           &nbsp;|&nbsp;
-          <%= link_to "Edit", sufia.edit_generic_file_path(@generic_file) unless @generic_file.processing?   %>
-          <%= "File is being processed you may edit once it is complete" if @generic_file.processing?   %>
-      <%end %>
+          <% if @generic_file.processing? %>
+            <%= "File is being processed you may edit once it is complete" %>
+          <% else %>
+            <%= link_to "Edit", sufia.edit_generic_file_path(@generic_file) %>
+          <% end %>
+      <% end %>
       <% if can?(:create, FeaturedWork) %>
         <% if FeaturedWork.can_create_another? && !@generic_file.featured?%>
           &nbsp;|&nbsp;
@@ -21,11 +24,11 @@
       <% end %>
     </p>
     <p>Export to:
-      <%= link_to 'EndNote', sufia.generic_file_path(@generic_file.noid, :format => 'endnote') %>
+      <%= link_to 'EndNote', sufia.generic_file_path(@generic_file.noid, format: 'endnote') %>
       &nbsp;|&nbsp;
-      <%= link_to 'Zotero', sufia.static_path('zotero'), {:id => 'zoteroLink', :name =>    'zotero', :class => 'lightboxLink'} %>
+      <%= link_to 'Zotero', sufia.static_path('zotero'), {id: 'zoteroLink', name: 'zotero', class: 'lightboxLink'} %>
       &nbsp;|&nbsp;
-      <%= link_to 'Mendeley', sufia.static_path('mendeley'), {:id => 'mendeleyLink', :name =>    'mendeley', :class => 'lightboxLink'} %>
+      <%= link_to 'Mendeley', sufia.static_path('mendeley'), {id: 'mendeleyLink', name: 'mendeley', class: 'lightboxLink'} %>
     </p>
     <!-- AddThis Button BEGIN -->
     <div class="addthis_toolbox addthis_default_style">

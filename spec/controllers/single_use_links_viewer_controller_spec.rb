@@ -24,11 +24,11 @@ describe SingleUseLinksViewerController do
   
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(:id => @file)
+      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(id: @file)
     end
 
     let :download_link do
-      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.download_path(:id => @file)
+      SingleUseLink.create itemId: @file.pid, path: Sufia::Engine.routes.url_helpers.download_path(id: @file)
     end
 
     let :show_link_hash do
@@ -46,7 +46,7 @@ describe SingleUseLinksViewerController do
       it "and_return http success" do
         controller.stub(:render)
         expected_content = ActiveFedora::Base.find(@file.pid, cast: true).content.content
-        controller.should_receive(:send_file_headers!).with({:filename => 'world.png', :disposition => 'inline', :type => 'image/png' })
+        controller.should_receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
         get :download, id:download_link_hash 
         response.body.should == expected_content
         response.should be_success

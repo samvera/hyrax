@@ -1,6 +1,6 @@
 <%= link_to sufia.notifications_path, id: "notify_link", class: "btn btn-default", title: "User Notifications" do %>
- <%= render :partial => 'users/notify_number' %>
+ <%= render partial: 'users/notify_number' %>
 <% end %>  
 <div class='hide'> 
-  <%= link_to "notify", sufia.user_notify_path, :remote => true, :id => 'notify_update_link' %>
+  <%= link_to "notify", sufia.user_notify_path, remote: true, id: 'notify_update_link' %>
 </div> 

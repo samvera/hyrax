@@ -8,8 +8,8 @@ describe ChecksumAuditLog do
     @f.stub(:characterize_if_changed).and_yield #don't run characterization
     @f.save!
     @version = @f.datastreams['content'].versions.first
-    @old = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1, :created_at=>2.minutes.ago)
-    @new = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>0)
+    @old = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)
+    @new =  ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 0)
   end
   after(:all) do
     @f.delete
@@ -22,11 +22,11 @@ describe ChecksumAuditLog do
     @f.logs(@version.dsid).should == [@new, @old]
   end
   it "should prune history for a datastream" do
-    success1 = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1)
+    success1 = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1)
     ChecksumAuditLog.prune_history(@version)
-    success2 = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1)
+    success2 = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1)
     ChecksumAuditLog.prune_history(@version)
-    success3 = ChecksumAuditLog.create(:pid=>@f.pid, :dsid=>@version.dsid, :version=>@version.versionID, :pass=>1)
+    success3 = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1)
     ChecksumAuditLog.prune_history(@version)
     lambda { ChecksumAuditLog.find(success2.id)}.should raise_exception ActiveRecord::RecordNotFound
     lambda { ChecksumAuditLog.find(success3.id)}.should raise_exception ActiveRecord::RecordNotFound

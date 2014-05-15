@@ -17,7 +17,7 @@ describe "Create and use single-use links" do
   end
 
   it "should generate a single-use link to show the record" do
-    visit generate_show_single_use_link_path(:id => @file)
+    visit generate_show_single_use_link_path(id: @file)
     
     expect(page).to have_css '.single-use-link a'
     find('.single-use-link a').click
@@ -27,7 +27,7 @@ describe "Create and use single-use links" do
 
   it "should download the file contents" do
 
-    visit generate_download_single_use_link_path(:id => @file)
+    visit generate_download_single_use_link_path(id: @file)
 
     expect(page).to have_css '.download-link'
     find('.download-link').click

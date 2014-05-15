@@ -41,7 +41,7 @@ module Sufia
         #     attr_accessor :name, :credit_rating
         #
         #     attr_accessible :name
-        #     attr_accessible :name, :credit_rating, :as => :admin
+        #     attr_accessible :name, :credit_rating, as: :admin
         #
         #     def assign_attributes(values, options = {})
         #       sanitize_for_mass_assignment(values, options[:as]).each do |k, v|
@@ -53,7 +53,7 @@ module Sufia
         # When using the :default role:
         #
         #   customer = Customer.new
-        #   customer.assign_attributes({ "name" => "David", "credit_rating" => "Excellent", :last_login => 1.day.ago }, :as => :default)
+        #   customer.assign_attributes({ "name" => "David", "credit_rating" => "Excellent", last_login: 1.day.ago }, as: :default)
         #   customer.name          # => "David"
         #   customer.credit_rating # => nil
         #
@@ -63,7 +63,7 @@ module Sufia
         # And using the :admin role:
         #
         #   customer = Customer.new
-        #   customer.assign_attributes({ "name" => "David", "credit_rating" => "Excellent", :last_login => 1.day.ago }, :as => :admin)
+        #   customer.assign_attributes({ "name" => "David", "credit_rating" => "Excellent", last_login: 1.day.ago }, as: :admin)
         #   customer.name          # => "David"
         #   customer.credit_rating # => "Excellent"
         #

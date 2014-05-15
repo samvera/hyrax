@@ -24,22 +24,22 @@ module Sufia
       # Catch permission errors
       rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
         if exception.action == :edit
-          redirect_to(sufia.url_for({:action=>'show'}), :alert => "You do not have sufficient privileges to edit this document")
+          redirect_to(sufia.url_for({action: 'show'}), alert: "You do not have sufficient privileges to edit this document")
         elsif current_user and current_user.persisted?
-          redirect_to root_url, :alert => exception.message
+          redirect_to root_url, alert: exception.message
         else
           session["user_return_to"] = request.url
-          redirect_to new_user_session_url, :alert => exception.message
+          redirect_to new_user_session_url, alert: exception.message
         end
       end
 
       # actions: audit, index, create, new, edit, show, update,
       #          destroy, permissions, citation, stats
-      before_filter :authenticate_user!, :except => [:show, :citation]
-      before_filter :has_access?, :except => [:show]
-      prepend_before_filter :normalize_identifier, :except => [:index, :create, :new]
-      load_resource :only=>[:audit]
-      load_and_authorize_resource :except=>[:index, :audit]
+      before_filter :authenticate_user!, except: [:show, :citation]
+      before_filter :has_access?, except: [:show]
+      prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
+      load_resource only: [:audit]
+      load_and_authorize_resource except: [:index, :audit]
     end
 
     # routed to /files/new
@@ -104,7 +104,7 @@ module Sufia
         format.html {
           @events = @generic_file.events(100)
         }
-        format.endnote { render :text => @generic_file.export_as_endnote }
+        format.endnote { render text: @generic_file.export_as_endnote }
       end
     end
 
@@ -139,7 +139,7 @@ module Sufia
           Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
         end
         @generic_file.record_version_committer(current_user)
-        redirect_to sufia.edit_generic_file_path(:tab => params[:redirect_tab]), :notice => render_to_string(:partial=>'generic_files/asset_updated_flash', :locals => { :generic_file => @generic_file })
+        redirect_to sufia.edit_generic_file_path(tab: params[:redirect_tab]), notice: render_to_string(partial: 'generic_files/asset_updated_flash', locals: { generic_file: @generic_file })
       else
         render action: 'edit'
       end
@@ -167,12 +167,12 @@ module Sufia
       if Sufia::GenericFile::Actions.create_content(@generic_file, file, file.original_filename, datastream_id, current_user)
         respond_to do |format|
           format.html {
-            render :json => [@generic_file.to_jq_upload],
-            :content_type => 'text/html',
-            :layout => false
+            render json: [@generic_file.to_jq_upload],
+            content_type: 'text/html',
+            layout: false
           }
           format.json {
-            render :json => [@generic_file.to_jq_upload]
+            render json: [@generic_file.to_jq_upload]
           }
         end
       else

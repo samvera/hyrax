@@ -4,7 +4,7 @@
 -%>
 <div id="showHead">
   <div id="showUtils">
-    <span class="back_to_cat"><%= link_back_to_catalog :label=>'← Return to search results' %></span>
+    <span class="back_to_cat"><%= link_back_to_catalog label: '← Return to search results' %></span>
     <%- if @previous_document || @next_document -%>
       <div id="previousNextDocument">
 	    <span class="previous"><%= link_to_previous_document(@previous_document) %></span>
@@ -35,6 +35,6 @@
 </div>
 <% if controller.action_name == "edit" %>
   <div class="delete-asset">
-    <%= button_to("Delete This Item", {:action => :destroy, :controller => :assets, :id => @document_fedora.pid}, :confirm => 'Are you sure?', :method => :delete )%>
+    <%= button_to("Delete This Item", {action: :destroy, controller: :assets, id: @document_fedora.pid}, confirm: 'Are you sure?', method: :delete )%>
   </div>
 <% end %>

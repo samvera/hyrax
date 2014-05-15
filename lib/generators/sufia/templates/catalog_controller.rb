@@ -32,8 +32,8 @@ class CatalogController < ApplicationController
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
-      :qt => "search",
-      :rows => 10
+      qt: "search",
+      rows: 10
     }
     
     # Specify which field to use in the tag cloud on the homepage.  
@@ -120,8 +120,8 @@ class CatalogController < ApplicationController
       all_names = config.show_fields.values.map{|val| val.field}.join(" ")
       title_name = solr_name("desc_metadata__title", :stored_searchable)
       field.solr_parameters = {
-        :qf => "#{all_names} noid_tsi file_format_tesim",
-        :pf => "#{title_name}"
+        qf: "#{all_names} noid_tsi file_format_tesim",
+        pf: "#{title_name}"
       }
     end
 
@@ -140,8 +140,8 @@ class CatalogController < ApplicationController
       # See: http://wiki.apache.org/solr/LocalParams
       solr_name = solr_name("desc_metadata__contributor", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -149,8 +149,8 @@ class CatalogController < ApplicationController
       field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
       solr_name = solr_name("desc_metadata__creator", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -160,8 +160,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__title", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -172,8 +172,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__description", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -183,8 +183,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__publisher", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -194,8 +194,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__created", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -205,8 +205,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__subject", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -216,8 +216,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__language", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -227,8 +227,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__resource_type", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -239,8 +239,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__format", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -251,8 +251,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__id", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -263,8 +263,8 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__based_near", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
@@ -274,24 +274,24 @@ class CatalogController < ApplicationController
       }
       solr_name = solr_name("desc_metadata__tag", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
     config.add_search_field('depositor') do |field|
       solr_name = solr_name("desc_metadata__depositor", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 
     config.add_search_field('rights') do |field|
       solr_name = solr_name("desc_metadata__rights", :stored_searchable)
       field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
+        qf: solr_name,
+        pf: solr_name
       }
     end
 

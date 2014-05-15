@@ -48,7 +48,7 @@ Sufia::Engine.routes.draw do
   end
 
   # Dashboard routes (based partly on catalog routes)
-  resources 'dashboard', :only=>:index do
+  resources 'dashboard', only: :index do
     collection do
       get 'page/:page', action: :index
       get 'activity', action: :activity, as: :dashboard_activity

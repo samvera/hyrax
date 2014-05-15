@@ -2,26 +2,26 @@
 <html>
   <head>
 
-    <%= render :partial => "layouts/head_tag_content"%>
+    <%= render partial: "layouts/head_tag_content"%>
   </head>
 
 <body> 
 <div  id="wrapper"> 
   <div class="container-fluid">
     <div id="page-positioner">
-      <%= render :partial => '/masthead' %>
-      <%= render :partial => '/controls' %>
-      <%= render :partial => '/flash_msg' %>
+      <%= render partial: '/masthead' %>
+      <%= render partial: '/controls' %>
+      <%= render partial: '/flash_msg' %>
       <div id="content-wrapper">
         <div class="container-fluid">
         <div id="content-header" class="row">
           <div class="col-xs-12 col-sm-3">
-            <%= link_to '<i class="glyphicon glyphicon-upload"></i> Upload File(s)'.html_safe, sufia.new_generic_file_path, {:class => "btn btn-primary"}  %><br />
+            <%= link_to '<i class="glyphicon glyphicon-upload"></i> Upload File(s)'.html_safe, sufia.new_generic_file_path, {class: "btn btn-primary"}  %><br />
           </div>
           <div class="col-xs-12 col-sm-9">
             <div class="row">
-              <%= render :partial => 'heading' %>
-              <%= render :partial => 'search_form' %>
+              <%= render partial: 'heading' %>
+              <%= render partial: 'search_form' %>
             </div>
           </div>
         </div>

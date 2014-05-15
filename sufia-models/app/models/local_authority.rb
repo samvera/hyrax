@@ -6,18 +6,18 @@ class LocalAuthority < ActiveRecord::Base
   has_many :local_authority_entries
 
   def self.harvest_rdf(name, sources, opts = {})
-    return unless self.where(:name => name).empty?
-    authority = self.create(:name => name)
+    return unless self.where(name: name).empty?
+    authority = self.create(name: name)
     format = opts.fetch(:format, :ntriples)
     predicate = opts.fetch(:predicate, RDF::SKOS.prefLabel)
     entries = []
     sources.each do |uri|
-      RDF::Reader.open(uri, :format => format) do |reader|
+      RDF::Reader.open(uri, format: format) do |reader|
         reader.each_statement do |statement|
           if statement.predicate == predicate
-            entries << LocalAuthorityEntry.new(:local_authority => authority,
-                                               :label => statement.object.to_s,
-                                               :uri => statement.subject.to_s)
+            entries << LocalAuthorityEntry.new(local_authority: authority,
+                                               label: statement.object.to_s,
+                                               uri: statement.subject.to_s)
           end
         end
       end
@@ -30,17 +30,17 @@ class LocalAuthority < ActiveRecord::Base
   end
 
   def self.harvest_tsv(name, sources, opts = {})
-    return unless self.where(:name => name).empty?
-    authority = self.create(:name => name)
+    return unless self.where(name: name).empty?
+    authority = self.create(name: name)
     prefix = opts.fetch(:prefix, "")
     entries = []
     sources.each do |uri|
       open(uri) do |f|
         f.each_line do |tsv|
           fields = tsv.split(/\t/)
-          entries << LocalAuthorityEntry.new(:local_authority => authority,
-                                             :uri => "#{prefix}#{fields[0]}/",
-                                             :label => fields[2])
+          entries << LocalAuthorityEntry.new(local_authority: authority,
+                                             uri: "#{prefix}#{fields[0]}/",
+                                             label: fields[2])
         end
       end
     end
@@ -69,15 +69,15 @@ class LocalAuthority < ActiveRecord::Base
     if (term == 'subject' && model == 'generic_files') # and local_authoritiy = lc_subject 
         sql = SubjectLocalAuthorityEntry.where("lowerLabel like ?", "#{lowQuery}%").select("label, uri").limit(25).to_sql
         SubjectLocalAuthorityEntry.find_by_sql(sql).each do |hit|
-          hits << {:uri => hit.uri, :label => hit.label}
+          hits << {uri: hit.uri, label: hit.label}
         end
     else 
-      dterm = DomainTerm.where(:model => model, :term => term).first
+      dterm = DomainTerm.where(model: model, term: term).first
       if dterm
         authorities = dterm.local_authorities.collect(&:id).uniq      
         sql = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("lower(label) like ?", "#{lowQuery}%").select("label, uri").limit(25).to_sql
         LocalAuthorityEntry.find_by_sql(sql).each do |hit|
-          hits << {:uri => hit.uri, :label => hit.label}
+          hits << {uri: hit.uri, label: hit.label}
         end
       end
     end

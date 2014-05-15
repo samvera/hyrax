@@ -27,7 +27,6 @@ module Sufia
         errors.add(:base, virus.message)
         false
       end
-
     end
   end
 end

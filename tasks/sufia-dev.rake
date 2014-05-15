@@ -5,7 +5,7 @@ require 'jettywrapper'
 #ENV["RAILS_ROOT"] ||= 'spec/internal'
 
 desc 'Spin up hydra-jetty and run specs'
-task :ci => ['jetty:config'] do
+task ci: ['jetty:config'] do
   puts 'running continuous integration'
   jetty_params = Jettywrapper.load_config
   error = Jettywrapper.wrap(jetty_params) do
@@ -14,14 +14,13 @@ task :ci => ['jetty:config'] do
   raise "test failures: #{error}" if error
 end
 
-task :spec => :generate do
+task spec: :generate do
   Bundler.with_clean_env do
     within_test_app do
       Rake::Task['rspec'].invoke
     end
   end
 end
-
 
 desc "Run specs"
 RSpec::Core::RakeTask.new(:rspec) do |t|
@@ -33,7 +32,6 @@ RSpec::Core::RakeTask.new(:rspec) do |t|
   end
 end
 
-
 desc "Create the test rails app"
 task :generate do
   unless File.exists?('spec/internal/Rakefile')
@@ -41,7 +39,7 @@ task :generate do
     `rails new spec/internal`
     puts "Updating gemfile"
 
-    `echo "gem 'sufia', :path=>'../../../sufia'
+    `echo "gem 'sufia', path: '../../../sufia'
 gem 'capybara'
 gem 'database_cleaner'
 gem 'factory_girl_rails'

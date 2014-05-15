@@ -4,7 +4,7 @@ module Sufia::UsersControllerBehavior
   included do
     include Blacklight::Catalog::SearchContext
     layout "sufia-one-column"
-    prepend_before_filter :find_user, :except => [:index, :search, :notifications_number]
+    prepend_before_filter :find_user, except: [:index, :search, :notifications_number]
     before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
     before_filter :user_is_current_user, only: [:edit, :update, :toggle_trophy]
 
@@ -80,7 +80,7 @@ module Sufia::UsersControllerBehavior
        t = current_user.trophies.create(generic_file_id: params[:file_id])
        return false unless t.persisted?
      end
-     render :json => t
+     render json: t
   end 
 
 

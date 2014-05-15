@@ -9,7 +9,7 @@
       <% end %>
       <td>
         <h3>
-          <%= link_to truncate(recent_document.title_or_label, :length => 28, :separator => ' '), sufia.generic_file_path(recent_document.noid), :title => recent_document.title_or_label  %>
+          <%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(recent_document.noid), title: recent_document.title_or_label  %>
 
           <% if display_access %>
               <% if recent_document.registered? %>
@@ -21,9 +21,9 @@
               <% end %>
           <% end %>
         </h3>
-        <p> 
-          <%= link_to truncate(recent_document.label, :length=>25),
-              sufia.generic_file_path(recent_document.noid), :title => recent_document.label %><br />
+        <p>
+          <%= link_to truncate(recent_document.label, length: 25),
+              sufia.generic_file_path(recent_document.noid), title: recent_document.label %><br />
           <%= link_to_facet_list(recent_document.tags, 'desc_metadata__tag', 'no keywords specified').html_safe %>
         </p>
       </td>

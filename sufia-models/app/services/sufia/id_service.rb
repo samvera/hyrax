@@ -7,7 +7,7 @@ module Sufia
       Sufia.config.noid_template
     end
 
-    @minter = ::Noid::Minter.new(:template => noid_template)
+    @minter = ::Noid::Minter.new(template: noid_template)
     @pid = $$
     @namespace = Sufia.config.id_namespace
     @semaphore = Mutex.new
@@ -32,7 +32,7 @@ module Sufia
       File.open(Sufia.config.minter_statefile, File::RDWR|File::CREAT, 0644) do |f|
         f.flock(File::LOCK_EX)
         yaml = YAML::load(f.read)
-        yaml = {:template => noid_template} unless yaml
+        yaml = {template: noid_template} unless yaml
         minter = ::Noid::Minter.new(yaml)
         pid = "#{@namespace}:#{minter.mint}"
         f.rewind

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Collection do
   before(:all) do
     @user = FactoryGirl.create(:user)
-    @collection = Collection.new(:title => "test collection").tap do |c|
+    @collection = Collection.new(title: "test collection").tap do |c|
       c.apply_depositor_metadata(@user.user_key)
     end
   end

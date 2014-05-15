@@ -8,7 +8,7 @@ module Sufia::User
     include Blacklight::User
     include Hydra::User
 
-    delegate :can?, :cannot?, :to => :ability
+    delegate :can?, :cannot?, to: :ability
 
     # set this up as a messageable object
     acts_as_messageable
@@ -18,7 +18,7 @@ module Sufia::User
     # Users should be followable
     acts_as_followable
 
-    mount_uploader :avatar, AvatarUploader, :mount_on => :avatar_file_name
+    mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
     validates_with AvatarValidator
     has_many :trophies
   end

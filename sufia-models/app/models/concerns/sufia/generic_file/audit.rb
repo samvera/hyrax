@@ -24,7 +24,7 @@ module Sufia
       end
 
       def logs(dsid)
-        ChecksumAuditLog.where(:dsid=>dsid, :pid=>self.pid).order('created_at desc, id desc')
+        ChecksumAuditLog.where(dsid: dsid, pid: self.pid).order('created_at desc, id desc')
       end
 
       def audit!
@@ -40,18 +40,17 @@ module Sufia
         audit_results = logs.collect { |result| result["pass"] }
 
         # check how many non runs we had
-        non_runs =audit_results.reduce(0) { |sum, value| (value == NO_RUNS) ? sum = sum+1 : sum }
-        if (non_runs == 0)
-          result =audit_results.reduce(true) { |sum, value| sum && value }
+        non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum += 1 : sum }
+        if non_runs == 0
+          result = audit_results.reduce(true) { |sum, value| sum && value }
           return result
-        elsif (non_runs < audit_results.length)
-          result =audit_results.reduce(true) { |sum, value| (value == NO_RUNS) ? sum : sum && value }
+        elsif non_runs < audit_results.length
+          result = audit_results.reduce(true) { |sum, value| value == NO_RUNS ? sum : sum && value }
           return 'Some audits have not been run, but the ones run were '+ ((result)? 'passing' : 'failing') + '.'
         else
           return 'Audits have not yet been run on this file.'
         end
       end
-
 
       module ClassMethods
         def audit!(version)
@@ -68,24 +67,20 @@ module Sufia
 
           # run the find just incase the job has finished already
           latest_audit = self.find(version.pid).logs(version.dsid).first
-          latest_audit = ChecksumAuditLog.new(:pass=>NO_RUNS, :pid=>version.pid, :dsid=>version.dsid, :version=>version.versionID) unless latest_audit
-          return latest_audit
+          latest_audit = ChecksumAuditLog.new(pass: NO_RUNS, pid: version.pid, dsid: version.dsid, version: version.versionID) unless latest_audit
+          latest_audit
         end
 
         def needs_audit?(version, latest_audit)
           if latest_audit and latest_audit.updated_at
-            #logger.debug "***AUDIT*** last audit = #{latest_audit.updated_at.to_date}"
             days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
-            #logger.debug "***AUDIT*** days since last audit: #{days_since_last_audit}"
             if days_since_last_audit < Sufia.config.max_days_between_audits
-              #logger.debug "***AUDIT*** No audit needed for #{version.pid} #{version.versionID} (#{latest_audit.updated_at})"
               return false
             end
           else
             logger.warn "***AUDIT*** problem with audit log!  Latest Audit is not nil, but updated_at is not set #{latest_audit}"  unless latest_audit.nil?
           end
-          #logger.info "***AUDIT*** Audit needed for #{version.pid} #{version.versionID}"
-          return true
+          true
         end
 
         def audit_everything(force = false)
@@ -102,16 +97,15 @@ module Sufia
 
         def run_audit(version)
           if version.dsChecksumValid
-            #logger.info "***AUDIT*** Audit passed for #{version.pid} #{version.versionID}"
             passing = 1
             ChecksumAuditLog.prune_history(version)
           else
             logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
             passing = 0
           end
-          check = ChecksumAuditLog.create!(:pass=>passing, :pid=>version.pid,
-                                           :dsid=>version.dsid, :version=>version.versionID)
-          return check
+          check = ChecksumAuditLog.create!(pass: passing, pid: version.pid,
+                                           dsid: version.dsid, version: version.versionID)
+          check
         end
       end
     end

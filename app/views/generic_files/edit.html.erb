@@ -11,12 +11,12 @@ $('input[name=revision]:radio').on('click', function() {
 confirmation_needed = false;
 window.onbeforeunload = confirmExit;
 function confirmExit(){
-      if(confirmation_needed){ 
+      if(confirmation_needed){
       // if you return a string it will be displayed in between "don't navigate away"
       // and "click Ok to navigate away or cancel to stay put" in the confirm dialog
          return "Your metadata has not been saved.";
       }
- }  
+ }
 // only valid for perm tab
 set_access_levels();
 
@@ -25,12 +25,12 @@ $("a[rel=popover]").popover({ html: true });
 
 <% end %>
 
-    <%= render :partial => 'breadcrumbs' %>
+    <%= render partial: 'breadcrumbs' %>
     <h1 class="lower">Edit <%= @generic_file %></h1>
 
 <div class="row">
   <div class="col-xs-12 col-sm-4">
-    <%= render :partial => 'media_display' %>
+    <%= render partial: 'media_display' %>
   </div>
   <div class="col-xs-12 col-sm-8">
     <%= link_to "&lt;&lt;Browse view".html_safe, sufia.generic_file_path(@generic_file) %>
@@ -40,9 +40,9 @@ $("a[rel=popover]").popover({ html: true });
       <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="glyphicon glyphicon-key"></i> Permissions</a></li>
     </ul>
     <div class="tab-content">
-      <%= render :partial => "descriptions", :locals => { :generic_file => @generic_file } %>
-        <%= render :partial => "permission", :locals => { :gf => @generic_file} %>
-      <%= render :partial => "versioning", :locals => { :generic_file => @generic_file } %>
+      <%= render partial: "descriptions", locals: { generic_file: @generic_file } %>
+      <%= render partial: "permission", locals: { gf: @generic_file} %>
+      <%= render partial: "versioning", locals: { generic_file: @generic_file } %>
     </div>
   </div> <!-- /.col-sm-9 -->
 </div><!-- /.row -->

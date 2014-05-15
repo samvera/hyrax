@@ -9,18 +9,18 @@
   initialize_audio();
 <% end %>
 
-<%= render :partial => 'generic_files/breadcrumbs' %>
+<%= render partial: 'generic_files/breadcrumbs' %>
 <div class="container-fluid">
 <div class="row">
   <div class="col-xs-12 col-sm-4">
-    <%= render :partial => 'generic_files/media_display' %>
+    <%= render partial: 'generic_files/media_display' %>
     <%= render partial: 'show_actions' %>
   </div>
   <div itemscope itemtype="http://schema.org/CreativeWork" class="col-xs-12 col-sm-8">
     <h1><%= @generic_file %></h1>
     <%= render partial: 'show_descriptions' %>
     <%= render partial: 'show_details' %>
-    <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+    <%= render partial: 'users/activity_log', locals: {events: @events} %>
   </div><!-- /columns second -->
 </div> <!-- /.row -->
 </div><!-- /.container-fluid -->

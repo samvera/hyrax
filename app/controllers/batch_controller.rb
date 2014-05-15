@@ -4,19 +4,19 @@ class BatchController < ApplicationController
   layout "sufia-one-column"
 
   before_filter :has_access?
-  prepend_before_filter :normalize_identifier, :only=>[:edit, :show, :update, :destroy]
+  prepend_before_filter :normalize_identifier, only: [:edit, :show, :update, :destroy]
 
   def edit
     @batch =  Batch.find_or_create(params[:id])
     @generic_file = GenericFile.new
     @generic_file.creator = current_user.name
-    @generic_file.title =  @batch.generic_files.map(&:label)
+    @generic_file.title = @batch.generic_files.map(&:label)
     @generic_file.initialize_fields
   end
 
   def update
     authenticate_user!
-    @batch =  Batch.find_or_create(params[:id])
+    @batch = Batch.find_or_create(params[:id])
     @batch.status="processing"
     @batch.save
     Sufia.queue.push(BatchUpdateJob.new(current_user.user_key, params))

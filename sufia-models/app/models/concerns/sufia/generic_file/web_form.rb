@@ -44,7 +44,7 @@ module Sufia
           "size" => self.file_size,
           "url" => "/files/#{noid}",
           "thumbnail_url" => self.pid,
-          "delete_url" => "deleteme", # generic_file_path(:id => id),
+          "delete_url" => "deleteme", # generic_file_path(id: id),
           "delete_type" => "DELETE"
         }
       end
