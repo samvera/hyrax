@@ -39,19 +39,39 @@ module Sufia::GenericFile
     def revert_content(revision_id, datastream_id)
       revision = generic_file.content.get_version(revision_id)
       generic_file.add_file(revision.content, datastream_id, revision.label)
-      save_characterize_and_record_committer
+      save_characterize_and_record_committer do
+        if Sufia.config.respond_to?(:after_revert_content)
+          Sufia.config.after_revert_content.call(generic_file, user, revision_id)
+        end
+      end
     end
 
     def update_content(file, datastream_id)
       generic_file.add_file(file, datastream_id, file.original_filename)
-      save_characterize_and_record_committer
+      save_characterize_and_record_committer do
+        if Sufia.config.respond_to?(:after_update_content)
+          Sufia.config.after_update_content.call(generic_file, user)
+        end
+      end
     end
 
     def update_metadata(attributes, visibility)
       generic_file.attributes = generic_file.sanitize_attributes(attributes)
       generic_file.visibility = visibility
       generic_file.date_modified = DateTime.now
-      save_and_record_committer
+      save_and_record_committer do
+        if Sufia.config.respond_to?(:after_update_metadata)
+          Sufia.config.after_update_metadata.call(generic_file, user)
+        end
+      end
+    end
+
+    def destroy
+      pid = generic_file.pid  #Work around for https://github.com/projecthydra/active_fedora/issues/422
+      generic_file.destroy
+      if Sufia.config.respond_to?(:after_destroy)
+        Sufia.config.after_destroy.call(pid, user)
+      end
     end
 
     # Takes an optional block and executes the block if the save was successful.

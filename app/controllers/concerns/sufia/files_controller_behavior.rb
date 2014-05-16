@@ -60,9 +60,7 @@ module Sufia
 
     # routed to /files/:id (DELETE)
     def destroy
-      pid = @generic_file.noid
-      @generic_file.destroy
-      Sufia.queue.push(ContentDeleteEventJob.new(pid, current_user.user_key))
+      actor.destroy
       redirect_to self.class.destroy_complete_path(params), notice:
         render_to_string(partial: 'generic_files/asset_deleted_flash', locals: { generic_file: @generic_file })
     end
@@ -142,22 +140,16 @@ module Sufia
     end
 
     def update_version
-      if actor.revert_content(params[:revision], datastream_id)
-        Sufia.queue.push(ContentRestoredVersionEventJob.new(@generic_file.pid, current_user.user_key, params[:revision]))
-      end
+      actor.revert_content(params[:revision], datastream_id)
     end
 
     def update_file
-      if actor.update_content(params[:filedata], datastream_id)
-        Sufia.queue.push(ContentNewVersionEventJob.new(@generic_file.pid, current_user.user_key))
-      end
+      actor.update_content(params[:filedata], datastream_id)
     end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      if actor.update_metadata(params[:generic_file], params[:visibility])
-        Sufia.queue.push(ContentUpdateEventJob.new(@generic_file.pid, current_user.user_key))
-      end
+      actor.update_metadata(params[:generic_file], params[:visibility])
     end
 
     def json_error(error, name=nil, additional_arguments={})

@@ -246,7 +246,7 @@ describe GenericFilesController do
     end
     it "should spawn a content delete event job" do
       s1 = double('one')
-      ContentDeleteEventJob.should_receive(:new).with(@generic_file.noid, @user.user_key).and_return(s1)
+      ContentDeleteEventJob.should_receive(:new).with(@generic_file.pid, @user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
       delete :destroy, id: @generic_file.pid
     end
