@@ -19,9 +19,9 @@
         <%= link_to "Delete This #{curation_concern.human_readable_type}", [:curation_concern, curation_concern], class: 'btn btn-primary', data: { confirm: "Delete this #{curation_concern.human_readable_type}?" }, method: :delete %>
         <%= link_to "Attach a File", new_curation_concern_generic_file_path(curation_concern), class: 'btn btn-primary' %>
       <% end %>
-      <%# if collector %>
+      <% if collector %>
         <%= render 'curate/collections/add_to_collection_gui', collectible: curation_concern, button_class: 'btn btn-primary' %>
-      <%# end %>
+      <% end %>
     </div>
   <% end %>
 <% end %>

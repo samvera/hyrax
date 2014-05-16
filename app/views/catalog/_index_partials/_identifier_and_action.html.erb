@@ -17,11 +17,12 @@
   <div class="col-md-4 search-result-actions">
     <% if current_user -%>
       <% if can?( :edit, document ) && edit_path.present? %>
+        <% edit_link_text = "Edit #{document.human_readable_type}" %>
         <%= link_to(
-          raw('<i class="glyphicon-pencil icon-large"></i>'),
+          raw('<i class="glyphicon glyphicon-pencil icon-large"></i> '+edit_link_text),
             edit_path,
             class: 'itemicon itemedit btn',
-            title: "Edit #{document.human_readable_type}"
+            title: edit_link_text
         )%>
         <% if @collection -%>
           <%= button_for_remove_from_collection(document) %>
@@ -32,7 +33,7 @@
         <% end %>
       <% end %>
       <% if can? :collect, document %>
-        <%= render 'add_to_collection_gui', collectible: document %>
+        <%= render 'curate/collections/add_to_collection_gui', collectible: document %>
       <% end %>
     <% end %>
   </div>

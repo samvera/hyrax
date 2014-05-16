@@ -15,7 +15,7 @@
           <% options << options_from_collection_for_select(collections, "pid", "title") %>
           <% options << '</optgroup>'.html_safe %>
         <% end %>
-        <%= select_tag :id, options, prompt: 'Make a Selection', class: 'input-xlarge', :'aria-labelledby' => select_label_id %>
+        <%= select_tag :id, options, prompt: 'Make a Selection', class: 'form-control', :'aria-labelledby' => select_label_id %>
       </div>
     </div>
 

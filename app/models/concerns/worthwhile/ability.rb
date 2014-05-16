@@ -23,6 +23,8 @@ module Worthwhile
 #         u && u.can_receive_deposits_from.include?(current_user)
 #       end
 
+      can :collect, :all
+
     end
     
     # Add this to your ability_logic if you want all logged in users to be able to submit content
