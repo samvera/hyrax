@@ -8,4 +8,5 @@ tmp
 *.bundle
 spec/internal
 jetty
+.rvmrc
 

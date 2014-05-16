@@ -55,7 +55,8 @@
 }
 
 legend {
-  font-family: $headings-font-family
+  font-family: $headings-font-family;
+  line-height: 40px;
 
   a {
     font-family: $font-family-sans-serif;

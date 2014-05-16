@@ -5,6 +5,8 @@
 
 legend small {
   margin-left:.5em;
+  color: #999999;
+  font-size: 15px;
 }
 
 .label-large {
@@ -43,6 +45,14 @@ legend small {
   label { display: inline; }
 }
 
+form label.optional { font-weight: normal; }
+form label.required { font-weight: bold; }
+
+#set-access-controls {
+  label { font-weight: normal; }
+  .control-group { padding: 0 1.75em; }
+}
+
 .control-label.required {
   abbr {
     font-size: 1.25em;
@@ -63,9 +73,10 @@ legend small {
 }
 
 .accept-contributor-agreement {
-  padding-top:1em;
+  padding: 1em 2.5em;
   input, label {
     font-size:1.3em;
+    font-weight: normal;
   }
 }
 

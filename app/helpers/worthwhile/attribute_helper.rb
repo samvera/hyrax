@@ -36,7 +36,7 @@ module Worthwhile
     private
       def extract_dom_label_class_and_link_title(document)
         hash = document.stringify_keys
-        dom_label_class, link_title = "label-important", "Private"
+        dom_label_class, link_title = "label-danger", "Private"
         if hash[Hydra.config.permissions.read.group].present?
           if hash[Hydra.config.permissions.read.group].include?('public')
             if hash[Hydra.config.permissions.embargo_release_date].present?
