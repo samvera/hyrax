@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in worthwhile.gemspec
 gemspec
 
-
-gem 'sufia-models', github: 'projecthydra/sufia'
 gem 'byebug' unless ENV['TRAVIS']
 
 # If we don't specify 2.11.0 we'll end up with sprockets 2.12.0 in the main
