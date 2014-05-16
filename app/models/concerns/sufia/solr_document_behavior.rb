@@ -1,6 +1,11 @@
 # -*- encoding : utf-8 -*-
 module Sufia
   module SolrDocumentBehavior
+    # Add a schema.org itemtype
+    def itemtype
+      Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
+    end
+
     def title_or_label
       title || label
     end

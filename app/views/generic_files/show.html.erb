@@ -16,7 +16,7 @@
     <%= render partial: 'generic_files/media_display' %>
     <%= render partial: 'show_actions' %>
   </div>
-  <div itemscope itemtype="http://schema.org/CreativeWork" class="col-xs-12 col-sm-8">
+  <div itemscope itemtype="<%= @generic_file.itemtype %>" class="col-xs-12 col-sm-8">
     <h1><%= @generic_file %></h1>
     <%= render partial: 'show_descriptions' %>
     <%= render partial: 'show_details' %>
