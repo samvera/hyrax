@@ -21,21 +21,22 @@ describe Worthwhile::CurationConcern::GenericFileActor do
     let(:reloaded_generic_file) {
       generic_file.class.find(generic_file.pid)
     }
-    describe 'with a file' do
+    context 'with a file' do
       it 'succeeds if attributes are given' do
-        return_value = nil
+        
+        s2 = double('characterize job')
+        allow(CharacterizeJob).to receive(:new).and_return(s2)
+        expect(Sufia.queue).to receive(:push).with(s2).once
+
         expect {
-          return_value = subject.create
-        }.to change {
-          parent.class.find(parent.pid).generic_files.count
-        }.by(1)
+          expect(subject.create).to be_true
+        }.to change { parent.reload.generic_files.count }.by(1)
 
         reloaded_generic_file.batch.should == parent
         reloaded_generic_file.to_s.should == title
         reloaded_generic_file.filename.should == File.basename(__FILE__)
 
         expect(reloaded_generic_file.to_solr[Hydra.config[:permissions][:read][:group]]).to eq(['registered'])
-        return_value.should be_true
       end
     end
 
@@ -50,14 +51,14 @@ describe Worthwhile::CurationConcern::GenericFileActor do
     let(:generic_file) { FactoryGirl.create(:file_with_work, user: user) }
 
     it do
-      generic_file.title.should_not == title
-      generic_file.content.content.should_not == file_content
-      return_value = nil
-      return_value = subject.update
-      generic_file.title.should == [title]
-      generic_file.to_s.should == title
-      generic_file.content.content.should == file_content
-      return_value.should be_true
+      s2 = double('characterize job')
+      allow(CharacterizeJob).to receive(:new).and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
+
+      expect(subject.update).to be_true
+      expect(generic_file.title).to eq [title]
+      expect(generic_file.to_s).to eq title
+      expect(generic_file.content.content).to eq file_content
     end
 
     it 'failure returns false' do
@@ -77,15 +78,16 @@ describe Worthwhile::CurationConcern::GenericFileActor do
     before(:each) do
       # I need to make an update
       updated_attributes = { file: new_file}
+      s2 = double('characterize job')
+      allow(CharacterizeJob).to receive(:new).and_return(s2)
+      expect(Sufia.queue).to receive(:push).with(s2).once
       actor = Worthwhile::CurationConcern::GenericFileActor.new(generic_file, user, updated_attributes)
       actor.update
     end
     it do
-      return_value = nil
       expect {
-        return_value = subject.rollback
-      }.to change {subject.curation_concern.content.mimeType}.from('image/png').to(mime_type)
-      return_value.should be_true
+        expect(subject.rollback).to be_true
+      }.to change { subject.curation_concern.content.mimeType }.from('image/png').to(mime_type)
     end
 
     it 'failure returns false' do
