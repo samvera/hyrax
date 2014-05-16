@@ -8,6 +8,7 @@
   <% end -%>
 
   <%= render 'form_descriptive_fields', curation_concern: @collection, f: f %>
+  <%= render partial: 'form_permission', locals: {f: f} %>
 
   <div class="row">
     <div class="col-md-12 form-actions">
