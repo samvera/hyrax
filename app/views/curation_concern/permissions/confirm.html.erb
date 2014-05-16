@@ -1,0 +1,8 @@
+<p>You've changed this <%= curation_concern.title %> to be <%= curation_concern.visibility %>.</p>
+
+<p>Would you like change all of its content to <%= curation_concern.visibility %> as well?</p>
+
+<div class="form-actions">
+  <%= button_to "Yes please.", copy_curation_concern_permission_path(curation_concern), class: 'btn btn-primary' %>
+  <%= link_to "No. I'll update it manually.", polymorphic_path([:curation_concern, curation_concern]), class: 'btn' %>
+</div>
