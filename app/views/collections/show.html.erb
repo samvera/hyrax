@@ -11,6 +11,7 @@
   </div>
 <% end %>
 
+<%= render partial: 'search_form'%>
 <%= render 'sort_and_per_page' %>
 
   <% if has_collection_search_parameters? %>
@@ -18,7 +19,6 @@
   <% else %>
     <h2>Items in this Collection</h2>
   <% end %>
-  <%= render partial: 'search_form'%>
   <%= render_document_index @member_docs %>
 
   <%= render partial: 'paginate' %>
