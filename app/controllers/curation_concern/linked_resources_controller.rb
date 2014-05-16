@@ -1,11 +1,10 @@
 class CurationConcern::LinkedResourcesController < ApplicationController
-
+  include Worthwhile::ThemedLayoutController
+  with_themed_layout '1_column'
   respond_to(:html)
 
   load_and_authorize_resource class: Worthwhile::LinkedResource, instance_name: :curation_concern
   include Worthwhile::ParentContainer
-
-  # self.excluded_actions_for_curation_concern_authorization = [:new, :create]
 
   def new
     respond_with(curation_concern)
@@ -56,6 +55,8 @@ class CurationConcern::LinkedResourcesController < ApplicationController
   def curation_concern
     @curation_concern
   end
+
+  helper_method :curation_concern
 
   protected
     def _prefixes

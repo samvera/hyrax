@@ -173,7 +173,6 @@ describe 'collection' do
       #within('.form-actions') do
         click_button('Update Collection')
       #end
-      save_and_open_page
       page.should_not have_content(@collection.title)
       page.should_not have_content(@collection.description)
       page.should have_content(new_title)
