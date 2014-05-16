@@ -17,9 +17,6 @@ class CatalogController < ApplicationController
   before_filter :enforce_show_permissions, only: :show
   # This applies appropriate access controls to all solr queries
   CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
-
-  # This filters out objects that you want to exclude from search results, like FileAssets
-  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
   CatalogController.solr_search_params_logic += [:show_only_works]
 
   skip_before_filter :default_html_head
@@ -330,7 +327,7 @@ class CatalogController < ApplicationController
 
     # Override Hydra::PolicyAwareAccessControlsEnforcement
     def gated_discovery_filters
-      return if current_user && (current_user.groups.include? 'admin')
+      return [] if current_user && (current_user.groups.include? 'admin')
       super
     end
 
@@ -355,26 +352,11 @@ class CatalogController < ApplicationController
       super
     end
 
-
-    # Limits search results just to GenericFiles
-    # @param solr_parameters the current solr parameters
-    # @param user_parameters the current user-subitted parameters
-    def exclude_unwanted_models(solr_parameters, user_parameters)
-      solr_parameters[:fq] ||= []
-      [GenericFile].each do |klass|
-        solr_parameters[:fq] << exclude_class_filter(klass)
-      end
-    end
-
-    def exclude_class_filter(klass)
-      '-' + ActiveFedora::SolrService.construct_query_for_rel(has_model: klass.to_class_uri)
-    end
-
     #Excludes collection and person only when trying to filter by work.
     # This is included as part of blacklight search solr params logic
     def show_only_works(solr_parameters, user_parameters)
       if params.has_key?(:f) and params[:f].to_a.flatten == ["generic_type_sim","Work"]
-        solr_parameters[:fq] = []  #overwrite default facets
+        solr_parameters[:fq] ||= []
         clauses = Worthwhile.configuration.registered_curation_concern_types.map(&:constantize).map do |klass|
           ActiveFedora::SolrService.construct_query_for_rel(has_model: klass.to_class_uri)
         end
