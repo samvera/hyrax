@@ -157,7 +157,7 @@ describe 'event jobs' do
     @another_user.events.length.should == 0
     @third_user.events.length.should == 0
     Time.should_receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deleted file \'test:123\'', timestamp: '1' }
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deleted file \'123\'', timestamp: '1' }
     ContentDeleteEventJob.new('test:123', @user.user_key).run
     @user.profile_events.length.should == 1
     @user.profile_events.first.should == event
