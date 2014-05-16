@@ -30,7 +30,7 @@ module Worthwhile
     def inject_routes
       inject_into_file 'config/routes.rb', :after => /devise_for :users\s*\n/ do
         "  mount Hydra::Collections::Engine => '/'\n"\
-        "  mount Worthwhile::Engine, at: '/'\n"
+        "  mount Worthwhile::Engine, at: '/'\n"\
         "  worthwhile_collections\n"\
         "  worthwhile_curation_concerns\n"\
       end
