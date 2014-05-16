@@ -20,7 +20,7 @@
 
         <% if solr_doc.has?('desc_metadata__description_tesim') %>
           <dt>Description:</dt>
-          <dd><%= truncate(render_index_field_value(document: solr_doc, field: 'desc_metadata__description_tesim'), length: 150) %></dd>
+          <dd><%= truncate(render_index_field_value(document: solr_doc, field: 'desc_metadata__description_tesim'), length: 150, escape: false) %></dd>
         <% end %>
 
         <% if solr_doc.has?('desc_metadata__publisher_tesim') %>
