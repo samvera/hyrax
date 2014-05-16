@@ -21,7 +21,7 @@
 //= require bootstrap/collapse
 //= require bootstrap/tooltip
 //= require bootstrap/popover
-//=# require bootstrap-datepicker/core
+//=# require bootstrap-datepicker
 //
 //= require manage_repeating_fields
 //= require toggle_details
@@ -62,10 +62,10 @@ Blacklight.onLoad(function() {
   $('.proxy-rights').proxyRights();
 
 
-  $('#set-access-controls .datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    startDate: '+1d'
-  });
+//  $('#set-access-controls .datepicker').datepicker({
+//    format: 'yyyy-mm-dd',
+//    startDate: '+1d'
+//  });
 
   $('.remove-member').on('ajax:success', function(){window.location.href = window.location.href});
 
