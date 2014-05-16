@@ -47,9 +47,7 @@ describe Worthwhile::CurationConcern::GenericFileActor do
   end
 
   describe '#update' do
-    let(:generic_file) {
-      FactoryGirl.create_generic_file(parent, user)
-    }
+    let(:generic_file) { FactoryGirl.create(:file_with_work, user: user) }
 
     it do
       generic_file.title.should_not == title
@@ -73,7 +71,7 @@ describe Worthwhile::CurationConcern::GenericFileActor do
       { version: version }
     }
     let(:version) { generic_file.versions.last.version_id }
-    let(:generic_file) { FactoryGirl.create_generic_file(parent, user, file) }
+    let(:generic_file) { FactoryGirl.create(:file_with_work, user: user, content: file) }
     let(:file) { Rack::Test::UploadedFile.new(__FILE__, 'text/plain', false) }
     let(:new_file) { worthwhile_fixture_file_upload('files/image.png', 'image/png', false)}
     before(:each) do

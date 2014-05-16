@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :work, aliases:[:generic_work], class: GenericWork do
     ignore do
-      user {FactoryGirl.create(:user)}
+      user { FactoryGirl.create(:user) }
     end
 
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE

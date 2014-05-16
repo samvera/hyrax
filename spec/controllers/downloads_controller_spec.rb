@@ -4,12 +4,9 @@ describe DownloadsController do
   describe '#show' do
     let(:user) { FactoryGirl.create(:user) }
     let(:another_user) { FactoryGirl.create(:user) }
-    let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
     let(:image_file) { File.open(Rails.root.join('../fixtures/files/image.png')) }
     let(:generic_file) {
-      FactoryGirl.create_generic_file(:generic_work, user, worthwhile_fixture_file_upload('files/image.png', 'image/png', false)) {|g|
-        g.visibility = visibility
-      }
+      FactoryGirl.create(:file_with_work, user: user, content: worthwhile_fixture_file_upload('files/image.png', 'image/png', false))
     }
 
     it "raise not_found if the object does not exist" do
