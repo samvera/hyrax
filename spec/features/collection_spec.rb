@@ -148,7 +148,7 @@ describe 'collection' do
 
   describe 'edit collection' do
     before (:each) do
-      @collection = Collection.new(title: 'collection title')
+      @collection = Collection.new(title: 'Awesome Title')
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
       @collection.members = [@gw1, @gw2]
@@ -170,9 +170,10 @@ describe 'collection' do
       fill_in('Title', with: new_title)
       fill_in('collection_description', with: new_description)
       fill_in('Creator', with: creators.first)
-      within('.form-actions') do
+      #within('.form-actions') do
         click_button('Update Collection')
-      end
+      #end
+      save_and_open_page
       page.should_not have_content(@collection.title)
       page.should_not have_content(@collection.description)
       page.should have_content(new_title)

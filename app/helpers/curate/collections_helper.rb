@@ -7,6 +7,10 @@ module Curate::CollectionsHelper
     render partial: 'button_create_collection', locals:{label:label}
   end
 
+  def button_for_remove_item_from_collection(document, collection, label = 'Remove From Collection')
+    render partial:'/curate/collections/button_remove_from_collection', locals:{collection:collection, label:label, document:document}
+  end
+
   def hidden_collection_members
     _erbout = ''
     if params[:batch_document_ids].present?
