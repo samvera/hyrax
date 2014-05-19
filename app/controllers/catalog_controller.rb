@@ -18,6 +18,7 @@ class CatalogController < ApplicationController
   # This applies appropriate access controls to all solr queries
   CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   CatalogController.solr_search_params_logic += [:show_only_works]
+  CatalogController.solr_search_params_logic += [:exclude_linked_resources]
 
   skip_before_filter :default_html_head
   
@@ -352,6 +353,13 @@ class CatalogController < ApplicationController
         end
         solr_parameters[:fq] << '(' + clauses.join(' OR ') + ')'
       end
+    end
+
+    # Excludes Linked Resource objects from search results.
+    # Based on hydra's exclude_unwanted_models filter
+    def exclude_linked_resources(solr_parameters, user_parameters)
+      solr_parameters[:fq] ||= []
+      solr_parameters[:fq] << '-active_fedora_model_ssi:"Worthwhile::LinkedResource"'
     end
 
     def depositor
