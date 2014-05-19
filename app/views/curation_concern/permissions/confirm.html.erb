@@ -1,8 +1,13 @@
-<p>You've changed this <%= curation_concern.title %> to be <%= curation_concern.visibility %>.</p>
-
-<p>Would you like change all of its content to <%= curation_concern.visibility %> as well?</p>
-
-<div class="form-actions">
-  <%= button_to "Yes please.", copy_curation_concern_permission_path(curation_concern), class: 'btn btn-primary' %>
-  <%= link_to "No. I'll update it manually.", polymorphic_path([:curation_concern, curation_concern]), class: 'btn' %>
+<div class="panel panel-default permissions-confirm">
+  <div class="panel-heading">
+    <h4>Apply changes to contents?<h4>
+  </div>
+  <div class="panel-body">
+    <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern.title %></i>, to <b><%= curation_concern.visibility %></b>.</p>
+    <p>Would you like change all of its content to <b><%= curation_concern.visibility %></b> as well?</p>
+  </div>
+  <div class="form-actions panel-footer">
+    <%= button_to "Yes please.", copy_curation_concern_permission_path(curation_concern), class: 'btn btn-primary' %>
+    <%= link_to "No. I'll update it manually.", polymorphic_path([:curation_concern, curation_concern]), class: 'btn' %>
+  </div>
 </div>
