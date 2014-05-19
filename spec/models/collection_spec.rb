@@ -14,6 +14,13 @@ describe Collection do
     subject.members.should == [another_collection]
   end
 
+  it 'updates solr with pids of its parent collections' do
+    another_collection = FactoryGirl.create(:collection)
+    another_collection.members << subject
+    another_collection.save
+    subject.reload.to_solr[Solrizer.solr_name(:collection)].should == [another_collection.pid]
+  end
+
   it 'cannot contain itself' do
     subject.members << subject
     subject.save

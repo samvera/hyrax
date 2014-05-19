@@ -10,6 +10,7 @@ describe CatalogController do
     let!(:work1) { FactoryGirl.create(:public_generic_work, user: user) }
     let!(:work2) { FactoryGirl.create(:public_generic_work) }
     let!(:linked_resource) { FactoryGirl.create(:linked_resource, user: user, batch:work1) }
+    let!(:file) { FactoryGirl.create(:generic_file, batch:work1) }
     before do
       sign_in user
     end
