@@ -35,8 +35,8 @@ class CatalogController < ApplicationController
       qt: "search",
       rows: 10
     }
-    
-    # Specify which field to use in the tag cloud on the homepage.  
+
+    # Specify which field to use in the tag cloud on the homepage.
     # To disable the tag cloud, comment out this line.
     config.tag_cloud_field_name = Solrizer.solr_name("desc_metadata__tag", :facetable)
 
@@ -63,18 +63,18 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
-    config.add_index_field solr_name("desc_metadata__title", :stored_searchable), label: "Title"
-    config.add_index_field solr_name("desc_metadata__description", :stored_searchable), label: "Description"
-    config.add_index_field solr_name("desc_metadata__tag", :stored_searchable), label: "Keyword"
-    config.add_index_field solr_name("desc_metadata__subject", :stored_searchable), label: "Subject"
-    config.add_index_field solr_name("desc_metadata__creator", :stored_searchable), label: "Creator"
-    config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable), label: "Contributor"
-    config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable), label: "Publisher"
-    config.add_index_field solr_name("desc_metadata__based_near", :stored_searchable), label: "Location"
-    config.add_index_field solr_name("desc_metadata__language", :stored_searchable), label: "Language"
-    config.add_index_field solr_name("desc_metadata__date_uploaded", :stored_searchable), label: "Date Uploaded"
-    config.add_index_field solr_name("desc_metadata__date_modified", :stored_searchable), label: "Date Modified"
-    config.add_index_field solr_name("desc_metadata__date_created", :stored_searchable), label: "Date Created"
+    config.add_index_field solr_name("desc_metadata__title", :stored_searchable), label: "Title", itemprop: 'name'
+    config.add_index_field solr_name("desc_metadata__description", :stored_searchable), label: "Description", itemprop: 'description'
+    config.add_index_field solr_name("desc_metadata__tag", :stored_searchable), label: "Keyword", itemprop: 'keywords'
+    config.add_index_field solr_name("desc_metadata__subject", :stored_searchable), label: "Subject", itemprop: 'about'
+    config.add_index_field solr_name("desc_metadata__creator", :stored_searchable), label: "Creator", itemprop: 'creator'
+    config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable), label: "Contributor", itemprop: 'contributor'
+    config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable), label: "Publisher", itemprop: 'publisher'
+    config.add_index_field solr_name("desc_metadata__based_near", :stored_searchable), label: "Location", itemprop: 'contentLocation'
+    config.add_index_field solr_name("desc_metadata__language", :stored_searchable), label: "Language", itemprop: 'inLanguage'
+    config.add_index_field solr_name("desc_metadata__date_uploaded", :stored_searchable), label: "Date Uploaded", itemprop: 'datePublished'
+    config.add_index_field solr_name("desc_metadata__date_modified", :stored_searchable), label: "Date Modified", itemprop: 'dateModified'
+    config.add_index_field solr_name("desc_metadata__date_created", :stored_searchable), label: "Date Created", itemprop: 'dateCreated'
     config.add_index_field solr_name("desc_metadata__rights", :stored_searchable), label: "Rights"
     config.add_index_field solr_name("desc_metadata__resource_type", :stored_searchable), label: "Resource Type"
     config.add_index_field solr_name("desc_metadata__format", :stored_searchable), label: "File Format"

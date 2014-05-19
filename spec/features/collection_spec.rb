@@ -17,7 +17,7 @@ describe 'collection' do
   let(:title2) {"Test Collection 2"}
   let(:description2) {"Description for collection 2 we are testing."}
 
-  let(:user) { FactoryGirl.create(:user, email: 'user1@example.com') }
+  let(:user) { FactoryGirl.find_or_create(:archivist) }
   let(:user_key) { user.user_key }
 
   before(:all) do
@@ -28,7 +28,7 @@ describe 'collection' do
     (0..12).each do |x|
       @gfs[x] =  GenericFile.new.tap do |f|
         f.title = "title #{x}"
-        f.apply_depositor_metadata('user1@example.com')
+        f.apply_depositor_metadata('archivist1@example.com')
         f.save!
       end
     end
@@ -42,7 +42,6 @@ describe 'collection' do
     GenericFile.destroy_all
     Collection.destroy_all
   end
-
 
   describe 'create collection' do
     before do
