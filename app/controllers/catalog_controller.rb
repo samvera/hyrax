@@ -141,7 +141,6 @@ class CatalogController < ApplicationController
     # subject, language, resource_type, format, identifier, based_near,
     config.add_search_field('contributor') do |field|
       # solr_parameters hash are sent to Solr as ordinary url query params.
-      field.solr_parameters = { :"spellcheck.dictionary" => "contributor" }
 
       # :solr_local_parameters will be sent using Solr LocalParams
       # syntax, as eg {! qf=$title_qf }. This is neccesary to use
@@ -154,10 +153,7 @@ class CatalogController < ApplicationController
       }
     end
 
-
-
     config.add_search_field('creator') do |field|
-      field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
       solr_name = solr_name("desc_metadata__creator", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -189,9 +185,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('publisher') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "publisher"
-      }
       solr_name = solr_name("desc_metadata__publisher", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -211,9 +204,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('subject') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "subject"
-      }
       solr_name = solr_name("desc_metadata__subject", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,

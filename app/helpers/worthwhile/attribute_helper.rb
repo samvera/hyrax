@@ -19,7 +19,12 @@ module Worthwhile
               markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(Sufia.config.cc_licenses_reverse[value])}</a></li>\n)
             end
           else
-            markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
+            li_value = if options[:catalog_search_link]
+                       link_to(h(value), catalog_index_path(search_field: method_name, q: h(value)))
+                       else
+                         h(value)
+                       end
+            markup << %(<li class="attribute #{method_name}"> #{li_value} </li>\n)
           end
         end
         markup << %(</ul></td></tr>)

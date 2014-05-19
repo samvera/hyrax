@@ -5,9 +5,9 @@
   </thead>
   <tbody>
   <%= curation_concern_attribute_to_html(curation_concern, :description, 'Abstract') %>
-  <%= curation_concern_attribute_to_html(curation_concern, :creator, 'Creator') %>
-  <%= curation_concern_attribute_to_html(curation_concern, :contributor, 'Contributors') %>
-  <%= curation_concern_attribute_to_html(curation_concern, :subject, "Subject") %>
+  <%= curation_concern_attribute_to_html(curation_concern, :creator, 'Creator', { catalog_search_link: true }) %>
+  <%= curation_concern_attribute_to_html(curation_concern, :contributor, 'Contributors', { catalog_search_link: true }) %>
+  <%= curation_concern_attribute_to_html(curation_concern, :subject, "Subject", { catalog_search_link: true }) %>
   <%= curation_concern_attribute_to_html(curation_concern, :publisher, "Publisher") %>
   <%#= curation_concern_attribute_to_html(curation_concern, :bibliographic_citation, "Bibliographic Citation") %>
   <%#= curation_concern_attribute_to_html(curation_concern, :source, "Source") %>
