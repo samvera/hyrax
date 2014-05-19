@@ -1,6 +1,15 @@
 module Worthwhile
   module AttributeHelper
-    # options[:include_empty]
+
+    # If options[:catalog_search_link] is false,
+    # it will return the attribute value as text.
+    # If options[:catalog_search_link] is true,
+    # it will return a link to a catalog search for that text.
+    #
+    # If the method_name of the attribute is different than
+    # how the attribute name should appear on the search URL,
+    # you can explicitly set the URL's search field name using
+    # options[:search_field].
     def curation_concern_attribute_to_html(curation_concern, method_name, label = nil, options = {})
       if curation_concern.respond_to?(method_name)
         markup = ""
@@ -19,11 +28,8 @@ module Worthwhile
               markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(Sufia.config.cc_licenses_reverse[value])}</a></li>\n)
             end
           else
-            li_value = if options[:catalog_search_link]
-                       link_to(h(value), catalog_index_path(search_field: method_name, q: h(value)))
-                       else
-                         h(value)
-                       end
+            search_field = options[:search_field] || method_name
+            li_value = link_to_if(options[:catalog_search_link], h(value), catalog_index_path(search_field: search_field, q: h(value)))
             markup << %(<li class="attribute #{method_name}"> #{li_value} </li>\n)
           end
         end

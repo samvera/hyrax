@@ -163,9 +163,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('title') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "title"
-      }
       solr_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -175,9 +172,6 @@ class CatalogController < ApplicationController
 
     config.add_search_field('description') do |field|
       field.label = "Abstract or Summary"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "description"
-      }
       solr_name = solr_name("desc_metadata__description", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -194,9 +188,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('date_created') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "date_created"
-      }
       solr_name = solr_name("desc_metadata__created", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -213,9 +204,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('language') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "language"
-      }
       solr_name = solr_name("desc_metadata__language", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -224,9 +212,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('human_readable_type') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "human_readable_type"
-      }
       solr_name = solr_name("human_readable_type", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -236,9 +221,6 @@ class CatalogController < ApplicationController
 
     config.add_search_field('format') do |field|
       field.include_in_advanced_search = false
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "format"
-      }
       solr_name = solr_name("desc_metadata__format", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -248,9 +230,6 @@ class CatalogController < ApplicationController
 
     config.add_search_field('identifier') do |field|
       field.include_in_advanced_search = false
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "identifier"
-      }
       solr_name = solr_name("desc_metadata__id", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -260,9 +239,6 @@ class CatalogController < ApplicationController
 
     config.add_search_field('based_near') do |field|
       field.label = "Location"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "based_near"
-      }
       solr_name = solr_name("desc_metadata__based_near", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
@@ -271,9 +247,6 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('tag') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "tag"
-      }
       solr_name = solr_name("desc_metadata__tag", :stored_searchable, type: :string)
       field.solr_local_parameters = {
         :qf => solr_name,
