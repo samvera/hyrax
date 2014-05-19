@@ -9,7 +9,6 @@
     <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
     <meta name="viewport" content="width=device-width">
     <%= csrf_meta_tag %>
-
     <%= stylesheet_link_tag 'application' %>
     <%= javascript_include_tag 'application' %>
     <%= render partial: 'shared/ga', formats: [:html] %>
@@ -18,10 +17,6 @@
 
     <%= content_for?(:body) ? yield(:body) : yield %>
 
-
-    <% unless Rails.env.production? %>
-    <!-- Rendered through: <%= yield(:layout_name) %>boilerplate -->
-    <% end %>
-    <div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
+    <%= render 'shared/ajax_modal' %>
   </body>
 </html>
