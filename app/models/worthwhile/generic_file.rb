@@ -44,6 +44,10 @@ module Worthwhile
       super.tap do |solr_doc|
         # patch until https://github.com/projecthydra/sufia/pull/453 is merged (4.0.0 beta 4)
         solr_doc['desc_metadata__title_sim'] = solr_doc['desc_metadata__title_tesim']
+
+        # Enables Riiif to not have to recalculate this each time.
+        solr_doc['height_isi'] = Integer(height.first) if height.present?
+        solr_doc['width_isi'] = Integer(width.first) if width.present?
       end
     end
   end
