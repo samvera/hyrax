@@ -4,7 +4,7 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     index.as :stored_searchable, :facetable
   end
   property :title, predicate: RDF::DC.title do |index|
-    index.as :stored_searchable
+    index.as :stored_searchable, :facetable
   end
   property :creator, predicate: RDF::DC.creator do |index|
     index.as :stored_searchable, :facetable
