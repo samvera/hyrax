@@ -33,6 +33,7 @@ module Worthwhile::CurationConcernController
     if actor.create
       after_create_response
     else
+      flash[:error] = curation_concern.errors
       setup_form
       respond_with([:curation_concern, curation_concern]) do |wants|
         wants.html { render 'new', status: :unprocessable_entity }
