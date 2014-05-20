@@ -39,7 +39,13 @@ module Worthwhile
       obj.representative = self.pid
       obj.save
     end
-    
+
+    def to_solr(solr_doc = {})
+      super.tap do |solr_doc|
+        # patch until https://github.com/projecthydra/sufia/pull/453 is merged (4.0.0 beta 4)
+        solr_doc['desc_metadata__title_sim'] = solr_doc['desc_metadata__title_tesim']
+      end
+    end
   end
 end
 
