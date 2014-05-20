@@ -100,6 +100,7 @@ describe CurationConcern::GenericFilesController do
         Worthwhile::GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
           gf.batch = parent
+          gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           gf.save!
         end
       end
@@ -140,6 +141,12 @@ describe CurationConcern::GenericFilesController do
           post :update, id: generic_file, generic_file: 
             { title: 'new_title', tag: [''], permissions: { new_group_name: '', new_user_name: '', group: {'group3' => 'read' }}}
           expect(assigns[:generic_file].read_groups).to eq ["group3"]
+        end
+
+        it "should update visibility" do
+          new_visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          post :update, id: generic_file, generic_file: {visibility:new_visibility, embargo_release_date:""}
+          generic_file.reload.visibility.should == new_visibility
         end
       end
 
