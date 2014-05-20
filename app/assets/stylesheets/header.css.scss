@@ -17,6 +17,24 @@ $gray-lighter: #eee;
   background-image: linear-gradient(to bottom, #0071BC 0%, #003457 100%);
   min-height: 4em;
 
+  #logo span.glyphicon {
+    color: #FFF;
+    font-size: 4em;
+    margin: .25em 0 0 .25em;
+  }
+
+  .institution_name {
+    font-family: 'Lato', Verdana, Arial, Helvetica;
+    font-size: 4em;
+    font-weight: 300;
+    margin: 0 0 0 .25em;
+  }
+
+  .institution_name, .institution_name a:link, .institution_name a:visited {
+    color: #FFF;
+    text-decoration: none;
+  }
+
   .navbar {
     min-height: 0px;
     margin-bottom: 0.8em;
@@ -71,18 +89,6 @@ $gray-lighter: #eee;
   }
 }
 
-#logo span.glyphicon {
-  color: #FFF;
-  font-size: 4em;
-  margin: .25em 0 0 .25em;
-}
-.institution_name {
-  color: #FFF;
-  font-family: 'Lato', Verdana, Arial, Helvetica;
-  font-size: 4em;
-  font-weight: 300;
-  margin: 0 0 0 .25em;
-}
 
 .login_button {
   margin: 1.75em 3em 0 0;
@@ -90,4 +96,7 @@ $gray-lighter: #eee;
 
 #search-form-header {
   margin-top: 7px;
+}
+#search-submit-header {
+  margin-left: -15px;
 }

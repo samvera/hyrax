@@ -1,10 +1,10 @@
 <%# only display the q parameter if the controller is not the dashboard.  If they are in the dashboard controller, then the search is of the dashboard. %>
-    <%= form_tag catalog_index_path, method: :get, id: "search-form-header", class: "col-xs-12", role: "search" do %>
+    <%= form_tag catalog_index_path, method: :get, id: "search-form-header", role: "search" do %>
       <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8, :owner)) %>
       <%= hidden_field_tag 'owner', params[:owner] %>
-
+    <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-10">
+        <div class="col-xs-10">
           <div class="input-group">
             <% q = params[:controller].match(/^dashboard/) ? nil : params[:q] %>
             <%= text_field_tag :q, q, class: "q form-control", id: "search-field-header", placeholder: t('sufia.search.form.q.placeholder') %>
@@ -17,15 +17,16 @@
                 <li><a href="#" data-search-option="all" data-search-label="<%= t('sufia.search.form.option.all.label_short') %>"><%= t('sufia.search.form.option.all.label_long') %></a></li>
                 <li><a href="#" data-search-option="mine" data-search-label="<%= t('sufia.search.form.option.mine.label_short') %>"><%= t('sufia.search.form.option.mine.label_long') %></a></li>
               </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-2">
+            </div><!-- /.input-group-btn -->
+          </div><!-- /.input-group -->
+        </div><!-- /text field dropdown -->
+        <div class="col-xs-2">
           <button type="submit" class="btn btn-primary" id="search-submit-header">
-            <i class="glyphicon glyphicon-search"></i> Go
+            <span class="glyphicon glyphicon-search"></span> Go
           </button>
-        </div>
-      </div>
+        </div><!-- /.go -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
     <% end %>
 
   
