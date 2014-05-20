@@ -97,11 +97,6 @@ module Sufia
       end
     end
 
-    # Redefine this for more intuitive keys in Redis
-    def to_param
-      noid
-    end
-
     def label=(new_label)
       @inner_object.label = new_label
       if self.title.empty?

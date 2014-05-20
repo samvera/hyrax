@@ -4,7 +4,6 @@ class CollectionsController < ApplicationController
   include Blacklight::Catalog::SearchContext
   include BlacklightAdvancedSearch::ParseBasicQ
   include BlacklightAdvancedSearch::Controller
-  include Sufia::Noid # for normalize_identifier method
   prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
   before_filter :filter_docs_with_read_access!, except: :show
   before_filter :has_access?, except: :show

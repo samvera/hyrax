@@ -4,9 +4,6 @@ module Sufia
     include Hydra::Controller::DownloadBehavior
 
     included do
-      # module mixes in normalize_identifier method
-      include Sufia::Noid
-
       # moved check into the routine so we can handle the user with no access
       prepend_before_filter :normalize_identifier
     end

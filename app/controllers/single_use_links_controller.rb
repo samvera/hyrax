@@ -1,8 +1,6 @@
 require 'sufia/single_use_error'
 
 class SingleUseLinksController < ApplicationController
-  include Sufia::Noid
-
   prepend_before_filter :normalize_identifier
   before_filter :load_asset
   before_filter :authenticate_user!
