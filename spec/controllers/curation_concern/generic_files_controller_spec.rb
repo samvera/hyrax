@@ -3,7 +3,7 @@ require 'spec_helper'
 describe CurationConcern::GenericFilesController do
   let(:user) { FactoryGirl.create(:user) }
   let(:file) { fixture_file_upload('files/image.png','image/png') }
-  let(:parent) { FactoryGirl.create(:generic_work, edit_users: [user.user_key]) }
+  let(:parent) { FactoryGirl.create(:generic_work, edit_users: [user.user_key], visibility:Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
 
   context "when signed in" do
     before { sign_in user }
@@ -43,6 +43,15 @@ describe CurationConcern::GenericFilesController do
           version = saved_file.content.latest_version
           expect(version.versionID).to eq "content.0"
           expect(saved_file.content.version_committer(version)).to eq user.email
+        end
+
+        it "copies visibility from the parent" do
+          s2 = double('one')
+          expect(CharacterizeJob).to receive(:new).with('test:123').and_return(s2)
+          expect(Sufia.queue).to receive(:push).with(s2).once
+          xhr :post, :create, files: [file], parent_id: parent
+          saved_file = assigns[:generic_file].reload
+          expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         end
       end
 
