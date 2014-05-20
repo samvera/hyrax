@@ -1,5 +1,4 @@
 module CurationConcern
-  class LinkedResourceActor 
-    include Worthwhile::CurationConcern::BaseActor
+  class LinkedResourceActor < CurationConcern::BaseActor
   end
 end
