@@ -11,7 +11,7 @@ require 'engine_cart/rake_task'
 task ci: ['engine_cart:generate', 'jetty:clean'] do
   ENV['environment'] = "test"
   jetty_params = Jettywrapper.load_config
-  jetty_params[:startup_wait]= 60
+  jetty_params[:startup_wait]= 90
 
   Jettywrapper.wrap(jetty_params) do
     # run the tests
