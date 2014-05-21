@@ -264,49 +264,53 @@ describe GenericFile do
       end
     end
   end
-  it "supports to_solr" do
-    allow(subject).to receive(:pid).and_return('stubbed_pid')
-    subject.part_of = "Arabiana"
-    subject.contributor = "Mohammad"
-    subject.creator = "Allah"
-    subject.title = "The Work"
-    subject.description = "The work by Allah"
-    subject.publisher = "Vertigo Comics"
-    subject.date_created = "1200-01-01"
-    subject.date_uploaded = Date.parse("2011-01-01")
-    subject.date_modified = Date.parse("2012-01-01")
-    subject.subject = "Theology"
-    subject.language = "Arabic"
-    subject.rights = "Wide open, buddy."
-    subject.resource_type = "Book"
-    subject.identifier = "urn:isbn:1234567890"
-    subject.based_near = "Medina, Saudi Arabia"
-    subject.related_url = "http://example.org/TheWork/"
-    subject.mime_type = "image/jpeg"
-    subject.format_label = "JPEG Image"
-    local = subject.to_solr
-    local.should_not be_nil
-    local[Solrizer.solr_name("desc_metadata__part_of")].should be_nil
-    local[Solrizer.solr_name("desc_metadata__date_uploaded")].should be_nil
-    local[Solrizer.solr_name("desc_metadata__date_modified")].should be_nil
-    local[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)].should == '2011-01-01T00:00:00Z'
-    local[Solrizer.solr_name("desc_metadata__date_modified", :stored_sortable, type: :date)].should == '2012-01-01T00:00:00Z'
-    local[Solrizer.solr_name("desc_metadata__rights")].should == ["Wide open, buddy."]
-    local[Solrizer.solr_name("desc_metadata__related_url")].should == ["http://example.org/TheWork/"]
-    local[Solrizer.solr_name("desc_metadata__contributor")].should == ["Mohammad"]
-    local[Solrizer.solr_name("desc_metadata__creator")].should == ["Allah"]
-    local[Solrizer.solr_name("desc_metadata__title")].should == ["The Work"]
-    local[Solrizer.solr_name("desc_metadata__description")].should == ["The work by Allah"]
-    local[Solrizer.solr_name("desc_metadata__publisher")].should == ["Vertigo Comics"]
-    local[Solrizer.solr_name("desc_metadata__subject")].should == ["Theology"]
-    local[Solrizer.solr_name("desc_metadata__language")].should == ["Arabic"]
-    local[Solrizer.solr_name("desc_metadata__date_created")].should == ["1200-01-01"]
-    local[Solrizer.solr_name("desc_metadata__resource_type")].should == ["Book"]
-    local[Solrizer.solr_name("file_format")].should == "jpeg (JPEG Image)"
-    local[Solrizer.solr_name("desc_metadata__identifier")].should == ["urn:isbn:1234567890"]
-    local[Solrizer.solr_name("desc_metadata__based_near")].should == ["Medina, Saudi Arabia"]
-    local[Solrizer.solr_name("mime_type")].should == ["image/jpeg"]
-    local["noid_tsi"].should eq('stubbed_pid')
+  describe "to_solr" do
+    before do
+      allow(subject).to receive(:pid).and_return('stubbed_pid')
+      subject.part_of = "Arabiana"
+      subject.contributor = "Mohammad"
+      subject.creator = "Allah"
+      subject.title = "The Work"
+      subject.description = "The work by Allah"
+      subject.publisher = "Vertigo Comics"
+      subject.date_created = "1200-01-01"
+      subject.date_uploaded = Date.parse("2011-01-01")
+      subject.date_modified = Date.parse("2012-01-01")
+      subject.subject = "Theology"
+      subject.language = "Arabic"
+      subject.rights = "Wide open, buddy."
+      subject.resource_type = "Book"
+      subject.identifier = "urn:isbn:1234567890"
+      subject.based_near = "Medina, Saudi Arabia"
+      subject.related_url = "http://example.org/TheWork/"
+      subject.mime_type = "image/jpeg"
+      subject.format_label = "JPEG Image"
+    end
+    it "supports to_solr" do
+      local = subject.to_solr
+      expect(local[Solrizer.solr_name("desc_metadata__part_of")]).to be_nil
+      expect(local[Solrizer.solr_name("desc_metadata__date_uploaded")]).to be_nil
+      expect(local[Solrizer.solr_name("desc_metadata__date_modified")]).to be_nil
+      expect(local[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
+      expect(local[Solrizer.solr_name("desc_metadata__date_modified", :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
+      expect(local[Solrizer.solr_name("desc_metadata__rights")]).to eq ["Wide open, buddy."]
+      expect(local[Solrizer.solr_name("desc_metadata__related_url")]).to eq ["http://example.org/TheWork/"]
+      expect(local[Solrizer.solr_name("desc_metadata__contributor")]).to eq ["Mohammad"]
+      expect(local[Solrizer.solr_name("desc_metadata__creator")]).to eq ["Allah"]
+      expect(local[Solrizer.solr_name("desc_metadata__title")]).to eq ["The Work"]
+      expect(local["desc_metadata__title_sim"]).to eq ["The Work"]
+      expect(local[Solrizer.solr_name("desc_metadata__description")]).to eq ["The work by Allah"]
+      expect(local[Solrizer.solr_name("desc_metadata__publisher")]).to eq ["Vertigo Comics"]
+      expect(local[Solrizer.solr_name("desc_metadata__subject")]).to eq ["Theology"]
+      expect(local[Solrizer.solr_name("desc_metadata__language")]).to eq ["Arabic"]
+      expect(local[Solrizer.solr_name("desc_metadata__date_created")]).to eq ["1200-01-01"]
+      expect(local[Solrizer.solr_name("desc_metadata__resource_type")]).to eq ["Book"]
+      expect(local[Solrizer.solr_name("file_format")]).to eq "jpeg (JPEG Image)"
+      expect(local[Solrizer.solr_name("desc_metadata__identifier")]).to eq ["urn:isbn:1234567890"]
+      expect(local[Solrizer.solr_name("desc_metadata__based_near")]).to eq ["Medina, Saudi Arabia"]
+      expect(local[Solrizer.solr_name("mime_type")]).to eq ["image/jpeg"]
+      expect(local["noid_tsi"]).to eq 'stubbed_pid'
+    end
   end
   it "should support multi-valued fields in solr" do
     subject.tag = ["tag1", "tag2"]
