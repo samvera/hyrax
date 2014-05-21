@@ -12,7 +12,6 @@ module Sufia
     included do
       include Hydra::Controller::ControllerBehavior
       include Blacklight::Configurable
-      include Sufia::Noid # for normalize_identifier method
       include Sufia::FilesController::BrowseEverything
       include Sufia::FilesController::LocalIngestBehavior
       extend Sufia::FilesController::UploadCompleteBehavior

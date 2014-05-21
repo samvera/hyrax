@@ -12,6 +12,10 @@ module Sufia::Controller
     user_signed_in? ? current_user.ability : super
   end
 
+  def normalize_identifier
+    params[:id] = Sufia::Noid.namespaceize(params[:id])
+  end
+
   def render_404(exception)
     logger.error("Rendering 404 page due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
     render template: '/error/404', layout: "error", formats: [:html], status: 404
