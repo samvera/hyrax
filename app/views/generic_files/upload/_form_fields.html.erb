@@ -6,7 +6,7 @@
       <%= render partial: 'generic_files/upload/tos_checkbox' %>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
-            <div class="span70">
+            <div class="col-md-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span class="btn btn-success fileinput-button">
                     <i class="icon-plus icon-white"></i>
@@ -32,10 +32,10 @@
                     <span>Cancel upload</span>
                 </button>
             </div>
-            <div class="span50">
+            <div class="col-md-5 fileupload-progress">
                 <!-- The global progress bar -->
-                <div class="progress progress-success progress-striped active fade">
-                    <div class="bar" style="width:0%;"></div>
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                 </div>
             </div>
         </div>
@@ -44,4 +44,3 @@
         <br />
         <!-- The table listing the files available for upload/download -->
         <table id="file-table" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-
