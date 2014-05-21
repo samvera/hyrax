@@ -3,6 +3,6 @@
 <% elsif work.representative.present? %>
   <%= image_tag download_path(work.representative, {:datastream_id => 'thumbnail'}), class: 'representative_image' %>
 <% else %>
-  <%= image_tag 'curate/nope.png', class: "canonical-image" %>
+  <%= image_tag 'nope.png', class: "canonical-image" %>
 <% end %>
 
