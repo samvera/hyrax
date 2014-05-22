@@ -17,8 +17,7 @@ class CatalogController < ApplicationController
   before_filter :enforce_show_permissions, only: :show
   # This applies appropriate access controls to all solr queries
   CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
-  CatalogController.solr_search_params_logic += [:show_only_works]
-  CatalogController.solr_search_params_logic += [:exclude_linked_resources]
+  CatalogController.solr_search_params_logic += [:filter_models]
 
   skip_before_filter :default_html_head
   
@@ -316,23 +315,22 @@ class CatalogController < ApplicationController
       super
     end
 
-    #Excludes collection and person only when trying to filter by work.
     # This is included as part of blacklight search solr params logic
-    def show_only_works(solr_parameters, user_parameters)
-      if params.has_key?(:f) and params[:f].to_a.flatten == ["generic_type_sim","Work"]
-        solr_parameters[:fq] ||= []
-        clauses = Worthwhile.configuration.registered_curation_concern_types.map(&:constantize).map do |klass|
-          ActiveFedora::SolrService.construct_query_for_rel(has_model: klass.to_class_uri)
-        end
-        solr_parameters[:fq] << '(' + clauses.join(' OR ') + ')'
+    def filter_models(solr_parameters, user_parameters)
+      solr_parameters[:fq] ||= []
+      solr_parameters[:fq] << '(' + (work_clauses + collection_clauses).join(' OR ') + ')'
+    end
+
+    def work_clauses
+      return [] if params.has_key?(:f) && !params[:f][:generic_type_sim].include?('Work')
+      Worthwhile.configuration.registered_curation_concern_types.map(&:constantize).map do |klass|
+        ActiveFedora::SolrService.construct_query_for_rel(has_model: klass.to_class_uri)
       end
     end
 
-    # Excludes Linked Resource objects from search results.
-    # Based on hydra's exclude_unwanted_models filter
-    def exclude_linked_resources(solr_parameters, user_parameters)
-      solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << '-active_fedora_model_ssi:"Worthwhile::LinkedResource"'
+    def collection_clauses 
+      return [] if params.has_key?(:f) && !params[:f][:generic_type_sim].include?('Collection')
+      [ActiveFedora::SolrService.construct_query_for_rel(has_model: Collection.to_class_uri)]
     end
 
     def depositor
