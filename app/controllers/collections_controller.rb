@@ -48,7 +48,11 @@ class CollectionsController < ApplicationController
 
   # If they've selected "owner=mine" then restrict to files I have edit access to
   def discovery_permissions
-    ["edit"]
+    if params[:owner]=="mine"
+      ["edit"]
+    else
+      super
+    end
   end
 
   # Include 'curation_concern/base' in search path for views

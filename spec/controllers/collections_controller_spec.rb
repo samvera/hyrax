@@ -43,19 +43,19 @@ describe CollectionsController do
       @asset2 = GenericFile.new(title: "Second of the Assets", depositor: user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save
-      @asset3 = GenericFile.new(title: "Third of the Assets", depositor:'abc')
-      @asset3.apply_depositor_metadata('abc')
-      @asset3.save
+      @my_public_asset_in_collection = GenericFile.new(title: "Third of the Assets", depositor:'abc')
+      @my_public_asset_in_collection.apply_depositor_metadata('abc')
+      @my_public_asset_in_collection.save
       old_count = Collection.count
-      post :create, collection: {title: "My own Collection ", description: "The Description\r\n\r\nand more"}, batch_document_ids:[@asset1.id, @asset2.id, @asset3.id]
+      post :create, collection: {title: "My own Collection ", description: "The Description\r\n\r\nand more"}, batch_document_ids:[@asset1.id, @asset2.id, @my_public_asset_in_collection.id]
       Collection.count.should == old_count+1
       collection = assigns(:collection)
       collection.members.should include (@asset1)
       collection.members.should include (@asset2)
-      collection.members.should_not include (@asset3)
+      collection.members.should_not include (@my_public_asset_in_collection)
       @asset1.destroy
       @asset2.destroy
-      @asset3.destroy
+      @my_public_asset_in_collection.destroy
     end
 
     it "should add docs to collection if batch ids provided and add the collection id to the documents int he colledction" do
@@ -85,22 +85,22 @@ describe CollectionsController do
       @asset2 = GenericFile.new(title: "Second of the Assets", depositor: user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save
-      @asset3 = GenericFile.new(title: "Third of the Assets", depositor:'abc')
-      @asset3.apply_depositor_metadata(user.user_key)
-      @asset3.save
+      @my_public_asset_in_collection = GenericFile.new(title: "Third of the Assets", depositor:'abc')
+      @my_public_asset_in_collection.apply_depositor_metadata(user.user_key)
+      @my_public_asset_in_collection.save
       sign_in user
     end
     after do
       @collection.destroy
       @asset1.destroy
       @asset2.destroy
-      @asset3.destroy
+      @my_public_asset_in_collection.destroy
     end
 
     it "should set collection on members" do
-      put :update, id: @collection.id, collection: {members:"add"}, batch_document_ids:[@asset3.pid,@asset1.pid, @asset2.pid]
+      put :update, id: @collection.id, collection: {members:"add"}, batch_document_ids:[@my_public_asset_in_collection.pid,@asset1.pid, @asset2.pid]
       response.should redirect_to Hydra::Collections::Engine.routes.url_helpers.collection_path(@collection.pid)
-      assigns[:collection].members.map{|m| m.pid}.sort.should == [@asset2, @asset3, @asset1].map {|m| m.pid}.sort
+      assigns[:collection].members.map{|m| m.pid}.sort.should == [@asset2, @my_public_asset_in_collection, @asset1].map {|m| m.pid}.sort
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
       asset_results["response"]["numFound"].should == 1
       doc = asset_results["response"]["docs"].first
@@ -118,6 +118,7 @@ describe CollectionsController do
   end
 
   describe "#show" do
+    let(:other_user) { FactoryGirl.create(:user) }
     before do
       @asset1 = GenericFile.new(title: "First of the Assets")
       @asset1.apply_depositor_metadata(user.user_key)
@@ -125,17 +126,27 @@ describe CollectionsController do
       @asset2 = GenericFile.new(title: "Second of the Assets", depositor:user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save!
-      @asset3 = GenericFile.new(title: "Third of the Assets", depositor:user.user_key)
-      @asset3.apply_depositor_metadata(user.user_key)
-      @asset3.save!
-      @asset4 = GenericFile.new(title: "Third of the Assets", depositor:user.user_key)
-      @asset4.apply_depositor_metadata(user.user_key)
-      @asset4.save!
+      @my_public_asset_in_collection = GenericFile.new(title: "Third of the Assets", depositor:user.user_key)
+      @my_public_asset_in_collection.apply_depositor_metadata(user.user_key)
+      @my_public_asset_in_collection.visibility = "open"
+      @my_public_asset_in_collection.save!
+      @my_public_asset_outside_collection = GenericFile.new(title: "Fourth of the Assets", depositor:user.user_key)
+      @my_public_asset_outside_collection.apply_depositor_metadata(user.user_key)
+      @my_public_asset_outside_collection.visibility = "open"
+      @my_public_asset_outside_collection.save
+      @private_asset_not_mine = GenericFile.new(title: "Fifth of the Assets", depositor:other_user.user_key)
+      @private_asset_not_mine.apply_depositor_metadata(other_user.user_key)
+      @private_asset_not_mine.visibility = "restricted"
+      @private_asset_not_mine.save!
+      @public_asset_not_mine = GenericFile.new(title: "Sixth of the Assets", depositor:other_user.user_key)
+      @public_asset_not_mine.apply_depositor_metadata(other_user.user_key)
+      @public_asset_not_mine.visibility = "open"
+      @public_asset_not_mine.save!
       @collection = Collection.new
       @collection.title = "My collection"
       @collection.description = "My incredibly detailed description of the collection"
       @collection.apply_depositor_metadata(user.user_key)
-      @collection.members = [@asset1,@asset2,@asset3]
+      @collection.members = [@asset1,@asset2,@my_public_asset_in_collection,@private_asset_not_mine,@public_asset_not_mine]
       @collection.save!
       controller.stub(:authorize!).and_return(true)
       controller.stub(:apply_gated_search)
@@ -150,14 +161,27 @@ describe CollectionsController do
         expect(response).to be_successful
         assigns[:collection].title.should == @collection.title
         ids = assigns[:member_docs].map(&:id)
-        expect(ids).to include @asset1.pid, @asset2.pid, @asset3.pid
-        expect(ids).to_not include @asset4.pid
+        expect(ids).to include @asset1.pid, @asset2.pid, @my_public_asset_in_collection.pid, @public_asset_not_mine.pid
+        expect(ids).to_not include @my_public_asset_outside_collection.pid, @private_asset_not_mine.pid
+      end
+
+      context "when query limited to 'mine'" do
+        it "should return only the collection members that I own" do
+          get :show, id: @collection.id, owner:'mine'
+          expect(response).to be_successful
+          assigns[:collection].title.should == @collection.title
+          ids = assigns[:member_docs].map(&:id)
+          expect(ids).to include @asset1.pid, @asset2.pid, @my_public_asset_in_collection.pid
+          expect(ids).to_not include @my_public_asset_outside_collection.pid, @private_asset_not_mine.pid, @public_asset_not_mine.pid
+        end
       end
     end
     context "not signed in" do
-      it "should not show me files in the collection" do
+      it "should only show me public access files in the collection" do
         get :show, id: @collection.id
-        assigns[:member_docs].count.should == 0
+        assigns[:member_docs].count.should == 2
+        ids = assigns[:member_docs].map(&:id)
+        expect(ids).to include @my_public_asset_in_collection.pid, @public_asset_not_mine.pid
       end
     end
   end
