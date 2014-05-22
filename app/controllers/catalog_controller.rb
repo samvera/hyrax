@@ -322,14 +322,14 @@ class CatalogController < ApplicationController
     end
 
     def work_clauses
-      return [] if params.has_key?(:f) && !params[:f][:generic_type_sim].include?('Work')
+      return [] if params.has_key?(:f) && Array(params[:f][:generic_type_sim]).include?('Collection')
       Worthwhile.configuration.registered_curation_concern_types.map(&:constantize).map do |klass|
         ActiveFedora::SolrService.construct_query_for_rel(has_model: klass.to_class_uri)
       end
     end
 
     def collection_clauses 
-      return [] if params.has_key?(:f) && !params[:f][:generic_type_sim].include?('Collection')
+      return [] if params.has_key?(:f) && Array(params[:f][:generic_type_sim]).include?('Work')
       [ActiveFedora::SolrService.construct_query_for_rel(has_model: Collection.to_class_uri)]
     end
 

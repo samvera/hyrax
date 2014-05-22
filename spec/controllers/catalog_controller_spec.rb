@@ -18,15 +18,15 @@ describe CatalogController do
     context "Searching all content" do
       it "should exclude linked resources" do
         get 'index'
-        response.should be_successful
-        assigns(:document_list).map(&:id).should include(work1.id, work2.id, collection.id)
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:id)).to include(work1.id, work2.id, collection.id)
       end
     end
 
     context "Searching all works" do
       it "should return all the works" do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
-        response.should be_successful
+        expect(response).to be_successful
         assigns(:document_list).map(&:id).should == [work1.id, work2.id]
       end
     end
@@ -34,7 +34,7 @@ describe CatalogController do
     context "Searching all collections" do
       it "should return all the works" do
         get 'index', 'f' => {'generic_type_sim' => 'Collection'}
-        response.should be_successful
+        expect(response).to be_successful
         assigns(:document_list).map(&:id).should == [collection.id]
       end
     end
@@ -42,8 +42,16 @@ describe CatalogController do
     context "searching just my works" do
       it "should return just my works" do
         get 'index', works: 'mine', 'f' => {'generic_type_sim' => 'Work'}
-        response.should be_successful
+        expect(response).to be_successful
         assigns(:document_list).map(&:id).should == [work1.id]
+      end
+    end
+
+    context "searching for one kind of work" do
+      it "returns just the specified type" do
+        get 'index', 'f' => {'human_readable_type_sim' => 'Generic Work'}
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:id)).to include(work1.id, work2.id)
       end
     end
 
