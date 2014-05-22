@@ -30,6 +30,14 @@ describe CurationConcern::GenericWorksController do
         expect(response).to be_success
       end
     end
+    context "when I am a repository manager" do
+      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      let(:a_work) { FactoryGirl.create(private_work_factory_name) }
+      it "someone elses private work should show me the page" do
+        get :show, id: a_work
+        expect(response).to be_success
+      end
+    end
   end
 
   describe "#new" do
@@ -74,6 +82,14 @@ describe CurationConcern::GenericWorksController do
         response.should render_template(:unauthorized)
       end
     end
+    context "when I am a repository manager" do
+      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      let(:a_work) { FactoryGirl.create(private_work_factory_name) }
+      it "someone elses private work should show me the page" do
+        get :edit, id: a_work
+        expect(response).to be_success
+      end
+    end
   end
 
   describe "#update" do
@@ -96,13 +112,46 @@ describe CurationConcern::GenericWorksController do
         expect(response).to render_template('edit')
       end
     end
+    context "someone elses public work" do
+      let(:a_work) { FactoryGirl.create(public_work_factory_name) }
+      it "should show 401 Unauthorized" do
+        get :update, id: a_work
+        expect(response.status).to eq 401
+        response.should render_template(:unauthorized)
+      end
+    end
+    context "when I am a repository manager" do
+      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      let(:a_work) { FactoryGirl.create(private_work_factory_name) }
+      it "someone elses private work should update the work" do
+        patch :update, id: a_work, generic_work: {  }
+        response.should redirect_to [:curation_concern, assigns[:curation_concern]]
+      end
+    end
   end
 
   describe "#destroy" do
     let(:work_to_be_deleted) { FactoryGirl.create(private_work_factory_name, user: user) }
     it "should delete the work" do
       delete :destroy, id: work_to_be_deleted
+      response.should redirect_to catalog_index_path()
       expect { GenericWork.find(work_to_be_deleted.pid) }.to raise_error
+    end
+    context "someone elses public work" do
+      let(:work_to_be_deleted) { FactoryGirl.create(private_work_factory_name) }
+      it "should show 401 Unauthorized" do
+        delete :destroy, id: work_to_be_deleted
+        expect(response.status).to eq 401
+        response.should render_template(:unauthorized)
+      end
+    end
+    context "when I am a repository manager" do
+      let(:work_to_be_deleted) { FactoryGirl.create(private_work_factory_name) }
+      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+      it "someone elses private work should delete the work" do
+        delete :destroy, id: work_to_be_deleted
+        expect { GenericWork.find(work_to_be_deleted.pid) }.to raise_error
+      end
     end
   end
 

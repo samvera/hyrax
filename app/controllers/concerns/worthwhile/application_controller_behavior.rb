@@ -8,7 +8,7 @@ module Worthwhile
       helper Worthwhile::MainAppHelpers
       
       rescue_from CanCan::AccessDenied do |exception|
-        if [:show, :edit].include? exception.action
+        if [:show, :edit, :update, :destroy].include? exception.action
           render 'unauthorized', status: :unauthorized
         else
           redirect_to main_app.root_url, alert: exception.message

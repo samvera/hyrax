@@ -71,8 +71,9 @@ describe CatalogController do
   describe "when logged in as a repository manager" do
     let(:creating_user) { FactoryGirl.create(:user) }
     let(:manager_user) { FactoryGirl.create(:user) }
-    let!(:work1) { FactoryGirl.create(:generic_work, user: creating_user) }
+    let!(:work1) { FactoryGirl.create(:private_generic_work, user: creating_user) }
     let!(:work2) { FactoryGirl.create(:embargoed_work, user: creating_user) }
+    let!(:collection) { FactoryGirl.create(:private_collection, user: creating_user) }
 
     before do
       allow_any_instance_of(User).to receive(:groups).and_return(['admin'])
@@ -89,6 +90,11 @@ describe CatalogController do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
         response.should be_successful
         assigns(:document_list).map(&:id).should include(work2.id)
+      end
+      it "should return other users' private collections" do
+        get 'index', 'f' => {'generic_type_sim' => 'Collection'}
+        response.should be_successful
+        assigns(:document_list).map(&:id).should include(collection.id)
       end
     end
 

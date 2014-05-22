@@ -12,6 +12,7 @@
 
 <% collector = can?(:collect, curation_concern) %>
 <% editor    = can?(:edit,    curation_concern) %>
+
 <% if collector || editor %>
   <% content_for :second_row do %>
     <div class="form-actions">
