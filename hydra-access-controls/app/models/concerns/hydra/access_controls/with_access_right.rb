@@ -2,10 +2,7 @@ module Hydra
   module AccessControls
     module WithAccessRight
       extend ActiveSupport::Concern
-
-      def under_embargo?
-        @under_embargo ||= rightsMetadata.under_embargo?
-      end
+      include Hydra::AccessControls::Permissions
 
       delegate :open_access?, :open_access_with_embargo_release_date?, 
                :authenticated_only_access?, :private_access?, to: :access_rights

@@ -167,7 +167,7 @@ describe Hydra::PolicyAwareAbility do
   end
   describe "edit_persons_from_policy" do
     it "should retrieve the list of individuals with edit access from the policy" do
-      subject.edit_persons_from_policy(@policy.pid).should == ["julius_caesar"]
+      expect(subject.edit_users_from_policy(@policy.pid)).to eq ["julius_caesar"]
     end
   end
   describe "read_groups_from_policy" do
@@ -179,7 +179,7 @@ describe Hydra::PolicyAwareAbility do
   end
   describe "read_persons_from_policy" do
     it "should retrieve the list of individuals with read access from the policy" do
-      subject.read_persons_from_policy(@policy.pid).should == ["julius_caesar","nero"]
+      expect(subject.read_users_from_policy(@policy.pid)).to eq ["julius_caesar","nero"]
     end
   end
 end

@@ -35,7 +35,7 @@ module Hydra
     end
 
     class PermissionsConfig
-      attr_accessor :embargo_release_date, :policy_class
+      attr_accessor :policy_class, :embargo, :lease
       def initialize
         @values = {}
         [:discover, :read, :edit].each do |key|
@@ -43,7 +43,13 @@ module Hydra
             group:      solr_name("#{prefix}#{key}_access_group", :symbol),
             individual: solr_name("#{prefix}#{key}_access_person", :symbol))
         end
-        @embargo_release_date = solr_name("#{prefix}embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
+        @embargo = EmbargoConfig.new({}, prefix: prefix)
+        @lease = LeaseConfig.new({}, prefix: prefix)
+      end
+
+      def embargo_release_date
+        Deprecation.warn PermissionsConfig, "embargo_release_date is deprecated, use embargo.release_date instead"
+        embargo.release_date
       end
 
       def merge! values
@@ -54,14 +60,17 @@ module Hydra
         case key
           when :discover, :read, :edit
             self.assign_value key, value
+          when :inheritable
+            inheritable.merge! value
           when :embargo_release_date
-            self.embargo_release_date = value
+            Deprecation.warn PermissionsConfig, "[:embargo_release_date]= is deprecated, use embargo.release_date= instead"
+            embargo.release_date = value
           when :policy_class
             self.policy_class = value
           when :owner
             logger.warn "':owner' is no longer a valid configuration for Hydra. Please remove it from your configuration."
           else
-            raise "Unknown key"
+            raise "Unknown key `#{key.inspect}`"
         end
       end
 
@@ -72,7 +81,8 @@ module Hydra
           when :inheritable
             inheritable
           when :embargo_release_date
-            @embargo_release_date
+            Deprecation.warn PermissionsConfig, "[:embargo_release_date] is deprecated, use embargo.release_date= instead"
+            embargo.release_date
           when :policy_class
             @policy_class
           else
@@ -121,6 +131,33 @@ module Hydra
         ActiveFedora::SolrService.solr_name(*args)
       end
 
+      class EmbargoConfig
+        attr_accessor :release_date, :visibility_during, :visibility_after, :history
+        def initialize(values = {}, attributes={prefix:''})
+          @release_date = solr_name("#{attributes[:prefix]}embargo_release_date", :stored_sortable, type: :date)
+          @visibility_during = solr_name("visibility_during_embargo", :symbol)
+          @visibility_after = solr_name("visibility_after_embargo", :symbol)
+          @history = solr_name("embargo_history", :symbol)
+        end
+
+        def solr_name(*args)
+          ActiveFedora::SolrService.solr_name(*args)
+        end
+      end
+
+      class LeaseConfig
+        attr_accessor :expiration_date, :visibility_during, :visibility_after, :history
+        def initialize(values = {}, attributes={prefix:''})
+          @expiration_date = solr_name("#{attributes[:prefix]}lease_expiration_date", :stored_sortable, type: :date)
+          @visibility_during = solr_name("visibility_during_lease", :symbol)
+          @visibility_after = solr_name("visibility_after_lease", :symbol)
+          @history = solr_name("lease_history", :symbol)
+        end
+
+        def solr_name(*args)
+          ActiveFedora::SolrService.solr_name(*args)
+        end
+      end
 
       class GroupPermission
         attr_accessor :group, :individual

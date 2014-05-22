@@ -98,7 +98,7 @@ describe Hydra::AdminPolicy do
         subject[inheritable_group].should include("africana-faculty", "cool-kids")
 
         subject[Hydra.config[:permissions][:inheritable][:edit][:individual] ].should == ["julius_caesar"]
-        subject[Hydra.config[:permissions][:inheritable][:embargo_release_date] ].should == "2102-10-01"
+        expect(subject[Hydra.config[:permissions][:inheritable][:embargo_release_date] ]).to eq Date.parse("2102-10-01").to_time.utc.iso8601
       end
     end
 

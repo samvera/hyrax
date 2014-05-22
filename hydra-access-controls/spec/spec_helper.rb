@@ -16,11 +16,6 @@ if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   SimpleCov.start
 end
 
-require 'support/mods_asset'
-require 'support/solr_document'
-require "support/user"
-require "factory_girl"
-require "factories"
 
 require 'support/rails'
 Object.logger = Logger.new(File.expand_path('../test.log', __FILE__))
@@ -28,16 +23,18 @@ Object.logger = Logger.new(File.expand_path('../test.log', __FILE__))
 # Since we're not doing a Rails Engine test, we have to load these classes manually:
 require_relative '../app/models/role_mapper'
 require_relative '../app/models/ability'
-
+require_relative '../app/services/hydra/lease_service'
+require_relative '../app/services/hydra/embargo_service'
+require_relative '../app/validators/hydra/future_date_validator'
+require 'support/mods_asset'
+require 'support/solr_document'
+require "support/user"
+require "factory_girl"
+require "factories"
 
 
 RSpec.configure do |config|
 
-end
-
-# Stubbing a deprecated class/method so it won't mess up tests.
-class Hydra::SuperuserAttributes
- cattr_accessor :silenced
 end
 
 # Stubbing Devise
