@@ -10,22 +10,32 @@ describe CatalogController do
     let!(:work1) { FactoryGirl.create(:public_generic_work, user: user) }
     let!(:work2) { FactoryGirl.create(:public_generic_work) }
     let!(:linked_resource) { FactoryGirl.create(:linked_resource, user: user, batch:work1) }
+    let!(:collection) { FactoryGirl.create(:collection, user: user) }
     let!(:file) { FactoryGirl.create(:generic_file, batch:work1) }
     before do
       sign_in user
     end
     context "Searching all content" do
       it "should exclude linked resources" do
-        get 'index', 'f' => {'generic_type_sim' => 'Work'}
+        get 'index'
         response.should be_successful
-        assigns(:document_list).map(&:id).should == [work1.id, work2.id]
+        assigns(:document_list).map(&:id).should include(work1.id, work2.id, collection.id)
       end
     end
+
     context "Searching all works" do
       it "should return all the works" do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
         response.should be_successful
         assigns(:document_list).map(&:id).should == [work1.id, work2.id]
+      end
+    end
+
+    context "Searching all collections" do
+      it "should return all the works" do
+        get 'index', 'f' => {'generic_type_sim' => 'Collection'}
+        response.should be_successful
+        assigns(:document_list).map(&:id).should == [collection.id]
       end
     end
 
