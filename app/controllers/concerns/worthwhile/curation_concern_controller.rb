@@ -4,6 +4,7 @@ module Worthwhile::CurationConcernController
   included do
     include Worthwhile::ThemedLayoutController
     with_themed_layout '1_column'
+    helper Worthwhile::AbilityHelper
     
     class_attribute :curation_concern_type
     attr_accessor :curation_concern

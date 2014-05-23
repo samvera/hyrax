@@ -4,5 +4,6 @@ module Worthwhile::MainAppHelpers
   include Worthwhile::GenericFileHelper
   include Worthwhile::SearchPathsHelper
   include Worthwhile::RenderConstraintsHelper
+  include Worthwhile::AbilityHelper
   include Curate::CollectionsHelper
 end
