@@ -6,7 +6,7 @@
           <% if flash[type] %>
             <div class="alert <%= flash_dom_class %> ui-corner-all <%= type.to_s %>">
               <a class="close" data-dismiss="alert" href="#">×</a>
-              <%= Array(flash[type]).join("<br/>").html_safe %>
+              <%= safe_join(Array(flash[type]), "<br/>") %>
             </div>
             <% flash.delete(type) %>
           <% end %>
