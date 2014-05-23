@@ -15,11 +15,23 @@ describe CatalogController do
     before do
       sign_in user
     end
+
+    context "when there is private content" do
+      let!(:private_work) { FactoryGirl.create(:private_generic_work) }
+      let!(:private_collection) { FactoryGirl.create(:private_collection) }
+
+      it "excludes it" do
+        get 'index'
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:id)).to match_array [work1.id, work2.id, collection.id]
+      end
+    end
+
     context "Searching all content" do
       it "should exclude linked resources" do
         get 'index'
         expect(response).to be_successful
-        expect(assigns(:document_list).map(&:id)).to include(work1.id, work2.id, collection.id)
+        expect(assigns(:document_list).map(&:id)).to match_array [work1.id, work2.id, collection.id]
       end
     end
 
