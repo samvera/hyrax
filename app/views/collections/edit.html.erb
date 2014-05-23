@@ -4,21 +4,18 @@
 
 
 <% unless has_collection_search_parameters? %>
-  <div class="row">
-    <%= render partial: 'collections/edit_actions' %>
-    <%= render partial: 'collections/form', locals: { record: @collection } %>
-  </div>
+  <%= render partial: 'collections/edit_actions' %>
+  <%= render partial: 'collections/form', locals: { record: @collection } %>
 <% end %>
-  
 
-  <h2>Manage Items in this Collection</h2>
-  <%= render partial: 'search_collection_dashboard_form'%>
-  <%= render partial: 'catalog/did_you_mean' %>
-  <%#= render partial: 'catalog/facet_selected' %>
+<h2>Manage Items in this Collection</h2>
+<%= render partial: 'search_collection_dashboard_form'%>
+<%= render partial: 'catalog/did_you_mean' %>
+<%#= render partial: 'catalog/facet_selected' %>
 
-	<%= render 'catalog/constraints', localized_params: params %>
+<%= render 'catalog/constraints', localized_params: params %>
 
-  <%#= render 'catalog/sort_and_per_page' %>
-  <%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
+<%#= render 'catalog/sort_and_per_page' %>
+<%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
 
 <%= render partial:'paginate' %>
