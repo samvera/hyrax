@@ -7,17 +7,13 @@
     <% session[:batch_edit_state] = "on" %>
     <%= batch_edit_continue "Edit Selected" %>
     <%= batch_delete %>
-    <%= form_tag sufia.dashboard_index_path  do %>
-      <%= hidden_field_tag :type, nil, value: "Add to Collection" %>
-      <div>
-      </div>
-    <% end %>
-        <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
-          data: { toggle: "modal", target: "#collection-list-container" } %>
+    <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
+        data: { toggle: "modal", target: "#collection-list-container" } %>
   </div>
+
   <div class="sort-toggle">
     <% unless @response.response['numFound'] < 2 %>
-      <%= form_tag sufia.dashboard_index_path, method: :get, class: 'per_page form-inline' do %>
+      <%= form_tag sufia.dashboard_files_path, method: :get, class: 'per_page form-inline' do %>
         <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
         <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>			      
         &nbsp;&nbsp;&nbsp;
@@ -31,4 +27,5 @@
       <% end %>
     <% end unless sort_fields.empty? %>
   </div>
+  
 </div>

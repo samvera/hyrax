@@ -1,10 +1,10 @@
 Sufia::Engine.routes.draw do
 
   # Downloads controller route
-  resources :homepage, only: "index"
+  resources :homepage, only: 'index'
 
   # Route the home page as the root
-  root to: "homepage#index"
+  root to: 'homepage#index'
 
   get 'single_use_link/generate_download/:id' => 'single_use_links#new_download', as: :generate_download_single_use_link
   get 'single_use_link/generate_show/:id' => 'single_use_links#new_show', as: :generate_show_single_use_link
@@ -13,8 +13,8 @@ Sufia::Engine.routes.draw do
 
   match 'batch_edits/clear' => 'batch_edits#clear', as: :batch_edits_clear, via: [:get, :post]
 
-  # "Notifications" route for catalog index view
-  get "users/notifications_number" => "users#notifications_number", as: :user_notify
+  # Notifications route for catalog index view
+  get 'users/notifications_number' => 'users#notifications_number', as: :user_notify
 
   # Generic file routes
   resources :generic_files, path: :files, except: :index do
@@ -29,7 +29,7 @@ Sufia::Engine.routes.draw do
   resources :featured_work_lists, path: 'featured_works', only: :create
 
   # Downloads controller route
-  resources :downloads, only: "show"
+  resources :downloads, only: 'show'
 
   # Messages
   resources :notifications, only: [:destroy, :index], controller: :mailbox do
@@ -48,38 +48,31 @@ Sufia::Engine.routes.draw do
   end
 
   # Dashboard page
-  resources 'dashboard', only: :index do
+  resources :dashboard, only: :index do
     collection do
       get 'activity', action: :activity, as: :dashboard_activity
     end
   end
 
   # Routes for user's files, collections, highlights and shares
-  namespace :dashboard do
-    resources :files, only: :index, controller: "/my/files" do
-      collection do
-        get 'page/:page', action: :index
-        get 'facet/:id', action: :facet, as: :dashboard_facet
-      end
-    end
-    resources :collections, only: :index, controller: "/my/collections" do
-      collection do
-        get 'page/:page', action: :index
-        get 'facet/:id', action: :facet, as: :dashboard_facet
-      end
-    end
-    resources :highlights, only: :index, controller: "/my/highlights" do
-      collection do
-        get 'page/:page', action: :index
-        get 'facet/:id', action: :facet, as: :dashboard_facet
-      end
-    end
-    resources :shares, only: :index, controller: "/my/shares" do
-      collection do
-        get 'page/:page', action: :index
-        get 'facet/:id', action: :facet, as: :dashboard_facet
-      end
-    end
+  # Preserves existing behavior by maintaining paths to /dashboard
+  # Routes actions to the various My controllers
+  scope :dashboard do
+    get '/files',             controller: 'my/files', action: :index, as: 'dashboard_files'
+    get '/files/page/:page',  controller: 'my/files', action: :index
+    get '/files/facet/:id',   controller: 'my/files', action: :facet, as: 'dashboard_facet_dashboard_files'
+    
+    get '/collections',             controller: 'my/collections', action: :index, as: 'dashboard_collections'
+    get '/collections/page/:page',  controller: 'my/collections', action: :index
+    get '/collections/facet/:id',   controller: 'my/collections', action: :facet, as: 'dashboard_facet_dashboard_collections'
+    
+    get '/highlights',            controller: 'my/highlights', action: :index, as: 'dashboard_highlights'
+    get '/highlights/page/:page', controller: 'my/highlights', action: :index
+    get '/highlights/facet/:id',  controller: 'my/highlights', action: :facet, as: 'dashboard_facet_dashboard_highlights'
+    
+    get '/shares',            controller: 'my/shares', action: :index, as: 'dashboard_shares'
+    get '/shares/page/:page', controller: 'my/shares', action: :index
+    get '/shares/facet/:id',  controller: 'my/shares', action: :facet, as: 'dashboard_facet_dashboard_shares'
   end
 
   # advanced routes for advanced search
@@ -108,7 +101,7 @@ Sufia::Engine.routes.draw do
   if defined?(Sufia::ResqueAdmin)
     namespace :admin do
       constraints Sufia::ResqueAdmin do
-        mount Resque::Server, at: "queues"
+        mount Resque::Server, at: 'queues'
       end
     end
   end
