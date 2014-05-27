@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h3><%= @user.name %></h3>
+    <h5><%= @user.title %></h5>
+    <h5><%= @user.department %></h5>
+    <h6><%= link_to_telephone %></h6>
+    <h6><%= @user.email %></h6>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <%= link_to t("sufia.view_profile"), sufia.profile_path(@user), class: "btn btn-info" %>
+  </div>
+  <div class="col-xs-6">
+    <%= link_to t("sufia.edit_profile"), sufia.edit_profile_path(@user), class: "btn btn-info" %>
+  </div>
+</div>

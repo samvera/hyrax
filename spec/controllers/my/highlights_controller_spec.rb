@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Dashboard::HighlightsController do
+describe My::HighlightsController do
   describe "logged in user" do
     before (:each) do
       @user = FactoryGirl.find_or_create(:archivist)
@@ -26,11 +26,6 @@ describe Dashboard::HighlightsController do
       it "should respond with success" do
         get :index
         expect(response).to be_successful
-        expect(response).to render_template('dashboard/lists/index')
-      end
-
-      it "sets the controller name" do
-        expect(controller.controller_name).to eq :dashboard
       end
 
       it "should paginate" do          
@@ -54,13 +49,4 @@ describe Dashboard::HighlightsController do
     end
   end
 
-  describe "not logged in as a user" do
-    describe "#index" do
-      it "should return an error" do
-        get :index
-        expect(response).to be_redirect
-      end
-    end
-  end
 end
-

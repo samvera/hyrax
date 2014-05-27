@@ -1,5 +1,6 @@
-module Dashboard
-  class SharesController < ListsController
+module My
+  class SharesController < MyController
+
     self.solr_search_params_logic += [
       :show_only_shared_files,
     ]

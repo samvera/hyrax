@@ -91,6 +91,32 @@ $gray-lighter: #eee;
   text-decoration: none;
 }
 
+.portal {
+  border: 1px solid $gray-lightish;
+  margin: 5px;
+  padding: 5px;
+  h3 {
+    margin-top: 10px;
+  }
+}
+
+.heading-tile {
+  border-right: 1px solid $gray-lightish;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: x-large;
+  font-weight: normal;
+  span {
+    display: block;
+  }
+}
+
+.heading-row {
+  border-bottom: 1px solid $gray-lightish;
+  //margin-left: 10px;
+}
+
 #collection-list-container {
   .collection-list {
     li {

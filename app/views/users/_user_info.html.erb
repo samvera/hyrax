@@ -53,7 +53,7 @@
 
   <% if user.telephone %>
     <dt class="col-xs-5"><i class="glyphicon glyphicon-phone"></i> Telephone</dt>
-    <dd class="col-xs-7"><%= link_to user.telephone, "wtai://wp/mc;#{user.telephone}" %><%# user.telephone %></dd>
+    <dd class="col-xs-7"><%= link_to_telephone(user) %></dd>
   <% end %>
 
 </dl>

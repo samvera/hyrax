@@ -1,6 +1,7 @@
 <% @page_title = "Edit Collection #{display_title(@collection)} - #{application_name}" %>
 <%= render partial: 'generic_files/breadcrumbs', locals: {
-  include_file: false, generic_file: GenericFile.new(title: @collection.title) } %>
+      include_file: false, generic_file: GenericFile.new(title: @collection.title) 
+    } %>
 
 <h1>Edit Collection: <%= display_title(@collection) %></h1>
 
@@ -15,16 +16,12 @@
     </div><!-- /columns second -->
   </div> <!-- /columns two-b -->
 <% end %>
-  
 
-  <h2>Manage Items in this Collection</h2>
-  <%= render partial: 'search_collection_dashboard_form'%>
-  <%= render partial: 'dashboard/did_you_mean' %>
-  <%= render partial: 'dashboard/facet_selected' %>
-
-	<%= render 'dashboard/constraints', localized_params: params %>
-
-  <%= render 'collections/sort_and_per_page' %>
-  <%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
+<h2>Manage Items in this Collection</h2>
+<%= render partial: 'search_collection_dashboard_form'%>
+<%= render partial: 'my/did_you_mean' %>
+<%= render partial: 'my/facet_selected' %>
+<%= render 'collections/sort_and_per_page' %>
+<%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
 
 <%= render partial:'paginate' %>

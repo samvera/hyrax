@@ -1,0 +1,11 @@
+initialize_audio();
+
+// hide or show the batch update buttons on page startup
+window.batch_part_on_other_page = <%= @batch_part_on_other_page %>;
+window.batch_size_on_other_page = <%= @batch_size_on_other_page %>;
+window.result_set_size = <%= @result_set_size %>;
+window.document_list_count = <%= @document_list.count %>;
+toggleButtons(<%= !@empty_batch %>);
+
+// initialize hydra batch edit and set up select all button toggle after checkboxes have been created
+$('#documents').batchEdit({afterCheckboxUpdate: setup_buttontoggle});

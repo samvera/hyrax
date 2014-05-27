@@ -1,21 +1,53 @@
-<% content_for :head do %>
-    <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(format: 'rss')), title: "RSS for results") %>
-    <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(format: 'atom')), title: "Atom for results") %>
+<%= content_for :heading do %>
+
+  <div class="col-xs-12 heading-row">
+    <div class="col-xs-3 heading-tile">
+      <h1><%= t("sufia.dashboard.title") %></h1> 
+    </div>
+    <div class="col-xs-9 heading-tile">
+      <h1><%= t("sufia.dashboard.greeting") + current_user.name %></h1>
+    </div>
+  </div>
+
+  <div class="col-xs-12 heading-row">
+    <div class="col-xs-4 heading-tile">
+      <span class="glyphicon glyphicon-open"></span>
+      <%= link_to t("sufia.dashboard.upload"), sufia.new_generic_file_path %>
+    </div>
+    <div class="col-xs-4 heading-tile">
+    <span class="glyphicon glyphicon-folder-open"></span>
+      <%= link_to t("sufia.dashboard.create_collection"), collections.new_collection_path %>
+    </div>
+    <div class="col-xs-4 heading-tile">
+    <span class="glyphicon glyphicon-eye-open"></span>
+      <%= link_to t("sufia.dashboard.view_files"), sufia.dashboard_files_path  %>
+    </div>
+  </div>
+
 <% end %>
 
-<ul class="nav nav-tabs">
-  <li class="<%= "active" if @selected_tab == :files %>">
-    <%= link_to "Files", sufia.dashboard_files_path %>
-  </li>
-  <li class="<%= "active" if @selected_tab == :collections %>">
-    <%= link_to "Collections", sufia.dashboard_collections_path %>
-  </li>
-  <li class="<%= "active" if @selected_tab == :highlighted %>">
-    <%= link_to "Highlighted", sufia.dashboard_highlights_path %>
-  </li>
-  <li class="<%= "active" if @selected_tab == :shared %>">
-    <%= link_to "Shared with Me", sufia.dashboard_shares_path %>
-  </li>
-</ul>
+<%= content_for :sidebar do %>
+  
+  <div class="row">
+    <div class="portal"><%= render partial: "dashboard/_index_partials/user_info" %></div>
+  </div>
 
-Totally awesome new dashboard goes here!<br/>
+  <div class="row">
+    <div class="portal"><%= render partial: "dashboard/_index_partials/stats" %></div>
+  </div>
+
+<% end %>
+
+<div class="row">
+  <div class="portal">
+    <h3><%= t("sufia.dashboard.user_activity") %></h3>
+    <%= render_recent_activity %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="portal">
+    <h3><%= t("sufia.dashboard.user_notifications") %></h3>
+    <%= render_recent_notifications %>
+  </div>
+</div>
