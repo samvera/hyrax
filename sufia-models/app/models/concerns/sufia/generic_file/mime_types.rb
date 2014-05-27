@@ -32,7 +32,7 @@ module Sufia
 
       module ClassMethods
         def image_mime_types
-          ['image/png', 'image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif']
+          ['image/png', 'image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif', 'image/tiff']
         end
 
         def pdf_mime_types
