@@ -1,7 +1,7 @@
 # This was moved out of sufia-models and into sufia/app/models.
 # Copied the file in here to retain the functionality until/unless the file gets moved back into sufia-models.
 # -*- encoding : utf-8 -*-
-module Sufia
+module Worthwhile
   module SolrDocumentBehavior
     def title_or_label
       title || label
@@ -24,8 +24,11 @@ module Sufia
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
       m = ActiveFedora::Base.load_instance_from_solr(id, self)
-      return self if m.class == ActiveFedora::Base
-      m
+      m.class == ActiveFedora::Base ? self : m
+    end
+
+    def collection?
+      hydra_model == 'Collection'
     end
 
     # Method to return the ActiveFedora model
@@ -35,6 +38,14 @@ module Sufia
 
     def noid
       self[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)]
+    end
+
+    def human_readable_type
+      Array(self[Solrizer.solr_name('human_readable_type', :stored_searchable)]).first
+    end
+
+    def representative 
+      Array(self[Solrizer.solr_name('representative', :stored_searchable)]).first
     end
 
     def date_uploaded

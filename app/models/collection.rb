@@ -10,8 +10,8 @@ class Collection < ActiveFedora::Base
   end
 
   def to_solr(solr_doc={}, opts={})
-    super(solr_doc, opts)
-    index_collection_pids(solr_doc)
-    return solr_doc
+    super(solr_doc, opts).tap do |solr_doc|
+      index_collection_pids(solr_doc)
+    end
   end
 end

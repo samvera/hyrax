@@ -43,6 +43,19 @@ module Worthwhile
       end
     end
 
+    # Add behaviors to the SolrDocument model
+    def inject_solr_document_behavior
+      file_path = "app/models/solr_document.rb"
+      if File.exists?(file_path)
+        inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
+          "\n  # Adds Worthwhile behaviors to the SolrDocument.\n" +
+            "  include Worthwhile::SolrDocumentBehavior\n"
+        end
+      else
+        puts "     \e[31mFailure\e[0m  Worthwhile requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
+      end
+    end
+
     def assets
       copy_file "worthwhile.css.scss", "app/assets/stylesheets/worthwhile.css.scss"
       copy_file "worthwhile.js", "app/assets/javascripts/worthwhile.js"

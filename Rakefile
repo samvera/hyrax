@@ -19,4 +19,5 @@ task ci: ['engine_cart:generate', 'jetty:clean'] do
   end
 end
 
+task clean: 'engine_cart:clean'
 task default: :ci

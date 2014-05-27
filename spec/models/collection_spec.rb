@@ -49,10 +49,16 @@ describe Collection do
     end
   end
 
-  describe "to_solr on a saved object" do
+  describe "to_solr" do
+    before do
+      allow(subject).to receive(:pid).and_return('sufia:test123')
+    end
+
     let(:solr_doc) {subject.to_solr}
-    it "should have a generic_type_sim" do
-      solr_doc['generic_type_sim'].should == ['Collection']
+
+    it "should have required fields" do
+      expect(solr_doc['generic_type_sim']).to eq ['Collection']
+      expect(solr_doc['noid_tsi']).to eq 'test123'
     end
 
   end

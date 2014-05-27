@@ -6,4 +6,6 @@ module Worthwhile::MainAppHelpers
   include Worthwhile::RenderConstraintsHelper
   include Worthwhile::AbilityHelper
   include Curate::CollectionsHelper
+  include Worthwhile::ThumbnailHelper
+  include Worthwhile::UrlHelper
 end

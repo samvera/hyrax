@@ -1,17 +1,15 @@
-<% solr_doc          ||= document.inner_object.solr_doc                                                    %>
 <% title_link_target ||= polymorphic_path([:curation_concern, document])                                   %>
-<% title_link_text   ||= render_index_field_value(document: solr_doc, field: 'desc_metadata__title_tesim') %>
+<% title_link_text   ||= render_index_field_value(document: document, field: 'desc_metadata__title_tesim') %>
 <% edit_path         ||= edit_polymorphic_path([:curation_concern, document])                              %>
 
 <div class="row identifier-and-action">
   <div class="col-md-2 list-number">
     <%= document_counter_with_offset(counter) if defined?(counter) %>
-    <%= render :partial => 'catalog/_index_partials/type_display', locals: {document: document} %>
+    <%= render partial: 'catalog/_index_partials/type_display', locals: {document: document} %>
   </div>
 
   <div class="col-md-6 search-result-link">
-    <%# Minimize Fedora hits by using solr_doc rather than document %>
-    <%= link_to title_link_text, title_link_target, :id => "src_copy_link_#{solr_doc.noid}" %>
+    <%= link_to title_link_text, title_link_target, id: "src_copy_link_#{document.noid}" %>
   </div>
 
   <div class="col-md-4 search-result-actions">
@@ -19,7 +17,7 @@
       <% if can?( :edit, document ) && edit_path.present? %>
         <% edit_link_text = "Edit #{document.human_readable_type}" %>
         <%= link_to(
-          raw('<i class="glyphicon glyphicon-pencil icon-large"></i> '+edit_link_text),
+          raw('<i class="glyphicon glyphicon-pencil icon-large"></i> '+ edit_link_text),
             edit_path,
             class: 'itemicon itemedit btn',
             title: edit_link_text
