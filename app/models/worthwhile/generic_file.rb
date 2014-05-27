@@ -50,6 +50,13 @@ module Worthwhile
         solr_doc['width_isi'] = Integer(width.first) if width.present?
       end
     end
+
+    class << self
+      # patch until https://github.com/projecthydra/sufia/pull/467 is merged (4.0.0 beta 5)
+      def image_mime_types
+        super + ['image/tiff']
+      end
+    end
   end
 end
 
