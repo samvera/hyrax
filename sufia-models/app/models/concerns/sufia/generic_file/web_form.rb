@@ -16,7 +16,7 @@ module Sufia
       # override this method if you need to initialize more complex RDF assertions (b-nodes)
       def initialize_fields
         terms_for_editing.each do |key|
-          # if value is empty, we create an one element array to loop over for output 
+          # if value is empty, we create an one element array to loop over for output
           self[key] = [''] if self[key].empty?
         end
       end
@@ -34,7 +34,7 @@ module Sufia
       module ClassMethods
         def terms_for_display
           [:resource_type, :title, :creator, :contributor, :description, :tag, :rights, :publisher, :date_created,
-           :date_uploaded, :date_modified, :subject, :language, :identifier, :based_near, :related_url]
+           :subject, :language, :identifier, :based_near, :related_url]
         end
       end
 
