@@ -31,15 +31,19 @@ describe GenericFile do
     context "when image?" do
       it "should be true for jpeg2000" do
         subject.mime_type = 'image/jp2'
-        subject.should be_image
+        expect(subject).to be_image
       end
       it "should be true for jpeg" do
         subject.mime_type = 'image/jpg'
-        subject.should be_image
+        expect(subject).to be_image
       end
       it "should be true for png" do
         subject.mime_type = 'image/png'
-        subject.should be_image
+        expect(subject).to be_image
+      end
+      it "should be true for tiff" do
+        subject.mime_type = 'image/tiff'
+        expect(subject).to be_image
       end
     end
     context "when pdf?" do
