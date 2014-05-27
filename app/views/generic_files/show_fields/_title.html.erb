@@ -1,12 +1,7 @@
-        <tr>
-          <th>Title</th>
-          <td>
-            <% @generic_file.title.each do |title| %>
-              <span itemprop="name">
-              <%= title %>
-              </span>
-              <br />
-            <% end %>
-          </td>
-        </tr>
+<% @generic_file.title.each do |title| %>
+  <span itemprop="name">
+  <%= title %>
+  </span>
+  <br />
+<% end %>
 

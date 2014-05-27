@@ -1,12 +1,7 @@
-        <tr>
-          <th>Date Created</th>
-          <td>
-            <% @generic_file.date_created.each do |dc| %>
-              <span itemprop="dateCreated">
-              <%= dc %>
-			  </span>
-              <br />
-            <% end %>
-          </td>
-        </tr>
+<% @generic_file.date_created.each do |dc| %>
+  <span itemprop="dateCreated">
+  <%= dc %>
+  </span>
+  <br />
+<% end %>
 

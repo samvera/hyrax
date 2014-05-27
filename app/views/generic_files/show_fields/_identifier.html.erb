@@ -1,9 +1,4 @@
-        <tr>
-          <th>Identifier</th>
-          <td>
-            <% @generic_file.identifier.each do |id| %>
-              <%= id %><br />
-            <% end %>
-          </td>
-        </tr>
+<% @generic_file.identifier.each do |id| %>
+  <%= id %><br />
+<% end %>
 

@@ -1,22 +1,13 @@
-<%# convert class variable to a local variable if the local hasn't been set %>
 <% generic_file = @generic_file unless generic_file  %>
 
-    <h2 class="non lower">Descriptions</h2>
-    <table class="table table-striped"><!-- class="verticalheadings"> -->
-      <tbody>
-        <%= render :partial=>'generic_files/show_fields/resource_type' %>
-        <%= render :partial=>'generic_files/show_fields/title' %>
-        <%= render :partial=>'generic_files/show_fields/creator' %>
-        <%= render :partial=>'generic_files/show_fields/contributor' %>
-        <%= render :partial=>'generic_files/show_fields/related_url' %>
-        <%= render :partial=>'generic_files/show_fields/based_near' %>
-        <%= render :partial=>'generic_files/show_fields/description' %>
-        <%= render :partial=>'generic_files/show_fields/language' %>
-        <%= render :partial=>'generic_files/show_fields/publisher' %>
-        <%= render :partial=>'generic_files/show_fields/rights' %>
-        <%= render :partial=>'generic_files/show_fields/subject' %>
-        <%= render :partial=>'generic_files/show_fields/tag' %>
-        <%= render :partial=>'generic_files/show_fields/identifier' %>
-        <%= render :partial=>'generic_files/show_fields/date_created' %>
-      </tbody>
-    </table> <!-- /verticalheadings -->
+<h2 class="non lower">Descriptions</h2>
+<table class="table table-striped"><!-- class="verticalheadings"> -->
+  <tbody>
+  <% (generic_file.terms_for_display).each do |term| %>
+      <tr>
+        <th><%= get_label(term) %></th>
+        <td> <%= render_show_field_partial(term, generic_file: generic_file) %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table> <!-- /verticalheadings -->
