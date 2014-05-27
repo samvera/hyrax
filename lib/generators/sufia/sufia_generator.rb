@@ -14,6 +14,7 @@ This generator makes the following changes to your application:
  2. Adds Sufia's abilities into the Ability class
  3. Adds controller behavior to the application controller
  4. Copies the catalog controller into the local app
+ 5. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
        """
 
   def run_required_generators
@@ -71,4 +72,18 @@ This generator makes the following changes to your application:
     sentinel = /devise_for :users/
     inject_into_file 'config/routes.rb', routing_code, { after: sentinel, verbose: false }
   end
+
+  # Add behaviors to the SolrDocument model
+  def inject_sufia_solr_document_behavior
+    file_path = "app/models/solr_document.rb"
+    if File.exists?(file_path)
+      inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
+        "\n  # Adds Sufia behaviors to the SolrDocument.\n" +
+          "  include Sufia::SolrDocumentBehavior\n"
+      end
+    else
+      puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
+    end
+  end
+
 end

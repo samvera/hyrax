@@ -13,9 +13,8 @@ This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Adds user behavior to the user model
  3. Creates the sufia.rb configuration file
- 4. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
- 5. Generates mailboxer
- 6. Generates usage stats config
+ 4. Generates mailboxer
+ 5. Generates usage stats config
        """
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -81,19 +80,6 @@ This generator makes the following changes to your application:
     copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
     copy_file 'config/resque_admin.rb', 'config/initializers/resque_admin.rb'
     copy_file 'config/resque_config.rb', 'config/initializers/resque_config.rb'
-  end
-
-  # Add behaviors to the SolrDocument model
-  def inject_sufia_solr_document_behavior
-    file_path = "app/models/solr_document.rb"
-    if File.exists?(file_path)
-      inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
-        "\n  # Adds Sufia behaviors to the SolrDocument.\n" +
-          "  include Sufia::SolrDocumentBehavior\n"
-      end
-    else
-      puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
-    end
   end
 
   def install_mailboxer
