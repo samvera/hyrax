@@ -15,16 +15,15 @@ describe GenericFile do
     it "should return a list" do
       expect(subject.terms_for_display).to eq([:resource_type, :title,
         :creator, :contributor, :description, :tag, :rights, :publisher,
-        :date_created, :date_uploaded, :date_modified, :subject, :language,
-        :identifier, :based_near, :related_url])
+        :date_created, :subject, :language, :identifier, :based_near,
+        :related_url])
     end
   end
 
   describe "accessible_attributes" do
     it "should have a list" do
       subject.accessible_attributes.should include(:part_of, :resource_type, :title, :creator, :contributor, :description,
-        :tag, :rights, :publisher, :date_created, :date_uploaded, :date_modified, :subject, :language, :identifier,
-        :based_near, :related_url, :permissions)
+        :tag, :rights, :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url, :permissions)
     end
 
     it "should sanitize them" do
