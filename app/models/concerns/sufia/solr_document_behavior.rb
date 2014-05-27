@@ -109,7 +109,7 @@ module Sufia
     end
 
     def image?
-      ['image/png','image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif'].include? self.mime_type
+      ['image/png','image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif', 'image/tiff'].include? self.mime_type
     end
 
     def video?
