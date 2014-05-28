@@ -3,19 +3,23 @@
 <!-- Button to trigger modal -->
 <a href="#extraFieldsModal_<%=name %>" role="button" class="btn btn-warning fright vmiddle" data-toggle="modal">Additional <%= label %> <i class="icon-plus-sign icon-large"></i></a>
 <!-- Modal -->
-<div class="modal hide" id="extraFieldsModal_<%=name %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-    <h2 id="extraFieldsModal_<%=name %>_Label">Additional <%= label %>(s)</h2>
-  </div>
-  <div class="modal-body" aria-hidden="true">
-      <% values[start..values.length].each do |value| %>
-         <% next if value.empty? %>
-         <%= "#{value.truncate(250)}" %><br />
-      <% end %>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+<div class="modal fade" id="extraFieldsModal_<%=name %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h2 id="extraFieldsModal_<%=name %>_Label">Additional <%= label %>(s)</h2>
+      </div>
+      <div class="modal-body">
+          <% values[start..values.length].each do |value| %>
+             <% next if value.empty? %>
+             <%= "#{value.truncate(250)}" %><br />
+          <% end %>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 </div>
