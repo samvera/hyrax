@@ -90,8 +90,13 @@ module CurationConcern
           self.visibility = visibility_during_embargo ? visibility_during_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         else
           self.visibility = visibility_after_embargo ? visibility_after_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_RESTRICTED
+          after_embargo_release
         end
       end
+    end
+
+    def after_embargo_release
+       puts "TODO: implement after_embargo_release"
     end
 
     def validate_lease
@@ -119,10 +124,15 @@ module CurationConcern
       if lease_expiration_date
         if lease_expired?
           self.visibility = visibility_after_lease ? visibility_after_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          after_lease_expiration
         else
           self.visibility = visibility_during_lease ? visibility_during_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         end
       end
+    end
+
+    def after_lease_expiration
+      puts "TODO: implement after_lease_expiration"
     end
 
   end

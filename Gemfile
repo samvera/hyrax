@@ -34,4 +34,5 @@ if File.exists?(file)
 end
 
 # pins to a version of hydra-access-controls with lease & embargo support
-gem 'hydra-head', github:'projecthydra/hydra-head', ref:'07d8c8b3b8abff062f8e772911b3cb0e994d41ce'
+gem 'hydra-head', github:'projecthydra/hydra-head', ref:'b6b96a014bb610dfa8f8aa1ea312ae7717a15acd'
+#gem 'hydra-head', path:'..//hydra-head'
