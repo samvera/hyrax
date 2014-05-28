@@ -5,12 +5,12 @@
     var n = $(".batch_document_selector:checked").length;
     if ((n>0) || (forceOn)) {
         $('.batch-toggle').show();
-        $('.batch-select-all').show();
-        $('#batch-edit').show();
+        $('.batch-select-all').removeClass('hidden');
+        $('#batch-edit').removeClass('hidden');
     } else if ( otherPage){
         $('.batch-toggle').hide();
-        $('.batch-select-all').hide();
-        $('#batch-edit').hide();
+        $('.batch-select-all').addClass('hidden');
+        $('#batch-edit').addClass('hidden');
     }
     $("body").css("cursor", "auto");
   }
@@ -44,7 +44,7 @@
     $("input[type='checkbox'].batch_document_selector").each(function(index, value) {
        value['checked'] = checked;
     });
-    toggleButtons();     
+    toggleButtons();  
  
     // set menu check marks
     toggleStateBool($("[data-behavior='batch-edit-select-page']"),checked);    

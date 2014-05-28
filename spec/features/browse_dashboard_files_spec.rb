@@ -11,7 +11,7 @@ describe "Browse Dashboard" do
     visit "/dashboard"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
-    page.should have_content "Fake Document Title"
+    expect(page).to have_content("Fake Document Title")
   end
 
   context "within my files page" do
@@ -21,14 +21,14 @@ describe "Browse Dashboard" do
     end
 
     it "should show me some files" do
-      page.should have_content "Edit File"
-      page.should have_content "Download File"
+      expect(page).to have_content("Edit File")
+      expect(page).to have_content("Download File")
     end
 
     it "should allow you to search your own files" do
       fill_in "q", with: "PDF"
       click_button "search-submit-header"
-      page.should have_content "Fake Document Title"
+      expect(page).to have_content("Fake Document Title")
     end
 
     it "should allow you to browse facets" do
@@ -39,7 +39,7 @@ describe "Browse Dashboard" do
       within("#document_#{@fixtures[1].noid}") do
         click_link "Test Document MP3.mp3"
       end
-      page.should have_content "File Details"
+      expect(page).to have_content("File Details")
     end
 
     it "should allow me to edit files (from the fixtures)" do
@@ -47,7 +47,20 @@ describe "Browse Dashboard" do
       click_button "search-submit-header"
       click_button "Select an action"
       click_link "Edit File"
-      page.should have_content "Edit Fake Wav File.wav"
+      expect(page).to have_content("Edit Fake Wav File.wav")
+    end
+
+    it "should refresh the page of files" do
+      click_button "Refresh"
+      expect(page).to have_content("Edit File")
+      expect(page).to have_content("Download File")
+    end
+
+    it "should allow me to edit files in batches" do
+      pending "Need to enable javascript testing"
+      first('input#check_all').click
+      click_button('Edit Selected')
+      expect(page).to have_content('3 files')
     end
 
   end
@@ -58,7 +71,7 @@ describe "Browse Dashboard" do
     end
     it "should search within my collections" do
       within(".input-group-btn") do
-        page.should have_content("My Collections")
+        expect(page).to have_content("My Collections")
       end
     end
   end
@@ -69,7 +82,7 @@ describe "Browse Dashboard" do
     end
     it "should search within my highlights" do
       within(".input-group-btn") do
-        page.should have_content("My Highlights")
+        expect(page).to have_content("My Highlights")
       end
     end
   end
@@ -80,7 +93,7 @@ describe "Browse Dashboard" do
     end
     it "should search within my shares" do
       within(".input-group-btn") do
-        page.should have_content("My Shares")
+        expect(page).to have_content("My Shares")
       end
     end
   end
