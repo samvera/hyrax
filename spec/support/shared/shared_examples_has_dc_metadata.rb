@@ -10,11 +10,8 @@ shared_examples 'has_dc_metadata' do
   it { should have_multivalue_field(:content_format) }
   it { should have_multivalue_field(:identifier) }
   it { should have_multivalue_field(:publisher) }
-  # it { should have_multivalue_field(:bibliographic_citation) }
   it { should have_multivalue_field(:source) }
   it { should have_multivalue_field(:language) }
-  it { should have_multivalue_field(:extent) }
-  it { should have_multivalue_field(:requires) }
   it { should have_multivalue_field(:subject) }
 
 end
