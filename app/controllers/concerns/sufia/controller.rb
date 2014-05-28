@@ -41,10 +41,6 @@ module Sufia::Controller
     end
   end
 
-  def search_layout
-    "sufia-two-column"
-  end
-
   protected
 
   ### Hook which is overridden in Sufia::Ldap::Controller
