@@ -38,7 +38,7 @@ This generator makes the following changes to your application:
         "  \n# Adds Sufia behaviors into the application controller \n" +
         "  include Sufia::Controller\n"
       end
-      gsub_file file_path, "layout 'blacklight'", "layout :search_layout"
+      gsub_file file_path, "layout 'blacklight'", "layout 'sufia-one-column'"
     else
       puts "     \e[31mFailure\e[0m  Could not find #{file_path}.  To add Sufia behaviors to your Controllers, you must include the Sufia::Controller module in the Controller class definition."
     end
