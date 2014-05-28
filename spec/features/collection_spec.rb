@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'collection' do
   def create_collection(title, description)
+    visit '/dashboard'
     first('#hydra-collection-add').click
     expect(page).to have_content 'Create New Collection'
     fill_in('Title', with: title)
@@ -50,7 +51,6 @@ describe 'collection' do
     end
     it "should create collection from the dashboard and include files", js: true do
       create_collection(title2, description2)
-
       visit '/dashboard/files'
       first('input#check_all').click
       click_button "Add to Collection" # opens the modal

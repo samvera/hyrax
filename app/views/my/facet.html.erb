@@ -1,6 +1,3 @@
-<!-- This was copied from https://github.com/projectblacklight/blacklight/blob/master/app/views/catalog/facet.html.erb
- It implements the facets in the same manner as blacklight does for the main catalog for the individual's dashbord
--->
 <div class="facet_pagination top">
   <%= render partial: 'facet_pagination' %>
 </div>
@@ -11,10 +8,10 @@
 </div>
 <div class="modal-body">
   <div class="facet_extended_list">
-    <%= render_facet_limit(@display_facet, layout: false) %>
+  <%= render_facet_limit(@display_facet, layout: false) %>
   </div>
 </div>
-
+  
 <div class="modal-footer">
 
   <div class="facet_pagination bottom">

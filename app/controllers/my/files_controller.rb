@@ -10,5 +10,12 @@ module My
       super
       @selected_tab = :files
     end
+
+    protected
+    
+    def search_action_url *args
+      sufia.dashboard_files_url *args
+    end
+  
   end
 end

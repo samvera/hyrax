@@ -58,12 +58,8 @@ module Sufia
       end
     end
 
-    def search_action_url opts={}
-      sufia.url_for(opts)
-    end
-
     protected
-    
+
     # show only files with edit permissions in lib/hydra/access_controls_enforcement.rb apply_gated_discovery
     def discovery_permissions
       ["edit"]
