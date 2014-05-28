@@ -6,6 +6,8 @@ module CurationConcern
     include Hydra::AccessControls::WithAccessRight
     include Sufia::Noid
     include CurationConcern::HumanReadableType
+    include Hydra::Collection
+    include Hydra::Collections::Collectible
 
     def add_member(collectible)
       if can_add_to_members?(collectible)
@@ -16,14 +18,6 @@ module CurationConcern
       end
     end
 
-    def remove_member(collectible)
-      return false unless self.members.include?(collectible)
-      collectible.collections.delete(self)
-      collectible.save
-      self.members.delete(collectible)
-      self.save
-    end
-
     def to_s
       self.title.present? ? title : "No Title"
     end
@@ -32,8 +26,14 @@ module CurationConcern
       super.tap do |solr_doc|
         Solrizer.set_field(solr_doc, 'generic_type', human_readable_type, :facetable)
         solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
+        index_collection_pids(solr_doc)
       end
     end
+
+    def can_be_member_of_collection?(collection)
+      collection == self ? false : true
+    end
+
 
     # ------------------------------------------------
     # overriding method from active-fedora:
@@ -56,7 +56,6 @@ module CurationConcern
     rescue NoMethodError
       false
     end
-
 
   end
 end

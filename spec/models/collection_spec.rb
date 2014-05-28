@@ -93,35 +93,32 @@ describe Collection do
     end
   end
 
-  describe '#remove_member' do
+  describe '#members.delete' do
     it 'removes the member from the collection and returns true' do
       work = FactoryGirl.create(:generic_work, title: 'Work 2')
-      subject.add_member(work)
+      subject.members << work
       subject.members.should == [work]
+      subject.save
 
       work.reload
       work.collections.should == [subject]
-      work.to_solr["collection_sim"].should == [subject.pid]
+      work.to_solr["collection_tesim"].should == [subject.pid]
+      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.pid).send(:solr_doc)
+      solr_doc["collection_tesim"].should == [subject.pid]
 
-      subject.remove_member(work).should be true
+      subject.members.delete(work).should == [work]
       subject.save!
       reloaded_subject.members.should == []
 
+      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.pid).send(:solr_doc)
+      solr_doc["collection_tesim"].should be_nil
+
+
       work.reload
       work.collections.should == []
-      work.to_solr["collection_sim"].should == []
+      work.to_solr["collection_tesim"].should == []
     end
 
-    it 'returns false if there is nothing to delete' do
-      subject.remove_member(nil).should be_false
-    end
-
-    it 'returns false when trying to delete a member with does not belong to the collection' do
-      subject.save
-      work = FactoryGirl.create(:generic_work)
-      subject.remove_member(work).should be_false
-      reloaded_subject.members.should == []
-    end
   end
 
 end
