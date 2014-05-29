@@ -4,7 +4,6 @@ class CollectionsController < ApplicationController
   include Blacklight::Catalog::SearchContext
   include BlacklightAdvancedSearch::ParseBasicQ
   include BlacklightAdvancedSearch::Controller
-  include Sufia::Noid # for normalize_identifier method
   include Worthwhile::ThemedLayoutController
   include Hydra::AccessControlsEnforcement
   prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
@@ -16,7 +15,11 @@ class CollectionsController < ApplicationController
   helper BlacklightHelper
   helper Worthwhile::CatalogHelper
 
-  protected 
+  protected
+
+  def normalize_identifier
+    params[:id] = Sufia::Noid.namespaceize(params[:id])
+  end
 
   def query_collection_members
     flash[:notice]=nil if flash[:notice] == "Select something first"

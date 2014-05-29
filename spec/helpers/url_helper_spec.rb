@@ -10,7 +10,7 @@ describe Worthwhile::UrlHelper do
   subject { helper.url_for_document document }
 
   it "draws the default thumbnail" do
-    expect(subject).to eq "/concern/generic_works/sufia:123"
+    expect(subject).to eq "/concern/generic_works/123"
   end
 end
 
