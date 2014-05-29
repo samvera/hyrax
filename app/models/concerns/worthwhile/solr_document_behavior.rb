@@ -14,7 +14,7 @@ module Worthwhile
     end
 
     def to_param
-      noid
+      noid || id
     end
 
     ##
