@@ -16,11 +16,8 @@ module Sufia
       end
 
       def namespaceize(identifier)
-        if identifier.start_with?(namespace)
-          identifier
-        else
-          "#{namespace}:#{identifier}"
-        end
+        return identifier if identifier.include?(':')
+        "#{namespace}:#{identifier}"
       end
 
       protected
