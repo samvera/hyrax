@@ -1,6 +1,7 @@
 module Worthwhile
   module FilesController
     extend ActiveSupport::Concern
+    include Worthwhile::WithoutNamespace
 
     included do
       include Worthwhile::ThemedLayoutController
@@ -108,7 +109,7 @@ module Worthwhile
 
     def process_file(file)
       update_metadata_from_upload_screen
-      actor.create_metadata(params[:parent_id])
+      actor.create_metadata(namespaced_parent_id)
       if actor.create_content(file, file.original_filename, datastream_id)
         respond_to do |format|
           format.html {
