@@ -54,5 +54,27 @@ describe CatalogController do
         assigns(:document_list).count.should eql(1)
       end
     end
+
+    context "with collections" do
+      before do
+       @collection = Collection.new(title:"my collection", tag: 'rocks').tap do |c|
+         c.apply_depositor_metadata('mjg36')
+         c.save!
+       end
+      end
+
+      after do
+        @collection.destroy
+      end
+
+      it "finds collections and files" do
+        xhr :get, :index, q:"rocks"
+        expect(response).to be_success
+        doc_list = assigns(:document_list)
+        expect(doc_list.map(&:id)).to match_array [@collection.id, @gf1.id]
+      end
+
+    end
+
   end
 end
