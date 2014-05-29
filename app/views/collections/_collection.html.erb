@@ -1,7 +1,7 @@
 <%# This is a search result view %>
 <li id="document_<%= collection.noid %>" class="search-result">
 
-  <%= render partial: 'catalog/_index_partials/identifier_and_action', locals: { document: collection, counter: collection_counter, title_link_target: collections.collection_path(collection.id), edit_path: collections.edit_collection_path(collection.id), solr_doc: collection } %>
+  <%= render 'collections/identifier_and_action', document: collection, counter: collection_counter %>
 
   <div class="row">
 

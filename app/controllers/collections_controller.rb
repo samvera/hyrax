@@ -9,14 +9,12 @@ class CollectionsController < ApplicationController
   include Hydra::AccessControlsEnforcement
   prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
   before_filter :filter_docs_with_read_access!, except: [:show, :new]
-  #before_filter :initialize_fields_for_edit, only: [:edit, :new]
   CollectionsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
   with_themed_layout '1_column'
 
   helper BlacklightHelper
   helper Worthwhile::CatalogHelper
-  helper Worthwhile::CollectionsHelper
 
   protected 
 

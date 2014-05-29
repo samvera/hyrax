@@ -1,7 +1,3 @@
 <p class="resource-type">
-  <% if document.has?('desc_metadata__resource_type_tesim') %>
-    <%= render_index_field_value document: document, field: 'desc_metadata__resource_type_tesim' %>
-  <% else %>
-    <%= render_index_field_value document: document, field: 'human_readable_type_tesim' %>
-  <% end %>
+  <%= render_index_field_value document: document, field: 'human_readable_type_tesim' %>
 </p>
