@@ -1,18 +1,21 @@
 require 'spec_helper'
 
 describe CurationConcern::CollectionModel do
-  let(:klass) {
-    Class.new(ActiveFedora::Base) {
+  before do
+    class EssentialCollection < ActiveFedora::Base
       include CurationConcern::CollectionModel
       def members; @members ||= []; end
       def save; true; end
-    }
-  }
+    end
+  end
+  after do
+    Object.send(:remove_const, :EssentialCollection)
+  end
 
   context '.add_member' do
     let(:collectible?) { nil }
     let(:proposed_collectible) { double(collections: []) }
-    subject { klass.new }
+    subject { EssentialCollection.new }
     before(:each) {
       proposed_collectible.stub(:can_be_member_of_collection?).with(subject).and_return(collectible?)
       proposed_collectible.stub(:save).and_return(true)
