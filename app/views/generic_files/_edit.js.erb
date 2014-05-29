@@ -1,0 +1,22 @@
+if (navigator.userAgent.match("MSIE"))
+  $("form").validate();
+
+initialize_audio();
+
+$('input[name=revision]:radio').on('click', function() {
+  $('#save_version_note').fadeIn('slow');
+});
+
+confirmation_needed = false;
+window.onbeforeunload = confirmExit;
+
+function confirmExit(){
+  if(confirmation_needed) {
+    // if you return a string it will be displayed in between "don't navigate away"
+    // and "click Ok to navigate away or cancel to stay put" in the confirm dialog
+    return "Your metadata has not been saved.";
+  }
+}
+
+// only valid for perm tab
+set_access_levels();

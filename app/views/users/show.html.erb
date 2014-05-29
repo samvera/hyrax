@@ -1,24 +1,19 @@
-<% content_for :local_js do %>
-
-$('#myTab a').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-})
-
+<%= javascript_tag do %>
+  $('#myTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  })
 <% end %>
-  <div class="col-xs-12">
-    <div class="pull-right">
-      <%= render 'profile_actions' %>
-    </div>
-    <span class="col-xs-3">
-      <%= render 'left_sidebar' %>
-    </span>
 
-    <!-- right col -->
-    <span class="col-xs-9">
-      <%= render 'profile_tabs' %>
-    </span>
+<div class="col-xs-12">
+  <div class="pull-right">
+    <%= render 'profile_actions' %>
   </div>
-
-
-
+  <span class="col-xs-3">
+    <%= render 'left_sidebar' %>
+  </span>
+  <!-- right col -->
+  <span class="col-xs-9">
+    <%= render 'profile_tabs' %>
+  </span>
+</div>
