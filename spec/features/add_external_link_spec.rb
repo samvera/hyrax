@@ -10,6 +10,7 @@ describe "Adding a work with external links" do
   it "adds external links" do
     click_link 'New Generic Work'
     fill_in 'External link', with: 'http://dp.la'
+    fill_in 'Title', with: 'DPLA link'
     check 'I have read and accept the contributor license agreement'
     click_button 'Create Generic work'
     expect(page).to have_link 'http://dp.la'

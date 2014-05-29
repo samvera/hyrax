@@ -17,6 +17,10 @@ module Worthwhile
       noid || id
     end
 
+    def to_s
+      title_or_label
+    end
+
     ##
     # Offer the source (ActiveFedora-based) model to Rails for some of the
     # Rails methods (e.g. link_to).

@@ -4,6 +4,7 @@ FactoryGirl.define do
       user { FactoryGirl.create(:user) }
     end
 
+    title "Test title"
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
     before(:create) do |work, evaluator|
