@@ -15,8 +15,6 @@ module CurationConcern::Work
   included do
     has_metadata "properties", type: Worthwhile::PropertiesDatastream
     has_attributes :depositor, :representative, datastream: :properties, multiple: false
-    
-    attr_accessor :files
   end
   
   def to_solr(solr_doc={}, opts={})
