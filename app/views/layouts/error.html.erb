@@ -11,15 +11,6 @@
     <!-- application js -->
     <%= javascript_include_tag 'application' %>
 
-    <!-- controller specific uploader -->
-    <%= yield(:js_head) %>
-
-    <script type="text/javascript">
-      $(function() {
-        <%= yield(:local_js) %>
-      });
-    </script>
-
     <%= render partial: '/ga', formats: [:html] %>
   </head>
 

@@ -1,11 +1,7 @@
-<% content_for :js_head do  %>
-  <% javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
-  <script type="text/javascript">
-    var addthis_config = {"data_track_addressbar":true};
-  </script>
-<% end %>
+<%= javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
 
-<% content_for :local_js do %>
+<%= javascript_tag do %>
+  var addthis_config = {"data_track_addressbar":true};
   initialize_audio();
 <% end %>
 

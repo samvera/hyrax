@@ -1,7 +1,4 @@
 <% @page_title = "More Search Options - #{application_name}" %>
-<% content_for :local_js do %>
-  $(document).ready(function(){$("form.advanced input:first").focus();});
-<% end %>
 <div class="span55">
   <h1>More Search Options</h1>
   <%= render 'advanced_search_form' %>

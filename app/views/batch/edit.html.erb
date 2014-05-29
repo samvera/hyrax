@@ -1,30 +1,14 @@
-<% content_for :local_js do %>
-   if (navigator.userAgent.match("MSIE")){
-      $("#new_generic_file").validate();
-   }
-
-$('#permissions_display').show();
-
-// initialize popover helpers
-$("a[rel=popover]").popover({ html: true });
-
-confirmation_needed = true;
-window.onbeforeunload = confirmExit;
-function confirmExit(){
-      if(confirmation_needed){
-      // if you return a string it will be displayed in between "don't navigate away"
-      // and "click Ok to navigate away or cancel to stay put" in the confirm dialog
-         return "Your metadata has not been saved.";
-      }
- }
+<%= javascript_tag do %>
+  <%= render partial: "edit", formats: [:js] %>
 <% end %>
 
 <h1>Apply Metadata</h1>
-<br />
-<div class="alert">The information you provide for Title will be applied to the corresponding file only; however all other
-  information you provide will be applied <em>to the entire batch of files</em> you have just deposited into <%= t('sufia.product_name') %>.
-  You may edit individual files from <%= link_to "<i class='icon-dashboard'></i> #{t('sufia.bread_crumb.file_list')}".html_safe, sufia.dashboard_files_path %> once
-  this step is finished.
+<div class="alert">
+  The information you provide for Title will be applied to the corresponding file only; however all other
+  information you provide will be applied <em>to the entire batch of files</em> you have just 
+  deposited into <%= t('sufia.product_name') %>. You may edit individual files from 
+  <%= link_to "<i class='icon-dashboard'></i> #{t('sufia.bread_crumb.file_list')}".html_safe, sufia.dashboard_files_path %> 
+  once this step is finished.
 </div>
 <%= form_for([@batch, @generic_file], url: sufia.batch_generic_files_path, html: { multipart: true, class: 'form-horizontal' }) do |f| %>
 
@@ -33,7 +17,8 @@ function confirmExit(){
   <%= render partial: 'generic_files/permission_form', formats: [:html], locals: { gf: @generic_file, batch: @batch } %>
 
   <div class="row form-actions" id="permissions_submit">
-          <%= button_tag '<i class="icon-save"></i> Save'.html_safe, type: 'submit', class: 'btn-primary btn-large', onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_permission" %>
+    <%= button_tag '<i class="icon-save"></i> Save'.html_safe, type: 'submit', class: 'btn-primary btn-large', 
+        onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_permission" %>
   </div>
 
 <% end %>
