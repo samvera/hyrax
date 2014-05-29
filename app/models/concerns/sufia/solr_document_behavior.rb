@@ -124,5 +124,15 @@ module Sufia
       # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
       ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? self.mime_type
     end
+
+    def office_document?
+        ['text/rtf',
+         'application/msword',
+         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+         'application/vnd.ms-excel',
+         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+         'application/vnd.ms-powerpoint',
+         'application/vnd.openxmlformats-officedocument.presentationml.presentation'].include? self.mime_type
+    end
   end
 end

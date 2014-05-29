@@ -22,6 +22,10 @@
 
   <%= render_download_icon "Download the full-sized PDF" %>
 
+<% elsif @generic_file.office_document?%>
+
+    <%= render_download_icon "Download the full-sized Document" %>
+
 <% else %>
 
   <%= render_download_icon %>

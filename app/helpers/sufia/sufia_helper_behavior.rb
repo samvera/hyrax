@@ -5,7 +5,7 @@ module Sufia
     # example:
     #   config.index.thumbnail_method = :sufia_thumbnail_tag
     def sufia_thumbnail_tag(document, options)
-      path = if document.image? || document.pdf? || document.video?
+      path = if document.image? || document.pdf? || document.video? || document.office_document?
         sufia.download_path document.noid, datastream_id: 'thumbnail'
       elsif document.audio?
         "audio.png"
