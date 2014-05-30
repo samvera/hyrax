@@ -13,6 +13,8 @@ module Worthwhile
     include ::CurationConcern::Embargoable
     include Worthwhile::GenericFile::VersionedContent
     
+    before_destroy :remove_representative_relationship
+
     belongs_to :batch, property: :is_part_of, class_name: 'ActiveFedora::Base'
     attr_accessor :file
     
@@ -38,6 +40,12 @@ module Worthwhile
       return unless obj.representative.blank?
       obj.representative = self.pid
       obj.save
+    end
+
+    def remove_representative_relationship
+      return unless batch.representative == self.pid
+      batch.representative = nil
+      batch.save
     end
 
     def to_solr(solr_doc = {})
