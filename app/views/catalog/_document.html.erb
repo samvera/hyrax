@@ -1,15 +1,15 @@
 <%# This is a search result view %>
-<li id="document_<%= document.noid %>" class="search-result">
+<li id="document_<%= document.to_param %>" class="search-result">
 
   <%= render partial: 'catalog/_index_partials/identifier_and_action', locals: {document: document, counter: document_counter} %>
 
   <div class="row">
 
-    <div class="col-md-2">
+    <div class="col-xs-2">
       <%= render_thumbnail_tag document %>
     </div>
 
-    <div class="col-md-10">
+    <div class="col-xs-10">
       <dl class="attribute-list">
         <% if document.has?('desc_metadata__contributor_tesim') %>
           <dt>Author(s):</dt>
@@ -27,7 +27,7 @@
         <% end %>
       </dl>
 
-      <a href="" title="Click for more details"><i id="expand_<%= document.noid %>" class="glyphicon-plus icon-large show-details"></i></a>
+      <a href="" title="Click for more details"><i id="expand_<%= document.to_param %>" class="glyphicon glyphicon-plus show-details"></i></a>
 
       <dl class="attribute-list extended-attributes hide">
         <% index_fields.each do |solr_fname, field| -%>
