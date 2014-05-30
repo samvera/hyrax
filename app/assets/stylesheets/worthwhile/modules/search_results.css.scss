@@ -26,13 +26,20 @@
   .document-metadata {
     @include make-xs-column(8);
     overflow:hidden;
-    dt {
-      float:left;
-      margin-right: 2px;
-      clear: both;
+
+    dd, dt{
+        display: inline;
+        margin: 0;
     }
-    dd {
-      float:left;
+    dd:before {
+        content: ' '; /* space them */
+    }
+    dt:before { /* insert line break before <dt> */
+        content:"\A";
+        white-space:pre;
+    }
+    dt:first-child:before { /* disable line break before the first <dt> */
+        content: none;
     }
   }
 
