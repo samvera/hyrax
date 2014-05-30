@@ -23,7 +23,7 @@ module Sufia
       config.enable_contact_form_delivery = false
       config.browse_everything = nil
       config.enable_local_ingest = nil
-      config.usage_statistics = nil
+      config.analytics = false
       config.queue = Sufia::Resque::Queue
 
       config.autoload_paths += %W(
