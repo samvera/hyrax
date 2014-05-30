@@ -39,10 +39,6 @@ class CollectionsController < ApplicationController
     @collection.initialize_fields
   end
 
-  def _prefixes
-    @_prefixes ||= super + ['catalog']
-  end
-
   # If they've selected "owner=mine" then restrict to files I have edit access to
   def discovery_permissions
     if params[:owner]=="mine"
@@ -52,9 +48,9 @@ class CollectionsController < ApplicationController
     end
   end
 
-  # Include 'curation_concern/base' in search path for views
+  # Include 'catalog' and 'curation_concern/base' in search path for views
   def _prefixes
-    @_prefixes ||= super + ['curation_concern/base']
+    @_prefixes ||= super + ['catalog', 'curation_concern/base']
   end
 
 end
