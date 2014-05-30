@@ -54,7 +54,6 @@ module Worthwhile::CatalogController
 
       # solr fields to be displayed in the index (search results) view
       #   The ordering of the field names is the order of the display
-      config.add_index_field solr_name("desc_metadata__title", :stored_searchable, type: :string), label: "Title"
       config.add_index_field solr_name("desc_metadata__description", :stored_searchable, type: :string), label: "Description"
       config.add_index_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), label: "Keyword"
       config.add_index_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), label: "Subject"

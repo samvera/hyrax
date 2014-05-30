@@ -123,3 +123,14 @@ dl.stacked {
 legend + .control-group {
   margin-top: 0px;
 }
+
+#documents .document {
+  .document-thumbnail {
+    @include make-sm-column(2);
+  }
+
+  .document-metadata {
+    float: left;
+    @include make-sm-column(8);
+  }
+}
