@@ -4,10 +4,9 @@ class CollectionsController < ApplicationController
   include Blacklight::Catalog::SearchContext
   include BlacklightAdvancedSearch::ParseBasicQ
   include BlacklightAdvancedSearch::Controller
-  include Sufia::Noid # for normalize_identifier method
   include Worthwhile::ThemedLayoutController
   include Hydra::AccessControlsEnforcement
-  prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
+  include Worthwhile::WithoutNamespace
   before_filter :filter_docs_with_read_access!, except: [:show, :new]
   CollectionsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
@@ -16,7 +15,7 @@ class CollectionsController < ApplicationController
   helper BlacklightHelper
   helper Worthwhile::CatalogHelper
 
-  protected 
+  protected
 
   def query_collection_members
     flash[:notice]=nil if flash[:notice] == "Select something first"

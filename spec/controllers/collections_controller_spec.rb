@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CollectionsController do
-  before(:each) { @routes = Hydra::Collections::Engine.routes }
+  routes { Hydra::Collections::Engine.routes }
   before do
     controller.stub(:has_access?).and_return(true)
     User.any_instance.stub(:groups).and_return([])
@@ -83,7 +83,7 @@ describe CollectionsController do
 
     it "should set collection on members" do
       put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_public_generic_work.pid,work1.pid, work2.pid]
-      response.should redirect_to Hydra::Collections::Engine.routes.url_helpers.collection_path(collection.pid)
+      expect(response).to redirect_to collection_path(collection)
       assigns[:collection].members.map{|m| m.pid}.sort.should == [work2, my_public_generic_work, work1].map {|m| m.pid}.sort
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{work2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
       asset_results["response"]["numFound"].should == 1

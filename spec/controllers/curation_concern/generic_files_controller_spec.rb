@@ -28,8 +28,8 @@ describe CurationConcern::GenericFilesController do
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
                  permission: { group: { 'public' => 'read' } }
+            expect(response).to be_success
           }.to change { Worthwhile::GenericFile.count }.by(1)
-          expect(response).to be_success
           expect(flash[:error]).to be_nil
           saved_file = assigns[:generic_file].reload
 
@@ -50,6 +50,7 @@ describe CurationConcern::GenericFilesController do
           expect(CharacterizeJob).to receive(:new).with('test:123').and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
           xhr :post, :create, files: [file], parent_id: parent
+          expect(assigns[:generic_file]).to be_persisted
           saved_file = assigns[:generic_file].reload
           expect(saved_file.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         end

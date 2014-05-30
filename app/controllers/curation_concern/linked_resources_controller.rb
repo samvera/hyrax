@@ -1,5 +1,6 @@
 class CurationConcern::LinkedResourcesController < ApplicationController
   include Worthwhile::ThemedLayoutController
+  include Worthwhile::WithoutNamespace
   with_themed_layout '1_column'
   respond_to(:html)
 

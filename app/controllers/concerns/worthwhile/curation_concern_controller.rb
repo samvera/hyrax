@@ -1,5 +1,6 @@
 module Worthwhile::CurationConcernController
   extend ActiveSupport::Concern
+  include Worthwhile::WithoutNamespace
   
   included do
     include Worthwhile::ThemedLayoutController
