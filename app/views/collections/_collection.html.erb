@@ -1,0 +1,36 @@
+<li>
+  <h2>
+    <%= link_to collection.title_or_label, [collections, collection] %>
+  </h2>
+  <table class="table">
+    <tr>
+      <td rowspan="6" class="span20">
+        <%= link_to [collections, collection] do %>
+          <%= image_tag "folder.png", { width: 150 } %>
+        <% end %>
+      </td>
+      <th><h4>Title:</h4></th>
+      <td><%= collection.title %></td>
+    </tr>
+    <tr>
+      <th><h4>Depositor:<h4></div>
+      <td><%= link_to_profile collection.depositor("no depositor value") %></td>
+    </tr>
+    <tr>
+      <th><h4>Creator:</h4></th>
+      <td><%= collection.creator %></td>
+    </tr>
+    <tr>
+      <th><h4>Description:</h4></th>
+      <td><%= iconify_auto_link(collection.description) %></th>
+    </tr>
+    <tr>
+      <th><h4>Keywords:</h4></th>
+      <td><%= collection.tags.join(', ') %></td>
+    </tr>
+    <tr>
+      <th><h4>Date Uploaded:</h4></th>
+      <td><%= collection.date_uploaded %></td>
+    </tr>
+  </table>
+</li>
