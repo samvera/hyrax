@@ -1,7 +1,0 @@
-<div id="search-results">
-  <ol class="catalog" start="<%=1+((@response.current_page-1)*@response.limit_value)%>">
-    <% docs.each_with_index do |document,counter| %>
-    <%= render partial: 'catalog/_index_partials/list_files', locals: {document: document, counter: counter} %>
-  <% end %>
-  </ol>
-</div>

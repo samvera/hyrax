@@ -6,5 +6,5 @@
 <% if params[:action] == "edit" %>
   <%= render partial:'my/_index_partials/default_group', locals:{documents: documents, docs:documents} %>
 <% else %>
-  <%= render partial:'catalog/_index_partials/default_group', locals:{documents: documents, docs:documents} %>
+  <%= render 'catalog/document_list', documents: documents %>
 <% end %>
