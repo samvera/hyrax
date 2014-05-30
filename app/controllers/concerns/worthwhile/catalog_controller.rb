@@ -29,6 +29,7 @@ module Worthwhile::CatalogController
       config.index.display_type_field = solr_name("has_model", :symbol)
 
       config.index.thumbnail_method = :thumbnail_tag
+      config.index.partials.delete(:thumbnail) # we render this inside _index_default.html.erb
 
       # solr field configuration for document/show views
       # config.show.title_field = solr_name("desc_metadata__title", :stored_searchable)

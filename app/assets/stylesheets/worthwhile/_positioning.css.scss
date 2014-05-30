@@ -124,13 +124,3 @@ legend + .control-group {
   margin-top: 0px;
 }
 
-#documents .document {
-  .document-thumbnail {
-    @include make-xs-column(2);
-  }
-
-  .document-metadata {
-    float: left;
-    @include make-xs-column(8);
-  }
-}
