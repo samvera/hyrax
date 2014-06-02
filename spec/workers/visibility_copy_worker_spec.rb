@@ -31,6 +31,7 @@ describe VisibilityCopyWorker do
     end
 
     it "should copy visibility to its contained files" do
+      pending "See https://github.com/curationexperts/absolute/issues/164"
       subject.run
       work.reload
       work.generic_files.each do |file|

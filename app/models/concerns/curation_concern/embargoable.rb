@@ -14,7 +14,14 @@ module CurationConcern
       has_attributes :lease_expiration_date, datastream: 'rightsMetadata', :at=>[:lease, :machine, :date], multiple:false
       has_attributes :embargo_history, datastream: 'rightsMetadata', :at=>[:embargo, :human_readable], multiple:true
       has_attributes :lease_history, datastream: 'rightsMetadata', :at=>[:lease, :human_readable], multiple:true
+    end
 
+    def under_embargo?
+      @under_embargo ||= rightsMetadata.under_embargo?
+    end
+
+    def lease_active?
+      @lease_active ||= rightsMetadata.lease_active?
     end
 
     # If changing away from embargo or lease, this will deactivate the lease/embargo before proceeding.
@@ -22,31 +29,19 @@ module CurationConcern
     def visibility=(value)
       # If changing from embargo or lease, deactivate the lease/embargo and wipe out the associated metadata before proceeding
       if !embargo_release_date.nil?
-        deactivate_embargo! unless (value == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO || value == visibility_during_embargo )
+        deactivate_embargo! unless value == visibility_during_embargo
       end
       if !lease_expiration_date.nil?
-        deactivate_lease! unless (value == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE || value == visibility_during_lease )
+        deactivate_lease! unless value == visibility_during_lease
       end
-      begin
-        super
-      rescue ArgumentError => e
-        case value
-          when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
-            if embargo_release_date.nil?
-              raise ArgumentError, "To set visibility as #{value.inspect} you must also specify embargo_release_date."
-            else
-              embargo_visibility!
-            end
-          when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
-            if lease_expiration_date.nil?
-              raise ArgumentError, "To set visibility as #{value.inspect} you must also specify lease_expiration_date."
-            else
-              lease_visibility!
-            end
-          else
-            raise e
-        end
-      end
+      super
+    end
+
+    def apply_embargo(release_date, visibility_during=nil, visibility_after=nil)
+      self.embargo_release_date = release_date
+      self.visibility_during_embargo = visibility_during unless visibility_during.nil?
+      self.visibility_after_embargo = visibility_after unless visibility_after.nil?
+      self.embargo_visibility!
     end
 
     def deactivate_embargo!
@@ -56,15 +51,6 @@ module CurationConcern
       self.visibility_during_embargo = nil
       self.visibility_after_embargo = nil
       self.embargo_history += [embargo_record]
-    end
-
-    def deactivate_lease!
-      lease_state = under_embargo? ? "active" : "expired"
-      lease_record = "An #{lease_state} lease was deactivated on #{Date.today}.  Its release date was #{lease_expiration_date}.  Visibility during embargo was #{visibility_during_lease} and intended visibility after embargo was #{visibility_after_lease}"
-      self.lease_expiration_date = nil
-      self.visibility_during_lease = nil
-      self.visibility_after_lease = nil
-      self.lease_history += [lease_record]
     end
 
     def write_embargo_release_date
@@ -111,7 +97,9 @@ module CurationConcern
     def embargo_visibility!
       if embargo_release_date
         if under_embargo?
-          self.visibility = visibility_during_embargo ? visibility_during_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          self.visibility_during_embargo = visibility_during_embargo ? visibility_during_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          self.visibility_after_embargo = visibility_after_embargo ? visibility_after_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          self.visibility = visibility_during_embargo
         else
           self.visibility = visibility_after_embargo ? visibility_after_embargo : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         end
@@ -120,12 +108,12 @@ module CurationConcern
 
     def validate_lease
       if lease_expiration_date
-        if lease_expired?
-          expected_visibility = visibility_after_lease
-          failure_message = "The lease expired on #{lease_expiration_date}.  The "
-        else
+        if lease_active?
           expected_visibility = visibility_during_lease
           failure_message = "A lease is in effect for this object until #{lease_expiration_date}.  Until that time the "
+        else
+          expected_visibility = visibility_after_lease
+          failure_message = "The lease expired on #{lease_expiration_date}.  The "
         end
         if visibility == expected_visibility
           return true
@@ -139,12 +127,30 @@ module CurationConcern
       end
     end
 
+    def apply_lease(release_date, visibility_during=nil, visibility_after=nil)
+      self.lease_expiration_date = release_date
+      self.visibility_during_lease = visibility_during unless visibility_during.nil?
+      self.visibility_after_lease = visibility_after unless visibility_after.nil?
+      self.lease_visibility!
+    end
+
+    def deactivate_lease!
+      lease_state = lease_active? ? "active" : "expired"
+      lease_record = "An #{lease_state} lease was deactivated on #{Date.today}.  Its release date was #{lease_expiration_date}.  Visibility during the lease was #{visibility_during_lease} and intended visibility after lease was #{visibility_after_lease}."
+      self.lease_expiration_date = nil
+      self.visibility_during_lease = nil
+      self.visibility_after_lease = nil
+      self.lease_history += [lease_record]
+    end
+
     def lease_visibility!
       if lease_expiration_date
-        if lease_expired?
-          self.visibility = visibility_after_lease ? visibility_after_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        if lease_active?
+          self.visibility_during_lease = visibility_during_lease ? visibility_during_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          self.visibility_after_lease = visibility_after_lease ? visibility_after_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          self.visibility = visibility_during_lease
         else
-          self.visibility = visibility_during_lease ? visibility_during_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          self.visibility = visibility_after_lease ? visibility_after_lease : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         end
       end
     end

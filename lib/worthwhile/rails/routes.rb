@@ -47,7 +47,7 @@ module ActionDispatch::Routing
     def worthwhile_embargo_management
       resources :embargoes, only:[:index,:edit,:destroy]
       put '/embargoes', to: 'embargoes#update'
-      resources :embargoes, only:[:index,:edit,:destroy]
+      resources :leases, only:[:index,:edit,:destroy]
       put '/leases', to: 'leases#update'
     end
     

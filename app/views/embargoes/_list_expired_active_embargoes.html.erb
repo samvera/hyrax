@@ -20,7 +20,7 @@
     <tr>
       <th>Type of Work</th><th>Title</th><th>Current Visibility</th><th>Embargo Release Date</th><th>Visibility will Change to</th>
     </tr>
-    <% @curation_concerns_with_expired_embargoes.each do |curation_concern| %>
+    <% assets_with_expired_embargoes.each do |curation_concern| %>
       <tr>
         <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
         <td class="title"><%= link_to curation_concern.title, edit_embargo_path(curation_concern)  %></td>

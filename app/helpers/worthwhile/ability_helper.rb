@@ -36,7 +36,8 @@ module Worthwhile
           content_tag :span, "Private", class:"label label-danger"
         when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
           content_tag :span, "Embargo", class:"label label-warning"
-        #when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
+        when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
+          content_tag :span, "Lease", class:"label label-warning"
         else
           content_tag :span, value, class:"label label-info"
       end

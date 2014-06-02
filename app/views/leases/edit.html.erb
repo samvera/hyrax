@@ -1,0 +1,43 @@
+<% content_for :page_header do %>
+  <h1>Manage Leases for  <%= curation_concern %><span class="human_readable_type">(<%= curation_concern.human_readable_type %>)</span></h1>
+<% end %>
+
+<h2>Current Lease</h2>
+<%= simple_form_for curation_concern, :url=>embargo_path(curation_concern) do |f| %>
+  <fieldset id="set-access-controls">
+    <section class="help-block">
+      <p>
+        <% if curation_concern.lease_expiration_date %>
+          <strong>This work is under lease.</strong>
+        <% else %>
+          <strong>This work is not currently under lease.</strong> If you would like to apply a lease, provide the information here.
+        <% end %>
+      </p>
+    </section>
+
+    <div class="control-group">
+      <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE %>" />
+      <%= render "curation_concern/base/form_permission_lease", curation_concern: curation_concern, f: f  %>
+    </div>
+  </fieldset>
+
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <% if curation_concern.lease_expiration_date %>
+        <%= f.submit "Update Lease", class: 'btn btn-primary' %>
+        <%= link_to "Deactivate Lease",lease_path(curation_concern), :method => :delete, class: 'btn btn-danger' %>
+      <% else %>
+        <%= f.submit "Apply Lease", class: 'btn btn-primary' %>
+      <% end %>
+      <%= link_to 'Cancel and manage all leases', embargoes_path, class: 'btn btn-link' %>
+      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>
+
+<h2>Past Leases</h2>
+<% if curation_concern.lease_history.empty? %>
+  This <%= curation_concern.human_readable_type %> has never had embargoes applied to it.
+<% else %>
+  <%= render partial:"lease_history" %>
+<% end %>

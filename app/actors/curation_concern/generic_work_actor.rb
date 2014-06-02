@@ -1,13 +1,14 @@
 
 module CurationConcern
   class GenericWorkActor < CurationConcern::BaseActor
+    include Worthwhile::ManagesEmbargoesActor
 
     def create
-      assign_pid && super && attach_files && create_linked_resources && assign_representative
+      assign_pid && interpret_visibility && super && attach_files && create_linked_resources && assign_representative
     end
 
     def update
-      add_to_collections(attributes.delete(:collection_ids)) &&
+      add_to_collections(attributes.delete(:collection_ids)) && interpret_visibility  &&
         super && attach_files && create_linked_resources
     end
 

@@ -39,11 +39,5 @@
 <% if curation_concern.embargo_history.empty? %>
   This <%= curation_concern.human_readable_type %> has never had embargoes applied to it.
 <% else %>
-  <ul>
-    <% curation_concern.embargo_history.each do |entry| %>
-      <% unless entry.empty? %>
-        <li><%= entry %></li>
-      <% end %>
-    <% end %>
-  </ul>
+  <%= render partial:"embargo_history" %>
 <% end %>

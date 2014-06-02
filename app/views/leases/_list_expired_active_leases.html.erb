@@ -1,0 +1,36 @@
+<% if assets_with_expired_leases.empty? %>
+  <table  class="leases table">
+    <tbody>
+    <tr>
+      <th>Type of Work</th><th>Title</th><th>Current Visibility</th><th>Lease Release Date</th><th>Visibility will Change to</th>
+    </tr>
+    <tr>
+      <td colspan="5"><p>There are no expired leases in effect at this time.</p> </td>
+    </tr>
+    </tbody>
+  </table>
+
+<% else %>
+
+  <table  class="leases table">
+    <thead>
+    <%= button_to 'Deactivate Leases for Selected', catalog_index_path, class: 'btn btn-primary' %>
+    </thead>
+    <tbody>
+    <tr>
+      <th>Type of Work</th><th>Title</th><th>Current Visibility</th><th>Lease Release Date</th><th>Visibility will Change to</th>
+    </tr>
+    <% assets_with_expired_leases.each do |curation_concern| %>
+      <tr>
+        <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
+        <td class="title"><%= link_to curation_concern.title, edit_lease_path(curation_concern)  %></td>
+        <td class="current-visibility"><%= visibility_badge(curation_concern.visibility) %></td>
+        <td class="lease-release-date"><%= curation_concern.lease_expiration_date %></td>
+        <td class="visibility-after-lease"><%= visibility_badge(curation_concern.visibility_after_lease) %></td>
+        <td class="actions"><%= button_to 'Deactivate Lease', embargo_path(curation_concern), :method=>:delete, class: 'btn btn-primary' %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+<% end %>

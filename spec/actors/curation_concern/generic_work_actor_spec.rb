@@ -26,7 +26,12 @@ describe CurationConcern::GenericWorkActor do
 
     describe 'valid attributes' do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
-
+      let(:attributes) {{}}
+      it "should interpret and apply embargo and lease visibility settings" do
+        expect(subject).to receive(:interpret_lease_visibility).and_return(true)
+        expect(subject).to receive(:interpret_embargo_visibility).and_return(true)
+        subject.create
+      end
       describe 'with a file' do
         let(:attributes) {
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap {|a|
@@ -119,7 +124,14 @@ describe CurationConcern::GenericWorkActor do
           subject.update.should be_false
         end
       end
-
+      describe 'valid attributes' do
+        let(:attributes) {{}}
+        it "should interpret and apply embargo and lease visibility settings" do
+          expect(subject).to receive(:interpret_lease_visibility).and_return(true)
+          expect(subject).to receive(:interpret_embargo_visibility).and_return(true)
+          subject.update
+        end
+      end
       describe 'adding to collections' do
         let!(:collection1) { FactoryGirl.create(:collection, user: user) }
         let!(:collection2) { FactoryGirl.create(:collection, user: user) }
