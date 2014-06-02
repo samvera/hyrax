@@ -3,7 +3,7 @@ shared_examples 'with_access_rights' do
   def prepare_subject_for_access_rights_visibility_test!
     # I am doing this because the actual persistence of the objects requires
     # so much more and I don't know for certain if it has happened.
-    subject.stub(:persisted?).and_return(true)
+    allow(subject).to receive(:persisted?).and_return(true)
   end
 
   it "has an under_embargo?" do
