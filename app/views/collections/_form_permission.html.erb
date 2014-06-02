@@ -28,7 +28,7 @@
       </label>
       <label class="radio">
         <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if @collection.private_access? %> checked="true"<% end %>/>
-        <span class="label label-important">Private</span> Only visible to you and your delegates.
+        <span class="label label-danger">Private</span> Only visible to you and your delegates.
       </label>
     </div>
 
