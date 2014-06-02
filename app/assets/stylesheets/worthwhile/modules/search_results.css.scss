@@ -16,31 +16,19 @@
     padding-top:0;
   }
   .search-result-actions {
-    @include make-xs-column(2);
+    @include make-xs-column(8);
+    @include make-xs-column-offset(4);
+    @include make-sm-column(2);
+    @include make-sm-column-offset(0);
   }
 
   .document-thumbnail {
-    @include make-xs-column(2);
+    @include make-xs-column(4);
+    @include make-sm-column(2);
   }
 
   .document-metadata {
     @include make-xs-column(8);
-    overflow:hidden;
-
-    dd, dt{
-        display: inline;
-        margin: 0;
-    }
-    dd:before {
-        content: ' '; /* space them */
-    }
-    dt:before { /* insert line break before <dt> */
-        content:"\A";
-        white-space:pre;
-    }
-    dt:first-child:before { /* disable line break before the first <dt> */
-        content: none;
-    }
   }
 
   .canonical-image {

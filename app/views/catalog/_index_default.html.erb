@@ -1,6 +1,6 @@
 <div class="row">
   <%= render_document_partial document, 'thumbnail', document_counter: document_counter %>
-  <dl class="document-metadata dl-invert">
+  <dl class="document-metadata dl-invert dl-horizontal">
     
     <% index_fields(document).each do |solr_fname, field| -%>
       <% if should_render_index_field? document, field %>
