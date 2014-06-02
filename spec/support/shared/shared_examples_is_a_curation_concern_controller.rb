@@ -24,8 +24,6 @@ shared_examples 'is_a_curation_concern_controller' do |curation_concern_class, o
     public_send("curation_concern_#{curation_concern_type_underscore}_path", controller.curation_concern.pid)
   end
 
-  render_views
-
   if optionally_include_specs(actions, :show)
     describe "#show" do
       context "my own private work" do
