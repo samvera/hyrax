@@ -74,6 +74,7 @@ form label.required { font-weight: bold; }
   text-align:center;
   font-size:1.3em;
   line-height:1;
+  z-index: -1000;  // Prevent padding from obscuring file upload button when window is narrow
 }
 
 .accept-contributor-agreement {
