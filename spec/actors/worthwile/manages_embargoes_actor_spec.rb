@@ -36,21 +36,16 @@ describe Worthwhile::ManagesEmbargoesActor do
       before do
         subject.attributes[:visibility] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
       end
-      it "should apply the embargo, override the visibility attribute and return true" do
+      it "should apply the embargo remove relevant attributes and return true" do
         subject.attributes[:embargo_release_date] = future_date.to_s
         subject.attributes[:visibility_during_embargo] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         subject.attributes[:visibility_after_embargo] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         expect(subject.curation_concern).to receive(:apply_embargo).with(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         expect(subject.interpret_embargo_visibility).to be_true
-        expect(subject.attributes[:visibility]).to eq subject.curation_concern.visibility_during_embargo
-      end
-      it "should inject defaults back into attributes if visibility_during and visibility_after are not set" do
-        subject.attributes[:embargo_release_date] = future_date.to_s
-        subject.attributes[:visibility_during_embargo] = nil
-        subject.attributes[:visibility_after_embargo] = nil
-        subject.interpret_embargo_visibility
-        expect(subject.attributes[:visibility_during_embargo]).to eq subject.curation_concern.visibility_during_embargo
-        expect(subject.attributes[:visibility_after_embargo]).to eq subject.curation_concern.visibility_after_embargo
+        expect(subject.attributes[:visibility]).to be_nil
+        expect(subject.attributes[:visibility_during_embargo]).to be_nil
+        expect(subject.attributes[:visibility_after_embargo]).to be_nil
+
       end
       it "should set error on curation_concern and return false if embargo_release_date is not set" do
         expect(subject.interpret_embargo_visibility).to be_false
@@ -67,26 +62,37 @@ describe Worthwhile::ManagesEmbargoesActor do
       before do
         subject.attributes[:visibility] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
       end
-      it "should apply the lease, override the visibility attribute and return true" do
+      it "should apply the lease, remove relevant attributes and return true" do
         subject.attributes[:lease_expiration_date] = future_date.to_s
         subject.attributes[:visibility_during_lease] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         subject.attributes[:visibility_after_lease] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         expect(subject.curation_concern).to receive(:apply_lease).with(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         expect(subject.interpret_lease_visibility).to be_true
         expect(subject.attributes[:visibility]).to eq subject.curation_concern.visibility_during_lease
-      end
-      it "should inject defaults back into attributes if visibility_during and visibility_after are not set" do
-        subject.attributes[:lease_expiration_date] = future_date.to_s
-        subject.attributes[:visibility_during_lease] = nil
-        subject.attributes[:visibility_after_lease] = nil
-        subject.interpret_lease_visibility
-        expect(subject.attributes[:visibility_during_lease]).to eq subject.curation_concern.visibility_during_lease
-        expect(subject.attributes[:visibility_after_lease]).to eq subject.curation_concern.visibility_after_lease
+        expect(subject.attributes[:visibility_during_lease]).to be_nil
+        expect(subject.attributes[:visibility_after_lease]).to be_nil
       end
       it "should set error on curation_concern and return false if lease_expiration_date is not set" do
         expect(subject.interpret_lease_visibility).to be_false
         expect(subject.curation_concern.errors[:visibility].first).to eq 'When setting visibility to "lease" you must also specify lease expiration date.'
       end
+    end
+  end
+
+  context "#apply_embargo_visibility" do
+    it "with one asset applies embargo visibility to the asset" do
+      subject.apply_embargo_visibility( double(pid:"foo", apply_embargo_visibility!:true) )
+    end
+    it "with an array of assets applies embargo visibility for each asset" do
+      subject.apply_embargo_visibility( [double(pid:"foo", apply_embargo_visibility!:true), double(pid:"bar", apply_embargo_visibility!:true), double(pid:"baz", apply_embargo_visibility!:true)] )
+    end
+  end
+  context "#apply_lease_visibility" do
+    it "with one asset applies lease visibility to the asset" do
+      subject.apply_lease_visibility( double(pid:"foo", apply_lease_visibility!:true) )
+    end
+    it "with an array of assets applies lease visibility for each asset" do
+      subject.apply_lease_visibility( [double(pid:"see", apply_lease_visibility!:true),double(pid:"sally", apply_lease_visibility!:true),double(pid:"run", apply_lease_visibility!:true)] )
     end
   end
 end

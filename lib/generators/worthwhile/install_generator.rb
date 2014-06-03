@@ -33,6 +33,7 @@ module Worthwhile
         "  mount Worthwhile::Engine, at: '/'\n"\
         "  worthwhile_collections\n"\
         "  worthwhile_curation_concerns\n"\
+        "  worthwhile_embargo_management\n"\
       end
     end
 

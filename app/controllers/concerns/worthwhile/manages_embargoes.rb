@@ -1,20 +1,24 @@
 module Worthwhile
   module ManagesEmbargoes
+    extend ActiveSupport::Concern
 
-    def apply_embargo_visibility(assets)
-      response = {}
-      Array(assets).each do |asset|
-        response[asset.pid] = asset.apply_embargo_visibility!
-      end
-      response
+    included do
+      include Worthwhile::ThemedLayoutController
+      with_themed_layout '1_column'
+
+      attr_accessor :curation_concern
+      helper_method :curation_concern
+      helper_method :assets_under_embargo, :assets_with_expired_embargoes, :assets_with_deactivated_embargoes
+      helper_method :assets_under_lease, :assets_with_expired_leases, :assets_with_deactivated_leases
+
+      load_and_authorize_resource class: ActiveFedora::Base, instance_name: :curation_concern
     end
 
-    def apply_lease_visibility(assets)
-      response = {}
-      Array(assets).each do |asset|
-        response[asset.pid] = asset.apply_lease_visibility!
-      end
-      response
+
+    def index
+    end
+
+    def edit
     end
 
     #

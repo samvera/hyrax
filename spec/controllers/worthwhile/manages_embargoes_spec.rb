@@ -4,10 +4,8 @@ require 'ostruct'
 describe Worthwhile::ManagesEmbargoes do
 
   let(:model) {
-    Class.new(ActiveFedora::Base) {
-
+    Class.new(ApplicationController) {
       include Worthwhile::ManagesEmbargoes
-
     }
   }
 
@@ -44,14 +42,6 @@ describe Worthwhile::ManagesEmbargoes do
         expect(returned_pids).to_not include work_without_embargo.pid
       end
     end
-    context "#apply_embargo_visibility" do
-      it "with one asset applies embargo visibility to the asset" do
-        subject.apply_embargo_visibility( double(pid:"foo", apply_embargo_visibility!:true) )
-      end
-      it "with an array of assets applies embargo visibility for each asset" do
-        subject.apply_embargo_visibility( [double(pid:"foo", apply_embargo_visibility!:true), double(pid:"bar", apply_embargo_visibility!:true), double(pid:"baz", apply_embargo_visibility!:true)] )
-      end
-    end
   end
 
 
@@ -80,14 +70,6 @@ describe Worthwhile::ManagesEmbargoes do
         returned_pids = subject.assets_under_lease.map {|a| a.pid}
         expect(returned_pids).to include work_with_expired_lease1.pid,work_with_expired_lease2.pid,work_with_lease_in_effect.pid
         expect(returned_pids).to_not include work_without_lease.pid
-      end
-    end
-    context "#apply_lease_visibility" do
-      it "with one asset applies lease visibility to the asset" do
-        subject.apply_lease_visibility( double(pid:"foo", apply_lease_visibility!:true) )
-      end
-      it "with an array of assets applies lease visibility for each asset" do
-        subject.apply_lease_visibility( [double(pid:"see", apply_lease_visibility!:true),double(pid:"sally", apply_lease_visibility!:true),double(pid:"run", apply_lease_visibility!:true)] )
       end
     end
   end
