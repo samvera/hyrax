@@ -34,6 +34,10 @@ $gray-lighter: #eee;
   background-color: #f9f9f9;
 }
 
+.file_listing_thumbnail {
+  width: 20%;
+}
+
 .nav > li > a.accordion-toggle {
   padding-left: 5px;
   padding-right: 5px;
@@ -76,7 +80,9 @@ $gray-lighter: #eee;
 .sorts-dash, .sorts, .expandable_new {
   cursor: pointer;
 }
-
+.sort-toggle {
+  padding: .5em 0;
+}
 .caret.up {
   border-top: 0;
   border-bottom: 4px solid;
