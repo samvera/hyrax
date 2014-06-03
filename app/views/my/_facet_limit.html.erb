@@ -1,12 +1,11 @@
-<% paginator = Blacklight::Solr::FacetPaginator.new(display_facet.items,
-        limit: facet_limit_for(solr_field)) %>
-<ul class="slide-list">
+<ul class="facet-values list-unstyled">
+  <% paginator = facet_paginator(facet_field, display_facet) %>
   <% paginator.items.each do |item| -%>
-<li>
-    <% if facet_in_params?( solr_field, item.value ) %>
-      <%= render_selected_facet_value(solr_field, item) %>
-    <% else %>
-      <%= render_facet_value(solr_field, item) %>
+    <li>
+    <% if facet_in_params?(solr_field, item.value) %>
+        <%= render_selected_facet_value(solr_field, item) %>
+      <% else %>
+        <%= render_facet_value(solr_field, item) %>
     <% end -%>
     </li>
   <% end %>
@@ -14,4 +13,5 @@
   <% if(paginator.has_next?)  %>
     <li class="more_facets_link"><%= link_to 'more ' + facet_field.label.pluralize + '»', sufia.url_for(params.merge(id: solr_field, action: "facet", path_only: true)), class: "more_facets_link" %></li>
   <% end %>
-</ul> <!-- /slide-list -->
+
+</ul>

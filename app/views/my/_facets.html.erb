@@ -1,9 +1,22 @@
 <% # main container for facets/limits menu -%>
-<div>
-  <%= render partial: 'collections/button_for_creating_empty_collection', locals: {label: 'Create Collection'} %>
-  <div class="row">&nbsp;</div>
-  <h2>Browse By</h2>
-  <ul class="nav nav-list" id="facets">
-    <%= render_facet_partials %>
-  </ul>
+<% if has_facet_values?  %>
+<div id="facets" class="facets sidenav">
+
+  <div class="top-panel-heading panel-heading">
+    <button type="button" class="facets-toggle" data-toggle="collapse" data-target="#facet-panel-collapse">
+      <span class="sr-only">Toggle facets</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+
+  <h4>
+  	<%= t('blacklight.search.facets.title') %>
+  </h4>
+    </div>
+
+  <div id="facet-panel-collapse" class="collapse panel-group">
+  <%= render_facet_partials %>
 </div>
+</div>
+<% end %>

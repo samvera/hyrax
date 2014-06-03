@@ -32,10 +32,8 @@ describe "Browse Dashboard" do
     end
 
     it "should allow you to browse facets" do
-      pending "Issue #428 is causing this"
       click_link "more Subjects"
       click_link "consectetur"
-      save_and_open_page
       within("#document_#{@fixtures[1].noid}") do
         click_link "Test Document MP3.mp3"
       end
