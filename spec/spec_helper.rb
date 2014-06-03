@@ -103,7 +103,7 @@ RSpec.configure do |config|
 
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
-  
+  config.infer_spec_type_from_file_location!
 end
 
 module FactoryGirl

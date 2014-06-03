@@ -3,7 +3,6 @@ module Sufia
     extend ActiveSupport::Concern
     included do
       self.solr_search_params_logic += [:only_generic_files_and_collections]
-      layout "sufia-two-column"
     end
 
     protected
