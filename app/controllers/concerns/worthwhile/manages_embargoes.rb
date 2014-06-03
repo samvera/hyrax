@@ -16,6 +16,7 @@ module Worthwhile
 
 
     def index
+      authorize! :discover, :embargo
     end
 
     def edit
