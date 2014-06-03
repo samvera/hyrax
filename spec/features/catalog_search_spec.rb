@@ -84,8 +84,8 @@ describe 'catalog searching' do
 
     it "allows for browsing tags" do
       expect(page).to have_content('Search Results')
-      within('#facet_group') do
-        first('a[data-toggle="collapse"]').click
+      within('#facets') do
+        first('a.more_facets_link').click
         click_link "more Keywords»"
       end
       click_link "tag18"
