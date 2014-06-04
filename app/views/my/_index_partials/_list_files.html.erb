@@ -13,9 +13,9 @@
   <td width="41%">
     <a href="#" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-plus"></i></a>&nbsp;
     <%= link_to sufia.generic_file_path(document) do %>
-      <%= render_thumbnail_tag document %>
+      <%= render_thumbnail_tag document, class:"hidden-xs file_listing_thumbnail" %>
     <% end %>
-    <span class=center>
+    <span>
       <%= link_to document.title_or_label, sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" %><br/>
     </span>
   </td>

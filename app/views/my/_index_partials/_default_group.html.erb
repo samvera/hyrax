@@ -3,12 +3,12 @@
 <% unless params[:display_type] == 'list' %>
   <thead>
   <tr>
-    <th class="sm"><%= render partial: 'batch_edits/check_all' %></th>
+    <th><%= render partial: 'batch_edits/check_all' %></th>
     <th>&nbsp;</th>
-    <th class="center">Title</th>
+    <th>Title</th>
     <th class="sorts-dash"><i id="desc_metadata__date_uploaded_dtsi" class="<%=params[:sort]== "desc_metadata__date_uploaded_dtsi desc" ? 'caret' : params[:sort]== "desc_metadata__date_uploaded_dtsi asc" ? 'caret up' : ''%>"></i>Date Uploaded</th>
     <th>Visibility</th>
-    <th class="center">Action</th>
+    <th>Action</th>
   </tr>
   </thead>
   <% end %>
