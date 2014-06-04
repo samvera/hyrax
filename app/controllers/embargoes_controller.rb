@@ -1,5 +1,6 @@
 class EmbargoesController < ApplicationController
 
+  include Worthwhile::WithoutNamespace
   include Worthwhile::ManagesEmbargoes
 
   def destroy
@@ -8,4 +9,10 @@ class EmbargoesController < ApplicationController
     flash[:notice] = curation_concern.embargo_history.last
     redirect_to edit_embargo_path(curation_concern)
   end
+
+  protected
+    def _prefixes
+      # This allows us to use the unauthorized template in curation_concern/base
+      @_prefixes ||= super + ['curation_concern/base']
+    end
 end

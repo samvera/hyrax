@@ -27,20 +27,13 @@ describe EmbargoesController do
     context "when I do not have edit permissions for the object" do
       it "should redirect" do
         get :edit, id: not_my_work
-        expect(response.status).to eq 404
-        #response.should render_template(:unauthorized)
+        expect(response.status).to eq 401
+        expect(response).to render_template :unauthorized
       end
     end
-    context "when I am the owner of the object" do
+    context "when I have permission to edit the object" do
       it "should show me the page" do
         get :edit, id: a_work
-        expect(response).to be_success
-      end
-    end
-    context "when I am a repository manager" do
-      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      it "should show me the page" do
-        get :edit, id: not_my_work
         expect(response).to be_success
       end
     end
@@ -52,26 +45,20 @@ describe EmbargoesController do
     context "when I do not have edit permissions for the object" do
       it "should deny access" do
         get :destroy, id: not_my_work
-        expect(response.status).to eq 404
+        expect(response.status).to eq 401
+        expect(response).to render_template :unauthorized
       end
     end
-    context "when I am the owner of the object" do
+    context "when I have permission to edit the object" do
+      before do
+        expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+      end
       it "should deactivate embargo and redirect" do
+        expect(a_work).to receive(:deactivate_embargo!)
+        expect(a_work).to receive(:save)
         get :destroy, id: a_work
-        expect(controller.curation_concern).to receive(:deactivate_embargo!)
-        expect(controller.curation_concern).to receive(:save)
-        expect(response).to redirect_to :edit
-      end
-    end
-    context "when I am a repository manager" do
-      before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
-      it "should deactivate embargo and redirect" do
-        get :destroy, id: not_my_work
-        expect(controller.curation_concern).to receive(:deactivate_embargo!)
-        expect(controller.curation_concern).to receive(:save)
-        expect(response).to redirect_to :edit
+        expect(response).to redirect_to edit_embargo_path(a_work)
       end
     end
   end
-
 end

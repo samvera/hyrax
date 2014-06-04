@@ -11,8 +11,7 @@ module Worthwhile
         can :create, Worthwhile::ClassifyConcern
         can :create, [Worthwhile::GenericFile, Worthwhile::LinkedResource]
       end
-      # alias_action :confirm, :copy, :to => :update
-# 
+
       if user_groups.include? 'admin'
        can [:discover, :show, :read, :edit, :update, :destroy], :all
       end
