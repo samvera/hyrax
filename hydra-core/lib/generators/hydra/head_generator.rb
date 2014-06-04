@@ -7,6 +7,8 @@ module Hydra
     source_root File.expand_path('../templates', __FILE__)
 
     argument :model_name, :type => :string , :default => "user"
+    class_option :'skip-rspec', type: :boolean, default: false, desc: "Skip the rspec generator"
+
 
       desc """
     This generator makes the following changes to your application:
@@ -21,6 +23,8 @@ module Hydra
     #
 
     def inject_test_framework
+      return if options[:'skip-rspec']
+
       application("\n" <<
         "    config.generators do |g|\n" <<
         "      g.test_framework :rspec, :spec => true\n" <<

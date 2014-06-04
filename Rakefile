@@ -161,9 +161,12 @@ end
 
 
 
+desc "run all specs"
 task :spec do
   raise "test failures" unless all_modules('rake spec')
 end
+
+desc "Remove any existing test deploys"
 task :clean do
   raise "test failures" unless all_modules('rake clean')
 end

@@ -28,6 +28,6 @@ class TestAppGenerator < Rails::Generators::Base
   def run_hydra_head_generator
     say_status("warning", "GENERATING HH", :yellow)       
 
-    generate 'hydra:head', '-f'
+    generate 'hydra:head', '-f --skip-rspec'
   end
 end
