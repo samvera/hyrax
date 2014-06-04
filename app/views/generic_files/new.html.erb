@@ -1,12 +1,12 @@
 <h2>Upload</h2>
 <%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#local" data-toggle="tab"><i class="icon-desktop"></i> <%= t('sufia.upload.my_computer.tab_label')%></a></li>
+  <li class="active"><a href="#local" data-toggle="tab"><i class="glyphicon glyphicon-folder-open"></i> <%= t('sufia.upload.my_computer.tab_label')%></a></li>
   <% if Sufia.config.browse_everything %>
-    <li><a href="#browse_everything" data-toggle="tab"><i class="icon-cloud"></i> <%= t('sufia.upload.browse_everything.tab_label')%></a></li>
+    <li><a href="#browse_everything" data-toggle="tab"><i class="glyphicon glyphicon-cloud-download"></i> <%= t('sufia.upload.browse_everything.tab_label')%></a></li>
   <% end %>
   <% if Sufia.config.enable_local_ingest %>
-    <li><a href="#ingest" data-toggle="tab"><i class="icon-hdd"></i> <%= t('sufia.upload.local_ingest.tab_label')%></a></li>
+    <li><a href="#ingest" data-toggle="tab"><i class="glyphicon glyphicon-hdd"></i> <%= t('sufia.upload.local_ingest.tab_label')%></a></li>
   <% end %>
 </ul>
 

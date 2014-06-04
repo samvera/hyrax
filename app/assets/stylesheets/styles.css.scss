@@ -102,5 +102,28 @@ button {
   }
 }
 
+.large-icon {
+  font-size: 1.5em;
+}
 
+.btn.collection-remove {
+  background:none;
+  border:none;
+  /*     padding:0!important;
+    padding: 6px 12px;*/
 
+  cursor:pointer;
+  clear: both;
+  color: #333333;
+  display: block;
+  width: 100%;
+  font-weight: normal;
+  line-height: 18px;
+  padding: 3px 15px;
+  white-space: nowrap;
+  border-radius:0px
+}
+.btn.collection-remove:hover{
+  text-decoration:underline;
+  background-color:#0088CC;
+}

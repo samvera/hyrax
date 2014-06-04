@@ -69,7 +69,7 @@ module Sufia
 
     def iconify_auto_link(text, showLink = true)
       auto_link(text) do |value|
-        "<i class='icon-external-link'></i>&nbsp;#{value if showLink}<br />"
+        "<i class='glyphicon glyphicon-new-window'></i>&nbsp;#{value if showLink}<br />"
       end
     end
 

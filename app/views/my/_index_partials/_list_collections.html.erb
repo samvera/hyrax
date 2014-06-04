@@ -8,7 +8,7 @@ on element ids -->
   <td width="1%">
   </td>
   <td width="37%">
-    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="glyphicon-plus icon-large fleft"></i></a>&nbsp;
+    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="glyphicon-plus large-icon fleft"></i></a>&nbsp;
     <%= link_to image_tag("/assets/folder.png", width: 36), collections.collection_path(noid) %>
     <span class=center><%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %> <br /></span>
   </td>

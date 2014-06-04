@@ -16,7 +16,7 @@
       <div class="col-xs-8">
         <label class="checkbox">
           <%= f.check_box :remove_avatar %> Yes
-          <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="glyphicon glyphicon-question-sign icon-large"></i></a>
+          <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="glyphicon glyphicon-question-sign"></i></a>
         </label>
       </div><!-- .controls -->
     </div><!-- .form-group -->
@@ -26,27 +26,27 @@
       <div class="col-xs-8">
         <label class="checkbox">
           <%= check_box_tag 'update_directory' %> Yes
-          <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from <%=t('sufia.institution_name') %>'s central directory (LDAP) and is cached by <%=t('sufia.product_name') %>.  If you have updated that information and don't see those changes in your <%=t('sufia.product_name') %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="glyphicon glyphicon-question-sign icon-large"></i></a>
+          <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from <%=t('sufia.institution_name') %>'s central directory (LDAP) and is cached by <%=t('sufia.product_name') %>.  If you have updated that information and don't see those changes in your <%=t('sufia.product_name') %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="glyphicon glyphicon-question-sign"></i></a>
         </label>
       </div><!-- .controls -->
     </div><!-- .form-group -->
 
     <div class="form-group">
-      <%= f.label :twitter_handle, '<i class="glyphicon glyphicon-twitter"></i> Twitter Handle'.html_safe, class: 'col-xs-4 control-label' %>
+      <%= f.label :twitter_handle, '<i class="icon-twitter"></i> Twitter Handle'.html_safe, class: 'col-xs-4 control-label' %>
       <div class="col-xs-8">
          <%= f.text_field :twitter_handle, class: "input-medium" %>
       </div><!-- .controls -->
     </div><!-- .form-group -->
 
     <div class="form-group">
-      <%= f.label :facebook_handle, '<i class="glyphicon glyphicon-facebook"></i> Facebook Handle'.html_safe, class: 'col-xs-4 control-label' %>
+      <%= f.label :facebook_handle, '<i class="icon-facebook"></i> Facebook Handle'.html_safe, class: 'col-xs-4 control-label' %>
       <div class="col-xs-8">
          <%= f.text_field :facebook_handle, class: "input-medium" %>
       </div><!-- .controls -->
     </div><!-- .form-group -->
 
     <div class="form-group">
-      <%= f.label :googleplus_handle, '<i class="glyphicon glyphicon-google-plus"></i> Google+ Handle'.html_safe, class: 'col-xs-4 control-label' %>
+      <%= f.label :googleplus_handle, '<i class="icon-google-plus"></i> Google+ Handle'.html_safe, class: 'col-xs-4 control-label' %>
       <div class="col-xs-8">
          <%= f.text_field :googleplus_handle, class: "input-medium" %>
       </div><!-- .controls -->

@@ -1,5 +1,5 @@
 <div class="tab-pane active" id="contributions">
-  <i class="icon-trophy trophy-on"></i> <strong>Highlighted Files</strong>
+  <i class="glyphicon glyphicon-star trophy-on"></i> <strong>Highlighted Files</strong>
   <% if @trophies.count > 0 %>
     <table>
       <% @trophies.each do |t| %>
@@ -12,8 +12,8 @@
           <td>
             <%= link_to display_title(t), sufia.generic_file_path(t) %>
             <% if current_user == @user %>
-              <%= display_trophy_link current_user, t.noid, class: 'glyphicon glyphicon-trophy', data: {removerow: true} do %>
-                <i class='trophy-on icon-remove'></i>
+              <%= display_trophy_link current_user, t.noid, class: 'glyphicon glyphicon-star', data: {removerow: true} do %>
+                <i class='trophy-on glyphicon glyphicon-remove'></i>
               <% end %>
             <% end %>
           </td>
