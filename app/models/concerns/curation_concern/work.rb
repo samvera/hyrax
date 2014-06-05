@@ -2,8 +2,7 @@ module CurationConcern::Work
   extend ActiveSupport::Concern
   include ::CurationConcern::Curatable
   include ::CurationConcern::WithGenericFiles
-  include Hydra::AccessControls::Permissions
-  include ::CurationConcern::Embargoable
+  include Hydra::AccessControls::Embargoable
   include ::CurationConcern::WithEditors
   include CurationConcern::WithLinkedResources
 

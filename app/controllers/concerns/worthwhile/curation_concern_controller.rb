@@ -20,6 +20,10 @@ module Worthwhile::CurationConcernController
       load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern
       self.curation_concern_type = curation_concern_type
     end
+
+    def cancan_resource_class
+      Worthwhile::ControllerResource
+    end
   end
   
   def contributor_agreement

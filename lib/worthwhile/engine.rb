@@ -10,6 +10,7 @@ module Worthwhile
     require 'breadcrumbs_on_rails'
 
     config.autoload_paths += %W(
+     #{config.root}/lib
      #{config.root}/app/actors/concerns
     )
     
