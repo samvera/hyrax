@@ -7,7 +7,7 @@ class TestAppGenerator < Rails::Generators::Base
     # gem 'sufia-models', github: 'projecthydra/sufia'
     # gem "jettywrapper"
     # pins to a version of hydra-access-controls with lease & embargo support
-    gem 'hydra-head', '7.1.0.rc1'
+    # gem 'hydra-head', '7.1.0.rc1'
     Bundler.with_clean_env do
       run "bundle install"
     end
