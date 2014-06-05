@@ -67,7 +67,7 @@ describe CurationConcern::GenericFilesController do
 
       context "when the file has a virus" do
         it "displays a flash error" do
-          pending
+          skip
           expect(Sufia::GenericFile::Actions).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
@@ -98,7 +98,7 @@ describe CurationConcern::GenericFilesController do
       end
 
       it "should delete the file" do
-        expect(Worthwhile::GenericFile.find(generic_file.pid)).to be_true
+        expect(Worthwhile::GenericFile.find(generic_file.pid)).to be_kind_of Worthwhile::GenericFile
         delete :destroy, id: generic_file
         expect { Worthwhile::GenericFile.find(generic_file.pid) }.to raise_error ActiveFedora::ObjectNotFoundError
         expect(response).to redirect_to [:curation_concern, parent]
@@ -136,7 +136,7 @@ describe CurationConcern::GenericFilesController do
         end
 
         it "should add a new groups and users" do
-          pending
+          skip
           post :update, id: generic_file, generic_file: 
             { title: 'new_title', tag: [''], permissions: { new_group_name: {'group1'=>'read'}, new_user_name: {'user1'=>'edit'}}}
 
@@ -145,7 +145,7 @@ describe CurationConcern::GenericFilesController do
         end
 
         it "should update existing groups and users" do
-          pending
+          skip
           generic_file.read_groups = ['group3']
           generic_file.save! # TODO slow test, more than one save.
           post :update, id: generic_file, generic_file: 

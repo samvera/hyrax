@@ -4,7 +4,7 @@ describe Collection do
   let(:reloaded_subject) { Collection.find(subject.pid) }
 
   it 'can be part of a collection' do
-    expect(subject.can_be_member_of_collection?(double)).to be_true
+    expect(subject.can_be_member_of_collection?(double)).to be true
   end
 
 
@@ -72,7 +72,7 @@ describe Collection do
   describe '#add_member' do
     it 'adds the member to the collection and returns true' do
       work = FactoryGirl.create(:generic_work, title: 'Work 1')
-      subject.add_member(work).should be_true
+      subject.add_member(work).should be true
       reloaded_subject.members.should == [work]
 
       work.reload
@@ -80,15 +80,15 @@ describe Collection do
       work.to_solr["collection_sim"].should == [subject.pid]
     end
 
-    it 'returns false if there is nothing to add' do
-      subject.add_member(nil).should be_false
+    it 'returns nil if there is nothing to add' do
+      expect(subject.add_member(nil)).to be_nil
     end
 
     it 'returns false if it failed to save' do
       subject.save
       work = FactoryGirl.create(:generic_work)
-      subject.stub(:save).and_return(false)
-      subject.add_member(work).should be_false
+      allow(subject).to receive(:save).and_return(false)
+      expect(subject.add_member(work)).to be false
       reloaded_subject.members.should == []
     end
   end

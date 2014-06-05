@@ -6,8 +6,8 @@ require 'devise'
 require 'engine_cart'
 EngineCart.load_application!
 
+require 'rspec/its'
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
@@ -65,4 +65,6 @@ RSpec.configure do |config|
   config.after(:each, type: :feature) { Warden.test_reset! }
   config.include Controllers::EngineHelpers, type: :controller
   config.include Capybara::DSL
+  config.infer_spec_type_from_file_location!
+  config.deprecation_stream
 end

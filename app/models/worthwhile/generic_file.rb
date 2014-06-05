@@ -1,7 +1,7 @@
 module Worthwhile
   class GenericFile < ActiveFedora::Base
     include Sufia::ModelMethods
-    include Hydra::AccessControls::Permissions
+    include Hydra::AccessControls::Embargoable
     include Sufia::Noid
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Versions
@@ -10,7 +10,6 @@ module Worthwhile
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::WebForm
-    include ::CurationConcern::Embargoable
     include Worthwhile::GenericFile::VersionedContent
     
     before_destroy :remove_representative_relationship
