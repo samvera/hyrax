@@ -1,0 +1,43 @@
+<% content_for :page_header do %>
+  <h1>Manage Embargoes for  <%= curation_concern %><span class="human_readable_type">(<%= curation_concern.human_readable_type %>)</span></h1>
+<% end %>
+
+<h2>Current Embargo</h2>
+<%= simple_form_for curation_concern, :url=>embargo_path(curation_concern) do |f| %>
+  <fieldset id="set-access-controls">
+    <section class="help-block">
+      <p>
+        <% if curation_concern.embargo_release_date %>
+          <strong>This work is under embargo.</strong>
+        <% else %>
+          <strong>This work is not currently under embargo.</strong> If you would like to apply and embargo, provide the information here.
+        <% end %>
+      </p>
+    </section>
+
+    <div class="control-group">
+      <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" />
+      <%= render "curation_concern/base/form_permission_embargo", curation_concern: curation_concern, f: f  %>
+    </div>
+  </fieldset>
+
+  <div class="row">
+    <div class="col-md-12 form-actions">
+      <% if curation_concern.embargo_release_date %>
+        <%= f.submit "Update Embargo", class: 'btn btn-primary' %>
+        <%= link_to "Deactivate Embargo",embargo_path(curation_concern), :method => :delete, class: 'btn btn-danger' %>
+      <% else %>
+        <%= f.submit "Apply Embargo", class: 'btn btn-primary' %>
+      <% end %>
+      <%= link_to 'Cancel and manage all embargoes', embargoes_path, class: 'btn btn-link' %>
+      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>
+
+<h2>Past Embargoes</h2>
+<% if curation_concern.embargo_history.empty? %>
+  This <%= curation_concern.human_readable_type %> has never had embargoes applied to it.
+<% else %>
+  <%= render partial:"embargo_history" %>
+<% end %>

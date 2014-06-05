@@ -29,12 +29,10 @@ describe CurationConcern::LinkedResourceActor do
     describe 'failure' do
       it 'returns false' do
         link.stub(:valid?).and_return(false)
-        return_value = 'some value'
         expect {
-          return_value = subject.create
+          expect(subject.create).to be false
         }.to_not change { Worthwhile::LinkedResource.count }
         reload_resource(parent).linked_resources.should == []
-        return_value.should be_false
       end
     end
   end

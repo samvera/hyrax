@@ -20,13 +20,18 @@ describe CurationConcern::GenericWorkActor do
         CurationConcern::GenericWorkActor.any_instance.should_receive(:save).and_return(false)
         subject.stub(:attach_files).and_return(true)
         subject.stub(:create_linked_resource).and_return(true)
-        subject.create.should be_false
+        expect(subject.create).to be false
       end
     end
 
     describe 'valid attributes' do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
-
+      let(:attributes) {{}}
+      it "should interpret and apply embargo and lease visibility settings" do
+        expect(subject).to receive(:interpret_lease_visibility).and_return(true)
+        expect(subject).to receive(:interpret_embargo_visibility).and_return(true)
+        subject.create
+      end
       describe 'with a file' do
         let(:attributes) {
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap {|a|
@@ -39,7 +44,7 @@ describe CurationConcern::GenericWorkActor do
             s2 = double('characterize job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
             expect(Sufia.queue).to receive(:push).with(s2).once
-            subject.create.should be_true
+            expect(subject.create).to be true
             expect(curation_concern).to be_persisted
             curation_concern.date_uploaded.should == Date.today
             curation_concern.date_modified.should == Date.today
@@ -71,7 +76,7 @@ describe CurationConcern::GenericWorkActor do
             allow(CharacterizeJob).to receive(:new).and_return(s2)
             expect(Sufia.queue).to receive(:push).with(s2).twice
 
-            subject.create.should be_true
+            expect(subject.create).to be true
             expect(curation_concern).to be_persisted
             curation_concern.date_uploaded.should == Date.today
             curation_concern.date_modified.should == Date.today
@@ -92,7 +97,7 @@ describe CurationConcern::GenericWorkActor do
         }
 
         it 'should stamp each link with the access rights' do
-          subject.create.should be_true
+          expect(subject.create).to be true
           expect(curation_concern).to be_persisted
           curation_concern.date_uploaded.should == Date.today
           curation_concern.date_modified.should == Date.today
@@ -116,10 +121,17 @@ describe CurationConcern::GenericWorkActor do
 
         it 'returns false' do
           CurationConcern::GenericWorkActor.any_instance.should_receive(:save).and_return(false)
-          subject.update.should be_false
+          expect(subject.update).to be false
         end
       end
-
+      describe 'valid attributes' do
+        let(:attributes) {{}}
+        it "should interpret and apply embargo and lease visibility settings" do
+          expect(subject).to receive(:interpret_lease_visibility).and_return(true)
+          expect(subject).to receive(:interpret_embargo_visibility).and_return(true)
+          subject.update
+        end
+      end
       describe 'adding to collections' do
         let!(:collection1) { FactoryGirl.create(:collection, user: user) }
         let!(:collection2) { FactoryGirl.create(:collection, user: user) }
@@ -138,7 +150,7 @@ describe CurationConcern::GenericWorkActor do
           reload = GenericWork.find(curation_concern.pid)
           expect(reload.collections).to eq [collection1]
 
-          subject.update.should be_true
+          expect(subject.update).to be true
 
           reload = GenericWork.find(curation_concern.pid)
           expect(reload.identifier).to be_blank
@@ -146,7 +158,7 @@ describe CurationConcern::GenericWorkActor do
           expect(reload).to be_open_access
           expect(reload.collections.count).to eq 1
           expect(reload.collections).to eq [collection2]
-          expect(subject.visibility_changed?).to be_true
+          expect(subject).to be_visibility_changed
         end
       end
     end

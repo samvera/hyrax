@@ -61,7 +61,7 @@ describe 'collection' do
       expect(page).to have_content description
     end
     it "should create collection from the dashboard and include works" do
-      pending "batch collection operations (add/remove)"
+      skip "batch collection operations (add/remove)"
       create_collection(title2, description2)
 
       visit search_path_for_my_works
@@ -181,7 +181,7 @@ describe 'collection' do
     end
 
     it "should remove a work from a collection" do
-      pending "BUG removing works from a collection"
+      skip "BUG removing works from a collection"
       page.should have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link('Edit Collection')
@@ -200,7 +200,7 @@ describe 'collection' do
     end
 
     it "should remove all works from a collection", js: true do
-      pending "batch collection operations (add/remove)"
+      skip "batch collection operations (add/remove)"
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link('Edit Collection')

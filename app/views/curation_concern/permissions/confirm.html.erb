@@ -3,8 +3,8 @@
     <h4>Apply changes to contents?<h4>
   </div>
   <div class="panel-body">
-    <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern.title %></i>, to <b><%= curation_concern.visibility %></b>.</p>
-    <p>Would you like change all of its content to <b><%= curation_concern.visibility %></b> as well?</p>
+    <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern.title %></i>, making it visible to <b><%= visibility_badge(curation_concern.visibility) %></b>.</p>
+    <p>Would you like change all of the files within the <%= curation_concern.human_readable_type %> to <b><%= visibility_badge(curation_concern.visibility) %></b> as well?</p>
   </div>
   <div class="form-actions panel-footer">
     <%= button_to "Yes please.", copy_curation_concern_permission_path(curation_concern), class: 'btn btn-primary' %>

@@ -1,0 +1,4 @@
+<% assets_with_deactivated_leases.each do |curation_concern| %>
+  <%= link_to curation_concern.title, edit_lease_path(curation_concern) %> <%= visibility_badge(curation_concern.visibility) %>
+  <%= render partial:"lease_history", locals:{curation_concern:curation_concern} %>
+<% end %>

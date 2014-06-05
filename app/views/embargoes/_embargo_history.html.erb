@@ -1,0 +1,7 @@
+<ul>
+  <% curation_concern.embargo_history.each do |entry| %>
+    <% unless entry.empty? %>
+      <li><%= entry %></li>
+    <% end %>
+  <% end %>
+</ul>

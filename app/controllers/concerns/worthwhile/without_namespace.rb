@@ -1,4 +1,5 @@
 module Worthwhile
+  # Including WithoutNamespace on a controller allows us to prepend the default namespace to the params[:id]
   module WithoutNamespace
     extend ActiveSupport::Concern
 
