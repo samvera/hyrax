@@ -32,9 +32,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "hydra-head", "~> 7.0"
   spec.add_dependency 'nest', '~> 1.1.1'
   spec.add_dependency 'resque', '~> 1.23'
-  spec.add_dependency 'resque-pool', '0.3.0'
+  spec.add_dependency 'resque-pool', '~> 0.3.0'
   spec.add_dependency 'noid', '~> 0.6.6'
-  spec.add_dependency 'mailboxer', '~> 0.12.0.rc2'
+  spec.add_dependency 'mailboxer', '~> 0.12.0'
   spec.add_dependency 'acts_as_follower', '>= 0.1.1', '< 0.3'
   spec.add_dependency 'carrierwave', '~> 0.9.0'
   spec.add_dependency 'hydra-derivatives', '~> 0.1'
