@@ -32,7 +32,7 @@ describe DashboardController do
 
     it "gathers the user's notifications" do
       get :index
-      expect(assigns(:notifications)).to be_true
+      expect(assigns(:notifications)).to be_truthy
     end
 
     context "with activities" do

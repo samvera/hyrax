@@ -54,7 +54,7 @@ describe CollectionsController do
       collection = assigns(:collection)
       collection.members.should include (@asset1)
       collection.members.should include (@asset2)
-      collection.members.should_not include (@asset3)
+      collection.members.to_a.should_not include (@asset3) # .to_a to avoid a call to any? which doesn't exist in AF::HABTM
       @asset1.destroy
       @asset2.destroy
       @asset3.destroy

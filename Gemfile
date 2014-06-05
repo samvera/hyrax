@@ -11,10 +11,11 @@ gem 'sass-rails', '~> 4.0.0'
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'rspec-rails', '~> 2.99'
+  gem 'rspec-rails', '~> 3.0.1'
+  gem 'rspec-its'
   gem 'launchy' unless ENV['TRAVIS']
   gem 'byebug' unless ENV['TRAVIS']
-  gem 'capybara'
+  gem 'capybara', '~> 2.3.0'
   gem 'poltergeist'
   gem "jettywrapper"
   gem "factory_girl_rails"

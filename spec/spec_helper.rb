@@ -6,7 +6,7 @@ require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_
 require 'database_cleaner'
 
 require 'rspec/rails'
-require 'rspec/autorun'
+require 'rspec/its'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15

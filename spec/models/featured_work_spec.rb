@@ -21,7 +21,7 @@ describe FeaturedWork do
   describe "can_create_another?" do
     subject { FeaturedWork }
     context "when none exist" do
-      its(:can_create_another?) { should be_true }
+      its(:can_create_another?) { should be true }
     end
     context "when five exist" do
       before do
@@ -29,7 +29,7 @@ describe FeaturedWork do
           FeaturedWork.create(generic_file_id:n.to_s)
         end
       end
-      its(:can_create_another?) { should be_false }
+      its(:can_create_another?) { should be false }
     end
   end
 
