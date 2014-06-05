@@ -20,7 +20,7 @@ describe RecordsHelper do
     a.attr('data-original-title').should == "Keyword"
     a.attr('id').should == "generic_file_tag_help"
     i = a.children.first
-    i.attr('class').should == 'glyphicon glyphicon-question-sign icon-large'
+    i.attr('class').should == 'glyphicon glyphicon-question-sign large-icon'
   end
 
   describe "download links" do

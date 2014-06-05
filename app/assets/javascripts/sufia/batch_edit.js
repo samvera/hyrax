@@ -6,11 +6,11 @@ function batch_edit_init () {
     $("tr.expandable").click(function () {
         $(this).next("ul").slideToggle();
 
-        $(this).find('i.toggle').toggleClass("icon-chevron-down");
+        $(this).find('i.toggle').toggleClass("glyphicon glyphicon-chevron-down");
     });
 
     $("tr.expandable_new").click(function () {
-        $(this).find('i').toggleClass("icon-chevron-down");
+        $(this).find('i').toggleClass("glyphicon glyphicon-chevron-down");
     });
 
 

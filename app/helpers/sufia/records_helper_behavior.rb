@@ -12,7 +12,7 @@ module Sufia
       link_to '#', id: "generic_file_#{key.to_s}_help", rel: 'popover', 
         'data-content' => metadata_help(key),
         'data-original-title' => get_label(key) do
-          content_tag 'i', '', class: "glyphicon glyphicon-question-sign icon-large"
+          content_tag 'i', '', class: "glyphicon glyphicon-question-sign large-icon"
       end
     end
 

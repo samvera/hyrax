@@ -1,11 +1,11 @@
 <dl id="user_info" class="row">
-  <dt class="col-xs-5"><i class="glyphicon glyphicon-facebook"></i> Facebook Handle</dt>
+  <dt class="col-xs-5"><i class="icon-facebook"></i> Facebook Handle</dt>
   <dd class="col-xs-7"><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
 
-  <dt class="col-xs-5"><i class="glyphicon glyphicon-twitter"></i> Twitter Handle</dt>
+  <dt class="col-xs-5"><i class="icon-twitter"></i> Twitter Handle</dt>
   <dd class="col-xs-7"><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
  
-  <dt class="col-xs-5"><i class="glyphicon glyphicon-google-plus"></i> Google+ Handle</dt>
+  <dt class="col-xs-5"><i class="icon-google-plus"></i> Google+ Handle</dt>
   <dd class="col-xs-7"><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
  
   <dt class="col-xs-5"><i class="glyphicon glyphicon-envelope-alt"></i> Email</dt>
@@ -52,7 +52,7 @@
   <% end %>
 
   <% if user.telephone %>
-    <dt class="col-xs-5"><i class="glyphicon glyphicon-phone"></i> Telephone</dt>
+    <dt class="col-xs-5"><i class="glyphicon glyphicon-earphone"></i> Telephone</dt>
     <dd class="col-xs-7"><%= link_to_telephone(user) %></dd>
   <% end %>
 

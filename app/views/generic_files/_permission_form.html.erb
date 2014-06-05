@@ -13,7 +13,7 @@
   <div class="row">
     <p class="pull-right">
     <!-- Button to trigger modal -->
-    <a href="#myModal" role="button" class="btn btn-warning" data-toggle="modal">What's this <i class="glyphicon glyphicon-question-sign icon-large"></i></a>
+    <a href="#myModal" role="button" class="btn btn-warning" data-toggle="modal">What's this <i class="glyphicon glyphicon-question-sign large-icon"></i></a>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -41,7 +41,7 @@
         <h3>Share With</h3>
         <p>You may grant &quot;View/Download&quot; or &quot;Edit&quot;  access for specific users and/or groups to files. Enter
         a valid <%=t('sufia.account_name') %>, one at a time, select the access level for that user and click
-        <button class="btn btn-mini btn-inverse" onclick="return false;"><i class="icon-plus-sign" ></i>Add</button>.
+        <button class="btn btn-mini btn-inverse" onclick="return false;"><i class="glyphicon glyphicon-plus" ></i>Add</button>.
         </p>
 
         <%= render partial: 'generic_files/groups_description' %>
@@ -83,7 +83,7 @@
         <p class="help-block">Enter <%=t('sufia.account_label') %> (one at a time)</p>
         <%= text_field_tag 'new_user_name_skel', nil, class: "span29" %><span class="add-on"><%=t('sufia.directory.suffix') %></span>
         <%= select_tag 'new_user_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'span17' %>
-        <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="icon-plus-sign"></i> Add</button>
+        <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="glyphicon glyphicon-plus"></i> Add</button>
         <br /> <span id="directory_user_result"></span>
       </div>
     </div>
@@ -93,7 +93,7 @@
       <div class="input-append">
         <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'span38' %>
         <%= select_tag 'new_group_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'span17' %>
-        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="icon-plus-sign"></i> Add</button>
+        <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="glyphicon glyphicon-plus"></i> Add</button>
         <br /><span id="directory_group_result"></span>
       </div>
     </div>

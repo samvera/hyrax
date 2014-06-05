@@ -9,8 +9,8 @@
   <h3> Descriptions:</h3>
 
     <ul class="nav nav-tabs">
-      <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><i class="icon-tags"></i> Descriptions</a></li>
-      <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="icon-key"></i> Permissions</a></li>
+      <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><i class="glyphicon glyphicon-tags"></i> Descriptions</a></li>
+      <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="glyphicon glyphicon-lock"></i> Permissions</a></li>
     </ul>
     <div class="tab-content">
       <div class="well tab-pane active" id="descriptions_display">
@@ -21,7 +21,7 @@
               <tr id='row_<%= term.to_s %>' class="expandable">
                 <th width="20%">
                    <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%=term.to_s%>">
-                      <%= get_label(term) %>&nbsp;<i class="toggle icon-chevron-right grey"></i>
+                      <%= get_label(term) %>&nbsp;<i class="toggle glyphicon glyphicon-chevron-right grey"></i>
                    </a>
                 </th>
                 <td  width="50%" class="scrolly">

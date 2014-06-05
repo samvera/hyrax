@@ -9,7 +9,7 @@
         <li><%= link_to raw('<span class="glyphicon glyphicon-upload"></span> upload'), sufia.new_generic_file_path, id: 'upload_nav_link' %></li>
         <li><%= link_to raw('<span class="glyphicon glyphicon-cog"></span> edit profile'), sufia.edit_profile_path(current_user), id: 'upload_nav_link' %></li>
         <li class="divider"></li>
-        <li><%= link_to raw('<span class="glyphicon glyphicon-signout"></span> log out'), destroy_user_session_path, id: 'logout_nav_link' %></li>
+        <li><%= link_to raw('<span class="glyphicon glyphicon-log-out"></span> log out'), destroy_user_session_path, id: 'logout_nav_link' %></li>
       </ul>
     </div><!-- /.btn-group -->
 <% else %>
