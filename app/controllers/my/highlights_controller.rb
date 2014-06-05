@@ -17,5 +17,12 @@ module My
       super
       @selected_tab = :highlighted
     end
+  
+    protected
+    
+    def search_action_url *args
+      sufia.dashboard_highlights_url *args
+    end
+
   end
 end

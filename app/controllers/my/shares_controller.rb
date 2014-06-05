@@ -16,5 +16,12 @@ module My
       super
       @selected_tab = :shared
     end
+  
+    protected
+    
+    def search_action_url *args
+      sufia.dashboard_shares_url *args
+    end
+
   end
 end
