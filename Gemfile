@@ -18,7 +18,7 @@ group :develop, :test do
   gem 'debugger'
 end
 
-gem 'hydra-head', github:'projecthydra/hydra-head', ref:'e6c65d2'
+gem 'hydra-head', '7.1.0.rc1'
 
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))
 if File.exists?(file)
