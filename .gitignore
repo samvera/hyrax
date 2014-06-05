@@ -14,6 +14,9 @@ ruby-gemset
 .rvmrc
 Gemfile.lock
 
+# don't push around jetty (for dev envs only)
+jetty
+
 ## MAC OS
 .DS_Store
 
@@ -46,7 +49,6 @@ pkg/
 spec/dummy/db/*.sqlite3
 spec/dummy/log/*.log
 spec/dummy/tmp/
-
 
 spec/mock_upload_directory
 
