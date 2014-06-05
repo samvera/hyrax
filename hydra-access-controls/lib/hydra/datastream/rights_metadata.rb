@@ -40,14 +40,38 @@ module Hydra
         # t.access_group(:proxy=>[:access,:machine,:group])
         
         t.embargo {
-          t.human_readable(:path=>"human")
+          t.human_readable(path: "human")
           t.machine{
-            t.date(:type =>"release")
+            t.date(type: :time, attributes: {type: "release"})
+            t.date_deactivated(type: "deactivated")
+            t.visibility_during(path: "visibility", attributes: {scope: 'during'})
+            t.visibility_after(path: "visibility", attributes: {scope: 'after'})
           }
-          t.embargo_release_date(:proxy => [:machine, :date])
-        }    
+        }
+
+        t.lease {
+          t.human_readable(path: "human")
+          t.machine{
+            t.date(type: :time, attributes: {type: "expire"})
+            t.date_deactivated(type: :time, attributes: {type: "deactivated"})
+            t.visibility_during(path: "visibility", attributes: {scope: 'during'})
+            t.visibility_after(path: "visibility", attributes: {scope: 'after'})
+          }
+        }
 
         t.license(:ref=>[:copyright])
+
+        t.visibility_during_embargo ref: [:embargo, :machine, :visibility_during]
+        t.visibility_after_embargo ref: [:embargo, :machine, :visibility_after]
+        t.visibility_during_lease ref: [:lease, :machine, :visibility_during]
+        t.visibility_after_lease ref: [:lease, :machine, :visibility_after]
+        t.embargo_history ref: [:embargo, :human_readable]
+        t.lease_history ref: [:lease, :human_readable]
+        t.embargo_release_date ref: [:embargo, :machine, :date], type: :time
+        t.embargo_deactivation_date ref: [:embargo, :machine, :date_deactivated]
+        t.lease_expiration_date ref: [:lease, :machine, :date], type: :time
+        t.lease_deactivation_date ref: [:lease, :machine, :date_deactivated]
+
       end
 
       # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
@@ -75,7 +99,11 @@ module Hydra
             xml.embargo{
               xml.human
               xml.machine
-            }        
+            }
+            xml.lease{
+              xml.human
+              xml.machine
+            }
           }
         end
         return builder.doc
@@ -172,37 +200,35 @@ module Hydra
         return result
       end
 
-      attr_reader :embargo_release_date
-      def embargo_release_date=(release_date)
-        release_date = release_date.to_s if release_date.is_a? Date
-        begin
-          release_date.nil? || Date.parse(release_date)
-        rescue 
-          return "INVALID DATE"
-        end
-        self.update_values({[:embargo,:machine,:date]=>release_date})
-      end
-      def embargo_release_date(opts={})
-        embargo_release_date = self.find_by_terms(*[:embargo,:machine,:date]).first ? self.find_by_terms(*[:embargo,:machine,:date]).first.text : nil
-        if embargo_release_date.present? && opts[:format] && opts[:format] == :solr_date
-          embargo_release_date << "T23:59:59Z"
-        end
-        embargo_release_date
-      end
       def under_embargo?
-        (embargo_release_date && Date.today < embargo_release_date.to_date) ? true : false
+        (embargo_release_date.present? && Date.today < embargo_release_date.first) ? true : false
+      end
+
+      def active_lease?
+        lease_expiration_date.present? && Date.today < lease_expiration_date.first
       end
 
       def to_solr(solr_doc=Hash.new)
         [:discover, :read, :edit].each do |access|
           vals = send("#{access}_access").machine.group
-          solr_doc[Hydra.config[:permissions][access][:group]] = vals unless vals.empty?
+          solr_doc[Hydra.config.permissions[access].group] = vals unless vals.empty?
           vals = send("#{access}_access").machine.person
-          solr_doc[Hydra.config[:permissions][access][:individual]] = vals unless vals.empty?
+          solr_doc[Hydra.config.permissions[access].individual] = vals unless vals.empty?
         end
-        if embargo_release_date
-          ::Solrizer::Extractor.insert_solr_field_value(solr_doc, Hydra.config[:permissions][:embargo_release_date], embargo_release_date(:format=>:solr_date))
+        if embargo_release_date.present?
+          key = Hydra.config.permissions.embargo.release_date.sub(/_[^_]+$/, '') #Strip off the suffix
+          ::Solrizer.insert_field(solr_doc, key, embargo_release_date, :stored_sortable)
         end
+        if lease_expiration_date.present?
+          key = Hydra.config.permissions.lease.expiration_date.sub(/_[^_]+$/, '') #Strip off the suffix
+          ::Solrizer.insert_field(solr_doc, key, lease_expiration_date, :stored_sortable)
+        end
+        solr_doc[::Solrizer.solr_name("visibility_during_embargo", :symbol)] = visibility_during_embargo unless visibility_during_embargo.nil?
+        solr_doc[::Solrizer.solr_name("visibility_after_embargo", :symbol)] = visibility_after_embargo unless visibility_after_embargo.nil?
+        solr_doc[::Solrizer.solr_name("visibility_during_lease", :symbol)] = visibility_during_lease unless visibility_during_lease.nil?
+        solr_doc[::Solrizer.solr_name("visibility_after_lease", :symbol)] = visibility_after_lease unless visibility_after_lease.nil?
+        solr_doc[::Solrizer.solr_name("embargo_history", :symbol)] = embargo_history unless embargo_history.nil?
+        solr_doc[::Solrizer.solr_name("lease_history", :symbol)] = lease_history unless lease_history.nil?
         solr_doc
       end
 

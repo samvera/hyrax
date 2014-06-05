@@ -42,6 +42,7 @@ describe Hydra::Config do
   it "should have defaults" do
     config.permissions.read.individual.should == 'read_access_person_ssim'
     config.permissions.embargo_release_date.should == 'embargo_release_date_dtsi'
+    config.permissions.embargo.release_date.should == 'embargo_release_date_dtsi'
     config.user_model.should == 'User'
   end
 

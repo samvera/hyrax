@@ -94,7 +94,7 @@ describe Hydra::AccessControlsEnforcement do
       subject.params = {}
       subject.should_receive(:can?).with(:edit, stub_doc).and_return(true)
       subject.current_ability.should_receive(:get_permissions_solr_response_for_doc_id).and_return(stub_doc)
-      lambda {subject.send(:enforce_show_permissions, {}) }.should_not raise_error Hydra::AccessDenied
+      expect {subject.send(:enforce_show_permissions, {}) }.not_to raise_error Hydra::AccessDenied
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
       user = User.new :uid=>'testuser@example.com'

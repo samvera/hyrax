@@ -3,6 +3,7 @@ module Hydra
     extend ActiveSupport::Autoload
     autoload :AccessRight
     autoload :WithAccessRight
+    autoload :Embargoable
     autoload :Visibility
     autoload :Permission
     autoload :Permissions

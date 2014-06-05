@@ -1,23 +1,26 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require "nokogiri"
 
 describe Hydra::Datastream::InheritableRightsMetadata do
   before do
-    Hydra.stub(:config).and_return({:permissions=>{
-      :discover => {:group =>"discover_access_group_ssim", :individual=>"discover_access_person_ssim"},
-      :read => {:group =>"read_access_group_ssim", :individual=>"read_access_person_ssim"},
-      :edit => {:group =>"edit_access_group_ssim", :individual=>"edit_access_person_ssim"},
-      :owner => "depositor_ssim",
-      :embargo_release_date => "embargo_release_date_dtsi",
-      
-      :inheritable => {
-        :discover => {:group =>"inheritable_discover_access_group_ssim", :individual=>"inheritable_discover_access_person_ssim"},
-        :read => {:group =>"inheritable_read_access_group_ssim", :individual=>"inheritable_read_access_person_ssim"},
-        :edit => {:group =>"inheritable_edit_access_group_ssim", :individual=>"inheritable_edit_access_person_ssim"},
-        :owner => "inheritable_depositor_ssim",
-        :embargo_release_date => "inheritable_embargo_release_date_dtsi"
-      }
-    }})
+    Hydra.stub(:config).and_return(
+      Hydra::Config.new.tap do |config|
+        config.permissions ={
+          :discover => {:group =>"discover_access_group_ssim", :individual=>"discover_access_person_ssim"},
+          :read => {:group =>"read_access_group_ssim", :individual=>"read_access_person_ssim"},
+          :edit => {:group =>"edit_access_group_ssim", :individual=>"edit_access_person_ssim"},
+          :owner => "depositor_ssim",
+          :embargo_release_date => "embargo_release_date_dtsi",
+
+          :inheritable => {
+            :discover => {:group =>"inheritable_discover_access_group_ssim", :individual=>"inheritable_discover_access_person_ssim"},
+            :read => {:group =>"inheritable_read_access_group_ssim", :individual=>"inheritable_read_access_person_ssim"},
+            :edit => {:group =>"inheritable_edit_access_group_ssim", :individual=>"inheritable_edit_access_person_ssim"},
+            :owner => "inheritable_depositor_ssim",
+            :embargo_release_date => "inheritable_embargo_release_date_dtsi"
+          }
+        }
+      end
+    )
   end
   
   before(:each) do
@@ -55,7 +58,7 @@ describe Hydra::Datastream::InheritableRightsMetadata do
       subject[Hydra.config[:permissions][:inheritable][:read][:individual] ].should == ["nero"]
       subject[Hydra.config[:permissions][:inheritable][:edit][:group] ].should == ["africana-faculty", "cool-kids"]
       subject[Hydra.config[:permissions][:inheritable][:edit][:individual] ].should == ["julius_caesar"]
-      subject[Hydra.config[:permissions][:inheritable][:embargo_release_date] ].should == "2102-10-01"
+      expect(subject[Hydra.config[:permissions][:inheritable][:embargo_release_date]]).to eq Date.parse("2102-10-01").to_time.utc.iso8601
     end
   end
 

@@ -11,7 +11,10 @@ module Hydra
           solr_doc[Hydra.config[:permissions][:inheritable][access][:group]] = send("#{access}_access").machine.group
           solr_doc[Hydra.config[:permissions][:inheritable][access][:individual]] = send("#{access}_access").machine.person
         end
-        solr_doc[Hydra.config[:permissions][:inheritable][:embargo_release_date]] = embargo_release_date
+        if embargo_release_date.present?
+          key = Hydra.config.permissions.inheritable.embargo.release_date.sub(/_[^_]+$/, '') #Strip off the suffix
+          ::Solrizer.insert_field(solr_doc, key, embargo_release_date, :stored_sortable)
+        end
         return solr_doc
       end
     end

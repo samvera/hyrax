@@ -142,7 +142,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     it "should escape slashes in the group names" do
       RoleMapper.stub(:roles).with(@user).and_return(["abc/123","cde/567"])
       subject.stub(:current_user).and_return(@user)
-      user_access_filters = subject.apply_policy_role_permissions
+      user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
         user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\\/123")
         user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cde\\\/567")
@@ -151,7 +151,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     it "should escape spaces in the group names" do
       RoleMapper.stub(:roles).with(@user).and_return(["abc 123","cd/e 567"])
       subject.stub(:current_user).and_return(@user)
-      user_access_filters = subject.apply_policy_role_permissions
+      user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
         user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\ 123")
         user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cd\\\/e\\ 567")
