@@ -50,7 +50,7 @@ module Worthwhile
         dom_label_class, link_title = "label-danger", "Private"
         if hash[Hydra.config.permissions.read.group].present?
           if hash[Hydra.config.permissions.read.group].include?('public')
-            if hash[Hydra.config.permissions.embargo_release_date].present?
+            if hash[Hydra.config.permissions.embargo.release_date].present?
               dom_label_class, link_title = 'label-warning', 'Open Access with Embargo'
             else
               dom_label_class, link_title = 'label-success', 'Open Access'
