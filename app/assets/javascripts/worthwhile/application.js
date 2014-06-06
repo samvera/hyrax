@@ -11,6 +11,7 @@
 //= require bootstrap/collapse
 //= require bootstrap/tooltip
 //= require bootstrap/popover
+//= require bootstrap/tab
 //
 //= require handlebars
 //= require jquery.tokeninput
