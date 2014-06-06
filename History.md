@@ -1,4 +1,329 @@
 # History of Sufia releases
+
+## 4.0.0.rc1
+
+* Use the bootstrap_form helpers (bootstrap_forms is no longer
+available) [Justin Coyne]
+
+* Lock hydra-editor to ~> 0.3.0 [Justin Coyne]
+
+* Use mailboxer 0.12.0 [Justin Coyne]
+
+* Allow hydra-head 7.1.0 to be used [Justin Coyne]
+
+* Drop no longer used submodule for hydra-jetty [Michael J. Giarlo]
+
+* Rename releasing document because reasons. [Michael J. Giarlo]
+
+* Updating release process documentation. [Michael J. Giarlo]
+
+* Moved to release notes [Michael J. Giarlo]
+
+* Changing all icons to glyph icons except the social ones because
+bootstrap does not include those [Carolyn Cole]
+
+* Adding missing methods to My controllers [Adam Wead]
+
+* Added additonal span and classes to fix thumbnail image hogging
+column and refactored HTML/CSS. fixes #SCM-9283 [Carolyn Cole]
+
+* Updating modals and fixing facet features #428 [Adam Wead]
+
+* Screen reader should say 'items' #485 [Adam Wead]
+
+* making new office document thumbnails visible. [Carolyn Cole]
+
+* Removing unused blacklight overrides.  Only keeping the ones we need
+to change blacklight default behavior. Pinning respec to 2.99 [Carolyn Cole]
+
+* Label featured works appropriately and allow overriding this label
+[Michael J. Giarlo]
+
+* Creates generators to upgrade 3.7.2 instances to 4.0.0 [Michael J.
+Giarlo]
+
+* Refactor views to support collection links [Justin Coyne]
+
+* Removing instances of :local_js and :js_head [Adam Wead]
+
+* Noid.namespaceize should not append a second namespace onto a pid.
+Previously if the passed in identifier had a namespace that was not the same as
+the configure namespace it would append a second namespace to the identifier. 
+This would create an invalid pid. [Justin Coyne]
+
+* Adding collections to the filter for searching. resolves #429
+[Carolyn Cole]
+
+* Correcting Rails app integration issues [Adam Wead]
+
+* removing unused layout method [Carolyn Cole]
+
+* Adding bootstrap 3 modal classes to generic_file modals [Carolyn
+Cole]
+
+* Changing the layout for the catalog controller to always include two
+columns, since the homepage is now a separate controller [Carolyn Cole]
+
+* Add image/tiff as a recognized image type [Justin Coyne]
+
+* Preparing for 4.0.0.beta4 release [Justin Coyne]
+
+* Bump version to 4.0.0.beta4 [Justin Coyne]
+
+* New dashboard functionality with unified search [Adam Wead]
+
+* Uploaded and modified dates should not be included in the display of
+descriptive metadata [Michael J. Giarlo]
+
+* Moving repeatative html up the stack and removing hard coded labels
+[Carolyn Cole]
+
+* Inject Sufia::SolrDocumentBehavior with the sufia generator instead
+of the sufia-models generator. This keeps the module and geneator together in
+the same gem. [Justin Coyne]
+
+* Removing sufia route set from catalog path as it does not exist
+there.  This causes an error in production only. [Carolyn Cole]
+
+* Fixes progress bar for jquery-file-upload [Michael J. Giarlo]
+
+* Glyphicons come with bootstrap-sass, remove this old version [Justin
+Coyne]
+
+* Upgrade to mailboxer 0.12.0.rc2 (from rc1) [Justin Coyne]
+
+* Updating README as per committer's call on May 19th [Adam Wead]
+
+* Index title with `_sim` suffix in addition to the existing `_tesim`
+suffix This enables an exact match search on title: ```ruby
+GenericFile.where(desc_metadata__title_tesim: 'anoabo00-00001.jp2').map {|f|
+f.title.first } \# => ["anoabo00-00001.jp2", "anoabo00-00002.jp2",
+"anoabo00-00003.jp2"] GenericFile.where(desc_metadata__title_sim:
+'anoabo00-00001.jp2').map {|f| f.title.first } \# => ["anoabo00-00001.jp2"] ```
+[Justin Coyne]
+
+* Fixed unified search layout and hover states. [mtribone]
+
+* Separate model noid concerns from controller noid concerns [Justin
+Coyne]
+
+* bump version to beta 3 [Justin Coyne]
+
+* Restore schema.org microdata to GenericFile show view; Add
+schema.org microdata to Collection show view; Take advantage of Blacklight's
+schema.org microdata hooks. [Michael J. Giarlo]
+
+* Set up all the events in the initializer [Justin Coyne]
+
+* Version bump to 4.0.0.beta3 [Justin Coyne]
+
+* Cease auto characterizing on save and use a real Actor. This makes
+testing far easier. Fixes #232 [Justin Coyne]
+
+* Changing the forwarding location to be where the files now are
+instead of where they once were. resolves #434 [Carolyn Cole]
+
+* Changing to only public works can be featured. resolves #395
+[Carolyn Cole]
+
+* Fixing sytax error introduced by Ruby/Rails style reformat [Carolyn
+Cole]
+
+* Refactor the file controller update method for clarity [Justin
+Coyne]
+
+* Use modern Ruby/Rails style guidelines [Michael J. Giarlo]
+
+* Generate thumbnails for office documents [Michael J. Giarlo]
+
+* Move GenericFile concerns to standard autoload paths [Justin Coyne]
+
+* Move the event job launching out of Actions. events aren't in
+sufia-models [Justin Coyne]
+
+* Removed duplicate object allocations [Justin Coyne]
+
+* Eliminate double save and stop using exceptions for flow control
+[Justin Coyne]
+
+* Encapsulate browse_everything upload in a module [Justin Coyne]
+
+* Put revert and update actions in the Actions module [Justin Coyne]
+
+* Allow users to add files to collections. Use the Boostrap modal
+rather than a custom modal. [Justin Coyne]
+
+* Only put the javascript for tinymce on the page one time. This
+allows the javascript test to pass. [Justin Coyne]
+
+* added dashboard tabs and moved file list to those tabs [Brian Maddy]
+
+* Setting text area id and adding jquery loop to allow for multiple
+content blocks to be on the same page.  resolves #415 [Carolyn Cole]
+
+* Query Google Analytics for file usage information and display with
+Flot JQuery [Adam Wead]
+
+* Moved controller concerns from lib/ to app/controllers/concerns/.
+[dchandekstark]
+
+* Added grid view for search results and collections view [Justin
+Coyne]
+
+* There is no longer two recent blocks on the home page, so clean up
+the home page controller to only have the one that shows all files. [Carolyn
+Cole]
+
+* Refactor the controllers to cleanup after the homepage_controller
+was added [Justin Coyne]
+
+* Adding an editable block for marketing content on the homepage
+header [Carolyn Cole]
+
+* Add collections [Justin Coyne]
+
+* Unify the home page search Fixes http://scm.dlt.psu.edu/issues/9142
+[Justin Coyne]
+
+* Add source and bibliographicCitation DC terms to the metadata
+datastream [Justin Coyne]
+
+* moving homepage to it's own controller [Carolyn Cole]
+
+* added videojs fonts to precompile and made rake clean stop spring
+[Brian Maddy]
+
+* Version should be updated in all three locations. [Michael J.
+Giarlo]
+
+* add default value so config.usage_statistics is defined [Jim Coble]
+
+* Test for an XHR request, not for a javascript format [Justin Coyne]
+
+* Check to make sure BrowseEverthing is defined If you're only using
+sufia-models, then BrowseEverthing is not defined and you get an error. [Justin
+Coyne]
+
+* Ship the video-js fonts [Justin Coyne]
+
+* Allow endnote to be injected into a rails 4.0 or 4.1 file [Justin
+Coyne]
+
+* VirusFoundError should live in sufia-models [Justin Coyne]
+
+* Allow rails 4.1 to be used [Justin Coyne]
+
+* Modify how the pages controller and helper work so that you do not
+have to be logged in before viewing the page. [Carolyn Cole]
+
+* Changing to 2.1.1 to avoid the issue with 2.1.0 [cam156]
+
+* Update SUFIA_VERSION [cam156]
+
+* Update SUFIA_VERSION [cam156]
+
+* upping the version so people know the current UI changes are
+breaking [Carolyn Cole]
+
+* Refactor styles.css and create additional style sheets for features
+and sections. refs #SCM-9141 [Michael Tribone]
+
+* Template, home page, dashboard, edits to upgrade to Bootstrap3 and
+update look [Carolyn Cole]
+
+* Fixing dashboard facets to be bootstrap 3 compliant and updating
+pending dashboard test to be a passing test. [Carolyn Cole]
+
+* Upgrade mailboxer to 0.12.0.rc1 [Justin Coyne]
+
+* Drag and drop to order featured works [Justin Coyne]
+
+* [tagcloud] improving sort feature & made tagcloud properly
+configurable [Matt Zumwalt]
+
+* Add usage statistics to the user interface [Michael J. Giarlo]
+
+* using gsub to remove require tree, which removes javascript error in
+Chrome [Carolyn Cole]
+
+* Fix tests that broke as a result of a merge [Justin Coyne]
+
+* checking the frame rate as a number so 30 is equal to 30.0 [Carolyn
+Cole]
+
+* Re-add the generic_files stylesheet which was removed in #359
+[Justin Coyne]
+
+* Use the User.to_param to craft paths. Fixes #367 [Justin Coyne]
+
+* Refactor user factories [Justin Coyne]
+
+* Add all show fields to default all_fields search in generator, so
+that there's a better search experience out of the box. [dchandekstark]
+
+* Initialize the javascript on page:load events for Turbolinks support
+[Justin Coyne]
+
+* Factor out PropertiesDatastream behavior to a concern to facilitate
+overriding [dchandekstark]
+
+* Add featured works to the homepage [Justin Coyne]
+
+* Refactor Trophies javascript. All trophy scripts should use the
+TrophyHelper#display_trophy_link Add the `trophy-class` back to the user's
+profile page. The script now updates the link text depending on the current
+state of the trophy. Trophies should work with Turbolinks now. [Justin Coyne]
+
+* Restrict rails to ~> 4.0.  4.1.0 causes errors with mailboxer
+[Justin Coyne]
+
+* [tagcloud] adding sort feature to tag cloud [Matt Zumwalt]
+
+* switched to ajax and jquery-based tag cloud [Matt Zumwalt]
+
+* Don't show the tinymce editor until the edit button is pushed
+[Justin Coyne]
+
+* Edit the about page with the TinyMCE editor [Justin Coyne]
+
+* only render tag cloud section on homepage if a blacklight query has
+been run. (ie don't render on login page) [Matt Zumwalt]
+
+* Added tinymce editor for featured researcher [Justin Coyne]
+
+* only render tag cloud section on homepage if a blacklight query has
+been run. (ie don't render on login page) [Matt Zumwalt]
+
+* Adding stylesheet and fixing login page error on layout [Carolyn
+Cole]
+
+* browse-everything tab uses localization for tab/button labels [Matt
+Zumwalt]
+
+* adding tag cloud helper and displaying it in homepage [Matt Zumwalt]
+
+* Bootstrap 3 ui changes [Carolyn Cole]
+
+* removing dropbox-specific support (replaced by browse-everything)
+[Matt Zumwalt]
+
+* added browse-everything for uploads [Matt Zumwalt]
+
+* Update to hydra-head 7.0.1 [Justin Coyne]
+
+* Upgrading sufia to the Blacklight 5 and Hydra-Head 7 [Carolyn Cole]
+
+* Adding a description to the all:release task so it will show up with
+rake -T [Carolyn Cole]
+
+* Update video.js to 4.5.1 [Justin Coyne]
+
+* Move font-awesome-sass-rails to be an internal dependency and not
+required in the Gemfile [Justin Coyne]
+
+* Clean up spacing [Justin Coyne]
+
+
 ## 3.7.0
 
 * The UsersController needs to set @trophies to a list of GenericFiles [Justin Coyne]
