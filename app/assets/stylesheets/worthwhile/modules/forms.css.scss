@@ -30,9 +30,9 @@ legend small {
   padding-left:1.2em;
 }
 
-.control-group.error input,
-.control-group.error option,
-.control-group.error textarea {
+.form-group.has-error input,
+.form-group.has-error option,
+.form-group.has-error textarea {
   color:$gray-dark;
 }
 
@@ -54,7 +54,7 @@ form label.required { font-weight: bold; }
 
 #set-access-controls {
   label { font-weight: normal; }
-  .control-group { padding: 0 1.75em; }
+  & > .form-group { padding: 0 1.75em; }
 }
 
 .control-label.required {
@@ -64,7 +64,7 @@ form label.required { font-weight: bold; }
   }
 }
 
-.control-group input.inline {
+.form-group input.inline {
   display: inline-block;
 }
 

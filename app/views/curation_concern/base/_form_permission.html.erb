@@ -25,7 +25,7 @@
       </p>
     </section>
 
-    <div class="control-group">
+    <div class="form-group">
       <label class="radio">
         <input type="radio" id="visibility_open" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if curation_concern.open_access? %> checked="true"<% end %>/>
         <span class="label label-success">Open Access</span> Visible to the world.

@@ -25,7 +25,7 @@ Blacklight.onLoad(function() {
       $removeControl.click()
     }
   });
-  $('.multi_value.control-group').manage_fields();
+  $('.multi_value.form-group').manage_fields();
   $('.link-users').linkUsers();
   $('.link-groups').linkGroups();
   $('.proxy-rights').proxyRights();
