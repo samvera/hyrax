@@ -31,7 +31,7 @@
         <span class="label label-success">Open Access</span> Visible to the world.
       </label>
       <label class="radio">
-        <input type="radio" id="visibility_ndu" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if curation_concern.authenticated_only_access? %> checked="true"<% end %> />
+        <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if curation_concern.authenticated_only_access? %> checked="true"<% end %> />
         <span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
       </label>
       <label class="radio">
