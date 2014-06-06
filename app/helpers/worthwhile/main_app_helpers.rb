@@ -9,4 +9,5 @@ module Worthwhile::MainAppHelpers
   include Curate::CollectionsHelper
   include Worthwhile::ThumbnailHelper
   include Worthwhile::UrlHelper
+  include Worthwhile::EmbargoHelper
 end
