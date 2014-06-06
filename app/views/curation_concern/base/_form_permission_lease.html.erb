@@ -8,7 +8,7 @@
   <div class="form-group">
     until
     <%= f.label  :lease_expiration_date, class:"sr-only" %>
-    <%= f.input :lease_expiration_date, wrapper: :inline, input_html: { placeholder: Date.tomorrow, class: 'input-small datepicker' } %>
+    <%= f.input :lease_expiration_date, wrapper: :inline, input_html: { value: f.object.lease_expiration_date || Date.tomorrow, class: 'input-small datepicker' } %>
   </div>
   <div class="form-group">
     then restrict it to
