@@ -13,8 +13,9 @@ Hydra.configure do |config|
   # config.permissions.edit.group           = ActiveFedora::SolrService.solr_name("edit_access_group", :symbol)
   # config.permissions.edit.individual      = ActiveFedora::SolrService.solr_name("edit_access_person", :symbol)
   #
-  # config.permissions.embargo_release_date = ActiveFedora::SolrService.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
-  # }
+  # config.permissions.embargo.release_date  = ActiveFedora::SolrService.solr_name("embargo_release_date", :stored_sortable, type: :date)
+  # config.permissions.lease.expiration_date = ActiveFedora::SolrService.solr_name("lease_expiration_date", :stored_sortable, type: :date)
+  #
   #
   # specify the user model
   # config.user_model = '#{model_name.classify}'
