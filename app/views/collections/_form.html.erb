@@ -13,12 +13,15 @@
       <input type="hidden" name="batch_document_ids[]" value="<%= batch_item %>"/>
     <% end %>
   <% end %>
-  <%= f.actions do %>
-    <% if params[:action] == "new" %>
-      <%= f.submit 'Create Collection' %>
-    <% else %>
-      <%= f.submit 'Update Collection' %>
-    <% end %>
-    <%= f.cancel %>
-  <% end %>
+  
+  <div class="form-actions">
+    <div class="primary-actions">
+      <% if params[:action] == "new" %>
+        <%= f.primary 'Create Collection' %>
+      <% else %>
+        <%= f.primary 'Update Collection' %>
+      <% end %>
+      <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
+    </div>
+  </div>
 <% end %>
