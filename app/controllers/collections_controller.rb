@@ -12,7 +12,6 @@ class CollectionsController < ApplicationController
 
   with_themed_layout '1_column'
 
-  helper BlacklightHelper
   helper Worthwhile::CatalogHelper
 
   protected

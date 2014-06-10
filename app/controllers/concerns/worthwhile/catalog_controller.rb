@@ -8,7 +8,6 @@ module Worthwhile::CatalogController
 
   included do
     with_themed_layout 'catalog'
-    helper BlacklightHelper
     helper Worthwhile::CatalogHelper
     # These before_filters apply the hydra access controls
     before_filter :enforce_show_permissions, only: :show

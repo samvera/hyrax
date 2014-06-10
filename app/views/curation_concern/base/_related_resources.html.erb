@@ -14,22 +14,20 @@
       <tr class="<%= dom_class(link) %> attributes">
         <td class="attribute url"><%= link_to link.url, link.url %></td>
         <td>
-          <%- if with_actions -%>
-            <%- if can?(:edit, link) -%>
-              <%= link_to(
-                'Edit',
-                edit_polymorphic_path([:curation_concern, link]),
-                { class: 'btn', title: "Edit #{link}" }
-              ) %>
-            <%- end -%>
-            <%- if can?(:destroy, link) -%>
-              <%= link_to(
-                'Delete',
-                polymorphic_path([:curation_concern, link]),
-                class: 'btn', method: :delete, title: "Delete #{link.to_s.inspect}",
-                data: {confirm: "Deleting #{link.to_s.inspect} from #{t('sufia.product_name')} is permanent. Click OK to delete this from #{t('sufia.product_name')}, or Cancel to cancel this operation"}
-              )%>
-            <%- end -%>
+          <%- if can?(:edit, link) -%>
+            <%= link_to(
+              'Edit',
+              edit_polymorphic_path([:curation_concern, link]),
+              { class: 'btn', title: "Edit #{link}" }
+            ) %>
+          <%- end -%>
+          <%- if can?(:destroy, link) -%>
+            <%= link_to(
+              'Delete',
+              polymorphic_path([:curation_concern, link]),
+              class: 'btn', method: :delete, title: "Delete #{link.to_s.inspect}",
+              data: {confirm: "Deleting #{link.to_s.inspect} from #{t('sufia.product_name')} is permanent. Click OK to delete this from #{t('sufia.product_name')}, or Cancel to cancel this operation"}
+            )%>
           <%- end -%>
         </td>
       </tr>
