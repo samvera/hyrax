@@ -129,7 +129,6 @@ describe CollectionsController do
   end
 
   describe "#show" do
-    let(:other_user) { FactoryGirl.create(:user) }
     before do
       collection.members = [work1,work2,my_public_generic_work,private_asset_not_mine,public_asset_not_mine]
       collection.save
@@ -141,13 +140,25 @@ describe CollectionsController do
         sign_in user
       end
 
-      it "should return the collection and its members" do
+      it "should return the collection and its members I have access to" do
         get :show, id: collection.id
         expect(response).to be_successful
         assigns[:collection].title.should == collection.title
         ids = assigns[:member_docs].map(&:id)
         expect(ids).to include work1.pid, work2.pid, my_public_generic_work.pid, public_asset_not_mine.pid
         expect(ids).to_not include my_other_public_generic_work.pid, private_asset_not_mine.pid
+      end
+
+      context "as an admin" do
+        before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
+        it "shows all the collection members" do
+          get :show, id: collection.id
+          expect(response).to be_successful
+          assigns[:collection].title.should == collection.title
+          ids = assigns[:member_docs].map(&:id)
+          expect(ids).to include work1.pid, work2.pid, my_public_generic_work.pid, public_asset_not_mine.pid, private_asset_not_mine.pid
+          expect(ids).to_not include my_other_public_generic_work.pid
+        end
       end
 
       context "when query limited to 'mine'" do

@@ -17,6 +17,12 @@ class CollectionsController < ApplicationController
 
   protected
 
+  # Override Hydra::PolicyAwareAccessControlsEnforcement
+  def gated_discovery_filters
+    return [] if current_user && (current_user.groups.include? 'admin')
+    super
+  end
+
   def query_collection_members
     flash[:notice]=nil if flash[:notice] == "Select something first"
     query = params[:cq]
