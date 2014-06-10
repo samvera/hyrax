@@ -2,12 +2,26 @@ class EmbargoesController < ApplicationController
 
   include Worthwhile::WithoutNamespace
   include Worthwhile::ManagesEmbargoes
+  include Hydra::Collections::AcceptsBatches
 
+  skip_before_filter :normalize_identifier, only: :update
+  
   def destroy
     curation_concern.deactivate_embargo!
     curation_concern.save
     flash[:notice] = curation_concern.embargo_history.last
     redirect_to edit_embargo_path(curation_concern)
+  end
+
+  def update
+    filter_docs_with_edit_access!
+    batch.each do |id|
+      ActiveFedora::Base.find(id).tap do |curation_concern|
+        curation_concern.deactivate_embargo!
+        curation_concern.save
+      end
+    end
+    redirect_to embargoes_path
   end
 
   protected

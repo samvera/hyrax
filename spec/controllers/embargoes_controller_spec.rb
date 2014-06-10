@@ -61,4 +61,18 @@ describe EmbargoesController do
       end
     end
   end
+
+  describe "#update" do
+    context "when I have permission to edit the object" do
+      before do
+        expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+      end
+      it "should deactivate embargo and redirect" do
+        expect(a_work).to receive(:deactivate_embargo!)
+        expect(a_work).to receive(:save)
+        patch :update, batch_document_ids: [a_work.pid]
+        expect(response).to redirect_to embargoes_path
+      end
+    end
+  end
 end

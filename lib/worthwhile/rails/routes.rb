@@ -2,12 +2,12 @@ module ActionDispatch::Routing
   class Mapper
     
     def worthwhile_curation_concerns 
-      resources :downloads, only: [:show]
+      resources :downloads, only: :show
       namespace :curation_concern, path: :concern do
         Worthwhile.configuration.registered_curation_concern_types.map(&:tableize).each do |curation_concern_name|
           namespaced_resources curation_concern_name, except: [:index]
         end
-        resources( :permissions, only:[]) do
+        resources :permissions, only: [] do
           member do
             get :confirm
             post :copy
@@ -45,8 +45,16 @@ module ActionDispatch::Routing
     end
 
     def worthwhile_embargo_management
-      resources :embargoes, only:[:index, :edit, :destroy]
-      resources :leases, only:[:index, :edit, :destroy]
+      resources :embargoes, only: [:index, :edit, :destroy] do
+        collection do
+          patch :update
+        end
+      end
+      resources :leases, only: [:index, :edit, :destroy] do
+        collection do
+          patch :update
+        end
+      end
     end
     
     private
