@@ -6,8 +6,8 @@
 
 <%= render 'attributes', curation_concern: curation_concern %>
 
-<%= render 'related_files', curation_concern: curation_concern, with_actions: true %>
-<%= render 'related_resources', curation_concern: curation_concern, with_actions: true %>
+<%= render 'related_files', curation_concern: curation_concern %>
+<%= render 'related_resources', curation_concern: curation_concern %>
 <%= render 'collections', curation_concern: curation_concern %>
 
 <% collector = can?(:collect, curation_concern) %>
