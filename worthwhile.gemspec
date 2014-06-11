@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "simple_form"
   spec.add_dependency 'sufia-models', '~> 4.0.0.rc1'
   spec.add_dependency 'hydra-collections'
-  spec.add_dependency 'blacklight_advanced_search', '~> 5.0'
   #spec.add_dependency 'bootstrap-datepicker-rails'
 
   spec.add_development_dependency "devise", "~> 3.0"

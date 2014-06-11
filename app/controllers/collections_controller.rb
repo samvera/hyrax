@@ -2,8 +2,6 @@
 class CollectionsController < ApplicationController
   include Hydra::CollectionsControllerBehavior
   include Blacklight::Catalog::SearchContext
-  include BlacklightAdvancedSearch::ParseBasicQ
-  include BlacklightAdvancedSearch::Controller
   include Worthwhile::ThemedLayoutController
   include Hydra::AccessControlsEnforcement
   include Worthwhile::WithoutNamespace

@@ -4,6 +4,12 @@ describe CatalogController do
   before do
     ActiveFedora::Base.delete_all
   end
+
+  describe "creator facet" do
+    subject { CatalogController.blacklight_config.facet_fields['desc_metadata__creator_sim'] }
+    its(:label) { should eq 'Creator' }
+  end
+  
   
   describe "when logged in" do
     let(:user) { FactoryGirl.create(:user) }
