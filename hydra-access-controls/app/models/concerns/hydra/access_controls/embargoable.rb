@@ -7,9 +7,8 @@ module Hydra
       included do
         validates :embargo_release_date, :'hydra/future_date' => true
 
-        has_attributes :visibility_during_embargo, :visibility_after_embargo, 
+        has_attributes :visibility_during_embargo, :visibility_after_embargo, :embargo_release_date,
           :visibility_during_lease, :visibility_after_lease, :lease_expiration_date,
-          :embargo_release_date,
           datastream: 'rightsMetadata', multiple: false
 
         has_attributes :embargo_history, :lease_history, datastream: 'rightsMetadata', multiple:true
@@ -40,12 +39,12 @@ module Hydra
         self.embargo_release_date = release_date
         self.visibility_during_embargo = visibility_during unless visibility_during.nil?
         self.visibility_after_embargo = visibility_after unless visibility_after.nil?
-        self.embargo_visibility!
+        embargo_visibility!
       end
 
       def deactivate_embargo!
         embargo_state = under_embargo? ? "active" : "expired"
-        embargo_record = "An #{embargo_state} embargo was deactivated on #{Date.today}.  Its release date was #{embargo_release_date}.  Visibility during embargo was #{visibility_during_embargo} and intended visibility after embargo was #{visibility_after_embargo}"
+        embargo_record = embargo_history_message(embargo_state, Date.today, embargo_release_date, visibility_during_embargo, visibility_after_embargo)
         self.embargo_release_date = nil
         self.visibility_during_embargo = nil
         self.visibility_after_embargo = nil
@@ -115,7 +114,7 @@ module Hydra
 
       def deactivate_lease!
         lease_state = active_lease? ? "active" : "expired"
-        lease_record = "An #{lease_state} lease was deactivated on #{Date.today}.  Its release date was #{lease_expiration_date}.  Visibility during the lease was #{visibility_during_lease} and intended visibility after lease was #{visibility_after_lease}."
+        lease_record = lease_history_message(lease_state, Date.today, lease_expiration_date, visibility_during_lease, visibility_after_lease)
         self.lease_expiration_date = nil
         self.visibility_during_lease = nil
         self.visibility_after_lease = nil
@@ -134,6 +133,21 @@ module Hydra
         end
       end
 
+      protected
+
+        # Create the log message used when deactivating an embargo
+        # This method may be overriden in order to transform the values of the passed parameters.
+        def embargo_history_message(state, deactivate_date, release_date, visibility_during, visibility_after)
+          I18n.t 'hydra.embargo.history_message', state: state, deactivate_date: deactivate_date, release_date: release_date,
+            visibility_during: visibility_during, visibility_after: visibility_after
+        end
+
+        # Create the log message used when deactivating a lease
+        # This method may be overriden in order to transform the values of the passed parameters.
+        def lease_history_message(state, deactivate_date, expiration_date, visibility_during, visibility_after)
+          I18n.t 'hydra.lease.history_message', state: state, deactivate_date: deactivate_date, expiration_date: expiration_date,
+            visibility_during: visibility_during, visibility_after: visibility_after
+        end
     end
   end
 end

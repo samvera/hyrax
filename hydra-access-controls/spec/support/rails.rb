@@ -1,3 +1,6 @@
+# Rails normally loads the locales of engines for us.
+I18n.load_path << 'config/locale/hydra-access-controls.en.yml'
+
 module Rails
   def self.env
     ENV['environment']

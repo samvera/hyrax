@@ -1,0 +1,6 @@
+en:
+  hydra:
+    embargo:
+      history_message: 'An %{state} embargo was deactivated on %{deactivate_date}.  Its release date was %{release_date}.  Visibility during embargo was %{visibility_during} and intended visibility after embargo was %{visibility_after}'
+    lease:
+      history_message: 'An %{state} lease was deactivated on %{deactivate_date}.  Its expiration date was %{expiration_date}.  Visibility during the lease was %{visibility_during} and intended visibility after the lease was %{visibility_after}'
