@@ -1,7 +1,7 @@
 ENV["environment"] ||= "test"
 
 require 'rspec/mocks'
-require 'rspec/autorun'
+require 'rspec/its'
 require 'hydra-access-controls'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
