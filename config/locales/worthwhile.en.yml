@@ -1,0 +1,15 @@
+en:
+  sufia:
+    facet:
+      human_readable_type: Type of Work
+      creator: Creator
+      tag: Keyword
+      subject: Subject
+      language: Language
+      based_near: Location
+      publisher: Publisher
+      file_format: Format 
+      type: Type
+
+
+

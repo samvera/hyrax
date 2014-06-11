@@ -36,16 +36,17 @@ module Worthwhile::CatalogController
 
       # solr fields that will be treated as facets by the blacklight application
       #   The ordering of the field names is the order of the display
-      config.add_facet_field solr_name("human_readable_type", :facetable), label: "Type of Work" 
-      config.add_facet_field solr_name(:desc_metadata__creator, :facetable), label: "Creator", limit: 5
+      config.add_facet_field solr_name("human_readable_type", :facetable), label: t('worthwhile.facet.human_readable_type')
+      "Type of Work" 
+      config.add_facet_field solr_name(:desc_metadata__creator, :facetable), label: t('worthwhile.facet.creator'), limit: 5
 
-      config.add_facet_field solr_name("desc_metadata__tag", :facetable), label: "Keyword", limit: 5
-      config.add_facet_field solr_name("desc_metadata__subject", :facetable), label: "Subject", limit: 5
-      config.add_facet_field solr_name("desc_metadata__language", :facetable), label: "Language", limit: 5
-      config.add_facet_field solr_name("desc_metadata__based_near", :facetable), label: "Location", limit: 5
-      config.add_facet_field solr_name("desc_metadata__publisher", :facetable), label: "Publisher", limit: 5
-      config.add_facet_field solr_name("file_format", :facetable), label: "File Format", limit: 5
-      config.add_facet_field "generic_type_sim", label: "Type", show: false
+      config.add_facet_field solr_name("desc_metadata__tag", :facetable), label: t('worthwhile.facet.tag'), limit: 5
+      config.add_facet_field solr_name("desc_metadata__subject", :facetable), label: t('worthwhile.facet.subject'), limit: 5
+      config.add_facet_field solr_name("desc_metadata__language", :facetable), label: t('worthwhile.facet.language'), limit: 5
+      config.add_facet_field solr_name("desc_metadata__based_near", :facetable), label: t('worthwhile.facet.based_near'), limit: 5
+      config.add_facet_field solr_name("desc_metadata__publisher", :facetable), label: t('worthwhile.facet.publisher'), limit: 5
+      config.add_facet_field solr_name("file_format", :facetable), label: t('worthwhile.facet.file_format'), limit: 5
+      config.add_facet_field "generic_type_sim", label: t('worthwhile.facet.type'), show: false
 
       # Have BL send all facet field names to Solr, which has been the default
       # previously. Simply remove these lines if you'd rather use Solr request
@@ -271,6 +272,10 @@ module Worthwhile::CatalogController
   end
   
   module ClassMethods 
+    def t *args
+      I18n.translate args
+    end
+
     def uploaded_field
       #  system_create_dtsi
       solr_name('desc_metadata__date_uploaded', :stored_sortable, type: :date)
