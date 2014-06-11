@@ -273,7 +273,7 @@ module Worthwhile::CatalogController
   
   module ClassMethods 
     def t *args
-      I18n.translate args
+      I18n.translate *args
     end
 
     def uploaded_field

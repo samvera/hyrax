@@ -4,7 +4,7 @@ describe CatalogController do
   before do
     ActiveFedora::Base.delete_all
   end
-
+  
   describe "when logged in" do
     let(:user) { FactoryGirl.create(:user) }
     let!(:work1) { FactoryGirl.create(:public_generic_work, user: user) }
@@ -39,7 +39,7 @@ describe CatalogController do
       it "should return all the works" do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
         expect(response).to be_successful
-        assigns(:document_list).map(&:id).should == [work1.id, work2.id]
+        expect(assigns(:document_list).map(&:id)).to eq [work1.id, work2.id]
       end
     end
 
@@ -47,7 +47,7 @@ describe CatalogController do
       it "should return all the works" do
         get 'index', 'f' => {'generic_type_sim' => 'Collection'}
         expect(response).to be_successful
-        assigns(:document_list).map(&:id).should == [collection.id]
+        expect(assigns(:document_list).map(&:id)).to eq [collection.id]
       end
     end
 
@@ -55,7 +55,7 @@ describe CatalogController do
       it "should return just my works" do
         get 'index', works: 'mine', 'f' => {'generic_type_sim' => 'Work'}
         expect(response).to be_successful
-        assigns(:document_list).map(&:id).should == [work1.id]
+        expect(assigns(:document_list).map(&:id)).to eq [work1.id]
       end
     end
 
@@ -74,7 +74,7 @@ describe CatalogController do
         json = JSON.parse(response.body)
         # Grab the doc corresponding to work and inspect the json
         work_json = json["docs"].first
-        work_json.should == {"pid"=>work.pid, "title"=> "#{work.title} (#{work.human_readable_type})"}
+        expect(work_json).to eq("pid"=>work.pid, "title"=> "#{work.title} (#{work.human_readable_type})")
       end
     end
 
@@ -95,18 +95,18 @@ describe CatalogController do
     context "searching all works" do
       it "should return other users' private works" do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
-        response.should be_successful
-        assigns(:document_list).map(&:id).should include(work1.id)
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:id)).to include(work1.id)
       end
       it "should return other users' embargoed works" do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
-        response.should be_successful
-        assigns(:document_list).map(&:id).should include(work2.id)
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:id)).to include(work2.id)
       end
       it "should return other users' private collections" do
         get 'index', 'f' => {'generic_type_sim' => 'Collection'}
-        response.should be_successful
-        assigns(:document_list).map(&:id).should include(collection.id)
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:id)).to include(collection.id)
       end
     end
 
