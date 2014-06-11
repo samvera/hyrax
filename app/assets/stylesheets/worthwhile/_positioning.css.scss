@@ -54,6 +54,13 @@ legend .pull-right {
 .related_files {
   max-height: 400px;
   overflow: auto;
+
+  .thumbnail {
+    display: inline;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
 }
 
 .with-headroom {
