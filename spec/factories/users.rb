@@ -5,7 +5,7 @@ FactoryGirl.define do
     password_confirmation 'a password'
     factory :admin do
       after(:build) do |user|
-        user.stub(:groups).and_return ["admin"]
+        allow(user).to receive(:groups).and_return ["admin"]
       end
     end
   end
