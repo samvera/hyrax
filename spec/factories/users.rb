@@ -5,7 +5,9 @@ FactoryGirl.define do
     password_confirmation 'a password'
     factory :admin do
       after(:build) do |user|
-        allow(user).to receive(:groups).and_return ["admin"]
+        def user.groups
+          ["admin"]
+        end
       end
     end
   end
