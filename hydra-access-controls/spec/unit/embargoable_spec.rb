@@ -48,16 +48,24 @@ describe Hydra::AccessControls::Embargoable do
       expect(subject.visibility_after_embargo).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
     end
   end
+
   context 'deactivate_embargo!' do
-    it "should remove the associated embargo information and record it in the object's embargo history" do
-      subject.embargo_release_date = past_date.to_s
+    before do
       subject.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       subject.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      subject.deactivate_embargo!
-      expect(subject.embargo_release_date).to be_nil
-      expect(subject.visibility_during_embargo).to be_nil
-      expect(subject.visibility_after_embargo).to be_nil
-      expect(subject.embargo_history.last).to include("An expired embargo was deactivated on #{Date.today}.")
+      subject.embargo_release_date = release_date
+    end
+
+    context "when the embargo is expired" do
+      let(:release_date) { past_date.to_s }
+
+      it "should remove the associated embargo information and record it in the object's embargo history" do
+        subject.deactivate_embargo!
+        expect(subject.embargo_release_date).to be_nil
+        expect(subject.visibility_during_embargo).to be_nil
+        expect(subject.visibility_after_embargo).to be_nil
+        expect(subject.embargo_history.last).to include("An expired embargo was deactivated on #{Date.today}.")
+      end
     end
   end
 
@@ -78,15 +86,22 @@ describe Hydra::AccessControls::Embargoable do
   end
 
   context 'deactivate_lease!' do
-    it "should remove the associated embargo information and record it in the object's embargo history" do
-      subject.lease_expiration_date = past_date.to_s
+    before do
+      subject.lease_expiration_date = expiration_date
       subject.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
       subject.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-      subject.deactivate_lease!
-      expect(subject.lease_expiration_date).to be_nil
-      expect(subject.visibility_during_lease).to be_nil
-      expect(subject.visibility_after_lease).to be_nil
-      expect(subject.lease_history.last).to include("An expired lease was deactivated on #{Date.today}.")
+    end
+
+    context "when the lease is expired" do
+      let(:expiration_date) { past_date.to_s }
+
+      it "should remove the associated embargo information and record it in the object's embargo history" do
+        subject.deactivate_lease!
+        expect(subject.lease_expiration_date).to be_nil
+        expect(subject.visibility_during_lease).to be_nil
+        expect(subject.visibility_after_lease).to be_nil
+        expect(subject.lease_history.last).to include("An expired lease was deactivated on #{Date.today}.")
+      end
     end
   end
 

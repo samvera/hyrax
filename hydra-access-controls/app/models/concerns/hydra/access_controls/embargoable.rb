@@ -72,6 +72,7 @@ module Hydra
         end
       end
 
+      # Set the current visibility to match what is described in the embargo.
       def embargo_visibility!
         if embargo_release_date
           if under_embargo?
@@ -121,6 +122,7 @@ module Hydra
         self.lease_history += [lease_record]
       end
 
+      # Set the current visibility to match what is described in the lease.
       def lease_visibility!
         if lease_expiration_date
           if active_lease?
