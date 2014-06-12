@@ -60,8 +60,9 @@ describe CurationConcern::GenericFilesController do
         it "should render error" do
           xhr :post, :create, files: ['hello'], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          response.status.should == 422
-          JSON.parse(response.body).first['error'].should match(/no file for upload/i)
+          expect(response.status).to eq 422
+          err = JSON.parse(response.body).first['error']
+          expect(err).to match(/no file for upload/i)
         end
       end
 
@@ -71,18 +72,17 @@ describe CurationConcern::GenericFilesController do
           expect(Sufia::GenericFile::Actions).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          flash[:error].should_not be_blank
-          flash[:error].should include('A virus was found')
+          expect(flash[:error]).to include('A virus was found')
         end
       end
 
       context "when solr is down" do
         it "should error out of create and save after on continuos rsolr error" do
-          Worthwhile::GenericFile.any_instance.stub(:save).and_raise(RSolr::Error::Http.new({},{}))
+          allow_any_instance_of(Worthwhile::GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
 
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          response.body.should include("Error occurred while creating generic file.")
+          expect(response.body).to include("Error occurred while creating generic file.")
         end
       end
 
@@ -127,11 +127,11 @@ describe CurationConcern::GenericFilesController do
         end
 
         it "should go back to edit on an error" do
-          Worthwhile::GenericFile.any_instance.should_receive(:valid?).and_return(false)
+          allow_any_instance_of(Worthwhile::GenericFile).to receive(:valid?).and_return(false)
           post :update, id: generic_file, generic_file: 
             {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
-          response.should be_successful
-          response.should render_template('edit')
+          expect(response).to be_successful
+          expect(response).to render_template('edit')
           expect(assigns[:generic_file]).to eq generic_file
         end
 
@@ -155,15 +155,15 @@ describe CurationConcern::GenericFilesController do
 
         it "should update visibility" do
           new_visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-          post :update, id: generic_file, generic_file: {visibility:new_visibility, embargo_release_date:""}
-          generic_file.reload.visibility.should == new_visibility
+          post :update, id: generic_file, generic_file: {visibility: new_visibility, embargo_release_date:""}
+          expect(generic_file.reload.visibility).to eq new_visibility
         end
       end
 
       context "updating file content" do
         it "should be successful" do
           s2 = double('one')
-          CharacterizeJob.should_receive(:new).with(generic_file.pid).and_return(s2)
+          expect(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
           post :update, id: generic_file, filedata: file
           expect(response).to redirect_to [:curation_concern, generic_file]
@@ -210,7 +210,7 @@ describe CurationConcern::GenericFilesController do
       it "should give me a flash error" do
         get :edit, id: generic_file
         expect(response.code).to eq '401'
-        response.should render_template(:unauthorized)
+        expect(response).to render_template(:unauthorized)
       end
     end
     describe "view" do
