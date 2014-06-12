@@ -9,7 +9,7 @@ module Worthwhile
       @assets_under_lease ||= LeaseService.assets_under_lease
     end
 
-    def assets_with_deactivated_embargoes
+    def assets_with_deactivated_leases
       @assets_with_deactivated_leases ||= LeaseService.assets_with_deactivated_leases
     end
 

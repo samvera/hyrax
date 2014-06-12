@@ -10,4 +10,5 @@ module Worthwhile::MainAppHelpers
   include Worthwhile::ThumbnailHelper
   include Worthwhile::UrlHelper
   include Worthwhile::EmbargoHelper
+  include Worthwhile::LeaseHelper
 end
