@@ -35,7 +35,7 @@ describe LocalAuthority do
     LocalAuthority.harvest_tsv("geo", @tsv, prefix: 'http://sws.geonames.org/')
     LocalAuthority.count.should == 1
     auth = LocalAuthority.where(name: "geo").first
-    LocalAuthorityEntry.where(local_authority_id: auth.id).first.uri.start_with?('http://sws.geonames.org/').should be_true
+    expect(LocalAuthorityEntry.where(local_authority_id: auth.id).first.uri).to start_with('http://sws.geonames.org/')
     LocalAuthorityEntry.count.should == 149
   end
   describe "when vocabs are harvested" do

@@ -29,8 +29,8 @@ describe BatchController do
     end
     it "should not be editable" do
       ability = Ability.new(@user)
-      ability.can?(:edit, @file).should be_true
-      ability.can?(:edit, @file2).should be_false
+      expect(ability.can?(:edit, @file)).to be true
+      expect(ability.can?(:edit, @file2)).to be false
     end
     it "should enqueue a batch update job" do
       params = {'generic_file' => {'read_groups_string' => '', 'read_users_string' => 'archivist1, archivist2', 'tag' => ['']}, 'id' => @batch.pid, 'controller' => 'batch', 'action' => 'update'}

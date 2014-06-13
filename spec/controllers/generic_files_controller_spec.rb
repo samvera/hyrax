@@ -17,7 +17,10 @@ describe GenericFilesController do
     end
 
     after do
-      GenericFile.unstub(:new)
+      begin
+        GenericFile.unstub(:new)
+      rescue RSpec::Mocks::MockExpectationError => e
+      end
       Batch.find("sample:batch_id").delete rescue
       @mock.delete unless @mock.inner_object.class == ActiveFedora::UnsavedDigitalObject
     end
@@ -63,7 +66,7 @@ describe GenericFilesController do
       # This is confirming that the correct file was attached
       saved_file.label.should == 'world.png'
       saved_file.content.checksum.should == 'f794b23c0c6fe1083d0ca8b58261a078cd968967'
-      saved_file.content.dsChecksumValid.should be_true
+      expect(saved_file.content.dsChecksumValid).to be true
 
       # Confirming that date_uploaded and date_modified were set
       saved_file.date_uploaded.should == date_today
@@ -86,9 +89,10 @@ describe GenericFilesController do
       file = fixture_file_upload('/world.png','image/png')
       controller.stub(:add_posted_blob_to_asset)
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+      GenericFile.unstub(:new)
       lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
-      b = Batch.create(pid: "sample:batch_id")
-      b.generic_files.first.pid.should == "test:123"
+      batch = Batch.create(pid: "sample:batch_id")
+      batch.generic_files.first.pid.should == "test:123"
     end
     it "should set the depositor id" do
       file = fixture_file_upload('/world.png','image/png')
@@ -167,8 +171,8 @@ describe GenericFilesController do
         lambda { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
-        File.exist?("#{@mock_upload_directory}/image.jpg").should be_false
-        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        expect(File).not_to exist("#{@mock_upload_directory}/image.jpg")
+        expect(File).not_to exist("#{@mock_upload_directory}/world.png")
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
         files.first.label.should == 'world.png'
@@ -179,7 +183,7 @@ describe GenericFilesController do
         lambda { post :create, local_file: ["world.png"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(1)
         response.should redirect_to mock_url
         # These files should have been moved out of the upload directory
-        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        expect(File).not_to exist("#{@mock_upload_directory}/world.png")
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
         files.first.label.should == 'world.png'
@@ -188,9 +192,9 @@ describe GenericFilesController do
         lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
         response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
-        File.exist?("#{@mock_upload_directory}/import/files/icons.zip").should be_false
-        File.exist?("#{@mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt").should be_false
-        File.exist?("#{@mock_upload_directory}/world.png").should be_false
+        expect(File).not_to exist("#{@mock_upload_directory}/import/files/icons.zip")
+        expect(File).not_to exist("#{@mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
+        expect(File).not_to exist("#{@mock_upload_directory}/world.png")
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
         files.first.label.should == 'world.png'
@@ -224,7 +228,7 @@ describe GenericFilesController do
       response.should be_success
       lambda { JSON.parse(response.body) }.should_not raise_error
       audit_results = JSON.parse(response.body).collect { |result| result["pass"] }
-      audit_results.reduce(true) { |sum, value| sum && value }.should be_true
+      expect(audit_results.reduce(true) { |sum, value| sum && value }).to be_truthy
     end
   end
 
