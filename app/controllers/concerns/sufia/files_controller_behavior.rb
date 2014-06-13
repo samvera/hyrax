@@ -112,7 +112,7 @@ module Sufia
 
     # routed to /files/:id (PUT)
     def update
-      success = if params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+      success = if wants_to_revert?
         update_version
       elsif params.has_key? :filedata
         update_file
@@ -133,6 +133,10 @@ module Sufia
     end
 
     protected
+
+    def wants_to_revert?
+      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+    end
 
     def actor
       @actor ||= Sufia::GenericFile::Actor.new(@generic_file, current_user)
