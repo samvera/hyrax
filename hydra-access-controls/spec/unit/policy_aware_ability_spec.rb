@@ -86,37 +86,37 @@ describe Hydra::PolicyAwareAbility do
     context "public user" do
       it "should return false" do
         subject.stub(:user_groups).and_return(["public"])
-        subject.test_edit_from_policy(@asset.pid).should be_false
+        subject.test_edit_from_policy(@asset.pid).should be false
       end
     end
     context "registered user" do
       it "should return false" do
         subject.user_groups.should include("registered")
-        subject.test_edit_from_policy(@asset.pid).should be_false
+        subject.test_edit_from_policy(@asset.pid).should be false
       end
     end
     context "user with policy read access only" do
       it "should return false" do
         subject.current_user.stub(:user_key).and_return("nero")
-        subject.test_edit_from_policy(@asset.pid).should be_false
+        subject.test_edit_from_policy(@asset.pid).should be false
       end
     end
     context "user with policy edit access" do
       it "should return true" do
         subject.current_user.stub(:user_key).and_return("julius_caesar")
-        subject.test_edit_from_policy(@asset.pid).should be_true
+        subject.test_edit_from_policy(@asset.pid).should be true
       end
     end
     context "user in group with policy read access" do
       it "should return false" do
         subject.stub(:user_groups).and_return(["africana-faculty"])
-        subject.test_edit_from_policy(@asset.pid).should be_false
+        subject.test_edit_from_policy(@asset.pid).should be false
       end
     end
     context "user in group with policy edit access" do
       it "should return true" do
         subject.stub(:user_groups).and_return(["cool_kids"])
-        subject.test_edit_from_policy(@asset.pid).should be_true
+        subject.test_edit_from_policy(@asset.pid).should be true
       end
     end
   end
@@ -124,37 +124,37 @@ describe Hydra::PolicyAwareAbility do
     context "public user" do
       it "should return false" do
         subject.stub(:user_groups).and_return(["public"])
-        subject.test_read_from_policy(@asset.pid).should be_false
+        subject.test_read_from_policy(@asset.pid).should be false
       end
     end
     context "registered user" do
       it "should return false" do
         subject.user_groups.should include("registered")
-        subject.test_read_from_policy(@asset.pid).should be_false
+        subject.test_read_from_policy(@asset.pid).should be false
       end
     end
     context "user with policy read access only" do
       it "should return false" do
         subject.current_user.stub(:user_key).and_return("nero")
-        subject.test_read_from_policy(@asset.pid).should be_true
+        subject.test_read_from_policy(@asset.pid).should be true
       end
     end
     context "user with policy edit access" do
       it "should return true" do
         subject.current_user.stub(:user_key).and_return("julius_caesar")
-        subject.test_read_from_policy(@asset.pid).should be_true
+        subject.test_read_from_policy(@asset.pid).should be true
       end
     end
     context "user in group with policy read access" do
       it "should return false" do
         subject.stub(:user_groups).and_return(["africana-faculty"])
-        subject.test_read_from_policy(@asset.pid).should be_true
+        subject.test_read_from_policy(@asset.pid).should be true
       end
     end
     context "user in group with policy edit access" do
       it "should return true" do
         subject.stub(:user_groups).and_return(["cool_kids"])
-        subject.test_read_from_policy(@asset.pid).should be_true
+        subject.test_read_from_policy(@asset.pid).should be true
       end
     end
   end

@@ -21,6 +21,7 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
   config.use_transactional_fixtures = true
   config.before(:suite) { User.destroy_all }
+  config.infer_spec_type_from_file_location!
 end
 
 

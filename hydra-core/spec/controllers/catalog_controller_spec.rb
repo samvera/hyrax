@@ -34,7 +34,7 @@ describe CatalogController do
   end
   
   it "should not choke on objects with periods in ids (ie Fedora system objects)" do    
-     pending "Need to override blacklight routes"	
+     skip "Need to override blacklight routes"	
 
 	## We could do something like this to remove the catalog/show route and replace it with a route that allows dots (e.g. resources :catalog, :id=> /.+/)
 	  # def add_route

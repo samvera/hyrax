@@ -137,12 +137,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
     		it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be_true
+    		  subject.can?(:read, @asset).should be true
   		  end
         it "Then I should not be able to edit, update and destroy the asset" do
-          subject.can?(:edit, @asset).should be_false
-          subject.can?(:update, @asset).should be_false
-          subject.can?(:destroy, @asset).should be_false
+          subject.can?(:edit, @asset).should be false
+          subject.can?(:update, @asset).should be false
+          subject.can?(:destroy, @asset).should be false
         end
       end
     end
@@ -161,12 +161,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
     		it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be_true
+    		  subject.can?(:read, @asset).should be true
   		  end
     		it "Then I should be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be_true
-          subject.can?(:update, @asset).should be_true
-          subject.can?(:destroy, @asset).should be_true
+          subject.can?(:edit, @asset).should be true
+          subject.can?(:update, @asset).should be true
+          subject.can?(:destroy, @asset).should be true
         end
   		end
     	context "And a subscribing asset grants read access to me as an individual" do
@@ -178,12 +178,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
     		it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be_true
+    		  subject.can?(:read, @asset).should be true
   		  end
         it "Then I should be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be_true
-          subject.can?(:update, @asset).should be_true
-          subject.can?(:destroy, @asset).should be_true
+          subject.can?(:edit, @asset).should be true
+          subject.can?(:update, @asset).should be true
+          subject.can?(:destroy, @asset).should be true
         end
       end
     end
@@ -202,12 +202,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
   		  it "Then I should not be able to view the asset" do
-    		  subject.can?(:read, @asset).should be_false
+    		  subject.can?(:read, @asset).should be false
   		  end
         it "Then I should not be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be_false
-          subject.can?(:update, @asset).should be_false
-          subject.can?(:destroy, @asset).should be_false
+          subject.can?(:edit, @asset).should be false
+          subject.can?(:update, @asset).should be false
+          subject.can?(:destroy, @asset).should be false
         end
       end
       context "And a subscribing asset grants read access to me as an individual" do
@@ -219,12 +219,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
   		  it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be_true
+    		  subject.can?(:read, @asset).should be true
   		  end
         it "Then I should not be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be_false
-          subject.can?(:update, @asset).should be_false
-          subject.can?(:destroy, @asset).should be_false
+          subject.can?(:edit, @asset).should be false
+          subject.can?(:update, @asset).should be false
+          subject.can?(:destroy, @asset).should be false
         end
       end
     end
