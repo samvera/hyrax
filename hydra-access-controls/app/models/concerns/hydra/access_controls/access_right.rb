@@ -7,8 +7,7 @@ module Hydra
 
       # The values that get drawn to the page
       VISIBILITY_TEXT_VALUE_PUBLIC = 'open'.freeze
-      VISIBILITY_TEXT_VALUE_EMBARGO = 'open_with_embargo_release_date'.freeze
-      #VISIBILITY_TEXT_VALUE_EMBARGO = 'embargo'.freeze  # << !! Will change to this in next major release !!
+      VISIBILITY_TEXT_VALUE_EMBARGO = 'embargo'.freeze
       VISIBILITY_TEXT_VALUE_LEASE = 'lease'.freeze
       VISIBILITY_TEXT_VALUE_AUTHENTICATED = 'authenticated'.freeze
       VISIBILITY_TEXT_VALUE_PRIVATE = 'restricted'.freeze
