@@ -29,8 +29,8 @@
       <% else %>
         <%= f.submit "Apply Lease", class: 'btn btn-primary' %>
       <% end %>
-      <%= link_to 'Cancel and manage all leases', embargoes_path, class: 'btn btn-link' %>
-      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-link' %>
+      <%= link_to 'Cancel and manage all leases', leases_path, class: 'btn btn-default' %>
+      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-default' %>
     </div>
   </div>
 <% end %>
