@@ -61,16 +61,16 @@ module Hydra
 
         t.license(:ref=>[:copyright])
 
-        t.visibility_during_embargo ref: [:embargo, :machine, :visibility_during]
-        t.visibility_after_embargo ref: [:embargo, :machine, :visibility_after]
-        t.visibility_during_lease ref: [:lease, :machine, :visibility_during]
-        t.visibility_after_lease ref: [:lease, :machine, :visibility_after]
-        t.embargo_history ref: [:embargo, :human_readable]
-        t.lease_history ref: [:lease, :human_readable]
-        t.embargo_release_date ref: [:embargo, :machine, :date], type: :time
-        t.embargo_deactivation_date ref: [:embargo, :machine, :date_deactivated]
-        t.lease_expiration_date ref: [:lease, :machine, :date], type: :time
-        t.lease_deactivation_date ref: [:lease, :machine, :date_deactivated]
+        t.visibility_during_embargo proxy: [:embargo, :machine, :visibility_during]
+        t.visibility_after_embargo proxy: [:embargo, :machine, :visibility_after]
+        t.visibility_during_lease proxy: [:lease, :machine, :visibility_during]
+        t.visibility_after_lease proxy: [:lease, :machine, :visibility_after]
+        t.embargo_history proxy: [:embargo, :human_readable]
+        t.lease_history proxy: [:lease, :human_readable]
+        t.embargo_release_date proxy: [:embargo, :machine, :date], type: :time
+        t.embargo_deactivation_date proxy: [:embargo, :machine, :date_deactivated]
+        t.lease_expiration_date proxy: [:lease, :machine, :date], type: :time
+        t.lease_deactivation_date proxy: [:lease, :machine, :date_deactivated]
 
       end
 
