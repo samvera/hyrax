@@ -7,6 +7,7 @@ class EmbargoesController < ApplicationController
   skip_before_filter :normalize_identifier, only: :update
   
   def destroy
+    curation_concern.embargo_visibility! # If the embargo has lapsed, update the current visibility.
     curation_concern.deactivate_embargo!
     curation_concern.save
     flash[:notice] = curation_concern.embargo_history.last

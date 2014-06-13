@@ -6,6 +6,7 @@ class LeasesController < ApplicationController
   skip_before_filter :normalize_identifier, only: :update
 
   def destroy
+    curation_concern.lease_visibility! # If the lease has lapsed, update the current visibility.
     curation_concern.deactivate_lease!
     curation_concern.save
     flash[:notice] = curation_concern.lease_history.last

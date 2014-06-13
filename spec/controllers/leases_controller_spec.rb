@@ -52,12 +52,27 @@ describe LeasesController do
     context "when I have permission to edit the object" do
       before do
         expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
-      end
-      it "should deactivate lease and redirect" do
-        expect(a_work).to receive(:deactivate_lease!)
-        expect(a_work).to receive(:save)
+        a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        a_work.lease_expiration_date = release_date.to_s
         get :destroy, id: a_work
-        expect(response).to redirect_to edit_lease_path(a_work)
+      end
+
+      context "with an active lease" do
+        let(:release_date) { Date.today+2 }
+        it "should deactivate the lease without updating visibility and redirect" do
+          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(response).to redirect_to edit_lease_path(a_work)
+        end
+      end
+
+      context "with an expired lease" do
+        let(:release_date) { Date.today-2 }
+
+        it "should deactivate the lease, update the visibility and redirect" do
+          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          expect(response).to redirect_to edit_lease_path(a_work)
+        end
       end
     end
   end
