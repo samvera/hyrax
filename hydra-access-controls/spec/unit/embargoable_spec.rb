@@ -67,6 +67,20 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject.embargo_history.last).to include("An expired embargo was deactivated on #{Date.today}.")
       end
     end
+
+    context "when the embargo is active" do
+      let(:release_date) { future_date.to_s }
+
+      it "should remove the associated embargo information and record it in the object's embargo history" do
+        expect {
+          subject.deactivate_embargo!
+        }.to change { subject.under_embargo? }.from(true).to(false)
+        expect(subject.embargo_release_date).to be_nil
+        expect(subject.visibility_during_embargo).to be_nil
+        expect(subject.visibility_after_embargo).to be_nil
+        expect(subject.embargo_history.last).to include("An active embargo was deactivated on #{Date.today}.")
+      end
+    end
   end
 
   context 'apply_lease' do
@@ -95,12 +109,25 @@ describe Hydra::AccessControls::Embargoable do
     context "when the lease is expired" do
       let(:expiration_date) { past_date.to_s }
 
-      it "should remove the associated embargo information and record it in the object's embargo history" do
+      it "should remove the associated lease information and record it in the object's lease history" do
         subject.deactivate_lease!
         expect(subject.lease_expiration_date).to be_nil
         expect(subject.visibility_during_lease).to be_nil
         expect(subject.visibility_after_lease).to be_nil
         expect(subject.lease_history.last).to include("An expired lease was deactivated on #{Date.today}.")
+      end
+    end
+    context "when the lease is active" do
+      let(:expiration_date) { future_date.to_s }
+
+      it "should remove the associated lease information and record it in the object's lease history" do
+        expect {
+          subject.deactivate_lease!
+        }.to change { subject.active_lease? }.from(true).to(false)
+        expect(subject.lease_expiration_date).to be_nil
+        expect(subject.visibility_during_lease).to be_nil
+        expect(subject.visibility_after_lease).to be_nil
+        expect(subject.lease_history.last).to include("An active lease was deactivated on #{Date.today}.")
       end
     end
   end
