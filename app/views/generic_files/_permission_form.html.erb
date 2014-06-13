@@ -27,7 +27,7 @@
         <p>This setting will determine who can view your file, and the associated metadata. Setting
         the visibility to <span class="label label-success">Open Access</span> will allow your content to be discovered in Google and viewed by anyone.
         The visibility setting <span class="label label-info"><%=t('sufia.institution_name') %></span> will only allow users who are logged into <%=t('sufia.product_name') %>
-        (via WebAccess) to view the content.  Files that are marked <span class="label label-important">Private</span> are only able to be viewed
+        (via WebAccess) to view the content.  Files that are marked <span class="label label-danger">Private</span> are only able to be viewed
         by users and/or groups that have been given specific access in the &quot;Share With&quot; section.
         </p>
 
@@ -70,7 +70,7 @@
           <input type="radio" id="visibility_psu" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if !registered_perm.blank? %> checked="true"<% end %> /><span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
         </label>
         <label class="radio">
-          <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-important">Private</span> Visible to users/groups specified below, if any.
+          <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-danger">Private</span> Visible to users/groups specified below, if any.
         </label>
     </div><!-- /.controls -->
   </div><!-- /.control-group -->

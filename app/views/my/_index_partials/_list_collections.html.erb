@@ -8,7 +8,7 @@ on element ids -->
   <td width="1%">
   </td>
   <td width="37%">
-    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="glyphicon-plus large-icon fleft"></i></a>&nbsp;
+    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="glyphicon glyphicon-plus"></i></a>&nbsp;
     <%= link_to image_tag("/assets/folder.png", width: 36), collections.collection_path(noid) %>
     <span class=center><%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %> <br /></span>
   </td>
@@ -19,7 +19,7 @@ on element ids -->
     <% elsif document.public? %>
       <span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
-      <span class="label label-important" title="Private">Private</span></a>
+      <span class="label label-danger" title="Private">Private</span></a>
     <% end %>
   
   </td>
@@ -31,7 +31,7 @@ on element ids -->
   <td colspan="6">
     <dl class="expanded-details row">
       <dt class="col-xs-3 col-lg-2">Description:</dt>
-      <dd class="col-xs-9 col-lg-4"><%= document.description%></dd>
+      <dd class="col-xs-9 col-lg-10"> <%= document.description%></dd>
       <dt class="col-xs-3 col-lg-2">Edit Access:</dt>
       <dd class="col-xs-9 col-lg-10">
       <% if document.edit_groups.present? %>
