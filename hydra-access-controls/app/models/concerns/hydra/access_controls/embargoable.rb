@@ -15,11 +15,11 @@ module Hydra
       end
 
       def under_embargo?
-        @under_embargo ||= rightsMetadata.under_embargo?
+        rightsMetadata.under_embargo?
       end
 
       def active_lease?
-        @active_lease ||= rightsMetadata.active_lease?
+        rightsMetadata.active_lease?
       end
 
       # If changing away from embargo or lease, this will deactivate the lease/embargo before proceeding.
