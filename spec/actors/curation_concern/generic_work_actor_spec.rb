@@ -27,7 +27,7 @@ describe CurationConcern::GenericWorkActor do
     context 'valid attributes' do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
       context 'with embargo' do
-        let(:attributes) { { title: "New embargo", visibility: "open_with_embargo_release_date",
+        let(:attributes) { { title: "New embargo", visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
                            visibility_during_embargo: "authenticated", embargo_release_date: "2099-06-16",
                            visibility_after_embargo: "open", visibility_during_lease: "open",
                            lease_expiration_date: "2014-06-12", visibility_after_lease: "restricted",
