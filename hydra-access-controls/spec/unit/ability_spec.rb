@@ -52,12 +52,12 @@ describe Ability do
       end
       subject { Ability.new(nil) }
       it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
       end
       it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
+        subject.can?(:edit, @asset).should be false
+        subject.can?(:update, @asset).should be false
+        subject.can?(:destroy, @asset).should be false
       end
     end
     context "Then a registered user" do
@@ -66,12 +66,12 @@ describe Ability do
       end
       subject { Ability.new(@user) }
       it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
       end
       it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
+        subject.can?(:edit, @asset).should be false
+        subject.can?(:update, @asset).should be false
+        subject.can?(:destroy, @asset).should be false
       end
     end
   end
@@ -119,15 +119,15 @@ describe Ability do
       subject { Ability.new(@user) }
 
       it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
       end
       it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
+        subject.can?(:edit, @asset).should be false
+        subject.can?(:update, @asset).should be false
+        subject.can?(:destroy, @asset).should be false
       end
       it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be_false
+        subject.can?(:admin, @asset).should be false
       end
     end
   end
@@ -142,15 +142,15 @@ describe Ability do
       subject { Ability.new(@user) }
 
       it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
       end
       it "should be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_true
-        subject.can?(:update, @asset).should be_true
-        subject.can?(:destroy, @asset).should be_true
+        subject.can?(:edit, @asset).should be true
+        subject.can?(:update, @asset).should be true
+        subject.can?(:destroy, @asset).should be true
       end
       it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be_false
+        subject.can?(:admin, @asset).should be false
       end
     end
     context "Then a collaborator with edit access (group permision)" do
@@ -161,7 +161,7 @@ describe Ability do
       subject { Ability.new(@user) }
 
       it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
       end
     end
   end
@@ -178,15 +178,15 @@ describe Ability do
       subject { Ability.new(@user) }
 
       it "should not be able to view the asset" do
-        subject.can?(:read, @asset).should be_false
+        subject.can?(:read, @asset).should be false
       end
       it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
+        subject.can?(:edit, @asset).should be false
+        subject.can?(:update, @asset).should be false
+        subject.can?(:destroy, @asset).should be false
       end
       it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be_false
+        subject.can?(:admin, @asset).should be false
       end
     end
     context "Then someone whose role/group has read access" do
@@ -197,15 +197,15 @@ describe Ability do
       subject { Ability.new(@user) }
 
       it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
       end
       it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be_false
-        subject.can?(:update, @asset).should be_false
-        subject.can?(:destroy, @asset).should be_false
+        subject.can?(:edit, @asset).should be false
+        subject.can?(:update, @asset).should be false
+        subject.can?(:destroy, @asset).should be false
       end
       it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be_false
+        subject.can?(:admin, @asset).should be false
       end
     end
   end
@@ -231,7 +231,7 @@ describe Ability do
     subject { MyAbility.new(@user) }
 
     it "should be set the custom permission" do
-      subject.can?(:accept, ActiveFedora::Base).should be_true
+      subject.can?(:accept, ActiveFedora::Base).should be true
     end
 
   end
@@ -249,8 +249,8 @@ describe Ability do
     subject { Ability.new(@user) }
     it "should be readable in the first instance and not in the second instance" do
       # We had a bug around this where it keeps returning the access for the first object queried
-      subject.can?(:edit, @asset1).should be_true  
-      subject.can?(:edit, @asset2).should be_false  
+      subject.can?(:edit, @asset1).should be true  
+      subject.can?(:edit, @asset2).should be false  
     end
   end
 
@@ -267,17 +267,17 @@ describe Ability do
         @asset.save
       end
       it "should permit the user to download the object's datastreams" do
-        subject.can?(:read, @asset).should be_true
+        subject.can?(:read, @asset).should be true
         @asset.datastreams.each_value do |ds|
-          subject.can?(:download, ds).should be_true
+          subject.can?(:download, ds).should be true
         end
       end
     end
     context "user lacks read permission on the object" do
       it "should not permit the user to download the object's datastreams" do
-        subject.can?(:read, @asset).should be_false
+        subject.can?(:read, @asset).should be false
         @asset.datastreams.each_value do |ds|
-          subject.can?(:download, ds).should be_false
+          subject.can?(:download, ds).should be false
         end
       end
     end

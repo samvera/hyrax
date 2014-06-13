@@ -190,7 +190,7 @@ describe DownloadsController do
       before { sign_in @user }
       context "current_ability.can? returns true / can_download? returns false" do
         it "should authorize according to can_download?" do
-          controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be_true
+          controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be true
           controller.stub(:can_download?).and_return(false)
           Deprecation.silence(Hydra::Controller::DownloadBehavior) do
             get :show, id: @obj, datastream_id: 'buzz'
@@ -204,7 +204,7 @@ describe DownloadsController do
           @obj.save
         end
         it "should authorize according to can_download?" do
-          controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be_false
+          controller.current_ability.can?(:download, @obj.datastreams['buzz']).should be false
           controller.stub(:can_download?).and_return(true)
           Deprecation.silence(Hydra::Controller::DownloadBehavior) do
             get :show, id: @obj, datastream_id: 'buzz'

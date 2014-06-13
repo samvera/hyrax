@@ -18,18 +18,18 @@ describe "WithAccessRight" do
   context "not persisted" do
     context "when it is public" do
       before { subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC}
-      its(:authenticated_only_access?) { should be_false}
-      its(:private_access?) { should be_false}
-      its(:open_access?) { should be_true}
-      its(:open_access_with_embargo_release_date?) { should be_false}
+      its(:authenticated_only_access?) { should be false}
+      its(:private_access?) { should be false}
+      its(:open_access?) { should be true}
+      its(:open_access_with_embargo_release_date?) { should be false}
     end
 
     context "when it is private" do
       before { subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
-      its(:authenticated_only_access?) { should be_false}
-      its(:private_access?) { should be_true}
-      its(:open_access?) { should be_false}
-      its(:open_access_with_embargo_release_date?) { should be_false}
+      its(:authenticated_only_access?) { should be false}
+      its(:private_access?) { should be true}
+      its(:open_access?) { should be false}
+      its(:open_access_with_embargo_release_date?) { should be false}
     end
   end
 
@@ -39,30 +39,30 @@ describe "WithAccessRight" do
       before do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
       end
-      its(:authenticated_only_access?) { should be_false}
-      its(:private_access?) { should be_false}
-      its(:open_access?) { should be_true}
-      its(:open_access_with_embargo_release_date?) { should be_false}
+      its(:authenticated_only_access?) { should be false}
+      its(:private_access?) { should be false}
+      its(:open_access?) { should be true}
+      its(:open_access_with_embargo_release_date?) { should be false}
     end
 
     context "when it is private" do
       before do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       end
-      its(:authenticated_only_access?) { should be_false}
-      its(:private_access?) { should be_true}
-      its(:open_access?) { should be_false}
-      its(:open_access_with_embargo_release_date?) { should be_false}
+      its(:authenticated_only_access?) { should be false}
+      its(:private_access?) { should be true}
+      its(:open_access?) { should be false}
+      its(:open_access_with_embargo_release_date?) { should be false}
     end
 
     context "when it is authenticated access" do
       before do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
       end
-      its(:authenticated_only_access?) { should be_true}
-      its(:private_access?) { should be_false}
-      its(:open_access?) { should be_false}
-      its(:open_access_with_embargo_release_date?) { should be_false}
+      its(:authenticated_only_access?) { should be true}
+      its(:private_access?) { should be false}
+      its(:open_access?) { should be false}
+      its(:open_access_with_embargo_release_date?) { should be false}
     end
   end
 
