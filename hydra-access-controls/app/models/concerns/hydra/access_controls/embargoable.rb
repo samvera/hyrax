@@ -5,7 +5,7 @@ module Hydra
       include Hydra::AccessControls::WithAccessRight
 
       included do
-        validates :embargo_release_date, :'hydra/future_date' => true
+        validates :embargo_release_date, :lease_expiration_date, :'hydra/future_date' => true
 
         has_attributes :visibility_during_embargo, :visibility_after_embargo, :embargo_release_date,
           :visibility_during_lease, :visibility_after_lease, :lease_expiration_date,
