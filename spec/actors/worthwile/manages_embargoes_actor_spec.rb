@@ -13,7 +13,7 @@ describe Worthwhile::ManagesEmbargoesActor do
   subject {
     model.new(curation_concern, user, attributes)
   }
-  let(:future_date) { Date.today+2 }
+  let(:date) { Date.today+2 }
 
   context "#interpret_visibility" do
     it "should interpret lease and embargo visibility" do
@@ -27,6 +27,7 @@ describe Worthwhile::ManagesEmbargoesActor do
       expect(subject.interpret_visibility).to be false
     end
   end
+
   context "#interpret_embargo_visibility" do
     context 'when visibility is not set to embargo' do
       let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
@@ -41,12 +42,12 @@ describe Worthwhile::ManagesEmbargoesActor do
       let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
                            visibility_during_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
                            visibility_after_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-                           embargo_release_date: future_date.to_s } }
+                           embargo_release_date: date.to_s } }
 
-      it "should apply the embargo remove embargo attributes and return true" do
-        expect(subject.curation_concern).to receive(:apply_embargo).with(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+      it "should apply the embargo remove embargo attributes except for embargo_release_date and return true" do
+        expect(subject.curation_concern).to receive(:apply_embargo).with(date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         expect(subject.interpret_embargo_visibility).to be true
-        expect(subject.attributes.keys).to eq []
+        expect(subject.attributes.keys).to eq ['embargo_release_date']
       end
 
       context "when embargo_release_date is not set" do
@@ -56,6 +57,7 @@ describe Worthwhile::ManagesEmbargoesActor do
           expect(subject.curation_concern.errors[:visibility].first).to eq 'When setting visibility to "embargo" you must also specify embargo release date.'
         end
       end
+
     end
   end
 
@@ -73,10 +75,10 @@ describe Worthwhile::ManagesEmbargoesActor do
       let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
                            visibility_during_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
                            visibility_after_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-                           lease_expiration_date: future_date.to_s } }
+                           lease_expiration_date: date.to_s } }
 
       it "should apply the lease, remove lease attributes and return true" do
-        expect(subject.curation_concern).to receive(:apply_lease).with(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+        expect(subject.curation_concern).to receive(:apply_lease).with(date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         expect(subject.interpret_lease_visibility).to be true
         expect(subject.attributes.keys).to eq []
       end

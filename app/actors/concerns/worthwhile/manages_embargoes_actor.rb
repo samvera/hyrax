@@ -29,20 +29,19 @@ module Worthwhile
     # If user has set visibility to embargo, interprets the relevant information and applies it
     # Returns false if there are any errors and sets an error on the curation_concern
     def interpret_embargo_visibility
-      # clear embargo_release_date even if it isn't being used. Otherwise it sets the embargo_date
-      # even though they didn't select embargo on the form.
-      date = attributes.delete(:embargo_release_date)
       if attributes[:visibility] != Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
-        # Remove the embargo visibility so it doesn't get set later in the chain
+        # clear embargo_release_date even if it isn't being used. Otherwise it sets the embargo_date
+        # even though they didn't select embargo on the form.
         attributes.delete(:visibility_during_embargo)
         attributes.delete(:visibility_after_embargo)
+        attributes.delete(:embargo_release_date)
         true
-      elsif !date
+      elsif !attributes[:embargo_release_date]
         curation_concern.errors.add(:visibility, 'When setting visibility to "embargo" you must also specify embargo release date.')
         false
       else
         attributes.delete(:visibility)
-        curation_concern.apply_embargo(date, attributes.delete(:visibility_during_embargo),
+        curation_concern.apply_embargo(attributes[:embargo_release_date], attributes.delete(:visibility_during_embargo),
                                        attributes.delete(:visibility_after_embargo))
         true
       end
@@ -51,19 +50,18 @@ module Worthwhile
     # If user has set visibility to lease, interprets the relevant information and applies it
     # Returns false if there are any errors and sets an error on the curation_concern
     def interpret_lease_visibility
-      # clear lease_expiration_date even if it isn't being used. Otherwise it sets the lease_expiration 
-      # even though they didn't select lease on the form.
-      date = attributes.delete(:lease_expiration_date)
       if attributes[:visibility] != Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
-        # Remove the lease visibility so it doesn't get set later in the chain
+        # clear lease_expiration_date even if it isn't being used. Otherwise it sets the lease_expiration 
+        # even though they didn't select lease on the form.
         attributes.delete(:visibility_during_lease)
         attributes.delete(:visibility_after_lease)
+        attributes.delete(:lease_expiration_date)
         true
-      elsif !date
+      elsif !attributes[:lease_expiration_date]
         curation_concern.errors.add(:visibility, 'When setting visibility to "lease" you must also specify lease expiration date.')
         false
       else
-        curation_concern.apply_lease(date, attributes.delete(:visibility_during_lease),
+        curation_concern.apply_lease(attributes[:lease_expiration_date], attributes.delete(:visibility_during_lease),
                                        attributes.delete(:visibility_after_lease))
         attributes.delete(:visibility)
         true

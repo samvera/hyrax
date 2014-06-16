@@ -28,21 +28,59 @@ describe CurationConcern::GenericWorkActor do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
       context 'with embargo' do
         let(:attributes) { { title: "New embargo", visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
-                           visibility_during_embargo: "authenticated", embargo_release_date: "2099-06-16",
+                           visibility_during_embargo: "authenticated", embargo_release_date: date.to_s,
                            visibility_after_embargo: "open", visibility_during_lease: "open",
                            lease_expiration_date: "2014-06-12", visibility_after_lease: "restricted",
                            rights: "http://creativecommons.org/licenses/by/3.0/us/" } }
 
-        it "should interpret and apply embargo and lease visibility settings" do
-          # expect(subject).to receive(:interpret_lease_visibility).and_return(true)
-          # expect(subject).to receive(:interpret_embargo_visibility).and_return(true)
-          subject.create
-          expect(curation_concern).to be_persisted
-          expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
-          expect(curation_concern.visibility_after_embargo).to eq 'open'
-          expect(curation_concern.visibility).to eq 'authenticated'
+        context "with a valid embargo date" do
+          let(:date) { Date.today + 2 }
+          it "should interpret and apply embargo and lease visibility settings" do
+            subject.create
+            expect(curation_concern).to be_persisted
+            expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
+            expect(curation_concern.visibility_after_embargo).to eq 'open'
+            expect(curation_concern.visibility).to eq 'authenticated'
+          end
+        end
+
+        context "when embargo_release_date is in the past" do
+          let(:date) { Date.today-2 }
+          it "should set error on curation_concern and return false" do
+            expect(subject.create).to be false
+            expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date'
+          end
         end
       end
+
+      context 'with lease' do
+        let(:attributes) { { title: "New embargo", visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
+                           visibility_during_embargo: "authenticated", embargo_release_date: '2099-05-12',
+                           visibility_after_embargo: "open", visibility_during_lease: "open",
+                           lease_expiration_date: date.to_s, visibility_after_lease: "restricted",
+                           rights: "http://creativecommons.org/licenses/by/3.0/us/" } }
+
+        context "with a valid lease date" do
+          let(:date) { Date.today + 2 }
+          it "should interpret and apply embargo and lease visibility settings" do
+            subject.create
+            expect(curation_concern).to be_persisted
+            expect(curation_concern.embargo_release_date).to be_nil
+            expect(curation_concern.visibility_during_lease).to eq 'open'
+            expect(curation_concern.visibility_after_lease).to eq 'restricted'
+            expect(curation_concern.visibility).to eq 'open'
+          end
+        end
+
+        context "when lease_expiration_date is in the past" do
+          let(:date) { Date.today-2 }
+          it "should set error on curation_concern and return false" do
+            expect(subject.create).to be false
+            expect(subject.curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
+          end
+        end
+      end
+
       context 'with a file' do
         let(:attributes) {
           FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap {|a|
