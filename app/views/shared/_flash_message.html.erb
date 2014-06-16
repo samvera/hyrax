@@ -6,17 +6,10 @@
           <% if flash[type] %>
             <div class="alert <%= flash_dom_class %> ui-corner-all <%= type.to_s %>">
               <a class="close" data-dismiss="alert" href="#">×</a>
-              <%= safe_join(Array(flash[type]), "<br/>") %>
+              <%= sanitize(flash[type]) %>
             </div>
             <% flash.delete(type) %>
           <% end %>
-        <% end %>
-        <% if flash[:curation_concern_pid] %>
-          <% curation_concern = ActiveFedora::Base.find(flash[:curation_concern_pid], cast: true) %>
-          <div class="alert alert-success ui-corner-all notice">
-            <a class="close" data-dismiss="alert" href="#">×</a>
-            <%= link_to(content_tag('h4', %(Created "#{curation_concern}")), [:curation_concern, curation_concern], class: "created_curation_concern") %>
-          </div>
         <% end %>
       </div>
     </div>
