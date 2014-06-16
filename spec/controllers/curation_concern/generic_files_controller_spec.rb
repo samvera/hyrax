@@ -165,11 +165,12 @@ describe CurationConcern::GenericFilesController do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
-          post :update, id: generic_file, filedata: file
+          post :update, id: generic_file, file: file
           expect(response).to redirect_to [:curation_concern, generic_file]
+          expect(generic_file.reload.label).to eq 'image.png'
         end
       end
-
+ 
       context "restoring an old version" do
         before do
           allow(Sufia.queue).to receive(:push) # don't run characterization jobs

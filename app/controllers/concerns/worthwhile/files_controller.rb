@@ -64,8 +64,8 @@ module Worthwhile
     def update
       success = if wants_to_revert?
         actor.revert_content(params[:revision], datastream_id)
-      elsif params.has_key? :filedata
-        actor.update_content(params[:filedata], datastream_id)
+      elsif params.has_key? :file
+        actor.update_content(params[:file], datastream_id)
       elsif params.has_key? :generic_file
         actor.update_metadata(params[:generic_file], params[:generic_file][:visibility])
       end
