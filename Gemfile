@@ -13,6 +13,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails', '~> 3.0.1'
   gem 'rspec-its'
+  gem 'rspec-activemodel-mocks'
   gem 'launchy' unless ENV['TRAVIS']
   gem 'byebug' unless ENV['TRAVIS']
   gem 'capybara', '~> 2.3.0'
