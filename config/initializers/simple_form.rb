@@ -10,7 +10,7 @@ SimpleForm.setup do |config|
     end
   end
   config.wrappers :bootstrap, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
-    b.use :html
+    b.use :html5
     b.use :placeholder
     b.wrapper :tag => 'span', :class => 'control-label' do |bb|
       bb.use :label
