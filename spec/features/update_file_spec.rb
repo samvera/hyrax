@@ -6,6 +6,11 @@ describe "Editing attached files" do
 
   before do
     sign_in user
+
+    # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
+    s2 = double('one')
+    expect(CharacterizeJob).to receive(:new).and_return(s2)
+    expect(Sufia.queue).to receive(:push).with(s2).once
   end
 
   it "should update the file" do
