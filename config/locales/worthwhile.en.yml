@@ -10,6 +10,10 @@ en:
       publisher: Publisher
       file_format: Format 
       type: Type
+  simple_form:
+    hints:
+      defaults:
+        description: 'Please keep your description to 300 words or fewer.'
 
 
 

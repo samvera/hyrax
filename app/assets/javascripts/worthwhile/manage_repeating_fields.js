@@ -36,13 +36,13 @@
           $removeControl = this.remover.clone(),
           $newField = $activeField.clone(),
           $listing = $('.listing', this.element),
-          $warningSpan  = $("<span class=\'message warning\'>cannot add new empty field</span>");
+          $warningMessage  = $("<div class=\'message has-warning\'>cannot add new empty field</div>");
       if ($activeField.children('input').val() === '') {
-          $listing.children('.warning').remove();
-          $listing.append($warningSpan);
+          $listing.children('.has-warning').remove();
+          $listing.append($warningMessage);
       }
       else{
-        $listing.children('.warning').remove();
+        $listing.children('.has-warning').remove();
         $('.add', $activeFieldControls).remove();
         $activeFieldControls.prepend($removeControl);
         $newChildren = $newField.children('input');

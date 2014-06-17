@@ -1,19 +1,11 @@
 <fieldset class="required">
   <legend>Required Information</legend>
 
-  <%= f.input :title, input_html: { class: 'form-control' } %>
+  <%= f.input :title %>
 
-  <%= f.input :creator, input_html: { class: 'form-control' } %>
+  <%= f.input :creator, as: :multi_value %>
 
-  <%= f.input :contributor, input_html: { class: 'form-control' } %>
+  <%= f.input :contributor, as: :multi_value, input_html: { class: 'form-control' } %>
 
-  <%= f.input :description,
-              as: :text,
-              hint: 'Please keep your abstract to 300 words or less.',
-              input_html: {
-                class: 'input-xxxlarge',
-                rows: '14'
-              },
-              label: 'Abstract'
-  %>
+  <%= f.input :description, as: :text, input_html: { rows: '14' } %>
 </fieldset>

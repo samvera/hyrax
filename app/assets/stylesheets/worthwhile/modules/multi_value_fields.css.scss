@@ -32,6 +32,7 @@
     padding: 10px;
     text-shadow: 0 1px 0 rgba(0,0,0,.5);
     animation: animate-bg 5s linear infinite;
+    border-radius: $border-radius-base;
   }
 
   .has-error{
@@ -39,7 +40,7 @@
     border-color: #c43d3d;
   }
 
-  .warning{
+  .has-warning{
     background-color: #eaaf51;
     border-color: #d99a36;
   }
