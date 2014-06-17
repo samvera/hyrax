@@ -8,12 +8,13 @@ module CurationConcern::Curatable
     include Sufia::ModelMethods
     include Hydra::Collections::Collectible
     include Solrizer::Common
+    include ::CurationConcern::HasRepresentative
 
     # Modules in Curate's CurationConcern::Model that we _might_ pull in later
     # include Curate::ActiveModelAdaptor
     
     has_metadata 'properties', type: Worthwhile::PropertiesDatastream
-    has_attributes :relative_path, :depositor, :owner, :representative, datastream: :properties, multiple: false
+    has_attributes :relative_path, :depositor, :owner, datastream: :properties, multiple: false
     class_attribute :human_readable_short_description
     attr_accessor :files
   end
@@ -30,7 +31,6 @@ module CurationConcern::Curatable
     super.tap do |solr_doc|
       index_collection_pids(solr_doc)
       solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
-      solr_doc[Solrizer.solr_name('representative', :stored_searchable)] = representative
       add_derived_date_created(solr_doc)
     end
   end

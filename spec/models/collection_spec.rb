@@ -3,10 +3,13 @@ require 'spec_helper'
 describe Collection do
   let(:reloaded_subject) { Collection.find(subject.pid) }
 
+  before do
+    subject.title = 'A title'
+  end
+
   it 'can be part of a collection' do
     expect(subject.can_be_member_of_collection?(double)).to be true
   end
-
 
   it 'can contain another collection' do
     another_collection = FactoryGirl.create(:collection)
@@ -118,7 +121,10 @@ describe Collection do
       work.collections.should == []
       work.to_solr["collection_tesim"].should == []
     end
+  end
 
+  it 'has a representative' do
+    expect(subject.respond_to?(:representative)).to eq true
   end
 
 end

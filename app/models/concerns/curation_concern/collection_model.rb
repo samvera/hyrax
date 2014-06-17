@@ -8,6 +8,7 @@ module CurationConcern
     include CurationConcern::HumanReadableType
     include Hydra::Collection
     include Hydra::Collections::Collectible
+    include CurationConcern::HasRepresentative
 
     def add_member(collectible)
       if can_add_to_members?(collectible)
