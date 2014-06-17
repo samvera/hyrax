@@ -14,4 +14,11 @@ describe GenericWork do
       expect(subject.generic_files.first).to be_kind_of Worthwhile::GenericFile
     end
   end
+
+  describe "to_solr" do
+    subject { FactoryGirl.build(:work, date_uploaded: Date.today).to_solr }
+    it "indexes some fields" do
+      expect(subject.keys).to include 'desc_metadata__date_uploaded_dtsi'
+    end
+  end
 end
