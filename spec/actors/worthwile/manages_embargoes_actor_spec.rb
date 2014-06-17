@@ -77,10 +77,10 @@ describe Worthwhile::ManagesEmbargoesActor do
                            visibility_after_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
                            lease_expiration_date: date.to_s } }
 
-      it "should apply the lease, remove lease attributes and return true" do
+      it "should apply the lease, remove lease attributes except for lease_expiration_date and return true" do
         expect(subject.curation_concern).to receive(:apply_lease).with(date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         expect(subject.interpret_lease_visibility).to be true
-        expect(subject.attributes.keys).to eq []
+        expect(subject.attributes.keys).to eq ['lease_expiration_date']
       end
 
       context "when lease_expiration_date is not set" do

@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hydra-head', '7.1.0.rc2'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
   spec.add_dependency "active_attr"
-  spec.add_dependency "simple_form"
+  spec.add_dependency "simple_form", '~> 3.1.0.rc1'
   spec.add_dependency 'sufia-models', '~> 4.0.0.rc1'
   spec.add_dependency 'hydra-collections'
   #spec.add_dependency 'bootstrap-datepicker-rails'

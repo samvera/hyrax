@@ -44,17 +44,27 @@ legend small {
   margin-top: 1em;
 }
 
-.control-label {
-  display: block;
-  label { display: inline; }
-}
-
 form label.optional { font-weight: normal; }
 form label.required { font-weight: bold; }
 
 #set-access-controls {
   label { font-weight: normal; }
   & > .form-group { padding: 0 1.75em; }
+
+  .form-inline {
+    .control-label, label {
+      display: inline;
+      &:after {
+        content: ' ';
+      }
+    }
+    .help-block {
+      display: inline;
+      &:before {
+        content: ' ';
+      }
+    }
+  }
 }
 
 .control-label.required {
@@ -64,9 +74,6 @@ form label.required { font-weight: bold; }
   }
 }
 
-.form-group input.inline {
-  display: inline-block;
-}
 
 .field-choice {
   padding-bottom:1em;
