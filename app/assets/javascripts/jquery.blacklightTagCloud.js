@@ -17,7 +17,7 @@
       var $tagCloud = $(this)
       $.ajax({url:"/catalog/facet/"+facet_name+".json"}).done(function(data) {
         data.response.facets.items.map(function(item) {
-          $tagCloud.append('<li rel="'+item.hits+'" title="'+item.value+'"><a href="/?f['+facet_name+'][]='+item.value+'">'+item.value+'</a><span class="badge facet-count">'+item.hits+'</span></li>');
+          $tagCloud.append('<li rel="'+item.hits+'" title="'+item.value+'"><a href="/catalog?f['+facet_name+'][]='+item.value+'">'+item.value+'</a><span class="badge facet-count">'+item.hits+'</span></li>');
         });
         $tagCloud.tagcloud(options);
         $tagCloud.children().tsort({attr:'title', order:'asc'});
