@@ -17,7 +17,7 @@ module CurationConcern
     protected
 
     def assign_pid
-      curation_concern.inner_object.pid = Worthwhile::CurationConcern.mint_a_pid
+      curation_concern.inner_object.pid ||= Worthwhile::CurationConcern.mint_a_pid
     end
 
     def files
