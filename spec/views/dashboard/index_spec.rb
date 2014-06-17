@@ -11,6 +11,8 @@ describe "dashboard/index.html.erb" do
     allow(@user).to receive(:all_following).and_return(["magneto"])
     allow(@user).to receive(:followers).and_return(["wolverine","storm"])
     allow(controller).to receive(:current_user).and_return(@user)
+    allow(view).to receive(:number_of_files).and_return("15")
+    allow(view).to receive(:number_of_collections).and_return("3")
     assign(:activity, [])
     assign(:notifications, [])
   end
@@ -56,7 +58,8 @@ describe "dashboard/index.html.erb" do
       expect(@sidebar).to include "Your Statistics"
       expect(@sidebar).to include '<span class="label label-default">1</span>'
       expect(@sidebar).to include '<span class="label label-default">2</span>'
-      expect(@sidebar).to include '<span class="label label-default">0</span>'
+      expect(@sidebar).to include '<span class="label label-default">15</span>'
+      expect(@sidebar).to include '<span class="label label-default">3</span>'
     end
 
   end

@@ -7,6 +7,7 @@ require 'database_cleaner'
 
 require 'rspec/rails'
 require 'rspec/its'
+require 'rspec/active_model/mocks'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15

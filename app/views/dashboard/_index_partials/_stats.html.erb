@@ -2,8 +2,12 @@
 
 <table class="table table-condensed">
   <tr>
-    <td><span class="label label-default"><%= number_of_deposits(@user) %></span></td>
-    <td><%= t("sufia.dashboard.stats.deposits") %></td>
+    <td><span class="label label-default"><%= number_of_files %></span></td>
+    <td><%= t("sufia.dashboard.stats.files") %></td>
+  </tr>
+  <tr>
+    <td><span class="label label-default"><%= number_of_collections %></span></td>
+    <td><%= t("sufia.dashboard.stats.collections") %></td>
   </tr>
   <tr>
     <td><span class="label label-default"><%= @user.all_following.count %></span></td>
