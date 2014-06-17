@@ -1,5 +1,5 @@
 class MultiValueInput < SimpleForm::Inputs::CollectionInput
-  def input
+  def input(wrapper_options)
     @rendered_first_element = false
     input_html_classes.unshift("string")
     input_html_options[:type] ||= 'text'
