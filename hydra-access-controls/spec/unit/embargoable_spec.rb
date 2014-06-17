@@ -20,6 +20,15 @@ describe Hydra::AccessControls::Embargoable do
 
   subject { model.new }
 
+  context 'validations' do
+    subject { ModsAsset.new(lease_expiration_date: past_date, embargo_release_date: past_date) }
+    it "validates embargo_release_date and lease_expiration_date" do
+      expect(subject).to_not be_valid
+      expect(subject.errors[:lease_expiration_date]).to eq ['Must be a future date']
+      expect(subject.errors[:embargo_release_date]).to eq ['Must be a future date']
+    end
+  end
+
   context 'visibility=' do
     it "when changing from embargo, wipes out associated embargo metadata" do
       subject.embargo_release_date = future_date.to_s
