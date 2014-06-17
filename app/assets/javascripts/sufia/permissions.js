@@ -44,9 +44,9 @@ Blacklight.onLoad(function() {
         return false;
       }
 
-      if ($('#new_user_name_skel').val() == $('#file_owner').html()) {
-        $('#permissions_error_text').html("Cannot change owner permissions.");
-        $('#permissions_error').show();
+      if ( ($('#new_user_name_skel').val()+$('.add-on').text()) == $('#file_owner').data('depositor') ) {
+        $('#permissions_error_text').html("Cannot change depositor permissions.");
+        $('#permissions_error').removeClass('hidden');
         $('#new_user_name_skel').val('');
         $('#new_user_name_skel').focus();
         return false;
@@ -54,12 +54,12 @@ Blacklight.onLoad(function() {
 
       if (!is_permission_duplicate($('#new_user_name_skel').val())) {
         $('#permissions_error_text').html("This user already has a permission.");
-        $('#permissions_error').show();
+        $('#permissions_error').removeClass('hidden');
         $('#new_user_name_skel').focus();
         return false;
       }
       $('#permissions_error').html();
-      $('#permissions_error').hide();
+      $('#permissions_error').addClass('hidden');
 
       var un = $('#new_user_name_skel').val();
       var perm_form = $('#new_user_permission_skel').val();
@@ -84,12 +84,12 @@ Blacklight.onLoad(function() {
 
       if (!is_permission_duplicate($('#new_group_name_skel').val())) {
         $('#permissions_error_text').html("This group already has a permission.");
-        $('#permissions_error').show();
+        $('#permissions_error').removeClass('hidden');
         $('#new_group_name_skel').focus();
         return false;
       }
       $('#permissions_error').html();
-      $('#permissions_error').hide();
+      $('#permissions_error').addClass('hidden');
       // clear out the elements to add more
       $('#new_group_name_skel').val('');
       $('#new_group_permission_skel').val('none');
@@ -118,7 +118,7 @@ Blacklight.onLoad(function() {
       var td2 = $(document.createElement('td'));
       var remove = $('<button class="btn close">X</button>');
 
-      $('#save_perm_note').show();
+      $('#save_perm_note').removeClass('hidden');
 
       $('#new_perms').append(td1);
       $('#new_perms').append(td2);
@@ -143,8 +143,9 @@ Blacklight.onLoad(function() {
 
   $('.remove_perm').on('click', function() {
      var top = $(this).parent().parent();
-     top.hide(); // do not show the block
+     top.addClass('hidden'); // do not show the block
      top.find('.select_perm')[0].options[0].selected= true; // select the first otion which is none
+     $('#save_perm_note').removeClass('hidden');
      return false;
 
   });

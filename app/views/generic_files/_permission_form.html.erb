@@ -7,8 +7,8 @@
 <input type="hidden" name="generic_file[permissions][group][public]" value="1" />
 <input type="hidden" name="generic_file[permissions][group][registered]" value="2" />
 <h2><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %><small>(applied to all files just uploaded)</small><% end %></h2>
-<div class="alert hide" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
-<div class="alert alert-error hide" id="permissions_error"><a class="close" data-dismiss="alert" href="#">×</a><span id="permissions_error_text"></span></div>
+<div class="alert alert-info hidden" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
+<div class="alert alert-warning hidden" id="permissions_error"><a class="close" data-dismiss="alert" href="#">×</a><span id="permissions_error_text"></span></div>
 <div class="well">
   <div class="row">
     <p class="pull-right">
@@ -105,7 +105,11 @@
     <th width="40%">Access Level</th>
   </tr>
   <tr id="file_permissions">
-    <td><%= label_tag :owner_access, "Depositor (<span id=\"file_owner\">#{link_to_profile depositor}</span>)".html_safe, class: "control-label" %></td>
+    <td>
+      <%= label_tag :owner_access, class: "control-label" do %>
+        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>) 
+      <% end %>
+    </td>
     <td>
     <%= Sufia.config.owner_permission_levels.keys[0] %>
     </td>
