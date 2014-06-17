@@ -13,6 +13,7 @@ And then execute:
     $ bundle
 
 Then:
+
     $ rails generate worthwhile:install
     $ rake db:migrate
     
