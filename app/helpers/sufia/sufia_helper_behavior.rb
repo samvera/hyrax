@@ -99,18 +99,6 @@ module Sufia
       link_to @user.telephone, "wtai://wp/mc;#{@user.telephone}" if @user.telephone
     end
 
-    # Create a link back to the index screen, keeping the user's facet, query and paging choices intact by using session.
-    # We should be able to do away with this method in Blacklight 5
-    # @example
-    #   link_back_to_catalog(label: 'Back to Search')
-    def link_back_to_catalog(opts = { label: nil })
-      scope = opts.delete(:route_set) || self
-      query_params = current_search_session.try(:query_params) || {}
-      link_url = scope.url_for(query_params)
-      opts[:label] ||= t('blacklight.back_to_search')
-      link_to opts[:label], link_url
-    end
-
     # Only display the current search parameters if the user is not in the dashboard.
     # If they are in the dashboard, then the search defaults to the user's files and not
     # all of Sufia.
