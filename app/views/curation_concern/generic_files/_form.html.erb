@@ -32,7 +32,7 @@
         (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{parent.human_readable_type})),
         class: 'btn btn-primary'
       ) %>
-      <%= link_to 'Cancel', polymorphic_path([:curation_concern, parent]), class: 'btn btn-link' %>
+      <%= link_to 'Cancel', parent_path(parent), class: 'btn btn-link' %>
     </div>
   </div>
 <% end %>

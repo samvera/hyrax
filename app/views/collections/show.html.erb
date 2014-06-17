@@ -2,6 +2,8 @@
 
 <h1 class="lower"><%= @collection.title %></h1>
 
+<%= render partial: 'curation_concern/base/representative_media', locals: {work: @collection} %>
+
 <h3><%=@collection.description%> </h3>
 
 <% unless has_collection_search_parameters? %>

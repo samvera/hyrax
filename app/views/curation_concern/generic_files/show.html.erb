@@ -10,5 +10,6 @@
     <% if can? :edit, curation_concern %>
       <%= link_to "Edit this File", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-primary'  %>
     <% end %>
-    <%= link_to "Back to #{parent.human_readable_type}", polymorphic_path([:curation_concern, parent]), class: 'btn btn-primary' %>
+
+    <%= link_to "Back to #{parent.human_readable_type}", parent_path(parent), class: 'btn btn-primary' %>
   </div>
