@@ -48,6 +48,7 @@ form label.required { font-weight: bold; }
 
   .form-inline {
     .control-label, label {
+      padding-left: 0;
       display: inline;
       &:after {
         content: ' ';
