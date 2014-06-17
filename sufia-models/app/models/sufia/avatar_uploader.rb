@@ -2,10 +2,15 @@ class Sufia::AvatarUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
   include CarrierWave::Compatibility::Paperclip
 
-  process convert: 'png'
+  attr_accessor :original_size
 
+  before :cache, :get_original_file_size
+  
+  process convert: 'png'
+  
   version :medium do
     process resize_to_limit: [300, 300]
+    
   end
 
   version :thumb do
@@ -19,4 +24,9 @@ class Sufia::AvatarUploader < CarrierWave::Uploader::Base
   def extension_white_list
     %w(jpg jpeg png gif bmp tif tiff)
   end
+
+  def get_original_file_size file
+    @original_size = file.size
+  end
+
 end

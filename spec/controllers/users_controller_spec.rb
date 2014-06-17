@@ -132,7 +132,7 @@ describe UsersController do
       s1 = double('one')
       UserEditProfileEventJob.should_receive(:new).with(@user.user_key).and_return(s1)
       Sufia.queue.should_receive(:push).with(s1).once
-      f = fixture_file_upload('/world.png', 'image/png')
+      f = fixture_file_upload('/1.5mb-avatar.jpg', 'image/jpg')
       post :update, id: @user.user_key, user: { avatar: f }
       response.should redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       flash[:notice].should include("Your profile has been updated")
