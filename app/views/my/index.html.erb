@@ -37,7 +37,9 @@
 <%= render partial: 'document_list' %>
 
 <% content_for :sidebar do %>
-    <%= render partial: 'facets' %>
+  <%= link_to t("sufia.dashboard.upload"), sufia.new_generic_file_path, class: "btn btn-primary" %>
+  <%= link_to t("sufia.dashboard.create_collection"), collections.new_collection_path, id: "hydra-collection-add", class: "btn btn-primary" %>
+  <%= render partial: 'facets' %>
 <% end %>
 
 <%= render 'results_pagination' %>

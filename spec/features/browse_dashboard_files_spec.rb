@@ -61,6 +61,14 @@ describe "Browse Dashboard" do
       expect(page).to have_content('3 files')
     end
 
+    it "should display a button for uploading files" do
+      click_link('Upload')
+    end
+
+    it "should display a button for creating collections" do
+      click_link('Create Collection')
+    end
+
   end
 
   context "within my collections page" do
