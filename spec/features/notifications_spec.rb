@@ -12,7 +12,7 @@ describe "Notifications page" do
     page.find(:xpath, '//thead/tr').should have_content "Date"
     page.find(:xpath, '//thead/tr').should have_content "Subject"
     page.find(:xpath, '//thead/tr').should have_content "Message"
-    page.should have_content "Sample notification."
+    page.should have_content "Sample notification 1."
     page.should have_content "less than a minute ago"
     page.should have_content "You've got mail."
   end

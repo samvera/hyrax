@@ -25,6 +25,7 @@ module Sufia
       config.enable_local_ingest = nil
       config.analytics = false
       config.queue = Sufia::Resque::Queue
+      config.max_notifications_for_dashboard = 5
 
       config.autoload_paths += %W(
         #{config.root}/lib/sufia/models/jobs

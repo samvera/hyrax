@@ -13,7 +13,7 @@ module Sufia
       if @notifications.empty?
         t('sufia.dashboard.no_notifications')
       else
-        render partial: "mailbox/notifications", locals: { messages: @notifications }
+        render partial: "mailbox/notifications", locals: { messages: notifications_for_dashboard }
       end
     end
 
@@ -27,6 +27,16 @@ module Sufia
 
     def number_of_collections user=current_user
       Collection.where(Solrizer.solr_name('depositor', :stored_searchable) => user.user_key).count
+    end
+
+    def notifications_for_dashboard
+      @notifications.limit(Sufia.config.max_notifications_for_dashboard)
+    end
+
+    def link_to_additional_notifications
+      if @notifications.count > Sufia.config.max_notifications_for_dashboard
+        link_to t('sufia.dashboard.additional_notifications'), sufia.notifications_path
+      end
     end
 
   end
