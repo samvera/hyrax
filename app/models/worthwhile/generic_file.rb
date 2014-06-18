@@ -42,6 +42,7 @@ module Worthwhile
     end
 
     def remove_representative_relationship
+      return unless ActiveFedora::Base.exists?(batch)
       return unless batch.representative == self.pid
       batch.representative = nil
       batch.save

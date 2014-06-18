@@ -40,6 +40,22 @@ describe Worthwhile::GenericFile do
         parent.save!
       end
 
+      context "the parent object doesn't exist" do
+        before do
+          parent.representative = subject.pid
+          parent.save!
+          @parent_pid = parent.pid
+          parent.destroy
+        end
+
+        it "doesn't raise an error" do
+          expect(ActiveFedora::Base.exists?(@parent_pid)).to eq false
+          expect {
+            subject.remove_representative_relationship
+          }.to_not raise_error
+        end
+      end
+
       context 'it is not the representative' do
         it "doesn't update parent work when file is deleted" do
           expect(subject.batch).to eq parent
