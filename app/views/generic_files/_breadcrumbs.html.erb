@@ -8,6 +8,8 @@
      crumbs << link_to('Home', root_path)
 
      case request.referer
+     when /collections/
+       crumbs << link_to(t('sufia.bread_crumb.collections_list'), sufia.dashboard_collections_path)
      when /dashboard/
        crumbs << link_to(t('sufia.bread_crumb.file_list'), sufia.dashboard_files_path)
      when /files/
