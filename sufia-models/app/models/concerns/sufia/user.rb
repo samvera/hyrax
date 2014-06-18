@@ -21,6 +21,7 @@ module Sufia::User
     mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
     validates_with AvatarValidator
     has_many :trophies
+    attr_accessor :update_directory
   end
 
   # Format the json for select2 which requires just an id and a field called text.
@@ -69,7 +70,7 @@ module Sufia::User
       [:email, :login, :display_name, :address, :admin_area,
         :department, :title, :office, :chat_id, :website, :affiliation,
         :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
-        :twitter_handle, :googleplus_handle, :linkedin_handle]
+        :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar]
     end
 
     def current

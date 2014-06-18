@@ -108,7 +108,7 @@ function batch_edit_init () {
         $("#status_" + key).html("Changes Saved");
         $(save_button).removeAttr("disabled");
         $(outer_div).removeClass("loading");
-        $('#' + form_id).children([".control-group"]).removeClass('hidden')
+        $('#' + form_id).children([".form-group"]).removeClass('hidden')
     }
 
     function before_ajax(form_id) {
@@ -117,7 +117,7 @@ function batch_edit_init () {
         var outer_div = "#collapse_" + key;
         $(save_button).attr("disabled", "disabled");
         $(outer_div).addClass("loading");
-        $('#' + form_id).children([".control-group"]).addClass('hidden')
+        $('#' + form_id).children([".form-group"]).addClass('hidden')
     }
 
 

@@ -1,0 +1,27 @@
+      <table class="table">
+        <tr>
+          <th><h4>Title:</h4></th>
+          <td><%= work.title %></td>
+        </tr>
+        <tr>
+          <th><h4>Depositor:<h4></div>
+          <td><%= link_to_profile work.depositor("no depositor value") %></td>
+        </tr>
+        <tr>
+          <th><h4>Creator:</h4></th>
+          <td><%= work.creator %></td>
+        </tr>
+        <tr>
+          <th><h4>Description:</h4></th>
+          <td><%= iconify_auto_link(work.description) %></th>
+        </tr>
+        <tr>
+          <th><h4>Keywords:</h4></th>
+          <td><%= work.tags.join(', ') %></td>
+        </tr>
+        <tr>
+          <th><h4>Date Uploaded:</h4></th>
+          <td><%= work.date_uploaded %></td>
+        </tr>
+      </table>
+

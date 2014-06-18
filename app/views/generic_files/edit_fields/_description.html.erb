@@ -1,5 +1,5 @@
       <div class="col-sm-9" <%  if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
         <%= f.text_area :description, name:"generic_file[#{key.to_s}][]", id: "generic_file_{key.to_s}", value: v, class: "input-large" %>
         <%= render partial: "generic_files/edit_fields/suffix", locals: { key: key, index: index } %>
-      </div><!-- /controls -->
+      </div>
       <div id="additional_<%= key %>_elements"></div>

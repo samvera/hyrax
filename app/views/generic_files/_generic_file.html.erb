@@ -3,34 +3,13 @@
     <%= link_to generic_file.title_or_label, sufia.generic_file_path(generic_file) %>
     <small>[<%= link_to 'Download', sufia.download_path(generic_file), target: '_new' %>]</small>
   </h2>
-  <table class="table">
-    <tr>
-      <td rowspan="6" class="span20">
-        <%= render_thumbnail_tag generic_file, { width: 150 } %>
-      </td>
-      <th><h4>Title:</h4></th>
-      <td><%= generic_file.title %></td>
-    </tr>
-    <tr>
-      <th><h4>Depositor:<h4></div>
-      <td><%= link_to_profile generic_file.depositor("no depositor value") %></td>
-    </tr>
-    <tr>
-      <th><h4>Creator:</h4></th>
-      <td><%= generic_file.creator %></td>
-    </tr>
-    <tr>
-      <th><h4>Description:</h4></th>
-      <td><%= iconify_auto_link(generic_file.description) %></th>
-    </tr>
-    <tr>
-      <th><h4>Keywords:</h4></th>
-      <td><%= generic_file.tags.join(', ') %></td>
-    </tr>
-    <tr>
-      <th><h4>Date Uploaded:</h4></th>
-      <td><%= generic_file.date_uploaded %></td>
-    </tr>
-  </table>
+  <div class="row">
+    <div class="col-sm-3">
+      <%= render_thumbnail_tag generic_file %>
+    </div>
+    <div class="col-sm-9">
+      <%= render 'shared/attributes', work: generic_file %>
+    </table>
+  </div>
 </li>
 

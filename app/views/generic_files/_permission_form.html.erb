@@ -61,38 +61,46 @@
     </p>
   </div>
   <h3>Visibility - <small>who should have the ability to read and download</small></h3>
-  <div class="form-group">
-     <div class="controls">
-        <label class="radio">
-          <input type="radio" id="visibility_open" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
-        </label>
-        <label class="radio">
-          <input type="radio" id="visibility_psu" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if !registered_perm.blank? %> checked="true"<% end %> /><span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
-        </label>
-        <label class="radio">
-          <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-danger">Private</span> Visible to users/groups specified below, if any.
-        </label>
-    </div><!-- /.controls -->
-  </div><!-- /.control-group -->
-  <div class="row">
-      <h3>Share With <small>(optional)</small></h3>
+  <div class="radio">
+    <label>
+      <input type="radio" id="visibility_open" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
+    </label>
+    <label>
+      <input type="radio" id="visibility_psu" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if !registered_perm.blank? %> checked="true"<% end %> /><span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
+    </label>
+    <label>
+      <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-danger">Private</span> Visible to users/groups specified below, if any.
+    </label>
   </div>
-  <div class="row control-group">
+  <div class="row">
+      <h3 class="col-sm-12">Share With <small>(optional)</small></h3>
+  </div>
+  <div class="form-group">
     <div id="new-user">
-      <div class="input-append">
-        <p class="help-block">Enter <%=t('sufia.account_label') %> (one at a time)</p>
-        <%= text_field_tag 'new_user_name_skel', nil, class: "span29" %><span class="add-on"><%=t('sufia.directory.suffix') %></span>
-        <%= select_tag 'new_user_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'span17' %>
+      <p class="col-sm-12">Enter <%=t('sufia.account_label') %> (one at a time)</p>
+      <div class="col-sm-5">
+        <div class="input-group">
+          <%= text_field_tag 'new_user_name_skel', nil, class: "form-control" %><span class="input-group-addon"><%=t('sufia.directory.suffix') %></span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <%= select_tag 'new_user_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'form-control' %>
+      </div>
+      <div class="col-sm-3">
         <button class="btn btn-mini btn-inverse" id="add_new_user_skel"><i class="glyphicon glyphicon-plus"></i> Add</button>
         <br /> <span id="directory_user_result"></span>
       </div>
     </div>
   </div>
-  <div class="row control-group">
+  <div class="form-group">
     <div id="new-group" >
-      <div class="input-append">
-        <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'span38' %>
-        <%= select_tag 'new_group_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'span17' %>
+      <div class="col-sm-5">
+        <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
+      </div>
+      <div class="col-sm-4">
+        <%= select_tag 'new_group_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'form-control' %>
+      </div>
+      <div class="col-sm-3">
         <button class="btn btn-mini btn-inverse" id="add_new_group_skel" ><i class="glyphicon glyphicon-plus"></i> Add</button>
         <br /><span id="directory_group_result"></span>
       </div>
@@ -111,7 +119,7 @@
       <% end %>
     </td>
     <td>
-    <%= Sufia.config.owner_permission_levels.keys[0] %>
+      <%= Sufia.config.owner_permission_levels.keys[0] %>
     </td>
   </tr>
   <% gf.permissions.each do |permission| %>
@@ -122,8 +130,10 @@
     <tr>
       <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], class: "control-label" %></td>
       <td>
-      <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia.config.permission_levels, permission[:access]), class: 'span20 select_perm' %>
-      <button class="btn close remove_perm">X</button>
+        <div class="col-sm-8">
+          <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia.config.permission_levels, permission[:access]), class: 'form-control select_perm' %>
+        </div>
+        <button class="btn close remove_perm">X</button>
       </td>
     </tr>
   <% end %>

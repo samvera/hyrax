@@ -9,10 +9,10 @@
 
 <% unless has_collection_search_parameters? %>
   <div itemscope itemtype="http://schema.org/CollectionPage" class="row">
-    <div class="col-xs-12 col-sm-4">
+    <div class="col-sm-4">
       <%= render partial: 'collections/media_display', locals: { generic_file: @collection } %>
     </div>
-    <div class="col-xs-12 col-sm-8"><!-- class="column second"> -->
+    <div class="col-sm-8"><!-- class="column second"> -->
       <%= render partial: 'collections/show_actions' %>
       <%= render partial: 'collections/show_descriptions', locals: { generic_file: @collection } %>
     </div><!-- /columns second -->

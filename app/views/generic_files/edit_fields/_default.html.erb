@@ -2,5 +2,5 @@
         <% required = render_req && (index == 0) && required?(key) %>
         <%= f.text_field :title, name: "generic_file[#{key.to_s}][]", id: "generic_file_#{key.to_s}", value: v, class: "input-large", required: required  %>
         <%= render partial: "generic_files/edit_fields/suffix", locals: { key: key, index: index } %>
-      </div><!-- /controls -->
+      </div>
       <div id="additional_<%= key %>_elements"></div>

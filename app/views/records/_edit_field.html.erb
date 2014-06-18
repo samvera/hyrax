@@ -2,7 +2,7 @@
   # With render_edit_field_partial_with_action because there is also a 
   # 'render_edit_field_partial' in sufia that uses 'generic_file' as the action. %>
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
-<div class="control-group">
+<div class="form-group">
   <% vals =  f.object[key] %>
   <% if render_req && f.object.required?(key) %>
     <% tmp = '<span class="error">*</span>' + field_label(key) %>
@@ -14,5 +14,5 @@
   <% vals.to_ary.each_with_index do |v, index| %>
     <%= render_edit_field_partial_with_action('records', key, f: f,  v: v, index: index, render_req: render_req) %>
   <% end %>
-</div><!-- /control-group -->
+</div>
 

@@ -49,13 +49,14 @@ module Sufia::UsersControllerBehavior
   def update
     if params[:user]
       @user.update_attributes(params.require(:user).permit(*User.permitted_attributes))
+      @user.populate_attributes if ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:user][:update_directory])
     end
-    @user.populate_attributes if params[:update_directory]
-    @user.remove_avatar = true if params[:delete_avatar]
+
     unless @user.save
       redirect_to sufia.edit_profile_path(@user.to_param), alert: @user.errors.full_messages
       return
     end
+    # TODO this should be moved to TrophiesController
     params.keys.select {|k, v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
       smash_trophy = smash_trophy.sub /^remove_trophy_/, ''
       current_user.trophies.where(generic_file_id: smash_trophy).destroy_all

@@ -2,20 +2,13 @@
 
   <%= render_hash_as_hidden_fields(params_for_search(advanced_search_context)) %>
 
-  <div>
+  <div class="form-group">
+    <label class="control-label" for='op'>Find items that match</label>
+    <%= select_tag(:op, options_for_select({ all: 'AND', any: 'OR'}.sort, 'all'), class: "") %> of the fields below:
+  </div>
 
-    <div>
-        <div class="control-group">
-          <label class="control-label">Find items that match</label>
-          <div class="controls">
-            <%= select_tag(:op, options_for_select({ all: 'AND', any: 'OR'}.sort, 'all'), class: "span10") %> of the fields below:
-          </div>
-        </div>
-
-        <div id="advanced_search">
-          <%= render 'advanced/advanced_search_fields' %>
-        </div>
-    </div>
+  <div id="advanced_search">
+    <%= render 'advanced/advanced_search_fields' %>
   </div>
 
   <% unless (search_context_str = render_search_to_s( advanced_search_context)).blank? %>
@@ -25,13 +18,17 @@
     </div>
   <% end %>
 
+  <div class="form-group">
+    <%= label_tag :sort, "Sort results by: ", class: 'control-label col-sm-4' %>
+    <div class="col-sm-8">
+      <%= select_tag :sort, options_for_select(sort_fields, h(params[:sort])), class: 'form-control' %>
+    </div>
+  </div>
 
-  <div class="form-actions">
-    <%= label_tag(:sort, "Sort results by") %>
-    <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>
+  <div>
     <%= hidden_field_tag(:search_field, blacklight_config.advanced_search[:url_key]) %>
     <br />
     <%= submit_tag 'Search', class: 'btn btn-primary', id: 'advanced_search' %>
-	  <%= link_to "Start over", {controller: "advanced", action: "index"}, class:"btn" %>
+	  <%= link_to "Start over", {controller: "advanced", action: "index"}, class:"btn btn-default" %>
   </div>
 <% end %>
