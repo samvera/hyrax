@@ -5,15 +5,13 @@ on element ids -->
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
   <td width="6%"></td> 
-  <td width="1%">
-  </td>
-  <td width="37%">
+  <td width="38%">
     <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="glyphicon glyphicon-plus"></i></a>&nbsp;
     <%= link_to image_tag("/assets/folder.png", width: 36), collections.collection_path(noid) %>
     <span class=center><%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %> <br /></span>
   </td>
   <td width="17%"><%= document.date_uploaded %> </td>
-  <td width="5%" align="center">
+  <td width="5%" class="center">
       <% if document.registered? %>
      <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
     <% elsif document.public? %>
@@ -23,7 +21,7 @@ on element ids -->
     <% end %>
   
   </td>
-  <td width="23%" class="center">
+  <td class="center">
     <%= render partial:'collection_action_menu', locals:{noid:noid} %>
    </td>
 </tr>

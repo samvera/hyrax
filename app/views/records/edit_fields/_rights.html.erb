@@ -1,6 +1,6 @@
-<div class="controls"<%= if index == 0 ? " id=\"additional_#{key.to_s}_clone\"" : '' %>>
+      <div <%= if index == 0 ? " id=\"additional_#{key.to_s}_clone\"" : '' %>>
             <%= f.select "rights", options_for_select(Sufia.config.cc_licenses, v), include_blank: true %>
         <%= render partial: "generic_files/edit_fields/suffix", locals: { key: key, index: index } %>
-      </div><!-- /controls -->              
+      </div>
       <div id="additional_<%= key %>_elements"></div>
 

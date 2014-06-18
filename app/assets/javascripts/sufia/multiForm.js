@@ -6,7 +6,7 @@
     var settings = $.extend( { }, options);
 
     function addField() {
-      count = $(this).closest('.control-group').find('.controls').size();
+      count = $(this).closest('.form-group').find('input').size();
       var cloneId = this.id.replace("submit", "clone");
       var newId = this.id.replace("submit", "elements");
       var cloneElem = $('#'+cloneId).clone();
@@ -29,7 +29,7 @@
       textFields = cloneElem.find('input[type=text]')
       $.each(textFields, function(n, tf) {
         newName = $(tf).attr('name').replace('[0]', '['+count+']');
-        $(tf).attr('name', newName).attr("value", "").attr("required", false)
+        $(tf).attr('name', newName).val('').attr("required", false)
       })
 
       if (settings.afterAdd) {

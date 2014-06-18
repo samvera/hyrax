@@ -1,6 +1,6 @@
 <h1>Contact</h1>
-<div class="alert">
-  <%= render partial: 'directions' %>
+<div class="alert alert-info">
+  <%= render 'directions' %>
 </div>
 
 <% if user_signed_in? %>
@@ -14,42 +14,34 @@
 <h2>Contact Form</h2>
 <%= form_for(@contact_form, url: sufia.contact_form_index_path, html: {class: 'form-horizontal well'}) do |f| %>
   <%= f.text_field :contact_method, class: 'hide' %>
-  <div class="control-group">
-    <%= f.label :category, 'Issue Type', class: "control-label" %>
-    <div class="controls">
-      <% issue_types = ContactForm::ISSUE_TYPES.dup %>
-      <% issue_types.unshift(['Select an Issue Type', nil]) %>
-      <%= f.select 'category', options_for_select(issue_types), {}, {class: 'input-large', required: true } %>
+  <div class="form-group">
+    <%= f.label :category, 'Issue Type', class: "col-sm-2 control-label" %>
+    <% issue_types = ContactForm::ISSUE_TYPES.dup %>
+    <% issue_types.unshift(['Select an Issue Type', nil]) %>
+    <div class="col-sm-10">
+      <%= f.select 'category', options_for_select(issue_types), {}, {class: 'form-control', required: true } %>
     </div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :name, 'Your Name', class: "control-label" %>
-    <div class="controls"><%= f.text_field :name, class: "input-xlarge", value: nm, required: true %>  </div>
+  <div class="form-group">
+    <%= f.label :name, 'Your Name', class: "col-sm-2 control-label" %>
+    <div class="col-sm-10"><%= f.text_field :name, value: nm, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :email, 'Your Email', class: "control-label" %>
-    <div class="controls">
-    <%= f.text_field :email, class: "input-xlarge", value: em, required: true %>
-    </div>
+  <div class="form-group">
+    <%= f.label :email, 'Your Email', class: "col-sm-2 control-label" %>
+    <div class="col-sm-10"><%= f.text_field :email, value: em, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :subject, 'Subject', class: "control-label" %>
-    <div class="controls">
-      <%= f.text_field :subject, class: "input-xlarge", value: "", required: true %>
-    </div>
+  <div class="form-group">
+    <%= f.label :subject, 'Subject', class: "col-sm-2 control-label" %>
+    <div class="col-sm-10"><%= f.text_field :subject, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :message, 'Message', class: "control-label" %>
-    <div class="controls">
-    <%= f.text_area :message, class: "input-xlarge", value: "", required: true %>
-    </div>
+  <div class="form-group">
+    <%= f.label :message, 'Message', class: "col-sm-2 control-label" %>
+    <div class="col-sm-10"><%= f.text_area :message, rows: 4, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="form-actions">
-    <%= f.submit value: "Send", class: "btn-primary btn-large"  %>
-  </div>
+  <%= f.submit value: "Send", class: "btn btn-primary" %>
 <% end %>

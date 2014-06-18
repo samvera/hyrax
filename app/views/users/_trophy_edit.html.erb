@@ -2,16 +2,14 @@
   <i class="glyphicon glyphicon-star trophy-on" ></i> Remove Highlight Designation
   <a href="#" id="remove_trophy_help" rel="popover" data-content="If you would like to remove a highlight designation, check the box and save your profile." data-original-title="Remove Highlight Designation"><i class="glyphicon glyphicon-question-sign"></i></a>
 </div>
-<div class="control-group">
+<div class="form-group">
   <dl>
     <% trophies.each do |t| %>
       <dd>
-        <div class="controls">
-          <%= link_to t, sufia.generic_file_path(t) %>
-          <label class="checkbox fleft">
-            <%= check_box_tag "remove_trophy_#{t.noid}" %> Yes &nbsp;
-          </label>
-        </div>
+        <%= link_to t, sufia.generic_file_path(t) %>
+        <label class="checkbox fleft">
+          <%= check_box_tag "remove_trophy_#{t.noid}" %> Yes &nbsp;
+        </label>
       </dd>
       <br/>
     <% end %>

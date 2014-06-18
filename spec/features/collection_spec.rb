@@ -159,7 +159,7 @@ describe 'collection' do
       fill_in('Title', with: new_title)
       fill_in('Description', with: new_description)
       fill_in('Creator', with: creators.first)
-      within('.form-actions') do
+      within('.primary-actions') do
         click_button('Update Collection')
       end
       page.should_not have_content(@collection.title)
