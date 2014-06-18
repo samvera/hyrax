@@ -1,6 +1,14 @@
 $gray-lightish: #bbb;
 $gray-lighter: #eee;
 
+.table thead th {
+  text-align: center;
+}
+
+th div.dropdown {
+    top: 1.25em;
+  }
+
 .table {
   > tbody {
     > tr[id*='detail_'] {
@@ -60,10 +68,6 @@ $gray-lighter: #eee;
     }
   }
 
-  .facet_select {
-
-  }
-
   .facet-count {
     padding-left: 0.2em;
     padding-right: 0.2em;
@@ -74,6 +78,12 @@ $gray-lighter: #eee;
 
 }
 
+.cog {
+  position: relative;
+  top: -1.20em;
+  left: 1.25em;
+}
+
 .batch-info {
   margin-bottom: 0.8em;
 }
@@ -82,7 +92,7 @@ $gray-lighter: #eee;
   cursor: pointer;
 }
 .sort-toggle {
-  padding: .5em 0;
+  padding: 2em 0 .5em 0;
 }
 .caret.up {
   border-top: 0;
