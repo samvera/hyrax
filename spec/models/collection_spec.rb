@@ -127,4 +127,10 @@ describe Collection do
     expect(subject.respond_to?(:representative)).to eq true
   end
 
+  it 'can contain non-collection-member generic files' do
+    # GenericFiles that are associated with the Collection,
+    # but aren't members, for example, the representative file.
+    expect(subject.respond_to?(:generic_files)).to eq true
+  end
+
 end

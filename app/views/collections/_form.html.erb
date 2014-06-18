@@ -10,6 +10,8 @@
   <%= render 'form_descriptive_fields', curation_concern: @collection, f: f %>
   <%= render partial: 'form_permission', locals: {f: f} %>
 
+  <%= render "form_representative_image", curation_concern: @collection, f: f %>
+
   <div class="row">
     <div class="col-md-12 form-actions">
       <%= f.submit class: 'btn btn-primary require-contributor-agreement' %>
