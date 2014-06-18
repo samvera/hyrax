@@ -26,10 +26,10 @@ describe "Display User Dashboard" do
 
   it "should let the user view files" do
     click_link "View Files"
-    page.should have_content "Files"
-    page.should have_content "Collections"
-    page.should have_content "Highlighted"
-    page.should have_content "Shared with Me"
+    page.should have_content "My Files"
+    page.should have_content "My Collections"
+    page.should have_content "My Highlights"
+    page.should have_content "Files Shared with Me"
   end
 
 end

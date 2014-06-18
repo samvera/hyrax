@@ -54,14 +54,19 @@ en:
       view_files:           "View Files"
       user_activity:        "User Activity"
       no_activity:          "User has no recent activity"
-      user_notiticiations:  "User Notifications"
+      user_notifications:   "User Notifications"
       no_notifications:     "User has no notifications"
       stats:
-        heading:     "Your Statistics"
-        files:       "Files you've deposited"
-        collections: "Collections you've created"
-        following:   "People you follow"
-        followers:   "People who are following you"
+        heading:            "Your Statistics"
+        files:              "Files you've deposited"
+        collections:        "Collections you've created"
+        following:          "People you follow"
+        followers:          "People who are following you"
+      my:
+        files:        "My Files"
+        collections:  "My Collections" 
+        highlights:   "My Highlights"
+        shares:       "Files Shared with Me"
 
     metadata_help:
       resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."
