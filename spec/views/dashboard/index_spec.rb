@@ -74,16 +74,39 @@ describe "dashboard/index.html.erb" do
           { action: 'so and so edited their profile', timestamp: @now },
           { action: 'so and so uploaded a file', timestamp: (@now - 360 ) }
         ])
-        assign(:notifications, FactoryGirl.create(:user_with_mail).mailbox.inbox)
       end
 
       it "should include recent activities and notifications" do
         render
         expect(rendered).to include "so and so edited their profile"
         expect(rendered).to include "6 minutes ago"
-        expect(rendered).to include "You've got mail"
-        expect(rendered).to include "Sample notification"
       end
+
+    end
+
+    context "with notifications" do
+
+      before do
+        assign(:notifications, FactoryGirl.create(:user_with_mail).mailbox.inbox)
+      end
+
+      it "shows a link to all notifications" do
+        render
+        expect(rendered).to include "See all notifications"
+      end
+
+      it "defaults to a limited number of notifications" do
+        render
+        expect(rendered).to include "Sample notification 2."
+        expect(rendered).to_not include "Sample notification 1."
+      end
+
+      it "allows showing more notifications" do
+        Sufia.config.max_notifications_for_dashboard = 6
+        render
+        expect(rendered).to include "Sample notification 1."
+      end
+
 
     end
 

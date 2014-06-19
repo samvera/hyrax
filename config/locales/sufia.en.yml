@@ -47,15 +47,16 @@ en:
     homepage:
       featured_works:       'Featured Works'
     dashboard:
-      title:                "My Dashboard"
-      greeting:             "Hello, "
-      upload:               "Upload"
-      create_collection:    "Create Collection"
-      view_files:           "View Files"
-      user_activity:        "User Activity"
-      no_activity:          "User has no recent activity"
-      user_notifications:   "User Notifications"
-      no_notifications:     "User has no notifications"
+      title:                    "My Dashboard"
+      greeting:                 "Hello, "
+      upload:                   "Upload"
+      create_collection:        "Create Collection"
+      view_files:               "View Files"
+      user_activity:            "User Activity"
+      no_activity:              "User has no recent activity"
+      user_notiticiations:      "User Notifications"
+      no_notifications:         "User has no notifications"
+      additional_notifications: "See all notifications"
       stats:
         heading:            "Your Statistics"
         files:              "Files you've deposited"
