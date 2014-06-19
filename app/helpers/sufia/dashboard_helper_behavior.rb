@@ -26,7 +26,7 @@ module Sufia
     end
 
     def number_of_collections user=current_user
-      Collection.where(Solrizer.solr_name('depositor', :stored_searchable) => user.user_key).count
+      ::Collection.where(Solrizer.solr_name('depositor', :stored_searchable) => user.user_key).count
     end
 
     def notifications_for_dashboard
