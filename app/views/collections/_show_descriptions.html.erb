@@ -1,8 +1,13 @@
 <h2 class="non lower">Descriptions</h2>
 <table class="table table-striped"><!-- class="verticalheadings"> -->
   <tbody>
-    <%= render partial: 'collections/show_fields/title', locals: {collection: @collection} %>
-    <%= render partial: 'collections/show_fields/creator', locals: {collection: @collection} %>
-    <%= render partial: 'collections/show_fields/description', locals: {collection: @collection} %>
+    <% (@collection.terms_for_display).each do |term| %>
+      <% if @collection.send(term).present? %>
+        <tr>
+          <th><%= get_label(term) %></th>
+          <td><%= render_show_field_partial_with_action("records", term, {record: @collection}) %> </td>
+        </tr>
+      <% end %>
+    <% end %>
   </tbody>
 </table> <!-- /verticalheadings -->

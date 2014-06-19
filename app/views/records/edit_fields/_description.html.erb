@@ -1,8 +1,7 @@
-      <div <%  if index == 0 %> id="additional_<%= key.to_s %>_clone" <% end %>>
+      <div class="col-sm-9" <%  if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
         <% required = render_req && (index == 0) && f.object.required?(key) %>
-        <%= text_area_tag "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", v, 
-          id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", class: "input-large", required: required  %>
-        
+        <%= f.text_area :description, name:"#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "input-large", required: required %>
+        <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
         <% unless f.object.class.unique?(key) %>
           <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
         <% end %>

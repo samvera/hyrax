@@ -1,5 +1,9 @@
-      <div class="col-sm-9" <%  if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
-        <%= f.text_area :description, name:"generic_file[#{key.to_s}][]", id: "generic_file_{key.to_s}", value: v, class: "input-large" %>
-        <%= render partial: "generic_files/edit_fields/suffix", locals: { key: key, index: index } %>
-      </div>
-      <div id="additional_<%= key %>_elements"></div>
+        <div class="col-sm-9" <%  if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
+          <% required = render_req && (index == 0) && f.object.required?(key) %>
+          <%= f.text_area :description, name:"generic_file[#{key.to_s}][]", id: "generic_file_#{key.to_s}", value: v, class: "input-large", required: required %>
+          <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
+          <% unless f.object.class.unique?(key) %>
+            <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
+          <% end %>
+        </div>
+        <div id="additional_<%= key %>_elements"></div>

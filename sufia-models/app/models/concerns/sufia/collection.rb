@@ -15,7 +15,8 @@ module Sufia
     end
 
     def terms_for_display
-      [:title, :creator, :description, :date_modified, :date_uploaded]
+      [:resource_type, :title, :creator, :contributor, :description, :tag, :rights, :publisher, :date_created,
+       :subject, :language, :identifier, :based_near, :related_url]
     end
 
     def terms_for_editing

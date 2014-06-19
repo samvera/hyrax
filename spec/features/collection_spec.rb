@@ -6,7 +6,7 @@ describe 'collection' do
     first('#hydra-collection-add').click
     expect(page).to have_content 'Create New Collection'
     fill_in('Title', with: title)
-    fill_in('Description', with: description)
+    fill_in('Abstract or Summary', with: description)
     click_button("Create Collection")
     expect(page).to have_content 'Items in this Collection'
     expect(page).to have_content title
@@ -157,7 +157,7 @@ describe 'collection' do
       new_description = "Completely new Description text."
       creators = ["Dorje Trollo", "Vajrayogini"]
       fill_in('Title', with: new_title)
-      fill_in('Description', with: new_description)
+      fill_in('Abstract or Summary', with: new_description)
       fill_in('Creator', with: creators.first)
       within('.primary-actions') do
         click_button('Update Collection')
