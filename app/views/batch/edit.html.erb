@@ -17,7 +17,7 @@
   <%= render partial: 'generic_files/permission_form', formats: [:html], locals: { gf: @generic_file, batch: @batch } %>
 
   <div class="row" id="permissions_submit">
-    <%= button_tag '<i class="glyphicon glyphicon-floppy-disk"></i> Save'.html_safe, type: 'submit', class: 'btn-primary btn-large',
+    <%= button_tag '<i class="glyphicon glyphicon-floppy-disk"></i> Save'.html_safe, type: 'submit', class: 'btn btn-primary btn-lg',
         onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_permission" %>
   </div>
 

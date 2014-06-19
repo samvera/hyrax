@@ -4,10 +4,10 @@
   <%= form_tag(sufia.generic_files_path, id: 'browse_everything_form', method: 'post') do %>
       <%= render partial: 'generic_files/upload/tos_checkbox' %>
       <%= hidden_field_tag(:batch_id, @batch_noid) %>
-      <%= button_tag(t('sufia.upload.browse_everything.browse_files_button'), type: 'button', class: 'btn btn-large btn-success', id: "browse-btn",
+      <%= button_tag(t('sufia.upload.browse_everything.browse_files_button'), type: 'button', class: 'btn btn-lg btn-success', id: "browse-btn",
         'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
         'data-target' => '#browse_everything_form' ) %>
-      <%= button_tag("Submit selected files", type: 'submit', class: 'activate-submit btn btn-large btn-primary', id: "submit-btn") %>
+      <%= button_tag("Submit selected files", type: 'submit', class: 'activate-submit btn btn-lg btn-primary', id: "submit-btn") %>
   <% end %>
 
   <p id="status">0 items selected</p>
