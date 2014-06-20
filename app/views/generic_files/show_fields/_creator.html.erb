@@ -1,7 +1,0 @@
-<% @generic_file.creator.each do |creator| %>
-        <span itemprop="creator" itemscope itemtype="http://schema.org/Thing">
-    <span itemprop="name"><%= link_to_facet(creator, Solrizer.solr_name("desc_metadata__creator", :facetable)) %></span>
-        </span>
-  <br />
-<% end %>
-
