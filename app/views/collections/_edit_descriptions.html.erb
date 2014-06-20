@@ -6,7 +6,7 @@
       <div class="well">
 
         <% (collection.terms_for_editing).each do |term| %>
-          <%= render partial: "generic_files/field_form", locals: { generic_file: collection, f: f, render_req: true, key: term } %>
+          <%= render partial: "records/edit_field", locals: { record: collection, f: f, render_req: true, key: term } %>
         <% end %>
    
       </div><!-- /well -->

@@ -1,10 +1,7 @@
-<%# convert class variable to a local variable if the local hasn't been set %>
-<% generic_file = @generic_file unless generic_file  %>
-
       <div class="form-group">
         <%= f.label :resource_type, "Resource Types", class: "control-label", for: "resource_type" %>
         <p class="help-block">You may select multiple types to apply<p>
-        <%= f.select :resource_type, options_for_select(Sufia.config.resource_types.keys, generic_file.resource_type), {},
+        <%= f.select :resource_type, options_for_select(Sufia.config.resource_types.keys), {},
           {multiple: true, size: 7} %>
         <%= help_icon(:resource_type) %>
       </div>

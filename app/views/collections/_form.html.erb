@@ -1,4 +1,4 @@
-<%= bootstrap_form_for [collections, @collection], html: {class: 'form-horizontal editor'} do |f| %>
+<%= form_for [collections, @collection], html: {class: 'form-horizontal editor'} do |f| %>
   <div id="descriptions_display">
     <h2 class="non lower">Descriptions <small class="pull-right"><span class="error">*</span> indicates required fields</small> </h2>
     <div class="well">
@@ -16,9 +16,9 @@
   
   <div class="primary-actions">
     <% if params[:action] == "new" %>
-      <%= f.primary 'Create Collection' %>
+      <%= f.button 'Create Collection', type: 'submit', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection" %>
     <% else %>
-      <%= f.primary 'Update Collection' %>
+      <%= f.button 'Update Collection', type: 'submit', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection" %>
     <% end %>
     <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
   </div>

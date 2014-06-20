@@ -1,6 +1,5 @@
-      <div <%= if index == 0 ? " id=\"additional_#{key.to_s}_clone\"" : '' %>>
-            <%= f.select "rights", options_for_select(Sufia.config.cc_licenses, v), include_blank: true %>
-        <%= render partial: "generic_files/edit_fields/suffix", locals: { key: key, index: index } %>
+      <div class="col-sm-9" <% if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
+        <%= f.select "rights", options_for_select(Sufia.config.cc_licenses, v), include_blank: true %>
+        <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
       </div>
       <div id="additional_<%= key %>_elements"></div>
-
