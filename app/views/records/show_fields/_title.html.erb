@@ -1,4 +1,6 @@
-            <span itemprop="name">
-              <%= record.title %>
-            </span>
-
+            <% Array(record.title).each do |title| %>
+              <span itemprop="name">
+              <%= title %>
+              </span>
+              <br />
+            <% end %>

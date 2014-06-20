@@ -1,7 +1,0 @@
-<% @generic_file.based_near.each do |bn| %>
-  <span itemprop="contentLocation" itemscope itemtype="http://schema.org/Place">
-    <span itemprop="name"><%= link_to_facet(bn, Solrizer.solr_name("desc_metadata__based_near", :facetable)) %></span>
-  </span>
-  <br />
-<% end %>
-
