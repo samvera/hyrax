@@ -2,7 +2,7 @@
 
 # Please Note!
 Sufia is currently in transition to a new 4.0 release scheduled for late summer 2014.  If wish to use Sufia now,
-please ensure you using version 3.7.2, available from RubyGems.org.  For documentation specific to this version,
+please ensure you using version 3.7.2, available from RubyGems.org. For documentation specific to this version,
 please consult the [Sufia 3.7.2 documentation](http://rubydoc.info/gems/sufia/3.7.2/frames).
 
 If you have questions or need help, please email `hydra-tech@googlegroups.com`
@@ -69,7 +69,7 @@ rake db:migrate
 ### Get a copy of hydra-jetty
 ```
 rake jetty:clean
-rake jetty:config
+rake sufia:jetty:config
 rake jetty:start
 ```
 
@@ -200,8 +200,8 @@ Sufia provides a tag cloud on the home page.  To change which field is displayed
 ```ruby
 configure_blacklight do |config|
   ...
-  
-  # Specify which field to use in the tag cloud on the homepage.  
+
+  # Specify which field to use in the tag cloud on the homepage.
   # To disable the tag cloud, comment out this line.
   config.tag_cloud_field_name = Solrizer.solr_name("desc_metadata__tag", :facetable)
 end

@@ -289,6 +289,7 @@ describe GenericFile do
       subject.related_url = "http://example.org/TheWork/"
       subject.mime_type = "image/jpeg"
       subject.format_label = "JPEG Image"
+      subject.full_text.content = 'abcxyz'
     end
     it "supports to_solr" do
       local = subject.to_solr
@@ -314,6 +315,7 @@ describe GenericFile do
       expect(local[Solrizer.solr_name("desc_metadata__based_near")]).to eq ["Medina, Saudi Arabia"]
       expect(local[Solrizer.solr_name("mime_type")]).to eq ["image/jpeg"]
       expect(local["noid_tsi"]).to eq 'stubbed_pid'
+      expect(local['all_text_timv']).to eq('abcxyz')
     end
   end
   it "should support multi-valued fields in solr" do
@@ -348,7 +350,7 @@ describe GenericFile do
   end
   describe "trophies" do
     before do
-      u = FactoryGirl.create(:jill)
+      u = FactoryGirl.find_or_create(:jill)
       @f = GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata(u)
         gf.save!
@@ -367,7 +369,7 @@ describe GenericFile do
 
   describe "audit" do
     before do
-      u = FactoryGirl.create(:jill)
+      u = FactoryGirl.find_or_create(:jill)
       f = GenericFile.new
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       f.apply_depositor_metadata(u)
@@ -512,12 +514,12 @@ describe GenericFile do
         myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, 'content', 'sufia_test4.pdf')
         myfile.label = 'label123'
         myfile.apply_depositor_metadata('mjg36')
+        # characterize method saves
         myfile.characterize
-        myfile.save
         @myfile = myfile.reload
       end
       after(:all) do
-        @myfile.delete
+        @myfile.destroy
       end
       it "should return expected results after a save" do
         @myfile.file_size.should == ['218882']
@@ -535,11 +537,13 @@ describe GenericFile do
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
         @myfile.filename[0].should == @myfile.label
       end
-
       it "should append each term only once" do
         @myfile.append_metadata
         @myfile.format_label.should == ["Portable Document Format"]
         @myfile.title.should include("Microsoft Word - sample.pdf.docx")
+      end
+      it 'includes extracted full-text content' do
+        expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMicrosoft Word - sample.pdf.docx\n\n\n \n \n\n \n\n \n\n \n\nThis PDF file was created using CutePDF. \n\nwww.cutepdf.com")
       end
     end
   end

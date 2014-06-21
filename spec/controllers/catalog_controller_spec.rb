@@ -12,24 +12,35 @@ describe CatalogController do
   describe "#index" do
     before (:all) do
       @user = FactoryGirl.find_or_create(:jill)
-      GenericFile.delete_all
-      @gf1 =  GenericFile.new(title:'Test Document PDF', filename:'test.pdf', tag:'rocks', read_groups:['public'])
-      @gf1.apply_depositor_metadata('mjg36')
-      @gf1.save
+      @gf1 = GenericFile.new(title: 'Test Document PDF', filename: 'test.pdf', tag: 'rocks', read_groups: ['public']).tap do |f|
+        f.apply_depositor_metadata('mjg36')
+        f.save
+      end
 
-      @gf2 =  GenericFile.new(title:'Test 2 Document', filename:'test2.doc', tag:'clouds', contributor:'Contrib1', read_groups:['public'])
-      @gf2.apply_depositor_metadata('mjg36')
-      @gf2.save
+      @gf2 = GenericFile.new(title: 'Test 2 Document', filename: 'test2.doc', tag: 'clouds', contributor: 'Contrib1', read_groups: ['public']).tap do |f|
+        f.apply_depositor_metadata('mjg36')
+        f.full_text.content = 'full_textfull_text'
+        f.save
+      end
 
-      @editable_file = GenericFile.new.tap do |gf|
-        gf.apply_depositor_metadata(@user.user_key)
-        gf.save!
+      @editable_file = GenericFile.new.tap do |f|
+        f.apply_depositor_metadata(@user.user_key)
+        f.save!
       end
     end
 
     after (:all) do
-      @gf1.delete
-      @gf2.delete
+      GenericFile.destroy_all
+    end
+
+    describe 'full-text search' do
+      it 'finds records' do
+        get :index, q: 'full_textfull_text'
+        expect(response).to be_success
+        expect(response).to render_template('catalog/index')
+        assigns(:document_list).count.should eql(1)
+        assigns(:document_list).map(&:id).should == [@gf2.id]
+      end
     end
 
     describe "term search" do

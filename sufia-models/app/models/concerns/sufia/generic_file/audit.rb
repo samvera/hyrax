@@ -2,8 +2,6 @@ module Sufia
   module GenericFile
     module Audit
       extend ActiveSupport::Concern
-      included do
-      end
 
       NO_RUNS = 999
 
@@ -17,6 +15,7 @@ module Sufia
 
       def per_version(&block)
         self.datastreams.each do |dsid, ds|
+          next if ds == full_text
           ds.versions.each do |ver|
             block.call(ver)
           end

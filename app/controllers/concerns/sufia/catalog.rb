@@ -14,6 +14,5 @@ module Sufia
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"info:fedora/afmodel:GenericFile\" \"info:fedora/afmodel:Collection\")"
       end
-
   end
 end

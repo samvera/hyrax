@@ -18,6 +18,7 @@ module Sufia
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::ReloadOnSave
+    include Sufia::GenericFile::FullTextIndexing
     include Hydra::Collections::Collectible
 
     included do
@@ -74,7 +75,7 @@ module Sufia
       relateds = begin
                    self.batch.generic_files
                  rescue NoMethodError => e
-                   #batch is nil - When would this ever happen?
+                   # batch is nil - When would this ever happen?
                    batch_id = self.object_relations["isPartOf"].first || self.object_relations[:is_part_of].first
                    return [] if batch_id.nil?
                    self.class.find(Solrizer.solr_name('is_part_of', :symbol) => batch_id)
@@ -93,6 +94,7 @@ module Sufia
         solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
         solr_doc[Solrizer.solr_name('file_format')] = file_format
         solr_doc[Solrizer.solr_name('file_format', :facetable)] = file_format
+        solr_doc['all_text_timv'] = full_text.content
         solr_doc = index_collection_pids(solr_doc)
       end
     end
