@@ -2,22 +2,22 @@ require 'spec_helper'
 
 describe 'catalog searching' do
 
-  before :all do
-    @gf1 =  GenericFile.new.tap do |f|
+  before(:all) do
+    @gf1 = GenericFile.new.tap do |f|
       f.title = 'title 1'
       f.tag = ["tag1", "tag2"]
       f.apply_depositor_metadata('jilluser')
       f.read_groups = ['public']
       f.save!
     end
-    @gf2 =  GenericFile.new.tap do |f|
+    @gf2 = GenericFile.new.tap do |f|
       f.title = 'title 2'
       f.tag = ["tag2", "tag3"]
       f.apply_depositor_metadata('jilluser')
       f.read_groups = ['public']
       f.save!
     end
-    @col =  Collection.new.tap do |f|
+    @col = Collection.new.tap do |f|
       f.title = 'title 3'
       f.tag = ["tag3", "tag4"]
       f.apply_depositor_metadata('jilluser')
@@ -33,6 +33,7 @@ describe 'catalog searching' do
   end
 
   before do
+    allow(User).to receive(:find_by_user_key).and_return(stub_model(User, twitter_handle: 'bob'))
     sign_in :user
     visit '/'
   end

@@ -5,6 +5,10 @@
 <!-- added for use on small devices like phones" -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+<% if content_for?(:meta_tags) %>
+   <%= yield :meta_tags %>
+<% end %>
+
 <title><%= h(@page_title || application_name) %></title>
 <!-- application css -->
 <%= stylesheet_link_tag 'application' %>

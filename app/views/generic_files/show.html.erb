@@ -1,3 +1,22 @@
+<% content_for(:meta_tags) do %>
+<%
+   tweeter = User.find_by_user_key(@generic_file.depositor).twitter_handle
+   tweeter = tweeter.present? ? "@#{tweeter}" : t('sufia.product_twitter_handle') %>
+  <meta name="twitter:card" content="product">
+  <meta name="twitter:site" content="<%= t('sufia.product_twitter_handle') %>"/>
+  <meta name="twitter:creator" content="<%= tweeter %>"/>
+  <meta property="og:site_name" content="<%= t('sufia.product_name') %>"/>
+  <meta property="og:type" content="object"/>
+  <meta property="og:title" content="<%= @generic_file.title.first %>"/>
+  <meta property="og:description" content="<%= @generic_file.description.first.truncate(200) rescue @generic_file.title.first %>"/>
+  <meta property="og:image" content="<%= sufia.download_url(@generic_file, datastream_id: 'thumbnail') %>"/>
+  <meta property="og:url" content="<%= sufia.generic_file_url(@generic_file.noid) %>"/>
+  <meta name="twitter:data1" content="<%= @generic_file.tag.join(', ') %>"/>
+  <meta name="twitter:label1" content="Keywords"/>
+  <meta name="twitter:data2" content="<%= @generic_file.rights.first %>"/>
+  <meta name="twitter:label2" content="Rights"/>
+<% end %>
+
 <%= javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>
 
 <%= javascript_tag do %>
