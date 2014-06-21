@@ -4,7 +4,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../internal", __FILE__))
 
 require 'database_cleaner'
-
+require 'mida'
 require 'rspec/rails'
 require 'rspec/its'
 require 'rspec/active_model/mocks'
@@ -16,7 +16,6 @@ require 'capybara/rails'
 require 'equivalent-xml/rspec_matchers'
 
 require File.expand_path('../support/features', __FILE__)
-
 
 if ENV['COVERAGE']
   require 'simplecov'
@@ -91,7 +90,6 @@ RSpec.configure do |config|
   config.after do
     DatabaseCleaner.clean
   end
-
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
