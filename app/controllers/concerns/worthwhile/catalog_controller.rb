@@ -36,17 +36,15 @@ module Worthwhile::CatalogController
 
       # solr fields that will be treated as facets by the blacklight application
       #   The ordering of the field names is the order of the display
-      config.add_facet_field solr_name("human_readable_type", :facetable), label: t('worthwhile.facet.human_readable_type')
-      "Type of Work" 
-      config.add_facet_field solr_name(:desc_metadata__creator, :facetable), label: t('worthwhile.facet.creator'), limit: 5
-
-      config.add_facet_field solr_name("desc_metadata__tag", :facetable), label: t('worthwhile.facet.tag'), limit: 5
-      config.add_facet_field solr_name("desc_metadata__subject", :facetable), label: t('worthwhile.facet.subject'), limit: 5
-      config.add_facet_field solr_name("desc_metadata__language", :facetable), label: t('worthwhile.facet.language'), limit: 5
-      config.add_facet_field solr_name("desc_metadata__based_near", :facetable), label: t('worthwhile.facet.based_near'), limit: 5
-      config.add_facet_field solr_name("desc_metadata__publisher", :facetable), label: t('worthwhile.facet.publisher'), limit: 5
-      config.add_facet_field solr_name("file_format", :facetable), label: t('worthwhile.facet.file_format'), limit: 5
-      config.add_facet_field "generic_type_sim", label: t('worthwhile.facet.type'), show: false
+      config.add_facet_field solr_name("human_readable_type", :facetable)
+      config.add_facet_field solr_name('desc_metadata__creator', :facetable), limit: 5
+      config.add_facet_field solr_name("desc_metadata__tag", :facetable), limit: 5
+      config.add_facet_field solr_name("desc_metadata__subject", :facetable), limit: 5
+      config.add_facet_field solr_name("desc_metadata__language", :facetable), limit: 5
+      config.add_facet_field solr_name("desc_metadata__based_near", :facetable), limit: 5
+      config.add_facet_field solr_name("desc_metadata__publisher", :facetable), limit: 5
+      config.add_facet_field solr_name("file_format", :facetable), limit: 5
+      config.add_facet_field "generic_type_sim", show: false
 
       # Have BL send all facet field names to Solr, which has been the default
       # previously. Simply remove these lines if you'd rather use Solr request
@@ -55,40 +53,40 @@ module Worthwhile::CatalogController
 
       # solr fields to be displayed in the index (search results) view
       #   The ordering of the field names is the order of the display
-      config.add_index_field solr_name("desc_metadata__description", :stored_searchable, type: :string), label: "Description"
-      config.add_index_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), label: "Keyword"
-      config.add_index_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), label: "Subject"
-      config.add_index_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), label: "Creator"
-      config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), label: "Contributor"
-      config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), label: "Publisher"
-      config.add_index_field solr_name("desc_metadata__based_near", :stored_searchable, type: :string), label: "Location"
-      config.add_index_field solr_name("desc_metadata__language", :stored_searchable, type: :string), label: "Language"
-      config.add_index_field solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :string), label: "Date Uploaded"
-      config.add_index_field solr_name("desc_metadata__date_modified", :stored_sortable, type: :string), label: "Date Modified"
-      config.add_index_field solr_name("desc_metadata__date_created", :stored_searchable, type: :string), label: "Date Created"
-      config.add_index_field solr_name("desc_metadata__rights", :stored_searchable, type: :string), label: "Rights"
-      config.add_index_field solr_name("human_readable_type", :stored_searchable, type: :string), label: "Resource Type"
-      config.add_index_field solr_name("desc_metadata__format", :stored_searchable, type: :string), label: "File Format"
-      config.add_index_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), label: "Identifier"
+      config.add_index_field solr_name("desc_metadata__description", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__tag", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__subject", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__creator", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__based_near", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__language", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__date_uploaded", :stored_sortable)
+      config.add_index_field solr_name("desc_metadata__date_modified", :stored_sortable)
+      config.add_index_field solr_name("desc_metadata__date_created", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__rights", :stored_searchable)
+      config.add_index_field solr_name("human_readable_type", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__format", :stored_searchable)
+      config.add_index_field solr_name("desc_metadata__identifier", :stored_searchable)
 
       # solr fields to be displayed in the show (single result) view
       #   The ordering of the field names is the order of the display
-      config.add_show_field solr_name("desc_metadata__title", :stored_searchable, type: :string), label: "Title"
-      config.add_show_field solr_name("desc_metadata__description", :stored_searchable, type: :string), label: "Description"
-      config.add_show_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), label: "Keyword"
-      config.add_show_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), label: "Subject"
-      config.add_show_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), label: "Creator"
-      config.add_show_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), label: "Contributor"
-      config.add_show_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), label: "Publisher"
-      config.add_show_field solr_name("desc_metadata__based_near", :stored_searchable, type: :string), label: "Location"
-      config.add_show_field solr_name("desc_metadata__language", :stored_searchable, type: :string), label: "Language"
-      config.add_show_field solr_name("desc_metadata__date_uploaded", :stored_searchable, type: :string), label: "Date Uploaded"
-      config.add_show_field solr_name("desc_metadata__date_modified", :stored_searchable, type: :string), label: "Date Modified"
-      config.add_show_field solr_name("desc_metadata__date_created", :stored_searchable, type: :string), label: "Date Created"
-      config.add_show_field solr_name("desc_metadata__rights", :stored_searchable, type: :string), label: "Rights"
-      config.add_show_field solr_name("human_readable_type", :stored_searchable, type: :string), label: "Resource Type"
-      config.add_show_field solr_name("desc_metadata__format", :stored_searchable, type: :string), label: "File Format"
-      config.add_show_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), label: "Identifier"
+      config.add_show_field solr_name("desc_metadata__title", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__description", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__tag", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__subject", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__creator", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__contributor", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__publisher", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__based_near", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__language", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__date_uploaded", :stored_sortable)
+      config.add_show_field solr_name("desc_metadata__date_modified", :stored_sortable)
+      config.add_show_field solr_name("desc_metadata__date_created", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__rights", :stored_searchable)
+      config.add_show_field solr_name("human_readable_type", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__format", :stored_searchable)
+      config.add_show_field solr_name("desc_metadata__identifier", :stored_searchable)
 
       # "fielded" search configuration. Used by pulldown among other places.
       # For supported keys in hash, see rdoc for Blacklight::SearchFields
