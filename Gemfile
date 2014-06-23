@@ -14,8 +14,6 @@ group :test do
   gem 'poltergeist'
 end
 
-gem 'hydra-head', github: 'projecthydra/hydra-head', ref: 'cf479a5'
-
 group :develop, :test do
   gem 'debugger'
 end
