@@ -41,6 +41,11 @@ module Sufia::Controller
     end
   end
 
+  # Override Devise method to redirect to dashboard after signing in
+  def after_sign_in_path_for(resource)
+    sufia.dashboard_index_path
+  end
+
   protected
 
   ### Hook which is overridden in Sufia::Ldap::Controller
