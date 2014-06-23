@@ -10,7 +10,7 @@ module Worthwhile::CatalogHelper
     end
   end
 
-  def all_type_tab(label = "All")
+  def all_type_tab(label = t('worthwhile.catalog.index.type_tabs.all'))
     if params[:f] && params[:f][type_field]
       local_params = params.dup
       local_params[:f] = local_params[:f].select{|k,_| k != type_field }
