@@ -2,7 +2,7 @@
 
 # Please Note!
 Sufia is currently in transition to a new 4.0 release scheduled for late summer 2014.  If wish to use Sufia now,
-please ensure you using version 3.7.2, available from RubyGems.org.  For documentation specific to this version,
+please ensure you using version 3.7.2, available from RubyGems.org. For documentation specific to this version,
 please consult the [Sufia 3.7.2 documentation](http://rubydoc.info/gems/sufia/3.7.2/frames).
 
 If you have questions or need help, please email `hydra-tech@googlegroups.com`
@@ -21,7 +21,7 @@ Sufia has the following features:
 * Version control
 * Characterization of uploaded files
 * Forms for batch editing metadata
-* Faceted search and browse (based on Blacklight)
+* Faceted search and browse
 * Social media interaction
 * User profiles
 * User dashboard for file management
@@ -31,7 +31,14 @@ Sufia has the following features:
 * Activity streams
 * Background jobs
 * Single-use links
-* Analytics
+* Google Analytics for usage statistics
+* Integration w/ cloud storage providers
+* Schema.org microdata, Open Graph meta tags, and Twitter cards for rich snippets
+* User-managed collections for grouping files
+* Full-text indexing & searching
+* Responsive, fluid, Bootstrap 3-based UI
+* Dynamically configurable featured works and researchers on homepage
+* Proxy deposit and transfers of ownership (coming soon!)
 
 ## Sufia needs the following software to work:
 1. Solr
@@ -66,7 +73,7 @@ rails g sufia -f
 rake db:migrate
 ```
 
-### Get a copy of hydra-jetty
+### Get a copy of jetty (Solr and Fedora)
 ```
 rake jetty:clean
 rake jetty:config
@@ -200,8 +207,8 @@ Sufia provides a tag cloud on the home page.  To change which field is displayed
 ```ruby
 configure_blacklight do |config|
   ...
-  
-  # Specify which field to use in the tag cloud on the homepage.  
+
+  # Specify which field to use in the tag cloud on the homepage.
   # To disable the tag cloud, comment out this line.
   config.tag_cloud_field_name = Solrizer.solr_name("desc_metadata__tag", :facetable)
 end
