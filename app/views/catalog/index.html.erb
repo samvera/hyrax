@@ -1,17 +1,7 @@
 <% content_for :page_title, "#{application_name} Search Results" %>
 <% content_for :page_class, 'search' %>
 <% content_for :page_header do %>
-  <nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse" id="type-tabs">
-        <ul class="nav navbar-nav">
-          <%= type_tab 'Works', 'Work' %>
-          <%= type_tab 'Collections', 'Collection' %>
-          <%= all_type_tab %>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <%= render 'navbar' %>
 <% end %>
 <% content_for :sidebar do %>
 
