@@ -1,6 +1,6 @@
 group :develop do
   gem 'active-fedora', github: "projecthydra/active_fedora"
 end
-gem 'rspec-rails', '~> 2.99', group: :test
+gem 'rspec-rails', '~> 3.0', group: :test
 gem 'rspec-its'
 
