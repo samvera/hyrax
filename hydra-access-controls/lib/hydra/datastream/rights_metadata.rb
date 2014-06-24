@@ -97,11 +97,9 @@ module Hydra
               xml.machine
             }
             xml.embargo{
-              xml.human
               xml.machine
             }
             xml.lease{
-              xml.human
               xml.machine
             }
           }
