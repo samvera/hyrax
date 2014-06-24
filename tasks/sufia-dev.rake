@@ -46,6 +46,7 @@ gem 'factory_girl_rails'
 gem 'poltergeist'
 gem 'rspec-its'
 gem 'rspec-activemodel-mocks'
+gem 'mida'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'" >> spec/internal/Gemfile`
     puts "Copying generator"
     `cp -r spec/support/lib/generators spec/internal/lib`

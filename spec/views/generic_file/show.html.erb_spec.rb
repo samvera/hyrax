@@ -7,8 +7,11 @@ describe 'generic_files/show.html.erb' do
       twitter_handle: 'bot4lib')
   }
 
-  let(:generic_file) {
+  let(:content) do
     content = double('content', versions: [], mimeType: 'application/pdf')
+  end
+
+  let(:generic_file) do
     stub_model(GenericFile, noid: '123',
       depositor: depositor.user_key,
       audit_stat: 1,
@@ -16,24 +19,122 @@ describe 'generic_files/show.html.erb' do
       description: ['Lorem ipsum lorem ipsum.'],
       tag: ['bacon', 'sausage', 'eggs'],
       rights: ['http://example.org/rights/1'],
+      based_near: ['Seattle, WA, US'],
+      contributor: ['Tweedledee', 'Tweedledum'],
+      creator: ['Doe, John', 'Doe, Jane'],
+      date_created: ['1984-01-02'],
+      language: ['Quechua'],
+      publisher: ['Random Publishing, Inc.'],
+      subject: ['Biology', 'Physiology', 'Ethnography'],
       content: content)
-  }
+  end
 
   before do
     allow(controller).to receive(:current_user).and_return(depositor)
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)
     allow(User).to receive(:find_by_user_key).with(generic_file.depositor).and_return(depositor)
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
+    allow(view).to receive(:on_the_dashboard?).and_return(false)
     assign(:generic_file, generic_file)
     assign(:events, [])
+    assign(:notify_number, 0)
+  end
+
+  describe 'schema.org' do
+    describe 'descriptive metadata' do
+      before do
+        render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+        @item = Mida::Document.new(rendered).items.first
+      end
+
+      it 'sets itemtype to CreativeWork' do
+        expect(@item.type).to eq('http://schema.org/CreativeWork')
+      end
+
+      it 'sets title as name' do
+        expect(@item.properties['name'].first).to eq('My Title')
+      end
+
+      it 'sets description' do
+        expect(@item.properties['description'].first).to eq('Lorem ipsum lorem ipsum.')
+      end
+
+      it 'sets tag as keywords' do
+        expect(@item.properties['keywords']).to include('bacon', 'sausage', 'eggs')
+      end
+
+      it 'sets based_near as contentLocation' do
+        based_near = @item.properties['contentLocation'].first
+        expect(based_near.type).to eq('http://schema.org/Place')
+        expect(based_near.properties['name'].first).to eq('Seattle, WA, US')
+      end
+
+      it 'sets contributor' do
+        contributors = @item.properties['contributor']
+        expect(contributors.count).to eq(2)
+        contributor = contributors.first
+        expect(contributor.type).to eq('http://schema.org/Agent')
+        expect(contributor.properties['name'].first).to eq('Tweedledee')
+      end
+
+      it 'sets creator' do
+        creators = @item.properties['creator']
+        expect(creators.count).to eq(2)
+        creator = creators.first
+        expect(creator.type).to eq('http://schema.org/Agent')
+        expect(creator.properties['name'].first).to eq('Doe, John')
+      end
+
+      it 'sets date_created as dateCreated' do
+        expect(@item.properties['dateCreated'].first).to eq('1984-01-02')
+      end
+
+      it 'sets language as inLanguage' do
+        expect(@item.properties['inLanguage'].first).to eq('Quechua')
+      end
+
+      it 'sets publisher' do
+        publisher = @item.properties['publisher'].first
+        expect(publisher.type).to eq('http://schema.org/Organization')
+        expect(publisher.properties['name'].first).to eq('Random Publishing, Inc.')
+      end
+
+      it 'sets subjects' do
+        subjects = @item.properties['about']
+        expect(subjects.count).to eq(3)
+        subject = subjects.first
+        expect(subject.type).to eq('http://schema.org/Thing')
+        expect(subject.properties['name'].first).to eq('Biology')
+      end
+
+      it 'sets depositor as accountablePerson' do
+        depositor = @item.properties['accountablePerson'].first
+        expect(depositor.type).to eq('http://schema.org/Person')
+        expect(depositor.properties['name'].first).to eq('bob')
+      end
+    end
+
+    describe 'resource type-specific itemtypes' do
+      context 'when resource_type is Audio' do
+        it 'sets itemtype to AudioObject' do
+          generic_file.resource_type = ['Audio']
+          render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+          @item = Mida::Document.new(rendered).items.first
+          expect(@item.type).to eq('http://schema.org/AudioObject')
+        end
+      end
+      context 'when resource_type is Conference Proceeding' do
+        it 'sets itemtype to ScholarlyArticle' do
+          generic_file.resource_type = ['Conference Proceeding']
+          render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+          @item = Mida::Document.new(rendered).items.first
+          expect(@item.type).to eq('http://schema.org/ScholarlyArticle')
+        end
+      end
+    end
   end
 
   describe 'twitter cards' do
-    before do
-      allow(view).to receive(:on_the_dashboard?).and_return(false)
-      assign(:notify_number, 0)
-    end
-
     it 'appears in meta tags' do
       render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       meta_twitter_tags = Nokogiri::HTML(rendered).xpath("//meta")
@@ -120,7 +221,6 @@ describe 'generic_files/show.html.erb' do
   end
 
   describe 'analytics' do
-
     context 'when enabled' do
       before do
         Sufia.config.analytics = true
@@ -147,7 +247,6 @@ describe 'generic_files/show.html.erb' do
   end
 
   describe 'featured' do
-
     context "public file" do
       before do
         allow(generic_file).to receive(:public?).and_return(true)

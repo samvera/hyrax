@@ -3,13 +3,13 @@ source 'https://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
-
 # Required for doing pagination inside an engine. See https://github.com/amatsuda/kaminari/pull/322
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'sufia-models', path: './sufia-models'
 gem 'sass-rails', '~> 4.0.0'
 
 group :development, :test do
+  gem 'mida'
   gem 'sqlite3'
   gem 'rspec-rails', '~> 3.0.1'
   gem 'rspec-its'
