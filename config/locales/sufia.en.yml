@@ -29,6 +29,9 @@ en:
           my_shares:
             label_short:  "My Shares"
             label_long:   "My Shares"
+      button:
+        html: '<span class="glyphicon glyphicon-search"></span> Go'
+        text: "Search"
     upload:
       my_computer:
         tab_label: "My Computer"
