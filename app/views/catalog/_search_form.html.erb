@@ -1,9 +1,8 @@
 <%= form_tag search_form_action, method: :get, id: "search-form-header", role: "search" do %>
   <%= render_hash_as_hidden_fields(params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
-  <div class="container-fluid">
-    <div class="row">
 
-      <div class="col-xs-10">
+    <div class="row">
+      <div class="col-xs-12">
         <div class="input-group">
           <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", 
               placeholder: t("sufia.search.form.q.placeholder") %>
@@ -12,6 +11,9 @@
           <label class="sr-only" for="search-field-header"><%= t("sufia.search.form.q.label") %></label>
 
           <div class="input-group-btn">
+            <button type="submit" class="btn btn-primary" id="search-submit-header">
+              <%= t('sufia.search.button.html') %>
+            </button>
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
               <span data-search-element="label"><%= t("sufia.search.form.option.all.label_long") %></span>
               <span class="caret"></span>
@@ -44,16 +46,9 @@
 
             </ul>
           </div><!-- /.input-group-btn -->
-        
+
         </div><!-- /.input-group -->
       </div><!-- /text field dropdown -->
-      
-      <div class="col-xs-2">
-        <button type="submit" class="btn btn-primary" id="search-submit-header">
-          <span class="glyphicon glyphicon-search"></span> Go
-        </button>
-      </div><!-- /.go -->
-    
     </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
+
 <% end %>
