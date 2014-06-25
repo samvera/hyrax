@@ -10,6 +10,6 @@ class Collection < ActiveFedora::Base
 
   # override Hydra::Collection to add :solr_page_size
   has_and_belongs_to_many :members, property: :has_collection_member, class_name: "ActiveFedora::Base" , after_remove: :remove_member,
-    solr_page_size: 150
+    solr_page_size: 70
 
 end

@@ -53,9 +53,11 @@ describe EmbargoesController do
     context "when I have permission to edit the object" do
       before do
         expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
-        a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+        a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.embargo_release_date = release_date.to_s
+        a_work.save(validate: false)
         get :destroy, id: a_work
       end
 
@@ -63,7 +65,7 @@ describe EmbargoesController do
         let(:release_date) { Date.today+2 }
 
         it "should deactivate embargo without updating visibility and redirect" do
-          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           expect(response).to redirect_to edit_embargo_path(a_work)
         end
       end
