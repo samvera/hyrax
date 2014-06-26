@@ -1,4 +1,4 @@
-    <div class="hide" id="more_descriptions">
+    <div id="more_descriptions">
       <% (@generic_file.terms_for_editing - [:title, :creator, :rights, :tag, :resource_type]).each do |term| %>
         <%= render partial: "generic_files/field_form", locals: { generic_file: @generic_file, f: f, render_req: false, key: term } %>
       <% end %>

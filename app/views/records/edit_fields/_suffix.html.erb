@@ -1,6 +1,9 @@
+        <% single ||= false %>
         <% if index == 0  %>
-          <%= add_field(key) %>
-          &nbsp;
+          <% unless single %>
+            <%= add_field(key) %>
+          <% end %>
+            &nbsp;
           <%= help_icon(key) %>
           <%= render partial: "records/rights_modal" if key == "rights" %>
         <% else %>

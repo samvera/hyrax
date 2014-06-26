@@ -44,6 +44,7 @@
 //= require sufia/tabs
 //= require hydra/batch_select
 //= require sufia/dashboard_actions
+//= require sufia/batch
 //= require hydra_collections
 //= require browse_everything
 //= require jquery.blacklightTagCloud
@@ -96,11 +97,6 @@ Blacklight.onLoad(function() {
     });
   };
 
-  $('#add_descriptions').click(function() {
-      $('#more_descriptions').show();
-      $('#add_descriptions').hide();
-      return false;
-  });
 
   $("a[rel=popover]").click(function() { return false;});
 

@@ -6,9 +6,9 @@
   <% vals = record[key] %>
   <% if render_req && record.required?(key) %>
     <% tmp = '<span class="required-field">*</span>' + get_label(key) %>
-    <%= f.label key, tmp.html_safe, class: "col-sm-3 control-label"  %>
+    <%= f.label key, tmp.html_safe  %>
   <% else %>
-    <%= f.label key, get_label(key), class: "col-sm-3 control-label" %>
+    <%= f.label key, get_label(key) %>
   <% end %>
 
   <% if key == :resource_type %>
