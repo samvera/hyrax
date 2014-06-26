@@ -47,6 +47,8 @@ en:
       tag:              "Keyword"
       date_created:     "Date Created"
       related_url:      "Related URL"
+      total_items:      "Total Items"
+      size:             "Size"
     homepage:
       featured_works:       'Featured Works'
     dashboard:
