@@ -18,8 +18,8 @@
       <%= link_to document.title_or_label, sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" %><br/>
     </span>
   </td>
-  <td width="17%"><%= document.date_uploaded %> </td>
-  <td width="5%">
+  <td width="17%" class="text-center"><%= document.date_uploaded %> </td>
+  <td width="5%" class="text-center">
     <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>" class="visibility-link">
       <% if document.registered? %>
           <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
@@ -30,7 +30,7 @@
       <% end %>
     </a>
   </td>
-  <td width="23%">
+  <td width="23%" class="text-center">
     <%= render partial: 'action_menu', locals: { noid: noid, gf: gf } %>
   </td>
 </tr>
