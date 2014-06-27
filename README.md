@@ -76,7 +76,7 @@ rake db:migrate
 ### Get a copy of jetty (Solr and Fedora)
 ```
 rake jetty:clean
-rake jetty:config
+rake sufia:jetty:config
 rake jetty:start
 ```
 

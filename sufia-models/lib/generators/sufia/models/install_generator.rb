@@ -15,6 +15,8 @@ This generator makes the following changes to your application:
  3. Creates the sufia.rb configuration file
  4. Generates mailboxer
  5. Generates usage stats config
+ 6. Installs Blacklight gallery
+ 7. Runs full-text generator
        """
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -92,6 +94,11 @@ This generator makes the following changes to your application:
 
   def install_blacklight_gallery
     generate "blacklight_gallery:install"
+  end
+
+  # Sets up full-text indexing (Solr config + jars)
+  def full_text_indexing
+    generate "sufia:models:fulltext"
   end
 
   private

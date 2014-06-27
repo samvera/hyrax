@@ -13,6 +13,7 @@ This generator for upgrading sufia-models from 3.7.2 to 4.0 makes the following 
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Runs the mailboxer upgrade generator
  3. Adds analytics to the sufia.rb configuration file
+ 4. Runs full-text generator
        """
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -49,6 +50,7 @@ This generator for upgrading sufia-models from 3.7.2 to 4.0 makes the following 
   # Upgrade mailboxer
   def install_mailboxer
     generate "mailboxer:namespacing_compatibility"
+    generate "mailboxer:install -s"
   end
 
   # Add config file for Google Analytics
@@ -64,6 +66,11 @@ This generator for upgrading sufia-models from 3.7.2 to 4.0 makes the following 
         "  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info\n" +
         "  #config.analytics = false\n"
       end
+  end
+
+  # Sets up full-text indexing (Solr config + jars)
+  def full_text_indexing
+    generate "sufia:models:fulltext"
   end
 
   private
