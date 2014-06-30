@@ -4,14 +4,20 @@
 on element ids -->
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
-  <td width="6%"></td> 
-  <td width="38%">
-    <a href="" title="Click for more details"><i id="expand_<%= noid.gsub(":", "_") %>" class="glyphicon glyphicon-plus"></i></a>&nbsp;
-    <%= link_to image_tag("/assets/folder.png", width: 36), collections.collection_path(noid) %>
-    <span class=center><%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %> <br /></span>
+  <td width="3%"></td> 
+  <td width="41%">
+    <div class="media">
+      <%= link_to image_tag("/assets/folder.png", class: "hidden-xs file_listing_thumbnail"), collections.collection_path(noid), class: "pull-left" %>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %>
+          <a href="#" class="small" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-chevron-right"></i></a>
+        </h4>
+      </div>
+    </div>
   </td>
   <td width="17%"><%= document.date_uploaded %> </td>
-  <td width="5%" class="center">
+  <td width="5%" class="text-center">
       <% if document.registered? %>
      <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
     <% elsif document.public? %>
@@ -21,7 +27,7 @@ on element ids -->
     <% end %>
   
   </td>
-  <td class="center">
+  <td class="text-center">
     <%= render partial:'collection_action_menu', locals:{noid:noid} %>
    </td>
 </tr>

@@ -1,7 +1,7 @@
 <div class="btn-group">
-  <button class="btn btn-sm" href="#"><i class="glyphicon glyphicon-wrench"></i> Select an action</button>
-  <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-chevron-down"></span></button>
-  <ul class="dropdown-menu">
+  <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">Select an action <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right">
    <li>
    <%= link_to raw('<i class="glyphicon glyphicon-pencil"></i> Edit Collection'), collections.edit_collection_path(noid),
      class: 'itemicon itemedit', title: 'Edit Collection' %>

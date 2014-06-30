@@ -1,13 +1,10 @@
-$gray-lightish: #bbb;
-$gray-lighter: #eee;
+h4 .small {
+  color: $navbar-default-toggle-icon-bar-bg;
+}
 
 .table thead th {
   text-align: center;
 }
-
-th div.dropdown {
-    top: 1.25em;
-  }
 
 .table {
   > tbody {
@@ -44,7 +41,8 @@ th div.dropdown {
 }
 
 .file_listing_thumbnail {
-  width: 20%;
+  @extend .media-object;
+  width: 64px;
 }
 
 .nav > li > a.accordion-toggle {
@@ -76,12 +74,6 @@ th div.dropdown {
     display: block;
   }
 
-}
-
-.cog {
-  position: relative;
-  top: -1.20em;
-  left: 1.25em;
 }
 
 .batch-info {
@@ -131,7 +123,16 @@ th div.dropdown {
 
 .heading-row {
   border-bottom: 1px solid $gray-lightish;
-  //margin-left: 10px;
+}
+
+input.batch_document_selector {
+  margin: 10px 10px 2px 10px;
+  padding: 0px;
+}
+
+input#check_all {
+  padding: 0;
+  margin: 3px 3px 3px 10px;
 }
 
 #collection-list-container {
@@ -147,3 +148,11 @@ th div.dropdown {
   }
 }
 
+#documents {
+  .media-body {
+    padding-top: 12px;
+  }
+  td {
+    vertical-align: middle;
+  }
+}

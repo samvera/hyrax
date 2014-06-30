@@ -96,20 +96,6 @@ Blacklight.onLoad(function() {
     });
   };
 
-  // show/hide more information on the dashboard when clicking
-  // plus/minus
-  $('.glyphicon-plus').on('click', function() {
-    var button = $(this);
-    //this.id format: "expand_NNNNNNNNNN"
-    var array = this.id.split("expand_");
-    if (array.length > 1) {
-      var docId = array[1];
-      $("#detail_" + docId + " .expanded-details").slideToggle();
-      button.toggleClass('glyphicon-plus glyphicon-minus');
-    }
-    return false;
-  });
-
   $('#add_descriptions').click(function() {
       $('#more_descriptions').show();
       $('#add_descriptions').hide();
