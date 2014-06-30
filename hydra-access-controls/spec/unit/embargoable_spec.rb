@@ -73,7 +73,8 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject.embargo_release_date).to be_nil
         expect(subject.visibility_during_embargo).to be_nil
         expect(subject.visibility_after_embargo).to be_nil
-        expect(subject.embargo_history.last).to include("An expired embargo was deactivated on #{Date.today}.")
+        expect(subject.embargo_history.size).to eq 1
+        expect(subject.embargo_history.first).to include("An expired embargo was deactivated on #{Date.today}.")
       end
     end
 
@@ -87,7 +88,17 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject.embargo_release_date).to be_nil
         expect(subject.visibility_during_embargo).to be_nil
         expect(subject.visibility_after_embargo).to be_nil
-        expect(subject.embargo_history.last).to include("An active embargo was deactivated on #{Date.today}.")
+        expect(subject.embargo_history.size).to eq 1
+        expect(subject.embargo_history.first).to include("An active embargo was deactivated on #{Date.today}.")
+      end
+    end
+
+    context "when there is no embargo" do
+      let(:release_date) { nil }
+
+      it "should not do anything" do
+        subject.deactivate_embargo!
+        expect(subject.embargo_history).to eq []
       end
     end
   end
@@ -123,9 +134,11 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject.lease_expiration_date).to be_nil
         expect(subject.visibility_during_lease).to be_nil
         expect(subject.visibility_after_lease).to be_nil
-        expect(subject.lease_history.last).to include("An expired lease was deactivated on #{Date.today}.")
+        expect(subject.lease_history.size).to eq 1
+        expect(subject.lease_history.first).to include("An expired lease was deactivated on #{Date.today}.")
       end
     end
+
     context "when the lease is active" do
       let(:expiration_date) { future_date.to_s }
 
@@ -136,7 +149,17 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject.lease_expiration_date).to be_nil
         expect(subject.visibility_during_lease).to be_nil
         expect(subject.visibility_after_lease).to be_nil
-        expect(subject.lease_history.last).to include("An active lease was deactivated on #{Date.today}.")
+        expect(subject.lease_history.size).to eq 1
+        expect(subject.lease_history.first).to include("An active lease was deactivated on #{Date.today}.")
+      end
+    end
+
+    context "when there is no lease" do
+      let(:expiration_date) { nil }
+
+      it "should not do anything" do
+        subject.deactivate_lease!
+        expect(subject.lease_history).to eq []
       end
     end
   end

@@ -43,6 +43,7 @@ module Hydra
       end
 
       def deactivate_embargo!
+        return unless embargo_release_date
         embargo_state = under_embargo? ? "active" : "expired"
         embargo_record = embargo_history_message(embargo_state, Date.today, embargo_release_date, visibility_during_embargo, visibility_after_embargo)
         self.embargo_release_date = nil
@@ -114,6 +115,7 @@ module Hydra
       end
 
       def deactivate_lease!
+        return unless lease_expiration_date
         lease_state = active_lease? ? "active" : "expired"
         lease_record = lease_history_message(lease_state, Date.today, lease_expiration_date, visibility_during_lease, visibility_after_lease)
         self.lease_expiration_date = nil
