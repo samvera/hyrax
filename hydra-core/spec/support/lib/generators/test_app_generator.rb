@@ -30,4 +30,8 @@ class TestAppGenerator < Rails::Generators::Base
 
     generate 'hydra:head', '-f --skip-rspec'
   end
+
+  def remove_generated_user_spec
+    remove_file 'spec/models/user_spec.rb'
+  end
 end
