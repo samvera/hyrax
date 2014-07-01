@@ -1,6 +1,14 @@
 <h2 class="non lower">Descriptions</h2>
 <table class="table table-striped"><!-- class="verticalheadings"> -->
   <tbody>
+    <tr>
+      <th><%= get_label("total_items") %></th>
+      <td><%= @collection.members.count %></td>
+    </tr>
+    <tr>
+      <th><%= get_label("size") %></th>
+      <td><%= number_to_human_size(@collection.bytes) %></td>
+    </tr>
     <% (@collection.terms_for_display).each do |term| %>
       <% if @collection.send(term).present? %>
         <tr>
