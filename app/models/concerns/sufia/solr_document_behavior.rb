@@ -1,6 +1,9 @@
 # -*- encoding : utf-8 -*-
 module Sufia
   module SolrDocumentBehavior
+    extend ActiveSupport::Concern
+    include Sufia::GenericFile::MimeTypes
+
     # Add a schema.org itemtype
     def itemtype
       Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
@@ -105,35 +108,6 @@ module Sufia
 
     def registered?
       read_groups.include?('registered')
-    end
-
-    def pdf?
-      ['application/pdf'].include? self.mime_type
-    end
-
-    def image?
-      ['image/png','image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif'].include? self.mime_type
-    end
-
-    def video?
-      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf'].include? self.mime_type
-    end
-
-    def audio?
-      # audio/x-wave is the mime type that fits 0.6.0 returns for a wav file.
-      # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
-      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? self.mime_type
-    end
-
-    def office_document?
-        ['text/rtf',
-         'application/msword',
-         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-         'application/vnd.oasis.opendocument.text',
-         'application/vnd.ms-excel',
-         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-         'application/vnd.ms-powerpoint',
-         'application/vnd.openxmlformats-officedocument.presentationml.presentation'].include? self.mime_type
     end
   end
 end
