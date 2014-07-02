@@ -58,6 +58,10 @@ This generator for upgrading sufia from 3.7.2 to 4.0 makes the following changes
     remove_file 'app/assets/stylesheets/blacklight.css.scss'
   end
 
+  def install_blacklight_gallery
+    generate "blacklight_gallery:install"
+  end
+
   def tinymce_config
     copy_file "config/tinymce.yml", "config/tinymce.yml"
   end
