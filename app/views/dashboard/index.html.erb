@@ -1,28 +1,8 @@
 <%= content_for :heading do %>
 
-  <div class="col-xs-12 heading-row">
-    <div class="col-xs-3 heading-tile">
-      <h1><%= t("sufia.dashboard.title") %></h1> 
-    </div>
-    <div class="col-xs-9 heading-tile">
-      <h1><%= t("sufia.dashboard.greeting") + current_user.name %></h1>
-    </div>
-  </div>
+  <%= render partial: "dashboard/_index_partials/heading_greetings" %>
 
-  <div class="col-xs-12 heading-row">
-    <div class="col-xs-4 heading-tile">
-      <span class="glyphicon glyphicon-open"></span>
-      <%= link_to t("sufia.dashboard.upload"), sufia.new_generic_file_path %>
-    </div>
-    <div class="col-xs-4 heading-tile">
-    <span class="glyphicon glyphicon-folder-open"></span>
-      <%= link_to t("sufia.dashboard.create_collection"), collections.new_collection_path, id: "hydra-collection-add" %>
-    </div>
-    <div class="col-xs-4 heading-tile">
-    <span class="glyphicon glyphicon-eye-open"></span>
-      <%= link_to t("sufia.dashboard.view_files"), sufia.dashboard_files_path  %>
-    </div>
-  </div>
+  <%= render partial: "dashboard/_index_partials/heading_actions" %>
 
 <% end %>
 
@@ -38,17 +18,4 @@
 
 <% end %>
 
-<div class="row">
-  <div class="portal">
-    <h3><%= t("sufia.dashboard.user_activity") %></h3>
-    <%= render_recent_activity %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="portal">
-    <h3><%= t("sufia.dashboard.user_notifications") %></h3>
-    <%= render_recent_notifications %>
-    <%= link_to_additional_notifications %>
-  </div>
-</div>
+<%= render partial: "dashboard/_index_partials/contents" %>
