@@ -76,15 +76,11 @@ h4 .small {
 
 }
 
-.batch-info {
-  margin-bottom: 0.8em;
-}
-
 .sorts-dash, .sorts, .expandable_new {
   cursor: pointer;
 }
 .sort-toggle {
-  padding: 2em 0 .5em 0;
+  padding: 10px 0 10px 0;
 }
 .caret.up {
   border-top: 0;
@@ -135,6 +131,10 @@ input#check_all {
   margin: 3px 3px 3px 10px;
 }
 
+.constraints-container {
+  margin-bottom: 10px;
+}
+
 #collection-list-container {
   .collection-list {
     li {
@@ -155,4 +155,8 @@ input#check_all {
   td {
     vertical-align: middle;
   }
+}
+
+#my_nav {
+  margin-bottom: 20px;
 }

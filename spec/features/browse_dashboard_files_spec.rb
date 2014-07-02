@@ -26,10 +26,16 @@ describe "Browse Dashboard" do
       expect(page).to_not have_content("Is part of:")
     end
 
-    it "should allow you to search your own files" do
+    it "should allow you to search your own files and remove constraints" do
       fill_in "q", with: "PDF"
       click_button "search-submit-header"
       expect(page).to have_content("Fake Document Title")
+      within(".constraints-container") do
+        expect(page).to have_content("You searched for:")
+        expect(page).to have_css("span.glyphicon-remove")
+        find(".dropdown-toggle").click
+      end
+      expect(page).to have_content("Fake Wav File")
     end
 
     it "should allow you to browse facets" do
