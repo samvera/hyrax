@@ -4,4 +4,10 @@ module BatchEditsHelper
   def batch_delete
     render partial: '/batch_edits/delete_selected'
   end
+
+  def render_check_all
+    unless @disable_select_all || params[:controller].match("my/collections")
+      render partial: 'batch_edits/check_all'
+    end
+  end
 end

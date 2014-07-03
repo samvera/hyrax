@@ -20,9 +20,10 @@ describe "Browse Dashboard" do
       visit "dashboard/files"
     end
 
-    it "should show me some files" do
+    it "should show me files that are not part of any collection" do
       expect(page).to have_content("Edit File")
       expect(page).to have_content("Download File")
+      expect(page).to_not have_content("Is part of:")
     end
 
     it "should allow you to search your own files" do

@@ -32,6 +32,12 @@ module GenericFileHelper
     link_to (text || "Download"), sufia.download_path(@generic_file.noid), { id: "file_download", target: "_new", data: { label: @generic_file.id } }
   end
 
+  def render_collection_list gf
+    unless gf.collections.empty?
+      ("Is part of: " + gf.collections.map { |c| link_to(c.title, collections.collection_path(c.id)) }.join(", ")).html_safe
+    end
+  end
+
   private
 
   def render_edit_field_partial_with_action(action, key, locals)

@@ -1,7 +1,7 @@
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
   <% gf = GenericFile.load_instance_from_solr(document.id) %>
-  <td width="3%"><%= batch_edit_select(document) %>&nbsp;
+  <td><%= batch_edit_select(document) %>&nbsp;
     <%# This block is for adding/removing the magic wand while batch updates are processing %>
     <% if gf.processing? %>
         <i class="glyphicon glyphicon-time <%= 'ss-'+gf.batch.noid %>"/>
@@ -9,17 +9,22 @@
         <i class="glyphicon glyphicon-share-alt"/>
     <% end %>
   </td>
-  <td width="41%">
-    <a href="#" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-plus"></i></a>&nbsp;
-    <%= link_to sufia.generic_file_path(document) do %>
-      <%= render_thumbnail_tag document, class:"hidden-xs file_listing_thumbnail" %>
-    <% end %>
-    <span>
-      <%= link_to document.title_or_label, sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" %><br/>
-    </span>
+  <td>
+    <div class="media">
+      <%= link_to sufia.generic_file_path(document), class: "pull-left" do %>
+        <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
+      <% end %>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <%= link_to document.title_or_label, sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" %>
+          <a href="#" class="small" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-chevron-right"></i></a>
+        </h4>
+        <%= render_collection_list(gf) %>
+      </div>
+    </div>
   </td>
-  <td width="17%" class="text-center"><%= document.date_uploaded %> </td>
-  <td width="5%" class="text-center">
+  <td class="text-center"><%= document.date_uploaded %> </td>
+  <td class="text-center">
     <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>" class="visibility-link">
       <% if document.registered? %>
           <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
@@ -30,7 +35,7 @@
       <% end %>
     </a>
   </td>
-  <td width="23%" class="text-center">
+  <td class="text-center">
     <%= render partial: 'action_menu', locals: { noid: noid, gf: gf } %>
   </td>
 </tr>
