@@ -9,12 +9,7 @@
 
 <% @page_title = application_name + " Dashboard" %>
 
-<% if params.has_key?("q") %>
-    <div class="alert alert-info"><i class="glyphicon glyphicon-search large-icon"></i> You searched for:
-      <strong><%= params[:q] %></strong></div>
-<% end %>
-
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" id="my_nav">
   <li class="<%= "active" if @selected_tab == :files %>">
     <%= link_to t('sufia.dashboard.my.files'), sufia.dashboard_files_path %>
   </li>
@@ -29,10 +24,7 @@
   </li>
 </ul>
 
-<%= render partial: 'did_you_mean' %>
-<%= render partial: 'facet_selected' %>
-
-<%= render 'sort_and_per_page' %>
+<%= render 'search_header' %>
 
 <%= render partial: 'document_list' %>
 
