@@ -3,21 +3,23 @@
 <%= render partial: 'generic_files/breadcrumbs', locals: {
   include_file: false, generic_file: GenericFile.new(title: @collection.title) } %>
 
-<h1 class="lower"><%= @collection.title %></h1>
-
-<h3><%=@collection.description%> </h3>
-
-<% unless has_collection_search_parameters? %>
   <div itemscope itemtype="http://schema.org/CollectionPage" class="row">
-    <div class="col-sm-4">
-      <%= render partial: 'collections/media_display', locals: { generic_file: @collection } %>
-    </div>
-    <div class="col-sm-8"><!-- class="column second"> -->
-      <%= render partial: 'collections/show_actions' %>
+    <div class="col-sm-9 pull-right">
+      <header>
+        <h1><%= @collection.title %></h1>
+        <p class="collection_description"><%=@collection.description%></p>
+      </header>
+      <% unless has_collection_search_parameters? %>
       <%= render partial: 'collections/show_descriptions', locals: { generic_file: @collection } %>
-    </div><!-- /columns second -->
-  </div> <!-- /columns two-b -->
-<% end %>
+      <% end %>
+    </div>
+    <div class="col-sm-3">
+      <%= render partial: 'collections/media_display', locals: { generic_file: @collection } %>
+      <% unless has_collection_search_parameters? %>
+      <%= render partial: 'collections/show_actions' %>
+      <% end %>
+    </div>
+  </div>
 
 <%= render 'sort_and_per_page' %>
 
@@ -35,5 +37,3 @@
 
 <%= render_document_index @member_docs %>
 <%= render partial: 'paginate' %>
-
-

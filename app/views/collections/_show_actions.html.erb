@@ -1,7 +1,7 @@
-<h2 class="non lower">Actions</h2>
-<p>
+<h2 class="sr-only">Actions</h2>
+<div class="actions-controls-collections">
   <% if can? :edit, @collection %>
-      <%= link_to "Edit", collections.edit_collection_path %> &nbsp;&nbsp;
-      <%= link_to "Add files from your dashboard",  sufia.dashboard_files_path %>
+      <span class="label label-default"><%= link_to "Edit", collections.edit_collection_path %></span> &nbsp;&nbsp;
+      <span class="label label-default"><%= link_to "Add files",  sufia.dashboard_files_path %></span>
   <%end %>
-</p>
+</div>
