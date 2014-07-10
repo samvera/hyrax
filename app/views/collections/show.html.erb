@@ -21,12 +21,19 @@
 
 <%= render 'sort_and_per_page' %>
 
-  <% if has_collection_search_parameters? %>
-    <h2>Search Results within this Collection</h2>
-  <% else %>
-    <h2>Items in this Collection</h2>
-  <% end %>
-  <%= render partial: 'search_form'%>
-  <%= render_document_index @member_docs %>
+<% if has_collection_search_parameters? %>
+    <% header_title = "Search Results within this Collection" %>
+<% else %>
+    <% header_title = "Items in this Collection" %>
+<% end %>
 
-  <%= render partial: 'paginate' %>
+<div>
+  <!-- Use CSS class h2 rather than HTML h2 tag to allow header and search box to align vertically -->
+  <span class="h2"><%= header_title %></span>
+  <%= render partial: 'search_form'%>
+</div>
+
+<%= render_document_index @member_docs %>
+<%= render partial: 'paginate' %>
+
+
