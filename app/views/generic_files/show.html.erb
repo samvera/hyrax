@@ -1,4 +1,4 @@
-<% content_for(:meta_tags) do %>
+<% content_for(:twitter_meta) do %>
 <%
    tweeter = User.find_by_user_key(@generic_file.depositor).twitter_handle
    tweeter = tweeter.present? ? "@#{tweeter}" : t('sufia.product_twitter_handle') %>
@@ -10,11 +10,28 @@
   <meta property="og:title" content="<%= @generic_file.title.first %>"/>
   <meta property="og:description" content="<%= @generic_file.description.first.truncate(200) rescue @generic_file.title.first %>"/>
   <meta property="og:image" content="<%= sufia.download_url(@generic_file, datastream_id: 'thumbnail') %>"/>
-  <meta property="og:url" content="<%= sufia.generic_file_url(@generic_file.noid) %>"/>
+  <meta property="og:url" content="<%= sufia.generic_file_url(@generic_file) %>"/>
   <meta name="twitter:data1" content="<%= @generic_file.tag.join(', ') %>"/>
   <meta name="twitter:label1" content="Keywords"/>
   <meta name="twitter:data2" content="<%= @generic_file.rights.first %>"/>
   <meta name="twitter:label2" content="Rights"/>
+<% end %>
+
+<% content_for(:gscholar_meta) do %>
+  <meta name="citation_title" content="<%= @generic_file.title.first %>"/>
+  <% @generic_file.creator.each do |creator| %>
+  <meta name="citation_author" content="<%= creator %>"/>
+  <% end %>
+  <meta name="citation_publication_date" content="<%= @generic_file.date_created.first %>"/>
+  <meta name="citation_pdf_url" content="<%= sufia.download_url(@generic_file) %>"/>
+  <!-- Sufia does not yet support these metadata -->
+  <!--
+    <meta name="citation_journal_title" content=""/>
+    <meta name="citation_volume" content=""/>
+    <meta name="citation_issue" content=""/>
+    <meta name="citation_firstpage" content=""/>
+    <meta name="citation_lastpage" content=""/>
+  -->
 <% end %>
 
 <%= javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>

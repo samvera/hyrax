@@ -5,9 +5,8 @@
 <!-- added for use on small devices like phones" -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<% if content_for?(:meta_tags) %>
-   <%= yield :meta_tags %>
-<% end %>
+<%= yield :twitter_meta if content_for?(:twitter_meta) %>
+<%= yield :gscholar_meta if content_for?(:gscholar_meta) %>
 
 <title><%= h(@page_title || application_name) %></title>
 <!-- application css -->

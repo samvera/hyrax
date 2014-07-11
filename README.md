@@ -33,6 +33,7 @@ Sufia has the following features:
 * Single-use links
 * Google Analytics for usage statistics
 * Integration w/ cloud storage providers
+* Google Scholar-specific metadata embedding
 * Schema.org microdata, Open Graph meta tags, and Twitter cards for rich snippets
 * User-managed collections for grouping files
 * Full-text indexing & searching
