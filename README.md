@@ -91,9 +91,10 @@ Add this line:
 ```*= require_tree .```
 
 _Removing the require_tree from application.css will ensure you're not loading the blacklight.css.  This is because blacklight's css styling does not mix well with sufia's default styling._
+
 #### Modify app/assets/javascripts/application.js
 
-Add this line:
+Add this line at the bottom of the file:
 ```
 //= require sufia
 ```
