@@ -6,61 +6,23 @@
 
 <input type="hidden" name="generic_file[permissions][group][public]" value="1" />
 <input type="hidden" name="generic_file[permissions][group][registered]" value="2" />
-<h2><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %><small>(applied to all files just uploaded)</small><% end %></h2>
+
+<h2><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %>
+      <small>(applied to all files just uploaded)</small><% end %>
+</h2>
+
 <div class="alert alert-info hidden" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
 <div class="alert alert-warning hidden" id="permissions_error"><a class="close" data-dismiss="alert" href="#">×</a><span id="permissions_error_text"></span></div>
+
 <div class="well">
-  <div class="row">
-    <p class="pull-right">
-    <!-- Button to trigger modal -->
-    <a href="#myModal" role="button" class="btn btn-warning" data-toggle="modal">What's this <i class="glyphicon glyphicon-question-sign large-icon"></i></a>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h2 id="myModalLabel"><%=t('sufia.product_name') %> Permissions</h2>
-      </div>
-      <div class="modal-body">
-        <h3>Visibility</h3>
-        <p>This setting will determine who can view your file, and the associated metadata. Setting
-        the visibility to <span class="label label-success">Open Access</span> will allow your content to be discovered in Google and viewed by anyone.
-        The visibility setting <span class="label label-info"><%=t('sufia.institution_name') %></span> will only allow users who are logged into <%=t('sufia.product_name') %>
-        (via WebAccess) to view the content.  Files that are marked <span class="label label-danger">Private</span> are only able to be viewed
-        by users and/or groups that have been given specific access in the &quot;Share With&quot; section.
-        </p>
 
-        <p>
-        Permissions in <%=t('sufia.product_name') %> are hierarchical.  This means that you cannot set the visibility of a file to <span class="label label-success">Open Access</span> or
-        <span class="label label-info"><%=t('sufia.institution_name') %></span> and simultaneously try to restrict the access of a single user. However, you may mark the visibility of
-        a file as <span class="label label-danger">Private</span> and then grant access to particular users and/or groups for that file in the &quot;Share With&quot;
-        section.
-        </p>
-
-        <h3>Share With</h3>
-        <p>You may grant &quot;View/Download&quot; or &quot;Edit&quot;  access for specific users and/or groups to files. Enter
-        a valid <%=t('sufia.account_name') %>, one at a time, select the access level for that user and click
-        <button class="btn btn-xs btn-inverse" onclick="return false;"><i class="glyphicon glyphicon-plus" ></i>Add</button>.
-        </p>
-
-        <%= render partial: 'generic_files/groups_description' %>
-
-        <h3>Permission Definitions</h3>
-        <p>
-        <strong>View/Download:</strong> this file (both contents and metadata) is accessible from within <%=t('sufia.product_name') %>.<br />
-        <strong>Edit:</strong> this file (both contents and metadata) can be edited.  You may only grant this permission to <%=t('sufia.institution_name') %> users and/or groups.
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-    </p>
-  </div>
-  <h3>Visibility - <small>who should have the ability to read and download</small></h3>
+  <!-- Visibility -->
+  <% visibility_text = capture do %>
+    <%= render partial: 'generic_files/visibility' %>
+  <% end %>
+  <h3>Visibility - <small>who should have the ability to read and download</small>
+    <span id="visibility_tooltip" class="h5"><%= help_icon('visibility', visibility_text) %></span>
+  </h3>
   <div class="radio">
     <label>
       <input type="radio" id="visibility_open" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
@@ -72,8 +34,15 @@
       <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-danger">Private</span> Visible to users/groups specified below, if any.
     </label>
   </div>
+
+  <!-- Share With -->
+  <% share_with_text = capture do %>
+    <%= render partial: 'generic_files/share_with' %>
+  <% end %>
   <div class="row">
-      <h3 class="col-sm-12">Share With <small>(optional)</small></h3>
+    <h3 class="col-sm-12">Share With <small>(optional)</small>
+      <span id="share_with_tooltip" class="h5"><%= help_icon('share_with', share_with_text) %></span>
+    </h3>
   </div>
   <div class="form-group">
     <div id="new-user">
@@ -106,7 +75,9 @@
       </div>
     </div>
   </div>
+
 </div><!-- /.well -->
+
 <table class="table table-bordered">
   <tr>
     <th width="60%">Person/Group</th>

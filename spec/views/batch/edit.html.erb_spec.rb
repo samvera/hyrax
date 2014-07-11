@@ -22,8 +22,14 @@ describe 'batch/edit.html.erb' do
     @page = Capybara::Node::Simple.new(rendered)
   end
 
-  it "should draw modal for license" do
-    expect(@page).to have_selector("div#myModal .modal-dialog .modal-content", count: 1)
+  it "should draw tooltip for visibility" do
+    expect(@page).to have_selector("span#visibility_tooltip", count: 1)
+    expect(@page).to have_selector("a#generic_file_visibility_help", count: 1)
+  end
+
+  it "should draw tooltip for share_with" do
+    expect(@page).to have_selector("span#share_with_tooltip", count: 1)
+    expect(@page).to have_selector("a#generic_file_share_with_help", count: 1)
   end
 
   it "should draw modal for rights" do
