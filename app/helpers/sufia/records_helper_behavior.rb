@@ -8,11 +8,13 @@ module Sufia
      more_or_less_button(key, 'remover', '-')
     end
 
-    def help_icon(key)
-      link_to '#', id: "generic_file_#{key.to_s}_help", rel: 'popover', 
-        'data-content' => metadata_help(key),
-        'data-original-title' => get_label(key) do
-          content_tag 'i', '', class: "glyphicon glyphicon-question-sign large-icon"
+    def help_icon(key, content = nil, title = nil)
+      content = content || metadata_help(key)
+      title = title || get_label(key)
+      link_to '#', id: "generic_file_#{key.to_s}_help", rel: 'popover',
+              'data-content' => content,
+              'data-original-title' => title do
+        content_tag 'i', '', class: "glyphicon glyphicon-question-sign large-icon"
       end
     end
 
