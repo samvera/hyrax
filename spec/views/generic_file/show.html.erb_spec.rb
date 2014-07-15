@@ -134,87 +134,111 @@ describe 'generic_files/show.html.erb' do
     end
   end
 
-  describe 'twitter cards' do
-    it 'appears in meta tags' do
+  describe 'google scholar' do
+    # NOTE: before(:all) will not work in this context
+    before(:each) do
       render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
-      meta_twitter_tags = Nokogiri::HTML(rendered).xpath("//meta")
-      expect(meta_twitter_tags.count).to eq(15)
+    end
+
+    it 'appears in meta tags' do
+      gscholar_meta_tags = Nokogiri::HTML(rendered).xpath("//meta[contains(@name, 'citation_')]")
+      expect(gscholar_meta_tags.count).to eq(5)
+    end
+
+    it 'displays title' do
+      tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_title']")
+      expect(tag.attribute('content').value).to eq('My Title')
+    end
+
+    it 'displays authors' do
+      tags = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_author']")
+      expect(tags.first.attribute('content').value).to eq('Doe, John')
+      expect(tags.last.attribute('content').value).to eq('Doe, Jane')
+    end
+
+    it 'displays publication date' do
+      tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publication_date']")
+      expect(tag.attribute('content').value).to eq('1984-01-02')
+    end
+
+    it 'displays download URL' do
+      tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_pdf_url']")
+      expect(tag.attribute('content').value).to eq('http://test.host/downloads/123')
+    end
+  end
+
+  describe 'twitter cards' do
+    # NOTE: before(:all) will not work in this context
+    before(:each) do
+      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+    end
+
+    it 'appears in meta tags' do
+      twitter_meta_tags = Nokogiri::HTML(rendered).xpath("//meta[contains(@name, 'twitter:') or contains(@property, 'og:')]")
+      expect(twitter_meta_tags.count).to eq(13)
     end
 
     it 'displays twitter:card' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:card']")
       expect(tag.attribute('content').value).to eq('product')
     end
 
     it 'displays twitter:site' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:site']")
       expect(tag.attribute('content').value).to eq('@HydraSphere')
     end
 
     it 'displays twitter:creator' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:creator']")
       expect(tag.attribute('content').value).to eq('@bot4lib')
     end
 
     it 'displays og:site_name' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:site_name']")
       expect(tag.attribute('content').value).to eq('Sufia')
     end
 
     it 'displays og:type' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:type']")
       expect(tag.attribute('content').value).to eq('object')
     end
 
     it 'displays og:title' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:title']")
       expect(tag.attribute('content').value).to eq('My Title')
     end
 
     it 'displays og:description' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:description']")
       expect(tag.attribute('content').value).to eq('Lorem ipsum lorem ipsum.')
     end
 
     it 'displays og:image' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:image']")
       expect(tag.attribute('content').value).to eq('http://test.host/downloads/123?datastream_id=thumbnail')
     end
 
     it 'displays og:url' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:url']")
       expect(tag.attribute('content').value).to eq('http://test.host/files/123')
     end
 
     it 'displays twitter:data1' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:data1']")
       expect(tag.attribute('content').value).to eq('bacon, sausage, eggs')
     end
 
     it 'displays twitter:label1' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:label1']")
       expect(tag.attribute('content').value).to eq('Keywords')
     end
 
     it 'displays twitter:data2' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:data2']")
       expect(tag.attribute('content').value).to eq('http://example.org/rights/1')
     end
 
     it 'displays twitter:label2' do
-      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:label2']")
       expect(tag.attribute('content').value).to eq('Rights')
     end
