@@ -1,21 +1,13 @@
-<h2 class="non lower">Descriptions</h2>
-<table class="table table-striped"><!-- class="verticalheadings"> -->
-  <tbody>
-    <tr>
-      <th><%= get_label("total_items") %></th>
-      <td><%= @collection.members.count %></td>
-    </tr>
-    <tr>
-      <th><%= get_label("size") %></th>
-      <td><%= number_to_human_size(@collection.bytes) %></td>
-    </tr>
-    <% (@collection.terms_for_display).each do |term| %>
+<h2 class="sr-only">Descriptions</h2>
+<dl class="metadata-collections">
+  <dt><%= get_label("total_items") %></dt>
+  <dd><%= @collection.members.count %></dd>
+  <dt><%= get_label("size") %></dt>
+  <dd><%= number_to_human_size(@collection.bytes) %></dd>
+  <% (@collection.terms_for_display).each do |term| %>
       <% if @collection.send(term).present? %>
-        <tr>
-          <th><%= get_label(term) %></th>
-          <td><%= render_show_field_partial_with_action("records", term, {record: @collection}) %> </td>
-        </tr>
+      <dt><%= get_label(term) %></dt>
+      <dd><%= render_show_field_partial_with_action("records", term, {record: @collection}) %></dd>
       <% end %>
-    <% end %>
-  </tbody>
-</table> <!-- /verticalheadings -->
+  <% end %>
+</dl>

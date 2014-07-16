@@ -1,0 +1,31 @@
+.collection_description {
+  color: #333;
+  font-family: 'Lato', Verdana, Arail, Helvetica, sans-serif;
+  font-size: 1.15em;
+  font-weight: 300;
+  line-height: 1.25em;
+  letter-spacing: .10em;
+}
+
+.metadata-collections dt {
+  float: left;
+  margin-right: 1em;
+}
+
+.collection-icon {
+  font-size: 20vw;
+  color: #fab801;
+  padding: 15px 0 0 10px;
+}
+
+.actions-controls-collections {
+  display: block;
+  margin: 1em 0 0 1em;
+}
+
+.actions-controls-collections a:link,
+.actions-controls-collections a:visited,
+.actions-controls-collections a:hover {
+  color: #FFF;
+  text-align: center;
+}
