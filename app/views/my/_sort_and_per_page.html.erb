@@ -3,13 +3,15 @@
     <%= render partial: 'collections/form_for_select_collection', locals: {user_collections: @user_collections}  %>
   </div>
 
-  <div class="batch-toggle">
-    <% session[:batch_edit_state] = "on" %>
-    <%= batch_edit_continue "Edit Selected" %>
-    <%= batch_delete %>
-    <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
-        data: { toggle: "modal", target: "#collection-list-container" } %>
-  </div>
+  <% if on_my_files? %>
+    <div class="batch-toggle">
+      <% session[:batch_edit_state] = "on" %>
+      <%= batch_edit_continue "Edit Selected" %>
+      <%= batch_delete %>
+      <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
+          data: { toggle: "modal", target: "#collection-list-container" } %>
+    </div>
+  <% end %>
 
   <div class="sort-toggle">
     <% unless @response.response['numFound'] < 2 %>

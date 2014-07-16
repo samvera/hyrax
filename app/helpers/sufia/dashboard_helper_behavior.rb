@@ -21,6 +21,10 @@ module Sufia
       params[:controller].match(/^dashboard|my/)
     end
 
+    def on_my_files?
+      params[:controller].match(/^my\/files/)
+    end
+
     def number_of_files user=current_user
       ::GenericFile.where(Solrizer.solr_name('depositor', :stored_searchable) => user.user_key).count
     end
