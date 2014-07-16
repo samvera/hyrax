@@ -60,12 +60,12 @@
       <%= f.label :rights, '<span class="error">*</span> Rights'.html_safe, class: "control-label" %>
       <div id="additional_rights_clone">
         <%= f.select "rights", options_for_select(Sufia::Engine::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), required: true %>
-          <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="sr-only">add another Rights</span></button>
+        <button class="adder btn" name="additional_rights" id="additional_rights_submit">+<span class="sr-only">add another Rights</span></button>
         &nbsp;
-        <%= help_icon(:rights) %>
+        <%= help_icon_modal('rightsModal') %>
         <%= render partial: "generic_files/rights_modal" %>
-
       </div>
+
       <div id="additional_rights_elements"></div>
     </div>
 
