@@ -18,6 +18,12 @@ module Sufia
       end
     end
 
+    def help_icon_modal(modal_id)
+      link_to '#' + modal_id, id: "generic_file_#{modal_id}_help_modal", rel: 'button', data: { toggle: 'modal' } do
+        content_tag 'i', '', class: 'glyphicon glyphicon-question-sign large-icon'
+      end
+    end
+
     def metadata_help(key)
       I18n.t("sufia.metadata_help.#{key}", default: key.to_s.humanize)
     end

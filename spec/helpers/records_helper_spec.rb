@@ -23,6 +23,18 @@ describe RecordsHelper do
     i.attr('class').should == 'glyphicon glyphicon-question-sign large-icon'
   end
 
+  specify "draws help_icon_modal" do
+    str = String.new(helper.help_icon_modal('myModal'))
+    doc = Nokogiri::HTML(str)
+    a = doc.xpath('//a').first
+
+    expect(a.attr('href')).to eq('#myModal')
+    expect(a.attr('data-toggle')).to eq('modal')
+    expect(a.attr('id')).to eq('generic_file_myModal_help_modal')
+    i = a.children.first
+    expect(i.attr('class')).to eq('glyphicon glyphicon-question-sign large-icon')
+  end
+
   describe "download links" do
 
     before :all do
