@@ -295,4 +295,32 @@ describe 'generic_files/show.html.erb' do
       end
     end
   end
+
+  describe 'collections list' do
+    context "when the file is not featured in any collections" do
+
+      it "should display the empty message" do
+        render
+        expect(rendered).to have_text(t('sufia.file.collections_list.empty'))
+      end
+    end
+
+    context "when the file is featured in collections" do
+      let(:collection1) {
+        stub_model(Collection,
+          title: 'collection1',
+          noid: '456')
+      }
+ 
+      before do
+        allow(generic_file).to receive(:collections).and_return([collection1])
+      end
+
+      it "should display the header and titles of collections it belongs to" do
+        render
+        expect(rendered).to have_text(t('sufia.file.collections_list.heading'))
+        expect(rendered).to have_text('collection1')
+      end
+    end
+  end
 end
