@@ -1,10 +1,4 @@
 module ActiveFedora
-  class UnsavedDigitalObject
-    def assign_pid
-      @pid ||= Sufia::IdService.mint
-    end
-  end
-
   class Base
     def stream
       Nest.new(self.class.name, $redis)[to_param]

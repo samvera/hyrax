@@ -27,6 +27,13 @@ describe GenericFile do
     end
   end
 
+  describe "assign_pid" do
+    it "should use the noid id service" do
+      expect_any_instance_of(Rubydora::Fc3Service).to_not receive(:next_pid)
+      GenericFile.assign_pid(nil)
+    end
+  end
+
   describe "mime type recognition" do
     context "when image?" do
       it "should be true for jpeg2000" do
