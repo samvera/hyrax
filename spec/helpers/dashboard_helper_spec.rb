@@ -38,4 +38,15 @@ describe DashboardHelper do
     end
   end
 
+  describe "#on_my_files" do
+    it "should return false when the controller isn't my files" do
+      allow(helper).to receive(:params).and_return({ controller: "my/collections" })
+      expect(helper).to_not be_on_my_files
+    end
+    it "should return true when the controller is my files" do
+      allow(helper).to receive(:params).and_return({ controller: "my/files" })
+      expect(helper).to be_on_my_files
+    end
+  end
+
 end
