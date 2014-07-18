@@ -13,6 +13,8 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
       def session
       end
+
+      delegate :logger, to: :Rails
     end
     
     @sample_policies = []

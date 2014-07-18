@@ -18,7 +18,6 @@ end
 
 
 require 'support/rails'
-Object.logger = Logger.new(File.expand_path('../test.log', __FILE__))
 
 # Since we're not doing a Rails Engine test, we have to load these classes manually:
 require_relative '../app/models/role_mapper'

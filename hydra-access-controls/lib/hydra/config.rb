@@ -68,7 +68,7 @@ module Hydra
           when :policy_class
             self.policy_class = value
           when :owner
-            logger.warn "':owner' is no longer a valid configuration for Hydra. Please remove it from your configuration."
+            Rails.logger.warn "':owner' is no longer a valid configuration for Hydra. Please remove it from your configuration."
           else
             raise "Unknown key `#{key.inspect}`"
         end
