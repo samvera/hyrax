@@ -14,7 +14,7 @@ namespace :sufia do
 
     desc 'Download Solr full-text extraction jars'
     task :download_jars do
-      logger.info "Downloading full-text jars from maven.org ..."
+      puts "Downloading full-text jars from maven.org ..."
       url_prefix = 'http://search.maven.org/remotecontent?filepath='
       fulltext_dir = 'jetty/solr/lib/contrib/extraction/lib'
       jars = %w(
@@ -54,7 +54,7 @@ namespace :sufia do
         jars.each do |jar|
           url = url_prefix + jar
           jarfile = jar.split('/').last
-          logger.info "Fetching #{url}" unless File.exists?(jarfile)
+          puts "Fetching #{url}" unless File.exists?(jarfile)
           system "wget --quiet --no-clobber #{url} -O #{jarfile}"
         end
       end
