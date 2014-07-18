@@ -83,8 +83,7 @@ module Hydra
         elsif request.headers['HTTP_RANGE']
           send_range
         else
-          send_file_headers! content_options
-          self.response_body = datastream.stream
+          send_file_contents
         end
       end
 
@@ -117,10 +116,22 @@ module Hydra
         response.headers['Content-Range'] = "bytes #{from}-#{to}/#{datastream.dsSize}"
         response.headers['Content-Length'] = "#{length}"
         self.status = 206
-        send_file_headers! content_options
+        prepare_file_headers
         self.response_body = datastream.stream(from, length)
       end
+
+      def send_file_contents
+        self.status = 200
+        prepare_file_headers
+        self.response_body = datastream.stream
+      end
       
+      def prepare_file_headers
+        send_file_headers! content_options
+        response.headers['Content-Type'] = datastream.mimeType
+        self.content_type = datastream.mimeType
+      end
+
       private 
       
       def default_content_ds
