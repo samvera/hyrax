@@ -74,6 +74,10 @@ en:
         collections:  "My Collections" 
         highlights:   "My Highlights"
         shares:       "Files Shared with Me"
+    file:
+      collections_list:
+        heading:   "This file is in the following collections:"
+        empty:     "This file is not currently in any collections." 
 
     metadata_help:
       resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."
