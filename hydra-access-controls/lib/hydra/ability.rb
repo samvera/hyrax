@@ -48,7 +48,7 @@ module Hydra
     
 
     def hydra_default_permissions
-      logger.debug("Usergroups are " + user_groups.inspect)
+      Rails.logger.debug("Usergroups are " + user_groups.inspect)
       self.ability_logic.each do |method|
         send(method)
       end
@@ -102,15 +102,15 @@ module Hydra
     protected
 
     def test_edit(pid)
-      logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
+      Rails.logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
       group_intersection = user_groups & edit_groups(pid)
       result = !group_intersection.empty? || edit_users(pid).include?(current_user.user_key)
-      logger.debug("[CANCAN] decision: #{result}")
+      Rails.logger.debug("[CANCAN] decision: #{result}")
       result
     end   
     
     def test_read(pid)
-      logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
+      Rails.logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
       group_intersection = user_groups & read_groups(pid)
       result = !group_intersection.empty? || read_users(pid).include?(current_user.user_key)
       result
@@ -120,7 +120,7 @@ module Hydra
       doc = permissions_doc(pid)
       return [] if doc.nil?
       eg = doc[self.class.edit_group_field] || []
-      logger.debug("[CANCAN] edit_groups: #{eg.inspect}")
+      Rails.logger.debug("[CANCAN] edit_groups: #{eg.inspect}")
       return eg
     end
 
@@ -129,7 +129,7 @@ module Hydra
       doc = permissions_doc(pid)
       return [] if doc.nil?
       rg = edit_groups(pid) | (doc[self.class.read_group_field] || [])
-      logger.debug("[CANCAN] read_groups: #{rg.inspect}")
+      Rails.logger.debug("[CANCAN] read_groups: #{rg.inspect}")
       return rg
     end
 
@@ -137,7 +137,7 @@ module Hydra
       doc = permissions_doc(pid)
       return [] if doc.nil?
       ep = doc[self.class.edit_user_field] ||  []
-      logger.debug("[CANCAN] edit_users: #{ep.inspect}")
+      Rails.logger.debug("[CANCAN] edit_users: #{ep.inspect}")
       return ep
     end
 
@@ -146,7 +146,7 @@ module Hydra
       doc = permissions_doc(pid)
       return [] if doc.nil?
       rp = edit_users(pid) | (doc[self.class.read_user_field] || [])
-      logger.debug("[CANCAN] read_users: #{rp.inspect}")
+      Rails.logger.debug("[CANCAN] read_users: #{rp.inspect}")
       return rp
     end
 

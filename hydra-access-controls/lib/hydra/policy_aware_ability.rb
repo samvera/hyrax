@@ -53,10 +53,10 @@ module Hydra::PolicyAwareAbility
     if policy_pid.nil?
       return false
     else
-      logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide EDIT permissions for #{current_user.user_key}?")
+      Rails.logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide EDIT permissions for #{current_user.user_key}?")
       group_intersection = user_groups & edit_groups_from_policy( policy_pid )
       result = !group_intersection.empty? || edit_users_from_policy( policy_pid ).include?(current_user.user_key)
-      logger.debug("[CANCAN] -policy- decision: #{result}")
+      Rails.logger.debug("[CANCAN] -policy- decision: #{result}")
       return result
     end
   end   
@@ -67,10 +67,10 @@ module Hydra::PolicyAwareAbility
     if policy_pid.nil?
       return false
     else
-      logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide READ permissions for #{current_user.user_key}?")
+      Rails.logger.debug("[CANCAN] -policy- Does the POLICY #{policy_pid} provide READ permissions for #{current_user.user_key}?")
       group_intersection = user_groups & read_groups_from_policy( policy_pid )
       result = !group_intersection.empty? || read_users_from_policy( policy_pid ).include?(current_user.user_key)
-      logger.debug("[CANCAN] -policy- decision: #{result}")
+      Rails.logger.debug("[CANCAN] -policy- decision: #{result}")
       result
     end
   end 
@@ -80,7 +80,7 @@ module Hydra::PolicyAwareAbility
     policy_permissions = policy_permissions_doc(policy_pid)
     edit_group_field = Hydra.config[:permissions][:inheritable][:edit][:group]
     eg = ((policy_permissions == nil || policy_permissions.fetch(edit_group_field,nil) == nil) ? [] : policy_permissions.fetch(edit_group_field,nil))
-    logger.debug("[CANCAN] -policy- edit_groups: #{eg.inspect}")
+    Rails.logger.debug("[CANCAN] -policy- edit_groups: #{eg.inspect}")
     return eg
   end
 
@@ -90,7 +90,7 @@ module Hydra::PolicyAwareAbility
     policy_permissions = policy_permissions_doc(policy_pid)
     read_group_field = Hydra.config[:permissions][:inheritable][:read][:group]
     rg = edit_groups_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_group_field,nil) == nil) ? [] : policy_permissions.fetch(read_group_field,nil))
-    logger.debug("[CANCAN] -policy- read_groups: #{rg.inspect}")
+    Rails.logger.debug("[CANCAN] -policy- read_groups: #{rg.inspect}")
     return rg
   end
 
@@ -104,7 +104,7 @@ module Hydra::PolicyAwareAbility
     policy_permissions = policy_permissions_doc(policy_pid)
     edit_user_field = Hydra.config[:permissions][:inheritable][:edit][:individual]
     eu = ((policy_permissions == nil || policy_permissions.fetch(edit_user_field,nil) == nil) ? [] : policy_permissions.fetch(edit_user_field,nil))
-    logger.debug("[CANCAN] -policy- edit_users: #{eu.inspect}")
+    Rails.logger.debug("[CANCAN] -policy- edit_users: #{eu.inspect}")
     return eu
   end
 
@@ -119,7 +119,7 @@ module Hydra::PolicyAwareAbility
     policy_permissions = policy_permissions_doc(policy_pid)
     read_user_field = Hydra.config[:permissions][:inheritable][:read][:individual]
     ru = edit_users_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_user_field, nil) == nil) ? [] : policy_permissions.fetch(read_user_field, nil))
-    logger.debug("[CANCAN] -policy- read_users: #{ru.inspect}")
+    Rails.logger.debug("[CANCAN] -policy- read_users: #{ru.inspect}")
     return ru
   end
   

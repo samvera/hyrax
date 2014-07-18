@@ -12,6 +12,8 @@ describe Hydra::AccessControlsEnforcement do
 
       def session
       end
+
+      delegate :logger, to: :Rails
     end
   end
   subject { MockController.new }
