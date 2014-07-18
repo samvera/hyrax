@@ -1,3 +1,11 @@
+h3. 7.2.0 (2014-07-18)
+* 2014-07-14: Unifying download response header behavior [Jeremy Friesen]
+* 2014-07-17: Ability should use the rails logger rather than Loggable [Justin Coyne]
+* 2014-07-18: Adjust the tested versions of Ruby to the latest patch available on Travis [Justin Coyne]
+* 2014-07-17: loosen active-fedora spec to ~> 7.0 in preparation for 7.1.0 [Justin Coyne]
+* 2014-06-24: Only deactivate lease/embargo when there is a lease/embargo deactivate_lease! and deactivate_embargo! shouldn't do anything unless there is a lease_expiration_date or an embargo_release_date [Justin Coyne]
+* 2014-06-24: Upgrade to rspec 3 [Justin Coyne]
+
 h3. 6.4.0 (2013-09-30)
 * Patch Hydra::AccessControlsEnforcement#escape_filter to support
   group/role names containing colons. [David Chandek-Stark]
