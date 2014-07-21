@@ -4,7 +4,7 @@
   include_file: false, generic_file: GenericFile.new(title: @collection.title) } %>
 
   <div itemscope itemtype="http://schema.org/CollectionPage" class="row">
-    <div class="col-sm-9 pull-right">
+    <div class="col-sm-10 pull-right">
       <header>
         <h1><%= @collection.title %></h1>
         <p class="collection_description"><%=@collection.description%></p>
@@ -13,7 +13,7 @@
       <%= render partial: 'collections/show_descriptions', locals: { generic_file: @collection } %>
       <% end %>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <%= render partial: 'collections/media_display', locals: { generic_file: @collection } %>
       <% unless has_collection_search_parameters? %>
       <%= render partial: 'collections/show_actions' %>
