@@ -38,7 +38,7 @@ class BatchUpdateJob
 
   def update_file(gf, user)
     unless user.can? :edit, gf
-      logger.error "User #{user.user_key} DENIED access to #{gf.pid}!"
+      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.pid}!"
       @denied << gf
       return
     end
@@ -51,7 +51,7 @@ class BatchUpdateJob
       gf.save!
     rescue RSolr::Error::Http => error
       save_tries += 1
-      logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
+      ActiveFedora::Base.logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
       # fail for good if the tries is greater than 3
       raise error if save_tries >=3
       sleep 0.01

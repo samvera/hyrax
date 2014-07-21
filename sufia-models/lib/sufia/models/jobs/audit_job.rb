@@ -15,25 +15,19 @@ class AuditJob < ActiveFedoraPidBasedJob
   end
 
   def run
-    #logger.info "GF is #{generic_file.pid}"
     if generic_file
       datastream = generic_file.datastreams[datastream_id]
-      #logger.info "DS is #{datastream.inspect}"
       if datastream
-        #logger.info "Datastream for audit = #{datastream.inspect}"
         version =  datastream.versions.select { |v| v.versionID == version_id}.first
         log = run_audit(version)
 
         # look up the user for sending the message to
         login = generic_file.depositor
-        #logger.info "User login is #{login}"`
-        #logger.info "All users = #{User.all}"
         if login
           user = User.find_by_user_key(login)
-          logger.warn "User '#{login}' not found" unless user
-          #logger.info "ZZZ user = #{user.inspect}"
+          ActiveFedora::Base.logger.warn "User '#{login}' not found" unless user
           job_user = User.audituser()
-          #send the user a message about the failing audit
+          # send the user a message about the failing audit
           unless (log.pass == 1)
             message = "The audit run at #{log.created_at} for #{log.pid}:#{log.dsid}:#{log.version} was #{log.pass == 1 ? 'passing' : 'failing'}."
             subject = (log.pass == 1 ? PASS : FAIL)
@@ -41,10 +35,10 @@ class AuditJob < ActiveFedoraPidBasedJob
           end 
         end
       else
-        logger.warn "No datastream for audit!!!!! pid: #{pid} dsid: #{datastream_id}"
+        ActiveFedora::Base.logger.warn "No datastream for audit!!!!! pid: #{pid} dsid: #{datastream_id}"
       end
     else
-      logger.warn "No generic file for data stream audit!!!!! pid: #{pid} dsid: #{datastream_id}"
+      ActiveFedora::Base.logger.warn "No generic file for data stream audit!!!!! pid: #{pid} dsid: #{datastream_id}"
     end
   end
 

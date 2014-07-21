@@ -74,10 +74,8 @@ describe GenericFilesController do
     end
 
     it "should record what user created the first version of content" do
-      #GenericFile.any_instance.stub(:to_solr).and_return({})
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: "The world", terms_of_service: "1"
-
+      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
       saved_file = GenericFile.find('test:123')
       version = saved_file.content.latest_version
       version.versionID.should == "content.0"
@@ -545,8 +543,7 @@ describe GenericFilesController do
         end
         it "should display failing audits" do
           sign_in @archivist
-          @ds = @file.datastreams.first
-          AuditJob.new(@file.pid, @ds[0], @ds[1].versionID).run
+          AuditJob.new(@file.pid, "RELS-EXT", @file.rels_ext.versionID).run
           get :show, id: "test5"
           assigns[:notify_number].should == 1
           @archivist.mailbox.inbox[0].messages[0].subject.should == "Failing Audit Run"
