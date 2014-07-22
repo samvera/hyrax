@@ -47,11 +47,6 @@ module Hydra
         @lease = LeaseConfig.new({}, prefix: prefix)
       end
 
-      def embargo_release_date
-        Deprecation.warn PermissionsConfig, "embargo_release_date is deprecated, use embargo.release_date instead"
-        embargo.release_date
-      end
-
       def merge! values
         values.each {|k, v| self[k] = v }
       end
@@ -62,9 +57,6 @@ module Hydra
             self.assign_value key, value
           when :inheritable
             inheritable.merge! value
-          when :embargo_release_date
-            Deprecation.warn PermissionsConfig, "[:embargo_release_date]= is deprecated, use embargo.release_date= instead"
-            embargo.release_date = value
           when :policy_class
             self.policy_class = value
           when :owner
@@ -80,9 +72,6 @@ module Hydra
             @values[key]
           when :inheritable
             inheritable
-          when :embargo_release_date
-            Deprecation.warn PermissionsConfig, "[:embargo_release_date] is deprecated, use embargo.release_date= instead"
-            embargo.release_date
           when :policy_class
             @policy_class
           else

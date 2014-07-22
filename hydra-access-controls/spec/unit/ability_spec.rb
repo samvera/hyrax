@@ -12,17 +12,15 @@ describe Ability do
 
   context "for a not-signed in user" do
     before do
-      User.any_instance.stub(:email).and_return(nil)
-      User.any_instance.stub(:new_record?).and_return(true)
+      allow_any_instance_of(User).to receive(:email).and_return(nil)
+      allow_any_instance_of(User).to receive(:new_record?).and_return(true)
     end
     subject { Ability.new(nil) }
     it "should call custom_permissions" do
-      Ability.any_instance.should_receive(:custom_permissions)
+      expect_any_instance_of(Ability).to receive(:custom_permissions)
       subject.can?(:delete, 7)
     end
-    it "should not be able to create ActiveFedora::Base objects" do
-      subject.should_not be_able_to(:create, ActiveFedora::Base)
-    end
+    it { should_not be_able_to(:create, ActiveFedora::Base) }
   end
 
   context "for a signed in user" do
@@ -30,9 +28,8 @@ describe Ability do
       @user = FactoryGirl.build(:registered_user)
     end
     subject { Ability.new(@user) }
-    it "should not be able to create ActiveFedora::Base objects" do
-      subject.should_not be_able_to(:create, ActiveFedora::Base)
-    end
+
+    it { should_not be_able_to(:create, ActiveFedora::Base) }
   end
 
 
@@ -41,38 +38,25 @@ describe Ability do
 #   Test coverage for discover permission is in spec/requests/gated_discovery_spec.rb
   
   describe "Given an asset that has been made publicly available (ie. open access)" do
-    before do
-      @asset = FactoryGirl.build(:open_access_asset)
-      @asset.save
-    end
+    let(:asset) { FactoryGirl.create(:open_access_asset) }
+
     context "Then a not-signed-in user" do
-      before do
-        @user = User.new
-        @user.new_record = true
-      end
       subject { Ability.new(nil) }
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be true
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be false
-        subject.can?(:update, @asset).should be false
-        subject.can?(:destroy, @asset).should be false
-      end
+      it { should     be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
     end
+
     context "Then a registered user" do
       before do
         @user = FactoryGirl.build(:registered_user)
       end
       subject { Ability.new(@user) }
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be true
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be false
-        subject.can?(:update, @asset).should be false
-        subject.can?(:destroy, @asset).should be false
-      end
+      it { should     be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
     end
   end
   
@@ -108,105 +92,75 @@ describe Ability do
   end
 
   describe "Given an asset which registered users have read access to" do
-    before do
-      @asset = FactoryGirl.build(:org_read_access_asset)
-      @asset.save
-    end
+    let(:asset) { FactoryGirl.create(:org_read_access_asset) }
     context "The a registered user" do
       before do
         @user = FactoryGirl.build(:registered_user)
       end
       subject { Ability.new(@user) }
 
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be true
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be false
-        subject.can?(:update, @asset).should be false
-        subject.can?(:destroy, @asset).should be false
-      end
-      it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be false
-      end
+      it { should     be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
+      it { should_not be_able_to(:admin, asset) }
     end
   end
 
   describe "Given an asset with collaborator" do
-    before { @asset = FactoryGirl.create(:group_edit_asset) }
-    after { @asset.destroy }
+    let(:asset) { FactoryGirl.create(:group_edit_asset) }
+    after { asset.destroy }
     context "Then a collaborator with edit access (user permision)" do
       before do
         @user = FactoryGirl.build(:calvin_collaborator)
       end
       subject { Ability.new(@user) }
 
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be true
-      end
-      it "should be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be true
-        subject.can?(:update, @asset).should be true
-        subject.can?(:destroy, @asset).should be true
-      end
-      it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be false
-      end
+      it { should     be_able_to(:read, asset) }
+      it { should     be_able_to(:edit, asset) }
+      it { should     be_able_to(:update, asset) }
+      it { should     be_able_to(:destroy, asset) }
+      it { should_not be_able_to(:admin, asset) }
     end
+
     context "Then a collaborator with edit access (group permision)" do
       before do
         @user = FactoryGirl.build(:martia_morocco)
-        RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
+        allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
       end
       subject { Ability.new(@user) }
 
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be true
-      end
+      it { should     be_able_to(:read, asset) }
     end
   end
 
   describe "Given an asset where dept can read & registered users can discover" do
-    before do
-      @asset = FactoryGirl.build(:dept_access_asset)
-      @asset.save
-    end
+    let(:asset) { FactoryGirl.create(:dept_access_asset) }
     context "Then a registered user" do
       before do
         @user = FactoryGirl.build(:registered_user)
       end
       subject { Ability.new(@user) }
 
-      it "should not be able to view the asset" do
-        subject.can?(:read, @asset).should be false
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be false
-        subject.can?(:update, @asset).should be false
-        subject.can?(:destroy, @asset).should be false
-      end
-      it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be false
-      end
+      it { should_not be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
+      it { should_not be_able_to(:admin, asset) }
     end
+
     context "Then someone whose role/group has read access" do
       before do
         @user = FactoryGirl.build(:martia_morocco)
-        RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
+        allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
       end
       subject { Ability.new(@user) }
 
-      it "should be able to view the asset" do
-        subject.can?(:read, @asset).should be true
-      end
-      it "should not be able to edit, update and destroy the asset" do
-        subject.can?(:edit, @asset).should be false
-        subject.can?(:update, @asset).should be false
-        subject.can?(:destroy, @asset).should be false
-      end
-      it "should not be able to see the admin view of the asset" do
-        subject.can?(:admin, @asset).should be false
-      end
+      it { should     be_able_to(:read, asset) }
+      it { should_not be_able_to(:edit, asset) }
+      it { should_not be_able_to(:update, asset) }
+      it { should_not be_able_to(:destroy, asset) }
+      it { should_not be_able_to(:admin, asset) }
     end
   end
 
@@ -230,9 +184,7 @@ describe Ability do
 
     subject { MyAbility.new(@user) }
 
-    it "should be set the custom permission" do
-      subject.can?(:accept, ActiveFedora::Base).should be true
-    end
+    it { should be_able_to(:accept, ActiveFedora::Base) }
 
   end
 
@@ -249,37 +201,30 @@ describe Ability do
     subject { Ability.new(@user) }
     it "should be readable in the first instance and not in the second instance" do
       # We had a bug around this where it keeps returning the access for the first object queried
-      subject.can?(:edit, @asset1).should be true  
-      subject.can?(:edit, @asset2).should be false  
+      expect(subject).to be_able_to(:edit, @asset1)
+      expect(subject).to_not be_able_to(:edit, @asset2)
     end
   end
 
   describe "download permissions" do
-    subject { Ability.new(@user) }
-    before do
-      @asset = FactoryGirl.create(:asset)
-      @user = FactoryGirl.build(:user)
-    end
-    after { @asset.destroy }
+    subject { Ability.new(user) }
+    let(:asset) { FactoryGirl.create(:asset) }
+    let(:user) { FactoryGirl.build(:user) }
+    after { asset.destroy }
+
     context "user has read permission on the object" do
       before do
-        @asset.read_users = [@user.user_key]
-        @asset.save
+        asset.read_users = [user.user_key]
+        asset.save!
       end
-      it "should permit the user to download the object's datastreams" do
-        subject.can?(:read, @asset).should be true
-        @asset.datastreams.each_value do |ds|
-          subject.can?(:download, ds).should be true
-        end
-      end
+
+      it { should be_able_to(:read, asset) }
+      it { should be_able_to(:download, asset.rightsMetadata) }
     end
-    context "user lacks read permission on the object" do
-      it "should not permit the user to download the object's datastreams" do
-        subject.can?(:read, @asset).should be false
-        @asset.datastreams.each_value do |ds|
-          subject.can?(:download, ds).should be false
-        end
-      end
+
+    context "user lacks read permission on the object and datastream" do
+      it { should_not be_able_to(:read, asset) }
+      it { should_not be_able_to(:download, asset.rightsMetadata) }
     end
   end
 

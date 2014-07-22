@@ -10,8 +10,8 @@ describe Hydra::Config do
         :read => {:group =>ActiveFedora::SolrService.solr_name("read_access_group", :symbol), :individual=>ActiveFedora::SolrService.solr_name("read_access_person", :symbol)},
         :edit => {:group =>ActiveFedora::SolrService.solr_name("edit_access_group", :symbol), :individual=>ActiveFedora::SolrService.solr_name("edit_access_person", :symbol)},
         :owner => ActiveFedora::SolrService.solr_name("depositor", :symbol),
-        :embargo_release_date => ActiveFedora::SolrService.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
       }
+      config.permissions.embargo.release_date = ActiveFedora::SolrService.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
 
       # specify the user model
       config[:user_model] = 'User'
@@ -41,7 +41,6 @@ describe Hydra::Config do
 
   it "should have defaults" do
     config.permissions.read.individual.should == 'read_access_person_ssim'
-    config.permissions.embargo_release_date.should == 'embargo_release_date_dtsi'
     config.permissions.embargo.release_date.should == 'embargo_release_date_dtsi'
     config.user_model.should == 'User'
   end

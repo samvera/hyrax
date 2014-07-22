@@ -2,8 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Hydra::Datastream::RightsMetadata do
 
-  let(:obj) { ActiveFedora::Base.new }
-  let(:sample) { Hydra::Datastream::RightsMetadata.new(obj.inner_object, nil) }
+  let(:parent) { double('inner object', uri: '/fedora/rest/test/1234', id: '1234', new_record?: true) }
+
+  let(:sample) { Hydra::Datastream::RightsMetadata.new(parent, 'rightsMetadata') }
   
   describe "license" do
     before do
@@ -19,7 +20,7 @@ describe Hydra::Datastream::RightsMetadata do
     it "should be accessable as a term path" do
       # This enables us to use:
       #  delegate :license_title, :to=>'rightsMetadata', :at=>[:license, :title]
-      sample.term_values(:license, :title).should == ["Creative Commons Attribution 3.0 Unported License."]
+      expect(sample.term_values(:license, :title)).to eq ["Creative Commons Attribution 3.0 Unported License."]
     end
   end
   
@@ -32,55 +33,55 @@ describe Hydra::Datastream::RightsMetadata do
         sample.permissions = {"group"=>{"librarians"=>"read","students"=>"discover"}}
       end
       it "should create/update/delete permissions for the given user/group" do
-        sample.class.terminology.xpath_for(:access, :person, "person_123").should == '//oxns:access/oxns:machine/oxns:person[contains(., "person_123")]'
+        expect(sample.class.terminology.xpath_for(:access, :person, "person_123")).to eq '//oxns:access/oxns:machine/oxns:person[contains(., "person_123")]'
         
         person_123_perms_xpath = sample.class.terminology.xpath_for(:access, :person, "person_123")
         group_zzz_perms_xpath = sample.class.terminology.xpath_for(:access, :group, "group_zzz")
         
-        sample.find_by_terms(person_123_perms_xpath).should be_empty 
-        sample.permissions({"person"=>"person_123"}, "edit").should == "edit"
-        sample.permissions({"group"=>"group_zzz"}, "edit").should == "edit"      
+        expect(sample.find_by_terms(person_123_perms_xpath)).to be_empty 
+        expect(sample.permissions({"person"=>"person_123"}, "edit")).to eq "edit"
+        expect(sample.permissions({"group"=>"group_zzz"}, "edit")).to eq "edit"      
         
-        sample.find_by_terms(person_123_perms_xpath).first.ancestors("access").first.attributes["type"].text.should == "edit"
-        sample.find_by_terms(group_zzz_perms_xpath).first.ancestors("access").first.attributes["type"].text.should == "edit"
+        expect(sample.find_by_terms(person_123_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "edit"
+        expect(sample.find_by_terms(group_zzz_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "edit"
         
         sample.permissions({"person"=>"person_123"}, "read")
         sample.permissions({"group"=>"group_zzz"}, "read")
-        sample.find_by_terms(person_123_perms_xpath).length.should == 1
+        expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 1
         
-        sample.find_by_terms(person_123_perms_xpath).first.ancestors("access").first.attributes["type"].text.should == "read"
-        sample.find_by_terms(group_zzz_perms_xpath).first.ancestors("access").first.attributes["type"].text.should == "read"
+        expect(sample.find_by_terms(person_123_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "read"
+        expect(sample.find_by_terms(group_zzz_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "read"
       
-        sample.permissions({"person"=>"person_123"}, "none").should == "none"
-        sample.permissions({"group"=>"group_zzz"}, "none").should == "none"
-        sample.find_by_terms(person_123_perms_xpath).should be_empty 
-        sample.find_by_terms(person_123_perms_xpath).should be_empty 
+        expect(sample.permissions({"person"=>"person_123"}, "none")).to eq "none"
+        expect(sample.permissions({"group"=>"group_zzz"}, "none")).to eq "none"
+        expect(sample.find_by_terms(person_123_perms_xpath)).to  be_empty 
+        expect(sample.find_by_terms(person_123_perms_xpath)).to be_empty 
       end
       it "should remove existing permissions (leaving only one permission level per user/group)" do
         person_123_perms_xpath = sample.class.terminology.xpath_for(:access, :person, "person_123")
         group_zzz_perms_xpath = sample.class.terminology.xpath_for(:access, :group, "group_zzz")
                         
-        sample.find_by_terms(person_123_perms_xpath).length.should == 0
-        sample.find_by_terms(group_zzz_perms_xpath).length.should == 0
+        expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 0
+        expect(sample.find_by_terms(group_zzz_perms_xpath).length).to eq 0
         sample.permissions({"person"=>"person_123"}, "read")
         sample.permissions({"group"=>"group_zzz"}, "read")
-        sample.find_by_terms(person_123_perms_xpath).length.should == 1
-        sample.find_by_terms(group_zzz_perms_xpath).length.should == 1
+        expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 1
+        expect(sample.find_by_terms(group_zzz_perms_xpath).length).to eq 1
         
         sample.permissions({"person"=>"person_123"}, "edit")
         sample.permissions({"group"=>"group_zzz"}, "edit")
-        sample.find_by_terms(person_123_perms_xpath).length.should == 1
-        sample.find_by_terms(group_zzz_perms_xpath).length.should == 1
+        expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 1
+        expect(sample.find_by_terms(group_zzz_perms_xpath).length).to eq 1
       end
       it "should not impact other users permissions" do
         sample.permissions({"person"=>"person_123"}, "read")
         sample.permissions({"person"=>"person_789"}, "edit")
         
-        sample.permissions({"person"=>"person_123"}).should == "read"
+        expect(sample.permissions({"person"=>"person_123"})).to eq "read"
         sample.permissions({"person"=>"person_456"}, "read")
-        sample.permissions({"person"=>"person_123"}).should == "read"
-        sample.permissions({"person"=>"person_456"}).should == "read"
-        sample.permissions({"person"=>"person_789"}).should == "edit"
+        expect(sample.permissions({"person"=>"person_123"})).to eq "read"
+        expect(sample.permissions({"person"=>"person_456"})).to eq "read"
+        expect(sample.permissions({"person"=>"person_789"})).to eq "edit"
         
         
       end
@@ -89,9 +90,9 @@ describe Hydra::Datastream::RightsMetadata do
       it "should return permissions level for the given user/group" do
         sample.permissions({"person"=>"person_123"}, "edit")
         sample.permissions({"group"=>"group_zzz"}, "discover")
-        sample.permissions({"person"=>"person_123"}).should == "edit"
-        sample.permissions({"group"=>"group_zzz"}).should == "discover"
-        sample.permissions({"group"=>"foo_people"}).should == "none"
+        expect(sample.permissions({"person"=>"person_123"})).to eq "edit"
+        expect(sample.permissions({"group"=>"group_zzz"})).to eq "discover"
+        expect(sample.permissions({"group"=>"foo_people"})).to eq "none"
       end
     end
   end
@@ -100,8 +101,7 @@ describe Hydra::Datastream::RightsMetadata do
       sample.permissions({"group"=>"group_zzz"}, "edit")
       sample.permissions({"group"=>"public"}, "discover")
 
-      #sample.groups.should == {"group_zzz"=>"edit", "public"=>"discover"}
-      sample.groups.should == {"public"=>"discover", "group_zzz"=>"edit"}
+      expect(sample.groups).to eq("public"=>"discover", "group_zzz"=>"edit")
     end
   end
   describe "individuals" do
@@ -114,10 +114,10 @@ describe Hydra::Datastream::RightsMetadata do
   
   describe "update_permissions" do
     it "should accept a hash of groups and persons, updating their permissions accordingly" do
-      sample.should_receive(:permissions).with({"group" => "group1"}, "discover")
-      sample.should_receive(:permissions).with({"group" => "group2"}, "edit")
-      sample.should_receive(:permissions).with({"person" => "person1"}, "read")
-      sample.should_receive(:permissions).with({"person" => "person2"}, "discover")
+      expect(sample).to receive(:permissions).with({"group" => "group1"}, "discover")
+      expect(sample).to receive(:permissions).with({"group" => "group2"}, "edit")
+      expect(sample).to receive(:permissions).with({"person" => "person1"}, "read")
+      expect(sample).to receive(:permissions).with({"person" => "person2"}, "discover")
       
       sample.update_permissions( {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}} )
     end
@@ -145,10 +145,10 @@ describe Hydra::Datastream::RightsMetadata do
       sample.update_values(params)
       solr_doc = sample.to_solr
       
-      solr_doc["edit_access_person_ssim"].should == ["Lil Kim"]
-      solr_doc["edit_access_group_ssim"].sort.should == ["group1", "group2"]
-      solr_doc["discover_access_person_ssim"].should == ["Joe Schmoe"]
-      solr_doc["discover_access_group_ssim"].should == ["public"]
+      expect(solr_doc["edit_access_person_ssim"]).to eq ["Lil Kim"]
+      expect(solr_doc["edit_access_group_ssim"].sort).to eq ["group1", "group2"]
+      expect(solr_doc["discover_access_person_ssim"]).to eq ["Joe Schmoe"]
+      expect(solr_doc["discover_access_group_ssim"]).to eq ["public"]
     end
     it "should solrize fixture content correctly" do
       lsample = Hydra::Datastream::RightsMetadata.new(ActiveFedora::Base.new, nil)
@@ -156,10 +156,10 @@ describe Hydra::Datastream::RightsMetadata do
                                   'group' => {'archivist' => 'edit', 'public' =>'read', 'bob'=>'discover'}})
 
       solr_doc = lsample.to_solr
-      solr_doc["edit_access_person_ssim"].should == ["researcher1"]
-      solr_doc["edit_access_group_ssim"].should == ["archivist"]
-      solr_doc["read_access_group_ssim"].should == ["public"]
-      solr_doc["discover_access_group_ssim"].should == ["bob"]
+      expect(solr_doc["edit_access_person_ssim"]).to eq ["researcher1"]
+      expect(solr_doc["edit_access_group_ssim"]).to eq ["archivist"]
+      expect(solr_doc["read_access_group_ssim"]).to eq ["public"]
+      expect(solr_doc["discover_access_group_ssim"]).to eq ["bob"]
     end
 
     it "should solrize embargo information if set" do

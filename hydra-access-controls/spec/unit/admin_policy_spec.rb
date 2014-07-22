@@ -24,47 +24,47 @@ describe Hydra::AdminPolicy do
   describe "to_solr" do
     subject { Hydra::AdminPolicy.new(:title=>"Foobar").to_solr }
     it "should have title_ssim" do
-      subject[ActiveFedora::SolrService.solr_name('title', type: :string)].should == "Foobar"
+      expect(subject[ActiveFedora::SolrService.solr_name('title', type: :string)]).to eq "Foobar"
     end
   end
 
   describe "updating default permissions" do
     it "should create new group permissions" do
       subject.default_permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
-      subject.default_permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'}]
+      expect(subject.default_permissions).to eq [{:type=>'group', :access=>'discover', :name=>'group1'}]
     end
     it "should create new user permissions" do
       subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
-      subject.default_permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+      expect(subject.default_permissions).to eq [{:type=>'user', :access=>'discover', :name=>'user1'}]
     end
     it "should not replace existing groups" do
       subject.default_permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
       subject.default_permissions = [{:name=>'group2', :access=>'discover', :type=>'group'}]
-      subject.default_permissions.should == [{:type=>'group', :access=>'discover', :name=>'group1'},
+      expect(subject.default_permissions).to eq [{:type=>'group', :access=>'discover', :name=>'group1'},
                                    {:type=>'group', :access=>'discover', :name=>'group2'}]
     end
     it "should not replace existing users" do
       subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
       subject.default_permissions = [{:name=>'user2', :access=>'discover', :type=>'user'}]
-      subject.default_permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'},
+      expect(subject.default_permissions).to eq [{:type=>'user', :access=>'discover', :name=>'user1'},
                                    {:type=>'user', :access=>'discover', :name=>'user2'}]
     end
     it "should update permissions on existing users" do
       subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'user'}]
       subject.default_permissions = [{:name=>'user1', :access=>'edit', :type=>'user'}]
-      subject.default_permissions.should == [{:type=>'user', :access=>'edit', :name=>'user1'}]
+      expect(subject.default_permissions).to eq [{:type=>'user', :access=>'edit', :name=>'user1'}]
     end
     it "should update permissions on existing groups" do
       subject.default_permissions = [{:name=>'group1', :access=>'discover', :type=>'group'}]
       subject.default_permissions = [{:name=>'group1', :access=>'edit', :type=>'group'}]
-      subject.default_permissions.should == [{:type=>'group', :access=>'edit', :name=>'group1'}]
+      expect(subject.default_permissions).to eq [{:type=>'group', :access=>'edit', :name=>'group1'}]
     end
     it "should assign user permissions when :type == 'person'" do
       subject.default_permissions = [{:name=>'user1', :access=>'discover', :type=>'person'}]
-      subject.default_permissions.should == [{:type=>'user', :access=>'discover', :name=>'user1'}]
+      expect(subject.default_permissions).to eq [{:type=>'user', :access=>'discover', :name=>'user1'}]
     end
     it "should raise an ArgumentError when the :type hashkey is invalid" do
-      expect{subject.default_permissions = [{:name=>'user1', :access=>'read', :type=>'foo'}]}.to raise_error(ArgumentError)
+      expect { subject.default_permissions = [{:name=>'user1', :access=>'read', :type=>'foo'}] }.to raise_error(ArgumentError)
     end
   end
   
@@ -80,25 +80,25 @@ describe Hydra::AdminPolicy do
     describe "to_solr" do
       subject {@policy.to_solr}
       it "should not affect normal solr permissions fields" do    
-        subject.should_not have_key( Hydra.config[:permissions][:discover][:group] ) 
-        subject.should_not have_key( Hydra.config[:permissions][:discover][:individual] )
-        subject.should_not have_key( Hydra.config[:permissions][:read][:group] )
-        subject.should_not have_key( Hydra.config[:permissions][:read][:individual] )
-        subject.should_not have_key( Hydra.config[:permissions][:edit][:group] )
-        subject.should_not have_key( Hydra.config[:permissions][:edit][:individual] )
-        subject.should_not have_key( Hydra.config[:permissions][:embargo_release_date] )
+        expect(subject).to_not have_key( Hydra.config[:permissions][:discover][:group] ) 
+        expect(subject).to_not have_key( Hydra.config[:permissions][:discover][:individual] )
+        expect(subject).to_not have_key( Hydra.config[:permissions][:read][:group] )
+        expect(subject).to_not have_key( Hydra.config[:permissions][:read][:individual] )
+        expect(subject).to_not have_key( Hydra.config[:permissions][:edit][:group] )
+        expect(subject).to_not have_key( Hydra.config[:permissions][:edit][:individual] )
+        expect(subject).to_not have_key( Hydra.config[:permissions].embargo.release_date )
       end
       it "should provide prefixed/inherited solr permissions fields" do
-        subject[Hydra.config[:permissions][:inheritable][:discover][:group] ].should == ["posers"]
-        subject[Hydra.config[:permissions][:inheritable][:discover][:individual] ].should == ["constantine"]
-        subject[Hydra.config[:permissions][:inheritable][:read][:group] ].should == ["slightlycoolkids"]
-        subject[Hydra.config[:permissions][:inheritable][:read][:individual] ].should == ["nero"]
+        expect(subject[Hydra.config[:permissions][:inheritable][:discover][:group] ]).to eq ["posers"]
+        expect(subject[Hydra.config[:permissions][:inheritable][:discover][:individual] ]).to eq ["constantine"]
+        expect(subject[Hydra.config[:permissions][:inheritable][:read][:group] ]).to eq ["slightlycoolkids"]
+        expect(subject[Hydra.config[:permissions][:inheritable][:read][:individual] ]).to eq ["nero"]
         inheritable_group = Hydra.config[:permissions][:inheritable][:edit][:group]
-        subject[inheritable_group].length.should == 2
-        subject[inheritable_group].should include("africana-faculty", "cool-kids")
+        expect(subject[inheritable_group].length).to eq 2
+        expect(subject[inheritable_group]).to include("africana-faculty", "cool-kids")
 
-        subject[Hydra.config[:permissions][:inheritable][:edit][:individual] ].should == ["julius_caesar"]
-        expect(subject[Hydra.config[:permissions][:inheritable][:embargo_release_date] ]).to eq Date.parse("2102-10-01").to_time.utc.iso8601
+        expect(subject[Hydra.config[:permissions][:inheritable][:edit][:individual] ]).to eq ["julius_caesar"]
+        expect(subject[Hydra.config[:permissions][:inheritable].embargo.release_date ]).to eq Date.parse("2102-10-01").to_time.utc.iso8601
       end
     end
 
@@ -110,7 +110,7 @@ describe Hydra::AdminPolicy do
   describe "When accessing assets with Policies associated" do
     before do
       @user = FactoryGirl.build(:martia_morocco)
-      RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
+      allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
     end
     before(:all) do
       class TestAbility
@@ -137,12 +137,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
     		it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be true
+    		  expect(subject.can?(:read, @asset)).to be true
   		  end
         it "Then I should not be able to edit, update and destroy the asset" do
-          subject.can?(:edit, @asset).should be false
-          subject.can?(:update, @asset).should be false
-          subject.can?(:destroy, @asset).should be false
+          expect(subject.can?(:edit, @asset)).to be false
+          expect(subject.can?(:update, @asset)).to be false
+          expect(subject.can?(:destroy, @asset)).to be false
         end
       end
     end
@@ -161,12 +161,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
     		it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be true
+    		  expect(subject.can?(:read, @asset)).to be true
   		  end
     		it "Then I should be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be true
-          subject.can?(:update, @asset).should be true
-          subject.can?(:destroy, @asset).should be true
+          expect(subject.can?(:edit, @asset)).to be true
+          expect(subject.can?(:update, @asset)).to be true
+          expect(subject.can?(:destroy, @asset)).to be true
         end
   		end
     	context "And a subscribing asset grants read access to me as an individual" do
@@ -178,12 +178,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
     		it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be true
+    		  expect(subject.can?(:read, @asset)).to be true
   		  end
         it "Then I should be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be true
-          subject.can?(:update, @asset).should be true
-          subject.can?(:destroy, @asset).should be true
+          expect(subject.can?(:edit, @asset)).to be true
+          expect(subject.can?(:update, @asset)).to be true
+          expect(subject.can?(:destroy, @asset)).to be true
         end
       end
     end
@@ -202,12 +202,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
   		  it "Then I should not be able to view the asset" do
-    		  subject.can?(:read, @asset).should be false
+    		  expect(subject.can?(:read, @asset)).to be false
   		  end
         it "Then I should not be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be false
-          subject.can?(:update, @asset).should be false
-          subject.can?(:destroy, @asset).should be false
+          expect(subject.can?(:edit, @asset)).to be false
+          expect(subject.can?(:update, @asset)).to be false
+          expect(subject.can?(:destroy, @asset)).to be false
         end
       end
       context "And a subscribing asset grants read access to me as an individual" do
@@ -219,12 +219,12 @@ describe Hydra::AdminPolicy do
         end
         after { @asset.delete }
   		  it "Then I should be able to view the asset" do
-    		  subject.can?(:read, @asset).should be true
+    		  expect(subject.can?(:read, @asset)).to be true
   		  end
         it "Then I should not be able to edit/update/destroy the asset" do
-          subject.can?(:edit, @asset).should be false
-          subject.can?(:update, @asset).should be false
-          subject.can?(:destroy, @asset).should be false
+          expect(subject.can?(:edit, @asset)).to be false
+          expect(subject.can?(:update, @asset)).to be false
+          expect(subject.can?(:destroy, @asset)).to be false
         end
       end
     end
