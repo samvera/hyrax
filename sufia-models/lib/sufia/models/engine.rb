@@ -45,7 +45,6 @@ module Sufia
       initializer 'requires' do
         require 'activerecord-import'
         require 'hydra/derivatives'
-        require 'sufia/models/model_methods'
         require 'sufia/models/file_content'
         require 'sufia/models/file_content/versions'
         require 'sufia/models/user_local_directory_behavior'
