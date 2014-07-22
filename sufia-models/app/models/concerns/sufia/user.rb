@@ -64,6 +64,12 @@ module Sufia::User
     @ability ||= ::Ability.new(self)
   end
 
+  def get_all_user_activity( since = DateTime.now.to_i - 8640)
+    events = self.events.reverse.collect { |event| event if event[:timestamp].to_i > since }.compact
+    profile_events = self.profile_events.reverse.collect { |event| event if event[:timestamp].to_i > since }.compact
+    events.concat(profile_events).sort { |a, b| b[:timestamp].to_i <=> a[:timestamp].to_i }
+  end
+
   module ClassMethods
 
     def permitted_attributes
