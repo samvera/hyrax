@@ -362,15 +362,14 @@ describe GenericFile do
         gf.apply_depositor_metadata(u)
         gf.save!
       end
-      @t = Trophy.create(user_id: u.id, generic_file_id: @f.pid)
+      @t = Trophy.create(user_id: u.id, generic_file_id: @f.noid)
     end
     it "should have a trophy" do
-      Trophy.where(generic_file_id: @f.pid).count.should == 1
+      expect(Trophy.where(generic_file_id: @f.noid).count).to eq 1
     end
     it "should remove all trophies when file is deleted" do
-      @f.should_receive(:cleanup_trophies)
       @f.destroy
-      Trophy.where(generic_file_id: @f.pid).count.should == 0
+      expect(Trophy.where(generic_file_id: @f.noid).count).to eq 0
     end
   end
 

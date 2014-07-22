@@ -7,7 +7,6 @@ describe AuditJob do
     @file = GenericFile.new
     @file.apply_depositor_metadata(@user)
     @file.save
-    @ds = @file.datastreams.first
   end
   after do
     @file.delete
@@ -15,7 +14,7 @@ describe AuditJob do
   describe "passing audit" do
     it "should not send passing mail" do
       ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(true)
-      AuditJob.new(@file.pid, @ds[0], @ds[1].versionID).run
+      AuditJob.new(@file.pid, "RELS-EXT", @file.rels_ext.versionID).run
       @inbox = @user.mailbox.inbox
       @inbox.count.should == 0
     end
@@ -23,7 +22,7 @@ describe AuditJob do
   describe "failing audit" do
     it "should send failing mail" do
       ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(false)
-      AuditJob.new(@file.pid, @ds[0], @ds[1].versionID).run
+      AuditJob.new(@file.pid, "RELS-EXT", @file.rels_ext.versionID).run
       @inbox = @user.mailbox.inbox
       @inbox.count.should == 1
       @inbox.each { |msg| msg.last_message.subject.should == AuditJob::FAIL }
