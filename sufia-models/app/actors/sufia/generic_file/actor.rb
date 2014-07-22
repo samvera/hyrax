@@ -17,7 +17,7 @@ module Sufia::GenericFile
       generic_file.apply_depositor_metadata(user)
       generic_file.date_uploaded = Date.today
       generic_file.date_modified = Date.today
-      generic_file.creator = user.name
+      generic_file.creator = [user.name]
 
       if batch_id
         generic_file.add_relationship("isPartOf", "info:fedora/#{Sufia::Noid.namespaceize(batch_id)}")

@@ -18,7 +18,7 @@ FactoryGirl.define do
         end
         initialize_with { new(pid: pid) }
         read_groups ["public"]
-        resource_type "Dissertation"
+        resource_type ["Dissertation"]
         subject %w"lorem ipsum dolor sit amet"
         before(:create) do |gf|
           gf.apply_depositor_metadata "archivist1@example.com"

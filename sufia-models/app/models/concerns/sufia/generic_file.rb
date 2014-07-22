@@ -102,7 +102,7 @@ module Sufia
     def label=(new_label)
       @inner_object.label = new_label
       if self.title.empty?
-        self.title = new_label
+        self.title = [new_label].compact
       end
     end
 

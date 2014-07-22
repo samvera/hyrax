@@ -250,9 +250,9 @@ describe GenericFile do
         f.should respond_to(:log_event)
       end
       it "should be able to set values via delegated methods" do
-        subject.related_url = "http://example.org/"
-        subject.creator = "John Doe"
-        subject.title = "New work"
+        subject.related_url = ["http://example.org/"]
+        subject.creator = ["John Doe"]
+        subject.title = ["New work"]
         subject.save
         f = subject.reload
         f.related_url.should == ["http://example.org/"]
@@ -260,13 +260,13 @@ describe GenericFile do
         f.title.should == ["New work"]
       end
       it "should be able to be added to w/o unexpected graph behavior" do
-        subject.creator = "John Doe"
-        subject.title = "New work"
+        subject.creator = ["John Doe"]
+        subject.title = ["New work"]
         subject.save
         f = subject.reload
         f.creator.should == ["John Doe"]
         f.title.should == ["New work"]
-        f.creator = "Jane Doe"
+        f.creator = ["Jane Doe"]
         f.title << "Newer work"
         f.save
         f = subject.reload
@@ -278,24 +278,24 @@ describe GenericFile do
   describe "to_solr" do
     before do
       allow(subject).to receive(:pid).and_return('stubbed_pid')
-      subject.part_of = "Arabiana"
-      subject.contributor = "Mohammad"
-      subject.creator = "Allah"
-      subject.title = "The Work"
-      subject.description = "The work by Allah"
-      subject.publisher = "Vertigo Comics"
+      subject.part_of = ["Arabiana"]
+      subject.contributor = ["Mohammad"]
+      subject.creator = ["Allah"]
+      subject.title = ["The Work"]
+      subject.description = ["The work by Allah"]
+      subject.publisher = ["Vertigo Comics"]
       subject.date_created = "1200-01-01"
       subject.date_uploaded = Date.parse("2011-01-01")
       subject.date_modified = Date.parse("2012-01-01")
-      subject.subject = "Theology"
-      subject.language = "Arabic"
-      subject.rights = "Wide open, buddy."
-      subject.resource_type = "Book"
-      subject.identifier = "urn:isbn:1234567890"
-      subject.based_near = "Medina, Saudi Arabia"
-      subject.related_url = "http://example.org/TheWork/"
+      subject.subject = ["Theology"]
+      subject.language = ["Arabic"]
+      subject.rights = ["Wide open, buddy."]
+      subject.resource_type = ["Book"]
+      subject.identifier = ["urn:isbn:1234567890"]
+      subject.based_near = ["Medina, Saudi Arabia"]
+      subject.related_url = ["http://example.org/TheWork/"]
       subject.mime_type = "image/jpeg"
-      subject.format_label = "JPEG Image"
+      subject.format_label = ["JPEG Image"]
       subject.full_text.content = 'abcxyz'
     end
     it "supports to_solr" do

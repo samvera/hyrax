@@ -14,50 +14,50 @@ describe BatchEditsController do
 
   describe "edit" do
     before do
-      @one = GenericFile.new(creator: "Fred", language: 'en')#, resource_type: 'foo')
+      @one = GenericFile.new(creator: ["Fred"], language: ['en'])
       @one.apply_depositor_metadata('mjg36')
-      @two = GenericFile.new(creator: "Wilma", publisher: 'Rand McNally', language: 'en', resource_type: 'bar')
+      @two = GenericFile.new(creator: ["Wilma"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar'])
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
       controller.batch = [@one.pid, @two.pid]
-      controller.should_receive(:can?).with(:edit, @one.pid).and_return(true)
-      controller.should_receive(:can?).with(:edit, @two.pid).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, @one.pid).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, @two.pid).and_return(true)
     end
     it "should be successful" do
       get :edit
       response.should be_successful
       assigns[:terms].should == [:creator, :contributor, :description, :tag, :rights, :publisher,
                         :date_created, :subject, :language, :identifier, :based_near, :related_url]
-      assigns[:show_file].creator.should == ["Fred", "Wilma"]
-      assigns[:show_file].publisher.should == ["Rand McNally"]
-      assigns[:show_file].language.should == ["en"]
+      expect(assigns[:show_file].creator).to eq ["Fred", "Wilma"]
+      expect(assigns[:show_file].publisher).to eq ["Rand McNally"]
+      expect(assigns[:show_file].language).to eq ["en"]
     end
   end
 
   describe "update" do
     before do
-      @one = GenericFile.new(creator: "Fred", language: 'en')
+      @one = GenericFile.new(creator: ["Fred"], language: ['en'])
       @one.apply_depositor_metadata('mjg36')
-      @two = GenericFile.new(creator: "Wilma", publisher: 'Rand McNally', language: 'en')
+      @two = GenericFile.new(creator: ["Wilma"], publisher: ['Rand McNally'], language: ['en'])
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
       controller.batch = [@one.pid, @two.pid]
-      controller.should_receive(:can?).with(:edit, @one.pid).and_return(true)
-      controller.should_receive(:can?).with(:edit, @two.pid).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, @one.pid).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, @two.pid).and_return(true)
     end
     it "should be successful" do
-      put :update , update_type:"delete_all"
-      response.should be_redirect
-      expect {GenericFile.find(@one.id)}.to raise_error(ActiveFedora::ObjectNotFoundError)
-      expect {GenericFile.find(@two.id)}.to raise_error(ActiveFedora::ObjectNotFoundError)
+      put :update , update_type: "delete_all"
+      expect(response).to be_redirect
+      expect { GenericFile.find(@one.id) }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      expect { GenericFile.find(@two.id) }.to raise_error(ActiveFedora::ObjectNotFoundError)
     end
     it "should update the records" do
-      put :update , update_type:"update", "generic_file"=>{"subject"=>["zzz"]}
-      response.should be_redirect
-      GenericFile.find(@one.id).subject.should == ["zzz"]
-      GenericFile.find(@two.id).subject.should == ["zzz"]
+      put :update , update_type: "update", "generic_file"=>{"subject"=>["zzz"]}
+      expect(response).to be_redirect
+      expect(GenericFile.find(@one.id).subject).to eq ["zzz"]
+      expect(GenericFile.find(@two.id).subject).to eq ["zzz"]
     end
   end
 
