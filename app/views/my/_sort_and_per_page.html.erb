@@ -6,7 +6,9 @@
   <% if on_my_files? %>
     <div class="batch-toggle">
       <% session[:batch_edit_state] = "on" %>
-      <%= batch_edit_continue "Edit Selected" %>
+      <div class="button_to-inline">
+        <%= batch_edit_continue "Edit Selected" %>
+      </div>
       <%= batch_delete %>
       <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
           data: { toggle: "modal", target: "#collection-list-container" } %>
