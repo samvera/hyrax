@@ -28,9 +28,7 @@ module Sufia
       config.max_notifications_for_dashboard = 5
 
       config.autoload_paths += %W(
-        #{config.root}/lib/sufia/models/jobs
         #{config.root}/app/models/datastreams
-        #{config.root}/app/models/concerns
       )
 
       rake_tasks do
