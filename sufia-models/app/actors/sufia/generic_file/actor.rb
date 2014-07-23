@@ -22,7 +22,7 @@ module Sufia::GenericFile
       if batch_id
         generic_file.add_relationship("isPartOf", "info:fedora/#{Sufia::Noid.namespaceize(batch_id)}")
       else
-        logger.warn "unable to find batch to attach to"
+        ActiveFedora::Base.logger.warn "unable to find batch to attach to"
       end
       yield(generic_file) if block_given?
     end
@@ -87,7 +87,7 @@ module Sufia::GenericFile
       begin
         return false unless generic_file.save
       rescue RSolr::Error::Http => error
-        logger.warn "Sufia::GenericFile::Actor::save_and_record_committer Caught RSOLR error #{error.inspect}"
+        ActiveFedora::Base.logger.warn "Sufia::GenericFile::Actor::save_and_record_committer Caught RSOLR error #{error.inspect}"
         save_tries+=1
         # fail for good if the tries is greater than 3
         raise error if save_tries >=3
@@ -107,7 +107,7 @@ module Sufia::GenericFile
       def virus_check(file)
         path = file.is_a?(String) ? file : file.path
         unless defined?(ClamAV)
-          logger.warn "Virus checking disabled, #{path} not checked"
+          ActiveFedora::Base.logger.warn "Virus checking disabled, #{path} not checked"
           return
         end
         scan_result = ClamAV.instance.scanfile(path)

@@ -14,7 +14,7 @@ module Sufia
         begin
           ::Resque.enqueue_to queue, MarshaledJob, Base64.encode64(Marshal.dump(job))
         rescue Redis::CannotConnectError
-          logger.error "Redis is down!"
+          ActiveFedora::Base.logger.error "Redis is down!"
         end
       end
     end
