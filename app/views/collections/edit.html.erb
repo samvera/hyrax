@@ -7,10 +7,10 @@
 
 <% unless has_collection_search_parameters? %>
   <div class="row">
-    <div class="col-xs-12 col-sm-4">
+    <div class="col-xs-12 col-sm-2">
       <%= render partial: 'collections/media_display', locals: { collection: @collection } %>
     </div>
-    <div class="col-xs-12 col-sm-8"><!-- class="column second"> -->
+    <div class="col-xs-12 col-sm-10"><!-- class="column second"> -->
       <%= render partial: 'collections/edit_actions' %>
       <%= render partial: 'collections/form', locals: { record: @collection } %>
     </div><!-- /columns second -->

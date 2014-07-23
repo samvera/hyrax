@@ -7,7 +7,9 @@ on element ids -->
   <td width="3%"></td> 
   <td width="41%">
     <div class="media">
-      <%= link_to image_tag("/assets/folder.png", class: "hidden-xs file_listing_thumbnail"), collections.collection_path(noid), class: "pull-left" %>
+      <%= link_to [collections, document], class: "pull-left" do %>
+        <span class="glyphicon glyphicon-th collection-icon-small">
+      <% end %>
       <div class="media-body">
         <h4 class="media-heading">
           <%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %>

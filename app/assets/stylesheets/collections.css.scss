@@ -12,11 +12,20 @@
   margin-right: 1em;
 }
 
-.collection-icon {
-  font-size: 20vw;
+.collection-icon, .collection-icon-search, .collection-icon-small {
+  font-size: 12vw;
   color: #fab801;
   padding: 15px 0 0 10px;
 }
+
+.collection-icon-search {
+  font-size: 10vw;
+}
+
+.collection-icon-small {
+  font-size: 2vw;
+}
+
 
 .actions-controls-collections {
   display: block;
