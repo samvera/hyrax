@@ -95,18 +95,21 @@ describe 'collection' do
     end
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")
       end
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      # Should not show title and description a second time
+      expect(page).to_not have_css('.metadata-collections', text: @collection.title)
+      expect(page).to_not have_css('.metadata-collections', text: @collection.description)
       # Should not have Collection Descriptive metadata table
-      page.should have_content("Descriptions")
+      expect(page).to have_content("Descriptions")
       # Should have search results / contents listing
-      page.should have_content(@gf1.title.first)
-      page.should have_content(@gf2.title.first)
-      page.should_not have_css(".pager")
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
+      expect(page).to_not have_css(".pager")
 
       click_link "Gallery"
       expect(page).to have_content(@gf1.title.first)
