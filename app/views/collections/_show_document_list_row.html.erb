@@ -1,0 +1,63 @@
+<% noid = document.noid %>
+<tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
+  <% gf = GenericFile.load_instance_from_solr(document.id) %>
+  <td>&nbsp;
+    <%# This block is for adding/removing the magic wand while batch updates are processing %>
+    <% if gf.processing? %>
+      <i class="glyphicon glyphicon-time <%= 'ss-'+gf.batch.noid %>"/>
+    <% elsif gf.depositor != @user.user_key %>
+      <i class="glyphicon glyphicon-share-alt"/>
+    <% end %>
+  </td>
+  <td>
+    <div class="media">
+      <%= link_to sufia.generic_file_path(document), class: "pull-left" do %>
+        <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
+      <% end %>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <%= link_to document.title_or_label, sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" %>
+          <a href="#" class="small" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-chevron-right"></i></a>
+        </h4>
+        <%= render_collection_list(gf) %>
+      </div>
+    </div>
+  </td>
+  <td class="text-center"><%= document.date_uploaded %> </td>
+  <td class="text-center">
+    <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>" class="visibility-link">
+      <% if document.registered? %>
+        <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
+      <% elsif document.public? %>
+        <span class="label label-success" title="Open Access">Open Access</span>
+      <% else %>
+        <span class="label label-danger" title="Private">Private</span>
+      <% end %>
+    </a>
+  </td>
+  <td class="text-center">
+    <%= render partial: 'show_document_list_menu', locals: { noid: noid, gf: gf } %>
+  </td>
+</tr>
+<tr id="detail_<%= noid %>"> <!--  document detail"> -->
+  <td colspan="6">
+    <dl class="expanded-details row">
+      <dt class="col-xs-3 col-lg-2">File Name:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= link_to document.label, sufia.generic_file_path(noid) %></dd>
+      <dt class="col-xs-3 col-lg-2">File Format:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= document.file_format %>JPG</dd>
+      <dt class="col-xs-3 col-lg-2">Creator:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= document.creator %></dd>
+      <dt class="col-xs-3 col-lg-2">Depositor:</dt>
+      <dd class="col-xs-9 col-lg-4"><%= link_to_profile document.depositor %></dd>
+      <dt class="col-xs-3 col-lg-2">Edit Access:</dt>
+      <dd class="col-xs-9 col-lg-10">
+        <% if document.edit_groups.present? %>
+          Groups: <%= document.edit_groups.join(', ') %>
+          <br/>
+        <% end %>
+        Users: <%= document.edit_people.join(', ') %>
+      </dd>
+    </dl>
+  </td>
+</tr>

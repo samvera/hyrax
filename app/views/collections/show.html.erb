@@ -35,5 +35,7 @@
   <%= render partial: 'search_form'%>
 </div>
 
+<% @user ||= current_user %>
 <%= render_document_index @member_docs %>
+
 <%= render partial: 'paginate' %>
