@@ -2,7 +2,6 @@ module Hydra
   module Controller
     module DownloadBehavior
       extend ActiveSupport::Concern
-      extend Deprecation
 
       included do
         include Hydra::Controller::ControllerBehavior
@@ -13,7 +12,7 @@ module Hydra
       
       # Responds to http requests to show the datastream
       def show
-        if datastream.new?
+        if datastream.new_record?
           render_404
         else
           send_content
@@ -36,7 +35,7 @@ module Hydra
       end
 
       def load_asset
-        @asset = ActiveFedora::Base.load_instance_from_solr(params[asset_param_key])
+        @asset = ActiveFedora::Base.find(params[asset_param_key])
       end
 
       def load_datastream
@@ -45,10 +44,6 @@ module Hydra
 
       # Customize the :download ability in your Ability class, or override this method
       def authorize_download!
-        if self.respond_to?(:can_download?)
-          Deprecation.warn(DownloadBehavior, "The `can_download?' method is deprecated and will not be supported in hydra-head 8.0.  Implement special authorization behavior by customizing the :download permission on ActiveFedora::Datastream in your Ability class.", caller)
-          current_ability.send(can_download? ? :can : :cannot, :download, ActiveFedora::Datastream, dsid: datastream.dsid, pid: datastream.pid)
-        end
         authorize! :download, datastream
       end
 
@@ -73,8 +68,7 @@ module Hydra
       end
       
       # Handle the HTTP show request
-      def send_content(asset_ = nil)
-        Deprecation.warn(DownloadBehavior, "The `asset' parameter of the `send_content' method is deprecated and will be removed from Hydra::Controller::DownloadBehavior in hydra-head 8.0", caller) if asset_
+      def send_content
 
         response.headers['Accept-Ranges'] = 'bytes'
 
@@ -89,7 +83,7 @@ module Hydra
 
       # Create some headers for the datastream
       def content_options
-        {disposition: 'inline', type: datastream.mimeType, filename: datastream_name}
+        {disposition: 'inline', type: datastream.mime_type, filename: datastream_name}
       end
 
       # Override this if you'd like a different filename
@@ -101,8 +95,8 @@ module Hydra
 
       # render an HTTP HEAD response
       def content_head
-        response.headers['Content-Length'] = datastream.dsSize
-        response.headers['Content-Type'] = datastream.mimeType
+        response.headers['Content-Length'] = datastream.size
+        response.headers['Content-Type'] = datastream.mime_type
         head :ok
       end
       
@@ -111,9 +105,9 @@ module Hydra
       def send_range
         _, range = request.headers['HTTP_RANGE'].split('bytes=')
         from, to = range.split('-').map(&:to_i)
-        to = datastream.dsSize - 1 unless to
+        to = datastream.size - 1 unless to
         length = to - from + 1
-        response.headers['Content-Range'] = "bytes #{from}-#{to}/#{datastream.dsSize}"
+        response.headers['Content-Range'] = "bytes #{from}-#{to}/#{datastream.size}"
         response.headers['Content-Length'] = "#{length}"
         self.status = 206
         prepare_file_headers
@@ -128,18 +122,17 @@ module Hydra
       
       def prepare_file_headers
         send_file_headers! content_options
-        response.headers['Content-Type'] = datastream.mimeType
-        self.content_type = datastream.mimeType
+        response.headers['Content-Type'] = datastream.mime_type
+        self.content_type = datastream.mime_type
       end
 
       private 
       
       def default_content_ds
-        ActiveFedora::ContentModel.known_models_for(asset).each do |model_class|
-          return asset.datastreams[model_class.default_content_ds] if model_class.respond_to?(:default_content_ds)
-        end
-        if asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
-          return asset.datastreams[DownloadsController.default_content_dsid]
+        if asset.class.respond_to?(:default_content_ds)
+          asset.datastreams[asset.class.default_content_ds]
+        elsif asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
+          asset.datastreams[DownloadsController.default_content_dsid]
         end
       end
       

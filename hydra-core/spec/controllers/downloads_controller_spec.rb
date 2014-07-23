@@ -18,6 +18,7 @@ describe DownloadsController do
   describe "with a file" do
     before do
       class ContentHolder < ActiveFedora::Base
+        include Hydra::ModelMethods
         include Hydra::AccessControls::Permissions
         has_file_datastream 'thumbnail'
       end
@@ -113,18 +114,20 @@ describe DownloadsController do
         end
       end
       describe "stream" do
+        let(:inner_object) { ActiveFedora::Base.new('/changeme:test') }
         before do
-          stub_response = double
-          allow(stub_response).to receive(:read_body).and_yield("one1").and_yield('two2').and_yield('thre').and_yield('four')
-          stub_repo = double
-          allow(stub_repo).to receive(:datastream_dissemination).and_yield(stub_response)
-          stub_ds = ActiveFedora::Datastream.new
-          allow(stub_ds).to receive(:repository).and_return(stub_repo)
-          allow(stub_ds).to receive(:mimeType).and_return('video/webm')
-          allow(stub_ds).to receive(:dsSize).and_return(16)
-          allow(stub_ds).to receive(:dsid).and_return('webm')
-          allow(stub_ds).to receive(:new?).and_return(false)
-          allow(stub_ds).to receive(:pid).and_return('changeme:test')
+          stub_response = double()
+          stub_response.stub(:read_body).and_yield("one1").and_yield('two2').and_yield('thre').and_yield('four')
+          stub_repo = double()
+          stub_repo.stub(:datastream_dissemination).and_yield(stub_response)
+
+          stub_ds = ActiveFedora::Datastream.new(inner_object, 'webm')
+          stub_ds.stub(:repository).and_return(stub_repo)
+          stub_ds.stub(:mimeType).and_return('video/webm')
+          stub_ds.stub(:dsSize).and_return(16)
+          stub_ds.stub(:dsid).and_return('webm')
+          stub_ds.stub(:new?).and_return(false)
+          stub_ds.stub(:pid).and_return('changeme:test')
           stub_file = double('stub object', datastreams: {'webm' => stub_ds}, pid:'changeme:test', label: "MyVideo.webm")
           expect(ActiveFedora::Base).to receive(:load_instance_from_solr).with('changeme:test').and_return(stub_file)
           allow(controller).to receive(:authorize!).with(:download, stub_ds).and_return(true)

@@ -1,4 +1,10 @@
 module Hydra::ModelMethods
+  extend ActiveSupport::Concern
+
+  included do
+    # Could also be http://www.semanticdesktop.org/ontologies/2007/03/22/nfo/#fileName
+    attribute :label, [ RDF::URI.new("http://spdx.org/rdf/terms#fileName"), FedoraLens::Lenses.single, FedoraLens::Lenses.literal_to_string ]
+  end    
   
   #
   # Adds metadata about the depositor to the asset
