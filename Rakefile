@@ -4,16 +4,15 @@ Bundler::GemHelper.install_tasks
 
 APP_ROOT= File.dirname(__FILE__)
 require 'jettywrapper'
+JETTY_ZIP_BASENAME = 'fedora-4b1'
+Jettywrapper.url = "https://github.com/projecthydra/hydra-jetty/archive/#{JETTY_ZIP_BASENAME}.zip"
 
 namespace :jetty do
   TEMPLATE_DIR = 'hydra-core/lib/generators/hydra/templates'
   SOLR_DIR = "#{TEMPLATE_DIR}/solr_conf/conf"
-  FEDORA_DIR = "#{TEMPLATE_DIR}/fedora_conf/conf"
 
   desc "Config Jetty"
   task :config => :clean do
-    Rake::Task["jetty:config_fedora"].reenable
-    Rake::Task["jetty:config_fedora"].invoke
     Rake::Task["jetty:config_solr"].reenable
     Rake::Task["jetty:config_solr"].invoke
   end
@@ -25,31 +24,6 @@ namespace :jetty do
       cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
     end
 
-  end
-
-  desc "Copies a custom fedora config for the bundled Hydra Testing Server"
-  task :config_fedora do
-    # load a custom fedora.fcfg - 
-    if defined?(Rails.root)
-      app_root = Rails.root
-    else
-      app_root = File.join(File.dirname(__FILE__),"..")
-    end
-     
-    fcfg = File.join(FEDORA_DIR,"development","fedora.fcfg")
-    if File.exists?(fcfg)
-      puts "copying over development/fedora.fcfg"
-      cp("#{fcfg}", 'jetty/fedora/default/server/config/', :verbose => true)
-    else
-      puts "#{fcfg} file not found -- skipping fedora config"
-    end
-    fcfg = File.join(FEDORA_DIR,"test","fedora.fcfg")
-    if File.exists?(fcfg)
-      puts "copying over test/fedora.fcfg"
-      cp("#{fcfg}", 'jetty/fedora/test/server/config/', :verbose => true)
-    else
-      puts "#{fcfg} file not found -- skipping fedora config"
-    end
   end
 end
 
