@@ -5,8 +5,6 @@ module Hydra
 
       included do
         include Hydra::Controller::ControllerBehavior
-        before_filter :load_asset
-        before_filter :load_datastream
         before_filter :authorize_download!
       end
       
@@ -34,25 +32,17 @@ module Hydra
         :id
       end
 
-      def load_asset
-        @asset = ActiveFedora::Base.find(params[asset_param_key])
-      end
-
-      def load_datastream
-        @ds = datastream_to_show
-      end
-
       # Customize the :download ability in your Ability class, or override this method
       def authorize_download!
         authorize! :download, datastream
       end
 
       def asset
-        @asset
+        @asset ||= ActiveFedora::Base.find(params[asset_param_key])
       end
 
       def datastream
-        @ds
+        @ds ||= datastream_to_show
       end
 
       # Override this method to change which datastream is shown.
@@ -62,7 +52,7 @@ module Hydra
       # @return [ActiveFedora::Datastream] the datastream
       def datastream_to_show
         ds = asset.datastreams[params[:datastream_id]] if params.has_key?(:datastream_id)
-        ds = default_content_ds if ds.nil?
+        ds ||= default_content_ds
         raise "Unable to find a datastream for #{asset}" if ds.nil?
         ds
       end
@@ -89,7 +79,7 @@ module Hydra
       # Override this if you'd like a different filename
       # @return [String] the filename
       def datastream_name
-        params[:filename] || asset.label
+        params[:filename] || datastream.original_name || (asset.respond_to?(:label) && asset.label) || datastream.id
       end
 
 
@@ -111,13 +101,21 @@ module Hydra
         response.headers['Content-Length'] = "#{length}"
         self.status = 206
         prepare_file_headers
-        self.response_body = datastream.stream(from, length)
+        datastream.stream(request.headers['HTTP_RANGE']) do |block|
+          response.stream.write block
+        end
+      ensure
+        response.stream.close
       end
 
       def send_file_contents
         self.status = 200
         prepare_file_headers
-        self.response_body = datastream.stream
+        datastream.stream do |block|
+          response.stream.write block
+        end
+      ensure
+        response.stream.close
       end
       
       def prepare_file_headers

@@ -8,7 +8,7 @@ require 'bundler/setup'
 require 'rspec/rails'
 require 'hydra-core'
 
-if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
+if ENV['COVERAGE']
   require 'simplecov'
   require 'simplecov-rcov'
 
@@ -17,10 +17,7 @@ if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
 end
 
 RSpec.configure do |config|
-  config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::TestHelpers, type: :controller
   config.use_transactional_fixtures = true
-  config.before(:suite) { User.destroy_all }
   config.infer_spec_type_from_file_location!
 end
-
-
