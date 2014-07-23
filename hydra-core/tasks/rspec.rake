@@ -3,17 +3,11 @@ ENV["RAILS_ROOT"] ||= 'spec/internal'
 GEM_ROOT= File.expand_path(File.join(File.dirname(__FILE__),".."))
 
 desc "Run specs"
-task :spec => [:generate, :fixtures] do |t|
+task spec: :generate do |t|
   focused_spec = ENV['SPEC'] ? " SPEC=#{File.join(GEM_ROOT, ENV['SPEC'])}" : ''
   within_test_app do
     system "rake myspec#{focused_spec}"
     abort "Error running hydra-core" unless $?.success?
-  end
-end
-
-task :fixtures do
-  within_test_app do
-    system "rake hydra:fixtures:refresh RAILS_ENV=test"
   end
 end
 
