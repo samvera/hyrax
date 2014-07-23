@@ -57,7 +57,9 @@ describe 'collection' do
       # since there is only one collection, it's not necessary to choose a radio button
       click_button "Update Collection"
       expect(page).to have_content "Items in this Collection"
-      expect(page).to have_selector "ol.catalog li:nth-child(9)" # at least 9 files in this collection
+      # There are two rows in the table per document (one for the general info, one for the details)
+      # Make sure we have at least 9 documents (18 table rows)
+      expect(page).to have_selector "table.table-zebra-striped tr:nth-child(18)"
     end
   end
 
@@ -112,25 +114,26 @@ describe 'collection' do
     end
 
     it "should hide collection descriptive metadata when searching a collection" do
-      page.should have_content(@collection.title)
+      # URL: /dashboard/collections
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link("collection title")
       end
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
-      page.should have_content(@gf1.title.first)
-      page.should have_content(@gf2.title.first)
+      # URL: /collections/collection-id
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
       fill_in('collection_search', with: @gf1.title.first)
       click_button('collection_submit')
-      # Should not have Collection Descriptive metadata table
-      page.should_not have_content("Descriptions")
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
+      # Should not have Collection metadata table (only title and description)
+      expect(page).to_not have_content("Total Items")
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
-      page.should have_content(@gf1.title.first)
-      page.should_not have_content(@gf2.title.first)
-      # Should not have Dashboard content in contents listing
-      page.should_not have_content("Visibility")
+      expect(page).to have_content("Search Results")
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to_not have_content(@gf2.title.first)
     end
   end
 
@@ -146,13 +149,15 @@ describe 'collection' do
     end
 
     it "should edit and update collection metadata" do
-      page.should have_content(@collection.title)
+      # URL: /dashboard/collections
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         find('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
-      page.should have_field('collection_title', with: @collection.title)
-      page.should have_field('collection_description', with: @collection.description)
+      # URL: /collections/collection-id/edit
+      expect(page).to have_field('collection_title', with: @collection.title)
+      expect(page).to have_field('collection_description', with: @collection.description)
       new_title = "Altered Title"
       new_description = "Completely new Description text."
       creators = ["Dorje Trollo", "Vajrayogini"]
@@ -162,11 +167,13 @@ describe 'collection' do
       within('.primary-actions') do
         click_button('Update Collection')
       end
-      page.should_not have_content(@collection.title)
-      page.should_not have_content(@collection.description)
-      page.should have_content(new_title)
-      page.should have_content(new_description)
-      page.should have_content(creators.first)
+      # URL: /collections/collection-id
+      header = find('header')
+      expect(header).to_not have_content(@collection.title)
+      expect(header).to_not have_content(@collection.description)
+      expect(header).to have_content(new_title)
+      expect(header).to have_content(new_description)
+      expect(page).to have_content(creators.first)
     end
 
     it "should remove a file from a collection" do
