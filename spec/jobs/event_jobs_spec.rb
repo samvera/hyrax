@@ -7,7 +7,7 @@ describe 'event jobs' do
     @third_user = FactoryGirl.find_or_create(:curator)
     @gf = GenericFile.new(pid: 'test:123')
     @gf.apply_depositor_metadata(@user)
-    @gf.title = 'Hamlet'
+    @gf.title = ['Hamlet']
     @gf.save
   end
   after(:each) do

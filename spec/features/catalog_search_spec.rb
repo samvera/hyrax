@@ -4,14 +4,14 @@ describe 'catalog searching' do
 
   before(:all) do
     @gf1 = GenericFile.new.tap do |f|
-      f.title = 'title 1'
+      f.title = ['title 1']
       f.tag = ["tag1", "tag2"]
       f.apply_depositor_metadata('jilluser')
       f.read_groups = ['public']
       f.save!
     end
     @gf2 = GenericFile.new.tap do |f|
-      f.title = 'title 2'
+      f.title = ['title 2']
       f.tag = ["tag2", "tag3"]
       f.apply_depositor_metadata('jilluser')
       f.read_groups = ['public']
