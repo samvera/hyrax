@@ -62,6 +62,9 @@ describe "dashboard/index.html.erb" do
       expect(@sidebar).to include '<span class="label label-default">3</span>'
     end
 
+    it "should show the statistics before the profile" do
+      expect(@sidebar).to match /Your Statistics.*Charles Francis Xavier/m
+    end
   end
 
   describe "main" do
