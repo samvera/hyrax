@@ -37,29 +37,15 @@ describe DashboardController do
 
     context "with activities" do
 
-      before :all do
-        @now = DateTime.now.to_i
-      end
-
+      let(:activity) { double }
       before do
-        allow_any_instance_of(User).to receive(:events).and_return(activities)
-      end
-
-      def activities
-        [
-          { action: 'so and so edited their profile', timestamp: @now },
-          { action: 'so and so uploaded a file', timestamp: (@now - 360 ) }
-        ]
+        allow(activity).to receive(:map).and_return(activity)
+        expect_any_instance_of(User).to receive(:get_all_user_activity).and_return(activity)
       end
 
       it "gathers the user's recent activity within the default amount of time" do
         get :index
-        expect(assigns(:activity)).to eq(activities.reverse)
-      end
-
-      it "gathers the user's recent activity within a given timestamp" do
-        get :index, { since: (@now - 60 ) }
-        expect(assigns(:activity)).to eq([activities.first])
+        expect(assigns(:activity)).to eq activity
       end
 
       it "returns results in JSON" do

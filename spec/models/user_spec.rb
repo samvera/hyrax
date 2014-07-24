@@ -73,4 +73,31 @@ describe User do
     end
 
   end
+
+  describe "activity streams" do
+    let(:now){DateTime.now.to_i}
+    let(:user) { @user }
+    let(:activities) {
+        [{ action: 'so and so edited their profile', timestamp: now },
+        { action: 'so and so uploaded a file', timestamp: (now - 360 ) }]
+    }
+    let(:file_activities) {
+      [{ action: 'uploaded a file', timestamp: now + 1 }]
+    }
+
+    before do
+      allow(user).to receive(:events).and_return(activities)
+      allow(user).to receive(:profile_events).and_return(file_activities)
+    end
+
+    it "gathers the user's recent activity within the default amount of time" do
+      expect(user.get_all_user_activity).to eq(file_activities.concat(activities))
+    end
+
+    it "gathers the user's recent activity within a given timestamp" do
+      expect(user.get_all_user_activity(now-60)).to eq(file_activities.concat([activities.first]))
+    end
+
+  end
+
 end

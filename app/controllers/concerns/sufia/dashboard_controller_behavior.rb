@@ -32,20 +32,13 @@ module Sufia
     # in your dashboard view.  You'll need to alter dashboard/index.html.erb accordingly.
     def gather_dashboard_information
       @user = current_user
-      @activity = get_user_activity
+      @activity = current_user.get_all_user_activity(params[:since].blank? ? DateTime.now.to_i - 8640 : params[:since].to_i)
       @notifications = current_user.mailbox.inbox
-    end
-
-    # Returns the most recent activity in the last 24 hours, or since a given timestamp
-    # specified by params[:since]
-    def get_user_activity
-      since = params[:since] ? params[:since].to_i : (DateTime.now.to_i - 86400)
-      current_user.events.reverse.collect { |event| event if event[:timestamp].to_i > since }.compact
     end
 
     # Formats the user's activities into human-readable strings used for rendering JSON
     def human_readable_user_activity
-      get_user_activity.map do |event|
+      current_user.get_all_user_activity.map do |event|
         [event[:action], "#{time_ago_in_words(Time.at(event[:timestamp].to_i))} ago", event[:timestamp].to_i]
       end
     end
