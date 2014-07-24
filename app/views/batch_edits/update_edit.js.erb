@@ -1,5 +1,5 @@
 <% value = "" %>
 <% @vals = [@vals] unless @vals.is_a?(Array) %>
-<% @vals.each { |val|  logger.warn"#{val.inspect}"; value = value + val+'<br />'}%>
+<% @vals.each { |val|  Rails.logger.warn"#{val.inspect}"; value = value + val+'<br />'}%>
 $("#data_<%= @key%>").html( "<%=value.html_safe%>");
 $("#status_<%= @key%>").html("Changes Saved");

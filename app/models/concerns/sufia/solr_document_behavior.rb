@@ -49,7 +49,7 @@ module Sufia
       begin
         Date.parse(field).to_formatted_s(:standard)
       rescue
-        logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
+        ActiveFedora::Base.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
       end
     end
 
