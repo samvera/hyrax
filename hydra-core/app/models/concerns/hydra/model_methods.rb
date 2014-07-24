@@ -1,3 +1,5 @@
+require 'mime/types'
+
 module Hydra::ModelMethods
 
   # Adds metadata about the depositor to the asset
