@@ -38,18 +38,19 @@ describe CollectionsController do
       Collection.count.should == old_count+1
     end
     it "should create a Collection with files I can access" do
-      @asset1 = GenericFile.new(title: "First of the Assets")
+      @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
-      @asset2 = GenericFile.new(title: "Second of the Assets", depositor: user.user_key)
+      @asset2 = GenericFile.new(title: ["Second of the Assets"], depositor: user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save
-      @asset3 = GenericFile.new(title: "Third of the Assets", depositor:'abc')
+      @asset3 = GenericFile.new(title: ["Third of the Assets"], depositor:'abc')
       @asset3.apply_depositor_metadata('abc')
       @asset3.save
       controller.should_receive(:has_access?).and_return(true)
       old_count = Collection.count
-      post :create, collection: {title: "My own Collection ", description: "The Description\r\n\r\nand more"}, batch_document_ids:[@asset1.id, @asset2.id, @asset3.id]
+      post :create, collection: { title: "My own Collection", description: "The Description\r\n\r\nand more" },
+        batch_document_ids: [@asset1.id, @asset2.id, @asset3.id]
       Collection.count.should == old_count+1
       collection = assigns(:collection)
       collection.members.should include (@asset1)
@@ -61,10 +62,11 @@ describe CollectionsController do
     end
 
     it "should add docs to collection if batch ids provided and add the collection id to the documents int he colledction" do
-      @asset1 = GenericFile.new(title: "First of the Assets")
+      @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
-      post :create, batch_document_ids: [@asset1.id], collection: {title: "My Secong Collection ", description: "The Description\r\n\r\nand more"}
+      post :create, batch_document_ids: [@asset1.id],
+        collection: { title: "My Secong Collection ", description: "The Description\r\n\r\nand more" }
       assigns[:collection].members.should == [@asset1]
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset1.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
       asset_results["response"]["numFound"].should == 1
@@ -78,16 +80,16 @@ describe CollectionsController do
 
   describe "#update" do
     before do
-      @collection = Collection.new(title: "Collection Title")
+      @collection = Collection.new(title: ["Collection Title"])
       @collection.apply_depositor_metadata(user.user_key)
       @collection.save
-      @asset1 = GenericFile.new(title: "First of the Assets")
+      @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
-      @asset2 = GenericFile.new(title: "Second of the Assets", depositor: user.user_key)
+      @asset2 = GenericFile.new(title: ["Second of the Assets"], depositor: user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save
-      @asset3 = GenericFile.new(title: "Third of the Assets", depositor:'abc')
+      @asset3 = GenericFile.new(title: ["Third of the Assets"], depositor:'abc')
       @asset3.apply_depositor_metadata(user.user_key)
       @asset3.save
       sign_in user
@@ -100,7 +102,7 @@ describe CollectionsController do
     end
 
     it "should set collection on members" do
-      put :update, id: @collection.id, collection: {members:"add"}, batch_document_ids:[@asset3.pid,@asset1.pid, @asset2.pid]
+      put :update, id: @collection.id, collection: {members:"add"}, batch_document_ids: [@asset3.pid, @asset1.pid, @asset2.pid]
       response.should redirect_to Hydra::Collections::Engine.routes.url_helpers.collection_path(@collection.noid)
       assigns[:collection].members.map{|m| m.pid}.sort.should == [@asset2, @asset3, @asset1].map {|m| m.pid}.sort
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
@@ -109,7 +111,7 @@ describe CollectionsController do
       doc["id"].should == @asset2.id
       afterupdate = GenericFile.find(@asset2.pid)
       doc[Solrizer.solr_name(:collection)].should == afterupdate.to_solr[Solrizer.solr_name(:collection)]
-      put :update, id: @collection.id, collection: {members:"remove"}, batch_document_ids:[@asset2]
+      put :update, id: @collection.id, collection: {members:"remove"}, batch_document_ids: [@asset2]
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
       asset_results["response"]["numFound"].should == 1
       doc = asset_results["response"]["docs"].first
@@ -121,16 +123,16 @@ describe CollectionsController do
 
   describe "#show" do
     before do
-      @asset1 = GenericFile.new(title: "First of the Assets")
+      @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save!
-      @asset2 = GenericFile.new(title: "Second of the Assets", depositor:user.user_key)
+      @asset2 = GenericFile.new(title: ["Second of the Assets"], depositor:user.user_key)
       @asset2.apply_depositor_metadata(user.user_key)
       @asset2.save!
-      @asset3 = GenericFile.new(title: "Third of the Assets", depositor:user.user_key)
+      @asset3 = GenericFile.new(title: ["Third of the Assets"], depositor:user.user_key)
       @asset3.apply_depositor_metadata(user.user_key)
       @asset3.save!
-      @asset4 = GenericFile.new(title: "Third of the Assets", depositor:user.user_key)
+      @asset4 = GenericFile.new(title: ["Third of the Assets"], depositor:user.user_key)
       @asset4.apply_depositor_metadata(user.user_key)
       @asset4.save!
       @collection = Collection.new
