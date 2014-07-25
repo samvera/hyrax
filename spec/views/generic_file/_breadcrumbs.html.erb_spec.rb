@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'generic_files/_breadcrumbs.html.erb' do
 
   let(:request) { double("request", referer: referer) }
-  let(:generic_file) { GenericFile.new(title: "Fake object") }
+  let(:generic_file) { GenericFile.new(title: ["Fake object"]) }
 
   describe 'when coming from dashboard' do
     let! (:referer) { "http://...dashboard" }
