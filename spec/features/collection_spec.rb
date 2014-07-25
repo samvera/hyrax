@@ -28,7 +28,7 @@ describe 'collection' do
     @gfs = []
     (0..12).each do |x|
       @gfs[x] =  GenericFile.new.tap do |f|
-        f.title = "title #{x}"
+        f.title = ["title #{x}"]
         f.apply_depositor_metadata('archivist1@example.com')
         f.save!
       end

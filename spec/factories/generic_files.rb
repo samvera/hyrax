@@ -22,7 +22,7 @@ FactoryGirl.define do
         subject %w"lorem ipsum dolor sit amet"
         before(:create) do |gf|
           gf.apply_depositor_metadata "archivist1@example.com"
-          gf.title = "Fake Document Title"
+          gf.title = ["Fake Document Title"]
           gf.label = "fake_document.pdf"
         end
       end

@@ -284,7 +284,7 @@ describe GenericFile do
       subject.title = ["The Work"]
       subject.description = ["The work by Allah"]
       subject.publisher = ["Vertigo Comics"]
-      subject.date_created = "1200-01-01"
+      subject.date_created = ["1200-01-01"]
       subject.date_uploaded = Date.parse("2011-01-01")
       subject.date_modified = Date.parse("2012-01-01")
       subject.subject = ["Theology"]
@@ -1021,7 +1021,7 @@ describe GenericFile do
      f2 = GenericFile.find(subject.id)
      f2.reload_on_save = true
      f1.mime_type = "video/abc123"
-     f2.title = "abc123"
+     f2.title = ["abc123"]
      f1.save
      mime_type_key = Solrizer.solr_name("mime_type")
      title_key = Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string)
