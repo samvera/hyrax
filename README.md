@@ -65,7 +65,7 @@ Note the line with kaminari listed as a dependency.  This is a temporary fix to 
 
 ### Run the sufia generator
 ```
-rails g sufia -f
+rails generate sufia:install -f
 ```
 
 ### Run the migrations

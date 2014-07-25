@@ -1,19 +1,20 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 
-require File.expand_path("config/environment", ENV['RAILS_ROOT'] || File.expand_path("../internal", __FILE__))
+require 'engine_cart'
+EngineCart.load_application!
 
-require 'database_cleaner'
 require 'mida'
 require 'rspec/rails'
 require 'rspec/its'
 require 'rspec/active_model/mocks'
+require 'factory_girl_rails'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'equivalent-xml/rspec_matchers'
+require 'database_cleaner'
 
 require File.expand_path('../support/features', __FILE__)
 
@@ -59,9 +60,6 @@ else
 end
 
 Resque.inline = Rails.env.test?
-
-FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
-FactoryGirl.find_definitions
 
 module EngineRoutes
   def self.included(base)
