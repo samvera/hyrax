@@ -38,14 +38,14 @@ describe Hydra::ModelMethods do
     let(:mock_file) { "File contents" }
 
     it "should set the dsid, mimetype and content" do
-      expect(subject).to receive(:add_file_datastream).with(mock_file, label: file_name, mime_type: "mymimetype", dsid: 'bar')
+      expect(subject).to receive(:add_file_datastream).with(mock_file, label: file_name, mime_type: "mymimetype", dsid: 'bar', original_name: file_name)
       expect(subject).to receive(:set_title_and_label).with(file_name, only_if_blank: true )
       expect(MIME::Types).to receive(:of).with(file_name).and_return([double(content_type: "mymimetype")])
       subject.add_file(mock_file, 'bar', file_name)
     end
 
     it "should accept a supplied mime_type and content" do
-      expect(subject).to receive(:add_file_datastream).with(mock_file, label: file_name, mime_type: "image/png", dsid: 'bar')
+      expect(subject).to receive(:add_file_datastream).with(mock_file, label: file_name, mime_type: "image/png", dsid: 'bar', original_name: file_name)
       expect(subject).to receive(:set_title_and_label).with(file_name, only_if_blank: true )
       subject.add_file(mock_file, 'bar', file_name, 'image/png')
     end

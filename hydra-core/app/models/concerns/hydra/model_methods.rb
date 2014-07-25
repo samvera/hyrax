@@ -26,7 +26,7 @@ module Hydra::ModelMethods
   # @param [String] file the IO object that is the blob
   def add_file(file, dsid, file_name, mime_type=nil)
     mime_type ||= best_mime_for_filename(file_name)
-    options = {label: file_name, mime_type: mime_type}
+    options = {label: file_name, mime_type: mime_type, original_name: file_name}
     options[:dsid] = dsid if dsid
     add_file_datastream(file, options)
     set_title_and_label( file_name, only_if_blank: true )
