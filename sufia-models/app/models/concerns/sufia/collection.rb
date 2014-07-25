@@ -15,12 +15,13 @@ module Sufia
     end
 
     def terms_for_display
-      [:resource_type, :title, :creator, :contributor, :description, :tag, :rights, :publisher, :date_created,
-       :subject, :language, :identifier, :based_near, :related_url]
+      terms_for_editing - [:title, :description]
     end
 
     def terms_for_editing
-      terms_for_display - [:date_modified, :date_uploaded]
+      [:resource_type, :title, :creator, :contributor, :description, :tag,
+        :rights, :publisher, :date_created, :subject, :language, :identifier,
+        :based_near, :related_url]
     end
 
     # Test to see if the given field is required
