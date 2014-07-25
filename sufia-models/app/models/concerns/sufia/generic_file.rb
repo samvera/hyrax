@@ -70,17 +70,9 @@ module Sufia
     # until all objects are done uploading and the user is redirected to
     # BatchController#edit.  Therefore, we must handle the case where
     # self.batch_id is set but self.batch returns nil.
-    # This can get a major overhaul with ActiveFedora 7
     def related_files
-      relateds = begin
-                   self.batch.generic_files
-                 rescue NoMethodError => e
-                   # batch is nil - When would this ever happen?
-                   batch_id = self.object_relations["isPartOf"].first || self.object_relations[:is_part_of].first
-                   return [] if batch_id.nil?
-                   self.class.find(Solrizer.solr_name('is_part_of', :symbol) => batch_id)
-                 end
-      relateds.reject { |gf| gf.pid == self.pid }
+      return [] if batch.nil?
+      batch.generic_files.reject { |sibling| sibling.id == id }
     end
 
     # Unstemmed, searchable, stored
