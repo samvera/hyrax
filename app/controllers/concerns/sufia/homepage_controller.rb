@@ -27,7 +27,7 @@ module Sufia::HomepageController
   end
 
   def sort_field
-    "#{Solrizer.solr_name('system_create', :sortable)} desc"
+    "#{Solrizer.solr_name('system_create', :stored_sortable, type: :date)} desc"
   end
 
   # Limits search results just to GenericFiles
