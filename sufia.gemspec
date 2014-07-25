@@ -29,17 +29,26 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sass-rails'
 
   gem.add_dependency 'hydra-batch-edit', '>= 1.1.1', '< 2.0.0'
-  gem.add_dependency 'browse-everything', '>= 0.4.0'
+  gem.add_dependency 'browse-everything', '~> 0.4'
 
-  gem.add_dependency 'daemons', '1.1.9'
+  gem.add_dependency 'daemons', '~> 1.1'
   gem.add_dependency 'mail_form'
-  gem.add_dependency 'rails_autolink', '~> 1.1.0'
-  gem.add_dependency 'yaml_db', '0.2.3'
+  gem.add_dependency 'rails_autolink', '~> 1.1'
+  gem.add_dependency 'yaml_db', '~> 0.2'
   gem.add_dependency 'font-awesome-sass-rails', '~> 3.0'
-  gem.add_dependency 'hydra-editor', '~> 0.3.0'
-  gem.add_dependency 'hydra-collections', '~> 2.0.2'
-  gem.add_dependency 'bootstrap_form', '~> 2.1.1'
+  gem.add_dependency 'hydra-editor', '~> 0.3'
+  gem.add_dependency 'hydra-collections', '~> 2.0'
+  gem.add_dependency 'bootstrap_form', '~> 2.1'
   gem.add_dependency 'bootstrap-sass', '< 3.2'
   gem.add_dependency 'blacklight-gallery'
+
+  gem.add_development_dependency 'engine_cart'
+  gem.add_development_dependency 'mida'
+  gem.add_development_dependency 'database_cleaner'
+  gem.add_development_dependency 'rspec-its'
+  gem.add_development_dependency 'rspec-activemodel-mocks'
+  gem.add_development_dependency "capybara"
+  gem.add_development_dependency "poltergeist", "~> 1.5"
+  gem.add_development_dependency "factory_girl_rails"
 
 end

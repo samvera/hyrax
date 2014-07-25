@@ -1,13 +1,18 @@
 require 'rails/generators'
 
 class TestAppGenerator < Rails::Generators::Base
-  source_root File.expand_path("../../../../support", __FILE__)
+  source_root "./spec/test_app_templates"
 
-  def run_sufia_generator
-    say_status("warning", "GENERATING SUFIA", :yellow)
-    generate 'sufia', '-f'
+  # if you need to generate any additional configuration
+  # into the test app, this generator will be run immediately
+  # after setting up the application
+
+  def install_engine
+    generate 'sufia:install', '-f'
+  end
+
+  def browse_everything_config
     generate "browse_everything:config"
-    remove_file 'spec/factories/users.rb'
   end
 
   def add_analytics_config
@@ -35,5 +40,5 @@ class TestAppGenerator < Rails::Generators::Base
     gsub_file 'app/assets/javascripts/application.js',
               '//= require_tree .', '//= require sufia'
   end
-
+    
 end
