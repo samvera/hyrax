@@ -47,11 +47,16 @@ describe BatchEditsController do
       expect(controller).to receive(:can?).with(:edit, @one.pid).and_return(true)
       expect(controller).to receive(:can?).with(:edit, @two.pid).and_return(true)
     end
+    let(:mycontroller) { "my/files" }
     it "should be successful" do
       put :update , update_type: "delete_all"
-      expect(response).to be_redirect
+      expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: "dashboard", only_path: true))
       expect { GenericFile.find(@one.id) }.to raise_error(ActiveFedora::ObjectNotFoundError)
       expect { GenericFile.find(@two.id) }.to raise_error(ActiveFedora::ObjectNotFoundError)
+    end
+    it "should redirect to the return controller" do
+      put :update , update_type: "delete_all", return_controller: mycontroller
+      expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: mycontroller, only_path: true))
     end
     it "should update the records" do
       put :update , update_type: "update", "generic_file"=>{"subject"=>["zzz"]}

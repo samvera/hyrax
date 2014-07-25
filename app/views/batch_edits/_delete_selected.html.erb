@@ -1,4 +1,5 @@
 <%= form_tag(batch_edits_path, method: :delete, class: "batch-select-all hidden", "data-behavior" => 'batch-select-all') do -%>
     <%= hidden_field_tag('update_type', 'delete_all') %>
+    <%= hidden_field_tag('return_controller', params[:controller]) %>
   <%= submit_tag("Delete Selected", class: 'batch-all-button btn btn-primary submits-batches', data: { confirm: "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation" }) %>
 <% end %>
