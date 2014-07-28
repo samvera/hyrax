@@ -451,39 +451,46 @@ describe GenericFile do
 
   end
 
-  describe "related_files" do
-    let(:batch_id) { "foobar:100" }
-    before(:each) do
-      @f1 = GenericFile.new
-      @f2 = GenericFile.new
-      @f3 = GenericFile.new
-      @f1.apply_depositor_metadata('mjg36')
-      @f2.apply_depositor_metadata('mjg36')
-      @f3.apply_depositor_metadata('mjg36')
+  describe "#related_files" do
+    let!(:f1) do
+      GenericFile.new.tap do |f|
+        f.apply_depositor_metadata('mjg36')
+        f.batch_id = batch_id
+        f.save
+      end
+    end
+    let!(:f2) do
+      GenericFile.new.tap do |f|
+        f.apply_depositor_metadata('mjg36')
+        f.batch_id = batch_id
+        f.save
+      end
+    end
+    let!(:f3) do
+      GenericFile.new.tap do |f|
+        f.apply_depositor_metadata('mjg36')
+        f.batch_id = batch_id
+        f.save
+      end
     end
 
-    describe "when the files belong to a batch" do
-      after(:each) do
-        @f1.delete
-        @f2.delete
-        @f3.delete
-      end
-      before do
-        @f1.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
-        @f2.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
-        @f3.add_relationship("isPartOf", "info:fedora/#{@batch_id}")
-        @f1.save!
-        @f2.save!
-        @f3.save!
-      end
-      it "should never return a file in its own related_files method" do
-        @f1.related_files.should match_array [@f2, @f3]
-        @f2.related_files.should match_array [@f1, @f3]
-        @f3.related_files.should match_array [@f1, @f2]
+    context "when the files belong to a batch" do
+      let(:batch) { Batch.create }
+      let(:batch_id) { batch.id }
+
+      it "shouldn't return itself from the related_files method" do
+        expect(f1.related_files).to match_array [f2, f3]
+        expect(f2.related_files).to match_array [f1, f3]
+        expect(f3.related_files).to match_array [f1, f2]
       end
     end
-    it "should return an empty array when there are no related files" do
-      @f1.related_files.should == []
+
+    context "when there are no related files" do
+      let(:batch_id) { nil }
+
+      it "should return an empty array when there are no related files" do
+        expect(f1.related_files).to eq []
+      end
     end
   end
   describe "noid integration" do

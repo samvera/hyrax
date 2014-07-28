@@ -20,7 +20,7 @@ module Sufia::GenericFile
       generic_file.creator = [user.name]
 
       if batch_id
-        generic_file.add_relationship("isPartOf", "info:fedora/#{Sufia::Noid.namespaceize(batch_id)}")
+        generic_file.batch_id = Sufia::Noid.namespaceize(batch_id)
       else
         ActiveFedora::Base.logger.warn "unable to find batch to attach to"
       end
