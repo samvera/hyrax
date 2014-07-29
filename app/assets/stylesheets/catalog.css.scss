@@ -1,0 +1,5 @@
+// makes it so images don't bleed into the content on the right
+.catalog img {
+  max-width: 100%;
+  max-height: auto;
+}
