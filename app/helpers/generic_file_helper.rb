@@ -80,4 +80,13 @@ module GenericFileHelper
       image_tag sufia.download_path(@generic_file, datastream_id: 'thumbnail'), { class: "img-responsive", alt: "#{title} of #{@generic_file.title.first}" }
     end
   end
+
+  def render_visibility_badge
+    if can? :edit, @generic_file
+      render_visibility_link @generic_file
+    else
+      render_visibility_label @generic_file
+    end
+  end
+
 end

@@ -25,15 +25,7 @@
   </td>
   <td class="text-center"><%= document.date_uploaded %> </td>
   <td class="text-center">
-    <a href="<%= sufia.generic_file_path(noid) %>/edit/?tab=permissions" id="permission_<%= noid %>" class="visibility-link">
-      <% if document.registered? %>
-          <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
-      <% elsif document.public? %>
-          <span class="label label-success" title="Open Access">Open Access</span>
-      <% else %>
-          <span class="label label-danger" title="Private">Private</span>
-      <% end %>
-    </a>
+    <%= render_visibility_link document %>
   </td>
   <td class="text-center">
     <%= render partial: 'action_menu', locals: { noid: noid, gf: gf } %>
