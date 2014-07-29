@@ -11,7 +11,7 @@ module Sufia
     end
 
     def noid
-      Noid.noidify(self.pid)
+      Noid.noidify(id)
     end
 
     # Redefine this for more intuitive keys in Redis

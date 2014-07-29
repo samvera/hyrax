@@ -29,6 +29,8 @@ end
 
 Capybara.javascript_driver = :poltergeist
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
+# HttpLogger.logger = Logger.new(STDOUT)
+# HttpLogger.ignore = [/localhost:8983\/solr/]
 
 $in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
 

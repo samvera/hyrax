@@ -61,7 +61,7 @@ describe GenericFile, :type => :model do
 
   describe "assign_pid" do
     it "should use the noid id service" do
-      expect_any_instance_of(Rubydora::Fc3Service).to_not receive(:next_pid)
+      expect(Sufia::IdService).to receive(:mint)
       GenericFile.assign_pid(nil)
     end
   end
@@ -259,14 +259,12 @@ describe GenericFile, :type => :model do
     it "should redefine to_param to make redis keys more recognizable" do
       expect(subject.to_param).to eq(subject.noid)
     end
+
     describe "that have been saved" do
-      # This file has no content, so it doesn't characterize
-      # before(:each) do
-      #   Sufia.queue.should_receive(:push).once
-      # end
       after do
-        @file.delete unless @file.new_record?
+        subject.delete unless subject.new_record?
       end
+
       it "should have activity stream-related methods defined" do
         subject.save
         f = subject.reload
@@ -275,6 +273,7 @@ describe GenericFile, :type => :model do
         expect(f).to respond_to(:create_event)
         expect(f).to respond_to(:log_event)
       end
+
       it "should be able to set values via delegated methods" do
         subject.related_url = ["http://example.org/"]
         subject.creator = ["John Doe"]
@@ -285,6 +284,7 @@ describe GenericFile, :type => :model do
         expect(f.creator).to eq(["John Doe"])
         expect(f.title).to eq(["New work"])
       end
+
       it "should be able to be added to w/o unexpected graph behavior" do
         subject.creator = ["John Doe"]
         subject.title = ["New work"]
@@ -301,9 +301,10 @@ describe GenericFile, :type => :model do
       end
     end
   end
+
   describe "to_solr" do
     before do
-      allow(subject).to receive(:pid).and_return('stubbed_pid')
+      allow(subject).to receive(:id).and_return('stubbed_pid')
       subject.part_of = ["Arabiana"]
       subject.contributor = ["Mohammad"]
       subject.creator = ["Allah"]
@@ -324,6 +325,7 @@ describe GenericFile, :type => :model do
       subject.format_label = ["JPEG Image"]
       subject.full_text.content = 'abcxyz'
     end
+
     it "supports to_solr" do
       local = subject.to_solr
       expect(local[Solrizer.solr_name("desc_metadata__part_of")]).to be_nil
@@ -409,6 +411,7 @@ describe GenericFile, :type => :model do
       @f = f.reload
     end
     it "should schedule a audit job for each datastream" do
+      skip "Disabled audit"
       s0 = double('zero')
       expect(AuditJob).to receive(:new).with(@f.pid, 'descMetadata', "descMetadata.0").and_return(s0)
       expect(Sufia.queue).to receive(:push).with(s0)
@@ -442,12 +445,14 @@ describe GenericFile, :type => :model do
     end
 
     it "should return true on audit_status" do
+      skip "Disabled audit"
       expect(@f.audit_stat).to be_truthy
     end
   end
 
   describe "run_audit" do
     before do
+      skip "disabled audit"
       @f = GenericFile.new
       @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @f.apply_depositor_metadata('mjg36')
@@ -519,28 +524,20 @@ describe GenericFile, :type => :model do
       end
     end
   end
+
   describe "noid integration" do
-    before(:all) do
-      GenericFile.any_instance.should_receive(:characterize_if_changed).and_yield
-      @new_file = GenericFile.new('ns-123')
-      @new_file.apply_depositor_metadata('mjg36')
-      @new_file.save
-    end
-    after(:all) do
-      @new_file.delete
-    end
-    it "should support the noid method" do
-      expect(@new_file).to respond_to(:noid)
-    end
+    subject { GenericFile.new('ns-123') }
+
     it "should return the expected identifier" do
-      expect(@new_file.noid).to eq('123')
+      expect(subject.noid).to eq 'ns-123'
     end
+
     it "should work outside of an instance" do
       new_id = Sufia::IdService.mint
-      noid = new_id.split(':').last
-      expect(Sufia::Noid.noidify(new_id)).to eq(noid)
+      expect(Sufia::Noid.noidify(new_id)).to eq new_id
     end
   end
+
   describe "characterize" do
     it "should return expected results when called", unless: $in_travis do
       subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
@@ -1054,6 +1051,7 @@ describe GenericFile, :type => :model do
     after do
       subject.destroy
     end
+
     it "gets both sets of data into solr" do
      f1= GenericFile.find(subject.id)
      f2 = GenericFile.find(subject.id)
