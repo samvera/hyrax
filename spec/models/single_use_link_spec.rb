@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe SingleUseLink, :type => :model do
-  before(:all) do
+describe SingleUseLink do
+  before do
     @file = GenericFile.new
     @file.apply_depositor_metadata('mjg36')
     @file.save
   end
 
-  after(:all) do
+  after do
     @file.destroy
   end
 

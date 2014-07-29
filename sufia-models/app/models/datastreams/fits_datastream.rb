@@ -1,6 +1,14 @@
 class FitsDatastream < ActiveFedora::OmDatastream
   include OM::XML::Document
 
+  has_many_versions
+
+  def save
+    super.tap do |passing|
+      create_version if passing
+    end
+  end
+
   def prefix
     ""
   end

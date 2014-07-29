@@ -3,6 +3,7 @@ module Sufia
     extend ActiveSupport::Concern
 
     included do
+      has_many_versions
       set_terminology do |t|
         t.root(path: "fields")
         # This is where we put the user id of the object depositor -- impacts permissions/access controls
@@ -27,6 +28,12 @@ module Sufia
 
     def prefix
       ""
+    end
+  end
+
+  def save
+    super.tap do |passing|
+      create_version if passing
     end
   end
 end

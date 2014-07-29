@@ -1,4 +1,6 @@
 class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
+  has_many_versions
+
   property :part_of, predicate: RDF::DC.isPartOf
   property :resource_type, predicate: RDF::DC.type do |index|
     index.as :stored_searchable, :facetable
@@ -65,5 +67,11 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     LocalAuthority.register_vocabulary(self, "tag", "lc_genres")
   rescue
     puts "tables for vocabularies missing"
+  end
+
+  def save
+    super.tap do |passing|
+      create_version if passing
+    end
   end
 end

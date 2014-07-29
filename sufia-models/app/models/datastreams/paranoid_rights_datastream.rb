@@ -1,12 +1,19 @@
 # subclass built-in Hydra RightsDatastream and build in extra model-level validation
 class ParanoidRightsDatastream < Hydra::Datastream::RightsMetadata
   use_terminology Hydra::Datastream::RightsMetadata
+  has_many_versions
 
   VALIDATIONS = [
     {key: :edit_users, message: 'Depositor must have edit access', condition: lambda { |obj| !obj.edit_users.include?(obj.depositor) }},
     {key: :edit_groups, message: 'Public cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('public') }},
     {key: :edit_groups, message: 'Registered cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('registered') }}
   ]
+
+  def save
+    super.tap do |passing|
+      create_version if passing
+    end
+  end
 
   def validate(object)
     valid = true

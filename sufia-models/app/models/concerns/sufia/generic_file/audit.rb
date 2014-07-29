@@ -70,8 +70,9 @@ module Sufia
           ::GenericFile.audit(version, true)
         end
 
-        def audit(version, force = false)
-          latest_audit = self.find(version.pid).audit_each( version, force)
+        def audit(version_uri, force = false)
+          return true; # TODO Just skipping the audit for now
+          latest_audit = self.find(version_uri).audit_each( version, force)
         end
 
         def needs_audit?(version, latest_audit)
