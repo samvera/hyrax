@@ -8,7 +8,7 @@
       <% if can? :edit, @generic_file %>
           &nbsp;|&nbsp;
           <% if @generic_file.processing? %>
-            <%= "File is being processed you may edit once it is complete" %>
+            <%= t('sufia.upload.processing') %>
           <% else %>
             <%= link_to "Edit", sufia.edit_generic_file_path(@generic_file) %>
           <% end %>

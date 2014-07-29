@@ -41,6 +41,7 @@ en:
         files_selected: "files selected"
       local_ingest:
         tab_label: "Network/Server Location"
+      processing: "File is being processed; you may edit when processing has completed"
     field_label:
       based_near:       "Location"
       description:      "Abstract or Summary"
@@ -71,13 +72,13 @@ en:
         followers:          "People who are following you"
       my:
         files:        "My Files"
-        collections:  "My Collections" 
+        collections:  "My Collections"
         highlights:   "My Highlights"
         shares:       "Files Shared with Me"
     file:
       collections_list:
         heading:   "This file is in the following collections:"
-        empty:     "This file is not currently in any collections." 
+        empty:     "This file is not currently in any collections."
 
     metadata_help:
       resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."
