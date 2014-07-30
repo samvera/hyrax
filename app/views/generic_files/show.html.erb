@@ -50,7 +50,7 @@
     <%= render partial: 'show_collections' %>
   </div>
   <div itemscope itemtype="<%= @generic_file.itemtype %>" class="col-xs-12 col-sm-8">
-    <h1><%= @generic_file %></h1>
+    <h1 class="visibility"><%= @generic_file %> <%= render_visibility_badge %></h1>
     <%= render partial: 'show_descriptions' %>
     <%= render partial: 'show_details' %>
     <%= render partial: 'users/activity_log', locals: {events: @events} %>

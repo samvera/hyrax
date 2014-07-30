@@ -101,3 +101,6 @@ en:
       collections_list: "Your Collections"
       previous:  "Back to Previous"
       search_results: "Back to search results"
+    visibility:
+      open: "Open Access"
+      private: "Private"

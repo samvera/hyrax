@@ -323,4 +323,15 @@ describe 'generic_files/show.html.erb' do
       end
     end
   end
+
+  describe 'visibility' do
+    let(:expected) do
+      '<span class="label label-danger" title="'+t('sufia.visibility.private')+'">'+t('sufia.visibility.private')+'</span></a>' 
+    end
+    it "should display the visibility badge" do
+      render
+      expect(rendered).to include(expected)
+    end
+  end
+
 end

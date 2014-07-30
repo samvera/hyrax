@@ -15,6 +15,7 @@ module Sufia
   end
 
   autoload :Utils, 'sufia/models/utils'
+  autoload :Permissions
 
   attr_writer :queue
 

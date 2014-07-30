@@ -3,7 +3,8 @@ module Sufia
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
     include Sufia::GenericFile::MimeTypes
-
+    include Sufia::Permissions::Readable
+    
     # Add a schema.org itemtype
     def itemtype
       Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
@@ -102,12 +103,5 @@ module Sufia
       Array(self[::Ability.edit_user_field])
     end
 
-    def public?
-      read_groups.include?('public')
-    end
-
-    def registered?
-      read_groups.include?('registered')
-    end
   end
 end

@@ -120,6 +120,21 @@ module Sufia
       end
     end
 
+    def render_visibility_link document
+      link_to render_visibility_label(document), sufia.edit_generic_file_path(document.noid, {anchor: "permissions_display"}),
+        id: "permission_"+document.noid, class: "visibility-link"
+    end
+
+    def render_visibility_label document
+      if document.registered?
+        content_tag :span, t('sufia.institution_name'), class: "label label-info", title: t('sufia.institution_name')
+      elsif document.public?
+        content_tag :span, t('sufia.visibility.open'), class: "label label-success", title: t('sufia.visibility.open')
+      else
+        content_tag :span, t('sufia.visibility.private'), class: "label label-danger", title: t('sufia.visibility.private')
+      end
+    end
+
     private
 
     def search_action_for_dashboard
