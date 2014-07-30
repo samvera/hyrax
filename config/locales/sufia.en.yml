@@ -104,3 +104,6 @@ en:
     visibility:
       open: "Open Access"
       private: "Private"
+    user_profile:
+      no_followers: "No one is following you."
+      no_following: "You are not following anyone."
