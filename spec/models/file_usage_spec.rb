@@ -71,7 +71,7 @@ describe FileUsage, :type => :model do
     end
 
     it "should set the path" do
-      expect(usage.path).to eq("/files/#{Sufia::Noid.noidify(@file.id)}")
+      expect(usage.path).to eq("/files/#{URI.encode(Sufia::Noid.noidify(@file.id), '/')}")
     end
 
     it "should set the created date" do
