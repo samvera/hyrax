@@ -6,9 +6,7 @@ describe Batch, :type => :model do
     @file = GenericFile.new
     @file.apply_depositor_metadata('mjg36')
     @file.save
-    @batch = Batch.create(title: ["test collection"],
-                          creator: @user.user_key,
-                          part: @file.pid)
+    @batch = Batch.create(title: ["test collection"], creator: [@user.user_key], part: [@file.pid])
   end
   after(:all) do
     @user.delete
@@ -57,9 +55,9 @@ describe Batch, :type => :model do
     end
     describe "when the object does not exist" do
       it "should create" do
-        expect {Batch.find("batch:123")}.to raise_error(ActiveFedora::ObjectNotFoundError)
+        expect { Batch.find("batch-123") }.to raise_error(ActiveFedora::ObjectNotFoundError)
         expect(Batch).to receive(:create).once.and_return("the batch")
-        @b2 = Batch.find_or_create( "batch:123")
+        @b2 = Batch.find_or_create( "batch-123")
         expect(@b2).to eq("the batch")
       end
     end

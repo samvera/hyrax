@@ -14,7 +14,7 @@ class Batch < ActiveFedora::Base
     begin
       Batch.find(pid)
     rescue ActiveFedora::ObjectNotFoundError
-      Batch.create({pid: pid})
+      Batch.create(pid: pid)
     end
   end
 
