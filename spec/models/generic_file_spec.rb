@@ -584,12 +584,7 @@ describe GenericFile, :type => :model do
       end
     end
   end
-  describe "label" do
-    it "should set the label" do
-      @file.label = "My New Label"
-      expect(@file.label).to eq "My New Label"
-    end
-  end
+
   context "with rightsMetadata" do
     subject do
       m = GenericFile.new()

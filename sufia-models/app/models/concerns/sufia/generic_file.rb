@@ -92,13 +92,6 @@ module Sufia
       end
     end
 
-    def label=(new_label)
-      super
-      if self.title.empty?
-        self.title = [new_label].compact
-      end
-    end
-
     # Is this file in the middle of being processed by a batch?
     def processing?
        return false if self.batch.blank?
