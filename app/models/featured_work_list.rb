@@ -31,7 +31,7 @@ class FeaturedWorkList
     end
 
     def pids
-      @works.pluck(:generic_file_id).map { |noid| Sufia::Noid.namespaceize(noid) }
+      @works.pluck(:generic_file_id)
     end
 
     def solr_docs
@@ -39,7 +39,7 @@ class FeaturedWorkList
     end
 
     def work_with_pid(pid)
-      @works.find { |w| Sufia::Noid.namespaceize(w.generic_file_id) == pid}
+      @works.find { |w| w.generic_file_id == pid}
     end
   
 end
