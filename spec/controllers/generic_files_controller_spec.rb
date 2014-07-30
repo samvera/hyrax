@@ -255,6 +255,17 @@ describe GenericFilesController do
       Sufia.queue.should_receive(:push).with(s1).once
       delete :destroy, id: @generic_file.pid
     end
+
+    context "when the file is featured" do
+      before do
+        FeaturedWork.create(generic_file_id: @generic_file.pid)
+      end
+      it "should make the file not featured" do
+        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to include(@generic_file.pid)
+        delete :destroy, id: @generic_file.pid
+        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to_not include(@generic_file.pid)
+      end
+    end
   end
 
   describe 'stats' do
