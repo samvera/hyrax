@@ -539,12 +539,20 @@ describe GenericFile, :type => :model do
   end
 
   describe "characterize" do
-    it "should return expected results when called", unless: $in_travis do
-      subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      subject.characterize
-      doc = Nokogiri::XML.parse(subject.characterization.content)
-      expect(doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text).to eq('50')
+    context "makes a datastream" do
+      before do
+        subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        subject.characterize
+        # characterize method saves
+      end
+      let(:datastream) { subject.characterization }
+      let(:xml) { datastream.ng_xml }
+      let(:namespace) { {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'} }
+      it "should return expected results when called", unless: $in_travis do
+        expect(xml.xpath('//ns:imageWidth/text()', namespace).inner_text).to eq '50'
+      end
     end
+
     context "after characterization" do
       before(:all) do
         myfile = GenericFile.new
