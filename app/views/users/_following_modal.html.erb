@@ -1,26 +1,30 @@
 <div class="modal-div">
 
-<!-- Text to trigger modal -->
-<h4><i class="glyphicon glyphicon-hand-right"></i><a data-toggle="modal" href="#following">Following:</a>  <%= @following.count %></h4>
-<!-- Modal -->
-<div class="modal hide in" id="following" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+  <!-- Text to trigger modal -->
+  <h4>
+    <i class="glyphicon glyphicon-hand-right"></i><a data-toggle="modal" href="#following">Following:</a>  <%= @following.count %>
+  </h4>
+  <!-- Modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="following" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <% if @following.count > 0 %>
+            <h3>Following</h3>
+            <ul>
+              <% @following.each do |f| %>
+                <li><%= link_to f.name, sufia.profile_path(f), title: "View user's profile" %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <h3><%= t("sufia.user_profile.no_following") %></h3>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="modal-body">
-    <% if @following.count > 0 %>
-      <h3>Following</h3>
-      <ul>
-      <% @following.each do |f| %>
-        <li><%= link_to f.name, sufia.profile_path(f), title: "View user's profile" %></li>
-      <% end %>
-      </ul>
-    <% else %>
-      <h3>No Following</h3>
-    <% end %>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-  </div>
-</div>
 </div>
