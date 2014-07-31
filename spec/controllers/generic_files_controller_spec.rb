@@ -69,7 +69,6 @@ describe GenericFilesController, :type => :controller do
         xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
         saved_file = GenericFile.find('test123')
         version = saved_file.content.latest_version
-        # expect(version.versionID).to eq "content.0"
         expect(saved_file.content.version_committer(version)).to eq @user.user_key
       end
 
@@ -144,7 +143,6 @@ describe GenericFilesController, :type => :controller do
     let(:mock_upload_directory) { 'spec/mock_upload_directory' }
     before do
       Sufia.config.enable_local_ingest = true
-      # Dir.mkdir mock_upload_directory unless File.exists? @mock_upload_directory
       FileUtils.mkdir_p([File.join(mock_upload_directory, "import/files"), File.join(mock_upload_directory, "import/metadata")])
       FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), mock_upload_directory)
       FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), mock_upload_directory)
@@ -227,23 +225,23 @@ describe GenericFilesController, :type => :controller do
   end
 
   describe "destroy" do
-    before(:each) do
-      @generic_file = GenericFile.new
-      @generic_file.apply_depositor_metadata(@user)
-      @generic_file.save
-      @user = FactoryGirl.find_or_create(:jill)
-      sign_in @user
+    let(:user) { @user }
+    let(:generic_file) do
+      GenericFile.new.tap do |gf|
+        gf.apply_depositor_metadata(user)
+        gf.save!
+      end
     end
+
+    before do
+      allow(ContentDeleteEventJob).to receive(:new).with(generic_file.id, user.user_key).and_return(delete_message)
+    end
+    let(:delete_message) { double('delete message') }
     it "should delete the file" do
-      expect(GenericFile.find(@generic_file.pid)).not_to be_nil
-      delete :destroy, id: @generic_file.pid
-      expect { GenericFile.find(@generic_file.pid) }.to raise_error(ActiveFedora::ObjectNotFoundError)
-    end
-    it "should spawn a content delete event job" do
-      s1 = double('one')
-      expect(ContentDeleteEventJob).to receive(:new).with(@generic_file.pid, @user.user_key).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
-      delete :destroy, id: @generic_file.pid
+      expect(Sufia.queue).to receive(:push).with(delete_message)
+      expect {
+        delete :destroy, id: generic_file
+      }.to change { GenericFile.exists?(generic_file.id) }.from(true).to(false)
     end
 
     context "when the file is featured" do
@@ -345,7 +343,6 @@ describe GenericFilesController, :type => :controller do
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       post :update, id: generic_file, generic_file: {title: ['new_title'], tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
-      @user.delete
     end
 
     it "spawns a content new version event job" do
@@ -361,7 +358,6 @@ describe GenericFilesController, :type => :controller do
 
       file = fixture_file_upload('/world.png', 'image/png')
       post :update, id: generic_file, filedata: file, generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
-      @user.destroy
     end
 
     it "should change mime type when restoring a revision with a different mime type" do

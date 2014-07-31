@@ -13,7 +13,9 @@ module Sufia::Controller
   end
 
   def normalize_identifier
-    params[:id] = Sufia::Noid.namespaceize(params[:id])
+    # nop
+    # If you want to override you can do something like this:
+    # params[:id] = Sufia::Noid.namespaceize(params[:id])
   end
 
   def render_404(exception)
