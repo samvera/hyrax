@@ -1,8 +1,28 @@
 require 'spec_helper'
 
 describe Sufia::GenericFile::Actor do
+  include ActionDispatch::TestProcess # for fixture_file_upload
 
   let(:user) { FactoryGirl.create(:user) }
+  let(:generic_file) { FactoryGirl.create(:generic_file) }
+  let(:actor) { Sufia::GenericFile::Actor.new(generic_file, user) }
+  let(:uploaded_file) { fixture_file_upload('/world.png','image/png') }
+
+  describe "#create_content" do
+    let(:deposit_message) { double('deposit message') }
+    let(:characterize_message) { double('characterize message') }
+
+    before do
+      allow(ContentDepositEventJob).to receive(:new).with(generic_file.id, user.user_key).and_return(deposit_message)
+      allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(characterize_message)
+    end
+
+    it "should enqueue deposit and characterize messages" do
+      expect(Sufia.queue).to receive(:push).with(deposit_message)
+      expect(Sufia.queue).to receive(:push).with(characterize_message)
+      actor.create_content(uploaded_file, 'world.png', 'content')
+    end
+  end
 
   describe "#virus_check" do
     it "should return the results of running ClamAV scanfile method" do

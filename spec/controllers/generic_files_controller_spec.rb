@@ -7,132 +7,122 @@ describe GenericFilesController, :type => :controller do
     sign_in @user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
+    allow_any_instance_of(GenericFile).to receive(:characterize)
   end
 
   describe "#create" do
     before do
       @file_count = GenericFile.count
-      @mock = GenericFile.new(pid: 'test123')
-      allow(GenericFile).to receive(:new).and_return(@mock)
+      mock = GenericFile.new(pid: 'test123')
+      allow(GenericFile).to receive(:new).and_return(mock)
     end
 
-    after do
-      begin
-        allow(GenericFile).to receive(:new).and_call_original
-      rescue RSpec::Mocks::MockExpectationError => e
-      end
-      Batch.find("sample_batch_id").delete rescue
-      @mock.delete unless @mock.new_record?
-    end
+    let(:batch) { Batch.create }
+    let(:batch_id) { batch.id }
+    let(:file) { fixture_file_upload('/world.png','image/png') }
 
     it "should record on_behalf_of" do
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, files: [file], Filename: 'The world', batch_id: 'sample:batch_id', on_behalf_of: 'carolyn', terms_of_service: '1'
       expect(response).to be_success
-      saved_file = GenericFile.find('test:123')
-      expect(saved_file.on_behalf_of).to eq('carolyn')
-    end
-
-    it "should render error the file wasn't actually a file" do
-      file = 'hello'
-      xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-      expect(response.status).to eq(422)
-      expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
-    end
-
-    it "spawns a content deposit event job" do
-      file = fixture_file_upload('/world.png','image/png')
-      s1 = double('one')
-      allow(ContentDepositEventJob).to receive(:new).with('test123', 'jilluser@example.com').and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
-
-      s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with('test123').and_return(s2)
-      expect(Sufia.queue).to receive(:push).with(s2).once
-      xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: 'sample_batch_id', permission: {group: { public: 'read' } }, terms_of_service: '1'
-      expect(flash[:error]).to be_nil
-    end
-
-    it "displays a flash error when file has a virus" do
-      file = fixture_file_upload('/world.png', 'image/png')
-      expect(Sufia::GenericFile::Actor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
-      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-      expect(flash[:error]).not_to be_blank
-      expect(flash[:error]).to include('A virus was found')
-    end
-
-    it "should create and save a file asset from the given params" do
-      date_today = Date.today
-      allow(Date).to receive(:today).and_return(date_today)
-      file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-      expect(response).to be_success
-      expect(GenericFile.count).to eq(@file_count + 1)
-
       saved_file = GenericFile.find('test123')
-
-      # This is confirming that the correct file was attached
-      expect(saved_file.label).to eq('world.png')
-      expect(saved_file.content.checksum).to eq('f794b23c0c6fe1083d0ca8b58261a078cd968967')
-      expect(saved_file.content.dsChecksumValid).to be true
-
-      # Confirming that date_uploaded and date_modified were set
-      expect(saved_file.date_uploaded).to eq(date_today)
-      expect(saved_file.date_modified).to eq(date_today)
+      expect(saved_file.on_behalf_of).to eq 'carolyn'
     end
 
-    it "should record what user created the first version of content" do
-      file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      saved_file = GenericFile.find('test123')
-      version = saved_file.content.latest_version
-      expect(version.versionID).to eq("content.0")
-      expect(saved_file.content.version_committer(version)).to eq(@user.user_key)
+    context "when the file submitted isn't a file" do
+      let(:file) { 'hello' }
+
+      it "should render 422 error" do
+        xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+        expect(response.status).to eq 422
+        expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
+      end
     end
 
-    it "should create batch associations from batch_id" do
-      allow(Sufia.config).to receive(:id_namespace).and_return('sample')
-      file = fixture_file_upload('/world.png','image/png')
-      allow(controller).to receive(:add_posted_blob_to_asset)
-      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      allow(GenericFile).to receive(:new).and_call_original
-      expect {Batch.find("sample:batch_id")}.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
-      batch = Batch.create(pid: "sample:batch_id")
-      expect(batch.generic_files.first.pid).to eq("test:123")
+    context "when everything is perfect" do
+      it "spawns a content deposit event job" do
+        expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content').and_return(true)
+        xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
+        expect(flash[:error]).to be_nil
+      end
+
+      it "should create and save a file asset from the given params" do
+        date_today = Date.today
+        allow(Date).to receive(:today).and_return(date_today)
+        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+        expect(response).to be_success
+        expect(GenericFile.count).to eq(@file_count + 1)
+
+        saved_file = GenericFile.find('test123')
+
+        # This is confirming that the correct file was attached
+        expect(saved_file.label).to eq 'world.png'
+        expect(saved_file.content.checksum).to eq 'f794b23c0c6fe1083d0ca8b58261a078cd968967'
+        expect(saved_file.content.dsChecksumValid).to be true
+
+        # Confirming that date_uploaded and date_modified were set
+        expect(saved_file.date_uploaded).to eq date_today
+        expect(saved_file.date_modified).to eq date_today
+      end
+
+      it "should record what user created the first version of content" do
+        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+        saved_file = GenericFile.find('test123')
+        version = saved_file.content.latest_version
+        expect(version.versionID).to eq "content.0"
+        expect(saved_file.content.version_committer(version)).to eq @user.user_key
+      end
+
+      it "should create batch associations from batch_id" do
+        skip "we need to create the batch, because Fedora 4 doesn't let us set associations to things that don't exist"
+        batch_id = "object-that-doesnt-exist"
+        allow(Sufia.config).to receive(:id_namespace).and_return('sample')
+        allow(controller).to receive(:add_posted_blob_to_asset)
+        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+        allow(GenericFile).to receive(:new).and_call_original
+        expect { Batch.find(batch_id) }.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
+        batch = Batch.create(pid: batch_id)
+        expect(batch.generic_files.first.pid).to eq "test123"
+      end
+
+      it "should set the depositor id" do
+        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+        expect(response).to be_success
+
+        saved_file = GenericFile.find('test123')
+        # This is confirming that apply_depositor_metadata recorded the depositor
+        expect(saved_file.properties.depositor).to eq ['jilluser@example.com']
+        expect(saved_file.depositor).to eq 'jilluser@example.com'
+        expect(saved_file.properties.to_solr.keys).to include('depositor_tesim')
+        expect(saved_file.properties.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
+        expect(saved_file.to_solr.keys).to include('depositor_tesim')
+        expect(saved_file.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
+      end
+
     end
-    it "should set the depositor id" do
-      file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      expect(response).to be_success
 
-      saved_file = GenericFile.find('test123')
-      # This is confirming that apply_depositor_metadata recorded the depositor
-      #TODO make sure this is moved to scholarsphere:
-      #saved_file.properties.depositor.should == ['jilluser']
-      expect(saved_file.properties.depositor).to eq(['jilluser@example.com'])
-      #TODO make sure this is moved to scholarsphere:
-      #saved_file.depositor.should == 'jilluser'
-      expect(saved_file.depositor).to eq('jilluser@example.com')
-      expect(saved_file.properties.to_solr.keys).to include('depositor_tesim')
-      #TODO make sure this is moved to scholarsphere:
-      #saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
-      expect(saved_file.properties.to_solr['depositor_tesim']).to eq(['jilluser@example.com'])
-      expect(saved_file.to_solr.keys).to include('depositor_tesim')
-      expect(saved_file.to_solr['depositor_tesim']).to eq(['jilluser@example.com'])
+    context "when the file has a virus" do
+      it "displays a flash error when file has a virus" do
+        expect(Sufia::GenericFile::Actor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+        xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+        expect(flash[:error]).not_to be_blank
+        expect(flash[:error]).to include('A virus was found')
+      end
     end
 
-    it "should error out of create and save after on continuos rsolr error" do
-      allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
+    context "when solr continuously has errors" do
+      it "should error out of create and save after on continuos rsolr error" do
+        allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
 
-      file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      expect(response.body).to include("Error occurred while creating generic file.")
+        file = fixture_file_upload('/world.png','image/png')
+        xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+        expect(response.body).to include("Error occurred while creating generic file.")
+      end
     end
   end
 
   describe "#create with browse-everything" do
     before do
-      GenericFile.delete_all
       @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
     end
     it "should ingest files from provide URLs" do
@@ -153,7 +143,6 @@ describe GenericFilesController, :type => :controller do
     let (:mock_url) {"http://example.com"}
     before do
       Sufia.config.enable_local_ingest = true
-      GenericFile.delete_all
       @mock_upload_directory = 'spec/mock_upload_directory'
       # Dir.mkdir @mock_upload_directory unless File.exists? @mock_upload_directory
       FileUtils.mkdir_p([File.join(@mock_upload_directory, "import/files"),File.join(@mock_upload_directory, "import/metadata")])
@@ -229,9 +218,6 @@ describe GenericFilesController, :type => :controller do
       @generic_file.apply_depositor_metadata('mjg36')
       @generic_file.save
     end
-    after do
-      @generic_file.delete
-    end
     it "should return json with the result" do
       xhr :post, :audit, id: @generic_file.pid
       expect(response).to be_success
@@ -248,9 +234,6 @@ describe GenericFilesController, :type => :controller do
       @generic_file.save
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
-    end
-    after do
-      @user.delete
     end
     it "should delete the file" do
       expect(GenericFile.find(@generic_file.pid)).not_to be_nil

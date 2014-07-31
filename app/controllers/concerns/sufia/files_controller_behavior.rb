@@ -45,7 +45,8 @@ module Sufia
 
     # routed to /files/new
     def new
-      @batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
+      #@batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
+      @batch_noid = Batch.create.noid
     end
 
     # routed to /files/:id/edit
