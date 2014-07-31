@@ -4,7 +4,7 @@ class TestAppGenerator < Rails::Generators::Base
   source_root "../../spec/test_app_templates"
 
   def add_gems
-    # gem 'sufia-models', github: 'projecthydra/sufia'
+    gem 'sufia-models', github: 'projecthydra/sufia'
     # gem "jettywrapper"
     # pins to a version of hydra-access-controls with lease & embargo support
     # gem 'hydra-head', '7.1.0.rc1'

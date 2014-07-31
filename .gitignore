@@ -9,4 +9,5 @@ tmp
 spec/internal
 jetty
 .rvmrc
-
+.ruby-*
+./spec/internal

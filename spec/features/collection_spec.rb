@@ -43,7 +43,6 @@ describe 'collection' do
     Collection.destroy_all
   end
 
-
   describe 'create collection' do
     before do
       sign_in user
@@ -86,8 +85,7 @@ describe 'collection' do
 
     it "should delete a collection" do
       page.should have_content(@collection.title)
-      within('#document_'+@collection.noid) do
-        #first('button.dropdown-toggle').click
+      within("#document_#{@collection.noid}") do
         first(".itemtrash").click
       end
       page.should_not have_content(@collection.title)
@@ -199,7 +197,7 @@ describe 'collection' do
       page.should have_content(@gw2.title)
     end
 
-    it "should remove all works from a collection", js: true do
+    it "should remove all works from a collection" do
       skip "batch collection operations (add/remove)"
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do

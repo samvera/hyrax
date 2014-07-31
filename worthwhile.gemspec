@@ -18,13 +18,12 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hydra-head', '7.1.0'
+  spec.add_dependency 'hydra-head', '7.2.0'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
   spec.add_dependency "active_attr"
   spec.add_dependency "simple_form", '~> 3.1.0.rc1'
   spec.add_dependency 'sufia-models', '~> 4.0.0.rc1'
   spec.add_dependency 'hydra-collections'
-  #spec.add_dependency 'bootstrap-datepicker-rails'
 
   spec.add_development_dependency "devise", "~> 3.0"
   spec.add_development_dependency "bundler", "~> 1.6"
@@ -38,5 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "poltergeist", ">= 1.5.0"
   spec.add_development_dependency "factory_girl"
   spec.add_development_dependency "database_cleaner", "< 1.1.0"
-  
+
 end
