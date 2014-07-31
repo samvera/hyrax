@@ -12,7 +12,7 @@ module Sufia
       end
 
       def latest_version
-        versions.first
+        versions.last
       end
 
       def version_committer(version)

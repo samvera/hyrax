@@ -12,6 +12,7 @@ class IngestLocalFileJob
     self.user_key = user_key
   end
 
+  #TODO this should use Actor#create_content
   def run
     user = User.find_by_user_key(user_key)
     raise "Unable to find user for #{user_key}" unless user

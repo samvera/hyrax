@@ -104,6 +104,16 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before do
+    begin
+      FedoraLens.connection.delete("test")
+    rescue StandardError
+    end
+    FedoraLens.connection.put("test","")
+    ActiveFedora::SolrService.instance.conn.delete_by_query('*:*', params: {'softCommit' => true})
+    FedoraLens.base_path = "/test"
+  end
+  
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.

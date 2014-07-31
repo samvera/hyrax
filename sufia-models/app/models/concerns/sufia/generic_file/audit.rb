@@ -71,7 +71,7 @@ module Sufia
         end
 
         def audit(version_uri, force = false)
-          return true; # TODO Just skipping the audit for now
+          return { pass: true } # TODO Just skipping the audit for now
           latest_audit = self.find(version_uri).audit_each( version, force)
         end
 
