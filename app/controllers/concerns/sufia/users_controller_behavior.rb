@@ -66,8 +66,7 @@ module Sufia::UsersControllerBehavior
   end
 
   def toggle_trophy
-     id = Sufia::Noid.namespaceize params[:file_id]
-     unless current_user.can? :edit, id
+     unless current_user.can? :edit, params[:file_id]
        redirect_to root_path, alert: "You do not have permissions to the file"
        return false
      end
