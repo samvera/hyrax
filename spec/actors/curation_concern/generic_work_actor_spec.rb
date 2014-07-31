@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe CurationConcern::GenericWorkActor do
   include ActionDispatch::TestProcess
+
   let(:user) { FactoryGirl.create(:user) }
-  
   let(:file) { worthwhile_fixture_file_upload('files/image.png', 'image/png') }
 
   subject {
@@ -140,7 +140,7 @@ describe CurationConcern::GenericWorkActor do
       end
 
       context 'with linked resources' do
-        
+
         let(:attributes) {
           FactoryGirl.attributes_for(:generic_work, visibility: visibility, linked_resource_urls: ['http://www.youtube.com/watch?v=oHg5SJYRHA0', "http://google.com"])
         }
