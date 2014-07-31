@@ -349,7 +349,7 @@ describe GenericFilesController do
         gf.save!
       end
     end
-
+    
     context "when updating metadata" do
       let(:update_message) { double('content update message') }
       before do
