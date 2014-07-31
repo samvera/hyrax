@@ -16,9 +16,7 @@ module Sufia
       end
 
       def version_committer(version)
-        vc = VersionCommitter.where(obj_id: version.pid,
-                                    datastream_id: version.dsid,
-                                    version_id: version.versionID)
+        vc = VersionCommitter.where(version_id: version.to_s)
         return vc.empty? ? nil : vc.first.committer_login
       end
 

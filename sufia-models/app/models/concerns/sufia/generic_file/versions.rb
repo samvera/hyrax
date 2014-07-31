@@ -5,10 +5,7 @@ module Sufia
         version = content.latest_version
         # content datastream not (yet?) present
         return if version.nil?
-        VersionCommitter.create(obj_id: version.pid,
-                                datastream_id: version.dsid,
-                                version_id: version.versionID,
-                                committer_login: user.user_key)
+        VersionCommitter.create(version_id: version.to_s, committer_login: user.user_key)
       end
 
     end
