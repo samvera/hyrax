@@ -49,7 +49,7 @@ class SingleUseLinksViewerController < ApplicationController
   protected
 
   def authorize_download!
-    authorize! :read, @asset
+    authorize! :read, asset
   end
 
   def single_use_link
@@ -60,8 +60,8 @@ class SingleUseLinksViewerController < ApplicationController
     Sufia::SingleUseError.new('Single-Use Link Not Found')
   end
 
-  def load_asset
-    @asset = ActiveFedora::Base.load_instance_from_solr(single_use_link.itemId)
+  def asset
+    @asset ||= ActiveFedora::Base.find(single_use_link.itemId)
   end
 
   def current_ability
