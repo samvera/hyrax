@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe 'collections/_form.html.erb', :type => :view do
   describe 'when the collection edit form is rendered' do
-    let(:collection) { Collection.new({title: 'the title', description: 'the description',
-                                       creator: 'the creator'})}
+    let(:collection) { Collection.new(title: 'the title', description: 'the description',
+                                       creator: ['the creator'])}
 
     before do
       controller.request.path_parameters[:id] = 'j12345'

@@ -15,7 +15,7 @@
     <%# resource_type is a multiselect box, so don't render one row for each %>
     <%= render_edit_field_partial(key, record: record, f: f, render_req: render_req) %>
   <% else %>
-    <% vals.to_ary.each_with_index do |v, index| %>
+    <% Array(vals).each_with_index do |v, index| %>
       <%= render_edit_field_partial(key, record: record, f: f,  v: v, index: index, render_req: render_req) %>
     <% end %>
   <% end %>
