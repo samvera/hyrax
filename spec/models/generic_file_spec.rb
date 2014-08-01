@@ -562,7 +562,7 @@ describe GenericFile, :type => :model do
     end
 
     context "after characterization" do
-      before(:all) do
+      before do
         myfile = GenericFile.new
         myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, 'content', 'sufia_test4.pdf')
         myfile.label = 'label123'
@@ -571,31 +571,27 @@ describe GenericFile, :type => :model do
         myfile.characterize
         @myfile = myfile.reload
       end
-      after(:all) do
+      after do
         @myfile.destroy
       end
       it "should return expected results after a save" do
-        expect(@myfile.file_size).to eq(['218882'])
-        expect(@myfile.original_checksum).to eq(['5a2d761cab7c15b2b3bb3465ce64586d'])
-      end
-      it "should return a hash of all populated values from the characterization terminology" do
-        expect(@myfile.characterization_terms[:format_label]).to eq(["Portable Document Format"])
-        expect(@myfile.characterization_terms[:mime_type]).to eq("application/pdf")
-        expect(@myfile.characterization_terms[:file_size]).to eq(["218882"])
-        expect(@myfile.characterization_terms[:original_checksum]).to eq(["5a2d761cab7c15b2b3bb3465ce64586d"])
+        expect(@myfile.file_size).to eq ['218882']
+        expect(@myfile.original_checksum).to eq ['5a2d761cab7c15b2b3bb3465ce64586d']
+
+        expect(@myfile.characterization_terms[:format_label]).to eq ["Portable Document Format"]
+        expect(@myfile.characterization_terms[:mime_type]).to eq "application/pdf"
+        expect(@myfile.characterization_terms[:file_size]).to eq ["218882"]
+        expect(@myfile.characterization_terms[:original_checksum]).to eq ["5a2d761cab7c15b2b3bb3465ce64586d"]
         expect(@myfile.characterization_terms.keys).to include(:last_modified)
         expect(@myfile.characterization_terms.keys).to include(:filename)
-      end
-      it "should append metadata from the characterization" do
+
         expect(@myfile.title).to include("Microsoft Word - sample.pdf.docx")
-        expect(@myfile.filename[0]).to eq(@myfile.label)
-      end
-      it "should append each term only once" do
+        expect(@myfile.filename[0]).to eq @myfile.label
+
         @myfile.append_metadata
-        expect(@myfile.format_label).to eq(["Portable Document Format"])
+        expect(@myfile.format_label).to eq ["Portable Document Format"]
         expect(@myfile.title).to include("Microsoft Word - sample.pdf.docx")
-      end
-      it 'includes extracted full-text content' do
+
         expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMicrosoft Word - sample.pdf.docx\n\n\n \n \n\n \n\n \n\n \n\nThis PDF file was created using CutePDF. \n\nwww.cutepdf.com")
       end
     end

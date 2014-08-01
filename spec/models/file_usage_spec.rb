@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe FileUsage, :type => :model do
 
-  before :all do
+  before do
     @file = GenericFile.new
     @file.apply_depositor_metadata("awead")
     @file.save
   end
 
-  after :all do
+  after do
     @file.delete
   end
 
