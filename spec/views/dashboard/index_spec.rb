@@ -100,14 +100,14 @@ describe "dashboard/index.html.erb" do
 
       it "defaults to a limited number of notifications" do
         render
-        expect(rendered).to include "Sample notification 2."
-        expect(rendered).to_not include "Sample notification 1."
+        expect(rendered).to include "Single File 9"
+        expect(rendered).to_not include "Single File 2"
       end
 
       it "allows showing more notifications" do
         Sufia.config.max_notifications_for_dashboard = 6
         render
-        expect(rendered).to include "Sample notification 1."
+        expect(rendered).to include "Single File 1"
       end
 
 

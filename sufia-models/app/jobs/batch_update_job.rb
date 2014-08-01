@@ -1,12 +1,12 @@
 class BatchUpdateJob
   include Hydra::PermissionsQuery
-  include Rails.application.routes.url_helpers
+  include Sufia::Messages
 
   def queue_name
     :batch_update
   end
 
-  attr_accessor :login, :title, :file_attributes, :batch_id, :visibility
+  attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied
 
   def initialize(login, params)
     self.login = login
@@ -14,32 +14,29 @@ class BatchUpdateJob
     self.file_attributes = params[:generic_file]
     self.visibility = params[:visibility]
     self.batch_id = params[:id]
+    self.saved = []
+    self.denied = []
   end
 
   def run
     batch = Batch.find_or_create(self.batch_id)
     user = User.find_by_user_key(self.login)
-    @saved = []
-    @denied = []
 
     batch.generic_files.each do |gf|
       update_file(gf, user)
     end
     batch.update_attributes({status:["Complete"]})
-
-    job_user = User.batchuser()
-
-    message = '<span class="batchid ui-helper-hidden">ss-'+batch.noid+'</span>The file(s) '+ file_list(@saved)+ " have been saved." unless @saved.empty?
-    job_user.send_message(user, message, 'Batch upload complete') unless @saved.empty?
-
-    message = '<span class="batchid ui-helper-hidden">'+batch.noid+'</span>The file(s) '+ file_list(@denied)+" could not be updated.  You do not have sufficient privileges to edit it." unless @denied.empty?
-    job_user.send_message(user, message, 'Batch upload permission denied') unless @denied.empty?
+    if denied.empty?
+      send_user_success_message(user, batch) unless saved.empty?
+    else
+      send_user_failure_message(user, batch)
+    end
   end
 
   def update_file(gf, user)
     unless user.can? :edit, gf
       ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.pid}!"
-      @denied << gf
+      denied << gf
       return
     end
     gf.title = title[gf.pid] if title[gf.pid] rescue gf.label
@@ -58,10 +55,17 @@ class BatchUpdateJob
       retry
     end #
     Sufia.queue.push(ContentUpdateEventJob.new(gf.pid, login))
-    @saved << gf
+    saved << gf
   end
 
-  def file_list ( files)
-    files.map { |gf| '<a href="'+Sufia::Engine.routes.url_helpers.generic_files_path+'/'+gf.noid+'">'+gf.to_s+'</a>' }.join(', ')
+  def send_user_success_message user, batch
+    message = saved.count > 1 ? multiple_success(batch.noid, saved) : single_success(batch.noid, saved.first)
+    User.batchuser.send_message(user, message, success_subject, sanitize_text = false)
   end
+
+  def send_user_failure_message user, batch
+    message = denied.count > 1 ? multiple_failure(batch.noid, denied) : single_failure(batch.noid, denied.first)
+    User.batchuser.send_message(user, message, failure_subject, sanitize_text = false)
+  end
+  
 end
