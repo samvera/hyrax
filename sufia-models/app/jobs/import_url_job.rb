@@ -11,7 +11,7 @@ class ImportUrlJob < ActiveFedoraPidBasedJob
   def run
     user = User.find_by_user_key(generic_file.depositor)
 
-    Tempfile.open(self.pid) do |f|
+    Tempfile.open(pid.gsub('/', '_')) do |f|
       path = copy_remote_file(generic_file.import_url, f)
       # attach downloaded file to generic file stubbed out
       if Sufia::GenericFile::Actor.new(generic_file, user).create_content(f, path, 'content')
