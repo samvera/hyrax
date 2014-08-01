@@ -2,15 +2,8 @@ require 'spec_helper'
 
 describe "Browse Dashboard", :type => :feature do
 
-  before :all do
-    cleanup_jetty
-    @fixtures = find_or_create_file_fixtures
-  end
-  after :all do
-    cleanup_jetty
-  end
-
   before do
+    @fixtures = find_or_create_file_fixtures
     sign_in FactoryGirl.create :user_with_fixtures
   end
 

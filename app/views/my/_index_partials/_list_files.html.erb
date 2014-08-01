@@ -1,6 +1,6 @@
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
-  <% gf = GenericFile.load_instance_from_solr(document.id) %>
+  <% gf = document.to_model %>
   <td>
     <label for="batch_document_<%= document.id %>" class="sr-only"><%=t("sufia.dashboard.my.sr.batch_checkbox")%></label>
     <%= batch_edit_select(document) %>&nbsp;

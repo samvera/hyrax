@@ -1,6 +1,6 @@
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
-  <% gf = GenericFile.load_instance_from_solr(document.id) %>
+  <% gf = document.to_model%>
   <td>&nbsp;
     <%# This block is for adding/removing the magic wand while batch updates are processing %>
     <% if gf.processing? %>
