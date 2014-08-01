@@ -1,8 +1,13 @@
 require 'spec_helper'
 
+<<<<<<< HEAD
 describe 'searching', :type => :feature do
   before { GenericFile.destroy_all }
   let!(:file) { FactoryGirl.create(:public_file, title: "Toothbrush") }
+=======
+describe 'searching' do
+  let!(:file) { FactoryGirl.create(:public_file, title: ["Toothbrush"]) }
+>>>>>>> Set title as a multivalued field
 
   context "as a public user" do
     it "should find the file and have a gallery" do
