@@ -14,7 +14,7 @@ FactoryGirl.define do
     factory :fixture do
       factory :public_pdf do
         transient do
-          pid "sufia:fixture-pdf"
+          pid "fixture-pdf"
         end
         initialize_with { new(pid: pid) }
         read_groups ["public"]
@@ -28,20 +28,19 @@ FactoryGirl.define do
       end
       factory :public_mp3 do
         transient do
-          pid "sufia:fixture-mp3"
+          pid "fixture-mp3"
         end
         initialize_with { new(pid: pid) }
         subject %w"consectetur adipisicing elit"
         before(:create) do |gf|
           gf.apply_depositor_metadata "archivist1@example.com"
-          gf.inner_object.pid = "sufia:fixture-mp3"
           gf.label = "Test Document MP3.mp3"
         end
         read_groups ["public"]
       end
       factory :public_wav do
         transient do
-          pid "sufia:fixture-wav"
+          pid "fixture-wav"
         end
         initialize_with { new(pid: pid) }
         resource_type ["Audio", "Dataset"]
