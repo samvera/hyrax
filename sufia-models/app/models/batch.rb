@@ -8,7 +8,7 @@ class Batch < ActiveFedora::Base
   belongs_to :user, property: "creator"
   has_many :generic_files, property: :is_part_of
 
-  has_attributes :title, :creator, :part, :status, datastream: :descMetadata, multiple: true
+  has_attributes :title, :creator, :status, datastream: :descMetadata, multiple: true
 
   def self.find_or_create(pid)
     begin
