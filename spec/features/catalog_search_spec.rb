@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'catalog searching', :type => :feature do
 
-  before(:all) do
+  before do
     @gf1 = GenericFile.new.tap do |f|
       f.title = ['title 1']
       f.tag = ["tag1", "tag2"]
@@ -10,26 +10,6 @@ describe 'catalog searching', :type => :feature do
       f.read_groups = ['public']
       f.save!
     end
-    @gf2 = GenericFile.new.tap do |f|
-      f.title = ['title 2']
-      f.tag = ["tag2", "tag3"]
-      f.apply_depositor_metadata('jilluser')
-      f.read_groups = ['public']
-      f.save!
-    end
-    @col = Collection.new.tap do |f|
-      f.title = 'title 3'
-      f.tag = ["tag3", "tag4"]
-      f.apply_depositor_metadata('jilluser')
-      f.read_groups = ['public']
-      f.save!
-    end
-  end
-
-  after(:all) do
-    User.destroy_all
-    GenericFile.destroy_all
-    Collection.destroy_all
   end
 
   before do
@@ -38,37 +18,57 @@ describe 'catalog searching', :type => :feature do
     visit '/'
   end
 
-  it "finds multiple files" do
-    within('#masthead_controls') do
-      fill_in('search-field-header', with: "tag2")
-      click_button("Go")
+  context "with files and collections" do
+    before do
+      @gf2 = GenericFile.new.tap do |f|
+        f.title = ['title 2']
+        f.tag = ["tag2", "tag3"]
+        f.apply_depositor_metadata('jilluser')
+        f.read_groups = ['public']
+        f.save!
+      end
+      @col = Collection.new.tap do |f|
+        f.title = 'title 3'
+        f.tag = ["tag3", "tag4"]
+        f.apply_depositor_metadata('jilluser')
+        f.read_groups = ['public']
+        f.save!
+      end
     end
-    expect(page).to have_content('Search Results')
-    expect(page).to have_content(@gf1.title.first)
-    expect(page).to have_content(@gf2.title.first)
-    expect(page).to_not have_content(@col.title)
-  end
 
-  it "finds files and collections" do
-    within('#masthead_controls') do
-      fill_in('search-field-header', with: "tag3")
-      click_button("Go")
+    # TODO most of these tests could be controller tests.
+    it "finds multiple files" do
+      within('#masthead_controls') do
+        fill_in('search-field-header', with: "tag2")
+        click_button("Go")
+      end
+      expect(page).to have_content('Search Results')
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
+      expect(page).to_not have_content(@col.title)
     end
-    expect(page).to have_content('Search Results')
-    expect(page).to have_content(@col.title)
-    expect(page).to have_content(@gf2.title.first)
-    expect(page).to_not have_content(@gf1.title.first)
-  end
 
-  it "finds collections" do
-    within('#masthead_controls') do
-      fill_in('search-field-header', with: "tag4")
-      click_button("Go")
+    it "finds files and collections" do
+      within('#masthead_controls') do
+        fill_in('search-field-header', with: "tag3")
+        click_button("Go")
+      end
+      expect(page).to have_content('Search Results')
+      expect(page).to have_content(@col.title)
+      expect(page).to have_content(@gf2.title.first)
+      expect(page).to_not have_content(@gf1.title.first)
     end
-    expect(page).to have_content('Search Results')
-    expect(page).to have_content(@col.title)
-    expect(page).to_not have_content(@gf2.title.first)
-    expect(page).to_not have_content(@gf1.title.first)
+
+    it "finds collections" do
+      within('#masthead_controls') do
+        fill_in('search-field-header', with: "tag4")
+        click_button("Go")
+      end
+      expect(page).to have_content('Search Results')
+      expect(page).to have_content(@col.title)
+      expect(page).to_not have_content(@gf2.title.first)
+      expect(page).to_not have_content(@gf1.title.first)
+    end
   end
 
   context "many tags" do
