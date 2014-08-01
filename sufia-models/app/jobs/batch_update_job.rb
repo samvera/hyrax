@@ -10,7 +10,7 @@ class BatchUpdateJob
 
   def initialize(login, params)
     self.login = login
-    self.title = params[:title]
+    self.title = params[:title] || {}
     self.file_attributes = params[:generic_file]
     self.visibility = params[:visibility]
     self.batch_id = params[:id]
@@ -41,7 +41,7 @@ class BatchUpdateJob
       denied << gf
       return
     end
-    gf.title = title[gf.pid] if title[gf.pid] rescue gf.label
+    gf.title = [title[gf.pid]] if title[gf.pid]
     gf.attributes=file_attributes
     gf.visibility= visibility
 
