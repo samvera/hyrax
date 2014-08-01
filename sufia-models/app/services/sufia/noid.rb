@@ -2,12 +2,10 @@ module Sufia
   module Noid
     extend ActiveSupport::Concern
 
-    module ClassMethods
-      ## This overrides the default behavior, which is to ask Fedora for a pid
-      # @see ActiveFedora::Sharding.assign_pid
-      def assign_pid(_)
-        Sufia::IdService.mint
-      end
+    ## This overrides the default behavior, which is to ask Fedora for a pid
+    # @see ActiveFedora::Sharding.assign_pid
+    def assign_pid
+      Sufia::IdService.mint
     end
 
     def noid

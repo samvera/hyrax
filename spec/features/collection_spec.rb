@@ -20,21 +20,16 @@ describe 'collection', :type => :feature do
 
   let(:user) { FactoryGirl.find_or_create(:archivist) }
 
-  before(:all) do
+  before do
     @gfs = []
-    (0..12).each do |x|
-      @gfs[x] =  GenericFile.new.tap do |f|
-        f.title = ["title #{x}"]
-        f.apply_depositor_metadata('archivist1@example.com')
+    (0..1).each do |x|
+      @gfs[x] =  GenericFile.new(title: ["title #{x}"]).tap do |f|
+        f.apply_depositor_metadata(user_key)
         f.save!
       end
     end
     @gf1 = @gfs[0]
     @gf2 = @gfs[1]
-  end
-
-  after(:all) do
-    ActiveFedora::Base.destroy_all
   end
 
   describe 'create collection' do
@@ -212,9 +207,8 @@ describe 'collection', :type => :feature do
   end
 
   describe 'show pages of a collection' do
-    before (:each) do
-      @collection = Collection.new title:'collection title'
-      @collection.description = 'collection description'
+    before do
+      @collection = Collection.new title: 'collection title', description: 'collection description'
       @collection.apply_depositor_metadata(user.user_key)
       @collection.members = @gfs
       @collection.save!
