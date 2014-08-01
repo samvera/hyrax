@@ -129,7 +129,7 @@ describe 'collection', :type => :feature do
   end
 
   describe 'edit collection' do
-    before (:each) do
+    before do
       @collection = Collection.new(title: 'collection title')
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user.user_key)
@@ -208,6 +208,12 @@ describe 'collection', :type => :feature do
 
   describe 'show pages of a collection' do
     before do
+      (2..12).each do |x|
+        @gfs[x] =  GenericFile.new(title: ["title #{x}"]).tap do |f|
+          f.apply_depositor_metadata(user_key)
+          f.save!
+        end
+      end
       @collection = Collection.new title: 'collection title', description: 'collection description'
       @collection.apply_depositor_metadata(user.user_key)
       @collection.members = @gfs
