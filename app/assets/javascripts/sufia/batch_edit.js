@@ -151,11 +151,27 @@ function batch_edit_init () {
         setTimeout(ajaxManager.runNow(), 100);
     }
 
+    function enable_show_hide_links() {
+        // Show/hide field details when clicking on a link with ID "expand_link_XXX".
+        // We expect to find an element named detail_XXX in addition to the expand_link_XXX.
+        // The "detail_XXX" element has the chevron icon.
+        $('.glyphicon-chevron-right-helper').on('click', function() {
+            var array = this.id.split("expand_link_");
+            if (array.length > 1) {
+                var docId = array[1];
+                $("#detail_" + docId + " .expanded-details").slideToggle();
+                var button = $("#expand_" + docId);
+                button.toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+            }
+            return false;
+        });
+    }
+
     $("#permissions_save").click(runSave);
     $(".field-save").click(runSave);
+    enable_show_hide_links();
 
 }
-
 
 
 

@@ -14,35 +14,34 @@
     </ul>
     <div class="tab-content">
       <div class="well tab-pane active" id="descriptions_display">
-        <table class="table table-striped"><!-- class="verticalheadings"> -->
-        <tbody>
         <% @terms.each do |term| %>
           <% vals = @show_file.send(term) %>
-              <tr id='row_<%= term.to_s %>' class="expandable">
-                <th width="20%">
-                   <a class="accordion-toggle grey" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%=term.to_s%>">
-                      <%= get_label(term) %>&nbsp;<i class="toggle glyphicon glyphicon-chevron-right grey"></i>
-                   </a>
-                </th>
-                <td  width="50%" class="scrolly">
-
-                    <div id="collapse_<%= term.to_s %>" class="accordion-body collapse scrolly">
-                      <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
-                          <%= hidden_field_tag('update_type', 'update') %>
-                          <%= hidden_field_tag('key', term.to_s) %>
-                          <%= render partial: "generic_files/field_form", locals: { generic_file: @show_file, f: f, render_req: false, key: term } %>
-                        <div class="row">
-                           <%= f.submit "Save changes", class: 'btn btn-primary field-save updates-batches' , id: "#{term.to_s}_save" %>
-                           <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>">Cancel </a>
-                           <div id="status_<%= term.to_s %>" class="status fleft"></div>
-                        </div>
-                      <% end %>
-                    </div>
-                </td>
-              </tr>
-         <% end %>
-          </tbody></table> <!-- class="verticalheadings"> -->
+          <div class="row">
+            <!-- look into dashboard_actions.js -->
+            <div class="col-sm-2 col-sm-offset-1">
+              <a class="accordion-toggle grey glyphicon-chevron-right-helper" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#" id="expand_link_<%=term.to_s%>">
+                <%= get_label(term) %>
+              </a>
+              <a href="#collapse_<%=term.to_s%>" class="small" id="chevron_link_<%=term.to_s%>"><span id="expand_<%=term.to_s%>" class="glyphicon glyphicon-chevron-right"></span></a>
+            </div>
+            <div id="detail_<%= term.to_s %>" class="col-sm-6">
+              <div class="accordion-body collapse expanded-details scrolly">
+                <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
+                  <%= hidden_field_tag('update_type', 'update') %>
+                  <%= hidden_field_tag('key', term.to_s) %>
+                  <%= render partial: "generic_files/field_form", locals: { generic_file: @show_file, f: f, render_req: false, key: term } %>
+                  <div>
+                    <%= f.submit "Save changes", class: 'btn btn-primary field-save updates-batches' , id: "#{term.to_s}_save" %>
+                    <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>">Cancel </a>
+                    <div id="status_<%= term.to_s %>" class="status fleft"></div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div><!-- /well -->
+
       <div id="permissions_display" class="tab-pane">
         <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_permissions", class: "ajax-form"} do |f| %>
            <%= hidden_field_tag('update_type', 'update') %>
