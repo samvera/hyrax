@@ -9,15 +9,15 @@ module Sufia
 
       def remove_blank_assertions
         terms_for_editing.each do |key|
-          self[key] = nil if self[key] == ['']
+          self[key] = nil if self[key].blank?
         end
       end
 
       # override this method if you need to initialize more complex RDF assertions (b-nodes)
       def initialize_fields
-        terms_for_editing.each do |key|
+        terms_for_editing.select { |key| self[key].blank? }.each do |key|
           # if value is empty, we create an one element array to loop over for output
-          self[key] = [''] if self.class.multiple?(key) && self[key].empty?
+          self[key] = self.class.multiple?(key) ? [''] : ''
         end
       end
 

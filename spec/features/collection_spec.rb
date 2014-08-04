@@ -37,6 +37,7 @@ describe 'collection', :type => :feature do
       sign_in user
       visit '/dashboard/collections'
     end
+
     it "should create collection from the dashboard and include files", js: true do
       create_collection(title2, description2)
       visit '/dashboard/files'
@@ -46,13 +47,14 @@ describe 'collection', :type => :feature do
       click_button "Update Collection"
       expect(page).to have_content "Items in this Collection"
       # There are two rows in the table per document (one for the general info, one for the details)
-      # Make sure we have at least 9 documents (18 table rows)
-      expect(page).to have_selector "table.table-zebra-striped tr:nth-child(18)"
+      # Make sure we have at least 2 documents
+      expect(page).to have_selector "table.table-zebra-striped tr#document_#{@gf1.id}"
+      expect(page).to have_selector "table.table-zebra-striped tr#document_#{@gf2.id}"
     end
   end
 
   describe 'delete collection' do
-    before (:each) do
+    before do
       @collection = Collection.new title:'collection title'
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user.user_key)
