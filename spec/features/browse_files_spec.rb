@@ -7,7 +7,7 @@ describe "Browse files", :type => :feature do
   end
 
   before do
-    @fixtures = find_or_create_file_fixtures
+    @fixtures = create_file_fixtures
     @fixtures[0].tag = ["key"]
     (1..25).each do |i|
       @fixtures[0].tag << "key_#{i}"

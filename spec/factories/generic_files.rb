@@ -20,10 +20,10 @@ FactoryGirl.define do
         read_groups ["public"]
         resource_type ["Dissertation"]
         subject %w"lorem ipsum dolor sit amet"
+        title ["fake_document.pdf"]
         before(:create) do |gf|
           gf.apply_depositor_metadata "archivist1@example.com"
           gf.title = ["Fake Document Title"]
-          gf.label = "fake_document.pdf"
         end
       end
       factory :public_mp3 do
@@ -32,9 +32,9 @@ FactoryGirl.define do
         end
         initialize_with { new(pid: pid) }
         subject %w"consectetur adipisicing elit"
+        title ["Test Document MP3.mp3"]
         before(:create) do |gf|
           gf.apply_depositor_metadata "archivist1@example.com"
-          gf.label = "Test Document MP3.mp3"
         end
         read_groups ["public"]
       end
@@ -45,10 +45,10 @@ FactoryGirl.define do
         initialize_with { new(pid: pid) }
         resource_type ["Audio", "Dataset"]
         read_groups ["public"]
+        title ["Fake Wav File.wav"]
         subject %w"sed do eiusmod tempor incididunt ut labore"
         before(:create) do |gf|
           gf.apply_depositor_metadata "archivist1@example.com"
-          gf.label = "Fake Wav File.wav"
         end
       end
     end
