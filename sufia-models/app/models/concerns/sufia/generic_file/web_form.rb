@@ -9,7 +9,10 @@ module Sufia
 
       def remove_blank_assertions
         terms_for_editing.each do |key|
-          self[key] = nil if self[key].blank?
+          if self[key] == ['']
+            self[key] = []
+            changed_attributes.delete(key) if attribute_was(key) == []
+          end
         end
       end
 

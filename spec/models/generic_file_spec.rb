@@ -1047,6 +1047,18 @@ describe GenericFile, :type => :model do
     end
   end
 
+  describe "#remove_blank_assertions" do
+    subject { GenericFile.new }
+    before do
+      subject.title = ["foo"]
+      subject.description = [""]
+      subject.remove_blank_assertions
+    end
+    it "should only change title" do
+      expect(subject.changes).to eq("title"=>[[], ["foo"]])
+    end
+  end
+
   describe "should create a full to_solr record" do
     subject do
       GenericFile.new.tap do |f|
@@ -1054,25 +1066,24 @@ describe GenericFile, :type => :model do
         f.save
       end
     end
+    let(:mime_type_key) { Solrizer.solr_name("mime_type") }
+    let(:title_key) { Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string) }
 
     after do
       subject.destroy
     end
 
     it "gets both sets of data into solr" do
-     f1= GenericFile.find(subject.id)
-     f2 = GenericFile.find(subject.id)
-     f2.reload_on_save = true
-     f1.mime_type = "video/abc123"
+     f1 =  GenericFile.find(subject.id)
+     f2 =  GenericFile.find(subject.id)
+     f1.mime_type = "video/abc123" # stored in the characterization datastream
      f2.title = ["abc123"]
+     expect(f2.mime_type).to eq ''
      f1.save
-     mime_type_key = Solrizer.solr_name("mime_type")
-     title_key = Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string)
-     expect(f1.to_solr[mime_type_key]).to eq([f1.mime_type])
-     expect(f1.to_solr[title_key]).to_not eq(f2.title)
-     f2.save
-     expect(f2.to_solr[mime_type_key]).to eq([f1.mime_type])
-     expect(f2.to_solr[title_key]).to eq(f2.title)
+     expect {
+       f2.save
+     }.to change{ f2.to_solr[mime_type_key] }.from(['']).to(["video/abc123"])
+     expect(f2.to_solr[title_key]).to eq ["abc123"]
     end
   end
 

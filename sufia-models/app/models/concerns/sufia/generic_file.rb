@@ -17,7 +17,6 @@ module Sufia
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck
-    include Sufia::GenericFile::ReloadOnSave
     include Sufia::GenericFile::FullTextIndexing
     include Sufia::GenericFile::ProxyDeposit
     include Hydra::Collections::Collectible
@@ -37,6 +36,7 @@ module Sufia
     def retry_warming
       save_tries = 0
       conflict_tries = 0
+      etag_tries = 0
       begin
         yield
       rescue RSolr::Error::Http => error
@@ -45,6 +45,15 @@ module Sufia
         # fail for good if the tries is greater than 3
         raise if save_tries >=3
         sleep 0.01
+        retry
+      rescue Ldp::EtagMismatch
+        prev_changes = changes.dup
+        # There was a version conflict, so reload the previous version, then apply the changed attributes
+        reload
+        prev_changes.each do |key, (_, value)|
+          self[key] = value
+        end
+        raise if etag_tries >= 1
         retry
       rescue  ActiveResource::ResourceConflict => error
         conflict_tries += 1
