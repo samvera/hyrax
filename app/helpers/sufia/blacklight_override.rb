@@ -5,7 +5,11 @@ module Sufia
     end
 
     def url_for_document doc, options = {}
-      [sufia, doc]
+      if doc['has_model_ssim'].first == ::Collection.to_class_uri
+        [collections, doc]
+      else
+        [sufia, doc]
+      end
     end
   
     def render_constraints_query(localized_params = params)
