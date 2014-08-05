@@ -12,8 +12,10 @@ module Worthwhile
     self.human_readable_short_description = "An arbitrary URL reference."
     include ActionView::Helpers::SanitizeHelper
     
-    has_attributes :date_uploaded, :date_modified, :title, :description, :creator,
-                  datastream: :descMetadata, multiple: false
+    has_attributes :date_uploaded, :date_modified, :title, :description, datastream: :descMetadata, multiple: false
+
+    # Creator is multiple to match Sufia::GenericFile#creator
+    has_attributes :creator, datastream: :descMetadata, multiple: true
 
     def url=(url)
       u = URI::Parser.new.parse(url)

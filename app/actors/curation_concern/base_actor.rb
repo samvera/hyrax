@@ -55,6 +55,7 @@ module CurationConcern
     end
 
     def apply_save_data_to_curation_concern
+      attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
       curation_concern.attributes = attributes
       curation_concern.date_modified = Date.today
     end
