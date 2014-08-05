@@ -35,7 +35,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'mail_form'
   gem.add_dependency 'rails_autolink', '~> 1.1'
   gem.add_dependency 'yaml_db', '~> 0.2'
-  gem.add_dependency 'font-awesome-sass-rails', '~> 3.0'
+  gem.add_dependency 'font-awesome-rails'
   gem.add_dependency 'hydra-editor', '~> 0.3'
   gem.add_dependency 'hydra-collections', '~> 2.0'
   gem.add_dependency 'bootstrap_form', '~> 2.1'

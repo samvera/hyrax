@@ -29,21 +29,21 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :twitter_handle, '<i class="icon-twitter"></i> Twitter Handle'.html_safe, class: 'col-xs-4 control-label' %>
+      <%= f.label :twitter_handle, '<i class="fa fa-twitter"></i> Twitter Handle'.html_safe, class: 'col-xs-4 control-label' %>
       <div class="col-xs-8">
          <%= f.text_field :twitter_handle, class: "form-control" %>
       </div>
     </div><!-- .form-group -->
 
     <div class="form-group">
-      <%= f.label :facebook_handle, '<i class="icon-facebook"></i> Facebook Handle'.html_safe, class: 'col-xs-4 control-label' %>
+      <%= f.label :facebook_handle, '<i class="fa fa-facebook"></i> Facebook Handle'.html_safe, class: 'col-xs-4 control-label' %>
       <div class="col-xs-8">
          <%= f.text_field :facebook_handle, class: "form-control" %>
       </div>
     </div><!-- .form-group -->
 
     <div class="form-group">
-      <%= f.label :googleplus_handle, '<i class="icon-google-plus"></i> Google+ Handle'.html_safe, class: 'col-xs-4 control-label' %>
+      <%= f.label :googleplus_handle, '<i class="fa fa-google-plus"></i> Google+ Handle'.html_safe, class: 'col-xs-4 control-label' %>
       <div class="col-xs-8">
          <%= f.text_field :googleplus_handle, class: "form-control" %>
       </div>
@@ -63,6 +63,6 @@
 
   <h2><i class="glyphicon glyphicon-group"></i> User Managed Groups Info (UMG) <%= link_to 'Manage UMG', 'http://umg.its.psu.edu/', class: 'btn btn-xs btn-primary' %> </h3>
   <% current_user.groups.each do |g| %>
-    <i class="icon-caret-right"></i> <%= g %><br />
+    <i class="glyphicon glyphicon-asterisk"></i> <%= g %><br />
   <% end %>
 </div>

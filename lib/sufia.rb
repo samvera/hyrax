@@ -9,7 +9,7 @@ require 'browse-everything'
 require 'sufia/models'
 
 require 'rails_autolink'
-require 'font-awesome-sass-rails'
+require 'font-awesome-rails'
 require 'tinymce-rails'
 require 'tinymce-rails-imageupload'
 
