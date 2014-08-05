@@ -115,11 +115,11 @@ Blacklight.onLoad(function() {
    */
   $("li.expandable").click(function(){
     $(this).next("ul").slideToggle();
-    $(this).find('i').toggleClass("glyphicon glyphicon-chevron-down");
+    $(this).find('i').toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
   });
 
   $("li.expandable_new").click(function(){
-    $(this).find('i').toggleClass("glyphicon glyphicon-chevron-down");
+    $(this).find('i').toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
   });
 
   $(".sorts-dash").click(function(){
