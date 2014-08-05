@@ -12,12 +12,12 @@ describe CatalogController do
   describe "#index" do
     before (:all) do
       @user = FactoryGirl.find_or_create(:jill)
-      @gf1 = GenericFile.new(title: 'Test Document PDF', filename: 'test.pdf', tag: 'rocks', read_groups: ['public']).tap do |f|
+      @gf1 = GenericFile.new(title: ['Test Document PDF'], filename: ['test.pdf'], tag: ['rocks'], read_groups: ['public']).tap do |f|
         f.apply_depositor_metadata('mjg36')
         f.save
       end
 
-      @gf2 = GenericFile.new(title: 'Test 2 Document', filename: 'test2.doc', tag: 'clouds', contributor: 'Contrib1', read_groups: ['public']).tap do |f|
+      @gf2 = GenericFile.new(title: ['Test 2 Document'], filename: ['test2.doc'], tag: ['clouds'], contributor: ['Contrib1'], read_groups: ['public']).tap do |f|
         f.apply_depositor_metadata('mjg36')
         f.full_text.content = 'full_textfull_text'
         f.save
@@ -68,7 +68,7 @@ describe CatalogController do
 
     context "with collections" do
       before do
-       @collection = Collection.new(title:"my collection", tag: 'rocks').tap do |c|
+       @collection = Collection.new(title: "my collection", tag: ['rocks']).tap do |c|
          c.apply_depositor_metadata('mjg36')
          c.save!
        end
