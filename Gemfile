@@ -10,6 +10,7 @@ gem 'sass-rails', '~> 4.0.3'
 
 group :development, :test do
   gem "simplecov", require: false
+  gem "byebug", require: false
 end # (leave this comment here to catch a stray line inserted by blacklight!)
 
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))
