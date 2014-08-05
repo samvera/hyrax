@@ -3,10 +3,17 @@ require 'spec_helper'
 describe Sufia::Messages do
 
   let(:message) do
+    TestClass.new
+  end
+
+  before do
     class TestClass
       include Sufia::Messages
     end
-    TestClass.new
+  end
+
+  after do
+    Object.send(:remove_const, :TestClass)
   end
 
   let(:batch_id)  { "1" }

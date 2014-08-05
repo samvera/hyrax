@@ -42,11 +42,10 @@ module Sufia
 
       ## Extract the metadata from the content datastream and record it in the characterization datastream
       def characterize
-        metadata = self.content.extract_metadata
-        self.characterization.ng_xml = metadata if metadata.present?
-        self.append_metadata
+        metadata = content.extract_metadata
+        characterization.ng_xml = metadata if metadata.present?
+        append_metadata
         self.filename = [self.label]
-        extract_content
         save
       end
 
