@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "active_attr"
   spec.add_dependency "simple_form", '~> 3.1.0.rc1'
   spec.add_dependency 'sufia-models', '~> 4.0.0.rc1'
-  spec.add_dependency 'hydra-collections'
+  spec.add_dependency 'hydra-collections', '~> 2.0.5'
 
   spec.add_development_dependency "devise", "~> 3.0"
   spec.add_development_dependency "bundler", "~> 1.6"

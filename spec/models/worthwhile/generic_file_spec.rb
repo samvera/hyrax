@@ -7,7 +7,7 @@ describe Worthwhile::GenericFile do
 
   describe "to_solr" do
     before do
-      subject.title = 'One Flew Over the Cuckoo\'s Nest'
+      subject.title = ['One Flew Over the Cuckoo\'s Nest']
       subject.characterization.metadata.image.height = '500'
       subject.characterization.metadata.image.width = '600'
     end
