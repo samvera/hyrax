@@ -28,12 +28,16 @@ class FileUsage
 
   private
 
+  # Sufia::Download is sent to Sufia::Analytics.profile as #sufia__download
+  # see Legato::ProfileMethods.method_name_from_klass
   def download_statistics
-    Sufia::Analytics.profile.download(sort: 'date').for_file(self.id)
+    Sufia::Analytics.profile.sufia__download(sort: 'date').for_file(self.id)
   end
 
+  # Sufia::Pageview is sent to Sufia::Analytics.profile as #sufia__pageview
+  # see Legato::ProfileMethods.method_name_from_klass
   def pageview_statistics
-    Sufia::Analytics.profile.pageview(sort: 'date').for_path(self.path)
+    Sufia::Analytics.profile.sufia__pageview(sort: 'date').for_path(self.path)
   end
 
   def pageviews_to_flot values = Array.new
