@@ -5,7 +5,7 @@ module Sufia
     end
 
     def url_for_document doc, options = {}
-      if doc['has_model_ssim'].first == ::Collection.to_class_uri
+      if (doc.is_a?(SolrDocument) && doc.hydra_model == 'Collection')
         [collections, doc]
       else
         [sufia, doc]
