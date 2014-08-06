@@ -28,4 +28,23 @@ describe 'users/show.html.erb' do
     render
     rendered.should match /Joined on #{join_date.strftime("%b %d, %Y")}/
   end
+
+  context "with trophy" do
+
+    let(:generic_file) { GenericFile.new(title: ["Fake object"], pid:"sufia:abc123") }
+    before do
+      allow(view).to receive(:search_session).and_return({})
+      allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
+      allow(view).to receive(:current_search_session).and_return(nil)
+      assign(:trophies, [generic_file])
+    end
+
+    it "should have trophy" do
+      render
+      page = Capybara::Node::Simple.new(rendered)
+      expect(page).to have_selector(".tab-content > div#contributions.tab-pane")
+      expect(page).to have_selector("#trophyrow_#{generic_file.noid}")
+
+    end
+  end
 end
