@@ -1,10 +1,10 @@
 FactoryGirl.define do
-  factory :work, aliases:[:generic_work, :private_generic_work], class: GenericWork do
+  factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     ignore do
       user { FactoryGirl.create(:user) }
     end
 
-    title "Test title"
+    title ["Test title"]
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
     before(:create) do |work, evaluator|

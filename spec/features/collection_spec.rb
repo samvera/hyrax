@@ -27,7 +27,7 @@ describe 'collection' do
     @gws = []
     (0..12).each do |x|
       @gws[x] =  GenericWork.new.tap do |f|
-        f.title = "title #{x}"
+        f.title = ["title #{x}"]
         f.apply_depositor_metadata('user1@example.com')
         f.save!
       end
@@ -112,8 +112,8 @@ describe 'collection' do
       page.should have_content(@collection.title)
       page.should have_content(@collection.description)
       # Should have search results / contents listing
-      page.should have_content(@gw1.title)
-      page.should have_content(@gw2.title)
+      page.should have_content(@gw1.title.first)
+      page.should have_content(@gw2.title.first)
       page.should_not have_css(".pager")
 
       #click_link "Gallery"
@@ -128,17 +128,17 @@ describe 'collection' do
       end
       page.should have_content(@collection.title)
       page.should have_content(@collection.description)
-      page.should have_content(@gw1.title)
-      page.should have_content(@gw2.title)
-      fill_in('collection_search', with: @gw1.title)
+      page.should have_content(@gw1.title.first)
+      page.should have_content(@gw2.title.first)
+      fill_in('collection_search', with: @gw1.title.first)
       click_button('collection_submit')
       # Should not have Collection Descriptive metadata table
       page.should_not have_content("Descriptions")
       page.should have_content(@collection.title)
       page.should have_content(@collection.description)
       # Should have search results / contents listing
-      page.should have_content(@gw1.title)
-      page.should_not have_content(@gw2.title)
+      page.should have_content(@gw1.title.first)
+      page.should_not have_content(@gw2.title.first)
       # Should not have Dashboard content in contents listing
       page.should_not have_content("Visibility")
     end

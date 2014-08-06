@@ -28,7 +28,7 @@ describe Worthwhile::GenericFile do
       if ActiveFedora::Base.exists?(parent_pid)
         ActiveFedora::Base.find(parent_pid).destroy
       end
-      GenericWork.new pid: parent_pid, title: 'asdf'
+      GenericWork.new pid: parent_pid, title: ['asdf']
     }
 
     subject { Worthwhile::GenericFile.create(batch: parent) }

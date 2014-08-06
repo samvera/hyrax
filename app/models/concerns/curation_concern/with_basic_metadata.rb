@@ -27,12 +27,12 @@ module CurationConcern::WithBasicMetadata
 
       
     # Single-value fields
-    has_attributes :created, :date_modified, :date_uploaded, :description, :title,
+    has_attributes :created, :date_modified, :date_uploaded, :description,
                 datastream: :descMetadata, multiple: false
                 
     # Multi-value fields
     has_attributes :contributor, :creator, :coverage, :date, :content_format, :identifier, :language,
-                   :publisher, :relation, :rights, :source, :subject, :type,
+                   :publisher, :relation, :rights, :source, :subject, :title, :type,
                 datastream: :descMetadata, multiple: true
   end
 

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe GenericWork do
   it "should have a title" do
-    subject.title = 'foo'
-    expect(subject.title).to eq 'foo'
+    subject.title = ['foo']
+    expect(subject.title).to eq ['foo']
   end
 
   context "with attached files" do

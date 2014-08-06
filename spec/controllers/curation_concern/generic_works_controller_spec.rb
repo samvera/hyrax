@@ -52,7 +52,7 @@ describe CurationConcern::GenericWorksController do
   describe "#create" do
     it "should create a work" do
       expect {
-        post :create, accept_contributor_agreement: "accept", generic_work: { title: "a title" }
+        post :create, accept_contributor_agreement: "accept", generic_work: { title: ["a title"] }
       }.to change { GenericWork.count }.by(1)
       response.should redirect_to [:curation_concern, assigns[:curation_concern]]
     end

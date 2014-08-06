@@ -68,13 +68,13 @@ describe CatalogController do
     end
 
     context "when json is requested for autosuggest of related works" do
-      let!(:work) { FactoryGirl.create(:generic_work, user: user, title:"All my #{srand}") }
+      let!(:work) { FactoryGirl.create(:generic_work, user: user, title: ["All my #{srand}"]) }
       it "should return json" do
         xhr :get, :index, format: :json, q: work.title
         json = JSON.parse(response.body)
         # Grab the doc corresponding to work and inspect the json
         work_json = json["docs"].first
-        expect(work_json).to eq("pid"=>work.pid, "title"=> "#{work.title} (#{work.human_readable_type})")
+        expect(work_json).to eq("pid"=>work.pid, "title"=> "#{work.title.first} (#{work.human_readable_type})")
       end
     end
 

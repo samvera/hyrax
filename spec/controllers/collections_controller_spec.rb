@@ -9,13 +9,13 @@ describe CollectionsController do
 
   let(:user) { FactoryGirl.create(:admin) }
   let(:otheruser) { FactoryGirl.create(:user) }
-  let(:work1) { FactoryGirl.create(:generic_work, title: "First of the Assets", user:user) }
-  let(:work2) { FactoryGirl.create(:generic_work, title: "Second of the Assets", user: user) }
-  let(:my_public_generic_work) { FactoryGirl.create(:public_generic_work, title: "Third of the Assets (public)", user:user) }
-  let(:my_other_public_generic_work) { FactoryGirl.create(:public_generic_work, title: "Fourth of the Assets", user:user) }
-  let(:private_asset_not_mine) { FactoryGirl.create(:private_generic_work, title: "Fifth of the Assets", user:otheruser) }
-  let(:public_asset_not_mine) { FactoryGirl.create(:public_generic_work, title: "Sixth of the Assets", user:otheruser) }
-  let(:collection) { FactoryGirl.create(:collection, title:"My collection", description:"My incredibly detailed description of the collection", user:user) }
+  let(:work1) { FactoryGirl.create(:generic_work, user:user) }
+  let(:work2) { FactoryGirl.create(:generic_work, user: user) }
+  let(:my_public_generic_work) { FactoryGirl.create(:public_generic_work, user:user) }
+  let(:my_other_public_generic_work) { FactoryGirl.create(:public_generic_work, user:user) }
+  let(:private_asset_not_mine) { FactoryGirl.create(:private_generic_work, user:otheruser) }
+  let(:public_asset_not_mine) { FactoryGirl.create(:public_generic_work, user:otheruser) }
+  let(:collection) { FactoryGirl.create(:collection, user:user) }
 
   after (:all) do
     Collection.destroy_all

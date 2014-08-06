@@ -74,7 +74,7 @@ describe Collection do
 
   describe '#add_member' do
     it 'adds the member to the collection and returns true' do
-      work = FactoryGirl.create(:generic_work, title: 'Work 1')
+      work = FactoryGirl.create(:generic_work)
       subject.add_member(work).should be true
       reloaded_subject.members.should == [work]
 
@@ -98,7 +98,7 @@ describe Collection do
 
   describe '#members.delete' do
     it 'removes the member from the collection and returns true' do
-      work = FactoryGirl.create(:generic_work, title: 'Work 2')
+      work = FactoryGirl.create(:generic_work)
       subject.members << work
       subject.members.should == [work]
       subject.save
