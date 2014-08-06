@@ -58,7 +58,7 @@ module Worthwhile
       begin
         Date.parse(field).to_formatted_s(:standard)
       rescue
-        logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
+        Rails.logger.info "Unable to parse date: #{field.first.inspect} for #{self['id']}"
       end
     end
 
