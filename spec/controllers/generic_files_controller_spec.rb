@@ -292,7 +292,7 @@ describe GenericFilesController do
             OpenStruct.new(date: '2014-01-05', pageviews: 2)])
         allow(mock_query).to receive(:map).and_return(mock_query.for_path.map(&:marshal_dump))
         profile = double('profile')
-        allow(profile).to receive(:pageview).and_return(mock_query)
+        allow(profile).to receive(:sufia__pageview).and_return(mock_query)
         allow(Sufia::Analytics).to receive(:profile).and_return(profile)
 
         download_query = double('query')
@@ -300,7 +300,7 @@ describe GenericFilesController do
           OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:123456789", totalEvents: "3")
         ])
         allow(download_query).to receive(:map).and_return(download_query.for_file.map(&:marshal_dump))
-        allow(profile).to receive(:download).and_return(download_query)
+        allow(profile).to receive(:sufia__download).and_return(download_query)
       end
 
       it 'renders the stats view' do
