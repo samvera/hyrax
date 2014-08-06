@@ -8,31 +8,28 @@ describe FitsDatastream, unless: $in_travis do
       @file.characterize
     end
     it "should have a format label" do
-      @file.format_label.should == ["Portable Network Graphics"]
+      expect(@file.format_label).to eq ["Portable Network Graphics"]
     end
     it "should have a mime type" do
-      @file.mime_type.should == "image/png"
+      expect(@file.mime_type).to eq "image/png"
     end
     it "should have a file size" do
-      @file.file_size.should == ["4218"]
-    end
-    it "should have a file size" do
-      @file.file_size.should == ["4218"]
+      expect(@file.file_size).to eq ["4218"]
     end
     it "should have a last modified timestamp" do
-      @file.last_modified.should_not be_empty
+      expect(@file.last_modified).to_not be_empty
     end
     it "should have a filename" do
-      @file.filename.should_not be_empty
+      expect(@file.filename).to_not be_empty
     end
     it "should have a checksum" do
-      @file.original_checksum.should == ["28da6259ae5707c68708192a40b3e85c"]
+      expect(@file.original_checksum).to eq ["28da6259ae5707c68708192a40b3e85c"]
     end
     it "should have a height" do
-      @file.height.should == ["50"]
+      expect(@file.height).to eq ["50"]
     end
     it "should have a width" do
-      @file.width.should == ["50"]
+      expect(@file.width).to eq ["50"]
     end
   end
   describe "video" do
@@ -42,38 +39,38 @@ describe FitsDatastream, unless: $in_travis do
       @file.characterize
     end
     it "should have a format label" do
-      @file.format_label.should == ["ISO Media, MPEG v4 system, version 2"]
+      expect(@file.format_label).to eq ["ISO Media, MPEG v4 system, version 2"]
     end
     it "should have a mime type" do
-      @file.mime_type.should == "video/mp4"
+      expect(@file.mime_type).to eq "video/mp4"
     end
     it "should have a file size" do
-      @file.file_size.should == ["245779"]
+      expect(@file.file_size).to eq ["245779"]
     end
     it "should have a last modified timestamp" do
-      @file.last_modified.should_not be_empty
+      expect(@file.last_modified).to_not be_empty
     end
     it "should have a filename" do
-      @file.filename.should_not be_empty
+      expect(@file.filename).to_not be_empty
     end
     it "should have a checksum" do
-      @file.original_checksum.should == ["dc77a8de8c091c19d86df74280f6feb7"]
+      expect(@file.original_checksum).to eq ["dc77a8de8c091c19d86df74280f6feb7"]
     end
     it "should have a width" do
-      @file.width.should == ["190"]
+      expect(@file.width).to eq ["190"]
     end
     it "should have a height" do
-      @file.height.should == ["240"]
+      expect(@file.height).to eq ["240"]
     end
     it "should have a sample_rate" do
-      @file.sample_rate.should == ["32000"]
+      expect(@file.sample_rate).to eq ["32000"]
     end
     it "should have a duration" do
-      @file.duration.should == ["4.97 s"]
+      expect(@file.duration).to eq ["4.97 s"]
     end
     it "should have a frame_rate" do
-      @file.frame_rate.count.should == 1
-      @file.frame_rate[0].to_f.should == 30.0
+      expect(@file.frame_rate.count).to eq 1
+      expect(@file.frame_rate[0].to_f).to eq 30.0
     end
   end
 end
