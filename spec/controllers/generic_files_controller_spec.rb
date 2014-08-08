@@ -341,7 +341,7 @@ describe GenericFilesController do
       Sufia.queue.should_receive(:push).with(s1).once
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
-      post :update, id: generic_file, generic_file: {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
+      post :update, id: generic_file, generic_file: {title: ['new_title'], tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
       @user.delete
     end
 

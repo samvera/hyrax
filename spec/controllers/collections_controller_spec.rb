@@ -80,7 +80,7 @@ describe CollectionsController do
 
   describe "#update" do
     before do
-      @collection = Collection.new(title: ["Collection Title"])
+      @collection = Collection.new(title: "Collection Title")
       @collection.apply_depositor_metadata(user.user_key)
       @collection.save
       @asset1 = GenericFile.new(title: ["First of the Assets"])
