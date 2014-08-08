@@ -28,7 +28,8 @@ module Sufia::GenericFile
     end
 
     def create_content(file, file_name, dsid)
-      generic_file.add_file(file, dsid, file_name)
+      fname = generic_file.label.blank? ? file_name.truncate(255) : generic_file.label
+      generic_file.add_file(file, dsid, fname)
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_create_content)
           Sufia.config.after_create_content.call(generic_file, user)
