@@ -103,5 +103,9 @@ module Sufia
       Array(self[::Ability.edit_user_field])
     end
 
+    def collection?
+      hydra_model == 'Collection'
+    end
+
   end
 end

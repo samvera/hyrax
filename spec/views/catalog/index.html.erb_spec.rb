@@ -29,6 +29,8 @@ describe 'catalog/index.html.erb' do
   it 'appears on page without error' do
     render
     expect(rendered).to include(@collection.title)
+    page = Capybara::Node::Simple.new(rendered)
+    expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
   end
 
 end
