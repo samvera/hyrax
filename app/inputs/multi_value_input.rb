@@ -2,7 +2,7 @@ class MultiValueInput < SimpleForm::Inputs::CollectionInput
   def input(wrapper_options)
     @rendered_first_element = false
     input_html_classes.unshift("string")
-    input_html_options[:type] ||= 'text'
+    #input_html_options[:type] ||= 'text'
     input_html_options[:name] ||= "#{object_name}[#{attribute_name}][]"
     markup = <<-HTML
 
@@ -46,7 +46,11 @@ class MultiValueInput < SimpleForm::Inputs::CollectionInput
     options[:class] += ["#{input_dom_id} form-control multi-text-field"]
     options[:'aria-labelledby'] = label_id
     @rendered_first_element = true
-    @builder.text_field(attribute_name, options)
+    if options.delete(:type) == 'textarea'.freeze
+      @builder.text_area(attribute_name, options)
+    else
+      @builder.text_field(attribute_name, options)
+    end
   end
 
 

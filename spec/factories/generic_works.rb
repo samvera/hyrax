@@ -10,7 +10,7 @@ FactoryGirl.define do
     before(:create) do |work, evaluator|
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
-    
+
 
     factory :public_generic_work do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
