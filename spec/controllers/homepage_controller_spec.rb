@@ -9,7 +9,7 @@ describe HomepageController do
       @gf1 = GenericFile.new(title:['Test Document PDF'], filename:['test.pdf'], tag:['rocks'], read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
-      @gf2 = GenericFile.new(title:['Test 2 Document'], filename:['test2.doc'], tag:['clouds'], contributor:['Contrib1'], read_groups:['public'])
+      @gf2 = GenericFile.new(title:['Test Private Document'], filename:['test2.doc'], tag:['clouds'], contributor:['Contrib1'], read_groups:['private'])
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
     end
@@ -41,6 +41,13 @@ describe HomepageController do
         expect(marketing.name).to eq 'marketing_text'
       end
     end
+
+    it "should not include other user's private documents in recent documents" do
+      get :index
+      expect(response).to be_success
+      titles = assigns(:recent_documents).map {|d| d['desc_metadata__title_tesim'][0]}
+      expect(titles).to_not include('Test Private Document')
+    end    
 
     context "with a document not created this second" do
       before do
