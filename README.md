@@ -5,7 +5,7 @@ Sufia is currently in transition to a new 4.0 release scheduled for late summer 
 please ensure you using version 3.7.2, available from RubyGems.org. For documentation specific to this version,
 please consult the [Sufia 3.7.2 documentation](http://rubydoc.info/gems/sufia/3.7.2/frames).
 
-If you have questions or need help, please email `hydra-tech@googlegroups.com`
+If you have questions or need help, please email [the Hydra community development list](mailto:hydra-tech@googlegroups.com).
 
 ## What is Sufia?
 Sufia is a component that adds self-deposit institutional repository features to a Rails app.
@@ -40,6 +40,14 @@ Sufia has the following features:
 * Responsive, fluid, Bootstrap 3-based UI
 * Dynamically configurable featured works and researchers on homepage
 * Proxy deposit and transfers of ownership (coming soon!)
+
+## License
+
+Sufia is available under [the Apache 2.0 license](LICENSE.md).
+
+## Contributing
+
+We'd love to accept your contributions.  Please see our guide to [contributing to Sufia](CONTRIBUTING.md).
 
 ## Sufia needs the following software to work:
 1. Solr
@@ -227,6 +235,8 @@ See https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 This information is for people who want to modify the engine itself, not an application that uses the engine:
 
 ### run the tests
+
+```
 rake clean spec
 ```
 
@@ -243,3 +253,10 @@ To change what happens to files that fail validation add an after_validation hoo
       end
     end
 ```
+
+## Acknowledgments
+
+This software has been developed by and is brought to you by the Hydra community.  Learn more at the
+[Project Hydra website](http://projecthydra.org)
+
+![Project Hydra Logo](https://github.com/uvalib/libra-oa/blob/a6564a9e5c13b7873dc883367f5e307bf715d6cf/public/images/powered_by_hydra.png?raw=true)
