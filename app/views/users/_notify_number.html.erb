@@ -1,4 +1,5 @@
 <i class="glyphicon glyphicon-bullhorn"></i>
 <% if @notify_number > 0 %>
-<span id="notify_number" class="overlay"> <%=@notify_number%></span>
-<% end %>                 
+  <span id="notify_number" class="overlay"> <%=@notify_number%></span>
+  <span class="sr-only">unread notifications</span>
+<% end %>
