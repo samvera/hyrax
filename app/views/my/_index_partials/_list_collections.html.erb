@@ -4,17 +4,23 @@
 on element ids -->
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
-  <td width="3%"></td> 
+  <td width="3%"></td>
   <td width="41%">
     <div class="media">
-      <%= link_to [collections, document], class: "pull-left" do %>
+      <%= link_to [collections, document], class: "pull-left", "aria-hidden" => true do %>
         <span class="glyphicon glyphicon-th collection-icon-small">
       <% end %>
       <div class="media-body">
-        <h4 class="media-heading">
-          <%= link_to document.title_or_label, collections.collection_path(noid), id: "src_copy_link#{noid}" %>
-          <a href="#" class="small" title="Click for more details"><i id="expand_<%= noid %>" class="glyphicon glyphicon-chevron-right"></i></a>
-        </h4>
+        <div class="media-heading">
+          <%= link_to  collections.collection_path(noid), id: "src_copy_link#{noid}" do %>
+              <span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span>
+              <%= document.title_or_label %>
+          <% end %>
+          <a href="#" class="small" title="Click for more details">
+            <i id="expand_<%= noid %>" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
+            <span class="sr-only"> <%= "#{t("sufia.dashboard.my.sr.detail_label")} #{document.title_or_label}" %></span>
+          </a>
+        </div>
       </div>
     </div>
   </td>

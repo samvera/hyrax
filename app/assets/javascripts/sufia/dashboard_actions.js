@@ -9,18 +9,29 @@ Blacklight.onLoad(function() {
     }
   });
 
-  // show/hide more information on the dashboard when clicking
+  function show_details(item) {
+    var button = $(this);
+    //button.id format: "expand_NNNNNNNNNN"
+    var array = item.id.split("expand_");
+    if (array.length > 1) {
+      var docId = array[1];
+      $("#detail_" + docId + " .expanded-details").slideToggle();
+      button.toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    }
+  }
+
+        // show/hide more information on the dashboard when clicking
   // plus/minus
   $('.glyphicon-chevron-right').on('click', function() {
-  var button = $(this);
-  //this.id format: "expand_NNNNNNNNNN"
-  var array = this.id.split("expand_");
-  if (array.length > 1) {
-    var docId = array[1];
-    $("#detail_" + docId + " .expanded-details").slideToggle();
-    button.toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-  }
-  return false;
+    show_details(this);
+    return false;
+  });
+
+  $('a').filter( function() {
+      return $(this).find('.glyphicon-chevron-right').length === 1;
+   }).on('click', function() {
+    show_details($(this).find(".glyphicon-chevron-right")[0]);
+    return false;
   });
 
 });

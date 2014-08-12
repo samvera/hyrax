@@ -1,3 +1,4 @@
+<% current_tab = @selected_tab.to_s %>
 <% content_for :head do %>
     <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(format: 'rss')), title: "RSS for results") %>
     <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(format: 'atom')), title: "Atom for results") %>
@@ -7,9 +8,12 @@
   <%= render partial: 'scripts', formats: [:js] %>
 <% end %>
 
-<% @page_title = application_name + " Dashboard" %>
+<% @page_title = "#{current_tab.capitalize} listing" %>
+
 
 <ul class="nav nav-tabs" id="my_nav">
+  <h1 class="sr-only">Listing Navigation Bar</h1>
+  <span class="sr-only">You are currently listing your <%= current_tab.pluralize %> .  You have <%= @response.docs.count %> <%= current_tab.pluralize(@response.docs.count)%> </span>
   <li class="<%= "active" if @selected_tab == :files %>">
     <%= link_to t('sufia.dashboard.my.files'), sufia.dashboard_files_path %>
   </li>
@@ -26,12 +30,13 @@
 
 <%= render 'search_header' %>
 
+<h1 class="sr-only"><%=@page_title %></h1>
 <%= render partial: 'document_list' %>
 
 <% content_for :sidebar do %>
   <%= link_to t("sufia.dashboard.upload"), sufia.new_generic_file_path, class: "btn btn-primary" %>
   <%= link_to t("sufia.dashboard.create_collection"), collections.new_collection_path, id: "hydra-collection-add", class: "btn btn-primary" %>
-  <%= render partial: 'facets' %>
+  <%= render partial: 'facets', locals: {current_tab: current_tab} %>
 <% end %>
 
 <%= render 'results_pagination' %>

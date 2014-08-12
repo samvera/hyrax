@@ -1,9 +1,9 @@
-<div class="modal fade" id="collection-list-container">
+<div role="dialog" class="modal fade" id="collection-list-container" tabindex="-1" aria-labelledby="col_add_title" >
   <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Add to collection</h4>
+          <h4 class="modal-title" id="col_add_title">Add to collection</h4>
         </div>
         <div class="modal-body">
           <% if user_collections.blank? %>
@@ -14,7 +14,10 @@
               <ul>
                 <% user_collections.sort! { |c1,c2| c1['desc_metadata__date_modified_dtsi'] <=> c2['desc_metadata__date_modified_dtsi'] }  %>
                 <% user_collections.each do |collection| %>
-                  <li> <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %><%= label_tag(:collection, collection.title) %> </li>
+                  <li> <label for="<%= collection.id %>" class="sr-only">Add to <%=collection.title%></label>
+                    <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %>
+                    <%= label_tag(:collection, collection.title, "aria-hidden" =>true) %>
+                  </li>
                 <% end %>
               </ul>
             </div><!-- collection-list -->

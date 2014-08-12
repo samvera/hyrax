@@ -47,7 +47,7 @@ describe "Browse Dashboard" do
       click_link "more Subjects"
       click_link "consectetur"
       within("#document_#{@fixtures[1].noid}") do
-        click_link "Test Document MP3.mp3"
+        click_link "Display all details of Test Document MP3.mp3"
       end
       expect(page).to have_content("File Details")
     end
