@@ -8,7 +8,7 @@ describe "active_fedora/accessible_by" do
   let(:editable_obj) {FactoryGirl.create(:group_edit_asset)}
 
   before do
-    user.should_receive(:groups).at_most(:once).and_return(user.roles)
+    expect(user).to receive(:groups).at_most(:once).and_return(user.roles)
     ModsAsset.delete_all
   end
 

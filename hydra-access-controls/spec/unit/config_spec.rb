@@ -16,7 +16,7 @@ describe Hydra::Config do
       # specify the user model
       config[:user_model] = 'User'
 
-      config[:permissions][:edit][:individual].should == 'edit_access_person_ssim'
+      expect(config[:permissions][:edit][:individual]).to eq 'edit_access_person_ssim'
   end
 
   it "should accept a struct based config" do
@@ -28,21 +28,21 @@ describe Hydra::Config do
       # specify the user model
       config.user_model = 'User'
 
-      config.permissions.discover.group.should == 'discover_access_group_ssim'
-      config.user_model.should == 'User'
+      expect(config.permissions.discover.group).to eq 'discover_access_group_ssim'
+      expect(config.user_model).to eq 'User'
   end
 
   it "should have inheritable attributes" do
-      config[:permissions][:inheritable][:edit][:individual].should == 'inheritable_edit_access_person_ssim'
+      expect(config[:permissions][:inheritable][:edit][:individual]).to eq 'inheritable_edit_access_person_ssim'
   end
   it "should have a nil policy_class" do
-      config[:permissions][:policy_class].should be_nil
+      expect(config[:permissions][:policy_class]).to be_nil
   end
 
   it "should have defaults" do
-    config.permissions.read.individual.should == 'read_access_person_ssim'
-    config.permissions.embargo.release_date.should == 'embargo_release_date_dtsi'
-    config.user_model.should == 'User'
+    expect(config.permissions.read.individual).to eq 'read_access_person_ssim'
+    expect(config.permissions.embargo.release_date).to eq 'embargo_release_date_dtsi'
+    expect(config.user_model).to eq 'User'
   end
 
 end

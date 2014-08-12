@@ -6,7 +6,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       include Hydra::AccessControlsEnforcement
       include Hydra::PolicyAwareAccessControlsEnforcement
       attr_accessor :params
-      
+
       def current_ability
         @current_ability ||= Ability.new(current_user)
       end
@@ -16,51 +16,51 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
       delegate :logger, to: :Rails
     end
-    
+
     @sample_policies = []
     # user discover
     policy1 = Hydra::AdminPolicy.new("test-policy1")
     policy1.default_permissions = [{:type=>"user", :access=>"discover", :name=>"sara_student"}]
     policy1.save!
     @sample_policies << policy1
-    
+
     # user read
     policy2 = Hydra::AdminPolicy.new("test-policy2")
     policy2.default_permissions = [{:type=>"user", :access=>"read", :name=>"sara_student"}]
     policy2.save!
     @sample_policies << policy2
-    
+
     # user edit
     policy3 = Hydra::AdminPolicy.new("test-policy3")
     policy3.default_permissions = [{:type=>"user", :access=>"edit", :name=>"sara_student"}]
     policy3.save!
     @sample_policies << policy3
-    
-    
+
+
     # group discover
     policy4 = Hydra::AdminPolicy.new("test-policy4")
     policy4.default_permissions = [{:type=>"group", :access=>"discover", :name=>"africana-104-students"}]
     policy4.save!
     @sample_policies << policy4
-    
+
     # group read
     policy5 = Hydra::AdminPolicy.new("test-policy5")
     policy5.default_permissions = [{:type=>"group", :access=>"read", :name=>"africana-104-students"}]
     policy5.save!
     @sample_policies << policy5
-    
+
     # group edit
     policy6 = Hydra::AdminPolicy.new("test-policy6")
     policy6.default_permissions = [{:type=>"group", :access=>"edit", :name=>"africana-104-students"}]
     policy6.save!
     @sample_policies << policy6
-    
+
     # public discover
     policy7 = Hydra::AdminPolicy.new("test-policy7")
     policy7.default_permissions = [{:type=>"group", :access=>"discover", :name=>"public"}]
     policy7.save!
     @sample_policies << policy7
-  
+
     # public read
     policy8 = Hydra::AdminPolicy.new("test-policy8")
     policy8.default_permissions = [{:type=>"group", :access=>"read", :name=>"public"}]
@@ -75,26 +75,26 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       @sample_policies << policy
     end
 
-    # no access 
+    # no access
     policy_no_access = Hydra::AdminPolicy.new("test-policy_no_access")
     policy_no_access.save!
 
     @sample_policies << policy_no_access
     @policies_with_access = @sample_policies.select { |p| p.pid != policy_no_access.pid }
   end
-  
+
   after(:all) do
     @sample_policies.each {|p| p.delete }
   end
-  
+
   subject { PolicyMockController.new }
-  
+
   before do
     @solr_parameters = {}
     @user_parameters = {}
     @user = FactoryGirl.build(:sara_student)
   end
-  
+
   describe "policies_with_access" do
     context "Authenticated user" do
       before do
@@ -105,7 +105,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
         @policies_with_access.map {|p| p.pid }.each do |p|
           subject.policies_with_access.should include(p)
         end
-        subject.policies_with_access.should_not include("/test-policy_no_access")
+        subject.policies_with_access.should_not include("test-policy_no_access")
       end
       it "should allow you to configure which model to use for policies" do
         Hydra.stub(:config).and_return( {:permissions=>{:policy_class => ModsAsset}} )
@@ -116,11 +116,11 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     context "Anonymous user" do
       before { subject.stub(:current_user).and_return(nil) }
       it "should return the policies that provide discover permissions" do
-        subject.policies_with_access.should match_array ["/test-policy7", "/test-policy8"]
+        subject.policies_with_access.should match_array ["test-policy7", "test-policy8"]
       end
     end
   end
-  
+
   describe "apply_gated_discovery" do
     before do
       RoleMapper.stub(:roles).with(@user).and_return(@user.roles)

@@ -7,19 +7,18 @@ module Hydra::ModelMethods
   # @param [String, #user_key] depositor
   #
   def apply_depositor_metadata(depositor)
-    prop_ds = self.datastreams["properties"]
     rights_ds = self.datastreams["rightsMetadata"]
-    
+
     depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
-  
-    if prop_ds 
-      prop_ds.depositor = depositor_id unless prop_ds.nil?
+
+    if respond_to? :depositor
+      self.depositor = depositor_id
     end
     rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
     return true
   end
 
-  # Puts the contents of file (posted blob) into a datastream and sets the title and label 
+  # Puts the contents of file (posted blob) into a datastream and sets the title and label
   # Sets asset label and title to filename if they're empty
   #
   # @param [#read] file the IO object that is the blob
@@ -37,7 +36,7 @@ module Hydra::ModelMethods
     mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
   end
 
-  
+
   # Set the title and label on the current object
   #
   # @param [String] new_title
@@ -56,7 +55,7 @@ module Hydra::ModelMethods
       set_title( new_title )
     end
   end
-  
+
   # Set the title and label on the current object
   #
   # @param [String] new_title

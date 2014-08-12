@@ -7,6 +7,7 @@ describe Hydra::ModelMethods do
       include Hydra::AccessControls::Permissions
       include Hydra::ModelMethods
       has_metadata "properties", type: Hydra::Datastream::Properties
+      has_attributes :depositor, datastream: :properties, multiple: false
     end
   end
 
