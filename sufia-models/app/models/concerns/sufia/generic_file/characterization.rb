@@ -45,7 +45,7 @@ module Sufia
         metadata = content.extract_metadata
         characterization.ng_xml = metadata if metadata.present?
         append_metadata
-        self.filename = [self.label]
+        self.filename = [content.original_name]
         save
       end
 
