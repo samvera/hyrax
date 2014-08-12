@@ -17,6 +17,7 @@
     <%- if blacklight_config.respond_to?(:tag_cloud_field_name) && blacklight_config.tag_cloud_field_name %>
         <div class="row">
           <h2 class="heading1 pull-left">Explore</h2>
+          <span class="sr-only">Popular Keywords</span>
           <%= render partial: 'tagcloud', locals: { tag_cloud_field_name: blacklight_config.tag_cloud_field_name } %>
         </div>
     <%- end %>
