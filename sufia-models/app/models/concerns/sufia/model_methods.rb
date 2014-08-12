@@ -13,11 +13,10 @@ module Sufia
 
     def apply_depositor_metadata(depositor)
       rights_ds = self.datastreams["rightsMetadata"]
-      prop_ds = self.datastreams["properties"]
       depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
 
-      rights_ds.update_indexed_attributes([:edit_access, :person]=>depositor_id) unless rights_ds.nil?
-      prop_ds.depositor = depositor_id unless prop_ds.nil?
+      rights_ds.update_indexed_attributes([:edit_access, :person] => depositor_id) unless rights_ds.nil?
+      self.depositor = depositor_id
 
       return true
     end

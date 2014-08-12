@@ -9,7 +9,13 @@ module Sufia
         has_file_datastream "content", type: FileContentDatastream
         has_file_datastream "thumbnail"
 
-        has_attributes :relative_path, :depositor, :import_url, datastream: :properties, multiple: false
+        attribute :depositor, [
+          RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"),
+          FedoraLens::Lenses.single,
+          FedoraLens::Lenses.literal_to_string
+        ]
+
+        has_attributes :relative_path, :import_url, datastream: :properties, multiple: false
         has_attributes :date_uploaded, :date_modified, datastream: :descMetadata, multiple: false
         has_attributes :related_url, :based_near, :part_of, :creator,
                                     :contributor, :title, :tag, :description, :rights,
