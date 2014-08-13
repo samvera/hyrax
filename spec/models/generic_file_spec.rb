@@ -543,15 +543,21 @@ describe GenericFile, :type => :model do
   end
 
   describe "noid integration" do
-    subject { GenericFile.new('ns-123') }
+    subject { GenericFile.new(pid: 'wd3763094') }
 
     it "should return the expected identifier" do
-      expect(subject.noid).to eq 'ns-123'
+      expect(subject.noid).to eq 'wd3763094'
     end
 
-    it "should work outside of an instance" do
-      new_id = Sufia::IdService.mint
-      expect(Sufia::Noid.noidify(new_id)).to eq new_id
+    it "should have a tree-like URL" do
+      expect(subject.uri).to eq 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094'
+    end
+
+    context "when a url is provided" do
+      let(:url) { 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094' }
+      it "should be able to get the id" do
+        expect(GenericFile.uri_to_id(url)).to eq 'wd3763094'
+      end
     end
   end
 

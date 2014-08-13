@@ -14,7 +14,7 @@ gem 'hydra-derivatives', github: 'projecthydra-labs/hydra-derivatives', branch: 
 
 group :development, :test do
   gem "simplecov", require: false
-  gem 'byebug', require: false unless ENV['CI']
+  gem 'byebug' unless ENV['CI']
 end
 
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))

@@ -22,8 +22,11 @@ module Sufia
     end
 
     def to_s
-      return Array(title).join(" | ") if title.present?
-      label || "No Title"
+      if title.present?
+        Array(title).join(" | ")
+      else
+        "No Title"
+      end
     end
 
   end
