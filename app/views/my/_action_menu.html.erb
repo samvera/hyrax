@@ -3,25 +3,25 @@
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
     <li>
-    <%= link_to raw('<i class="glyphicon glyphicon-link over"></i> Single-Use Link to File'), '#',
+    <%= link_to raw('<i class="glyphicon glyphicon-link over" aria-hidden="true"></i> Single-Use Link to File'), '#',
       class: "copypaste itemicon itemcode", title: "Single-Use Link to File", id: "copy_link_#{noid}" %>
     </li>
     <li>
-    <%= link_to raw('<i class="glyphicon glyphicon-pencil"></i> Edit File'), sufia.edit_generic_file_path(noid),
+    <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-pencil"></i> Edit File'), sufia.edit_generic_file_path(noid),
       class: 'itemicon itemedit', title: 'Edit File' %>
     </li>
     <li>
-    <%= link_to raw('<i class="glyphicon glyphicon-download-alt"></i> Download File'), sufia.download_path(noid),
+    <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-download-alt"></i> Download File'), sufia.download_path(noid),
       class: 'itemicon itemdownload', title: 'Download File', target: '_new' %>
     </li>
     <li>
-    <%= link_to raw('<i class="glyphicon glyphicon-trash"></i> Delete File'), sufia.generic_file_path(noid),
+    <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-trash"></i> Delete File'), sufia.generic_file_path(noid),
       class: 'itemicon itemtrash', title: 'Delete File', method: :delete, data: {
       confirm: "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation" } %>
     </li>
     <li>
       <%= display_trophy_link(@user, noid) do |text| %>
-        <i class='glyphicon glyphicon-star'></i> <%= text %>
+        <i aria-hidden="true" class='glyphicon glyphicon-star'></i> <%= text %>
       <% end %>
     </li>
   </ul>
