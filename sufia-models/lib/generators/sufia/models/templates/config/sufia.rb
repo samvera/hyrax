@@ -111,6 +111,16 @@ Sufia.config do |config|
   # Specify how many seconds back from the current time that we should show by default of the user's activity on the user's dashboard
   # config.activity_to_show_default_seconds_since_now = 24*60*60
 
+  # Specify a date you wish to start collecting Google Analytic statistics for.
+  # Leaving it blank will set the start date to when ever the file was uploaded by
+  # NOTE: if you have always sent analytics to GA for downloads and page views leave this commented out
+  # config.analytic_start_date = DateTime.new(2014,9,10)
+  #
+  # Method of converting pids into URIs for storage in Fedora
+  # config.translate_uri_to_id = lambda { |uri| uri.to_s.split('/')[-1] }
+  # config.translate_id_to_uri = lambda { |id|
+  #      "#{FedoraLens.host}#{FedoraLens.base_path}/#{Sufia::Noid.treeify(id)}" }
+
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     if defined? BrowseEverything

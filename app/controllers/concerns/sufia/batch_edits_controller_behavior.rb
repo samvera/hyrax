@@ -47,7 +47,7 @@ module Sufia
 
     def after_destroy_collection
       redirect_to_return_controller unless request.xhr?
-    end 
+    end
 
     def update_document(obj)
       super

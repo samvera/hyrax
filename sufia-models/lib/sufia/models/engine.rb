@@ -31,6 +31,10 @@ module Sufia
       # Defaulting analytic start date to when ever the file was uploaded by leaving it blank
       config.analytic_start_date = nil
 
+      config.translate_uri_to_id = lambda { |uri| uri.to_s.split('/')[-1] }
+      config.translate_id_to_uri = lambda { |id|
+        "#{FedoraLens.host}#{FedoraLens.base_path}/#{Sufia::Noid.treeify(id)}" }
+
       config.autoload_paths += %W(
         #{config.root}/app/models/datastreams
       )
@@ -58,10 +62,15 @@ module Sufia
       end
 
       initializer 'configure' do
-        Hydra::Derivatives.ffmpeg_path    = Sufia.config.ffmpeg_path
-        Hydra::Derivatives.temp_file_base = Sufia.config.temp_file_base
-        Hydra::Derivatives.fits_path      = Sufia.config.fits_path
-        Hydra::Derivatives.enable_ffmpeg  = Sufia.config.enable_ffmpeg
+        Sufia.config.tap do |c|
+          Hydra::Derivatives.ffmpeg_path    = c.ffmpeg_path
+          Hydra::Derivatives.temp_file_base = c.temp_file_base
+          Hydra::Derivatives.fits_path      = c.fits_path
+          Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
+
+          ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
+          ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
+        end
       end
     end
   end

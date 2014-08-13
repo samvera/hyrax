@@ -2,7 +2,6 @@ class Batch < ActiveFedora::Base
   include Hydra::AccessControls::Permissions
   include Sufia::ModelMethods
   include Sufia::Noid
-  extend Sufia::InternalUris
 
   has_metadata name: "descMetadata", type: BatchRdfDatastream
 

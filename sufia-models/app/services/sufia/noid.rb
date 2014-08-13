@@ -22,6 +22,11 @@ module Sufia
         String(identifier).split(":").last
       end
 
+      # Create a pairtree like path for the given identifier
+      def treeify(identifier)
+        (identifier.scan(/..?/).first(4) + [identifier]).join('/')
+      end
+
       def namespaceize(identifier)
         return identifier if identifier.include?(':')
         "#{namespace}:#{identifier}"
