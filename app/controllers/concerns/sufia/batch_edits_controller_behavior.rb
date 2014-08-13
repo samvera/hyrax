@@ -1,9 +1,11 @@
 module Sufia
   module BatchEditsControllerBehavior
     extend ActiveSupport::Concern
-    
+    include Sufia::Breadcrumbs
+
     included do
       layout "sufia-one-column"
+      before_filter :build_breadcrumbs, only: :edit
     end
 
     def edit

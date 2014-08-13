@@ -533,6 +533,10 @@ describe GenericFilesController do
         response.should_not redirect_to(action: 'show')
         flash[:alert].should be_nil
       end
+      it "should set the breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        get :show, id: "test5"
+      end
     end
     describe "flash" do
       it "should not let the user submit if they logout" do
