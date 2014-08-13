@@ -48,3 +48,10 @@
 #home_content {
   padding: 2em 0;
 }
+
+// When we put a hidden label before the main search field, bootstrap stops
+// displaying rounded corners. This puts them back in.
+#search-field-header {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
