@@ -3,11 +3,11 @@
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
    <li>
-   <%= link_to raw('<i class="glyphicon glyphicon-pencil"></i> Edit Collection'), collections.edit_collection_path(noid),
+   <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-pencil"></i> Edit Collection'), collections.edit_collection_path(noid),
      class: 'itemicon itemedit', title: 'Edit Collection' %>
    </li>
    <li>
-   <%= link_to raw('<i class="glyphicon glyphicon-trash"></i> Delete Collection'), collections.collection_path(noid),
+   <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-trash"></i> Delete Collection'), collections.collection_path(noid),
      class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
      confirm: "Deleting a collection from #{t('sufia.product_name')} is permanent. Click OK to delete this collection from #{t('sufia.product_name')}, or Cancel to cancel this operation" } %>
    </li>
