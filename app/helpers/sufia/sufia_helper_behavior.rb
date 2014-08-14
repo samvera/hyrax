@@ -5,14 +5,21 @@ module Sufia
     # example:
     #   config.index.thumbnail_method = :sufia_thumbnail_tag
     def sufia_thumbnail_tag(document, options)
-      path = if document.image? || document.pdf? || document.video? || document.office_document?
-        sufia.download_path document.noid, datastream_id: 'thumbnail'
-      elsif document.audio?
-        "audio.png"
+      # collection
+      if (document.collection?)
+        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
+
+      # file
       else
-        "default.png"
+        path = if document.image? || document.pdf? || document.video? || document.office_document?
+          sufia.download_path document.noid, datastream_id: 'thumbnail'
+        elsif document.audio?
+          "audio.png"
+        else
+          "default.png"
+        end
+        image_tag path, options
       end
-      image_tag path, options
     end
 
     # Create a link back to the dashboard screen, keeping the user's facet, query and paging choices intact by using session.
