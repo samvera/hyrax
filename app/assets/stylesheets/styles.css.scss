@@ -18,9 +18,10 @@ body {
   background-image: linear-gradient(to bottom, #E1E1E1 0%, #FFFFFF 100%);
 }
 
-#page-positioner h1, #page-positioner h2, #page-positioner h3,
-#page-positioner h4, #page-positioner h5, #page-positioner h6 {
-  font-family: 'Lato', Verdana, Arail, Helvetica, sans-serif;
+#page-positioner {
+  h1, h2, h3, h4, h5, h6, .attribute-label {
+    font-family: 'Lato', Verdana, Arail, Helvetica, sans-serif;
+  }
 }
 
 #page-positioner {
@@ -31,8 +32,10 @@ body {
   font-weight: 300;
 }
 
-#page-positioner h3, #page-positioner h4 {
-  font-weight: 400;
+#page-positioner {
+  h3, h4, .attribute-label {
+    font-weight: 400;
+  }
 }
 
 .input-group {
