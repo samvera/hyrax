@@ -34,8 +34,11 @@ en:
         text: "Search"
     upload:
       my_computer:
+        sr_tab_label: "Access Files from"
         tab_label: "My Computer"
+        sr_instructions: "Agree to the deposit agreement and then select files.  Press the Start Upload Button once all files have been selected."
       browse_everything:
+        sr_tab_label: "Access Files from"
         tab_label: "Cloud Providers"
         browse_files_button: "Browse cloud files"
         files_selected: "files selected"
