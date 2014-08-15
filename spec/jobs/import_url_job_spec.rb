@@ -46,7 +46,8 @@ describe ImportUrlJob do
     it "should create a content datastream" do
       Net::HTTP.any_instance.should_receive(:request_get).with(file_path).and_yield(mock_response)
       job.run
-      generic_file.reload.content.size.should == 4218
+      expect(generic_file.reload.content.size).to eq 4218
+      expect(generic_file.content.dsLabel).to eq file_path
     end
   end
 
