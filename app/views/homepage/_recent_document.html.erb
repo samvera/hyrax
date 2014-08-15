@@ -9,8 +9,7 @@
       <% end %>
       <td>
         <h3>
-          <%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(recent_document.noid), title: recent_document.title_or_label  %>
-
+          <span class="sr-only">Title</span><%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(recent_document.noid), title: recent_document.title_or_label  %>
           <% if display_access %>
               <% if recent_document.registered? %>
                  <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span>
@@ -22,9 +21,9 @@
           <% end %>
         </h3>
         <p>
-          <%= link_to truncate(recent_document.label, length: 25),
+          <span class="sr-only">Filename</span><%= link_to truncate(recent_document.label, length: 25),
               sufia.generic_file_path(recent_document.noid), title: recent_document.label %><br />
-          <%= link_to_facet_list(recent_document.tags, 'desc_metadata__tag', 'no keywords specified').html_safe %>
+          <span class="sr-only">Keywords</span><%= link_to_facet_list(recent_document.tags, 'desc_metadata__tag', 'no keywords specified').html_safe %>
         </p>
       </td>
     </tr>
