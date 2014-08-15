@@ -157,6 +157,10 @@ describe CollectionsController do
         expect(ids).to include @asset1.pid, @asset2.pid, @asset3.pid
         expect(ids).to_not include @asset4.pid
       end
+      it "should set the breadcrumb trail" do
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        get :show, id: @collection.id
+      end
     end
     context "not signed in" do
       it "should not show me files in the collection" do

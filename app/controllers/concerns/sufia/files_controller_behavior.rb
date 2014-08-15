@@ -8,6 +8,7 @@ module Sufia
   module FilesControllerBehavior
     extend ActiveSupport::Concern
     extend Sufia::FilesController::UploadCompleteBehavior
+    include Sufia::Breadcrumbs
 
     included do
       include Hydra::Controller::ControllerBehavior
@@ -36,6 +37,7 @@ module Sufia
       #          destroy, permissions, citation, stats
       before_filter :authenticate_user!, except: [:show, :citation]
       before_filter :has_access?, except: [:show]
+      before_filter :build_breadcrumbs, only: [:show, :edit, :stats]
       prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
       load_resource only: [:audit]
       load_and_authorize_resource except: [:index, :audit]

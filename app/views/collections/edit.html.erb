@@ -1,7 +1,5 @@
 <% @page_title = "Edit Collection #{display_title(@collection)} - #{application_name}" %>
-<%= render partial: 'generic_files/breadcrumbs', locals: {
-      include_file: false, generic_file: GenericFile.new(title: @collection.title) 
-    } %>
+<%= render_breadcrumbs %>
 
 <h1>Edit Collection: <%= display_title(@collection) %></h1>
 

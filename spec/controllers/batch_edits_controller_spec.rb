@@ -33,6 +33,10 @@ describe BatchEditsController do
       expect(assigns[:show_file].publisher).to eq ["Rand McNally"]
       expect(assigns[:show_file].language).to eq ["en"]
     end
+    it "should set the breadcrumb trail" do
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+      get :edit
+    end
   end
 
   describe "update" do

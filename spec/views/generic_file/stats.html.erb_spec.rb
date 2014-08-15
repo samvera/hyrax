@@ -33,12 +33,6 @@ describe 'generic_files/stats.html.erb' do
       assign(:stats, no_stats)
     end
 
-    it 'shows breadcrumbs' do
-      render
-      page = Capybara::Node::Simple.new(rendered)
-      expect(page).to have_selector('span.active', text: 'file1.txt')
-    end
-
     context 'when no analytics results returned' do
       before do
         assign(:pageviews, 0)
