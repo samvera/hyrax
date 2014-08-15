@@ -3,7 +3,7 @@
 <% unless params[:display_type] == 'list' %>
   <thead>
   <tr>
-    <th><%= render_check_all %></th>
+    <th><label for="check_all" class="sr-only"><%= t("sufia.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
     <th>Title</th>
     <th class="sorts-dash"><i id="desc_metadata__date_uploaded_dtsi" class="<%=params[:sort]== "desc_metadata__date_uploaded_dtsi desc" ? 'caret' : params[:sort]== "desc_metadata__date_uploaded_dtsi asc" ? 'caret up' : ''%>"></i>Date Uploaded</th>
     <th>Visibility</th>

@@ -1,13 +1,15 @@
 <div class="btn-group">
-  <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">Select an action <span class="caret"></span>
+  <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%=noid%>" aria-haspopup="true">
+    <span class="sr-only">Press to </span>
+    Select an action <span class="caret" aria-hidden="true"></span>
   </button>
-  <ul class="dropdown-menu dropdown-menu-right">
-   <li>
-   <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-pencil"></i> Edit Collection'), collections.edit_collection_path(noid),
+  <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%=noid%>">
+   <li role="menuitem" tabindex="-1">
+   <%= link_to raw('<i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit Collection'), collections.edit_collection_path(noid),
      class: 'itemicon itemedit', title: 'Edit Collection' %>
    </li>
-   <li>
-   <%= link_to raw('<i aria-hidden="true" class="glyphicon glyphicon-trash"></i> Delete Collection'), collections.collection_path(noid),
+   <li role="menuitem" tabindex="-1">
+   <%= link_to raw('<i class="glyphicon glyphicon-trash" aria-hidden="true"></i> Delete Collection'), collections.collection_path(noid),
      class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
      confirm: "Deleting a collection from #{t('sufia.product_name')} is permanent. Click OK to delete this collection from #{t('sufia.product_name')}, or Cancel to cancel this operation" } %>
    </li>

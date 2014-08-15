@@ -97,7 +97,7 @@ describe 'collection' do
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
-        click_link("collection title")
+        click_link("Display all details of collection title")
       end
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
@@ -120,7 +120,7 @@ describe 'collection' do
       # URL: /dashboard/collections
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
-        click_link("collection title")
+        click_link("Display all details of collection title")
       end
       # URL: /collections/collection-id
       expect(page).to have_content(@collection.title)
@@ -232,7 +232,7 @@ describe 'collection' do
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       page.should have_content(@collection.title)
       within('#document_'+@collection.noid) do
-        click_link("collection title")
+        click_link("Display all details of collection title")
       end
       page.should have_css(".pager")
     end
