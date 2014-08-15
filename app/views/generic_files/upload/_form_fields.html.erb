@@ -9,15 +9,15 @@
             <div class="col-md-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Select files...</span>
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                    <span aria-hidden="true">Select files...</span>
                     <input type="file" name="files[]" multiple />
                 </span>
                 <% ua = request.env['HTTP_USER_AGENT'] %>
                 <% if !!(ua =~ /Chrome/) %>
                 <span class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Select folder...</span>
+                    <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
+                    <span aria-hidden="true">Select folder...</span>
                     <input type="file" name="files[]" directory webkitdirectory mozdirectory />
                 </span>
                 <% end %>

@@ -20,7 +20,7 @@ Blacklight.onLoad(function () {
     // if box is checked - enable submit, otherwise disable 
     var disable = (bool) ? false : true;
     $('input[data-activate]').attr('checked', bool);
-    $('.activate-submit').attr('disabled', disable);
+    $('.activate-submit').attr('disabled', disable).attr('aria-disabled', disable);
   })
 
   // show/hide the tooltip depending if the agreement is already checked
