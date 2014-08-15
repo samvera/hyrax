@@ -1,18 +1,20 @@
-      <h3>
-        <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '),
-          sufia.generic_file_path(featured), title: featured.title_or_label  %>
-      </h3>
-      <div> 
-        <%= link_to_profile featured.depositor("no depositor value") %>
-      </div>
-      <div> 
-        <%= link_to truncate(featured.label, length: 25),
-            sufia.generic_file_path(featured), title: featured.label %>
-      </div>
-      <div> 
-        <%= link_to_facet_list(featured.resource_type, 'desc_metadata__resource_type', 'no resource specified') %>
-      </div>
-      <div> 
-        <%= link_to_facet_list(featured.tags, 'desc_metadata__tag', 'no keywords specified') %>
-      </div>
-
+<h3>
+  <span class="sr-only">Title</span>
+  <%= link_to truncate(featured.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(featured), title: featured.title_or_label  %>
+</h3>
+<div> 
+  <span class="sr-only">Depositor</span>
+  <%= link_to_profile featured.depositor("no depositor value") %>
+</div>
+<div> 
+  <span class="sr-only">Filename</span>
+  <%= link_to truncate(featured.label, length: 25), sufia.generic_file_path(featured), title: featured.label %>
+</div>
+<div> 
+  <span class="sr-only">File type</span>
+  <%= link_to_facet_list(featured.resource_type, 'desc_metadata__resource_type', 'no resource specified') %>
+</div>
+<div> 
+  <span class="sr-only">Keywords</span>
+  <%= link_to_facet_list(featured.tags, 'desc_metadata__tag', 'no keywords specified') %>
+</div>
