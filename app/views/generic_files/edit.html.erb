@@ -2,7 +2,7 @@
   <%= render partial: "edit", formats: [:js] %>
 <% end %>
 
-<%= render_breadcrumbs %>
+<%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
 <h1 class="lower">Edit <%= @generic_file %></h1>
 
 <div class="row">
