@@ -55,6 +55,10 @@ en:
       size:             "Size"
     homepage:
       featured_works:       'Featured Works'
+      recently_uploaded:    'Recently Uploaded'
+      explore:              'Explore'
+      sr_explore:           'Popular Keywords'
+      no_public:            'No public work has been contributed.'
     dashboard:
       title:                    "My Dashboard"
       greeting:                 "Hello, "
