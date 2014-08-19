@@ -1,0 +1,23 @@
+<%# This is copied from blacklight-5.5.3/app/views/kaminari/blacklight_compact/_paginator.html.erb
+so we can add a aria-hidden="true" attribute around it. If that gets added into
+Blacklight, this file can be removed
+-%>
+<% if total_pages > 1 -%>
+  <%# #render checks if total_pages > 1, so we can't put our fallback
+  in here .. -%>
+  <%= paginator.render do -%>
+    <div aria-hidden="true" class="page_links">
+      <%= prev_page_tag %> |
+      <span class="page_entries">
+        <%= page_entries_info %>
+      </span> |
+      <%= next_page_tag %>
+    </div>
+  <% end -%>
+<% else -%>
+    <div aria-hidden="true" class="page_links">
+      <span class="page_entries">
+        <%= page_entries_info %>
+      </span>
+    </div>
+<% end -%>
