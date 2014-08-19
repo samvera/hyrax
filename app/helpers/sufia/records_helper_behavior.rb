@@ -14,13 +14,15 @@ module Sufia
       link_to '#', id: "generic_file_#{key.to_s}_help", rel: 'popover',
               'data-content' => content,
               'data-original-title' => title do
-        content_tag 'i', '', class: "glyphicon glyphicon-question-sign large-icon"
+        content_tag(:span, "help", class: "sr-only") +
+        content_tag('i', '', "aria-hidden" => true, class: "glyphicon glyphicon-question-sign large-icon")
       end
     end
 
     def help_icon_modal(modal_id)
       link_to '#' + modal_id, id: "generic_file_#{modal_id}_help_modal", rel: 'button', data: { toggle: 'modal' } do
-        content_tag 'i', '', class: 'glyphicon glyphicon-question-sign large-icon'
+        content_tag(:span, "help", class: "sr-only") +
+        content_tag('i', '', "aria-hidden" => true, class: 'glyphicon glyphicon-question-sign large-icon')
       end
     end
 

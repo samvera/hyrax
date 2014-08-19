@@ -16,11 +16,11 @@ describe RecordsHelper do
     doc = Nokogiri::HTML(str)
     a = doc.xpath('//a').first
     
-    a.attr('data-content').should == "Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>."
-    a.attr('data-original-title').should == "Keyword"
-    a.attr('id').should == "generic_file_tag_help"
-    i = a.children.first
-    i.attr('class').should == 'glyphicon glyphicon-question-sign large-icon'
+    expect(a.attr('data-content')).to eq "Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>."
+    expect(a.attr('data-original-title')).to eq "Keyword"
+    expect(a.attr('id')).to eq "generic_file_tag_help"
+    expect(a.at_css('.sr-only').content).to eq('help')
+    expect(a.at_css(':not(.sr-only)').attr('class')).to eq('glyphicon glyphicon-question-sign large-icon')
   end
 
   specify "draws help_icon_modal" do
@@ -31,8 +31,8 @@ describe RecordsHelper do
     expect(a.attr('href')).to eq('#myModal')
     expect(a.attr('data-toggle')).to eq('modal')
     expect(a.attr('id')).to eq('generic_file_myModal_help_modal')
-    i = a.children.first
-    expect(i.attr('class')).to eq('glyphicon glyphicon-question-sign large-icon')
+    expect(a.at_css('.sr-only').content).to eq('help')
+    expect(a.at_css(':not(.sr-only)').attr('class')).to eq('glyphicon glyphicon-question-sign large-icon')
   end
 
   describe "download links" do
