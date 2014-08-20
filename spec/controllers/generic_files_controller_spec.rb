@@ -282,7 +282,6 @@ describe GenericFilesController do
 
     context 'when user has access to file' do
       before do
-        sign_in @user
         mock_query = double('query')
         allow(mock_query).to receive(:for_path).and_return([
             OpenStruct.new(date: '2014-01-01', pageviews: 4),
@@ -307,6 +306,20 @@ describe GenericFilesController do
         get :stats, id: @generic_file.noid
         expect(response).to be_success
         expect(response).to render_template(:stats)
+      end
+
+      context "user is not signed in but the file is public" do
+        before do
+          sign_out @user
+          @generic_file.read_groups = ['public']
+          @generic_file.save
+        end
+
+        it 'renders the stats view' do
+          get :stats, id: @generic_file.noid
+          expect(response).to be_success
+          expect(response).to render_template(:stats)
+        end
       end
     end
 
