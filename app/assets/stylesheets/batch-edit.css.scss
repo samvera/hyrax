@@ -1,0 +1,21 @@
+.help-icon {
+  @extend .glyphicon;
+  @extend .glyphicon-question-sign;
+  @extend .large-icon;
+  top: 5px;
+}
+
+.form-horizontal .batch-group {
+  @extend .form-group;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#hide_addl_descriptions {
+  margin-bottom: 10px;
+}
+
+#additional_title_clone {
+  padding-top: 5px;
+}
+

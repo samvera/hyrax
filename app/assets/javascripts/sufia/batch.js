@@ -1,7 +1,12 @@
 Blacklight.onLoad(function() {
-  $('#add_descriptions').click(function() {
+  $('#show_addl_descriptions').click(function() {
     $('#more_descriptions').show();
-    $('#add_descriptions').hide();
+    $('#show_addl_descriptions').hide();
+    return false;
+  });
+  $('#hide_addl_descriptions').click(function() {
+    $('#more_descriptions').hide();
+    $('#show_addl_descriptions').show();
     return false;
   });
   $('#more_descriptions').hide();

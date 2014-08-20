@@ -4,7 +4,6 @@
             <%= add_field(key) %>
           <% end %>
             &nbsp;
-          <%= help_icon(key) %>
           <%= render partial: "records/rights_modal" if key == "rights" %>
         <% else %>
           <%= subtract_field(key) %>

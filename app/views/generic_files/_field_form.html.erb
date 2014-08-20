@@ -1,5 +1,5 @@
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
-<div class="form-group">
+<div class="batch-group">
   <% vals = generic_file[key] %>
   <% if render_req && required?(key) %>
     <% tmp = '<span class="required-field">*</span>' + get_label(key) %>
@@ -7,7 +7,7 @@
   <% else %>
     <%= f.label key, get_label(key) %>
   <% end %>
-
+  <%= help_icon(key) %>
   <% if key == :resource_type %>
     <%# resource_type is a multiselect box, so don't render one row for each %>
     <%= render_edit_field_partial(key, record: generic_file, f: f, render_req: render_req) %>
@@ -16,4 +16,4 @@
       <%= render_edit_field_partial(key, record: generic_file, f: f,  v: v, index: index, render_req: render_req) %>
     <% end %>
   <% end %>
- </div><!-- /.form-group -->
+ </div><!-- /.batch-group -->
