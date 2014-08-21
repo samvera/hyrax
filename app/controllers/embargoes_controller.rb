@@ -5,7 +5,7 @@ class EmbargoesController < ApplicationController
   include Hydra::Collections::AcceptsBatches
 
   skip_before_filter :normalize_identifier, only: :update
-  
+
   def destroy
     remove_embargo(curation_concern)
     flash[:notice] = curation_concern.embargo_history.last
