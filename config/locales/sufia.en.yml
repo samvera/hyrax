@@ -119,9 +119,15 @@ en:
       date_created: "The date on which the file was generated. Dates are accepted in the form YYYY-MM-DD, e.g. 1776-07-04."
       description: "Free-text notes about the file itself. Examples include abstracts of a paper, citation information for a journal article, or a tag indicating a larger collection to which the file belongs."
       identifier: "A unique handle describing the file. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
-      language: " The language of the file content."
+      language: "The language of the file content."
       publisher: "The person or group making the file available. Generally this is the institution."
       rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. <em>This is a required field</em>."
+    aria_label: 
+      default: "Usage information for %{title}"
+      based_near: "Usage information for location"
+      description: "Usage information for abstract or summary"
+      tag: "Usage information for keyword"
+      rightsModal: "Usage information for rights"
     background_attribution: "Background image courtesy of Penn State University"
     bread_crumb:
       search_results: "Back to search results"
@@ -131,3 +137,7 @@ en:
     user_profile:
       no_followers: "No one is following you."
       no_following: "You are not following anyone."
+    batch:
+      help:
+        title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
+        resource_type: "You may select multiple types to apply to all files"
