@@ -33,7 +33,7 @@ describe FileUsage, :type => :model do
 
   # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
   # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
-  # Sample data structures were created by sending real events to GA from a test instance of 
+  # Sample data structures were created by sending real events to GA from a test instance of
   # Scholarsphere.  The data below are essentially a "cut and paste" from the output of query
   # results from the Legato gem.
 

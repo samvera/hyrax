@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PropertiesDatastream, :type => :model do
   describe "import_url" do
-    #let(:datastream) { PropertiesDatastream.new(double('base object', uri: '/test/foo', new_record?: true), 'properties') }
+    #let(:datastream) { PropertiesDatastream.new(double('base object', uri: "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/foo", new_record?: true), 'properties') }
     before do
       subject.import_url = 'http://example.com/somefile.txt'
     end

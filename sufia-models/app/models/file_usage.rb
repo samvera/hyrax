@@ -23,8 +23,8 @@ class FileUsage
   def total_pageviews
     self.pageviews.reduce(0) { |total, result| total + result[1].to_i }
   end
-  
-  # Package data for visualization using JQuery Flot 
+
+  # Package data for visualization using JQuery Flot
   def to_flot
     [
       { label: "Pageviews",  data: pageviews },

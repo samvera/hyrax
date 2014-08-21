@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe GenericFileRdfDatastream do
-  subject { GenericFileRdfDatastream.new(double('base object', uri: '/test/foo', new_record?: true), 'descMetadata') }
+  subject { GenericFileRdfDatastream.new(double('base object', uri: "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/foo", id: 'foo', new_record?: true), 'descMetadata') }
 
   it "should have bibliographicCitation" do
     subject.bibliographic_citation = "foo"

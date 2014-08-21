@@ -90,11 +90,7 @@ describe GenericFilesController do
 
         saved_file = GenericFile.find('test123')
         # This is confirming that apply_depositor_metadata recorded the depositor
-        expect(saved_file.properties.depositor).to eq ['jilluser@example.com']
         expect(saved_file.depositor).to eq 'jilluser@example.com'
-        expect(saved_file.properties.to_solr.keys).to include('depositor_tesim')
-        expect(saved_file.properties.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
-        expect(saved_file.to_solr.keys).to include('depositor_tesim')
         expect(saved_file.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
       end
 

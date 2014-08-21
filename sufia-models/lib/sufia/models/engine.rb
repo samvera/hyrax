@@ -33,7 +33,7 @@ module Sufia
 
       config.translate_uri_to_id = lambda { |uri| uri.to_s.split('/')[-1] }
       config.translate_id_to_uri = lambda { |id|
-        "#{FedoraLens.host}#{FedoraLens.base_path}/#{Sufia::Noid.treeify(id)}" }
+        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Sufia::Noid.treeify(id)}" }
 
       config.autoload_paths += %W(
         #{config.root}/app/models/datastreams

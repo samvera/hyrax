@@ -119,7 +119,7 @@ Sufia.config do |config|
   # Method of converting pids into URIs for storage in Fedora
   # config.translate_uri_to_id = lambda { |uri| uri.to_s.split('/')[-1] }
   # config.translate_id_to_uri = lambda { |id|
-  #      "#{FedoraLens.host}#{FedoraLens.base_path}/#{Sufia::Noid.treeify(id)}" }
+  #      "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Sufia::Noid.treeify(id)}" }
 
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin

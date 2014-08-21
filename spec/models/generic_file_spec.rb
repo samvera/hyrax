@@ -368,11 +368,7 @@ describe GenericFile, :type => :model do
   end
   it "should support setting and getting the relative_path value" do
     subject.relative_path = "documents/research/NSF/2010"
-<<<<<<< HEAD
-    expect(subject.relative_path).to eq("documents/research/NSF/2010")
-=======
     expect(subject.relative_path).to eq "documents/research/NSF/2010"
->>>>>>> No need to test for label. We don't have a label in Fedora-4
   end
   describe "create_thumbnail" do
     before do
@@ -390,13 +386,8 @@ describe GenericFile, :type => :model do
       end
       it "should make a png thumbnail" do
         @f.create_thumbnail
-<<<<<<< HEAD
-        expect(@f.thumbnail.content.size).to eq(4768) # this is a bad test. I just want to show that it did something.
-        expect(@f.thumbnail.mime_type).to eq('image/png')
-=======
         expect(@f.thumbnail.content.size).to eq 4768 # this is a bad test. I just want to show that it did something.
         expect(@f.thumbnail.mime_type).to eq 'image/png'
->>>>>>> No need to test for label. We don't have a label in Fedora-4
       end
     end
   end
@@ -561,68 +552,6 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "characterize" do
-    context "makes a datastream" do
-      before do
-        subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-        subject.characterize
-        # characterize method saves
-      end
-      let(:datastream) { subject.characterization }
-      let(:xml) { datastream.ng_xml }
-      let(:namespace) { {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'} }
-      it "should return expected results when called", unless: $in_travis do
-        expect(xml.xpath('//ns:imageWidth/text()', namespace).inner_text).to eq '50'
-      end
-    end
-
-    context "after characterization" do
-      before do
-        myfile = GenericFile.new
-        myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, 'content', 'sufia_test4.pdf')
-        myfile.apply_depositor_metadata('mjg36')
-        # characterize method saves
-        myfile.characterize
-        @myfile = myfile.reload
-      end
-      after do
-        @myfile.destroy
-      end
-      it "should return expected results after a save" do
-        expect(@myfile.file_size).to eq ['218882']
-        expect(@myfile.original_checksum).to eq ['5a2d761cab7c15b2b3bb3465ce64586d']
-<<<<<<< HEAD
-
-        expect(@myfile.characterization_terms[:format_label]).to eq ["Portable Document Format"]
-        expect(@myfile.characterization_terms[:mime_type]).to eq "application/pdf"
-        expect(@myfile.characterization_terms[:file_size]).to eq ["218882"]
-        expect(@myfile.characterization_terms[:original_checksum]).to eq ["5a2d761cab7c15b2b3bb3465ce64586d"]
-        expect(@myfile.characterization_terms.keys).to include(:last_modified)
-        expect(@myfile.characterization_terms.keys).to include(:filename)
-
-        expect(@myfile.title).to include("Microsoft Word - sample.pdf.docx")
-        expect(@myfile.filename[0]).to eq @myfile.label
-=======
-
-        expect(@myfile.characterization_terms[:format_label]).to eq ["Portable Document Format"]
-        expect(@myfile.characterization_terms[:mime_type]).to eq "application/pdf"
-        expect(@myfile.characterization_terms[:file_size]).to eq ["218882"]
-        expect(@myfile.characterization_terms[:original_checksum]).to eq ["5a2d761cab7c15b2b3bb3465ce64586d"]
-        expect(@myfile.characterization_terms.keys).to include(:last_modified, :filename)
-
-        expect(@myfile.title).to include("Microsoft Word - sample.pdf.docx")
-        expect(@myfile.filename[0]).to eq 'sufia_test4.pdf'
->>>>>>> No need to test for label. We don't have a label in Fedora-4
-
-        @myfile.append_metadata
-        expect(@myfile.format_label).to eq ["Portable Document Format"]
-        expect(@myfile.title).to include("Microsoft Word - sample.pdf.docx")
-
-        expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMicrosoft Word - sample.pdf.docx\n\n\n \n \n\n \n\n \n\n \n\nThis PDF file was created using CutePDF. \n\nwww.cutepdf.com")
-      end
-    end
-  end
-
   context "with rightsMetadata" do
     subject do
       m = GenericFile.new()
@@ -631,17 +560,6 @@ describe GenericFile, :type => :model do
       m
     end
     it "should have read groups accessor" do
-<<<<<<< HEAD
-      expect(subject.read_groups).to eq(['group-6', 'group-7'])
-    end
-    it "should have read groups string accessor" do
-      expect(subject.read_groups_string).to eq('group-6, group-7')
-    end
-    it "should have read groups writer" do
-      subject.read_groups = ['group-2', 'group-3']
-      expect(subject.rightsMetadata.groups).to eq({'group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit'})
-      expect(subject.rightsMetadata.users).to eq({"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'})
-=======
       expect(subject.read_groups).to eq ['group-6', 'group-7']
     end
     it "should have read groups string accessor" do
@@ -651,29 +569,18 @@ describe GenericFile, :type => :model do
       subject.read_groups = ['group-2', 'group-3']
       expect(subject.rightsMetadata.groups).to eq('group-2' => 'read', 'group-3'=>'read', 'group-8' => 'edit')
       expect(subject.rightsMetadata.users).to eq("person1"=>"read","person2"=>"read", 'jcoyne' => 'edit')
->>>>>>> No need to test for label. We don't have a label in Fedora-4
     end
 
     it "should have read groups string writer" do
       subject.read_groups_string = 'umg/up.dlt.staff, group-3'
-<<<<<<< HEAD
-      expect(subject.rightsMetadata.groups).to eq({'umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit'})
-      expect(subject.rightsMetadata.users).to eq({"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'})
-=======
       expect(subject.rightsMetadata.groups).to eq('umg/up.dlt.staff' => 'read', 'group-3'=>'read', 'group-8' => 'edit')
       expect(subject.rightsMetadata.users).to eq("person1"=>"read","person2"=>"read", 'jcoyne' => 'edit')
->>>>>>> No need to test for label. We don't have a label in Fedora-4
     end
     it "should only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
-<<<<<<< HEAD
-      expect(subject.rightsMetadata.groups).to eq({'group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit'})
-      expect(subject.rightsMetadata.users).to eq({"person1"=>"read","person2"=>"read", 'jcoyne' => 'edit'})
-=======
       expect(subject.rightsMetadata.groups).to eq('group-2' => 'read', 'group-3'=>'read', 'group-7' => 'read', 'group-8' => 'edit')
       expect(subject.rightsMetadata.users).to eq("person1"=>"read","person2"=>"read", 'jcoyne' => 'edit')
->>>>>>> No need to test for label. We don't have a label in Fedora-4
     end
   end
   describe "permissions validation" do
@@ -713,11 +620,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions=()" do
         @file.permissions = {user: {'mjg36' => 'read'}}
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -733,11 +636,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:edit_access, :person] => '')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -745,11 +644,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions()" do
         @rightsmd.permissions({person: "mjg36"}, "read")
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -757,11 +652,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"person" => {"mjg36" => "read"}})
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -769,11 +660,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -781,11 +668,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -793,11 +676,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_values()" do
         @rightsmd.update_values([:edit_access, :person] => '')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_users)
         expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
@@ -841,11 +720,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions=()" do
         @file.permissions = {group: {'public' => 'edit'}}
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -861,11 +736,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:edit_access, :group] => 'public')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -873,11 +744,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions()" do
         @rightsmd.permissions({group: "public"}, "edit")
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -885,11 +752,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"group" => {"public" => "edit"}})
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -897,11 +760,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -909,11 +768,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -921,11 +776,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_values()" do
         @rightsmd.update_values([:edit_access, :group] => 'public')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -969,11 +820,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions=()" do
         @file.permissions = {group: {'registered' => 'edit'}}
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -989,11 +836,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:edit_access, :group] => 'registered')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -1001,11 +844,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions()" do
         @rightsmd.permissions({group: "registered"}, "edit")
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -1013,11 +852,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"group" => {"registered" => "edit"}})
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -1025,11 +860,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -1037,11 +868,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -1049,11 +876,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_values()" do
         @rightsmd.update_values([:edit_access, :group] => 'registered')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to be_new_record
         expect(@file.errors).to include(:edit_groups)
         expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -1099,11 +922,7 @@ describe GenericFile, :type => :model do
       end
       it "should work via permissions=()" do
         @file.permissions = {group: {'registered' => 'read'}}
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid
@@ -1117,66 +936,42 @@ describe GenericFile, :type => :model do
       end
       it "should work via update_indexed_attributes" do
         @rightsmd.update_indexed_attributes([:read_access, :group] => 'registered')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid
       end
       it "should work via permissions()" do
         @rightsmd.permissions({group: "registered"}, "read")
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid
       end
       it "should work via update_permissions()" do
         @rightsmd.update_permissions({"group" => {"registered" => "read"}})
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid
       end
       it "should work via content=()" do
         @rightsmd.content=(@rights_xml)
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid
       end
       it "should work via ng_xml=()" do
         @rightsmd.ng_xml=(Nokogiri::XML::Document.parse(@rights_xml))
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid
       end
       it "should work via update_values()" do
         @rightsmd.update_values([:read_access, :group] => 'registered')
-<<<<<<< HEAD
         expect { @file.save }.not_to raise_error
-=======
-        expect { @file.save }.to_not raise_error
->>>>>>> No need to test for label. We don't have a label in Fedora-4
         expect(@file).to_not be_new_record
         expect(@file.errors).to be_empty
         expect(@file).to be_valid

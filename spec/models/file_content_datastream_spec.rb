@@ -51,8 +51,8 @@ describe FileContentDatastream, :type => :model do
   end
 
   describe "extract_metadata" do
-    let(:datastream) { FileContentDatastream.new(double('base object', uri: '/test/foo', new_record?: true),
-                                        'content') }
+    let(:datastream) { FileContentDatastream.new(parent_object, 'content') }
+    let(:parent_object) { double('base object', uri: "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/foo", id: 'foo', new_record?: true) }
     let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: File.new(fixture_path + '/world.png'),
                                                  filename: 'world.png') }
     before { datastream.content = file }

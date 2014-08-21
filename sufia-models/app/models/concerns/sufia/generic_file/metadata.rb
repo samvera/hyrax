@@ -9,11 +9,16 @@ module Sufia
         has_file_datastream "content", type: FileContentDatastream
         has_file_datastream "thumbnail"
 
-        attribute :depositor, [
-          RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"),
-          FedoraLens::Lenses.single,
-          FedoraLens::Lenses.literal_to_string
-        ]
+        property :depositor, predicate: RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt") do |index|
+          index.as :symbol, :stored_searchable
+        end
+
+
+        # Hack until https://github.com/no-reply/ActiveTriples/pull/37 is merged
+        def depositor_with_first
+          depositor_without_first.first
+        end
+        alias_method_chain :depositor, :first
 
         has_attributes :relative_path, :import_url, datastream: :properties, multiple: false
         has_attributes :date_uploaded, :date_modified, datastream: :descMetadata, multiple: false
@@ -21,7 +26,13 @@ module Sufia
                                     :contributor, :title, :tag, :description, :rights,
                                     :publisher, :date_created, :subject,
                                     :resource_type, :identifier, :language, datastream: :descMetadata, multiple: true
-        attribute :label, [ RDF::DC.title, FedoraLens::Lenses.single, FedoraLens::Lenses.literal_to_string]
+        property :label, predicate: RDF::DC.title
+
+        # Hack until https://github.com/no-reply/ActiveTriples/pull/37 is merged
+        def label_with_first
+          label_without_first.first
+        end
+        alias_method_chain :label, :first
       end
 
       # Add a schema.org itemtype
