@@ -1,12 +1,5 @@
 # Sufia [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia) [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia) [![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 
-# Please Note!
-Sufia is currently in transition to a new 4.0 release scheduled for late summer 2014.  If wish to use Sufia now,
-please ensure you using version 3.7.2, available from RubyGems.org. For documentation specific to this version,
-please consult the [Sufia 3.7.2 documentation](http://rubydoc.info/gems/sufia/3.7.2/frames).
-
-If you have questions or need help, please email [the Hydra community development list](mailto:hydra-tech@googlegroups.com).
-
 ## What is Sufia?
 Sufia is a component that adds self-deposit institutional repository features to a Rails app.
 Sufia is created with Ruby on Rails and builds on the Hydra Framework.
@@ -58,6 +51,10 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 1. Ruby
 
 #### !! Ensure that you have all of the above components installed before you continue. !!
+
+## Need Help?
+
+If you have questions or need help, please email [the Hydra community development list](mailto:hydra-tech@googlegroups.com).
 
 ## Creating an application
 ### Generate base Rails install
