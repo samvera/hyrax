@@ -313,7 +313,6 @@ describe GenericFilesController do
 
       context "user is not signed in but the file is public" do
         before do
-          sign_out @user
           @generic_file.read_groups = ['public']
           @generic_file.save
         end
@@ -575,7 +574,7 @@ describe GenericFilesController do
       end
       it "should set the breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
-        get :show, id: "test5"
+        get :show, id: generic_file
       end
     end
   end

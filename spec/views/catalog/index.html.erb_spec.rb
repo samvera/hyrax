@@ -29,12 +29,10 @@ describe 'catalog/index.html.erb' do
   end
 
   it 'appears on page without error' do
-    pending "rebased from 4.0 master"
     render
-    #expect(rendered).to include(@collection.title)
+    expect(rendered).to include(collection.title)
     page = Capybara::Node::Simple.new(rendered)
     expect(page).to have_selector("span.glyphicon.glyphicon-th.collection-icon-search")
-    expect(rendered).to include('collection1')
   end
 
 end

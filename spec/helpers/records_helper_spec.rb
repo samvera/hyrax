@@ -8,42 +8,21 @@ describe RecordsHelper, :type => :helper do
     "<button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-remove\"></i></span><span class=\"sr-only\">add another test</span></button>"    
   }
   it "draws add button" do
-<<<<<<< HEAD
     expect(helper.add_field(:test)).to eql(adder)
   end
 
   it "draws subtract button" do
     expect(helper.subtract_field(:test)).to eql(remover)
-=======
-    expect(helper.add_field(:test)).to eq(
-      "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\">+<span class=\"sr-only\">add another test</span></button>"
-    )
-  end
-
-  it "draws subtract button" do
-    expect(helper.subtract_field(:test)).to eq(
-      "<button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\">-<span class=\"sr-only\">add another test</span></button>"
-    )
->>>>>>> don't use namespaced pid in tests
   end
 
   it "draws help_icon" do
     str = String.new(helper.help_icon(:tag))
     doc = Nokogiri::HTML(str)
     a = doc.xpath('//a').first
-<<<<<<< HEAD
     expect(a.attr('data-content')).to  eql("Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>.")
     expect(a.attr('data-original-title')).to  eql("Keyword")
     expect(a.attr('id')).to  eql("generic_file_tag_help")
     expect(a.children.first.attr('class')).to eql('help-icon')
-=======
-    
-    expect(a.attr('data-content')).to eq "Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>."
-    expect(a.attr('data-original-title')).to eq "Keyword"
-    expect(a.attr('id')).to eq "generic_file_tag_help"
-    i = a.children.first
-    expect(i.attr('class')).to eq 'glyphicon glyphicon-question-sign large-icon'
->>>>>>> don't use namespaced pid in tests
   end
 
   specify "draws help_icon_modal" do
@@ -72,16 +51,9 @@ describe RecordsHelper, :type => :helper do
         expect(helper.render_download_link).to have_content("Download")
       end
 
-<<<<<<< HEAD
       it "includes user-supplied link text" do
         expect(link_text).to have_selector("#file_download")
         expect(link_text).to have_content("Download Fake")
-=======
-      it "includes user-supplied text" do
-        content = helper.render_download_link("Download Fake")
-        expect(content).to have_selector("#file_download")
-        expect(content).to have_content("Download Fake")
->>>>>>> don't use namespaced pid in tests
       end
     end
 
@@ -91,16 +63,9 @@ describe RecordsHelper, :type => :helper do
         expect(helper.render_download_icon).to match("Download the document")
       end
 
-<<<<<<< HEAD
       it "includes user-supplied icon text" do
         expect(icon_text).to have_selector("#file_download")
         expect(icon_text).to match("Download the full-sized Fake")
-=======
-      it "includes user-supplied text" do
-        content = helper.render_download_icon("Download the full-sized Fake")
-        expect(content).to have_selector("#file_download")
-        expect(content).to match("Download the full-sized Fake")
->>>>>>> don't use namespaced pid in tests
       end
     end
 
