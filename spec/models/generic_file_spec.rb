@@ -221,9 +221,6 @@ describe GenericFile, :type => :model do
     it "should have a characterization datastream" do
       expect(subject.characterization).to be_kind_of FitsDatastream
     end
-    it "should have a dc desc metadata" do
-      expect(subject.descMetadata).to be_kind_of GenericFileRdfDatastream
-    end
     it "should have content datastream" do
       subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       expect(subject.content).to be_kind_of FileContentDatastream
@@ -305,7 +302,9 @@ describe GenericFile, :type => :model do
         f.save
         f = subject.reload
         expect(f.creator).to eq ["Jane Doe"]
-        expect(f.title).to eq ["New work", "Newer work"]
+        # TODO: Is order important?
+        expect(f.title).to include("New work")
+        expect(f.title).to include("Newer work")
       end
     end
   end
@@ -336,26 +335,26 @@ describe GenericFile, :type => :model do
 
     it "supports to_solr" do
       local = subject.to_solr
-      expect(local[Solrizer.solr_name("desc_metadata__part_of")]).to be_nil
-      expect(local[Solrizer.solr_name("desc_metadata__date_uploaded")]).to be_nil
-      expect(local[Solrizer.solr_name("desc_metadata__date_modified")]).to be_nil
-      expect(local[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
-      expect(local[Solrizer.solr_name("desc_metadata__date_modified", :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
-      expect(local[Solrizer.solr_name("desc_metadata__rights")]).to eq ["Wide open, buddy."]
-      expect(local[Solrizer.solr_name("desc_metadata__related_url")]).to eq ["http://example.org/TheWork/"]
-      expect(local[Solrizer.solr_name("desc_metadata__contributor")]).to eq ["Mohammad"]
-      expect(local[Solrizer.solr_name("desc_metadata__creator")]).to eq ["Allah"]
-      expect(local[Solrizer.solr_name("desc_metadata__title")]).to eq ["The Work"]
-      expect(local["desc_metadata__title_sim"]).to eq ["The Work"]
-      expect(local[Solrizer.solr_name("desc_metadata__description")]).to eq ["The work by Allah"]
-      expect(local[Solrizer.solr_name("desc_metadata__publisher")]).to eq ["Vertigo Comics"]
-      expect(local[Solrizer.solr_name("desc_metadata__subject")]).to eq ["Theology"]
-      expect(local[Solrizer.solr_name("desc_metadata__language")]).to eq ["Arabic"]
-      expect(local[Solrizer.solr_name("desc_metadata__date_created")]).to eq ["1200-01-01"]
-      expect(local[Solrizer.solr_name("desc_metadata__resource_type")]).to eq ["Book"]
+      expect(local[Solrizer.solr_name("part_of")]).to be_nil
+      expect(local[Solrizer.solr_name("date_uploaded")]).to be_nil
+      expect(local[Solrizer.solr_name("date_modified")]).to be_nil
+      expect(local[Solrizer.solr_name("date_uploaded", :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
+      expect(local[Solrizer.solr_name("date_modified", :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
+      expect(local[Solrizer.solr_name("rights")]).to eq ["Wide open, buddy."]
+      expect(local[Solrizer.solr_name("related_url")]).to eq ["http://example.org/TheWork/"]
+      expect(local[Solrizer.solr_name("contributor")]).to eq ["Mohammad"]
+      expect(local[Solrizer.solr_name("creator")]).to eq ["Allah"]
+      expect(local[Solrizer.solr_name("title")]).to eq ["The Work"]
+      expect(local[Solrizer.solr_name("title", :facetable)]).to eq ["The Work"]
+      expect(local[Solrizer.solr_name("description")]).to eq ["The work by Allah"]
+      expect(local[Solrizer.solr_name("publisher")]).to eq ["Vertigo Comics"]
+      expect(local[Solrizer.solr_name("subject")]).to eq ["Theology"]
+      expect(local[Solrizer.solr_name("language")]).to eq ["Arabic"]
+      expect(local[Solrizer.solr_name("date_created")]).to eq ["1200-01-01"]
+      expect(local[Solrizer.solr_name("resource_type")]).to eq ["Book"]
       expect(local[Solrizer.solr_name("file_format")]).to eq "jpeg (JPEG Image)"
-      expect(local[Solrizer.solr_name("desc_metadata__identifier")]).to eq ["urn:isbn:1234567890"]
-      expect(local[Solrizer.solr_name("desc_metadata__based_near")]).to eq ["Medina, Saudi Arabia"]
+      expect(local[Solrizer.solr_name("identifier")]).to eq ["urn:isbn:1234567890"]
+      expect(local[Solrizer.solr_name("based_near")]).to eq ["Medina, Saudi Arabia"]
       expect(local[Solrizer.solr_name("mime_type")]).to eq ["image/jpeg"]
       expect(local["noid_tsi"]).to eq 'stubbed_pid'
       expect(local['all_text_timv']).to eq('abcxyz')
@@ -420,9 +419,6 @@ describe GenericFile, :type => :model do
     end
     it "should schedule a audit job for each datastream" do
       skip "Disabled audit"
-      s0 = double('zero')
-      expect(AuditJob).to receive(:new).with(@f.pid, 'descMetadata', "descMetadata.0").and_return(s0)
-      expect(Sufia.queue).to receive(:push).with(s0)
       s1 = double('one')
       expect(AuditJob).to receive(:new).with(@f.pid, 'DC', "DC1.0").and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1)
@@ -1010,7 +1006,8 @@ describe GenericFile, :type => :model do
       subject.remove_blank_assertions
     end
     it "should only change title" do
-      expect(subject.changes).to eq("title"=>[[], ["foo"]])
+      expect(subject.title).to eq(["foo"])
+      expect(subject.description).to be_empty
     end
   end
 
@@ -1022,7 +1019,7 @@ describe GenericFile, :type => :model do
       end
     end
     let(:mime_type_key) { Solrizer.solr_name("mime_type") }
-    let(:title_key) { Solrizer.solr_name("desc_metadata__title", :stored_searchable, type: :string) }
+    let(:title_key) { Solrizer.solr_name("title", :stored_searchable, type: :string) }
 
     after do
       subject.destroy
@@ -1038,7 +1035,6 @@ describe GenericFile, :type => :model do
       f1.save
       f2.save
       solr = f2.to_solr
-      byebug
       expect {
         f2.save
       }.to change{ f2.to_solr[mime_type_key] }.from(['']).to(["video/abc123"])

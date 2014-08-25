@@ -248,7 +248,7 @@ configure_blacklight do |config|
 
   # Specify which field to use in the tag cloud on the homepage.
   # To disable the tag cloud, comment out this line.
-  config.tag_cloud_field_name = Solrizer.solr_name("desc_metadata__tag", :facetable)
+  config.tag_cloud_field_name = Solrizer.solr_name("tag", :facetable)
 end
 ```
 

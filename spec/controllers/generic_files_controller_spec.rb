@@ -46,7 +46,8 @@ describe GenericFilesController do
       end
 
       it "should create and save a file asset from the given params" do
-        date_today = Date.today
+        # Now expecting iso8601 dates?
+        date_today = Time.now.utc.iso8601
         allow(Date).to receive(:today).and_return(date_today)
         expect {
           xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id,

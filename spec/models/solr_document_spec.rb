@@ -4,7 +4,7 @@ describe SolrDocument, :type => :model do
 
   describe "date_uploaded" do
     before do
-      subject['desc_metadata__date_uploaded_dtsi'] = '2013-03-14T00:00:00Z'
+      subject['date_uploaded_dtsi'] = '2013-03-14T00:00:00Z'
     end
     it "should be a date" do
       expect(subject.date_uploaded).to eq '03/14/2013'

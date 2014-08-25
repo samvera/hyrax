@@ -45,7 +45,7 @@ describe HomepageController, :type => :controller do
     it "should not include other user's private documents in recent documents" do
       get :index
       expect(response).to be_success
-      titles = assigns(:recent_documents).map {|d| d['desc_metadata__title_tesim'][0]}
+      titles = assigns(:recent_documents).map {|d| d['title_tesim'][0]}
       expect(titles).to_not include('Test Private Document')
     end    
 

@@ -11,8 +11,9 @@ describe AuditJob do
   describe "passing audit" do
     it "should not send passing mail" do
       skip "skipping audit for now"
-      allow_any_instance_of(GenericFileRdfDatastream).to receive(:dsChecksumValid).and_return(true)
-      AuditJob.new(@file.pid, "descMetadata", @file.descMetadata.versionID).run
+      # allow_any_instance_of(GenericFileRdfDatastream).to receive(:dsChecksumValid).and_return(true)
+      # AuditJob.new(@file.pid, "descMetadata", @file.descMetadata.versionID).run
+      # audit process TBD
       @inbox = @user.mailbox.inbox
       expect(@inbox.count).to eq(0)
     end
@@ -20,8 +21,9 @@ describe AuditJob do
   describe "failing audit" do
     it "should send failing mail" do
       skip "skipping audit for now"
-      allow_any_instance_of(GenericFileRdfDatastream).to receive(:dsChecksumValid).and_return(false)
-      AuditJob.new(@file.pid, "descMetadata", @file.descMetadata.versionID).run
+      # allow_any_instance_of(GenericFileRdfDatastream).to receive(:dsChecksumValid).and_return(false)
+      # AuditJob.new(@file.pid, "descMetadata", @file.descMetadata.versionID).run
+      # audit process TBD
       @inbox = @user.mailbox.inbox
       expect(@inbox.count).to eq(1)
       @inbox.each { |msg| expect(msg.last_message.subject).to eq(AuditJob::FAIL) }

@@ -49,7 +49,7 @@ module Sufia
         save
       end
 
-      # Populate descMetadata with fields from FITS (e.g. Author from pdfs)
+      # Populate GenericFile's properties with fields from FITS (e.g. Author from pdfs)
       def append_metadata
         terms = self.characterization_terms
         Sufia.config.fits_to_desc_mapping.each_pair do |k, v|

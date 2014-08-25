@@ -7,9 +7,6 @@ describe Batch do
   it "should have rightsMetadata" do
     expect(batch.rightsMetadata).to be_instance_of Hydra::Datastream::RightsMetadata
   end
-  it "should have dc desc metadata" do
-    expect(batch.descMetadata).to be_kind_of BatchRdfDatastream
-  end
   it "should belong to testuser" do
     expect(batch.creator).to eq [user.user_key]
   end

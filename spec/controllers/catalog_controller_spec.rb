@@ -46,14 +46,14 @@ describe CatalogController, :type => :controller do
         expect(response).to render_template('catalog/index')
         expect(assigns(:document_list).map(&:id)).to eq [@gf1.id]
         expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).first['desc_metadata__title_tesim']).to eq ['Test Document PDF']
+        expect(assigns(:document_list).first[Solrizer.solr_name("title")]).to eq ['Test Document PDF']
       end
     end
 
     describe "facet search" do
       before do
         # TODO: this is not how a facet query is done.
-        get :index, q: "{f=desc_metadata__contributor_tesim}Contrib1"
+        get :index, q: "{f=contributor_tesim}Contrib1"
       end
       it "should find facet files" do
         expect(response).to be_success
