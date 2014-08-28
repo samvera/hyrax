@@ -10,7 +10,7 @@ function getSingleUse(id) {
 }
 
 Blacklight.onLoad(function() {
-    ZeroClipboard.setDefaults({ moviePath: "/assets/ZeroClipboard.swf" });
+    ZeroClipboard.setDefaults({ moviePath: "<%= asset_path 'ZeroClipboard.swf' %>" });
     $.each($(".copypaste"), function(idx, item) {
         var clip = new ZeroClipboard();
         clip.on("dataRequested", function(client, args) {
