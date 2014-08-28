@@ -83,7 +83,6 @@ describe CollectionsController do
     end
 
     it "should set collection on members" do
-      pending "Will fail until projecthydra-labs/hydra-collections#48 is fixed"
       put :update, id: @collection.id, collection: {members:"add"}, batch_document_ids: [@asset3.pid, @asset1.pid, @asset2.pid]
       expect(response).to redirect_to routes.url_helpers.collection_path(@collection.noid)
       expect(assigns[:collection].members).to match_array [@asset2, @asset3, @asset1]

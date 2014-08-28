@@ -170,7 +170,6 @@ describe 'collection', :type => :feature do
     end
 
     it "should remove a file from a collection" do
-      pending "Will fail until projecthydra-labs/hydra-collections#48 is fixed"
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         first('button.dropdown-toggle').click
@@ -191,7 +190,6 @@ describe 'collection', :type => :feature do
     end
 
     it "should remove all files from a collection", js: true do
-      pending "Will fail until projecthydra-labs/hydra-collections#48 is fixed"
       expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click

@@ -22,7 +22,7 @@ EXTRA_GEMS =<<EOF
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'active-fedora', github: 'projecthydra/active_fedora', ref: '331a64092daf3c2b5f72e32db750287f1f5bd198'
 gem 'hydra-head', github: 'projecthydra/hydra-head', branch: 'fedora-4'
-gem 'hydra-collections', github: 'projecthydra-labs/hydra-collections', ref: '79810e74a76bd67bccfb5c0caf9f44eaa4df301b'
+gem 'hydra-collections', github: 'projecthydra-labs/hydra-collections', branch: 'fedora-4'
 gem 'hydra-derivatives', github: 'projecthydra-labs/hydra-derivatives', branch: 'fedora-4'
 
 EOF
