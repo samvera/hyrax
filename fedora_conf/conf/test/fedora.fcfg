@@ -464,7 +464,7 @@
       <comment>The local path for the Fedora-METS 1.0 XML
             schema used to do XML schema validation of digital objects.</comment>
     </param>
-    <param name="xsd_xacml_policy1.0" value="xsd/cs-xacml-schema-policy-1.0.xsd">
+    <param name="xsd_xacml_policy1.0" value="xsd/cs-xacml-schema-policy-01.xsd">
       <comment>The local path for the OASIS XACML XML policy schema 
 			used to do XML schema validation of XACML policies.</comment>
     </param>
