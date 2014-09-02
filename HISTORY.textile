@@ -1,3 +1,6 @@
+h3. 7.2.1 (2014-9-2)
+* 2014-09-02: Fix problem Cannot define multiple 'included' blocks. #201 & #202
+
 h3. 7.2.0 (2014-07-18)
 * 2014-07-14: Unifying download response header behavior [Jeremy Friesen]
 * 2014-07-17: Ability should use the rails logger rather than Loggable [Justin Coyne]
