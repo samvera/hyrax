@@ -7,8 +7,8 @@ describe Hydra::AccessControls::Embargoable do
       def save(returning_value = true)
         valid? && run_callbacks(:save) && !!returning_value
       end
-      
-      include Hydra::AccessControls::Embargoable  
+
+      include Hydra::AccessControls::Embargoable
     }
   }
 
