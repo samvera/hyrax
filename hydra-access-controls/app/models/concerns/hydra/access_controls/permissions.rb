@@ -3,9 +3,9 @@ module Hydra
     module Permissions
       extend ActiveSupport::Concern
       extend Deprecation
-      include Hydra::AccessControls::Visibility
 
       included do
+        include Hydra::AccessControls::Visibility
         has_metadata "rightsMetadata", type: Hydra::Datastream::RightsMetadata
       end
 
