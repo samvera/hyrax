@@ -1011,35 +1011,44 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "should create a full to_solr record" do
+  describe "to_solr record" do
+    let(:depositor) { 'jcoyne' }
     subject do
       GenericFile.new.tap do |f|
-        f.apply_depositor_metadata('jcoyne')
+        f.apply_depositor_metadata(depositor)
         f.save
       end
     end
-    let(:mime_type_key) { Solrizer.solr_name("mime_type") }
+    let(:depositor_key) { Solrizer.solr_name("depositor") }
     let(:title_key) { Solrizer.solr_name("title", :stored_searchable, type: :string) }
+    let(:title) { ["abc123"] }
+    let(:no_terms) { GenericFile.find(subject.id).to_solr }
+    let(:terms) { 
+      file = GenericFile.find(subject.id)
+      file.title = title
+      file.save
+      file.to_solr
+    }
 
     after do
       subject.destroy
     end
 
-    it "gets both sets of data into solr" do
-      skip "We need to store characterization info in a property"
-      f1 =  GenericFile.find(subject.id)
-      f2 =  GenericFile.find(subject.id)
-      f1.mime_type = "video/abc123" # stored in the characterization datastream
-      f2.title = ["abc123"]
-      expect(f2.mime_type).to eq ''
-      f1.save
-      f2.save
-      solr = f2.to_solr
-      expect {
-        f2.save
-      }.to change{ f2.to_solr[mime_type_key] }.from(['']).to(["video/abc123"])
-      expect(f2.to_solr[title_key]).to eq ["abc123"]
+    context "without terms" do
+      specify "title is nil" do
+        expect(no_terms[title_key]).to be_nil
+      end
     end
+
+    context "with terms" do
+      specify "depositor is set" do
+        expect(terms[depositor_key].first).to eql(depositor)
+      end
+      specify "title is set" do
+        expect(terms[title_key]).to eql(title)
+      end
+    end
+
   end
 
   describe "public?" do

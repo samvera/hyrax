@@ -56,11 +56,10 @@ describe Sufia::GenericFile::Actor do
 
     let(:actor) { Sufia::GenericFile::Actor.new(generic_file_with_label, user)}
 
-    it "uses the label instead of the path" do
-      skip "Fedora4 doesn't have labels. Should we use something else?"
+    it "uses the original name instead of the path" do
       allow(actor).to receive(:save_characterize_and_record_committer).and_return("true")
       actor.create_content(Tempfile.new('foo'), 'tmp\foo', 'content')
-      expect(generic_file_with_label.content.dsLabel).to eq generic_file_with_label.label
+      expect(generic_file_with_label.content.original_name).to eq generic_file_with_label.label
     end
   end
 
