@@ -32,9 +32,7 @@ module Sufia
 
     config.assets.paths << config.root.join('vendor', 'assets', 'fonts')
     config.assets.precompile << %r(vjs\.(?:eot|ttf|woff)$)
-    config.assets.precompile += %w( fontawesome-webfont.woff )
-    config.assets.precompile += %w( fontawesome-webfont.ttf )
-    config.assets.precompile += %w( fontawesome-webfont.svg )
+    config.assets.precompile << %r(fontawesome-webfont\.(?:svg|ttf|woff)$)
     config.assets.precompile += %w( ZeroClipboard.swf )
   end
 end
