@@ -3,6 +3,7 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
 require 'jettywrapper'
+Jettywrapper.hydra_jetty_version = "v7.1.0"
 require 'engine_cart/rake_task'
 
 desc 'Spin up hydra-jetty and run specs'
