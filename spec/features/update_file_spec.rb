@@ -22,7 +22,7 @@ describe "Editing attached files" do
     attach_file("Upload a file", fixture_file_path('files/image.png'))
     click_button "Update Attached File"
 
-    expect(generic_file.reload.content.label).to eq 'image.png'
     expect(page).to have_content "The file image.png has been updated."
+    expect(generic_file.reload.content.label).to eq 'image.png'
   end
 end

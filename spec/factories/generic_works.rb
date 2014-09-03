@@ -17,12 +17,21 @@ FactoryGirl.define do
     end
 
     factory :work_with_files do
-      after(:build) { |work, evaluator| 2.times { work.generic_files << FactoryGirl.build(:generic_file) }}
+      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.build(:generic_file) }}
     end
 
     factory :embargoed_work do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      embargo_release_date { Date.tomorrow.to_s }
+      after(:build) { |work, _| work.apply_embargo(Date.tomorrow.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+    end
+
+    factory :embargoed_work_with_files do
+      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.build(:generic_file) }}
+      after(:build) { |work, _| work.apply_embargo(Date.tomorrow.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+    end
+
+    factory :leased_work_with_files do
+      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.build(:generic_file) }}
+      after(:build) { |work, _| work.apply_lease(Date.tomorrow.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
     end
   end
 end

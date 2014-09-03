@@ -7,7 +7,7 @@ describe VisibilityCopyWorker do
     subject { VisibilityCopyWorker.new(work.id) }
 
     it "should have no content at the outset" do
-      work.generic_files.first.visibility.should == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      expect(work.generic_files.first.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
     end
 
     it "should copy visibility to its contained files" do
@@ -15,29 +15,54 @@ describe VisibilityCopyWorker do
       work.save
       subject.run
       work.reload.generic_files.each do |file|
-        file.visibility.should == 'open'
+        expect(file.visibility).to eq 'open'
       end
     end
   end
 
   describe "an embargoed work" do
-    let(:embargo_date) { 2.days.from_now }
-    let(:work) { FactoryGirl.create(:work_with_files, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, embargo_release_date: embargo_date) }
+    let(:work) { FactoryGirl.create(:embargoed_work_with_files) }
     subject { VisibilityCopyWorker.new(work.id) }
 
-    it "should have no content at the outset" do
-      work.should be_open_access_with_embargo_release_date
-      work.generic_files.first.should_not be_open_access_with_embargo_release_date
+    before do
+      expect(work.visibility).to eq 'restricted'
+      expect(work).to be_under_embargo
+      expect(work.generic_files.first).to_not be_under_embargo
     end
 
-    it "should copy visibility to its contained files" do
-      skip "See https://github.com/curationexperts/absolute/issues/164"
-      subject.run
-      work.reload
-      work.generic_files.each do |file|
-        file.should be_open_access_with_embargo_release_date
+    context "when run" do
+      before do
+        subject.run
+        work.reload
+      end
+      let(:file) { work.generic_files.first }
+
+      it "should copy visibility to its contained files" do
+        expect(file).to be_under_embargo
       end
     end
   end
 
+  describe "an leased work" do
+    let(:work) { FactoryGirl.create(:leased_work_with_files) }
+    subject { VisibilityCopyWorker.new(work.id) }
+
+    before do
+      expect(work.visibility).to eq 'open'
+      expect(work).to be_active_lease
+      expect(work.generic_files.first).to_not be_active_lease
+    end
+
+    context "when run" do
+      before do
+        subject.run
+        work.reload
+      end
+      let(:file) { work.generic_files.first }
+
+      it "should copy visibility to its contained files" do
+        expect(file).to be_active_lease
+      end
+    end
+  end
 end

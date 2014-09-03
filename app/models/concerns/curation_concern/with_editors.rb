@@ -6,7 +6,7 @@ module CurationConcern
       self.edit_groups += [group]
     end
 
-    # @param groups [Array<String>] a list of group names to add 
+    # @param groups [Array<String>] a list of group names to add
     def add_editor_groups(groups)
       groups.each { |g| add_editor_group(g) }
     end
