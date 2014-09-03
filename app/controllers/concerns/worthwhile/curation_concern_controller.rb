@@ -2,20 +2,20 @@ module Worthwhile::CurationConcernController
   extend ActiveSupport::Concern
   include Worthwhile::WithoutNamespace
   include Blacklight::Catalog::SearchContext
-  
+
   included do
     include Worthwhile::ThemedLayoutController
     with_themed_layout '1_column'
     helper Worthwhile::AbilityHelper
-    
+
     class_attribute :curation_concern_type
     attr_accessor :curation_concern
     helper_method :curation_concern
     helper_method :contributor_agreement
-    
+
     respond_to :html
-  end   
-  
+  end
+
   module ClassMethods
     def set_curation_concern_type(curation_concern_type)
       load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern
@@ -26,7 +26,7 @@ module Worthwhile::CurationConcernController
       Worthwhile::ControllerResource
     end
   end
-  
+
   def contributor_agreement
     @contributor_agreement ||= Worthwhile::ContributorAgreement.new(curation_concern, current_user, params)
   end
@@ -71,7 +71,7 @@ module Worthwhile::CurationConcernController
   end
 
   attr_writer :actor
-  
+
   protected
     def actor
       @actor ||= Worthwhile::CurationConcern.actor(curation_concern, current_user, attributes_for_actor)

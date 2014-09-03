@@ -49,12 +49,14 @@ describe LeasesController do
         expect(response).to render_template :unauthorized
       end
     end
+
     context "when I have permission to edit the object" do
       before do
         expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
         a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         a_work.lease_expiration_date = release_date.to_s
+        expect(Sufia.queue).to receive(:push).with(an_instance_of(VisibilityCopyWorker))
         get :destroy, id: a_work
       end
 

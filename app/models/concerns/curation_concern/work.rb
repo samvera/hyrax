@@ -15,7 +15,7 @@ module CurationConcern::Work
     has_metadata "properties", type: Worthwhile::PropertiesDatastream
     has_attributes :depositor, :representative, datastream: :properties, multiple: false
   end
-  
+
   def to_solr(solr_doc={}, opts={})
     super(solr_doc, opts)
     Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)

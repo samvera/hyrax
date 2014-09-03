@@ -9,11 +9,11 @@ module Worthwhile
   #     include Worthwile::ManagesEmbargoesActor
   #
   #     def create
-  #       interpret_visibility && super
+  #       interpret_visibility && super && copy_visibility
   #     end
   #
   #     def update
-  #       interpret_visibility && super
+  #       interpret_visibility && super && copy_visibility
   #     end
   #  end
   #
@@ -43,6 +43,7 @@ module Worthwhile
         attributes.delete(:visibility)
         curation_concern.apply_embargo(attributes[:embargo_release_date], attributes.delete(:visibility_during_embargo),
                                        attributes.delete(:visibility_after_embargo))
+        @needs_to_copy_visibility = true
         true
       end
     end
@@ -51,7 +52,7 @@ module Worthwhile
     # Returns false if there are any errors and sets an error on the curation_concern
     def interpret_lease_visibility
       if attributes[:visibility] != Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
-        # clear lease_expiration_date even if it isn't being used. Otherwise it sets the lease_expiration 
+        # clear lease_expiration_date even if it isn't being used. Otherwise it sets the lease_expiration
         # even though they didn't select lease on the form.
         attributes.delete(:visibility_during_lease)
         attributes.delete(:visibility_after_lease)
@@ -63,25 +64,16 @@ module Worthwhile
       else
         curation_concern.apply_lease(attributes[:lease_expiration_date], attributes.delete(:visibility_during_lease),
                                        attributes.delete(:visibility_after_lease))
+        @needs_to_copy_visibility = true
         attributes.delete(:visibility)
         true
       end
     end
 
-    # def apply_embargo_visibility(assets)
-    #   response = {}
-    #   Array(assets).each do |asset|
-    #     response[asset.pid] = asset.apply_embargo_visibility!
-    #   end
-    #   response
-    # end
 
-    # def apply_lease_visibility(assets)
-    #   response = {}
-    #   Array(assets).each do |asset|
-    #     response[asset.pid] = asset.apply_lease_visibility!
-    #   end
-    #   response
-    # end
+    def copy_visibility
+      Sufia.queue.push(VisibilityCopyWorker.new(curation_concern.id)) if @needs_to_copy_visibility
+      true
+    end
   end
 end

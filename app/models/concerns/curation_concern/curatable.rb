@@ -1,7 +1,7 @@
 # Replaces Curate's CurationConcern::Model
 module CurationConcern::Curatable
   extend ActiveSupport::Concern
-  
+
   included do
     include ::CurationConcern::HumanReadableType
     include Sufia::Noid
@@ -12,13 +12,13 @@ module CurationConcern::Curatable
 
     # Modules in Curate's CurationConcern::Model that we _might_ pull in later
     # include Curate::ActiveModelAdaptor
-    
+
     has_metadata 'properties', type: Worthwhile::PropertiesDatastream
     has_attributes :relative_path, :depositor, :owner, datastream: :properties, multiple: false
     class_attribute :human_readable_short_description
     attr_accessor :files
   end
-  
+
   def as_json(options)
     { pid: pid, title: title, model: self.class.to_s, curation_concern_type: human_readable_type }
   end
@@ -36,11 +36,11 @@ module CurationConcern::Curatable
   end
 
   def to_s
-    title
+    title.join(', ')
   end
 
   # Returns a string identifying the path associated with the object. ActionPack uses this to find a suitable partial to represent the object.
-  def to_partial_path 
+  def to_partial_path
     "curation_concern/#{super}"
   end
 

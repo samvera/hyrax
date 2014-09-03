@@ -17,7 +17,7 @@ describe CurationConcern::LinkedResourcesController do
       sign_in(user)
       parent
       get :new, parent_id: parent.to_param
-      response.should be_successful
+      expect(response).to be_successful
       expect(response).to render_template(:new)
     end
 
@@ -39,7 +39,7 @@ describe CurationConcern::LinkedResourcesController do
     it 'redirects to the parent work' do
       sign_in(user)
       parent
-      actor.should_receive(actors_action).and_return(success)
+      expect(actor).to receive(actors_action).and_return(success)
       controller.actor = actor
 
       post(:create, parent_id: parent.to_param,
@@ -55,14 +55,14 @@ describe CurationConcern::LinkedResourcesController do
       it 'renders the form' do
         sign_in(user)
         parent
-        actor.should_receive(actors_action).and_return(failure)
+        expect(actor).to receive(actors_action).and_return(failure)
         controller.actor = actor
 
         post(:create, parent_id: parent.to_param,
              linked_resource: { url: you_tube_link }
              )
         expect(response).to render_template('new')
-        response.status.should == 422
+        expect(response.status).to eq 422
       end
     end
   end
@@ -71,21 +71,19 @@ describe CurationConcern::LinkedResourcesController do
         linked_resource
         sign_in user
         get :edit, id: linked_resource.to_param
-        controller.curation_concern.should be_kind_of(Worthwhile::LinkedResource)
-        response.should be_successful
+        expect(controller.curation_concern).to be_kind_of(Worthwhile::LinkedResource)
+        expect(response).to be_successful
       end
     end
 
     describe '#update' do
       let(:updated_title) { Time.now.to_s }
       let(:failing_actor) {
-        actor.
-        should_receive(:update).
-        and_return(false)
+        expect(actor).to receive(:update).and_return(false)
         actor
       }
       let(:successful_actor) {
-        actor.should_receive(:update).and_return(true)
+        expect(actor).to receive(:update).and_return(true)
         actor
       }
       let(:actor) { double('actor') }
@@ -95,7 +93,7 @@ describe CurationConcern::LinkedResourcesController do
         sign_in(user)
         put :update, id: linked_resource.to_param, linked_resource: {title: updated_title}
         expect(response).to render_template('edit')
-        response.status.should == 422
+        expect(response.status).to eq 422
       end
 
       it 'redirects to parent when successful' do

@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+
 describe CurationConcern::GenericFilesController do
   let(:user) { FactoryGirl.create(:user) }
   let(:file) { fixture_file_upload('files/image.png','image/png') }
@@ -27,7 +28,12 @@ describe CurationConcern::GenericFilesController do
           expect(Sufia.queue).to receive(:push).with(s2).once
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
-                 permission: { group: { 'public' => 'read' } }
+              generic_file: { "title"=>[""], visibility_during_embargo: "restricted",
+                              embargo_release_date: "2014-08-23",
+                              visibility_after_embargo: "open", visibility_during_lease: "open",
+                              lease_expiration_date: "2014-08-23",
+                              visibility_after_lease: "restricted",
+                              visibility: "restricted"}
             expect(response).to be_success
           }.to change { Worthwhile::GenericFile.count }.by(1)
           expect(flash[:error]).to be_nil
@@ -43,6 +49,13 @@ describe CurationConcern::GenericFilesController do
           version = saved_file.content.latest_version
           expect(version.versionID).to eq "content.0"
           expect(saved_file.content.version_committer(version)).to eq user.email
+
+          # Confirm that embargo/lease are not set.
+          expect(saved_file).to_not be_under_embargo
+          expect(saved_file).to_not be_active_lease
+          # Presently it's coping from the parent and disregarding what is on the form.
+          # expect(saved_file.visibility).to eq 'restricted'
+          expect(saved_file.visibility).to eq 'open'
         end
 
         it "copies visibility from the parent" do
@@ -121,14 +134,14 @@ describe CurationConcern::GenericFilesController do
 
       context "updating metadata" do
         it "should be successful" do
-          post :update, id: generic_file, generic_file: 
+          post :update, id: generic_file, generic_file:
             {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
           expect(response).to redirect_to [:curation_concern, generic_file]
         end
 
         it "should go back to edit on an error" do
           allow_any_instance_of(Worthwhile::GenericFile).to receive(:valid?).and_return(false)
-          post :update, id: generic_file, generic_file: 
+          post :update, id: generic_file, generic_file:
             {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
           expect(response).to be_successful
           expect(response).to render_template('edit')
@@ -137,7 +150,7 @@ describe CurationConcern::GenericFilesController do
 
         it "should add a new groups and users" do
           skip
-          post :update, id: generic_file, generic_file: 
+          post :update, id: generic_file, generic_file:
             { title: 'new_title', tag: [''], permissions: { new_group_name: {'group1'=>'read'}, new_user_name: {'user1'=>'edit'}}}
 
           expect(assigns[:generic_file].read_groups).to eq ["group1"]
@@ -148,7 +161,7 @@ describe CurationConcern::GenericFilesController do
           skip
           generic_file.read_groups = ['group3']
           generic_file.save! # TODO slow test, more than one save.
-          post :update, id: generic_file, generic_file: 
+          post :update, id: generic_file, generic_file:
             { title: 'new_title', tag: [''], permissions: { new_group_name: '', new_user_name: '', group: {'group3' => 'read' }}}
           expect(assigns[:generic_file].read_groups).to eq ["group3"]
         end
@@ -165,12 +178,12 @@ describe CurationConcern::GenericFilesController do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
-          post :update, id: generic_file, file: file
+          post :update, id: generic_file, files: [file]
           expect(response).to redirect_to [:curation_concern, generic_file]
           expect(generic_file.reload.label).to eq 'image.png'
         end
       end
- 
+
       context "restoring an old version" do
         before do
           allow(Sufia.queue).to receive(:push) # don't run characterization jobs

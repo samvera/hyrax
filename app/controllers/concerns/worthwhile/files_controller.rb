@@ -30,7 +30,7 @@ module Worthwhile
     def create
       create_from_upload(params)
     end
-    
+
     def create_from_upload(params)
       # check error condition No files
       return json_error("Error! No file to save") if !params.has_key?(:files)
@@ -64,13 +64,13 @@ module Worthwhile
     def update
       success = if wants_to_revert?
         actor.revert_content(params[:revision], datastream_id)
-      elsif params.has_key? :file
-        actor.update_content(params[:file], datastream_id)
+      elsif params.has_key? :files
+        actor.update_content(params[:files].first, datastream_id)
       elsif params.has_key? :generic_file
         actor.update_metadata(params[:generic_file], params[:generic_file][:visibility])
       end
 
-      if success 
+      if success
         redirect_to [:curation_concern, @generic_file], notice:
           "The file #{view_context.link_to(@generic_file, [main_app, :curation_concern, @generic_file])} has been updated."
       else

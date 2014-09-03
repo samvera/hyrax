@@ -4,20 +4,17 @@
       <fieldset class="required">
         <legend>Your File&#8217;s Title</legend>
         <span class="control-label">
-          <label class="string optional" for="generic_file_title">Title</label>
+          <%= label_tag 'generic_file[title][]', 'Title',  class: "string optional" %>
         </span>
-        <%= text_field_tag 'generic_file[title]', curation_concern.title.first,
-                    input_html: { class: 'input-xlarge' }
-        %>
+        <%= text_field_tag 'generic_file[title][]', curation_concern.title.first, class: 'form-control' %>
       </fieldset>
       <fieldset class="required">
         <legend>
           Attach Your File
           <small>A PDF copy is preferred.</small>
         </legend>
-          
-          <%= label_tag 'file', 'Upload a file' %>
-          <%= file_field_tag "file" %>
+          <%= label_tag 'files[]', 'Upload a file' %>
+          <%= file_field_tag "files[]" %>
       </fieldset>
     </div>
 

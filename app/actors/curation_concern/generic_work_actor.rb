@@ -4,12 +4,12 @@ module CurationConcern
     include Worthwhile::ManagesEmbargoesActor
 
     def create
-      assign_pid && interpret_visibility && super && attach_files && create_linked_resources && assign_representative
+      assign_pid && interpret_visibility && super && attach_files && create_linked_resources && assign_representative && copy_visibility
     end
 
     def update
       add_to_collections(attributes.delete(:collection_ids)) && interpret_visibility  &&
-        super && attach_files && create_linked_resources
+        super && attach_files && create_linked_resources && copy_visibility
     end
 
     delegate :visibility_changed?, to: :curation_concern

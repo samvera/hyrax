@@ -6,10 +6,16 @@ class EmbargoesController < ApplicationController
 
   skip_before_filter :normalize_identifier, only: :update
 
+  # Remove an active or lapsed embargo
   def destroy
+    update_files = !curation_concern.under_embargo? # embargo expired
     remove_embargo(curation_concern)
     flash[:notice] = curation_concern.embargo_history.last
-    redirect_to edit_embargo_path(curation_concern)
+    if update_files
+      redirect_to confirm_curation_concern_permission_path(curation_concern)
+    else
+      redirect_to edit_embargo_path(curation_concern)
+    end
   end
 
   def update

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "Editing attached files" do
+describe "Add an attached file" do
   let(:user) { FactoryGirl.create(:user) }
-  let!(:generic_file) { FactoryGirl.create(:file_with_work, user: user) }
+  let!(:work) { FactoryGirl.create(:work, user: user) }
 
   before do
     sign_in user
@@ -14,15 +14,15 @@ describe "Editing attached files" do
   end
 
   it "should update the file" do
-    visit "/concern/generic_works/#{generic_file.batch.id}"
-    click_link 'Edit'
-
-    expect(page).to have_content "Updating Attached File to \"Test title\""
+    visit "/concern/generic_works/#{work.id}"
+    click_link 'Attach a File'
 
     attach_file("Upload a file", fixture_file_path('files/image.png'))
-    click_button "Update Attached File"
+    click_button "Attach to Generic Work"
 
-    expect(page).to have_content "The file image.png has been updated."
-    expect(generic_file.reload.content.label).to eq 'image.png'
+    within '.related_files' do
+      expect(page).to have_link "image.png"
+    end
   end
 end
+
