@@ -184,7 +184,7 @@ config.browse_everything = BrowseEverything.config
         * OR
     1. By adding/changing config/initializers/sufia.rb to point to your fits location:   `config.fits_path = "/<your full path>/fits.sh"`
 1. You may additionally need to chmod the fits.sh (chmod a+x fits.sh)
-1. You may need to restart your shell to pick up the changes to you path
+1. You may need to restart your shell to pick up the changes to your path
 1. You should be able to run "fits.sh" from the command line and see a help message
 
 ### Start background workers
