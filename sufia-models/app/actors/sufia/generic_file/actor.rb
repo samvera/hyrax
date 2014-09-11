@@ -69,11 +69,10 @@ module Sufia::GenericFile
     end
 
     def destroy
-      pid = generic_file.pid  #Work around for https://github.com/projecthydra/active_fedora/issues/422
       generic_file.destroy
-      FeaturedWork.where(generic_file_id: pid).destroy_all
+      FeaturedWork.where(generic_file_id: generic_file.pid).destroy_all
       if Sufia.config.respond_to?(:after_destroy)
-        Sufia.config.after_destroy.call(pid, user)
+        Sufia.config.after_destroy.call(generic_file.pid, user)
       end
     end
 
