@@ -57,16 +57,23 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 If you have questions or need help, please email [the Hydra community development list](mailto:hydra-tech@googlegroups.com).
 
 ## Creating an application
+
 ### Generate base Rails install
+
 ```rails new my_app```
+
 ### Add gems to Gemfile
+
 ```
 gem 'sufia', '~> 4.0.0'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
+
 Then `bundle install`
 
-Note the line with kaminari listed as a dependency.  This is a temporary fix to address a problem in the current release of kaminari. Technically you should not have to list kaminari, which is a dependency of blacklight and sufia.
+
+
+Users have 
 
 ### Run the sufia generator
 ```
@@ -111,6 +118,30 @@ Add this line at the bottom of the file:
 ```
 
 Turbolinks does not mix well with Blacklight.
+
+### Install Notes
+
+#### Kaminari
+
+The line with kaminari listed as a dependency in Gemfile is a temporary fix to address a 
+[problem](https://github.com/amatsuda/kaminari/pull/322) in the current release of kaminari. 
+Technically you should not have to list kaminari, which is a dependency of blacklight and sufia.
+
+#### Bundler
+
+Users have reported problems with the initial `bundle install` command, seeing an error such as:
+
+```
+Bundler could not find compatible versions for gem "bootstrap-sass":
+  In Gemfile:
+    sufia (~> 4.0.0) ruby depends on
+      bootstrap-sass (< 3.2) ruby
+
+    sufia (~> 4.0.0) ruby depends on
+      bootstrap-sass (3.2.0.2)
+```
+
+The solution is to update your bundler gem to the latest version.
 
 ### Analytics
 
