@@ -71,10 +71,6 @@ gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # re
 
 Then `bundle install`
 
-
-
-Users have 
-
 ### Run the sufia generator
 ```
 rails generate sufia:install -f
