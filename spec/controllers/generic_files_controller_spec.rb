@@ -390,106 +390,82 @@ describe GenericFilesController do
       end
     end
 
-    describe "restoring an old version" do
+    context "with two existing versions from different users" do
+
+      let(:file1)       { "world.png" }
+      let(:file1_type)  { "image/png" }
+      let(:file2)       { "image.jpg" }
+      let(:file2_type)  { "image/jpeg" }
+      let(:first_user)  { FactoryGirl.find_or_create(:jill)}
+      let(:second_user) { FactoryGirl.find_or_create(:archivist) }
+      let(:version1)    { generic_file.content.versions[1] }
+      let(:version2)    { generic_file.content.versions[2] }
+
       before do
         allow_any_instance_of(GenericFile).to receive(:characterize)
+        sign_in first_user
+        actor1 = Sufia::GenericFile::Actor.new(generic_file, first_user)
+        image1 = fixture_file_upload(file1)
+        actor1.create_content(image1, file1, 'content')
+        sign_in second_user
+        actor2 = Sufia::GenericFile::Actor.new(generic_file, second_user)
+        image2 = fixture_file_upload(file2)
+        actor2.create_content(image2, file2, 'content')
       end
 
-      it "should change mime type when restoring a revision with a different mime type" do
-        skip "Skipping version restore for now"
-        @user = FactoryGirl.find_or_create(:jill)
-        sign_in @user
-        actor = Sufia::GenericFile::Actor.new(generic_file, @user)
-
-        image1 = fixture_file_upload('/world.png','image/png')
-        actor.create_content(image1, 'world.png', 'content')
-
-        posted_file = GenericFile.find(generic_file.pid)
-        version1 = posted_file.content.latest_version
-        expect(posted_file.content.version_committer(version1)).to eq @user.user_key
-
-        image2 = fixture_file_upload('/image.jpg','image/jpg')
-        actor.create_content(image2, 'image.jpg', 'content')
-
-        posted_file = GenericFile.find(generic_file.pid)
-        version2 = posted_file.content.latest_version
-        expect(version2).to_not eq version1
-        expect(posted_file.content.version_committer(version2)).to eq @user.user_key
-
-        expect(posted_file.content.mime_type).to eq "image/jpeg"
-        post :update, id: generic_file, revision: 'content.0'
-
-        restored_file = GenericFile.find(generic_file.pid)
-        version3 = restored_file.content.latest_version
-        expect(version3).not_to eq version2
-        expect(version3).not_to eq version1
-        expect(restored_file.content.version_committer(version3)).to eq @user.user_key
-        expect(restored_file.content.mime_type).to eq "image/png"
+      it "should have two versions (plus the root version)" do
+        expect(generic_file.content.versions.count).to eq 3
       end
 
-      context "when two users edit a file" do
-        let(:archivist) { FactoryGirl.find_or_create(:archivist) }
-        let(:user) { FactoryGirl.find_or_create(:jill) }
-        let(:generic_file) do
-          GenericFile.new.tap do |gf|
-            gf.apply_depositor_metadata(user)
-            gf.edit_users = [user.user_key, archivist.user_key]
-            gf.save!
+      it "should have the current version" do
+        expect(generic_file.content.latest_version).to eql(version2)
+        expect(generic_file.content.mime_type).to eql(file2_type)
+        expect(generic_file.content.original_name).to eql(file2)
+      end
+
+      it "should use the first version for the object's title and label" do
+        expect(generic_file.label).to eql(file1)
+        expect(generic_file.title.first).to eql(file1)
+      end
+
+      it "should note the user for each version" do
+        expect(generic_file.content.version_committer(version1)).to eql(first_user.user_key)
+        expect(generic_file.content.version_committer(version2)).to eql(second_user.user_key)
+      end
+
+      describe "restoring a previous verion" do
+
+        context "as the first user" do
+          before do
+            sign_in first_user
+          end
+
+          context "using the first user's version" do
+            before do
+              post :update, id: generic_file, revision: version1
+            end
+            let(:restored_file)  { GenericFile.find(generic_file.pid) }
+            let(:latest_version) { GenericFile.find(generic_file.pid).content.latest_version }
+            it "should create a new version with the previous version's info" do
+              expect(restored_file.content.mime_type).to eql(file1_type)
+              expect(restored_file.content.original_name).to eql(file1)
+              expect(restored_file.content.versions.count).to eq 4
+              expect(restored_file.content.versions[3]).to eql(latest_version)
+              expect(restored_file.content.version_committer(latest_version)).to eql(first_user.user_key)
+            end
           end
         end
-        before do
-          allow_any_instance_of(Sufia::GenericFile::Actor).to receive(:push_characterize_job)
-          sign_in user
+
+        context "as the second user" do
+          before do
+            sign_in second_user
+          end
+          it "should not create a new version" do
+            post :update, id: generic_file, revision: version1
+            expect(response).to be_redirect
+          end
         end
 
-        it "records which user added a new version" do
-          skip "Skipping version restore for now"
-          file = fixture_file_upload('/world.png','image/png')
-          post :update, id: generic_file, filedata: file
-
-          posted_file = GenericFile.find(generic_file.pid)
-          version1 = posted_file.content.latest_version
-          expect(posted_file.content.version_committer(version1)).to eq(user.user_key)
-
-          # other user uploads new version
-          # TODO this should be a separate test
-          allow(controller).to receive(:current_user).and_return(archivist)
-          # reset controller:
-          controller.instance_variable_set(:@actor, nil)
-
-          expect(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').never
-
-          s1 = double('one')
-          allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, archivist.user_key).and_return(s1)
-          expect(Sufia.queue).to receive(:push).with(s1).once
-
-          file = fixture_file_upload('/image.jpg', 'image/jpg')
-          post :update, id: generic_file, filedata: file
-
-          edited_file = generic_file.reload
-          version2 = edited_file.content.latest_version
-          expect(version2).not_to eq(version1)
-          expect(edited_file.content.version_committer(version2)).to eq(archivist.user_key)
-
-          # original user restores his or her version
-          allow(controller).to receive(:current_user).and_return(user)
-          sign_in user
-          expect(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').never
-          s1 = double('one')
-          allow(ContentRestoredVersionEventJob).to receive(:new).with(generic_file.pid, user.user_key, 'content.0').and_return(s1)
-          expect(Sufia.queue).to receive(:push).with(s1).once
-
-          # reset controller:
-          controller.instance_variable_set(:@actor, nil)
-
-          post :update, id: generic_file, revision: 'content.0'
-
-          restored_file = generic_file.reload
-          version3 = restored_file.content.latest_version
-          expect(version3).not_to eq(version2)
-          expect(version3).not_to eq(version1)
-          expect(restored_file.content.version_committer(version3)).to eq(user.user_key)
-        end
       end
     end
 

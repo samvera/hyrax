@@ -7,12 +7,16 @@ module Sufia
         has_many_versions
       end
 
-      def get_version(version_id)
-        versions.select { |v| v.versionID == version_id}.first
+      def uuid_for(version_id)
+        version_id.to_s.split("/").last
       end
 
       def latest_version
         versions.last
+      end
+
+      def root_version
+        versions.first
       end
 
       def version_committer(version)
@@ -25,6 +29,7 @@ module Sufia
           create_version if passing
         end
       end
+      
     end
   end
 end

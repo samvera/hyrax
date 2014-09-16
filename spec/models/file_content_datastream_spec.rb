@@ -12,40 +12,38 @@ describe FileContentDatastream, :type => :model do
     after do
       @file.delete
     end
-    it "should have a list of versions with one entry" do
-      @file.content.versions.count == 1
+    let(:root_version) { @file.content.versions.first }
+    it "should have a list of versions including the root version" do
+      expect(@file.content.versions).to be_kind_of(Array)
+      expect(@file.content.versions.count).to eql(2)
     end
-    it "should return the expected version ID" do
-      skip "Skipping versions for now"
-      expect(@file.content.versions.first.versionID).to eq("content.0")
+    it "should return a RDF::URI for the version" do
+      expect(@file.content.versions.first).to be_kind_of(RDF::URI)
     end
-    it "should support latest_version" do
-      skip "Skipping versions for now"
-      expect(@file.content.latest_version.versionID).to eq("content.0")
+    it "should contain the root version" do
+      expect(@file.content.root_version).to eql(root_version)
     end
-    it "should return the same version via get_version" do
-      skip "Skipping versions for now"
-      expect(@file.content.get_version("content.0").versionID).to eq(@file.content.latest_version.versionID)
-    end
-    it "should not barf when a garbage ID is provided to get_version"  do
-      skip "Skipping versions for now"
-      expect(@file.content.get_version("foobar")).to be_nil
+    context "with the latest version" do
+      let(:latest_version) { @file.content.versions.last }
+      it "should return the latest version" do
+        expect(@file.content.latest_version.to_s).to eql(latest_version.to_s)
+      end
     end
     describe "add a version" do
       before do
         @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         @file.save
       end
-      it "should return two versions" do
-        @file.content.versions.count == 2
+      let(:latest_version) { @file.content.versions.last }
+      let(:uuid) { @file.content.versions.last.to_s.split("/").last  }
+      it "should return the root verion and two additional versions" do
+        expect(@file.content.versions.count).to eql(3)
       end
       it "should return the newer version via latest_version" do
-        skip "Skipping versions for now"
-        expect(@file.content.versions.first.versionID).to eq("content.1")
+        expect(@file.content.latest_version.to_s).to eql(latest_version.to_s)
       end
-      it "should return the same version via get_version" do
-        skip "Skipping versions for now"
-        expect(@file.content.get_version("content.1").versionID).to eq(@file.content.latest_version.versionID)
+      it "should return the same version using the version's UUID" do
+        expect(@file.content.uuid_for(latest_version)).to eql(uuid)
       end
     end
   end

@@ -138,7 +138,7 @@ module Sufia
     protected
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.to_s
     end
 
     def actor
@@ -146,7 +146,7 @@ module Sufia
     end
 
     def update_version
-      actor.revert_content(params[:revision], datastream_id)
+      actor.revert_content(params[:revision])
     end
 
     def update_file

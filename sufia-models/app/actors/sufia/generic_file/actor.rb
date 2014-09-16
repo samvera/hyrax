@@ -28,8 +28,7 @@ module Sufia::GenericFile
     end
 
     def create_content(file, file_name, dsid)
-      fname = generic_file.label.blank? ? file_name.truncate(255) : generic_file.label
-      generic_file.add_file(file, dsid, fname)
+      generic_file.add_file(file, dsid, file_name.truncate(255))
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_create_content)
           Sufia.config.after_create_content.call(generic_file, user)
@@ -37,9 +36,9 @@ module Sufia::GenericFile
       end
     end
 
-    def revert_content(revision_id, datastream_id)
-      revision = generic_file.content.get_version(revision_id)
-      generic_file.add_file(revision.content, datastream_id, revision.label)
+    def revert_content(revision_id)
+      uuid = generic_file.content.uuid_for(revision_id)
+      generic_file.content.restore_version(uuid)
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_revert_content)
           Sufia.config.after_revert_content.call(generic_file, user, revision_id)

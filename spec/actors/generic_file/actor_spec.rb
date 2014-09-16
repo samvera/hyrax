@@ -47,19 +47,27 @@ describe Sufia::GenericFile::Actor do
   end
 
   context "when a label is already specified" do
+    let(:label)    { "test_file.png" }
+    let(:new_file) { "foo.jpg" }
     let(:generic_file_with_label) do
       GenericFile.new.tap do |f|
         f.apply_depositor_metadata(user.user_key)
-        f.label = "test_file.name"
+        f.label = label
       end
     end
-
     let(:actor) { Sufia::GenericFile::Actor.new(generic_file_with_label, user)}
 
-    it "uses the original name instead of the path" do
+    before do
       allow(actor).to receive(:save_characterize_and_record_committer).and_return("true")
-      actor.create_content(Tempfile.new('foo'), 'tmp\foo', 'content')
-      expect(generic_file_with_label.content.original_name).to eq generic_file_with_label.label
+      actor.create_content(Tempfile.new(new_file), new_file, "content")
+    end
+
+    it "will retain the object's original label" do
+      expect(generic_file_with_label.label).to eql(label)
+    end
+
+    it "will use the new file's name" do
+      expect(generic_file_with_label.content.original_name).to eql(new_file)
     end
   end
 
