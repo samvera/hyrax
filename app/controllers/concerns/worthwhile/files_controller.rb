@@ -89,7 +89,11 @@ module Worthwhile
     end
 
     def actor
-      @actor ||= ::CurationConcern::GenericFileActor.new(@generic_file, current_user)
+      @actor ||= ::CurationConcern::GenericFileActor.new(@generic_file, current_user, attributes)
+    end
+
+    def attributes
+      params[:generic_file]
     end
 
     def json_error(error, name=nil, additional_arguments={})

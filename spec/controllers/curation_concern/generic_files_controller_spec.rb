@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe CurationConcern::GenericFilesController do
   let(:user) { FactoryGirl.create(:user) }
   let(:file) { fixture_file_upload('files/image.png','image/png') }
@@ -166,10 +165,27 @@ describe CurationConcern::GenericFilesController do
           expect(assigns[:generic_file].read_groups).to eq ["group3"]
         end
 
-        it "should update visibility" do
-          new_visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-          post :update, id: generic_file, generic_file: {visibility: new_visibility, embargo_release_date:""}
-          expect(generic_file.reload.visibility).to eq new_visibility
+        context "updating visibility" do
+          it "should apply public" do
+            new_visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+            post :update, id: generic_file, generic_file: {visibility: new_visibility, embargo_release_date:""}
+            expect(generic_file.reload.visibility).to eq new_visibility
+          end
+
+          it "should apply embargo" do
+            post :update, id: generic_file, generic_file: {
+              visibility: 'embargo',
+              visibility_during_embargo: "restricted",
+              embargo_release_date: "2099-09-05",
+              visibility_after_embargo: "open",
+              visibility_during_lease: "open",
+              lease_expiration_date: "2099-09-05",
+              visibility_after_lease: "restricted"
+            }
+            generic_file.reload
+            expect(generic_file).to be_under_embargo
+            expect(generic_file).to_not be_active_lease
+          end
         end
       end
 
