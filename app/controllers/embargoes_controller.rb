@@ -20,9 +20,11 @@ class EmbargoesController < ApplicationController
 
   def update
     filter_docs_with_edit_access!
+    copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] }
     batch.each do |id|
       ActiveFedora::Base.find(id).tap do |curation_concern|
         remove_embargo(curation_concern)
+        curation_concern.copy_visibility_to_files if copy_visibility.include?(id)
       end
     end
     redirect_to embargoes_path

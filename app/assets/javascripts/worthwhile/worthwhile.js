@@ -7,6 +7,7 @@
 //= require worthwhile/facet_mine
 //= require worthwhile/accept_contributor_agreement
 //= require worthwhile/proxy_submission
+//= require worthwhile/embargoes
 
 
 // Initialize plugins and Bootstrap dropdowns on jQuery's ready event as well as

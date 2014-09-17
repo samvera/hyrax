@@ -83,20 +83,24 @@ describe EmbargoesController do
 
   describe "#update" do
     context "when I have permission to edit the object" do
+      let(:a_file) { FactoryGirl.build(:generic_file, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
       before do
+        a_work.generic_files << a_file
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.embargo_release_date = release_date.to_s
         a_work.save(validate: false)
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+        # expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+        # expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
       end
 
       context "with an expired embargo" do
         let(:release_date) { Date.today-2 }
         it "should deactivate embargo, update the visibility and redirect" do
-          patch :update, batch_document_ids: [a_work.pid]
-          expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          patch :update, batch_document_ids: [a_work.pid], embargoes: { "0" => { copy_visibility: a_work.id} }
+          expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(a_file.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(response).to redirect_to embargoes_path
         end
       end
