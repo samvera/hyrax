@@ -20,11 +20,16 @@ module Worthwhile
       say_status("warning", "Removing Blacklight's generated CatalogController...", :yellow)
       remove_file('app/controllers/catalog_controller.rb')
     end
-    
+
     def inject_application_controller_behavior
       inject_into_file 'app/controllers/application_controller.rb', :after => /Blacklight::Controller\s*\n/ do
         "  include Worthwhile::ApplicationControllerBehavior\n"
       end
+    end
+
+    def replace_blacklight_layout
+      gsub_file 'app/controllers/application_controller.rb', /layout 'blacklight'/,
+        "include Worthwhile::ThemedLayoutController\n  with_themed_layout '1_column'\n"
     end
 
     def inject_routes
