@@ -1,6 +1,6 @@
 en:
   sufia:
-    product_name:       "Curate"
+    product_name:       "Repository"
     institution_name:   "Your Institution"
     institution_homepage_url:   "#"
     division_name:      "Your Division at Institution"
@@ -8,7 +8,7 @@ en:
     search:
       form:
         q:
-          label:        "Search Curate"
+          label:        "Search Repository"
           placeholder:  "Type keywords in here"
     search_facets:
       label:            "View:"
