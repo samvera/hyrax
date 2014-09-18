@@ -3,19 +3,7 @@
     <%= render "form_required_information", curation_concern: curation_concern, f: f %>
   </div>
 
-  <fieldset id="content-editor">
-    <legend>
-      <%=t('sufia.work.editor.legend') %>
-      <small><%=t('sufia.work.editor.caption') %></small>
-    </legend>
-    <div class="col-md-6" id="required-information">
-      <%#= render "linked_editors", curation_concern: curation_concern, f: f %>
-    </div>
-
-    <div class="col-md-6" id="additional-information">
-      <%#= render "linked_groups", curation_concern: curation_concern, f: f %>
-    </div>
-  </fieldset>
+  <%# render 'form_editors', f: f %>
 
   <div class="col-md-6" id="additional-information">
     <%= render "form_additional_information", curation_concern: curation_concern, f: f %>
