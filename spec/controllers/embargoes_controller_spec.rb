@@ -91,8 +91,6 @@ describe EmbargoesController do
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.embargo_release_date = release_date.to_s
         a_work.save(validate: false)
-        # expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
-        # expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
       end
 
       context "with an expired embargo" do
