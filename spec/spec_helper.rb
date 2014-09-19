@@ -15,22 +15,15 @@ require 'capybara/rspec'
 require 'capybara/rails'
 
 
-if ENV['COVERAGE']
+if ENV['COVERAGE'] || ENV['CI']
   require 'simplecov'
+  require 'coveralls'
 
   ENGINE_ROOT = File.expand_path('../..', __FILE__)
-
-  # Out of the box, SimpleCov was looking at file in ENGINE_ROOT/spec/internal;
-  # After all that was where Rails was pointed at.
-  SimpleCov.root(ENGINE_ROOT)
-  SimpleCov.start 'rails' do
-    filters.clear
-    add_filter do |src|
-      src.filename !~ /^#{ENGINE_ROOT}/
-    end
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter if ENV["CI"]
+  SimpleCov.start do
     add_filter '/spec/'
   end
-  SimpleCov.command_name "spec"
 end
 
 require 'worthwhile'
