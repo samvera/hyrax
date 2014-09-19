@@ -1,0 +1,23 @@
+<div class="clearfix proxy-rights">
+
+  <div class="col-xs-6 proxy-search">
+    <h3 class="panel-title">Authorize Proxy</h3>
+    <label class="sr-only" for="user">Proxy User</label>
+    <%= hidden_field_tag :user, nil, data: { grantor: current_user.to_param } %>
+  </div>
+
+  <div class="col-xs-6">
+    <h3 class="panel-title">Current Proxies</h3>
+    <table class="table table-condensed table-striped" id="authorizedProxies">
+      <tbody>
+        <% @user.can_receive_deposits_from.each do |depositor| %>
+          <tr><td class="depositor-name"><%= depositor.name %></td>
+            <td><%= link_to(sufia.user_depositor_path(@user, depositor), method: :delete, class: "remove-proxy-button") do %>
+              <i class="glyphicon glyphicon-remove"></i><% end %>
+            </td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+</div>

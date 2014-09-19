@@ -10,6 +10,9 @@ module Sufia
         # This is where we put the relative path of the file if submitted as a folder
         t.relative_path
         t.import_url path: 'importUrl', index_as: :symbol
+        t.proxy_depositor path: 'proxyDepositor', index_as: :symbol
+        # This value is set when a user indicates they are depositing this for someone else
+        t.on_behalf_of path: 'onBehalfOf', index_as: :symbol
       end
     end
 

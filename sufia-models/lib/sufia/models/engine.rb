@@ -1,4 +1,3 @@
-require 'sufia/models/resque'
 module Sufia
   module Models
     def self.config(&block)
@@ -10,6 +9,7 @@ module Sufia
     end
 
     class Engine < ::Rails::Engine
+      require 'sufia/models/resque'
 
       # Set some configuration defaults
       config.enable_ffmpeg = false

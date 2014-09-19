@@ -19,12 +19,8 @@ describe 'collection' do
   let(:description2) {"Description for collection 2 we are testing."}
 
   let(:user) { FactoryGirl.find_or_create(:archivist) }
-  let(:user_key) { user.user_key }
 
   before(:all) do
-    @old_resque_inline_value = Resque.inline
-    Resque.inline = true
-
     @gfs = []
     (0..12).each do |x|
       @gfs[x] =  GenericFile.new.tap do |f|
@@ -38,10 +34,7 @@ describe 'collection' do
   end
 
   after(:all) do
-    Resque.inline = @old_resque_inline_value
-    Batch.destroy_all
-    GenericFile.destroy_all
-    Collection.destroy_all
+    ActiveFedora::Base.destroy_all
   end
 
   describe 'create collection' do
@@ -67,7 +60,7 @@ describe 'collection' do
     before (:each) do
       @collection = Collection.new title:'collection title'
       @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
+      @collection.apply_depositor_metadata(user.user_key)
       @collection.save
       sign_in user
       visit '/dashboard/collections'
@@ -87,7 +80,7 @@ describe 'collection' do
     before do
       @collection = Collection.new title: 'collection title'
       @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
+      @collection.apply_depositor_metadata(user.user_key)
       @collection.members = [@gf1,@gf2]
       @collection.save
       sign_in user
@@ -144,7 +137,7 @@ describe 'collection' do
     before (:each) do
       @collection = Collection.new(title: 'collection title')
       @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
+      @collection.apply_depositor_metadata(user.user_key)
       @collection.members = [@gf1, @gf2]
       @collection.save
       sign_in user
@@ -222,7 +215,7 @@ describe 'collection' do
     before (:each) do
       @collection = Collection.new title:'collection title'
       @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
+      @collection.apply_depositor_metadata(user.user_key)
       @collection.members = @gfs
       @collection.save!
       sign_in user

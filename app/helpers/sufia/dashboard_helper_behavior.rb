@@ -1,5 +1,20 @@
 module Sufia
   module DashboardHelperBehavior
+    def render_sent_transfers
+      if @outgoing.present?
+        render partial: 'transfers/sent'
+      else
+        t('sufia.dashboard.no_transfers')
+      end
+    end
+
+    def render_received_transfers
+      if @incoming.present?
+        render partial: 'transfers/received'
+      else
+        t('sufia.dashboard.no_transfer_requests')
+      end
+    end
 
     def render_recent_activity
       if @activity.empty?

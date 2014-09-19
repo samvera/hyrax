@@ -12,7 +12,7 @@ describe GenericFilesController do
   describe "#create" do
     before do
       @file_count = GenericFile.count
-      @mock = GenericFile.new({pid: 'test:123'})
+      @mock = GenericFile.new({ pid: 'test:123' })
       GenericFile.stub(:new).and_return(@mock)
     end
 
@@ -23,6 +23,14 @@ describe GenericFilesController do
       end
       Batch.find("sample:batch_id").delete rescue
       @mock.delete unless @mock.inner_object.class == ActiveFedora::UnsavedDigitalObject
+    end
+
+    it "should record on_behalf_of" do
+      file = fixture_file_upload('/world.png','image/png')
+      xhr :post, :create, files: [file], Filename: 'The world', batch_id: 'sample:batch_id', on_behalf_of: 'carolyn', terms_of_service: '1'
+      response.should be_success
+      saved_file = GenericFile.find('test:123')
+      saved_file.on_behalf_of.should == 'carolyn'
     end
 
     it "should render error the file wasn't actually a file" do

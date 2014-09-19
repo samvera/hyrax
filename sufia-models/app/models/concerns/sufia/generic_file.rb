@@ -19,6 +19,7 @@ module Sufia
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::ReloadOnSave
     include Sufia::GenericFile::FullTextIndexing
+    include Sufia::GenericFile::ProxyDeposit
     include Hydra::Collections::Collectible
 
     included do

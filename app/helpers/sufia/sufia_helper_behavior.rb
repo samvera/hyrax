@@ -1,5 +1,27 @@
 module Sufia
   module SufiaHelperBehavior
+    def error_messages_for(object)
+      if object.try(:errors) and object.errors.full_messages.any?
+        content_tag(:div, class: 'alert alert-block alert-error validation-errors') do
+          content_tag(:h4, I18n.t('sufia.errors.header', model: object.class.model_name.human.downcase), class: 'alert-heading') +
+            content_tag(:ul) do
+            object.errors.full_messages.map do |message|
+              content_tag(:li, message)
+            end.join('').html_safe
+          end
+        end
+      else
+        '' # return empty string
+      end
+    end
+
+    def show_transfer_request_title(req)
+      if req.deleted_file?
+        req.title
+      else
+        link_to(req.title, sufia.generic_file_path(req['pid'].split(':').last))
+      end
+    end
 
     # You can configure blacklight to use this as the thumbnail
     # example:
@@ -122,7 +144,7 @@ module Sufia
     def search_form_action
       if on_the_dashboard?
         search_action_for_dashboard
-      else  
+      else
         catalog_index_path
       end
     end
@@ -156,7 +178,7 @@ module Sufia
         sufia.dashboard_highlights_path
       else
         sufia.dashboard_files_path
-      end    
+      end
     end
 
   end

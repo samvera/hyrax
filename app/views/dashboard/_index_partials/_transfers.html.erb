@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-9">
+    <h4>Sent</h4>
+  </div>
+  <div class="col-xs-12 col-sm-3 transfer_link">
+    <%= link_to sufia.dashboard_files_path  do %>
+        <%= t("sufia.dashboard.transfer_files_link") %>
+    <% end %>
+  </div>
+</div>
+<%= render_sent_transfers %>
+
+<h4>Received</h4>
+<%= render_received_transfers %>

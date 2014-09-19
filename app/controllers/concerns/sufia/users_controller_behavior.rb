@@ -24,14 +24,14 @@ module Sufia::UsersControllerBehavior
       format.html
       format.json { render json: @users.to_json }
     end
-    
+
   end
 
   # Display user profile
   def show
     if @user.respond_to? :profile_events
-      @events = @user.profile_events(100) 
-    else 
+      @events = @user.profile_events(100)
+    else
       @events = []
     end
     @trophies = @user.trophy_files
@@ -65,7 +65,7 @@ module Sufia::UsersControllerBehavior
     redirect_to sufia.profile_path(@user.to_param), notice: "Your profile has been updated"
   end
 
-  def toggle_trophy    
+  def toggle_trophy
      id = Sufia::Noid.namespaceize params[:file_id]
      unless current_user.can? :edit, id
        redirect_to root_path, alert: "You do not have permissions to the file"
@@ -73,17 +73,16 @@ module Sufia::UsersControllerBehavior
      end
      # TODO  make sure current user has access to file
      t = current_user.trophies.where(generic_file_id: params[:file_id]).first
-     if t 
-       t.destroy  
+     if t
+       t.destroy
        #TODO do this better says Mike
-       return false if t.persisted?  
+       return false if t.persisted?
      else
        t = current_user.trophies.create(generic_file_id: params[:file_id])
        return false unless t.persisted?
      end
      render json: t
-  end 
-
+  end
 
   # Follow a user
   def follow
@@ -105,7 +104,7 @@ module Sufia::UsersControllerBehavior
 
   protected
 
-  # You can override base_query to return a list of arguments 
+  # You can override base_query to return a list of arguments
   def base_query
     [nil]
   end
@@ -133,4 +132,3 @@ module Sufia::UsersControllerBehavior
     return sort_val
   end
 end
-

@@ -211,6 +211,7 @@ module Sufia
     def update_metadata_from_upload_screen
       # Relative path is set by the jquery uploader when uploading a directory
       @generic_file.relative_path = params[:relative_path] if params[:relative_path]
+      @generic_file.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
     end
   end
 end

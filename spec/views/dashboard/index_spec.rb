@@ -8,8 +8,10 @@ describe "dashboard/index.html.erb" do
     allow(@user).to receive(:department).and_return("Xavier’s School for Gifted Youngsters")
     allow(@user).to receive(:telephone).and_return("814.865.8399")
     allow(@user).to receive(:email).and_return("chuck@xsgy.edu")
+    allow(@user).to receive(:login).and_return("chuck")
     allow(@user).to receive(:all_following).and_return(["magneto"])
     allow(@user).to receive(:followers).and_return(["wolverine","storm"])
+    allow(@user).to receive(:can_receive_deposits_from).and_return([])
     allow(controller).to receive(:current_user).and_return(@user)
     allow(view).to receive(:number_of_files).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
@@ -110,11 +112,9 @@ describe "dashboard/index.html.erb" do
         expect(rendered).to include "Single File 1"
       end
 
-
     end
 
     context "without activities and notifications" do
-
       it "should include headings for activities and notifications" do
         render
         expect(rendered).to include "User Activity"
@@ -126,9 +126,6 @@ describe "dashboard/index.html.erb" do
         expect(rendered).to include "User has no notifications"
         expect(rendered).to include "User has no recent activity"
       end
-
     end
-
   end
-
 end

@@ -71,6 +71,11 @@ en:
       user_notiticiations:      "User Notifications"
       no_notifications:         "User has no notifications"
       additional_notifications: "See all notifications"
+      proxy_activity:           "Proxy Activity"
+      transfer_of_ownership:    "Transfer of Ownership"
+      transfer_files_link:      "Select files to transfer"
+      no_transfer_requests:     "You haven't received any file transfer requests"
+      no_transfers:             "You haven't transferred any files"
       stats:
         heading:            "Your Statistics"
         files:              "Files you've deposited"
@@ -102,14 +107,14 @@ en:
         multiple:
           link: "These files"
           tag: "have been saved."
-        title:  "Files uploaded successfully" 
+        title:  "Files uploaded successfully"
         subject: "Batch upload complete"
       failure:
         single: "could not be updated. You do not have sufficient privileges to edit it."
         multiple:
-          link: "These files" 
+          link: "These files"
           tag: "could not be updated. You do not have sufficient privileges to edit them."
-        title:  "Files failed" 
+        title:  "Files failed"
         subject: "Batch upload permission denied"
     metadata_help:
       resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."
@@ -126,7 +131,7 @@ en:
       language: "The language of the file content."
       publisher: "The person or group making the file available. Generally this is the institution."
       rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. <em>This is a required field</em>."
-    aria_label: 
+    aria_label:
       default: "Usage information for %{title}"
       based_near: "Usage information for location"
       description: "Usage information for abstract or summary"

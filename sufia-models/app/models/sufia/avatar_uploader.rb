@@ -1,7 +1,7 @@
 class Sufia::AvatarUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
   include CarrierWave::Compatibility::Paperclip
-  
+
   version :medium do
     process resize_to_limit: [300, 300]
   end
@@ -11,11 +11,10 @@ class Sufia::AvatarUploader < CarrierWave::Uploader::Base
   end
 
   def default_url
-    "/assets/missing_#{version_name}.png"
+    "missing_#{version_name}.png"
   end
 
   def extension_white_list
     %w(jpg jpeg png gif bmp tif tiff)
   end
-  
 end

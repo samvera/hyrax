@@ -1,0 +1,5 @@
+<%= @proxy_deposit_request.sending_user %> has deposited the file <%= @generic_file.title %> on your behalf.
+
+<%= form_for @proxy_deposit_request do |f| %>
+  <% f.submit "Accept" %>
+<% end %>

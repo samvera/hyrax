@@ -17,6 +17,7 @@ This generator makes the following changes to your application:
  5. Generates usage stats config
  6. Installs Blacklight gallery
  7. Runs full-text generator
+ 8. Runs proxies generator
        """
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -55,7 +56,9 @@ This generator makes the following changes to your application:
       'add_linkedin_to_users.rb',
       'create_tinymce_assets.rb',
       'create_content_blocks.rb',
-      'create_featured_works.rb'
+      'create_featured_works.rb',
+      'create_proxy_deposit_requests.rb',
+      'create_proxy_deposit_rights.rb'
     ].each do |file|
       better_migration_template file
     end
@@ -100,6 +103,11 @@ This generator makes the following changes to your application:
   # Sets up full-text indexing (Solr config + jars)
   def full_text_indexing
     generate "sufia:models:fulltext"
+  end
+
+  # Sets up proxies and transfers
+  def full_text_indexing
+    generate "sufia:models:proxies"
   end
 
   private

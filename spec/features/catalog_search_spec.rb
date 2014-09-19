@@ -84,11 +84,8 @@ describe 'catalog searching' do
     end
 
     it "allows for browsing tags" do
-      expect(page).to have_content('Search Results')
-      within('#facets') do
-        first('a.more_facets_link').click
-        click_link "more Keywords»"
-      end
+      click_link "Keyword"
+      click_link "more Keywords»"
       click_link "tag18"
       expect(page).to have_content "Search Results"
       click_link @gf1.title[0]

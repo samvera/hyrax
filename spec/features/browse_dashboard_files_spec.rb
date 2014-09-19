@@ -2,8 +2,15 @@ require 'spec_helper'
 
 describe "Browse Dashboard" do
 
-  before do
+  before :all do
+    cleanup_jetty
     @fixtures = find_or_create_file_fixtures
+  end
+  after :all do
+    cleanup_jetty
+  end
+
+  before do
     sign_in FactoryGirl.create :user_with_fixtures
   end
 
@@ -17,10 +24,13 @@ describe "Browse Dashboard" do
   context "within my files page" do
 
     before do
-      visit "dashboard/files"
+      visit "/dashboard/files"
     end
 
     it "should display all the necessary information" do
+      within("#document_#{@fixtures.first.noid}") do
+        click_button("Select an action")
+      end
       expect(page).to have_content("Edit File")
       expect(page).to have_content("Download File")
       expect(page).to_not have_content("Is part of:")
@@ -44,6 +54,7 @@ describe "Browse Dashboard" do
     end
 
     it "should allow you to browse facets" do
+      click_link "Subject"
       click_link "more Subjects"
       click_link "consectetur"
       within("#document_#{@fixtures[1].noid}") do
@@ -62,50 +73,28 @@ describe "Browse Dashboard" do
 
     it "should refresh the page of files" do
       click_button "Refresh"
-      expect(page).to have_content("Edit File")
-      expect(page).to have_content("Download File")
+      within("#document_#{@fixtures.first.noid}") do
+        click_button("Select an action")
+        expect(page).to have_content("Edit File")
+        expect(page).to have_content("Download File")
+      end
     end
 
     it "should allow me to edit files in batches" do
-      pending "Need to enable javascript testing"
       first('input#check_all').click
       click_button('Edit Selected')
       expect(page).to have_content('3 files')
     end
 
-  end
-
-  context "within my collections page" do
-    before do
-      visit "dashboard/collections"
-    end
-    it "should search within my collections" do
-      within(".input-group-btn") do
-        expect(page).to have_content("My Collections")
+    it "should link to my other tabs" do
+      ["My Collections", "My Highlights", "Files Shared with Me"].each do |tab|
+        within("#my_nav") do
+          click_link(tab)
+        end
+        expect(page).to have_content(tab)
       end
     end
-  end
 
-  context "within my highlights page" do
-    before do
-      visit "dashboard/highlights"
-    end
-    it "should search within my highlights" do
-      within(".input-group-btn") do
-        expect(page).to have_content("My Highlights")
-      end
-    end
-  end
-
-  context "within my shares page" do
-    before do
-      visit "dashboard/shares"
-    end
-    it "should search within my shares" do
-      within(".input-group-btn") do
-        expect(page).to have_content("My Shares")
-      end
-    end
   end
 
 end

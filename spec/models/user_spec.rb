@@ -60,10 +60,10 @@ describe User do
   end
 
   describe "trophy_files" do
-    let(:user) { @user } 
-    let(:file1) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
-    let(:file2) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
-    let(:file3) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } } 
+    let(:user) { @user }
+    let(:file1) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } }
+    let(:file2) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } }
+    let(:file3) { GenericFile.new.tap { |f| f.apply_depositor_metadata(user); f.save! } }
     let!(:trophy1) { user.trophies.create!(generic_file_id: file1.noid) }
     let!(:trophy2) { user.trophies.create!(generic_file_id: file2.noid) }
     let!(:trophy3) { user.trophies.create!(generic_file_id: file3.noid) }
@@ -97,7 +97,23 @@ describe User do
     it "gathers the user's recent activity within a given timestamp" do
       expect(user.get_all_user_activity(now-60)).to eq(file_activities.concat([activities.first]))
     end
-
   end
-
+  describe "proxy_deposit_rights" do
+    before do
+      @subject = FactoryGirl.create :curator
+      @user1 = FactoryGirl.create :jill
+      @user2 = FactoryGirl.create :archivist
+      @subject.can_receive_deposits_from << @user1
+      @subject.can_make_deposits_for << @user2
+      @subject.save!
+    end
+    it "can_receive_deposits_from" do
+      expect(@subject.can_receive_deposits_from.to_a).to eq [@user1]
+      expect(@user1.can_make_deposits_for.to_a).to eq [@subject]
+    end
+    it "can_make_deposits_for" do
+      expect(@subject.can_make_deposits_for.to_a).to eq [@user2]
+      expect(@user2.can_receive_deposits_from.to_a).to eq [@subject]
+    end
+  end
 end
