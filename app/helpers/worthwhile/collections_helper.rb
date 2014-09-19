@@ -9,8 +9,7 @@ module Worthwhile::CollectionsHelper
 
   def link_to_select_collection(collectible, opts={})
     html_class = opts[:class]
-    link_to add_member_form_collections_path(collectible_id: collectible.id),
-      data: { toggle: "modal", target: '#' + collection_modal_id(collectible) },
+    link_to '#', data: { toggle: "modal", target: '#' + collection_modal_id(collectible) },
       class: "add-to-collection #{html_class}", title: "Add #{collectible.human_readable_type} to Collection" do
       icon('plus-sign') + ' Add to a Collection'
     end
