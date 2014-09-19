@@ -8,7 +8,7 @@
   <% end -%>
 
   <%= render 'form_descriptive_fields', curation_concern: @collection, f: f %>
-  <%= render partial: 'form_permission', locals: {f: f} %>
+  <%= render 'form_permission', f: f %>
 
   <%= render "form_representative_image", curation_concern: @collection, f: f %>
 
