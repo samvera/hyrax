@@ -1,8 +1,8 @@
-<% content_for :page_title, curation_concern_page_title(curation_concern) %>
-<% content_for :page_header do %>
+<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_header do %>
   <h1>File Details</h1>
 <% end %>
-<%= render partial: 'media_display', locals: {generic_file: curation_concern, dom_class_name: 'representative_image'} %>
+<%= render 'media_display', generic_file: curation_concern, dom_class_name: 'representative_image' %>
 <%= render "attributes", curation_concern: curation_concern %>
 
   <div class="form-actions">

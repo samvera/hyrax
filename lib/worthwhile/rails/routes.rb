@@ -1,7 +1,7 @@
 module ActionDispatch::Routing
   class Mapper
-    
-    def worthwhile_curation_concerns 
+
+    def worthwhile_curation_concerns
       resources :downloads, only: :show
       namespace :curation_concern, path: :concern do
         Worthwhile.configuration.registered_curation_concern_types.map(&:tableize).each do |curation_concern_name|
@@ -37,7 +37,6 @@ module ActionDispatch::Routing
           get 'facet/:id', action: :facet, as: :dashboard_facet
         end
         collection do
-          get :add_member_form
           put '', action: :update
           put :remove_member
         end
@@ -56,7 +55,7 @@ module ActionDispatch::Routing
         end
       end
     end
-    
+
     private
     # Namespaces routes appropriately
     # @example route_namespaced_target("worthwhile/generic_work") is equivalent to
@@ -67,7 +66,7 @@ module ActionDispatch::Routing
       if target.include?("/")
         the_namespace = target[0..target.index("/")-1]
         new_target = target[target.index("/")+1..-1]
-        namespace the_namespace do 
+        namespace the_namespace do
           namespaced_resources(new_target, opts)
         end
       else

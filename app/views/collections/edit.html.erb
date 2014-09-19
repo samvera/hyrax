@@ -1,22 +1,17 @@
-<% content_for :page_title, curation_concern_page_title(@collection) %>
+<% provide :page_title, curation_concern_page_title(@collection) %>
 
 <h1>Edit <%= @collection %> <span class="human_readable_type">(<%= @collection.human_readable_type %>)</span></h1>
 
 
 <% unless has_collection_search_parameters? %>
-  <%= render partial: 'collections/edit_actions' %>
-  <%= render partial: 'collections/form', locals: { record: @collection } %>
+  <%= render 'collections/edit_actions' %>
+  <%= render 'collections/form', record: @collection %>
 <% end %>
 <br />
 
 <h2>Manage Items in this Collection</h2>
-<%= render partial: 'search_collection_dashboard_form'%>
-<%= render partial: 'catalog/did_you_mean' %>
-<%#= render partial: 'catalog/facet_selected' %>
-
+<%= render 'search_collection_dashboard_form'%>
+<%= render 'catalog/did_you_mean' %>
 <%= render 'catalog/constraints', localized_params: params %>
-
-<%#= render 'catalog/sort_and_per_page' %>
-<%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
-
-<%= render partial:'paginate' %>
+<%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
+<%= render 'paginate' %>

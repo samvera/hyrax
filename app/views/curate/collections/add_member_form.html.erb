@@ -1,6 +1,0 @@
-<% content_for :page_header do %>
-  <h1 id="add-to-title">Add <%= @collectible %> to:</h1>
-<% end %>
-<% if can? :collect, @collectible %>
-  <%= render partial: 'form_to_add_member', locals: { collectible: @collectible, select_label_id: 'add-to-title', button_class: 'btn btn-primary' } %>
-<% end %>

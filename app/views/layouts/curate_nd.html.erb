@@ -1,25 +1,14 @@
-<% content_for :layout_name, 'curate_nd, ' %>
-<% content_for :body do %>
+<% provide :body do %>
 
-  <%= render 'shared/header' %>
-
+<%= render 'shared/header' %>
 <%= render 'shared/flash_message' %>
 
   <div id="main" role="main" class="container <%= yield(:page_class) if content_for?(:page_class)%>">
   <% if content_for?(:page_header) %>
     <div class="row">
-    <% if content_for?(:page_actions) %>
-      <div class="col-md-10 main-header ">
-        <%= yield(:page_header) %>
-      </div>
-      <div class="col-md-2 page-actions">
-        <%= yield(:page_actions) %>
-      </div>
-    <% else %>
       <div class="col-md-12 main-header ">
         <%= yield(:page_header) %>
       </div>
-    <% end %>
     </div>
   <% end %>
 

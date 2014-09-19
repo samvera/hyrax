@@ -1,11 +1,10 @@
-<% content_for :page_title, curation_concern_page_title(curation_concern) %>
-<% content_for :page_header do %>
+<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_header do %>
   <h1><%= curation_concern %> <span class="human_readable_type">(<%= curation_concern.human_readable_type %>)</span></h1>
 <% end %>
-<%= render partial: 'representative_media', locals: {work: curation_concern} %>
 
+<%= render 'representative_media', work: curation_concern %>
 <%= render 'attributes', curation_concern: curation_concern %>
-
 <%= render 'related_files', curation_concern: curation_concern %>
 <%= render 'related_resources', curation_concern: curation_concern %>
 <%= render 'collections', curation_concern: curation_concern %>
@@ -14,19 +13,16 @@
 <% editor    = can?(:edit,    curation_concern) %>
 
 <% if collector || editor %>
-  <% content_for :second_row do %>
-    <div class="form-actions">
-      <% if editor %>
-        <%= link_to "Edit This #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-primary' %>
-        <%= link_to "Delete This #{curation_concern.human_readable_type}", [:curation_concern, curation_concern], class: 'btn btn-primary', data: { confirm: "Delete this #{curation_concern.human_readable_type}?" }, method: :delete %>
-        <%= link_to "Attach a File", new_curation_concern_generic_file_path(curation_concern), class: 'btn btn-primary' %>
-        <%= link_to "Add an External Link", new_curation_concern_linked_resource_path(curation_concern), class: 'btn btn-primary' %>
-      <% end %>
-      <% if collector %>
-        <%= render 'curate/collections/add_to_collection_modal', collectible: curation_concern %>
-        <%= link_to_select_collection curation_concern, class: 'btn btn-primary' %>
-      <% end %>
-    </div>
-  <% end %>
+  <div class="form-actions">
+    <% if editor %>
+      <%= link_to "Edit This #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-primary' %>
+      <%= link_to "Delete This #{curation_concern.human_readable_type}", [:curation_concern, curation_concern], class: 'btn btn-primary', data: { confirm: "Delete this #{curation_concern.human_readable_type}?" }, method: :delete %>
+      <%= link_to "Attach a File", new_curation_concern_generic_file_path(curation_concern), class: 'btn btn-primary' %>
+      <%= link_to "Add an External Link", new_curation_concern_linked_resource_path(curation_concern), class: 'btn btn-primary' %>
+    <% end %>
+    <% if collector %>
+      <%= render 'curate/collections/add_to_collection_modal', collectible: curation_concern %>
+      <%= link_to_select_collection curation_concern, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
 <% end %>
-
