@@ -14,41 +14,41 @@ describe Collection do
   it 'can contain another collection' do
     another_collection = FactoryGirl.create(:collection)
     subject.members << another_collection
-    subject.members.should == [another_collection]
+    expect(subject.members).to eq [another_collection]
   end
 
   it 'updates solr with pids of its parent collections' do
     another_collection = FactoryGirl.create(:collection)
     another_collection.members << subject
     another_collection.save
-    subject.reload.to_solr[Solrizer.solr_name(:collection)].should == [another_collection.pid]
+    expect(subject.reload.to_solr[Solrizer.solr_name(:collection)]).to eq [another_collection.pid]
   end
 
   it 'cannot contain itself' do
     subject.members << subject
     subject.save
-    reloaded_subject.members.should == []
+    expect(reloaded_subject.members).to eq []
   end
 
   describe "when visibility is private" do
     it "should not be open_access?" do
-      subject.should_not be_open_access
+      expect(subject).to_not be_open_access
     end
     it "should not be authenticated_only_access?" do
-      subject.should_not be_authenticated_only_access
+      expect(subject).to_not be_authenticated_only_access
     end
     it "should not be private_access?" do
-      subject.should be_private_access
+      expect(subject).to be_private_access
     end
   end
 
   describe "visibility" do
     it "should have visibility accessor" do
-      subject.visibility.should == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      expect(subject.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
     end
     it "should have visibility writer" do
       subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      subject.should be_open_access
+      expect(subject).to be_open_access
     end
   end
 
@@ -68,19 +68,19 @@ describe Collection do
 
   describe '#human_readable_type' do
     it "indicates collection" do
-      subject.human_readable_type.should == 'Collection'
+      expect(subject.human_readable_type).to eq 'Collection'
     end
   end
 
   describe '#add_member' do
     it 'adds the member to the collection and returns true' do
       work = FactoryGirl.create(:generic_work)
-      subject.add_member(work).should be true
-      reloaded_subject.members.should == [work]
+      expect(subject.add_member(work)).to be true
+      expect(reloaded_subject.members).to eq [work]
 
       work.reload
-      work.collections.should == [subject]
-      work.to_solr["collection_sim"].should == [subject.pid]
+      expect(work.collections).to eq [subject]
+      expect(work.to_solr["collection_sim"]).to eq [subject.pid]
     end
 
     it 'returns nil if there is nothing to add' do
@@ -92,7 +92,7 @@ describe Collection do
       work = FactoryGirl.create(:generic_work)
       allow(subject).to receive(:save).and_return(false)
       expect(subject.add_member(work)).to be false
-      reloaded_subject.members.should == []
+      expect(reloaded_subject.members).to eq []
     end
   end
 
@@ -100,26 +100,26 @@ describe Collection do
     it 'removes the member from the collection and returns true' do
       work = FactoryGirl.create(:generic_work)
       subject.members << work
-      subject.members.should == [work]
+      expect(subject.members).to eq [work]
       subject.save
 
       work.reload
-      work.collections.should == [subject]
-      work.to_solr["collection_tesim"].should == [subject.pid]
+      expect(work.collections).to eq [subject]
+      expect(work.to_solr["collection_tesim"]).to eq [subject.pid]
       solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.pid).send(:solr_doc)
-      solr_doc["collection_tesim"].should == [subject.pid]
+      expect(solr_doc["collection_tesim"]).to eq [subject.pid]
 
-      subject.members.delete(work).should == [work]
+      expect(subject.members.delete(work)).to eq [work]
       subject.save!
-      reloaded_subject.members.should == []
+      expect(reloaded_subject.members).to eq []
 
       solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.pid).send(:solr_doc)
-      solr_doc["collection_tesim"].should be_nil
+      expect(solr_doc["collection_tesim"]).to be_nil
 
 
       work.reload
-      work.collections.should == []
-      work.to_solr["collection_tesim"].should == []
+      expect(work.collections).to eq []
+      expect(work.to_solr["collection_tesim"]).to eq []
     end
   end
 

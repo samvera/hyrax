@@ -6,27 +6,27 @@ describe Worthwhile::LinkedResource do
   it { should respond_to(:human_readable_type) }
 
   it 'has a #human_readable_short_description' do
-    subject.human_readable_short_description.length.should_not == 0
+    expect(subject.human_readable_short_description.length).to_not eq 0
   end
 
   it 'has a .human_readable_short_description' do
-    subject.class.human_readable_short_description.length.should_not == 0
+    expect(subject.class.human_readable_short_description.length).to_not eq 0
   end
 
   it 'uses #noid for #to_param' do
-    subject.stub(:persisted?).and_return(true)
-    subject.to_param.should == subject.noid
+    allow(subject).to receive(:persisted?).and_return(true)
+    expect(subject.to_param).to eq subject.noid
   end
 
   it 'has no url to display' do
-    subject.to_s.should == nil
+    expect(subject.to_s).to eq nil
   end
 
   describe "validating" do
     subject {Worthwhile::LinkedResource.new}
     it "should not validate and have an error" do
-      subject.should_not be_valid
-      subject.errors[:url].should == ["can't be blank"]
+      expect(subject).to_not be_valid
+      expect(subject.errors[:url]).to eq ["can't be blank"]
     end
   end
 
@@ -34,7 +34,7 @@ describe Worthwhile::LinkedResource do
     context "javascript uri" do
       subject { FactoryGirl.build(:linked_resource, url: "javascript:void(alert('Hello'));") }
       it "should be cleared" do
-        subject.url.should be_nil
+        expect(subject.url).to be_nil
       end
     end
     context "http uri" do

@@ -84,12 +84,12 @@ describe 'collection' do
     end
 
     it "should delete a collection" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         first(".itemtrash").click
       end
-      page.should_not have_content(@collection.title)
-      page.should have_content("Collection was successfully deleted.")
+      expect(page).to_not have_content(@collection.title)
+      expect(page).to have_content("Collection was successfully deleted.")
     end
   end
 
@@ -105,16 +105,16 @@ describe 'collection' do
     end
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")
       end
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
-      page.should have_content(@gw1.title.first)
-      page.should have_content(@gw2.title.first)
-      page.should_not have_css(".pager")
+      expect(page).to have_content(@gw1.title.first)
+      expect(page).to have_content(@gw2.title.first)
+      expect(page).to_not have_css(".pager")
 
       #click_link "Gallery"
       #expect(page).to have_content(@gw1.title)
@@ -122,25 +122,25 @@ describe 'collection' do
     end
 
     it "should hide collection descriptive metadata when searching a collection" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link("collection title")
       end
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
-      page.should have_content(@gw1.title.first)
-      page.should have_content(@gw2.title.first)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).to have_content(@gw1.title.first)
+      expect(page).to have_content(@gw2.title.first)
       fill_in('collection_search', with: @gw1.title.first)
       click_button('collection_submit')
       # Should not have Collection Descriptive metadata table
-      page.should_not have_content("Descriptions")
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
+      expect(page).to_not have_content("Descriptions")
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
-      page.should have_content(@gw1.title.first)
-      page.should_not have_content(@gw2.title.first)
+      expect(page).to have_content(@gw1.title.first)
+      expect(page).to_not have_content(@gw2.title.first)
       # Should not have Dashboard content in contents listing
-      page.should_not have_content("Visibility")
+      expect(page).to_not have_content("Visibility")
     end
   end
 
@@ -156,12 +156,12 @@ describe 'collection' do
     end
 
     it "should edit and update collection metadata" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link('Edit Collection')
       end
-      page.should have_field('collection_title', with: @collection.title)
-      page.should have_field('collection_description', with: @collection.description)
+      expect(page).to have_field('collection_title', with: @collection.title)
+      expect(page).to have_field('collection_description', with: @collection.description)
       new_title = "Altered Title"
       new_description = "Completely new Description text."
       creators = ["Dorje Trollo", "Vajrayogini"]
@@ -171,48 +171,48 @@ describe 'collection' do
       #within('.form-actions') do
         click_button('Update Collection')
       #end
-      page.should_not have_content(@collection.title)
-      page.should_not have_content(@collection.description)
-      page.should have_content(new_title)
-      page.should have_content(new_description)
-      page.should have_content(creators.first)
+      expect(page).to_not have_content(@collection.title)
+      expect(page).to_not have_content(@collection.description)
+      expect(page).to have_content(new_title)
+      expect(page).to have_content(new_description)
+      expect(page).to have_content(creators.first)
     end
 
     it "should remove a work from a collection" do
       skip "BUG removing works from a collection"
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         click_link('Edit Collection')
       end
-      page.should have_field('collection_title', with: @collection.title)
-      page.should have_field('collection_description', with: @collection.description)
-      page.should have_content(@gw1.title)
-      page.should have_content(@gw2.title)
+      expect(page).to have_field('collection_title', with: @collection.title)
+      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_content(@gw1.title)
+      expect(page).to have_content(@gw2.title)
       within("#document_#{@gw1.noid}") do
         click_button('Remove From Collection')
       end
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
-      page.should_not have_content(@gw1.title)
-      page.should have_content(@gw2.title)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).to_not have_content(@gw1.title)
+      expect(page).to have_content(@gw2.title)
     end
 
     it "should remove all works from a collection" do
       skip "batch collection operations (add/remove)"
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link('Edit Collection')
       end
-      page.should have_field('collection_title', with: @collection.title)
-      page.should have_field('collection_description', with: @collection.description)
-      page.should have_content(@gw1.title)
-      page.should have_content(@gw2.title)
+      expect(page).to have_field('collection_title', with: @collection.title)
+      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_content(@gw1.title)
+      expect(page).to have_content(@gw2.title)
       first('input#check_all').click
       click_button('Remove From Collection')
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
-      page.should_not have_content(@gw1.title)
-      page.should_not have_content(@gw2.title)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).to_not have_content(@gw1.title)
+      expect(page).to_not have_content(@gw2.title)
     end
   end
 
@@ -228,11 +228,11 @@ describe 'collection' do
     end
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("collection title")
       end
-      page.should have_css(".pager")
+      expect(page).to have_css(".pager")
     end
   end
 end

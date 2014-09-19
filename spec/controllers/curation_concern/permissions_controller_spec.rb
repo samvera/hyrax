@@ -15,11 +15,11 @@ describe CurationConcern::PermissionsController do
 
   describe "#copy" do
     let(:generic_work) { FactoryGirl.create(:generic_work, user: user) }
+    let(:worker) { double }
 
     it "should add a worker to the queue" do
-      worker = double
-      VisibilityCopyWorker.should_receive(:new).with(generic_work.pid).and_return(worker)
-      Sufia.queue.should_receive(:push).with(worker)
+      expect(VisibilityCopyWorker).to receive(:new).with(generic_work.pid).and_return(worker)
+      expect(Sufia.queue).to receive(:push).with(worker)
       post :copy, id: generic_work
       expect(response).to redirect_to controller.polymorphic_path([:curation_concern, generic_work])
       expect(flash[:notice]).to eq 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'

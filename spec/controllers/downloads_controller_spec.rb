@@ -39,7 +39,7 @@ describe DownloadsController do
       generic_file
       sign_in user
       get :show, id: generic_file.to_param
-      response.body.should == generic_file.content.content
+      expect(response.body).to eq generic_file.content.content
     end
 
     it 'sends requested datastream content' do
@@ -47,7 +47,7 @@ describe DownloadsController do
       generic_file.save!
       sign_in user
       get :show, id: generic_file.to_param, datastream_id: 'thumbnail'
-      response.body.should == generic_file.thumbnail.content
+      expect(response.body).to eq generic_file.thumbnail.content
     end
   end
 end

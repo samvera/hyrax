@@ -17,8 +17,8 @@ describe CurationConcern::CollectionModel do
     let(:proposed_collectible) { double(collections: []) }
     subject { EssentialCollection.new }
     before(:each) {
-      proposed_collectible.stub(:can_be_member_of_collection?).with(subject).and_return(collectible?)
-      proposed_collectible.stub(:save).and_return(true)
+      allow(proposed_collectible).to receive(:can_be_member_of_collection?).with(subject).and_return(collectible?)
+      allow(proposed_collectible).to receive(:save).and_return(true)
     }
 
     context 'with itself' do

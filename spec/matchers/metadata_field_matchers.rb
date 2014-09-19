@@ -2,7 +2,7 @@
 
 RSpec::Matchers.define :have_unique_field do |expected_field_name|
   match do |subject|
-    subject.should respond_to(expected_field_name)
+    expect(subject).to respond_to(expected_field_name)
     field_value = subject.send(expected_field_name)
     field_value.nil? || !field_value.kind_of?(Array)
   end
@@ -18,8 +18,8 @@ end
 
 RSpec::Matchers.define :have_multivalue_field do |expected_field_name|
   match do |subject|
-    subject.should respond_to(expected_field_name)
-    subject.send(expected_field_name).should be_instance_of Array
+    expect(subject).to respond_to(expected_field_name)
+    expect(subject.send(expected_field_name)).to be_instance_of Array
   end
 
   description do

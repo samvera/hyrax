@@ -119,7 +119,7 @@ describe CollectionsController do
       end
       it "should remove members and update all of the relevant solr documents" do
         # BUG: This is returning inaccurate information
-        #     collection.reload.members.should include public_asset_not_mine
+        #     expect(collection.reload.members).to include public_asset_not_mine
         solr_doc_before_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.pid).send(:solr_doc)
         expect(solr_doc_before_remove[Solrizer.solr_name(:collection)]).to eq [collection.pid]
         put :update, id: collection.id, collection: {members:"remove"}, batch_document_ids:[public_asset_not_mine.pid]

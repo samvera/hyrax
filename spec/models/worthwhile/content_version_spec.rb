@@ -9,8 +9,8 @@ module Worthwhile
     let(:raw_version) { double(dsCreateDate: created_on, versionID: version_id) }
     subject { described_class.new(content, raw_version) }
 
-    before(:each) do
-      content.stub(:version_committer).with(raw_version).and_return(committer_name)
+    before do
+      expect(content).to receive(:version_committer).with(raw_version).and_return(committer_name)
     end
     its(:created_on) { should eq(created_on) }
     its(:committer_name) { should eq(committer_name) }

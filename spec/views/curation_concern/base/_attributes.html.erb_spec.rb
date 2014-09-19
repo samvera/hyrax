@@ -11,11 +11,11 @@ describe 'curation_concern/base/_attributes.html.erb' do
                                   subject: [subject]) }
 
   before do
-    view.stub(:dom_class) { '' }
-    view.stub(:permission_badge_for) { '' }
+    allow(view).to receive(:dom_class) { '' }
+    allow(view).to receive(:permission_badge_for) { '' }
 
     render partial: 'attributes', locals: { curation_concern: curation_concern }
-  end 
+  end
 
   it 'has links to search for other objects with the same metadata' do
     expect(rendered).to have_link(creator, href: catalog_index_path(search_field: 'creator', q: creator))
