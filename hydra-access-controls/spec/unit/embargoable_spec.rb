@@ -35,15 +35,22 @@ describe Hydra::AccessControls::Embargoable do
       expect(subject).to receive(:deactivate_embargo!)
       subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
-    it "when changing from lease, wipes out associated lease metadata" do
-      subject.lease_expiration_date = future_date.to_s
-      expect(subject).to receive(:deactivate_lease!)
-      subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+
+    context "when changing from lease" do
+      it "wipes out associated lease metadata and marks visibility as changed" do
+        subject.apply_lease(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+        expect(subject).to receive(:deactivate_lease!)
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        expect(subject).to be_visibility_changed
+      end
     end
   end
+
   context 'apply_embargo' do
     it "applies appropriate embargo_visibility settings" do
-      subject.apply_embargo(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+      expect {
+        subject.apply_embargo(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+      }.to change { subject.visibility_changed? }.from(false).to(true)
       expect(subject).to be_under_embargo
       expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       expect(subject.embargo_release_date).to eq future_date.to_time.utc
@@ -84,7 +91,8 @@ describe Hydra::AccessControls::Embargoable do
       it "should remove the associated embargo information and record it in the object's embargo history" do
         expect {
           subject.deactivate_embargo!
-        }.to change { subject.under_embargo? }.from(true).to(false)
+        }.to change { subject.under_embargo? }.from(true).to(false).and change {
+          subject.visibility_changed? }.from(false).to(true)
         expect(subject.embargo_release_date).to be_nil
         expect(subject.visibility_during_embargo).to be_nil
         expect(subject.visibility_after_embargo).to be_nil
@@ -104,18 +112,39 @@ describe Hydra::AccessControls::Embargoable do
   end
 
   context 'apply_lease' do
-    it "applies appropriate embargo_visibility settings" do
-      subject.apply_lease(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
-      expect(subject).to be_active_lease
-      expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      expect(subject.lease_expiration_date).to eq future_date.to_time.utc
-      expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+    context "when the initial value is restricted" do
+      it "applies appropriate embargo_visibility settings" do
+        subject.apply_lease(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+        expect(subject).to be_active_lease
+        expect(subject).to be_visibility_changed
+        expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        expect(subject.lease_expiration_date).to eq future_date.to_time.utc
+        expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      end
+      it "relies on default before/after visibility if none provided" do
+        subject.apply_lease(future_date.to_s)
+        expect(subject.visibility_during_lease).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        expect(subject.lease_expiration_date).to eq future_date.to_time.utc
+        expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      end
     end
-    it "relies on default before/after visibility if none provided" do
-      subject.apply_lease(future_date.to_s)
-      expect(subject.visibility_during_lease).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-      expect(subject.lease_expiration_date).to eq future_date.to_time.utc
-      expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+
+    context "when the initial value is public" do
+      before do
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        # reset the changed log
+        subject.send(:instance_variable_set, :@visibility_will_change, false)
+      end
+
+      it "applies appropriate embargo_visibility settings" do
+        expect {
+          subject.apply_lease(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+        }.to change { subject.visibility_changed? }.from(false).to(true)
+        expect(subject).to be_active_lease
+        expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        expect(subject.lease_expiration_date).to eq future_date.to_time.utc
+        expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      end
     end
   end
 
@@ -130,7 +159,9 @@ describe Hydra::AccessControls::Embargoable do
       let(:expiration_date) { past_date.to_s }
 
       it "should remove the associated lease information and record it in the object's lease history" do
-        subject.deactivate_lease!
+        expect {
+          subject.deactivate_lease!
+        }.to change { subject.visibility_changed? }.from(false).to(true)
         expect(subject.lease_expiration_date).to be_nil
         expect(subject.visibility_during_lease).to be_nil
         expect(subject.visibility_after_lease).to be_nil
