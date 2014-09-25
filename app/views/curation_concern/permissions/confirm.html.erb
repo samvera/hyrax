@@ -3,8 +3,13 @@
     <h4>Apply changes to contents?<h4>
   </div>
   <div class="panel-body">
-    <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern.title %></i>, making it visible to <b><%= visibility_badge(curation_concern.visibility) %></b>.</p>
-    <p>Would you like change all of the files within the <%= curation_concern.human_readable_type %> to <b><%= visibility_badge(curation_concern.visibility) %></b> as well?</p>
+    <% if curation_concern.under_embargo? %>
+      <p>You've applied an embargo to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing it's visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.embargo_release_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
+      <p>Would you like to apply the same embargo to all of the files within the  <%= curation_concern.human_readable_type %> as well?</p>
+    <% else %>
+      <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, making it visible to <b><%= visibility_badge(curation_concern.visibility) %></b>.</p>
+      <p>Would you like change all of the files within the <%= curation_concern.human_readable_type %> to <b><%= visibility_badge(curation_concern.visibility) %></b> as well?</p>
+    <% end %>
   </div>
   <div class="form-actions panel-footer">
     <%= button_to "Yes please.", copy_curation_concern_permission_path(curation_concern), class: 'btn btn-primary' %>
