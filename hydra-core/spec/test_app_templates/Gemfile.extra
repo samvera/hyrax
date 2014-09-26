@@ -1,8 +1,6 @@
 group :develop do
   gem 'active-fedora', github: "projecthydra/active_fedora"
 end
-# Temporary fix for https://github.com/twbs/bootstrap-sass/issues/647 on Rails 3
-gem 'bootstrap-sass', github: 'twbs/bootstrap-sass', ref: '540ad23'
 gem 'rspec-rails', '~> 3.1', group: :test
 gem 'rspec-its'
 
