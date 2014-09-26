@@ -44,6 +44,7 @@ module Hydra
           self.visibility_during_embargo = visibility_during unless visibility_during.nil?
           self.visibility_after_embargo = visibility_after unless visibility_after.nil?
           embargo_visibility!
+          visibility_will_change!
         end
 
         def deactivate_embargo!
@@ -54,6 +55,7 @@ module Hydra
           self.visibility_during_embargo = nil
           self.visibility_after_embargo = nil
           self.embargo_history += [embargo_record]
+          visibility_will_change!
         end
 
         def validate_embargo
@@ -115,7 +117,8 @@ module Hydra
           self.lease_expiration_date = release_date
           self.visibility_during_lease = visibility_during unless visibility_during.nil?
           self.visibility_after_lease = visibility_after unless visibility_after.nil?
-          self.lease_visibility!
+          lease_visibility!
+          visibility_will_change!
         end
 
         def deactivate_lease!
@@ -126,6 +129,7 @@ module Hydra
           self.visibility_during_lease = nil
           self.visibility_after_lease = nil
           self.lease_history += [lease_record]
+          visibility_will_change!
         end
 
         # Set the current visibility to match what is described in the lease.

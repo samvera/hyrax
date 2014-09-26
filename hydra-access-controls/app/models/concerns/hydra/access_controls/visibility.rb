@@ -29,7 +29,7 @@ module Hydra
       end
 
       def visibility_changed?
-        @visibility_will_change
+        !!@visibility_will_change
       end
 
       private
