@@ -39,5 +39,5 @@
 <% if curation_concern.lease_history.empty? %>
   This <%= curation_concern.human_readable_type %> has never had embargoes applied to it.
 <% else %>
-  <%= render partial:"lease_history" %>
+  <%= render "lease_history" %>
 <% end %>
