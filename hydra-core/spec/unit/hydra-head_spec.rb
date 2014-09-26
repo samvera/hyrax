@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe HydraHead do
   it "should be valid" do
-    HydraHead.should be_a(Module)
+    expect(HydraHead).to be_a(Module)
   end
 end

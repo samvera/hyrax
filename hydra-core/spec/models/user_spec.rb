@@ -3,18 +3,18 @@ require 'spec_helper'
 describe User do
 
   describe "user_key" do
+    let(:user) { User.new.tap {|u| u.email = "foo@example.com"} }
     before do
-      @user = User.new.tap {|u| u.email = "foo@example.com"}
-      @user.stub(:username =>'foo')
+      allow(user).to receive(:username).and_return('foo')
     end
 
     it "should return email" do
-      @user.user_key.should == 'foo@example.com'
+      expect(user.user_key).to eq 'foo@example.com'
     end
 
     it "should return username" do
-      Devise.stub(:authentication_keys =>[:username])
-      @user.user_key.should == 'foo'
+      allow(Devise).to receive(:authentication_keys).and_return([:username])
+      expect(user.user_key).to eq 'foo'
     end
 
   end

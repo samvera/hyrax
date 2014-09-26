@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe HydraHead::Engine do
   it "should be a subclass of Rails::Engine" do
-    HydraHead::Engine.superclass.should == Rails::Engine
+    expect(HydraHead::Engine.superclass).to eq Rails::Engine
   end
 end
