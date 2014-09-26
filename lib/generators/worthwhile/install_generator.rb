@@ -12,6 +12,10 @@ module Worthwhile
       say_status("warning", "GENERATING HYDRA-HEAD", :yellow)
       generate "hydra:head -f"
 
+      # TODO this should probably move to the hydra:head generator because it installs the gem
+      say_status("warning", "GENERATING RSPEC-RAILS", :yellow)
+      generate 'rspec:install'
+
       say_status("warning", "GENERATING SUFIA", :yellow)
       generate "sufia:models:install#{options[:force] ? ' -f' : ''}"
     end
