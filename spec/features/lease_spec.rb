@@ -7,6 +7,8 @@ describe "leases" do
   end
   describe "create a new leased object" do
 
+    let(:future_date) { 2.days.from_now }
+
     it "can be created, displayed and updated" do
       visit '/'
       click_link 'New Generic Work'
@@ -22,10 +24,10 @@ describe "leases" do
 
       expect(page).to have_content("This work is under lease.")
 
-      fill_in "until", with: 2.days.from_now.to_s
+      fill_in "until", with: future_date.to_s
 
       click_button "Update Lease"
-      expect(page).to have_content(2.days.from_now.strftime '%F')
+      expect(page).to have_content(future_date.to_date.to_formatted_s(:long_ordinal))
     end
 
   end

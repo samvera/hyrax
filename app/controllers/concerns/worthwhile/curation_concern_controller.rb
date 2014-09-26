@@ -107,6 +107,7 @@ module Worthwhile::CurationConcernController
     end
 
     def after_update_response
+      #TODO visibility or lease/embargo status
       if actor.visibility_changed?
         redirect_to confirm_curation_concern_permission_path(curation_concern)
       else

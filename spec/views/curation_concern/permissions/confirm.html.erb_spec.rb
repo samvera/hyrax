@@ -15,6 +15,14 @@ describe 'curation_concern/permissions/confirm.html.erb' do
     end
   end
 
+  context "when the work is leased" do
+    let(:curation_concern) { build(:leased_work, embargo_date: '2099-09-26'.to_date) }
+
+    it "should have a message about leases" do
+      expect(rendered).to have_content "You've applied a lease to this Generic Work, Test title, changing it's visibility to Open Access until September 26th, 2099. Would you like to apply the same lease to all of the files within the Generic Work as well?"
+    end
+  end
+
   context "when the work is not embargoed" do
     let(:curation_concern) { build(:work) }
 
