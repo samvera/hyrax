@@ -5,6 +5,8 @@ gemspec
 
 gem 'byebug' unless ENV['TRAVIS']
 gem 'sass-rails', '~> 4.0.3'
+gem 'worthwhile-models', path: './worthwhile-models'
+gem 'active-triples', '0.2.3'
 
 group :test do
   gem 'simplecov', '~> 0.9', require: false

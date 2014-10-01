@@ -1,11 +1,12 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'worthwhile/version'
+version = File.read(File.expand_path("../WORTHWHILE_VERSION",__FILE__)).strip
+
+# lib = File.expand_path('../lib', __FILE__)
+# $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "worthwhile"
-  spec.version       = Worthwhile::VERSION
+  spec.version       = version
   spec.authors       = ["Justin Coyne"]
   spec.email         = ["justin@curationexperts.com"]
   spec.summary       = %q{A simple institutional repository for Hydra}
@@ -22,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
   spec.add_dependency "active_attr"
   spec.add_dependency "simple_form", '~> 3.1.0.rc2'
+  spec.add_dependency 'worthwhile-models', version
   spec.add_dependency 'sufia-models', '~> 4.0.0'
   spec.add_dependency 'hydra-collections', '~> 2.0.5'
 
