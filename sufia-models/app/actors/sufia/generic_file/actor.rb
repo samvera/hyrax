@@ -58,7 +58,7 @@ module Sufia::GenericFile
 
     def update_metadata(attributes, visibility)
       generic_file.attributes = generic_file.sanitize_attributes(attributes)
-      generic_file.visibility = visibility
+      update_visibility(visibility)
       generic_file.date_modified = DateTime.now
       remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?
       save_and_record_committer do
@@ -117,6 +117,13 @@ module Sufia::GenericFile
         raise Sufia::VirusFoundError.new("A virus was found in #{path}: #{scan_result}") unless scan_result == 0
       end
     end
+
+    protected
+
+      # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
+      def update_visibility(visibility)
+        generic_file.visibility = visibility
+      end
 
     private
       def remove_from_feature_works
