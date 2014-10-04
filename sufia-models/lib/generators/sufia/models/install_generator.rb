@@ -84,6 +84,10 @@ This generator makes the following changes to your application:
     copy_file 'config/resque_config.rb', 'config/initializers/resque_config.rb'
   end
 
+  def create_collection
+    copy_file 'app/models/collection.rb', 'app/models/collection.rb'
+  end
+
   def install_mailboxer
     generate "mailboxer:install"
   end
