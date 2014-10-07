@@ -4,10 +4,10 @@
   </div>
   <div class="panel-body">
     <% if curation_concern.under_embargo? %>
-      <p>You've applied an embargo to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing it's visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.embargo_release_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
+      <p>You've applied an embargo to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing its visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.embargo_release_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
       <p>Would you like to apply the same embargo to all of the files within the  <%= curation_concern.human_readable_type %> as well?</p>
     <% elsif curation_concern.active_lease? %>
-      <p>You've applied a lease to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing it's visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.lease_expiration_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
+      <p>You've applied a lease to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing its visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.lease_expiration_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
       <p>Would you like to apply the same lease to all of the files within the  <%= curation_concern.human_readable_type %> as well?</p>
     <% else %>
       <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, making it visible to <b><%= visibility_badge(curation_concern.visibility) %></b>.</p>
