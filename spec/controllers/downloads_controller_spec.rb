@@ -33,7 +33,7 @@ describe DownloadsController do
         it "should return requested datastreams" do
           controller.stub(:render) # send_data calls render internally
           expected_content = ActiveFedora::Base.find("sufia:test1", cast: true).descMetadata.content
-          controller.should_receive(:send_file_headers!).with({filename: 'descMetadata', disposition: 'inline', type: 'text/plain' })
+          expect(controller).to receive(:send_file_headers!).with(filename: 'descMetadata', disposition: 'inline', type: 'application/n-triples')
           get "show", id: "test1", datastream_id: "descMetadata"
           response.body.should == expected_content
           response.should be_success
