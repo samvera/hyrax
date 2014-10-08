@@ -73,14 +73,14 @@ module CurationConcern
     #   self.attributes
     # => { 'title' => ['first', 'second'] }
     def remove_blank_attributes!
-      multiple_attributes.each_with_object(attributes) do |(k, v), h|
+      multivalued_form_attributes.each_with_object(attributes) do |(k, v), h|
         h[k] = v.select(&:present?)
       end
     end
 
-    # Return the hash of attributes that are multivalued
-    def multiple_attributes
-      attributes.select {|_, v| v.respond_to? :select }.except(:files)
+    # Return the hash of attributes that are multivalued and not uploaded files
+    def multivalued_form_attributes
+      attributes.select {|_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
     end
   end
 end
