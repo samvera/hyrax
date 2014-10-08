@@ -4,7 +4,7 @@ tag     = "v#{version}"
 
 directory 'pkg'
 
-['sufia-models', 'sufia'].each do |framework|
+['worthwhile-models', 'worthwhile'].each do |framework|
   namespace framework do
     gem     = "pkg/#{framework}-#{version}.gem"
     gemspec = "#{framework}.gemspec"
@@ -15,7 +15,7 @@ directory 'pkg'
 
     task :update_version_rb do
       glob = root.dup
-      if framework == "sufia"
+      if framework == "worthwhile"
         glob << "/lib/*"
       else
         glob << "/#{framework}/lib/**"
@@ -36,7 +36,7 @@ directory 'pkg'
     end
     task gem => %w(update_version_rb pkg) do
       cmd = ""
-      cmd << "cd #{framework} && " unless framework == "sufia"
+      cmd << "cd #{framework} && " unless framework == "worthwhile"
       cmd << "gem build #{gemspec} && mv #{framework}-#{version}.gem #{root}/pkg/"
       sh cmd
     end
@@ -56,12 +56,12 @@ end
 
 
 namespace :all do
-  task build: ['sufia-models:build', 'sufia:build']
-  task install: ['sufia-models:install', 'sufia:install']
-  task push: ['sufia-models:push', 'sufia:push']
+  task build: ['worthwhile-models:build', 'worthwhile:build']
+  task install: ['worthwhile-models:install', 'worthwhile:install']
+  task push: ['worthwhile-models:push', 'worthwhile:push']
 
   task :ensure_clean_state do
-    unless `git status -s | grep -v SUFIA_VERSION | grep -v History.md`.strip.empty?
+    unless `git status -s | grep -v WORTHWHILE_VERSION | grep -v History.md`.strip.empty?
       abort "[ABORTING] `git status` reports a dirty tree. Make sure all changes are committed"
     end
 
@@ -87,7 +87,7 @@ namespace :all do
     sh "git push --tags"
   end
 
-  desc "Release both sufia and sufia-models and update the version to #{version} in all locations"
+  desc "Release both worthwhile and worthwhile-models and update the version to #{version} in all locations"
   task release: %w(ensure_clean_state build commit tag push)
 end
 
