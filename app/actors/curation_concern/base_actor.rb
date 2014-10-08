@@ -56,6 +56,7 @@ module CurationConcern
 
     def apply_save_data_to_curation_concern
       attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
+      remove_blank_attributes!
       curation_concern.attributes = attributes
       curation_concern.date_modified = Date.today
     end
@@ -63,6 +64,23 @@ module CurationConcern
     def attach_file(generic_file, file_to_attach)
       ActiveSupport::Deprecation.warn("removing #{self.class}#attach_file, use CurationConcern.attach_file instead")
       CurationConcern.attach_file(generic_file, user, file_to_attach)
+    end
+
+    # If any attributes are blank remove them
+    # e.g.:
+    #   self.attributes = { 'title' => ['first', 'second', ''] }
+    #   remove_blank_attributes!
+    #   self.attributes
+    # => { 'title' => ['first', 'second'] }
+    def remove_blank_attributes!
+      multiple_attributes.each_with_object(attributes) do |(k, v), h|
+        h[k] = v.select(&:present?)
+      end
+    end
+
+    # Return the hash of attributes that are multivalued
+    def multiple_attributes
+      attributes.select {|_, v| v.respond_to? :select }.except(:files)
     end
   end
 end

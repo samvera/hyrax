@@ -26,6 +26,7 @@ describe CurationConcern::GenericWorkActor do
 
     context 'valid attributes' do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+
       context 'with embargo' do
         let(:attributes) { { title: ["New embargo"], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
                            visibility_during_embargo: "authenticated", embargo_release_date: date.to_s,
@@ -140,7 +141,6 @@ describe CurationConcern::GenericWorkActor do
       end
 
       context 'with linked resources' do
-
         let(:attributes) {
           FactoryGirl.attributes_for(:generic_work, visibility: visibility, linked_resource_urls: ['http://www.youtube.com/watch?v=oHg5SJYRHA0', "http://google.com"])
         }
@@ -160,6 +160,18 @@ describe CurationConcern::GenericWorkActor do
           expect(curation_concern).to be_authenticated_only_access
         end
       end
+
+      context "with a present and a blank title" do
+        let(:attributes) {
+          FactoryGirl.attributes_for(:generic_work, title: ['this is present', ''])
+        }
+
+        it 'should stamp each link with the access rights' do
+          expect(subject.create).to be true
+          expect(curation_concern).to be_persisted
+          expect(curation_concern.title).to eq ['this is present']
+        end
+      end
     end
   end
 
@@ -174,6 +186,7 @@ describe CurationConcern::GenericWorkActor do
         expect(subject.update).to be false
       end
     end
+
     context 'valid attributes' do
       let(:attributes) {{}}
       it "should interpret and apply embargo and lease visibility settings" do
@@ -182,6 +195,7 @@ describe CurationConcern::GenericWorkActor do
         subject.update
       end
     end
+
     context 'adding to collections' do
       let!(:collection1) { FactoryGirl.create(:collection, user: user) }
       let!(:collection2) { FactoryGirl.create(:collection, user: user) }
