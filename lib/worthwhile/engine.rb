@@ -1,6 +1,6 @@
 #Load blacklight which will give worthwhile views a higher preference than those in blacklight
 require 'blacklight'
-require 'sufia/models'  
+require 'worthwhile/models'
 require 'hydra-collections'
 
 module Worthwhile
@@ -12,9 +12,9 @@ module Worthwhile
      #{config.root}/lib
      #{config.root}/app/actors/concerns
     )
-    
+
     initializer 'worthwhile.initialize' do
-      require 'worthwhile/rails/routes' 
+      require 'worthwhile/rails/routes'
     end
   end
 end
