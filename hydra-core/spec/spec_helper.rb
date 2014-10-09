@@ -20,4 +20,12 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
+
+  config.before(:each) do
+    begin
+      ActiveFedora.fedora.connection.delete(ActiveFedora.fedora.base_path.sub('/', ''))
+    rescue StandardError
+    end
+    ActiveFedora.fedora.connection.put(ActiveFedora.fedora.base_path.sub('/', ''),"")
+  end
 end

@@ -33,7 +33,13 @@ require "factories"
 
 
 RSpec.configure do |config|
-
+  config.before(:each) do
+    begin
+      ActiveFedora.fedora.connection.delete(ActiveFedora.fedora.base_path.sub('/', ''))
+    rescue StandardError
+    end
+    ActiveFedora.fedora.connection.put(ActiveFedora.fedora.base_path.sub('/', ''),"")
+  end
 end
 
 # Stubbing Devise
