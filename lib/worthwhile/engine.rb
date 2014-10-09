@@ -10,7 +10,6 @@ module Worthwhile
 
     config.autoload_paths += %W(
      #{config.root}/lib
-     #{config.root}/app/actors/concerns
     )
 
     initializer 'worthwhile.initialize' do
