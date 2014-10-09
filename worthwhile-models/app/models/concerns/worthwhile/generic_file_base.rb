@@ -12,7 +12,7 @@ module Worthwhile
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Versions
     include Sufia::Permissions::Readable
-    include Worthwhile::GenericFile::VersionedContent
+    include CurationConcern::VersionedContent
 
     included do
       belongs_to :batch, property: :is_part_of, class_name: 'ActiveFedora::Base'

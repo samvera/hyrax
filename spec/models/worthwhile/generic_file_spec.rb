@@ -21,6 +21,11 @@ describe Worthwhile::GenericFile do
     end
   end
 
+  context "with versions" do
+    it "should have versions" do
+      expect(subject.versions).to eq []
+    end
+  end
 
   describe 'with a parent work' do
     let(:parent_pid) { 'pid:123' }
