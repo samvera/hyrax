@@ -8,14 +8,8 @@
 
     <div class="form-group collection_id">
       <div class="controls">
-        <% options = "" %>
-        <% collections = available_collections(collectible) %>
-        <% if collections.any? -%>
-          <% options << '<optgroup label="Your Collections">'.html_safe %>
-          <% options << options_from_collection_for_select(collections, "pid", "title") %>
-          <% options << '</optgroup>'.html_safe %>
-        <% end %>
-        <%= select_tag :id, options, prompt: 'Make a Selection', class: 'form-control', :'aria-labelledby' => select_label_id %>
+        <%= select_tag :id, collection_options_for_select(collectible), prompt: 'Make a Selection',
+          class: 'form-control', :'aria-labelledby' => select_label_id %>
       </div>
     </div>
 

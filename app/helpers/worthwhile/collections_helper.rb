@@ -27,4 +27,37 @@ module Worthwhile::CollectionsHelper
     content_tag :span, '', class: "glyphicon glyphicon-#{type}"
   end
 
+  def collection_options_for_select(exclude_item = nil)
+    options_for_select(available_collections(exclude_item))
+  end
+
+  private
+    # return a list of collections for the current user with the exception of the passed in collection
+    def available_collections(exclude_item)
+      if exclude_item
+        collection_options.reject {|n| n.last == exclude_item.id}
+      else
+        collection_options
+      end
+    end
+
+
+    def collection_options
+      @collection_options ||= current_users_collections
+    end
+
+    # Defaults to returning a list of all collections.
+    # If you have implement User.collections, the results of that will be used.
+    def current_users_collections
+      if current_user.respond_to?(:collections)
+        current_user.collections.map { |c| [c.title.join(', '), c.id] }
+      else
+        query = ActiveFedora::SolrService.construct_query_for_rel(has_model: Collection.to_class_uri)
+        ActiveFedora::SolrService.query(query, fl: 'desc_metadata__title_tesim id',
+                                        rows: 1000).map do |r|
+          [r['desc_metadata__title_tesim'].join(', '), r['id']]
+        end.sort { |a, b| a.first <=> b.first }
+      end
+    end
+
 end

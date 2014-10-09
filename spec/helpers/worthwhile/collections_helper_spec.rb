@@ -16,4 +16,18 @@ describe Worthwhile::CollectionsHelper do
                                           batch_document_ids: [ '456' ])
     end
   end
+
+  describe "#collection_options_for_select" do
+    before do
+      allow(helper).to receive(:current_user).and_return(User.new)
+    end
+    let!(:collection1) { Collection.create!(pid: 'test:123', title: 'One') }
+    let!(:collection2) { Collection.create!(pid: 'test:456', title: 'Two') }
+    let!(:collection3) { Collection.create!(pid: 'test:789', title: 'Thre') }
+    subject { helper.collection_options_for_select(collection2) }
+
+    it "should exclude the passed in collection" do
+      expect(subject).to eq "<option value=\"#{collection1.id}\">#{collection1.title}</option>\n<option value=\"#{collection3.id}\">#{collection3.title}</option>"
+    end
+  end
 end

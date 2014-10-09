@@ -26,7 +26,7 @@ module Worthwhile::GenericWorkRdfProperties
       index.as :stored_searchable, :facetable
     end
     property :created, predicate: RDF::DC.created
-    
+
     property :date, predicate: RDF::DC.date do |index|
       index.type :date
       index.as :stored_sortable
