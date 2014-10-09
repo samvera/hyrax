@@ -5,5 +5,5 @@ gemspec
 
 path = File.expand_path('../hydra-core/spec/test_app_templates/Gemfile.extra', __FILE__)
 if File.exists?(path)
-  eval File.read(path), nil, path 
+  eval File.read(path), nil, path
 end

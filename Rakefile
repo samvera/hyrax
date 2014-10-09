@@ -4,7 +4,7 @@ Bundler::GemHelper.install_tasks
 
 APP_ROOT= File.dirname(__FILE__)
 require 'jettywrapper'
-JETTY_ZIP_BASENAME = 'fedora-4b1'
+JETTY_ZIP_BASENAME = 'fedora-4/master'
 Jettywrapper.url = "https://github.com/projecthydra/hydra-jetty/archive/#{JETTY_ZIP_BASENAME}.zip"
 
 namespace :jetty do
@@ -16,10 +16,10 @@ namespace :jetty do
     Rake::Task["jetty:config_solr"].reenable
     Rake::Task["jetty:config_solr"].invoke
   end
-  
+
   desc "Copies the default SOLR config for the bundled Hydra Testing Server"
   task :config_solr do
-    FileList["#{SOLR_DIR}/*"].each do |f|  
+    FileList["#{SOLR_DIR}/*"].each do |f|
       cp("#{f}", 'jetty/solr/development-core/conf/', :verbose => true)
       cp("#{f}", 'jetty/solr/test-core/conf/', :verbose => true)
     end

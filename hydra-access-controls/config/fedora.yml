@@ -1,8 +1,10 @@
 development:
   user: fedoraAdmin
   password: fedoraAdmin
-  url: http://127.0.0.1:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/fedora
+  url: http://localhost:8983/fedora/rest
+  base_path: /dev
 test:
   user: fedoraAdmin
   password: fedoraAdmin
-  url: http://127.0.0.1:<%= ENV['TEST_JETTY_PORT'] || 8983 %>/fedora-test
+  url: http://localhost:8983/fedora/rest
+  base_path: /test
