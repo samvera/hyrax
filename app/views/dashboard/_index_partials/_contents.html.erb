@@ -1,13 +1,17 @@
-<div class="row">
-  <div class="portal">
-    <h3><%= t("sufia.dashboard.user_activity") %></h3>
+<div class="panel panel-default" id="activity">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title "><%= t("sufia.dashboard.user_activity") %></h3>
+  </div>
+  <div class="panel-body">
     <%= render_recent_activity %>
   </div>
 </div>
 
-<div class="row">
-  <div class="portal">
-    <h3><%= t("sufia.dashboard.user_notifications") %></h3>
+<div class="panel panel-default" id="notifications">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title "><%= t("sufia.dashboard.user_notifications") %></h3>
+  </div>
+  <div class="panel-body">
     <%= render_recent_notifications %>
     <%= link_to_additional_notifications %>
   </div>
