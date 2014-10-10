@@ -143,7 +143,6 @@ describe DownloadsController do
           expect(response.status).to eq 206
         end
         it "should send the whole thing when the range is open ended" do
-          pending "Fedora 4b1 has a bug here. https://github.com/fcrepo4/fcrepo4/issues/426"
           request.env["HTTP_RANGE"] = 'bytes=0-'
           get :show, id: '1234', datastream_id: 'webm'
           expect(response.body).to eq 'one1two2threfour'
