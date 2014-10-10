@@ -2,15 +2,15 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Hydra::Datastream::RightsMetadata do
 
-  let(:parent) { double('inner object', uri: '/fedora/rest/test/1234', id: '1234', new_record?: true) }
+  let(:parent) { double('inner object', uri: "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/fedora/rest/test/1234", id: '1234', new_record?: true) }
 
   let(:sample) { Hydra::Datastream::RightsMetadata.new(parent, 'rightsMetadata') }
-  
+
   describe "license" do
     before do
-      sample.license.title = "Creative Commons Attribution 3.0 Unported License." 
-      sample.license.description = "This Creative Commons license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials." 
-      sample.license.url = "http://creativecommons.org/licenses/by/3.0/" 
+      sample.license.title = "Creative Commons Attribution 3.0 Unported License."
+      sample.license.description = "This Creative Commons license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials."
+      sample.license.url = "http://creativecommons.org/licenses/by/3.0/"
     end
     subject { sample.license}
     its(:title) {should == ["Creative Commons Attribution 3.0 Unported License."] }
@@ -23,7 +23,7 @@ describe Hydra::Datastream::RightsMetadata do
       expect(sample.term_values(:license, :title)).to eq ["Creative Commons Attribution 3.0 Unported License."]
     end
   end
-  
+
   describe "permissions" do
     describe "setter" do
       it "should set person permissions" do
@@ -34,40 +34,40 @@ describe Hydra::Datastream::RightsMetadata do
       end
       it "should create/update/delete permissions for the given user/group" do
         expect(sample.class.terminology.xpath_for(:access, :person, "person_123")).to eq '//oxns:access/oxns:machine/oxns:person[contains(., "person_123")]'
-        
+
         person_123_perms_xpath = sample.class.terminology.xpath_for(:access, :person, "person_123")
         group_zzz_perms_xpath = sample.class.terminology.xpath_for(:access, :group, "group_zzz")
-        
-        expect(sample.find_by_terms(person_123_perms_xpath)).to be_empty 
+
+        expect(sample.find_by_terms(person_123_perms_xpath)).to be_empty
         expect(sample.permissions({"person"=>"person_123"}, "edit")).to eq "edit"
-        expect(sample.permissions({"group"=>"group_zzz"}, "edit")).to eq "edit"      
-        
+        expect(sample.permissions({"group"=>"group_zzz"}, "edit")).to eq "edit"
+
         expect(sample.find_by_terms(person_123_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "edit"
         expect(sample.find_by_terms(group_zzz_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "edit"
-        
+
         sample.permissions({"person"=>"person_123"}, "read")
         sample.permissions({"group"=>"group_zzz"}, "read")
         expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 1
-        
+
         expect(sample.find_by_terms(person_123_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "read"
         expect(sample.find_by_terms(group_zzz_perms_xpath).first.ancestors("access").first.attributes["type"].text).to eq "read"
-      
+
         expect(sample.permissions({"person"=>"person_123"}, "none")).to eq "none"
         expect(sample.permissions({"group"=>"group_zzz"}, "none")).to eq "none"
-        expect(sample.find_by_terms(person_123_perms_xpath)).to  be_empty 
-        expect(sample.find_by_terms(person_123_perms_xpath)).to be_empty 
+        expect(sample.find_by_terms(person_123_perms_xpath)).to  be_empty
+        expect(sample.find_by_terms(person_123_perms_xpath)).to be_empty
       end
       it "should remove existing permissions (leaving only one permission level per user/group)" do
         person_123_perms_xpath = sample.class.terminology.xpath_for(:access, :person, "person_123")
         group_zzz_perms_xpath = sample.class.terminology.xpath_for(:access, :group, "group_zzz")
-                        
+
         expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 0
         expect(sample.find_by_terms(group_zzz_perms_xpath).length).to eq 0
         sample.permissions({"person"=>"person_123"}, "read")
         sample.permissions({"group"=>"group_zzz"}, "read")
         expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 1
         expect(sample.find_by_terms(group_zzz_perms_xpath).length).to eq 1
-        
+
         sample.permissions({"person"=>"person_123"}, "edit")
         sample.permissions({"group"=>"group_zzz"}, "edit")
         expect(sample.find_by_terms(person_123_perms_xpath).length).to eq 1
@@ -76,14 +76,14 @@ describe Hydra::Datastream::RightsMetadata do
       it "should not impact other users permissions" do
         sample.permissions({"person"=>"person_123"}, "read")
         sample.permissions({"person"=>"person_789"}, "edit")
-        
+
         expect(sample.permissions({"person"=>"person_123"})).to eq "read"
         sample.permissions({"person"=>"person_456"}, "read")
         expect(sample.permissions({"person"=>"person_123"})).to eq "read"
         expect(sample.permissions({"person"=>"person_456"})).to eq "read"
         expect(sample.permissions({"person"=>"person_789"})).to eq "edit"
-        
-        
+
+
       end
     end
     describe "getter" do
@@ -111,14 +111,14 @@ describe Hydra::Datastream::RightsMetadata do
       expect(sample.users).to eq("person_123"=>"read", "person_456"=>"edit")
     end
   end
-  
+
   describe "update_permissions" do
     it "should accept a hash of groups and persons, updating their permissions accordingly" do
       expect(sample).to receive(:permissions).with({"group" => "group1"}, "discover")
       expect(sample).to receive(:permissions).with({"group" => "group2"}, "edit")
       expect(sample).to receive(:permissions).with({"person" => "person1"}, "read")
       expect(sample).to receive(:permissions).with({"person" => "person2"}, "discover")
-      
+
       sample.update_permissions( {"group"=>{"group1"=>"discover","group2"=>"edit"}, "person"=>{"person1"=>"read","person2"=>"discover"}} )
     end
   end
@@ -138,13 +138,13 @@ describe Hydra::Datastream::RightsMetadata do
       expect(sample.groups).to eq({})
     end
   end
-  
+
   describe "to_solr" do
     it "should populate solr doc with the correct fields" do
       params = {[:edit_access, :person]=>"Lil Kim", [:edit_access, :group]=>["group1","group2"], [:discover_access, :group]=>["public"],[:discover_access, :person]=>["Joe Schmoe"]}
       sample.update_values(params)
       solr_doc = sample.to_solr
-      
+
       expect(solr_doc["edit_access_person_ssim"]).to eq ["Lil Kim"]
       expect(solr_doc["edit_access_group_ssim"].sort).to eq ["group1", "group2"]
       expect(solr_doc["discover_access_person_ssim"]).to eq ["Joe Schmoe"]

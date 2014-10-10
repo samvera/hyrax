@@ -9,7 +9,6 @@ describe Hydra::AccessControls::Permissions do
 
   subject { Foo.new }
 
-  
   it "should have a set of permissions" do
     subject.read_groups=['group1', 'group2']
     subject.edit_users=['user1']
