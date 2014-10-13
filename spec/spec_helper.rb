@@ -3,10 +3,10 @@ require "bundler/setup"
 
 
 require 'factory_girl'
-require 'devise'
 require 'engine_cart'
 EngineCart.load_application!
 
+require 'devise'
 
 require 'mida'
 require 'rspec/rails'
