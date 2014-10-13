@@ -1,20 +1,22 @@
-<h3><%= t("sufia.dashboard.stats.heading") %></h3>
-
-<table class="table table-condensed">
-  <tr>
-    <td><span class="label label-default"><%= number_of_files %></span></td>
-    <td><%= t("sufia.dashboard.stats.files") %></td>
-  </tr>
-  <tr>
-    <td><span class="label label-default"><%= number_of_collections %></span></td>
-    <td><%= t("sufia.dashboard.stats.collections") %></td>
-  </tr>
-  <tr>
-    <td><span class="label label-default"><%= @user.all_following.count %></span></td>
-    <td><%= t("sufia.dashboard.stats.following") %></td>
-  </tr>
-  <tr>
-    <td><span class="label label-default"><%= @user.followers.count %></span></td>
-    <td><%= t("sufia.dashboard.stats.followers") %></td>
-  </tr>
-</table>
+<div class="panel panel-default">
+  <div class="panel-heading dashboard-panel">
+    <h3 class="panel-title"><%= t("sufia.dashboard.stats.heading") %></h3></div>
+  <table class="table table-condensed">
+    <tr>
+      <td><span class="badge"><%= number_of_files %></span></td>
+      <td><%= t("sufia.dashboard.stats.files") %></td>
+    </tr>
+    <tr>
+      <td><span class="badge"><%= number_of_collections %></span></td>
+      <td><%= t("sufia.dashboard.stats.collections") %></td>
+    </tr>
+    <tr>
+      <td><span class="badge"><%= @user.all_following.count %></span></td>
+      <td><%= t("sufia.dashboard.stats.following") %></td>
+    </tr>
+    <tr>
+      <td><span class="badge"><%= @user.followers.count %></span></td>
+      <td><%= t("sufia.dashboard.stats.followers") %></td>
+    </tr>
+  </table>
+</div>

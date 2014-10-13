@@ -50,16 +50,16 @@ describe "dashboard/index.html.erb" do
     end
 
     it "should have links to view and edit the user's profile" do
-      expect(@sidebar).to include '<a class="btn btn-info" href="' + sufia.profile_path(@user) + '">View Profile</a>'
-      expect(@sidebar).to include '<a class="btn btn-info" href="' + sufia.edit_profile_path(@user) + '">Edit Profile</a>'
+      expect(@sidebar).to include '<a class="btn btn-default btn-raised" href="' + sufia.profile_path(@user) + '">View Profile</a>'
+      expect(@sidebar).to include '<a class="btn btn-default btn-raised" href="' + sufia.edit_profile_path(@user) + '">Edit Profile</a>'
     end
 
     it "should display user statistics" do
       expect(@sidebar).to include "Your Statistics"
-      expect(@sidebar).to include '<span class="label label-default">1</span>'
-      expect(@sidebar).to include '<span class="label label-default">2</span>'
-      expect(@sidebar).to include '<span class="label label-default">15</span>'
-      expect(@sidebar).to include '<span class="label label-default">3</span>'
+      expect(@sidebar).to include '<span class="badge">1</span>'
+      expect(@sidebar).to include '<span class="badge">2</span>'
+      expect(@sidebar).to include '<span class="badge">15</span>'
+      expect(@sidebar).to include '<span class="badge">3</span>'
     end
 
     it "should show the statistics before the profile" do
@@ -74,8 +74,8 @@ describe "dashboard/index.html.erb" do
       before do
         @now = DateTime.now.to_i
         assign(:activity, [
-          { action: 'so and so edited their profile', timestamp: @now },
-          { action: 'so and so uploaded a file', timestamp: (@now - 360 ) }
+            { action: 'so and so edited their profile', timestamp: @now },
+            { action: 'so and so uploaded a file', timestamp: (@now - 360 ) }
         ])
       end
 
