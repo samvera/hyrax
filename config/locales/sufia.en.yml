@@ -141,3 +141,12 @@ en:
       help:
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
         resource_type: "You may select multiple types to apply to all files"
+    collection:
+      select_form:
+        title: "Add to collection"
+        no_collections: "You do not have access to any existing collections. You may create a new collection."
+        select_heading: "Select the collection to add your files to:"
+        close: "Close"
+        create: "Create Collection"
+        update: "Update Collection"
+        create_new: "Add to new Collection"
