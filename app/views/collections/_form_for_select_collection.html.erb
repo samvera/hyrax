@@ -3,13 +3,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="col_add_title">Add to collection</h4>
+          <h4 class="modal-title" id="col_add_title"><%= t("sufia.collection.select_form.title") %></h4>
         </div>
         <div class="modal-body">
           <% if user_collections.blank? %>
-            <em> You do not have access to any existing collections. You may create a new collection.</em><br><br><br><br>
+            <em> <%= t("sufia.collection.select_form.no_collections") %></em><br><br><br><br>
           <% else %>
-            Select the collection to add your files to:
+            <%= t("sufia.collection.select_form.select_heading") %>
             <div class="collection-list">
               <ul>
                 <% user_collections.sort! { |c1,c2| c1['desc_metadata__date_modified_dtsi'] <=> c2['desc_metadata__date_modified_dtsi'] }  %>
@@ -24,12 +24,12 @@
           <% end %> <!-- else -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("sufia.collection.select_form.close")%></button>
           <% if user_collections.blank? %>
-            <%= button_for_create_collection %>
+            <%= button_for_create_collection t("sufia.collection.select_form.create") %>
           <% else %> 
-            <%= button_for_update_collection %>
-            <%= button_for_create_collection "Add to new Collection" %>
+            <%= button_for_update_collection t("sufia.collection.select_form.update") %>
+            <%= button_for_create_collection t("sufia.collection.select_form.create_new") %>
           <% end %> 
         </div>
       </div><!-- /.modal-content -->
