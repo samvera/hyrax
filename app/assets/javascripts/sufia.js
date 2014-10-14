@@ -48,6 +48,7 @@
 //= require hydra_collections
 //= require browse_everything
 //= require jquery.blacklightTagCloud
+//= require sufia/tagcloud
 //= require nestable
 
 // this needs to be after batch_select so that the form ids get setup correctly
@@ -99,15 +100,6 @@ Blacklight.onLoad(function() {
 
 
   $("a[rel=popover]").click(function() { return false;});
-
-  /*
-   *  Tag cloud(s)
-   */
-  $(".tagcloud").blacklightTagCloud({
-    size: {start: 0.9, end: 2.5, unit: 'em'},
-    cssHooks: {granularity: 15},
-    color: {start: '#0F0', end: '#F00'}
-  });
 
 
   /*
