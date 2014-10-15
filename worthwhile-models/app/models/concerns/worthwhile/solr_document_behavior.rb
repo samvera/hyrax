@@ -27,8 +27,10 @@ module Worthwhile
     # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
-      m = ActiveFedora::Base.load_instance_from_solr(id, self)
-      m.class == ActiveFedora::Base ? self : m
+      @model ||= begin
+        m = ActiveFedora::Base.load_instance_from_solr(id, self)
+        m.class == ActiveFedora::Base ? self : m
+      end
     end
 
     def collection?
@@ -48,7 +50,7 @@ module Worthwhile
       Array(self[Solrizer.solr_name('human_readable_type', :stored_searchable)]).first
     end
 
-    def representative 
+    def representative
       Array(self[Solrizer.solr_name('representative', :stored_searchable)]).first
     end
 
