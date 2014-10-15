@@ -41,7 +41,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       user_access_filters = []
       current_ability.user_groups.each_with_index do |group, i|
         permission_types.each do |type|
-          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer ), group)
+          user_access_filters << escape_filter(Hydra.config.permissions.inheritable[type.to_sym].group, group)
         end
       end
       user_access_filters
@@ -57,7 +57,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     user_access_filters = []
     if current_user
       permission_types.each do |type|
-        user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ), current_user.user_key)
+        user_access_filters << escape_filter(Hydra.config.permissions.inheritable[type.to_sym].individual, current_user.user_key)
       end
     end
     user_access_filters
@@ -67,11 +67,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # You can set this by overriding this method or setting Hydra.config[:permissions][:policy_class]
   # Defults to Hydra::AdminPolicy
   def policy_class
-    if Hydra.config[:permissions][:policy_class].nil?
-      return Hydra::AdminPolicy
-    else
-      return Hydra.config[:permissions][:policy_class]
-    end
+    Hydra.config.permissions.policy_class || Hydra::AdminPolicy
   end
 
   protected

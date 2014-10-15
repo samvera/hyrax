@@ -13,12 +13,12 @@ module Hydra::AccessControlsEnforcement
     self.solr_access_filters_logic = [:apply_group_permissions, :apply_user_permissions, :apply_superuser_permissions ]
 
   end
-  
+
   protected
 
   def gated_discovery_filters(permission_types = discovery_permissions, ability = current_ability)
     user_access_filters = []
-    
+
     # Grant access based on user id & group
     solr_access_filters_logic.each do |method_name|
       user_access_filters += send(method_name, permission_types, ability)
@@ -28,26 +28,18 @@ module Hydra::AccessControlsEnforcement
 
   def under_embargo?
     load_permissions_from_solr
-    embargo_key = ActiveFedora::SolrService.solr_name("embargo_release_date", Hydra::Datastream::RightsMetadata.date_indexer)
-    if @permissions_solr_document[embargo_key] 
+    embargo_key = Hydra.config.permissions.embargo.release_date
+    if @permissions_solr_document[embargo_key]
       embargo_date = Date.parse(@permissions_solr_document[embargo_key].split(/T/)[0])
       return embargo_date > Date.parse(Time.now.to_s)
     end
     false
   end
 
-  def is_public?
-    ActiveSupport::Deprecation.warn("Hydra::AccessControlsEnforcement.is_public? has been deprecated. Use can? instead.") 
-    load_permissions_from_solr
-    access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
-    @permissions_solr_document[access_key].present? && @permissions_solr_document[access_key].first.downcase == "public"
-  end
-  
-
   #
   # Action-specific enforcement
   #
-  
+
   # Controller "before" filter for enforcing access controls on show actions
   # @param [Hash] opts (optional, not currently used)
   def enforce_show_permissions(opts={})
@@ -55,22 +47,22 @@ module Hydra::AccessControlsEnforcement
     if permissions.under_embargo? && !can?(:edit, permissions)
       raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
     end
-    unless can? :read, permissions 
+    unless can? :read, permissions
       raise Hydra::AccessDenied.new("You do not have sufficient access privileges to read this document, which has been marked private.", :read, params[:id])
     end
   end
-  
+
   # Solr query modifications
   #
-  
-  # Set solr_parameters to enforce appropriate permissions 
+
+  # Set solr_parameters to enforce appropriate permissions
   # * Applies a lucene query to the solr :q parameter for gated discovery
   # * Uses public_qt search handler if user does not have "read" permissions
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
   #
   # @example This method should be added to your Catalog Controller's solr_search_params_logic
-  #   class CatalogController < ApplicationController 
+  #   class CatalogController < ApplicationController
   #     include Hydra::Controller::ControllerBehavior
   #     CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params
   #   end
@@ -78,7 +70,7 @@ module Hydra::AccessControlsEnforcement
     apply_gated_discovery(solr_parameters, user_parameters)
   end
 
-  
+
   # Which permission levels (logical OR) will grant you the ability to discover documents in a search.
 
   # Override this method if you want it to be something other than the default
@@ -98,13 +90,13 @@ module Hydra::AccessControlsEnforcement
     logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
 
-  
+
   def apply_group_permissions(permission_types, ability = current_ability)
       # for groups
       user_access_filters = []
       ability.user_groups.each_with_index do |group, i|
         permission_types.each do |type|
-          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer), group)
+          user_access_filters << escape_filter(Hydra.config.permissions[type.to_sym].group, group)
         end
       end
       user_access_filters
@@ -120,7 +112,7 @@ module Hydra::AccessControlsEnforcement
       user = ability.current_user
       if user && user.user_key.present?
         permission_types.each do |type|
-          user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer), user.user_key)
+          user_access_filters << escape_filter(Hydra.config.permissions[type.to_sym].individual, user.user_key)
         end
       end
       user_access_filters

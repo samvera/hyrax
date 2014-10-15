@@ -12,7 +12,6 @@ module Hydra
   autoload :PolicyAwareAccessControlsEnforcement
   autoload :Ability
   autoload :Config
-  autoload :Datastream
   autoload :PolicyAwareAbility
   autoload :AdminPolicy
   autoload :AdminPolicyBehavior

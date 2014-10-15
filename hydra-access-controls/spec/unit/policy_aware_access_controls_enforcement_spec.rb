@@ -23,7 +23,6 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     policy1.default_permissions.create(:type=>"person", :access=>"discover", :name=>"sara_student")
     policy1.save!
 
-    puts "Policy1 #{policy1.to_solr}"
     @sample_policies << policy1
 
     # user read
@@ -110,7 +109,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
         expect(subject.policies_with_access).to_not include("test-policy_no_access")
       end
       it "should allow you to configure which model to use for policies" do
-        allow(Hydra).to receive(:config).and_return( {:permissions=>{:policy_class => ModsAsset}} )
+        allow(Hydra.config.permissions).to receive(:policy_class).and_return(ModsAsset)
         expect(ModsAsset).to receive(:find_with_conditions).and_return([])
         subject.policies_with_access
       end
@@ -154,8 +153,8 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       allow(RoleMapper).to receive(:roles).with(@user).and_return(["abc/123","cde/567"])
       user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
-        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\\/123")
-        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cde\\\/567")
+        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\\/123")
+        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:cde\\\/567")
       end
     end
 
@@ -163,8 +162,8 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       allow(RoleMapper).to receive(:roles).with(@user).and_return(["abc 123","cd/e 567"])
       user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
-        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\ 123")
-        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cd\\\/e\\ 567")
+        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\ 123")
+        expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:cd\\\/e\\ 567")
       end
     end
   end
