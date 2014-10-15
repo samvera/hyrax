@@ -16,13 +16,15 @@ describe Hydra::ModelMethods do
   describe "apply_depositor_metadata" do
     it "should add edit access" do
       subject.apply_depositor_metadata('naomi')
-      expect(subject.rightsMetadata.users).to eq('naomi' => 'edit')
+      expect(subject.edit_users).to eq ['naomi']
     end
+
     it "should not overwrite people with edit access" do
-      subject.rightsMetadata.permissions({:person=>"jessie"}, 'edit')
+      subject.edit_users = ['jessie']
       subject.apply_depositor_metadata('naomi')
-      expect(subject.rightsMetadata.users).to eq('naomi' => 'edit', 'jessie' =>'edit')
+      expect(subject.edit_users).to match_array ['naomi', 'jessie']
     end
+
     it "should set depositor" do
       subject.apply_depositor_metadata('chris')
       expect(subject.properties.depositor).to eq ['chris']

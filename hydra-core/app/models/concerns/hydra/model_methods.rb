@@ -7,14 +7,12 @@ module Hydra::ModelMethods
   # @param [String, #user_key] depositor
   #
   def apply_depositor_metadata(depositor)
-    rights_ds = self.datastreams["rightsMetadata"]
-
     depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
 
     if respond_to? :depositor
       self.depositor = depositor_id
     end
-    rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
+    self.edit_users += [depositor_id]
     return true
   end
 
