@@ -34,7 +34,7 @@ describe "WithAccessRight" do
   end
 
   context "persisted" do
-    before { subject.stub( persisted?: true) }
+    before { allow(subject).to receive(:persisted?).and_return(true) }
     context "when it is public" do
       before do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

@@ -19,58 +19,60 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
     @sample_policies = []
     # user discover
-    policy1 = Hydra::AdminPolicy.new("test-policy1")
-    policy1.default_permissions = [{:type=>"user", :access=>"discover", :name=>"sara_student"}]
+    policy1 = Hydra::AdminPolicy.create("test-policy1")
+    policy1.default_permissions.create(:type=>"person", :access=>"discover", :name=>"sara_student")
     policy1.save!
+
+    puts "Policy1 #{policy1.to_solr}"
     @sample_policies << policy1
 
     # user read
-    policy2 = Hydra::AdminPolicy.new("test-policy2")
-    policy2.default_permissions = [{:type=>"user", :access=>"read", :name=>"sara_student"}]
+    policy2 = Hydra::AdminPolicy.create("test-policy2")
+    policy2.default_permissions.create(:type=>"person", :access=>"read", :name=>"sara_student")
     policy2.save!
     @sample_policies << policy2
 
     # user edit
-    policy3 = Hydra::AdminPolicy.new("test-policy3")
-    policy3.default_permissions = [{:type=>"user", :access=>"edit", :name=>"sara_student"}]
+    policy3 = Hydra::AdminPolicy.create("test-policy3")
+    policy3.default_permissions.create(:type=>"person", :access=>"edit", :name=>"sara_student")
     policy3.save!
     @sample_policies << policy3
 
 
     # group discover
-    policy4 = Hydra::AdminPolicy.new("test-policy4")
-    policy4.default_permissions = [{:type=>"group", :access=>"discover", :name=>"africana-104-students"}]
+    policy4 = Hydra::AdminPolicy.create("test-policy4")
+    policy4.default_permissions.create(:type=>"group", :access=>"discover", :name=>"africana-104-students")
     policy4.save!
     @sample_policies << policy4
 
     # group read
-    policy5 = Hydra::AdminPolicy.new("test-policy5")
-    policy5.default_permissions = [{:type=>"group", :access=>"read", :name=>"africana-104-students"}]
+    policy5 = Hydra::AdminPolicy.create("test-policy5")
+    policy5.default_permissions.create(:type=>"group", :access=>"read", :name=>"africana-104-students")
     policy5.save!
     @sample_policies << policy5
 
     # group edit
-    policy6 = Hydra::AdminPolicy.new("test-policy6")
-    policy6.default_permissions = [{:type=>"group", :access=>"edit", :name=>"africana-104-students"}]
+    policy6 = Hydra::AdminPolicy.create("test-policy6")
+    policy6.default_permissions.create(:type=>"group", :access=>"edit", :name=>"africana-104-students")
     policy6.save!
     @sample_policies << policy6
 
     # public discover
-    policy7 = Hydra::AdminPolicy.new("test-policy7")
-    policy7.default_permissions = [{:type=>"group", :access=>"discover", :name=>"public"}]
+    policy7 = Hydra::AdminPolicy.create("test-policy7")
+    policy7.default_permissions.create(:type=>"group", :access=>"discover", :name=>"public")
     policy7.save!
     @sample_policies << policy7
 
     # public read
-    policy8 = Hydra::AdminPolicy.new("test-policy8")
-    policy8.default_permissions = [{:type=>"group", :access=>"read", :name=>"public"}]
+    policy8 = Hydra::AdminPolicy.create("test-policy8")
+    policy8.default_permissions.create(:type=>"group", :access=>"read", :name=>"public")
     policy8.save!
     @sample_policies << policy8
 
     # user discover policies for testing that all are applied when over 10 are applicable
     (9..11).each do |i|
-      policy = Hydra::AdminPolicy.new("test-policy#{i}")
-      policy.default_permissions = [{:type=>"user", :access=>"discover", :name=>"sara_student"}]
+      policy = Hydra::AdminPolicy.create("test-policy#{i}")
+      policy.default_permissions.create(:type=>"person", :access=>"discover", :name=>"sara_student")
       policy.save!
       @sample_policies << policy
     end
@@ -98,66 +100,71 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   describe "policies_with_access" do
     context "Authenticated user" do
       before do
-        RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
-        subject.stub(:current_user).and_return(@user)
+        allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
+        allow(subject).to receive(:current_user).and_return(@user)
       end
       it "should return the policies that provide discover permissions" do
         @policies_with_access.map {|p| p.pid }.each do |p|
-          subject.policies_with_access.should include(p)
+          expect(subject.policies_with_access).to include(p)
         end
-        subject.policies_with_access.should_not include("test-policy_no_access")
+        expect(subject.policies_with_access).to_not include("test-policy_no_access")
       end
       it "should allow you to configure which model to use for policies" do
-        Hydra.stub(:config).and_return( {:permissions=>{:policy_class => ModsAsset}} )
-        ModsAsset.should_receive(:find_with_conditions).and_return([])
+        allow(Hydra).to receive(:config).and_return( {:permissions=>{:policy_class => ModsAsset}} )
+        expect(ModsAsset).to receive(:find_with_conditions).and_return([])
         subject.policies_with_access
       end
     end
     context "Anonymous user" do
-      before { subject.stub(:current_user).and_return(nil) }
+      before { allow(subject).to receive(:current_user).and_return(nil) }
       it "should return the policies that provide discover permissions" do
-        subject.policies_with_access.should match_array ["test-policy7", "test-policy8"]
+        expect(subject.policies_with_access).to match_array ["test-policy7", "test-policy8"]
       end
     end
   end
 
   describe "apply_gated_discovery" do
     before do
-      RoleMapper.stub(:roles).with(@user).and_return(@user.roles)
-      subject.stub(:current_user).and_return(@user)
+      allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
+      allow(subject).to receive(:current_user).and_return(@user)
     end
+
     it "should include policy-aware query" do
       # stubbing out policies_with_access because solr doesn't always return them in the same order.
       policy_pids = (1..8).map {|n| "test:policy#{n}"}
-      subject.should_receive(:policies_with_access).and_return(policy_pids)
+      expect(subject).to receive(:policies_with_access).and_return(policy_pids)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
       governed_field = ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)
-      @solr_parameters[:fq].first.should include(" OR (_query_:\"{!raw f=#{governed_field}}info:fedora/test:policy1\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy2\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy3\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy4\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy5\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy6\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy7\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy8\")")
+      expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!raw f=#{governed_field}}info:fedora/test:policy1\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy2\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy3\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy4\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy5\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy6\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy7\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy8\")")
     end
+
     it "should not change anything if there are no clauses to add" do
-      subject.stub(:policy_clauses).and_return(nil)
+      allow(subject).to receive(:policy_clauses).and_return(nil)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      @solr_parameters[:fq].first.should_not include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
+      expect(@solr_parameters[:fq].first).to_not include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
     end
   end
 
   describe "apply_policy_role_permissions" do
+    before do
+      allow(subject).to receive(:current_user).and_return(@user)
+    end
+
     it "should escape slashes in the group names" do
-      RoleMapper.stub(:roles).with(@user).and_return(["abc/123","cde/567"])
-      subject.stub(:current_user).and_return(@user)
+      allow(RoleMapper).to receive(:roles).with(@user).and_return(["abc/123","cde/567"])
       user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
-        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\\/123")
-        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cde\\\/567")
+        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\\/123")
+        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cde\\\/567")
       end
     end
+
     it "should escape spaces in the group names" do
-      RoleMapper.stub(:roles).with(@user).and_return(["abc 123","cd/e 567"])
-      subject.stub(:current_user).and_return(@user)
+      allow(RoleMapper).to receive(:roles).with(@user).and_return(["abc 123","cd/e 567"])
       user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
-        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\ 123")
-        user_access_filters.should include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cd\\\/e\\ 567")
+        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:abc\\ 123")
+        expect(user_access_filters).to include("#{ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_group", Hydra::Datastream::RightsMetadata.indexer )}\:cd\\\/e\\ 567")
       end
     end
   end

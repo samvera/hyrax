@@ -1,7 +1,7 @@
 module Hydra
   module AccessControls
     class AccessRight
-      # What these groups are called in the Hydra rightsMetadata XML:
+      # What these groups are called in the Hydra rights assertions:
       PERMISSION_TEXT_VALUE_PUBLIC = 'public'.freeze
       PERMISSION_TEXT_VALUE_AUTHENTICATED = 'registered'.freeze
 
@@ -79,8 +79,9 @@ module Hydra
         def has_visibility_text_for?(text)
           visibility == text
         end
+
         def has_permission_text_for?(text)
-          !!permissions.detect { |perm| perm.name == text }
+          !!permissions.detect { |perm| perm.agent_name == text }
         end
     end
   end

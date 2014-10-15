@@ -1,7 +1,7 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAccessControlsEnforcement
   extend Deprecation
-  
+
   # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access
   # appends the result of policy_clauses into the :fq
   # @param solr_parameters the current solr parameters
@@ -13,12 +13,12 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   end
 
   # returns solr query for finding all objects whose policies grant discover access to current_user
-  def policy_clauses 
+  def policy_clauses
     policy_pids = policies_with_access
     return nil if policy_pids.empty?
     '(' + policy_pids.map {|pid| ActiveFedora::SolrService.construct_query_for_rel(is_governed_by: "info:fedora/#{pid}")}.join(' OR ') + ')'
   end
-  
+
   # find all the policies that grant discover/read/edit permissions to this user or any of its groups
   def policies_with_access
     #### TODO -- Memoize this and put it in the session?
@@ -30,7 +30,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     logger.debug "get policies: #{result}\n\n"
     result.map {|h| h['id']}
   end
-  
+
   def apply_policy_role_permissions(permission_types = discovery_permissions)
     Deprecation.warn(Hydra::PolicyAwareAccessControlsEnforcement, "The method apply_policy_role_permissions is deprecated and will be removed from Hydra::PolicyAwareAccessControlsEnforcement in hydra-head 8.0.  Use apply_policy_group_permissions instead.", caller)
     apply_policy_group_permissions(permission_types)
@@ -74,7 +74,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     end
   end
 
-  protected 
+  protected
 
   def gated_discovery_filters
     filters = super
@@ -84,5 +84,5 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     end
     filters
   end
-  
+
 end

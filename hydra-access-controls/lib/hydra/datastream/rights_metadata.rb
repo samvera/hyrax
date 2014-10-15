@@ -182,9 +182,9 @@ module Hydra
         user_ids = users.keys | users_for_update
         user_ids.each {|person_id| self.permissions({"person"=>person_id}, params['person'].fetch(person_id, 'none'))}
       end
-      
+
       # @param [Symbol] type (either :group or :person)
-      # @return 
+      # @return
       # This method limits the response to known access levels.  Probably runs a bit faster than .permissions().
       def quick_search_by_type(type)
         result = {}

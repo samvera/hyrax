@@ -1,7 +1,7 @@
 FactoryGirl.define do
-  
+
   # Users
-  
+
   # Prototype user factory
   factory :user, :aliases => [:owner] do |u|
     sequence :uid do |n|
@@ -11,7 +11,7 @@ FactoryGirl.define do
     password { uid }
     new_record false
   end
-  
+
   factory :archivist, :parent=>:user do |u|
     uid 'archivist1'
     password 'archivist1'
@@ -71,34 +71,34 @@ FactoryGirl.define do
     roles { ["repository-admin"] }
   end
 
-  # 
+  #
   # Repository Objects
   #
-  
+
   factory :asset, :class => ModsAsset do |o|
   end
-  
+
   factory :admin_policy, :class => Hydra::AdminPolicy do |o|
   end
-  
+
   factory :default_access_asset, :parent=>:asset do |a|
-    permissions_attributes [{:name=>"joe_creator", :access=>"edit", :type=>"user"}]
+    permissions_attributes [{ name: "joe_creator", access: "edit", type: "person" }]
   end
-  
+
   factory :dept_access_asset, :parent=>:asset do |a|
-    permissions_attributes [{:name=>"africana-faculty", :access=>"read", :type=>"group"}, {:name=>"joe_creator", :access=>"edit", :type=>"user"}]
+    permissions_attributes [{ name: "africana-faculty", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }]
   end
 
   factory :group_edit_asset, :parent=>:asset do |a|
-    permissions_attributes [{:name=>"africana-faculty", :access=>"edit", :type=>"group"}, {:name=>"calvin_collaborator", :access=>"edit", :type=>"user"}]
+    permissions_attributes [{ name:"africana-faculty", access: "edit", type: "group" }, {name: "calvin_collaborator", access: "edit", type: "person"}]
   end
-  
+
   factory :org_read_access_asset, :parent=>:asset do |a|
-    permissions_attributes [{:name=>"registered", :access=>"read", :type=>"group"}, {:name=>"joe_creator", :access=>"edit", :type=>"user"}, {:name=>"calvin_collaborator", :access=>"edit", :type=>"user"}]
+    permissions_attributes [{ name: "registered", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
   end
-  
+
   factory :open_access_asset, :parent=>:asset do |a|
-    permissions_attributes [{:name=>"public", :access=>"read", :type=>"group"}, {:name=>"joe_creator", :access=>"edit", :type=>"user"}, {:name=>"calvin_collaborator", :access=>"edit", :type=>"user"}]
+    permissions_attributes [{ name: "public", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
   end
 
 end

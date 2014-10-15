@@ -3,11 +3,11 @@ require 'cancan'
 module Hydra
   module Ability
     extend ActiveSupport::Concern
-    
+
     # once you include Hydra::Ability you can add custom permission methods by appending to ability_logic like so:
     #
     # self.ability_logic +=[:setup_my_permissions]
-    
+
     included do
       include CanCan::Ability
       include Hydra::PermissionsQuery
@@ -33,7 +33,7 @@ module Hydra
     ## You can override this method if you are using a different AuthZ (such as LDAP)
     def user_groups
       return @user_groups if @user_groups
-      
+
       @user_groups = default_user_groups
       @user_groups |= current_user.groups if current_user and current_user.respond_to? :groups
       @user_groups |= ['registered'] unless current_user.new_record?
@@ -44,7 +44,7 @@ module Hydra
       # # everyone is automatically a member of the group 'public'
       ['public']
     end
-    
+
 
     def hydra_default_permissions
       Rails.logger.debug("Usergroups are " + user_groups.inspect)
@@ -60,16 +60,16 @@ module Hydra
     def edit_permissions
       can [:edit, :update, :destroy], String do |pid|
         test_edit(pid)
-      end 
+      end
 
       can [:edit, :update, :destroy], ActiveFedora::Base do |obj|
         test_edit(obj.pid)
       end
-   
+
       can [:edit, :update, :destroy], SolrDocument do |obj|
         cache.put(obj.id, obj)
         test_edit(obj.id)
-      end       
+      end
     end
 
     def read_permissions
@@ -79,12 +79,12 @@ module Hydra
 
       can :read, ActiveFedora::Base do |obj|
         test_read(obj.pid)
-      end 
-      
+      end
+
       can :read, SolrDocument do |obj|
         cache.put(obj.id, obj)
         test_read(obj.id)
-      end 
+      end
     end
 
     # Download permissions are exercised in Hydra::Controller::DownloadBehavior
@@ -97,7 +97,7 @@ module Hydra
     ## Override custom permissions in your own app to add more permissions beyond what is defined by default.
     def custom_permissions
     end
-    
+
     protected
 
     def test_edit(pid)
@@ -106,15 +106,15 @@ module Hydra
       result = !group_intersection.empty? || edit_users(pid).include?(current_user.user_key)
       Rails.logger.debug("[CANCAN] decision: #{result}")
       result
-    end   
-    
+    end
+
     def test_read(pid)
       Rails.logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
       group_intersection = user_groups & read_groups(pid)
       result = !group_intersection.empty? || read_users(pid).include?(current_user.user_key)
       result
-    end 
-    
+    end
+
     def edit_groups(pid)
       doc = permissions_doc(pid)
       return [] if doc.nil?
@@ -150,15 +150,15 @@ module Hydra
     end
 
     module ClassMethods
-      def read_group_field 
+      def read_group_field
         Hydra.config.permissions.read.group
       end
 
-      def edit_user_field 
+      def edit_user_field
         Hydra.config.permissions.edit.individual
       end
 
-      def read_user_field 
+      def read_user_field
         Hydra.config.permissions.read.individual
       end
 

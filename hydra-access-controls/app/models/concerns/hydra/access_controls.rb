@@ -5,7 +5,6 @@ module Hydra
     autoload :WithAccessRight
     autoload :Embargoable
     autoload :Visibility
-    autoload :Permission
     autoload :Permissions
   end
 end

@@ -2,27 +2,31 @@ require 'spec_helper'
 
 describe Hydra::AccessControls::Permission do
   describe "hash-like key access" do
-    let(:perm) { described_class.new(type: 'user', name: 'bob', access: 'read') }
-    it "should return values" do
-      perm[:type].should == 'user'
-      perm[:name].should == 'bob'
-      perm[:access].should == 'read'
+    let(:perm) { described_class.new(type: 'person', name: 'bob', access: 'read') }
+    it "should set predicates" do
+      expect(perm.agent.first.rdf_subject).to eq RDF::URI.new('http://projecthydra.org/ns/auth/person#bob')
+      expect(perm.mode.first.rdf_subject).to eq ACL.Read
     end
   end
+
   describe "#to_hash" do
-    subject { described_class.new(type: 'user', name: 'bob', access: 'read') }
-    its(:to_hash) { should == {type: 'user', name: 'bob', access: 'read'} }
+    let(:permission) { described_class.new(type: 'person', name: 'bob', access: 'read') }
+    subject { permission.to_hash }
+    it { should eq(type: 'person', name: 'bob', access: 'read') }
   end
+
   describe "equality comparison" do
-    let(:perm1) { described_class.new(type: 'user', name: 'bob', access: 'read') }
-    let(:perm2) { described_class.new(type: 'user', name: 'bob', access: 'read') }
-    let(:perm3) { described_class.new(type: 'user', name: 'jane', access: 'read') }
+    let(:perm1) { described_class.new(type: 'person', name: 'bob', access: 'read') }
+    let(:perm2) { described_class.new(type: 'person', name: 'bob', access: 'read') }
+    let(:perm3) { described_class.new(type: 'person', name: 'jane', access: 'read') }
+
     it "should be equal if all values are equal" do
-      perm1.should == perm2
+      expect(perm1).to eq perm2
     end
+
     it "should be unequal if some values are unequal" do
-      perm1.should_not == perm3
-      perm2.should_not == perm3
+      expect(perm1).to_not eq perm3
+      expect(perm2).to_not eq perm3
     end
   end
 end

@@ -1,5 +1,6 @@
 group :develop do
   gem 'active-fedora', github: 'projecthydra/active_fedora', branch: 'fedora-4'
+
   # Waiting on fixes in ActiveTriples
   gem 'active-triples', github: 'no-reply/ActiveTriples', ref: '4bec618710f7c87369e4e0960742d3943dec0fab'
 

@@ -5,7 +5,7 @@ describe Hydra::AccessControlsEnforcement do
     class MockController
       include Hydra::AccessControlsEnforcement
       attr_accessor :params
-      
+
       def current_ability
         @current_ability ||= Ability.new(current_user)
       end
@@ -17,7 +17,7 @@ describe Hydra::AccessControlsEnforcement do
     end
   end
   subject { MockController.new }
-  
+
   describe "When I am searching for content" do
     before do
       @solr_parameters = {}
@@ -32,18 +32,18 @@ describe Hydra::AccessControlsEnforcement do
         expect(@solr_parameters[:fq].first).to eq 'edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public'
       end
       it "Then I should not be treated as a member of the 'registered' group" do
-        expect(@solr_parameters[:fq].first).to_not match(/registered/) 
+        expect(@solr_parameters[:fq].first).to_not match(/registered/)
       end
-      it "Then I should not have individual or group permissions"
       it "Should changed based on the discovery_perissions" do
         @solr_parameters = {}
         discovery_permissions = ["read","edit"]
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
         ["edit","read"].each do |type|
-          expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:public/)      
+          expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:public/)
         end
       end
     end
+
     context "Given I am a registered user" do
       before do
         @user = FactoryGirl.build(:martia_morocco)
@@ -56,19 +56,19 @@ describe Hydra::AccessControlsEnforcement do
       end
       it "Then I should be treated as a member of the 'public' and 'registered' groups" do
         ["discover","edit","read"].each do |type|
-          expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:public/)  
-          expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:registered/)      
+          expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:public/)
+          expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:registered/)
         end
       end
       it "Then I should see assets that I have discover, read, or edit access to" do
         ["discover","edit","read"].each do |type|
-          expect(@solr_parameters[:fq].first).to match(/#{type}_access_person_ssim\:#{@user.user_key}/)      
+          expect(@solr_parameters[:fq].first).to match(/#{type}_access_person_ssim\:#{@user.user_key}/)
         end
       end
       it "Then I should see assets that my groups have discover, read, or edit access to" do
         ["faculty", "africana-faculty"].each do |group_id|
           ["discover","edit","read"].each do |type|
-            expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:#{group_id}/)      
+            expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:#{group_id}/)
           end
         end
       end
@@ -78,13 +78,13 @@ describe Hydra::AccessControlsEnforcement do
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
         ["faculty", "africana-faculty"].each do |group_id|
           ["edit","read"].each do |type|
-            expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:#{group_id}/)      
+            expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:#{group_id}/)
           end
         end
       end
     end
   end
-  
+
   describe "enforce_show_permissions" do
     it "should allow a user w/ edit permissions to view an embargoed object" do
       user = User.new :uid=>'testuser@example.com'
@@ -122,14 +122,14 @@ describe Hydra::AccessControlsEnforcement do
     it "should set query fields for the user id checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        expect(@solr_parameters[:fq].first).to match(/#{type}_access_person_ssim\:#{@stub_user.user_key}/)      
+        expect(@solr_parameters[:fq].first).to match(/#{type}_access_person_ssim\:#{@stub_user.user_key}/)
       end
     end
     it "should set query fields for all roles the user is a member of checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:archivist/)        
-        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:researcher/)        
+        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:archivist/)
+        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:researcher/)
       end
     end
 
@@ -137,8 +137,8 @@ describe Hydra::AccessControlsEnforcement do
       allow(RoleMapper).to receive(:roles).with(@stub_user).and_return(["abc/123","cde/567"])
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:abc\\\/123/)        
-        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:cde\\\/567/)        
+        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:abc\\\/123/)
+        expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:cde\\\/567/)
       end
     end
     it "should escape spaces in the group names" do

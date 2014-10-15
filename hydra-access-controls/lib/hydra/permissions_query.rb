@@ -32,8 +32,8 @@ module Hydra
     #
     #  Solr integration
     #
-    
-    # returns a params hash with the permissions info for a single solr document 
+
+    # returns a params hash with the permissions info for a single solr document
     # If the id arg is nil, then the value is fetched from params[:id]
     # This method is primary called by the get_permissions_solr_response_for_doc_id method.
     # Modeled on Blacklight::SolrHelper.solr_doc_params

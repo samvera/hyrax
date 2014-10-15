@@ -33,12 +33,17 @@ describe Ability do
   end
 
 
-# NOTES: 
+# NOTES:
 #   See spec/requests/... for test coverage describing WHAT should appear on a page based on access permissions
 #   Test coverage for discover permission is in spec/requests/gated_discovery_spec.rb
-  
+
   describe "Given an asset that has been made publicly available (ie. open access)" do
-    let(:asset) { FactoryGirl.create(:open_access_asset) }
+    #let(:asset) { FactoryGirl.create(:open_access_asset) }
+    let(:asset) { FactoryGirl.create(:asset) }
+    before do
+      asset.permissions_attributes = [{ name: "public", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
+      asset.save
+    end
 
     context "Then a not-signed-in user" do
       subject { Ability.new(nil) }
@@ -59,10 +64,15 @@ describe Ability do
       it { should_not be_able_to(:destroy, asset) }
     end
   end
-  
+
   describe "Given an asset with no custom access set" do
-    let(:asset) { FactoryGirl.create(:default_access_asset) }
-    let(:solr_doc) { SolrDocument.new(asset.rightsMetadata.to_solr.merge(id: asset.pid)) }
+    #let(:asset) { FactoryGirl.create(:default_access_asset) }
+    let(:asset) { FactoryGirl.create(:asset) }
+    before do
+      asset.permissions_attributes = [{ name: "joe_creator", access: "edit", type: "person" }]
+      asset.save
+    end
+    let(:solr_doc) { SolrDocument.new(asset.to_solr.merge(id: asset.pid)) }
     context "Then a not-signed-in user" do
       let(:user) { User.new.tap {|u| u.new_record = true } }
       subject { Ability.new(user) }
@@ -92,7 +102,12 @@ describe Ability do
   end
 
   describe "Given an asset which registered users have read access to" do
-    let(:asset) { FactoryGirl.create(:org_read_access_asset) }
+    # let(:asset) { FactoryGirl.create(:org_read_access_asset) }
+    let(:asset) { FactoryGirl.create(:asset) }
+    before do
+      asset.permissions_attributes = [{ name: "registered", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
+      asset.save
+    end
     context "The a registered user" do
       before do
         @user = FactoryGirl.build(:registered_user)
@@ -108,7 +123,12 @@ describe Ability do
   end
 
   describe "Given an asset with collaborator" do
-    let(:asset) { FactoryGirl.create(:group_edit_asset) }
+    # let(:asset) { FactoryGirl.create(:group_edit_asset) }
+    let(:asset) { FactoryGirl.create(:asset) }
+    before do
+      asset.permissions_attributes = [{ name:"africana-faculty", access: "edit", type: "group" }, {name: "calvin_collaborator", access: "edit", type: "person"}]
+      asset.save
+    end
     after { asset.destroy }
     context "Then a collaborator with edit access (user permision)" do
       before do
@@ -135,7 +155,12 @@ describe Ability do
   end
 
   describe "Given an asset where dept can read & registered users can discover" do
-    let(:asset) { FactoryGirl.create(:dept_access_asset) }
+    # let(:asset) { FactoryGirl.create(:dept_access_asset) }
+    let(:asset) { FactoryGirl.create(:asset) }
+    before do
+      asset.permissions_attributes = [{ name: "africana-faculty", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }]
+      asset.save
+    end
     context "Then a registered user" do
       before do
         @user = FactoryGirl.build(:registered_user)
@@ -189,20 +214,23 @@ describe Ability do
   end
 
   describe "calling ability on two separate objects" do
+    #asset1 = FactoryGirl.create(:org_read_access_asset)
+    let(:asset1) { FactoryGirl.create(:asset) }
+    let(:asset2) { FactoryGirl.create(:asset) }
     before do
-      @asset1 = FactoryGirl.create(:org_read_access_asset)
-      @asset2 = FactoryGirl.create(:asset)
+      asset1.permissions_attributes = [{ name: "registered", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
+      asset1.save
       @user = FactoryGirl.build(:calvin_collaborator) # has access to @asset1, but not @asset2
     end
     after do
-      @asset1.destroy
-      @asset2.destroy
+      asset1.destroy
+      asset2.destroy
     end
     subject { Ability.new(@user) }
     it "should be readable in the first instance and not in the second instance" do
       # We had a bug around this where it keeps returning the access for the first object queried
-      expect(subject).to be_able_to(:edit, @asset1)
-      expect(subject).to_not be_able_to(:edit, @asset2)
+      expect(subject).to be_able_to(:edit, asset1)
+      expect(subject).to_not be_able_to(:edit, asset2)
     end
   end
 
@@ -210,6 +238,7 @@ describe Ability do
     subject { Ability.new(user) }
     let(:asset) { FactoryGirl.create(:asset) }
     let(:user) { FactoryGirl.build(:user) }
+    let(:datastream) { ActiveFedora::Datastream.new(asset, 'ds1') }
     after { asset.destroy }
 
     context "user has read permission on the object" do
@@ -219,12 +248,12 @@ describe Ability do
       end
 
       it { should be_able_to(:read, asset) }
-      it { should be_able_to(:download, asset.rightsMetadata) }
+      it { should be_able_to(:download, datastream) }
     end
 
     context "user lacks read permission on the object and datastream" do
       it { should_not be_able_to(:read, asset) }
-      it { should_not be_able_to(:download, asset.rightsMetadata) }
+      it { should_not be_able_to(:download, datastream) }
     end
   end
 

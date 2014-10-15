@@ -39,19 +39,17 @@ module Hydra
 
       def public_visibility!
         visibility_will_change! unless visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        self.datastreams["rightsMetadata"].permissions({:group=>Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "read")
+        set_read_groups([Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC], [])
       end
 
       def registered_visibility!
         visibility_will_change! unless visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        self.datastreams["rightsMetadata"].permissions({:group=>Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "read")
-        self.datastreams["rightsMetadata"].permissions({:group=>Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
+        set_read_groups([Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED], [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC])
       end
 
       def private_visibility!
         visibility_will_change! unless visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
-        self.datastreams["rightsMetadata"].permissions({:group=>Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED}, "none")
-        self.datastreams["rightsMetadata"].permissions({:group=>Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC}, "none")
+        set_read_groups([], [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED, Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC])
       end
 
     end

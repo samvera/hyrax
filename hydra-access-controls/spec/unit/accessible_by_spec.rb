@@ -3,13 +3,22 @@ require 'spec_helper'
 describe "active_fedora/accessible_by" do
   let(:user) {FactoryGirl.build(:ira_instructor)}
   let(:ability) {Ability.new(user)}
-  let(:private_obj) {FactoryGirl.create(:default_access_asset)}
-  let(:public_obj) {FactoryGirl.create(:open_access_asset)}
-  let(:editable_obj) {FactoryGirl.create(:group_edit_asset)}
+  let(:private_obj) {FactoryGirl.create(:asset)}
+  let(:public_obj) {FactoryGirl.create(:asset)}
+  let(:editable_obj) {FactoryGirl.create(:asset)}
+
+  # let(:private_obj) {FactoryGirl.create(:default_access_asset)}
+  # let(:public_obj) {FactoryGirl.create(:open_access_asset)}
+  # let(:editable_obj) {FactoryGirl.create(:group_edit_asset)}
 
   before do
+    private_obj.permissions_attributes = [{ name: "joe_creator", access: "edit", type: "person" }]
+    private_obj.save
+    public_obj.permissions_attributes = [{ name: "public", access: "read", type: "group" }, { name: "joe_creator", access: "edit", type: "person" }, { name: "calvin_collaborator", access: "edit", type: "person" }]
+    public_obj.save
+    editable_obj.permissions_attributes = [{ name:"africana-faculty", access: "edit", type: "group" }, {name: "calvin_collaborator", access: "edit", type: "person"}]
+    editable_obj.save
     expect(user).to receive(:groups).at_most(:once).and_return(user.roles)
-    ModsAsset.delete_all
   end
 
   after do
