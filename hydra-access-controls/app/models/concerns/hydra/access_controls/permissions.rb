@@ -5,7 +5,7 @@ module Hydra
       include Hydra::AccessControls::Visibility
 
       included do
-        has_many :permissions, property: ::ACL.access_to, class_name: 'Hydra::AccessControls::Permission', inverse_of: :access_to
+        has_many :permissions, property: ::ACL.accessTo, class_name: 'Hydra::AccessControls::Permission', inverse_of: :access_to
         accepts_nested_attributes_for :permissions, allow_destroy: true
         alias_method :permissions_attributes_without_uniqueness=, :permissions_attributes=
         alias_method :permissions_attributes=, :permissions_attributes_with_uniqueness=

@@ -38,16 +38,13 @@ require "factory_girl"
 require "factories"
 
 # HttpLogger.logger = Logger.new(STDOUT)
-# HttpLogger.ignore = [/localhost:8983\/fedora/]
+# HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
+require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.before(:each) do
-    begin
-      ActiveFedora.fedora.connection.delete(ActiveFedora.fedora.base_path.sub('/', ''))
-    rescue StandardError
-    end
-    ActiveFedora.fedora.connection.put(ActiveFedora.fedora.base_path.sub('/', ''),"")
+    ActiveFedora::Cleaner.clean!
   end
 end
 

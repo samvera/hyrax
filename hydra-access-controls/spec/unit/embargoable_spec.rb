@@ -208,7 +208,7 @@ describe Hydra::AccessControls::Embargoable do
     end
   end
 
-  context 'validate_embargo' do
+  context 'validate_visibility_complies_with_embargo' do
     before do
       subject.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       subject.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -217,12 +217,12 @@ describe Hydra::AccessControls::Embargoable do
       it 'returns true if current visibility matches visibility_during_embargo' do
         subject.visibility = subject.visibility_during_embargo
         subject.embargo_release_date = future_date.to_s
-        expect(subject.validate_embargo).to be true
+        expect(subject.validate_visibility_complies_with_embargo).to be true
       end
       it 'records a failures in record.errors[:embargo]' do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         subject.embargo_release_date = future_date.to_s
-        expect(subject.validate_embargo).to be false
+        expect(subject.validate_visibility_complies_with_embargo).to be false
         expect(subject.errors[:embargo].first).to eq "An embargo is in effect for this object until #{subject.embargo_release_date}.  Until that time the visibility should be #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE} but it is currently #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED}.  Call embargo_visibility! on this object to repair."
       end
     end
@@ -230,12 +230,12 @@ describe Hydra::AccessControls::Embargoable do
       it 'returns true if current visibility matches visibility_after_embargo' do
         subject.visibility = subject.visibility_after_embargo
         subject.embargo_release_date = past_date.to_s
-        expect(subject.validate_embargo).to be true
+        expect(subject.validate_visibility_complies_with_embargo).to be true
       end
       it '(embargo expired) records a failures in record.errors[:embargo]' do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         subject.embargo_release_date = past_date.to_s
-        expect(subject.validate_embargo).to be false
+        expect(subject.validate_visibility_complies_with_embargo).to be false
         expect(subject.errors[:embargo].first).to eq "The embargo expired on #{subject.embargo_release_date}.  The visibility should be #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC} but it is currently #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE}.  Call embargo_visibility! on this object to repair."
       end
     end
@@ -284,7 +284,7 @@ describe Hydra::AccessControls::Embargoable do
     end
   end
 
-  context 'validate_lease' do
+  context 'validate_visibility_complies_with_lease' do
     let(:future_date) { 2.days.from_now }
     let(:past_date) { 2.days.ago }
     before do
@@ -295,12 +295,12 @@ describe Hydra::AccessControls::Embargoable do
       it 'returns true if current visibility matches visibility_after_lease' do
         subject.visibility = subject.visibility_after_lease
         subject.lease_expiration_date = past_date.to_s
-        expect(subject.validate_lease).to be true
+        expect(subject.validate_visibility_complies_with_lease).to be true
       end
       it 'records a failures in record.errors[:lease]' do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         subject.lease_expiration_date = past_date.to_s
-        expect(subject.validate_lease).to be false
+        expect(subject.validate_visibility_complies_with_lease).to be false
         expect(subject.errors[:lease].first).to eq "The lease expired on #{subject.lease_expiration_date}.  The visibility should be #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE} but it is currently #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC}.  Call lease_visibility! on this object to repair."
       end
     end
@@ -308,12 +308,12 @@ describe Hydra::AccessControls::Embargoable do
       it 'returns true if current visibility matches visibility_during_embargo' do
         subject.visibility = subject.visibility_during_lease
         subject.lease_expiration_date = future_date.to_s
-        expect(subject.validate_lease).to be true
+        expect(subject.validate_visibility_complies_with_lease).to be true
       end
       it 'records a failures in record.errors[:lease]' do
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         subject.lease_expiration_date = future_date.to_s
-        expect(subject.validate_lease).to be false
+        expect(subject.validate_visibility_complies_with_lease).to be false
         expect(subject.errors[:lease].first).to eq "A lease is in effect for this object until #{subject.lease_expiration_date}.  Until that time the visibility should be #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC} but it is currently #{Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED}.  Call lease_visibility! on this object to repair."
       end
     end

@@ -5,15 +5,15 @@ module Hydra
     property :hasEmbargo
     property :hasLease
 
-    property :visibility_during_embargo
-    property :visibility_after_embargo
-    property :embargo_release_date
-    property :visibility_during_lease
-    property :visibility_after_lease
-    property :lease_expiration_date
+    property :visibilityDuringEmbargo
+    property :visibilityAfterEmbargo
+    property :embargoReleaseDate
+    property :visibilityDuringLease
+    property :visibilityAfterLease
+    property :leaseExpirationDate
 
-    property :embargo_history
-    property :lease_history
+    property :embargoHistory
+    property :leaseHistory
 
     property :defaultPermissions
   end

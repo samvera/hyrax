@@ -1,6 +1,6 @@
 module Hydra::AccessControls
   class AccessControlList < ActiveFedora::Base
-    belongs_to :access_to, property: ::ACL.access_to, class_name: 'ActiveFedora::Base'
+    belongs_to :access_to, property: ::ACL.accessTo, class_name: 'ActiveFedora::Base'
     # has_many :admin_policies, class_name: 'Hydra::AdminPolicy'
     property :mode, predicate: ::ACL.mode, class_name: 'Hydra::AccessControls::Mode'
     property :agent, predicate: ::ACL.agent, class_name: 'Hydra::AccessControls::Agent'

@@ -10,7 +10,7 @@ describe Hydra::PolicyAwareAbility do
         :embargo_release_date => "inheritable_embargo_release_date_dtsi"
     })
   end
-  before(:all) do
+  before do
     class PolicyAwareClass
       include Hydra::PolicyAwareAbility
     end
@@ -24,14 +24,14 @@ describe Hydra::PolicyAwareAbility do
         {:type=>"person", :access=>"edit", :name=>"julius_caesar"}
       ]
 
-    @policy.save
+    @policy.save!
     @asset = ModsAsset.new
     @asset.admin_policy = @policy
-    @asset.save
+    @asset.save!
   end
-  after(:all) do
-    @policy.delete
-    @asset.delete
+  after do
+    # @policy.delete
+    # @asset.delete
     Object.send(:remove_const, :PolicyAwareClass)
   end
   subject { PolicyAwareClass.new( User.new ) }
@@ -53,9 +53,9 @@ describe Hydra::PolicyAwareAbility do
       @asset3 = ModsAsset.create
     end
     after do
-      @policy2.delete
-      @asset2.delete
-      @asset3.delete
+      # @policy2.delete
+      # @asset2.delete
+      # @asset3.delete
     end
     it "should retrieve the pid doc for the current object's governing policy" do
       expect(subject.policy_pid_for(@asset.pid)).to eq @policy.pid

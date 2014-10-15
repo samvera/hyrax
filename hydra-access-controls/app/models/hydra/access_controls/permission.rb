@@ -11,7 +11,9 @@ module Hydra::AccessControls
     end
 
     def inspect
-      "<#{self.class.name} pid: #{pid} agent: #{agent.first.rdf_subject.to_s.inspect} mode: #{mode.first.rdf_subject.to_s.inspect} access_to: #{access_to_id.inspect}>"
+      agent_value = agent.first.rdf_subject.to_s.inspect if agent.first
+      mode_value = mode.first.rdf_subject.to_s.inspect if mode.first
+      "<#{self.class.name} pid: #{pid} agent: #{agent_value} mode: #{mode_value} access_to: #{access_to_id.inspect}>"
     end
 
     def == other

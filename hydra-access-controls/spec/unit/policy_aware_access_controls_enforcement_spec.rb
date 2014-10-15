@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
-  before(:all) do
+  before do
     class PolicyMockController
       include Hydra::AccessControlsEnforcement
       include Hydra::PolicyAwareAccessControlsEnforcement
@@ -82,10 +82,6 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
     @sample_policies << policy_no_access
     @policies_with_access = @sample_policies.select { |p| p.pid != policy_no_access.pid }
-  end
-
-  after(:all) do
-    @sample_policies.each {|p| p.delete }
   end
 
   subject { PolicyMockController.new }
