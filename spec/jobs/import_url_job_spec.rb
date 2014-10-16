@@ -4,10 +4,12 @@ describe ImportUrlJob do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:file_path) { '/world.png' }
+  let(:file_hash)  {'/673467823498723948237462429793840923582'}
 
   let(:generic_file) do
     GenericFile.new.tap do |f|
-      f.import_url = "http://example.org#{file_path}"
+      f.import_url = "http://example.org#{file_hash}"
+      f.label = file_path
       f.apply_depositor_metadata(user.user_key)
       f.save
     end
@@ -44,10 +46,11 @@ describe ImportUrlJob do
     end
 
     it "should create a content datastream" do
-      Net::HTTP.any_instance.should_receive(:request_get).with(file_path).and_yield(mock_response)
+      Net::HTTP.any_instance.should_receive(:request_get).with(file_hash).and_yield(mock_response)
       job.run
       expect(generic_file.reload.content.size).to eq 4218
       expect(generic_file.content.dsLabel).to eq file_path
+      expect(user.mailbox.inbox.first.last_message.body).to eq("The file (#{file_path}) was successfully imported.")
     end
   end
 
