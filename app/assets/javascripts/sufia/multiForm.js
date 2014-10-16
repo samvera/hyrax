@@ -12,13 +12,15 @@
       var cloneElem = $('#'+cloneId).clone();
       // change the add button to a remove button
       var plusbttn = cloneElem.find('#'+this.id);
-      plusbttn.html('-<span class="sr-only">remove this '+ this.name.replace("_", " ") +'</span>');
+      var sr_hidden = '<span aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span>';
+      var sr_only = '<span class="sr-only">remove this ' + this.name.replace("_", " ") + '</span>';
+      var remove_button = sr_hidden + sr_only; 
+      plusbttn.html(remove_button);
       plusbttn.on('click',removeField);
 
 
       // remove the help tag on subsequent added fields
       cloneElem.find('.formHelp').remove();
-      cloneElem.find('i').remove();
       cloneElem.find('.modal-div').remove();
 
       //clear out the value for the element being appended

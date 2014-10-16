@@ -154,3 +154,7 @@ en:
         create: "Create Collection"
         update: "Update Collection"
         create_new: "Add to new Collection"
+      metadata:
+        add_another_keyword: "add another Keyword"
+        add_another_creator: "add another Creator"
+        add_another_rights: "add another Rights"

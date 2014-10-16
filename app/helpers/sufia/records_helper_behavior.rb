@@ -41,16 +41,22 @@ module Sufia
     private
 
     def more_or_less_button(key, html_class, symbol)
-      # TODO, there could be more than one element with this id on the page, but the fuctionality doesn't work without it.
-      content_tag('button', class: "#{html_class} btn", id: "additional_#{key}_submit", name: "additional_#{key}") do
-        (sr_hidden(symbol) + content_tag('span', class: 'sr-only') do
-          "add another #{key.to_s}"
-        end).html_safe
+      icon = (symbol == "-") ? "remove" : "plus" 
+      content_tag "button", class: "#{html_class} btn", id: "additional_#{key}_submit", name: "additional_#{key}" do
+        sr_hidden(icon) + sr_only(key.to_s)
       end
     end
 
-    def sr_hidden text
-      content_tag :span, text, "aria-hidden" => true
+    def sr_hidden icon
+      content_tag "span", "aria-hidden" => true do 
+        content_tag "i", "", class: "glyphicon glyphicon-#{icon}" 
+      end
+    end
+
+    def sr_only text
+      content_tag "span", class: "sr-only" do 
+        "add another #{text}"
+      end
     end
 
     def default_aria_label text

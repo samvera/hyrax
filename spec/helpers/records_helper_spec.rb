@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe RecordsHelper do
   let(:adder) {
-    "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\">+</span><span class=\"sr-only\">add another test</span></button>"
+    "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-plus\"></i></span><span class=\"sr-only\">add another test</span></button>"
   }
   let(:remover) {
-    "<button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\">-</span><span class=\"sr-only\">add another test</span></button>"    
+    "<button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-remove\"></i></span><span class=\"sr-only\">add another test</span></button>"    
   }
   it "draws add button" do
     expect(helper.add_field(:test)).to eql(adder)
