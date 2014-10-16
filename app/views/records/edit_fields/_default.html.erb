@@ -1,6 +1,6 @@
       <div <%  if index == 0 %> id="additional_<%= key.to_s %>_clone" <% end %>>
         <% required = render_req && (index == 0) && record.required?(key) %>
         <%= f.text_field :title, name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "input-large", required: required  %>
-        <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
+        <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index, single: f.object.class.unique?(key) } %>
       </div>
       <div id="additional_<%= key %>_elements"></div>
