@@ -8,7 +8,7 @@ module Sufia
       def audit(force = false)
         logs = []
         self.per_version do |ver|
-          logs << ::GenericFile.audit(ver, force)
+          logs << audit_each(ver, force)
         end
         logs
       end
@@ -51,23 +51,27 @@ module Sufia
         end
       end
 
+      def audit_each(version, force = false)
+        latest_audit = logs(version.dsid).first
+        return latest_audit unless force || ::GenericFile.needs_audit?(version, latest_audit)
+
+        #  Resque.enqueue(AuditJob, version.pid, version.dsid, version.versionID)
+        Sufia.queue.push(AuditJob.new(version.pid, version.dsid, version.versionID))
+
+        # run the find just incase the job has finished already
+        latest_audit = logs(version.dsid).first
+        latest_audit = ChecksumAuditLog.new(pass: NO_RUNS, pid: version.pid, dsid: version.dsid, version: version.versionID) unless latest_audit
+        latest_audit
+      end
+
+
       module ClassMethods
         def audit!(version)
           ::GenericFile.audit(version, true)
         end
 
         def audit(version, force = false)
-          latest_audit = self.find(version.pid).logs(version.dsid).first
-          unless force
-            return latest_audit unless ::GenericFile.needs_audit?(version, latest_audit)
-          end
-          #  Resque.enqueue(AuditJob, version.pid, version.dsid, version.versionID)
-          Sufia.queue.push(AuditJob.new(version.pid, version.dsid, version.versionID))
-
-          # run the find just incase the job has finished already
-          latest_audit = self.find(version.pid).logs(version.dsid).first
-          latest_audit = ChecksumAuditLog.new(pass: NO_RUNS, pid: version.pid, dsid: version.dsid, version: version.versionID) unless latest_audit
-          latest_audit
+          latest_audit = self.find(version.pid).audit_each( version, force)
         end
 
         def needs_audit?(version, latest_audit)
