@@ -5,7 +5,9 @@ class FileUsage
   def initialize id
     self.id = id
     self.path = Sufia::Engine.routes.url_helpers.generic_file_path(Sufia::Noid.noidify(id))
+    earliest = Sufia.config.analytic_start_date
     self.created = DateTime.parse(::GenericFile.find(id).create_date)
+    self.created = earliest > created ? earliest : created unless earliest.blank?
     self.downloads = download_statistics
     self.pageviews = pageview_statistics
   end
@@ -31,13 +33,13 @@ class FileUsage
   # Sufia::Download is sent to Sufia::Analytics.profile as #sufia__download
   # see Legato::ProfileMethods.method_name_from_klass
   def download_statistics
-    Sufia::Analytics.profile.sufia__download(sort: 'date').for_file(self.id)
+    Sufia::Analytics.profile.sufia__download(sort: 'date', start_date: created).for_file(self.id)
   end
 
   # Sufia::Pageview is sent to Sufia::Analytics.profile as #sufia__pageview
   # see Legato::ProfileMethods.method_name_from_klass
   def pageview_statistics
-    Sufia::Analytics.profile.sufia__pageview(sort: 'date').for_path(self.path)
+    Sufia::Analytics.profile.sufia__pageview(sort: 'date', start_date: created).for_path(self.path)
   end
 
   def pageviews_to_flot values = Array.new

@@ -84,8 +84,60 @@ describe FileUsage do
       expect(usage.to_flot[1][:label]).to eq("Downloads")
       expect(usage.to_flot[0][:data]).to include([1388534400000, 4], [1388620800000, 8], [1388707200000, 6], [1388793600000, 10], [1388880000000, 2]) 
       expect(usage.to_flot[1][:data]).to include([1388534400000, 1], [1388620800000, 1], [1388707200000, 2], [1388793600000, 3],  [1388880000000, 5])
-    end 
+    end
 
+    let(:create_date) {DateTime.new(2014, 01, 01)}
+
+    describe "analytics start date set" do
+      let(:earliest) {
+        DateTime.new(2014, 01, 02)
+      }
+
+      before do
+        Sufia.config.analytic_start_date = earliest
+      end
+
+      describe "create date before earliest date set" do
+        let(:usage) {
+          allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
+          allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
+          allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+          FileUsage.new(@file.id)
+        }
+        it "should set the created date to the earliest date not the created date" do
+          expect(usage.created).to eq(earliest)
+        end
+
+      end
+
+      describe "create date after earliest" do
+        let(:usage) {
+          allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
+          allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+          Sufia.config.analytic_start_date = earliest
+          FileUsage.new(@file.id)
+        }
+        it "should set the created date to the earliest date not the created date" do
+          expect(usage.created).to eq(@file.create_date)
+        end
+      end
+    end
+    describe "start date not set" do
+      before do
+        Sufia.config.analytic_start_date = nil
+      end
+
+      let(:usage) {
+        allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
+        allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
+        allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+        FileUsage.new(@file.id)
+      }
+      it "should set the created date to the earliest date not the created date" do
+        expect(usage.created).to eq(create_date)
+      end
+
+    end
   end
 
 end
