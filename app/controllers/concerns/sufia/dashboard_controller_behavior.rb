@@ -32,7 +32,7 @@ module Sufia
     # in your dashboard view.  You'll need to alter dashboard/index.html.erb accordingly.
     def gather_dashboard_information
       @user = current_user
-      @activity = current_user.get_all_user_activity(params[:since].blank? ? DateTime.now.to_i - 8640 : params[:since].to_i)
+      @activity = current_user.get_all_user_activity(params[:since].blank? ? DateTime.now.to_i - Sufia.config.activity_to_show_default_seconds_since_now : params[:since].to_i)
       @notifications = current_user.mailbox.inbox
     end
 

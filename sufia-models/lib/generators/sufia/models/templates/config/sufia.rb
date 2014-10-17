@@ -105,6 +105,9 @@ Sufia.config do |config|
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"
 
+  # Specify how many seconds back from the current time that we should show by default of the user's activity on the user's dashboard
+  # config.activity_to_show_default_seconds_since_now = 24*60*60
+
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     if defined? BrowseEverything
