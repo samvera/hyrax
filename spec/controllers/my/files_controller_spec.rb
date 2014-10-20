@@ -14,7 +14,7 @@ describe My::FilesController do
 
   let(:my_collection) do
     Collection.new(title: 'test collection').tap do |c|
-      c.apply_depositor_metadata(@user.user_key)
+      c.apply_depositor_metadata(user.user_key)
       c.save!
     end
   end
@@ -22,15 +22,17 @@ describe My::FilesController do
   let(:shared_file) do
     FactoryGirl.build(:generic_file).tap do |r|
       r.apply_depositor_metadata FactoryGirl.create(:user)
-      r.edit_users += [@user.user_key]
+      r.edit_users += [user.user_key]
       r.save!
     end
   end
 
+  let(:user) { FactoryGirl.find_or_create(:archivist) }
+
+
   before do
-    @user = FactoryGirl.find_or_create(:archivist)
-    sign_in @user
-    @my_file = FactoryGirl.create(:generic_file, depositor: @user)
+    sign_in user
+    @my_file = FactoryGirl.create(:generic_file, depositor: user)
     @my_collection = my_collection
     @shared_file = shared_file
     @unrelated_file = FactoryGirl.create(:generic_file, depositor: FactoryGirl.create(:user))
@@ -63,6 +65,25 @@ describe My::FilesController do
     expect(assigns[:document_list].map(&:id)).to_not include(@unrelated_file.id)
     # doesn't show non-generic files
     expect(assigns[:document_list].map(&:id)).to_not include(@wrong_type.id)
+  end
+
+  describe "batch processing" do
+    include Sufia::Messages
+    let (:batch_noid) {"batch_noid"}
+    let (:batch_noid2) {"batch_noid2"}
+    let (:batch) {double}
+
+    before do
+      allow(batch).to receive(:noid).and_return(batch_noid)
+      User.batchuser().send_message(user, single_success(batch_noid, batch), success_subject, sanitize_text = false)
+      User.batchuser().send_message(user, multiple_success(batch_noid2, [batch]), success_subject, sanitize_text = false)
+      get :index
+    end
+    it "gets batches that are complete" do
+      expect(assigns(:batches).count).to eq(2)
+      expect(assigns(:batches)).to include("ss-"+batch_noid)
+      expect(assigns(:batches)).to include("ss-"+batch_noid2)
+    end
   end
 
 end
