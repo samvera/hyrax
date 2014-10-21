@@ -39,7 +39,7 @@ function batch_edit_init () {
                     requests.splice($.inArray(opt, requests), 1);
             },
             runNow: function () {
-                clearTimeout(self.tid);
+                clearTimeout(this.tid);
                 if (!running) {
                     this.run();
                 }
@@ -104,7 +104,7 @@ function batch_edit_init () {
     function after_ajax(form_id) {
         var key = form_id.replace("form_", "");
         var save_button = "#" + key + "_save";
-        var outer_div = "#collapse_" + key;
+        var outer_div = "#detail_" + key;
         $("#status_" + key).html("Changes Saved");
         $(save_button).removeAttr("disabled");
         $(outer_div).removeClass("loading");
@@ -114,7 +114,7 @@ function batch_edit_init () {
     function before_ajax(form_id) {
         var key = form_id.replace("form_", "");
         var save_button = "#" + key + "_save";
-        var outer_div = "#collapse_" + key;
+        var outer_div = "#detail_" + key;
         $(save_button).attr("disabled", "disabled");
         $(outer_div).addClass("loading");
         $('#' + form_id).children([".form-group"]).addClass('hidden')
@@ -143,6 +143,7 @@ function batch_edit_init () {
                 after_ajax(form_id);
                 if (e.status == 200) {
                     eval(e.responseText);
+                    after_ajax(form_id);
                 } else {
                     alert("Error!  Status: " + e.status);
                 }
