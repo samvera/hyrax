@@ -143,7 +143,6 @@ function batch_edit_init () {
                 after_ajax(form_id);
                 if (e.status == 200) {
                     eval(e.responseText);
-                    after_ajax(form_id);
                 } else {
                     alert("Error!  Status: " + e.status);
                 }
