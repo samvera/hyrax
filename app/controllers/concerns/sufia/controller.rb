@@ -37,7 +37,7 @@ module Sufia::Controller
     return if action_name == "index" && controller_name == "mailbox"
     if user_signed_in?
       @notify_number = current_user.mailbox.inbox(unread: true).count
-      @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span class="batchid ui-helper-hidden">(.*)<\/span>The file(.*)/,1] }.select{ |val| !val.blank? }
+      @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=)(.*)/,1] }.select{ |val| !val.blank? }
     end
   end
 
