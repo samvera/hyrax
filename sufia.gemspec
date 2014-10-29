@@ -42,6 +42,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'bootstrap-sass', '< 3.2'
   gem.add_dependency 'blacklight-gallery'
   gem.add_dependency 'breadcrumbs_on_rails', '~>2.3.0'
+  gem.add_dependency 'select2-rails'
 
   gem.add_development_dependency 'engine_cart'
   gem.add_development_dependency 'mida'
@@ -51,5 +52,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "capybara"
   gem.add_development_dependency "poltergeist", "~> 1.5"
   gem.add_development_dependency "factory_girl_rails"
-
+  gem.add_development_dependency "equivalent-xml"
 end

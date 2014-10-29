@@ -19,6 +19,7 @@
 //= require jquery.validate
 //= require swfobject
 //= require ZeroClipboard.min
+//= require select2
 
 //= require flot/excanvas
 //= require flot/jquery.flot
@@ -42,9 +43,13 @@
 //= require sufia/editor
 //= require sufia/ga_events
 //= require sufia/tabs
+//= require sufia/user_search
+//= require sufia/transfers
+//= require sufia/proxy_rights
 //= require hydra/batch_select
 //= require sufia/dashboard_actions
 //= require sufia/batch
+
 //= require hydra_collections
 //= require browse_everything
 //= require jquery.blacklightTagCloud
@@ -98,9 +103,7 @@ Blacklight.onLoad(function() {
     });
   };
 
-
   $("a[rel=popover]").click(function() { return false;});
-
 
   /*
    * facets lists

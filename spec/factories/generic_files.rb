@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :generic_file do
-    ignore do
+    transient do
       depositor "archivist1@example.com"
     end
     before(:create) do |gf, evaluator|
@@ -13,7 +13,7 @@ FactoryGirl.define do
 
     factory :fixture do
       factory :public_pdf do
-        ignore do
+        transient do
           pid "sufia:fixture-pdf"
         end
         initialize_with { new(pid: pid) }
@@ -27,7 +27,7 @@ FactoryGirl.define do
         end
       end
       factory :public_mp3 do
-        ignore do
+        transient do
           pid "sufia:fixture-mp3"
         end
         initialize_with { new(pid: pid) }
@@ -40,7 +40,7 @@ FactoryGirl.define do
         read_groups ["public"]
       end
       factory :public_wav do
-        ignore do
+        transient do
           pid "sufia:fixture-wav"
         end
         initialize_with { new(pid: pid) }

@@ -1,0 +1,38 @@
+<table class="table table-striped" id="outgoing-transfers">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Date</th>
+      <th>To</th>
+      <th>Status</th>
+      <th>Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @outgoing.each do |req| %>
+    <% unless req.receiving_user.blank? %>
+    <tr>
+      <td> <%= show_transfer_request_title(req) %> </td>
+      <td class="sorts-dash">
+        <% if req.created_at > Time.now.beginning_of_day %>
+          <%= "#{time_ago_in_words(req.created_at)} ago"%>
+        <% else %>
+          <%= req.created_at.strftime("%b %d %Y") %>
+        <% end %>
+      </td>
+      <td><%= link_to req.receiving_user.name, sufia.profile_path(req.receiving_user)  %></td>
+      <td>
+        <% if req.pending? %>
+          <%= button_to "Cancel", sufia.transfer_path(req), method: :delete, class:'btn btn-danger', data: {confirm: "Are you sure you want to cancel this request?"} %>
+        <% else %>
+          <%= req.status.capitalize %>
+        <% end %>
+      </td>
+      <td><%= req.sender_comment %></td>
+    </tr>
+  <% else %>
+      <% Rails.logger.error "A proxy request has no receiver: #{req.inspect}" %>
+  <% end %>
+  <% end %>
+  </tbody>
+</table>

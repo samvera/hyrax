@@ -15,3 +15,8 @@ task ci: ['engine_cart:generate', 'jetty:clean', 'sufia:jetty:config'] do
   end
   raise "test failures: #{error}" if error
 end
+
+namespace 'engine_cart' do
+  desc 'Regenerate embedded app for testing'
+  task regenerate: ['engine_cart:clean', 'engine_cart:generate']
+end

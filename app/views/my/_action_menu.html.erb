@@ -27,6 +27,8 @@
         <i aria-hidden="true" class='glyphicon glyphicon-star'></i> <%= text %>
       <% end %>
     </li>
+    <li>
+      <%= link_to raw('<i class="glyphicon glyphicon-transfer" aria-hidden="true"></i> Transfer Ownership of File'), sufia.new_generic_file_transfer_path(noid), class: 'itemicon itemtransfer', title: 'Transfer Ownership of File' if gf.depositor == @user.user_key %>
+    </li>
   </ul>
 </div>
-

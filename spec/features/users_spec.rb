@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe "User Profile" do
 
   before do
@@ -30,7 +29,8 @@ describe "User Profile" do
       fill_in 'user_twitter_handle', with: 'curatorOfData'
       click_button 'Save Profile'
       expect(page).to have_content 'Your profile has been updated'
-      expect(page).to have_content 'curatorOfData'
+      click_link 'Profile'
+      expect(page).to have_content 'http://twitter.com/curatorOfData'
     end
   end
 

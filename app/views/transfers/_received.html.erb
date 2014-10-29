@@ -1,0 +1,58 @@
+<table class="table table-striped" id="incoming-transfers">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Date</th>
+      <th>From</th>
+      <th>Status</th>
+      <th>Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @incoming.each do |req| %>
+    <% unless req.sending_user.blank? %>
+    <tr>
+      <td> <%= show_transfer_request_title(req) %> </td>
+      <td class="sorts-dash">
+        <% if req.created_at > Time.now.beginning_of_day %>
+          <%= "#{time_ago_in_words(req.created_at)} ago"%>
+        <% else %>
+          <%= req.created_at.strftime("%b %d %Y") %>
+        <% end %>
+      </td>
+      <td><%= link_to req.sending_user.name, sufia.profile_path(req.sending_user)  %></td>
+      <td>
+        <% if req.pending? %>
+            <div class="btn-group">
+              <button class="btn btn-primary" href="#">Accept</button>
+              <button class="btn btn-small dropdown-toggle accept" data-toggle="dropdown" href="#"><span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li>
+                  <%= link_to 'Allow depositor to retain edit access', sufia.accept_transfer_path(req), method: :put, class: 'accept-retain', title: 'Accept the file and allow the original depositor to retain access to edit the file and metadat'  %>
+                </li>
+                <li>
+                  <%= link_to 'Remove depositor access', sufia.accept_transfer_path(req, reset: true), method: :put, class: 'accept-reset', title: 'Accept the file remove access from the original depositor.' %>
+                </li>
+                <li>
+                  <%= link_to 'Authorize depositor as proxy', sufia.accept_transfer_path(req, sticky: true), method: :put, class: 'accept-stick', title: 'Accept the file and allow the original depositor to retain access and authorize the original depositor as a proxy to deposit file on your behalf.' %>
+                </li>
+              </ul>
+            </div>
+
+          <%#= button_to "Accept and allow depositor to retain edit access", sufia.accept_transfer_path(req), method: :put, class: 'btn btn-primary' %>
+          <%#= button_to "Accept and reset access", sufia.accept_transfer_path(req, reset: true), method: :put, class: 'btn btn-primary' %>
+          <%#= button_to "Accept & Authorize Proxy", sufia.accept_transfer_path(req, sticky: true), method: :put, class: 'btn btn-primary' %>
+          <%= button_to "Reject", sufia.reject_transfer_path(req), method: :put, class: 'btn btn-danger', data: {confirm: "Are you sure you want to reject this request?"} %>
+        <% else %>
+          <%= req.status.capitalize %>
+        <% end %>
+      </td>
+
+      <td><%= req.sender_comment %></td>
+    </tr>
+    <% else %>
+      <% Rails.logger.error "A proxy request has no sender: #{req.inspect}" %>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>

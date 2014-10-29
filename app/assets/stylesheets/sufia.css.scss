@@ -3,6 +3,7 @@
  *= require generic_files
  *= require video-js
  *= require jquery-ui
+ *= require select2
  *= require sufia-audio-overrides
  *= require nestable
 */
@@ -14,7 +15,7 @@
 // Use import here instead of require so we can use the Sass variables defined in Bootstrap and Blacklight
 // TODO: Probably should use import throughout and move all of Sufia's stylesheets into a single named directory.
 @import 'sufia/settings','sufia/header','sufia/styles','sufia/file-listing','sufia/collections','sufia/batch-edit',
-'sufia/dashboard','sufia/home-page','sufia/featured','sufia/tagcloud','sufia/usage-stats','sufia/catalog','sufia/buttons';
+'sufia/dashboard','sufia/home-page','sufia/featured','sufia/tagcloud','sufia/usage-stats','sufia/catalog','sufia/buttons','sufia/proxy-rights';
 
 #browse-everything {
   top:10%;

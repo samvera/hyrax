@@ -2,11 +2,8 @@ require 'spec_helper'
 
 describe "Browse files" do
 
-  before do
-    allow(User).to receive(:find_by_user_key).and_return(stub_model(User, twitter_handle: 'bob'))
-  end
-
-  before(:all) do
+  before :all do
+    cleanup_jetty
     @fixtures = find_or_create_file_fixtures
     @fixtures[0].tag = ["key"]
     (1..25).each do |i|
@@ -15,11 +12,17 @@ describe "Browse files" do
     @fixtures[0].save
   end
 
+  after :all do
+    cleanup_jetty
+  end
+
   before do
+    allow(User).to receive(:find_by_user_key).and_return(stub_model(User, twitter_handle: 'bob'))
     visit '/'
     fill_in "search-field-header", with: "key"
     click_button "search-submit-header"
-    click_link "more Keywords"
+    click_link "Keyword"
+    click_link "more Keywords»"
   end
 
   describe "when not logged in" do
@@ -31,9 +34,11 @@ describe "Browse files" do
       page.should_not have_content "Edit"
     end
     it "should allow you to click next" do
-      first(:link, 'Next').click
-      page.should have_content "5"
-      page.should_not have_content "11"
+      click_link 'Next »'
+      within(".modal-body") do
+        page.should have_content "5"
+        page.should_not have_content "11"
+      end
     end
   end
 end
