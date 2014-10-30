@@ -41,6 +41,8 @@ require "factories"
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
+ActiveFedora::Base.logger = Logger.new(STDOUT)
+
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.before(:each) do

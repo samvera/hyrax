@@ -4,7 +4,7 @@ rvm:
 
 gemfile:
   - gemfiles/gemfile.rails4.1
-  - gemfiles/gemfile.rails4.0
+  - gemfiles/gemfile.rails4.2.beta
 
 notifications:
   irc: "irc.freenode.org#projecthydra"
