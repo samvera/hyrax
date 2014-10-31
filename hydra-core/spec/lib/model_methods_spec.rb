@@ -6,7 +6,7 @@ describe Hydra::ModelMethods do
     class TestModel < ActiveFedora::Base
       include Hydra::AccessControls::Permissions
       include Hydra::ModelMethods
-      has_metadata "properties", type: Hydra::Datastream::Properties
+      contains "properties", class_name: 'Hydra::Datastream::Properties'
       has_attributes :depositor, datastream: :properties, multiple: false
     end
   end
