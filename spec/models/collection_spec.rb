@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Collection do
+describe Collection, :type => :model do
   before do
     @user = FactoryGirl.create(:user)
     @collection = Collection.new(title: "test collection").tap do |c|

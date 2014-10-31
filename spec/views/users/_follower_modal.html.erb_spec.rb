@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'users/_follower_modal.html.erb' do
+describe 'users/_follower_modal.html.erb', :type => :view do
   let(:user) { FactoryGirl.create(:user, display_name: "Frank") }
 
   before do

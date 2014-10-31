@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "proxy deposit and transfers routing" do
+describe "proxy deposit and transfers routing", :type => :routing do
   routes { Sufia::Engine.routes }
 
   it "lists transfers" do

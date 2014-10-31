@@ -34,28 +34,28 @@ describe BatchUpdateJob do
     end
     context "with a failing update" do
       it "should check permissions for each file before updating" do
-        User.any_instance.should_receive(:can?).with(:edit, @file).and_return(false)
-        User.any_instance.should_receive(:can?).with(:edit, @file2).and_return(false)
+        expect_any_instance_of(User).to receive(:can?).with(:edit, @file).and_return(false)
+        expect_any_instance_of(User).to receive(:can?).with(:edit, @file2).and_return(false)
         BatchUpdateJob.new(@user.user_key, params).run
-        @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload permission denied"
-        @user.mailbox.inbox[0].messages[0].body.should include("data-content")
-        @user.mailbox.inbox[0].messages[0].body.should include("These files")
+        expect(@user.mailbox.inbox[0].messages[0].subject).to eq("Batch upload permission denied")
+        expect(@user.mailbox.inbox[0].messages[0].body).to include("data-content")
+        expect(@user.mailbox.inbox[0].messages[0].body).to include("These files")
       end
     end
     context "with a passing update" do
       let(:s1) { double('one') }
       let(:s2) { double('two') }
       it "should log a content update event" do
-        User.any_instance.should_receive(:can?).with(:edit, @file).and_return(true)
-        User.any_instance.should_receive(:can?).with(:edit, @file2).and_return(true)
-        ContentUpdateEventJob.should_receive(:new).with(@file.pid, @user.user_key).and_return(s1)
-        Sufia.queue.should_receive(:push).with(s1).once
-        ContentUpdateEventJob.should_receive(:new).with(@file2.pid, @user.user_key).and_return(s2)
-        Sufia.queue.should_receive(:push).with(s2).once
+        expect_any_instance_of(User).to receive(:can?).with(:edit, @file).and_return(true)
+        expect_any_instance_of(User).to receive(:can?).with(:edit, @file2).and_return(true)
+        expect(ContentUpdateEventJob).to receive(:new).with(@file.pid, @user.user_key).and_return(s1)
+        expect(Sufia.queue).to receive(:push).with(s1).once
+        expect(ContentUpdateEventJob).to receive(:new).with(@file2.pid, @user.user_key).and_return(s2)
+        expect(Sufia.queue).to receive(:push).with(s2).once
         BatchUpdateJob.new(@user.user_key, params).run
-        @user.mailbox.inbox[0].messages[0].subject.should == "Batch upload complete"
-        @user.mailbox.inbox[0].messages[0].body.should include("data-content")
-        @user.mailbox.inbox[0].messages[0].body.should include("These files")
+        expect(@user.mailbox.inbox[0].messages[0].subject).to eq("Batch upload complete")
+        expect(@user.mailbox.inbox[0].messages[0].body).to include("data-content")
+        expect(@user.mailbox.inbox[0].messages[0].body).to include("These files")
       end
     end
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PropertiesDatastream do
+describe PropertiesDatastream, :type => :model do
   describe "import_url" do
     before do
       subject.import_url = 'http://example.com/somefile.txt'

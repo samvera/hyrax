@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DashboardController do
+describe DashboardController, :type => :controller do
   
   context "with an unauthenticated user" do
 

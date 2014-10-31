@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GenericFileHelper do
+describe GenericFileHelper, :type => :helper do
 
   describe "#render_collection_list" do
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SufiaHelper do
+describe SufiaHelper, :type => :helper do
 
   describe "#link_to_facet_list" do
     before do
@@ -31,12 +31,12 @@ describe SufiaHelper do
     subject { helper }
     context "when cq is set" do
       before { allow(helper).to receive(:params).and_return({ cq: 'foo'}) }
-      it { should have_collection_search_parameters }
+      it { is_expected.to have_collection_search_parameters }
     end
 
     context "when cq is not set" do
       before { allow(helper).to receive(:params).and_return({ cq: ''}) }
-      it { should_not have_collection_search_parameters }
+      it { is_expected.not_to have_collection_search_parameters }
     end
   end
 
@@ -45,23 +45,23 @@ describe SufiaHelper do
       let(:document) { SolrDocument.new( mime_type_tesim: 'image/jpeg', noid_tsi: '1234') }
       it "should show the audio thumbnail" do
         rendered = helper.sufia_thumbnail_tag(document, { width: 90 })
-        rendered.should match /src="\/downloads\/1234\?datastream_id=thumbnail"/
-        rendered.should match /width="90"/
+        expect(rendered).to match /src="\/downloads\/1234\?datastream_id=thumbnail"/
+        expect(rendered).to match /width="90"/
       end
     end
     context "for an audio object" do
       let(:document) { SolrDocument.new( mime_type_tesim: 'audio/x-wave') }
       it "should show the audio thumbnail" do
         rendered = helper.sufia_thumbnail_tag(document, {})
-        rendered.should match /src="\/assets\/audio.png"/
+        expect(rendered).to match /src="\/assets\/audio.png"/
       end
     end
     context "for an document object" do
       let(:document) { SolrDocument.new( mime_type_tesim: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', noid_tsi: '1234') }
       it "should show the default thumbnail" do
         rendered = helper.sufia_thumbnail_tag(document, { width: 90 })
-        rendered.should match /src="\/downloads\/1234\?datastream_id=thumbnail"/
-        rendered.should match /width="90"/
+        expect(rendered).to match /src="\/downloads\/1234\?datastream_id=thumbnail"/
+        expect(rendered).to match /width="90"/
       end
     end
   end

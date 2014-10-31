@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PagesController do
+describe PagesController, :type => :controller do
   let (:page_name) {"about_page"}
   context "content exists" do
     describe "GET #show" do

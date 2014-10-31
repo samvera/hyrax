@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Notifications page" do
+describe "Notifications page", :type => :feature do
 
   before do
     sign_in FactoryGirl.create(:user_with_mail)
@@ -8,16 +8,16 @@ describe "Notifications page" do
   end
 
   it "should list notifications with date, subject and message" do
-    page.should have_content "User Notifications"
-    page.find(:xpath, '//thead/tr').should have_content "Date"
-    page.find(:xpath, '//thead/tr').should have_content "Subject"
-    page.find(:xpath, '//thead/tr').should have_content "Message"
-    page.should have_content "These files could not be updated. You do not have sufficient privileges to edit them. "
-    page.should have_content "These files have been saved"
-    page.should have_content "File 1 could not be updated. You do not have sufficient privileges to edit it."
-    page.should have_content "File 1 has been saved"
-    page.should have_content "Batch upload permission denied  "
-    page.should have_content "Batch upload complete"
+    expect(page).to have_content "User Notifications"
+    expect(page.find(:xpath, '//thead/tr')).to have_content "Date"
+    expect(page.find(:xpath, '//thead/tr')).to have_content "Subject"
+    expect(page.find(:xpath, '//thead/tr')).to have_content "Message"
+    expect(page).to have_content "These files could not be updated. You do not have sufficient privileges to edit them. "
+    expect(page).to have_content "These files have been saved"
+    expect(page).to have_content "File 1 could not be updated. You do not have sufficient privileges to edit it."
+    expect(page).to have_content "File 1 has been saved"
+    expect(page).to have_content "Batch upload permission denied  "
+    expect(page).to have_content "Batch upload complete"
   end
 
 

@@ -1,30 +1,30 @@
 require 'spec_helper'
 
-describe StaticController do
+describe StaticController, :type => :controller do
   routes { Sufia::Engine.routes }
   describe "#mendeley" do
     it "renders page" do
       get "mendeley"
-      response.should be_success
-      response.should render_template "layouts/homepage"
+      expect(response).to be_success
+      expect(response).to render_template "layouts/homepage"
     end
     it "renders no layout with javascript" do
       xhr :get, :mendeley
-      response.should be_success
-      response.should_not render_template "layouts/homepage"
+      expect(response).to be_success
+      expect(response).not_to render_template "layouts/homepage"
     end
   end
 
   describe "#zotero" do
     it "renders page" do
       get "zotero"
-      response.should be_success
-      response.should render_template "layouts/homepage"
+      expect(response).to be_success
+      expect(response).to render_template "layouts/homepage"
     end
     it "renders no layout with javascript" do
       xhr :get, :zotero
-      response.should be_success
-      response.should_not render_template "layouts/homepage"
+      expect(response).to be_success
+      expect(response).not_to render_template "layouts/homepage"
     end
   end
 end

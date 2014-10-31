@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Batch do
+describe Batch, :type => :model do
   before(:all) do
     @user = FactoryGirl.find_or_create(:jill)
     @file = GenericFile.new
@@ -16,22 +16,22 @@ describe Batch do
     @batch.delete
   end
   it "should have rightsMetadata" do
-    @batch.rightsMetadata.should be_instance_of Hydra::Datastream::RightsMetadata
+    expect(@batch.rightsMetadata).to be_instance_of Hydra::Datastream::RightsMetadata
   end
   it "should have dc desc metadata" do
-    @batch.descMetadata.should be_kind_of BatchRdfDatastream
+    expect(@batch.descMetadata).to be_kind_of BatchRdfDatastream
   end
   it "should belong to testuser" do
-    @batch.creator.should == [@user.user_key]
+    expect(@batch.creator).to eq([@user.user_key])
   end
   it "should be titled 'test collection'" do
-    @batch.title.should == ["test collection"]
+    expect(@batch.title).to eq(["test collection"])
   end
   it "should have generic_files defined" do
-    @batch.should respond_to(:generic_files)
+    expect(@batch).to respond_to(:generic_files)
   end
   it "should contain one generic file" do
-    @batch.part.should == [@file.pid]
+    expect(@batch.part).to eq([@file.pid])
   end
   it "should be able to have more than one file" do
     gf = GenericFile.new
@@ -39,28 +39,28 @@ describe Batch do
     gf.save
     @batch.part << gf.pid
     @batch.save
-    @batch.part.should == [@file.pid, gf.pid]
+    expect(@batch.part).to eq([@file.pid, gf.pid])
     gf.delete
   end
   it "should support to_solr" do
-    @batch.to_solr.should_not be_nil
-    @batch.to_solr["batch__part_t"].should be_nil
-    @batch.to_solr["batch__title_t"].should be_nil
-    @batch.to_solr["batch__creator_t"].should be_nil
+    expect(@batch.to_solr).not_to be_nil
+    expect(@batch.to_solr["batch__part_t"]).to be_nil
+    expect(@batch.to_solr["batch__title_t"]).to be_nil
+    expect(@batch.to_solr["batch__creator_t"]).to be_nil
   end
   describe "find_or_create" do
     describe "when the object exists" do
       it "should find batch instead of creating" do
-        Batch.should_receive(:create).never
+        expect(Batch).to receive(:create).never
         @b2 = Batch.find_or_create( @batch.pid)
       end
     end
     describe "when the object does not exist" do
       it "should create" do
-        lambda {Batch.find("batch:123")}.should raise_error(ActiveFedora::ObjectNotFoundError)
-        Batch.should_receive(:create).once.and_return("the batch")
+        expect {Batch.find("batch:123")}.to raise_error(ActiveFedora::ObjectNotFoundError)
+        expect(Batch).to receive(:create).once.and_return("the batch")
         @b2 = Batch.find_or_create( "batch:123")
-        @b2.should == "the batch"
+        expect(@b2).to eq("the batch")
       end
     end
   end

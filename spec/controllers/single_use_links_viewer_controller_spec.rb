@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SingleUseLinksViewerController do
+describe SingleUseLinksViewerController, :type => :controller do
   before(:all) do
     @user = FactoryGirl.find_or_create(:jill)
     @file = GenericFile.new
@@ -18,8 +18,8 @@ describe SingleUseLinksViewerController do
     SingleUseLink.delete_all
   end
   before do
-    controller.stub(:has_access?).and_return(true)
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+    allow(controller).to receive(:has_access?).and_return(true)
+    allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
   end
   
   describe "retrieval links" do
@@ -44,24 +44,24 @@ describe SingleUseLinksViewerController do
     end
     describe "GET 'download'" do
       it "and_return http success" do
-        controller.stub(:render)
+        allow(controller).to receive(:render)
         expected_content = ActiveFedora::Base.find(@file.pid, cast: true).content.content
-        controller.should_receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
+        expect(controller).to receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
         get :download, id:download_link_hash 
-        response.body.should == expected_content
-        response.should be_success
+        expect(response.body).to eq(expected_content)
+        expect(response).to be_success
       end
       it "and_return 404 on second attempt" do
         get :download, id:download_link_hash
-        response.should be_success
+        expect(response).to be_success
         get :download, id:download_link_hash
-        response.should render_template('error/single_use_error') 
+        expect(response).to render_template('error/single_use_error') 
       end
       it "and_return 404 on attempt to get download with show" do
         get :download, id:download_link_hash
-        response.should be_success
+        expect(response).to be_success
         get :show, id:download_link_hash
-        response.should render_template('error/single_use_error')
+        expect(response).to render_template('error/single_use_error')
       end
     end
 
@@ -69,18 +69,18 @@ describe SingleUseLinksViewerController do
       it "and_return http success" do
 
         get 'show', id:show_link_hash
-        response.should be_success
-        assigns[:asset].pid.should == @file.pid
+        expect(response).to be_success
+        expect(assigns[:asset].pid).to eq(@file.pid)
       end
       it "and_return 404 on second attempt" do
         get :show, id:show_link_hash
-        response.should be_success
+        expect(response).to be_success
         get :show, id:show_link_hash
-        response.should render_template('error/single_use_error')
+        expect(response).to render_template('error/single_use_error')
       end
       it "and_return 404 on attempt to get show path with download hash" do
         get :show, id:download_link_hash
-        response.should render_template('error/single_use_error')
+        expect(response).to render_template('error/single_use_error')
       end
     end
   end

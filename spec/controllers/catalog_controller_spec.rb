@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CatalogController do
+describe CatalogController, :type => :controller do
   routes { Rails.application.class.routes }
 
   let(:user) { @user }
@@ -38,8 +38,8 @@ describe CatalogController do
         get :index, q: 'full_textfull_text'
         expect(response).to be_success
         expect(response).to render_template('catalog/index')
-        assigns(:document_list).count.should eql(1)
-        assigns(:document_list).map(&:id).should == [@gf2.id]
+        expect(assigns(:document_list).count).to eql(1)
+        expect(assigns(:document_list).map(&:id)).to eq([@gf2.id])
       end
     end
 
@@ -47,10 +47,10 @@ describe CatalogController do
       it "should find records" do
         get :index, q: "pdf", owner: 'all'
         expect(response).to be_success
-        response.should render_template('catalog/index')
-        assigns(:document_list).map(&:id).should == [@gf1.id]
-        assigns(:document_list).count.should eql(1)
-        assigns(:document_list).first['desc_metadata__title_tesim'].should == ['Test Document PDF']
+        expect(response).to render_template('catalog/index')
+        expect(assigns(:document_list).map(&:id)).to eq([@gf1.id])
+        expect(assigns(:document_list).count).to eql(1)
+        expect(assigns(:document_list).first['desc_metadata__title_tesim']).to eq(['Test Document PDF'])
       end
     end
 
@@ -61,8 +61,8 @@ describe CatalogController do
       end
       it "should find facet files" do
         expect(response).to be_success
-        response.should render_template('catalog/index')
-        assigns(:document_list).count.should eql(1)
+        expect(response).to render_template('catalog/index')
+        expect(assigns(:document_list).count).to eql(1)
       end
     end
 

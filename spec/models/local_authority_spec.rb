@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LocalAuthority do
+describe LocalAuthority, :type => :model do
 
   def harvest_nt
     LocalAuthority.harvest_rdf("genres", [fixture_path + '/genreForms.nt'])
@@ -24,22 +24,22 @@ describe LocalAuthority do
   
   it "should harvest an ntriples RDF vocab" do
     harvest_nt
-    LocalAuthority.count.should == 1
-    LocalAuthorityEntry.count.should == 6
+    expect(LocalAuthority.count).to eq(1)
+    expect(LocalAuthorityEntry.count).to eq(6)
   end
   it "should harvest an RDF/XML vocab (w/ an alt predicate)" do
     LocalAuthority.harvest_rdf("langs", [fixture_path + '/lexvo.rdf'],
                                format: 'rdfxml',
                                predicate: RDF::URI("http://www.w3.org/2008/05/skos#prefLabel"))
-    LocalAuthority.count.should == 1
-    LocalAuthorityEntry.count.should == 35
+    expect(LocalAuthority.count).to eq(1)
+    expect(LocalAuthorityEntry.count).to eq(35)
   end
   it "should harvest TSV vocabs" do
     harvest_tsv
-    LocalAuthority.count.should == 1
+    expect(LocalAuthority.count).to eq(1)
     auth = LocalAuthority.where(name: "geo").first
     expect(LocalAuthorityEntry.where(local_authority_id: auth.id).first.uri).to start_with('http://sws.geonames.org/')
-    LocalAuthorityEntry.count.should == 149
+    expect(LocalAuthorityEntry.count).to eq(149)
   end
   
   describe "when vocabs are harvested" do
@@ -53,22 +53,22 @@ describe LocalAuthority do
     end
 
     it "should not have any initial domain terms" do
-      DomainTerm.count.should == 0
+      expect(DomainTerm.count).to eq(0)
     end
 
     it "should not harvest an RDF vocab twice" do
       harvest_nt
-      LocalAuthority.count.should == num_auths
-      LocalAuthorityEntry.count.should == num_entries
+      expect(LocalAuthority.count).to eq(num_auths)
+      expect(LocalAuthorityEntry.count).to eq(num_entries)
     end
     it "should not harvest a TSV vocab twice" do
       harvest_tsv
-      LocalAuthority.count.should == num_auths
-      LocalAuthorityEntry.count.should == num_entries
+      expect(LocalAuthority.count).to eq(num_auths)
+      expect(LocalAuthorityEntry.count).to eq(num_entries)
     end
     it "should register a vocab" do
       LocalAuthority.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
-      DomainTerm.count.should == 1
+      expect(DomainTerm.count).to eq(1)
     end
     
     describe "when vocabs are registered" do
@@ -79,23 +79,23 @@ describe LocalAuthority do
       end
 
       it "should have some doamin terms" do
-        DomainTerm.count.should == 2
+        expect(DomainTerm.count).to eq(2)
       end
       
       it "should return nil for empty queries" do
-        LocalAuthority.entries_by_term("my_test", "geographic", "").should be_nil
+        expect(LocalAuthority.entries_by_term("my_test", "geographic", "")).to be_nil
       end
       it "should return an empty array for unregistered models" do
-        LocalAuthority.entries_by_term("my_foobar", "geographic", "E").should == []
+        expect(LocalAuthority.entries_by_term("my_foobar", "geographic", "E")).to eq([])
       end
       it "should return an empty array for unregistered terms" do
-        LocalAuthority.entries_by_term("my_test", "foobar", "E").should == []
+        expect(LocalAuthority.entries_by_term("my_test", "foobar", "E")).to eq([])
       end
       it "should return entries by term" do
         term = DomainTerm.where(model: "my_tests", term: "genre").first
         authorities = term.local_authorities.collect(&:id).uniq
         hits = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "A%").select("label, uri").limit(25)
-        LocalAuthority.entries_by_term("my_tests", "genre", "A").count.should == 6
+        expect(LocalAuthority.entries_by_term("my_tests", "genre", "A").count).to eq(6)
       end
    
     end

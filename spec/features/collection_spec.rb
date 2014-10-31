@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'collection' do
+describe 'collection', :type => :feature do
   def create_collection(title, description)
     visit '/dashboard'
     first('#hydra-collection-add').click
@@ -67,12 +67,12 @@ describe 'collection' do
     end
 
     it "should delete a collection" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
-      page.should_not have_content(@collection.title)
+      expect(page).not_to have_content(@collection.title)
     end
   end
 
@@ -173,41 +173,41 @@ describe 'collection' do
     end
 
     it "should remove a file from a collection" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within("#document_#{@collection.noid}") do
         first('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
-      page.should have_field('collection_title', with: @collection.title)
-      page.should have_field('collection_description', with: @collection.description)
-      page.should have_content(@gf1.title.first)
-      page.should have_content(@gf2.title.first)
+      expect(page).to have_field('collection_title', with: @collection.title)
+      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
       within("#document_#{@gf1.noid}") do
         first('button.dropdown-toggle').click
         click_button('Remove from Collection')
       end
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
-      page.should_not have_content(@gf1.title.first)
-      page.should have_content(@gf2.title.first)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).not_to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
     end
 
     it "should remove all files from a collection", js: true do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         first('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
-      page.should have_field('collection_title', with: @collection.title)
-      page.should have_field('collection_description', with: @collection.description)
-      page.should have_content(@gf1.title.first)
-      page.should have_content(@gf2.title.first)
+      expect(page).to have_field('collection_title', with: @collection.title)
+      expect(page).to have_field('collection_description', with: @collection.description)
+      expect(page).to have_content(@gf1.title.first)
+      expect(page).to have_content(@gf2.title.first)
       first('input#check_all').click
       click_button('Remove From Collection')
-      page.should have_content(@collection.title)
-      page.should have_content(@collection.description)
-      page.should_not have_content(@gf1.title.first)
-      page.should_not have_content(@gf2.title.first)
+      expect(page).to have_content(@collection.title)
+      expect(page).to have_content(@collection.description)
+      expect(page).not_to have_content(@gf1.title.first)
+      expect(page).not_to have_content(@gf2.title.first)
     end
   end
 
@@ -223,11 +223,11 @@ describe 'collection' do
     end
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
-      page.should have_content(@collection.title)
+      expect(page).to have_content(@collection.title)
       within('#document_'+@collection.noid) do
         click_link("Display all details of collection title")
       end
-      page.should have_css(".pager")
+      expect(page).to have_css(".pager")
     end
   end
 end

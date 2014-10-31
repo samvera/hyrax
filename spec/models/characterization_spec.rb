@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sufia::GenericFile::Characterization do
+describe Sufia::GenericFile::Characterization, :type => :model do
   before do
     class TestClass < ActiveFedora::Base
       include Sufia::GenericFile::Characterization

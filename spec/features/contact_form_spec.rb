@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Sending an email via the contact form" do
+describe "Sending an email via the contact form", :type => :feature do
 
   before do
     sign_in :user_with_fixtures

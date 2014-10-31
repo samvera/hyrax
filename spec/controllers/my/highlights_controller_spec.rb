@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe My::HighlightsController do
+describe My::HighlightsController, :type => :controller do
   describe "logged in user" do
     before (:each) do
       @user = FactoryGirl.find_or_create(:archivist)

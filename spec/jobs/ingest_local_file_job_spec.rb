@@ -21,7 +21,7 @@ describe IngestLocalFileJob do
 
   it "should have attached a file" do
     job.run
-    generic_file.reload.content.size.should == 4218
+    expect(generic_file.reload.content.size).to eq(4218)
   end
 
   describe "virus checking" do

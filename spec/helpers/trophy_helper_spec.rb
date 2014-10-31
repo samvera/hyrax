@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TrophyHelper do
+describe TrophyHelper, :type => :helper do
   describe "#display_trophy_link" do
     let(:user) { FactoryGirl.create(:user) }
     let(:noid) { '9999' }

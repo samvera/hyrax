@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FitsDatastream, unless: $in_travis do
+describe FitsDatastream, type: :model, unless: $in_travis do
   describe "image" do
     before(:all) do
       @file = GenericFile.new

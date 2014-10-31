@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SingleUseLinksController do
+describe SingleUseLinksController, :type => :controller do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:file) do
     GenericFile.new.tap do |f|

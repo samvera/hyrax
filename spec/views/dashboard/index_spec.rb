@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "dashboard/index.html.erb" do
+describe "dashboard/index.html.erb", :type => :view do
 
   before do
     @user = mock_model(User, name: "Charles Francis Xavier", user_key: "charles")

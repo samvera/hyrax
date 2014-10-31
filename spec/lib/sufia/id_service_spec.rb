@@ -4,7 +4,7 @@ describe Sufia::IdService do
   describe "mint" do
     subject { Sufia::IdService.mint }
 
-    it { should_not be_empty }
+    it { is_expected.not_to be_empty }
 
     it "should not mint the same id twice in a row" do
       expect(Sufia::IdService.mint).to_not eq subject

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HomepageController do
+describe HomepageController, :type => :controller do
   routes { Rails.application.class.routes }
 
   describe "#index" do

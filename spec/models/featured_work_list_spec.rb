@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeaturedWorkList do
+describe FeaturedWorkList, :type => :model do
   let(:file1) { FactoryGirl.create(:generic_file) }
   let(:file2) { FactoryGirl.create(:generic_file) }
 

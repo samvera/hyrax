@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SolrDocument do
+describe SolrDocument, :type => :model do
 
   describe "date_uploaded" do
     before do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'generic_files/edit.html.erb' do
+describe 'generic_files/edit.html.erb', :type => :view do
   describe 'when the file has two or more resource types' do
     let(:generic_file) {
       content = double('content', versions: [], mimeType: 'application/pdf')

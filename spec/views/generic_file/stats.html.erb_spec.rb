@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'generic_files/stats.html.erb' do
+describe 'generic_files/stats.html.erb', :type => :view do
   describe 'usage statistics' do
     let(:generic_file) {
       stub_model(GenericFile, noid: '123',

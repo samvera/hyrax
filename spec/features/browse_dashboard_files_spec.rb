@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Browse Dashboard" do
+describe "Browse Dashboard", :type => :feature do
 
   before :all do
     cleanup_jetty

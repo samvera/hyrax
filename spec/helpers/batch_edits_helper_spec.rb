@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BatchEditsHelper do
+describe BatchEditsHelper, :type => :helper do
 
   describe "#render_check_all" do
 

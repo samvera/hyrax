@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'collections/_show_descriptions.html.erb' do
+describe 'collections/_show_descriptions.html.erb', :type => :view do
   context 'displaying a custom collection' do
     before do
       @collection = mock_model(Collection)

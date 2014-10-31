@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FileContentDatastream do
+describe FileContentDatastream, :type => :model do
   describe "version control" do
     before do
       f = GenericFile.new
@@ -16,16 +16,16 @@ describe FileContentDatastream do
       @file.content.versions.count == 1
     end
     it "should return the expected version ID" do
-      @file.content.versions.first.versionID.should == "content.0"
+      expect(@file.content.versions.first.versionID).to eq("content.0")
     end
     it "should support latest_version" do
-      @file.content.latest_version.versionID.should == "content.0"
+      expect(@file.content.latest_version.versionID).to eq("content.0")
     end
     it "should return the same version via get_version" do
-      @file.content.get_version("content.0").versionID.should == @file.content.latest_version.versionID
+      expect(@file.content.get_version("content.0").versionID).to eq(@file.content.latest_version.versionID)
     end
     it "should not barf when a garbage ID is provided to get_version"  do
-      @file.content.get_version("foobar").should be_nil
+      expect(@file.content.get_version("foobar")).to be_nil
     end
     describe "add a version" do
       before do
@@ -36,36 +36,36 @@ describe FileContentDatastream do
         @file.content.versions.count == 2
       end
       it "should return the newer version via latest_version" do
-        @file.content.versions.first.versionID.should == "content.1"
+        expect(@file.content.versions.first.versionID).to eq("content.1")
       end
       it "should return the same version via get_version" do
-        @file.content.get_version("content.1").versionID.should == @file.content.latest_version.versionID
+        expect(@file.content.get_version("content.1").versionID).to eq(@file.content.latest_version.versionID)
       end
     end
   end
   describe "extract_metadata" do
     before do
       @subject = FileContentDatastream.new(nil, 'content')
-      @subject.stub(pid: 'my_pid')
-      @subject.stub(dsVersionID: 'content.7')
+      allow(@subject).to receive_messages(pid: 'my_pid')
+      allow(@subject).to receive_messages(dsVersionID: 'content.7')
     end
     it "should return an xml document", unless: $in_travis do
       f = File.new(fixture_path + '/world.png', 'rb')
       @subject.content = f.read
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
-      doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text.should == '50'
+      expect(doc.root.xpath('//ns:imageWidth/text()', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).inner_text).to eq('50')
     end
     it "should return expected results when invoked via HTTP", unless: $in_travis do
       f = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(fixture_path + '/world.png'),
                                                  filename: 'world.png')
       content = double("file")
-      content.stub(read: f.read)
-      content.stub(rewind: f.rewind)
-      @subject.stub(:content).and_return(f)
+      allow(content).to receive_messages(read: f.read)
+      allow(content).to receive_messages(rewind: f.rewind)
+      allow(@subject).to receive(:content).and_return(f)
       xml = @subject.extract_metadata
       doc = Nokogiri::XML.parse(xml)
-      doc.root.xpath('//ns:identity/@mimetype', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).first.value.should == 'image/png'
+      expect(doc.root.xpath('//ns:identity/@mimetype', {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'}).first.value).to eq('image/png')
     end
   end
   describe "changed?" do
