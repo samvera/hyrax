@@ -59,12 +59,11 @@ module Hydra::ModelMethods
   # @param [String] new_title
   # @param [Hash] opts (optional) hash of configuration options
   def set_title(new_title, opts={})
-    if self.datastreams.has_key?("descMetadata")
-      desc_metadata_ds = self.datastreams["descMetadata"]
-      if desc_metadata_ds.respond_to?(:title_values)
-        desc_metadata_ds.title_values = new_title
+    if attached_files.has_key?("descMetadata")
+      if descMetadata.respond_to?(:title_values)
+        descMetadata.title_values = new_title
       else
-        desc_metadata_ds.title = new_title
+        descMetadata.title = new_title
       end
     end
   end
