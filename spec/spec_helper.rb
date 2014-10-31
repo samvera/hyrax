@@ -82,6 +82,7 @@ module EngineRoutes
   end
 end
 
+require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
@@ -93,6 +94,8 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :each do
+    puts "Cleaning"
+    ActiveFedora::Cleaner.clean!
     if Capybara.current_driver == :rack_test
       DatabaseCleaner.strategy = :transaction
     else
@@ -103,16 +106,6 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
-  end
-
-  config.before do
-    begin
-      ActiveFedora.fedora.connection.delete(ActiveFedora.fedora.base_path.sub('/', ''))
-    rescue StandardError
-    end
-    ActiveFedora.fedora.connection.put(ActiveFedora.fedora.base_path.sub('/', ''),"")
-    restore_spec_configuration if ActiveFedora::SolrService.instance.nil? || ActiveFedora::SolrService.instance.conn.nil?
-    ActiveFedora::SolrService.instance.conn.delete_by_query('*:*', params: {'softCommit' => true})
   end
 
   # If true, the base class of anonymous controllers will be inferred
