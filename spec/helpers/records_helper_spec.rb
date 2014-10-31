@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RecordsHelper do
+describe RecordsHelper, :type => :helper do
   let(:adder) {
     "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-plus\"></i></span><span class=\"sr-only\">add another test</span></button>"
   }

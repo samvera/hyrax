@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TinymceAssetsController do
+describe TinymceAssetsController, :type => :controller do
   let(:file) { fixture_file_upload('/world.png','image/png') }
 
   context "when logged in" do

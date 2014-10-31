@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sufia::Download do
+describe Sufia::Download, :type => :model do
 
   before do
     @download = Sufia::Download

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe User do
+describe User, :type => :model do
   before(:all) do
     @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
@@ -10,31 +10,31 @@ describe User do
     @another_user.delete
   end
   it "should have an email" do
-    @user.user_key.should == "jilluser@example.com"
+    expect(@user.user_key).to eq("jilluser@example.com")
   end
   it "should have activity stream-related methods defined" do
-    @user.should respond_to(:stream)
-    @user.should respond_to(:events)
-    @user.should respond_to(:profile_events)
-    @user.should respond_to(:create_event)
-    @user.should respond_to(:log_event)
-    @user.should respond_to(:log_profile_event)
+    expect(@user).to respond_to(:stream)
+    expect(@user).to respond_to(:events)
+    expect(@user).to respond_to(:profile_events)
+    expect(@user).to respond_to(:create_event)
+    expect(@user).to respond_to(:log_event)
+    expect(@user).to respond_to(:log_profile_event)
   end
   it "should have social attributes" do
-    @user.should respond_to(:twitter_handle)
-    @user.should respond_to(:facebook_handle)
-    @user.should respond_to(:googleplus_handle)
-    @user.should respond_to(:linkedin_handle)
+    expect(@user).to respond_to(:twitter_handle)
+    expect(@user).to respond_to(:facebook_handle)
+    expect(@user).to respond_to(:googleplus_handle)
+    expect(@user).to respond_to(:linkedin_handle)
   end
   it "should redefine to_param to make redis keys more recognizable (and useable within Rails URLs)" do
-    @user.to_param.should == "jilluser@example-dot-com"
+    expect(@user.to_param).to eq("jilluser@example-dot-com")
   end
   it "should have a cancan ability defined" do
-    @user.should respond_to(:can?)
+    expect(@user).to respond_to(:can?)
   end
   it "should not have any followers" do
-    @user.followers_count.should == 0
-    @another_user.follow_count.should == 0
+    expect(@user.followers_count).to eq(0)
+    expect(@another_user.follow_count).to eq(0)
   end
   describe "follow/unfollow" do
     before(:all) do

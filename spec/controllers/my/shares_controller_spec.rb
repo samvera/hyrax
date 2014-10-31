@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe My::SharesController do
+describe My::SharesController, :type => :controller do
   describe "logged in user" do
     before (:each) do
       @user = FactoryGirl.find_or_create(:archivist)

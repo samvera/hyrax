@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'catalog/_sort_and_per_page.html.erb' do
+describe 'catalog/_sort_and_per_page.html.erb', :type => :view do
   before do
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)

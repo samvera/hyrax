@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'users/_notify_number.html.erb' do
+describe 'users/_notify_number.html.erb', :type => :view do
 
   it "should draw user list" do
     assign :notify_number, 8

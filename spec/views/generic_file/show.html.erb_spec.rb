@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'generic_files/show.html.erb' do
+describe 'generic_files/show.html.erb', :type => :view do
   let(:depositor) {
     stub_model(User,
       user_key: 'bob',

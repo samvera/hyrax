@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'catalog/index.html.erb' do
+describe 'catalog/index.html.erb', :type => :view do
   before do
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     stub_template 'catalog/_search_sidebar.html.erb' => ''

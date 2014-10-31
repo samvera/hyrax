@@ -13,19 +13,19 @@ describe AuditJob do
   end
   describe "passing audit" do
     it "should not send passing mail" do
-      ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(true)
+      allow_any_instance_of(ActiveFedora::RelsExtDatastream).to receive(:dsChecksumValid).and_return(true)
       AuditJob.new(@file.pid, "RELS-EXT", @file.rels_ext.versionID).run
       @inbox = @user.mailbox.inbox
-      @inbox.count.should == 0
+      expect(@inbox.count).to eq(0)
     end
   end
   describe "failing audit" do
     it "should send failing mail" do
-      ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(false)
+      allow_any_instance_of(ActiveFedora::RelsExtDatastream).to receive(:dsChecksumValid).and_return(false)
       AuditJob.new(@file.pid, "RELS-EXT", @file.rels_ext.versionID).run
       @inbox = @user.mailbox.inbox
-      @inbox.count.should == 1
-      @inbox.each { |msg| msg.last_message.subject.should == AuditJob::FAIL }
+      expect(@inbox.count).to eq(1)
+      @inbox.each { |msg| expect(msg.last_message.subject).to eq(AuditJob::FAIL) }
     end
   end
 end

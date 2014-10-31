@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "User Profile" do
+describe "User Profile", :type => :feature do
 
   before do
     sign_in FactoryGirl.create(:curator)

@@ -28,7 +28,7 @@ describe Sufia::Breadcrumbs do
   describe "#default_trail" do
     context "when the user is logged in" do
       before do
-        crumbs.stub(:user_signed_in?) { true }
+        allow(crumbs).to receive(:user_signed_in?) { true }
       end
       specify "the default trail is nil" do
         expect(crumbs.default_trail).to eql([[I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path]])
@@ -36,7 +36,7 @@ describe Sufia::Breadcrumbs do
     end
     context "when there is no user" do
       before do
-        crumbs.stub(:user_signed_in?) { false }
+        allow(crumbs).to receive(:user_signed_in?) { false }
       end
       specify "the default trail is nil" do
         expect(crumbs.default_trail).to be_nil
@@ -57,7 +57,7 @@ describe Sufia::Breadcrumbs do
     context "when coming from the dashboard" do
       before do
         allow(crumbs.request).to receive(:referer).and_return("http://...dashboard/")
-        crumbs.stub(:user_signed_in?) { true }
+        allow(crumbs).to receive(:user_signed_in?) { true }
       end
       specify "the trail goes back to the user's files" do
         allow(crumbs).to receive(:controller_name).and_return("my/files")

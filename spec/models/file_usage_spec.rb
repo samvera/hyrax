@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FileUsage do
+describe FileUsage, :type => :model do
 
   before :all do
     @file = GenericFile.new

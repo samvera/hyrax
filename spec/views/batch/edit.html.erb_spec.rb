@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'batch/edit.html.erb' do
+describe 'batch/edit.html.erb', :type => :view do
   let( :batch ) {
     stub_model(Batch, id: '123')
   }

@@ -19,18 +19,18 @@ describe Sufia::FilesController::UploadCompleteBehavior do
   let (:test_id) {"123abc"}
   context "Not overridden" do
     it "respond with the batch edit path" do
-      UploadThing.upload_complete_path(test_id).should == Sufia::Engine.routes.url_helpers.batch_edit_path(test_id)
+      expect(UploadThing.upload_complete_path(test_id)).to eq(Sufia::Engine.routes.url_helpers.batch_edit_path(test_id))
     end
     it "respond with the dashboard path" do
-      UploadThing.destroy_complete_path({}).should ==   Sufia::Engine.routes.url_helpers.dashboard_files_path
+      expect(UploadThing.destroy_complete_path({})).to eq(Sufia::Engine.routes.url_helpers.dashboard_files_path)
     end
   end
   context "overriden path" do
     it "respond with the batch edit path" do
-      UploadThingRedefine.upload_complete_path(test_id).should == "example.com"
+      expect(UploadThingRedefine.upload_complete_path(test_id)).to eq("example.com")
     end
     it "respond with the batch edit path" do
-      UploadThingRedefine.destroy_complete_path(test_id).should == "destroy.com"
+      expect(UploadThingRedefine.destroy_complete_path(test_id)).to eq("destroy.com")
     end
   end
 end

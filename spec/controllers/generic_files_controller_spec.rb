@@ -1,24 +1,24 @@
 require 'spec_helper'
 
-describe GenericFilesController do
+describe GenericFilesController, :type => :controller do
   before do
-    controller.stub(:has_access?).and_return(true)
+    allow(controller).to receive(:has_access?).and_return(true)
     @user = FactoryGirl.find_or_create(:jill)
     sign_in @user
-    User.any_instance.stub(:groups).and_return([])
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+    allow_any_instance_of(User).to receive(:groups).and_return([])
+    allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
   end
 
   describe "#create" do
     before do
       @file_count = GenericFile.count
       @mock = GenericFile.new({ pid: 'test:123' })
-      GenericFile.stub(:new).and_return(@mock)
+      allow(GenericFile).to receive(:new).and_return(@mock)
     end
 
     after do
       begin
-        GenericFile.unstub(:new)
+        allow(GenericFile).to receive(:new).and_call_original
       rescue RSpec::Mocks::MockExpectationError => e
       end
       Batch.find("sample:batch_id").delete rescue
@@ -28,16 +28,16 @@ describe GenericFilesController do
     it "should record on_behalf_of" do
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, files: [file], Filename: 'The world', batch_id: 'sample:batch_id', on_behalf_of: 'carolyn', terms_of_service: '1'
-      response.should be_success
+      expect(response).to be_success
       saved_file = GenericFile.find('test:123')
-      saved_file.on_behalf_of.should == 'carolyn'
+      expect(saved_file.on_behalf_of).to eq('carolyn')
     end
 
     it "should render error the file wasn't actually a file" do
       file = 'hello'
       xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample:batch_id', permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-      response.status.should == 422
-      JSON.parse(response.body).first['error'].should match(/no file for upload/i)
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
     end
 
     it "spawns a content deposit event job" do
@@ -55,30 +55,30 @@ describe GenericFilesController do
 
     it "displays a flash error when file has a virus" do
       file = fixture_file_upload('/world.png', 'image/png')
-      Sufia::GenericFile::Actor.should_receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      expect(Sufia::GenericFile::Actor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-      flash[:error].should_not be_blank
-      flash[:error].should include('A virus was found')
+      expect(flash[:error]).not_to be_blank
+      expect(flash[:error]).to include('A virus was found')
     end
 
     it "should create and save a file asset from the given params" do
       date_today = Date.today
-      Date.stub(:today).and_return(date_today)
+      allow(Date).to receive(:today).and_return(date_today)
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-      response.should be_success
-      GenericFile.count.should == @file_count + 1
+      expect(response).to be_success
+      expect(GenericFile.count).to eq(@file_count + 1)
 
       saved_file = GenericFile.find('test:123')
 
       # This is confirming that the correct file was attached
-      saved_file.label.should == 'world.png'
-      saved_file.content.checksum.should == 'f794b23c0c6fe1083d0ca8b58261a078cd968967'
+      expect(saved_file.label).to eq('world.png')
+      expect(saved_file.content.checksum).to eq('f794b23c0c6fe1083d0ca8b58261a078cd968967')
       expect(saved_file.content.dsChecksumValid).to be true
 
       # Confirming that date_uploaded and date_modified were set
-      saved_file.date_uploaded.should == date_today
-      saved_file.date_modified.should == date_today
+      expect(saved_file.date_uploaded).to eq(date_today)
+      expect(saved_file.date_modified).to eq(date_today)
     end
 
     it "should record what user created the first version of content" do
@@ -86,47 +86,47 @@ describe GenericFilesController do
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
       saved_file = GenericFile.find('test:123')
       version = saved_file.content.latest_version
-      version.versionID.should == "content.0"
-      saved_file.content.version_committer(version).should == @user.user_key
+      expect(version.versionID).to eq("content.0")
+      expect(saved_file.content.version_committer(version)).to eq(@user.user_key)
     end
 
     it "should create batch associations from batch_id" do
-      Sufia.config.stub(:id_namespace).and_return('sample')
+      allow(Sufia.config).to receive(:id_namespace).and_return('sample')
       file = fixture_file_upload('/world.png','image/png')
-      controller.stub(:add_posted_blob_to_asset)
+      allow(controller).to receive(:add_posted_blob_to_asset)
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      GenericFile.unstub(:new)
-      lambda {Batch.find("sample:batch_id")}.should raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
+      allow(GenericFile).to receive(:new).and_call_original
+      expect {Batch.find("sample:batch_id")}.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
       batch = Batch.create(pid: "sample:batch_id")
-      batch.generic_files.first.pid.should == "test:123"
+      expect(batch.generic_files.first.pid).to eq("test:123")
     end
     it "should set the depositor id" do
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      response.should be_success
+      expect(response).to be_success
 
       saved_file = GenericFile.find('test:123')
       # This is confirming that apply_depositor_metadata recorded the depositor
       #TODO make sure this is moved to scholarsphere:
       #saved_file.properties.depositor.should == ['jilluser']
-      saved_file.properties.depositor.should == ['jilluser@example.com']
+      expect(saved_file.properties.depositor).to eq(['jilluser@example.com'])
       #TODO make sure this is moved to scholarsphere:
       #saved_file.depositor.should == 'jilluser'
-      saved_file.depositor.should == 'jilluser@example.com'
-      saved_file.properties.to_solr.keys.should include('depositor_tesim')
+      expect(saved_file.depositor).to eq('jilluser@example.com')
+      expect(saved_file.properties.to_solr.keys).to include('depositor_tesim')
       #TODO make sure this is moved to scholarsphere:
       #saved_file.properties.to_solr['depositor_t'].should == ['jilluser']
-      saved_file.properties.to_solr['depositor_tesim'].should == ['jilluser@example.com']
-      saved_file.to_solr.keys.should include('depositor_tesim')
-      saved_file.to_solr['depositor_tesim'].should == ['jilluser@example.com']
+      expect(saved_file.properties.to_solr['depositor_tesim']).to eq(['jilluser@example.com'])
+      expect(saved_file.to_solr.keys).to include('depositor_tesim')
+      expect(saved_file.to_solr['depositor_tesim']).to eq(['jilluser@example.com'])
     end
 
     it "should error out of create and save after on continuos rsolr error" do
-      GenericFile.any_instance.stub(:save).and_raise(RSolr::Error::Http.new({},{}))
+      allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
 
       file = fixture_file_upload('/world.png','image/png')
       xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample:batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-      response.body.should include("Error occurred while creating generic file.")
+      expect(response.body).to include("Error occurred while creating generic file.")
     end
   end
 
@@ -136,8 +136,8 @@ describe GenericFilesController do
       @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
     end
     it "should ingest files from provide URLs" do
-      ImportUrlJob.should_receive(:new).twice {"ImportJob"}
-      Sufia.queue.should_receive(:push).with("ImportJob").twice
+      expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+      expect(Sufia.queue).to receive(:push).with("ImportJob").twice
       expect { post :create, selected_files: @json_from_browse_everything, batch_id: "sample:batch_id" }.to change(GenericFile, :count).by(2)
       created_files = GenericFile.all
       ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
@@ -165,59 +165,59 @@ describe GenericFilesController do
     end
     after do
       Sufia.config.enable_local_ingest = false
-      FileContentDatastream.any_instance.stub(:live?).and_return(true)
+      allow_any_instance_of(FileContentDatastream).to receive(:live?).and_return(true)
       GenericFile.destroy_all
     end
     context "when User model defines a directory path" do
       before do
         if $in_travis
           # In order to avoid an invalid derivative creation, just stub out the derivatives.
-          GenericFile.any_instance.stub(:create_derivatives)
+          allow_any_instance_of(GenericFile).to receive(:create_derivatives)
         end
-        User.any_instance.stub(:directory).and_return(@mock_upload_directory)
+        allow_any_instance_of(User).to receive(:directory).and_return(@mock_upload_directory)
       end
       it "should ingest files from the filesystem" do
-        lambda { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(2)
-        response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
+        expect { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.to change(GenericFile, :count).by(2)
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
         expect(File).not_to exist("#{@mock_upload_directory}/image.jpg")
         expect(File).not_to exist("#{@mock_upload_directory}/world.png")
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
-        files.first.label.should == 'world.png'
-        files.last.label.should == 'image.jpg'
+        expect(files.first.label).to eq('world.png')
+        expect(files.last.label).to eq('image.jpg')
       end
       it "should ingest redirect to another location" do
-        GenericFilesController.should_receive(:upload_complete_path).and_return(mock_url)
-        lambda { post :create, local_file: ["world.png"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(1)
-        response.should redirect_to mock_url
+        expect(GenericFilesController).to receive(:upload_complete_path).and_return(mock_url)
+        expect { post :create, local_file: ["world.png"], batch_id: "xw42n7934"}.to change(GenericFile, :count).by(1)
+        expect(response).to redirect_to mock_url
         # These files should have been moved out of the upload directory
         expect(File).not_to exist("#{@mock_upload_directory}/world.png")
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
-        files.first.label.should == 'world.png'
+        expect(files.first.label).to eq('world.png')
       end
       it "should ingest directories from the filesystem" do
-        lambda { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.should change(GenericFile, :count).by(4)
-        response.should redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
+        expect { post :create, local_file: ["world.png", "import"], batch_id: "xw42n7934"}.to change(GenericFile, :count).by(4)
+        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path('xw42n7934')
         # These files should have been moved out of the upload directory
         expect(File).not_to exist("#{@mock_upload_directory}/import/files/icons.zip")
         expect(File).not_to exist("#{@mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
         expect(File).not_to exist("#{@mock_upload_directory}/world.png")
         # And into the storage directory
         files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => 'info:fedora/sufia:xw42n7934')
-        files.first.label.should == 'world.png'
+        expect(files.first.label).to eq('world.png')
         ['icons.zip', 'Example.ogg'].each do |filename|
-          files.select{|f| f.label == filename}.first.relative_path.should == "import/files/#{filename}"
+          expect(files.select{|f| f.label == filename}.first.relative_path).to eq("import/files/#{filename}")
         end
-        files.select{|f| f.label == 'dublin_core_rdf_descMetadata.nt'}.first.relative_path.should == 'import/metadata/dublin_core_rdf_descMetadata.nt'
+        expect(files.select{|f| f.label == 'dublin_core_rdf_descMetadata.nt'}.first.relative_path).to eq('import/metadata/dublin_core_rdf_descMetadata.nt')
       end
     end
     context "when User model does not define directory path" do
       it "should return an error message and redirect to file upload page" do
-        lambda { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.should_not change(GenericFile, :count)
-        response.should render_template :new
-        flash[:alert].should == 'Your account is not configured for importing files from a user-directory on the server.'
+        expect { post :create, local_file: ["world.png", "image.jpg"], batch_id: "xw42n7934"}.not_to change(GenericFile, :count)
+        expect(response).to render_template :new
+        expect(flash[:alert]).to eq('Your account is not configured for importing files from a user-directory on the server.')
       end
     end
   end
@@ -234,8 +234,8 @@ describe GenericFilesController do
     end
     it "should return json with the result" do
       xhr :post, :audit, id: @generic_file.pid
-      response.should be_success
-      lambda { JSON.parse(response.body) }.should_not raise_error
+      expect(response).to be_success
+      expect { JSON.parse(response.body) }.not_to raise_error
       audit_results = JSON.parse(response.body).collect { |result| result["pass"] }
       expect(audit_results.reduce(true) { |sum, value| sum && value }).to be_truthy
     end
@@ -253,14 +253,14 @@ describe GenericFilesController do
       @user.delete
     end
     it "should delete the file" do
-      GenericFile.find(@generic_file.pid).should_not be_nil
+      expect(GenericFile.find(@generic_file.pid)).not_to be_nil
       delete :destroy, id: @generic_file.pid
-      lambda { GenericFile.find(@generic_file.pid) }.should raise_error(ActiveFedora::ObjectNotFoundError)
+      expect { GenericFile.find(@generic_file.pid) }.to raise_error(ActiveFedora::ObjectNotFoundError)
     end
     it "should spawn a content delete event job" do
       s1 = double('one')
-      ContentDeleteEventJob.should_receive(:new).with(@generic_file.pid, @user.user_key).and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      expect(ContentDeleteEventJob).to receive(:new).with(@generic_file.pid, @user.user_key).and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
       delete :destroy, id: @generic_file.pid
     end
 
@@ -358,8 +358,8 @@ describe GenericFilesController do
 
     it "should spawn a content update event job" do
       s1 = double('one')
-      ContentUpdateEventJob.should_receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
-      Sufia.queue.should_receive(:push).with(s1).once
+      expect(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
+      expect(Sufia.queue).to receive(:push).with(s1).once
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       post :update, id: generic_file, generic_file: {title: ['new_title'], tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
@@ -391,24 +391,24 @@ describe GenericFilesController do
 
       posted_file = GenericFile.find(generic_file.pid)
       version1 = posted_file.content.latest_version
-      posted_file.content.version_committer(version1).should == @user.user_key
+      expect(posted_file.content.version_committer(version1)).to eq(@user.user_key)
 
       file = fixture_file_upload('/image.jpg','image/jpg')
       post :update, id: generic_file, filedata: file, generic_file: { tag: [''], permissions: { new_user_name: { 'archivist1@example.com'=>'edit' } } }
 
       posted_file = GenericFile.find(generic_file.pid)
       version2 = posted_file.content.latest_version
-      posted_file.content.version_committer(version2).should == @user.user_key
+      expect(posted_file.content.version_committer(version2)).to eq(@user.user_key)
 
-      posted_file.content.mimeType.should == "image/jpeg"
+      expect(posted_file.content.mimeType).to eq("image/jpeg")
       post :update, id: generic_file, revision: 'content.0'
 
       restored_file = GenericFile.find(generic_file.pid)
       version3 = restored_file.content.latest_version
-      version3.versionID.should_not == version2.versionID
-      version3.versionID.should_not == version1.versionID
-      restored_file.content.version_committer(version3).should == @user.user_key
-      restored_file.content.mimeType.should == "image/png"
+      expect(version3.versionID).not_to eq(version2.versionID)
+      expect(version3.versionID).not_to eq(version1.versionID)
+      expect(restored_file.content.version_committer(version3)).to eq(@user.user_key)
+      expect(restored_file.content.mimeType).to eq("image/png")
       @user.delete
     end
 
@@ -480,8 +480,8 @@ describe GenericFilesController do
       post :update, id: generic_file, generic_file: { tag: [''], permissions:
         { new_group_name: { 'group1' => 'read' }, new_user_name: { 'user1' => 'edit' }}}
 
-      assigns[:generic_file].read_groups.should == ["group1"]
-      assigns[:generic_file].edit_users.should include("user1", @user.user_key)
+      expect(assigns[:generic_file].read_groups).to eq(["group1"])
+      expect(assigns[:generic_file].edit_users).to include("user1", @user.user_key)
     end
     it "should update existing groups and users" do
       generic_file.read_groups = ['group3']
@@ -489,7 +489,7 @@ describe GenericFilesController do
       post :update, id: generic_file, generic_file: { tag: [''], permissions:
         { new_group_name: '', new_group_permission: '', new_user_name: '', new_user_permission: '', group: { 'group3' => 'read' }}}
 
-      assigns[:generic_file].read_groups.should == ["group3"]
+      expect(assigns[:generic_file].read_groups).to eq(["group3"])
     end
 
     it "spawns a virus check" do
@@ -516,10 +516,10 @@ describe GenericFilesController do
         end
       end
       it "redirects to edit" do
-        GenericFile.any_instance.should_receive(:valid?).and_return(false)
+        expect_any_instance_of(GenericFile).to receive(:valid?).and_return(false)
         post :update, id: generic_file, generic_file: {:tag=>['']}
-        response.should be_successful
-        response.should render_template('edit')
+        expect(response).to be_successful
+        expect(response).to render_template('edit')
         expect(assigns[:generic_file]).to eq generic_file
       end
     end
@@ -542,17 +542,17 @@ describe GenericFilesController do
     describe "edit" do
       it "should give me a flash error" do
         get :edit, id: "test5"
-        response.should redirect_to @routes.url_helpers.generic_file_path('test5')
-        flash[:alert].should_not be_nil
-        flash[:alert].should_not be_empty
-        flash[:alert].should include("You do not have sufficient privileges to edit this document")
+        expect(response).to redirect_to @routes.url_helpers.generic_file_path('test5')
+        expect(flash[:alert]).not_to be_nil
+        expect(flash[:alert]).not_to be_empty
+        expect(flash[:alert]).to include("You do not have sufficient privileges to edit this document")
       end
     end
     describe "view" do
       it "should show me the file" do
         get :show, id: "test5"
-        response.should_not redirect_to(action: 'show')
-        flash[:alert].should be_nil
+        expect(response).not_to redirect_to(action: 'show')
+        expect(flash[:alert]).to be_nil
       end
       it "should set the breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
@@ -563,26 +563,26 @@ describe GenericFilesController do
       it "should not let the user submit if they logout" do
         sign_out @user
         get :new
-        response.should_not be_success
-        flash[:alert].should_not be_nil
-        flash[:alert].should include("You need to sign in or sign up before continuing")
+        expect(response).not_to be_success
+        expect(flash[:alert]).not_to be_nil
+        expect(flash[:alert]).to include("You need to sign in or sign up before continuing")
       end
       it "should filter flash if they signin" do
         sign_in @user
         get :show, id: "test5"
-        flash[:alert].should be_nil
+        expect(flash[:alert]).to be_nil
       end
       describe "failing audit" do
         before do
-          ActiveFedora::RelsExtDatastream.any_instance.stub(:dsChecksumValid).and_return(false)
+          allow_any_instance_of(ActiveFedora::RelsExtDatastream).to receive(:dsChecksumValid).and_return(false)
           @archivist = FactoryGirl.find_or_create(:archivist)
         end
         it "should display failing audits" do
           sign_in @archivist
           AuditJob.new(@file.pid, "RELS-EXT", @file.rels_ext.versionID).run
           get :show, id: "test5"
-          assigns[:notify_number].should == 1
-          @archivist.mailbox.inbox[0].messages[0].subject.should == "Failing Audit Run"
+          expect(assigns[:notify_number]).to eq(1)
+          expect(@archivist.mailbox.inbox[0].messages[0].subject).to eq("Failing Audit Run")
         end
       end
     end

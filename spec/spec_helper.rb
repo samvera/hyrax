@@ -73,6 +73,10 @@ module EngineRoutes
 end
 
 RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = File.expand_path("../fixtures", __FILE__)
 

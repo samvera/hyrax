@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe My::FilesController do
+describe My::FilesController, :type => :controller do
 
   before :all do
     GenericFile.destroy_all

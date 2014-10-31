@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "file routes" do
+describe "file routes", :type => :routing do
   routes { Sufia::Engine.routes }
   it 'should create a featured_work' do
     expect(post: '/files/1/featured_work').to route_to(controller: 'featured_works', action: 'create', id: '1')

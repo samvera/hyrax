@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Browse files" do
+describe "Browse files", :type => :feature do
 
   before :all do
     cleanup_jetty
@@ -28,16 +28,16 @@ describe "Browse files" do
   describe "when not logged in" do
     it "should let us browse some of the fixtures" do
       click_link "18"
-      page.should have_content "Search Results"
+      expect(page).to have_content "Search Results"
       click_link @fixtures[0].title[0]
-      page.should have_content "Download"
-      page.should_not have_content "Edit"
+      expect(page).to have_content "Download"
+      expect(page).not_to have_content "Edit"
     end
     it "should allow you to click next" do
       click_link 'Next »'
       within(".modal-body") do
-        page.should have_content "5"
-        page.should_not have_content "11"
+        expect(page).to have_content "5"
+        expect(page).not_to have_content "11"
       end
     end
   end

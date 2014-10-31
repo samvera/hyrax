@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GenericFileRdfDatastream do
+describe GenericFileRdfDatastream, :type => :model do
   it "should have bibliographicCitation" do
     subject.bibliographic_citation = "foo"
     expect(subject.bibliographic_citation).to eq ["foo"]

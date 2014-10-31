@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ChecksumAuditLog do
+describe ChecksumAuditLog, :type => :model do
   let(:f) do
     GenericFile.new.tap do |gf|
       gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')

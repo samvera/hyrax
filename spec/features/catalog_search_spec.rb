@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'catalog searching' do
+describe 'catalog searching', :type => :feature do
 
   before(:all) do
     @gf1 = GenericFile.new.tap do |f|

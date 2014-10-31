@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sufia::Pageview do
+describe Sufia::Pageview, :type => :model do
   before do
     @pageview = Sufia::Pageview
   end

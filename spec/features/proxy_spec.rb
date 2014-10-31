@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'proxy' do
+describe 'proxy', :type => :feature do
   let(:user) { FactoryGirl.find_or_create(:archivist) }
   let(:second_user) { FactoryGirl.find_or_create(:jill) }
 
@@ -21,8 +21,8 @@ describe 'proxy' do
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
     end
 
-    it "allows on-behalf-of deposit" do
-      pending 'This test was incomplete before and is still incomplete.'
+    # TODO: Finish this spec
+    xit "allows on-behalf-of deposit" do
       sign_in user
       visit '/'
       first('a.dropdown-toggle').click

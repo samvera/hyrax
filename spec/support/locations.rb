@@ -2,7 +2,7 @@ module Locations
   def go_to_dashboard
     visit '/dashboard'
     # causes selenium to wait until text appears on the page
-    page.should have_content('My Dashboard')
+    expect(page).to have_content('My Dashboard')
   end
 
   def go_to_dashboard_files
@@ -12,17 +12,17 @@ module Locations
 
   def go_to_dashboard_collections
     visit '/dashboard/collections'
-    page.should have_content('My Collections')
+    expect(page).to have_content('My Collections')
   end
 
   def go_to_dashboard_shares
     visit '/dashboard/shares'
-    page.should have_content('Files Shared with Me')
+    expect(page).to have_content('Files Shared with Me')
   end
 
   def go_to_dashboard_highlights
     visit '/dashboard/highlights'
-    page.should have_content('My Highlights')
+    expect(page).to have_content('My Highlights')
   end
 
   def go_to_user_profile

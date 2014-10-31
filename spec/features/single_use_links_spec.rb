@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Create and use single-use links" do
+describe "Create and use single-use links", :type => :feature do
   include Warden::Test::Helpers
   Warden.test_mode!
   include Sufia::Engine.routes.url_helpers

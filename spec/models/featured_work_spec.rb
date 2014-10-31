@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeaturedWork do
+describe FeaturedWork, :type => :model do
   let(:feature) { FeaturedWork.create(generic_file_id:"99") }
 
   it "should have a file" do
@@ -21,7 +21,10 @@ describe FeaturedWork do
   describe "can_create_another?" do
     subject { FeaturedWork }
     context "when none exist" do
-      its(:can_create_another?) { should be true }
+      describe '#can_create_another?' do
+        subject { super().can_create_another? }
+        it { is_expected.to be true }
+      end
     end
     context "when five exist" do
       before do
@@ -29,13 +32,21 @@ describe FeaturedWork do
           FeaturedWork.create(generic_file_id:n.to_s)
         end
       end
-      its(:can_create_another?) { should be false }
+
+      describe '#can_create_another?' do
+        subject { super().can_create_another? }
+        it { is_expected.to be false }
+      end
     end
   end
 
   describe "#order" do
     subject { FeaturedWork.new(order: 5) }
-    its(:order) {should eq 5 }
+
+    describe '#order' do
+      subject { super().order }
+      it {is_expected.to eq 5 }
+    end
   end
 end
 

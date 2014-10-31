@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'searching' do
+describe 'searching', :type => :feature do
   before { GenericFile.destroy_all }
   let!(:file) { FactoryGirl.create(:public_file, title: "Toothbrush") }
 

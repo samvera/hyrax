@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DownloadsController do
+describe DownloadsController, :type => :controller do
 
   describe "with a file" do
     before do
@@ -17,42 +17,42 @@ describe DownloadsController do
     describe "when logged in as reader" do
       before do
         sign_in FactoryGirl.find_or_create(:archivist)
-        User.any_instance.stub(:groups).and_return([])
-        controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+        allow_any_instance_of(User).to receive(:groups).and_return([])
+        allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
       end
       describe "show" do
         it "should default to returning configured default download" do
-          DownloadsController.default_content_dsid.should == "content"
-          controller.stub(:render) # send_data calls render internally
+          expect(DownloadsController.default_content_dsid).to eq("content")
+          allow(controller).to receive(:render) # send_data calls render internally
           expected_content = ActiveFedora::Base.find("sufia:test1", cast: true).content.content
-          controller.should_receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
+          expect(controller).to receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
           get "show", id: "test1"
-          response.body.should == expected_content
-          response.should be_success
+          expect(response.body).to eq(expected_content)
+          expect(response).to be_success
         end
         it "should return requested datastreams" do
-          controller.stub(:render) # send_data calls render internally
+          allow(controller).to receive(:render) # send_data calls render internally
           expected_content = ActiveFedora::Base.find("sufia:test1", cast: true).descMetadata.content
           expect(controller).to receive(:send_file_headers!).with(filename: 'descMetadata', disposition: 'inline', type: 'application/n-triples')
           get "show", id: "test1", datastream_id: "descMetadata"
-          response.body.should == expected_content
-          response.should be_success
+          expect(response.body).to eq(expected_content)
+          expect(response).to be_success
         end
         it "should support setting disposition to inline" do
-          controller.stub(:render) # send_data calls render internally
+          allow(controller).to receive(:render) # send_data calls render internally
           expected_content = ActiveFedora::Base.find("sufia:test1", cast: true).content.content
-          controller.should_receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
+          expect(controller).to receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
           get "show", id: "test1", disposition: "inline"
-          response.body.should == expected_content
-          response.should be_success
+          expect(response.body).to eq(expected_content)
+          expect(response).to be_success
         end
 
         it "should allow you to specify filename for download" do
-          controller.stub(:render) # send_data calls render internally
+          allow(controller).to receive(:render) # send_data calls render internally
           expected_content = ActiveFedora::Base.find("sufia:test1", cast: true).content.content
-          controller.should_receive(:send_file_headers!).with({filename: 'my%20dog.png', disposition: 'inline', type: 'image/png' })
+          expect(controller).to receive(:send_file_headers!).with({filename: 'my%20dog.png', disposition: 'inline', type: 'image/png' })
           get "show", id: "test1", "filename" => "my%20dog.png"
-          response.body.should == expected_content
+          expect(response.body).to eq(expected_content)
         end
       end
     end
@@ -60,15 +60,15 @@ describe DownloadsController do
     describe "when not logged in as reader" do
       before do
         sign_in FactoryGirl.find_or_create(:jill)
-        User.any_instance.stub(:groups).and_return([])
-        controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+        allow_any_instance_of(User).to receive(:groups).and_return([])
+        allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
       end
 
       describe "show" do
         it "should deny access" do
           get "show", id: "test1"
-          response.should redirect_to root_path
-          flash[:alert].should == 'You are not authorized to access this page.'
+          expect(response).to redirect_to root_path
+          expect(flash[:alert]).to eq('You are not authorized to access this page.')
         end
       end
     end

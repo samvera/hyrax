@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe BatchEditsController do
+describe BatchEditsController, :type => :controller do
   before do
-    controller.stub(:has_access?).and_return(true)
+    allow(controller).to receive(:has_access?).and_return(true)
     @user = FactoryGirl.find_or_create(:jill)
     sign_in @user
-    User.any_instance.stub(:groups).and_return([])
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+    allow_any_instance_of(User).to receive(:groups).and_return([])
+    allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
     request.env["HTTP_REFERER"] = 'test.host/original_page'
   end
 
@@ -26,9 +26,9 @@ describe BatchEditsController do
     end
     it "should be successful" do
       get :edit
-      response.should be_successful
-      assigns[:terms].should == [:creator, :contributor, :description, :tag, :rights, :publisher,
-                        :date_created, :subject, :language, :identifier, :based_near, :related_url]
+      expect(response).to be_successful
+      expect(assigns[:terms]).to eq([:creator, :contributor, :description, :tag, :rights, :publisher,
+                        :date_created, :subject, :language, :identifier, :based_near, :related_url])
       expect(assigns[:show_file].creator).to eq ["Fred", "Wilma"]
       expect(assigns[:show_file].publisher).to eq ["Rand McNally"]
       expect(assigns[:show_file].language).to eq ["en"]

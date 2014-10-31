@@ -6,11 +6,11 @@ describe Sufia::Noid do
 
     context "when the passed in pid doesn't have a namespace" do
       let(:id) { 'abc123' }
-      it { should eq 'sufia:abc123' }
+      it { is_expected.to eq 'sufia:abc123' }
     end
     context "when the passed in pid has a namespace" do
       let(:id) { 'ksl:abc123' }
-      it { should eq 'ksl:abc123' }
+      it { is_expected.to eq 'ksl:abc123' }
     end
   end
 end

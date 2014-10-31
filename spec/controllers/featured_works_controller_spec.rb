@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeaturedWorksController do
+describe FeaturedWorksController, :type => :controller do
   describe "#create" do
     before do
       sign_in FactoryGirl.create(:user)
