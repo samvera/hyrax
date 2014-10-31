@@ -4,12 +4,12 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        has_metadata "properties", type: PropertiesDatastream
-        has_file_datastream "content", type: FileContentDatastream
-        has_file_datastream "thumbnail"
+        contains "properties", class_name: 'PropertiesDatastream'
+        contains "content", class_name: 'FileContentDatastream'
+        contains "thumbnail"
 
         has_attributes :relative_path, :import_url, datastream: :properties, multiple: false
-        
+
         property :label, predicate: RDF::DC.title
 
         property :depositor, predicate: RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt") do |index|

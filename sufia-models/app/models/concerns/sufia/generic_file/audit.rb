@@ -14,7 +14,7 @@ module Sufia
       end
 
       def per_version(&block)
-        self.datastreams.each do |dsid, ds|
+        attached_files.each do |dsid, ds|
           next if ds == full_text
           ds.versions.each do |ver|
             block.call(ver)

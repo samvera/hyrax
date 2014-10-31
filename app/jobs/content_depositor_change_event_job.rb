@@ -19,7 +19,7 @@ class ContentDepositorChangeEventJob < EventJob
     # TODO: This should be in its own job, not this event job
     file = ::GenericFile.find(pid)
     file.proxy_depositor = file.depositor
-    file.rightsMetadata.clear_permissions! if reset
+    file.clear_permissions! if reset
     file.apply_depositor_metadata(login)
     file.save!
 

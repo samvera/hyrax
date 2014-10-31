@@ -21,7 +21,6 @@ end
 EXTRA_GEMS =<<EOF
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'active-fedora', github: 'projecthydra/active_fedora', branch: 'fedora-4'
-gem 'active-triples', github: 'no-reply/ActiveTriples', ref: '4bec618710f7c87369e4e0960742d3943dec0fab'
 
 gem 'ldp', github: 'cbeer/ldp'
 gem 'hydra-head', github: 'projecthydra/hydra-head', branch: 'fedora-4'

@@ -24,7 +24,7 @@ module Sufia
     included do
       belongs_to :batch, property: :is_part_of
 
-      around_save :retry_warming
+      # around_save :retry_warming
 
       attr_accessible *(terms_for_display + [:part_of, :permissions])
     end
@@ -90,8 +90,8 @@ module Sufia
       @noid_indexer ||= Solrizer::Descriptor.new(:text, :indexed, :stored)
     end
 
-    def to_solr(solr_doc={}, opts={})
-      super(solr_doc, opts).tap do |solr_doc|
+    def to_solr(solr_doc={})
+      super.tap do |solr_doc|
         solr_doc[Solrizer.solr_name('label')] = self.label
         solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
         solr_doc[Solrizer.solr_name('file_format')] = file_format

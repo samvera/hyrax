@@ -4,9 +4,6 @@ describe Batch do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:batch) { Batch.create(title: ["test collection"], creator: [user.user_key]) }
 
-  it "should have rightsMetadata" do
-    expect(batch.rightsMetadata).to be_instance_of Hydra::Datastream::RightsMetadata
-  end
   it "should belong to testuser" do
     expect(batch.creator).to eq [user.user_key]
   end

@@ -8,14 +8,12 @@ module Sufia
 
     # OVERRIDE to support Hydra::Datastream::Properties which does not
     #   respond to :depositor_values but :depositor
-    # Adds metadata about the depositor to the asset
-    # Most important behavior: if the asset has a rightsMetadata datastream, this method will add +depositor_id+ to its individual edit permissions.
-
+    # Adds metadata about the depositor to the asset and ads +depositor_id+ to
+    # its individual edit permissions.
     def apply_depositor_metadata(depositor)
-      rights_ds = self.datastreams["rightsMetadata"]
       depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
 
-      rights_ds.update_indexed_attributes([:edit_access, :person] => depositor_id) unless rights_ds.nil?
+      self.edit_users += [depositor_id]
       self.depositor = depositor_id
 
       return true
