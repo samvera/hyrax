@@ -89,7 +89,7 @@ module Hydra
 
     # Download permissions are exercised in Hydra::Controller::DownloadBehavior
     def download_permissions
-      can :download, ActiveFedora::Datastream do |ds|
+      can :download, ActiveFedora::File do |ds|
         can? :read, ds.digital_object.id # i.e, can download ds if can read object
       end
     end

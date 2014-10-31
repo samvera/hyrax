@@ -7,7 +7,7 @@ module Hydra
         include Hydra::Controller::ControllerBehavior
         before_filter :authorize_download!
       end
-      
+
       # Responds to http requests to show the datastream
       def show
         if datastream.new_record?
@@ -46,17 +46,17 @@ module Hydra
       end
 
       # Override this method to change which datastream is shown.
-      # Loads the datastream specified by the HTTP parameter `:datastream_id`. 
+      # Loads the file specified by the HTTP parameter `:datastream_id`.
       # If this object does not have a datastream by that name, return the default datastream
       # as returned by {#default_content_ds}
-      # @return [ActiveFedora::Datastream] the datastream
+      # @return [ActiveFedora::File] the file
       def datastream_to_show
-        ds = asset.datastreams[params[:datastream_id]] if params.has_key?(:datastream_id)
+        ds = asset.attached_files[params[:datastream_id]] if params.has_key?(:datastream_id)
         ds ||= default_content_ds
         raise "Unable to find a datastream for #{asset}" if ds.nil?
         ds
       end
-      
+
       # Handle the HTTP show request
       def send_content
 
@@ -128,9 +128,9 @@ module Hydra
       
       def default_content_ds
         if asset.class.respond_to?(:default_content_ds)
-          asset.datastreams[asset.class.default_content_ds]
-        elsif asset.datastreams.keys.include?(DownloadsController.default_content_dsid)
-          asset.datastreams[DownloadsController.default_content_dsid]
+          asset.attached_files[asset.class.default_content_ds]
+        elsif asset.attached_files.keys.include?(DownloadsController.default_content_dsid)
+          asset.attached_files[DownloadsController.default_content_dsid]
         end
       end
       

@@ -238,7 +238,8 @@ describe Ability do
     subject { Ability.new(user) }
     let(:asset) { FactoryGirl.create(:asset) }
     let(:user) { FactoryGirl.build(:user) }
-    let(:datastream) { ActiveFedora::Datastream.new(asset, 'ds1') }
+    let(:datastream) { ActiveFedora::File.new(asset, 'ds1') }
+
     after { asset.destroy }
 
     context "user has read permission on the object" do

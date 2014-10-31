@@ -20,7 +20,7 @@ describe DownloadsController do
       class ContentHolder < ActiveFedora::Base
         include Hydra::ModelMethods
         include Hydra::AccessControls::Permissions
-        has_file_datastream 'thumbnail'
+        contains 'thumbnail'
       end
       @user = User.new.tap {|u| u.email = 'email@example.com'; u.password = 'password'; u.save}
     end
@@ -122,7 +122,7 @@ describe DownloadsController do
         before do
           parent.add_file_datastream('one1two2threfour', dsid: 'webm', mime_type: 'video/webm', original_name: 'MyVideo.webm')
           parent.save!
-          expect(controller).to receive(:authorize!).with(:download, instance_of(ActiveFedora::Datastream)).and_return(true)
+          expect(controller).to receive(:authorize!).with(:download, instance_of(ActiveFedora::File)).and_return(true)
         end
         it "head request" do
           request.env["HTTP_RANGE"] = 'bytes=0-15'
