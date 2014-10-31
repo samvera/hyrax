@@ -4,8 +4,6 @@ class TestAppGenerator < Rails::Generators::Base
   source_root File.expand_path("../../../../support", __FILE__)
 
   def copy_test_classes
-    copy_file "app/models/generic_content.rb"
-
     # Download controller
     copy_file "app/controllers/downloads_controller.rb"
   end
