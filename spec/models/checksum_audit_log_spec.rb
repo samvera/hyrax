@@ -12,7 +12,7 @@ describe ChecksumAuditLog do
       gf.save!
     end
   end
-  let(:version) { f.datastreams['content'].versions.first }
+  let(:version) { f.attached_files['content'].versions.first }
   let(:old) do
     ChecksumAuditLog.create(pid: f.pid, dsid: version.dsid, version: version.versionID, pass: 1, created_at: 2.minutes.ago)
   end

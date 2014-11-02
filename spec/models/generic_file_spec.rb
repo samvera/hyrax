@@ -431,7 +431,7 @@ describe GenericFile, :type => :model do
       @f.audit!
     end
     it "should log a failing audit" do
-      @f.datastreams.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
+      @f.attached_files.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
       allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
       @f.audit!
       expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 0 }
