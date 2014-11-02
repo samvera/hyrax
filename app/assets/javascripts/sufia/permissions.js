@@ -68,6 +68,7 @@ Blacklight.onLoad(function() {
       $('#new_user_name_skel').val('');
       $('#new_user_permission_skel').val('none');
 
+      // FIXME don't add new_user_name add a row (permissions_attributes) with type: 'user', and name: 'userprovided'
       addPerm(un, perm_form, perm, 'new_user_name');
       return false;
   });
@@ -94,6 +95,7 @@ Blacklight.onLoad(function() {
       $('#new_group_name_skel').val('');
       $('#new_group_permission_skel').val('none');
 
+      // FIXME don't add new_group_name add a row (permissions_attributes) with type: 'user', and name: 'userprovided'
       addPerm(cn, perm_form, perm, 'new_group_name');
       return false;
   });

@@ -171,58 +171,24 @@ describe GenericFile, :type => :model do
       subject.read_groups=['group1', 'group2']
       subject.edit_users=['user1']
       subject.read_users=['user2', 'user3']
-      expect(subject.permissions).to eq [{type: "group", access: "read", name: "group1"},
+      expect(subject.permissions.map(&:to_hash)).to match_array [
+          {type: "group", access: "read", name: "group1"},
           {type: "group", access: "read", name: "group2"},
-          {type: "user", access: "read", name: "user2"},
-          {type: "user", access: "read", name: "user3"},
-          {type: "user", access: "edit", name: "user1"}]
+          {type: "person", access: "read", name: "user2"},
+          {type: "person", access: "read", name: "user3"},
+          {type: "person", access: "edit", name: "user1"}]
     end
-    describe "updating permissions" do
-      it "should create new group permissions" do
-        subject.permissions = {new_group_name: {'group1'=>'read'}}
-        expect(subject.permissions).to eq [{type: "group", access: "read", name: "group1"},
-                                     {type: "user", access: "edit", name: "jcoyne"}]
-      end
-      it "should create new user permissions" do
-        subject.permissions = {new_user_name: {'user1'=>'read'}}
-        expect(subject.permissions).to eq [{type: "user", access: "read", name: "user1"},
-                                     {type: "user", access: "edit", name: "jcoyne"}]
-      end
-      it "should not replace existing groups" do
-        subject.permissions = {new_group_name: {'group1' => 'read'}}
-        subject.permissions = {new_group_name: {'group2' => 'read'}}
-        expect(subject.permissions).to eq [{type: "group", access: "read", name: "group1"},
-                                     {type: "group", access: "read", name: "group2"},
-                                     {type: "user", access: "edit", name: "jcoyne"}]
-      end
-      it "should not replace existing users" do
-        subject.permissions = {new_user_name:{'user1'=>'read'}}
-        subject.permissions = {new_user_name:{'user2'=>'read'}}
-        expect(subject.permissions).to eq [{type: "user", access: "read", name: "user1"},
-                                     {type: "user", access: "read", name: "user2"},
-                                     {type: "user", access: "edit", name: "jcoyne"}]
-      end
-      it "should update permissions on existing users" do
-        subject.permissions = {new_user_name:{'user1'=>'read'}}
-        subject.permissions = {user:{'user1'=>'edit'}}
-        expect(subject.permissions).to eq [{type: "user", access: "edit", name: "user1"},
-                                     {type: "user", access: "edit", name: "jcoyne"}]
-      end
-      it "should update permissions on existing groups" do
-        subject.permissions = {new_group_name:{'group1'=>'read'}}
-        subject.permissions = {group:{'group1'=>'edit'}}
-        expect(subject.permissions).to eq [{type: "group", access: "edit", name: "group1"},
-                                     {type: "user", access: "edit", name: "jcoyne"}]
-      end
-    end
+
     it "should have a characterization datastream" do
       expect(subject.characterization).to be_kind_of FitsDatastream
     end
+
     it "should have content datastream" do
       subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       expect(subject.content).to be_kind_of FileContentDatastream
     end
   end
+
   describe "delegations" do
     it "should delegate methods to properties metadata" do
       expect(subject).to respond_to(:relative_path)
@@ -431,12 +397,14 @@ describe GenericFile, :type => :model do
       @f.audit!
     end
     it "should log a failing audit" do
+      skip "skip versioning for now"
       @f.attached_files.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
       allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
       @f.audit!
       expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 0 }
     end
     it "should log a passing audit" do
+      skip "skip versioning for now"
       allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
       @f.audit!
       expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 1 }
@@ -550,15 +518,17 @@ describe GenericFile, :type => :model do
                                     {type: 'group', access: 'read', name: "group-6"},
                                     {type: 'group', access: 'read', name: "group-7"},
                                     {type: 'group', access: 'edit', name: "group-8"}]
-        #m.save
       end
     end
+
     it "should have read groups accessor" do
       expect(subject.read_groups).to eq ['group-6', 'group-7']
     end
+
     it "should have read groups string accessor" do
       expect(subject.read_groups_string).to eq 'group-6, group-7'
     end
+
     it "should have read groups writer" do
       subject.read_groups = ['group-2', 'group-3']
       expect(subject.read_groups).to eq ['group-2', 'group-3']
@@ -575,104 +545,53 @@ describe GenericFile, :type => :model do
     it "should only revoke eligible groups" do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
-      expect(subject.read_groups).to eq ['group-2', 'group-3', 'group-7']
+      expect(subject.read_groups).to match_array ['group-2', 'group-3', 'group-7']
       expect(subject.edit_groups).to eq ['group-8']
-      expect(subject.read_users).to eq ['person1', 'person2']
+      expect(subject.read_users).to match_array ['person1', 'person2']
       expect(subject.edit_users).to eq ['jcoyne']
     end
   end
+
   describe "permissions validation" do
-    context "depositor must have edit access" do
-      before(:each) do
-        @file = GenericFile.new
-        @file.apply_depositor_metadata('mjg36')
-      end
-      it "should work via permissions=()" do
-        @file.permissions = {user: {'mjg36' => 'read'}}
-        expect { @file.save }.not_to raise_error
-        expect(@file).to be_new_record
-        expect(@file.errors).to include(:edit_users)
-        expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
-        expect(@file).to_not be_valid
-      end
-      it "should work via update" do
-        # automatically triggers save
-        expect { @file.update(read_users_string: 'mjg36') }.not_to raise_error
-        expect(@file).to be_new_record
-        expect(@file.errors).to include(:edit_users)
-        expect(@file.errors[:edit_users]).to include('Depositor must have edit access')
-        expect(@file).to_not be_valid
+    subject do
+      GenericFile.new do |file|
+        file.apply_depositor_metadata('mjg36')
       end
     end
 
-    context "public must not have edit access" do
-      before(:each) do
-        @file = GenericFile.new
-        @file.apply_depositor_metadata('mjg36')
-        @file.read_groups = ['public']
+    context "when the depositor does not have edit access" do
+      before do
+        subject.permissions = [ Hydra::AccessControls::Permission.new(type: 'person', name: 'mjg36', access: 'read')]
       end
-      it "should work via permissions=()" do
-        @file.permissions = {group: {'public' => 'edit'}}
-        expect { @file.save }.not_to raise_error
-        expect(@file).to be_new_record
-        expect(@file.errors).to include(:edit_groups)
-        expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
-        expect(@file).to_not be_valid
-      end
-      it "should work via update" do
-        # automatically triggers save
-        expect { @file.update(edit_groups_string: 'public') }.not_to raise_error
-        expect(@file).to be_new_record
-        expect(@file.errors).to include(:edit_groups)
-        expect(@file.errors[:edit_groups]).to include('Public cannot have edit access')
-        expect(@file).to_not be_valid
+      it "should be invalid" do
+        expect(subject).to_not be_valid
+        expect(subject.errors[:edit_users]).to include('Depositor must have edit access')
       end
     end
-    context "registered must not have edit access" do
-      before(:each) do
-        @file = GenericFile.new
-        @file.apply_depositor_metadata('mjg36')
-        @file.read_groups = ['registered']
+
+    context "when the public has edit access" do
+      before do
+        subject.edit_groups = ['public']
       end
-      it "should work via permissions=()" do
-        @file.permissions = {group: {'registered' => 'edit'}}
-        expect { @file.save }.not_to raise_error
-        expect(@file).to be_new_record
-        expect(@file.errors).to include(:edit_groups)
-        expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
-        expect(@file).to_not be_valid
-      end
-      it "should work via update" do
-        # automatically triggers save
-        expect { @file.update(edit_groups_string: 'registered') }.not_to raise_error
-        expect(@file).to be_new_record
-        expect(@file.errors).to include(:edit_groups)
-        expect(@file.errors[:edit_groups]).to include('Registered cannot have edit access')
-        expect(@file).to_not be_valid
+      it "should be invalid" do
+        expect(subject).to_not be_valid
+        expect(subject.errors[:edit_groups]).to include('Public cannot have edit access')
       end
     end
+
+    context "when registered has edit access" do
+      before do
+        subject.edit_groups = ['registered']
+      end
+      it "should be invalid" do
+        expect(subject).to_not be_valid
+        expect(subject.errors[:edit_groups]).to include('Registered cannot have edit access')
+      end
+    end
+
     context "everything is copacetic" do
-      before(:each) do
-        @file = GenericFile.new
-        @file.apply_depositor_metadata('mjg36')
-        @file.read_groups = ['public']
-      end
-      after(:each) do
-        @file.delete
-      end
-      it "should work via permissions=()" do
-        @file.permissions = {group: {'registered' => 'read'}}
-        expect { @file.save }.not_to raise_error
-        expect(@file).to_not be_new_record
-        expect(@file.errors).to be_empty
-        expect(@file).to be_valid
-      end
-      it "should work via update" do
-        # automatically triggers save
-        expect { @file.update(read_groups_string: 'registered') }.not_to raise_error
-        expect(@file).to_not be_new_record
-        expect(@file.errors).to be_empty
-        expect(@file).to be_valid
+      it "should be valid" do
+        expect(subject).to be_valid
       end
     end
   end
