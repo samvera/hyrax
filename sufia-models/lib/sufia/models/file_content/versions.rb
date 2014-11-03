@@ -7,16 +7,8 @@ module Sufia
         has_many_versions
       end
 
-      def uuid_for(version_id)
-        version_id.to_s.split("/").last
-      end
-
       def latest_version
         versions.last
-      end
-
-      def root_version
-        versions.first
       end
 
       def version_committer(version)

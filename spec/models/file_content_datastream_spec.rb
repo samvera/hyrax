@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe FileContentDatastream, :type => :model do
   describe "version control" do
+    let(:version1) { "version1" }
+    let(:version2) { "version2" }
     before do
       f = GenericFile.new
       f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
@@ -12,21 +14,17 @@ describe FileContentDatastream, :type => :model do
     after do
       @file.delete
     end
-    let(:root_version) { @file.content.versions.first }
-    it "should have a list of versions including the root version" do
+    it "should have a list of versions" do
       expect(@file.content.versions).to be_kind_of(Array)
-      expect(@file.content.versions.count).to eql(2)
+      expect(@file.content.versions.count).to eql(1)
     end
-    it "should return a RDF::URI for the version" do
-      expect(@file.content.versions.first).to be_kind_of(RDF::URI)
-    end
-    it "should contain the root version" do
-      expect(@file.content.root_version).to eql(root_version)
+    it "should return a label for the version" do
+      expect(@file.content.versions.first.to_s).to eql(version1)
     end
     context "with the latest version" do
       let(:latest_version) { @file.content.versions.last }
       it "should return the latest version" do
-        expect(@file.content.latest_version.to_s).to eql(latest_version.to_s)
+        expect(@file.content.latest_version.to_s).to eql(version1)
       end
     end
     describe "add a version" do
@@ -35,15 +33,11 @@ describe FileContentDatastream, :type => :model do
         @file.save
       end
       let(:latest_version) { @file.content.versions.last }
-      let(:uuid) { @file.content.versions.last.to_s.split("/").last  }
-      it "should return the root verion and two additional versions" do
-        expect(@file.content.versions.count).to eql(3)
+      it "should return two versions" do
+        expect(@file.content.versions.count).to eql(2)
       end
       it "should return the newer version via latest_version" do
-        expect(@file.content.latest_version.to_s).to eql(latest_version.to_s)
-      end
-      it "should return the same version using the version's UUID" do
-        expect(@file.content.uuid_for(latest_version)).to eql(uuid)
+        expect(@file.content.latest_version.to_s).to eql(version2)
       end
     end
   end

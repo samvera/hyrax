@@ -400,8 +400,8 @@ describe GenericFilesController do
       let(:file2_type)  { "image/jpeg" }
       let(:first_user)  { FactoryGirl.find_or_create(:jill)}
       let(:second_user) { FactoryGirl.find_or_create(:archivist) }
-      let(:version1)    { generic_file.content.versions[1] }
-      let(:version2)    { generic_file.content.versions[2] }
+      let(:version1)    { "version1" }
+      let(:version2)    { "version2" }
 
       before do
         allow_any_instance_of(GenericFile).to receive(:characterize)
@@ -415,12 +415,12 @@ describe GenericFilesController do
         actor2.create_content(image2, file2, 'content')
       end
 
-      it "should have two versions (plus the root version)" do
-        expect(generic_file.content.versions.count).to eq 3
+      it "should have two versions" do
+        expect(generic_file.content.versions.count).to eq 2
       end
 
       it "should have the current version" do
-        expect(generic_file.content.latest_version).to eql(version2)
+        expect(generic_file.content.latest_version.to_s).to eql(version2)
         expect(generic_file.content.mime_type).to eql(file2_type)
         expect(generic_file.content.original_name).to eql(file2)
       end
@@ -448,12 +448,12 @@ describe GenericFilesController do
             end
             let(:restored_file)  { GenericFile.find(generic_file.pid) }
             let(:latest_version) { GenericFile.find(generic_file.pid).content.latest_version }
-            it "should create a new version with the previous version's info" do
+            it "should restore the first versions's content and metadata" do
               expect(restored_file.content.mime_type).to eql(file1_type)
               expect(restored_file.content.original_name).to eql(file1)
-              expect(restored_file.content.versions.count).to eq 4
-              expect(restored_file.content.versions[3]).to eql(latest_version)
-              expect(restored_file.content.version_committer(latest_version)).to eql(first_user.user_key)
+              expect(restored_file.content.versions.count).to eq 2
+              expect(restored_file.content.versions[1]).to eql(latest_version)
+              expect(restored_file.content.version_committer(version1)).to eql(first_user.user_key)
             end
           end
         end
