@@ -4,16 +4,19 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        contains "properties", class_name: 'PropertiesDatastream'
         contains "content", class_name: 'FileContentDatastream'
         contains "thumbnail"
-
-        has_attributes :relative_path, :import_url, datastream: :properties, multiple: false
 
         property :label, predicate: RDF::DC.title
 
         property :depositor, predicate: RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt") do |index|
           index.as :symbol, :stored_searchable
+        end
+
+        property :relative_path, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath')
+
+        property :import_url, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl') do |index|
+          index.as :symbol
         end
 
         property :part_of, predicate: RDF::DC.isPartOf
@@ -84,13 +87,20 @@ module Sufia
           puts "tables for vocabularies missing"
         end
 
+        def depositor
+          super.first
+        end
+
+        def relative_path
+          super.first
+        end
+
+        def import_url
+          super.first
+        end
+
         # For singular-valued properties
         # Hack until https://github.com/no-reply/ActiveTriples/pull/37 is merged
-
-        def depositor_with_first
-          depositor_without_first.first
-        end
-        alias_method_chain :depositor, :first
 
         def label_with_first
           label_without_first.first

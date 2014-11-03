@@ -4,9 +4,26 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        has_attributes :proxy_depositor, :on_behalf_of, datastream: :properties, multiple: false
+        property :proxy_depositor, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#proxyDepositor') do |index|
+          index.as :symbol
+        end
+
+        # This value is set when a user indicates they are depositing this for someone else
+        property :on_behalf_of, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#onBehalfOf') do |index|
+          index.as :symbol
+        end
+
         after_create :create_transfer_request
+
+        def proxy_depositor
+          super.first
+        end
+
+        def on_behalf_of
+          super.first
+        end
       end
+
 
       def create_transfer_request
         Sufia.queue.push(ContentDepositorChangeEventJob.new(pid, on_behalf_of)) if on_behalf_of.present?

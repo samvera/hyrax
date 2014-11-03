@@ -12,9 +12,6 @@ describe GenericFile, :type => :model do
     before do
       @transfer_to = FactoryGirl.find_or_create(:jill)
     end
-    after do
-      @file.destroy
-    end
 
     it "transfers the request" do
       @file.on_behalf_of = @transfer_to.user_key
@@ -160,9 +157,6 @@ describe GenericFile, :type => :model do
   end
 
   describe "attributes" do
-    it "should have properties datastream for depositor" do
-      expect(subject.properties).to be_instance_of PropertiesDatastream
-    end
     it "should have apply_depositor_metadata" do
       expect(subject.edit_users).to eq ['jcoyne']
       expect(subject.depositor).to eq 'jcoyne'
@@ -189,12 +183,10 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "delegations" do
-    it "should delegate methods to properties metadata" do
+  describe "metadata" do
+    it "should have descriptive metadata" do
       expect(subject).to respond_to(:relative_path)
       expect(subject).to respond_to(:depositor)
-    end
-    it "should delegate methods to descriptive metadata" do
       expect(subject).to respond_to(:related_url)
       expect(subject).to respond_to(:based_near)
       expect(subject).to respond_to(:part_of)
@@ -229,10 +221,6 @@ describe GenericFile, :type => :model do
     end
 
     describe "that have been saved" do
-      after do
-        subject.delete unless subject.new_record?
-      end
-
       it "should have activity stream-related methods defined" do
         subject.save
         f = subject.reload
@@ -336,9 +324,6 @@ describe GenericFile, :type => :model do
     before do
       @f = GenericFile.new
       @f.apply_depositor_metadata('mjg36')
-    end
-    after do
-      @f.delete
     end
     describe "with a video", if: Sufia.config.enable_ffmpeg do
       before do
@@ -598,9 +583,6 @@ describe GenericFile, :type => :model do
   describe "file content validation" do
     context "when file contains a virus" do
       let(:f) { File.new(fixture_path + '/small_file.txt') }
-      after(:each) do
-        subject.destroy if subject.persisted?
-      end
       it "populates the errors hash during validation" do
         allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
         subject.add_file(f, 'content', 'small_file.txt')
@@ -650,10 +632,6 @@ describe GenericFile, :type => :model do
       file.save
       file.to_solr
     }
-
-    after do
-      subject.destroy
-    end
 
     context "without terms" do
       specify "title is nil" do
