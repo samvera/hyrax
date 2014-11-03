@@ -475,7 +475,7 @@ describe GenericFilesController do
       post :update, id: generic_file,
         generic_file: { tag: [''],
                         permissions_attributes: [
-                          { type: 'user', name: 'user1', access: 'edit' },
+                          { type: 'person', name: 'user1', access: 'edit' },
                           { type: 'group', name: 'group1', access: 'read' }
                         ]
                       }

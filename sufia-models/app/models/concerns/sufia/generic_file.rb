@@ -26,7 +26,7 @@ module Sufia
 
       # around_save :retry_warming
 
-      attr_accessible *(terms_for_display + [:part_of, :permissions])
+      attr_accessible *(terms_for_display + [:part_of, :permissions_attributes])
     end
 
     def persistent_url
