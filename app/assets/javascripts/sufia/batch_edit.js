@@ -20,9 +20,13 @@ function batch_edit_init () {
         var Result  = {};
         while (i--) {
             var Pair = decodeURIComponent(Data[i]).split("=");
-            var Key = Pair[0];
-            var Val = Pair[1];
-            Result[Key] = Val;
+            var key = Pair[0];
+            var val = Pair[1];
+            if (Result[key] != null) {
+                if(!$.isArray(Result[key])) Result[key] = [Result[key]];
+                Result[key].push(val);
+            } else
+                Result[key] = val;
         }
         return Result;
     }
@@ -46,54 +50,65 @@ function batch_edit_init () {
             },
             run: function () {
                 running = true;
-                var self = this,
-                        orgSuc;
+                var self = this;
 
                 if (requests.length) {
-                    oriSuc = requests[0].complete;
 
                     // combine data from multiple requests
                     if (requests.length > 1) {
-                        var data = deserialize(requests[0].data.replace(/\+/g, " "));
-                        form = [requests[0].form]
-                        for (var i = requests.length - 1; i > 0; i--) {
-                            req = requests.pop();
-                            adata = deserialize(req.data.replace(/\+/g, " "));
-                            for (key in  Object.keys(adata)) {
-                                curKey = Object.keys(adata)[key];
-                                if (curKey.slice(0, 12) == "generic_file") {
-                                    data[curKey] = adata[curKey];
-                                    form.push(req.form);
-                                }
-                            }
-                        }
-                        requests[0].data = $.param(data);
-                        requests[0].form = form;
+                      requests = this.combine_requests(requests);
                     }
 
-                    requests[0].complete = function () {
-                        if (typeof oriSuc === 'function') oriSuc();
-                        if (typeof requests[0].form === 'object') {
-                            for (f in form) {
-                                form_id = form[f];
-                                after_ajax(form_id);
-                            }
-                        }
-                        requests.shift();
-                        self.run.apply(self, []);
-                    };
-
+                    requests = this.setup_request_complete(requests);
                     $.ajax(requests[0]);
                 } else {
                     self.tid = setTimeout(function () {
                         self.run.apply(self, []);
                     }, 500);
+                    running = false;
                 }
-                running = false;
             },
             stop: function () {
                 requests = [];
                 clearTimeout(this.tid);
+            },
+            setup_request_complete: function (requests) {
+                oriComp = requests[0].complete;
+
+                requests[0].complete = [ function (e) {
+                    req = requests.shift();
+                    if (typeof req.form === 'object') {
+                        for (f in req.form) {
+                            form_id = form[f];
+                            after_ajax(form_id);
+                        }
+                    }
+                    this.tid = setTimeout(function () {
+                        ajaxManager.run.apply(ajaxManager, []);
+                    }, 50);
+                    return true;
+                }];
+                if (typeof oriComp === 'function') requests[0].complete.push(oriComp);
+                return requests;
+            },
+            combine_requests: function (requests) {
+                var data = deserialize(requests[0].data.replace(/\+/g, " "));
+                form = [requests[0].form]
+                for (var i = requests.length - 1; i > 0; i--) {
+                    req = requests.pop();
+                    adata = deserialize(req.data.replace(/\+/g, " "));
+
+                    for (key in  Object.keys(adata)) {
+                        curKey = Object.keys(adata)[key];
+                        if (curKey.slice(0, 12) == "generic_file") {
+                            data[curKey] = adata[curKey];
+                            form.push(req.form);
+                        }
+                    }
+                }
+                requests[0].data = $.param(data);
+                requests[0].form = form;
+                return requests;
             }
         };
     }());
@@ -135,11 +150,7 @@ function batch_edit_init () {
             dataType: "json",
             type: form.attr("method").toUpperCase(),
             data: form.serialize(),
-            success: function (e) {
-                eval(e.responseText);
-                after_ajax(form_id);
-            },
-            error: function (e) {
+            complete: function (e) {
                 after_ajax(form_id);
                 if (e.status == 200) {
                     eval(e.responseText);
