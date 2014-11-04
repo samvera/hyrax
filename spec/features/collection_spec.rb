@@ -212,7 +212,7 @@ describe 'collection', :type => :feature do
     before do
       (2..12).each do |x|
         @gfs[x] =  GenericFile.new(title: ["title #{x}"]).tap do |f|
-          f.apply_depositor_metadata(user_key)
+          f.apply_depositor_metadata(user.user_key)
           f.save!
         end
       end
