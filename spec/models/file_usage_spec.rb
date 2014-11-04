@@ -2,14 +2,11 @@ require 'spec_helper'
 
 describe FileUsage, :type => :model do
 
-  before do
-    @file = GenericFile.new
-    @file.apply_depositor_metadata("awead")
-    @file.save
-  end
-
-  after do
-    @file.delete
+  let(:file) do
+    GenericFile.new.tap do |file|
+      file.apply_depositor_metadata("awead")
+      file.save
+    end
   end
 
   let(:dates) {
@@ -67,15 +64,15 @@ describe FileUsage, :type => :model do
   describe "#initialize" do
 
     it "should set the id" do
-      expect(usage.id).to eq(@file.id)
+      expect(usage.id).to eq(file.id)
     end
 
     it "should set the path" do
-      expect(usage.path).to eq("/files/#{URI.encode(Sufia::Noid.noidify(@file.id), '/')}")
+      expect(usage.path).to eq("/files/#{URI.encode(Sufia::Noid.noidify(file.id), '/')}")
     end
 
     it "should set the created date" do
-      expect(usage.created).to eq(DateTime.parse(@file.create_date))
+      expect(usage.created).to eq(file.create_date)
     end
 
   end
@@ -136,10 +133,10 @@ describe FileUsage, :type => :model do
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
-          FileUsage.new(@file.id)
+          FileUsage.new(file.id)
         }
         it "should set the created date to the earliest date not the created date" do
-          expect(usage.created).to eq(@file.create_date)
+          expect(usage.created).to eq(file.create_date)
         end
       end
     end
