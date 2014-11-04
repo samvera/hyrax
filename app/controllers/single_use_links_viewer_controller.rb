@@ -19,7 +19,7 @@ class SingleUseLinksViewerController < ApplicationController
 
       can :read, ActiveFedora::Base do |obj|
         single_use_link.valid? and
-          single_use_link.itemId == obj.pid and single_use_link.destroy!
+          single_use_link.itemId == obj.id and single_use_link.destroy!
       end if single_use_link
 
     end

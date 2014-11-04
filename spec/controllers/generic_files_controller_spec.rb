@@ -232,7 +232,7 @@ describe GenericFilesController do
 
     it "should return json with the result" do
       skip "Skiping audit for now"
-      xhr :post, :audit, id: generic_file.pid
+      xhr :post, :audit, id: generic_file.id
       expect(response).to be_success
       json = JSON.parse(response.body)
       audit_results = json.collect { |result| result["pass"] }
@@ -261,13 +261,13 @@ describe GenericFilesController do
 
     context "when the file is featured" do
       before do
-        FeaturedWork.create(generic_file_id: generic_file.pid)
+        FeaturedWork.create(generic_file_id: generic_file.id)
         expect(Sufia.queue).to receive(:push).with(delete_message)
       end
       it "should make the file not featured" do
-        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to include(generic_file.pid)
-        delete :destroy, id: generic_file.pid
-        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to_not include(generic_file.pid)
+        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to include(generic_file.id)
+        delete :destroy, id: generic_file.id
+        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to_not include(generic_file.id)
       end
     end
   end
@@ -334,7 +334,7 @@ describe GenericFilesController do
       end
 
       it 'redirects to root_url' do
-        get :stats, id: @generic_file.pid
+        get :stats, id: @generic_file.id
         expect(response).to redirect_to(Sufia::Engine.routes.url_helpers.root_path)
       end
     end
@@ -351,7 +351,7 @@ describe GenericFilesController do
     context "when updating metadata" do
       let(:update_message) { double('content update message') }
       before do
-        allow(ContentUpdateEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(update_message)
+        allow(ContentUpdateEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(update_message)
       end
 
       it "should spawn a content update event job" do
@@ -363,11 +363,11 @@ describe GenericFilesController do
       it "spawns a content new version event job" do
         pending "Merge from Sufia4?"
         s1 = double('one')
-        allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
+        allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
         expect(Sufia.queue).to receive(:push).with(s1).once
 
         s2 = double('one')
-        allow(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
+        allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
         expect(Sufia.queue).to receive(:push).with(s2).once
         @user = FactoryGirl.find_or_create(:jill)
         sign_in @user
@@ -377,11 +377,11 @@ describe GenericFilesController do
     context "when updating the attached file" do
       it "spawns a content new version event job" do
         s1 = double('one')
-        allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
+        allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
         expect(Sufia.queue).to receive(:push).with(s1).once
 
         s2 = double('one')
-        allow(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
+        allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
         expect(Sufia.queue).to receive(:push).with(s2).once
         @user = FactoryGirl.find_or_create(:jill)
         sign_in @user
@@ -446,8 +446,8 @@ describe GenericFilesController do
             before do
               post :update, id: generic_file, revision: version1
             end
-            let(:restored_file)  { GenericFile.find(generic_file.pid) }
-            let(:latest_version) { GenericFile.find(generic_file.pid).content.latest_version }
+            let(:restored_file)  { GenericFile.find(generic_file.id) }
+            let(:latest_version) { GenericFile.find(generic_file.id).content.latest_version }
             it "should restore the first versions's content and metadata" do
               expect(restored_file.content.mime_type).to eql(file1_type)
               expect(restored_file.content.original_name).to eql(file1)
@@ -499,18 +499,18 @@ describe GenericFilesController do
 
     it "spawns a virus check" do
       s1 = double('one')
-      allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.pid, 'jilluser@example.com').and_return(s1)
+      allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
-      allow(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
-      allow(CreateDerivativesJob).to receive(:new).with(generic_file.pid).and_return(s2)
+      allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
+      allow(CreateDerivativesJob).to receive(:new).with(generic_file.id).and_return(s2)
       @user = FactoryGirl.find_or_create(:jill)
       sign_in @user
       file = fixture_file_upload('/world.png', 'image/png')
       expect(Sufia::GenericFile::Actor).to receive(:virus_check).and_return(0)
       expect(Sufia.queue).to receive(:push).with(s2).once
-      post :update, id: generic_file.pid, filedata: file, 'Filename' => 'The world',
+      post :update, id: generic_file.id, filedata: file, 'Filename' => 'The world',
           generic_file: { tag: [''],
                           permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
     end

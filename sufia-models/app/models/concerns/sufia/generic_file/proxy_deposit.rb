@@ -32,7 +32,7 @@ module Sufia
       def request_transfer_to(target)
         raise ArgumentError, "Must provide a target" unless target
         deposit_user = ::User.find_by_user_key(depositor)
-        ProxyDepositRequest.create!(pid: pid, receiving_user: target, sending_user: deposit_user)
+        ProxyDepositRequest.create!(pid: id, receiving_user: target, sending_user: deposit_user)
       end
     end
   end

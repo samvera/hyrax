@@ -37,11 +37,11 @@ class BatchUpdateJob
 
   def update_file(gf, user)
     unless user.can? :edit, gf
-      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.pid}!"
+      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.id}!"
       denied << gf
       return
     end
-    gf.title = [title[gf.pid]] if title[gf.pid]
+    gf.title = [title[gf.id]] if title[gf.id]
     gf.attributes=file_attributes
     gf.visibility= visibility
 
@@ -50,13 +50,13 @@ class BatchUpdateJob
       gf.save!
     rescue RSolr::Error::Http => error
       save_tries += 1
-      ActiveFedora::Base.logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
+      ActiveFedora::Base.logger.warn "BatchUpdateJob caught RSOLR error on #{gf.id}: #{error.inspect}"
       # fail for good if the tries is greater than 3
       raise error if save_tries >=3
       sleep 0.01
       retry
     end #
-    Sufia.queue.push(ContentUpdateEventJob.new(gf.pid, login))
+    Sufia.queue.push(ContentUpdateEventJob.new(gf.id, login))
     saved << gf
   end
 

@@ -15,11 +15,11 @@ describe SingleUseLinksViewerController do
 
   describe "retrieval links" do
     let :show_link do
-      SingleUseLink.create itemId: file.pid, path: routes.url_helpers.generic_file_path(id: file)
+      SingleUseLink.create itemId: file.id, path: routes.url_helpers.generic_file_path(id: file)
     end
 
     let :download_link do
-      SingleUseLink.create itemId: file.pid, path: routes.url_helpers.download_path(id: file)
+      SingleUseLink.create itemId: file.id, path: routes.url_helpers.download_path(id: file)
     end
 
     let :show_link_hash do
@@ -31,7 +31,7 @@ describe SingleUseLinksViewerController do
     end
 
     describe "GET 'download'" do
-      let(:expected_content) { ActiveFedora::Base.find(file.pid).content.content }
+      let(:expected_content) { ActiveFedora::Base.find(file.id).content.content }
 
       it "and_return http success" do
         expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'inline', type: 'image/png')
@@ -59,7 +59,7 @@ describe SingleUseLinksViewerController do
       it "and_return http success" do
         get 'show', id: show_link_hash
         expect(response).to be_success
-        expect(assigns[:asset].pid).to eq file.pid
+        expect(assigns[:asset].id).to eq file.id
       end
 
       it "and_return 404 on second attempt" do
