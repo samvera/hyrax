@@ -10,11 +10,11 @@ class Batch < ActiveFedora::Base
   property :title, predicate: RDF::DC.title
   property :status, predicate: RDF::DC.type
 
-  def self.find_or_create(pid)
+  def self.find_or_create(id)
     begin
-      Batch.find(pid)
+      Batch.find(id)
     rescue ActiveFedora::ObjectNotFoundError
-      Batch.create(pid: pid)
+      Batch.create(id: id)
     end
   end
 

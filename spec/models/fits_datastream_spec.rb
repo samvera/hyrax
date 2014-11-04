@@ -3,7 +3,7 @@ require 'spec_helper'
 describe FitsDatastream, type: :model, unless: $in_travis do
   describe "image" do
     before(:all) do
-      @file = GenericFile.new(pid: 'foo123')
+      @file = GenericFile.new(id: 'foo123')
       @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
       @file.characterize
     end
@@ -48,7 +48,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
   describe "video" do
     before(:all) do
-      @file = GenericFile.new(pid: 'foo123')
+      @file = GenericFile.new(id: 'foo123')
       @file.add_file(File.open(fixture_path + '/sample_mpeg4.mp4'), 'content', 'sample_mpeg4.mp4')
       @file.characterize
     end
@@ -90,7 +90,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
   describe "pdf" do
     before do
-      @myfile = GenericFile.new(pid: 'foo123')
+      @myfile = GenericFile.new(id: 'foo123')
       @myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, 'content', 'sufia_test4.pdf')
       @myfile.apply_depositor_metadata('mjg36')
       # characterize method saves

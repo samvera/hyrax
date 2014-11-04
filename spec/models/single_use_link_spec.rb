@@ -21,32 +21,32 @@ describe SingleUseLink do
       expect(Digest::SHA2).to receive(:new).and_return(@hash)
      end
      it "should create show link" do
-      su = SingleUseLink.create itemId: file.pid, path: Sufia::Engine.routes.url_helpers.generic_file_path(file.pid)
+      su = SingleUseLink.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.generic_file_path(file.id)
       expect(su.downloadKey).to eq(@hash)
       expect(su.itemId).to eq(file.pid)
-      expect(su.path).to eq(Sufia::Engine.routes.url_helpers.generic_file_path(file.pid))
+      expect(su.path).to eq(Sufia::Engine.routes.url_helpers.generic_file_path(file.id))
       su.delete
      end
      it "should create show download link" do
-      su = SingleUseLink.create itemId: file.pid, path: Sufia::Engine.routes.url_helpers.download_path(file.pid)
+      su = SingleUseLink.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.download_path(file.pid)
       expect(su.downloadKey).to eq(@hash)
-      expect(su.itemId).to eq(file.pid)
-      expect(su.path).to eq(Sufia::Engine.routes.url_helpers.download_path(file.pid))
+      expect(su.itemId).to eq(file.id)
+      expect(su.path).to eq(Sufia::Engine.routes.url_helpers.download_path(file.id))
       su.delete
      end
   end
   describe "find" do
      describe "not expired" do
        before do
-          @su = SingleUseLink.create(downloadKey: 'sha2hashb', itemId: file.pid, path: Sufia::Engine.routes.url_helpers.download_path(file.noid), expires: DateTime.now.advance(hours: 1))
+          @su = SingleUseLink.create(downloadKey: 'sha2hashb', itemId: file.id, path: Sufia::Engine.routes.url_helpers.download_path(file.noid), expires: DateTime.now.advance(hours: 1))
        end
        it "should retrieve link" do
           link = SingleUseLink.where(downloadKey: 'sha2hashb').first
-          expect(link.itemId).to eq(file.pid)
+          expect(link.itemId).to eq(file.id)
        end
        it "should retrieve link with find_by" do
           link = SingleUseLink.find_by_downloadKey('sha2hashb')
-          expect(link.itemId).to eq(file.pid)
+          expect(link.itemId).to eq(file.id)
        end
        it "should expire link" do
           link = SingleUseLink.where(downloadKey: 'sha2hashb').first
@@ -55,7 +55,7 @@ describe SingleUseLink do
      end
      describe "expired" do
        before do
-          @su = SingleUseLink.create!(downloadKey: 'sha2hashb', itemId:file.pid, path:Sufia::Engine.routes.url_helpers.download_path(file.noid))
+          @su = SingleUseLink.create!(downloadKey: 'sha2hashb', itemId:file.id, path:Sufia::Engine.routes.url_helpers.download_path(file.noid))
 
           @su.update_attribute :expires, DateTime.now.advance(hours: -1)
        end

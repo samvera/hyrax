@@ -368,23 +368,23 @@ describe GenericFile, :type => :model do
     it "should schedule a audit job for each datastream" do
       skip "Disabled audit"
       s1 = double('one')
-      expect(AuditJob).to receive(:new).with(@f.pid, 'DC', "DC1.0").and_return(s1)
+      expect(AuditJob).to receive(:new).with(@f.id, 'DC', "DC1.0").and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1)
       s2 = double('two')
-      expect(AuditJob).to receive(:new).with(@f.pid, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
+      expect(AuditJob).to receive(:new).with(@f.id, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
       expect(Sufia.queue).to receive(:push).with(s2)
       s3 = double('three')
-      expect(AuditJob).to receive(:new).with(@f.pid, 'properties', "properties.0").and_return(s3)
+      expect(AuditJob).to receive(:new).with(@f.id, 'properties', "properties.0").and_return(s3)
       expect(Sufia.queue).to receive(:push).with(s3)
       s4 = double('four')
-      expect(AuditJob).to receive(:new).with(@f.pid, 'content', "content.0").and_return(s4)
+      expect(AuditJob).to receive(:new).with(@f.id, 'content', "content.0").and_return(s4)
       expect(Sufia.queue).to receive(:push).with(s4)
       @f.audit!
     end
     it "should log a failing audit" do
       skip "skip versioning for now"
       @f.attached_files.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
-      allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
+      allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', id: 'foo:123', dsid: 'foo', version: '1'))
       @f.audit!
       expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 0 }
     end
@@ -409,8 +409,8 @@ describe GenericFile, :type => :model do
       @f.apply_depositor_metadata('mjg36')
       @f.save!
       @version = @f.datastreams['content'].versions.first
-      @old = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)
-      @new = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 0)
+      @old = ChecksumAuditLog.create(id: @f.id, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)
+      @new = ChecksumAuditLog.create(id: @f.id, dsid: @version.dsid, version: @version.versionID, pass: 0)
     end
     it "should not prune failed audits" do
       expect(@version).to receive(:dsChecksumValid).and_return(true)
@@ -477,7 +477,7 @@ describe GenericFile, :type => :model do
   end
 
   describe "noid integration" do
-    subject { GenericFile.new(pid: 'wd3763094') }
+    subject { GenericFile.new(id: 'wd3763094') }
 
     it "should return the expected identifier" do
       expect(subject.noid).to eq 'wd3763094'

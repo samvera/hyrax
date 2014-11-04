@@ -14,9 +14,9 @@ FactoryGirl.define do
     factory :fixture do
       factory :public_pdf do
         transient do
-          pid "fixture-pdf"
+          id "fixture-pdf"
         end
-        initialize_with { new(pid: pid) }
+        initialize_with { new(id: id) }
         read_groups ["public"]
         resource_type ["Dissertation"]
         subject %w"lorem ipsum dolor sit amet"
@@ -28,9 +28,9 @@ FactoryGirl.define do
       end
       factory :public_mp3 do
         transient do
-          pid "fixture-mp3"
+          id "fixture-mp3"
         end
-        initialize_with { new(pid: pid) }
+        initialize_with { new(id: id) }
         subject %w"consectetur adipisicing elit"
         title ["Test Document MP3.mp3"]
         before(:create) do |gf|
@@ -40,9 +40,9 @@ FactoryGirl.define do
       end
       factory :public_wav do
         transient do
-          pid "fixture-wav"
+          id "fixture-wav"
         end
-        initialize_with { new(pid: pid) }
+        initialize_with { new(id: id) }
         resource_type ["Audio", "Dataset"]
         read_groups ["public"]
         title ["Fake Wav File.wav"]

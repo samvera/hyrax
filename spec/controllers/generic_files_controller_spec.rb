@@ -11,7 +11,7 @@ describe GenericFilesController do
   end
 
   describe "#create" do
-    let(:mock) { GenericFile.new(pid: 'test123') }
+    let(:mock) { GenericFile.new(id: 'test123') }
     let(:batch) { Batch.create }
     let(:batch_id) { batch.id }
     let(:file) { fixture_file_upload('/world.png','image/png') }
@@ -81,8 +81,8 @@ describe GenericFilesController do
         xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
         allow(GenericFile).to receive(:new).and_call_original
         expect { Batch.find(batch_id) }.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
-        batch = Batch.create(pid: batch_id)
-        expect(batch.generic_files.first.pid).to eq "test123"
+        batch = Batch.create(id: batch_id)
+        expect(batch.generic_files.first.id).to eq "test123"
       end
 
       it "should set the depositor id" do
@@ -534,7 +534,7 @@ describe GenericFilesController do
 
   describe "someone elses files" do
     let(:generic_file) do
-      GenericFile.new(pid: 'test5').tap do |f|
+      GenericFile.new(id: 'test5').tap do |f|
         f.apply_depositor_metadata('archivist1@example.com')
         f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         # grant public read access explicitly

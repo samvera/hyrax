@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'catalog/index.html.erb' do
 
-  let(:collection) { Collection.new(title: 'collection1', pid: 'abc123') }
+  let(:collection) { Collection.new(title: 'collection1', id: 'abc123') }
   let(:doc) { SolrDocument.new(collection.to_solr) }
 
   before do
