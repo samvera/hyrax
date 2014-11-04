@@ -21,18 +21,18 @@ describe Hydra::EmbargoService do
 
   describe "#assets_with_expired_embargoes" do
     it "returns an array of assets with expired embargoes" do
-      returned_pids = subject.assets_with_expired_embargoes.map {|a| a.pid}
-      expect(returned_pids).to include work_with_expired_embargo1.pid, work_with_expired_embargo2.pid
-      expect(returned_pids).to_not include work_with_embargo_in_effect.pid, work_without_embargo.pid
+      returned_ids = subject.assets_with_expired_embargoes.map {|a| a.id}
+      expect(returned_ids).to include work_with_expired_embargo1.id, work_with_expired_embargo2.id
+      expect(returned_ids).to_not include work_with_embargo_in_effect.id, work_without_embargo.id
     end
   end
 
   describe "#assets_under_embargo" do
     it "returns all assets with embargo release date set" do
       result = subject.assets_under_embargo
-      returned_pids = subject.assets_under_embargo.map {|a| a.pid}
-      expect(returned_pids).to include work_with_expired_embargo1.pid,work_with_expired_embargo2.pid,work_with_embargo_in_effect.pid
-      expect(returned_pids).to_not include work_without_embargo.pid
+      returned_ids = subject.assets_under_embargo.map {|a| a.id}
+      expect(returned_ids).to include work_with_expired_embargo1.id, work_with_expired_embargo2.id, work_with_embargo_in_effect.id
+      expect(returned_ids).to_not include work_without_embargo.id
     end
   end
 end

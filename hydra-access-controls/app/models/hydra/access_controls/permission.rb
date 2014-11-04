@@ -13,11 +13,11 @@ module Hydra::AccessControls
     def inspect
       agent_value = agent.first.rdf_subject.to_s.inspect if agent.first
       mode_value = mode.first.rdf_subject.to_s.inspect if mode.first
-      "<#{self.class.name} pid: #{pid} agent: #{agent_value} mode: #{mode_value} access_to: #{access_to_id.inspect}>"
+      "<#{self.class.name} id: #{id} agent: #{agent_value} mode: #{mode_value} access_to: #{access_to_id.inspect}>"
     end
 
     def == other
-      other.is_a?(Permission) && self.pid == self.pid && self.access_to_id == other.access_to_id &&
+      other.is_a?(Permission) && id == other.id && self.access_to_id == other.access_to_id &&
         self.agent.first.rdf_subject == other.agent.first.rdf_subject && self.mode.first.rdf_subject == other.mode.first.rdf_subject
     end
 

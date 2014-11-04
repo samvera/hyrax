@@ -72,7 +72,7 @@ describe Ability do
       asset.permissions_attributes = [{ name: "joe_creator", access: "edit", type: "person" }]
       asset.save
     end
-    let(:solr_doc) { SolrDocument.new(asset.to_solr.merge(id: asset.pid)) }
+    let(:solr_doc) { SolrDocument.new(asset.to_solr.merge(id: asset.id)) }
     context "Then a not-signed-in user" do
       let(:user) { User.new.tap {|u| u.new_record = true } }
       subject { Ability.new(user) }

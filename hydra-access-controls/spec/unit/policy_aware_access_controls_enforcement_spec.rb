@@ -81,7 +81,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     policy_no_access.save!
 
     @sample_policies << policy_no_access
-    @policies_with_access = @sample_policies.select { |p| p.pid != policy_no_access.pid }
+    @policies_with_access = @sample_policies.select { |p| p.id != policy_no_access.id }
   end
 
   subject { PolicyMockController.new }
@@ -99,7 +99,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
         allow(subject).to receive(:current_user).and_return(@user)
       end
       it "should return the policies that provide discover permissions" do
-        @policies_with_access.map {|p| p.pid }.each do |p|
+        @policies_with_access.map {|p| p.id }.each do |p|
           expect(subject.policies_with_access).to include(p)
         end
         expect(subject.policies_with_access).to_not include("test-policy_no_access")
@@ -126,8 +126,8 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
     it "should include policy-aware query" do
       # stubbing out policies_with_access because solr doesn't always return them in the same order.
-      policy_pids = (1..8).map {|n| "test:policy#{n}"}
-      expect(subject).to receive(:policies_with_access).and_return(policy_pids)
+      policy_ids = (1..8).map {|n| "test:policy#{n}"}
+      expect(subject).to receive(:policies_with_access).and_return(policy_ids)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
       governed_field = ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)
       expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!raw f=#{governed_field}}info:fedora/test:policy1\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy2\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy3\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy4\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy5\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy6\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy7\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy8\")")

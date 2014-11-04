@@ -58,12 +58,12 @@ module Hydra
     end
 
     def edit_permissions
-      can [:edit, :update, :destroy], String do |pid|
-        test_edit(pid)
+      can [:edit, :update, :destroy], String do |id|
+        test_edit(id)
       end
 
       can [:edit, :update, :destroy], ActiveFedora::Base do |obj|
-        test_edit(obj.pid)
+        test_edit(obj.id)
       end
 
       can [:edit, :update, :destroy], SolrDocument do |obj|
@@ -73,12 +73,12 @@ module Hydra
     end
 
     def read_permissions
-      can :read, String do |pid|
-        test_read(pid)
+      can :read, String do |id|
+        test_read(id)
       end
 
       can :read, ActiveFedora::Base do |obj|
-        test_read(obj.pid)
+        test_read(obj.id)
       end
 
       can :read, SolrDocument do |obj|
@@ -100,23 +100,23 @@ module Hydra
 
     protected
 
-    def test_edit(pid)
+    def test_edit(id)
       Rails.logger.debug("[CANCAN] Checking edit permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
-      group_intersection = user_groups & edit_groups(pid)
-      result = !group_intersection.empty? || edit_users(pid).include?(current_user.user_key)
+      group_intersection = user_groups & edit_groups(id)
+      result = !group_intersection.empty? || edit_users(id).include?(current_user.user_key)
       Rails.logger.debug("[CANCAN] decision: #{result}")
       result
     end
 
-    def test_read(pid)
+    def test_read(id)
       Rails.logger.debug("[CANCAN] Checking read permissions for user: #{current_user.user_key} with groups: #{user_groups.inspect}")
-      group_intersection = user_groups & read_groups(pid)
-      result = !group_intersection.empty? || read_users(pid).include?(current_user.user_key)
+      group_intersection = user_groups & read_groups(id)
+      result = !group_intersection.empty? || read_users(id).include?(current_user.user_key)
       result
     end
 
-    def edit_groups(pid)
-      doc = permissions_doc(pid)
+    def edit_groups(id)
+      doc = permissions_doc(id)
       return [] if doc.nil?
       eg = doc[self.class.edit_group_field] || []
       Rails.logger.debug("[CANCAN] edit_groups: #{eg.inspect}")
@@ -124,16 +124,16 @@ module Hydra
     end
 
     # edit implies read, so read_groups is the union of edit and read groups
-    def read_groups(pid)
-      doc = permissions_doc(pid)
+    def read_groups(id)
+      doc = permissions_doc(id)
       return [] if doc.nil?
-      rg = edit_groups(pid) | (doc[self.class.read_group_field] || [])
+      rg = edit_groups(id) | (doc[self.class.read_group_field] || [])
       Rails.logger.debug("[CANCAN] read_groups: #{rg.inspect}")
       return rg
     end
 
-    def edit_users(pid)
-      doc = permissions_doc(pid)
+    def edit_users(id)
+      doc = permissions_doc(id)
       return [] if doc.nil?
       ep = doc[self.class.edit_user_field] ||  []
       Rails.logger.debug("[CANCAN] edit_users: #{ep.inspect}")
@@ -141,10 +141,10 @@ module Hydra
     end
 
     # edit implies read, so read_users is the union of edit and read users
-    def read_users(pid)
-      doc = permissions_doc(pid)
+    def read_users(id)
+      doc = permissions_doc(id)
       return [] if doc.nil?
-      rp = edit_users(pid) | (doc[self.class.read_user_field] || [])
+      rp = edit_users(id) | (doc[self.class.read_user_field] || [])
       Rails.logger.debug("[CANCAN] read_users: #{rp.inspect}")
       return rp
     end
