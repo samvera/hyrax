@@ -264,7 +264,7 @@ describe UsersController, :type => :controller do
        @file = GenericFile.new()
        @file.apply_depositor_metadata(@user)
        @file.save
-       @file_id = @file.pid.split(":").last
+       @file_id = @file.id.split(":").last
      end
      after do
        @file.delete

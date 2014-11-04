@@ -24,7 +24,7 @@ describe Batch do
       let! (:batch) { Batch.create(title: ["test collection"], creator: [user.user_key]) }
       it "should find batch instead of creating" do
         expect(Batch).to_not receive(:create)
-        Batch.find_or_create(batch.pid)
+        Batch.find_or_create(batch.id)
       end
     end
     describe "when the object does not exist" do

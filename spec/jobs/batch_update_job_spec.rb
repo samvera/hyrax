@@ -27,7 +27,7 @@ describe BatchUpdateJob do
         generic_file: {
           read_groups_string: '', read_users_string: 'archivist1, archivist2', tag: ['']
         }, 
-        id: @batch.pid,
+        id: @batch.id,
         controller: 'batch',
         action: 'update'
       }.with_indifferent_access
@@ -48,9 +48,9 @@ describe BatchUpdateJob do
       it "should log a content update event" do
         expect_any_instance_of(User).to receive(:can?).with(:edit, @file).and_return(true)
         expect_any_instance_of(User).to receive(:can?).with(:edit, @file2).and_return(true)
-        expect(ContentUpdateEventJob).to receive(:new).with(@file.pid, @user.user_key).and_return(s1)
+        expect(ContentUpdateEventJob).to receive(:new).with(@file.id, @user.user_key).and_return(s1)
         expect(Sufia.queue).to receive(:push).with(s1).once
-        expect(ContentUpdateEventJob).to receive(:new).with(@file2.pid, @user.user_key).and_return(s2)
+        expect(ContentUpdateEventJob).to receive(:new).with(@file2.id, @user.user_key).and_return(s2)
         expect(Sufia.queue).to receive(:push).with(s2).once
         BatchUpdateJob.new(@user.user_key, params).run
         expect(@user.mailbox.inbox[0].messages[0].subject).to eq("Batch upload complete")

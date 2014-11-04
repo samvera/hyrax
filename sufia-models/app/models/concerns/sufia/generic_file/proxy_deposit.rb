@@ -26,7 +26,7 @@ module Sufia
 
 
       def create_transfer_request
-        Sufia.queue.push(ContentDepositorChangeEventJob.new(pid, on_behalf_of)) if on_behalf_of.present?
+        Sufia.queue.push(ContentDepositorChangeEventJob.new(id, on_behalf_of)) if on_behalf_of.present?
       end
 
       def request_transfer_to(target)

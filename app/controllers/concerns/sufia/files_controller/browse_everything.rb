@@ -27,7 +27,7 @@ module Sufia::FilesController
           actor = Sufia::GenericFile::Actor.new(gf, current_user)
           actor.create_metadata(params[:batch_id])
           gf.save!
-          Sufia.queue.push(ImportUrlJob.new(gf.pid))
+          Sufia.queue.push(ImportUrlJob.new(gf.id))
         end
       end
 
