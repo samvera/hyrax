@@ -17,9 +17,9 @@ describe BatchEditsController, :type => :controller do
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
-      controller.batch = [@one.pid, @two.pid]
-      expect(controller).to receive(:can?).with(:edit, @one.pid).and_return(true)
-      expect(controller).to receive(:can?).with(:edit, @two.pid).and_return(true)
+      controller.batch = [@one.id, @two.id]
+      expect(controller).to receive(:can?).with(:edit, @one.id).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, @two.id).and_return(true)
     end
     it "should be successful" do
       get :edit
@@ -44,9 +44,9 @@ describe BatchEditsController, :type => :controller do
       @two.apply_depositor_metadata('mjg36')
       @one.save!
       @two.save!
-      controller.batch = [@one.pid, @two.pid]
-      expect(controller).to receive(:can?).with(:edit, @one.pid).and_return(true)
-      expect(controller).to receive(:can?).with(:edit, @two.pid).and_return(true)
+      controller.batch = [@one.id, @two.id]
+      expect(controller).to receive(:can?).with(:edit, @one.id).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, @two.id).and_return(true)
     end
     let(:mycontroller) { "my/files" }
     it "should be successful" do

@@ -43,10 +43,10 @@ module Sufia
 
       def to_jq_upload
         return {
-          "name" => self.title,
-          "size" => self.file_size,
+          "name" => title,
+          "size" => file_size,
           "url" => "/files/#{noid}",
-          "thumbnail_url" => self.pid,
+          "thumbnail_url" => id,
           "delete_url" => "deleteme", # generic_file_path(id: id),
           "delete_type" => "DELETE"
         }

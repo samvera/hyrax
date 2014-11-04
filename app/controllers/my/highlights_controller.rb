@@ -6,10 +6,10 @@ module My
     ]
 
     def show_only_highlighted_files(solr_parameters, user_parameters)
-      pids = current_user.trophies.pluck(:generic_file_id)
+      ids = current_user.trophies.pluck(:generic_file_id)
       solr_parameters[:fq] ||= []
       solr_parameters[:fq] += [
-        ActiveFedora::SolrService.construct_query_for_pids(pids)
+        ActiveFedora::SolrService.construct_query_for_ids(ids)
       ]
     end
 

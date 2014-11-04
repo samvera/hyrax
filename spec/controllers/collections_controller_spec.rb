@@ -59,7 +59,7 @@ describe CollectionsController do
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq @asset1.id
-      afterupdate = GenericFile.find(@asset1.pid)
+      afterupdate = GenericFile.find(@asset1.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
 
@@ -83,21 +83,21 @@ describe CollectionsController do
     end
 
     it "should set collection on members" do
-      put :update, id: @collection.id, collection: {members:"add"}, batch_document_ids: [@asset3.pid, @asset1.pid, @asset2.pid]
+      put :update, id: @collection, collection: {members:"add"}, batch_document_ids: [@asset3.id, @asset1.id, @asset2.id]
       expect(response).to redirect_to routes.url_helpers.collection_path(@collection.noid)
       expect(assigns[:collection].members).to match_array [@asset2, @asset3, @asset1]
-      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
+      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq @asset2.id
-      afterupdate = GenericFile.find(@asset2.pid)
+      afterupdate = GenericFile.find(@asset2.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
-      put :update, id: @collection.id, collection: {members:"remove"}, batch_document_ids: [@asset2]
-      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
+      put :update, id: @collection, collection: {members:"remove"}, batch_document_ids: [@asset2]
+      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq @asset2.id
-      afterupdate = GenericFile.find(@asset2.pid)
+      afterupdate = GenericFile.find(@asset2.id)
       expect(doc[Solrizer.solr_name(:collection)]).to be_nil
     end
   end
@@ -126,19 +126,19 @@ describe CollectionsController do
       end
 
       it "should return the collection and its members" do
-        get :show, id: @collection.id
+        get :show, id: @collection
         expect(response).to be_successful
         expect(assigns[:collection].title).to eq @collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [@asset1, @asset2, @asset3].map(&:id)
       end
       it "should set the breadcrumb trail" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
-        get :show, id: @collection.id
+        get :show, id: @collection
       end
     end
     context "not signed in" do
       it "should not show me files in the collection" do
-        get :show, id: @collection.id
+        get :show, id: @collection
         expect(assigns[:member_docs].count).to eq 0
       end
     end
@@ -152,7 +152,7 @@ describe CollectionsController do
       sign_in user
     end
     it "should not show flash" do
-      get :edit, id: @collection.id
+      get :edit, id: @collection
       expect(flash[:notice]).to be_nil
     end
   end

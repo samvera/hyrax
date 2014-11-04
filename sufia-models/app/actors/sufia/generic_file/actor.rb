@@ -68,9 +68,9 @@ module Sufia::GenericFile
 
     def destroy
       generic_file.destroy
-      FeaturedWork.where(generic_file_id: generic_file.pid).destroy_all
+      FeaturedWork.where(generic_file_id: generic_file.id).destroy_all
       if Sufia.config.respond_to?(:after_destroy)
-        Sufia.config.after_destroy.call(generic_file.pid, user)
+        Sufia.config.after_destroy.call(generic_file.id, user)
       end
     end
 
@@ -100,7 +100,7 @@ module Sufia::GenericFile
     end
 
     def push_characterize_job
-      Sufia.queue.push(CharacterizeJob.new(@generic_file.pid))
+      Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
     end
 
     class << self

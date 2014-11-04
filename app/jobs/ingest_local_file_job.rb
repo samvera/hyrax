@@ -25,7 +25,7 @@ class IngestLocalFileJob
     generic_file.save!
 
     FileUtils.rm(path)
-    Sufia.queue.push(ContentDepositEventJob.new(generic_file.pid, user_key))
+    Sufia.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
     # add message to user for downloaded file
     message = "The file (#{File.basename(filename)}) was successfully deposited."
     job_user.send_message(user, message, 'Local file ingest')

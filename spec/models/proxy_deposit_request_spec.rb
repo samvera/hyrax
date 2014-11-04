@@ -13,7 +13,7 @@ describe ProxyDepositRequest, type: :model do
   end
 
   subject do
-    ProxyDepositRequest.new(pid: file.pid, sending_user: sender,
+    ProxyDepositRequest.new(pid: file.id, sending_user: sender,
       receiving_user: receiver, sender_comment: "please take this")
   end
 
@@ -82,7 +82,7 @@ describe ProxyDepositRequest, type: :model do
         subject.transfer_to = receiver.user_key
         subject.save!
         proxy_request = receiver.proxy_deposit_requests.first
-        expect(proxy_request.pid).to eq(file.pid)
+        expect(proxy_request.pid).to eq(file.id)
         expect(proxy_request.sending_user).to eq(sender)
       end
     end
@@ -98,7 +98,7 @@ describe ProxyDepositRequest, type: :model do
     context 'when the file is already being transferred' do
       it 'raises an error' do
         subject.save!
-        subject2 = ProxyDepositRequest.new(pid: file.pid, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this')
+        subject2 = ProxyDepositRequest.new(pid: file.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this')
         expect(subject2).not_to be_valid
         expect(subject2.errors[:open_transfer]).to eq(['must close open transfer on the file before creating a new one'])
       end
