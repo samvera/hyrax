@@ -11,7 +11,6 @@ module Sufia
       before_save :update_permissions
       validates :title, presence: true
 
-      contains "properties", class_name: 'PropertiesDatastream'
     end
 
     def terms_for_display
