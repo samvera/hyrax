@@ -34,11 +34,7 @@ module Sufia
 
        initialize_fields(h, @show_file)
 
-       # map the permissions to parameter like input so that the assign will work
-       # todo sort the access level some how...
-       perm_param ={'user'=>{},'group'=>{"public"=>"read"}}
-       permissions.each{ |perm| perm_param[perm[:type]][perm[:name]] = perm[:access]}
-       @show_file.permissions = HashWithIndifferentAccess.new(perm_param)
+       @show_file.permissions_attributes = [{type: 'group', name: 'public', access: 'read'}]
     end
 
     def after_update
