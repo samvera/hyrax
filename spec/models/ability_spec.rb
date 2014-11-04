@@ -27,6 +27,7 @@ describe Sufia::Ability, :type => :model do
     it { is_expected.to be_able_to(:update, ContentBlock) }
   end
 
+
   describe "proxies and transfers" do
     let(:sender) { FactoryGirl.find_or_create(:jill) }
     let(:user) { FactoryGirl.find_or_create(:archivist) }
@@ -38,6 +39,12 @@ describe Sufia::Ability, :type => :model do
     end
     subject { Ability.new(user) }
     it { should_not be_able_to(:transfer, file.id) }
+
+    describe "depositor_for_document" do
+      it "should return the depositor" do
+        expect(subject.send(:depositor_for_document, file.id)).to eq sender.user_key
+      end
+    end
 
     context "with a ProxyDepositRequest for a file they have deposited" do
       subject { Ability.new(sender) }

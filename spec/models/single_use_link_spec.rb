@@ -23,12 +23,12 @@ describe SingleUseLink do
      it "should create show link" do
       su = SingleUseLink.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.generic_file_path(file.id)
       expect(su.downloadKey).to eq(@hash)
-      expect(su.itemId).to eq(file.pid)
+      expect(su.itemId).to eq(file.id)
       expect(su.path).to eq(Sufia::Engine.routes.url_helpers.generic_file_path(file.id))
       su.delete
      end
      it "should create show download link" do
-      su = SingleUseLink.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.download_path(file.pid)
+      su = SingleUseLink.create itemId: file.id, path: Sufia::Engine.routes.url_helpers.download_path(file.id)
       expect(su.downloadKey).to eq(@hash)
       expect(su.itemId).to eq(file.id)
       expect(su.path).to eq(Sufia::Engine.routes.url_helpers.download_path(file.id))

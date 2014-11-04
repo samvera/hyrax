@@ -15,8 +15,8 @@ module Sufia
     end
 
     def proxy_deposit_abilities
-      can :transfer, String do |pid|
-        get_depositor_from_pid(pid) == current_user.user_key
+      can :transfer, String do |id|
+        depositor_for_document(id) == current_user.user_key
       end
       can :create, ProxyDepositRequest if user_groups.include? 'registered'
       can :accept, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
@@ -47,10 +47,8 @@ module Sufia
 
     private
 
-    def get_depositor_from_pid(pid)
-      ::GenericFile.load_instance_from_solr(pid).depositor
-    rescue
-      nil
+    def depositor_for_document(document_id)
+      ::GenericFile.load_instance_from_solr(document_id).depositor
     end
   end
 end

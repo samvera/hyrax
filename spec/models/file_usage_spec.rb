@@ -67,7 +67,7 @@ describe FileUsage, :type => :model do
   describe "#initialize" do
 
     it "should set the id" do
-      expect(usage.id).to eq(@file.pid)
+      expect(usage.id).to eq(@file.id)
     end
 
     it "should set the path" do

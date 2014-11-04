@@ -5,7 +5,7 @@ describe Sufia::GenericFile::Characterization, :type => :model do
     class TestClass < ActiveFedora::Base
       include Sufia::GenericFile::Characterization
 
-      has_file_datastream 'content', type: FileContentDatastream
+      contains 'content', class_name: 'FileContentDatastream'
       attr_accessor :title, :creator
     end
   end

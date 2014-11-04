@@ -8,7 +8,7 @@ describe ContentDepositorChangeEventJob do
       gf.apply_depositor_metadata(@depositor.user_key)
       gf.save!
     end
-    ContentDepositorChangeEventJob.new(@file.pid, @receiver.user_key).run
+    ContentDepositorChangeEventJob.new(@file.id, @receiver.user_key).run
   end
   after do
     @file.destroy
