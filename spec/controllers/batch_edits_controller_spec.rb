@@ -52,8 +52,8 @@ describe BatchEditsController, :type => :controller do
     it "should be successful" do
       put :update , update_type: "delete_all"
       expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: "dashboard", only_path: true))
-      expect { GenericFile.find(@one.id) }.to raise_error(ActiveFedora::ObjectNotFoundError)
-      expect { GenericFile.find(@two.id) }.to raise_error(ActiveFedora::ObjectNotFoundError)
+      expect { GenericFile.find(@one.id) }.to raise_error(Ldp::Gone)
+      expect { GenericFile.find(@two.id) }.to raise_error(Ldp::Gone)
     end
     it "should redirect to the return controller" do
       put :update , update_type: "delete_all", return_controller: mycontroller
