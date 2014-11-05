@@ -7,7 +7,7 @@ describe "Browse Dashboard", :type => :feature do
     sign_in FactoryGirl.create :user_with_fixtures
   end
 
-  it "should search your files by deafult" do
+  it "should search your files by default" do
     visit "/dashboard"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"

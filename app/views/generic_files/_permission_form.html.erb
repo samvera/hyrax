@@ -1,7 +1,7 @@
 <% depositor = gf.depositor || batch.generic_files.first.depositor %>
-<% public_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "public"}.compact.first %>
+<% public_perm = gf.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
 <% public_perm = true if params[:controller] == 'batch' %>
-<% registered_perm = gf.permissions.map { |perm| perm[:access] if perm[:name] == "registered"}.compact.first %>
+<% registered_perm = gf.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
 
 
 <input type="hidden" name="generic_file[permissions][group][public]" value="1" />
@@ -112,9 +112,7 @@
   </tr>
   <% gf.permissions.each do |permission| %>
     <%# skip the public, penn state (aka registered), and depositor perms as they are displayed first at the top %>
-    <% next if permission[:name].downcase == 'public' %>
-    <% next if permission[:name].downcase == 'registered' %>
-    <% next if permission[:name].downcase == depositor %>
+    <% next if ['public', 'registered', depositor].include? permission.agent_name.downcase %>
     <tr>
       <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], class: "control-label" %></td>
       <td>
