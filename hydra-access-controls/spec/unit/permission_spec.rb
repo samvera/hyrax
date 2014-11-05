@@ -1,18 +1,34 @@
 require 'spec_helper'
 
 describe Hydra::AccessControls::Permission do
-  describe "hash-like key access" do
-    let(:perm) { described_class.new(type: 'person', name: 'bob', access: 'read') }
-    it "should set predicates" do
-      expect(perm.agent.first.rdf_subject).to eq RDF::URI.new('http://projecthydra.org/ns/auth/person#bob')
-      expect(perm.mode.first.rdf_subject).to eq ACL.Read
-    end
-  end
 
-  describe "#to_hash" do
+  describe "an initialized instance" do
     let(:permission) { described_class.new(type: 'person', name: 'bob', access: 'read') }
-    subject { permission.to_hash }
-    it { should eq(type: 'person', name: 'bob', access: 'read') }
+
+    it "should set predicates" do
+      expect(permission.agent.first.rdf_subject).to eq RDF::URI.new('http://projecthydra.org/ns/auth/person#bob')
+      expect(permission.mode.first.rdf_subject).to eq ACL.Read
+    end
+
+    describe "#to_hash" do
+      subject { permission.to_hash }
+      it { should eq(type: 'person', name: 'bob', access: 'read') }
+    end
+
+    describe "#agent_name" do
+      subject { permission.agent_name }
+      it { should eq 'bob' }
+    end
+
+    describe "#access" do
+      subject { permission.access }
+      it { should eq 'read' }
+    end
+
+    describe "#type" do
+      subject { permission.type }
+      it { should eq 'person' }
+    end
   end
 
   describe "equality comparison" do

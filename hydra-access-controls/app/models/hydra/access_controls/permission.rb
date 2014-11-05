@@ -7,7 +7,7 @@ module Hydra::AccessControls
     end
 
     def to_hash
-      { name: agent_name, type: type_from_agent, access: access_from_mode }
+      { name: agent_name, type: type, access: access }
     end
 
     def inspect
@@ -35,18 +35,18 @@ module Hydra::AccessControls
       parsed_agent.last
     end
 
+    def access
+      @access ||= mode.first.rdf_subject.to_s.split('#').last.downcase.sub('write', 'edit')
+    end
+
+    def type
+      parsed_agent.first
+    end
+
     protected
 
       def parsed_agent
         @parsed_agent ||= agent.first.rdf_subject.to_s.sub('http://projecthydra.org/ns/auth/', '').split('#')
-      end
-
-      def type_from_agent
-        parsed_agent.first
-      end
-
-      def access_from_mode
-        @access ||= mode.first.rdf_subject.to_s.split('#').last.downcase.sub('write', 'edit')
       end
 
       def build_agent(name, type)
