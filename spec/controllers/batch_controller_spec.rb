@@ -33,10 +33,9 @@ describe BatchController do
       end
 
       it "should set the groups" do
-        post :update, id: batch, "generic_file"=>{"permissions"=>{"group"=>{"public"=>"1", "registered"=>"2"}}}
+        post :update, id: batch, "generic_file"=>{"permissions_attributes"=>[{"type" => "group", "name" => "public", "access" => "read"}]}
         file.reload
-        expect(file.read_groups).to be_empty
-        expect(file.edit_groups).to be_empty
+        expect(file.read_groups).to include "public"
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
       end
 
