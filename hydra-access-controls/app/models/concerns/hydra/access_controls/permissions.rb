@@ -408,13 +408,13 @@ module Hydra
 
       def group_agent?(agent)
         raise "no agent" unless agent.present?
-        agent.first.rdf_subject.to_s.start_with?('http://projecthydra.org/ns/auth/group'.freeze)
+        agent.first.rdf_subject.to_s.start_with?(GROUP_AGENT_URL_PREFIX)
 
       end
 
       def person_agent?(agent)
         raise "no agent" unless agent.present?
-        agent.first.rdf_subject.to_s.start_with?('http://projecthydra.org/ns/auth/person'.freeze)
+        agent.first.rdf_subject.to_s.start_with?(PERSON_AGENT_URL_PREFIX)
       end
 
     end

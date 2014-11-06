@@ -1,4 +1,7 @@
 module Hydra::AccessControls
+  AGENT_URL_PREFIX = "http://projecthydra.org/ns/auth/".freeze
+  GROUP_AGENT_URL_PREFIX = "http://projecthydra.org/ns/auth/group".freeze
+  PERSON_AGENT_URL_PREFIX = 'http://projecthydra.org/ns/auth/person'.freeze
   class Permission < AccessControlList
     def initialize(args)
       super()
@@ -46,19 +49,19 @@ module Hydra::AccessControls
     protected
 
       def parsed_agent
-        @parsed_agent ||= agent.first.rdf_subject.to_s.sub('http://projecthydra.org/ns/auth/', '').split('#')
+        @parsed_agent ||= agent.first.rdf_subject.to_s.sub(AGENT_URL_PREFIX, '').split('#')
       end
 
       def build_agent(name, type)
         raise "Can't build agent #{inspect}" unless name && type
         self.agent = case type
                      when "group"
-                       Agent.new(RDF::URI.new("http://projecthydra.org/ns/auth/group##{name}"))
+                       Agent.new(RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{name}"))
                      when "person"
-                       Agent.new(RDF::URI.new("http://projecthydra.org/ns/auth/person##{name}"))
+                       Agent.new(RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
                      when "user"
                        Deprecation.warn Permission, "Passing \"user\" as the type to Permission is deprecated. Use \"person\" instead. This will be an error in ActiveFedora 9."
-                       Agent.new(RDF::URI.new("http://projecthydra.org/ns/auth/person##{name}"))
+                       Agent.new(RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
                      else
                        raise ArgumentError, "Unknown agent type #{type.inspect}"
                      end
