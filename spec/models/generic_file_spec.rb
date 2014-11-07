@@ -249,7 +249,7 @@ describe GenericFile, :type => :model do
         expect(f.creator).to eq ["John Doe"]
         expect(f.title).to eq ["New work"]
         f.creator = ["Jane Doe"]
-        f.title << "Newer work"
+        f.title += ["Newer work"]
         f.save
         f = subject.reload
         expect(f.creator).to eq ["Jane Doe"]
