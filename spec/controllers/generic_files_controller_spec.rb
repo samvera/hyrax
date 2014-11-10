@@ -353,7 +353,7 @@ describe GenericFilesController do
       it "should spawn a content update event job" do
         expect(Sufia.queue).to receive(:push).with(update_message)
         post :update, id: generic_file, generic_file: { title: ['new_title'], tag: [''],
-                                                        permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit'}] }
+                                                        permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}] }
       end
 
       it "spawns a content new version event job" do
