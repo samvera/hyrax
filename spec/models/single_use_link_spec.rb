@@ -7,10 +7,6 @@ describe SingleUseLink do
     @file.save
   end
 
-  after do
-    @file.destroy
-  end
-
   let(:file) { @file }
 
   describe "create" do

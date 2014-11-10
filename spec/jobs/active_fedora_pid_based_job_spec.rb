@@ -6,10 +6,7 @@ describe ActiveFedoraPidBasedJob do
                   gf.apply_depositor_metadata(user)
                   gf.save!
                 end}
-  after do
-    file.destroy
-    user.destroy
-  end
+
   it "finds object" do
     job = ActiveFedoraPidBasedJob.new(file.id)
     expect(job.generic_file).to_not be_nil

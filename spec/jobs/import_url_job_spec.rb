@@ -22,10 +22,6 @@ describe ImportUrlJob do
     end
   end
 
-  after do
-    generic_file.destroy
-  end
-
   subject(:job) { ImportUrlJob.new(generic_file.id) }
 
   it "should have no content at the outset" do

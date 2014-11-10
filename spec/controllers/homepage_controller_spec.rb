@@ -14,11 +14,6 @@ describe HomepageController, :type => :controller do
       @gf2.save
     end
 
-    after :all do
-      @gf1.delete
-      @gf2.delete
-    end
-
     let(:user) { FactoryGirl.find_or_create(:jill) }
     before do
       sign_in user

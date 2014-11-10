@@ -266,9 +266,7 @@ describe UsersController, :type => :controller do
        @file.save
        @file_id = @file.id.split(":").last
      end
-     after do
-       @file.delete
-     end
+
      it "should trophy a file" do
       post :toggle_trophy, {id: @user.user_key, file_id: @file_id}
       json = JSON.parse(response.body)

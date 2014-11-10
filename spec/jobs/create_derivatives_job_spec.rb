@@ -12,7 +12,6 @@ describe CreateDerivativesJob do
 
   after do
     Sufia.config.enable_ffmpeg = @ffmpeg_enabled
-    @generic_file.destroy
   end
 
   subject { CreateDerivativesJob.new(@generic_file.id) }

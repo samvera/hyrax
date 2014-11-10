@@ -37,8 +37,6 @@ describe Sufia::GenericFile::Actor do
 
     before { FeaturedWork.create(generic_file_id: gf.noid) }
 
-    after { gf.destroy }
-
     it "should be removed if document is not public" do
       # Switch document from public to restricted
       attributes = {'permissions'=>{'group' =>{'public' => '1', 'registered'=>'2'}}}

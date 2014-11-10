@@ -10,9 +10,7 @@ describe ContentDepositorChangeEventJob do
     end
     ContentDepositorChangeEventJob.new(@file.id, @receiver.user_key).run
   end
-  after do
-    @file.destroy
-  end
+
   it "changes the depositor and records an original depositor" do
     @file.reload
     expect(@file.depositor).to eq @receiver.user_key

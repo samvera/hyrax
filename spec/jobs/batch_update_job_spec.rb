@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe BatchUpdateJob do
-  
+
   before do
     @user = FactoryGirl.find_or_create(:jill)
     @batch = Batch.new
@@ -13,20 +13,13 @@ describe BatchUpdateJob do
     @file2.apply_depositor_metadata('otherUser')
     @file2.save
   end
-  
-  after do
-    @user.mailbox.inbox[0].messages[0].move_to_trash @user
-    @batch.delete
-    @file.delete
-    @file2.delete
-  end
-  
+
   describe "#run" do
     let(:params) do
       {
         generic_file: {
           read_groups_string: '', read_users_string: 'archivist1, archivist2', tag: ['']
-        }, 
+        },
         id: @batch.id,
         controller: 'batch',
         action: 'update'

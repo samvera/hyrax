@@ -5,10 +5,7 @@ describe User, :type => :model do
     @user = FactoryGirl.find_or_create(:jill)
     @another_user = FactoryGirl.find_or_create(:archivist)
   end
-  after(:all) do
-    @user.delete
-    @another_user.delete
-  end
+
   it "should have an email" do
     expect(@user.user_key).to eq("jilluser@example.com")
   end
@@ -42,10 +39,7 @@ describe User, :type => :model do
       @another_user = FactoryGirl.find_or_create(:archivist)
       @user.follow(@another_user)
     end
-    after do
-      @user.delete
-      @another_user.delete
-    end
+
     it "should be able to follow another user" do
       expect(@user).to be_following(@another_user)
       expect(@another_user).to_not be_following(@user)

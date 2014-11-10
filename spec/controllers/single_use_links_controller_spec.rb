@@ -11,10 +11,6 @@ describe SingleUseLinksController, :type => :controller do
     end
   end
 
-  after do
-    SingleUseLink.delete_all
-  end
-
   describe "logged in user with edit permission" do
     let(:hash) { "some-dummy-sha2-hash" }
 

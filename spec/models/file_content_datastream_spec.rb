@@ -11,9 +11,7 @@ describe FileContentDatastream, :type => :model do
       f.save
       @file = f.reload
     end
-    after do
-      @file.delete
-    end
+
     it "should have a list of versions" do
       expect(@file.content.versions).to be_kind_of(Array)
       expect(@file.content.versions.count).to eql(1)
@@ -61,9 +59,7 @@ describe FileContentDatastream, :type => :model do
       @generic_file = GenericFile.new
       @generic_file.apply_depositor_metadata('mjg36')
     end
-    after do
-      @generic_file.delete
-    end
+
     it "should only return true when the datastream has actually changed" do
       @generic_file.add_file(File.open(fixture_path + '/world.png', 'rb'), 'content', 'world.png')
       expect(@generic_file.content).to be_changed

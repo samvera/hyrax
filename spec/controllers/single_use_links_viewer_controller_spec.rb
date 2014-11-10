@@ -9,10 +9,6 @@ describe SingleUseLinksViewerController do
     end
   end
 
-  after do
-    SingleUseLink.delete_all
-  end
-
   describe "retrieval links" do
     let :show_link do
       SingleUseLink.create itemId: file.id, path: routes.url_helpers.generic_file_path(id: file)

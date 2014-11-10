@@ -4,14 +4,12 @@ describe Trophy, :type => :model do
    before(:all) do
     @trophy = Trophy.create(user_id:99,generic_file_id:"99")
   end
-  after(:all) do
-    @trophy.delete
-  end
 
   it "should have a user" do
      expect(@trophy).to respond_to(:user_id)
      expect(@trophy.user_id).to eq(99)
   end
+
   it "should have a file" do
      expect(@trophy).to respond_to(:generic_file_id)
      expect(@trophy.generic_file_id).to eq("99")

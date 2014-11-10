@@ -17,10 +17,6 @@ describe ProxyDepositRequest, type: :model do
       receiving_user: receiver, sender_comment: "please take this")
   end
 
-  after do
-    subject.destroy if subject.persisted?
-  end
-
   its(:status) { is_expected.to eq 'pending' }
   it { is_expected.to be_pending }
   its(:fulfillment_date) { is_expected.to be_nil }

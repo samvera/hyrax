@@ -280,10 +280,6 @@ describe GenericFilesController do
       end
     end
 
-    after do
-      @generic_file.destroy
-    end
-
     context 'when user has access to file' do
       before do
         sign_in user
@@ -541,10 +537,6 @@ describe GenericFilesController do
         f.read_groups = ['public']
         f.save!
       end
-    end
-
-    after do
-      generic_file.destroy
     end
 
     describe "edit" do

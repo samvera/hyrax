@@ -97,9 +97,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       @myfile.characterize
       @myfile.reload
     end
-    after do
-      @myfile.destroy
-    end
+
     it "should return expected results after a save" do
       expect(@myfile.file_size).to eq ['218882']
       expect(@myfile.original_checksum).to eq ['5a2d761cab7c15b2b3bb3465ce64586d']
