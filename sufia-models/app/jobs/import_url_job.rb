@@ -16,7 +16,7 @@ class ImportUrlJob < ActiveFedoraPidBasedJob
       # attach downloaded file to generic file stubbed out
       if Sufia::GenericFile::Actor.new(generic_file, user).create_content(f, path, 'content')
         # add message to user for downloaded file
-        message = "The file (#{generic_file.content.label}) was successfully imported."
+        message = "The file (#{generic_file.label}) was successfully imported."
         job_user.send_message(user, message, 'File Import')
       else
         job_user.send_message(user, generic_file.errors.full_messages.join(', '), 'File Import Error')

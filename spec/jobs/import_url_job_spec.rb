@@ -46,7 +46,7 @@ describe ImportUrlJob do
     end
 
     it "should create a content datastream" do
-      expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_path).and_yield(mock_response)
+      expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       job.run
       expect(generic_file.reload.content.size).to eq 4218
       expect(user.mailbox.inbox.first.last_message.body).to eq("The file (#{file_path}) was successfully imported.")
