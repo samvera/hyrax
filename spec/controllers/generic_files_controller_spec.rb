@@ -22,7 +22,7 @@ describe GenericFilesController do
 
     it "should record on_behalf_of" do
       file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: 'The world', batch_id: 'sample:batch_id', on_behalf_of: 'carolyn', terms_of_service: '1'
+      xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
       expect(response).to be_success
       saved_file = GenericFile.find('test123')
       expect(saved_file.on_behalf_of).to eq 'carolyn'
