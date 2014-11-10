@@ -42,9 +42,7 @@ class BatchUpdateJob
       return
     end
     gf.title = [title[gf.id]] if title[gf.id]
-    gf.permissions_attributes = file_attributes['permissions_attributes'] if file_attributes['permissions_attributes']
-    gf.read_users_string = file_attributes['read_users_string'] if file_attributes['read_users_string']
-    gf.read_groups_string = file_attributes['read_groups_string'] if file_attributes['read_groups_string']
+    gf.attributes = file_attributes
     gf.visibility= visibility
 
     save_tries = 0
