@@ -30,16 +30,21 @@ describe DownloadsController, :type => :controller do
           expect(DownloadsController.default_content_dsid).to eq "content"
           expect(controller).to receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
           get "show", id: file
-          expect(response.body).to eq expected_content
           expect(response).to be_success
+          expect(response.body).to eq expected_content
         end
 
         context "when grabbing the characterization datastream" do
-          let(:expected_content) { "<fits stuff>" }
+          let(:expected_content) { "<?xml version=\"1.0\"?>\n<fits stuff=\"yep\"/>" }
+          before do
+            file.characterization.content = expected_content
+            file.save!
+          end
+
           it "should return requested datastreams" do
             get "show", id: file, datastream_id: "characterization"
-            expect(response.body).to eq expected_content
             expect(response).to be_success
+            expect(response.body).to eq expected_content
           end
         end
 
