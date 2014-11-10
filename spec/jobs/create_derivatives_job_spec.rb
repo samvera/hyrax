@@ -105,12 +105,12 @@ describe CreateDerivativesJob do
       it 'transcodes to webm and mp4' do
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['webm']
+        derivative = reloaded.attached_files['webm']
         expect(derivative).not_to be_nil
         expect(derivative.content).not_to be_nil
         expect(derivative.mime_type).to eq('video/webm')
 
-        derivative2 = reloaded.datastreams['mp4']
+        derivative2 = reloaded.attached_files['mp4']
         expect(derivative2).not_to be_nil
         expect(derivative2.content).not_to be_nil
         expect(derivative2.mime_type).to eq('video/mp4')
@@ -127,12 +127,12 @@ describe CreateDerivativesJob do
       it 'transcodes to mp3 and ogg' do
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['mp3']
+        derivative = reloaded.attached_files['mp3']
         expect(derivative).not_to be_nil
         expect(derivative.content).not_to be_nil
         expect(derivative.mime_type).to eq('audio/mpeg')
 
-        derivative2 = reloaded.datastreams['ogg']
+        derivative2 = reloaded.attached_files['ogg']
         expect(derivative2).not_to be_nil
         expect(derivative2.content).not_to be_nil
         expect(derivative2.mime_type).to eq('audio/ogg')
@@ -150,11 +150,11 @@ describe CreateDerivativesJob do
         pending 'Need a way to do this in hydra-derivatives'
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['mp3']
+        derivative = reloaded.attached_files['mp3']
         expect(derivative.content.size).to eq(reloaded.content.content.size)
         expect(derivative.mime_type).to eq('audio/mpeg')
 
-        derivative2 = reloaded.datastreams['ogg']
+        derivative2 = reloaded.attached_files['ogg']
         expect(derivative2.content).not_to be_nil
         expect(derivative2.mime_type).to eq('audio/ogg')
       end
@@ -171,12 +171,12 @@ describe CreateDerivativesJob do
         pending 'Need a way to do this in hydra-derivatives'
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['mp3']
+        derivative = reloaded.attached_files['mp3']
         expect(derivative).not_to be_nil
         expect(derivative.content).not_to be_nil
         expect(derivative.mimeType).to eq('audio/mpeg')
 
-        derivative2 = reloaded.datastreams['ogg']
+        derivative2 = reloaded.attached_files['ogg']
         expect(derivative2).not_to be_nil
         expect(derivative2.content.size).to eq(reloaded.content.content.size)
         expect(derivative2.mime_type).to eq('audio/ogg')
