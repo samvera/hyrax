@@ -2,7 +2,7 @@
 <li class="featured-item" data-id="<%= solr_document.noid %>">
   <div class="main row">
     <div class="col-sm-3">
-      <%= link_to sufia.generic_file_path(solr_document) do %>
+      <%= link_to sufia.generic_file_path(solr_document), "aria-hidden" => true do %>
         <%= render_thumbnail_tag solr_document, {width: 90} %>
       <% end %>
     </div>

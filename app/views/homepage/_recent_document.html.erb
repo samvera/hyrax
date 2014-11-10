@@ -9,7 +9,7 @@
       <% end %>
       <td>
         <h3>
-          <span class="sr-only">Title</span><%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(recent_document.noid), title: recent_document.title_or_label  %>
+          <span class="sr-only">Title</span><%= link_to truncate(recent_document.title_or_label, length: 28, separator: ' '), sufia.generic_file_path(recent_document.noid)  %>
           <% if display_access %>
               <% if recent_document.registered? %>
                  <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span>
