@@ -74,9 +74,9 @@ describe 'catalog searching', :type => :feature do
   context "many tags" do
     before do
       (1..25).each do |i|
-        @gf1.tag << "tag#{i.to_s}"
+        @gf1.tag += ["tag#{sprintf('%02d', i)}"]
       end
-      @gf1.save
+      @gf1.save!
       within('#masthead_controls') do
         fill_in('search-field-header', with: "tag1")
         click_button("Go")
