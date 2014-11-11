@@ -22,6 +22,18 @@ describe Worthwhile::LinkedResource do
     expect(subject.to_s).to eq nil
   end
 
+  describe "to_s" do
+    it "if title is not set, returns the url" do
+      subject.url = 'http://www.youtube.com/watch?v=oHg5SJYRHA0'
+      expect(subject.to_s).to eq('http://www.youtube.com/watch?v=oHg5SJYRHA0')
+    end
+    it "if title is set, returns the title" do
+      subject.url = 'http://www.youtube.com/watch?v=oHg5SJYRHA0'
+      subject.title = "My Link Title"
+      expect(subject.to_s).to eq("My Link Title")
+    end
+  end
+
   describe "validating" do
     subject {Worthwhile::LinkedResource.new}
     it "should not validate and have an error" do

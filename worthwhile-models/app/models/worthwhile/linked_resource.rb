@@ -28,7 +28,11 @@ module Worthwhile
     end
 
     def to_s
-      url
+      if title && !title.empty?
+        title
+      else
+        url
+      end
     end
 
     def to_solr(solr_doc={}, opts={})
@@ -38,4 +42,3 @@ module Worthwhile
     end
   end
 end
-
