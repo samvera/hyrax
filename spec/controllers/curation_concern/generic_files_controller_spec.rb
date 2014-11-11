@@ -132,16 +132,17 @@ describe CurationConcern::GenericFilesController do
       end
 
       context "updating metadata" do
-        it "should be successful" do
+        it "should be successful and update attributes" do
           post :update, id: generic_file, generic_file:
-            {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
+            {title: ['new_title'], tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
           expect(response).to redirect_to [:curation_concern, generic_file]
+          expect(assigns[:generic_file].title).to eq(['new_title'])
         end
 
         it "should go back to edit on an error" do
           allow_any_instance_of(Worthwhile::GenericFile).to receive(:valid?).and_return(false)
           post :update, id: generic_file, generic_file:
-            {title: 'new_title', tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
+            {title: ['new_title'], tag: [''], permissions: { new_user_name: {'archivist1'=>'edit'}}}
           expect(response).to be_successful
           expect(response).to render_template('edit')
           expect(assigns[:generic_file]).to eq generic_file
@@ -150,7 +151,7 @@ describe CurationConcern::GenericFilesController do
         it "should add a new groups and users" do
           skip
           post :update, id: generic_file, generic_file:
-            { title: 'new_title', tag: [''], permissions: { new_group_name: {'group1'=>'read'}, new_user_name: {'user1'=>'edit'}}}
+            { title: ['new_title'], tag: [''], permissions: { new_group_name: {'group1'=>'read'}, new_user_name: {'user1'=>'edit'}}}
 
           expect(assigns[:generic_file].read_groups).to eq ["group1"]
           expect(assigns[:generic_file].edit_users).to include("user1", @user.user_key)
@@ -161,7 +162,7 @@ describe CurationConcern::GenericFilesController do
           generic_file.read_groups = ['group3']
           generic_file.save! # TODO slow test, more than one save.
           post :update, id: generic_file, generic_file:
-            { title: 'new_title', tag: [''], permissions: { new_group_name: '', new_user_name: '', group: {'group3' => 'read' }}}
+            { title: ['new_title'], tag: [''], permissions: { new_group_name: '', new_user_name: '', group: {'group3' => 'read' }}}
           expect(assigns[:generic_file].read_groups).to eq ["group3"]
         end
 
