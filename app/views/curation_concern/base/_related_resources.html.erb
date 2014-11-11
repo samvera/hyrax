@@ -12,7 +12,7 @@
   <tbody>
     <% curation_concern.linked_resources.each do |link| %>
       <tr class="<%= dom_class(link) %> attributes">
-        <td class="attribute url"><%= link_to link.url, link.url %></td>
+        <td class="attribute url"><%= link_to related_resource_link_name(link), link.url %></td>
         <td>
           <%- if can?(:edit, link) -%>
             <%= link_to(
