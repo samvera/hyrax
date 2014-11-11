@@ -9,7 +9,7 @@ module Sufia
     end
 
     def datastream_name
-      if datastream.dsid == self.class.default_content_dsid
+      if !params[:datastream_id] || params[:datastream_id] == self.class.default_content_dsid
         params[:filename] || asset.label
       else
         params[:datastream_id]
