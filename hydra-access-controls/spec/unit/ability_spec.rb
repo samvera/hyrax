@@ -238,7 +238,7 @@ describe Ability do
     subject { Ability.new(user) }
     let(:asset) { FactoryGirl.create(:asset) }
     let(:user) { FactoryGirl.build(:user) }
-    let(:datastream) { ActiveFedora::File.new(asset, 'ds1') }
+    let(:file) { ActiveFedora::File.new(asset, 'ds1') }
 
     after { asset.destroy }
 
@@ -248,13 +248,13 @@ describe Ability do
         asset.save!
       end
 
-      it { should be_able_to(:read, asset) }
-      it { should be_able_to(:download, datastream) }
+      it { should be_able_to(:read, asset.id) }
+      it { should be_able_to(:download, file) }
     end
 
-    context "user lacks read permission on the object and datastream" do
+    context "user lacks read permission on the object and file" do
       it { should_not be_able_to(:read, asset) }
-      it { should_not be_able_to(:download, datastream) }
+      it { should_not be_able_to(:download, file) }
     end
   end
 
