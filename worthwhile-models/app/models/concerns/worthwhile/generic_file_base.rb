@@ -21,6 +21,8 @@ module Worthwhile
 
       attr_accessor :file
 
+      attr_accessible *terms_for_display
+
       # make filename single-value (Sufia::GenericFile::Characterization makes it multivalue)
       # has_attributes :filename, datastream: :characterization, multiple: false
       def filename

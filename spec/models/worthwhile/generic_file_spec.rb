@@ -5,6 +5,11 @@ describe Worthwhile::GenericFile do
     subject.depositor = 'tess@example.com'
   end
 
+  it "should update attributes" do
+    subject.attributes = {title:["My new Title"]}
+    expect(subject.title).to eq(["My new Title"])
+  end
+
   describe "to_solr" do
     before do
       subject.title = ['One Flew Over the Cuckoo\'s Nest']
