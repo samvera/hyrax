@@ -89,7 +89,7 @@ module Hydra
         response.headers['Content-Type'] = datastream.mime_type
         head :ok
       end
-      
+
 
       # render an HTTP Range response
       def send_range
@@ -117,23 +117,23 @@ module Hydra
       ensure
         response.stream.close
       end
-      
+
       def prepare_file_headers
         send_file_headers! content_options
         response.headers['Content-Type'] = datastream.mime_type
         self.content_type = datastream.mime_type
       end
 
-      private 
-      
+      private
+
       def default_content_ds
         if asset.class.respond_to?(:default_content_ds)
           asset.attached_files[asset.class.default_content_ds]
-        elsif asset.attached_files.keys.include?(DownloadsController.default_content_dsid)
+        elsif asset.attached_files.key?(DownloadsController.default_content_dsid)
           asset.attached_files[DownloadsController.default_content_dsid]
         end
       end
-      
+
       module ClassMethods
         def default_content_dsid
           "content"
