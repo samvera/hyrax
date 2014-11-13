@@ -7,8 +7,8 @@ describe Hydra::AdminPolicy do
       subject.title = "My title"
       subject.description = "My description"
     end
-    its(:title) { should == "My title"}
-    its(:description) { should == "My description"}
+    its(:title) { is_expected.to eq "My title"}
+    its(:description) { is_expected.to eq "My description"}
   end
 
 
@@ -20,52 +20,49 @@ describe Hydra::AdminPolicy do
   end
 
   describe "updating default permissions" do
-    before do
-      subject.save
-    end
     it "should create new group permissions" do
-      subject.default_permissions.create({:name=>'group1', :access=>'discover', :type=>'group'})
+      subject.default_permissions.build({:name=>'group1', :access=>'discover', :type=>'group'})
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'group', :access=>'discover', :name=>'group1'}]
     end
     it "should create new user permissions" do
-      subject.default_permissions.create({:name=>'user1', :access=>'discover', :type=>'person'})
+      subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'discover', :name=>'user1'}]
     end
     it "should not replace existing groups" do
-      subject.default_permissions.create({:name=>'group1', :access=>'discover', :type=>'group'})
-      subject.default_permissions.create({:name=>'group2', :access=>'discover', :type=>'group'})
+      subject.default_permissions.build({:name=>'group1', :access=>'discover', :type=>'group'})
+      subject.default_permissions.build({:name=>'group2', :access=>'discover', :type=>'group'})
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'group', :access=>'discover', :name=>'group1'},
                                    {:type=>'group', :access=>'discover', :name=>'group2'}]
     end
     it "should not replace existing users" do
-      subject.default_permissions.create({:name=>'user1', :access=>'discover', :type=>'person'})
-      subject.default_permissions.create({:name=>'user2', :access=>'discover', :type=>'person'})
+      subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
+      subject.default_permissions.build({:name=>'user2', :access=>'discover', :type=>'person'})
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'discover', :name=>'user1'},
                                    {:type=>'person', :access=>'discover', :name=>'user2'}]
     end
     it "should update permissions on existing users" do
-      subject.default_permissions.create({:name=>'user1', :access=>'discover', :type=>'person'})
+      subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
       subject.default_permissions.first.mode = ::ACL.Write
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'edit', :name=>'user1'}]
     end
     it "should update permissions on existing groups" do
-      subject.default_permissions.create({:name=>'group1', :access=>'discover', :type=>'group'})
+      subject.default_permissions.build({:name=>'group1', :access=>'discover', :type=>'group'})
       subject.default_permissions.first.mode = ::ACL.Write
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'group', :access=>'edit', :name=>'group1'}]
     end
     it "should assign user permissions when :type == 'person'" do
-      subject.default_permissions.create({:name=>'user1', :access=>'discover', :type=>'person'})
+      subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'discover', :name=>'user1'}]
     end
     it "should raise an ArgumentError when the :type hashkey is invalid" do
-      expect { subject.default_permissions.create({:name=>'user1', :access=>'read', :type=>'foo'}) }.to raise_error(ArgumentError, 'Unknown agent type "foo"')
+      expect { subject.default_permissions.build({:name=>'user1', :access=>'read', :type=>'foo'}) }.to raise_error(ArgumentError, 'Unknown agent type "foo"')
     end
   end
 
   describe "Inheritable rights" do
     before do
-      @policy = Hydra::AdminPolicy.create
-      @policy.default_permissions.create([
+      @policy = Hydra::AdminPolicy.new
+      @policy.default_permissions.build([
         {:name=>"africana-faculty", :access=>"edit", :type=>"group"},
         {:name=>"cool-kids", :access=>"edit", :type=>"group"},
         {:name=>"julius_caesar", :access=>"edit", :type=>"person"},
@@ -78,7 +75,7 @@ describe Hydra::AdminPolicy do
     end
 
     describe "to_solr" do
-      subject {@policy.to_solr}
+      subject { @policy.to_solr }
 
       it "should not affect normal solr permissions fields" do
         expect(subject).to_not have_key Hydra.config.permissions.discover.group
@@ -127,11 +124,10 @@ describe Hydra::AdminPolicy do
 
     context "Given a policy grants read access to a group I belong to" do
       before do
-        @policy = Hydra::AdminPolicy.create
-        @policy.default_permissions.create({:type=>"group", :access=>"read", :name=>"africana-faculty"})
+        @policy = Hydra::AdminPolicy.new
+        @policy.default_permissions.build({:type=>"group", :access=>"read", :name=>"africana-faculty"})
         @policy.save
       end
-      after { @policy.delete }
 
     	context "And a subscribing asset does not grant access" do
     	  before do
@@ -139,7 +135,6 @@ describe Hydra::AdminPolicy do
           @asset.admin_policy = @policy
           @asset.save
         end
-        after { @asset.delete }
 
     		it "Then I should be able to view the asset" do
     		  expect(subject.can?(:read, @asset)).to be true
@@ -155,11 +150,10 @@ describe Hydra::AdminPolicy do
 
     context "Given a policy grants edit access to a group I belong to" do
       before do
-        @policy = Hydra::AdminPolicy.create
-        @policy.default_permissions.create({:type=>"group", :access=>"edit", :name=>"africana-faculty"})
+        @policy = Hydra::AdminPolicy.new
+        @policy.default_permissions.build({:type=>"group", :access=>"edit", :name=>"africana-faculty"})
         @policy.save
       end
-      after { @policy.delete }
 
     	context "And a subscribing asset does not grant access" do
     	  before do
@@ -167,7 +161,6 @@ describe Hydra::AdminPolicy do
           @asset.admin_policy = @policy
           @asset.save
         end
-        after { @asset.delete }
 
     		it "Then I should be able to view the asset" do
     		  expect(subject.can?(:read, @asset)).to be true
@@ -187,7 +180,6 @@ describe Hydra::AdminPolicy do
           @asset.admin_policy = @policy
           @asset.save
         end
-        after { @asset.delete }
 
     		it "Then I should be able to view the asset" do
     		  expect(subject.can?(:read, @asset)).to be true
@@ -206,14 +198,13 @@ describe Hydra::AdminPolicy do
         @policy = Hydra::AdminPolicy.new
         @policy.save
       end
-      after { @policy.delete }
+
       context "And a subscribing asset does not grant access" do
         before do
           @asset = ModsAsset.new()
           @asset.admin_policy = @policy
           @asset.save
         end
-        after { @asset.delete }
 
   		  it "Then I should not be able to view the asset" do
     		  expect(subject.can?(:read, @asset)).to be false
@@ -233,7 +224,6 @@ describe Hydra::AdminPolicy do
           @asset.admin_policy = @policy
           @asset.save
         end
-        after { @asset.delete }
 
   		  it "Then I should be able to view the asset" do
     		  expect(subject.can?(:read, @asset)).to be true
