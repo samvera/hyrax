@@ -5,15 +5,15 @@ describe 'batch/edit.html.erb', :type => :view do
     stub_model(Batch, id: '123')
   }
 
+  let(:content) { double('content', versions: [], mimeType: 'application/pdf') }
   let(:generic_file) {
-    content = double('content', versions: [], mimeType: 'application/pdf')
     stub_model(GenericFile, id: '321', noid: '321',
-               depositor: 'bob',
-               content: content)
+               depositor: 'bob')
   }
 
 
   before do
+    allow(generic_file).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     controller.request.path_parameters[:id] = "123"
     assign :batch, batch

@@ -25,11 +25,11 @@ describe 'generic_files/show.html.erb', :type => :view do
       date_created: ['1984-01-02'],
       language: ['Quechua'],
       publisher: ['Random Publishing, Inc.'],
-      subject: ['Biology', 'Physiology', 'Ethnography'],
-      content: content)
+      subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
   before do
+    allow(generic_file).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(depositor)
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)
     allow(User).to receive(:find_by_user_key).with(generic_file.depositor).and_return(depositor)
