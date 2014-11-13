@@ -4,7 +4,7 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        contains 'full_text', versionable: false
+        contains 'full_text'
       end
 
       def append_metadata
