@@ -16,7 +16,7 @@ module Hydra
         end
         if default_embargo
           key = Hydra.config.permissions.inheritable.embargo.release_date.sub(/_[^_]+$/, '') #Strip off the suffix
-          ::Solrizer.insert_field(solr_doc, key, default_embargo.embargo_release_date, :stored_sortable)
+          ::Solrizer.insert_field(doc, key, default_embargo.embargo_release_date, :stored_sortable)
         end
       end
     end
