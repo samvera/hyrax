@@ -9,10 +9,10 @@ class LocalAuthority < ActiveRecord::Base
     return unless self.where(name: name).empty?
     authority = self.create(name: name)
     format = opts.fetch(:format, :ntriples)
-    predicate = opts.fetch(:predicate, RDF::SKOS.prefLabel)
+    predicate = opts.fetch(:predicate, ::RDF::SKOS.prefLabel)
     entries = []
     sources.each do |uri|
-      RDF::Reader.open(uri, format: format) do |reader|
+      ::RDF::Reader.open(uri, format: format) do |reader|
         reader.each_statement do |statement|
           if statement.predicate == predicate
             entries << LocalAuthorityEntry.new(local_authority: authority,

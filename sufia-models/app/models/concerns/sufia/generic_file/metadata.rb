@@ -7,74 +7,74 @@ module Sufia
         contains "content", class_name: 'FileContentDatastream'
         contains "thumbnail"
 
-        property :label, predicate: RDF::DC.title
+        property :label, predicate: ::RDF::DC.title
 
-        property :depositor, predicate: RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt") do |index|
+        property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt") do |index|
           index.as :symbol, :stored_searchable
         end
 
-        property :relative_path, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath')
+        property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath')
 
-        property :import_url, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl') do |index|
+        property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl') do |index|
           index.as :symbol
         end
 
-        property :part_of, predicate: RDF::DC.isPartOf
-        property :resource_type, predicate: RDF::DC.type do |index|
+        property :part_of, predicate: ::RDF::DC.isPartOf
+        property :resource_type, predicate: ::RDF::DC.type do |index|
           index.as :stored_searchable, :facetable
         end
-        property :title, predicate: RDF::DC.title do |index|
+        property :title, predicate: ::RDF::DC.title do |index|
           index.as :stored_searchable, :facetable
         end
-        property :creator, predicate: RDF::DC.creator do |index|
+        property :creator, predicate: ::RDF::DC.creator do |index|
           index.as :stored_searchable, :facetable
         end
-        property :contributor, predicate: RDF::DC.contributor do |index|
+        property :contributor, predicate: ::RDF::DC.contributor do |index|
           index.as :stored_searchable, :facetable
         end
-        property :description, predicate: RDF::DC.description do |index|
+        property :description, predicate: ::RDF::DC.description do |index|
           index.type :text
           index.as :stored_searchable
         end
-        property :tag, predicate: RDF::DC.relation do |index|
+        property :tag, predicate: ::RDF::DC.relation do |index|
           index.as :stored_searchable, :facetable
         end
-        property :rights, predicate: RDF::DC.rights do |index|
+        property :rights, predicate: ::RDF::DC.rights do |index|
           index.as :stored_searchable
         end
-        property :publisher, predicate: RDF::DC.publisher do |index|
+        property :publisher, predicate: ::RDF::DC.publisher do |index|
           index.as :stored_searchable, :facetable
         end
-        property :date_created, predicate: RDF::DC.created do |index|
+        property :date_created, predicate: ::RDF::DC.created do |index|
           index.as :stored_searchable
         end
-        property :date_uploaded, predicate: RDF::DC.dateSubmitted do |index|
+        property :date_uploaded, predicate: ::RDF::DC.dateSubmitted do |index|
           index.type :date
           index.as :stored_sortable
         end
-        property :date_modified, predicate: RDF::DC.modified do |index|
+        property :date_modified, predicate: ::RDF::DC.modified do |index|
           index.type :date
           index.as :stored_sortable
         end
-        property :subject, predicate: RDF::DC.subject do |index|
+        property :subject, predicate: ::RDF::DC.subject do |index|
           index.as :stored_searchable, :facetable
         end
-        property :language, predicate: RDF::DC.language do |index|
+        property :language, predicate: ::RDF::DC.language do |index|
           index.as :stored_searchable, :facetable
         end
-        property :identifier, predicate: RDF::DC.identifier do |index|
+        property :identifier, predicate: ::RDF::DC.identifier do |index|
           index.as :stored_searchable
         end
-        property :based_near, predicate: RDF::FOAF.based_near do |index|
+        property :based_near, predicate: ::RDF::FOAF.based_near do |index|
           index.as :stored_searchable, :facetable
         end
-        property :related_url, predicate: RDF::RDFS.seeAlso do |index|
+        property :related_url, predicate: ::RDF::RDFS.seeAlso do |index|
           index.as :stored_searchable
         end
-        property :bibliographic_citation, predicate: RDF::DC.bibliographicCitation do |index|
+        property :bibliographic_citation, predicate: ::RDF::DC.bibliographicCitation do |index|
           index.as :stored_searchable
         end
-        property :source, predicate: RDF::DC.source do |index|
+        property :source, predicate: ::RDF::DC.source do |index|
           index.as :stored_searchable
         end
 

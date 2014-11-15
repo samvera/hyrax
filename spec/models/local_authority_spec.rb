@@ -26,7 +26,7 @@ describe LocalAuthority, :type => :model do
   it "should harvest an RDF/XML vocab (w/ an alt predicate)" do
     LocalAuthority.harvest_rdf("langs", [fixture_path + '/lexvo.rdf'],
                                format: 'rdfxml',
-                               predicate: RDF::URI("http://www.w3.org/2008/05/skos#prefLabel"))
+                               predicate: ::RDF::URI("http://www.w3.org/2008/05/skos#prefLabel"))
     expect(LocalAuthority.count).to eq(1)
     expect(LocalAuthorityEntry.count).to eq(35)
   end

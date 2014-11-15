@@ -4,12 +4,12 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        property :proxy_depositor, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#proxyDepositor') do |index|
+        property :proxy_depositor, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#proxyDepositor') do |index|
           index.as :symbol
         end
 
         # This value is set when a user indicates they are depositing this for someone else
-        property :on_behalf_of, predicate: RDF::URI.new('http://scholarsphere.psu.edu/ns#onBehalfOf') do |index|
+        property :on_behalf_of, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#onBehalfOf') do |index|
           index.as :symbol
         end
 
