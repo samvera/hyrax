@@ -6,7 +6,7 @@ describe Hydra::AccessControls::Permission do
     let(:permission) { described_class.new(type: 'person', name: 'bob', access: 'read') }
 
     it "should set predicates" do
-      expect(permission.agent.first.rdf_subject).to eq RDF::URI.new('http://projecthydra.org/ns/auth/person#bob')
+      expect(permission.agent.first.rdf_subject).to eq ::RDF::URI.new('http://projecthydra.org/ns/auth/person#bob')
       expect(permission.mode.first.rdf_subject).to eq ACL.Read
     end
 

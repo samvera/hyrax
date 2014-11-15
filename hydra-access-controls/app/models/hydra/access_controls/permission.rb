@@ -56,12 +56,12 @@ module Hydra::AccessControls
         raise "Can't build agent #{inspect}" unless name && type
         self.agent = case type
                      when "group"
-                       Agent.new(RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{name}"))
+                       Agent.new(::RDF::URI.new("#{GROUP_AGENT_URL_PREFIX}##{name}"))
                      when "person"
-                       Agent.new(RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
+                       Agent.new(::RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
                      when "user"
                        Deprecation.warn Permission, "Passing \"user\" as the type to Permission is deprecated. Use \"person\" instead. This will be an error in ActiveFedora 9."
-                       Agent.new(RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
+                       Agent.new(::RDF::URI.new("#{PERSON_AGENT_URL_PREFIX}##{name}"))
                      else
                        raise ArgumentError, "Unknown agent type #{type.inspect}"
                      end

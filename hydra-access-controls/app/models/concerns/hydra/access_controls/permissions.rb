@@ -387,7 +387,7 @@ module Hydra
       end
 
       # @param [Symbol] type either :group or :person
-      # @param [RDF::URI] mode One of the permissions modes, e.g. ACL.Write, ACL.Read, etc.
+      # @param [::RDF::URI] mode One of the permissions modes, e.g. ACL.Write, ACL.Read, etc.
       # @return [Array<Permission>]
       def search_by_type_and_mode(type, mode)
         case type

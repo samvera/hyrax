@@ -4,10 +4,10 @@ module Hydra
     include Hydra::AdminPolicyBehavior
     include Hydra::AccessControls::Permissions
 
-    property :title, predicate: RDF::DC.title do |index|
+    property :title, predicate: ::RDF::DC.title do |index|
       index.as :stored_searchable
     end
-    property :description, predicate: RDF::DC.description do |index|
+    property :description, predicate: ::RDF::DC.description do |index|
       index.as :searchable
     end
 
