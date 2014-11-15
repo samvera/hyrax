@@ -173,7 +173,7 @@ describe GenericFilesController do
         expect(File).not_to exist("#{mock_upload_directory}/image.jpg")
         expect(File).not_to exist("#{mock_upload_directory}/world.png")
         # And into the storage directory
-        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => batch_id)
+        files = Batch.find(batch_id).generic_files
         expect(files.first.label).to eq('world.png')
         expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
       end
@@ -187,7 +187,7 @@ describe GenericFilesController do
         # These files should have been moved out of the upload directory
         expect(File).not_to exist("#{mock_upload_directory}/world.png")
         # And into the storage directory
-        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => batch_id)
+        files = Batch.find(batch_id).generic_files
         expect(files.first.label).to eq 'world.png'
       end
 
@@ -201,12 +201,13 @@ describe GenericFilesController do
         expect(File).not_to exist("#{mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
         expect(File).not_to exist("#{mock_upload_directory}/world.png")
         # And into the storage directory
-        files = GenericFile.find(Solrizer.solr_name("is_part_of",:symbol) => batch_id)
+        files = Batch.find(batch_id).generic_files
         expect(files.first.label).to eq 'world.png'
+        # TODO: use files.select once projecthydra/active_fedora#609 is fixed
         ['icons.zip', 'Example.ogg'].each do |filename|
-          expect(files.select{|f| f.label == filename}.first.relative_path).to eq "import/files/#{filename}"
+          expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
         end
-        expect(files.select{|f| f.label == 'dublin_core_rdf_descMetadata.nt'}.first.relative_path).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
+        expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
       end
     end
 
