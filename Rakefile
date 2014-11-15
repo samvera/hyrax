@@ -4,7 +4,7 @@ Bundler::GemHelper.install_tasks
 
 APP_ROOT= File.dirname(__FILE__)
 require 'jettywrapper'
-JETTY_ZIP_BASENAME = 'fedora-4/b4'
+JETTY_ZIP_BASENAME = 'fedora-4/master'
 Jettywrapper.url = "https://github.com/projecthydra/hydra-jetty/archive/#{JETTY_ZIP_BASENAME}.zip"
 
 namespace :jetty do
