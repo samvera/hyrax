@@ -42,4 +42,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'google-api-client', '~> 0.7'
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'activerecord-import', '~> 0.5'
+  if RUBY_VERSION < '2.1.0'
+    spec.add_dependency 'mini_magick', '< 4'
+  else
+    spec.add_dependency 'mini_magick'
+  end
 end
