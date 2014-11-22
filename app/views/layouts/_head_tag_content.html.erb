@@ -2,18 +2,26 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
 <meta charset="utf-8" />
 
-<!-- added for use on small devices like phones" -->
+<!-- added for use on small devices like phones -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<%= yield :twitter_meta if content_for?(:twitter_meta) %>
-<%= yield :gscholar_meta if content_for?(:gscholar_meta) %>
+<!-- Twitter card metadata -->
+<%= yield :twitter_meta %>
+<!-- Google Scholar metadata -->
+<%= yield :gscholar_meta %>
 
 <title><%= h(@page_title || application_name) %></title>
+
 <!-- application css -->
 <%= stylesheet_link_tag 'application' %>
 <%= yield(:css_head) %>
 
 <!-- application js -->
 <%= javascript_include_tag 'application' %>
+<%= yield(:js_head) %>
 
+<!-- Google Analytics -->
 <%= render partial: '/ga', formats: [:html] %>
+
+<!-- for extras, e.g., a favicon -->
+<%= render partial: '/head_tag_extras', formats: [:html] %>
