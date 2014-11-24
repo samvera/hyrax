@@ -57,8 +57,6 @@ This generator makes the following changes to your application:
       'create_tinymce_assets.rb',
       'create_content_blocks.rb',
       'create_featured_works.rb',
-      'create_proxy_deposit_requests.rb',
-      'create_proxy_deposit_rights.rb',
       'create_file_view_stats.rb',
       'create_file_download_stats.rb'
     ].each do |file|
@@ -108,7 +106,7 @@ This generator makes the following changes to your application:
   end
 
   # Sets up proxies and transfers
-  def full_text_indexing
+  def proxies
     generate "sufia:models:proxies"
   end
 
