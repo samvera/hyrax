@@ -18,6 +18,7 @@ This generator makes the following changes to your application:
  6. Installs Blacklight gallery
  7. Runs full-text generator
  8. Runs proxies generator
+ 9. Runs cached stats generator
        """
 
   # Implement the required interface for Rails::Generators::Migration.
@@ -56,9 +57,7 @@ This generator makes the following changes to your application:
       'add_linkedin_to_users.rb',
       'create_tinymce_assets.rb',
       'create_content_blocks.rb',
-      'create_featured_works.rb',
-      'create_file_view_stats.rb',
-      'create_file_download_stats.rb'
+      'create_featured_works.rb'
     ].each do |file|
       better_migration_template file
     end
@@ -108,6 +107,11 @@ This generator makes the following changes to your application:
   # Sets up proxies and transfers
   def proxies
     generate "sufia:models:proxies"
+  end
+
+  # Sets up cached usage stats
+  def cached_stats
+    generate 'sufia:models:cached_stats'
   end
 
   private
