@@ -304,7 +304,7 @@ describe GenericFilesController, :type => :controller do
 
         download_query = double('query')
         allow(download_query).to receive(:for_file).and_return([
-          OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:123456789", totalEvents: "3")
+          OpenStruct.new(date: Date.today.strftime("%Y%m%d"), eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:123456789", totalEvents: "3")
         ])
         allow(download_query).to receive(:map).and_return(download_query.for_file.map(&:marshal_dump))
         allow(profile).to receive(:sufia__download).and_return(download_query)

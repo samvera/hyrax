@@ -12,6 +12,25 @@ describe FileUsage, :type => :model do
     @file.delete
   end
 
+  let(:dates) {
+    ldates = []
+    4.downto(0) {|idx| ldates << (Date.today-idx.day) }
+    ldates
+  }
+  let(:date_strs) {
+    ldate_strs = []
+    dates.each {|date| ldate_strs << date.strftime("%Y%m%d") }
+    ldate_strs
+  }
+
+  let(:view_output) {
+    [[statistic_date(dates[0]), 4], [statistic_date(dates[1]), 8], [statistic_date(dates[2]), 6], [statistic_date(dates[3]), 10], [statistic_date(dates[4]), 2]]
+  }
+
+  let(:download_output) {
+    [[statistic_date(dates[0]), 1], [statistic_date(dates[1]), 1], [statistic_date(dates[2]), 2], [statistic_date(dates[3]), 3],  [statistic_date(dates[4]), 5]]
+  }
+
   # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
   # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
   # Sample data structures were created by sending real events to GA from a test instance of 
@@ -20,27 +39,28 @@ describe FileUsage, :type => :model do
 
   let(:sample_download_statistics) {
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: "20140101", totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: "20140102", totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: "20140103", totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: "20140104", totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: "20140105", totalEvents: "5"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[0], totalEvents: "1"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[1], totalEvents: "1"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[2], totalEvents: "2"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[3], totalEvents: "3"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "sufia:x920fw85p", date: date_strs[4], totalEvents: "5"),
     ]
   }
 
   let(:sample_pageview_statistics) {
     [
-      OpenStruct.new(date: '20140101', pageviews: 4),
-      OpenStruct.new(date: '20140102', pageviews: 8),
-      OpenStruct.new(date: '20140103', pageviews: 6),
-      OpenStruct.new(date: '20140104', pageviews: 10),
-      OpenStruct.new(date: '20140105', pageviews: 2)
+      OpenStruct.new(date: date_strs[0], pageviews: 4),
+      OpenStruct.new(date: date_strs[1], pageviews: 8),
+      OpenStruct.new(date: date_strs[2], pageviews: 6),
+      OpenStruct.new(date: date_strs[3], pageviews: 10),
+      OpenStruct.new(date: date_strs[4], pageviews: 2)
     ]
   }
 
   let(:usage) {
-    allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
-    allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+    allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today-4.day).to_s)
+    expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
+    expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
     FileUsage.new(@file.id)
   }
 
@@ -82,8 +102,8 @@ describe FileUsage, :type => :model do
     it "should return an array of hashes for use with JQuery Flot" do
       expect(usage.to_flot[0][:label]).to eq("Pageviews")
       expect(usage.to_flot[1][:label]).to eq("Downloads")
-      expect(usage.to_flot[0][:data]).to include([1388534400000, 4], [1388620800000, 8], [1388707200000, 6], [1388793600000, 10], [1388880000000, 2]) 
-      expect(usage.to_flot[1][:data]).to include([1388534400000, 1], [1388620800000, 1], [1388707200000, 2], [1388793600000, 3],  [1388880000000, 5])
+      expect(usage.to_flot[0][:data]).to include(*view_output)
+      expect(usage.to_flot[1][:data]).to include(*download_output)
     end
 
     let(:create_date) {DateTime.new(2014, 01, 01)}
@@ -100,8 +120,8 @@ describe FileUsage, :type => :model do
       describe "create date before earliest date set" do
         let(:usage) {
           allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
-          allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
-          allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+          expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
+          expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           FileUsage.new(@file.id)
         }
         it "should set the created date to the earliest date not the created date" do
@@ -112,8 +132,9 @@ describe FileUsage, :type => :model do
 
       describe "create date after earliest" do
         let(:usage) {
-          allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
-          allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+          allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today-4.day).to_s)
+          expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
+          expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
           FileUsage.new(@file.id)
         }
@@ -129,8 +150,8 @@ describe FileUsage, :type => :model do
 
       let(:usage) {
         allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
-        allow_any_instance_of(FileUsage).to receive(:download_statistics).and_return(sample_download_statistics)
-        allow_any_instance_of(FileUsage).to receive(:pageview_statistics).and_return(sample_pageview_statistics)
+        expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
+        expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
         FileUsage.new(@file.id)
       }
       it "should set the created date to the earliest date not the created date" do
@@ -139,5 +160,4 @@ describe FileUsage, :type => :model do
 
     end
   end
-
 end
