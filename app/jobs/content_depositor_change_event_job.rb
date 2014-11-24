@@ -23,7 +23,7 @@ class ContentDepositorChangeEventJob < EventJob
     file.apply_depositor_metadata(login)
     file.save!
 
-    action = "User #{link_to_profile file.proxy_depositor} has transferred #{link_to file.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(file.noid)} to User #{link_to_profile login}"
+    action = "User #{link_to_profile file.proxy_depositor} has transferred #{link_to file.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(file.noid)} to user #{link_to_profile login}"
     timestamp = Time.now.to_i
     depositor = ::User.find_by_user_key(file.depositor)
     proxy_depositor = ::User.find_by_user_key(file.proxy_depositor)
@@ -31,19 +31,12 @@ class ContentDepositorChangeEventJob < EventJob
     event = proxy_depositor.create_event(action, timestamp)
     # Log the event to the GF's stream
     file.log_event(event)
-
-    #log the event to the depositor
-    log_depositor_event(event, depositor, file)
-
-    #log the event to the proxy_depositor
-    log_depositor_event(event, proxy_depositor, file)
-  end
-
-  def log_depositor_event(event, depositor, gf)
-    # Log the event to the depositor's profile stream
-    depositor.log_profile_event(event)
-    # Fan out the event to all followers who have access
-    depositor.followers.select { |user| user.can? :read, gf }.each do |follower|
+    # log the event to the proxy depositor's profile
+    proxy_depositor.log_profile_event(event)
+    # log the event to the depositor's dashboard
+    depositor.log_event(event)
+    # Fan out the event to the depositor's followers who have access
+    depositor.followers.select { |user| user.can? :read, file }.each do |follower|
       follower.log_event(event)
     end
   end
