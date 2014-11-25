@@ -7,7 +7,7 @@ gemspec
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'sufia-models', path: './sufia-models'
 gem 'sass-rails', '~> 4.0.3'
-gem 'active-fedora', '~> 9.0.0.beta1'
+gem 'active-fedora', '~> 9.0.0.beta2'
 gem 'hydra-head', github: 'projecthydra/hydra-head', branch: 'fedora-4'
 gem 'hydra-collections', github: 'projecthydra-labs/hydra-collections', branch: 'fedora-4'
 gem 'hydra-derivatives', github: 'projecthydra-labs/hydra-derivatives', branch: 'fedora-4'

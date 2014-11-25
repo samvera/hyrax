@@ -58,7 +58,7 @@ describe FileUsage, :type => :model do
     allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today-4.day).to_s)
     expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
     expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-    FileUsage.new(@file.id)
+    FileUsage.new(file.id)
   }
 
   describe "#initialize" do
@@ -103,12 +103,10 @@ describe FileUsage, :type => :model do
       expect(usage.to_flot[1][:data]).to include(*download_output)
     end
 
-    let(:create_date) {DateTime.new(2014, 01, 01)}
+    let(:create_date) { DateTime.new(2014, 01, 01).iso8601 }
 
     describe "analytics start date set" do
-      let(:earliest) {
-        DateTime.new(2014, 01, 02)
-      }
+      let(:earliest) { DateTime.new(2014, 01, 02).iso8601 }
 
       before do
         Sufia.config.analytic_start_date = earliest
@@ -119,7 +117,7 @@ describe FileUsage, :type => :model do
           allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-          FileUsage.new(@file.id)
+          FileUsage.new(file.id)
         }
         it "should set the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
@@ -149,7 +147,7 @@ describe FileUsage, :type => :model do
         allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
         expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
         expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        FileUsage.new(@file.id)
+        FileUsage.new(file.id)
       }
       it "should set the created date to the earliest date not the created date" do
         expect(usage.created).to eq(create_date)

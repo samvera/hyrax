@@ -87,8 +87,8 @@ describe 'event jobs' do
     @third_user.follow(@another_user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     allow(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/files/123">Hamlet</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
-    ContentDepositorChangeEventJob.new('test:123', @another_user.user_key).run
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/files/test-123">Hamlet</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
+    ContentDepositorChangeEventJob.new('test-123', @another_user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
     expect(@another_user.events.length).to eq(1)
