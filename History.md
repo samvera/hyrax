@@ -1,10 +1,21 @@
 # History of Sufia releases
 
+## 4.2.0
+
+* Caches google analytics data in the database so we do not have to retrieve them each time the page is loaded [Carolyn Cole]
+* Allows adopters to inject content into the layout's head block, needed by ScholarSphere to add a favicon [Mike Giarlo]
+* Removes redundant title attributes for featured and recent works, fixes orphaned labels [Michael Tribone]
+* Pins mini_magick for rubies < 2.1 [Carolyn Cole]
+* Changes the way we log depositor change events [Mike Giarlo]
+* Breaks cached stats migrations into dedicated generator [Mike Giarlo]
+* Fixes bug with proxy setup in the install generator [Mike Giarlo]
+* Fixes bug in batch editing javascript [Carolyn Cole]
+
 ## 4.1.0
 
-* Adds proxy deposit, "sticky" proxies, and transfers of ownership (from ScholarSphere) [mjgiarlo]
-* Fixes bug with form fields attached to single-valued terms [cam156]
-* Converts specs to use RSpec 3 style [mjgiarlo]
+* Adds proxy deposit, "sticky" proxies, and transfers of ownership (from ScholarSphere) [Mike Giarlo]
+* Fixes bug with form fields attached to single-valued terms [Carolyn Cole]
+* Converts specs to use RSpec 3 style [Mike Giarlo]
 
 ## 4.0.1
 
