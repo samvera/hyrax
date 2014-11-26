@@ -1,7 +1,9 @@
-<div class="dropdown" >
-  <%= check_box_tag 'check_all', 'yes', @all_checked, class: 'pull-left', disabled: ((@batch_size_on_other_page + @document_list.count) > @max_batch_size) %>
-  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog" title="click for selection options"></span></a>
-  <ul class="dropdown-menu">
-    <%= render partial: "#{controller_name}/batch_edits_actions" %>
-  </ul>
+<div class="dropdown batch_document_selector_all" >
+  <%= check_box_tag 'check_all', 'yes', @all_checked, disabled: @disable_select_all %>
+  <% if !@disable_select_all %>
+    <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog" title="click for selection options"></span></a>
+    <ul class="dropdown-menu">
+      <%= render partial:"#{controller_name}/batch_edits_actions" %>
+    </ul>
+  <% end %>
 </div>

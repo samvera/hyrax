@@ -6,7 +6,7 @@ module BatchEditsHelper
   end
 
   def render_check_all
-    unless @disable_select_all || params[:controller].match("my/collections")
+    unless params[:controller].match("my/collections")
       render partial: 'batch_edits/check_all'
     end
   end
