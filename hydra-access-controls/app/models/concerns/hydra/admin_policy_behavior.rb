@@ -3,8 +3,8 @@ module Hydra
     extend ActiveSupport::Concern
 
     included do
-      has_and_belongs_to_many :default_permissions, property: Hydra::ACL.defaultPermissions, class_name: 'Hydra::AccessControls::Permission'
-      belongs_to :default_embargo, property: Hydra::ACL.hasEmbargo, class_name: 'Hydra::AccessControls::Embargo'
+      has_and_belongs_to_many :default_permissions, predicate: Hydra::ACL.defaultPermissions, class_name: 'Hydra::AccessControls::Permission'
+      belongs_to :default_embargo, predicate: Hydra::ACL.hasEmbargo, class_name: 'Hydra::AccessControls::Embargo'
     end
 
     def to_solr(solr_doc=Hash.new)
