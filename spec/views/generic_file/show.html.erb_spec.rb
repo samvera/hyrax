@@ -73,7 +73,7 @@ describe 'generic_files/show.html.erb', :type => :view do
         contributors = @item.properties['contributor']
         expect(contributors.count).to eq(2)
         contributor = contributors.first
-        expect(contributor.type).to eq('http://schema.org/Agent')
+        expect(contributor.type).to eq('http://schema.org/Person')
         expect(contributor.properties['name'].first).to eq('Tweedledee')
       end
 
@@ -81,7 +81,7 @@ describe 'generic_files/show.html.erb', :type => :view do
         creators = @item.properties['creator']
         expect(creators.count).to eq(2)
         creator = creators.first
-        expect(creator.type).to eq('http://schema.org/Agent')
+        expect(creator.type).to eq('http://schema.org/Person')
         expect(creator.properties['name'].first).to eq('Doe, John')
       end
 
