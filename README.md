@@ -65,7 +65,7 @@ If you have questions or need help, please email [the Hydra community developmen
 ### Add gems to Gemfile
 
 ```
-gem 'sufia', '~> 4.0.0'
+gem 'sufia'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
