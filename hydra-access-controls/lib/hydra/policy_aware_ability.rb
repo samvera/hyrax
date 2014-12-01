@@ -4,6 +4,8 @@ module Hydra::PolicyAwareAbility
   extend Deprecation
   include Hydra::Ability
 
+  IS_GOVERNED_BY_SOLR_FIELD = "isGovernedBy_ssim".freeze
+
   # Extends Hydra::Ability.test_edit to try policy controls if object-level controls deny access
   def test_edit(pid)
     super || test_edit_from_policy(pid)
@@ -21,12 +23,18 @@ module Hydra::PolicyAwareAbility
   def policy_pid_for(object_pid)
     policy_pid = policy_pid_cache[object_pid]
     return policy_pid if policy_pid
-    solr_result = ActiveFedora::Base.find_with_conditions({:id=>object_pid}, :fl=>ActiveFedora::SolrService.solr_name('is_governed_by', :symbol))
+    solr_result = ActiveFedora::Base.find_with_conditions({id: object_pid}, fl: governed_by_solr_field)
     begin
-      policy_pid_cache[object_pid] = policy_pid = value_from_solr_field(solr_result, ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)).first.gsub("info:fedora/", "")
+      policy_pid_cache[object_pid] = policy_pid = value_from_solr_field(solr_result, governed_by_solr_field).first.gsub("info:fedora/", "")
     rescue NoMethodError
     end
     return policy_pid
+  end
+
+  def governed_by_solr_field
+    # TODO the solr key could be derived if we knew the class of the object:
+    #   ModsAsset.reflect_on_association(:admin_policy).solr_key
+    IS_GOVERNED_BY_SOLR_FIELD
   end
 
   # Returns the permissions solr document for policy_pid

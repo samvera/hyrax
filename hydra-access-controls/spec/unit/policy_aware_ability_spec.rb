@@ -29,11 +29,11 @@ describe Hydra::PolicyAwareAbility do
     @asset.admin_policy = @policy
     @asset.save!
   end
+
   after do
-    # @policy.delete
-    # @asset.delete
     Object.send(:remove_const, :PolicyAwareClass)
   end
+
   subject { PolicyAwareClass.new( User.new ) }
 
   describe "policy_pid_for" do
@@ -52,11 +52,7 @@ describe Hydra::PolicyAwareAbility do
       @asset2.save
       @asset3 = ModsAsset.create
     end
-    after do
-      # @policy2.delete
-      # @asset2.delete
-      # @asset3.delete
-    end
+
     it "should retrieve the pid doc for the current object's governing policy" do
       expect(subject.policy_pid_for(@asset.id)).to eq @policy.id
       expect(subject.policy_pid_for(@asset2.id)).to eq @policy2.id

@@ -107,7 +107,7 @@ module Hydra
         assign_value :edit, val
       end
 
-      protected 
+      protected
 
       def prefix
       end
@@ -117,7 +117,7 @@ module Hydra
       end
 
       def solr_name(*args)
-        ActiveFedora::SolrService.solr_name(*args)
+        ActiveFedora::SolrQueryBuilder.solr_name(*args)
       end
 
       class EmbargoConfig
@@ -130,7 +130,7 @@ module Hydra
         end
 
         def solr_name(*args)
-          ActiveFedora::SolrService.solr_name(*args)
+          ActiveFedora::SolrQueryBuilder.solr_name(*args)
         end
       end
 
@@ -144,7 +144,7 @@ module Hydra
         end
 
         def solr_name(*args)
-          ActiveFedora::SolrService.solr_name(*args)
+          ActiveFedora::SolrQueryBuilder.solr_name(*args)
         end
       end
 
