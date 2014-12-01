@@ -6,12 +6,12 @@ describe Hydra::Config do
       # You only need to change these values if you've indexed permissions by some means other than the Hydra's built-in tooling.
       # If you change these, you must also update the permissions request handler in your solrconfig.xml to return those values
       config[:permissions] = {
-        :discover => {:group =>ActiveFedora::SolrService.solr_name("discover_access_group", :symbol), :individual=>ActiveFedora::SolrService.solr_name("discover_access_person", :symbol)},
-        :read => {:group =>ActiveFedora::SolrService.solr_name("read_access_group", :symbol), :individual=>ActiveFedora::SolrService.solr_name("read_access_person", :symbol)},
-        :edit => {:group =>ActiveFedora::SolrService.solr_name("edit_access_group", :symbol), :individual=>ActiveFedora::SolrService.solr_name("edit_access_person", :symbol)},
-        :owner => ActiveFedora::SolrService.solr_name("depositor", :symbol),
+        :discover => {:group =>ActiveFedora::SolrQueryBuilder.solr_name("discover_access_group", :symbol), :individual=>ActiveFedora::SolrQueryBuilder.solr_name("discover_access_person", :symbol)},
+        :read => {:group =>ActiveFedora::SolrQueryBuilder.solr_name("read_access_group", :symbol), :individual=>ActiveFedora::SolrQueryBuilder.solr_name("read_access_person", :symbol)},
+        :edit => {:group =>ActiveFedora::SolrQueryBuilder.solr_name("edit_access_group", :symbol), :individual=>ActiveFedora::SolrQueryBuilder.solr_name("edit_access_person", :symbol)},
+        :owner => ActiveFedora::SolrQueryBuilder.solr_name("depositor", :symbol),
       }
-      config.permissions.embargo.release_date = ActiveFedora::SolrService.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
+      config.permissions.embargo.release_date = ActiveFedora::SolrQueryBuilder.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
 
       # specify the user model
       config[:user_model] = 'User'
@@ -23,7 +23,7 @@ describe Hydra::Config do
       # This specifies the solr field names of permissions-related fields.
       # You only need to change these values if you've indexed permissions by some means other than the Hydra's built-in tooling.
       # If you change these, you must also update the permissions request handler in your solrconfig.xml to return those values
-      config.permissions.discover.group = ActiveFedora::SolrService.solr_name("discover_access_group", :symbol)
+      config.permissions.discover.group = ActiveFedora::SolrQueryBuilder.solr_name("discover_access_group", :symbol)
 
       # specify the user model
       config.user_model = 'User'

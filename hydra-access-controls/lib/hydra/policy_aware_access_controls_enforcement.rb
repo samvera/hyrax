@@ -16,7 +16,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   def policy_clauses
     policy_pids = policies_with_access
     return nil if policy_pids.empty?
-    '(' + policy_pids.map {|pid| ActiveFedora::SolrService.construct_query_for_rel(is_governed_by: "info:fedora/#{pid}")}.join(' OR ') + ')'
+    '(' + policy_pids.map {|pid| ActiveFedora::SolrQueryBuilder.construct_query_for_rel(is_governed_by: "info:fedora/#{pid}")}.join(' OR ') + ')'
   end
 
   # find all the policies that grant discover/read/edit permissions to this user or any of its groups

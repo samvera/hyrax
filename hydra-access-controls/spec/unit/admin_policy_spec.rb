@@ -15,7 +15,7 @@ describe Hydra::AdminPolicy do
   describe "to_solr" do
     subject { Hydra::AdminPolicy.new(:title=>"Foobar").to_solr }
     it "should have title_ssim" do
-      expect(subject[ActiveFedora::SolrService.solr_name('title', type: :string)]).to eq ["Foobar"]
+      expect(subject[ActiveFedora::SolrQueryBuilder.solr_name('title', type: :string)]).to eq ["Foobar"]
     end
   end
 

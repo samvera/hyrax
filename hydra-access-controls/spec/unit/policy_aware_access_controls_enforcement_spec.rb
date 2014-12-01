@@ -129,14 +129,14 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       policy_ids = (1..8).map {|n| "test:policy#{n}"}
       expect(subject).to receive(:policies_with_access).and_return(policy_ids)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      governed_field = ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)
+      governed_field = ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)
       expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!raw f=#{governed_field}}info:fedora/test:policy1\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy2\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy3\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy4\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy5\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy6\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy7\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy8\")")
     end
 
     it "should not change anything if there are no clauses to add" do
       allow(subject).to receive(:policy_clauses).and_return(nil)
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      expect(@solr_parameters[:fq].first).to_not include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
+      expect(@solr_parameters[:fq].first).to_not include(" OR (#{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
     end
   end
 
