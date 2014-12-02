@@ -265,7 +265,11 @@ This information is for people who want to modify the engine itself, not an appl
 ### run the tests
 
 ```
-rake clean spec
+rake jetty:start
+redis-server
+rake engine_cart:clean
+rake engine_cart:generate
+rake spec
 ```
 
 ### Change validation behavior
