@@ -160,3 +160,11 @@ input#check_all {
 #my_nav {
   margin-bottom: 20px;
 }
+
+#check_all:disabled:hover:before {
+  content: "Too many items, can not select all.";
+  border: 1px;
+  font-size: .75em;
+  display: block;
+  width: 30em;
+}
