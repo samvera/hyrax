@@ -8,7 +8,7 @@ module My
     def show_only_shared_files(solr_parameters, user_parameters)
       solr_parameters[:fq] ||= []
       solr_parameters[:fq] += [
-        "-" + ActiveFedora::SolrService.construct_query_for_rel(depositor: current_user.user_key)
+        "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user.user_key)
       ]
     end
 
@@ -16,9 +16,9 @@ module My
       super
       @selected_tab = :shared
     end
-  
+
     protected
-    
+
     def search_action_url *args
       sufia.dashboard_shares_url *args
     end

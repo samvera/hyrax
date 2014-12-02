@@ -22,7 +22,7 @@ module Sufia
     include Hydra::Collections::Collectible
 
     included do
-      belongs_to :batch, property: :is_part_of
+      belongs_to :batch, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
       # around_save :retry_warming
 

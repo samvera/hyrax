@@ -3,8 +3,7 @@ class Batch < ActiveFedora::Base
   include Sufia::ModelMethods
   include Sufia::Noid
 
-  belongs_to :user, property: "creator"
-  has_many :generic_files, property: :is_part_of
+  has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
   property :creator, predicate: ::RDF::DC.creator
   property :title, predicate: ::RDF::DC.title

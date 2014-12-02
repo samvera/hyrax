@@ -9,7 +9,7 @@ module My
       ids = current_user.trophies.pluck(:generic_file_id)
       solr_parameters[:fq] ||= []
       solr_parameters[:fq] += [
-        ActiveFedora::SolrService.construct_query_for_ids(ids)
+        ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids)
       ]
     end
 

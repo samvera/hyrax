@@ -41,8 +41,7 @@ describe FileContentDatastream, :type => :model do
   end
 
   describe "extract_metadata" do
-    let(:datastream) { FileContentDatastream.new(parent_object, 'content') }
-    let(:parent_object) { ActiveFedora::Base.new(id: 'foo') }
+    let(:datastream) { FileContentDatastream.new('foo/content') }
     let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: File.new(fixture_path + '/world.png'),
                                                  filename: 'world.png') }
     before { datastream.content = file }
