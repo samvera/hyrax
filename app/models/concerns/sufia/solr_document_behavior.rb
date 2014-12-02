@@ -30,7 +30,7 @@ module Sufia
     # @example
     #   link_to '...', SolrDocument(id: 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
-      @m ||= ActiveFedora::Base.find(id)
+      @m ||= ActiveFedora::Base.load_instance_from_solr(id)
       return self if @m.class == ActiveFedora::Base
       @m
     end

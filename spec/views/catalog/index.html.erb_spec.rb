@@ -24,7 +24,7 @@ describe 'catalog/index.html.erb' do
     allow(resp).to receive(:empty?).and_return(false)
 
     # This stubs out the SolrDocument#to_model
-    allow(ActiveFedora::Base).to receive(:find).with('abc123').and_return(collection)
+    allow(ActiveFedora::Base).to receive(:load_instance_from_solr).with('abc123').and_return(collection)
     assign(:document_list, [doc])
   end
 

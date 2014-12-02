@@ -39,7 +39,6 @@ class SingleUseLinksController < ApplicationController
   end
 
   def asset
-    @asset ||= ActiveFedora::Base.find(params[:id])
+    @asset ||= ActiveFedora::Base.load_instance_from_solr(params[:id])
   end
-
 end

@@ -23,7 +23,7 @@ module Sufia
 
        # For each of the files in the batch, set the attributes to be the concatination of all the attributes
        batch.each do |doc_id|
-          gf = ::GenericFile.find(doc_id)
+          gf = ::GenericFile.load_instance_from_solr(doc_id)
           gf.terms_for_editing.each do |key|
             h[key] ||= []
             h[key] = (h[key] + gf.send(key)).uniq
