@@ -41,7 +41,7 @@ class BatchUpdateJob
       denied << gf
       return
     end
-    gf.title = [title[gf.id]] if title[gf.id]
+    gf.title = title[gf.id] if title[gf.id]
     gf.attributes = file_attributes
     gf.visibility= visibility
 
