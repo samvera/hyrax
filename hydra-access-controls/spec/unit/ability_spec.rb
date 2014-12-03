@@ -238,7 +238,7 @@ describe Ability do
     subject { Ability.new(user) }
     let(:asset) { FactoryGirl.create(:asset) }
     let(:user) { FactoryGirl.build(:user) }
-    let(:file) { ActiveFedora::File.new(asset, 'ds1') }
+    let(:file) { ActiveFedora::File.new("#{asset.uri}/ds1") }
 
     after { asset.destroy }
 
