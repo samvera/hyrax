@@ -2,12 +2,9 @@ module Hydra
   module AccessControls
     module Embargoable
       extend ActiveSupport::Concern
+      include Hydra::AccessControls::WithAccessRight
 
       included do
-        include Hydra::AccessControls::WithAccessRight
-        # We include EmbargoableMethods so that it can override the methods included above,
-        # and doesn't create a ActiveSupport::Concern::MultipleIncludedBlocks
-        include EmbargoableMethods
         validates :embargo_release_date, :lease_expiration_date, :'hydra/future_date' => true
 
         belongs_to :embargo, predicate: Hydra::ACL.hasEmbargo, class_name: 'Hydra::AccessControls::Embargo'

@@ -116,7 +116,7 @@ describe Hydra::AccessControls::Embargoable do
         expect(subject).to be_active_lease
         expect(subject).to be_visibility_changed
         expect(subject.visibility).to eq  Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        expect(subject.lease_expiration_date).to eq future_date.to_time.utc
+        expect(subject.lease_expiration_date).to eq future_date
         expect(subject.visibility_after_lease).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
       end
       it "relies on default before/after visibility if none provided" do
