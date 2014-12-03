@@ -35,6 +35,11 @@
   padding-top: 10px;
 }
 
+.profile img.orcid {
+  float: left;
+  margin-right: 2px;
+}
+
 /* This class is to workaround an issue in which Bootstrap requires a div to display a tooltip
  * on a disabled button. Using a span instead of a div would be ideal but unfortunately it does
  * not render the tooltip correctly in all browsers (e.g. in Chrome the tooltip is detected in

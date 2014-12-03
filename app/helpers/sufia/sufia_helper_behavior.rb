@@ -1,5 +1,9 @@
 module Sufia
   module SufiaHelperBehavior
+    def orcid_label(style_class='')
+      "#{image_tag 'orcid.png', { alt: t('sufia.user_profile.orcid.alt'), class: style_class }} #{t('sufia.user_profile.orcid.label')}".html_safe
+    end
+
     def error_messages_for(object)
       if object.try(:errors) and object.errors.full_messages.any?
         content_tag(:div, class: 'alert alert-block alert-error validation-errors') do

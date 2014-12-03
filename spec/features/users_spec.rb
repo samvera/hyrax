@@ -30,7 +30,7 @@ describe "User Profile", :type => :feature do
       click_button 'Save Profile'
       expect(page).to have_content 'Your profile has been updated'
       click_link 'Profile'
-      expect(page).to have_content 'http://twitter.com/curatorOfData'
+      expect(page).to have_link('curatorOfData', href: 'http://twitter.com/curatorOfData')
     end
   end
 
