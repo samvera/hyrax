@@ -449,7 +449,7 @@ describe GenericFilesController do
               expect(restored_file.content.mime_type).to eql(file1_type)
               expect(restored_file.content.original_name).to eql(file1)
               expect(restored_file.content.versions.count).to eq 2
-              expect(restored_file.content.versions[1]).to eql(latest_version)
+              expect(restored_file.content.versions[1]).to end_with(latest_version)
               expect(restored_file.content.version_committer(version1)).to eql(first_user.user_key)
             end
           end

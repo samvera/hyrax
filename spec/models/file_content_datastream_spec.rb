@@ -16,13 +16,13 @@ describe FileContentDatastream, :type => :model do
       expect(@file.content.versions).to be_kind_of(Array)
       expect(@file.content.versions.count).to eql(1)
     end
-    it "should return a label for the version" do
-      expect(@file.content.versions.first.to_s).to eql(version1)
+    it "should return a uri for the version" do
+      expect(@file.content.versions.first).to end_with(version1)
     end
     context "with the latest version" do
       let(:latest_version) { @file.content.versions.last }
       it "should return the latest version" do
-        expect(@file.content.latest_version.to_s).to eql(version1)
+        expect(@file.content.latest_version).to eql(version1)
       end
     end
     describe "add a version" do
