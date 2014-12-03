@@ -22,8 +22,6 @@ EXTRA_GEMS =<<EOF
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'hydra-head', github: 'projecthydra/hydra-head', branch: 'fedora-4'
 gem 'hydra-collections', github: 'projecthydra-labs/hydra-collections', branch: 'fedora-4'
-gem 'hydra-derivatives', github: 'projecthydra-labs/hydra-derivatives', branch: 'fedora-4'
-
 EOF
 
 namespace :engine_cart do
