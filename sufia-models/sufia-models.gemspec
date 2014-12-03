@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "hydra-head", "~> 8.0.0.alpha"
   spec.add_dependency "active-fedora", "~> 9.0.0.beta3"
-  spec.add_dependency "hydra-collections", "~> 3.0.0.alpha"
+  spec.add_dependency "hydra-collections", "~> 3.0.0.beta1"
   spec.add_dependency 'hydra-derivatives', '~> 1.0.0.beta1'
   spec.add_dependency 'nest', '~> 1.1'
   spec.add_dependency 'resque', '~> 1.23'
