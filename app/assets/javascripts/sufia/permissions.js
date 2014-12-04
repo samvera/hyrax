@@ -61,15 +61,14 @@ Blacklight.onLoad(function() {
       $('#permissions_error').html();
       $('#permissions_error').addClass('hidden');
 
-      var un = $('#new_user_name_skel').val();
-      var perm_form = $('#new_user_permission_skel').val();
-      var perm = $('#new_user_permission_skel :selected').text();
+      var user_name = $('#new_user_name_skel').val();
+      var access = $('#new_user_permission_skel').val();
+      var access_label = $('#new_user_permission_skel :selected').text();
       // clear out the elements to add more
       $('#new_user_name_skel').val('');
       $('#new_user_permission_skel').val('none');
 
-      // FIXME don't add new_user_name add a row (permissions_attributes) with type: 'user', and name: 'userprovided'
-      addPerm(un, perm_form, perm, 'new_user_name');
+      addPerm(user_name, access, access_label, 'user');
       return false;
   });
 
@@ -79,9 +78,9 @@ Blacklight.onLoad(function() {
         $('#new_group_name_skel').focus();
         return false;
       }
-      var cn = $('#new_group_name_skel').val();
-      var perm_form = $('#new_group_permission_skel').val();
-      var perm = $('#new_group_permission_skel :selected').text();
+      var group_name = $('#new_group_name_skel').val();
+      var access = $('#new_group_permission_skel').val();
+      var access_label = $('#new_group_permission_skel :selected').text();
 
       if (!is_permission_duplicate($('#new_group_name_skel').val())) {
         $('#permissions_error_text').html("This group already has a permission.");
@@ -95,8 +94,7 @@ Blacklight.onLoad(function() {
       $('#new_group_name_skel').val('');
       $('#new_group_permission_skel').val('none');
 
-      // FIXME don't add new_group_name add a row (permissions_attributes) with type: 'user', and name: 'userprovided'
-      addPerm(cn, perm_form, perm, 'new_group_name');
+      addPerm(group_name, access, access_label, 'group');
       return false;
   });
 
@@ -113,50 +111,84 @@ Blacklight.onLoad(function() {
 
 	});
 
-  function addPerm(un, perm_form, perm, perm_type)
+  function addPerm(agent_name, access, access_label, agent_type)
   {
+      showPermissionNote();
+
+      var tr = createPermissionRow(agent_name, access_label);
+      addHiddenPermField(tr, agent_type, agent_name, access);
+      $('#file_permissions').after(tr);
+      tr.effect("highlight", {}, 3000);
+  }
+
+  function createPermissionRow(agent_name, access_label) {
       var tr = $(document.createElement('tr'));
       var td1 = $(document.createElement('td'));
       var td2 = $(document.createElement('td'));
-      var remove = $('<button class="btn close">X</button>');
+      var remove_button = $('<button class="btn close">X</button>');
 
-      $('#save_perm_note').removeClass('hidden');
-
-      $('#new_perms').append(td1);
-      $('#new_perms').append(td2);
-
-      td1.html('<label class="control-label">'+un+'</label>');
-      td2.html(perm);
-      td2.append(remove);
-      remove.click(function () {
+      td1.html('<label class="control-label">' + agent_name + '</label>');
+      td2.html(access_label);
+      td2.append(remove_button);
+      remove_button.click(function () {
         tr.remove();
       });
 
+      return tr.append(td1).append(td2);
+  }
+
+  function addHiddenPermField(element, type, name, access) {
+      var prefix = 'generic_file[permissions_attributes][' + nextIndex() + ']';
       $('<input>').attr({
           type: 'hidden',
-          name: 'generic_file[permissions]['+perm_type+']['+un+']',
-          value: perm_form
-        }).appendTo(td2);
-      tr.append(td1);
-      tr.append(td2);
-      $('#file_permissions').after(tr);
-      tr.effect("highlight", {}, 3000);
+          name: prefix + '[type]',
+          value: type
+      }).appendTo(element);
+      $('<input>').attr({
+          type: 'hidden',
+          name: prefix + '[name]',
+          value: name
+      }).appendTo(element);
+      $('<input>').attr({
+          type: 'hidden',
+          name: prefix + '[access]',
+          value: access
+      }).appendTo(element);
+  }
+
+  function nextIndex() {
+      return $('#file_permissions').parent().children().size() - 1;
   }
 
   $('.remove_perm').on('click', function() {
      var top = $(this).parent().parent();
      top.addClass('hidden'); // do not show the block
-     top.find('.select_perm')[0].options[0].selected= true; // select the first otion which is none
-     $('#save_perm_note').removeClass('hidden');
+     addDestroyField(top);
+     showPermissionNote();
      return false;
-
   });
+
+  function showPermissionNote() {
+     $('#save_perm_note').removeClass('hidden');
+  }
+
+  function addDestroyField(element) {
+      $('<input>').attr({
+          type: 'hidden',
+          name: 'generic_file[permissions_attributes][' + indexOf(element) + '][_destroy]',
+          value: 'true'
+      }).appendTo(element);
+  }
+
+  function indexOf(element) {
+      return $('#file_permissions').parent().children().index(element) - 1;
+  }
 
 });
 
 // return the files visibility level (institution, open, restricted);
-function get_visibility(){
-  return $("input[name='visibility']:checked").val()
+function get_visibility() {
+  return $("input[name='visibility']:checked").val();
 }
 
 /*
@@ -164,8 +196,7 @@ function get_visibility(){
  * set other users/groups to 'read' (it would be over ruled by the
  * visibility of Open or Institution) so disable the Read option
  */
-function set_access_levels()
-{
+function set_access_levels() {
   var vis = get_visibility();
   var enabled_disabled = false;
   if (vis == "open" || vis == "psu") {

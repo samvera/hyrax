@@ -23,9 +23,9 @@
       </li>
     </ul>
     <div class="tab-content">
-      <%= render partial: "descriptions", locals: { generic_file: @generic_file } %>
-      <%= render partial: "permission", locals: { gf: @generic_file} %>
-      <%= render partial: "versioning", locals: { generic_file: @generic_file } %>
+      <%= render "descriptions",  generic_file: @generic_file %>
+      <%= render "permission", generic_file: @generic_file %>
+      <%= render "versioning", generic_file: @generic_file  %>
     </div>
-  </div> <!-- /.col-sm-9 -->
+  </div> <!-- /.col-sm-8 -->
 </div><!-- /.row -->

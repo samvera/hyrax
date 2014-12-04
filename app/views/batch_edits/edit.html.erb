@@ -46,7 +46,7 @@
         <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_permissions", class: "ajax-form"} do |f| %>
            <%= hidden_field_tag('update_type', 'update') %>
            <%= hidden_field_tag('key', 'permissions') %>
-           <%= render partial: "generic_files/permission_form", locals: { gf: @show_file } %>
+           <%= render "generic_files/permission_form", f: f %>
          <div class="row">
             <%= f.submit "Save changes", class: 'btn btn-primary updates-batches', id: 'permissions_save' %>
             <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_permissions" href="#collapse_permissions">Cancel </a>

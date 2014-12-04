@@ -8,12 +8,14 @@
       <div class="well">
 
         <% (generic_file.terms_for_editing).each do |term| %>
-          <%= render partial: "records/edit_field", locals: { record: generic_file, f: f, render_req: true, key: term } %>
+          <%= render "records/edit_field", record: generic_file, f: f, render_req: true, key: term %>
         <% end %>
 
       </div><!-- /well -->
-    <div class="action-button">
-      <%= f.button '<i class="glyphicon glyphicon-floppy-disk"></i> Save Descriptions'.html_safe, type: 'submit', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_descriptions" %>
+    <div>
+      <%= f.button type: 'submit', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_descriptions" do %>
+        <i class="glyphicon glyphicon-floppy-disk"></i> Save Descriptions
+      <% end %>
     </div>
   <% end %>
 </div>

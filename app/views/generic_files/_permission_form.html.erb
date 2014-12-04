@@ -1,11 +1,7 @@
-<% depositor = gf.depositor || batch.generic_files.first.depositor %>
-<% public_perm = gf.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
+<% depositor = f.object.depositor || batch.generic_files.first.depositor %>
+<% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
 <% public_perm = true if params[:controller] == 'batch' %>
-<% registered_perm = gf.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
-
-
-<input type="hidden" name="generic_file[permissions][group][public]" value="1" />
-<input type="hidden" name="generic_file[permissions][group][registered]" value="2" />
+<% registered_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
 
 <h2><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %>
       <small>(applied to all files just uploaded)</small><% end %>
@@ -103,21 +99,23 @@
   <tr id="file_permissions">
     <td>
       <%= label_tag :owner_access, class: "control-label" do %>
-        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>) 
+        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
       <% end %>
     </td>
     <td>
       <%= Sufia.config.owner_permission_levels.keys[0] %>
     </td>
   </tr>
-  <% gf.permissions.each do |permission| %>
+  <%= f.fields_for :permissions do |permission_fields| %>
     <%# skip the public, penn state (aka registered), and depositor perms as they are displayed first at the top %>
-    <% next if ['public', 'registered', depositor].include? permission.agent_name.downcase %>
+    <% next if ['public', 'registered', depositor].include? permission_fields.object.agent_name.downcase %>
     <tr>
-      <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], class: "control-label" %></td>
+      <td><%= permission_fields.label :agent_name, class: "control-label" do %>
+        <%= permission_fields.object.agent_name %>
+      <% end %></td>
       <td>
         <div class="col-sm-8">
-          <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia.config.permission_levels, permission[:access]), class: 'form-control select_perm' %>
+          <%= permission_fields.select :access, Sufia.config.permission_levels, {}, class: 'form-control select_perm' %>
         </div>
         <button class="btn close remove_perm">X</button>
       </td>
