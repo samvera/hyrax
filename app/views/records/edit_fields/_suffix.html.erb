@@ -3,7 +3,6 @@
           <% unless single %>
             <%= add_field(key) %>
           <% end %>
-            &nbsp;
           <%= render partial: "records/rights_modal" if key == "rights" %>
         <% else %>
           <%= subtract_field(key) %>

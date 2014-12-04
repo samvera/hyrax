@@ -1,5 +1,5 @@
 <%# convert class variable to a local variable if the local hasn't been set %>
 <div>
-  <%= f.select "resource_type", options_for_select(Sufia.config.resource_types.keys, record.resource_type), {}, { multiple: true, size: 7 } %>
+  <%= f.select :resource_type, Sufia.config.resource_types.keys, {}, { multiple: true, size: 7, class: 'form-control' } %>
   <p class="help-block">You may select multiple types to apply <%= help_icon(:resource_type) %><p>
 </div>
