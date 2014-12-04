@@ -17,7 +17,10 @@ class FeaturedWorkList
     return @works if @works
     @works = FeaturedWork.all
     add_solr_document_to_works
-    @works
+    @works = @works.reject do |work|
+      work.destroy if work.generic_file_solr_document.blank?
+      work.generic_file_solr_document.blank?
+    end
   end
 
   private
