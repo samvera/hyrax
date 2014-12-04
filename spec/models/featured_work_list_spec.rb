@@ -19,4 +19,16 @@ describe FeaturedWorkList, :type => :model do
       expect(solr_doc.noid).to eq file1.noid 
     end 
   end
+
+  describe 'file deleted' do
+    before do
+      file1.destroy
+    end
+    it 'should be a list of the remaining featured work objects, each with the generic_file\'s solr_doc' do
+      expect(subject.featured_works.size).to eq 1
+      solr_doc = subject.featured_works.first.generic_file_solr_document
+      expect(solr_doc).to be_kind_of SolrDocument
+      expect(solr_doc.noid).to eq file2.noid
+    end
+  end
 end
