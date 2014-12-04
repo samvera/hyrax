@@ -6,6 +6,7 @@ module Sufia
       NO_RUNS = 999
 
       def audit(force = false)
+        # TODO: This needs to be updated to pass enough information to audit_each
         logs = []
         self.per_version do |ver|
           logs << audit_each(ver, force)
@@ -22,8 +23,8 @@ module Sufia
         end
       end
 
-      def logs(dsid)
-        ChecksumAuditLog.where(dsid: dsid, pid: self.pid).order('created_at desc, id desc')
+      def logs(path)
+        ChecksumAuditLog.where(pid: self.pid, dsid: path).order('created_at desc, id desc')
       end
 
       def audit!
@@ -52,15 +53,15 @@ module Sufia
       end
 
       def audit_each(version, force = false)
-        latest_audit = logs(version.dsid).first
+        latest_audit = logs.first
         return latest_audit unless force || ::GenericFile.needs_audit?(version, latest_audit)
 
-        #  Resque.enqueue(AuditJob, version.pid, version.dsid, version.versionID)
-        Sufia.queue.push(AuditJob.new(version.pid, version.dsid, version.versionID))
+        # TODO: This needs to be updated to pass gf.id, datastream, and version_id
+        Sufia.queue.push(AuditJob.new(version, 'content', version))
 
         # run the find just incase the job has finished already
-        latest_audit = logs(version.dsid).first
-        latest_audit = ChecksumAuditLog.new(pass: NO_RUNS, pid: version.pid, dsid: version.dsid, version: version.versionID) unless latest_audit
+        latest_audit = logs.first
+        latest_audit = ChecksumAuditLog.new(pass: NO_RUNS, pid: version, version: version) unless latest_audit
         latest_audit
       end
 
@@ -99,16 +100,21 @@ module Sufia
           ::GenericFile.audit_everything(true)
         end
 
-        def run_audit(version)
-          if version.dsChecksumValid
+        def run_audit(id, path, uri)
+          begin
+            fixity_ok = ActiveFedora::FixityService.new(uri).check
+          rescue Ldp::NotFound 
+            error_msg = "resource not found"
+          end
+
+          if fixity_ok
             passing = 1
-            ChecksumAuditLog.prune_history(version)
+            ChecksumAuditLog.prune_history(id, path)
           else
-            logger.warn "***AUDIT*** Audit failed for #{version.pid} #{version.versionID}"
+            logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
             passing = 0
           end
-          check = ChecksumAuditLog.create!(pass: passing, pid: version.pid,
-                                           dsid: version.dsid, version: version.versionID)
+          check = ChecksumAuditLog.create!(pass: passing, pid: id, version: uri, dsid: path)
           check
         end
       end

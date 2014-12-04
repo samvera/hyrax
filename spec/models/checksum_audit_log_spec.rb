@@ -6,38 +6,62 @@ describe ChecksumAuditLog do
   end
 
   let(:f) do
-    GenericFile.new.tap do |gf|
-      gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      gf.apply_depositor_metadata('mjg36')
-      gf.save!
+    gf = GenericFile.new
+    gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+    gf.apply_depositor_metadata('mjg36')
+    gf.save!
+    gf
+  end
+
+  let(:version_uri) { f.datastreams['content'].versions.first }
+  let(:version_path) { 'content' }
+  let(:old) { ChecksumAuditLog.create(pid: f.pid, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
+  let(:new) { ChecksumAuditLog.create(pid: f.pid, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
+
+  context "a file with multiple checksums audits" do 
+    specify "should return a list of logs for this datastream sorted by date descending" do
+      logs = f.logs(version_path)
+      expect(logs).to eq([new, old])
     end
   end
-  let(:version) { f.attached_files['content'].versions.first }
-  let(:old) do
-    ChecksumAuditLog.create(pid: f.pid, dsid: version.dsid, version: version.versionID, pass: 1, created_at: 2.minutes.ago)
+
+  context "after multiple checksum audits where the checksum does not change" do 
+    specify "only one of them should be kept" do
+      success1 = ChecksumAuditLog.create(pid: f.pid, dsid: version_path, version: version_uri, pass: 1)
+      ChecksumAuditLog.prune_history(f.pid, version_path)
+      success2 = ChecksumAuditLog.create(pid: f.pid, dsid: version_path, version: version_uri, pass: 1)
+      ChecksumAuditLog.prune_history(f.pid, version_path)
+      success3 = ChecksumAuditLog.create(pid: f.pid, dsid: version_path, version: version_uri, pass: 1)
+      ChecksumAuditLog.prune_history(f.pid, version_path)
+
+      expect { ChecksumAuditLog.find(success2.id) }.to raise_exception ActiveRecord::RecordNotFound
+      expect { ChecksumAuditLog.find(success3.id) }.to raise_exception ActiveRecord::RecordNotFound
+      expect(ChecksumAuditLog.find(success1.id)).not_to be_nil
+      logs = f.logs(version_path)
+      expect(logs).to eq([success1, new, old])
+    end
   end
-  let(:new) do
-    ChecksumAuditLog.create(pid: f.pid, dsid: version.dsid, version: version.versionID, pass: 0, created_at: 1.minute.ago)
+  
+  context "should have an audit log history" do 
+    before do 
+      ChecksumAuditLog.create(pid: f.pid, dsid: 'content', version: 'v2', pass: 1)
+      ChecksumAuditLog.create(pid: f.pid, dsid: 'thumbnail', version: 'v1', pass: 1)
+    end
+
+    specify "should have an audit log history" do
+      audit = ChecksumAuditLog.get_audit_log(f.pid, 'content', version_uri)
+      expect(audit.pid).to eq(f.pid)
+      expect(audit.version).to eq(version_uri)
+
+      audit = ChecksumAuditLog.get_audit_log(f.pid, 'content', 'v2')
+      expect(audit.pid).to eq(f.pid)
+      expect(audit.version).to eq('v2')
+
+      audit = ChecksumAuditLog.get_audit_log(f.pid, 'thumbnail', 'v1')
+      expect(audit.pid).to eq(f.pid)
+      expect(audit.version).to eq('v1')
+
+    end
   end
 
-  it "should return a list of logs for this datastream sorted by date descending" do
-    skip "Skipping versions for now"
-    old; new
-    expect(@f.logs(@version.dsid)).to eq [new, old]
-  end
-
-  it "should prune history for a datastream" do
-    skip "Skipping versions for now"
-    old; new
-    success1 = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1)
-    ChecksumAuditLog.prune_history(@version)
-    success2 = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1)
-    ChecksumAuditLog.prune_history(@version)
-    success3 = ChecksumAuditLog.create(pid: @f.pid, dsid: @version.dsid, version: @version.versionID, pass: 1)
-    ChecksumAuditLog.prune_history(@version)
-    expect { ChecksumAuditLog.find(success2.id)}.to raise_exception ActiveRecord::RecordNotFound
-    expect { ChecksumAuditLog.find(success3.id)}.to raise_exception ActiveRecord::RecordNotFound
-    expect(ChecksumAuditLog.find(success1.id)).to_not be_nil
-    expect(@f.logs(@version.dsid)).to eq [success1, new, old]
-  end
 end
