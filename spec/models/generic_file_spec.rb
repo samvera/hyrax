@@ -33,10 +33,6 @@ describe GenericFile, :type => :model do
     end
   end
 
-  before do
-    subject.apply_depositor_metadata('jcoyne')
-  end
-
   describe '#to_s' do
     it 'uses the provided titles' do
       subject.title = ["Hello", "World"]
@@ -156,11 +152,16 @@ describe GenericFile, :type => :model do
 
   end
 
-  describe "attributes" do
-    it "should have apply_depositor_metadata" do
+  describe "#apply_depositor_metadata" do
+    before { subject.apply_depositor_metadata('jcoyne') }
+
+    it "should grant edit access and record the depositor" do
       expect(subject.edit_users).to eq ['jcoyne']
       expect(subject.depositor).to eq 'jcoyne'
     end
+  end
+
+  describe "attributes" do
     it "should have a set of permissions" do
       subject.read_groups=['group1', 'group2']
       subject.edit_users=['user1']
@@ -221,8 +222,10 @@ describe GenericFile, :type => :model do
     end
 
     describe "that have been saved" do
+      before { subject.apply_depositor_metadata('jcoyne') }
+
       it "should have activity stream-related methods defined" do
-        subject.save
+        subject.save!
         f = subject.reload
         expect(f).to respond_to(:stream)
         expect(f).to respond_to(:events)
@@ -244,7 +247,7 @@ describe GenericFile, :type => :model do
       it "should be able to be added to w/o unexpected graph behavior" do
         subject.creator = ["John Doe"]
         subject.title = ["New work"]
-        subject.save
+        subject.save!
         f = subject.reload
         expect(f.creator).to eq ["John Doe"]
         expect(f.title).to eq ["New work"]
@@ -356,81 +359,102 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "audit" do
-    before do
-      u = FactoryGirl.find_or_create(:jill)
-      f = GenericFile.new
-      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      f.apply_depositor_metadata(u)
-      f.save!
-      @f = f.reload
-    end
-    it "should schedule a audit job for each datastream" do
-      skip "Disabled audit"
-      s1 = double('one')
-      expect(AuditJob).to receive(:new).with(@f.id, 'DC', "DC1.0").and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1)
-      s2 = double('two')
-      expect(AuditJob).to receive(:new).with(@f.id, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
-      expect(Sufia.queue).to receive(:push).with(s2)
-      s3 = double('three')
-      expect(AuditJob).to receive(:new).with(@f.id, 'properties', "properties.0").and_return(s3)
-      expect(Sufia.queue).to receive(:push).with(s3)
-      s4 = double('four')
-      expect(AuditJob).to receive(:new).with(@f.id, 'content', "content.0").and_return(s4)
-      expect(Sufia.queue).to receive(:push).with(s4)
-      @f.audit!
-    end
-    it "should log a failing audit" do
-      skip "skip versioning for now"
-      @f.attached_files.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
-      allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', id: 'foo:123', dsid: 'foo', version: '1'))
-      @f.audit!
-      expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 0 }
-    end
-    it "should log a passing audit" do
-      skip "skip versioning for now"
-      allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
-      @f.audit!
-      expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 1 }
+  describe "auditing" do
+    let(:f) do
+      GenericFile.create do |f|
+        f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        f.apply_depositor_metadata('mjg36')
+      end
     end
 
-    it "should return true on audit_status" do
-      skip "Disabled audit"
-      expect(@f.audit_stat).to be_truthy
+    describe "#audit!" do
+      before do
+        @f = f.reload
+      end
+
+      it "should schedule a audit job for each datastream" do
+        skip "Disabled audit"
+        s1 = double('one')
+        expect(AuditJob).to receive(:new).with(@f.id, 'DC', "DC1.0").and_return(s1)
+        expect(Sufia.queue).to receive(:push).with(s1)
+        s2 = double('two')
+        expect(AuditJob).to receive(:new).with(@f.id, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
+        expect(Sufia.queue).to receive(:push).with(s2)
+        s3 = double('three')
+        expect(AuditJob).to receive(:new).with(@f.id, 'properties', "properties.0").and_return(s3)
+        expect(Sufia.queue).to receive(:push).with(s3)
+        s4 = double('four')
+        expect(AuditJob).to receive(:new).with(@f.id, 'content', "content.0").and_return(s4)
+        expect(Sufia.queue).to receive(:push).with(s4)
+        @f.audit!
+      end
+
+      it "should log a failing audit" do
+        skip "skip versioning for now"
+        @f.attached_files.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
+        allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', id: 'foo:123', dsid: 'foo', version: '1'))
+        @f.audit!
+        expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 0 }
+      end
+
+      it "should log a passing audit" do
+        skip "skip versioning for now"
+        allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
+        @f.audit!
+        expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 1 }
+      end
     end
-  end
 
-  describe "run_audit" do
-    before do
-      skip "disabled audit"
-      @f = GenericFile.new
-      @f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      @f.apply_depositor_metadata('mjg36')
-      @f.save!
-      @version = @f.datastreams['content'].versions.first
-      @old = ChecksumAuditLog.create(id: @f.id, dsid: @version.dsid, version: @version.versionID, pass: 1, created_at: 2.minutes.ago)
-      @new = ChecksumAuditLog.create(id: @f.id, dsid: @version.dsid, version: @version.versionID, pass: 0)
-    end
-    it "should not prune failed audits" do
-      expect(@version).to receive(:dsChecksumValid).and_return(true)
-      GenericFile.run_audit(@version)
-
-      expect(@version).to receive(:dsChecksumValid).and_return(false)
-      GenericFile.run_audit(@version)
-
-      expect(@version).to receive(:dsChecksumValid).and_return(false)
-      GenericFile.run_audit(@version)
-
-      expect(@version).to receive(:dsChecksumValid).and_return(true)
-      GenericFile.run_audit(@version)
-
-      expect(@version).to receive(:dsChecksumValid).and_return(false)
-      GenericFile.run_audit(@version)
-
-      expect(@f.logs(@version.dsid).map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
+    describe "#audit_stat" do
+      it "should return true on audit_status" do
+        skip "Disabled audit"
+        expect(f.audit_stat).to be_truthy
+      end
     end
 
+    describe "#human_readable_audit_status" do
+      subject { expect(f).to receive(:audit_stat).and_return(audit_stat); f.human_readable_audit_status }
+
+      context "when audit_stat is 0" do
+        let(:audit_stat) { 0 }
+        it { is_expected.to eq 'failing' }
+      end
+
+      context "when audit_stat is 1" do
+        let(:audit_stat) { 1 }
+        it { is_expected.to eq 'passing' }
+      end
+      context "when audit_stat is something else" do
+        let(:audit_stat) { 'something else' }
+        it { is_expected.to eq 'something else' }
+      end
+    end
+
+    describe "run_audit" do
+      let(:version) { f.datastreams['content'].versions.first }
+      let(:old) { ChecksumAuditLog.create(id: f.id, dsid: version.dsid, version: version.versionID, pass: 1, created_at: 2.minutes.ago) }
+      let(:new) { ChecksumAuditLog.create(id: f.id, dsid: version.dsid, version: version.versionID, pass: 0) }
+
+      it "should not prune failed audits" do
+        skip "disabled audit"
+        expect(version).to receive(:dsChecksumValid).and_return(true)
+        GenericFile.run_audit(version)
+
+        expect(version).to receive(:dsChecksumValid).and_return(false)
+        GenericFile.run_audit(version)
+
+        expect(version).to receive(:dsChecksumValid).and_return(false)
+        GenericFile.run_audit(version)
+
+        expect(version).to receive(:dsChecksumValid).and_return(true)
+        GenericFile.run_audit(version)
+
+        expect(version).to receive(:dsChecksumValid).and_return(false)
+        GenericFile.run_audit(version)
+
+        expect(f.logs(version.dsid).map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
+      end
+    end
   end
 
   describe "#related_files" do
@@ -497,7 +521,8 @@ describe GenericFile, :type => :model do
 
   context "with access control metadata" do
     subject do
-      GenericFile.new().tap do |m|
+      GenericFile.new do |m|
+        m.apply_depositor_metadata('jcoyne')
         m.permissions_attributes = [{type: 'person', access: 'read', name: "person1"},
                                     {type: 'person', access: 'read', name: "person2"},
                                     {type: 'group', access: 'read', name: "group-6"},
@@ -538,11 +563,7 @@ describe GenericFile, :type => :model do
   end
 
   describe "permissions validation" do
-    subject do
-      GenericFile.new do |file|
-        file.apply_depositor_metadata('mjg36')
-      end
-    end
+    before { subject.apply_depositor_metadata('mjg36') }
 
     context "when the depositor does not have edit access" do
       before do
@@ -555,9 +576,8 @@ describe GenericFile, :type => :model do
     end
 
     context "when the public has edit access" do
-      before do
-        subject.edit_groups = ['public']
-      end
+      before { subject.edit_groups = ['public'] }
+
       it "should be invalid" do
         expect(subject).to_not be_valid
         expect(subject.errors[:edit_groups]).to include('Public cannot have edit access')
@@ -565,9 +585,8 @@ describe GenericFile, :type => :model do
     end
 
     context "when registered has edit access" do
-      before do
-        subject.edit_groups = ['registered']
-      end
+      before { subject.edit_groups = ['registered'] }
+
       it "should be invalid" do
         expect(subject).to_not be_valid
         expect(subject.errors[:edit_groups]).to include('Registered cannot have edit access')
@@ -580,19 +599,25 @@ describe GenericFile, :type => :model do
       end
     end
   end
+
   describe "file content validation" do
     context "when file contains a virus" do
       let(:f) { File.new(fixture_path + '/small_file.txt') }
+
+      before do
+        subject.add_file(f, 'content', 'small_file.txt')
+        subject.apply_depositor_metadata('mjg36')
+      end
+
       it "populates the errors hash during validation" do
         allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
-        subject.add_file(f, 'content', 'small_file.txt')
         subject.save
         expect(subject).not_to be_persisted
         expect(subject.errors.messages).to eq(base: ["A virus was found in #{f.path}: EL CRAPO VIRUS"])
       end
+
       it "does not save a new version of a GenericFile" do
-        subject.add_file(f, 'content', 'small_file.txt')
-        subject.save
+        subject.save!
         allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError)
         subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , 'content', 'sufia_generic_stub.txt')
         subject.save
@@ -602,12 +627,12 @@ describe GenericFile, :type => :model do
   end
 
   describe "#remove_blank_assertions" do
-    subject { GenericFile.new }
     before do
       subject.title = ["foo"]
       subject.description = [""]
       subject.remove_blank_assertions
     end
+
     it "should only change title" do
       expect(subject.title).to eq(["foo"])
       expect(subject.description).to be_empty

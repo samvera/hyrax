@@ -550,15 +550,15 @@ describe GenericFilesController do
       end
     end
 
-    describe "view" do
-      it "should show me the file" do
-        get :show, id: generic_file
-        expect(response).not_to redirect_to(action: 'show')
-        expect(flash[:alert]).to be_nil
-      end
-      it "should set the breadcrumbs" do
+    describe "#show" do
+      it "should show me the file and set breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
         get :show, id: generic_file
+        expect(response).to be_successful
+        expect(flash).to be_empty
+        expect(assigns[:events]).to be_kind_of Array
+        expect(assigns[:generic_file]).to eq generic_file
+        expect(assigns[:audit_status]).to eq 'Audits have not yet been run on this file.'
       end
     end
   end

@@ -5,6 +5,19 @@ module Sufia
 
       NO_RUNS = 999
 
+      # provides a human readable version of the audit status
+      def human_readable_audit_status
+        stat = audit_stat(false)
+        case stat
+          when 0
+            'failing'
+          when 1
+            'passing'
+          else
+            stat
+        end
+      end
+
       def audit(force = false)
         logs = []
         self.per_version do |ver|

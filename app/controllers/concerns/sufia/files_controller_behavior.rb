@@ -103,6 +103,7 @@ module Sufia
       respond_to do |format|
         format.html {
           @events = @generic_file.events(100)
+          @audit_status = @generic_file.human_readable_audit_status
         }
         format.endnote { render text: @generic_file.export_as_endnote }
       end
