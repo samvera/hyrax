@@ -2,8 +2,9 @@
 <div class="batch-group">
   <% vals = generic_file[key] %>
   <% if render_req && required?(key) %>
-    <% tmp = '<span class="required-field">*</span>' + get_label(key) %>
-    <%= f.label key, tmp.html_safe  %>
+    <%= f.label key do %>
+      <span class="required-field">*</span><%= get_label(key) %>
+    <% end %>
   <% else %>
     <%= f.label key, get_label(key) %>
   <% end %>

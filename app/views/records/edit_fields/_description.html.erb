@@ -1,6 +1,6 @@
       <div  <%  if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
         <% required = render_req && (index == 0) && f.object.required?(key) %>
-        <%= f.text_area :description, name:"#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "input-large", required: required %>
+        <%= f.text_area :description, name:"#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "form-control", required: required %>
         <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index, single: f.object.unique?(key)} %>
       </div>
       <div id="additional_<%= key %>_elements"></div>

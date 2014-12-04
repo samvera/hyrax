@@ -9,7 +9,7 @@
           <%= f.label :title, "<span class='required-field'>*</span> Title #{index + 1}".html_safe, class: "control-label" %>
           <%= help_icon(:title) %>
           <div id="additional_title_clone">
-            <%= f.text_field :title, name: "title[#{gen_f.id}][]", value: gen_f.label, required: true %>
+            <%= f.text_field :title, name: "title[#{gen_f.id}][]", value: gen_f.label, class: 'form-control', required: true %>
           </div>
         </div>
       <% end %>
@@ -22,53 +22,66 @@
 </div>
 
 <%= hidden_field_tag(:extra_description_count, "1") %>
-<div  id="descriptions_display">
+<div id="descriptions_display">
   <h2>Bulk Descriptions</h2>
   <div class="well">
-    <h3>Applies to all files just uploaded</h3>
-    <div class="batch-group" id="resources">
-      <%# See if this works: render_edit_field_partial(:type, f:f) %>
-      <%= f.label :resource_type, "Resource Types", class: "control-label", for: "resource_type" %>
-      <%= help_icon(:resource_type) %>
-      <%= content_tag :p, t('sufia.batch.help.resource_type'), class: "help-block" %>
-      <%= f.select "resource_type", Sufia::Engine::config.resource_types, {}, { multiple: true, size: 7, "aria-label" => "Rights combo box" } %>
-    </div>
-
-    <div class="batch-group">
-      <%= f.label :tag, "<span class='required-field'>*</span> Keyword".html_safe, class: "control-label" %>
-      <%= help_icon(:tag) %>
-      <div id="additional_tag_clone">
-        <%= f.text_field :tag, name: "generic_file[tag][]", value: "", required: true  %>
-        <button class="adder btn" name="additional_tag" id="additional_tag_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_keyword') %></span></button>
+    <div class="row">
+      <div class="col-sm-6">
+      <h3>Applies to all files just uploaded</h3>
+      <div class="batch-group" id="resources">
+        <%# See if this works: render_edit_field_partial(:type, f:f) %>
+        <%= f.label :resource_type, "Resource Types", class: "control-label", for: "resource_type" %>
+        <%= help_icon(:resource_type) %>
+        <%= content_tag :p, t('sufia.batch.help.resource_type'), class: "help-block" %>
+        <%= f.select "resource_type", Sufia::Engine::config.resource_types, {}, { multiple: true, class: 'form-control', size: 7, "aria-label" => "Rights combo box" } %>
       </div>
-      <div id="additional_tag_elements"></div>
-    </div>
 
-    <div class="batch-group">
-      <%= f.label :creator, "<span class='required-field'>*</span> Creator".html_safe, class: "control-label" %>
-      <%= help_icon(:creator) %>
-      <div id="additional_creator_clone">
-        <%= f.text_field :creator, name: "generic_file[creator][]", value: "", required: true %>
-        <button class="adder btn" name="additional_creator" id="additional_creator_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_creator') %></span></button>
+      <div class="batch-group">
+        <%= f.label :tag, "<span class='required-field'>*</span> Keyword".html_safe, class: "control-label" %>
+        <%= help_icon(:tag) %>
+        <div id="additional_tag_clone" class="input-group">
+          <%= f.text_field :tag, name: "generic_file[tag][]", value: "", class: 'form-control', required: true  %>
+          <span class="input-group-btn field-controls">
+            <button class="adder btn" name="additional_tag" id="additional_tag_submit">
+              <span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>
+              <span class="sr-only"><%= t('sufia.batch.metadata.add_another_keyword') %></span>
+            </button>
+          </span>
+        </div>
+        <div id="additional_tag_elements"></div>
       </div>
-      <div id="additional_creator_elements"></div>
-    </div>
 
-    <div class="batch-group">
-      <%= f.label :rights, '<span class="required-field">*</span> Rights'.html_safe, class: "control-label" %>
-      <%= help_icon_modal('rightsModal') %>
-      <div id="additional_rights_clone">
-        <%= f.select "rights", options_for_select(Sufia::Engine::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), required: true %>
-        <button class="adder btn" name="additional_rights" id="additional_rights_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_rights') %></span></button>
-        <%= render partial: "generic_files/rights_modal" %>
+      <div class="batch-group">
+        <%= f.label :creator, "<span class='required-field'>*</span> Creator".html_safe, class: "control-label" %>
+        <%= help_icon(:creator) %>
+        <div id="additional_creator_clone" class="input-group">
+          <%= f.text_field :creator, name: "generic_file[creator][]", value: "", class: 'form-control', required: true %>
+          <span class="input-group-btn field-controls">
+            <button class="adder btn" name="additional_creator" id="additional_creator_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_creator') %></span></button>
+          </span>
+        </div>
+        <div id="additional_creator_elements"></div>
       </div>
-      <div id="additional_rights_elements"></div>
-    </div>
 
-    <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
-    <!-- hidden on initial load -->
+      <div class="batch-group">
+        <%= f.label :rights, '<span class="required-field">*</span> Rights'.html_safe, class: "control-label" %>
+        <%= help_icon_modal('rightsModal') %>
+        <div id="additional_rights_clone" class="input-group">
+          <%= f.select "rights", options_for_select(Sufia::Engine::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), { required: true }, { class: 'form-control' } %>
+          <span class="input-group-btn field-controls">
+            <button class="adder btn" name="additional_rights" id="additional_rights_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_rights') %></span></button>
+          </span>
+          <%= render partial: "generic_files/rights_modal" %>
+        </div>
+        <div id="additional_rights_elements"></div>
+      </div>
 
-    <%= render partial: 'more_metadata', locals: {f:f} %>
+      <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
+      <!-- hidden on initial load -->
 
+      <%= render 'more_metadata', f: f %>
+
+      </div> <!-- /col-sm-8 -->
+    </div> <!-- /row -->
   </div><!-- /well -->
 </div> <!-- /row -->

@@ -1,18 +1,23 @@
 require 'spec_helper'
 
-describe RecordsHelper, :type => :helper do
-  let(:adder) {
-    "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-plus\"></i></span><span class=\"sr-only\">add another test</span></button>"
-  }
-  let(:remover) {
-    "<button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-remove\"></i></span><span class=\"sr-only\">add another test</span></button>"    
-  }
-  it "draws add button" do
-    expect(helper.add_field(:test)).to eql(adder)
+describe RecordsHelper do
+
+  describe "#add_field" do
+    let(:expected) {
+      "<span class=\"input-group-btn field-controls\"><button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-plus\"></i></span><span class=\"sr-only\">add another test</span></button></span>"
+    }
+
+    subject { helper.add_field(:test) }
+    it { is_expected.to eq expected }
   end
 
-  it "draws subtract button" do
-    expect(helper.subtract_field(:test)).to eql(remover)
+  describe "#subtract_field" do
+    let(:expected) {
+      "<span class=\"input-group-btn field-controls\"><button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-remove\"></i></span><span class=\"sr-only\">add another test</span></button></span>"
+    }
+
+    subject { helper.subtract_field(:test) }
+    it { is_expected.to eq expected }
   end
 
   it "draws help_icon" do
@@ -37,15 +42,13 @@ describe RecordsHelper, :type => :helper do
 
   describe "download links" do
 
-    before do
-      @file = GenericFile.new(id: "fake-1")
-      assign :generic_file, @file
-    end
-
+    let(:file) { GenericFile.new(id: "fake-1") }
     let(:link_text) { helper.render_download_link("Download Fake") }
     let(:icon_text) { helper.render_download_icon("Download the full-sized Fake") }
- 
-    describe "#render_download_link" do    
+
+    before { assign :generic_file, file }
+
+    describe "#render_download_link" do
       it "has default text" do
         expect(helper.render_download_link).to have_selector("#file_download")
         expect(helper.render_download_link).to have_content("Download")
@@ -68,7 +71,6 @@ describe RecordsHelper, :type => :helper do
         expect(icon_text).to match("Download the full-sized Fake")
       end
     end
-
   end
 
   describe "#metadata_help" do
@@ -97,5 +99,4 @@ describe RecordsHelper, :type => :helper do
       expect(helper.get_aria_label("tag")).to eql("Usage information for keyword")
     end
   end
-
 end

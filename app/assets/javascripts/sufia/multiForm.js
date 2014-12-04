@@ -1,6 +1,6 @@
 (function( $ ){
 
-  $.fn.multiForm = function( options ) {  
+  $.fn.multiForm = function( options ) {
 
     // Create some defaults, extending them with any options that were provided
     var settings = $.extend( { }, options);
@@ -14,7 +14,7 @@
       var plusbttn = cloneElem.find('#'+this.id);
       var sr_hidden = '<span aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span>';
       var sr_only = '<span class="sr-only">remove this ' + this.name.replace("_", " ") + '</span>';
-      var remove_button = sr_hidden + sr_only; 
+      var remove_button = sr_hidden + sr_only;
       plusbttn.html(remove_button);
       plusbttn.on('click',removeField);
 
@@ -45,11 +45,11 @@
 
     function removeField () {
       // get parent and remove it
-      $(this).parent().remove();
+      $(this).closest('.input-group').remove();
       return false;
     }
 
-    return this.each(function() {        
+    return this.each(function() {
 
       // Tooltip plugin code here
       /*
@@ -63,5 +63,5 @@
     });
 
   };
-})( jQuery );  
+})( jQuery );
 
