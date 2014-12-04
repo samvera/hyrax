@@ -4,8 +4,7 @@ Bundler::GemHelper.install_tasks
 
 APP_ROOT= File.dirname(__FILE__)
 require 'jettywrapper'
-JETTY_ZIP_BASENAME = 'fedora-4/master'
-Jettywrapper.url = "https://github.com/projecthydra/hydra-jetty/archive/#{JETTY_ZIP_BASENAME}.zip"
+Jettywrapper.hydra_jetty_version = "v8.1.0"
 
 namespace :jetty do
   TEMPLATE_DIR = 'hydra-core/lib/generators/hydra/templates'
@@ -37,8 +36,6 @@ task :ci => ['jetty:config'] do
   raise "test failures: #{error}" if error
 
   Rake::Task["doc"].invoke
-  
-
 end
 
 task :default => [:ci]
@@ -149,7 +146,7 @@ def all_modules(cmd)
   FRAMEWORKS.each do |dir|
     Dir.chdir(dir) do
       puts "\n\e[1;33m[Hydra CI] #{dir}\e[m\n"
-      #cmd = "bundle exec rake spec" # doesn't work because it doesn't require the gems specified in the Gemfiles of the test rails apps 
+      #cmd = "bundle exec rake spec" # doesn't work because it doesn't require the gems specified in the Gemfiles of the test rails apps
       return false unless system(cmd)
     end
   end
@@ -160,7 +157,7 @@ begin
   require 'yard/rake/yardoc_task'
   project_root = File.expand_path(".")
   doc_destination = File.join(project_root, 'doc')
-  if !File.exists?(doc_destination) 
+  if !File.exists?(doc_destination)
     FileUtils.mkdir_p(doc_destination)
   end
 
