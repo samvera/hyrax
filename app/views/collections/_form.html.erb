@@ -13,7 +13,7 @@
       <input type="hidden" name="batch_document_ids[]" value="<%= batch_item %>"/>
     <% end %>
   <% end %>
-  
+
   <div class="primary-actions">
     <% if params[:action] == "new" %>
       <%= f.button 'Create Collection', type: 'submit', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection" %>

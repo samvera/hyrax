@@ -67,9 +67,9 @@ describe CollectionsController do
 
   describe "#update" do
     before do
-      @collection = Collection.new(title: "Collection Title")
-      @collection.apply_depositor_metadata(user.user_key)
-      @collection.save
+      @collection = Collection.create(title: ["Collection Title"]) do |collection|
+        collection.apply_depositor_metadata(user.user_key)
+      end
       @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
@@ -112,16 +112,15 @@ describe CollectionsController do
       @asset3.apply_depositor_metadata(user.user_key)
       @asset4 = GenericFile.new(title: ["Third of the Assets"], depositor:user.user_key)
       @asset4.apply_depositor_metadata(user.user_key)
-      @collection = Collection.new
-      @collection.title = "My collection"
-      @collection.description = "My incredibly detailed description of the collection"
-      @collection.apply_depositor_metadata(user.user_key)
-      @collection.members = [@asset1,@asset2,@asset3]
-      @collection.save!
+      @collection = Collection.create(title: ["My collection"],
+                                   description: ["My incredibly detailed description of the collection"],
+                                   members: [@asset1,@asset2,@asset3]) do |collection|
+        collection.apply_depositor_metadata(user)
+      end
       allow(controller).to receive(:authorize!).and_return(true)
     end
     context "when signed in" do
-      before do 
+      before do
         sign_in user
       end
 

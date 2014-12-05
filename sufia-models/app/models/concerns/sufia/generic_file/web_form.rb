@@ -20,7 +20,11 @@ module Sufia
       def initialize_fields
         terms_for_editing.select { |key| self[key].blank? }.each do |key|
           # if value is empty, we create an one element array to loop over for output
-          self[key] = ['']
+          if self.class.multiple?(key)
+            self[key] = ['']
+          else
+            self[key] = ''
+          end
         end
       end
 
