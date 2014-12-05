@@ -2,8 +2,9 @@ require 'spec_helper'
 
 RSpec.describe FileViewStat, :type => :model do
   let (:file_id) {"99"}
+  let (:user_id) {123}
   let (:date) {DateTime.new}
-  let (:file_stat) {FileViewStat.create(views:"25", date: date, file_id: file_id)}
+  let (:file_stat) {FileViewStat.create(views:"25", date: date, file_id: file_id, user_id: user_id)}
 
   it "has attributes" do
     expect(file_stat).to respond_to(:views)
@@ -12,6 +13,7 @@ RSpec.describe FileViewStat, :type => :model do
     expect(file_stat.file_id).to eq("99")
     expect(file_stat.date).to eq(date)
     expect(file_stat.views).to eq(25)
+    expect(file_stat.user_id).to eq(user_id)
   end
 
   describe "#get_float_statistics" do
@@ -46,7 +48,7 @@ RSpec.describe FileViewStat, :type => :model do
     describe "cache empty" do
       let (:stats) {
         expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        FileViewStat.statistics(file_id,Date.today-4.day)
+        FileViewStat.statistics(file_id, Date.today-4.day, user_id)
       }
 
       it "includes cached ga data" do
@@ -55,6 +57,7 @@ RSpec.describe FileViewStat, :type => :model do
 
       it "caches data" do
         expect(FileViewStat.to_flots stats).to include(*view_output)
+        expect(stats.first.user_id).to eq user_id
 
         # at this point all data should be cached
         allow(FileViewStat).to receive(:ga_statistics).with(Date.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
@@ -79,6 +82,7 @@ RSpec.describe FileViewStat, :type => :model do
       end
 
     end
+
   end
 end
 

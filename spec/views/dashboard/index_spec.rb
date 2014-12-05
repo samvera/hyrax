@@ -12,6 +12,8 @@ describe "dashboard/index.html.erb", :type => :view do
     allow(@user).to receive(:all_following).and_return(["magneto"])
     allow(@user).to receive(:followers).and_return(["wolverine","storm"])
     allow(@user).to receive(:can_receive_deposits_from).and_return([])
+    allow(@user).to receive(:total_file_views).and_return(1)
+    allow(@user).to receive(:total_file_downloads).and_return(3)
     allow(controller).to receive(:current_user).and_return(@user)
     allow(view).to receive(:number_of_files).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
@@ -62,6 +64,8 @@ describe "dashboard/index.html.erb", :type => :view do
       expect(@sidebar).to include '<span class="badge">2</span>'
       expect(@sidebar).to include '<span class="badge">15</span>'
       expect(@sidebar).to include '<span class="badge">3</span>'
+      expect(@sidebar).to include '1 View'
+      expect(@sidebar).to include '3 Downloads'
     end
 
     it "should show the statistics before the profile" do
