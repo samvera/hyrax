@@ -6,7 +6,6 @@ module Sufia
       NO_RUNS = 999
 
       def audit(force = false)
-        # TODO: This needs to be updated to pass enough information to audit_each
         logs = []
         self.per_version do |ver|
           logs << audit_each(ver, force)
@@ -14,6 +13,7 @@ module Sufia
         logs
       end
 
+      # This method only executes the audit on versionable files
       def per_version(&block)
         attached_files.each do |dsid, ds|
           next if ds == full_text
@@ -24,7 +24,7 @@ module Sufia
       end
 
       def logs(path)
-        ChecksumAuditLog.where(pid: self.pid, dsid: path).order('created_at desc, id desc')
+        ChecksumAuditLog.where(pid: self.id, dsid: path).order('created_at desc, id desc')
       end
 
       def audit!
