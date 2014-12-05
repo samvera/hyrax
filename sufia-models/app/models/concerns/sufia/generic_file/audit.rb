@@ -52,16 +52,19 @@ module Sufia
         end
       end
 
-      def audit_each(version, force = false)
-        latest_audit = logs.first
-        return latest_audit unless force || ::GenericFile.needs_audit?(version, latest_audit)
+      def audit_each(version_uri, force = false)
+        # TODO: Update from string parsing to use version object so that we don't have to 
+        # parse version_uri. Version_uri is in the form 
+        #       http://fedora/x/y/z/id/path/fcr:versions/version
+        version_uri_bits = version_uri.split('/')
+        id = version_uri_bits[version_uri_bits.length-4]
+        path = version_uri_bits[version_uri_bits.length-3]
+        latest_audit = logs(path).first
+        return latest_audit unless force || ::GenericFile.needs_audit?(version_uri, latest_audit)
 
-        # TODO: This needs to be updated to pass gf.id, datastream, and version_id
-        Sufia.queue.push(AuditJob.new(version, 'content', version))
+        Sufia.queue.push(AuditJob.new(id, path, version_uri))
 
-        # run the find just incase the job has finished already
-        latest_audit = logs.first
-        latest_audit = ChecksumAuditLog.new(pass: NO_RUNS, pid: version, version: version) unless latest_audit
+        latest_audit ||= ChecksumAuditLog.new(pass: NO_RUNS, pid: id, dsid: path, version: version_uri)
         latest_audit
       end
 
