@@ -7,15 +7,15 @@ module Sufia
         contains "content", class_name: 'FileContentDatastream'
         contains "thumbnail"
 
-        property :label, predicate: ::RDF::DC.title
+        property :label, predicate: ::RDF::DC.title, multiple: false
 
-        property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt") do |index|
+        property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false do |index|
           index.as :symbol, :stored_searchable
         end
 
-        property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath')
+        property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'), multiple: false
 
-        property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl') do |index|
+        property :import_url, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl'), multiple: false do |index|
           index.as :symbol
         end
 
@@ -48,11 +48,11 @@ module Sufia
         property :date_created, predicate: ::RDF::DC.created do |index|
           index.as :stored_searchable
         end
-        property :date_uploaded, predicate: ::RDF::DC.dateSubmitted do |index|
+        property :date_uploaded, predicate: ::RDF::DC.dateSubmitted, multiple: false do |index|
           index.type :date
           index.as :stored_sortable
         end
-        property :date_modified, predicate: ::RDF::DC.modified do |index|
+        property :date_modified, predicate: ::RDF::DC.modified, multiple: false do |index|
           index.type :date
           index.as :stored_sortable
         end
@@ -86,45 +86,6 @@ module Sufia
         rescue
           puts "tables for vocabularies missing"
         end
-
-        def depositor
-          super.first
-        end
-
-        def relative_path
-          super.first
-        end
-
-        def import_url
-          super.first
-        end
-
-        # For singular-valued properties
-        # Hack until https://github.com/no-reply/ActiveTriples/pull/37 is merged
-
-        def label_with_first
-          label_without_first.first
-        end
-        alias_method_chain :label, :first
-
-        def date_uploaded_with_first
-          date_uploaded_without_first.first
-        end
-        alias_method_chain :date_uploaded, :first
-
-        def date_modified_with_first
-          date_modified_without_first.first
-        end
-        alias_method_chain :date_modified, :first
-
-        # A hack on a hack. Sufia is expecting some way to determine if an attribute can be
-        # multiple or not. It was using using the datastream option, but that doesn't apply
-        # anymore with Fedora4 properties.
-        def unique? key
-          !self.respond_to?(key.to_s+"_with_first")
-        end
-
-
       end
 
       # Add a schema.org itemtype
