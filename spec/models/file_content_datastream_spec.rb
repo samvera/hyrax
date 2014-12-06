@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe FileContentDatastream, :type => :model do
-  describe "version control" do
+  describe "#latest_version" do
     let(:version1) { "version1" }
     let(:version2) { "version2" }
     before do
@@ -11,31 +11,19 @@ describe FileContentDatastream, :type => :model do
       f.save
       @file = f.reload
     end
-
-    it "should have a list of versions" do
-      expect(@file.content.versions).to be_kind_of(Array)
-      expect(@file.content.versions.count).to eql(1)
-    end
-    it "should return a uri for the version" do
-      expect(@file.content.versions.first).to end_with(version1)
-    end
-    context "with the latest version" do
+    context "with one version" do
       let(:latest_version) { @file.content.versions.last }
       it "should return the latest version" do
         expect(@file.content.latest_version).to eql(version1)
       end
     end
-    describe "add a version" do
+    context "with two versions" do
       before do
         @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         @file.save
       end
-      let(:latest_version) { @file.content.versions.last }
-      it "should return two versions" do
-        expect(@file.content.versions.count).to eql(2)
-      end
-      it "should return the newer version via latest_version" do
-        expect(@file.content.latest_version.to_s).to eql(version2)
+      it "should return the latest version" do
+        expect(@file.content.latest_version).to eql(version2)
       end
     end
   end

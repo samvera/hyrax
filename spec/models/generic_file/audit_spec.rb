@@ -24,7 +24,7 @@ describe "generic file audits" do
 
   context "force an audit on a specific version" do 
     specify "should return a single log result" do
-      log = f.audit_each(f.content.versions[0], true)
+      log = f.audit_each(f.content.versions.first.uri, true)
       expect(log).to_not be_nil
     end
   end

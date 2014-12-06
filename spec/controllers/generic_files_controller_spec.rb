@@ -413,7 +413,7 @@ describe GenericFilesController do
       end
 
       it "should have two versions" do
-        expect(generic_file.content.versions.count).to eq 2
+        expect(generic_file.content.versions.all.count).to eq 2
       end
 
       it "should have the current version" do
@@ -448,8 +448,8 @@ describe GenericFilesController do
             it "should restore the first versions's content and metadata" do
               expect(restored_file.content.mime_type).to eql(file1_type)
               expect(restored_file.content.original_name).to eql(file1)
-              expect(restored_file.content.versions.count).to eq 2
-              expect(restored_file.content.versions[1]).to end_with(latest_version)
+              expect(restored_file.content.versions.all.count).to eq 2
+              expect(restored_file.content.versions.last.label).to eql latest_version
               expect(restored_file.content.version_committer(version1)).to eql(first_user.user_key)
             end
           end

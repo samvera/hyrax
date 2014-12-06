@@ -20,7 +20,7 @@ describe AuditJob do
 
   describe "audit on a version of the content" do
     it "should pass" do
-      version_uri = @file.content.versions[0]
+      version_uri = @file.content.versions.first.uri
       job = AuditJob.new(@file.id, 'content', version_uri)
       expect(job.run).to eq(true)
     end
@@ -28,7 +28,7 @@ describe AuditJob do
 
   describe "audit on an invalid version of the content" do
     it "should fail" do
-      bad_version_uri = @file.content.versions[0] + "bogus"
+      bad_version_uri = @file.content.versions.first.uri + "bogus"
       job = AuditJob.new(@file.id, 'content', bad_version_uri)
       expect(job.run).to eq(false)
     end

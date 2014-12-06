@@ -13,7 +13,7 @@ describe ChecksumAuditLog do
     gf
   end
 
-  let(:version_uri) { f.content.versions.first }
+  let(:version_uri) { f.content.versions.first.uri }
   let(:version_path) { 'content' }
   let(:old) { ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
   let(:new) { ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
