@@ -67,7 +67,7 @@ describe CollectionsController do
 
   describe "#update" do
     before do
-      @collection = Collection.create(title: ["Collection Title"]) do |collection|
+      @collection = Collection.create(title: "Collection Title") do |collection|
         collection.apply_depositor_metadata(user.user_key)
       end
       @asset1 = GenericFile.new(title: ["First of the Assets"])
@@ -112,8 +112,8 @@ describe CollectionsController do
       @asset3.apply_depositor_metadata(user.user_key)
       @asset4 = GenericFile.new(title: ["Third of the Assets"], depositor:user.user_key)
       @asset4.apply_depositor_metadata(user.user_key)
-      @collection = Collection.create(title: ["My collection"],
-                                   description: ["My incredibly detailed description of the collection"],
+      @collection = Collection.create(title: "My collection",
+                                   description: "My incredibly detailed description of the collection",
                                    members: [@asset1,@asset2,@asset3]) do |collection|
         collection.apply_depositor_metadata(user)
       end

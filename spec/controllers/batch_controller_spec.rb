@@ -69,7 +69,7 @@ describe BatchController do
       end
 
       it "should set metadata like title" do
-        post :update, id: batch, "generic_file"=>{"tag"=>["footag", "bartag"]}, "title"=>{file.id=>"New Title"}
+        post :update, id: batch, "generic_file"=>{"tag"=>["footag", "bartag"]}, "title"=>{file.id=>["New Title"]}
         file.reload
         expect(file.title).to eq ["New Title"]
         # TODO is order important?
