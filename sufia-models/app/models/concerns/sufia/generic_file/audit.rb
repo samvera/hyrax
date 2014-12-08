@@ -18,26 +18,30 @@ module Sufia
         end
       end
 
-      def audit(force = false)
-        logs = []
-        self.per_version do |ver|
-          logs << audit_each(ver, force)
-        end
-        logs
+      # TODO: Run audits on all attached files. We're only audting "content" at tht moment
+      def audit force = false
+        @audit_log ||= Array.new
+        @force = force
+        audit_content
+        return @audit_log
       end
 
-      # This method only executes the audit on versionable files
-      def per_version(&block)
-        attached_files.each do |dsid, ds|
-          next if ds == full_text
-          ds.versions.each do |ver|
-            block.call(ver)
-          end
+      def audit_content
+        if content.has_versions?
+          audit_file_versions("content")
+        else
+          @audit_log << audit_file("content", content.uri)
         end
       end
 
-      def logs(path)
-        ChecksumAuditLog.where(pid: self.id, dsid: path).order('created_at desc, id desc')
+      def audit_file_versions file
+        attached_files[file].versions.all.each do |version|
+          @audit_log << audit_file(file, version.uri,  version.label)
+        end
+      end
+
+      def logs(file)
+        ChecksumAuditLog.where(pid: self.id, dsid: file).order('created_at desc, id desc')
       end
 
       def audit!
@@ -65,19 +69,11 @@ module Sufia
         end
       end
 
-      def audit_each(version_uri, force = false)
-        # TODO: Update from string parsing to use version object so that we don't have to 
-        # parse version_uri. Version_uri is in the form 
-        #       http://fedora/x/y/z/id/path/fcr:versions/version
-        version_uri_bits = version_uri.split('/')
-        id = version_uri_bits[version_uri_bits.length-4]
-        path = version_uri_bits[version_uri_bits.length-3]
-        latest_audit = logs(path).first
-        return latest_audit unless force || ::GenericFile.needs_audit?(version_uri, latest_audit)
-
-        Sufia.queue.push(AuditJob.new(id, path, version_uri))
-
-        latest_audit ||= ChecksumAuditLog.new(pass: NO_RUNS, pid: id, dsid: path, version: version_uri)
+      def audit_file(file, uri, label = nil)
+        latest_audit = logs(file).first
+        return latest_audit unless @force || ::GenericFile.needs_audit?(uri, latest_audit)
+        Sufia.queue.push(AuditJob.new(id, file, uri))
+        latest_audit ||= ChecksumAuditLog.new(pass: NO_RUNS, pid: id, dsid: file, version: label)
         latest_audit
       end
 
