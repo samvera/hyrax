@@ -14,11 +14,9 @@
 
 <!-- application css -->
 <%= stylesheet_link_tag 'application' %>
-<%= yield(:css_head) %>
 
 <!-- application js -->
 <%= javascript_include_tag 'application' %>
-<%= yield(:js_head) %>
 
 <!-- Google Analytics -->
 <%= render partial: '/ga', formats: [:html] %>
