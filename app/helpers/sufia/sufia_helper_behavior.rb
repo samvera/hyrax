@@ -164,6 +164,13 @@ module Sufia
       end
     end
 
+    def user_display_name_and_key(user_key)
+      user = ::User.find_by_user_key(user_key)
+      return user_key if user.nil?
+
+      user.respond_to?(:name) ? "#{user.name} (#{user_key})" : user_key
+    end
+
     private
 
     def search_action_for_dashboard

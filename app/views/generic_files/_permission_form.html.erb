@@ -53,12 +53,10 @@
   <div class="form-group">
     <div id="new-user">
       <p class="col-sm-12">Enter <%=t('sufia.account_label') %> (one at a time)</p>
-      <p class="sr-only">Use the add button to give access to one <%=t('sufia.account_label') %> at a time (it will be added to the list below).</p>
+      <p class="sr-only">Use the add button to give access to one <%=t('sufia.account_label') %> at a time (it will be added to the list below).  Select the user, by name or <%=t('sufia.account_label') %>. Then select the access level you wish to grant and click on Add this <%= t('sufia.account_label') %> to complete adding the permission.</p>
       <div class="col-sm-5">
-        <div class="input-group">
-          <label for="new_user_name_skel" class="sr-only"><%= t('sufia.account_label') %> (without the <%= t('sufia.directory.suffix') %> part)</label>
-          <%= text_field_tag 'new_user_name_skel', nil, class: "form-control" %><span class="input-group-addon"><%=t('sufia.directory.suffix') %></span>
-        </div>
+        <label for="new_user_name_skel" class="sr-only"><%= t('sufia.account_label') %> (without the <%= t('sufia.directory.suffix') %> part)</label>
+        <%= text_field_tag 'new_user_name_skel', nil %>
       </div>
       <div class="col-sm-4">
         <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
@@ -116,7 +114,7 @@
     <% next if permission[:name].downcase == 'registered' %>
     <% next if permission[:name].downcase == depositor %>
     <tr>
-      <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", permission[:name], class: "control-label" %></td>
+      <td><%= label_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", user_display_name_and_key(permission[:name]), class: "control-label" %></td>
       <td>
         <div class="col-sm-8">
           <%= select_tag "generic_file[permissions][#{permission[:type]}][#{permission[:name]}]", options_for_select(Sufia.config.permission_levels, permission[:access]), class: 'form-control select_perm' %>
