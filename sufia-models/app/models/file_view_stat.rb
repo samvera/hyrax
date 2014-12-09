@@ -5,8 +5,8 @@ class FileViewStat < ActiveRecord::Base
     [ self.class.convert_date(date), views ]
   end
 
-  def self.statistics file_id, start_date
-    combined_stats file_id, start_date, :views, :pageviews
+  def self.statistics file_id, start_date, user_id=nil
+    combined_stats file_id, start_date, :views, :pageviews, user_id
   end
 
   # Sufia::Download is sent to Sufia::Analytics.profile as #sufia__download

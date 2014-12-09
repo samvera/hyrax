@@ -17,13 +17,13 @@ module Sufia
       {ga_start_date: ga_start_date, cached_stats: stats.to_a }
     end
 
-    def combined_stats file_id, start_date, object_method, ga_key
+    def combined_stats file_id, start_date, object_method, ga_key, user_id=nil
       stat_cache_info = cached_stats( file_id, start_date, object_method)
       stats = stat_cache_info[:cached_stats]
       if stat_cache_info[:ga_start_date] < Date.today
         ga_stats =  ga_statistics(stat_cache_info[:ga_start_date], file_id)
         ga_stats.each do |stat|
-          lstat = self.new file_id:file_id, date: stat[:date], object_method => stat[ga_key]
+          lstat = self.new file_id: file_id, date: stat[:date], object_method => stat[ga_key], user_id: user_id
           lstat.save unless Date.parse(stat[:date]) == Date.today
           stats << lstat
         end

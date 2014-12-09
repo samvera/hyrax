@@ -181,7 +181,7 @@ The generator will create a configuration file at _config/analytics.yml_.  Edit 
 * An application name (you can make this up)
 * An application version (you can make this up)
 
-Lastly, you will need to set `config.analytics = true` in _config/initializers/sufia.rb_ and ensure that the OAuth client email
+Lastly, you will need to set `config.analytics = true` and `config.analytic_start_date` in _config/initializers/sufia.rb_ and ensure that the OAuth client email
 has the proper access within your Google Analyics account.  To do so, go to the _Admin_ tab for your Google Analytics account.
 Click on _User Management_, in the _Account_ column, and add "Read & Analyze" permissions for the OAuth client email address.
 

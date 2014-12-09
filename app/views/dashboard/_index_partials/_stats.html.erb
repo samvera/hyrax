@@ -1,11 +1,20 @@
 <div class="panel panel-default">
   <div class="panel-heading dashboard-panel">
     <h3 class="panel-title"><%= t("sufia.dashboard.stats.heading") %></h3></div>
+
   <table class="table table-condensed">
     <tr>
       <td><span class="badge"><%= number_of_files %></span></td>
-      <td><%= t("sufia.dashboard.stats.files") %></td>
+
+      <td>
+        <%= t("sufia.dashboard.stats.files") %>
+        <ul>
+          <li> <%= pluralize(@user.total_file_views, t("sufia.dashboard.stats.file_views")) %> </li>
+          <li> <%= pluralize(@user.total_file_downloads, t("sufia.dashboard.stats.file_downloads")) %> </li>
+        </ul>
+      </td>
     </tr>
+
     <tr>
       <td><span class="badge"><%= number_of_collections %></span></td>
       <td><%= t("sufia.dashboard.stats.collections") %></td>
