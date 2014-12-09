@@ -225,10 +225,9 @@ describe GenericFilesController do
 
   describe "audit" do
     let(:generic_file) do
-      GenericFile.new.tap do |gf|
+      GenericFile.create do |gf|
         gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         gf.apply_depositor_metadata(user)
-        gf.save!
       end
     end
 
@@ -244,9 +243,8 @@ describe GenericFilesController do
 
   describe "destroy" do
     let(:generic_file) do
-      GenericFile.new.tap do |gf|
+      GenericFile.create do |gf|
         gf.apply_depositor_metadata(user)
-        gf.save!
       end
     end
 
@@ -275,10 +273,9 @@ describe GenericFilesController do
   end
 
   describe 'stats' do
-    before do
-      @generic_file = GenericFile.new.tap do |gf|
+    let(:generic_file) do
+      GenericFile.create do |gf|
         gf.apply_depositor_metadata(user)
-        gf.save
       end
     end
 
@@ -306,19 +303,19 @@ describe GenericFilesController do
       end
 
       it 'renders the stats view' do
-        get :stats, id: @generic_file.noid
+        get :stats, id: generic_file
         expect(response).to be_success
         expect(response).to render_template(:stats)
       end
 
       context "user is not signed in but the file is public" do
         before do
-          @generic_file.read_groups = ['public']
-          @generic_file.save
+          generic_file.read_groups = ['public']
+          generic_file.save
         end
 
         it 'renders the stats view' do
-          get :stats, id: @generic_file.noid
+          get :stats, id: generic_file
           expect(response).to be_success
           expect(response).to render_template(:stats)
         end
@@ -327,12 +324,11 @@ describe GenericFilesController do
 
     context 'when user lacks access to file' do
       before do
-        @archivist = FactoryGirl.find_or_create(:archivist)
-        sign_in @archivist
+        sign_in FactoryGirl.create(:user)
       end
 
       it 'redirects to root_url' do
-        get :stats, id: @generic_file.id
+        get :stats, id: generic_file
         expect(response).to redirect_to(Sufia::Engine.routes.url_helpers.root_path)
       end
     end
@@ -340,9 +336,8 @@ describe GenericFilesController do
 
   describe "update" do
     let(:generic_file) do
-      GenericFile.new.tap do |gf|
+      GenericFile.create do |gf|
         gf.apply_depositor_metadata(user)
-        gf.save!
       end
     end
 
@@ -515,9 +510,8 @@ describe GenericFilesController do
 
     context "when there's an error saving" do
       let!(:generic_file) do
-        GenericFile.new.tap do |gf|
+        GenericFile.create do |gf|
           gf.apply_depositor_metadata(user)
-          gf.save!
         end
       end
       it "redirects to edit" do
@@ -532,12 +526,11 @@ describe GenericFilesController do
 
   describe "someone elses files" do
     let(:generic_file) do
-      GenericFile.new(id: 'test5').tap do |f|
+      GenericFile.create(id: 'test5') do |f|
         f.apply_depositor_metadata('archivist1@example.com')
         f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         # grant public read access explicitly
         f.read_groups = ['public']
-        f.save!
       end
     end
 
