@@ -5,12 +5,12 @@
 <h1>Apply Metadata</h1>
 <p>
   The information you provide for Title will be applied to the corresponding file only; however all other
-  information you provide will be applied <em>to the entire batch of files</em> you have just 
-  deposited into <%= t('sufia.product_name') %>. You may edit individual files from 
+  information you provide will be applied <em>to the entire batch of files</em> you have just
+  deposited into <%= t('sufia.product_name') %>. You may edit individual files from
   <%= link_to "<i class='glyphicon glyphicon-dashboard'></i> #{t('sufia.bread_crumb.file_list')}".html_safe, sufia.dashboard_files_path %>
   once this step is finished. <span class="required-field">*</span> indicates required fields.
 </p>
-<%= form_for([@batch, @generic_file], url: sufia.batch_generic_files_path, html: { multipart: true, class: 'form-horizontal' }) do |f| %>
+<%= form_for([sufia, @batch, @generic_file], html: { multipart: true }) do |f| %>
 
   <%= render 'metadata', f: f %>
 
