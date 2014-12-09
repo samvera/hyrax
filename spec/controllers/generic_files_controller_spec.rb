@@ -11,213 +11,214 @@ describe GenericFilesController do
   end
 
   describe "#create" do
-    let(:mock) { GenericFile.new(id: 'test123') }
-    let(:batch) { Batch.create }
-    let(:batch_id) { batch.id }
-    let(:file) { fixture_file_upload('/world.png','image/png') }
+    context "when uploading a file" do
+      let(:mock) { GenericFile.new(id: 'test123') }
+      let(:batch) { Batch.create }
+      let(:batch_id) { batch.id }
+      let(:file) { fixture_file_upload('/world.png','image/png') }
 
-    before do
-      allow(GenericFile).to receive(:new).and_return(mock)
-    end
-
-    it "should record on_behalf_of" do
-      file = fixture_file_upload('/world.png','image/png')
-      xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
-      expect(response).to be_success
-      saved_file = GenericFile.find('test123')
-      expect(saved_file.on_behalf_of).to eq 'carolyn'
-    end
-
-    context "when the file submitted isn't a file" do
-      let(:file) { 'hello' }
-
-      it "should render 422 error" do
-        xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-        expect(response.status).to eq 422
-        expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
-      end
-    end
-
-    context "when everything is perfect" do
-      it "spawns a content deposit event job" do
-        expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content').and_return(true)
-        xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
-        expect(flash[:error]).to be_nil
-      end
-
-      it "should create and save a file asset from the given params" do
-        # Now expecting iso8601 dates?
-        date_today = Time.now.utc.iso8601
-        allow(Date).to receive(:today).and_return(date_today)
-        expect {
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id,
-                    permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-        }.to change { GenericFile.count }.by(1)
-        expect(response).to be_success
-
-        saved_file = GenericFile.find('test123')
-
-        # This is confirming that the correct file was attached
-        expect(saved_file.label).to eq 'world.png'
-        file.rewind
-        expect(saved_file.content.content).to eq (file.read)
-        # Confirming that date_uploaded and date_modified were set
-        expect(saved_file.date_uploaded).to eq date_today
-        expect(saved_file.date_modified).to eq date_today
-      end
-
-      it "should record what user created the first version of content" do
-        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-        saved_file = GenericFile.find('test123')
-        version = saved_file.content.latest_version
-        expect(saved_file.content.version_committer(version)).to eq user.user_key
-      end
-
-      it "should create batch associations from batch_id" do
-        skip "we need to create the batch, because Fedora 4 doesn't let us set associations to things that don't exist"
-        batch_id = "object-that-doesnt-exist"
-        allow(Sufia.config).to receive(:id_namespace).and_return('sample')
-        allow(controller).to receive(:add_posted_blob_to_asset)
-        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-        allow(GenericFile).to receive(:new).and_call_original
-        expect { Batch.find(batch_id) }.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
-        batch = Batch.create(id: batch_id)
-        expect(batch.generic_files.first.id).to eq "test123"
-      end
-
-      it "should set the depositor id" do
-        xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-        expect(response).to be_success
-
-        saved_file = GenericFile.find('test123')
-        # This is confirming that apply_depositor_metadata recorded the depositor
-        expect(saved_file.depositor).to eq 'jilluser@example.com'
-        expect(saved_file.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
-      end
-
-    end
-
-    context "when the file has a virus" do
-      it "displays a flash error when file has a virus" do
-        expect(Sufia::GenericFile::Actor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
-        xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
-        expect(flash[:error]).not_to be_blank
-        expect(flash[:error]).to include('A virus was found')
-      end
-    end
-
-    context "when solr continuously has errors" do
-      it "should error out of create and save after on continuos rsolr error" do
-        allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
-
-        file = fixture_file_upload('/world.png','image/png')
-        xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-        expect(response.body).to include("Error occurred while creating generic file.")
-      end
-    end
-  end
-
-  describe "#create with browse-everything" do
-    let(:batch) { Batch.create }
-    let(:batch_id) { batch.id }
-
-    before do
-      @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
-    end
-    it "should ingest files from provide URLs" do
-      expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
-      expect(Sufia.queue).to receive(:push).with("ImportJob").twice
-      expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
-      created_files = GenericFile.all
-      ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
-        expect(created_files.map {|f| f.import_url}).to include(url)
-      end
-      ["filepicker-demo.txt.txt","Getting+Started.pdf"].each do |filename|
-        expect(created_files.map {|f| f.label}).to include(filename)
-      end
-    end
-  end
-
-  describe "#create with local_file" do
-    let(:mock_url) {"http://example.com"}
-    let(:mock_upload_directory) { 'spec/mock_upload_directory' }
-    let(:batch) { Batch.create }
-    let(:batch_id) { batch.id }
-
-    before do
-      Sufia.config.enable_local_ingest = true
-      FileUtils.mkdir_p([File.join(mock_upload_directory, "import/files"), File.join(mock_upload_directory, "import/metadata")])
-      FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), mock_upload_directory)
-      FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), mock_upload_directory)
-      FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(mock_upload_directory, "import/metadata"))
-      FileUtils.copy(File.expand_path('../../fixtures/icons.zip', __FILE__), File.join(mock_upload_directory, "import/files"))
-      FileUtils.copy(File.expand_path('../../fixtures/Example.ogg', __FILE__), File.join(mock_upload_directory, "import/files"))
-    end
-
-    after do
-      Sufia.config.enable_local_ingest = false
-      allow_any_instance_of(FileContentDatastream).to receive(:live?).and_return(true)
-    end
-
-    context "when User model defines a directory path" do
       before do
-        allow_any_instance_of(User).to receive(:directory).and_return(mock_upload_directory)
+        allow(GenericFile).to receive(:new).and_return(mock)
       end
 
-      it "should ingest files from the filesystem" do
-        expect {
-          post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
-        }.to change(GenericFile, :count).by(2)
-        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
-        # These files should have been moved out of the upload directory
-        expect(File).not_to exist("#{mock_upload_directory}/image.jpg")
-        expect(File).not_to exist("#{mock_upload_directory}/world.png")
-        # And into the storage directory
-        files = Batch.find(batch_id).generic_files
-        expect(files.first.label).to eq('world.png')
-        expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
+      it "should record on_behalf_of" do
+        file = fixture_file_upload('/world.png','image/png')
+        xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        expect(response).to be_success
+        saved_file = GenericFile.find('test123')
+        expect(saved_file.on_behalf_of).to eq 'carolyn'
       end
 
-      it "should ingest redirect to another location" do
-        expect(GenericFilesController).to receive(:upload_complete_path).and_return(mock_url)
-        expect {
-          post :create, local_file: ["world.png"], batch_id: batch_id
-        }.to change(GenericFile, :count).by(1)
-        expect(response).to redirect_to mock_url
-        # These files should have been moved out of the upload directory
-        expect(File).not_to exist("#{mock_upload_directory}/world.png")
-        # And into the storage directory
-        files = Batch.find(batch_id).generic_files
-        expect(files.first.label).to eq 'world.png'
-      end
+      context "when the file submitted isn't a file" do
+        let(:file) { 'hello' }
 
-      it "should ingest directories from the filesystem" do
-        expect {
-          post :create, local_file: ["world.png", "import"], batch_id: batch_id
-        }.to change(GenericFile, :count).by(4)
-        expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
-        # These files should have been moved out of the upload directory
-        expect(File).not_to exist("#{mock_upload_directory}/import/files/icons.zip")
-        expect(File).not_to exist("#{mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
-        expect(File).not_to exist("#{mock_upload_directory}/world.png")
-        # And into the storage directory
-        files = Batch.find(batch_id).generic_files
-        expect(files.first.label).to eq 'world.png'
-        # TODO: use files.select once projecthydra/active_fedora#609 is fixed
-        ['icons.zip', 'Example.ogg'].each do |filename|
-          expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
+        it "should render 422 error" do
+          xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+          expect(response.status).to eq 422
+          expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
         end
-        expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
+      end
+
+      context "when everything is perfect" do
+        it "spawns a content deposit event job" do
+          expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content').and_return(true)
+          xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
+          expect(flash[:error]).to be_nil
+        end
+
+        it "should create and save a file asset from the given params" do
+          # Now expecting iso8601 dates?
+          date_today = Time.now.utc.iso8601
+          allow(Date).to receive(:today).and_return(date_today)
+          expect {
+            xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id,
+                      permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+          }.to change { GenericFile.count }.by(1)
+          expect(response).to be_success
+
+          saved_file = GenericFile.find('test123')
+
+          # This is confirming that the correct file was attached
+          expect(saved_file.label).to eq 'world.png'
+          file.rewind
+          expect(saved_file.content.content).to eq (file.read)
+          # Confirming that date_uploaded and date_modified were set
+          expect(saved_file.date_uploaded).to eq date_today
+          expect(saved_file.date_modified).to eq date_today
+        end
+
+        it "should record what user created the first version of content" do
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+          saved_file = GenericFile.find('test123')
+          version = saved_file.content.latest_version
+          expect(saved_file.content.version_committer(version)).to eq user.user_key
+        end
+
+        it "should create batch associations from batch_id" do
+          skip "we need to create the batch, because Fedora 4 doesn't let us set associations to things that don't exist"
+          batch_id = "object-that-doesnt-exist"
+          allow(Sufia.config).to receive(:id_namespace).and_return('sample')
+          allow(controller).to receive(:add_posted_blob_to_asset)
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+          allow(GenericFile).to receive(:new).and_call_original
+          expect { Batch.find(batch_id) }.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
+          batch = Batch.create(id: batch_id)
+          expect(batch.generic_files.first.id).to eq "test123"
+        end
+
+        it "should set the depositor id" do
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+          expect(response).to be_success
+
+          saved_file = GenericFile.find('test123')
+          # This is confirming that apply_depositor_metadata recorded the depositor
+          expect(saved_file.depositor).to eq 'jilluser@example.com'
+          expect(saved_file.to_solr['depositor_tesim']).to eq ['jilluser@example.com']
+        end
+      end
+
+      context "when the file has a virus" do
+        it "displays a flash error when file has a virus" do
+          expect(Sufia::GenericFile::Actor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+          expect(flash[:error]).not_to be_blank
+          expect(flash[:error]).to include('A virus was found')
+        end
+      end
+
+      context "when solr continuously has errors" do
+        it "should error out of create and save after on continuos rsolr error" do
+          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
+
+          file = fixture_file_upload('/world.png','image/png')
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+          expect(response.body).to include("Error occurred while creating generic file.")
+        end
       end
     end
 
-    context "when User model does not define directory path" do
-      it "should return an error message and redirect to file upload page" do
-        expect {
-          post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
-        }.to_not change(GenericFile, :count)
-        expect(response).to render_template :new
-        expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
+    context "with browse-everything" do
+      let(:batch) { Batch.create }
+      let(:batch_id) { batch.id }
+
+      before do
+        @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
+      end
+      it "should ingest files from provide URLs" do
+        expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+        expect(Sufia.queue).to receive(:push).with("ImportJob").twice
+        expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
+        created_files = GenericFile.all
+        ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
+          expect(created_files.map {|f| f.import_url}).to include(url)
+        end
+        ["filepicker-demo.txt.txt","Getting+Started.pdf"].each do |filename|
+          expect(created_files.map {|f| f.label}).to include(filename)
+        end
+      end
+    end
+
+    context "with local_file" do
+      let(:mock_url) {"http://example.com"}
+      let(:mock_upload_directory) { 'spec/mock_upload_directory' }
+      let(:batch) { Batch.create }
+      let(:batch_id) { batch.id }
+
+      before do
+        Sufia.config.enable_local_ingest = true
+        FileUtils.mkdir_p([File.join(mock_upload_directory, "import/files"), File.join(mock_upload_directory, "import/metadata")])
+        FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), mock_upload_directory)
+        FileUtils.copy(File.expand_path('../../fixtures/image.jpg', __FILE__), mock_upload_directory)
+        FileUtils.copy(File.expand_path('../../fixtures/dublin_core_rdf_descMetadata.nt', __FILE__), File.join(mock_upload_directory, "import/metadata"))
+        FileUtils.copy(File.expand_path('../../fixtures/icons.zip', __FILE__), File.join(mock_upload_directory, "import/files"))
+        FileUtils.copy(File.expand_path('../../fixtures/Example.ogg', __FILE__), File.join(mock_upload_directory, "import/files"))
+      end
+
+      after do
+        Sufia.config.enable_local_ingest = false
+        allow_any_instance_of(FileContentDatastream).to receive(:live?).and_return(true)
+      end
+
+      context "when User model defines a directory path" do
+        before do
+          allow_any_instance_of(User).to receive(:directory).and_return(mock_upload_directory)
+        end
+
+        it "should ingest files from the filesystem" do
+          expect {
+            post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
+          }.to change(GenericFile, :count).by(2)
+          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
+          # These files should have been moved out of the upload directory
+          expect(File).not_to exist("#{mock_upload_directory}/image.jpg")
+          expect(File).not_to exist("#{mock_upload_directory}/world.png")
+          # And into the storage directory
+          files = Batch.find(batch_id).generic_files
+          expect(files.first.label).to eq('world.png')
+          expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
+        end
+
+        it "should ingest redirect to another location" do
+          expect(GenericFilesController).to receive(:upload_complete_path).and_return(mock_url)
+          expect {
+            post :create, local_file: ["world.png"], batch_id: batch_id
+          }.to change(GenericFile, :count).by(1)
+          expect(response).to redirect_to mock_url
+          # These files should have been moved out of the upload directory
+          expect(File).not_to exist("#{mock_upload_directory}/world.png")
+          # And into the storage directory
+          files = Batch.find(batch_id).generic_files
+          expect(files.first.label).to eq 'world.png'
+        end
+
+        it "should ingest directories from the filesystem" do
+          expect {
+            post :create, local_file: ["world.png", "import"], batch_id: batch_id
+          }.to change(GenericFile, :count).by(4)
+          expect(response).to redirect_to Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
+          # These files should have been moved out of the upload directory
+          expect(File).not_to exist("#{mock_upload_directory}/import/files/icons.zip")
+          expect(File).not_to exist("#{mock_upload_directory}/import/metadata/dublin_core_rdf_descMetadata.nt")
+          expect(File).not_to exist("#{mock_upload_directory}/world.png")
+          # And into the storage directory
+          files = Batch.find(batch_id).generic_files
+          expect(files.first.label).to eq 'world.png'
+          # TODO: use files.select once projecthydra/active_fedora#609 is fixed
+          ['icons.zip', 'Example.ogg'].each do |filename|
+            expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
+          end
+          expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
+        end
+      end
+
+      context "when User model does not define directory path" do
+        it "should return an error message and redirect to file upload page" do
+          expect {
+            post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
+          }.to_not change(GenericFile, :count)
+          expect(response).to render_template :new
+          expect(flash[:alert]).to eq 'Your account is not configured for importing files from a user-directory on the server.'
+        end
       end
     end
   end
