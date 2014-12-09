@@ -4,8 +4,6 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        contains "content", class_name: 'FileContentDatastream'
-        contains "thumbnail"
 
         property :label, predicate: ::RDF::DC.title, multiple: false
 
