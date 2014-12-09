@@ -22,7 +22,6 @@ FactoryGirl.define do
         subject %w"lorem ipsum dolor sit amet"
         title ["fake_document.pdf"]
         before(:create) do |gf|
-          gf.apply_depositor_metadata "archivist1@example.com"
           gf.title = ["Fake Document Title"]
         end
       end
@@ -33,9 +32,6 @@ FactoryGirl.define do
         initialize_with { new(id: id) }
         subject %w"consectetur adipisicing elit"
         title ["Test Document MP3.mp3"]
-        before(:create) do |gf|
-          gf.apply_depositor_metadata "archivist1@example.com"
-        end
         read_groups ["public"]
       end
       factory :public_wav do
@@ -47,9 +43,6 @@ FactoryGirl.define do
         read_groups ["public"]
         title ["Fake Wav File.wav"]
         subject %w"sed do eiusmod tempor incididunt ut labore"
-        before(:create) do |gf|
-          gf.apply_depositor_metadata "archivist1@example.com"
-        end
       end
     end
   end

@@ -12,15 +12,49 @@ describe Sufia::GenericFile::Actor do
     let(:deposit_message) { double('deposit message') }
     let(:characterize_message) { double('characterize message') }
 
-    before do
+    it "should enqueue deposit and characterize messages" do
       allow(ContentDepositEventJob).to receive(:new).with(generic_file.id, user.user_key).and_return(deposit_message)
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(characterize_message)
-    end
-
-    it "should enqueue deposit and characterize messages" do
       expect(Sufia.queue).to receive(:push).with(deposit_message)
       expect(Sufia.queue).to receive(:push).with(characterize_message)
       actor.create_content(uploaded_file, 'world.png', 'content')
+    end
+
+    context "with two existing versions from different users" do
+
+      let(:file1)       { "world.png" }
+      let(:file2)       { "image.jpg" }
+      let(:actor1)      { Sufia::GenericFile::Actor.new(generic_file, user) }
+      let(:actor2)      { Sufia::GenericFile::Actor.new(generic_file, second_user) }
+
+      let(:second_user) { FactoryGirl.find_or_create(:archivist) }
+      let(:versions)     { generic_file.content.versions }
+
+      before do
+        allow(Sufia.queue).to receive(:push)
+        actor1.create_content(fixture_file_upload(file1), file1, 'content')
+        actor2.create_content(fixture_file_upload(file2), file2, 'content')
+      end
+
+      it "should have two versions" do
+        expect(versions.all.count).to eq 2
+      end
+
+      it "should have the current version" do
+        expect(generic_file.content.latest_version.label).to eq 'version2'
+        expect(generic_file.content.mime_type).to eq "image/jpeg"
+        expect(generic_file.content.original_name).to eq file2
+      end
+
+      it "should use the first version for the object's title and label" do
+        expect(generic_file.label).to eql(file1)
+        expect(generic_file.title.first).to eql(file1)
+      end
+
+      it "should note the user for each version" do
+        expect(VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]
+        expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [second_user.user_key]
+      end
     end
   end
 
@@ -68,5 +102,4 @@ describe Sufia::GenericFile::Actor do
       expect(generic_file_with_label.content.original_name).to eql(new_file)
     end
   end
-
 end

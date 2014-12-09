@@ -69,9 +69,7 @@ describe GenericFilesController do
 
         it "should record what user created the first version of content" do
           xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-          saved_file = GenericFile.find('test123')
-          version = saved_file.content.latest_version
-          expect(saved_file.content.version_committer(version)).to eq user.user_key
+          expect(VersionCommitter.pluck(:committer_login).last).to eq user.user_key
         end
 
         it "should create batch associations from batch_id" do
@@ -334,6 +332,23 @@ describe GenericFilesController do
     end
   end
 
+  describe "#edit" do
+    let(:generic_file) do
+      GenericFile.create do |gf|
+        gf.apply_depositor_metadata(user)
+      end
+    end
+
+    it "should set the versions presenter" do
+      get :edit, id: generic_file
+
+      expect(response).to be_success
+      expect(assigns[:generic_file]).to eq generic_file
+      expect(assigns[:version_list]).to be_kind_of Sufia::VersionListPresenter
+    end
+
+  end
+
   describe "update" do
     let(:generic_file) do
       GenericFile.create do |gf|
@@ -391,63 +406,34 @@ describe GenericFilesController do
       let(:file1_type)  { "image/png" }
       let(:file2)       { "image.jpg" }
       let(:file2_type)  { "image/jpeg" }
-      let(:first_user)  { FactoryGirl.find_or_create(:jill)}
-      let(:second_user) { FactoryGirl.find_or_create(:archivist) }
+      let(:second_user) { FactoryGirl.create(:user) }
       let(:version1)    { "version1" }
-      let(:version2)    { "version2" }
+      let(:actor1)      { Sufia::GenericFile::Actor.new(generic_file, user) }
+      let(:actor2)      { Sufia::GenericFile::Actor.new(generic_file, second_user) }
 
       before do
         allow_any_instance_of(GenericFile).to receive(:characterize)
-        sign_in first_user
-        actor1 = Sufia::GenericFile::Actor.new(generic_file, first_user)
-        image1 = fixture_file_upload(file1)
-        actor1.create_content(image1, file1, 'content')
-        sign_in second_user
-        actor2 = Sufia::GenericFile::Actor.new(generic_file, second_user)
-        image2 = fixture_file_upload(file2)
-        actor2.create_content(image2, file2, 'content')
+        actor1.create_content(fixture_file_upload(file1), file1, 'content')
+        actor2.create_content(fixture_file_upload(file2), file2, 'content')
       end
 
-      it "should have two versions" do
-        expect(generic_file.content.versions.all.count).to eq 2
-      end
-
-      it "should have the current version" do
-        expect(generic_file.content.latest_version.to_s).to eql(version2)
-        expect(generic_file.content.mime_type).to eql(file2_type)
-        expect(generic_file.content.original_name).to eql(file2)
-      end
-
-      it "should use the first version for the object's title and label" do
-        expect(generic_file.label).to eql(file1)
-        expect(generic_file.title.first).to eql(file1)
-      end
-
-      it "should note the user for each version" do
-        expect(generic_file.content.version_committer(version1)).to eql(first_user.user_key)
-        expect(generic_file.content.version_committer(version2)).to eql(second_user.user_key)
-      end
-
-      describe "restoring a previous verion" do
-
+      describe "restoring a previous version" do
         context "as the first user" do
           before do
-            sign_in first_user
+            sign_in user
+            post :update, id: generic_file, revision: version1
           end
 
-          context "using the first user's version" do
-            before do
-              post :update, id: generic_file, revision: version1
-            end
-            let(:restored_file)  { GenericFile.find(generic_file.id) }
-            let(:latest_version) { GenericFile.find(generic_file.id).content.latest_version }
-            it "should restore the first versions's content and metadata" do
-              expect(restored_file.content.mime_type).to eql(file1_type)
-              expect(restored_file.content.original_name).to eql(file1)
-              expect(restored_file.content.versions.all.count).to eq 2
-              expect(restored_file.content.versions.last.label).to eql latest_version
-              expect(restored_file.content.version_committer(version1)).to eql(first_user.user_key)
-            end
+          let(:restored_content) { generic_file.reload.content }
+          let(:versions)         { restored_content.versions }
+          let(:latest_version)   { restored_content.latest_version }
+
+          it "should restore the first versions's content and metadata" do
+            expect(restored_content.mime_type).to eq file1_type
+            expect(restored_content.original_name).to eq file1
+            expect(versions.all.count).to eq 3
+            expect(versions.last.label).to eq latest_version.label
+            expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user.user_key]
           end
         end
 
@@ -460,7 +446,6 @@ describe GenericFilesController do
             expect(response).to be_redirect
           end
         end
-
       end
     end
 

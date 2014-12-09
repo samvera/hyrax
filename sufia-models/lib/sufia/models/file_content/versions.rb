@@ -8,12 +8,7 @@ module Sufia
       end
 
       def latest_version
-        versions.last.label unless versions.empty?
-      end
-
-      def version_committer(version)
-        vc = VersionCommitter.where(version_id: version)
-        return vc.empty? ? nil : vc.first.committer_login
+        versions.last unless versions.empty?
       end
 
       def save
@@ -21,7 +16,6 @@ module Sufia
           create_version if passing
         end
       end
-      
     end
   end
 end

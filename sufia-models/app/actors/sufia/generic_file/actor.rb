@@ -38,6 +38,7 @@ module Sufia::GenericFile
 
     def revert_content(revision_id)
       generic_file.content.restore_version(revision_id)
+      generic_file.content.create_version
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_revert_content)
           Sufia.config.after_revert_content.call(generic_file, user, revision_id)

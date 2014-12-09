@@ -26,7 +26,6 @@ module Sufia
     config.autoload_paths += %W(
       #{config.root}/app/controllers/concerns
       #{config.root}/app/models/concerns
-      #{config.root}/app/models/datastreams
       #{Hydra::Engine.root}/app/models/concerns
     )
 
