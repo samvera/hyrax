@@ -66,13 +66,10 @@
       <div class="batch-group">
         <%= f.label :rights, '<span class="required-field">*</span> Rights'.html_safe, class: "control-label" %>
         <%= help_icon_modal('rightsModal') %>
-        <div id="additional_rights_clone" class="input-group">
-          <%= f.select "rights", options_for_select(Sufia::Engine::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), { required: true }, { class: 'form-control' } %>
-          <span class="input-group-btn field-controls">
-            <button class="adder btn" name="additional_rights" id="additional_rights_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_rights') %></span></button>
-          </span>
-          <%= render partial: "generic_files/rights_modal" %>
-        </div>
+        <% f.object[:rights].each_with_index do |v, index| %>
+          <%= render_edit_field_partial(:rights, record: f.object, f: f, v: v, index: index, render_req: true) %>
+        <% end %>
+        <%= render "generic_files/rights_modal" %>
         <div id="additional_rights_elements"></div>
       </div>
 

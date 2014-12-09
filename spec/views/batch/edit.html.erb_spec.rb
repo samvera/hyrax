@@ -7,8 +7,7 @@ describe 'batch/edit.html.erb', :type => :view do
 
   let(:content) { double('content', versions: [], mimeType: 'application/pdf') }
   let(:generic_file) {
-    stub_model(GenericFile, id: '321', noid: '321',
-               depositor: 'bob')
+    stub_model(GenericFile, id: '321', noid: '321', depositor: 'bob', rights: [''])
   }
 
 
@@ -32,8 +31,14 @@ describe 'batch/edit.html.erb', :type => :view do
     expect(@page).to have_selector("a#generic_file_share_with_help", count: 1)
   end
 
-  it "should draw modal for rights" do
-    expect(@page).to have_selector("div#rightsModal .modal-dialog .modal-content", count: 1)
+  context "rights" do
+    it "should have a modal" do
+      expect(@page).to have_selector("div#rightsModal .modal-dialog .modal-content")
+    end
+
+    it "should allow setting many rights" do
+      expect(@page).to have_selector('select#generic_file_rights[name="generic_file[rights][]"]')
+    end
   end
 
 end
