@@ -2,29 +2,25 @@ require 'spec_helper'
 
 describe FileContentDatastream, :type => :model do
   describe "#latest_version" do
-    let(:version1) { "version1" }
-    let(:version2) { "version2" }
-    before do
-      f = GenericFile.new
-      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      f.apply_depositor_metadata('mjg36')
-      f.save
-      @file = f.reload
-    end
-    context "with one version" do
-      let(:latest_version) { @file.content.versions.last }
-      it "should return the latest version" do
-        expect(@file.content.latest_version).to eql(version1)
+    let(:file) do
+      GenericFile.create do |f|
+        f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        f.apply_depositor_metadata('mjg36')
       end
     end
+
+    context "with one version" do
+      subject { file.content.latest_version.label }
+      it { is_expected.to eq "version1" }
+    end
+
     context "with two versions" do
       before do
-        @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-        @file.save
+        file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        file.save
       end
-      it "should return the latest version" do
-        expect(@file.content.latest_version).to eql(version2)
-      end
+      subject { file.content.latest_version.label }
+      it { is_expected.to eq "version2" }
     end
   end
 

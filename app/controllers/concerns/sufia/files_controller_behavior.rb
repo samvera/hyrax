@@ -53,6 +53,7 @@ module Sufia
     def edit
       @generic_file.initialize_fields
       @groups = current_user.groups
+      @version_list = Sufia::VersionListPresenter.new(@generic_file.content.versions.all)
     end
 
     # routed to /files/:id/stats
@@ -139,7 +140,7 @@ module Sufia
     protected
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.to_s
+      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label
     end
 
     def actor
