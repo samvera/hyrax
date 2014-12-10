@@ -15,6 +15,7 @@ module Sufia
     include Sufia::GenericFile::Trophies
     include Sufia::GenericFile::Featured
     include Sufia::GenericFile::Metadata
+    include Sufia::GenericFile::Content
     include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::FullTextIndexing
