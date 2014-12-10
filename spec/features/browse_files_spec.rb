@@ -26,7 +26,7 @@ describe "Browse files", :type => :feature do
 
   describe "when not logged in" do
     it "should let us browse some of the fixtures" do
-      click_link "18"
+      click_link "13"
       expect(page).to have_content "Search Results"
       click_link @fixtures[0].title[0]
       expect(page).to have_content "Download"
