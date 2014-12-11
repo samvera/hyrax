@@ -41,7 +41,7 @@ module Sufia
     end
 
     def noid
-      self[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)]
+      self[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)]
     end
 
     def date_uploaded
