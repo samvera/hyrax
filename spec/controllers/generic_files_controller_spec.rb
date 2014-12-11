@@ -224,20 +224,18 @@ describe GenericFilesController do
 
   describe "audit" do
     let(:generic_file) do
-      GenericFile.new.tap do |gf|
+      GenericFile.create do |gf|
         gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
         gf.apply_depositor_metadata(user)
-        gf.save!
       end
     end
 
     it "should return json with the result" do
-      skip "Skiping audit for now"
-      xhr :post, :audit, id: generic_file.id
+      xhr :post, :audit, id: generic_file
       expect(response).to be_success
       json = JSON.parse(response.body)
       audit_results = json.collect { |result| result["pass"] }
-      expect(audit_results.reduce(true) { |sum, value| sum && value }).to be true
+      expect(audit_results.reduce(true) { |sum, value| sum && value }).to eq 999 # never been audited
     end
   end
 

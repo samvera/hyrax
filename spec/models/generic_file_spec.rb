@@ -368,47 +368,29 @@ describe GenericFile, :type => :model do
     end
 
     describe "#audit!" do
-      before do
-        @f = f.reload
-      end
-
       it "should schedule a audit job for each datastream" do
-        skip "Disabled audit"
-        s1 = double('one')
-        expect(AuditJob).to receive(:new).with(@f.id, 'DC', "DC1.0").and_return(s1)
-        expect(Sufia.queue).to receive(:push).with(s1)
-        s2 = double('two')
-        expect(AuditJob).to receive(:new).with(@f.id, 'RELS-EXT', "RELS-EXT.0").and_return(s2)
-        expect(Sufia.queue).to receive(:push).with(s2)
-        s3 = double('three')
-        expect(AuditJob).to receive(:new).with(@f.id, 'properties', "properties.0").and_return(s3)
-        expect(Sufia.queue).to receive(:push).with(s3)
         s4 = double('four')
-        expect(AuditJob).to receive(:new).with(@f.id, 'content', "content.0").and_return(s4)
+        expect(AuditJob).to receive(:new).with(f.id, 'content', instance_of(String)).and_return(s4)
         expect(Sufia.queue).to receive(:push).with(s4)
-        @f.audit!
-      end
-
-      it "should log a failing audit" do
-        skip "skip versioning for now"
-        @f.attached_files.each { |ds| allow(ds).to receive(:dsChecksumValid).and_return(false) }
-        allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', id: 'foo:123', dsid: 'foo', version: '1'))
-        @f.audit!
-        expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 0 }
-      end
-
-      it "should log a passing audit" do
-        skip "skip versioning for now"
-        allow(GenericFile).to receive(:run_audit).and_return(double(:respose, pass:1, created_at: '2005-12-20', pid: 'foo:123', dsid: 'foo', version: '1'))
-        @f.audit!
-        expect(ChecksumAuditLog.all).to be_all { |cal| cal.pass == 1 }
+        f.audit!
       end
     end
 
     describe "#audit_stat" do
-      it "should return true on audit_status" do
-        skip "Disabled audit"
-        expect(f.audit_stat).to be_truthy
+      context "when no audits have been run" do
+        it "should report that audits have not been run" do
+          expect(f.audit_stat).to eq "Audits have not yet been run on this file."
+        end
+      end
+
+      context "when no audit is pasing" do
+        before do
+         ChecksumAuditLog.create!(pass: 1, pid: f.id, version: f.content.versions.first.label, dsid: 'content')
+        end
+
+        it "should report that audits have not been run" do
+          expect(f.audit_stat).to eq 1
+        end
       end
     end
 
@@ -431,28 +413,19 @@ describe GenericFile, :type => :model do
     end
 
     describe "run_audit" do
-      let(:version) { f.datastreams['content'].versions.first }
-      let(:old) { ChecksumAuditLog.create(id: f.id, dsid: version.dsid, version: version.versionID, pass: 1, created_at: 2.minutes.ago) }
-      let(:new) { ChecksumAuditLog.create(id: f.id, dsid: version.dsid, version: version.versionID, pass: 0) }
+      let(:version) { f.content.versions.first.uri }
+      let!(:old) { ChecksumAuditLog.create(pid: f.id, dsid: 'content', version: version, pass: 1, created_at: 2.minutes.ago) }
+      let!(:new) { ChecksumAuditLog.create(pid: f.id, dsid: 'content', version: version, pass: 0) }
+      let(:mock_service) { double('mock fixity check service') }
+
+      before do
+        allow(ActiveFedora::FixityService).to receive(:new).and_return(mock_service)
+        allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
+      end
 
       it "should not prune failed audits" do
-        skip "disabled audit"
-        expect(version).to receive(:dsChecksumValid).and_return(true)
-        GenericFile.run_audit(version)
-
-        expect(version).to receive(:dsChecksumValid).and_return(false)
-        GenericFile.run_audit(version)
-
-        expect(version).to receive(:dsChecksumValid).and_return(false)
-        GenericFile.run_audit(version)
-
-        expect(version).to receive(:dsChecksumValid).and_return(true)
-        GenericFile.run_audit(version)
-
-        expect(version).to receive(:dsChecksumValid).and_return(false)
-        GenericFile.run_audit(version)
-
-        expect(f.logs(version.dsid).map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
+        5.times { GenericFile.run_audit(f.id, 'content', version) }
+        expect(f.logs('content').map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
       end
     end
   end

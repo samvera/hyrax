@@ -41,7 +41,7 @@ module Sufia
       end
 
       def logs(file)
-        ChecksumAuditLog.where(pid: self.id, dsid: file).order('created_at desc, id desc')
+        ChecksumAuditLog.where(pid: id, dsid: file).order('created_at desc, id desc')
       end
 
       def audit!
@@ -53,8 +53,7 @@ module Sufia
       end
 
       def audit_stat(force = false)
-        logs = audit(force)
-        audit_results = logs.collect { |result| result["pass"] }
+        audit_results = audit(force).collect { |result| result["pass"] }
 
         # check how many non runs we had
         non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum += 1 : sum }
@@ -115,7 +114,7 @@ module Sufia
         def run_audit(id, path, uri)
           begin
             fixity_ok = ActiveFedora::FixityService.new(uri).check
-          rescue Ldp::NotFound 
+          rescue Ldp::NotFound
             error_msg = "resource not found"
           end
 
@@ -126,8 +125,7 @@ module Sufia
             logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
             passing = 0
           end
-          check = ChecksumAuditLog.create!(pass: passing, pid: id, version: uri, dsid: path)
-          check
+          ChecksumAuditLog.create!(pass: passing, pid: id, version: uri, dsid: path)
         end
       end
     end
