@@ -367,15 +367,6 @@ describe GenericFile, :type => :model do
       end
     end
 
-    describe "#audit!" do
-      it "should schedule a audit job for each datastream" do
-        s4 = double('four')
-        expect(AuditJob).to receive(:new).with(f.id, 'content', instance_of(String)).and_return(s4)
-        expect(Sufia.queue).to receive(:push).with(s4)
-        f.audit!
-      end
-    end
-
     describe "#audit_stat" do
       context "when no audits have been run" do
         it "should report that audits have not been run" do

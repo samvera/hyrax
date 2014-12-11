@@ -44,10 +44,6 @@ module Sufia
         ChecksumAuditLog.where(pid: id, dsid: file).order('created_at desc, id desc')
       end
 
-      def audit!
-        audit(true)
-      end
-
       def audit_stat!
         audit_stat(true)
       end
@@ -78,10 +74,6 @@ module Sufia
 
 
       module ClassMethods
-        def audit!(version)
-          ::GenericFile.audit(version, true)
-        end
-
         def audit(version_uri, force = false)
           return { pass: true } # TODO Just skipping the audit for now
           latest_audit = self.find(version_uri).audit_each( version, force)
