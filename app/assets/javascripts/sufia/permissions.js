@@ -9,33 +9,9 @@
    */
 
 Blacklight.onLoad(function() {
-  // input for uids -  attach function to verify uid
-  $('#new_user_name_skel').on('blur', function() {
-      // clear out any existing messages
-      $('#directory_user_result').html('');
-      var un = $('#new_user_name_skel').val();
-      var perm = $('#new_user_permission_skel').val();
-      if ( $.trim(un).length == 0 ) {
-        return;
-      }
-      $.ajax( {
-        url: "/directory/user/" + un,
-        success: function( data ) {
-          if (data != null) {
-            if (!data.length) {
-              $('#directory_user_result').html('User id ('+un+ ') does not exist.');
-              $('#new_user_name_skel').select();
-              $('#new_user_permission_skel').val('none');
-              return;
-            }
-            else {
-              $('#new_user_permission_skel').focus();
-            }
-          }
-        }
-      });
 
-  });
+  // Attach the user search select2 box to the permission form
+  $("#new_user_name_skel").userSearch();
 
   // add button for new user
   $('#add_new_user_skel').on('click', function() {
