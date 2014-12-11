@@ -18,10 +18,9 @@ module Sufia
         end
       end
 
-      # TODO: Run audits on all attached files. We're only audting "content" at tht moment
-      def audit force = false
+      # TODO: Run audits on all attached files. We're only auditing "content" at tht moment
+      def audit
         @audit_log ||= Array.new
-        @force = force
         audit_content
         return @audit_log
       end
@@ -66,7 +65,7 @@ module Sufia
 
       def audit_file(file, uri, label = nil)
         latest_audit = logs(file).first
-        return latest_audit unless @force || ::GenericFile.needs_audit?(uri, latest_audit)
+        return latest_audit unless ::GenericFile.needs_audit?(uri, latest_audit)
         Sufia.queue.push(AuditJob.new(id, file, uri))
         latest_audit ||= ChecksumAuditLog.new(pass: NO_RUNS, pid: id, dsid: file, version: label)
         latest_audit
@@ -74,11 +73,6 @@ module Sufia
 
 
       module ClassMethods
-        def audit(version_uri, force = false)
-          return { pass: true } # TODO Just skipping the audit for now
-          latest_audit = self.find(version_uri).audit_each( version, force)
-        end
-
         def needs_audit?(version, latest_audit)
           if latest_audit and latest_audit.updated_at
             days_since_last_audit = (DateTime.now - latest_audit.updated_at.to_date).to_i
@@ -89,18 +83,6 @@ module Sufia
             logger.warn "***AUDIT*** problem with audit log!  Latest Audit is not nil, but updated_at is not set #{latest_audit}"  unless latest_audit.nil?
           end
           true
-        end
-
-        def audit_everything(force = false)
-          ::GenericFile.find_each do |gf|
-            gf.per_version do |ver|
-              ::GenericFile.audit(ver, force)
-            end
-          end
-        end
-
-        def audit_everything!
-          ::GenericFile.audit_everything(true)
         end
 
         def run_audit(id, path, uri)
