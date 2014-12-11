@@ -14,9 +14,6 @@ module Sufia
        @generic_file.depositor = current_user.user_key
        @terms = @generic_file.terms_for_editing - [:title, :format, :resource_type]
 
-       # do we want to show the original values for anything...
-       @show_file = ::GenericFile.new
-       @show_file.depositor = current_user.user_key
        h  = {}
        @names = []
        permissions = []
@@ -32,9 +29,9 @@ module Sufia
           permissions = (permissions + gf.permissions).uniq
        end
 
-       initialize_fields(h, @show_file)
+       initialize_fields(h, @generic_file)
 
-       @show_file.permissions_attributes = [{type: 'group', name: 'public', access: 'read'}]
+       @generic_file.permissions_attributes = [{type: 'group', name: 'public', access: 'read'}]
     end
 
     def after_update
