@@ -359,68 +359,6 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "auditing" do
-    let(:f) do
-      GenericFile.create do |f|
-        f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-        f.apply_depositor_metadata('mjg36')
-      end
-    end
-
-    describe "#audit_stat" do
-      context "when no audits have been run" do
-        it "should report that audits have not been run" do
-          expect(f.audit_stat).to eq "Audits have not yet been run on this file."
-        end
-      end
-
-      context "when no audit is pasing" do
-        before do
-         ChecksumAuditLog.create!(pass: 1, pid: f.id, version: f.content.versions.first.label, dsid: 'content')
-        end
-
-        it "should report that audits have not been run" do
-          expect(f.audit_stat).to eq 1
-        end
-      end
-    end
-
-    describe "#human_readable_audit_status" do
-      subject { expect(f).to receive(:audit_stat).and_return(audit_stat); f.human_readable_audit_status }
-
-      context "when audit_stat is 0" do
-        let(:audit_stat) { 0 }
-        it { is_expected.to eq 'failing' }
-      end
-
-      context "when audit_stat is 1" do
-        let(:audit_stat) { 1 }
-        it { is_expected.to eq 'passing' }
-      end
-      context "when audit_stat is something else" do
-        let(:audit_stat) { 'something else' }
-        it { is_expected.to eq 'something else' }
-      end
-    end
-
-    describe "run_audit" do
-      let(:version) { f.content.versions.first.uri }
-      let!(:old) { ChecksumAuditLog.create(pid: f.id, dsid: 'content', version: version, pass: 1, created_at: 2.minutes.ago) }
-      let!(:new) { ChecksumAuditLog.create(pid: f.id, dsid: 'content', version: version, pass: 0) }
-      let(:mock_service) { double('mock fixity check service') }
-
-      before do
-        allow(ActiveFedora::FixityService).to receive(:new).and_return(mock_service)
-        allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
-      end
-
-      it "should not prune failed audits" do
-        5.times { GenericFile.run_audit(f.id, 'content', version) }
-        expect(f.logs('content').map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
-      end
-    end
-  end
-
   describe "#related_files" do
     let!(:f1) do
       GenericFile.new.tap do |f|

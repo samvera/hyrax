@@ -22,13 +22,13 @@ class AuditJob < ActiveFedoraPidBasedJob
 
   def run
     fixity_ok = false
-    log = run_audit(pid, path, uri)
+    log = run_audit
     fixity_ok = (log.pass == 1)
     unless fixity_ok
       # send the user a message about the failing audit
       login = generic_file.depositor
       user = User.find_by_user_key(login)
-      ActiveFedora::Base.logger.warn "User '#{login}' not found" unless user
+      logger.warn "User '#{login}' not found" unless user
       job_user = User.audituser()
       file_title = generic_file.title.first
       message = "The audit run at #{log.created_at} for #{file_title} (#{uri}) failed."
@@ -38,9 +38,26 @@ class AuditJob < ActiveFedoraPidBasedJob
     fixity_ok
   end
 
-  private
-  def run_audit(id, path, uri)
-    object.class.run_audit(id, path, uri)
-  end
+  protected
 
+    def run_audit
+      begin
+        fixity_ok = ActiveFedora::FixityService.new(uri).check
+      rescue Ldp::NotFound
+        error_msg = "resource not found"
+      end
+
+      if fixity_ok
+        passing = 1
+        ChecksumAuditLog.prune_history(pid, path)
+      else
+        logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
+        passing = 0
+      end
+      ChecksumAuditLog.create!(pass: passing, pid: pid, version: uri, dsid: path)
+    end
+
+    def logger
+      ActiveFedora::Base.logger
+    end
 end

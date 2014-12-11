@@ -56,4 +56,21 @@ describe AuditJob do
       end
     end
   end
+
+  describe "run_audit" do
+    let(:uri) { file.content.versions.first.uri }
+    let!(:old) { ChecksumAuditLog.create(pid: file.id, dsid: 'content', version: uri, pass: 1, created_at: 2.minutes.ago) }
+    let!(:new) { ChecksumAuditLog.create(pid: file.id, dsid: 'content', version: uri, pass: 0) }
+    let(:mock_service) { double('mock fixity check service') }
+
+    before do
+      allow(ActiveFedora::FixityService).to receive(:new).and_return(mock_service)
+      allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
+    end
+
+    it "should not prune failed audits" do
+      5.times { job.send(:run_audit) }
+      expect(ChecksumAuditLog.logs_for(file.id, 'content').map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
+    end
+  end
 end
