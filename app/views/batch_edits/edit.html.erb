@@ -29,7 +29,7 @@
                 <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
-                  <%= render partial: "generic_files/field_form", locals: { generic_file: @generic_file, f: f, render_req: false, key: term } %>
+                  <%= render "generic_files/field_form", f: f, render_req: false, key: term %>
                   <div>
                     <%= f.submit "Save changes", class: 'btn btn-primary field-save updates-batches' , id: "#{term.to_s}_save" %>
                     <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>">Cancel </a>

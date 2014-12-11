@@ -1,6 +1,6 @@
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
 <div class="batch-group">
-  <% vals = generic_file[key] %>
+  <% vals = f.object[key] %>
   <% if render_req && required?(key) %>
     <%= f.label key do %>
       <span class="required-field">*</span><%= get_label(key) %>
@@ -11,10 +11,10 @@
   <%= help_icon(key) %>
   <% if key == :resource_type %>
     <%# resource_type is a multiselect box, so don't render one row for each %>
-    <%= render_edit_field_partial(key, record: generic_file, f: f, render_req: render_req) %>
+    <%= render_edit_field_partial(key, record: f.object, f: f, render_req: render_req) %>
   <% else %>
     <% vals.to_ary.each_with_index do |v, index| %>
-      <%= render_edit_field_partial(key, record: generic_file, f: f,  v: v, index: index, render_req: render_req) %>
+      <%= render_edit_field_partial(key, record: f.object, f: f,  v: v, index: index, render_req: render_req) %>
     <% end %>
   <% end %>
  </div><!-- /.batch-group -->
