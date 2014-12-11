@@ -45,7 +45,6 @@ module Sufia
 
     # routed to /files/new
     def new
-      #@batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
       @batch_noid = Batch.create.noid
     end
 
@@ -123,6 +122,8 @@ module Sufia
         update_file
       elsif params.has_key? :generic_file
         update_metadata
+      elsif params.has_key? :visibility
+        update_visibility
       end
 
       if success
@@ -158,6 +159,10 @@ module Sufia
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
       actor.update_metadata(params[:generic_file], params[:visibility])
+    end
+
+    def update_visibility
+      actor.update_metadata({}, params[:visibility])
     end
 
     def json_error(error, name=nil, additional_arguments={})
