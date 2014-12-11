@@ -39,7 +39,12 @@ describe 'batch/edit.html.erb', :type => :view do
     it "should allow setting many rights" do
       expect(@page).to have_selector('select#generic_file_rights[name="generic_file[rights][]"]')
     end
+  
+    it "should not have an empty rights element" do
+      @page.all('select#generic_file_rights option').each do |elem| 
+        expect(elem.value).to_not be_empty 
+      end
+    end
   end
-
 end
 
