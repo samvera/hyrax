@@ -58,8 +58,8 @@ Blacklight.onLoad(function() {
   for (var i=0; i < autocomplete_vocab.url_var.length; i++) {
     autocomplete_vocab.field_name.push('generic_file_' + autocomplete_vocab.url_var[i]);
     autocomplete_vocab.add_btn_id.push('additional_' + autocomplete_vocab.url_var[i] + '_submit');
-    // autocompletes
-    $("#" + autocomplete_vocab.field_name[i])
+    // add autocompletes to all inputs created
+    $(".form-group.multi_value." + autocomplete_vocab.field_name[i]).find('input[type=text]')
         // don't navigate away from the field on tab when selecting an item
         .bind( "keydown", function( event ) {
             if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -72,15 +72,20 @@ Blacklight.onLoad(function() {
   }
 
 
-  function setup_autocomplete(obj, cloneElem) {
-    // should we attach an auto complete based on the input
-    if (obj.id == 'additional_based_near_submit') {
-      cloneElem.find('input[type=text]').autocomplete(cities_autocomplete_opts);
+  function setup_autocomplete(event) {
+    var class_name = $.grep(event.target.className.split(" "),function( c ) {
+          return c.indexOf('generic_file') == 0;
+      })[0];
+    // attach auto complete for location
+    if (class_name == 'generic_file_based_near') {
+      $(event.target).find('input[type=text]').autocomplete(get_autocomplete_opts("location"));
     }
-    else if ( (index = $.inArray(obj.id, autocomplete_vocab.add_btn_id)) != -1 ) {
-      cloneElem.find('input[type=text]').autocomplete(get_autocomplete_opts(autocomplete_vocab.url_var[index]));
+    // attach other auto completes
+    else if ( (index = $.inArray(class_name, autocomplete_vocab.field_name)) != -1 ) {
+      $(event.target).find('input[type=text]').autocomplete(get_autocomplete_opts(autocomplete_vocab.url_var[index]));
     }
   }
 
-  $('form').multiForm({afterAdd: setup_autocomplete});
+  // add setup for autocompletes to multi value forms
+  $('.multi_value.form-group').manage_fields({ add: setup_autocomplete });
 });

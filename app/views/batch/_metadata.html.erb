@@ -37,32 +37,20 @@
     <div class="batch-group">
       <%= f.label :tag, "<span class='required-field'>*</span> Keyword".html_safe, class: "control-label" %>
       <%= help_icon(:tag) %>
-      <div id="additional_tag_clone">
-        <%= f.text_field :tag, name: "generic_file[tag][]", value: "", required: true  %>
-        <button class="adder btn" name="additional_tag" id="additional_tag_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_keyword') %></span></button>
-      </div>
-      <div id="additional_tag_elements"></div>
+      <%= f.input :tag, label: false, as: :multi_value  %>
     </div>
 
     <div class="batch-group">
       <%= f.label :creator, "<span class='required-field'>*</span> Creator".html_safe, class: "control-label" %>
       <%= help_icon(:creator) %>
-      <div id="additional_creator_clone">
-        <%= f.text_field :creator, name: "generic_file[creator][]", value: "", required: true %>
-        <button class="adder btn" name="additional_creator" id="additional_creator_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_creator') %></span></button>
-      </div>
-      <div id="additional_creator_elements"></div>
+      <%= f.input :creator, label: false, as: :multi_value  %>
     </div>
 
     <div class="batch-group">
       <%= f.label :rights, '<span class="required-field">*</span> Rights'.html_safe, class: "control-label" %>
       <%= help_icon_modal('rightsModal') %>
-      <div id="additional_rights_clone">
-        <%= f.select "rights", options_for_select(Sufia::Engine::config.cc_licenses, 'http://creativecommons.org/licenses/by-nc-nd/3.0/us/'), required: true %>
-        <button class="adder btn" name="additional_rights" id="additional_rights_submit"><span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span><span class="sr-only"><%= t('sufia.batch.metadata.add_another_rights') %></span></button>
-        <%= render partial: "generic_files/rights_modal" %>
-      </div>
-      <div id="additional_rights_elements"></div>
+      <%= f.input :rights, label: false, as: :multi_value, collection: Sufia.config.cc_licenses, include_blank: true, input_html: { type: 'select', class: 'select optional form-control' } %>
+      <%= render partial: "generic_files/rights_modal" %>
     </div>
 
     <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>

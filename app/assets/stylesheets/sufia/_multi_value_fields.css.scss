@@ -1,0 +1,67 @@
+.multi_value, .single_value {
+  .field-wrapper {
+    list-style-type:none;
+  }
+
+  .listing {
+    margin-left: 0;
+    max-width: 40em;
+    padding-left: 0px;
+    .input-group {
+      margin-bottom: 1px;
+    }
+  }
+
+  .field-controls span {
+    margin-left:.2em;
+  }
+
+  .field-controls {
+    margin-left: 2em;
+  }
+
+  .message{
+    background-size: 40px 40px;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,.4);
+    width: 100%;
+    border: 1px solid;
+    color: #fff;
+    padding: 10px;
+    text-shadow: 0 1px 0 rgba(0,0,0,.5);
+    animation: animate-bg 5s linear infinite;
+    border-radius: $border-radius-base;
+  }
+
+  .has-error{
+    background-color: #de4343;
+    border-color: #c43d3d;
+  }
+
+  .has-warning{
+    background-color: #eaaf51;
+    border-color: #d99a36;
+  }
+}
+
+// The contributor listing needs some normalization
+#contributors .listing {
+  max-width:20em;
+}
+
+#collection_title.listing {
+  max-width:37em;
+}
+
+.collection_description .listing {
+  max-width:35.5em;
+}
+
+#descriptions_display {
+  .form-group, .batch-group {
+    margin-left: 0;
+    margin-bottom: 0.5em;
+  }
+}

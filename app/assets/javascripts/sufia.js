@@ -35,7 +35,7 @@
 //= require sufia/trophy
 //= require sufia/featured_works
 //= require sufia/batch_select_all
-//= require sufia/multiForm
+//= require sufia/manage_repeating_fields
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
 //= require sufia/audio
@@ -82,6 +82,22 @@ function notify_update_link() {
 }
 
 Blacklight.onLoad(function() {
+  // Multi-value fields on forms
+  $('body').on('keypress', '.multi-text-field', function(event) {
+    var $activeField = $(event.target).parents('.field-wrapper'),
+        $activeFieldControls = $activeField.children('.field-controls'),
+        $addControl=$activeFieldControls.children('.add'),
+        $removeControl=$activeFieldControls.children('.remove');
+
+    // If user hits the "Enter" key (keyCode 13), it should add another input for the multi-value field.
+    // Unless it's a textarea field (since users might want multi-line input in a textarea).
+    if (event.keyCode == 13 && !($activeField.context.type == "textarea")) {
+      event.preventDefault();
+      $addControl.click()
+      $removeControl.click()
+    }
+  });
+  $('.multi_value.form-group').manage_fields();
 
   // set up global batch edit options to override the ones in the gem
   window.batch_edits_options = { checked_label: "",unchecked_label: "",progress_label: "",status_label: "",css_class: "batch_toggle"};
