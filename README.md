@@ -123,22 +123,6 @@ The line with kaminari listed as a dependency in Gemfile is a temporary fix to a
 [problem](https://github.com/amatsuda/kaminari/pull/322) in the current release of kaminari.
 Technically you should not have to list kaminari, which is a dependency of blacklight and sufia.
 
-#### Bundler
-
-Users have reported problems with the initial `bundle install` command, seeing an error such as:
-
-```
-Bundler could not find compatible versions for gem "bootstrap-sass":
-  In Gemfile:
-    sufia (~> 4.0.0) ruby depends on
-      bootstrap-sass (< 3.2) ruby
-
-    sufia (~> 4.0.0) ruby depends on
-      bootstrap-sass (3.2.0.2)
-```
-
-The solution is to update your bundler gem to the latest version.
-
 ### Proxies and Transfers
 
 To add proxies and transfers to your Sufia 4-based app, run the 'sufia:models:proxies' generator and then run 'rake db:migrate'.

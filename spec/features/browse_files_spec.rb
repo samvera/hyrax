@@ -42,8 +42,7 @@ describe "Browse files", :type => :feature do
     end
     it "should allow you to click next" do
       expect(page).to have_content "Numerical Sort"
-      expect(page).to have_css "a.sort_change", text:"Numerical Sort"
-      click_link "Numerical Sort"
+      expect(page).to have_css "a.sort_change", text:"A-Z Sort"
       within(".modal-body") do
         expect(page).to have_content "key_1 "
         expect(page).not_to have_content "key_25 "

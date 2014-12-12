@@ -8,6 +8,7 @@
  *= require nestable
 */
 
+@import "bootstrap-sprockets";
 @import 'bootstrap';
 @import 'blacklight/blacklight';
 @import "browse_everything";
