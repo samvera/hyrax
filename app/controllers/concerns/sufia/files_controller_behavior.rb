@@ -103,7 +103,7 @@ module Sufia
       respond_to do |format|
         format.html {
           @events = @generic_file.events(100)
-          @audit_status = @generic_file.human_readable_audit_status
+          @audit_status = audit_service.human_readable_audit_status
         }
         format.endnote { render text: @generic_file.export_as_endnote }
       end
@@ -111,7 +111,7 @@ module Sufia
 
     # routed to /files/:id/audit (POST)
     def audit
-      render json: @generic_file.audit
+      render json: audit_service.audit
     end
 
     # routed to /files/:id (PUT)
@@ -139,6 +139,10 @@ module Sufia
     end
 
     protected
+
+    def audit_service
+      Sufia::GenericFileAuditService.new(@generic_file)
+    end
 
     def wants_to_revert?
       params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label

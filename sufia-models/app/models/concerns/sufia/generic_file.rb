@@ -8,7 +8,6 @@ module Sufia
     include Sufia::GenericFile::MimeTypes
     include Sufia::GenericFile::Export
     include Sufia::GenericFile::Characterization
-    include Sufia::GenericFile::Audit
     include Sufia::GenericFile::Permissions
     include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives

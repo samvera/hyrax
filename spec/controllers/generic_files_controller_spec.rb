@@ -230,12 +230,11 @@ describe GenericFilesController do
     end
 
     it "should return json with the result" do
-      skip "Skiping audit for now"
-      xhr :post, :audit, id: generic_file.id
+      xhr :post, :audit, id: generic_file
       expect(response).to be_success
       json = JSON.parse(response.body)
       audit_results = json.collect { |result| result["pass"] }
-      expect(audit_results.reduce(true) { |sum, value| sum && value }).to be true
+      expect(audit_results.reduce(true) { |sum, value| sum && value }).to eq 999 # never been audited
     end
   end
 
