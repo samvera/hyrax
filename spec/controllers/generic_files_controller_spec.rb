@@ -72,18 +72,6 @@ describe GenericFilesController do
           expect(VersionCommitter.pluck(:committer_login).last).to eq user.user_key
         end
 
-        it "should create batch associations from batch_id" do
-          skip "we need to create the batch, because Fedora 4 doesn't let us set associations to things that don't exist"
-          batch_id = "object-that-doesnt-exist"
-          allow(Sufia.config).to receive(:id_namespace).and_return('sample')
-          allow(controller).to receive(:add_posted_blob_to_asset)
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-          allow(GenericFile).to receive(:new).and_call_original
-          expect { Batch.find(batch_id) }.to raise_error(ActiveFedora::ObjectNotFoundError) # The controller shouldn't actually save the Batch, but it should write the batch id to the files.
-          batch = Batch.create(id: batch_id)
-          expect(batch.generic_files.first.id).to eq "test123"
-        end
-
         it "should set the depositor id" do
           xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
           expect(response).to be_success
@@ -368,7 +356,6 @@ describe GenericFilesController do
       end
 
       it "spawns a content new version event job" do
-        pending "Merge from Sufia4?"
         s1 = double('one')
         allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
         expect(Sufia.queue).to receive(:push).with(s1).once
@@ -376,8 +363,8 @@ describe GenericFilesController do
         s2 = double('one')
         allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
         expect(Sufia.queue).to receive(:push).with(s2).once
-        @user = FactoryGirl.find_or_create(:jill)
-        sign_in @user
+        file = fixture_file_upload('/world.png', 'image/png')
+        post :update, id: generic_file, filedata: file, generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
       end
     end
 
@@ -390,8 +377,6 @@ describe GenericFilesController do
         s2 = double('one')
         allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
         expect(Sufia.queue).to receive(:push).with(s2).once
-        @user = FactoryGirl.find_or_create(:jill)
-        sign_in @user
 
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: generic_file, filedata: file, generic_file: {tag: [''],
@@ -482,8 +467,6 @@ describe GenericFilesController do
       s2 = double('one')
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
       allow(CreateDerivativesJob).to receive(:new).with(generic_file.id).and_return(s2)
-      @user = FactoryGirl.find_or_create(:jill)
-      sign_in @user
       file = fixture_file_upload('/world.png', 'image/png')
       expect(Sufia::GenericFile::Actor).to receive(:virus_check).and_return(0)
       expect(Sufia.queue).to receive(:push).with(s2).once
