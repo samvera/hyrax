@@ -19,7 +19,7 @@ class Batch < ActiveFedora::Base
 
   def to_solr(solr_doc={})
     super.tap do |solr_doc|
-      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
+      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)] = noid
     end
   end
 end

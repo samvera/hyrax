@@ -41,6 +41,10 @@ module Sufia
         return text.join("\n")
       end
 
+      def persistent_url
+        "#{Sufia.config.persistent_hostpath}#{noid}"
+      end
+
       # MIME type: 'application/x-openurl-ctx-kev'
       def export_as_openurl_ctx_kev
         export_text = []

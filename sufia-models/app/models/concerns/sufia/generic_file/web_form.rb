@@ -5,6 +5,7 @@ module Sufia
       include Sufia::GenericFile::AccessibleAttributes
       included do
         before_save :remove_blank_assertions
+        attr_accessible *(terms_for_display + [:part_of, :permissions_attributes])
       end
 
       def remove_blank_assertions
