@@ -33,7 +33,9 @@ describe "Browse files", :type => :feature do
       expect(page).not_to have_content "Edit"
     end
     it "should allow you to click next" do
-      click_link 'Next »'
+      within('.bottom') do
+        click_link 'Next »'
+      end
       within(".modal-body") do
         expect(page).to have_content "5"
         expect(page).not_to have_content "11"

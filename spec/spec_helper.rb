@@ -28,7 +28,8 @@ if ENV['COVERAGE']
   SimpleCov.command_name "spec"
 end
 
-Capybara.javascript_driver = :poltergeist
+Capybara.default_driver = :rack_test      # This is a faster driver
+Capybara.javascript_driver = :poltergeist # This is slower
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
 # HttpLogger.logger = Logger.new(STDOUT)
 # HttpLogger.ignore = [/localhost:8983\/solr/]
