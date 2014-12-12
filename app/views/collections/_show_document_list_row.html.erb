@@ -5,7 +5,7 @@
     <%# This block is for adding/removing the magic wand while batch updates are processing %>
     <% if gf.processing? %>
       <i class="glyphicon glyphicon-time <%= 'ss-'+gf.batch.noid %>"/>
-    <% elsif gf.depositor != @user.user_key %>
+    <% elsif current_user and gf.depositor != current_user.user_key %>
       <i class="glyphicon glyphicon-share-alt"/>
     <% end %>
   </td>
