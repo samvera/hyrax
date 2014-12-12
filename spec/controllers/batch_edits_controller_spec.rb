@@ -21,15 +21,17 @@ describe BatchEditsController, :type => :controller do
       expect(controller).to receive(:can?).with(:edit, @one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, @two.id).and_return(true)
     end
+
     it "should be successful" do
       get :edit
       expect(response).to be_successful
       expect(assigns[:terms]).to eq [:creator, :contributor, :description, :tag, :rights, :publisher,
                         :date_created, :subject, :language, :identifier, :based_near, :related_url]
-      expect(assigns[:show_file].creator).to eq ["Fred", "Wilma"]
-      expect(assigns[:show_file].publisher).to eq ["Rand McNally"]
-      expect(assigns[:show_file].language).to eq ["en"]
+      expect(assigns[:generic_file].creator).to eq ["Fred", "Wilma"]
+      expect(assigns[:generic_file].publisher).to eq ["Rand McNally"]
+      expect(assigns[:generic_file].language).to eq ["en"]
     end
+
     it "should set the breadcrumb trail" do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       get :edit
