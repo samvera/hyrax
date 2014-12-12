@@ -4,7 +4,7 @@ describe 'proxy', :type => :feature do
   let(:user) { FactoryGirl.find_or_create(:archivist) }
   let(:second_user) { FactoryGirl.find_or_create(:jill) }
 
-  describe 'add proxy in profile' do
+  describe 'add proxy in profile', :js do
     it "creates a proxy" do
       sign_in user
       visit "/"

@@ -59,28 +59,34 @@ describe "Sending an email via the contact form", :type => :feature do
     expect(page).to have_content "Sorry, this message was not delivered"
   end
 
-  it "should give an error when I don't provide a subject" do
-    visit '/'
-    click_link "Contact"
-    expect(page).to have_content "Contact Form"
-    fill_in "contact_form_name", with: "Test McPherson"
-    fill_in "contact_form_email", with: "archivist1@example.com"
-    fill_in "contact_form_message", with: "I am contacting you regarding ScholarSphere."
-    select "Depositing content", from: "contact_form_category"
-    expect_any_instance_of(ContactForm).not_to receive(:deliver)
-    click_button "Send"
+  context "when I don't provide a subject", :js do
+    it "should give an error" do
+      # TODO this should be a controller test, because that any_instance will be in a different thread
+      visit '/'
+      click_link "Contact"
+      expect(page).to have_content "Contact Form"
+      fill_in "contact_form_name", with: "Test McPherson"
+      fill_in "contact_form_email", with: "archivist1@example.com"
+      fill_in "contact_form_message", with: "I am contacting you regarding ScholarSphere."
+      select "Depositing content", from: "contact_form_category"
+      expect_any_instance_of(ContactForm).not_to receive(:deliver)
+      click_button "Send"
+    end
   end
 
-  it "should give an error when I don't provide a message" do
-    visit '/'
-    click_link "Contact"
-    expect(page).to have_content "Contact Form"
-    fill_in "contact_form_name", with: "Test McPherson"
-    fill_in "contact_form_email", with: "archivist1@example.com"
-    fill_in "contact_form_subject", with: "My Subject is Cool"
-    select "Depositing content", from: "contact_form_category"
-    expect_any_instance_of(ContactForm).not_to receive(:deliver)
-    click_button "Send"
+  context "when I don't provide a message", :js do
+    it "should give an error" do
+      # TODO this should be a controller test, because that any_instance will be in a different thread
+      visit '/'
+      click_link "Contact"
+      expect(page).to have_content "Contact Form"
+      fill_in "contact_form_name", with: "Test McPherson"
+      fill_in "contact_form_email", with: "archivist1@example.com"
+      fill_in "contact_form_subject", with: "My Subject is Cool"
+      select "Depositing content", from: "contact_form_category"
+      expect_any_instance_of(ContactForm).not_to receive(:deliver)
+      click_button "Send"
+    end
   end
 
   it "should give an error when I provide an invalid captcha" do
