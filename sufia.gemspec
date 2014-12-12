@@ -39,7 +39,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'hydra-editor', '~> 0.3'
   gem.add_dependency 'hydra-collections', '~> 2.0'
   gem.add_dependency 'bootstrap_form', '~> 2.1'
-  gem.add_dependency 'bootstrap-sass', '< 3.2'
   gem.add_dependency 'blacklight-gallery'
   gem.add_dependency 'breadcrumbs_on_rails', '~>2.3.0'
   gem.add_dependency 'select2-rails'
