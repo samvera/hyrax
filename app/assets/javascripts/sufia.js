@@ -51,7 +51,12 @@
 //= require sufia/batch
 
 //= require hydra_collections
-//= require browse_everything
+
+//
+// For Browse-everything until https://github.com/projecthydra-labs/browse-everything/issues/85 is resolved:
+//= require jquery.treetable
+//= require browse_everything/behavior
+//
 //= require jquery.blacklightTagCloud
 //= require sufia/tagcloud
 //= require nestable
