@@ -14,11 +14,13 @@
       <%= link_to raw('<i class="glyphicon glyphicon-download-alt"></i> Download File'), sufia.download_path(noid),
                   class: 'itemicon itemdownload', title: 'Download File', target: '_new' %>
     </li>
-    <li>
-      <%= display_trophy_link(@user, noid) do |text| %>
-        <i class='glyphicon glyphicon-star'></i> <%= text %>
-      <% end %>
-    </li>
+    <% if current_user %> 
+      <li>
+        <%= display_trophy_link(current_user, noid) do |text| %>
+          <i class='glyphicon glyphicon-star'></i> <%= text %>
+        <% end %>
+      </li>
+    <% end %>
   </ul>
 </div>
 
