@@ -1,14 +1,31 @@
 <dl id="user_info" class="row">
+
+<% if user.orcid.present? %>
+  <dt class="col-xs-5"><%= orcid_label('orcid') %></dt>
+  <dd class="col-xs-7"><%= link_to user.orcid, user.orcid, { target: '_blank' } %></dd>
+<% end %>
+
+<% if user.facebook_handle.present? %>
   <dt class="col-xs-5"><i class="fa fa-facebook"></i> Facebook Handle</dt>
   <dd class="col-xs-7"><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+<% end %>
 
+<% if user.twitter_handle.present? %>
   <dt class="col-xs-5"><i class="fa fa-twitter"></i> Twitter Handle</dt>
   <dd class="col-xs-7"><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
- 
+<% end %>
+
+<% if user.googleplus_handle.present? %>
   <dt class="col-xs-5"><i class="fa fa-google-plus"></i> Google+ Handle</dt>
   <dd class="col-xs-7"><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
- 
-  <dt class="col-xs-5"><i class="glyphicon glyphicon-envelope-alt"></i> Email</dt>
+<% end %>
+
+<% if user.linkedin_handle.present? %>
+  <dt class="col-xs-5"><i class="fa fa-linkedin"></i> LinkedIn</dt>
+  <dd class="col-xs-7"><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>
+<% end %>
+
+  <dt class="col-xs-5"><i class="fa fa-envelope"></i> Email</dt>
   <dd class="col-xs-7"><%= mail_to user.email %></dd>
 
   <% if user.chat_id %>

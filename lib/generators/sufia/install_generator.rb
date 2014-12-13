@@ -23,6 +23,10 @@ module Sufia
       generate "sufia:models:install"
     end
 
+    def banner
+      say_status("warning", "GENERATING SUFIA", :yellow)
+    end
+
     def insert_abilities
       insert_into_file 'app/models/ability.rb', after: /Hydra::Ability/ do
         "\n  include Sufia::Ability\n"
