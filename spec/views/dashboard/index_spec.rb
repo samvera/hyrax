@@ -64,8 +64,8 @@ describe "dashboard/index.html.erb", :type => :view do
       expect(@sidebar).to include '<span class="badge">2</span>'
       expect(@sidebar).to include '<span class="badge">15</span>'
       expect(@sidebar).to include '<span class="badge">3</span>'
-      expect(@sidebar).to include '1 View'
-      expect(@sidebar).to include '3 Downloads'
+      expect(@sidebar).to include '<span class="badge-optional">1</span> View'
+      expect(@sidebar).to include '<span class="badge-optional">3</span> Downloads'
     end
 
     it "should show the statistics before the profile" do
