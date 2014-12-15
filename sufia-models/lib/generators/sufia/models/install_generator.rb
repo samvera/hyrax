@@ -15,6 +15,7 @@ This generator makes the following changes to your application:
  8. Runs proxies generator
  9. Runs cached stats generator
 10. Runs ORCID field generator
+11. Runs user stats generator
        """
   def banner
     say_status("warning", "GENERATING SUFIA MODELS", :yellow)
@@ -96,5 +97,10 @@ This generator makes the following changes to your application:
   # Adds orcid field to user model
   def orcid_field
     generate 'sufia:models:orcid_field'
+  end
+
+  # Adds user stats-related migration & methods
+  def user_stats
+    generate 'sufia:models:user_stats'
   end
 end
