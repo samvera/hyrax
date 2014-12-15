@@ -1,27 +1,10 @@
 module Hydra::AccessControls
   class Embargo < ActiveFedora::Base
-    property :visibility_during_embargo, predicate: Hydra::ACL.visibilityDuringEmbargo
-    property :visibility_after_embargo, predicate: Hydra::ACL.visibilityAfterEmbargo
-    property :embargo_release_date, predicate: Hydra::ACL.embargoReleaseDate
+    property :visibility_during_embargo, predicate: Hydra::ACL.visibilityDuringEmbargo, multiple:false
+    property :visibility_after_embargo, predicate: Hydra::ACL.visibilityAfterEmbargo, multiple:false
+    property :embargo_release_date, predicate: Hydra::ACL.embargoReleaseDate, multiple:false
     property :embargo_history, predicate: Hydra::ACL.embargoHistory
 
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def visibility_during_embargo_with_first
-      visibility_during_embargo_without_first.first
-    end
-    alias_method_chain :visibility_during_embargo, :first
-
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def visibility_after_embargo_with_first
-      visibility_after_embargo_without_first.first
-    end
-    alias_method_chain :visibility_after_embargo, :first
-
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def embargo_release_date_with_first
-      embargo_release_date_without_first.first
-    end
-    alias_method_chain :embargo_release_date, :first
 
     # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
     def embargo_release_date_with_casting=(date)
