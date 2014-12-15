@@ -1,27 +1,9 @@
 module Hydra::AccessControls
   class Lease < ActiveFedora::Base
-    property :visibility_during_lease, predicate: Hydra::ACL.visibilityDuringLease
-    property :visibility_after_lease, predicate: Hydra::ACL.visibilityAfterLease
-    property :lease_expiration_date, predicate: Hydra::ACL.leaseExpirationDate
+    property :visibility_during_lease, predicate: Hydra::ACL.visibilityDuringLease, multiple:false
+    property :visibility_after_lease, predicate: Hydra::ACL.visibilityAfterLease, multiple:false
+    property :lease_expiration_date, predicate: Hydra::ACL.leaseExpirationDate, multiple:false
     property :lease_history, predicate: Hydra::ACL.leaseHistory
-
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def visibility_during_lease_with_first
-      visibility_during_lease_without_first.first
-    end
-    alias_method_chain :visibility_during_lease, :first
-
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def visibility_after_lease_with_first
-      visibility_after_lease_without_first.first
-    end
-    alias_method_chain :visibility_after_lease, :first
-
-    # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
-    def lease_expiration_date_with_first
-      lease_expiration_date_without_first.first
-    end
-    alias_method_chain :lease_expiration_date, :first
 
     # Hack until ActiveFedora supports activeTriples 0.3.0 (then we can just use super)
     def lease_expiration_date_with_casting=(date)

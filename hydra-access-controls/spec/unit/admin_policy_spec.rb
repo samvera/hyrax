@@ -4,8 +4,8 @@ describe Hydra::AdminPolicy do
 
   describe "when setting attributes" do
     before do
-      subject.title = "My title"
-      subject.description = "My description"
+      subject.title = ["My title"]
+      subject.description = ["My description"]
     end
     its(:title) { is_expected.to eq "My title"}
     its(:description) { is_expected.to eq "My description"}
@@ -13,7 +13,7 @@ describe Hydra::AdminPolicy do
 
 
   describe "to_solr" do
-    subject { Hydra::AdminPolicy.new(:title=>"Foobar").to_solr }
+    subject { Hydra::AdminPolicy.new(:title=>["Foobar"]).to_solr }
     it "should have title_ssim" do
       expect(subject[ActiveFedora::SolrQueryBuilder.solr_name('title', type: :string)]).to eq ["Foobar"]
     end
@@ -42,12 +42,12 @@ describe Hydra::AdminPolicy do
     end
     it "should update permissions on existing users" do
       subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
-      subject.default_permissions.first.mode = ::ACL.Write
+      subject.default_permissions.first.mode = Hydra::AccessControls::Mode.new(::ACL.Write)
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'edit', :name=>'user1'}]
     end
     it "should update permissions on existing groups" do
       subject.default_permissions.build({:name=>'group1', :access=>'discover', :type=>'group'})
-      subject.default_permissions.first.mode = ::ACL.Write
+      subject.default_permissions.first.mode = Hydra::AccessControls::Mode.new(::ACL.Write)
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'group', :access=>'edit', :name=>'group1'}]
     end
     it "should assign user permissions when :type == 'person'" do
