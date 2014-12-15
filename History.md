@@ -1,5 +1,24 @@
 # History of Sufia releases
 
+## 4.3.0
+
+ * Adds an ORCID field to the user model. [Michael J. Giarlo]
+ * Styles count for views and downloads, refs #9672 [Michael Tribone]
+ * Merge pull request #787 from projecthydra/update_master_to_bl-5.8 [Justin Coyne]
+ * More facets modal defaults to numerical sort [Adam Wead]
+ * Upgrade to Blacklight 5.8 [Adam Wead]
+ * Adding select2 name look up to permissions form for GenericFile and Batch. [Carolyn Cole]
+ * Adding blacklight gallery default views to catalog controller to match with the new installer.
+ * Display file stats for user.  Feature #9305 [Valerie Maher]
+ * Making sure the modal is actually sorted numerically and allow some files to be on the second p
+ * Fixing a bug that the home page crashes when a featured work has been destroyed [Carolyn Cole]
+ * Fixes button size and alignment issues with metadata and upload forms, refs #9569 [Michael Tribone]
+ * Updated dev notes [Valerie Maher]
+ * Disable check all instead of making it disappear.  User testing indicated this was confusing [Carolyn Cole]
+ * Views should not use the invalid Agent schema.org class [Michael J. Giarlo]
+ * README should not implicitly suggest an outdated version of Sufia. (Inspired by #719 -- thx, @mistydemeo!) [Michael J. Giarlo]
+
+
 ## 4.2.0
 
 * Caches google analytics data in the database so we do not have to retrieve them each time the page is loaded [Carolyn Cole]
