@@ -1,23 +1,24 @@
 # History of Sufia releases
 
-## 4.3.0
+## 4.3.1
 
- * Adds an ORCID field to the user model. [Michael J. Giarlo]
- * Styles count for views and downloads, refs #9672 [Michael Tribone]
- * Merge pull request #787 from projecthydra/update_master_to_bl-5.8 [Justin Coyne]
- * More facets modal defaults to numerical sort [Adam Wead]
- * Upgrade to Blacklight 5.8 [Adam Wead]
- * Adding select2 name look up to permissions form for GenericFile and Batch. [Carolyn Cole]
- * Adding blacklight gallery default views to catalog controller to match with the new installer.
- * Display file stats for user.  Feature #9305 [Valerie Maher]
- * Making sure the modal is actually sorted numerically and allow some files to be on the second p
- * Fixing a bug that the home page crashes when a featured work has been destroyed [Carolyn Cole]
- * Fixes button size and alignment issues with metadata and upload forms, refs #9569 [Michael Tribone]
- * Updated dev notes [Valerie Maher]
- * Disable check all instead of making it disappear.  User testing indicated this was confusing [Carolyn Cole]
- * Views should not use the invalid Agent schema.org class [Michael J. Giarlo]
- * README should not implicitly suggest an outdated version of Sufia. (Inspired by #719 -- thx, @mistydemeo!) [Michael J. Giarlo]
+* Adds an ORCID field to the user model. [Michael J. Giarlo]
+* Styles count for views and downloads, refs #9672 [Michael Tribone]
+* Merge pull request #787 from projecthydra/update_master_to_bl-5.8 [Justin Coyne]
+* More facets modal defaults to numerical sort [Adam Wead]
+* Upgrade to Blacklight 5.8 [Adam Wead]
+* Adding select2 name look up to permissions form for GenericFile and Batch. [Carolyn Cole]
+* Adding blacklight gallery default views to catalog controller to match with the new installer.
+* Display file stats for user.  Feature #9305 [Valerie Maher]
+* Making sure the modal is actually sorted numerically and allow some files to be on the second p
+* Fixing a bug that the home page crashes when a featured work has been destroyed [Carolyn Cole]
+* Fixes button size and alignment issues with metadata and upload forms, refs #9569 [Michael Tribone]
+* Updated dev notes [Valerie Maher]
+* Disable check all instead of making it disappear.  User testing indicated this was confusing [Carolyn Cole]
+* Views should not use the invalid Agent schema.org class [Michael J. Giarlo]
+* README should not implicitly suggest an outdated version of Sufia. (Inspired by #719 -- thx, @mistydemeo!) [Michael J. Giarlo]
 
+## 4.3.0 - YANKED
 
 ## 4.2.0
 
@@ -191,6 +192,7 @@ This release contains bug fixes and css fixes found after the Sufia 4.0 release.
   * changing to bootstrap 3 danger from important to get the red background for permissions, and fixing collection detail spacing when there is no description [Carolyn Cole]
   * Upgrade to rspec 3. Fixes #493 [Carolyn Cole]
   * Removed extraneous colons preceding key names. Fixes #516 [kerchner]
+
 ## 4.0.0.rc1
 
   * Use the bootstrap_form helpers (bootstrap_forms is no longer available) [Justin Coyne]
