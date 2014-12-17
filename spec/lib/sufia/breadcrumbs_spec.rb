@@ -54,25 +54,63 @@ describe Sufia::Breadcrumbs do
         expect(crumbs.trail_from_referer).to eql([[I18n.t('sufia.bread_crumb.search_results'), referer]])
       end
     end
-    context "when coming from the dashboard" do
+    context "when coming places other than the catalog" do
       before do
-        allow(crumbs.request).to receive(:referer).and_return("http://...dashboard/")
+        allow(crumbs.request).to receive(:referer).and_return("http://...blargh/")
         allow(crumbs).to receive(:user_signed_in?) { true }
+        allow(crumbs).to receive(:action_name).and_return("view")
       end
       specify "the trail goes back to the user's files" do
         allow(crumbs).to receive(:controller_name).and_return("my/files")
-        expect(crumbs.trail_from_referer.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
-        expect(crumbs.trail_from_referer.last).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
+        crumbs.trail_from_referer
+        expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
       end
       specify "the trail goes back to the user's collections" do
         allow(crumbs).to receive(:controller_name).and_return("my/collections")
-        expect(crumbs.trail_from_referer.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
-        expect(crumbs.trail_from_referer.last).to eql([I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path])
+        crumbs.trail_from_referer
+        expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path])
       end
       specify "the trail goes back to the user's files when on the batch edit page" do
         allow(crumbs).to receive(:controller_name).and_return("batch_edit")
-        expect(crumbs.trail_from_referer.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
-        expect(crumbs.trail_from_referer.last).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
+        crumbs.trail_from_referer
+        expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
+      end
+    end
+
+    context "when editing a file" do
+      before do
+        allow(crumbs.request).to receive(:referer).and_return("http://...blargh/")
+        allow(crumbs).to receive(:user_signed_in?) { true }
+        allow(crumbs).to receive(:action_name).and_return("edit")
+        allow(crumbs).to receive(:params).and_return({"id" => "abc123"})
+        allow(crumbs).to receive(:controller_name).and_return("generic_files")
+      end
+
+      specify "the trail goes back to the user's files and the browse view" do
+        crumbs.trail_from_referer
+        expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
+        expect(crumbs.trail[1]).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.generic_file.browse_view'), sufia.generic_file_path("abc123")])
+      end
+    end
+
+    context "when viewing file statistics" do
+      before do
+        allow(crumbs.request).to receive(:referer).and_return("http://...blargh/")
+        allow(crumbs).to receive(:user_signed_in?) { true }
+        allow(crumbs).to receive(:action_name).and_return("stats")
+        allow(crumbs).to receive(:params).and_return({"id" => "abc123"})
+        allow(crumbs).to receive(:controller_name).and_return("generic_files")
+      end
+
+      specify "the trail goes back to the user's files and the browse view" do
+        crumbs.trail_from_referer
+        expect(crumbs.trail.first).to eql([I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path])
+        expect(crumbs.trail[1]).to eql([I18n.t('sufia.dashboard.my.files'), sufia.dashboard_files_path])
+        expect(crumbs.trail.last).to eql([I18n.t('sufia.generic_file.browse_view'), sufia.generic_file_path("abc123")])
       end
     end
   end
