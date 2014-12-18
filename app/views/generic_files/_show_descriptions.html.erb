@@ -1,12 +1,11 @@
-<% generic_file ||= @generic_file %>
 
 <h2 class="non lower">Descriptions</h2>
 <table class="table table-striped"><!-- class="verticalheadings"> -->
   <tbody>
-  <% (generic_file.terms_for_display).each do |term| %>
+  <% @presenter.terms.each do |term| %>
       <tr>
         <th><%= get_label(term) %></th>
-        <td><%= render_show_field_partial_with_action("records", term, {record: generic_file}) %></td>
+        <td><%= render_show_field_partial_with_action("records", term, record: @presenter) %></td>
       </tr>
   <% end %>
   </tbody>

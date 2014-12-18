@@ -33,9 +33,9 @@ class CollectionsController < ApplicationController
       format.json { render json: {id: id}, status: :destroyed, location: @collection }
     end
   end
-  
+
   def initialize_fields_for_edit
-    @collection.initialize_fields
+    @form = Sufia::Forms::CollectionEditForm.new(@collection)
   end
 
   def _prefixes

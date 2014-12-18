@@ -11,13 +11,14 @@ describe BatchController do
     let(:batch) { Batch.create }
     context "enquing a batch job" do
       before do
-        allow(BatchUpdateJob).to receive(:new).with(user.user_key,
-                                                    hash_including('generic_file' => anything)).
-                                                    and_return(batch_update_message)
+        allow(BatchUpdateJob).to receive(:new).with(user.user_key, batch.id, {'1' => 'foo'},
+                { "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[]},
+                'open').and_return(batch_update_message)
       end
       it "should be successful" do
         expect(Sufia.queue).to receive(:push).with(batch_update_message).once
-        post :update, id: batch.id, "generic_file" => {"read_groups_string" => "", "read_users_string" => "archivist1, archivist2", "tag" => [""]}
+        post :update, id: batch.id, title: {'1' => 'foo'}, visibility: 'open',
+          generic_file: {read_groups_string: "", read_users_string: "archivist1, archivist2", tag: [""]}
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -99,6 +100,7 @@ describe BatchController do
       end
     end
   end
+
   describe "#edit" do
     before do
       allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
@@ -112,9 +114,9 @@ describe BatchController do
       @file2.save
     end
     it "should default creator" do
-      get :edit, id: @b1.id
-      expect(assigns[:generic_file].creator[0]).to eq user.display_name
-      expect(assigns[:generic_file].title[0]).to eq 'f1'
+      get :edit, id: @b1
+      expect(assigns[:form].creator[0]).to eq user.display_name
+      expect(assigns[:form].title[0]).to eq 'f1'
     end
   end
 end

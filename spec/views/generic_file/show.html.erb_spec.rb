@@ -28,6 +28,10 @@ describe 'generic_files/show.html.erb', :type => :view do
       subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
+  let(:presenter) {
+    Sufia::GenericFilePresenter.new(generic_file)
+  }
+
   before do
     allow(generic_file).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(depositor)
@@ -36,6 +40,7 @@ describe 'generic_files/show.html.erb', :type => :view do
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
     allow(view).to receive(:on_the_dashboard?).and_return(false)
     assign(:generic_file, generic_file)
+    assign(:presenter, presenter)
     assign(:events, [])
     assign(:notify_number, 0)
   end

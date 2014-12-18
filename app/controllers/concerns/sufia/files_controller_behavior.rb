@@ -50,9 +50,9 @@ module Sufia
 
     # routed to /files/:id/edit
     def edit
-      @generic_file.initialize_fields
+      @form = edit_form
       @groups = current_user.groups
-      @version_list = Sufia::VersionListPresenter.new(@generic_file.content.versions.all)
+      @version_list = version_list
     end
 
     # routed to /files/:id/stats
@@ -103,6 +103,7 @@ module Sufia
       respond_to do |format|
         format.html {
           @events = @generic_file.events(100)
+          @presenter = presenter
           @audit_status = audit_service.human_readable_audit_status
         }
         format.endnote { render text: @generic_file.export_as_endnote }
@@ -140,6 +141,18 @@ module Sufia
 
     protected
 
+    def presenter
+      Sufia::GenericFilePresenter.new(@generic_file)
+    end
+
+    def version_list
+      Sufia::VersionListPresenter.new(@generic_file.content.versions.all)
+    end
+
+    def edit_form
+      Sufia::Forms::GenericFileEditForm.new(@generic_file)
+    end
+
     def audit_service
       Sufia::GenericFileAuditService.new(@generic_file)
     end
@@ -162,7 +175,8 @@ module Sufia
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      actor.update_metadata(params[:generic_file], params[:visibility])
+      file_attributes = Sufia::Forms::GenericFileEditForm.model_attributes(params[:generic_file])
+      actor.update_metadata(file_attributes, params[:visibility])
     end
 
     def update_visibility

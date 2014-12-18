@@ -19,10 +19,15 @@ describe 'generic_files/edit.html.erb', :no_clean do
         resource_type: ['Book', 'Dataset'])
     }
 
+    let(:form) {
+      Sufia::Forms::GenericFileEditForm.new(generic_file)
+    }
+
     before do
       allow(generic_file).to receive(:content).and_return(content)
       allow(controller).to receive(:current_user).and_return(stub_model(User))
       assign(:generic_file, generic_file)
+      assign(:form, form)
       assign(:version_list, version_list)
     end
 

@@ -5,10 +5,11 @@ describe 'collections/_form.html.erb', :type => :view do
     let(:collection) { Collection.new(title: 'the title', description: 'the description',
                                        creator: ['the creator'])}
 
+    let(:collection_form) { Sufia::Forms::CollectionEditForm.new(collection) }
+
     before do
       controller.request.path_parameters[:id] = 'j12345'
-      collection.initialize_fields
-      assign(:collection, collection)
+      assign(:form, collection_form)
     end
 
     it "should draw the metadata fields for collection" do

@@ -12,7 +12,7 @@ module Sufia
        super
        @generic_file = ::GenericFile.new
        @generic_file.depositor = current_user.user_key
-       @terms = @generic_file.terms_for_editing - [:title, :format, :resource_type]
+       @terms = terms - [:title, :format, :resource_type]
 
        h  = {}
        @names = []
@@ -21,7 +21,7 @@ module Sufia
        # For each of the files in the batch, set the attributes to be the concatination of all the attributes
        batch.each do |doc_id|
           gf = ::GenericFile.load_instance_from_solr(doc_id)
-          gf.terms_for_editing.each do |key|
+          terms.each do |key|
             h[key] ||= []
             h[key] = (h[key] + gf.send(key)).uniq
           end
@@ -80,10 +80,14 @@ module Sufia
 
     # override this method if you need to initialize more complex RDF assertions (b-nodes)
     def initialize_fields(attributes, file)
-       file.terms_for_editing.each do |key|
+       terms.each do |key|
          # if value is empty, we create an one element array to loop over for output
          file[key] = attributes[key].empty? ? [''] : attributes[key]
        end
+    end
+
+    def terms
+      Forms::BatchEditForm.terms
     end
 
     def redirect_to_return_controller

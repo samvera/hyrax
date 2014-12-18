@@ -10,7 +10,7 @@
   <%= link_to "<i class='glyphicon glyphicon-dashboard'></i> #{t('sufia.bread_crumb.file_list')}".html_safe, sufia.dashboard_files_path %>
   once this step is finished. <span class="required-field">*</span> indicates required fields.
 </p>
-<%= form_for([sufia, @batch, @generic_file], html: { multipart: true }) do |f| %>
+<%= form_for([sufia, @batch, @form], html: { multipart: true }) do |f| %>
 
   <%= render 'metadata', f: f %>
 

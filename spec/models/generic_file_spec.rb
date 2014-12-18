@@ -528,19 +528,6 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "#remove_blank_assertions" do
-    before do
-      subject.title = ["foo"]
-      subject.description = [""]
-      subject.remove_blank_assertions
-    end
-
-    it "should only change title" do
-      expect(subject.title).to eq(["foo"])
-      expect(subject.description).to be_empty
-    end
-  end
-
   describe "to_solr record" do
     let(:depositor) { 'jcoyne' }
     subject do

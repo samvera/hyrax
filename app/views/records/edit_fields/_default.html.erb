@@ -1,5 +1,5 @@
       <div <%  if index == 0 %> id="additional_<%= key.to_s %>_clone" <% end %> class="input-group">
-        <% required = render_req && (index == 0) && record.required?(key) %>
+        <% required = render_req && (index == 0) && f.object.required?(key) %>
         <% if f.object.class.multiple?(key) %>
           <%= f.text_field :title, name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "form-control", required: required  %>
         <% else %>

@@ -3,8 +3,8 @@
   # 'render_edit_field_partial' in sufia that uses 'generic_file' as the action. %>
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
 <div class="form-group">
-  <% vals = record[key] %>
-  <% if render_req && record.required?(key) %>
+  <% vals = f.object[key] %>
+  <% if render_req && f.object.required?(key) %>
     <% tmp = '<span class="required-field">*</span>' + get_label(key) %>
     <%= f.label key, tmp.html_safe  %>
   <% else %>
@@ -13,10 +13,10 @@
 
   <% if key == :resource_type %>
     <%# resource_type is a multiselect box, so don't render one row for each %>
-    <%= render_edit_field_partial(key, record: record, f: f, render_req: render_req) %>
+    <%= render_edit_field_partial(key, f: f, render_req: render_req) %>
   <% else %>
     <% Array(vals).each_with_index do |v, index| %>
-      <%= render_edit_field_partial(key, record: record, f: f,  v: v, index: index, render_req: render_req) %>
+      <%= render_edit_field_partial(key, f: f, v: v, index: index, render_req: render_req) %>
     <% end %>
   <% end %>
 </div><!-- /.form-group -->

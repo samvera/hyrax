@@ -1,14 +1,11 @@
-<%# convert class variable to a local variable if the local hasn't been set %>
-<% generic_file ||= @generic_file %>
-
 <div id="descriptions_display" class="tab-pane active">
-  <%= form_for generic_file, url: sufia.generic_file_path(@generic_file), html: { multipart: true } do |f| %>
+  <%= form_for [sufia, @form], html: { multipart: true } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
     <h1>Descriptions <span class="pull-right required-field">* indicates required fields</span></h1>
       <div class="well">
 
-        <% (generic_file.terms_for_editing).each do |term| %>
-          <%= render "records/edit_field", record: generic_file, f: f, render_req: true, key: term %>
+        <% f.object.terms.each do |term| %>
+          <%= render "records/edit_field", f: f, render_req: true, key: term %>
         <% end %>
 
       </div><!-- /well -->

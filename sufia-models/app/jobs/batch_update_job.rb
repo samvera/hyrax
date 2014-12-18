@@ -8,12 +8,12 @@ class BatchUpdateJob
 
   attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied
 
-  def initialize(login, params)
+  def initialize(login, batch_id, title, file_attributes, visibility)
     self.login = login
-    self.title = params[:title] || {}
-    self.file_attributes = params[:generic_file]
-    self.visibility = params[:visibility]
-    self.batch_id = params[:id]
+    self.title = title || {}
+    self.file_attributes = file_attributes
+    self.visibility = visibility
+    self.batch_id = batch_id
     self.saved = []
     self.denied = []
   end
