@@ -5,7 +5,6 @@ module Sufia
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::Permissions
-    include Sufia::GenericFile::WebForm # provides initialize_fields method
 
     included do
       before_save :update_permissions
@@ -14,21 +13,11 @@ module Sufia
     end
 
     def terms_for_display
-      terms_for_editing - [:title, :description]
-    end
-
-    def terms_for_editing
-      [:resource_type, :title, :creator, :contributor, :description, :tag,
+      [:resource_type, :creator, :contributor, :tag,
         :rights, :publisher, :date_created, :subject, :language, :identifier,
         :based_near, :related_url]
     end
 
-    # Test to see if the given field is required
-    # @param [Symbol] key a field
-    # @return [Boolean] is it required or not
-    def required?(key)
-      self.class.validators_on(key).any?{|v| v.kind_of? ActiveModel::Validations::PresenceValidator}
-    end
 
     def to_param
       noid

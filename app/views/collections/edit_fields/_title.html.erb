@@ -1,3 +1,0 @@
-<div>
-  <%= f.text_field :title, name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "form-control", required: record.required?(key)  %>
-</div>

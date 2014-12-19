@@ -1,7 +1,7 @@
 <% render_req ||= true # render_req is true for single file edit, false for batch edit%>
 <div class="batch-group">
   <% vals = f.object[key] %>
-  <% if render_req && required?(key) %>
+  <% if render_req && f.object.required?(key) %>
     <%= f.label key do %>
       <span class="required-field">*</span><%= get_label(key) %>
     <% end %>

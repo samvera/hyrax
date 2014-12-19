@@ -331,6 +331,7 @@ describe GenericFilesController do
 
       expect(response).to be_success
       expect(assigns[:generic_file]).to eq generic_file
+      expect(assigns[:form]).to be_kind_of Sufia::Forms::GenericFileEditForm
       expect(assigns[:version_list]).to be_kind_of Sufia::VersionListPresenter
     end
 

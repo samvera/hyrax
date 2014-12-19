@@ -10,13 +10,16 @@ describe 'batch/edit.html.erb', :type => :view do
     stub_model(GenericFile, id: '321', noid: '321', depositor: 'bob', rights: [''])
   }
 
+  let(:form) {
+    Sufia::Forms::BatchEditForm.new(generic_file)
+  }
 
   before do
     allow(generic_file).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
     controller.request.path_parameters[:id] = "123"
     assign :batch, batch
-    assign :generic_file, generic_file
+    assign :form, form
     render
     @page = Capybara::Node::Simple.new(rendered)
   end
@@ -39,10 +42,10 @@ describe 'batch/edit.html.erb', :type => :view do
     it "should allow setting many rights" do
       expect(@page).to have_selector('select#generic_file_rights[name="generic_file[rights][]"]')
     end
-  
+
     it "should not have an empty rights element" do
-      @page.all('select#generic_file_rights option').each do |elem| 
-        expect(elem.value).to_not be_empty 
+      @page.all('select#generic_file_rights option').each do |elem|
+        expect(elem.value).to_not be_empty
       end
     end
   end

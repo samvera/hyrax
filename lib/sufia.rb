@@ -34,4 +34,11 @@ module Sufia
     config.assets.precompile << %r(fontawesome-webfont\.(?:svg|ttf|woff)$)
     config.assets.precompile += %w( ZeroClipboard.swf )
   end
+
+  def self.ActiveFedoraPresenter(generic)
+    self.const_set("#{generic}Form", Class.new(ActiveFedoraPresenter)).tap do |klass|
+      klass.model_class = generic
+    end
+  end
+
 end

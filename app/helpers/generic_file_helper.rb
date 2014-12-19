@@ -4,10 +4,6 @@ module GenericFileHelper
     gf.to_s
   end
 
-  def required?(key)
-    [:title, :creator, :tag, :rights].include?(key)
-  end
-
   def render_show_field_partial(key, locals)
     render_show_field_partial_with_action('generic_files', key, locals)
   end
