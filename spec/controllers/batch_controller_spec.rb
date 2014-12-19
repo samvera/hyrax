@@ -104,17 +104,14 @@ describe BatchController do
   describe "#edit" do
     before do
       allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
-      @b1 = Batch.new
-      @b1.save
-      @file = GenericFile.new(batch: @b1, label: 'f1')
-      @file.apply_depositor_metadata(user)
-      @file.save
-      @file2 = GenericFile.new(batch: @b1, label: 'f2')
-      @file2.apply_depositor_metadata(user)
-      @file2.save
     end
+    let(:b1) { Batch.create }
+    let!(:file) { GenericFile.create(batch: b1, label: 'f1') { |f| f.apply_depositor_metadata(user) } }
+    let!(:file2) { GenericFile.create(batch: b1, label: 'f2') { |f| f.apply_depositor_metadata(user) } }
+
     it "should default creator" do
-      get :edit, id: @b1
+      get :edit, id: b1
+      expect(assigns[:form]).not_to be_persisted
       expect(assigns[:form].creator[0]).to eq user.display_name
       expect(assigns[:form].title[0]).to eq 'f1'
     end
