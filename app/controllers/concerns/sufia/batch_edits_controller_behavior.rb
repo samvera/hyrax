@@ -43,7 +43,7 @@ module Sufia
     end
 
     def update_document(obj)
-      super
+      obj.attributes = generic_file_params
       obj.date_modified = Time.now.ctime
       obj.visibility = params[:visibility]
     end
@@ -51,16 +51,15 @@ module Sufia
     def update
       # keep the batch around if we are doing ajax calls
       batch_sav = batch.dup if request.xhr?
-      catalog_index_path = sufia.dashboard_index_path
-      type = params["update_type"]
-      if type == "update"
-        super
-      elsif type == "delete_all"
-        batch.each do |doc_id|
-          gf = ::GenericFile.find(doc_id)
-          gf.destroy
-        end
-        after_update
+      case params["update_type"]
+        when "update"
+          super
+        when "delete_all"
+          batch.each do |doc_id|
+            gf = ::GenericFile.find(doc_id)
+            gf.destroy
+          end
+          after_update
       end
 
       # reset the batch around if we are doing ajax calls
@@ -88,6 +87,10 @@ module Sufia
 
     def terms
       Forms::BatchEditForm.terms
+    end
+
+    def generic_file_params
+      Forms::BatchEditForm.model_attributes(params[:generic_file])
     end
 
     def redirect_to_return_controller

@@ -24,13 +24,34 @@ module Sufia::Forms
 
     module ClassMethods
       def model_attributes(form_params)
-        clean_params = form_params.dup
+        clean_params = sanitize_params(form_params)
         terms.each do |key|
           if clean_params[key] == ['']
             clean_params[key] = []
           end
         end
         clean_params
+      end
+
+      def sanitize_params(form_params)
+        form_params.permit(*permitted_params)
+      end
+
+      def permitted_params
+        @permitted ||= build_permitted_params
+      end
+
+      def build_permitted_params
+        permitted = []
+        terms.each do |term|
+          if multiple?(term)
+            permitted << { term => [] }
+          else
+            permitted << term
+          end
+        end
+        permitted << { permissions_attributes: [:type, :name, :access] }
+        permitted
       end
     end
 

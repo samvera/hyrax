@@ -12,13 +12,11 @@ describe BatchController do
     context "enquing a batch job" do
       before do
         allow(BatchUpdateJob).to receive(:new).with(user.user_key, batch.id, {'1' => 'foo'},
-                { "read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[]},
-                'open').and_return(batch_update_message)
+                { tag: [] }, 'open').and_return(batch_update_message)
       end
       it "should be successful" do
         expect(Sufia.queue).to receive(:push).with(batch_update_message).once
-        post :update, id: batch.id, title: {'1' => 'foo'}, visibility: 'open',
-          generic_file: {read_groups_string: "", read_users_string: "archivist1, archivist2", tag: [""]}
+        post :update, id: batch.id, title: {'1' => 'foo'}, visibility: 'open', generic_file: { tag: [""] }
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
         expect(flash[:notice]).to include("Your files are being processed")
       end
@@ -26,12 +24,7 @@ describe BatchController do
 
     describe "when user has edit permissions on a file" do
       # TODO all these tests could move to batch_update_job_spec.rb
-      let!(:file) do
-        GenericFile.new(batch: batch).tap do |f|
-          f.apply_depositor_metadata(user)
-          f.save!
-        end
-      end
+      let!(:file) { GenericFile.create(batch: batch) { |f| f.apply_depositor_metadata(user) } }
 
       it "should set the groups" do
         post :update, id: batch, "generic_file"=>{"permissions_attributes"=>[{"type" => "group", "name" => "public", "access" => "read"}]}
@@ -40,37 +33,13 @@ describe BatchController do
         expect(response).to redirect_to routes.url_helpers.dashboard_files_path
       end
 
-      it "should set the users with read access" do
-        post :update, id: batch, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1, archivist2", "tag"=>[""]}
-
-        expect(file.reload.read_users).to eq ['archivist1', 'archivist2']
-        expect(response).to redirect_to routes.url_helpers.dashboard_files_path
-      end
-
-      it "should set the groups with read access" do
-        post :update, id: batch, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
-        expect(file.reload.read_groups).to eq ['group1', 'group2']
-      end
-
       it "should set public read access" do
-        post :update, id: batch, "visibility"=>"open", "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"", "tag"=>[""]}
+        post :update, id: batch, visibility: "open", generic_file: { tag: [""] }
         expect(file.reload.read_groups).to eq ['public']
       end
 
-      it "should set public read access and groups at the same time" do
-        post :update, id: batch, "visibility"=>"open", "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
-        expect(file.reload.read_groups).to eq ['group1', 'group2', 'public']
-      end
-
-      it "should set public discover access and groups at the same time" do
-        post :update, id: batch, "permission"=>{"group"=>{"public"=>"none"}}, "generic_file"=>{"read_groups_string"=>"group1, group2", "read_users_string"=>"", "tag"=>[""]}
-        file.reload
-        expect(file.read_groups).to eq ['group1', 'group2']
-        expect(file.discover_groups).to eq []
-      end
-
       it "should set metadata like title" do
-        post :update, id: batch, "generic_file"=>{"tag"=>["footag", "bartag"]}, "title"=>{file.id=>["New Title"]}
+        post :update, id: batch, generic_file: { tag: ["footag", "bartag"] }, title: { file.id => ["New Title"] }
         file.reload
         expect(file.title).to eq ["New Title"]
         # TODO is order important?
@@ -78,7 +47,7 @@ describe BatchController do
       end
 
       it "should not set any tags" do
-        post :update, id: batch, "generic_file"=>{"read_groups_string"=>"", "read_users_string"=>"archivist1", "tag"=>[""]}
+        post :update, id: batch, generic_file: { tag: [""] }
         expect(file.reload.tag).to be_empty
       end
     end

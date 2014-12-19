@@ -15,7 +15,7 @@ describe Sufia::Forms::GenericFileEditForm do
   end
 
   describe ".model_attributes" do
-    let(:params) { { title: ['foo'], description: [''] }.with_indifferent_access }
+    let(:params) { ActionController::Parameters.new(title: ['foo'], description: [''])}
     subject { described_class.model_attributes(params) }
 
     it "should only change title" do

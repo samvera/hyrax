@@ -14,7 +14,14 @@ class CollectionsController < ApplicationController
 
   layout "sufia-one-column"
 
-  protected 
+  protected
+
+  def collection_params
+    params.require(:collection).permit(:title, :description, :members, part_of: [],
+      contributor: [], creator: [], publisher: [], date_created: [], subject: [],
+      language: [], rights: [], resource_type: [], identifier: [], based_near: [],
+      tag: [], related_url: [])
+  end
 
   def query_collection_members
     flash[:notice]=nil if flash[:notice] == "Select something first"
