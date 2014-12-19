@@ -52,7 +52,7 @@ describe EmbargoesController do
 
     context "when I have permission to edit the object" do
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+        expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -84,19 +84,27 @@ describe EmbargoesController do
   describe "#update" do
     context "when I have permission to edit the object" do
       let(:a_file) { FactoryGirl.build(:generic_file, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
+      let(:release_date) { Date.today+2 }
       before do
         a_work.generic_files << a_file
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.embargo_release_date = release_date.to_s
+        a_work.embargo.save(validate: false)
         a_work.save(validate: false)
+      end
+
+      it "should copy visibility from curation_concern to all of the identified files" do
+        pending "Is this ever used?  If so, write this test!"
+        fail
+        patch :update, batch_document_ids: [a_work.id], embargoes: { "0" => { copy_visibility: a_work.id} }
       end
 
       context "with an expired embargo" do
         let(:release_date) { Date.today-2 }
         it "should deactivate embargo, update the visibility and redirect" do
-          patch :update, batch_document_ids: [a_work.pid], embargoes: { "0" => { copy_visibility: a_work.id} }
+          patch :update, batch_document_ids: [a_work.id], embargoes: { "0" => { copy_visibility: a_work.id} }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(a_file.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(response).to redirect_to embargoes_path

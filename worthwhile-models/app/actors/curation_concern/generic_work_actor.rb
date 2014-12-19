@@ -16,8 +16,9 @@ module CurationConcern
 
     protected
 
+    # Is this here to ensure that the curation_concern has a pid set before any of the other methods are executed?
     def assign_pid
-      curation_concern.inner_object.pid ||= Worthwhile::CurationConcern.mint_a_pid
+      curation_concern.send(:assign_pid)
     end
 
     def files
@@ -64,7 +65,7 @@ module CurationConcern
         link.batch = curation_concern
         link.label = curation_concern.human_readable_type
       end
-      Sufia::GenericFile::Actor.new(resource, user).create_metadata(curation_concern.pid)
+      Sufia::GenericFile::Actor.new(resource, user).create_metadata(curation_concern.id)
       resource.save
     end
 
@@ -78,7 +79,7 @@ module CurationConcern
       generic_file = Worthwhile::GenericFile.new
       generic_file.file = file
       generic_file.batch = curation_concern
-      Sufia::GenericFile::Actor.new(generic_file, user).create_metadata(curation_concern.pid)
+      Sufia::GenericFile::Actor.new(generic_file, user).create_metadata(curation_concern.id)
       generic_file.embargo_release_date = curation_concern.embargo_release_date
       generic_file.visibility = visibility
       Worthwhile::CurationConcern.attach_file(generic_file, user, file)

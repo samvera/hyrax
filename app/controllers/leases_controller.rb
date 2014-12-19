@@ -1,5 +1,4 @@
 class LeasesController < ApplicationController
-  include Worthwhile::WithoutNamespace
   include Worthwhile::ManagesEmbargoes
   include Hydra::Collections::AcceptsBatches
 

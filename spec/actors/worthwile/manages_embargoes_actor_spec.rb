@@ -8,7 +8,7 @@ describe Worthwhile::ManagesEmbargoesActor do
   }
 
   let(:user) { User.new }
-  let(:curation_concern) { GenericWork.new(pid: Worthwhile::CurationConcern.mint_a_pid )}
+  let(:curation_concern) { GenericWork.new(id: Worthwhile::CurationConcern.mint_a_pid )}
   let(:attributes) {{}}
   subject {
     model.new(curation_concern, user, attributes)

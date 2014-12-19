@@ -14,8 +14,9 @@ module CurationConcern
 
     # we can trim this down a bit when Sufia 7.1 is released (adds update_visibility)
     def update_metadata(_, _)
-      interpret_visibility
-      generic_file.visibility = attributes[:visibility] if attributes.key?(:visibility)
+      interpret_visibility # Note: this modifies the contents of attributes!
+      update_visibility(attributes[:visibility]) if attributes.key?(:visibility)
+      # generic_file.visibility = attributes[:visibility] if attributes.key?(:visibility)
       generic_file.attributes = generic_file.sanitize_attributes(attributes)
       generic_file.date_modified = DateTime.now
       remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?

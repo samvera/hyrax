@@ -9,47 +9,47 @@ en:
       fields:
         facet:
           human_readable_type_sim: Type of Work
-          desc_metadata__creator_sim: Creator
-          desc_metadata__tag_sim: Keyword
-          desc_metadata__subject_sim: Subject
-          desc_metadata__language_sim: Language
-          desc_metadata__based_near_sim: Location
-          desc_metadata__publisher_sim: Publisher
+          creator_sim: Creator
+          tag_sim: Keyword
+          subject_sim: Subject
+          language_sim: Language
+          based_near_sim: Location
+          publisher_sim: Publisher
           file_format_sim: Format 
           generic_type_sim: Type
         index:
-          desc_metadata__description_tesim: "Description"
-          desc_metadata__tag_tesim: "Keyword"
-          desc_metadata__subject_tesim: "Subject"
-          desc_metadata__creator_tesim: "Creator"
-          desc_metadata__contributor_tesim: "Contributor"
-          desc_metadata__publisher_tesim: "Publisher"
-          desc_metadata__based_near_tesim: "Location"
-          desc_metadata__language_tesim: "Language"
-          desc_metadata__date_uploaded_tesi: "Date Uploaded"
-          desc_metadata__date_modified_tesi: "Date Modified"
-          desc_metadata__date_created_tesim: "Date Created"
-          desc_metadata__rights_tesim: "Rights"
+          description_tesim: "Description"
+          tag_tesim: "Keyword"
+          subject_tesim: "Subject"
+          creator_tesim: "Creator"
+          contributor_tesim: "Contributor"
+          publisher_tesim: "Publisher"
+          based_near_tesim: "Location"
+          language_tesim: "Language"
+          date_uploaded_tesi: "Date Uploaded"
+          date_modified_tesi: "Date Modified"
+          date_created_tesim: "Date Created"
+          rights_tesim: "Rights"
           human_readable_type_tesim: "Resource Type"
-          desc_metadata__format_tesim: "File Format"
-          desc_metadata__identifier_tesim: "Identifier"
+          format_tesim: "File Format"
+          identifier_tesim: "Identifier"
         show:
-          desc_metadata__title_tesim: "Title"
-          desc_metadata__description_tesim: "Description"
-          desc_metadata__tag_tesim: "Keyword"
-          desc_metadata__subject_tesim: "Subject"
-          desc_metadata__creator_tesim: "Creator"
-          desc_metadata__contributor_tesim: "Contributor"
-          desc_metadata__publisher_tesim: "Publisher"
-          desc_metadata__based_near_tesim: "Location"
-          desc_metadata__language_tesim: "Language"
-          desc_metadata__date_uploaded_tesi: "Date Uploaded"
-          desc_metadata__date_modified_tesi: "Date Modified"
-          desc_metadata__date_created_tesim: "Date Created"
-          desc_metadata__rights_tesim: "Rights"
+          title_tesim: "Title"
+          description_tesim: "Description"
+          tag_tesim: "Keyword"
+          subject_tesim: "Subject"
+          creator_tesim: "Creator"
+          contributor_tesim: "Contributor"
+          publisher_tesim: "Publisher"
+          based_near_tesim: "Location"
+          language_tesim: "Language"
+          date_uploaded_tesi: "Date Uploaded"
+          date_modified_tesi: "Date Modified"
+          date_created_tesim: "Date Created"
+          rights_tesim: "Rights"
           human_readable_type_tesim: "Resource Type"
-          desc_metadata__format_tesim: "File Format"
-          desc_metadata__identifier_tesim: "Identifier"
+          format_tesim: "File Format"
+          identifier_tesim: "Identifier"
   simple_form:
     hints:
       defaults:

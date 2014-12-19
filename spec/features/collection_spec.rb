@@ -19,21 +19,21 @@ describe 'collection' do
 
   let(:user) { FactoryGirl.create(:user, email: 'user1@example.com') }
   let(:user_key) { user.user_key }
-
-  before(:all) do
-    @old_resque_inline_value = Resque.inline
-    Resque.inline = true
-
-    @gws = []
-    (0..12).each do |x|
-      @gws[x] =  GenericWork.new.tap do |f|
+  let(:generic_works) do
+    (0..12).map do |x|
+      GenericWork.new.tap do |f|
         f.title = ["title #{x}"]
         f.apply_depositor_metadata('user1@example.com')
         f.save!
       end
     end
-    @gw1 = @gws[0]
-    @gw2 = @gws[1]
+  end
+  let(:gw1) { generic_works[0]}
+  let(:gw2) { generic_works[1]}
+
+  before(:all) do
+    @old_resque_inline_value = Resque.inline
+    Resque.inline = true
   end
 
   after(:all) do
@@ -95,10 +95,11 @@ describe 'collection' do
 
   describe 'show collection' do
     before do
-      @collection = Collection.new title: 'collection title'
-      @collection.description = 'collection description'
-      @collection.apply_depositor_metadata(user_key)
-      @collection.members = [@gw1,@gw2]
+      @collection = FactoryGirl.create(:collection, user:user, title: 'collection title', description:'collection description')
+      # @collection = Collection.new title: 'collection title'
+      # @collection.description = ['collection description']
+      # @collection.apply_depositor_metadata(user_key)
+      @collection.members = [gw1,gw2]
       @collection.save
       sign_in user
       visit search_path_for_my_collections
@@ -112,13 +113,13 @@ describe 'collection' do
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
-      expect(page).to have_content(@gw1.title.first)
-      expect(page).to have_content(@gw2.title.first)
+      expect(page).to have_content(gw1.title.first)
+      expect(page).to have_content(gw2.title.first)
       expect(page).to_not have_css(".pager")
 
       #click_link "Gallery"
-      #expect(page).to have_content(@gw1.title)
-      #expect(page).to have_content(@gw2.title)
+      #expect(page).to have_content(gw1.title)
+      #expect(page).to have_content(gw2.title)
     end
 
     it "should hide collection descriptive metadata when searching a collection" do
@@ -128,17 +129,17 @@ describe 'collection' do
       end
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
-      expect(page).to have_content(@gw1.title.first)
-      expect(page).to have_content(@gw2.title.first)
-      fill_in('collection_search', with: @gw1.title.first)
+      expect(page).to have_content(gw1.title.first)
+      expect(page).to have_content(gw2.title.first)
+      fill_in('collection_search', with: gw1.title.first)
       click_button('collection_submit')
       # Should not have Collection Descriptive metadata table
       expect(page).to_not have_content("Descriptions")
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
-      expect(page).to have_content(@gw1.title.first)
-      expect(page).to_not have_content(@gw2.title.first)
+      expect(page).to have_content(gw1.title.first)
+      expect(page).to_not have_content(gw2.title.first)
       # Should not have Dashboard content in contents listing
       expect(page).to_not have_content("Visibility")
     end
@@ -149,7 +150,7 @@ describe 'collection' do
       @collection = Collection.new(title: 'Awesome Title')
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
-      @collection.members = [@gw1, @gw2]
+      @collection.members = [gw1, gw2]
       @collection.save
       sign_in user
       visit search_path_for_my_collections
@@ -186,15 +187,15 @@ describe 'collection' do
       end
       expect(page).to have_field('collection_title', with: @collection.title)
       expect(page).to have_field('collection_description', with: @collection.description)
-      expect(page).to have_content(@gw1.title)
-      expect(page).to have_content(@gw2.title)
-      within("#document_#{@gw1.noid}") do
+      expect(page).to have_content(gw1.title)
+      expect(page).to have_content(gw2.title)
+      within("#document_#{gw1.noid}") do
         click_button('Remove From Collection')
       end
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
-      expect(page).to_not have_content(@gw1.title)
-      expect(page).to have_content(@gw2.title)
+      expect(page).to_not have_content(gw1.title)
+      expect(page).to have_content(gw2.title)
     end
 
     it "should remove all works from a collection" do
@@ -205,14 +206,14 @@ describe 'collection' do
       end
       expect(page).to have_field('collection_title', with: @collection.title)
       expect(page).to have_field('collection_description', with: @collection.description)
-      expect(page).to have_content(@gw1.title)
-      expect(page).to have_content(@gw2.title)
+      expect(page).to have_content(gw1.title)
+      expect(page).to have_content(gw2.title)
       first('input#check_all').click
       click_button('Remove From Collection')
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
-      expect(page).to_not have_content(@gw1.title)
-      expect(page).to_not have_content(@gw2.title)
+      expect(page).to_not have_content(gw1.title)
+      expect(page).to_not have_content(gw2.title)
     end
   end
 
@@ -221,7 +222,7 @@ describe 'collection' do
       @collection = Collection.new title:'collection title'
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
-      @collection.members = @gws
+      @collection.members = generic_works
       @collection.save!
       sign_in user
       visit search_path_for_my_collections

@@ -29,7 +29,7 @@ describe Worthwhile::LinkedResource do
     end
     it "if title is set, returns the title" do
       subject.url = 'http://www.youtube.com/watch?v=oHg5SJYRHA0'
-      subject.title = "My Link Title"
+      subject.label = "My Link Title"
       expect(subject.to_s).to eq("My Link Title")
     end
   end
@@ -42,7 +42,13 @@ describe Worthwhile::LinkedResource do
     end
   end
 
+  it "stores a redirect as its content" do
+    pending "until content redirects is implemented with active-fedora on fedora4"
+    fail
+  end
+
   describe "sanitizing" do
+
     context "javascript uri" do
       subject { FactoryGirl.build(:linked_resource, url: "javascript:void(alert('Hello'));") }
       it "should be cleared" do
@@ -73,6 +79,9 @@ describe Worthwhile::LinkedResource do
     subject { Worthwhile::LinkedResource.new(url: 'http://www.youtube.com/watch?v=oHg5SJYRHA0') }
     it 'should solrize its url' do
       expect(subject.to_solr.fetch('url_tesim')).to eq(['http://www.youtube.com/watch?v=oHg5SJYRHA0'])
+    end
+    it 'should include inherited values from ActiveFedora::Base' do
+      expect(subject.to_solr.keys).to include(:id)
     end
   end
 

@@ -37,8 +37,9 @@ describe VisibilityCopyWorker do
       end
       let(:file) { work.generic_files.first }
 
-      it "should copy visibility to its contained files" do
+      it "should copy visibility to its contained files and apply a copy of the embargo to the files" do
         expect(file).to be_under_embargo
+        expect(file.embargo.id).to_not eq work.embargo.id
       end
     end
   end
@@ -60,8 +61,9 @@ describe VisibilityCopyWorker do
       end
       let(:file) { work.generic_files.first }
 
-      it "should copy visibility to its contained files" do
+      it "should copy visibility to its contained files and apply a copy of the lease to the files" do
         expect(file).to be_active_lease
+        expect(file.lease.id).to_not eq work.lease.id
       end
     end
   end

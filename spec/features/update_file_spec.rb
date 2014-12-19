@@ -23,6 +23,8 @@ describe "Editing attached files" do
     click_button "Update Attached File"
 
     expect(page).to have_content "The file image.png has been updated."
-    expect(generic_file.reload.content.label).to eq 'image.png'
+    generic_file.reload
+    expect(generic_file.content.original_name).to eq 'image.png'
+    expect(generic_file.content.mime_type).to eq 'image/png'
   end
 end

@@ -1,6 +1,5 @@
 module Worthwhile::CurationConcernController
   extend ActiveSupport::Concern
-  include Worthwhile::WithoutNamespace
   include Blacklight::Catalog::SearchContext
 
   included do

@@ -147,7 +147,7 @@ describe CurationConcern::GenericWorksController do
     it "should delete the work" do
       delete :destroy, id: work_to_be_deleted
       expect(response).to redirect_to catalog_index_path()
-      expect { GenericWork.find(work_to_be_deleted.pid) }.to raise_error
+      expect { GenericWork.find(work_to_be_deleted.id) }.to raise_error
     end
 
     context "someone elses public work" do
@@ -164,7 +164,7 @@ describe CurationConcern::GenericWorksController do
       before { allow_any_instance_of(User).to receive(:groups).and_return(['admin']) }
       it "someone elses private work should delete the work" do
         delete :destroy, id: work_to_be_deleted
-        expect { GenericWork.find(work_to_be_deleted.pid) }.to raise_error
+        expect { GenericWork.find(work_to_be_deleted.id) }.to raise_error
       end
     end
   end

@@ -1,12 +1,14 @@
 source 'https://rubygems.org'
 
+gem 'hydra-head', github:"projecthydra/hydra-head", branch:'master'
+gem 'active-fedora', github:"projecthydra/active_fedora", ref:'a4b4d5e0e4e3342ce5a2a9b337ee744cecd68cc5'
+
 # Specify your gem's dependencies in worthwhile.gemspec
 gemspec
 
 gem 'byebug' unless ENV['TRAVIS']
 gem 'sass-rails', '~> 4.0.3'
 gem 'worthwhile-models', path: './worthwhile-models'
-gem 'active-triples', '0.2.3'
 
 group :test do
   gem 'simplecov', '~> 0.9', require: false
