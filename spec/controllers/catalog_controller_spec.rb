@@ -39,7 +39,10 @@ describe CatalogController do
       it "should return all the works" do
         get 'index', 'f' => {'generic_type_sim' => 'Work'}
         expect(response).to be_successful
-        expect(assigns(:document_list).map(&:id)).to eq [work1.id, work2.id]
+        expect(assigns(:document_list).count).to eq 2
+        [work1.id, work2.id].each do |work_id|
+          expect(assigns(:document_list).map(&:id)).to include(work_id)
+        end
       end
     end
 
@@ -74,7 +77,7 @@ describe CatalogController do
         json = JSON.parse(response.body)
         # Grab the doc corresponding to work and inspect the json
         work_json = json["docs"].first
-        expect(work_json).to eq("pid"=>work.pid, "title"=> "#{work.title.first} (#{work.human_readable_type})")
+        expect(work_json).to eq("pid"=>work.id, "title"=> "#{work.title.first} (#{work.human_readable_type})")
       end
     end
 

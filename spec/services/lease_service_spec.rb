@@ -24,17 +24,17 @@ describe Worthwhile::LeaseService do
 
   describe "#assets_with_expired_leases" do
     it "returns an array of assets with expired lease" do
-      returned_pids = subject.assets_with_expired_leases.map(&:pid)
-      expect(returned_pids).to include work_with_expired_lease1.pid,work_with_expired_lease2.pid
-      expect(returned_pids).to_not include work_with_lease_in_effect.pid,work_without_lease.pid
+      returned_pids = subject.assets_with_expired_leases.map(&:id)
+      expect(returned_pids).to include work_with_expired_lease1.id,work_with_expired_lease2.id
+      expect(returned_pids).to_not include work_with_lease_in_effect.id,work_without_lease.id
     end
   end
 
   describe "#assets_under_lease" do
     it "returns an array of assets with active leases" do
-      returned_pids = subject.assets_under_lease.map(&:pid)
-      expect(returned_pids).to include work_with_expired_lease1.pid,work_with_expired_lease2.pid,work_with_lease_in_effect.pid
-      expect(returned_pids).to_not include work_without_lease.pid
+      returned_pids = subject.assets_under_lease.map(&:id)
+      expect(returned_pids).to include work_with_expired_lease1.id,work_with_expired_lease2.id,work_with_lease_in_effect.id
+      expect(returned_pids).to_not include work_without_lease.id
     end
   end
 
@@ -46,7 +46,7 @@ describe Worthwhile::LeaseService do
       work_with_lease_in_effect.save!
     end
     it "returns an array of assets with deactivated leases" do
-      returned_pids = subject.assets_with_deactivated_leases.map(&:pid)
+      returned_pids = subject.assets_with_deactivated_leases.map(&:id)
       expect(returned_pids).to eq [work_with_expired_lease1.id, work_with_lease_in_effect.id ]
     end
   end

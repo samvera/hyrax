@@ -1,7 +1,6 @@
 module Worthwhile
   module FilesController
     extend ActiveSupport::Concern
-    include Worthwhile::WithoutNamespace
 
     included do
       include Worthwhile::ThemedLayoutController
@@ -63,13 +62,12 @@ module Worthwhile
     # routed to /files/:id (PUT)
     def update
       success = if wants_to_revert?
-        actor.revert_content(params[:revision], datastream_id)
+        actor.revert_content(params[:revision])
       elsif params.has_key? :files
         actor.update_content(params[:files].first, datastream_id)
       elsif params.has_key? :generic_file
         actor.update_metadata(params[:generic_file], params[:generic_file][:visibility])
       end
-
       if success
         redirect_to [:curation_concern, @generic_file], notice:
           "The file #{view_context.link_to(@generic_file, [main_app, :curation_concern, @generic_file])} has been updated."
@@ -85,7 +83,7 @@ module Worthwhile
     protected
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label
     end
 
     def actor
@@ -93,7 +91,7 @@ module Worthwhile
     end
 
     def attributes
-      params[:generic_file]
+      params.fetch(:generic_file, {}).dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
     end
 
     def json_error(error, name=nil, additional_arguments={})
@@ -113,7 +111,7 @@ module Worthwhile
 
     def process_file(file)
       update_metadata_from_upload_screen
-      actor.create_metadata(namespaced_parent_id)
+      actor.create_metadata(parent_id)
       if actor.create_content(file, file.original_filename, datastream_id)
         respond_to do |format|
           format.html {

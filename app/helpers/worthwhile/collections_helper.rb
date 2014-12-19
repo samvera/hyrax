@@ -52,10 +52,10 @@ module Worthwhile::CollectionsHelper
       if current_user.respond_to?(:collections)
         current_user.collections.map { |c| [c.title.join(', '), c.id] }
       else
-        query = ActiveFedora::SolrService.construct_query_for_rel(has_model: Collection.to_class_uri)
-        ActiveFedora::SolrService.query(query, fl: 'desc_metadata__title_tesim id',
+        query = ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: Collection.to_class_uri)
+        ActiveFedora::SolrService.query(query, fl: 'title_tesim id',
                                         rows: 1000).map do |r|
-          [r['desc_metadata__title_tesim'].join(', '), r['id']]
+          [r['title_tesim'].join(', '), r['id']]
         end.sort { |a, b| a.first <=> b.first }
       end
     end

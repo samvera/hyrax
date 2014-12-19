@@ -1,7 +1,7 @@
 <%= simple_form_for [:curation_concern, curation_concern] do |f| %>
   <fieldset class="required">
     <%= f.input :url, label: "External link", input_html: {class: 'input-xlarge'} %>
-    <%= f.input :title, input_html: {class: 'input-xlarge'} %>
+    <%= f.input :label, input_html: {class: 'input-xlarge'} %>
   </fieldset>
   <%= f.submit(
       (curation_concern.persisted? ? "Update External Link" : %(Add External Link to #{parent.human_readable_type})),

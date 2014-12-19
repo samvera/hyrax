@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Collection do
-  let(:reloaded_subject) { Collection.find(subject.pid) }
+  let(:reloaded_subject) { Collection.find(subject.id) }
 
   before do
     subject.title = 'A title'
@@ -17,11 +17,11 @@ describe Collection do
     expect(subject.members).to eq [another_collection]
   end
 
-  it 'updates solr with pids of its parent collections' do
+  it 'updates solr with ids of its parent collections' do
     another_collection = FactoryGirl.create(:collection)
     another_collection.members << subject
     another_collection.save
-    expect(subject.reload.to_solr[Solrizer.solr_name(:collection)]).to eq [another_collection.pid]
+    expect(subject.reload.to_solr[Solrizer.solr_name(:collection)]).to eq [another_collection.id]
   end
 
   it 'cannot contain itself' do
@@ -54,7 +54,7 @@ describe Collection do
 
   describe "to_solr" do
     before do
-      allow(subject).to receive(:pid).and_return('sufia:test123')
+      allow(subject).to receive(:id).and_return('sufia:test123')
     end
 
     let(:solr_doc) {subject.to_solr}
@@ -80,7 +80,7 @@ describe Collection do
 
       work.reload
       expect(work.collections).to eq [subject]
-      expect(work.to_solr["collection_sim"]).to eq [subject.pid]
+      expect(work.to_solr["collection_sim"]).to eq [subject.id]
     end
 
     it 'returns nil if there is nothing to add' do
@@ -105,15 +105,15 @@ describe Collection do
 
       work.reload
       expect(work.collections).to eq [subject]
-      expect(work.to_solr["collection_tesim"]).to eq [subject.pid]
-      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.pid).send(:solr_doc)
-      expect(solr_doc["collection_tesim"]).to eq [subject.pid]
+      expect(work.to_solr["collection_tesim"]).to eq [subject.id]
+      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.id).send(:solr_doc)
+      expect(solr_doc["collection_tesim"]).to eq [subject.id]
 
       expect(subject.members.delete(work)).to eq [work]
       subject.save!
       expect(reloaded_subject.members).to eq []
 
-      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.pid).send(:solr_doc)
+      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.id).send(:solr_doc)
       expect(solr_doc["collection_tesim"]).to be_nil
 
 

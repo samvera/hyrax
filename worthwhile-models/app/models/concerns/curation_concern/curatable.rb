@@ -14,23 +14,23 @@ module CurationConcern::Curatable
     # include Curate::ActiveModelAdaptor
 
     has_metadata 'properties', type: Worthwhile::PropertiesDatastream
-    has_attributes :relative_path, :depositor, :owner, datastream: :properties, multiple: false
+    has_attributes :owner, datastream: :properties, multiple: false
     class_attribute :human_readable_short_description
     attr_accessor :files
   end
 
-  def as_json(options)
-    { pid: pid, title: title, model: self.class.to_s, curation_concern_type: human_readable_type }
-  end
+  # def as_json(options)
+  #   { id: id, title: title, model: self.class.to_s, curation_concern_type: human_readable_type }
+  # end
 
   def as_rdf_object
     RDF::URI.new(internal_uri)
   end
 
-  def to_solr(solr_doc={}, opts={})
-    super.tap do |solr_doc|
-      index_collection_pids(solr_doc)
-      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
+  def to_solr(solr_doc={})
+    super(solr_doc).tap do |solr_doc|
+      index_collection_ids(solr_doc)
+      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)] = id
       add_derived_date_created(solr_doc)
     end
   end
@@ -62,7 +62,7 @@ module CurationConcern::Curatable
     dates.map { |date| Curate::DateFormatter.parse(date.to_s).to_s }
   end
 
-  def index_collection_pids(solr_doc)
+  def index_collection_ids(solr_doc)
     solr_doc[Solrizer.solr_name(:collection, :facetable)] ||= []
     solr_doc[Solrizer.solr_name(:collection)] ||= []
     self.collection_ids.each do |collection_id|

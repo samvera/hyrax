@@ -52,7 +52,7 @@ describe LeasesController do
 
     context "when I have permission to edit the object" do
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+        expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
         a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         a_work.lease_expiration_date = release_date.to_s
@@ -82,12 +82,12 @@ describe LeasesController do
   describe "#update" do
     context "when I have permission to edit the object" do
       before do
-        expect(ActiveFedora::Base).to receive(:find).with(a_work.pid).and_return(a_work)
+        expect(ActiveFedora::Base).to receive(:find).with(a_work.id).and_return(a_work)
       end
       it "should deactivate lease and redirect" do
         expect(a_work).to receive(:deactivate_lease!)
         expect(a_work).to receive(:save)
-        patch :update, batch_document_ids: [a_work.pid]
+        patch :update, batch_document_ids: [a_work.id]
         expect(response).to redirect_to leases_path
       end
     end

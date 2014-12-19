@@ -8,6 +8,7 @@ Dir.glob('tasks/*.rake').each { |r| import r }
 
 require 'jettywrapper'
 require 'engine_cart/rake_task'
+Jettywrapper.hydra_jetty_version = "v8.1.1"
 
 task ci: ['engine_cart:generate', 'jetty:clean'] do
   ENV['environment'] = "test"

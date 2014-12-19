@@ -9,8 +9,8 @@ describe Worthwhile::RelatedResourceHelper do
       expect(related_resource_link_name(linked_resource)).to_not have_css("span.secondary")
     end
     it "if title is set, should render title and url with hooks for styling the url" do
-      linked_resource.title = "My Link"
-      expect(related_resource_link_name(linked_resource)).to include(linked_resource.title)
+      linked_resource.title = ["My Link"]
+      expect(related_resource_link_name(linked_resource)).to include(linked_resource.title.first)
       expect(related_resource_link_name(linked_resource)).to have_css("span.secondary", text:linked_resource.url)
     end
   end

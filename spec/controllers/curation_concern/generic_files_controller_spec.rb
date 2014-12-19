@@ -11,7 +11,7 @@ describe CurationConcern::GenericFilesController do
     describe "#create" do
       before do
         Worthwhile::GenericFile.destroy_all
-        allow(Worthwhile::GenericFile).to receive(:new).and_return(Worthwhile::GenericFile.new(pid: 'test:123'))
+        allow(Worthwhile::GenericFile).to receive(:new).and_return(Worthwhile::GenericFile.new(id: '123'))
       end
 
       context "on the happy path" do
@@ -23,7 +23,7 @@ describe CurationConcern::GenericFilesController do
 
         it "spawns a CharacterizeJob" do
           s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).with('test:123').and_return(s2)
+          expect(CharacterizeJob).to receive(:new).with('123').and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
@@ -45,9 +45,9 @@ describe CurationConcern::GenericFilesController do
           expect(saved_file.date_uploaded).to eq date_today
           expect(saved_file.date_modified).to eq date_today
           expect(saved_file.depositor).to eq user.email
-          version = saved_file.content.latest_version
-          expect(version.versionID).to eq "content.0"
-          expect(saved_file.content.version_committer(version)).to eq user.email
+
+          expect(saved_file.content.versions.count).to eq(3)
+          expect(saved_file.content.latest_version).to be_instance_of(ActiveFedora::VersionsGraph::ResourceVersion)
 
           # Confirm that embargo/lease are not set.
           expect(saved_file).to_not be_under_embargo
@@ -59,7 +59,7 @@ describe CurationConcern::GenericFilesController do
 
         it "copies visibility from the parent" do
           s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).with('test:123').and_return(s2)
+          expect(CharacterizeJob).to receive(:new).with('123').and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
           xhr :post, :create, files: [file], parent_id: parent
           expect(assigns[:generic_file]).to be_persisted
@@ -110,9 +110,9 @@ describe CurationConcern::GenericFilesController do
       end
 
       it "should delete the file" do
-        expect(Worthwhile::GenericFile.find(generic_file.pid)).to be_kind_of Worthwhile::GenericFile
+        expect(Worthwhile::GenericFile.find(generic_file.id)).to be_kind_of Worthwhile::GenericFile
         delete :destroy, id: generic_file
-        expect { Worthwhile::GenericFile.find(generic_file.pid) }.to raise_error ActiveFedora::ObjectNotFoundError
+        expect { Worthwhile::GenericFile.find(generic_file.id) }.to raise_error Ldp::Gone
         expect(response).to redirect_to [:curation_concern, parent]
       end
     end
@@ -160,7 +160,7 @@ describe CurationConcern::GenericFilesController do
         it "should update existing groups and users" do
           skip
           generic_file.read_groups = ['group3']
-          generic_file.save! # TODO slow test, more than one save.
+          generic_file.save! # TODO slow , more than one save.
           post :update, id: generic_file, generic_file:
             { title: ['new_title'], tag: [''], permissions: { new_group_name: '', new_user_name: '', group: {'group3' => 'read' }}}
           expect(assigns[:generic_file].read_groups).to eq ["group3"]
@@ -193,7 +193,7 @@ describe CurationConcern::GenericFilesController do
       context "updating file content" do
         it "should be successful" do
           s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).with(generic_file.pid).and_return(s2)
+          expect(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
           expect(Sufia.queue).to receive(:push).with(s2).once
           post :update, id: generic_file, files: [file]
           expect(response).to redirect_to [:curation_concern, generic_file]
@@ -205,7 +205,7 @@ describe CurationConcern::GenericFilesController do
         before do
           allow(Sufia.queue).to receive(:push) # don't run characterization jobs
           # Create version 0
-          generic_file.add_file('test123', 'content', 'file.txt')
+          generic_file.add_file('123', 'content', 'file.txt')
           generic_file.save!
 
           # Create version 1
@@ -214,12 +214,13 @@ describe CurationConcern::GenericFilesController do
         end
 
         it "should be successful" do
-          post :update, id: generic_file, revision: 'content.0'
+          expect(generic_file.latest_version.label).to eq('version2')
+          post :update, id: generic_file, revision: 'version1'
           expect(response).to redirect_to [:curation_concern, generic_file]
           reloaded = generic_file.reload.content
-          expect(reloaded.latest_version.versionID).to eq 'content.2'
-          expect(reloaded.content).to eq 'test123'
-          expect(reloaded.mimeType).to eq 'text/plain'
+          expect(reloaded.latest_version.label).to eq 'version3'
+          expect(reloaded.content).to eq '123'
+          expect(reloaded.mime_type).to eq 'text/plain'
         end
       end
     end
@@ -235,7 +236,7 @@ describe CurationConcern::GenericFilesController do
       end
     end
     after do
-      # GenericFile.find('sufia:test5').destroy
+      # GenericFile.find('sufia:5').destroy
     end
     describe "edit" do
       it "should give me a flash error" do

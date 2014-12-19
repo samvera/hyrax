@@ -4,7 +4,6 @@ class CollectionsController < ApplicationController
   include Blacklight::Catalog::SearchContext
   include Worthwhile::ThemedLayoutController
   include Hydra::AccessControlsEnforcement
-  include Worthwhile::WithoutNamespace
   before_filter :filter_docs_with_read_access!, except: [:show, :new]
   CollectionsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 

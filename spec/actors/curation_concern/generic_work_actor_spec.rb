@@ -11,7 +11,7 @@ describe CurationConcern::GenericWorkActor do
   }
 
   describe '#create' do
-    let(:curation_concern) { GenericWork.new(pid: Worthwhile::CurationConcern.mint_a_pid )}
+    let(:curation_concern) { GenericWork.new(id: Worthwhile::CurationConcern.mint_a_pid )}
 
     context 'failure' do
       let(:attributes) {{}}
@@ -104,8 +104,8 @@ describe CurationConcern::GenericWorkActor do
             expect(curation_concern.generic_files.count).to eq 1
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
             generic_file = curation_concern.generic_files.first
+            file.rewind
             expect(generic_file.content.content).to eq file.read
-            expect(generic_file.filename).to eq 'image.png'
 
             expect(curation_concern).to be_authenticated_only_access
             expect(generic_file).to be_authenticated_only_access
@@ -202,7 +202,7 @@ describe CurationConcern::GenericWorkActor do
       let(:attributes) {
         FactoryGirl.attributes_for(:generic_work,
                                    visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-                                   collection_ids: [collection2.pid])
+                                   collection_ids: [collection2.id])
       }
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
@@ -211,12 +211,12 @@ describe CurationConcern::GenericWorkActor do
       end
 
       it "should add to collections" do
-        reload = GenericWork.find(curation_concern.pid)
+        reload = GenericWork.find(curation_concern.id)
         expect(reload.collections).to eq [collection1]
 
         expect(subject.update).to be true
 
-        reload = GenericWork.find(curation_concern.pid)
+        reload = GenericWork.find(curation_concern.id)
         expect(reload.identifier).to be_blank
         expect(reload).to be_persisted
         expect(reload).to be_open_access

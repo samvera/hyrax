@@ -4,7 +4,7 @@ module Worthwhile
     module_function
     
     def mint_a_pid
-      Sufia::Noid.namespaceize(Sufia::Noid.noidify(Sufia::IdService.mint))
+      Sufia::Noid.noidify(Sufia::IdService.mint)
     end  
 
     def actor(curation_concern, *args)

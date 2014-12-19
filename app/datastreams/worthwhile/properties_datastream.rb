@@ -21,7 +21,7 @@ class Worthwhile::PropertiesDatastream < ActiveFedora::OmDatastream
     builder.doc
   end
 
-  def prefix
+  def prefix(name)
     'properties_'
   end
 end

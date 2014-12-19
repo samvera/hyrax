@@ -43,6 +43,9 @@ module Worthwhile
         attributes.delete(:visibility)
         curation_concern.apply_embargo(attributes[:embargo_release_date], attributes.delete(:visibility_during_embargo),
                                        attributes.delete(:visibility_after_embargo))
+        if curation_concern.embargo
+          curation_concern.embargo.save  # See https://github.com/projecthydra/hydra-head/issues/226
+        end
         @needs_to_copy_visibility = true
         true
       end
@@ -64,6 +67,9 @@ module Worthwhile
       else
         curation_concern.apply_lease(attributes[:lease_expiration_date], attributes.delete(:visibility_during_lease),
                                        attributes.delete(:visibility_after_lease))
+        if curation_concern.lease
+          curation_concern.lease.save  # See https://github.com/projecthydra/hydra-head/issues/226
+        end
         @needs_to_copy_visibility = true
         attributes.delete(:visibility)
         true

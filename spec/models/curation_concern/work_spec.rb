@@ -27,4 +27,9 @@ describe CurationConcern::Work do
       expect(subject.human_readable_type).to eq 'Custom Type'
     end
   end
+
+  it "inherits (and extends) to_solr behaviors from superclass" do
+    expect(subject.to_solr.keys).to include(:id)
+    expect(subject.to_solr.keys).to include("has_model_ssim")
+  end
 end
