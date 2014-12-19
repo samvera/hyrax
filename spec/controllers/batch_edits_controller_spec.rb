@@ -35,6 +35,7 @@ describe BatchEditsController, :type => :controller do
     end
     it "should set the breadcrumb trail" do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
       get :edit
     end
   end

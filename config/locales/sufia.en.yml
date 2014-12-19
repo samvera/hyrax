@@ -174,3 +174,5 @@ en:
       subject:  'Subject'
       message:  'Message'
       delete:   'Delete Message'
+    generic_file:
+      browse_view: "Browse View"

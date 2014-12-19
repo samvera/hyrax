@@ -311,6 +311,10 @@ describe GenericFilesController, :type => :controller do
       end
 
       it 'renders the stats view' do
+        allow(controller.request).to receive(:referer).and_return('foo')
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.generic_file.browse_view'), Sufia::Engine.routes.url_helpers.generic_file_path(@generic_file.noid))
         get :stats, id: @generic_file.noid
         expect(response).to be_success
         expect(response).to render_template(:stats)
@@ -525,6 +529,28 @@ describe GenericFilesController, :type => :controller do
     end
   end
 
+  describe "edit" do
+    let(:generic_file) do
+      GenericFile.new.tap do |gf|
+        gf.apply_depositor_metadata(@user)
+        gf.save!
+      end
+    end
+
+    after do
+      generic_file.destroy
+    end
+
+    it 'renders the edit view' do
+      allow(controller.request).to receive(:referer).and_return('foo')
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.generic_file.browse_view'), Sufia::Engine.routes.url_helpers.generic_file_path(generic_file.noid))
+      get :edit, id: generic_file.noid
+      expect(response).to be_success
+      expect(response).to render_template(:edit)
+    end
+  end
   describe "someone elses files" do
     before do
       f = GenericFile.new(pid: 'sufia:test5')
