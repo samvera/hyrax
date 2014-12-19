@@ -9,7 +9,6 @@ module Sufia
     include Sufia::GenericFile::Export
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Permissions
-    include Sufia::GenericFile::WebForm
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Trophies
     include Sufia::GenericFile::Featured

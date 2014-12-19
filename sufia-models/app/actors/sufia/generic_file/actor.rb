@@ -56,7 +56,7 @@ module Sufia::GenericFile
     end
 
     def update_metadata(attributes, visibility)
-      generic_file.attributes = generic_file.sanitize_attributes(attributes)
+      generic_file.attributes = attributes
       update_visibility(visibility)
       generic_file.date_modified = DateTime.now
       remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?

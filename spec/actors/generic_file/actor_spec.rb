@@ -73,8 +73,7 @@ describe Sufia::GenericFile::Actor do
 
     it "should be removed if document is not public" do
       # Switch document from public to restricted
-      attributes = {'permissions'=>{'group' =>{'public' => '1', 'registered'=>'2'}}}
-      expect { actor.update_metadata(attributes, 'restricted') }.to change { FeaturedWork.count }.by(-1)
+      expect { actor.update_metadata({}, 'restricted') }.to change { FeaturedWork.count }.by(-1)
     end
   end
 
