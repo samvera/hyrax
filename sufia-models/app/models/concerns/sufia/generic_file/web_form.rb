@@ -9,17 +9,6 @@ module Sufia
           :related_url, :part_of, :permissions_attributes
       end
 
-      def to_jq_upload
-        return {
-          "name" => title,
-          "size" => file_size,
-          "url" => "/files/#{noid}",
-          "thumbnail_url" => id,
-          "delete_url" => "deleteme", # generic_file_path(id: id),
-          "delete_type" => "DELETE"
-        }
-      end
-
     end
   end
 end

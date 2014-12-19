@@ -40,9 +40,11 @@ describe GenericFilesController do
       end
 
       context "when everything is perfect" do
+        render_views
         it "spawns a content deposit event job" do
           expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content').and_return(true)
           xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
+          expect(response.body).to eq '[{"name":null,"size":"","url":"/files/test123","thumbnail_url":"test123","delete_url":"deleteme","delete_type":"DELETE"}]'
           expect(flash[:error]).to be_nil
         end
 

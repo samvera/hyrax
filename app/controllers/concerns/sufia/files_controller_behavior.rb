@@ -199,12 +199,10 @@ module Sufia
       if actor.create_content(file, file.original_filename, datastream_id)
         respond_to do |format|
           format.html {
-            render json: [@generic_file.to_jq_upload],
-            content_type: 'text/html',
-            layout: false
+            render 'jq_upload', formats: 'json', content_type: 'text/html'
           }
           format.json {
-            render json: [@generic_file.to_jq_upload]
+            render 'jq_upload'
           }
         end
       else
