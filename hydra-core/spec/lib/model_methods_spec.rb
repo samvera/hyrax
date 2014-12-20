@@ -53,4 +53,22 @@ describe Hydra::ModelMethods do
       subject.add_file(mock_file, 'bar', file_name, 'image/png')
     end
   end
+
+  describe '#set_title' do
+    context "on a class with a title property" do
+      before do
+        class WithProperty < ActiveFedora::Base
+          include Hydra::ModelMethods
+          property :title, predicate: ::RDF::DC.title
+        end
+      end
+
+      subject { WithProperty.new }
+
+      it "should set the property" do
+        subject.set_title('foo')
+        expect(subject.title).to eq ['foo']
+      end
+    end
+  end
 end
