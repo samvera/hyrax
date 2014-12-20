@@ -5,7 +5,7 @@ module Sufia
 
       included do
 
-        property :label, predicate: ::RDF::DC.title, multiple: false
+        property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 
         property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false do |index|
           index.as :symbol, :stored_searchable

@@ -39,33 +39,43 @@ describe BatchEditsController, :type => :controller do
   end
 
   describe "update" do
+    let!(:one) do
+      GenericFile.create(creator: ["Fred"], language: ['en']) do |file|
+        file.apply_depositor_metadata('mjg36')
+      end
+    end
+
+    let!(:two) do
+      GenericFile.create(creator: ["Fred"], language: ['en']) do |file|
+        file.apply_depositor_metadata('mjg36')
+      end
+    end
+
     before do
-      @one = GenericFile.new(creator: ["Fred"], language: ['en'])
-      @one.apply_depositor_metadata('mjg36')
-      @two = GenericFile.new(creator: ["Wilma"], publisher: ['Rand McNally'], language: ['en'])
-      @two.apply_depositor_metadata('mjg36')
-      @one.save!
-      @two.save!
-      controller.batch = [@one.id, @two.id]
-      expect(controller).to receive(:can?).with(:edit, @one.id).and_return(true)
-      expect(controller).to receive(:can?).with(:edit, @two.id).and_return(true)
+      controller.batch = [one.id, two.id]
+      expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
     end
+
     let(:mycontroller) { "my/files" }
+
     it "should be successful" do
-      put :update , update_type: "delete_all"
+      put :update, update_type: "delete_all"
       expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: "dashboard", only_path: true))
-      expect { GenericFile.find(@one.id) }.to raise_error(Ldp::Gone)
-      expect { GenericFile.find(@two.id) }.to raise_error(Ldp::Gone)
+      expect { GenericFile.find(one.id) }.to raise_error(Ldp::Gone)
+      expect { GenericFile.find(two.id) }.to raise_error(Ldp::Gone)
     end
+
     it "should redirect to the return controller" do
-      put :update , update_type: "delete_all", return_controller: mycontroller
+      put :update, update_type: "delete_all", return_controller: mycontroller
       expect(response).to redirect_to(Sufia::Engine.routes.url_for(controller: mycontroller, only_path: true))
     end
+
     it "should update the records" do
-      put :update , update_type: "update", generic_file: { subject: ["zzz"] }
+      put :update, update_type: "update", generic_file: { subject: ["zzz"] }
       expect(response).to be_redirect
-      expect(GenericFile.find(@one.id).subject).to eq ["zzz"]
-      expect(GenericFile.find(@two.id).subject).to eq ["zzz"]
+      expect(GenericFile.find(one.id).subject).to eq ["zzz"]
+      expect(GenericFile.find(two.id).subject).to eq ["zzz"]
     end
   end
 
