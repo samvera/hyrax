@@ -9,7 +9,6 @@ module Sufia
     included do
       before_save :update_permissions
       validates :title, presence: true
-
     end
 
     def terms_for_display
@@ -18,15 +17,8 @@ module Sufia
         :based_near, :related_url]
     end
 
-
     def to_param
       noid
-    end
-
-    def to_solr(solr_doc={})
-      super.tap do |solr_doc|
-        solr_doc[Solrizer.solr_name("noid", Sufia::GenericFile::Indexing.noid_indexer)] = noid
-      end
     end
 
     def update_permissions
@@ -37,6 +29,13 @@ module Sufia
     # Return an integer of the result
     def bytes
       members.reduce(0) { |sum, gf| sum + gf.file_size.first.to_i }
+    end
+
+    module ClassMethods
+      # override the default indexing service
+      def indexer
+        Sufia::IndexingService
+      end
     end
 
   end
