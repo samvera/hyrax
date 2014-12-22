@@ -1,7 +1,7 @@
 module Sufia
   module Forms
     class GenericFileEditForm < GenericFilePresenter
-      include MultiForm
+      include HydraEditor::Form
       self.required_fields = [:title, :creator, :tag, :rights]
 
       # This is required so that fields_for will draw a nested form.
