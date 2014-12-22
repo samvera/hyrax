@@ -10,6 +10,9 @@ class Batch < ActiveFedora::Base
   property :status, predicate: ::RDF::DC.type
 
   def self.find_or_create(id)
+    # FIXME potential race condition in this method. Consider that `find' may raise
+    # ObjectNotFound in multiple processes. However, Fedora should raise an error
+    # if we try to create two objects with the same id.
     begin
       Batch.find(id)
     rescue ActiveFedora::ObjectNotFoundError
@@ -17,9 +20,10 @@ class Batch < ActiveFedora::Base
     end
   end
 
-  def to_solr(solr_doc={})
-    super.tap do |solr_doc|
-      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)] = noid
+  class << self
+    # override the default indexing service
+    def indexer
+      Sufia::IndexingService
     end
   end
 end
