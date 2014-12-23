@@ -149,6 +149,9 @@ en:
     user_profile:
       no_followers: "No one is following you."
       no_following: "You are not following anyone."
+      orcid:
+        alt: "ORCID icon"
+        label: "ORCID Profile"
     batch:
       help:
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
@@ -171,3 +174,5 @@ en:
       subject:  'Subject'
       message:  'Message'
       delete:   'Delete Message'
+    generic_file:
+      browse_view: "Browse View"

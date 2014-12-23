@@ -290,6 +290,10 @@ describe GenericFilesController do
       end
 
       it 'renders the stats view' do
+        allow(controller.request).to receive(:referer).and_return('foo')
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
+        expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.generic_file.browse_view'), Sufia::Engine.routes.url_helpers.generic_file_path(generic_file.noid))
         get :stats, id: generic_file
         expect(response).to be_success
         expect(response).to render_template(:stats)
@@ -328,15 +332,19 @@ describe GenericFilesController do
       end
     end
 
-    it "should set the versions presenter" do
+    it "should set the breadcrumbs and versions presenter" do
+      allow(controller.request).to receive(:referer).and_return('foo')
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.generic_file.browse_view'), Sufia::Engine.routes.url_helpers.generic_file_path(generic_file.noid))
       get :edit, id: generic_file
 
       expect(response).to be_success
       expect(assigns[:generic_file]).to eq generic_file
       expect(assigns[:form]).to be_kind_of Sufia::Forms::GenericFileEditForm
       expect(assigns[:version_list]).to be_kind_of Sufia::VersionListPresenter
+      expect(response).to render_template(:edit)
     end
-
   end
 
   describe "update" do

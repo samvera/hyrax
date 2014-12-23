@@ -1,5 +1,9 @@
 module Sufia
   module SufiaHelperBehavior
+    def orcid_label(style_class='')
+      "#{image_tag 'orcid.png', { alt: t('sufia.user_profile.orcid.alt'), class: style_class }} #{t('sufia.user_profile.orcid.label')}".html_safe
+    end
+
     def error_messages_for(object)
       if object.try(:errors) and object.errors.full_messages.any?
         content_tag(:div, class: 'alert alert-block alert-error validation-errors') do
@@ -162,6 +166,13 @@ module Sufia
       else
         content_tag :span, t('sufia.visibility.private'), class: "label label-danger", title: t('sufia.visibility.private')
       end
+    end
+
+    def user_display_name_and_key(user_key)
+      user = ::User.find_by_user_key(user_key)
+      return user_key if user.nil?
+
+      user.respond_to?(:name) ? "#{user.name} (#{user_key})" : user_key
     end
 
     private

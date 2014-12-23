@@ -18,6 +18,16 @@
     background-color: $badge-background-color;
     color: $badge-font-color;
   }
+  .badge-optional {
+    background-color: $badge-optional-background-color;
+    border-radius: 2px;
+    color: $badge-font-color;
+    padding: 0 .25em;
+  }
+  .views-downloads-dashboard {
+    list-style-type: none;
+    padding-left: 0;
+  }
   .panel-default > .panel-heading {
     background-color: $panel-background-color;
   }

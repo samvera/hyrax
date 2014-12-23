@@ -194,7 +194,8 @@ describe UsersController, :type => :controller do
       expect(user.facebook_handle).to be_blank
       expect(user.googleplus_handle).to be_blank
       expect(user.linkedin_handle).to be_blank
-      post :update, id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle:"link" }
+      expect(user.orcid).to be_blank
+      post :update, id: user.user_key, user: { twitter_handle: 'twit', facebook_handle: 'face', googleplus_handle: 'goo', linkedin_handle:"link", orcid: '0000-0000-1111-2222' }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
       expect(flash[:notice]).to include("Your profile has been updated")
       u = User.find_by_user_key(user.user_key)
@@ -202,6 +203,14 @@ describe UsersController, :type => :controller do
       expect(u.facebook_handle).to eq 'face'
       expect(u.googleplus_handle).to eq 'goo'
       expect(u.linkedin_handle).to eq 'link'
+      expect(u.orcid).to eq 'http://orcid.org/0000-0000-1111-2222'
+    end
+
+    it 'displays a flash when invalid ORCID is entered' do
+      expect(user.orcid).to be_blank
+      post :update, id: user.user_key, user: { orcid: 'foobar' }
+      expect(response).to redirect_to(@routes.url_helpers.edit_profile_path(user.to_param))
+      expect(flash[:alert]).to include('Orcid must be a string of 19 characters, e.g., "0000-0000-0000-0000"')
     end
 
     context "when removing a trophy" do

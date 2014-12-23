@@ -1,12 +1,7 @@
-# -*- encoding : utf-8 -*-
-require 'rails/generators'
-require 'rails/generators/migration'
+require_relative 'abstract_migration_generator'
 
-class Sufia::Models::InstallGenerator < Rails::Generators::Base
-  include Rails::Generators::Migration
-
+class Sufia::Models::InstallGenerator < Sufia::Models::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
-
   argument     :model_name, type: :string , default: "user"
   desc """
 This generator makes the following changes to your application:
@@ -19,30 +14,15 @@ This generator makes the following changes to your application:
  7. Runs full-text generator
  8. Runs proxies generator
  9. Runs cached stats generator
+10. Runs ORCID field generator
+11. Runs user stats generator
        """
-
-  # Implement the required interface for Rails::Generators::Migration.
-  # taken from http://github.com/rails/rails/blob/master/activerecord/lib/generators/active_record.rb
-  def self.next_migration_number(path)
-    if @prev_migration_nr
-      @prev_migration_nr += 1
-    else
-      if last_migration = Dir[File.join(path, '*.rb')].sort.last
-        @prev_migration_nr = last_migration.sub(File.join(path, '/'), '').to_i + 1
-      else
-        @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-      end
-    end
-    @prev_migration_nr.to_s
-  end
-
   def banner
     say_status("warning", "GENERATING SUFIA MODELS", :yellow)
   end
 
   # Setup the database migrations
   def copy_migrations
-    # Can't get this any more DRY, because we need this order.
     [
       "acts_as_follower_migration.rb",
       "add_social_to_users.rb",
@@ -114,13 +94,13 @@ This generator makes the following changes to your application:
     generate 'sufia:models:cached_stats'
   end
 
-  private
+  # Adds orcid field to user model
+  def orcid_field
+    generate 'sufia:models:orcid_field'
+  end
 
-  def better_migration_template(file)
-    begin
-      migration_template "migrations/#{file}", "db/migrate/#{file}"
-    rescue Rails::Generators::Error => e
-      say_status("warning", e.message, :yellow)
-    end
+  # Adds user stats-related migration & methods
+  def user_stats
+    generate 'sufia:models:user_stats'
   end
 end

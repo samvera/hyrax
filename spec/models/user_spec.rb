@@ -20,6 +20,29 @@ describe User, :type => :model do
     expect(user).to respond_to(:facebook_handle)
     expect(user).to respond_to(:googleplus_handle)
     expect(user).to respond_to(:linkedin_handle)
+    expect(user).to respond_to(:orcid)
+  end
+  describe 'ORCID validation and normalization' do
+    it 'saves when a valid bare ORCID is supplied' do
+      user.orcid = '0000-0000-1111-2222'
+      expect(user).to be_valid
+      expect(user.save).to be true
+    end
+    it 'saves when a valid ORCID URI is supplied' do
+      user.orcid = 'http://orcid.org/0000-0000-1111-2222'
+      expect(user).to be_valid
+      expect(user.save).to be true
+    end
+    it 'normalizes bare ORCIDs to URIs' do
+      user.orcid = '0000-0000-1111-2222'
+      user.save
+      expect(user.orcid).to eq 'http://orcid.org/0000-0000-1111-2222'
+    end
+    it 'marks bad ORCIDs as invalid' do
+      user.orcid = '000-000-111-222'
+      expect(user).not_to be_valid
+      expect(user.save).to be false
+    end
   end
 
   describe "#to_param" do

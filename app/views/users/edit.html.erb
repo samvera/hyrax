@@ -1,5 +1,5 @@
 <h1>Edit Profile</h1>
-<div class="col-xs-12 col-sm-5">
+<div class="col-xs-12 col-sm-5 profile">
   <div class="well">
   <%= form_for @user, url: sufia.profile_path(@user.to_param), html: {multipart: true, class: 'form-horizontal' } do |f| %>
     <div class="form-group">
@@ -28,6 +28,15 @@
         <% end %>
       </div>
     </div>
+
+    <div class="form-group">
+      <%= f.label :orcid, class: 'col-xs-4 control-label' do %>
+        <%= orcid_label %>
+      <% end %>
+      <div class="col-xs-8">
+         <%= f.text_field :orcid, class: "form-control" %>
+      </div>
+    </div><!-- .form-group -->
 
     <div class="form-group">
       <%= f.label :twitter_handle, '<i class="fa fa-twitter"></i> Twitter Handle'.html_safe, class: 'col-xs-4 control-label' %>
@@ -60,7 +69,7 @@
   </div>
 </div><!-- .col-xs-5 /well-->
 
-<div class="col-xs-12 col-sm-offset-1 col-sm-6 well">
+<div class="col-xs-12 col-sm-offset-1 col-sm-6 well profile">
   <h2><i class="glyphicon glyphicon-user"></i> Directory Info (LDAP) <%= link_to 'Edit Instructions', 'http://www.psu.edu/directory/#update', class: 'btn btn-mini btn-primary' %></h3>
   <%= render partial: 'user_info', locals: {user: @user} %>
 

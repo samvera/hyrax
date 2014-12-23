@@ -18,33 +18,50 @@ module Sufia::User
     # Users should be followable
     acts_as_followable
 
-    # Setup accessible (or protected) attributes for your model
+    # Set up proxy-related relationships
     has_many :proxy_deposit_requests, foreign_key: 'receiving_user_id'
-
     has_many :deposit_rights_given, foreign_key: 'grantor_id', class_name: 'ProxyDepositRights', dependent: :destroy
     has_many :can_receive_deposits_from, through: :deposit_rights_given, source: :grantee
-
     has_many :deposit_rights_received, foreign_key: 'grantee_id', class_name: 'ProxyDepositRights', dependent: :destroy
     has_many :can_make_deposits_for, through: :deposit_rights_received, source: :grantor
 
+    # Validate and normalize ORCIDs
+    validates_with OrcidValidator
+    after_validation :normalize_orcid
+
+    # Set up user profile avatars
     mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
     validates_with AvatarValidator
+
     has_many :trophies
     attr_accessor :update_directory
+  end
+
+  # Coerce the ORCID into URL format
+  def normalize_orcid
+    # Skip normalization if:
+    #   1. validation has already flagged the ORCID as invalid
+    #   2. the orcid field is blank
+    #   3. the orcid is already in its normalized form
+    return if self.errors[:orcid].first.present? || self.orcid.blank? || self.orcid.starts_with?('http://orcid.org/')
+    bare_orcid = /\d{4}-\d{4}-\d{4}-\d{4}/.match(self.orcid).string
+    self.orcid = "http://orcid.org/#{bare_orcid}"
   end
 
   # Format the json for select2 which requires just an id and a field called text.
   # If we need an alternate format we should probably look at a json template gem
   def as_json(opts = nil)
-    {id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key}
+    { id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key }
   end
 
   def email_address
-    return self.email
+    self.email
   end
 
   def name
-    return self.display_name.titleize || self.user_key rescue self.user_key
+    self.display_name.titleize || raise
+  rescue
+    self.user_key
   end
 
   # Redefine this for more intuitive keys in Redis
@@ -61,7 +78,7 @@ module Sufia::User
 
   # method needed for messaging
   def mailboxer_email(obj=nil)
-    return nil
+    nil
   end
 
   # The basic groups method, override or will fallback to Sufia::Ldap::User
@@ -85,7 +102,9 @@ module Sufia::User
       [:email, :login, :display_name, :address, :admin_area,
         :department, :title, :office, :chat_id, :website, :affiliation,
         :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
-        :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar]
+        :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar,
+        :orcid
+      ]
     end
 
     def current
@@ -119,7 +138,5 @@ module Sufia::User
     def from_url_component(component)
       User.find_by_user_key(component.gsub(/-dot-/, '.'))
     end
-
   end
-
 end
