@@ -49,7 +49,7 @@ module Sufia::UsersControllerBehavior
   def update
     if params[:user]
       @user.attributes = user_params
-      @user.populate_attributes if ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:user][:update_directory])
+      @user.populate_attributes if update_directory?
     end
 
     unless @user.save
@@ -63,6 +63,10 @@ module Sufia::UsersControllerBehavior
     end
     Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
     redirect_to sufia.profile_path(@user.to_param), notice: "Your profile has been updated"
+  end
+
+  def update_directory?
+    ['1', 'true'].include? params[:user][:update_directory]
   end
 
   def toggle_trophy

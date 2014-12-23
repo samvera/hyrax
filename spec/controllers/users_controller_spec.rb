@@ -173,7 +173,7 @@ describe UsersController, :type => :controller do
         s1 = double('one')
         expect(UserEditProfileEventJob).to receive(:new).with(user.user_key).and_return(s1)
         expect(Sufia.queue).to receive(:push).with(s1).once
-        post :update, id: user.user_key, user: { remove_avatar: true }
+        post :update, id: user.user_key, user: { remove_avatar: 'true' }
         expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")
         expect(User.find_by_user_key(user.user_key).avatar?).to be false
@@ -185,10 +185,11 @@ describe UsersController, :type => :controller do
       expect(UserEditProfileEventJob).to receive(:new).with(user.user_key).and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1).once
       expect_any_instance_of(User).to receive(:populate_attributes).once
-      post :update, id: user.user_key, user: { update_directory: true }
+      post :update, id: user.user_key, user: { update_directory: 'true' }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
       expect(flash[:notice]).to include("Your profile has been updated")
     end
+
     it "should set an social handles" do
       expect(user.twitter_handle).to be_blank
       expect(user.facebook_handle).to be_blank
