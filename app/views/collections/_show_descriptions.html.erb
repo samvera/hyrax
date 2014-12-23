@@ -1,13 +1,11 @@
 <h2 class="sr-only">Descriptions</h2>
 <dl class="metadata-collections">
   <dt><%= get_label("total_items") %></dt>
-  <dd><%= @collection.members.count %></dd>
+  <dd><%= @presenter.total_items %></dd>
   <dt><%= get_label("size") %></dt>
-  <dd><%= number_to_human_size(@collection.bytes) %></dd>
-  <% (@collection.terms_for_display).each do |term| %>
-      <% if @collection.send(term).present? %>
-      <dt><%= get_label(term) %></dt>
-      <dd><%= render_show_field_partial_with_action("records", term, record: @collection) %></dd>
-      <% end %>
+  <dd><%= @presenter.size %></dd>
+  <% present_terms(@presenter, @presenter.terms_with_values) do |r, term| %>
+      <dt><%= r.label(term) %></dt>
+      <dd><%= r.value(term) %></dd>
   <% end %>
 </dl>

@@ -14,7 +14,16 @@ class CollectionsController < ApplicationController
 
   layout "sufia-one-column"
 
+  def show
+    super
+    @presenter = presenter
+  end
+
   protected
+
+  def presenter
+    Sufia::CollectionPresenter.new(@collection)
+  end
 
   def collection_params
     params.require(:collection).permit(:title, :description, :members, part_of: [],

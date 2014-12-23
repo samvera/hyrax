@@ -117,55 +117,61 @@ describe CollectionsController do
   end
 
   describe "#show" do
-    before do
-      @asset1 = GenericFile.new(title: ["First of the Assets"])
-      @asset1.apply_depositor_metadata(user.user_key)
-      @asset2 = GenericFile.new(title: ["Second of the Assets"], depositor:user.user_key)
-      @asset2.apply_depositor_metadata(user.user_key)
-      @asset3 = GenericFile.new(title: ["Third of the Assets"], depositor:user.user_key)
-      @asset3.apply_depositor_metadata(user.user_key)
-      @asset4 = GenericFile.new(title: ["Third of the Assets"], depositor:user.user_key)
-      @asset4.apply_depositor_metadata(user.user_key)
-      @collection = Collection.create(title: "My collection",
-                                   description: "My incredibly detailed description of the collection",
-                                   members: [@asset1,@asset2,@asset3]) do |collection|
-        collection.apply_depositor_metadata(user)
-      end
-      allow(controller).to receive(:authorize!).and_return(true)
+    let(:asset1) do
+      GenericFile.new(title: ["First of the Assets"]) { |a| a.apply_depositor_metadata(user) }
     end
+
+    let(:asset2) do
+      GenericFile.new(title: ["Second of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+    end
+
+    let(:asset3) do
+      GenericFile.new(title: ["Third of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+    end
+
+    let!(:asset4) do
+      GenericFile.create(title: ["Fourth of the Assets"]) { |a| a.apply_depositor_metadata(user) }
+    end
+
+    let(:collection) do
+      Collection.create(title: "My collection",
+        description: "My incredibly detailed description of the collection",
+        members: [asset1, asset2, asset3]) { |c| c.apply_depositor_metadata(user) }
+    end
+
     context "when signed in" do
-      before do
-        sign_in user
-      end
+      before { sign_in user }
 
       it "should return the collection and its members" do
-        get :show, id: @collection
-        expect(response).to be_successful
-        expect(assigns[:collection].title).to eq @collection.title
-        expect(assigns[:member_docs].map(&:id)).to match_array [@asset1, @asset2, @asset3].map(&:id)
-      end
-      it "should set the breadcrumb trail" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
-        get :show, id: @collection
+        get :show, id: collection
+        expect(response).to be_successful
+        expect(assigns[:presenter]).to be_kind_of Sufia::CollectionPresenter
+        expect(assigns[:collection].title).to eq collection.title
+        expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
     end
+
     context "not signed in" do
       it "should not show me files in the collection" do
-        get :show, id: @collection
+        get :show, id: collection
         expect(assigns[:member_docs].count).to eq 0
       end
     end
   end
 
   describe "#edit" do
-    before do
-      @collection = Collection.new(title: "My collection", description: "My incredibly detailed description of the collection")
-      @collection.apply_depositor_metadata(user.user_key)
-      @collection.save
-      sign_in user
+    let(:collection) do
+      Collection.create(title: "My collection",
+        description: "My incredibly detailed description of the collection") do |c|
+        c.apply_depositor_metadata(user)
+      end
     end
+
+    before { sign_in user }
+
     it "should not show flash" do
-      get :edit, id: @collection
+      get :edit, id: collection
       expect(flash[:notice]).to be_nil
     end
   end
