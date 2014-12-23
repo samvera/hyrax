@@ -48,7 +48,7 @@ module Sufia::UsersControllerBehavior
   # Process changes from profile form
   def update
     if params[:user]
-      @user.update_attributes(params.require(:user).permit(*User.permitted_attributes))
+      @user.attributes = user_params
       @user.populate_attributes if ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:user][:update_directory])
     end
 
@@ -102,6 +102,14 @@ module Sufia::UsersControllerBehavior
   end
 
   protected
+
+  def user_params
+    params.require(:user).permit(:email, :login, :display_name, :address, :admin_area,
+      :department, :title, :office, :chat_id, :website, :affiliation,
+      :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
+      :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar, :orcid)
+  end
+
 
   # You can override base_query to return a list of arguments
   def base_query
