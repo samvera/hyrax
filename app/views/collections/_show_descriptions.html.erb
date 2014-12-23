@@ -7,7 +7,7 @@
   <% (@collection.terms_for_display).each do |term| %>
       <% if @collection.send(term).present? %>
       <dt><%= get_label(term) %></dt>
-      <dd><%= render_show_field_partial_with_action("records", term, {record: @collection}) %></dd>
+      <dd><%= render_show_field_partial_with_action("records", term, record: @collection) %></dd>
       <% end %>
   <% end %>
 </dl>
