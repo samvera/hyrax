@@ -97,16 +97,6 @@ module Sufia::User
   end
 
   module ClassMethods
-
-    def permitted_attributes
-      [:email, :login, :display_name, :address, :admin_area,
-        :department, :title, :office, :chat_id, :website, :affiliation,
-        :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
-        :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar,
-        :orcid
-      ]
-    end
-
     def current
       Thread.current[:user]
     end
