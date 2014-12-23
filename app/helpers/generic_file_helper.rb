@@ -4,6 +4,11 @@ module GenericFileHelper
     gf.to_s
   end
 
+  def present_terms(presenter, terms=:all, &block)
+    terms = presenter.terms if terms == :all
+    Sufia::PresenterRenderer.new(presenter, self).fields(terms, &block)
+  end
+
   def render_show_field_partial(key, locals)
     render_show_field_partial_with_action('generic_files', key, locals)
   end

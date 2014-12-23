@@ -2,10 +2,10 @@
 <h2 class="non lower">Descriptions</h2>
 <table class="table table-striped"><!-- class="verticalheadings"> -->
   <tbody>
-  <% @presenter.terms.each do |term| %>
+  <% present_terms(@presenter) do |r, term| %>
       <tr>
-        <th><%= get_label(term) %></th>
-        <td><%= render_show_field_partial_with_action("records", term, record: @presenter) %></td>
+        <th><%= r.label(term) %></th>
+        <td><%= r.value(term) %></td>
       </tr>
   <% end %>
   </tbody>
