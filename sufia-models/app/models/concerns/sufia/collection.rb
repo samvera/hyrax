@@ -11,12 +11,6 @@ module Sufia
       validates :title, presence: true
     end
 
-    def terms_for_display
-      [:resource_type, :creator, :contributor, :tag,
-        :rights, :publisher, :date_created, :subject, :language, :identifier,
-        :based_near, :related_url]
-    end
-
     def to_param
       noid
     end

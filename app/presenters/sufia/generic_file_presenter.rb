@@ -9,5 +9,6 @@ module Sufia
     # Depositor and permissions are not displayed in app/views/generic_files/_show_descriptions.html.erb
     # so don't include them in `terms'.
     delegate :depositor, :permissions, to: :model
+
   end
 end
