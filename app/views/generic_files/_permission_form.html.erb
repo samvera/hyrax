@@ -17,12 +17,8 @@
 
 <div class="well">
 
-  <!-- Visibility -->
-  <% visibility_text = capture do %>
-    <%= render partial: 'generic_files/visibility' %>
-  <% end %>
   <h3>Visibility - <small>who should have the ability to read and download</small>
-    <span id="visibility_tooltip" class="h5"><%= help_icon('visibility', visibility_text) %></span>
+    <span id="visibility_tooltip" class="h5"><%= visibility_help %></span>
   </h3>
   <div class="radio">
     <label>
@@ -37,12 +33,9 @@
   </div>
 
   <!-- Share With -->
-  <% share_with_text = capture do %>
-    <%= render partial: 'generic_files/share_with' %>
-  <% end %>
   <div class="row">
     <h3 class="col-sm-12">Share With <small>(optional)</small>
-      <span id="share_with_tooltip" class="h5"><%= help_icon('share_with', share_with_text) %></span>
+      <span id="share_with_tooltip" class="h5"><%= share_with_help %></span>
     </h3>
   </div>
 

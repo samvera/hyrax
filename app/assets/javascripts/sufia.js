@@ -35,7 +35,6 @@
 //= require sufia/trophy
 //= require sufia/featured_works
 //= require sufia/batch_select_all
-//= require sufia/multiForm
 //= require sufia/edit_metadata
 //= require sufia/single_use_link
 //= require sufia/audio
@@ -51,6 +50,7 @@
 //= require sufia/batch
 
 //= require hydra_collections
+//= require hydra-editor/hydra-editor
 
 //
 // For Browse-everything until https://github.com/projecthydra-labs/browse-everything/issues/85 is resolved:

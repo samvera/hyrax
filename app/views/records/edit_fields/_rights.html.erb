@@ -1,9 +1,3 @@
-      <div <% if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %> class="input-group">
-        <% if f.object.class.multiple?(key) %>
-          <%= select_tag "rights", options_for_select(Sufia.config.cc_licenses, v), name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", class: 'form-control' %>
-        <% else %>
-          <%= f.select :rights, Sufia.config.cc_licenses, class: 'form-control' %>
-        <% end %>
-        <%= render "records/edit_fields/suffix", key: key, index: index %>
-      </div>
-      <div id="additional_<%= key %>_elements"></div>
+<%= f.input :rights, as: :select, collection: Sufia.config.cc_licenses,
+    input_html: { class: 'form-control', multiple: true }
+  %>

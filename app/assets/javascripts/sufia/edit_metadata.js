@@ -82,5 +82,6 @@ Blacklight.onLoad(function() {
     }
   }
 
-  $('form').multiForm({afterAdd: setup_autocomplete});
+  /* TODO fix autocomplete on added fields */
+  /* $('form').multiForm({afterAdd: setup_autocomplete}); */
 });

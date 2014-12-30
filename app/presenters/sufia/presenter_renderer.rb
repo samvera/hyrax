@@ -1,5 +1,7 @@
 module Sufia
   class PresenterRenderer
+    include ActionView::Helpers::TranslationHelper
+
     def initialize(presenter, view_context)
       @presenter = presenter
       @view_context = view_context
@@ -9,8 +11,8 @@ module Sufia
       render_show_field_partial(field_name, locals)
     end
 
-    def label(field_name)
-      @view_context.get_label(field_name)
+    def label(field)
+      t(:"#{model_name.param_key}.#{field}", scope: label_scope, default: field.to_s.humanize).presence
     end
 
     def fields(terms, &block)
@@ -33,11 +35,19 @@ module Sufia
       end
 
       def collection_path
-        @collection_path ||= ActiveSupport::Inflector.tableize(@presenter.model_class.model_name)
+        @collection_path ||= ActiveSupport::Inflector.tableize(model_name)
       end
 
       def partial_exists?(partial)
         @view_context.lookup_context.find_all(partial).any?
+      end
+
+      def label_scope
+        :"simple_form.labels"
+      end
+
+      def model_name
+        @presenter.model_class.model_name
       end
   end
 end

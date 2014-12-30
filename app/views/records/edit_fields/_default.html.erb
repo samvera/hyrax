@@ -1,10 +1,5 @@
-      <div <%  if index == 0 %> id="additional_<%= key.to_s %>_clone" <% end %> class="input-group">
-        <% required = render_req && (index == 0) && f.object.required?(key) %>
-        <% if f.object.class.multiple?(key) %>
-          <%= f.text_field :title, name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}][]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "form-control", required: required  %>
-        <% else %>
-          <%= f.text_field :title, name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "form-control", required: required  %>
-        <% end %>
-        <%= render "records/edit_fields/suffix", key: key, index: index, single: f.object.class.unique?(key) %>
-      </div>
-      <div id="additional_<%= key %>_elements"></div>
+<% if f.object.class.multiple? key %>
+  <%= f.input key, as: :multi_value_with_help, input_html: { class: 'form-control' }, required: f.object.required?(key) %>
+<% else %>
+  <%= f.input key, required: f.object.required?(key) %>
+<% end %>

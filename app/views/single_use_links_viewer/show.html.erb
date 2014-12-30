@@ -7,21 +7,15 @@
   <h2> Descriptions:</h2>
 
   <div class="well active" id="descriptions_display">
-      <table class="table table-striped"><!-- class="verticalheadings"> -->
+    <table class="table table-striped">
       <tbody>
-      <% @terms.each do |term| %>
-        <% vals = Array(@asset.send(term)) %>
-            <tr id='row_<%=term.to_s%>' class="expandable">
-              <th width="20%">
-                <%=get_label(term)%>
-              </th>
-              <td>
-                <% vals.each do |val| %>
-                  <%= val %><br />
-                <% end %>
-              </td>
-            </tr>
-       <% end %>
-        </tbody></table> <!-- class="verticalheadings"> -->
-    </div><!-- /well -->
+      <% present_terms(@presenter) do |r, term| %>
+          <tr id='row_<%= term %>' class="expandable">
+            <th width="20%"><%= r.label(term) %></th>
+            <td><%= r.value(term) %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div><!-- /well -->
 </div>

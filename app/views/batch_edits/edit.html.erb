@@ -15,29 +15,29 @@
     <div class="tab-content">
       <div class="well tab-pane active" id="descriptions_display">
         <% @terms.each do |term| %>
-          <% vals = @generic_file.send(term) %>
           <div class="row">
-            <!-- look into dashboard_actions.js -->
-            <div class="col-sm-2 col-sm-offset-1">
-              <a class="accordion-toggle grey glyphicon-chevron-right-helper" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#" id="expand_link_<%=term.to_s%>">
-                <%= get_label(term) %>
-              </a>
-              <a href="#collapse_<%=term.to_s%>" class="small" id="chevron_link_<%=term.to_s%>"><span id="expand_<%=term.to_s%>" class="glyphicon glyphicon-chevron-right"></span></a>
-            </div>
-            <div id="detail_<%= term.to_s %>" class="col-sm-6">
-              <div class="accordion-body collapse expanded-details scrolly">
-                <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
+            <%= simple_form_for @generic_file, url: batch_edits_path, method: :put, remote: true,
+              builder: Sufia::FormBuilder, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
+              <!-- look into dashboard_actions.js -->
+              <div class="col-sm-2 col-sm-offset-1">
+                <a class="accordion-toggle grey glyphicon-chevron-right-helper" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#" id="expand_link_<%=term.to_s%>">
+                  <%= f.input_label term %>
+                </a>
+                <a href="#collapse_<%=term.to_s%>" class="small" id="chevron_link_<%=term.to_s%>"><span id="expand_<%=term.to_s%>" class="glyphicon glyphicon-chevron-right"></span></a>
+              </div>
+              <div id="detail_<%= term.to_s %>" class="col-sm-6">
+                <div class="accordion-body collapse expanded-details scrolly">
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
-                  <%= render "generic_files/field_form", f: f, render_req: false, key: term %>
+                  <%= f.input term, as: :multi_value_with_help %>
                   <div>
                     <%= f.submit "Save changes", class: 'btn btn-primary field-save updates-batches' , id: "#{term.to_s}_save" %>
                     <a class="accordion-toggle btn" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>">Cancel </a>
                     <div id="status_<%= term.to_s %>" class="status fleft"></div>
                   </div>
-                <% end %>
+                </div>
               </div>
-            </div>
+            <% end %>
           </div>
         <% end %>
       </div><!-- /well -->
