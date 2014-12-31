@@ -20,6 +20,7 @@ require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 require 'support/features'
+require 'support/input_support'
 require 'byebug' unless ENV['TRAVIS']
 
 if ENV['COVERAGE']
@@ -124,6 +125,10 @@ RSpec.configure do |config|
 
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
+
+  config.include InputSupport, type: :input
+  config.include Capybara::RSpecMatchers, type: :input
+
   config.infer_spec_type_from_file_location!
 end
 

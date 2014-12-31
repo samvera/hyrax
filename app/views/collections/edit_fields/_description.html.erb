@@ -1,4 +1,3 @@
 <div>
-  <%= f.text_area :title, name: "#{ActiveModel::Naming.singular(f.object)}[#{key.to_s}]", id: "#{ActiveModel::Naming.singular(f.object)}_#{key.to_s}", value: v, class: "form-control", required: record.required?(key)  %>
-  <%= render "records/edit_fields/suffix", key: key, index: index, single: true %>
+  <%= f.input :description, as: :text, input_html: { rows: '14', required: record.required?(key) } %>
 </div>

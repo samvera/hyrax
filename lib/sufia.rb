@@ -17,6 +17,10 @@ require 'tinymce-rails-imageupload'
 module Sufia
   extend ActiveSupport::Autoload
 
+  eager_autoload do
+    autoload :FormBuilder
+  end
+
   class Engine < ::Rails::Engine
     engine_name 'sufia'
 

@@ -75,9 +75,11 @@ button {
   min-height: 4em;
 }
 
-.required-field {
-  color: red;
-  font-size: small;
+label.required, span.required {
+  abbr{
+    color: red;
+    font-size: small;
+  }
 }
 
 @media only screen and (min-width: 768px) {

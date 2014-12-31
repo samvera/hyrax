@@ -8,9 +8,9 @@
   information you provide will be applied <em>to the entire batch of files</em> you have just
   deposited into <%= t('sufia.product_name') %>. You may edit individual files from
   <%= link_to "<i class='glyphicon glyphicon-dashboard'></i> #{t('sufia.bread_crumb.file_list')}".html_safe, sufia.dashboard_files_path %>
-  once this step is finished. <span class="required-field">*</span> indicates required fields.
+  once this step is finished. <span class="required"><abbr title="required">*</abbr></span> indicates required fields.
 </p>
-<%= form_for([sufia, @batch, @form], html: { multipart: true }) do |f| %>
+<%= simple_form_for [sufia, @batch, @form], html: { multipart: true }, builder: Sufia::FormBuilder do |f| %>
 
   <%= render 'metadata', f: f %>
 

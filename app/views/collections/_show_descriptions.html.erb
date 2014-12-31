@@ -1,8 +1,8 @@
 <h2 class="sr-only">Descriptions</h2>
 <dl class="metadata-collections">
-  <dt><%= get_label("total_items") %></dt>
+  <dt><%= t(".total_items") %></dt>
   <dd><%= @presenter.total_items %></dd>
-  <dt><%= get_label("size") %></dt>
+  <dt><%= t(".size") %></dt>
   <dd><%= @presenter.size %></dd>
   <% present_terms(@presenter, @presenter.terms_with_values) do |r, term| %>
       <dt><%= r.label(term) %></dt>
