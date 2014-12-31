@@ -3,17 +3,6 @@ function batch_edit_init () {
     // initialize popover helpers
     $("a[rel=popover]").popover({ html: true });
 
-    $("tr.expandable").click(function () {
-        $(this).next("ul").slideToggle();
-
-        $(this).find('i.toggle').toggleClass("glyphicon glyphicon-chevron-down");
-    });
-
-    $("tr.expandable_new").click(function () {
-        $(this).find('i').toggleClass("glyphicon glyphicon-chevron-down");
-    });
-
-
     function deserialize(Params) {
         var Data = Params.split("&");
         var i = Data.length;
@@ -116,31 +105,45 @@ function batch_edit_init () {
 
     ajaxManager.run();
 
+    function formButtons(form_id) {
+        return $('#' + form_id + ' .btn')
+    }
+
+    function formFields(form_id) {
+        return $('#' + form_id + ' .form-group > *')
+    }
+
+    function formRightPanel(form_id) {
+        return $('#' + form_id + ' .form-group')
+    }
+
+    function disableForm(form_id) {
+        formButtons(form_id).attr("disabled", "disabled");
+        formRightPanel(form_id).addClass("loading");
+        formFields(form_id).addClass('invisible')
+    }
+
+    function enableForm(form_id) {
+        formButtons(form_id).removeAttr("disabled");
+        formRightPanel(form_id).removeClass("loading");
+        formFields(form_id).removeClass('invisible')
+    }
+
     function after_ajax(form_id) {
         var key = form_id.replace("form_", "");
-        var save_button = "#" + key + "_save";
-        var outer_div = "#detail_" + key;
         $("#status_" + key).html("Changes Saved");
-        $(save_button).removeAttr("disabled");
-        $(outer_div).removeClass("loading");
-        $('#' + form_id).children([".form-group"]).removeClass('hidden')
+        enableForm(form_id);
     }
 
     function before_ajax(form_id) {
-        var key = form_id.replace("form_", "");
-        var save_button = "#" + key + "_save";
-        var outer_div = "#detail_" + key;
-        $(save_button).attr("disabled", "disabled");
-        $(outer_div).addClass("loading");
-        $('#' + form_id).children([".form-group"]).addClass('hidden')
+        disableForm(form_id);
     }
-
 
     function runSave(e) {
         e.preventDefault();
         var button = $(this);
-        var form = $(button.parent().parent()[0]);
-        var form_id = form[0].id
+        var form = button.closest('form');
+        var form_id = form[0].id;
         before_ajax(form_id);
 
         ajaxManager.addReq({
@@ -162,26 +165,8 @@ function batch_edit_init () {
         setTimeout(ajaxManager.runNow(), 100);
     }
 
-    function enable_show_hide_links() {
-        // Show/hide field details when clicking on a link with ID "expand_link_XXX".
-        // We expect to find an element named detail_XXX in addition to the expand_link_XXX.
-        // The "detail_XXX" element has the chevron icon.
-        $('.glyphicon-chevron-right-helper').on('click', function() {
-            var array = this.id.split("expand_link_");
-            if (array.length > 1) {
-                var docId = array[1];
-                $("#detail_" + docId + " .expanded-details").slideToggle();
-                var button = $("#expand_" + docId);
-                button.toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-            }
-            return false;
-        });
-    }
-
     $("#permissions_save").click(runSave);
     $(".field-save").click(runSave);
-    enable_show_hide_links();
-
 }
 
 
