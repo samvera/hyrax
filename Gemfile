@@ -5,7 +5,7 @@ gemspec
 
 # Required for doing pagination inside an engine. See https://github.com/amatsuda/kaminari/pull/322
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
-gem 'hydra-editor', github: 'projecthydra-labs/hydra-editor', branch: 'worthwhile_editor'
+gem 'hydra-editor', github: 'projecthydra-labs/hydra-editor', ref: '6a10e321ec'
 gem 'sufia-models', path: './sufia-models'
 gem 'slop', '~> 3.6.0' # This just helps us generate a valid Gemfile.lock when Rails 4.2 is installed (which requires byebug which has a dependency on slop)
 
