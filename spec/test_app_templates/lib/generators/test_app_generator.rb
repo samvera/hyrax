@@ -4,7 +4,7 @@ class TestAppGenerator < Rails::Generators::Base
   source_root "./spec/test_app_templates"
 
   def add_gems
-    gem 'hydra-editor', github: 'projecthydra-labs/hydra-editor', branch: 'worthwhile_editor'
+    gem 'hydra-editor', github: 'projecthydra-labs/hydra-editor', ref: '6a10e321ec'
     Bundler.with_clean_env do
       run "bundle install"
     end
@@ -43,5 +43,5 @@ class TestAppGenerator < Rails::Generators::Base
     gsub_file 'app/assets/javascripts/application.js',
               '//= require_tree .', '//= require sufia'
   end
-    
+
 end
