@@ -3,17 +3,6 @@ function batch_edit_init () {
     // initialize popover helpers
     $("a[rel=popover]").popover({ html: true });
 
-    $("tr.expandable").click(function () {
-        $(this).next("ul").slideToggle();
-
-        $(this).find('i.toggle').toggleClass("glyphicon glyphicon-chevron-down");
-    });
-
-    $("tr.expandable_new").click(function () {
-        $(this).find('i').toggleClass("glyphicon glyphicon-chevron-down");
-    });
-
-
     function deserialize(Params) {
         var Data = Params.split("&");
         var i = Data.length;
@@ -116,32 +105,45 @@ function batch_edit_init () {
 
     ajaxManager.run();
 
-    function after_ajax(form_id) {
-        var key = form_id.replace("form_", "");
-        var save_button = "#" + key + "_save";
-        var outer_div = "#detail_" + key;
-        $("#status_" + key).html("Changes Saved");
-        $(save_button).removeAttr("disabled");
-        $(outer_div).removeClass("loading");
-        $('#' + form_id).children([".form-group"]).removeClass('hidden')
+
+    function after_ajax(form) {
+        form.enableForm();
     }
 
-    function before_ajax(form_id) {
-        var key = form_id.replace("form_", "");
-        var save_button = "#" + key + "_save";
-        var outer_div = "#detail_" + key;
-        $(save_button).attr("disabled", "disabled");
-        $(outer_div).addClass("loading");
-        $('#' + form_id).children([".form-group"]).addClass('hidden')
+    function before_ajax(form) {
+        form.disableForm();
     }
 
+    var BatchEditField = function (form) {
+        this.form = form;
+        this.formButtons = form.find('.btn');
+        this.formFields = form.find('.form-group > *');
+        this.formRightPanel = form.find('.form-group');
+        this.statusField = form.find('.status');
+    }
+
+    BatchEditField.prototype = {
+        disableForm: function () {
+            this.formButtons.attr("disabled", "disabled");
+            this.formRightPanel.addClass("loading");
+            this.formFields.addClass('invisible')
+        },
+
+        enableForm: function () {
+            this.statusField.html("Changes Saved");
+            this.formButtons.removeAttr("disabled");
+            this.formRightPanel.removeClass("loading");
+            this.formFields.removeClass('invisible')
+        }
+    }
 
     function runSave(e) {
         e.preventDefault();
         var button = $(this);
-        var form = $(button.parent().parent()[0]);
-        var form_id = form[0].id
-        before_ajax(form_id);
+        var form = button.closest('form');
+        var f = new BatchEditField(form);
+        var form_id = form[0].id;
+        before_ajax(f);
 
         ajaxManager.addReq({
             form: form_id,
@@ -150,38 +152,18 @@ function batch_edit_init () {
             dataType: "json",
             type: form.attr("method").toUpperCase(),
             data: form.serialize(),
-            complete: function (e) {
-                after_ajax(form_id);
-                if (e.status == 200) {
-                    eval(e.responseText);
-                } else {
-                    alert("Error!  Status: " + e.status);
-                }
+            success: function (e) {
+                after_ajax(f);
+            },
+            fail: function (e) {
+                alert("Error!  Status: " + e.status);
             }
         });
         setTimeout(ajaxManager.runNow(), 100);
     }
 
-    function enable_show_hide_links() {
-        // Show/hide field details when clicking on a link with ID "expand_link_XXX".
-        // We expect to find an element named detail_XXX in addition to the expand_link_XXX.
-        // The "detail_XXX" element has the chevron icon.
-        $('.glyphicon-chevron-right-helper').on('click', function() {
-            var array = this.id.split("expand_link_");
-            if (array.length > 1) {
-                var docId = array[1];
-                $("#detail_" + docId + " .expanded-details").slideToggle();
-                var button = $("#expand_" + docId);
-                button.toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-            }
-            return false;
-        });
-    }
-
     $("#permissions_save").click(runSave);
     $(".field-save").click(runSave);
-    enable_show_hide_links();
-
 }
 
 
