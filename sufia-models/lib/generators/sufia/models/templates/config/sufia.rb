@@ -99,6 +99,9 @@ Sufia.config do |config|
   # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
 
+  # Specify the form of hostpath to be used in Endnote exports
+  # config.persistent_hostpath = 'http://localhost/files/'
+
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
   # config.enable_ffmpeg = true
 

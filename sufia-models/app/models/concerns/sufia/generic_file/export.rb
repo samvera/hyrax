@@ -21,8 +21,8 @@ module Sufia
           '%G' => [:language],
           '%[' => [:date_modified],
           '%9' => [:resource_type],
-          '%~' => Application.config.application_name,
-          '%W' => t('sufia.institution_name')
+          '%~' => I18n.t('sufia.product_name'),
+          '%W' => I18n.t('sufia.institution_name')
         }
         text = []
         text << "%0 GenericFile"

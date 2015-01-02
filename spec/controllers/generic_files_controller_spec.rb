@@ -532,6 +532,10 @@ describe GenericFilesController do
         expect(assigns[:generic_file]).to eq generic_file
         expect(assigns[:audit_status]).to eq 'Audits have not yet been run on this file.'
       end
+      it 'renders an endnote file' do
+        get :show, id: generic_file, format: 'endnote'
+        expect(response).to be_successful
+      end
     end
   end
 

@@ -12,6 +12,7 @@ module Sufia
       require 'sufia/models/resque'
 
       # Set some configuration defaults
+      config.persistent_hostpath = "http://localhost/files/"
       config.enable_ffmpeg = false
       config.noid_template = '.reeddeeddk'
       config.ffmpeg_path = 'ffmpeg'
