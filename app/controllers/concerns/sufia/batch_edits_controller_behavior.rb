@@ -35,7 +35,11 @@ module Sufia
     end
 
     def after_update
-      redirect_to_return_controller unless request.xhr?
+
+      respond_to do |format|
+        format.json { head :no_content }
+        format.html { redirect_to_return_controller }
+      end
     end
 
     def after_destroy_collection
@@ -49,33 +53,23 @@ module Sufia
     end
 
     def update
-      # keep the batch around if we are doing ajax calls
-      batch_sav = batch.dup if request.xhr?
       case params["update_type"]
         when "update"
           super
         when "delete_all"
-          batch.each do |doc_id|
-            gf = ::GenericFile.find(doc_id)
-            gf.destroy
-          end
-          after_update
-      end
-
-      # reset the batch around if we are doing ajax calls
-      if request.xhr?
-        self.batch = batch_sav.dup
-        @key = params["key"]
-        if @key != "permissions"
-          @vals = params["generic_file"][@key]
-        else
-          @vals = [""]
-        end
-        render :update_edit
+          destroy_batch
       end
     end
 
     protected
+
+    def destroy_batch
+      batch.each do |doc_id|
+        gf = ::GenericFile.find(doc_id)
+        gf.destroy
+      end
+      after_update
+    end
 
     # override this method if you need to initialize more complex RDF assertions (b-nodes)
     def initialize_fields(attributes, file)
