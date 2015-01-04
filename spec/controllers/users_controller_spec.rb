@@ -172,7 +172,7 @@ describe UsersController, :type => :controller do
       s1 = double('one')
       expect(UserEditProfileEventJob).to receive(:new).with(@user.user_key).and_return(s1)
       expect(Sufia.queue).to receive(:push).with(s1).once
-      expect_any_instance_of(User).to receive(:populate_attributes).once
+      expect_any_instance_of(User).to receive(:populate_attributes).once.and_call_original
       post :update, id: @user.user_key, user: { update_directory: 'true' }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(@user.to_param))
       expect(flash[:notice]).to include("Your profile has been updated")
