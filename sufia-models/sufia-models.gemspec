@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   # This is a temporary homepage until we've had a chance to review the
   # process
   spec.homepage      = "https://github.com/projecthydra/sufia"
-  spec.license       = "Apache"
+  spec.license       = "Apache2"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -29,10 +29,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rails', '~> 4.0', '< 5.0.0'
   spec.add_dependency 'activeresource', "~> 4.0" # No longer a dependency of rails 4.0
 
-  spec.add_dependency "hydra-head", "~> 9.0.0.beta1"
-  spec.add_dependency "active-fedora", "~> 9.0.0.beta5"
-  spec.add_dependency "hydra-collections", "~> 4.0.0.beta4"
-  spec.add_dependency 'hydra-derivatives', '~> 1.0.0.beta1'
+  spec.add_dependency "hydra-head", "~> 9.0.0.rc2"
+  spec.add_dependency "active-fedora", "~> 9.0.0.rc2"
+  spec.add_dependency "hydra-collections", "~> 4.0.0.rc2"
+  spec.add_dependency 'hydra-derivatives', '~> 1.0.0.rc1'
   spec.add_dependency 'nest', '~> 1.1'
   spec.add_dependency 'resque', '~> 1.23'
   spec.add_dependency 'resque-pool', '~> 0.3'
