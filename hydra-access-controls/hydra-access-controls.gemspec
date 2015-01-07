@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.9.3'
 
   gem.add_dependency 'activesupport'
-  gem.add_dependency "active-fedora", '~> 9.0.0.beta3'
+  gem.add_dependency "active-fedora", '~> 9.0.0.rc1'
   gem.add_dependency 'cancancan'
   gem.add_dependency 'deprecation'
   gem.add_dependency "blacklight", '~> 5.3'
