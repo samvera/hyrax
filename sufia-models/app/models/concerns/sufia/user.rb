@@ -54,6 +54,11 @@ module Sufia::User
     { id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key }
   end
 
+  # Populate user instance with attributes from remote system (e.g., LDAP)
+  # There is no default implementation -- override this in your application
+  def populate_attributes
+  end
+
   def email_address
     self.email
   end
