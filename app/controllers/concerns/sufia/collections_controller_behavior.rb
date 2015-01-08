@@ -12,7 +12,6 @@ module Sufia
       prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
       before_filter :filter_docs_with_read_access!, except: :show
       before_filter :has_access?, except: :show
-      before_filter :initialize_fields_for_edit, only: [:edit, :new]
       before_filter :build_breadcrumbs, only: [:edit, :show]
 
       self.solr_search_params_logic += [:add_access_controls_to_solr_params]
@@ -20,15 +19,29 @@ module Sufia
       layout "sufia-one-column"
     end
 
+    def new
+      super
+      form
+    end
+
+    def edit
+      super
+      form
+    end
+
     def show
       super
-      @presenter = presenter
+      presenter
     end
 
     protected
 
     def presenter
-      Sufia::CollectionPresenter.new(@collection)
+      @presenter ||= presenter_class.new(@collection)
+    end
+
+    def presenter_class
+      Sufia::CollectionPresenter
     end
 
     def collection_params
@@ -56,8 +69,12 @@ module Sufia
       end
     end
 
-    def initialize_fields_for_edit
-      @form = Sufia::Forms::CollectionEditForm.new(@collection)
+    def form
+      @form ||= form_class.new(@collection)
+    end
+
+    def form_class
+      Sufia::Forms::CollectionEditForm
     end
 
     def _prefixes
