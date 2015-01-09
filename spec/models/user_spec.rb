@@ -28,6 +28,11 @@ describe User, :type => :model do
       expect(user).to be_valid
       expect(user.save).to be true
     end
+    it 'saves when an ORCID with a non-numeric check digit is provided' do
+      user.orcid = 'http://orcid.org/0000-0000-1111-222X'
+      expect(user).to be_valid
+      expect(user.save).to be true
+    end
     it 'saves when a valid ORCID URI is supplied' do
       user.orcid = 'http://orcid.org/0000-0000-1111-2222'
       expect(user).to be_valid
