@@ -12,11 +12,11 @@ module Sufia
         start_date = date_since_last_cache(user)
 
         stats = {}
-        files_for_user(user).each do |file|
-          view_stats = FileViewStat.statistics(file.id, start_date, user.id)
+        file_ids_for_user(user).each do |file_id|
+          view_stats = FileViewStat.statistics(file_id, start_date, user.id)
           stats = tally_results(view_stats, :views, stats)
 
-          dl_stats = FileDownloadStat.statistics(file.id, start_date, user.id)
+          dl_stats = FileDownloadStat.statistics(file_id, start_date, user.id)
           stats = tally_results(dl_stats, :downloads, stats)
         end
 
@@ -38,8 +38,12 @@ private
       end
     end
 
-    def files_for_user(user)
-      ::GenericFile.where(Solrizer.solr_name('depositor', :symbol) => user.user_key)
+    def file_ids_for_user(user)
+      ids = []
+      ::GenericFile.find_in_batches("#{Solrizer.solr_name('depositor', :symbol)}:\"#{user.user_key}\"", fl:"id") do |group|
+        ids.concat group.map { |doc| doc["id"] }
+      end
+      ids
     end
 
     # For each date, add the view and download counts for this
