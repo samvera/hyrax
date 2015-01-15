@@ -4,7 +4,6 @@ Bundler::GemHelper.install_tasks
 
 APP_ROOT= File.dirname(__FILE__)
 require 'jettywrapper'
-Jettywrapper.hydra_jetty_version = "v8.1.0"
 
 namespace :jetty do
   TEMPLATE_DIR = 'hydra-core/lib/generators/hydra/templates'
@@ -94,7 +93,6 @@ tag     = "v#{version}"
   end
 end
 
-
 namespace :all do
   task :build   => FRAMEWORKS.map { |f| "#{f}:build"   } + ['hydra-head:build']
   task :install => FRAMEWORKS.map { |f| "#{f}:install" } + ['hydra-head:install']
@@ -129,8 +127,6 @@ namespace :all do
 
   task :release => %w(ensure_clean_state build commit tag push)
 end
-
-
 
 desc "run all specs"
 task :spec do

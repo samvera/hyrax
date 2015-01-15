@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 version = File.read(File.expand_path("../../HYDRA_VERSION", __FILE__)).strip
 
-
 Gem::Specification.new do |gem|
   gem.authors     = ["Matt Zumwalt, Bess Sadler, Julie Meloni, Naomi Dushay, Jessie Keck, John Scofield, Justin Coyne & many more.  See https://github.com/projecthydra/hydra-head/contributors"]
   gem.email       = ["hydra-tech@googlegroups.com"]
@@ -19,12 +18,11 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
-
-  gem.add_dependency "rails", '>= 3.2.3', '< 5' 
+  gem.add_dependency "rails", '>= 3.2.3', '< 5'
   gem.add_dependency 'block_helpers'
   gem.add_dependency 'hydra-access-controls', version
-  gem.add_dependency 'jettywrapper', ">=1.4.1"
-  
+  gem.add_dependency 'jettywrapper', '>= 2.0.0'
+
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'rspec-rails'
