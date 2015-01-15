@@ -61,8 +61,10 @@ If you have questions or need help, please email [the Hydra community developmen
 
 ### Generate base Rails install
 
-```gem install rails -v 4.1.8```
-```rails new my_app```
+```
+gem install rails -v 4.1.8
+rails new my_app
+```
 
 ### Add gems to Gemfile
 
