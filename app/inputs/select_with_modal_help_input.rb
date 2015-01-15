@@ -14,7 +14,7 @@ class SelectWithModalHelpInput < MultiValueWithHelpInput
       end
     end
 
-    def build_text_field(value)
+    def build_field(value, index)
       html_options = input_html_options.dup
 
       if @rendered_first_element
