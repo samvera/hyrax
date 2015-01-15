@@ -48,7 +48,8 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 1. A SQL RDBMS (MySQL, SQLite)
 1. [Redis](http://redis.io/) key-value store
 1. [ImageMagick](http://www.imagemagick.org/)
-1. Ruby
+1. Ruby (*latest 2.1 recommended*)
+2. Rails (*latest 4.1 recommended*)
 
 #### !! Ensure that you have all of the above components installed before you continue. !!
 
