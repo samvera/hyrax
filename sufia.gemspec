@@ -28,14 +28,14 @@ Gem::Specification.new do |gem|
   # declare a dependency on) sass-rails
   gem.add_dependency 'sass-rails'
 
-  gem.add_dependency 'hydra-batch-edit', '>= 1.1.1', '< 2.0.0'
+  gem.add_dependency 'hydra-batch-edit', '~> 1.1'
   gem.add_dependency 'browse-everything', '~> 0.4'
   gem.add_dependency 'daemons', '~> 1.1'
   gem.add_dependency 'mail_form'
   gem.add_dependency 'rails_autolink', '~> 1.1'
   gem.add_dependency 'yaml_db', '~> 0.2'
   gem.add_dependency 'font-awesome-rails'
-  gem.add_dependency 'hydra-editor', '~> 1.0.0.rc2'
+  gem.add_dependency 'hydra-editor', '~> 1.0.0.rc3'
   gem.add_dependency 'blacklight-gallery'
   gem.add_dependency 'breadcrumbs_on_rails', '~>2.3.0'
   gem.add_dependency 'select2-rails'

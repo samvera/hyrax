@@ -29,8 +29,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rails', '~> 4.0', '< 5.0.0'
   spec.add_dependency 'activeresource', "~> 4.0" # No longer a dependency of rails 4.0
 
-  spec.add_dependency "hydra-head", "~> 9.0.0.rc2"
-  spec.add_dependency "active-fedora", "~> 9.0.0.rc2"
+  spec.add_dependency "hydra-head", "~> 9.0.0.rc3"
+  spec.add_dependency "active-fedora", "~> 9.0.0.rc3"
   spec.add_dependency "hydra-collections", "~> 4.0.0.rc2"
   spec.add_dependency 'hydra-derivatives', '~> 1.0.0.rc1'
   spec.add_dependency 'nest', '~> 1.1'
