@@ -1,22 +1,24 @@
-<%# Overriding hydra-editor so that we can replace the call to 'render_edit_field_partial'
-  # With render_edit_field_partial_with_action because there is also a 
-  # 'render_edit_field_partial' in sufia that uses 'generic_file' as the action. %>
-<% render_req ||= true # render_req is true for single file edit, false for batch edit%>
-<div class="form-group">
-  <% vals = record[key] %>
-  <% if render_req && record.required?(key) %>
-    <% tmp = '<span class="required-field">*</span>' + get_label(key) %>
-    <%= f.label key, tmp.html_safe  %>
-  <% else %>
-    <%= f.label key, get_label(key) %>
-  <% end %>
+<% render_req ||= true # render_req is true for single file edit, false for batch edit %>
 
-  <% if key == :resource_type %>
-    <%# resource_type is a multiselect box, so don't render one row for each %>
-    <%= render_edit_field_partial(key, record: record, f: f, render_req: render_req) %>
+<div class="form-group">
+  <% required = render_req && record.required?(key) %>
+  <% lbl = get_label(key) %>
+  <% single = f.object.class.unique?(key) %>
+
+  <% if partial_exists?("records/edit_fields/_#{key}") %>
+    <%= render_edit_field_partial(key, f: f, record: record, required: required, label_for_field: lbl, single: single) %>
   <% else %>
-    <% vals.to_ary.each_with_index do |v, index| %>
-      <%= render_edit_field_partial(key, record: record, f: f,  v: v, index: index, render_req: render_req) %>
+    <% opts = { label: lbl, required: required } %>
+
+    <% if single %>
+      <% opts = opts.merge(input_html: { class: 'listing' }) %>
+      <div class='single_value'>
+        <%= f.input key, opts %>
+      </div>
+    <% else %>
+      <% opts = opts.merge(as: :multi_value) %>
+      <%= f.input key, opts %>
     <% end %>
+
   <% end %>
-</div><!-- /.form-group -->
+</div>

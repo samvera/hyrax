@@ -24,7 +24,7 @@
               </a>
             </div>
             <div id="collapse_<%= term.to_s %>" class="collapse scrolly col-sm-6">
-                <%= form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
+                <%= simple_form_for @generic_file, url: batch_edits_path, method: :put, remote: true, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
                   <%= render partial: "generic_files/field_form", locals: { generic_file: @show_file, f: f, render_req: false, key: term } %>

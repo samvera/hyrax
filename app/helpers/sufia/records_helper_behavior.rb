@@ -1,12 +1,5 @@
 module Sufia
   module RecordsHelperBehavior
-    def add_field(key)
-      more_or_less_button(key, 'adder', '+')
-    end
-
-    def subtract_field(key)
-     more_or_less_button(key, 'remover', '-')
-    end
 
     def help_icon(key, content = nil, title = nil)
       content = content || metadata_help(key)
@@ -39,13 +32,6 @@ module Sufia
     end
   
     private
-
-    def more_or_less_button(key, html_class, symbol)
-      icon = (symbol == "-") ? "remove" : "plus" 
-      content_tag "button", class: "#{html_class} btn", id: "additional_#{key}_submit", name: "additional_#{key}" do
-        sr_hidden(icon) + sr_only(key.to_s)
-      end
-    end
 
     def sr_hidden icon
       content_tag "span", "aria-hidden" => true do 

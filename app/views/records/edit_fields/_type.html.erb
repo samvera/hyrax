@@ -1,8 +1,2 @@
-      <div class="form-group">
-        <%= f.label :resource_type, "Resource Types", for: "resource_type" %>
-        <p class="help-block">You may select multiple types to apply<p>
-        <%= f.select :resource_type, options_for_select(Sufia.config.resource_types.keys), {},
-          {multiple: true, size: 7} %>
-        <%= help_icon(:resource_type) %>
-      </div>
-
+<% required = render_req && record.required?(key) %>
+<%= render partial: "records/edit_fields/resource_type", locals: { record: record, f: f, required: required, key: key } %>

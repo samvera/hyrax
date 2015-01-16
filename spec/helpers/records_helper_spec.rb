@@ -1,19 +1,6 @@
 require 'spec_helper'
 
 describe RecordsHelper, :type => :helper do
-  let(:adder) {
-    "<button class=\"adder btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-plus\"></i></span><span class=\"sr-only\">add another test</span></button>"
-  }
-  let(:remover) {
-    "<button class=\"remover btn\" id=\"additional_test_submit\" name=\"additional_test\"><span aria-hidden=\"true\"><i class=\"glyphicon glyphicon-remove\"></i></span><span class=\"sr-only\">add another test</span></button>"    
-  }
-  it "draws add button" do
-    expect(helper.add_field(:test)).to eql(adder)
-  end
-
-  it "draws subtract button" do
-    expect(helper.subtract_field(:test)).to eql(remover)
-  end
 
   it "draws help_icon" do
     str = String.new(helper.help_icon(:tag))

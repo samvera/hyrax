@@ -1,5 +1,2 @@
-      <div <% if index == 0%> id="additional_<%= key.to_s %>_clone" <% end %>>
-        <%= f.select "rights", options_for_select(Sufia.config.cc_licenses, v), include_blank: true %>
-        <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index } %>
-      </div>
-      <div id="additional_<%= key %>_elements"></div>
+<%= f.input :rights, as: :multi_value, required: required, collection: Sufia.config.cc_licenses, include_blank: true, input_html: { type: 'select', include_blank: true, selected: :blank, class: 'select optional form-control' } %>
+<%= render partial: 'records/rights_modal' %>

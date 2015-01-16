@@ -14,9 +14,7 @@ describe 'collections/_form.html.erb', :type => :view do
     it "should draw the metadata fields for collection" do
       render
       expect(rendered).to have_selector("input#collection_title", count: 1)
-      expect(rendered).to_not have_selector("div#additional_title_clone button.adder")
       expect(rendered).to have_selector("input#collection_creator", count: 1)
-      expect(rendered).to have_selector("div#additional_creator_clone button.adder")
       expect(rendered).to have_selector("textarea#collection_description", count: 1)
       expect(rendered).to have_selector("input#collection_contributor", count: 1)
       expect(rendered).to have_selector("input#collection_tag", count: 1)
