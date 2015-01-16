@@ -48,7 +48,8 @@ We'd love to accept your contributions.  Please see our guide to [contributing t
 1. A SQL RDBMS (MySQL, SQLite)
 1. [Redis](http://redis.io/) key-value store
 1. [ImageMagick](http://www.imagemagick.org/)
-1. Ruby
+1. Ruby (*latest 2.1 recommended*)
+2. Rails (*latest 4.1 recommended*)
 
 #### !! Ensure that you have all of the above components installed before you continue. !!
 
@@ -60,12 +61,15 @@ If you have questions or need help, please email [the Hydra community developmen
 
 ### Generate base Rails install
 
-```rails new my_app```
+```
+gem install rails -v 4.1.8
+rails new my_app
+```
 
 ### Add gems to Gemfile
 
 ```
-gem 'sufia'
+gem 'sufia', '4.3.1'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
