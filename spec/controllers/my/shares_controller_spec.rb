@@ -24,6 +24,10 @@ describe My::SharesController, :type => :controller do
           r.edit_users += [@other_user.user_key]
           r.save!
         end
+        @my_collection = Collection.new(title: "My collection").tap do |c|
+          c.apply_depositor_metadata(@user.user_key)
+        end
+        @my_collection.save!
       end
 
       it "should respond with success" do
@@ -57,6 +61,8 @@ describe My::SharesController, :type => :controller do
         expect(assigns[:document_list].map(&:id)).to_not include(@unshared_file.id)
         # doesn't show files shared with other users
         expect(assigns[:document_list].map(&:id)).to_not include(@shared_with_someone_else.id)
+        # doesn't show my collections
+        expect(assigns[:document_list].map(&:id)).to_not include @my_collection.id
       end
     end
   end
