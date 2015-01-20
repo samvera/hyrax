@@ -3,6 +3,7 @@ module My
 
     self.solr_search_params_logic += [
       :show_only_shared_files,
+      :show_only_generic_files
     ]
 
     def show_only_shared_files(solr_parameters, user_parameters)
