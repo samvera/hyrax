@@ -108,7 +108,7 @@
         <div class="col-sm-8">
           <%= permission_fields.select :access, Sufia.config.permission_levels, {}, class: 'form-control select_perm' %>
         </div>
-        <button class="btn close remove_perm">X</button>
+        <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">X</button>
       </td>
     </tr>
   <% end %>

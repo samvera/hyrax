@@ -136,28 +136,24 @@ Blacklight.onLoad(function() {
       return $('#file_permissions').parent().children().size() - 1;
   }
 
-  $('.remove_perm').on('click', function() {
-     var top = $(this).parent().parent();
-     top.addClass('hidden'); // do not show the block
-     addDestroyField(top);
-     showPermissionNote();
-     return false;
+  $('.remove_perm').on('click', function(evt) {
+       evt.preventDefault();
+       var top = $(this).parent().parent();
+       top.addClass('hidden'); // do not show the block
+       addDestroyField(top, $(this).attr('data-index'));
+       showPermissionNote();
   });
 
   function showPermissionNote() {
      $('#save_perm_note').removeClass('hidden');
   }
 
-  function addDestroyField(element) {
+  function addDestroyField(element, index) {
       $('<input>').attr({
           type: 'hidden',
-          name: 'generic_file[permissions_attributes][' + indexOf(element) + '][_destroy]',
+          name: 'generic_file[permissions_attributes][' + index + '][_destroy]',
           value: 'true'
       }).appendTo(element);
-  }
-
-  function indexOf(element) {
-      return $('#file_permissions').parent().children().index(element) - 1;
   }
 
 });
