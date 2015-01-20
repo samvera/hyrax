@@ -133,10 +133,6 @@ module Sufia
       else
         render action: 'edit'
       end
-    rescue => error
-      flash[:error] = error.message
-      logger.error "GenericFilesController::update rescued #{error.class}\n\t#{error.message}\n #{error.backtrace.join("\n")}\n\n"
-      render action: 'edit'
     end
 
     protected
