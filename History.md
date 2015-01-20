@@ -1,5 +1,19 @@
 # History of Sufia releases
 
+## 5.0.0
+
+* Update README to be more specific about dependency versions [Michael J. Giarlo]
+* Pulled in code from curate to manage add/remove fields on edit forms.  Also story #3978 [Carolyn Cole]
+* Changing the file query to be a solr query for loading the file id, so we do not wait large file content to load.  This speed up the runs significantly on systems with large file. [Carolyn Cole]
+* Users controller should not call an undefined method. Fixes #532. [Michael J. Giarlo]
+* Fix problem where batch edit forms weren't expanding. Fixes #820 [Carolyn Cole]
+* Update and rename LICENSE.md to LICENSE per community convention. [Michael J. Giarlo]
+* Brings some of the fixes in fedora-4/master into master. [Michael J. Giarlo]
+* Adds condition to make the version of sass-rails dependent on the value of RAILS_VERSION [Michael J. Giarlo]
+* Merge travis config change to speed up the build [Michael J. Giarlo]
+* Adding the browse view link into the bread crumbs so it shows on both the edit and the stats page. [Carolyn Cole]
+
+
 ## 4.3.1
 
 * Adds an ORCID field to the user model. [Michael J. Giarlo]
