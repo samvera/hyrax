@@ -9,7 +9,7 @@ module Sufia
     private
 
       def wrapped_list
-        @wrapped_list ||= @raw_list.map { |v| Sufia::VersionPresenter.new(v) }.sort(&:date).tap { |l| l.first.try(:current!) }
+        @wrapped_list ||= @raw_list.map { |v| Sufia::VersionPresenter.new(v) }.sort { |a,b| b.version.created <=> a.version.created }.tap { |l| l.first.try(:current!) }
       end
   end
 end
