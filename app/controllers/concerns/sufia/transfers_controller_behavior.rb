@@ -57,11 +57,10 @@ module Sufia
     private
 
     def get_pid_and_authorize_depositor
-      @pid = Sufia::Noid.namespaceize(params[:id])
-      authorize! :edit, @pid
-      raise Hydra::AccessDenied unless ::GenericFile.load_instance_from_solr(@pid).depositor == current_user.user_key
+      @pid = params[:id]
+      authorize! :transfer, @pid
       @proxy_deposit_request.pid = @pid
-    rescue
+    rescue CanCan::AccessDenied
       redirect_to root_url, alert: 'You are not authorized to transfer this file'
     end
 

@@ -3,24 +3,27 @@ class Batch < ActiveFedora::Base
   include Sufia::ModelMethods
   include Sufia::Noid
 
-  has_metadata name: "descMetadata", type: BatchRdfDatastream
+  has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
-  belongs_to :user, property: "creator"
-  has_many :generic_files, property: :is_part_of
+  property :creator, predicate: ::RDF::DC.creator
+  property :title, predicate: ::RDF::DC.title
+  property :status, predicate: ::RDF::DC.type
 
-  has_attributes :title, :creator, :part, :status, datastream: :descMetadata, multiple: true
-
-  def self.find_or_create(pid)
+  def self.find_or_create(id)
+    # FIXME potential race condition in this method. Consider that `find' may raise
+    # ObjectNotFound in multiple processes. However, Fedora should raise an error
+    # if we try to create two objects with the same id.
     begin
-      Batch.find(pid)
+      Batch.find(id)
     rescue ActiveFedora::ObjectNotFoundError
-      Batch.create({pid: pid})
+      Batch.create(id: id)
     end
   end
 
-  def to_solr(solr_doc={}, opts={})
-    solr_doc = super(solr_doc, opts)
-    solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
-    return solr_doc
+  class << self
+    # override the default indexing service
+    def indexer
+      Sufia::IndexingService
+    end
   end
 end

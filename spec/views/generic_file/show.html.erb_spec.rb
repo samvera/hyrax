@@ -12,7 +12,7 @@ describe 'generic_files/show.html.erb', :type => :view do
   end
 
   let(:generic_file) do
-    stub_model(GenericFile, noid: '123',
+    stub_model(GenericFile, id: '123', noid: '123',
       depositor: depositor.user_key,
       audit_stat: 1,
       title: ['My Title'],
@@ -25,17 +25,22 @@ describe 'generic_files/show.html.erb', :type => :view do
       date_created: ['1984-01-02'],
       language: ['Quechua'],
       publisher: ['Random Publishing, Inc.'],
-      subject: ['Biology', 'Physiology', 'Ethnography'],
-      content: content)
+      subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
+  let(:presenter) {
+    Sufia::GenericFilePresenter.new(generic_file)
+  }
+
   before do
+    allow(generic_file).to receive(:content).and_return(content)
     allow(controller).to receive(:current_user).and_return(depositor)
     allow_any_instance_of(Ability).to receive(:can?).and_return(true)
     allow(User).to receive(:find_by_user_key).with(generic_file.depositor).and_return(depositor)
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
     allow(view).to receive(:on_the_dashboard?).and_return(false)
     assign(:generic_file, generic_file)
+    assign(:presenter, presenter)
     assign(:events, [])
     assign(:notify_number, 0)
   end

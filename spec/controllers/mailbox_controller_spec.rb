@@ -11,10 +11,7 @@ describe MailboxController, :type => :controller do
     allow_any_instance_of(MailboxController).to receive(:authenticate_user!).and_return(true)
     sign_in @user
   end
-  after(:each) do
-    @rec1.delete
-    @rec2.delete
-  end
+
   describe "#index" do
     it "should show message" do
       get :index

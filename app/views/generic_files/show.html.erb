@@ -45,15 +45,15 @@
 <div class="container-fluid">
 <div class="row">
   <div class="col-xs-12 col-sm-4">
-    <%= render partial: 'generic_files/media_display' %>
-    <%= render partial: 'show_actions' %>
-    <%= render partial: 'show_collections' %>
+    <%= render 'generic_files/media_display' %>
+    <%= render 'show_actions' %>
+    <%= render 'show_collections' %>
   </div>
   <div itemscope itemtype="<%= @generic_file.itemtype %>" class="col-xs-12 col-sm-8">
     <h1 class="visibility"><%= @generic_file %> <%= render_visibility_badge %></h1>
-    <%= render partial: 'show_descriptions' %>
-    <%= render partial: 'show_details' %>
-    <%= render partial: 'users/activity_log', locals: {events: @events} %>
+    <%= render 'show_descriptions' %>
+    <%= render 'show_details' %>
+    <%= render 'users/activity_log', events: @events %>
   </div><!-- /columns second -->
 </div> <!-- /.row -->
 </div><!-- /.container-fluid -->

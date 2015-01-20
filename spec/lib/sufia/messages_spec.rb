@@ -38,7 +38,7 @@ describe Sufia::Messages do
   end
 
   describe "#multiple_success" do
-    let(:expected) { '<span id="ss-1"><a data-content="'+file_list+'" data-title="Files uploaded successfully" href="#" rel="popover">These files</a> have been saved.</span>' }
+    let(:expected) { '<span id="ss-1"><a rel="popover" data-content="'+file_list+'" data-title="Files uploaded successfully" href="#">These files</a> have been saved.</span>' }
     it "should render a success message for multiple files" do
       expect(message.multiple_success(batch_id, multiple)).to eq(expected)
     end
@@ -52,7 +52,7 @@ describe Sufia::Messages do
   end
 
   describe "#multiple_failure" do
-    let(:expected) { '<span id="ss-1"><a data-content="'+file_list+'" data-title="Files failed" href="#" rel="popover">These files</a> could not be updated. You do not have sufficient privileges to edit them.</span>' }
+    let(:expected) { '<span id="ss-1"><a rel="popover" data-content="'+file_list+'" data-title="Files failed" href="#">These files</a> could not be updated. You do not have sufficient privileges to edit them.</span>' }
     it "should render a failure message for multiple files" do
       expect(message.multiple_failure(batch_id, multiple)).to eq(expected)
     end

@@ -4,7 +4,7 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        has_file_datastream 'full_text', versionable: false
+        contains 'full_text'
       end
 
       def append_metadata
@@ -27,7 +27,7 @@ module Sufia
           extracted_text = JSON.parse(resp.body)[''].rstrip
           full_text.content = extracted_text if extracted_text.present?
         rescue => e
-          logger.error("Error extracting content from #{self.pid}: #{e.inspect}")
+          logger.error("Error extracting content from #{self.id}: #{e.inspect}")
         end
     end
   end

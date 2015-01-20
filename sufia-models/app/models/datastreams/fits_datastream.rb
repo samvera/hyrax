@@ -1,7 +1,7 @@
 class FitsDatastream < ActiveFedora::OmDatastream
   include OM::XML::Document
 
-  def prefix
+  def prefix(_)
     ""
   end
 

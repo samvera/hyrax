@@ -15,10 +15,6 @@ describe IngestLocalFileJob do
     FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), @mock_upload_directory)
   end
 
-  after do
-    generic_file.destroy
-  end
-
   it "should have attached a file" do
     job.run
     expect(generic_file.reload.content.size).to eq(4218)

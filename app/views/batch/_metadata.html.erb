@@ -5,11 +5,10 @@
       <h3>Applies to individual files uploaded</h3>
       <%= content_tag :p, t('sufia.batch.help.title'), class: "help-block" %>
       <% @batch.generic_files.sort! { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
-        <div class="batch-group">
-          <%= f.label :title, "<span class='required-field'>*</span> Title #{index + 1}".html_safe, class: "control-label" %>
-          <%= help_icon(:title) %>
+        <div class="form-group">
+          <%= f.input_label :title, as: :multi_value_with_help, label: "Title #{index + 1}" %>
           <div id="additional_title_clone">
-            <%= f.text_field :title, name: "title[#{gen_f.id}][]", value: gen_f.label, required: true %>
+            <%= f.text_field :title, name: "title[#{gen_f.id}][]", value: gen_f.label, class: 'form-control', required: true %>
           </div>
         </div>
       <% end %>
@@ -22,41 +21,30 @@
 </div>
 
 <%= hidden_field_tag(:extra_description_count, "1") %>
-<div  id="descriptions_display">
+<div id="descriptions_display">
   <h2>Bulk Descriptions</h2>
   <div class="well">
-    <h3>Applies to all files just uploaded</h3>
-    <div class="batch-group" id="resources">
-      <%# See if this works: render_edit_field_partial(:type, f:f) %>
-      <%= f.label :resource_type, "Resource Types", class: "control-label", for: "resource_type" %>
-      <%= help_icon(:resource_type) %>
-      <%= content_tag :p, t('sufia.batch.help.resource_type'), class: "help-block" %>
-      <%= f.select "resource_type", Sufia::Engine::config.resource_types, {}, { multiple: true, size: 7, "aria-label" => "Rights combo box" } %>
-    </div>
+    <div class="row">
+      <div class="col-sm-6">
+      <h3>Applies to all files just uploaded</h3>
+      <%= f.input :resource_type, as: :select_with_help, collection: Sufia.config.resource_types,
+          input_html: { class: 'form-control', multiple: true, required: true } %>
 
-    <div class="batch-group">
-      <%= f.label :tag, "<span class='required-field'>*</span> Keyword".html_safe, class: "control-label" %>
-      <%= help_icon(:tag) %>
-      <%= f.input :tag, label: false, as: :multi_value  %>
-    </div>
+      <%= f.input :tag, as: :multi_value_with_help, input_html: { required: true } %>
 
-    <div class="batch-group">
-      <%= f.label :creator, "<span class='required-field'>*</span> Creator".html_safe, class: "control-label" %>
-      <%= help_icon(:creator) %>
-      <%= f.input :creator, label: false, as: :multi_value  %>
-    </div>
+      <%= f.input :creator, as: :multi_value_with_help, input_html: { required: true } %>
 
-    <div class="batch-group">
-      <%= f.label :rights, '<span class="required-field">*</span> Rights'.html_safe, class: "control-label" %>
-      <%= help_icon_modal('rightsModal') %>
-      <%= f.input :rights, label: false, as: :multi_value, collection: Sufia.config.cc_licenses, include_blank: true, input_html: { type: 'select', class: 'select optional form-control' } %>
-      <%= render partial: "generic_files/rights_modal" %>
-    </div>
+      <%= f.input :rights, as: :select_with_modal_help, collection: Sufia.config.cc_licenses,
+          input_html: { class: 'form-control', multiple: true, required: true } %>
 
-    <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
-    <!-- hidden on initial load -->
+      <%= render "generic_files/rights_modal" %>
 
-    <%= render partial: 'more_metadata', locals: {f:f} %>
+      <button id="show_addl_descriptions" class="btn btn-default" aria-label="reveal additional metadata description fields">Show Additional Fields</button>
+      <!-- hidden on initial load -->
 
+      <%= render 'more_metadata', f: f %>
+
+      </div> <!-- /col-sm-8 -->
+    </div> <!-- /row -->
   </div><!-- /well -->
 </div> <!-- /row -->

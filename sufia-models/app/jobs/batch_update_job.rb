@@ -8,12 +8,12 @@ class BatchUpdateJob
 
   attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied
 
-  def initialize(login, params)
+  def initialize(login, batch_id, title, file_attributes, visibility)
     self.login = login
-    self.title = params[:title]
-    self.file_attributes = params[:generic_file]
-    self.visibility = params[:visibility]
-    self.batch_id = params[:id]
+    self.title = title || {}
+    self.file_attributes = file_attributes
+    self.visibility = visibility
+    self.batch_id = batch_id
     self.saved = []
     self.denied = []
   end
@@ -25,7 +25,9 @@ class BatchUpdateJob
     batch.generic_files.each do |gf|
       update_file(gf, user)
     end
-    batch.update_attributes({status:["Complete"]})
+
+    batch.update(status: ["Complete"])
+
     if denied.empty?
       send_user_success_message(user, batch) unless saved.empty?
     else
@@ -35,12 +37,12 @@ class BatchUpdateJob
 
   def update_file(gf, user)
     unless user.can? :edit, gf
-      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.pid}!"
+      ActiveFedora::Base.logger.error "User #{user.user_key} DENIED access to #{gf.id}!"
       denied << gf
       return
     end
-    gf.title = title[gf.pid] if title[gf.pid] rescue gf.label
-    gf.attributes=file_attributes
+    gf.title = title[gf.id] if title[gf.id]
+    gf.attributes = file_attributes
     gf.visibility= visibility
 
     save_tries = 0
@@ -48,13 +50,13 @@ class BatchUpdateJob
       gf.save!
     rescue RSolr::Error::Http => error
       save_tries += 1
-      ActiveFedora::Base.logger.warn "BatchUpdateJob caught RSOLR error on #{gf.pid}: #{error.inspect}"
+      ActiveFedora::Base.logger.warn "BatchUpdateJob caught RSOLR error on #{gf.id}: #{error.inspect}"
       # fail for good if the tries is greater than 3
       raise error if save_tries >=3
       sleep 0.01
       retry
     end #
-    Sufia.queue.push(ContentUpdateEventJob.new(gf.pid, login))
+    Sufia.queue.push(ContentUpdateEventJob.new(gf.id, login))
     saved << gf
   end
 
@@ -67,5 +69,4 @@ class BatchUpdateJob
     message = denied.count > 1 ? multiple_failure(batch.noid, denied) : single_failure(batch.noid, denied.first)
     User.batchuser.send_message(user, message, failure_subject, sanitize_text = false)
   end
-  
 end

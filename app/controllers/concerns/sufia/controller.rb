@@ -13,7 +13,9 @@ module Sufia::Controller
   end
 
   def normalize_identifier
-    params[:id] = Sufia::Noid.namespaceize(params[:id])
+    # nop
+    # If you want to override you can do something like this:
+    # params[:id] = Sufia::Noid.namespaceize(params[:id])
   end
 
   def render_404(exception)
@@ -37,7 +39,7 @@ module Sufia::Controller
     return if action_name == "index" && controller_name == "mailbox"
     if user_signed_in?
       @notify_number = current_user.mailbox.inbox(unread: true).count
-      @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=)(.*)/,1] }.select{ |val| !val.blank? }
+      @batches = current_user.mailbox.inbox.map { |msg| msg.last_message.body[/<span id="(.*)"><a (href=|data-content=|rel=)(.*)/,1] }.select{ |val| !val.blank? }
     end
   end
 

@@ -45,13 +45,14 @@ module Sufia
 
     # routed to /files/new
     def new
-      @batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
+      @batch_noid = Batch.create.noid
     end
 
     # routed to /files/:id/edit
     def edit
-      @generic_file.initialize_fields
+      @form = edit_form
       @groups = current_user.groups
+      @version_list = version_list
     end
 
     # routed to /files/:id/stats
@@ -102,6 +103,8 @@ module Sufia
       respond_to do |format|
         format.html {
           @events = @generic_file.events(100)
+          @presenter = presenter
+          @audit_status = audit_service.human_readable_audit_status
         }
         format.endnote { render text: @generic_file.export_as_endnote }
       end
@@ -109,7 +112,7 @@ module Sufia
 
     # routed to /files/:id/audit (POST)
     def audit
-      render json: @generic_file.audit
+      render json: audit_service.audit
     end
 
     # routed to /files/:id (PUT)
@@ -120,6 +123,8 @@ module Sufia
         update_file
       elsif params.has_key? :generic_file
         update_metadata
+      elsif params.has_key? :visibility
+        update_visibility
       end
 
       if success
@@ -128,16 +133,28 @@ module Sufia
       else
         render action: 'edit'
       end
-    rescue => error
-      flash[:error] = error.message
-      logger.error "GenericFilesController::update rescued #{error.class}\n\t#{error.message}\n #{error.backtrace.join("\n")}\n\n"
-      render action: 'edit'
     end
 
     protected
 
+    def presenter
+      Sufia::GenericFilePresenter.new(@generic_file)
+    end
+
+    def version_list
+      Sufia::VersionListPresenter.new(@generic_file.content.versions.all)
+    end
+
+    def edit_form
+      Sufia::Forms::GenericFileEditForm.new(@generic_file)
+    end
+
+    def audit_service
+      Sufia::GenericFileAuditService.new(@generic_file)
+    end
+
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.versionID
+      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label
     end
 
     def actor
@@ -145,7 +162,7 @@ module Sufia
     end
 
     def update_version
-      actor.revert_content(params[:revision], datastream_id)
+      actor.revert_content(params[:revision])
     end
 
     def update_file
@@ -154,7 +171,12 @@ module Sufia
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      actor.update_metadata(params[:generic_file], params[:visibility])
+      file_attributes = Sufia::Forms::GenericFileEditForm.model_attributes(params[:generic_file])
+      actor.update_metadata(file_attributes, params[:visibility])
+    end
+
+    def update_visibility
+      actor.update_metadata({}, params[:visibility])
     end
 
     def json_error(error, name=nil, additional_arguments={})
@@ -173,12 +195,10 @@ module Sufia
       if actor.create_content(file, file.original_filename, datastream_id)
         respond_to do |format|
           format.html {
-            render json: [@generic_file.to_jq_upload],
-            content_type: 'text/html',
-            layout: false
+            render 'jq_upload', formats: 'json', content_type: 'text/html'
           }
           format.json {
-            render json: [@generic_file.to_jq_upload]
+            render 'jq_upload'
           }
         end
       else

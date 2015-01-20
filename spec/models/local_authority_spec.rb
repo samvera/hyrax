@@ -13,15 +13,11 @@ describe LocalAuthority, :type => :model do
   before :all do
     class MyTestRdfDatastream; end
   end
+
   after :all do
     Object.send(:remove_const, :MyTestRdfDatastream)
   end
-  after do
-    DomainTerm.destroy_all
-    LocalAuthority.destroy_all
-    LocalAuthorityEntry.destroy_all
-  end
-  
+
   it "should harvest an ntriples RDF vocab" do
     harvest_nt
     expect(LocalAuthority.count).to eq(1)
@@ -30,7 +26,7 @@ describe LocalAuthority, :type => :model do
   it "should harvest an RDF/XML vocab (w/ an alt predicate)" do
     LocalAuthority.harvest_rdf("langs", [fixture_path + '/lexvo.rdf'],
                                format: 'rdfxml',
-                               predicate: RDF::URI("http://www.w3.org/2008/05/skos#prefLabel"))
+                               predicate: ::RDF::URI("http://www.w3.org/2008/05/skos#prefLabel"))
     expect(LocalAuthority.count).to eq(1)
     expect(LocalAuthorityEntry.count).to eq(35)
   end
@@ -41,9 +37,9 @@ describe LocalAuthority, :type => :model do
     expect(LocalAuthorityEntry.where(local_authority_id: auth.id).first.uri).to start_with('http://sws.geonames.org/')
     expect(LocalAuthorityEntry.count).to eq(149)
   end
-  
+
   describe "when vocabs are harvested" do
-    
+
     let(:num_auths)   { LocalAuthority.count }
     let(:num_entries) { LocalAuthorityEntry.count }
 
@@ -70,9 +66,9 @@ describe LocalAuthority, :type => :model do
       LocalAuthority.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
       expect(DomainTerm.count).to eq(1)
     end
-    
+
     describe "when vocabs are registered" do
-      
+
       before do
         LocalAuthority.register_vocabulary(MyTestRdfDatastream, "geographic", "geo")
         LocalAuthority.register_vocabulary(MyTestRdfDatastream, "genre", "genres")
@@ -81,7 +77,7 @@ describe LocalAuthority, :type => :model do
       it "should have some doamin terms" do
         expect(DomainTerm.count).to eq(2)
       end
-      
+
       it "should return nil for empty queries" do
         expect(LocalAuthority.entries_by_term("my_test", "geographic", "")).to be_nil
       end
@@ -97,7 +93,6 @@ describe LocalAuthority, :type => :model do
         hits = LocalAuthorityEntry.where("local_authority_id in (?)", authorities).where("label like ?", "A%").select("label, uri").limit(25)
         expect(LocalAuthority.entries_by_term("my_tests", "genre", "A").count).to eq(6)
       end
-   
     end
   end
 end

@@ -1,4 +1,4 @@
 <% record.tag.each do |t| %>
-  <span itemprop="keywords"><%= link_to_facet(t, Solrizer.solr_name("desc_metadata__tag", :facetable)) %></span><br />
+  <span itemprop="keywords"><%= link_to_facet(t, Solrizer.solr_name("tag", :facetable)) %></span><br />
 <% end %>
 

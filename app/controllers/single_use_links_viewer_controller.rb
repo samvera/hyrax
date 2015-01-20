@@ -19,7 +19,7 @@ class SingleUseLinksViewerController < ApplicationController
 
       can :read, ActiveFedora::Base do |obj|
         single_use_link.valid? and
-          single_use_link.itemId == obj.pid and single_use_link.destroy!
+          single_use_link.itemId == obj.id and single_use_link.destroy!
       end if single_use_link
 
     end
@@ -39,7 +39,7 @@ class SingleUseLinksViewerController < ApplicationController
     raise not_found_exception unless single_use_link.path == sufia.polymorphic_path(@asset)
 
     #show the file
-    @terms = @asset.terms_for_display
+    @presenter = presenter
 
     # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
     @su = single_use_link.create_for_path sufia.download_path(id: @asset)
@@ -48,8 +48,12 @@ class SingleUseLinksViewerController < ApplicationController
 
   protected
 
+  def presenter
+    Sufia::GenericFilePresenter.new(@asset)
+  end
+
   def authorize_download!
-    authorize! :read, @asset
+    authorize! :read, asset
   end
 
   def single_use_link
@@ -60,8 +64,8 @@ class SingleUseLinksViewerController < ApplicationController
     Sufia::SingleUseError.new('Single-Use Link Not Found')
   end
 
-  def load_asset
-    @asset = ActiveFedora::Base.load_instance_from_solr(single_use_link.itemId)
+  def asset
+    @asset ||= ActiveFedora::Base.find(single_use_link.itemId)
   end
 
   def current_ability

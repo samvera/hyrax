@@ -69,7 +69,7 @@ rails new my_app
 ### Add gems to Gemfile
 
 ```
-gem 'sufia', '4.3.1'
+gem 'sufia', '6.0.0.rc1'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
@@ -236,7 +236,7 @@ configure_blacklight do |config|
 
   # Specify which field to use in the tag cloud on the homepage.
   # To disable the tag cloud, comment out this line.
-  config.tag_cloud_field_name = Solrizer.solr_name("desc_metadata__tag", :facetable)
+  config.tag_cloud_field_name = Solrizer.solr_name("tag", :facetable)
 end
 ```
 

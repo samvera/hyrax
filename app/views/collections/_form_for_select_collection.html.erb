@@ -12,7 +12,7 @@
             <%= t("sufia.collection.select_form.select_heading") %>
             <div class="collection-list">
               <ul>
-                <% user_collections.sort! { |c1,c2| c1['desc_metadata__date_modified_dtsi'] <=> c2['desc_metadata__date_modified_dtsi'] }  %>
+                <% user_collections.sort! { |c1,c2| c1['date_modified_dtsi'] <=> c2['date_modified_dtsi'] }  %>
                 <% user_collections.each do |collection| %>
                   <li> <label for="<%= collection.id %>" class="sr-only">Add to <%=collection.title%></label>
                     <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %>

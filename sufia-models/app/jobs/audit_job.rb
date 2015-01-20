@@ -6,44 +6,58 @@ class AuditJob < ActiveFedoraPidBasedJob
   PASS = 'Passing Audit Run'
   FAIL = 'Failing Audit Run'
 
-  attr_accessor :pid, :datastream_id, :version_id
+  attr_accessor :uri, :pid, :path
 
-  def initialize(pid, datastream_id, version_id)
-    super(pid)
-    self.datastream_id = datastream_id
-    self.version_id = version_id
+  # URI of the resource to audit.
+  # This URI could include the actual resource (e.g. content) and the version to audit:
+  #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content/fcr:versions/version1
+  # but it could also just be:
+  #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content
+  def initialize(id, path, uri)
+    super(uri)
+    self.pid = id
+    self.path = path
+    self.uri = uri
   end
 
   def run
-    if generic_file
-      datastream = generic_file.datastreams[datastream_id]
-      if datastream
-        version =  datastream.versions.select { |v| v.versionID == version_id}.first
-        log = run_audit(version)
-
-        # look up the user for sending the message to
-        login = generic_file.depositor
-        if login
-          user = User.find_by_user_key(login)
-          ActiveFedora::Base.logger.warn "User '#{login}' not found" unless user
-          job_user = User.audituser()
-          # send the user a message about the failing audit
-          unless (log.pass == 1)
-            message = "The audit run at #{log.created_at} for #{log.pid}:#{log.dsid}:#{log.version} was #{log.pass == 1 ? 'passing' : 'failing'}."
-            subject = (log.pass == 1 ? PASS : FAIL)
-            job_user.send_message(user, message, subject)
-          end 
-        end
-      else
-        ActiveFedora::Base.logger.warn "No datastream for audit!!!!! pid: #{pid} dsid: #{datastream_id}"
-      end
-    else
-      ActiveFedora::Base.logger.warn "No generic file for data stream audit!!!!! pid: #{pid} dsid: #{datastream_id}"
+    fixity_ok = false
+    log = run_audit
+    fixity_ok = (log.pass == 1)
+    unless fixity_ok
+      # send the user a message about the failing audit
+      login = generic_file.depositor
+      user = User.find_by_user_key(login)
+      logger.warn "User '#{login}' not found" unless user
+      job_user = User.audituser()
+      file_title = generic_file.title.first
+      message = "The audit run at #{log.created_at} for #{file_title} (#{uri}) failed."
+      subject = FAIL
+      job_user.send_message(user, message, subject)
     end
+    fixity_ok
   end
 
-  private
-  def run_audit(version)
-    object.class.run_audit(version)
-  end
+  protected
+
+    def run_audit
+      begin
+        fixity_ok = ActiveFedora::FixityService.new(uri).check
+      rescue Ldp::NotFound
+        error_msg = "resource not found"
+      end
+
+      if fixity_ok
+        passing = 1
+        ChecksumAuditLog.prune_history(pid, path)
+      else
+        logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
+        passing = 0
+      end
+      ChecksumAuditLog.create!(pass: passing, pid: pid, version: uri, dsid: path)
+    end
+
+    def logger
+      ActiveFedora::Base.logger
+    end
 end

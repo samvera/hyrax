@@ -10,13 +10,18 @@ describe Sufia::IdService do
       expect(Sufia::IdService.mint).to_not eq subject
     end
 
-    it "should be valid" do    
+    it "should be valid" do
       expect(Sufia::IdService.valid?(subject)).to be true
     end
 
+    it "should be reversable" do
+      new_id = Sufia::IdService.mint
+      expect(Sufia::Noid.noidify(new_id)).to eq new_id
+    end
+
     context "when the pid already exists in Fedora" do
-      let(:mock_pid) { 'scholarsphere:ef12ef12f' }
-      let(:unique_pid) {  'scholarsphere:bb22bb22b' }
+      let(:mock_pid) { 'ef12ef12f' }
+      let(:unique_pid) { 'bb22bb22b' }
 
       before do
         allow(Sufia::IdService).to receive(:next_id).and_return(mock_pid, unique_pid)

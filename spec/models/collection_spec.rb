@@ -8,11 +8,6 @@ describe Collection, :type => :model do
     end
   end
 
-  after do
-    @collection.delete
-    @user.destroy
-  end
-
   it "should have open visibility" do
     @collection.save
     expect(@collection.read_groups).to eq ['public']

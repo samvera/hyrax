@@ -40,7 +40,7 @@ describe "Create and use single-use links", :type => :feature do
       visit generate_download_single_use_link_path(id: file)
       expect(page).to have_css '.download-link'
       find('.download-link').click
-      expected_content = ActiveFedora::Base.find(file.pid, cast: true).content.content
+      expected_content = ActiveFedora::Base.find(file.id).content.content
       expect(page.source).to eq expected_content
     end
   end

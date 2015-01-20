@@ -11,8 +11,6 @@ class FeaturedWorkList
     end
   end
 
-  delegate :query, :construct_query_for_pids, to: ActiveFedora::SolrService
-
   def featured_works
     return @works if @works
     @works = FeaturedWork.all
@@ -26,20 +24,20 @@ class FeaturedWorkList
   private
     def add_solr_document_to_works
       solr_docs.each do |doc|
-        work_with_pid(doc['id']).generic_file_solr_document = SolrDocument.new(doc)
+        work_with_id(doc['id']).generic_file_solr_document = SolrDocument.new(doc)
       end
     end
 
-    def pids
-      @works.pluck(:generic_file_id).map { |noid| Sufia::Noid.namespaceize(noid) }
+    def ids
+      @works.pluck(:generic_file_id)
     end
 
     def solr_docs
-      query(construct_query_for_pids(pids))
+      ActiveFedora::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids))
     end
 
-    def work_with_pid(pid)
-      @works.find { |w| Sufia::Noid.namespaceize(w.generic_file_id) == pid}
+    def work_with_id(id)
+      @works.find { |w| w.generic_file_id == id}
     end
-  
+
 end

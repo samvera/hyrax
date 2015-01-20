@@ -1,3 +1,5 @@
-<% render_req ||= false %>
-<% required = render_req && record.required?(key) %>
-<%= f.input key, label: label_for_field, as: :multi_value, required: required, input_html: { rows: '5', type: 'textarea'} %>
+<% if f.object.class.multiple? key %>
+  <%= f.input :description, as: :multi_value_with_help, input_html: { rows: '14', type: 'textarea'}, required: false %>
+<% else %>
+  <%= f.input :description, as: :text, input_html: { rows: '14' } %>
+<% end %>

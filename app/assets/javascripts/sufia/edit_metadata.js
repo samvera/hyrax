@@ -51,15 +51,13 @@ Blacklight.onLoad(function() {
 
   autocomplete_vocab.url_var = ['subject', 'language'];   // the url variable to pass to determine the vocab to attach to
   autocomplete_vocab.field_name = new Array(); // the form name to attach the event for autocomplete
-  autocomplete_vocab.add_btn_id = new Array(); // the id of the button pressed when adding an additional form element
 
   // loop over the autocomplete fields and attach the
   // events for autocomplete and create other array values for autocomplete
   for (var i=0; i < autocomplete_vocab.url_var.length; i++) {
     autocomplete_vocab.field_name.push('generic_file_' + autocomplete_vocab.url_var[i]);
-    autocomplete_vocab.add_btn_id.push('additional_' + autocomplete_vocab.url_var[i] + '_submit');
-    // add autocompletes to all inputs created
-    $(".form-group.multi_value." + autocomplete_vocab.field_name[i]).find('input[type=text]')
+    // autocompletes
+    $("#" + autocomplete_vocab.field_name[i])
         // don't navigate away from the field on tab when selecting an item
         .bind( "keydown", function( event ) {
             if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -68,24 +66,20 @@ Blacklight.onLoad(function() {
             }
         })
         .autocomplete( get_autocomplete_opts(autocomplete_vocab.url_var[i]) );
-
   }
 
 
-  function setup_autocomplete(event) {
-    var class_name = $.grep(event.target.className.split(" "),function( c ) {
-          return c.indexOf('generic_file') == 0;
-      })[0];
-    // attach auto complete for location
-    if (class_name == 'generic_file_based_near') {
-      $(event.target).find('input[type=text]').autocomplete(get_autocomplete_opts("location"));
-    }
-    // attach other auto completes
-    else if ( (index = $.inArray(class_name, autocomplete_vocab.field_name)) != -1 ) {
-      $(event.target).find('input[type=text]').autocomplete(get_autocomplete_opts(autocomplete_vocab.url_var[index]));
+  // attach an auto complete based on the field
+  function setup_autocomplete(e, cloneElem) {
+    var $cloneElem = $(cloneElem);
+    // FIXME this code (comparing the id) depends on a bug. Each input has an id and the id is
+    // duplicated when you press the plus button. This is not valid html.
+    if ($cloneElem.attr("id") == 'generic_file_based_near') {
+      $cloneElem.autocomplete(cities_autocomplete_opts);
+    } else if ( (index = $.inArray($cloneElem.attr("id"), autocomplete_vocab.field_name)) != -1 ) {
+      $cloneElem.autocomplete(get_autocomplete_opts(autocomplete_vocab.url_var[index]));
     }
   }
 
-  // add setup for autocompletes to multi value forms
-  $('.multi_value.form-group').manage_fields({ add: setup_autocomplete });
+  $('.multi_value.form-group').manage_fields({add: setup_autocomplete});
 });

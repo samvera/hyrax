@@ -12,7 +12,7 @@ module Sufia
       # @param user_parameters the current user-subitted parameters
       def only_generic_files_and_collections(solr_parameters, user_parameters)
         solr_parameters[:fq] ||= []
-        solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"info:fedora/afmodel:GenericFile\" \"info:fedora/afmodel:Collection\")"
+        solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"GenericFile\" \"Collection\")"
       end
   end
 end

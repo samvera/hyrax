@@ -1,25 +1,23 @@
 <% @page_title = "Edit Collection #{display_title(@collection)} - #{application_name}" %>
 <%= render_breadcrumbs builder: Sufia::BootstrapBreadcrumbsBuilder %>
-
 <h1>Edit Collection: <%= display_title(@collection) %></h1>
 
 <% unless has_collection_search_parameters? %>
   <div class="row">
     <div class="col-xs-12 col-sm-2">
-      <%= render partial: 'collections/media_display', locals: { collection: @collection } %>
+      <%= render 'collections/media_display', collection: @collection %>
     </div>
     <div class="col-xs-12 col-sm-10"><!-- class="column second"> -->
-      <%= render partial: 'collections/edit_actions' %>
-      <%= render partial: 'collections/form', locals: { record: @collection } %>
+      <%= render 'collections/edit_actions' %>
+      <%= render 'collections/form' %>
     </div><!-- /columns second -->
   </div> <!-- /columns two-b -->
 <% end %>
 
 <h2>Manage Items in this Collection</h2>
-<%= render partial: 'search_collection_dashboard_form'%>
-<%= render partial: 'my/did_you_mean' %>
-<%= render partial: 'my/facet_selected' %>
+<%= render 'search_collection_dashboard_form'%>
+<%= render 'my/did_you_mean' %>
+<%= render 'my/facet_selected' %>
 <%= render 'collections/sort_and_per_page' %>
-<%= render partial:'document_list', locals: { documents: @member_docs, document_list_format: "dashboard" } %>
-
-<%= render partial:'paginate' %>
+<%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
+<%= render 'paginate' %>

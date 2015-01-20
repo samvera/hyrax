@@ -1,6 +1,6 @@
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
-  <% gf = GenericFile.load_instance_from_solr(document.id) %>
+  <% gf = document.to_model %>
   <td>
     <label for="batch_document_<%= document.id %>" class="sr-only"><%=t("sufia.dashboard.my.sr.batch_checkbox")%></label>
     <%= batch_edit_select(document) %>&nbsp;
@@ -13,7 +13,7 @@
   </td>
   <td>
     <div class="media">
-      <%= link_to sufia.generic_file_path(document), class: "pull-left", "aria-hidden" => true do %>
+      <%= link_to sufia.generic_file_path(document), class: "media-left", "aria-hidden" => true do %>
         <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
       <% end %>
       <div class="media-body">

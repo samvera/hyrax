@@ -12,7 +12,6 @@ describe CreateDerivativesJob do
 
   after do
     Sufia.config.enable_ffmpeg = @ffmpeg_enabled
-    @generic_file.destroy
   end
 
   subject { CreateDerivativesJob.new(@generic_file.id) }
@@ -33,7 +32,7 @@ describe CreateDerivativesJob do
         subject.run
         @generic_file.reload
         expect(@generic_file.thumbnail).to have_content
-        expect(@generic_file.thumbnail.mimeType).to eq('image/jpeg')
+        expect(@generic_file.thumbnail.mime_type).to eq('image/jpeg')
       end
     end
 
@@ -70,7 +69,7 @@ describe CreateDerivativesJob do
         subject.run
         @generic_file.reload
         expect(@generic_file.thumbnail).to have_content
-        expect(@generic_file.thumbnail.mimeType).to eq('image/jpeg')
+        expect(@generic_file.thumbnail.mime_type).to eq('image/jpeg')
       end
     end
 
@@ -89,7 +88,7 @@ describe CreateDerivativesJob do
         subject.run
         @generic_file.reload
         expect(@generic_file.thumbnail).to have_content
-        expect(@generic_file.thumbnail.mimeType).to eq('image/jpeg')
+        expect(@generic_file.thumbnail.mime_type).to eq('image/jpeg')
       end
     end
   end
@@ -105,15 +104,15 @@ describe CreateDerivativesJob do
       it 'transcodes to webm and mp4' do
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['webm']
+        derivative = reloaded.attached_files['webm']
         expect(derivative).not_to be_nil
         expect(derivative.content).not_to be_nil
-        expect(derivative.mimeType).to eq('video/webm')
+        expect(derivative.mime_type).to eq('video/webm')
 
-        derivative2 = reloaded.datastreams['mp4']
+        derivative2 = reloaded.attached_files['mp4']
         expect(derivative2).not_to be_nil
         expect(derivative2.content).not_to be_nil
-        expect(derivative2.mimeType).to eq('video/mp4')
+        expect(derivative2.mime_type).to eq('video/mp4')
       end
     end
 
@@ -127,15 +126,15 @@ describe CreateDerivativesJob do
       it 'transcodes to mp3 and ogg' do
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['mp3']
+        derivative = reloaded.attached_files['mp3']
         expect(derivative).not_to be_nil
         expect(derivative.content).not_to be_nil
-        expect(derivative.mimeType).to eq('audio/mpeg')
+        expect(derivative.mime_type).to eq('audio/mpeg')
 
-        derivative2 = reloaded.datastreams['ogg']
+        derivative2 = reloaded.attached_files['ogg']
         expect(derivative2).not_to be_nil
         expect(derivative2.content).not_to be_nil
-        expect(derivative2.mimeType).to eq('audio/ogg')
+        expect(derivative2.mime_type).to eq('audio/ogg')
       end
     end
 
@@ -150,13 +149,13 @@ describe CreateDerivativesJob do
         pending 'Need a way to do this in hydra-derivatives'
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['mp3']
+        derivative = reloaded.attached_files['mp3']
         expect(derivative.content.size).to eq(reloaded.content.content.size)
-        expect(derivative.mimeType).to eq('audio/mpeg')
+        expect(derivative.mime_type).to eq('audio/mpeg')
 
-        derivative2 = reloaded.datastreams['ogg']
+        derivative2 = reloaded.attached_files['ogg']
         expect(derivative2.content).not_to be_nil
-        expect(derivative2.mimeType).to eq('audio/ogg')
+        expect(derivative2.mime_type).to eq('audio/ogg')
       end
     end
 
@@ -171,15 +170,15 @@ describe CreateDerivativesJob do
         pending 'Need a way to do this in hydra-derivatives'
         subject.run
         reloaded = @generic_file.reload
-        derivative = reloaded.datastreams['mp3']
+        derivative = reloaded.attached_files['mp3']
         expect(derivative).not_to be_nil
         expect(derivative.content).not_to be_nil
         expect(derivative.mimeType).to eq('audio/mpeg')
 
-        derivative2 = reloaded.datastreams['ogg']
+        derivative2 = reloaded.attached_files['ogg']
         expect(derivative2).not_to be_nil
         expect(derivative2.content.size).to eq(reloaded.content.content.size)
-        expect(derivative2.mimeType).to eq('audio/ogg')
+        expect(derivative2.mime_type).to eq('audio/ogg')
       end
     end
   end

@@ -4,19 +4,13 @@ describe HomepageController, :type => :controller do
   routes { Rails.application.class.routes }
 
   describe "#index" do
-    before :all do
-      GenericFile.delete_all
+    before do
       @gf1 = GenericFile.new(title:['Test Document PDF'], filename:['test.pdf'], tag:['rocks'], read_groups:['public'])
       @gf1.apply_depositor_metadata('mjg36')
       @gf1.save
       @gf2 = GenericFile.new(title:['Test Private Document'], filename:['test2.doc'], tag:['clouds'], contributor:['Contrib1'], read_groups:['private'])
       @gf2.apply_depositor_metadata('mjg36')
       @gf2.save
-    end
-
-    after :all do
-      @gf1.delete
-      @gf2.delete
     end
 
     let(:user) { FactoryGirl.find_or_create(:jill) }
@@ -45,9 +39,16 @@ describe HomepageController, :type => :controller do
     it "should not include other user's private documents in recent documents" do
       get :index
       expect(response).to be_success
-      titles = assigns(:recent_documents).map {|d| d['desc_metadata__title_tesim'][0]}
+      titles = assigns(:recent_documents).map {|d| d['title_tesim'][0]}
       expect(titles).to_not include('Test Private Document')
-    end    
+    end
+
+    it "should include only GenericFile objects in recent documents" do
+      get :index
+      assigns(:recent_documents).each do |doc|
+        expect(doc[Solrizer.solr_name("has_model", :symbol)]).to eql ["GenericFile"]
+      end
+    end 
 
     context "with a document not created this second" do
       before do
@@ -70,6 +71,8 @@ describe HomepageController, :type => :controller do
         create_times = assigns(:recent_documents).map{|d| d['system_create_dtsi']}
         expect(create_times).to eq create_times.sort.reverse
       end
+
+
     end
 
     context "with featured works" do

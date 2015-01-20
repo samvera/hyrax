@@ -24,11 +24,7 @@ describe 'Transferring file ownership:', :type => :feature do
     go_to_dashboard_files
   end
 
-  after do
-    ActiveFedora::Base.destroy_all
-  end
-
-  describe 'When I request a file transfer:' do
+  describe 'When I request a file transfer:', :js do
     context 'For a file I do not own' do
       pending 'The transfer option is not available' do
         fail
@@ -70,7 +66,7 @@ describe 'Transferring file ownership:', :type => :feature do
     end
   end
 
-  describe 'When someone requests a file transfer to me' do
+  describe 'When someone requests a file transfer to me', :js do
     before do
       # As the original_owner, transfer a file to the new_owner
       transfer_ownership_of_file file, new_owner

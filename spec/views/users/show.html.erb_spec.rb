@@ -31,7 +31,7 @@ describe 'users/show.html.erb', :type => :view do
 
   context "with trophy" do
 
-    let(:generic_file) { GenericFile.new(title: ["Fake object"], pid:"sufia:abc123") }
+    let(:generic_file) { GenericFile.new(title: ["Fake object"], id: "abc123") }
     before do
       allow(view).to receive(:search_session).and_return({})
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)

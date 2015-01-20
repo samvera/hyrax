@@ -1,17 +1,17 @@
 <% noid = document.noid %>
 <tr id="document_<%= noid %>" class="<%= cycle("", "zebra") %>">
-  <% gf = GenericFile.load_instance_from_solr(document.id) %>
+  <% gf = document.to_model%>
   <td>&nbsp;
     <%# This block is for adding/removing the magic wand while batch updates are processing %>
     <% if gf.processing? %>
       <i class="glyphicon glyphicon-time <%= 'ss-'+gf.batch.noid %>"/>
-    <% elsif gf.depositor != @user.user_key %>
+    <% elsif current_user and gf.depositor != current_user.user_key %>
       <i class="glyphicon glyphicon-share-alt"/>
     <% end %>
   </td>
   <td>
     <div class="media">
-      <%= link_to sufia.generic_file_path(document), class: "pull-left" do %>
+      <%= link_to sufia.generic_file_path(document), class: "media-left" do %>
         <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
       <% end %>
       <div class="media-body">

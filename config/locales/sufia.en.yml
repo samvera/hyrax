@@ -47,11 +47,6 @@ en:
         tab_label: "Network/Server Location"
       processing: "File is being processed; you may edit when processing has completed"
     field_label:
-      based_near:       "Location"
-      description:      "Abstract or Summary"
-      tag:              "Keyword"
-      date_created:     "Date Created"
-      related_url:      "Related URL"
       total_items:      "Total Items"
       size:             "Size"
     homepage:
@@ -119,27 +114,6 @@ en:
           tag: "could not be updated. You do not have sufficient privileges to edit them."
         title:  "Files failed"
         subject: "Batch upload permission denied"
-    metadata_help:
-      resource_type: "Pre-defined categories to describe the type of file content being uploaded, such as \"article\" or \"dataset.\"  More than one type may be selected."
-      title: "A name for the file to aid in identifying it. Defaults to the file name, though a more descriptive title is encouraged. <em>This is a required field</em>."
-      tag: "Words or phrases you select to describe what the file is about. These are used to search for content. <em>This is a required field</em>."
-      subject: "Headings or index terms describing what the file is about; these <em>do</em> need to conform to an existing vocabulary. Currently supports Library of Congress Subject Headings."
-      creator: "The person or group responsible for the file being uploaded. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. \"Smith, John.\" <em>This is a required field</em>."
-      related_url: "A link to a website or other specific content (audio, video, PDF document) related to the file. An example is the URL of a research project from which the file was derived."
-      based_near: "A place name related to the file, such as its site of publication, or the city, state, or country the file's contents are about. Calls upon the GeoNames web service (<a href=\"http://www.geonames.org\">http://www.geonames.org</a>)."
-      contributor: "A person or group you want to recognize for playing a role in the creation of the file, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. \"Jones, Mary (advisor).\""
-      date_created: "The date on which the file was generated. Dates are accepted in the form YYYY-MM-DD, e.g. 1776-07-04."
-      description: "Free-text notes about the file itself. Examples include abstracts of a paper, citation information for a journal article, or a tag indicating a larger collection to which the file belongs."
-      identifier: "A unique handle describing the file. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
-      language: "The language of the file content."
-      publisher: "The person or group making the file available. Generally this is the institution."
-      rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. <em>This is a required field</em>."
-    aria_label:
-      default: "Usage information for %{title}"
-      based_near: "Usage information for location"
-      description: "Usage information for abstract or summary"
-      tag: "Usage information for keyword"
-      rightsModal: "Usage information for rights"
     background_attribution: "Background image courtesy of Penn State University"
     bread_crumb:
       search_results: "Back to search results"
@@ -176,3 +150,46 @@ en:
       delete:   'Delete Message'
     generic_file:
       browse_view: "Browse View"
+    footer:
+      copyright_html: "<strong>Copyright &copy; 2015 Project Hydra</strong> Licensed under the Apache License, Version 2.0"
+
+  simple_form:
+    labels:
+      generic_file:
+        based_near:       "Location"
+        description:      "Abstract or Summary"
+        tag:              "Keyword"
+        date_created:     "Date Created"
+        related_url:      "Related URL"
+      collection:
+        based_near:       "Location"
+        description:      "Abstract or Summary"
+        tag:              "Keyword"
+        date_created:     "Date Created"
+        related_url:      "Related URL"
+
+    metadata_help:
+      generic_file:
+        resource_type_html: "Pre-defined categories to describe the type of file content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected."
+        title: "A name for the file to aid in identifying it. Defaults to the file name, though a more descriptive title is encouraged. &lt;em&gt;This is a required field&lt;/em&gt;."
+        tag: "Words or phrases you select to describe what the file is about. These are used to search for content. &lt;em&gt;This is a required field&lt;/em&gt;."
+        subject: "Headings or index terms describing what the file is about; these &lt;em&gt;do&lt;/em&gt; need to conform to an existing vocabulary. Currently supports Library of Congress Subject Headings."
+        creator_html: "The person or group responsible for the file being uploaded. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot; &lt;em&gt;This is a required field&lt;/em&gt;."
+        related_url: "A link to a website or other specific content (audio, video, PDF document) related to the file. An example is the URL of a research project from which the file was derived."
+        based_near_html: "A place name related to the file, such as its site of publication, or the city, state, or country the file's contents are about. Calls upon the GeoNames web service (&lt;a href=&quot;http://www.geonames.org&quot;&gt;http://www.geonames.org&lt;/a&gt;)."
+        contributor_html: "A person or group you want to recognize for playing a role in the creation of the file, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. &quot;Jones, Mary (advisor).&quot;"
+        date_created: "The date on which the file was generated. Dates are accepted in the form YYYY-MM-DD, e.g. 1776-07-04."
+        description: "Free-text notes about the file itself. Examples include abstracts of a paper, citation information for a journal article, or a tag indicating a larger collection to which the file belongs."
+        identifier: "A unique handle describing the file. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book."
+        language: "The language of the file content."
+        publisher: "The person or group making the file available. Generally this is the institution."
+        rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. &lt;em&gt;This is a required field&lt;/em&gt;."
+
+    aria_label:
+      generic_file:
+        default: "Usage information for %{title}"
+        based_near: "Usage information for location"
+        description: "Usage information for abstract or summary"
+        tag: "Usage information for keyword"
+        rights: "Usage information for rights"
+

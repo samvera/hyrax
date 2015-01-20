@@ -4,13 +4,6 @@ require_relative '../../../sufia-models/lib/sufia/models/stats/user_stat_importe
 describe Sufia::UserStatImporter do
 
   before do
-    GenericFile.delete_all
-    User.delete_all
-
-    UserStat.delete_all
-    FileViewStat.delete_all
-    FileDownloadStat.delete_all
-
     allow(Sufia.config).to receive(:analytic_start_date) { dates[0] }
     stub_out_call_to_google_analytics
   end
@@ -19,21 +12,21 @@ describe Sufia::UserStatImporter do
   let(:frodo) { FactoryGirl.create(:user, email: 'frodo@example.com') }
 
   let!(:bilbo_file_1) do
-    GenericFile.new(pid: 'bilbo:1').tap do |f|
+    GenericFile.new(id: 'bilbo1').tap do |f|
       f.apply_depositor_metadata(bilbo.email)
       f.save
     end
   end
 
   let!(:bilbo_file_2) do
-    GenericFile.new(pid: 'bilbo:2').tap do |f|
+    GenericFile.new(id: 'bilbo2').tap do |f|
       f.apply_depositor_metadata(bilbo.email)
       f.save
     end
   end
 
   let!(:frodo_file_1) do
-    GenericFile.new(pid: 'frodo:1').tap do |f|
+    GenericFile.new(id: 'frodo1').tap do |f|
       f.apply_depositor_metadata(frodo.email)
       f.save
     end
@@ -84,31 +77,31 @@ describe Sufia::UserStatImporter do
 
   let(:bilbo_file_1_download_stats) {
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:1", date: date_strs[0], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:1", date: date_strs[1], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:1", date: date_strs[2], totalEvents: "5"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:1", date: date_strs[3], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:1", date: date_strs[4], totalEvents: "7"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[0], totalEvents: "2"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[1], totalEvents: "3"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[2], totalEvents: "5"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[3], totalEvents: "3"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo1", date: date_strs[4], totalEvents: "7"),
     ]
   }
 
   let(:bilbo_file_2_download_stats) {
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:2", date: date_strs[0], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:2", date: date_strs[1], totalEvents: "4"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:2", date: date_strs[2], totalEvents: "3"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:2", date: date_strs[3], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo:2", date: date_strs[4], totalEvents: "3"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[0], totalEvents: "1"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[1], totalEvents: "4"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[2], totalEvents: "3"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[3], totalEvents: "2"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "bilbo2", date: date_strs[4], totalEvents: "3"),
     ]
   }
 
   let(:frodo_file_1_download_stats) {
     [
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo:1", date: date_strs[0], totalEvents: "5"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo:1", date: date_strs[1], totalEvents: "4"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo:1", date: date_strs[2], totalEvents: "2"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo:1", date: date_strs[3], totalEvents: "1"),
-      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo:1", date: date_strs[4], totalEvents: "6"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[0], totalEvents: "5"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[1], totalEvents: "4"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[2], totalEvents: "2"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[3], totalEvents: "1"),
+      OpenStruct.new(eventCategory: "Files", eventAction: "Downloaded", eventLabel: "frodo1", date: date_strs[4], totalEvents: "6"),
     ]
   }
 

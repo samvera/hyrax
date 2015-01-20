@@ -99,7 +99,7 @@ Sufia::Engine.routes.draw do
 
   # Batch edit routes
   get 'batches/:id/edit' => 'batch#edit', as: :batch_edit
-  post 'batches/:id/' => 'batch#update', as: :batch_generic_files
+  post 'batches/:id' => 'batch#update', as: :batch_generic_files
 
   # Contact form routes
   post 'contact' => 'contact_form#create', as: :contact_form_index

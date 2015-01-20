@@ -3,7 +3,7 @@ module Sufia
     module Characterization
       extend ActiveSupport::Concern
       included do
-        has_metadata "characterization", type: FitsDatastream
+        contains "characterization", class_name: 'FitsDatastream'
         has_attributes :mime_type, datastream: :characterization, multiple: false
         has_attributes :format_label, :file_size, :last_modified,
                                         :filename, :original_checksum, :rights_basis,
@@ -45,11 +45,11 @@ module Sufia
         metadata = content.extract_metadata
         characterization.ng_xml = metadata if metadata.present?
         append_metadata
-        self.filename = [self.label]
+        self.filename = [content.original_name]
         save
       end
 
-      # Populate descMetadata with fields from FITS (e.g. Author from pdfs)
+      # Populate GenericFile's properties with fields from FITS (e.g. Author from pdfs)
       def append_metadata
         terms = self.characterization_terms
         Sufia.config.fits_to_desc_mapping.each_pair do |k, v|

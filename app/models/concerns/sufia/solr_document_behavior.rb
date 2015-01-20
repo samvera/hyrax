@@ -30,9 +30,9 @@ module Sufia
     # @example
     #   link_to '...', SolrDocument(id: 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
-      m = ActiveFedora::Base.load_instance_from_solr(id, self)
-      return self if m.class == ActiveFedora::Base
-      m
+      @m ||= ActiveFedora::Base.load_instance_from_solr(id)
+      return self if @m.class == ActiveFedora::Base
+      @m
     end
 
     # Method to return the ActiveFedora model
@@ -41,11 +41,11 @@ module Sufia
     end
 
     def noid
-      self[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)]
+      self[Solrizer.solr_name('noid', Sufia::IndexingService.noid_indexer)]
     end
 
     def date_uploaded
-      field = self[Solrizer.solr_name("desc_metadata__date_uploaded", :stored_sortable, type: :date)]
+      field = self[Solrizer.solr_name("date_uploaded", :stored_sortable, type: :date)]
       return unless field.present?
       begin
         Date.parse(field).to_formatted_s(:standard)
@@ -60,11 +60,11 @@ module Sufia
     end
 
     def title
-      Array(self[Solrizer.solr_name('desc_metadata__title')]).first
+      Array(self[Solrizer.solr_name('title')]).first
     end
 
     def description
-      Array(self[Solrizer.solr_name('desc_metadata__description')]).first
+      Array(self[Solrizer.solr_name('description')]).first
     end
 
     def label
@@ -76,15 +76,15 @@ module Sufia
     end
 
     def creator
-      Array(self[Solrizer.solr_name("desc_metadata__creator")]).first
+      Array(self[Solrizer.solr_name("creator")]).first
     end
 
     def tags
-      Array(self[Solrizer.solr_name("desc_metadata__tag")])
+      Array(self[Solrizer.solr_name("tag")])
     end
 
     def resource_type
-      Array(self[Solrizer.solr_name("desc_metadata__resource_type")])
+      Array(self[Solrizer.solr_name("resource_type")])
     end
 
     def mime_type

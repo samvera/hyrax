@@ -2,19 +2,13 @@ require 'spec_helper'
 
 describe "Browse Dashboard", :type => :feature do
 
-  before :all do
-    cleanup_jetty
-    @fixtures = find_or_create_file_fixtures
-  end
-  after :all do
-    cleanup_jetty
-  end
-
+  let(:user) { FactoryGirl.create(:user) }
   before do
-    sign_in FactoryGirl.create :user_with_fixtures
+    @fixtures = create_file_fixtures(user.user_key)
+    sign_in user
   end
 
-  it "should search your files by deafult" do
+  it "should search your files by default" do
     visit "/dashboard"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
@@ -28,6 +22,7 @@ describe "Browse Dashboard", :type => :feature do
     end
 
     it "should display all the necessary information" do
+      # TODO this would make a good view test.
       within("#document_#{@fixtures.first.noid}") do
         click_button("Select an action")
       end
@@ -64,6 +59,7 @@ describe "Browse Dashboard", :type => :feature do
     end
 
     it "should allow me to edit files (from the fixtures)" do
+      # TODO this would make a good view test.
       fill_in "q", with: "Wav"
       click_button "search-submit-header"
       click_button "Select an action"
@@ -72,6 +68,7 @@ describe "Browse Dashboard", :type => :feature do
     end
 
     it "should refresh the page of files" do
+      # TODO this would make a good view test.
       click_button "Refresh"
       within("#document_#{@fixtures.first.noid}") do
         click_button("Select an action")
@@ -87,6 +84,7 @@ describe "Browse Dashboard", :type => :feature do
     end
 
     it "should link to my other tabs" do
+      # TODO this would make a good view test.
       ["My Collections", "My Highlights", "Files Shared with Me"].each do |tab|
         within("#my_nav") do
           click_link(tab)

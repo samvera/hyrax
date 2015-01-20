@@ -21,8 +21,8 @@ module Sufia
           '%G' => [:language],
           '%[' => [:date_modified],
           '%9' => [:resource_type],
-          '%~' => Application.config.application_name,
-          '%W' => t('sufia.institution_name')
+          '%~' => I18n.t('sufia.product_name'),
+          '%W' => I18n.t('sufia.institution_name')
         }
         text = []
         text << "%0 GenericFile"
@@ -39,6 +39,10 @@ module Sufia
           text << "#{endnote_key} #{spaced_values}"
         end
         return text.join("\n")
+      end
+
+      def persistent_url
+        "#{Sufia.config.persistent_hostpath}#{noid}"
       end
 
       # MIME type: 'application/x-openurl-ctx-kev'

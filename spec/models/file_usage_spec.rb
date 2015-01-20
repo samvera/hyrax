@@ -2,14 +2,11 @@ require 'spec_helper'
 
 describe FileUsage, :type => :model do
 
-  before :all do
-    @file = GenericFile.new
-    @file.apply_depositor_metadata("awead")
-    @file.save
-  end
-
-  after :all do
-    @file.delete
+  let(:file) do
+    GenericFile.new.tap do |file|
+      file.apply_depositor_metadata("awead")
+      file.save
+    end
   end
 
   let(:dates) {
@@ -33,7 +30,7 @@ describe FileUsage, :type => :model do
 
   # This is what the data looks like that's returned from Google Analytics (GA) via the Legato gem
   # Due to the nature of querying GA, testing this data in an automated fashion is problematc.
-  # Sample data structures were created by sending real events to GA from a test instance of 
+  # Sample data structures were created by sending real events to GA from a test instance of
   # Scholarsphere.  The data below are essentially a "cut and paste" from the output of query
   # results from the Legato gem.
 
@@ -61,21 +58,21 @@ describe FileUsage, :type => :model do
     allow_any_instance_of(GenericFile).to receive(:create_date).and_return((Date.today-4.day).to_s)
     expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
     expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-    FileUsage.new(@file.id)
+    FileUsage.new(file.id)
   }
 
   describe "#initialize" do
 
     it "should set the id" do
-      expect(usage.id).to eq(@file.pid)
+      expect(usage.id).to eq(file.id)
     end
 
     it "should set the path" do
-      expect(usage.path).to eq("/files/#{Sufia::Noid.noidify(@file.id)}")
+      expect(usage.path).to eq("/files/#{URI.encode(Sufia::Noid.noidify(file.id), '/')}")
     end
 
     it "should set the created date" do
-      expect(usage.created).to eq(DateTime.parse(@file.create_date))
+      expect(usage.created).to eq(file.create_date)
     end
 
   end
@@ -106,12 +103,10 @@ describe FileUsage, :type => :model do
       expect(usage.to_flot[1][:data]).to include(*download_output)
     end
 
-    let(:create_date) {DateTime.new(2014, 01, 01)}
+    let(:create_date) { DateTime.new(2014, 01, 01).iso8601 }
 
     describe "analytics start date set" do
-      let(:earliest) {
-        DateTime.new(2014, 01, 02)
-      }
+      let(:earliest) { DateTime.new(2014, 01, 02).iso8601 }
 
       before do
         Sufia.config.analytic_start_date = earliest
@@ -122,7 +117,7 @@ describe FileUsage, :type => :model do
           allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-          FileUsage.new(@file.id)
+          FileUsage.new(file.id)
         }
         it "should set the created date to the earliest date not the created date" do
           expect(usage.created).to eq(earliest)
@@ -136,10 +131,10 @@ describe FileUsage, :type => :model do
           expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
           expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
           Sufia.config.analytic_start_date = earliest
-          FileUsage.new(@file.id)
+          FileUsage.new(file.id)
         }
         it "should set the created date to the earliest date not the created date" do
-          expect(usage.created).to eq(@file.create_date)
+          expect(usage.created).to eq(file.create_date)
         end
       end
     end
@@ -152,7 +147,7 @@ describe FileUsage, :type => :model do
         allow_any_instance_of(GenericFile).to receive(:create_date).and_return(create_date.to_s)
         expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
         expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        FileUsage.new(@file.id)
+        FileUsage.new(file.id)
       }
       it "should set the created date to the earliest date not the created date" do
         expect(usage.created).to eq(create_date)

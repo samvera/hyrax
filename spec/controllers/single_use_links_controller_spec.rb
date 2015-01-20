@@ -2,53 +2,46 @@ require 'spec_helper'
 
 describe SingleUseLinksController, :type => :controller do
   let(:user) { FactoryGirl.find_or_create(:jill) }
+
   let(:file) do
-    GenericFile.new.tap do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      f.apply_depositor_metadata(user)
-      f.save
+    GenericFile.new.tap do |file|
+      file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      file.apply_depositor_metadata(user)
+      file.save
     end
   end
-  let(:file2) do
-    GenericFile.new.tap do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
-      f.apply_depositor_metadata('mjg36')
-      f.save
-    end
-  end
-  before do
-    allow(controller).to receive(:has_access?).and_return(true)
-    allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
-  end
-  after(:all) do
-    ActiveFedora::Base.destroy_all
-    SingleUseLink.destroy_all
-  end
+
   describe "logged in user with edit permission" do
+    let(:hash) { "some-dummy-sha2-hash" }
+
     before do
       sign_in user
-      @now = DateTime.now
-      allow(DateTime).to receive(:now).and_return(@now)
-      @hash = "some-dummy-sha2-hash"
-      allow(Digest::SHA2).to receive(:new).and_return(@hash)
+      allow(DateTime).to receive(:now).and_return(DateTime.now)
+      expect(Digest::SHA2).to receive(:new).and_return(hash)
     end
 
-    it "gets the download link" do
-      get 'new_download', id: file.pid
-      expect(response).to be_success
-      expect(assigns[:link]).to eq @routes.url_helpers.download_single_use_link_path(@hash)
+    describe "GET 'download'" do
+      it "and_return http success" do
+        get 'new_download', id: file
+        expect(response).to be_success
+        expect(assigns[:link]).to eq routes.url_helpers.download_single_use_link_path(hash)
+      end
     end
 
-    it "gets the show link" do
-      get 'new_show', id: file.pid
-      expect(response).to be_success
-      expect(assigns[:link]).to eq @routes.url_helpers.show_single_use_link_path(@hash)
+    describe "GET 'show'" do
+      it "and_return http success" do
+        get 'new_show', id: file
+        expect(response).to be_success
+        expect(assigns[:link]).to eq routes.url_helpers.show_single_use_link_path(hash)
+      end
     end
   end
 
   describe "logged in user without edit permission" do
     before do
       @other_user = FactoryGirl.find_or_create(:archivist)
+      file.read_users << @other_user
+      file.save
       sign_in @other_user
       file.read_users << @other_user
       file.save
@@ -56,7 +49,7 @@ describe SingleUseLinksController, :type => :controller do
 
     describe "GET 'download'" do
       it "and_return http success" do
-        get 'new_download', id: file.pid
+        get 'new_download', id: file
         expect(response).not_to be_success
       end
 
@@ -64,7 +57,7 @@ describe SingleUseLinksController, :type => :controller do
 
     describe "GET 'show'" do
       it "and_return http success" do
-        get 'new_show', id: file.pid
+        get 'new_show', id: file
         expect(response).not_to be_success
       end
 
@@ -74,14 +67,14 @@ describe SingleUseLinksController, :type => :controller do
   describe "unknown user" do
     describe "GET 'download'" do
       it "and_return http failure" do
-        get 'new_download', id: file.pid
+        get 'new_download', id: file
         expect(response).not_to be_success
       end
     end
 
     describe "GET 'show'" do
       it "and_return http failure" do
-        get 'new_show', id: file.pid
+        get 'new_show', id: file
         expect(response).not_to be_success
       end
     end

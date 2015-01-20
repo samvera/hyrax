@@ -1,32 +1,32 @@
 require 'spec_helper'
 
-describe 'collections/_form.html.erb', :type => :view do
-  describe 'when the collection edit form is rendered' do
-    let(:collection) { Collection.new({title: 'the title', description: 'the description',
-                                       creator: 'the creator'})}
+describe 'collections/_form.html.erb' do
+  let(:collection) { Collection.new(title: 'the title', description: 'the description',
+                                     creator: ['the creator'])}
 
-    before do
-      controller.request.path_parameters[:id] = 'j12345'
-      collection.initialize_fields
-      assign(:collection, collection)
-    end
+  let(:collection_form) { Sufia::Forms::CollectionEditForm.new(collection) }
 
-    it "should draw the metadata fields for collection" do
-      render
-      expect(rendered).to have_selector("input#collection_title", count: 1)
-      expect(rendered).to have_selector("input#collection_creator", count: 1)
-      expect(rendered).to have_selector("textarea#collection_description", count: 1)
-      expect(rendered).to have_selector("input#collection_contributor", count: 1)
-      expect(rendered).to have_selector("input#collection_tag", count: 1)
-      expect(rendered).to have_selector("input#collection_subject", count: 1)
-      expect(rendered).to have_selector("input#collection_publisher", count: 1)
-      expect(rendered).to have_selector("input#collection_date_created", count: 1)
-      expect(rendered).to have_selector("input#collection_language", count: 1)
-      expect(rendered).to have_selector("input#collection_identifier", count: 1)
-      expect(rendered).to have_selector("input#collection_based_near", count: 1)
-      expect(rendered).to have_selector("input#collection_related_url", count: 1)
-      expect(rendered).to have_selector("select#collection_rights", count: 1)
-      expect(rendered).to have_selector("select#collection_resource_type", count: 1)
-    end
+  before do
+    controller.request.path_parameters[:id] = 'j12345'
+    assign(:form, collection_form)
+  end
+
+  it "should draw the metadata fields for collection" do
+    render
+    expect(rendered).to have_selector("input#collection_title")
+    expect(rendered).to_not have_selector("div#additional_title.multi_value")
+    expect(rendered).to have_selector("input#collection_creator.multi_value")
+    expect(rendered).to have_selector("textarea#collection_description")
+    expect(rendered).to have_selector("input#collection_contributor")
+    expect(rendered).to have_selector("input#collection_tag")
+    expect(rendered).to have_selector("input#collection_subject")
+    expect(rendered).to have_selector("input#collection_publisher")
+    expect(rendered).to have_selector("input#collection_date_created")
+    expect(rendered).to have_selector("input#collection_language")
+    expect(rendered).to have_selector("input#collection_identifier")
+    expect(rendered).to have_selector("input#collection_based_near")
+    expect(rendered).to have_selector("input#collection_related_url")
+    expect(rendered).to have_selector("select#collection_rights")
+    expect(rendered).to have_selector("select#collection_resource_type")
   end
 end

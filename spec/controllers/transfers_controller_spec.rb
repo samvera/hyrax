@@ -29,9 +29,9 @@ describe TransfersController, :type => :controller do
         get :index
         expect(response).to be_success
         expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:incoming].first.pid).to eq(incoming_file.pid)
+        expect(assigns[:incoming].first.pid).to eq(incoming_file.id)
         expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:outgoing].first.pid).to eq(outgoing_file.pid)
+        expect(assigns[:outgoing].first.pid).to eq(outgoing_file.id)
       end
 
       describe "When the incoming request is for a deleted file" do
@@ -60,7 +60,7 @@ describe TransfersController, :type => :controller do
           expect(response).to be_success
           expect(assigns[:generic_file]).to eq(file)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
-          expect(assigns[:proxy_deposit_request].pid).to eq(file.pid)
+          expect(assigns[:proxy_deposit_request].pid).to eq(file.id)
         end
       end
     end
@@ -75,12 +75,12 @@ describe TransfersController, :type => :controller do
       it "should be successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect {
-          post :create, id: file.id, proxy_deposit_request: {transfer_to: another_user.user_key}
+          post :create, id: file, proxy_deposit_request: {transfer_to: another_user.user_key}
         }.to change(ProxyDepositRequest, :count).by(1)
         expect(response).to redirect_to @routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
-        expect(proxy_request.pid).to eq(file.pid)
+        expect(proxy_request.pid).to eq(file.id)
         expect(proxy_request.sending_user).to eq(user)
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
@@ -89,7 +89,7 @@ describe TransfersController, :type => :controller do
       end
       it "should give an error if the user is not found" do
         expect {
-          post :create, id: file.id, proxy_deposit_request: {transfer_to: 'foo' }
+          post :create, id: file, proxy_deposit_request: {transfer_to: 'foo' }
         }.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
         expect(response).to redirect_to(root_path)

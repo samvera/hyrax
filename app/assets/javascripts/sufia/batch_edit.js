@@ -105,46 +105,45 @@ function batch_edit_init () {
 
     ajaxManager.run();
 
-    function formButtons(form_id) {
-        return $('#' + form_id + ' .btn')
+
+    function after_ajax(form) {
+        form.enableForm();
     }
 
-    function formFields(form_id) {
-        return $('#' + form_id + ' .form-group > *')
+    function before_ajax(form) {
+        form.disableForm();
     }
 
-    function formRightPanel(form_id) {
-        return $('#' + form_id + ' .form-group')
+    var BatchEditField = function (form) {
+        this.form = form;
+        this.formButtons = form.find('.btn');
+        this.formFields = form.find('.form-group > *');
+        this.formRightPanel = form.find('.form-group');
+        this.statusField = form.find('.status');
     }
 
-    function disableForm(form_id) {
-        formButtons(form_id).attr("disabled", "disabled");
-        formRightPanel(form_id).addClass("loading");
-        formFields(form_id).addClass('invisible')
-    }
+    BatchEditField.prototype = {
+        disableForm: function () {
+            this.formButtons.attr("disabled", "disabled");
+            this.formRightPanel.addClass("loading");
+            this.formFields.addClass('invisible')
+        },
 
-    function enableForm(form_id) {
-        formButtons(form_id).removeAttr("disabled");
-        formRightPanel(form_id).removeClass("loading");
-        formFields(form_id).removeClass('invisible')
-    }
-
-    function after_ajax(form_id) {
-        var key = form_id.replace("form_", "");
-        $("#status_" + key).html("Changes Saved");
-        enableForm(form_id);
-    }
-
-    function before_ajax(form_id) {
-        disableForm(form_id);
+        enableForm: function () {
+            this.statusField.html("Changes Saved");
+            this.formButtons.removeAttr("disabled");
+            this.formRightPanel.removeClass("loading");
+            this.formFields.removeClass('invisible')
+        }
     }
 
     function runSave(e) {
         e.preventDefault();
         var button = $(this);
         var form = button.closest('form');
+        var f = new BatchEditField(form);
         var form_id = form[0].id;
-        before_ajax(form_id);
+        before_ajax(f);
 
         ajaxManager.addReq({
             form: form_id,
@@ -153,13 +152,11 @@ function batch_edit_init () {
             dataType: "json",
             type: form.attr("method").toUpperCase(),
             data: form.serialize(),
-            complete: function (e) {
-                after_ajax(form_id);
-                if (e.status == 200) {
-                    eval(e.responseText);
-                } else {
-                    alert("Error!  Status: " + e.status);
-                }
+            success: function (e) {
+                after_ajax(f);
+            },
+            fail: function (e) {
+                alert("Error!  Status: " + e.status);
             }
         });
         setTimeout(ajaxManager.runNow(), 100);

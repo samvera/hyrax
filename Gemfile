@@ -8,10 +8,12 @@ gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
 gem 'sufia-models', path: './sufia-models'
 gem 'slop', '~> 3.6.0' # This just helps us generate a valid Gemfile.lock when Rails 4.2 is installed (which requires byebug which has a dependency on slop)
 
+gem 'hydra-editor', github: 'projecthydra-labs/hydra-editor'
+
 group :development, :test do
   gem "simplecov", require: false
-  gem "byebug", require: false
-end # (leave this comment here to catch a stray line inserted by blacklight!)
+  gem 'byebug' unless ENV['CI']
+end
 
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))
 if File.exists?(file)
@@ -20,10 +22,10 @@ if File.exists?(file)
 else
   gem 'rails', ENV['RAILS_VERSION'] if ENV['RAILS_VERSION']
 
-  if ENV['RAILS_VERSION'] and ENV['RAILS_VERSION'] !~ /^4.2/
-    gem 'sass-rails', "< 5.0"
-  else
+  if ENV['RAILS_VERSION'] and ENV['RAILS_VERSION'] =~ /^4.2/
     gem 'responders', "~> 2.0"
     gem 'sass-rails', ">= 5.0"
+  else
+    gem 'sass-rails', "< 5.0"
   end
 end

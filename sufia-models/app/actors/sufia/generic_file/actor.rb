@@ -20,7 +20,7 @@ module Sufia::GenericFile
       generic_file.creator = [user.name]
 
       if batch_id
-        generic_file.batch_id = Sufia::Noid.namespaceize(batch_id)
+        generic_file.batch_id = batch_id
       else
         ActiveFedora::Base.logger.warn "unable to find batch to attach to"
       end
@@ -28,8 +28,7 @@ module Sufia::GenericFile
     end
 
     def create_content(file, file_name, dsid)
-      fname = generic_file.label.blank? ? file_name.truncate(255) : generic_file.label
-      generic_file.add_file(file, dsid, fname)
+      generic_file.add_file(file, dsid, file_name.truncate(255))
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_create_content)
           Sufia.config.after_create_content.call(generic_file, user)
@@ -37,9 +36,9 @@ module Sufia::GenericFile
       end
     end
 
-    def revert_content(revision_id, datastream_id)
-      revision = generic_file.content.get_version(revision_id)
-      generic_file.add_file(revision.content, datastream_id, revision.label)
+    def revert_content(revision_id)
+      generic_file.content.restore_version(revision_id)
+      generic_file.content.create_version
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_revert_content)
           Sufia.config.after_revert_content.call(generic_file, user, revision_id)
@@ -57,7 +56,7 @@ module Sufia::GenericFile
     end
 
     def update_metadata(attributes, visibility)
-      generic_file.attributes = generic_file.sanitize_attributes(attributes)
+      generic_file.attributes = attributes
       update_visibility(visibility)
       generic_file.date_modified = DateTime.now
       remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?
@@ -69,11 +68,10 @@ module Sufia::GenericFile
     end
 
     def destroy
-      pid = generic_file.pid  #Work around for https://github.com/projecthydra/active_fedora/issues/422
       generic_file.destroy
-      FeaturedWork.where(generic_file_id: pid).destroy_all
+      FeaturedWork.where(generic_file_id: generic_file.id).destroy_all
       if Sufia.config.respond_to?(:after_destroy)
-        Sufia.config.after_destroy.call(pid, user)
+        Sufia.config.after_destroy.call(generic_file.id, user)
       end
     end
 
@@ -103,7 +101,7 @@ module Sufia::GenericFile
     end
 
     def push_characterize_job
-      Sufia.queue.push(CharacterizeJob.new(@generic_file.pid))
+      Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
     end
 
     class << self

@@ -1,2 +1,3 @@
-<%= f.input :rights, as: :multi_value, required: required, collection: Sufia.config.cc_licenses, include_blank: true, input_html: { type: 'select', include_blank: true, selected: :blank, class: 'select optional form-control' } %>
-<%= render partial: 'records/rights_modal' %>
+<%= f.input :rights, as: :select, collection: Sufia.config.cc_licenses,
+    input_html: { class: 'form-control', multiple: true }
+  %>

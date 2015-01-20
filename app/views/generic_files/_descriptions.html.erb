@@ -1,20 +1,17 @@
-<%# convert class variable to a local variable if the local hasn't been set %>
-<% generic_file ||= @generic_file %>
-
 <div id="descriptions_display" class="tab-pane active">
-  <%= simple_form_for generic_file, url: sufia.generic_file_path(@generic_file), html: { multipart: true } do |f| %>
+  <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
-    <h1>Descriptions <span class="pull-right required-field">* indicates required fields</span></h1>
+    <h1>Descriptions <span class="pull-right required"><abbr title="required">*</abbr> indicates required fields</span></h1>
+      <div class="well">
 
-    <div class="well">
-      <% (generic_file.terms_for_editing).each do |term| %>
-        <%= render partial: "records/edit_field", locals: { record: generic_file, f: f, render_req: true, key: term } %>
-      <% end %>
-    </div>
+        <% f.object.terms.each do |term| %>
+          <%= render_edit_field_partial(term, f: f) %>
+        <% end %>
 
-    <div class="action-button">
-      <%= f.button_button :submit, class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_descriptions" do %>
-        <%= '<i class="glyphicon glyphicon-floppy-disk"></i> Save Descriptions'.html_safe %>
+      </div><!-- /well -->
+    <div>
+      <%= f.submit class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_descriptions" do %>
+        <i class="glyphicon glyphicon-floppy-disk"></i> Save Descriptions
       <% end %>
     </div>
   <% end %>

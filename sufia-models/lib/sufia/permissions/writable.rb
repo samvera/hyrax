@@ -8,32 +8,50 @@ module Sufia
       include Hydra::AccessControls::Visibility
 
       included do
-        has_metadata "rightsMetadata", type: ParanoidRightsDatastream
         validate :paranoid_permissions
       end
 
       def paranoid_permissions
-        # let the rightsMetadata ds make this determination
-        # - the object instance is passed in for easier access to the props ds
-        rightsMetadata.validate(self)
+        valid = true
+        VALIDATIONS.each do |validation|
+          if validation[:condition].call(self)
+            errors[validation[:key]] ||= []
+            errors[validation[:key]] << validation[:message]
+            valid = false
+          end
+        end
+        return valid
+      end
+
+      VALIDATIONS = [
+        {key: :edit_users, message: 'Depositor must have edit access', condition: lambda { |obj| !obj.edit_users.include?(obj.depositor) }},
+        {key: :edit_groups, message: 'Public cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('public') }},
+        {key: :edit_groups, message: 'Registered cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('registered') }}
+      ]
+
+
+      def clear_permissions!
+        self.permissions = []
       end
 
       ## Updates those permissions that are provided to it. Does not replace any permissions unless they are provided
-      def permissions=(params)
-        perm_hash = permission_hash
-        params[:new_user_name].each { |name, access| perm_hash['person'][name] = access } if params[:new_user_name].present?
-        params[:new_group_name].each { |name, access| perm_hash['group'][name] = access } if params[:new_group_name].present?
+      # def permissions=(params)
+      #   raise "Fixme #{params}"
+      #   perm_hash = permission_hash
+      #   params[:new_user_name].each { |name, access| perm_hash['person'][name] = access } if params[:new_user_name].present?
+      #   params[:new_group_name].each { |name, access| perm_hash['group'][name] = access } if params[:new_group_name].present?
 
-        params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
-        params[:group].each { |name, access| perm_hash['group'][name] = access if ['read', 'edit'].include?(access)} if params[:group]
+      #   params[:user].each { |name, access| perm_hash['person'][name] = access} if params[:user]
+      #   params[:group].each { |name, access| perm_hash['group'][name] = access if ['read', 'edit'].include?(access)} if params[:group]
 
-        rightsMetadata.update_permissions(perm_hash)
-      end
+      #   # rightsMetadata.update_permissions(perm_hash)
+      # end
 
-      def permissions
-        perms = super
-        perms.map {|p| { name: p.name, access: p.access, type:p.type } }
-      end
+      # def permissions
+      #   raise "Fixme "
+      #   perms = super
+      #   perms.map {|p| { name: p.name, access: p.access, type:p.type } }
+      # end
 
       private
 

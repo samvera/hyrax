@@ -1,12 +1,5 @@
-<div>
-  <% required = render_req && record.required?(key) %>
-  <% lbl = get_label(key) %>
-  <% single = f.object.class.unique?(key) %>
-
-  <% opts = { label: lbl, required: required } %>
-  <% opts = opts.merge(as: :multi_value) unless single %>
-
-  <%= f.input key, opts %>
-
-  <%= render partial: "records/edit_fields/suffix", locals: { key: key, index: index, single: f.object.class.unique?(key) } %>
-</div>
+<% if f.object.class.multiple? key %>
+  <%= f.input key, as: :multi_value_with_help, input_html: { class: 'form-control' }, required: f.object.required?(key) %>
+<% else %>
+  <%= f.input key, required: f.object.required?(key) %>
+<% end %>

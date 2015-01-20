@@ -44,7 +44,7 @@ module Sufia::User
     #   2. the orcid field is blank
     #   3. the orcid is already in its normalized form
     return if self.errors[:orcid].first.present? || self.orcid.blank? || self.orcid.starts_with?('http://orcid.org/')
-    bare_orcid = /\d{4}-\d{4}-\d{4}-\d{4}/.match(self.orcid).string
+    bare_orcid = Sufia::OrcidValidator.match(self.orcid).string
     self.orcid = "http://orcid.org/#{bare_orcid}"
   end
 
@@ -77,7 +77,7 @@ module Sufia::User
 
   def trophy_files
     trophies.map do |t|
-      ::GenericFile.load_instance_from_solr(Sufia::Noid.namespaceize(t.generic_file_id))
+      ::GenericFile.load_instance_from_solr(t.generic_file_id)
     end
   end
 
@@ -102,16 +102,6 @@ module Sufia::User
   end
 
   module ClassMethods
-
-    def permitted_attributes
-      [:email, :login, :display_name, :address, :admin_area,
-        :department, :title, :office, :chat_id, :website, :affiliation,
-        :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
-        :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar,
-        :orcid
-      ]
-    end
-
     def current
       Thread.current[:user]
     end
