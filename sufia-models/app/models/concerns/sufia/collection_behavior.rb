@@ -1,5 +1,5 @@
 module Sufia
-  module Collection
+  module CollectionBehavior
     extend ActiveSupport::Concern
     include Hydra::Collection
     include Sufia::ModelMethods
