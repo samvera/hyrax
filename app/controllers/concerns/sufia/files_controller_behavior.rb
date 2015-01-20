@@ -50,9 +50,7 @@ module Sufia
 
     # routed to /files/:id/edit
     def edit
-      @form = edit_form
-      @groups = current_user.groups
-      @version_list = version_list
+      set_variables_for_edit_form
     end
 
     # routed to /files/:id/stats
@@ -119,7 +117,7 @@ module Sufia
     def update
       success = if wants_to_revert?
         update_version
-      elsif params.has_key? :filedata
+      elsif wants_to_upload_new_version?
         update_file
       elsif params.has_key? :generic_file
         update_metadata
@@ -131,11 +129,19 @@ module Sufia
         redirect_to sufia.edit_generic_file_path(tab: params[:redirect_tab]), notice:
           render_to_string(partial: 'generic_files/asset_updated_flash', locals: { generic_file: @generic_file })
       else
+        flash[:error] ||= 'Update was unsuccessful.'
+        set_variables_for_edit_form
         render action: 'edit'
       end
     end
 
     protected
+
+    def set_variables_for_edit_form
+      @form = edit_form
+      @groups = current_user.groups
+      @version_list = version_list
+    end
 
     def presenter
       Sufia::GenericFilePresenter.new(@generic_file)
@@ -157,6 +163,13 @@ module Sufia
       params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label
     end
 
+    def wants_to_upload_new_version?
+      has_file_data = params.has_key?(:filedata)
+      on_version_tab = params[:redirect_tab] == 'versions'
+
+      has_file_data || (on_version_tab && !wants_to_revert?)
+    end
+
     def actor
       @actor ||= Sufia::GenericFile::Actor.new(@generic_file, current_user)
     end
@@ -166,7 +179,12 @@ module Sufia
     end
 
     def update_file
-      actor.update_content(params[:filedata], datastream_id)
+      if params[:filedata]
+        actor.update_content(params[:filedata], datastream_id)
+      else
+        flash[:error] = 'Please select a file.'
+        false
+      end
     end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
