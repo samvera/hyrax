@@ -46,9 +46,6 @@ en:
       local_ingest:
         tab_label: "Network/Server Location"
       processing: "File is being processed; you may edit when processing has completed"
-    field_label:
-      total_items:      "Total Items"
-      size:             "Size"
     homepage:
       featured_works:       'Featured Works'
       recently_uploaded:    'Recently Uploaded'
@@ -167,6 +164,8 @@ en:
         tag:              "Keyword"
         date_created:     "Date Created"
         related_url:      "Related URL"
+        total_items:      "Total Items"
+        size:             "Size"
 
     metadata_help:
       generic_file:

@@ -5,6 +5,7 @@ describe 'collections/_show_descriptions.html.erb', :type => :view do
     let(:collection) do
       mock_model(Collection,
                   resource_type: [], creator: [], contributor: [], tag: [],
+                  description: '', title: 'hmm',
                   rights: [], publisher: [], date_created: ['2000-01-01'], subject: [],
                   language: [], identifier: [], based_near: [], related_url: [],
                   members: ['foo', 'bar'], bytes: 123456678
@@ -12,7 +13,6 @@ describe 'collections/_show_descriptions.html.erb', :type => :view do
     end
     before do
       assign(:presenter, presenter)
-      assign(:collection, collection)
     end
 
     let(:presenter) { Sufia::CollectionPresenter.new(collection) }
