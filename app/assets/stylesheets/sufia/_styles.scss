@@ -82,6 +82,10 @@ label.required, span.required {
   }
 }
 
+label.disabled {
+  color: $gray-med-dark;
+}
+
 @media only screen and (min-width: 768px) {
   #masthead {
     min-height: 8em;
