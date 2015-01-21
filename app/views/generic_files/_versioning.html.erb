@@ -1,6 +1,7 @@
 <div id="versioning_display" class="tab-pane">
   <h2>Versions</h2>
   <div class="well">
+
     <%= form_for [sufia, @generic_file], html: { multipart: true } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'versions') %>
     <h3>Upload New Version</h3>
@@ -8,13 +9,14 @@
           <div class="col-xs-12">
             <p>Upload a new version of this file from your computer.</p>
             <p id="upload_field">
-                <%= file_field_tag "filedata"  %>
+                <%= file_field_tag "filedata", required: 'required' %>
              </p>
             <%= f.button '<i class="glyphicon glyphicon-upload"></i> Upload New Version'.html_safe, name: "update_versioning", id: "upload_submit", onclick: "confirmation_needed = false;", class: "btn btn-primary" %>
           </div>
         </div>
-    <hr />
+    <% end %>
 
+    <%= form_for [sufia, @generic_file], html: { multipart: true } do |f| %>
     <h3>Restore Previous Version</h3>
     <% @version_list.each do |version| %>
       <div class="form-group">
@@ -29,5 +31,6 @@
     <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
     <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Revision'.html_safe, type: 'submit', class: 'btn btn-primary', onclick: "confirmation_needed = false;", name: "revert_submit", id: "revert_submit" %>
   <% end %>
+
   </div> <!-- /well -->
 </div> <!-- /row -->

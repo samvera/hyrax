@@ -498,6 +498,7 @@ describe GenericFilesController do
         expect(response).to be_successful
         expect(response).to render_template('edit')
         expect(assigns[:generic_file]).to eq generic_file
+        expect(flash[:error]).to include 'Update was unsuccessful.'
       end
     end
   end
