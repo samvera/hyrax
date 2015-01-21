@@ -5,8 +5,9 @@ module Sufia
 
     self.model_class = ::Collection
     # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
-    self.terms = [:resource_type, :creator, :contributor, :tag, :rights, :publisher, :date_created,
-                  :subject, :language, :identifier, :based_near, :related_url]
+    self.terms = [:title, :total_items, :size, :resource_type, :description, :creator, :contributor,
+                  :tag, :rights, :publisher, :date_created, :subject, :language, :identifier,
+                  :based_near, :related_url]
 
     # Depositor and permissions are not displayed in app/views/collections/_show_descriptions.html.erb
     # so don't include them in `terms'.
@@ -14,6 +15,17 @@ module Sufia
 
     def terms_with_values
       terms.select { |t| self[t].present? }
+    end
+
+    def [](key)
+      case key
+        when :size
+          size
+        when :total_items
+          total_items
+        else
+          super
+      end
     end
 
     def size
