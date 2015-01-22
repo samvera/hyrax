@@ -52,10 +52,10 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "assign_pid" do
-    it "should use the noid id service" do
+  describe "assign_id" do
+    it "should use the id service" do
       expect(Sufia::IdService).to receive(:mint)
-      subject.assign_pid
+      subject.assign_id
     end
   end
 
@@ -218,7 +218,7 @@ describe GenericFile, :type => :model do
       expect(subject).to respond_to(:page_count)
     end
     it "should redefine to_param to make redis keys more recognizable" do
-      expect(subject.to_param).to eq subject.noid
+      expect(subject.to_param).to eq subject.id
     end
 
     describe "that have been saved" do
@@ -310,7 +310,6 @@ describe GenericFile, :type => :model do
       expect(local[Solrizer.solr_name("identifier")]).to eq ["urn:isbn:1234567890"]
       expect(local[Solrizer.solr_name("based_near")]).to eq ["Medina, Saudi Arabia"]
       expect(local[Solrizer.solr_name("mime_type")]).to eq ["image/jpeg"]
-      expect(local["noid_tsi"]).to eq 'stubbed_pid'
       expect(local['all_text_timv']).to eq('abcxyz')
     end
   end
@@ -348,14 +347,14 @@ describe GenericFile, :type => :model do
         gf.apply_depositor_metadata(u)
         gf.save!
       end
-      @t = Trophy.create(user_id: u.id, generic_file_id: @f.noid)
+      @t = Trophy.create(user_id: u.id, generic_file_id: @f.id)
     end
     it "should have a trophy" do
-      expect(Trophy.where(generic_file_id: @f.noid).count).to eq 1
+      expect(Trophy.where(generic_file_id: @f.id).count).to eq 1
     end
     it "should remove all trophies when file is deleted" do
       @f.destroy
-      expect(Trophy.where(generic_file_id: @f.noid).count).to eq 0
+      expect(Trophy.where(generic_file_id: @f.id).count).to eq 0
     end
   end
 
@@ -403,10 +402,27 @@ describe GenericFile, :type => :model do
   end
 
   describe "noid integration" do
-    subject { GenericFile.new(id: 'wd3763094') }
+    before do
+      allow(Sufia::IdService).to receive(:mint).once.and_return(noid)
+    end
+
+    let(:noid) { 'wd3763094' }
+
+    subject do
+      GenericFile.create do |f|
+        f.apply_depositor_metadata('mjg36')
+      end
+    end
+
+    it "runs the overridden #assign_id method" do
+      expect(Sufia::IdService).to receive(:mint).once
+      GenericFile.create do |f|
+        f.apply_depositor_metadata('mjg36')
+      end
+    end
 
     it "should return the expected identifier" do
-      expect(subject.noid).to eq 'wd3763094'
+      expect(subject.id).to eq noid
     end
 
     it "should have a tree-like URL" do
@@ -540,7 +556,7 @@ describe GenericFile, :type => :model do
     let(:title_key) { Solrizer.solr_name("title", :stored_searchable, type: :string) }
     let(:title) { ["abc123"] }
     let(:no_terms) { GenericFile.find(subject.id).to_solr }
-    let(:terms) { 
+    let(:terms) {
       file = GenericFile.find(subject.id)
       file.title = title
       file.save

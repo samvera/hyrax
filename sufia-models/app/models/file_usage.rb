@@ -8,7 +8,7 @@ class FileUsage
     user_id = user ? user.id : nil
 
     self.id = id
-    self.path = Sufia::Engine.routes.url_helpers.generic_file_path(Sufia::Noid.noidify(id))
+    self.path = Sufia::Engine.routes.url_helpers.generic_file_path(id)
     earliest = Sufia.config.analytic_start_date
     self.created = ::GenericFile.find(id).create_date
     self.created = earliest > created ? earliest : created unless earliest.blank?

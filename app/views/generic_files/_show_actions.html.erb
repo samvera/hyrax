@@ -24,7 +24,7 @@
       <% end %>
     </p>
     <p>Export to:
-      <%= link_to 'EndNote', sufia.generic_file_path(@generic_file.noid, format: 'endnote') %>
+      <%= link_to 'EndNote', sufia.generic_file_path(@generic_file, format: 'endnote') %>
       &nbsp;|&nbsp;
       <%= link_to 'Zotero', sufia.static_path('zotero'), {id: 'zoteroLink', name: 'zotero', class: 'lightboxLink'} %>
       &nbsp;|&nbsp;

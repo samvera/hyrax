@@ -14,7 +14,7 @@ FactoryGirl.define do
     factory :user_with_mail do
       after(:create) do |user|
         # TODO: what is this class for?
-        # <span class="batchid ui-helper-hidden">fake_batch_noid</span>
+        # <span class="batchid ui-helper-hidden">fake_batch_id</span>
         message = BatchMessage.new
 
         # Create examples of single file successes and failures
@@ -42,9 +42,8 @@ FactoryGirl.define do
 end
 
 class MockFile
-  attr_accessor :noid, :to_s, :id
+  attr_accessor :to_s, :id
   def initialize id, string
-    self.noid = id
     self.id = id
     self.to_s = string
   end

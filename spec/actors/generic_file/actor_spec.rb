@@ -69,7 +69,7 @@ describe Sufia::GenericFile::Actor do
     let(:gf) { FactoryGirl.create(:generic_file, visibility: 'open') }
     let(:actor) { Sufia::GenericFile::Actor.new(gf, user)}
 
-    before { FeaturedWork.create(generic_file_id: gf.noid) }
+    before { FeaturedWork.create(generic_file_id: gf.id) }
 
     it "should be removed if document is not public" do
       # Switch document from public to restricted

@@ -34,7 +34,7 @@ describe SingleUseLink do
   describe "find" do
      describe "not expired" do
        before do
-          @su = SingleUseLink.create(downloadKey: 'sha2hashb', itemId: file.id, path: Sufia::Engine.routes.url_helpers.download_path(file.noid), expires: DateTime.now.advance(hours: 1))
+          @su = SingleUseLink.create(downloadKey: 'sha2hashb', itemId: file.id, path: Sufia::Engine.routes.url_helpers.download_path(file), expires: DateTime.now.advance(hours: 1))
        end
        it "should retrieve link" do
           link = SingleUseLink.where(downloadKey: 'sha2hashb').first
@@ -51,7 +51,7 @@ describe SingleUseLink do
      end
      describe "expired" do
        before do
-          @su = SingleUseLink.create!(downloadKey: 'sha2hashb', itemId:file.id, path:Sufia::Engine.routes.url_helpers.download_path(file.noid))
+          @su = SingleUseLink.create!(downloadKey: 'sha2hashb', itemId:file.id, path:Sufia::Engine.routes.url_helpers.download_path(file))
 
           @su.update_attribute :expires, DateTime.now.advance(hours: -1)
        end

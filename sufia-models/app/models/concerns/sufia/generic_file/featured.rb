@@ -3,12 +3,9 @@ module Sufia
     module Featured
       extend ActiveSupport::Concern
 
-
       def featured?
-        FeaturedWork.where(generic_file_id: noid).exists?
+        FeaturedWork.where(generic_file_id: id).exists?
       end
-
     end
   end
 end
-

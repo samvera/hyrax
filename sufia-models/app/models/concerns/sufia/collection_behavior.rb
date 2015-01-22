@@ -11,10 +11,6 @@ module Sufia
       validates :title, presence: true
     end
 
-    def to_param
-      noid
-    end
-
     def update_permissions
       self.visibility = "open"
     end
@@ -24,13 +20,5 @@ module Sufia
     def bytes
       members.reduce(0) { |sum, gf| sum + gf.file_size.first.to_i }
     end
-
-    module ClassMethods
-      # override the default indexing service
-      def indexer
-        Sufia::IndexingService
-      end
-    end
-
   end
 end

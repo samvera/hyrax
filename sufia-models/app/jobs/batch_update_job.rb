@@ -61,12 +61,12 @@ class BatchUpdateJob
   end
 
   def send_user_success_message user, batch
-    message = saved.count > 1 ? multiple_success(batch.noid, saved) : single_success(batch.noid, saved.first)
+    message = saved.count > 1 ? multiple_success(batch.id, saved) : single_success(batch.id, saved.first)
     User.batchuser.send_message(user, message, success_subject, sanitize_text = false)
   end
 
   def send_user_failure_message user, batch
-    message = denied.count > 1 ? multiple_failure(batch.noid, denied) : single_failure(batch.noid, denied.first)
+    message = denied.count > 1 ? multiple_failure(batch.id, denied) : single_failure(batch.id, denied.first)
     User.batchuser.send_message(user, message, failure_subject, sanitize_text = false)
   end
 end

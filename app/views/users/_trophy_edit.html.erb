@@ -8,12 +8,10 @@
       <dd>
         <%= link_to t, sufia.generic_file_path(t) %>
         <label class="checkbox fleft">
-          <%= check_box_tag "remove_trophy_#{t.noid}" %> Yes &nbsp;
+          <%= check_box_tag "remove_trophy_#{t.id}" %> Yes &nbsp;
         </label>
       </dd>
       <br/>
     <% end %>
  </dl>
 </div>
-
-

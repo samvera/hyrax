@@ -11,19 +11,19 @@ module GenericFileHelper
 
   def render_download_icon title = nil
     if title.nil?
-      link_to download_image_tag, sufia.download_path(@generic_file.id), { target: "_blank", title: "Download the document", id: "file_download", data: { label: @generic_file.id } }
+      link_to download_image_tag, sufia.download_path(@generic_file), { target: "_blank", title: "Download the document", id: "file_download", data: { label: @generic_file.id } }
     else
       link_to (download_image_tag(title) + title), sufia.download_path(@generic_file), { target: "_blank", title: title, id: "file_download", data: { label: @generic_file.id } }
     end
   end
 
   def render_download_link text = nil
-    link_to (text || "Download"), sufia.download_path(@generic_file.noid), { id: "file_download", target: "_new", data: { label: @generic_file.id } }
+    link_to (text || "Download"), sufia.download_path(@generic_file), { id: "file_download", target: "_new", data: { label: @generic_file.id } }
   end
 
   def render_collection_list gf
     unless gf.collections.empty?
-      ("Is part of: " + gf.collections.map { |c| link_to(c.title, collections.collection_path(c.id)) }.join(", ")).html_safe
+      ("Is part of: " + gf.collections.map { |c| link_to(c.title, collections.collection_path(c)) }.join(", ")).html_safe
     end
   end
 

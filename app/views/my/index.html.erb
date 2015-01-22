@@ -10,7 +10,6 @@
 
 <% @page_title = "#{current_tab.capitalize} listing" %>
 
-
 <ul class="nav nav-tabs" id="my_nav">
   <h1 class="sr-only">Listing Navigation Bar</h1>
   <span class="sr-only">You are currently listing your <%= current_tab.pluralize %> .  You have <%= @response.docs.count %> <%= current_tab.pluralize(@response.docs.count)%> </span>

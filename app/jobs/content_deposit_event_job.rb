@@ -1,7 +1,7 @@
 class ContentDepositEventJob < EventJob
   def run
     gf = GenericFile.find(generic_file_id)
-    action = "User #{link_to_profile depositor_id} has deposited #{link_to gf.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(gf.noid)}"
+    action = "User #{link_to_profile depositor_id} has deposited #{link_to gf.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(gf)}"
     timestamp = Time.now.to_i
     depositor = User.find_by_user_key(depositor_id)
     # Create the event

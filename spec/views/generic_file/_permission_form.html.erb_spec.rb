@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'generic_files/_permission_form.html.erb', :type => :view do
   let(:generic_file) {
-    stub_model(GenericFile, noid: '123',
+    stub_model(GenericFile, id: '123',
         depositor: 'bob',
         resource_type: ['Dataset'])
   }

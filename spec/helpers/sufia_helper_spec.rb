@@ -42,7 +42,7 @@ describe SufiaHelper, :type => :helper do
 
   describe "sufia_thumbnail_tag" do
     context "for an image object" do
-      let(:document) { SolrDocument.new( mime_type_tesim: 'image/jpeg', noid_tsi: '1234') }
+      let(:document) { SolrDocument.new( mime_type_tesim: 'image/jpeg', id: '1234' ) }
       it "should show the audio thumbnail" do
         rendered = helper.sufia_thumbnail_tag(document, { width: 90 })
         expect(rendered).to match /src="\/downloads\/1234\?datastream_id=thumbnail"/
@@ -50,14 +50,14 @@ describe SufiaHelper, :type => :helper do
       end
     end
     context "for an audio object" do
-      let(:document) { SolrDocument.new( mime_type_tesim: 'audio/x-wave') }
+      let(:document) { SolrDocument.new( mime_type_tesim: 'audio/x-wave', id: '1234') }
       it "should show the audio thumbnail" do
         rendered = helper.sufia_thumbnail_tag(document, {})
         expect(rendered).to match /src="\/assets\/audio.png"/
       end
     end
     context "for an document object" do
-      let(:document) { SolrDocument.new( mime_type_tesim: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', noid_tsi: '1234') }
+      let(:document) { SolrDocument.new( mime_type_tesim: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', id: '1234') }
       it "should show the default thumbnail" do
         rendered = helper.sufia_thumbnail_tag(document, { width: 90 })
         expect(rendered).to match /src="\/downloads\/1234\?datastream_id=thumbnail"/
@@ -72,7 +72,7 @@ describe SufiaHelper, :type => :helper do
       @user = mock_model(User)
       allow(@user).to receive(:telephone).and_return('867-5309')
     end
-    
+
     context "when @user is set" do
       it "should return a link to the user's telephone" do
         expect(helper.link_to_telephone).to eq("<a href=\"wtai://wp/mc;867-5309\">867-5309</a>")
@@ -84,7 +84,7 @@ describe SufiaHelper, :type => :helper do
         expect(helper.link_to_telephone(@user)).to eq("<a href=\"wtai://wp/mc;867-5309\">867-5309</a>")
       end
     end
-  
+
   end
 
   describe "#current_search_parameters" do
@@ -175,7 +175,6 @@ describe SufiaHelper, :type => :helper do
     it "finds only 3 files" do
       expect(helper.number_of_deposits(user1)).to eq(3)
     end
-
 
     def create_models (model, user1, user2)
       # deposited by the first user

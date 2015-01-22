@@ -14,7 +14,7 @@ describe 'generic_files/edit.html.erb', :no_clean do
     let(:content) { double('content', mimeType: 'application/pdf') }
 
     let(:generic_file) {
-      stub_model(GenericFile, id: '123', noid: '123',
+      stub_model(GenericFile, id: '123',
         depositor: 'bob',
         resource_type: ['Book', 'Dataset'])
     }

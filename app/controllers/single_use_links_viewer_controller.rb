@@ -1,10 +1,7 @@
 require 'sufia/single_use_error'
 
 class SingleUseLinksViewerController < ApplicationController
-
   include Sufia::DownloadsControllerBehavior
-
-  skip_filter :normalize_identifier
   skip_before_filter :load_datastream, except: :download
 
   class Ability
@@ -18,10 +15,8 @@ class SingleUseLinksViewerController < ApplicationController
       @single_use_link = single_use_link
 
       can :read, ActiveFedora::Base do |obj|
-        single_use_link.valid? and
-          single_use_link.itemId == obj.id and single_use_link.destroy!
+        single_use_link.valid? && single_use_link.itemId == obj.id && single_use_link.destroy!
       end if single_use_link
-
     end
   end
 

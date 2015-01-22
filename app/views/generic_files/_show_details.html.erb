@@ -28,7 +28,7 @@
               <div class="related-files">
                   <dl><dt>
 	              <% @generic_file.related_files.each do |f| %>
-	                <dd><%= link_to(f.label, sufia.generic_file_url(f.noid)) %></dd>
+	                <dd><%= link_to(f.label, sufia.generic_file_url(f)) %></dd>
 	              <% end %>
                   </dt></dl>
               </div>

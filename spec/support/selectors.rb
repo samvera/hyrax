@@ -18,26 +18,26 @@ module Selectors
   module Dashboard
 
     def db_item_actions_toggle item
-      within "#document_#{item.noid}" do
+      within "#document_#{item.id}" do
         find '.dropdown-toggle'
       end
     end
 
     def db_item_title item
-      within "#document_#{item.noid}" do
-        find "#src_copy_link#{item.noid}"
+      within "#document_#{item.id}" do
+        find "#src_copy_link#{item.id}"
       end
     end
 
     def db_file_checkbox file
-      within "#document_#{file.noid}" do
+      within "#document_#{file.id}" do
         find '.batch_document_selector'
       end
     end
 
     def db_collection_radio_button collection
       within '#collection-list-container' do
-        find "input[id*='#{collection.noid}']"
+        find "input[id*='#{collection.id}']"
       end
     end
 
@@ -52,8 +52,8 @@ module Selectors
     end
 
     def db_visibility_link file
-      within "#document_#{file.noid}" do
-        find "a#permission_#{file.noid}"
+      within "#document_#{file.id}" do
+        find "a#permission_#{file.id}"
       end
     end
 

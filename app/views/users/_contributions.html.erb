@@ -3,7 +3,7 @@
   <% if @trophies.count > 0 %>
     <table>
       <% @trophies.each do |t| %>
-        <tr id="trophyrow_<%= t.noid %>">
+        <tr id="trophyrow_<%= t.id %>">
           <td>
             <%= link_to sufia.generic_file_path(t) do %>
               <%= render_thumbnail_tag t, { width: 90 } %>
@@ -12,7 +12,7 @@
           <td>
             <%= link_to display_title(t), sufia.generic_file_path(t) %>
             <% if current_user == @user %>
-              <%= display_trophy_link current_user, t.noid, class: 'glyphicon glyphicon-star', data: {removerow: true} do %>
+              <%= display_trophy_link current_user, t.id, class: 'glyphicon glyphicon-star', data: {removerow: true} do %>
                 <i class='trophy-on glyphicon glyphicon-remove'></i>
               <% end %>
             <% end %>
@@ -24,4 +24,3 @@
     <%= @user.name %> has no highlighted files.
   <% end %>
 </div>
-

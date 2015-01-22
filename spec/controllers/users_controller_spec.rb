@@ -25,9 +25,9 @@ describe UsersController, :type => :controller do
       let(:file1) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
       let(:file2) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
       let(:file3) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
-      let!(:trophy1) { user.trophies.create!(generic_file_id: file1.noid) }
-      let!(:trophy2) { user.trophies.create!(generic_file_id: file2.noid) }
-      let!(:trophy3) { user.trophies.create!(generic_file_id: file3.noid) }
+      let!(:trophy1) { user.trophies.create!(generic_file_id: file1.id) }
+      let!(:trophy2) { user.trophies.create!(generic_file_id: file2.id) }
+      let!(:trophy3) { user.trophies.create!(generic_file_id: file3.id) }
 
       it "show the user profile if user exists" do
         get :show, id: user.user_key
@@ -114,9 +114,9 @@ describe UsersController, :type => :controller do
       let(:file1) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
       let(:file2) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
       let(:file3) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
-      let!(:trophy1) { user.trophies.create!(generic_file_id: file1.noid) }
-      let!(:trophy2) { user.trophies.create!(generic_file_id: file2.noid) }
-      let!(:trophy3) { user.trophies.create!(generic_file_id: file3.noid) }
+      let!(:trophy1) { user.trophies.create!(generic_file_id: file1.id) }
+      let!(:trophy2) { user.trophies.create!(generic_file_id: file2.id) }
+      let!(:trophy3) { user.trophies.create!(generic_file_id: file3.id) }
 
       it "show the user profile if user exists" do
         get :edit, id: user.user_key
@@ -217,11 +217,11 @@ describe UsersController, :type => :controller do
     context "when removing a trophy" do
       let(:file) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
       before do
-        user.trophies.create!(generic_file_id: file.noid)
+        user.trophies.create!(generic_file_id: file.id)
       end
       it "should remove a trophy" do
         expect {
-          post :update, id: user.user_key,  'remove_trophy_'+file.noid => 'yes'
+          post :update, id: user.user_key,  'remove_trophy_'+file.id => 'yes'
         }.to change { user.trophies.count }.by(-1)
         expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")

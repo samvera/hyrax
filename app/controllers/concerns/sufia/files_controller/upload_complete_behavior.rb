@@ -7,6 +7,5 @@ module Sufia
     def destroy_complete_path(params)
       Sufia::Engine.routes.url_helpers.dashboard_files_path
     end
-
   end # /FilesController::UploadCompleteBehavior
 end # /Sufia

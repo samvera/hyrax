@@ -3,7 +3,6 @@ class BatchController < ApplicationController
   layout "sufia-one-column"
 
   before_filter :has_access?
-  prepend_before_filter :normalize_identifier, only: [:edit, :show, :update, :destroy]
 
   def edit
     @batch = Batch.find_or_create(params[:id])

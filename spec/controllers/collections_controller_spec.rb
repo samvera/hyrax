@@ -89,7 +89,7 @@ describe CollectionsController do
 
       it "should set collection on members" do
         put :update, id: collection, collection: {members:"add"}, batch_document_ids: [@asset3.id, @asset1.id, @asset2.id]
-        expect(response).to redirect_to routes.url_helpers.collection_path(collection.noid)
+        expect(response).to redirect_to routes.url_helpers.collection_path(collection)
         expect(assigns[:collection].members).to match_array [@asset2, @asset3, @asset1]
         asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset2.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
         expect(asset_results["response"]["numFound"]).to eq 1

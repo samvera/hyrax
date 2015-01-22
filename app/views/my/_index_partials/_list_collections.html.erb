@@ -1,9 +1,6 @@
-
-<!-- scholarsphere over ride -->
-<!-- the sub on ':' is b.c. jQuery has trouble with '.' or ':'
-on element ids -->
-<% noid = document.noid %>
-<tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
+<!-- scholarsphere override -->
+<% id = document.id %>
+<tr id="document_<%= id %>" class="<%= cycle("","zebra") %>">
   <td width="3%"></td>
   <td width="41%">
     <div class="media">
@@ -12,12 +9,12 @@ on element ids -->
       <% end %>
       <div class="media-body">
         <div class="media-heading">
-          <%= link_to  collections.collection_path(noid), id: "src_copy_link#{noid}" do %>
+          <%= link_to  collections.collection_path(id), id: "src_copy_link#{id}" do %>
               <span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span>
               <%= document.title_or_label %>
           <% end %>
           <a href="#" class="small" title="Click for more details">
-            <i id="expand_<%= noid %>" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
+            <i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></i>
             <span class="sr-only"> <%= "#{t("sufia.dashboard.my.sr.detail_label")} #{document.title_or_label}" %></span>
           </a>
         </div>
@@ -27,19 +24,19 @@ on element ids -->
   <td width="17%"><%= document.date_uploaded %> </td>
   <td width="5%" class="text-center">
       <% if document.registered? %>
-     <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a> 
+     <span class="label label-info" title="<%=t('sufia.institution_name') %>"><%=t('sufia.institution_name') %></span></a>
     <% elsif document.public? %>
       <span class="label label-success" title="Open Access">Open Access</span></a>
     <% else %>
       <span class="label label-danger" title="Private">Private</span></a>
     <% end %>
-  
+
   </td>
   <td class="text-center">
-    <%= render partial:'collection_action_menu', locals:{noid:noid} %>
+    <%= render partial:'collection_action_menu', locals: { id: id } %>
    </td>
 </tr>
-<tr id="detail_<%= noid.gsub(":", "_") %>"> <!--  collection detail"> -->
+<tr id="detail_<%= id %>"> <!--  collection detail"> -->
   <td colspan="6">
     <dl class="expanded-details row">
       <dt class="col-xs-3 col-lg-2">Description:</dt>

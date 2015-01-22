@@ -7,9 +7,8 @@ module Sufia
       end
 
       def cleanup_trophies
-        Trophy.destroy_all(generic_file_id: self.noid)
+        Trophy.destroy_all(generic_file_id: self.id)
       end
-
     end
   end
 end

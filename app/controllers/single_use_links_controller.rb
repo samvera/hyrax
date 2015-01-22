@@ -1,5 +1,4 @@
 class SingleUseLinksController < ApplicationController
-  prepend_before_filter :normalize_identifier
   before_filter :authenticate_user!
   before_filter :authorize_user!
 

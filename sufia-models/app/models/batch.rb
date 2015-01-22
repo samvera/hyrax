@@ -19,11 +19,4 @@ class Batch < ActiveFedora::Base
       Batch.create(id: id)
     end
   end
-
-  class << self
-    # override the default indexing service
-    def indexer
-      Sufia::IndexingService
-    end
-  end
 end

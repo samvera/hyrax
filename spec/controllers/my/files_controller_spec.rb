@@ -19,7 +19,6 @@ describe My::FilesController, :type => :controller do
 
   let(:user) { FactoryGirl.find_or_create(:archivist) }
 
-
   before do
     sign_in user
     @my_file = FactoryGirl.create(:generic_file, depositor: user)
@@ -34,7 +33,7 @@ describe My::FilesController, :type => :controller do
     expect(response).to be_successful
   end
 
-  it "should paginate" do          
+  it "should paginate" do
     FactoryGirl.create(:generic_file)
     FactoryGirl.create(:generic_file)
     get :index, per_page: 2
@@ -59,21 +58,20 @@ describe My::FilesController, :type => :controller do
 
   describe "batch processing" do
     include Sufia::Messages
-    let (:batch_noid) {"batch_noid"}
-    let (:batch_noid2) {"batch_noid2"}
+    let (:batch_id) {"batch_id"}
+    let (:batch_id2) {"batch_id2"}
     let (:batch) {double}
 
     before do
-      allow(batch).to receive(:noid).and_return(batch_noid)
-      User.batchuser().send_message(user, single_success(batch_noid, batch), success_subject, sanitize_text = false)
-      User.batchuser().send_message(user, multiple_success(batch_noid2, [batch]), success_subject, sanitize_text = false)
+      allow(batch).to receive(:id).and_return(batch_id)
+      User.batchuser().send_message(user, single_success(batch_id, batch), success_subject, sanitize_text = false)
+      User.batchuser().send_message(user, multiple_success(batch_id2, [batch]), success_subject, sanitize_text = false)
       get :index
     end
     it "gets batches that are complete" do
       expect(assigns(:batches).count).to eq(2)
-      expect(assigns(:batches)).to include("ss-"+batch_noid)
-      expect(assigns(:batches)).to include("ss-"+batch_noid2)
+      expect(assigns(:batches)).to include("ss-"+batch_id)
+      expect(assigns(:batches)).to include("ss-"+batch_id2)
     end
   end
-
 end
