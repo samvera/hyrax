@@ -1,0 +1,1 @@
+gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'
