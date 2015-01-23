@@ -2,8 +2,11 @@ language: ruby
 cache: bundler
 sudo: false
 rvm:
-  - 2.1
-  - 2.2.0
+  - 2.2
+matrix:
+  include:
+    - rvm: 2.1
+      env: "RAILS_VERSION=4.1.8"
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
