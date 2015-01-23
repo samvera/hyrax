@@ -21,9 +21,10 @@
     <% @version_list.each do |version| %>
       <div class="form-group">
         <div class="col-xs-12">
-          <label class="radio">
-            <%= radio_button_tag(:revision, version.label, version.current?) %>
-            Restore from <%= version.created %> [by <%= version.committer %>]
+          <label class="radio <%= version.current? ? 'disabled' : '' %>">
+            <%= radio_button_tag(:revision, version.label, false, disabled: version.current?, required: 'required') %>
+            <%= version.current? ? 'Current version:' : 'Restore from' %>
+            <%= version.created %> [by <%= version.committer %>]
           </label>
         </div>
       </div>
