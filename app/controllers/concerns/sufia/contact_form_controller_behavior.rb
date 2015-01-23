@@ -8,8 +8,7 @@ module Sufia
       @contact_form = ContactForm.new(params[:contact_form])
       @contact_form.request = request
       # not spam and a valid form
-      logger.warn "*** MARK ***"
-      if @contact_form.deliver
+      if @contact_form.respond_to?(:deliver_now) ? @contact_form.deliver_now : @contact_form.deliver
         flash.now[:notice] = 'Thank you for your message!'
         after_deliver
         render :new
