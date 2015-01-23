@@ -69,7 +69,7 @@ function batch_edit_init () {
                     if (typeof req.form === 'object') {
                         for (f in req.form) {
                             form_id = form[f];
-                            after_ajax(form_id);
+                            after_ajax(new BatchEditField($("#"+form_id)));
                         }
                     }
                     this.tid = setTimeout(function () {
