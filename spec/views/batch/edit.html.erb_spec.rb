@@ -12,29 +12,26 @@ describe 'batch/edit.html.erb' do
     render
   end
 
-  it "should draw tooltip for visibility" do
+  it "should draw the page" do
+    # form
+    expect(rendered).to have_selector "form#new_generic_file"
+    # should have browser validations
+    expect(rendered).not_to have_selector "form#new_generic_file[novalidate]"
+
+    # tooltip for visibility
     expect(rendered).to have_selector "span#visibility_tooltip a i.help-icon"
-  end
 
-  it "should draw tooltip for share_with" do
+    # tooltip for share_with
     expect(rendered).to have_selector "span#share_with_tooltip a i.help-icon"
-  end
 
-  context "rights" do
-    it "should have a modal" do
-      expect(rendered).to have_selector("div#rightsModal .modal-dialog .modal-content")
+    # access rights
+    expect(rendered).to have_selector("div#rightsModal .modal-dialog .modal-content")
+    expect(rendered).to have_selector('select#generic_file_rights[name="generic_file[rights][]"]')
+    page = Capybara::Node::Simple.new(rendered)
+    page.all('select#generic_file_rights option').each do |elem|
+      expect(elem.value).to_not be_empty
     end
 
-    it "should allow setting many rights" do
-      expect(rendered).to have_selector('select#generic_file_rights[name="generic_file[rights][]"]')
-    end
-
-    it "should not have an empty rights element" do
-      page = Capybara::Node::Simple.new(rendered)
-      page.all('select#generic_file_rights option').each do |elem|
-        expect(elem.value).to_not be_empty
-      end
-    end
   end
 end
 
