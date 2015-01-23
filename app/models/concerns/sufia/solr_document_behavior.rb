@@ -4,7 +4,7 @@ module Sufia
     extend ActiveSupport::Concern
     include Sufia::GenericFile::MimeTypes
     include Sufia::Permissions::Readable
-    
+
     # Add a schema.org itemtype
     def itemtype
       Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'

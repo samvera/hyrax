@@ -18,7 +18,7 @@
       <% end %>
       <div class="media-body">
         <div class="media-heading">
-          <%= link_to  sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" do %>
+          <%= link_to sufia.generic_file_path(noid), id: "src_copy_link#{noid}", class: "#{'document-title' if document.title_or_label == document.label}" do %>
               <span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span>
               <%= document.title_or_label %>
           <% end %>
