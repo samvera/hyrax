@@ -15,8 +15,9 @@ module Sufia::GenericFile
     #   create_metadata(batch_id) { |gf| gf.save }
     def create_metadata(batch_id)
       generic_file.apply_depositor_metadata(user)
-      generic_file.date_uploaded = Date.today
-      generic_file.date_modified = Date.today
+      time_in_utc = DateTime.now.new_offset(0)
+      generic_file.date_uploaded = time_in_utc
+      generic_file.date_modified = time_in_utc
       generic_file.creator = [user.name]
 
       if batch_id

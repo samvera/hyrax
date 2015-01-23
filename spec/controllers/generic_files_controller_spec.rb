@@ -49,9 +49,8 @@ describe GenericFilesController do
         end
 
         it "should create and save a file asset from the given params" do
-          # Now expecting iso8601 dates?
-          date_today = Time.now.utc.iso8601
-          allow(Date).to receive(:today).and_return(date_today)
+          date_today = DateTime.now
+          allow(DateTime).to receive(:now).and_return(date_today)
           expect {
             xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id,
                       permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
@@ -65,8 +64,8 @@ describe GenericFilesController do
           file.rewind
           expect(saved_file.content.content).to eq (file.read)
           # Confirming that date_uploaded and date_modified were set
-          expect(saved_file.date_uploaded).to eq date_today
-          expect(saved_file.date_modified).to eq date_today
+          expect(saved_file.date_uploaded).to eq date_today.new_offset(0)
+          expect(saved_file.date_modified).to eq date_today.new_offset(0)
         end
 
         it "should record what user created the first version of content" do
