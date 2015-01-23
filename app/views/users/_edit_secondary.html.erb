@@ -1,0 +1,9 @@
+<h2><i class="glyphicon glyphicon-user"></i> Directory Info (LDAP) <%= link_to 'Edit Instructions', 'http://www.psu.edu/directory/#update', class: 'btn btn-mini btn-primary' %></h3>
+<%= render 'user_info',  {user: @user } %>
+
+<hr />
+
+<h2><i class="glyphicon glyphicon-group"></i> User Managed Groups Info (UMG) <%= link_to 'Manage UMG', 'http://umg.its.psu.edu/', class: 'btn btn-xs btn-primary' %> </h3>
+<% current_user.groups.each do |g| %>
+  <i class="glyphicon glyphicon-asterisk"></i> <%= g %><br />
+<% end %>
