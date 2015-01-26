@@ -21,6 +21,10 @@ class FeaturedWorkList
     end
   end
 
+  def empty?
+    featured_works.empty?
+  end
+
   private
     def add_solr_document_to_works
       solr_docs.each do |doc|
