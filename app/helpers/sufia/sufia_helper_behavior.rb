@@ -38,7 +38,7 @@ module Sufia
       # file
       else
         path = if document.image? || document.pdf? || document.video? || document.office_document?
-          sufia.download_path document.noid, datastream_id: 'thumbnail'
+          sufia.download_path document, datastream_id: 'thumbnail'
         elsif document.audio?
           "audio.png"
         else
@@ -154,8 +154,8 @@ module Sufia
     end
 
     def render_visibility_link document
-      link_to render_visibility_label(document), sufia.edit_generic_file_path(document.noid, {anchor: "permissions_display"}),
-        id: "permission_"+document.noid, class: "visibility-link"
+      link_to render_visibility_label(document), sufia.edit_generic_file_path(document, {anchor: "permissions_display"}),
+        id: "permission_"+document.id, class: "visibility-link"
     end
 
     def render_visibility_label document

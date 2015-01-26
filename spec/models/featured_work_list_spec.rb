@@ -5,8 +5,8 @@ describe FeaturedWorkList, :type => :model do
   let(:file2) { FactoryGirl.create(:generic_file) }
 
   before do
-    FeaturedWork.create(generic_file_id: file1.noid)
-    FeaturedWork.create(generic_file_id: file2.noid)
+    FeaturedWork.create(generic_file_id: file1.id)
+    FeaturedWork.create(generic_file_id: file2.id)
   end
 
   describe 'featured_works' do
@@ -14,7 +14,7 @@ describe FeaturedWorkList, :type => :model do
       expect(subject.featured_works.size).to eq 2
       solr_doc = subject.featured_works.first.generic_file_solr_document
       expect(solr_doc).to be_kind_of SolrDocument
-      expect(solr_doc.noid).to eq file1.noid
+      expect(solr_doc.id).to eq file1.id
     end
   end
 
@@ -26,7 +26,7 @@ describe FeaturedWorkList, :type => :model do
       expect(subject.featured_works.size).to eq 1
       solr_doc = subject.featured_works.first.generic_file_solr_document
       expect(solr_doc).to be_kind_of SolrDocument
-      expect(solr_doc.noid).to eq file2.noid
+      expect(solr_doc.id).to eq file2.id
     end
   end
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'generic_files/stats.html.erb', :type => :view do
   describe 'usage statistics' do
     let(:generic_file) {
-      stub_model(GenericFile, noid: '123',
+      stub_model(GenericFile, id: '123',
         title: ['file1.txt'])
     }
 

@@ -42,7 +42,7 @@ module Sufia
       end
 
       def persistent_url
-        "#{Sufia.config.persistent_hostpath}#{noid}"
+        "#{Sufia.config.persistent_hostpath}#{id}"
       end
 
       # MIME type: 'application/x-openurl-ctx-kev'

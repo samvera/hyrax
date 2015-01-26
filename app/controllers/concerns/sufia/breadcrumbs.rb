@@ -3,7 +3,7 @@
     extend ActiveSupport::Concern
 
     def build_breadcrumbs
-      if request.referer 
+      if request.referer
         trail_from_referer
       else
         default_trail
@@ -38,9 +38,8 @@
 
     def add_breadcrumb_for_action
       if /edit|stats/ =~ action_name && controller_name == "generic_files"
-        add_breadcrumb I18n.t("sufia.generic_file.browse_view"), sufia.generic_file_path(Sufia::Noid.noidify params["id"])
+        add_breadcrumb I18n.t("sufia.generic_file.browse_view"), sufia.generic_file_path(params["id"])
       end
     end
-
   end
 end

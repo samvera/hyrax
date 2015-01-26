@@ -74,7 +74,7 @@ describe 'collection', :type => :feature do
 
     it "should delete a collection" do
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.noid) do
+      within('#document_'+collection.id) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
@@ -96,7 +96,7 @@ describe 'collection', :type => :feature do
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.noid) do
+      within('#document_'+collection.id) do
         click_link("Display all details of collection title")
       end
       expect(page).to have_content(collection.title)
@@ -119,7 +119,7 @@ describe 'collection', :type => :feature do
     it "should hide collection descriptive metadata when searching a collection" do
       # URL: /dashboard/collections
       expect(page).to have_content(collection.title)
-      within("#document_#{collection.noid}") do
+      within("#document_#{collection.id}") do
         click_link("Display all details of collection title")
       end
       # URL: /collections/collection-id
@@ -154,7 +154,7 @@ describe 'collection', :type => :feature do
     it "should edit and update collection metadata" do
       # URL: /dashboard/collections
       expect(page).to have_content(collection.title)
-      within("#document_#{collection.noid}") do
+      within("#document_#{collection.id}") do
         find('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
@@ -181,7 +181,7 @@ describe 'collection', :type => :feature do
 
     it "should remove a file from a collection" do
       expect(page).to have_content(collection.title)
-      within("#document_#{collection.noid}") do
+      within("#document_#{collection.id}") do
         first('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
@@ -189,7 +189,7 @@ describe 'collection', :type => :feature do
       expect(page).to have_field('collection_description', with: collection.description)
       expect(page).to have_content(gf1.title.first)
       expect(page).to have_content(gf2.title.first)
-      within("#document_#{gf1.noid}") do
+      within("#document_#{gf1.id}") do
         first('button.dropdown-toggle').click
         click_button('Remove from Collection')
       end
@@ -201,7 +201,7 @@ describe 'collection', :type => :feature do
 
     it "should remove all files from a collection", js: true do
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.noid) do
+      within('#document_'+collection.id) do
         first('button.dropdown-toggle').click
         click_link('Edit Collection')
       end
@@ -237,7 +237,7 @@ describe 'collection', :type => :feature do
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/collections'
       expect(page).to have_content(collection.title)
-      within('#document_'+collection.noid) do
+      within('#document_'+collection.id) do
         click_link("Display all details of collection title")
       end
       expect(page).to have_css(".pager")

@@ -12,7 +12,7 @@ describe 'generic_files/show.html.erb', :type => :view do
   end
 
   let(:generic_file) do
-    stub_model(GenericFile, id: '123', noid: '123',
+    stub_model(GenericFile, id: '123',
       depositor: depositor.user_key,
       audit_stat: 1,
       title: ['My Title'],
@@ -311,12 +311,12 @@ describe 'generic_files/show.html.erb', :type => :view do
     end
 
     context "when the file is featured in collections" do
-      let(:collection1) {
+      let(:collection1) do
         stub_model(Collection,
           title: 'collection1',
-          noid: '456')
-      }
- 
+          id: '456')
+      end
+
       before do
         allow(generic_file).to receive(:collections).and_return([collection1])
       end
@@ -331,7 +331,7 @@ describe 'generic_files/show.html.erb', :type => :view do
 
   describe 'visibility' do
     let(:expected) do
-      '<span class="label label-danger" title="'+t('sufia.visibility.private')+'">'+t('sufia.visibility.private')+'</span></a>' 
+      '<span class="label label-danger" title="'+t('sufia.visibility.private')+'">'+t('sufia.visibility.private')+'</span></a>'
     end
     it "should display the visibility badge" do
       render

@@ -43,7 +43,7 @@ describe 'users/show.html.erb', :type => :view do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector(".tab-content > div#contributions.tab-pane")
-      expect(page).to have_selector("#trophyrow_#{generic_file.noid}")
+      expect(page).to have_selector("#trophyrow_#{generic_file.id}")
 
     end
   end

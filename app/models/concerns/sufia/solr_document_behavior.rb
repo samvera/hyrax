@@ -10,6 +10,10 @@ module Sufia
       Sufia.config.resource_types_to_schema[resource_type.first] || 'http://schema.org/CreativeWork'
     end
 
+    def to_param
+      self[:id]
+    end
+
     def title_or_label
       title || label
     end
@@ -18,10 +22,6 @@ module Sufia
     # Give our SolrDocument an ActiveModel::Naming appropriate route_key
     def route_key
       get(Solrizer.solr_name('has_model', :symbol)).split(':').last.downcase
-    end
-
-    def to_param
-      noid
     end
 
     ##
@@ -38,10 +38,6 @@ module Sufia
     # Method to return the ActiveFedora model
     def hydra_model
       self[Solrizer.solr_name('active_fedora_model', Solrizer::Descriptor.new(:string, :stored, :indexed))]
-    end
-
-    def noid
-      self[Solrizer.solr_name('noid', Sufia::IndexingService.noid_indexer)]
     end
 
     def date_uploaded

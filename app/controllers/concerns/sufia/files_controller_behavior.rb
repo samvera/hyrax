@@ -38,14 +38,13 @@ module Sufia
       before_filter :authenticate_user!, except: [:show, :citation, :stats]
       before_filter :has_access?, except: [:show]
       before_filter :build_breadcrumbs, only: [:show, :edit, :stats]
-      prepend_before_filter :normalize_identifier, except: [:index, :create, :new]
       load_resource only: [:audit]
       load_and_authorize_resource except: [:index, :audit]
     end
 
     # routed to /files/new
     def new
-      @batch_noid = Batch.create.noid
+      @batch_id = Batch.create.id
     end
 
     # routed to /files/:id/edit

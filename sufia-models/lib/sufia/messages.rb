@@ -46,22 +46,21 @@ module Sufia
     end
 
     def link_to_file file
-      link_to(file.to_s, Sufia::Engine.routes.url_helpers.generic_file_path(file.noid))
+      link_to(file.to_s, Sufia::Engine.routes.url_helpers.generic_file_path(file))
     end
 
     private
 
-    def success_link files
-      link_to I18n.t("sufia.messages.success.multiple.link"), "#", 
-        rel: "popover", 
-        data: { content: file_list(files).html_safe, title: I18n.t("sufia.messages.success.title") }
-    end
+      def success_link files
+        link_to I18n.t("sufia.messages.success.multiple.link"), "#",
+          rel: "popover",
+          data: { content: file_list(files).html_safe, title: I18n.t("sufia.messages.success.title") }
+      end
 
-    def failure_link files
-      link_to I18n.t("sufia.messages.failure.multiple.link"), "#", 
-        rel: "popover", 
-        data: { content: file_list(files).html_safe, title: I18n.t("sufia.messages.failure.title") }
-    end
-
+      def failure_link files
+        link_to I18n.t("sufia.messages.failure.multiple.link"), "#",
+          rel: "popover",
+          data: { content: file_list(files).html_safe, title: I18n.t("sufia.messages.failure.title") }
+      end
   end
 end

@@ -23,7 +23,7 @@ class ContentDepositorChangeEventJob < EventJob
     file.apply_depositor_metadata(login)
     file.save!
 
-    action = "User #{link_to_profile file.proxy_depositor} has transferred #{link_to file.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(file.noid)} to user #{link_to_profile login}"
+    action = "User #{link_to_profile file.proxy_depositor} has transferred #{link_to file.title.first, Sufia::Engine.routes.url_helpers.generic_file_path(file)} to user #{link_to_profile login}"
     timestamp = Time.now.to_i
     depositor = ::User.find_by_user_key(file.depositor)
     proxy_depositor = ::User.find_by_user_key(file.proxy_depositor)

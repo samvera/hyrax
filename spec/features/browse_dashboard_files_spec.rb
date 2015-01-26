@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe "Browse Dashboard", :type => :feature do
-
+describe "Browse Dashboard", type: :feature do
   let(:user) { FactoryGirl.create(:user) }
+  let!(:fixtures) { create_file_fixtures(user.user_key) }
+
   before do
-    @fixtures = create_file_fixtures(user.user_key)
     sign_in user
   end
 
@@ -12,7 +12,7 @@ describe "Browse Dashboard", :type => :feature do
     visit "/dashboard"
     fill_in "q", with: "PDF"
     click_button "search-submit-header"
-    expect(page).to have_content("Fake Document Title")
+    expect(page).to have_content("Fake PDF Title")
   end
 
   context "within my files page" do
@@ -23,7 +23,7 @@ describe "Browse Dashboard", :type => :feature do
 
     it "should display all the necessary information" do
       # TODO this would make a good view test.
-      within("#document_#{@fixtures.first.noid}") do
+      within("#document_#{fixtures.first.id}") do
         click_button("Select an action")
       end
       expect(page).to have_content("Edit File")
@@ -39,7 +39,7 @@ describe "Browse Dashboard", :type => :feature do
     it "should allow you to search your own files and remove constraints" do
       fill_in "q", with: "PDF"
       click_button "search-submit-header"
-      expect(page).to have_content("Fake Document Title")
+      expect(page).to have_content("Fake PDF Title")
       within(".constraints-container") do
         expect(page).to have_content("You searched for:")
         expect(page).to have_css("span.glyphicon-remove")
@@ -52,7 +52,7 @@ describe "Browse Dashboard", :type => :feature do
       click_link "Subject"
       click_link "more Subjects"
       click_link "consectetur"
-      within("#document_#{@fixtures[1].noid}") do
+      within("#document_#{fixtures[1].id}") do
         click_link "Display all details of Test Document MP3.mp3"
       end
       expect(page).to have_content("File Details")
@@ -70,7 +70,7 @@ describe "Browse Dashboard", :type => :feature do
     it "should refresh the page of files" do
       # TODO this would make a good view test.
       click_button "Refresh"
-      within("#document_#{@fixtures.first.noid}") do
+      within("#document_#{fixtures.first.id}") do
         click_button("Select an action")
         expect(page).to have_content("Edit File")
         expect(page).to have_content("Download File")

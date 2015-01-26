@@ -17,8 +17,8 @@ describe Sufia::Messages do
   end
 
   let(:batch_id) { "1" }
-  let(:single) { double(noid: "1", to_s: "File 1") }
-  let(:multiple) { [double(noid: "1", to_s: "File 1"), double(noid: "2", to_s: "File 2"), double(noid: "3", to_s: "File 3")] }
+  let(:single) { double(to_param: "1", to_s: "File 1") }
+  let(:multiple) { [double(to_param: "1", to_s: "File 1"), double(to_param: "2", to_s: "File 2"), double(to_param: "3", to_s: "File 3")] }
   let(:file_list) { "<a href='/files/1'>File 1</a>, <a href='/files/2'>File 2</a>, <a href='/files/3'>File 3</a>" }
 
   describe "message subjects" do
@@ -67,5 +67,4 @@ describe Sufia::Messages do
       expect(message.file_list(multiple)).to eq(file_list)
     end
   end
-
 end

@@ -6,9 +6,6 @@ Sufia.config do |config|
     file_author: :creator
   }
 
-  # Specify a different template for your repositories unique identifiers
-  # config.noid_template = ".reeddeeddk"
-
   config.max_days_between_audits = 7
 
   config.max_notifications_for_dashboard = 5
@@ -105,8 +102,15 @@ Sufia.config do |config|
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
   # config.enable_ffmpeg = true
 
-  # Specify the Fedora pid prefix:
-  # config.id_namespace = "sufia"
+  # Sufia uses NOIDs for files and collections instead of Fedora UUIDs
+  # where NOID = 10-character string and UUID = 32-character string w/ hyphens
+  # config.enable_noids = true
+
+  # Specify a different template for your repository's NOID IDs
+  # config.noid_template = ".reeddeeddk"
+
+  # Specify the prefix for Redis keys:
+  # config.redis_namespace = "sufia"
 
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"

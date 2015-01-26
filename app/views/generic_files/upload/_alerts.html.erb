@@ -1,7 +1,7 @@
 <div class="alert alert-info hide" id="success">
   You have successfully uploaded some of your files.  Either continue to upload or edit use the links below to abandon the rest of your added files.
   <p>
-  <%= link_to 'Add Descriptions', GenericFilesController.upload_complete_path(@batch_noid), class: 'btn' %>
+  <%= link_to 'Add Descriptions', GenericFilesController.upload_complete_path(@batch_id), class: 'btn' %>
   </p>
 </div>
 
@@ -11,7 +11,7 @@
 
 <div class="alert hide" id="partial_fail">
   One or more files did not upload successfully. To continue using the files uploaded use one of the links below.<br />
-  <%= link_to 'Add Descriptions', GenericFilesController.upload_complete_path(@batch_noid), class: 'btn' %>
+  <%= link_to 'Add Descriptions', GenericFilesController.upload_complete_path(@batch_id), class: 'btn' %>
 </div>
 
 <div class="alert hide" id="errmsg"> </div>

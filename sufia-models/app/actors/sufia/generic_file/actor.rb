@@ -125,10 +125,10 @@ module Sufia::GenericFile
       end
 
     private
+
       def remove_from_feature_works
-        featured_work = FeaturedWork.find_by_generic_file_id(generic_file.noid)
+        featured_work = FeaturedWork.find_by_generic_file_id(generic_file.id)
         featured_work.destroy unless featured_work.nil?
       end
-
   end
 end

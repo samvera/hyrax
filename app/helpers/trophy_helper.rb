@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 module TrophyHelper
- def display_trophy_link(user, noid, args={}, &block)
-   trophy = user.trophies.where(generic_file_id: noid).first
+ def display_trophy_link(user, id, args={}, &block)
+   trophy = user.trophies.where(generic_file_id: id).first
    trophyclass = trophy ? "trophy-on" : "trophy-off"
 
    args[:add_text] ||= "Highlight File on Profile"
@@ -12,7 +12,7 @@ module TrophyHelper
    args[:data]['add-text'] = args[:add_text]
    args[:data]['remove-text'] = args[:remove_text]
 
-   args[:data][:url] = sufia.trophy_profile_path(user, file_id: noid)
+   args[:data][:url] = sufia.trophy_profile_path(user, file_id: id)
    link_to '#', class: args[:class], data: args[:data] do
      yield(text)
    end
