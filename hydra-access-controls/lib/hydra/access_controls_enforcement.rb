@@ -10,7 +10,7 @@ module Hydra::AccessControlsEnforcement
     # CatalogController.include ModuleDefiningNewMethod
     # CatalogController.solr_access_filters_logic += [:new_method]
     # CatalogController.solr_access_filters_logic.delete(:we_dont_want)
-    self.solr_access_filters_logic = [:apply_group_permissions, :apply_user_permissions, :apply_superuser_permissions ]
+    self.solr_access_filters_logic = [:apply_group_permissions, :apply_user_permissions]
 
   end
 
@@ -116,10 +116,5 @@ module Hydra::AccessControlsEnforcement
         end
       end
       user_access_filters
-  end
-
-  # override to apply super user permissions
-  def apply_superuser_permissions(permission_types, ability = current_ability)
-    []
   end
 end
