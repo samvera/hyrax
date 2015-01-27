@@ -8,6 +8,11 @@ describe Sufia::Forms::GenericFileEditForm do
       expect(subject.terms).to eq([:resource_type, :title, :creator, :contributor, :description, :tag,
                     :rights, :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url])
     end
+
+    it "doesn't contain fields that users shouldn't be allowed to edit" do
+      # date_uploaded is reserved for the original creation date of the record.
+      expect(subject.terms).not_to include(:date_uploaded)
+    end
   end
 
   it "should initialize multivalued fields" do
