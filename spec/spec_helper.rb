@@ -128,6 +128,7 @@ RSpec.configure do |config|
 
   config.include InputSupport, type: :input
   config.include Capybara::RSpecMatchers, type: :input
+  config.include FactoryGirl::Syntax::Methods
 
   config.infer_spec_type_from_file_location!
 end

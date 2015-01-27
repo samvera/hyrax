@@ -1,5 +1,7 @@
-<h2>Featured Works</h2>
-<% if can? :update, FeaturedWork %>
+<h2><%= t('sufia.homepage.featured_works.title') %></h2>
+<% if @featured_work_list.empty? %>
+  <p><%= t('sufia.homepage.featured_works.no_works') %></p>
+<% elsif can? :update, FeaturedWork %>
   <%= form_for [sufia, @featured_work_list] do |f| %>
     <div class="panel-group dd" id="dd">
       <ol id="featured_works">
@@ -8,7 +10,7 @@
         <% end %>
       </ol>
     </div>
-    <%= f.submit "Save order", class: 'btn btn-default' %>
+    <%= f.submit("Save order", class: 'btn btn-default') %>
   <% end %>
 <% else %>
   <ol id="featured_works">
