@@ -18,12 +18,25 @@ describe HomepageController, :type => :controller do
       sign_in user
     end
 
-    it "should set featured researcher" do
-      get :index
-      expect(response).to be_success
-      assigns(:featured_researcher).tap do |researcher|
-        expect(researcher).to be_kind_of ContentBlock
-        expect(researcher.name).to eq 'featured_researcher'
+    context 'with existing featured researcher' do
+      let!(:bilbo) { ContentBlock.create!(name: ContentBlock::RESEARCHER, value: 'Biblo Baggins', created_at: 2.hours.ago) }
+      let!(:frodo) { ContentBlock.create!(name: ContentBlock::RESEARCHER, value: 'Frodo Baggins', created_at: Time.now) }
+
+      it 'finds the featured researcher' do
+        get :index
+        expect(response).to be_success
+        expect(assigns(:featured_researcher)).to eq frodo
+      end
+    end
+
+    context 'with no featured researcher' do
+      it "should set featured researcher" do
+        get :index
+        expect(response).to be_success
+        assigns(:featured_researcher).tap do |researcher|
+          expect(researcher).to be_kind_of ContentBlock
+          expect(researcher.name).to eq 'featured_researcher'
+        end
       end
     end
 

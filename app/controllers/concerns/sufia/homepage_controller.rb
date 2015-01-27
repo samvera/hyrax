@@ -13,8 +13,9 @@ module Sufia::HomepageController
   end
 
   def index
-    @featured_researcher = ContentBlock.find_or_create_by(name: 'featured_researcher')
-    @marketing_text = ContentBlock.find_or_create_by(name: 'marketing_text')
+    @featured_researcher = ContentBlock.featured_researcher
+    @featured_researcher ||= ContentBlock.create(name: ContentBlock::RESEARCHER)
+    @marketing_text = ContentBlock.find_or_create_by(name: ContentBlock::MARKETING)
     @featured_work_list = FeaturedWorkList.new
     recent
   end

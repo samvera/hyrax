@@ -117,7 +117,7 @@ Sufia::Engine.routes.draw do
     end
   end
 
-  resources :content_blocks, only: 'update'
+  resources :content_blocks, only: ['create', 'update']
   post '/tinymce_assets' => 'tinymce_assets#create'
 
   get 'about' => 'pages#show', id: 'about_page'
