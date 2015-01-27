@@ -6,8 +6,7 @@ describe Hydra::ModelMethods do
     class TestModel < ActiveFedora::Base
       include Hydra::AccessControls::Permissions
       include Hydra::ModelMethods
-      contains "properties", class_name: 'Hydra::Datastream::Properties'
-      has_attributes :depositor, datastream: :properties, multiple: false
+      property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false
     end
   end
 
@@ -27,12 +26,13 @@ describe Hydra::ModelMethods do
 
     it "should set depositor" do
       subject.apply_depositor_metadata('chris')
-      expect(subject.properties.depositor).to eq ['chris']
+      expect(subject.depositor).to eq 'chris'
     end
+
     it "should accept objects that respond_to? :user_key" do
-      stub_user = double(:user, :user_key=>'monty')
+      stub_user = double(:user, user_key: 'monty')
       subject.apply_depositor_metadata(stub_user)
-      expect(subject.properties.depositor).to eq ['monty']
+      expect(subject.depositor).to eq 'monty'
     end
   end
 
