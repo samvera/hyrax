@@ -22,6 +22,21 @@ describe BatchController do
       end
     end
 
+    describe "when submiting files on behalf of another user" do
+      let(:somebody_else_file) do 
+        f = GenericFile.create(title: ['Original Title']) { |gf| gf.apply_depositor_metadata('current_user') }
+        f.on_behalf_of = 'somebody@else.org'
+        f.save!
+        f
+      end      
+      let(:batch) { Batch.create { |b| b.generic_files.push(somebody_else_file) } }
+      it "should go to my shares page" do
+        post :update, id: batch, "generic_file"=>{"permissions_attributes"=>[{"type" => "group", "name" => "public", "access" => "read"}]}
+        expect(response).to redirect_to routes.url_helpers.dashboard_shares_path
+      end
+    end
+
+
     describe "when user has edit permissions on a file" do
       # TODO all these tests could move to batch_update_job_spec.rb
       let!(:file) { GenericFile.create(batch: batch) { |f| f.apply_depositor_metadata(user) } }
