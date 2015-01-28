@@ -1,6 +1,13 @@
 # properties datastream: catch-all for info that didn't have another home.  Particularly depositor.
 module Hydra::Datastream
   class Properties < ActiveFedora::OmDatastream
+    extend Deprecation
+
+    def initialize(*)
+      super
+      Deprecation.warn(Properties, "Hydra::Datastream::Properties is deprecated and will be removed in hydra-head 10.0")
+    end
+
     set_terminology do |t|
       t.root(:path=>"fields", :xmlns => '', :namespace_prefix => nil) 
 
