@@ -2,15 +2,16 @@ module Hydra
   module Controller
     module DownloadBehavior
       extend ActiveSupport::Concern
+      extend Deprecation
 
       included do
         include Hydra::Controller::ControllerBehavior
         before_filter :authorize_download!
       end
 
-      # Responds to http requests to show the datastream
+      # Responds to http requests to show the file
       def show
-        if datastream.new_record?
+        if file.new_record?
           render_404
         else
           send_content
@@ -34,7 +35,7 @@ module Hydra
 
       # Customize the :download ability in your Ability class, or override this method
       def authorize_download!
-        authorize! :download, datastream
+        authorize! :download, file
       end
 
       def asset
@@ -42,19 +43,34 @@ module Hydra
       end
 
       def datastream
-        @ds ||= datastream_to_show
+        Deprecation.warn(DownloadBehavior, "datastream is deprecated and will be removed in hydra-head 10.0. Use `file` instead.")
+        file
       end
 
-      # Override this method to change which datastream is shown.
-      # Loads the file specified by the HTTP parameter `:datastream_id`.
-      # If this object does not have a datastream by that name, return the default datastream
-      # as returned by {#default_content_ds}
+      def file
+        @file ||= load_file
+      end
+
+      # Override this method to change which file is shown.
+      # Loads the file specified by the HTTP parameter `:file_id`.
+      # If this object does not have a file by that name, return the default file
+      # as returned by {#default_file}
       # @return [ActiveFedora::File] the file
+      def load_file
+        file_path = params[:file]
+        if !file_path && params[:datastream_id]
+          Deprecation.warn(DownloadBehavior, "Parameter `datastream_id` is deprecated and will be removed in hydra-head 10.0. Use `file` instead.")
+          file_path = params[:datastream_id]
+        end
+        f = asset.attached_files[file_path] if file_path
+        f ||= default_file
+        raise "Unable to find a file for #{asset}" if f.nil?
+        f
+      end
+
       def datastream_to_show
-        ds = asset.attached_files[params[:datastream_id]] if params.has_key?(:datastream_id)
-        ds ||= default_content_ds
-        raise "Unable to find a datastream for #{asset}" if ds.nil?
-        ds
+        Deprecation.warn(DownloadBehavior, "datastream_to_show is deprecated and will be removed in hydra-head 10.0")
+        load_file
       end
 
       # Handle the HTTP show request
@@ -73,20 +89,27 @@ module Hydra
 
       # Create some headers for the datastream
       def content_options
-        {disposition: 'inline', type: datastream.mime_type, filename: datastream_name}
+        {disposition: 'inline', type: file.mime_type, filename: file_name}
       end
 
       # Override this if you'd like a different filename
       # @return [String] the filename
       def datastream_name
-        params[:filename] || datastream.original_name || (asset.respond_to?(:label) && asset.label) || datastream.id
+        Deprecation.warn(DownloadBehavior, "datastream_name is deprecated and will be removed in hydra-head 10.0, use file_name instead")
+        file_name
+      end
+
+      # Override this if you'd like a different filename
+      # @return [String] the filename
+      def file_name
+        params[:filename] || file.original_name || (asset.respond_to?(:label) && asset.label) || file.id
       end
 
 
       # render an HTTP HEAD response
       def content_head
-        response.headers['Content-Length'] = datastream.size
-        response.headers['Content-Type'] = datastream.mime_type
+        response.headers['Content-Length'] = file.size
+        response.headers['Content-Type'] = file.mime_type
         head :ok
       end
 
@@ -95,13 +118,13 @@ module Hydra
       def send_range
         _, range = request.headers['HTTP_RANGE'].split('bytes=')
         from, to = range.split('-').map(&:to_i)
-        to = datastream.size - 1 unless to
+        to = file.size - 1 unless to
         length = to - from + 1
-        response.headers['Content-Range'] = "bytes #{from}-#{to}/#{datastream.size}"
+        response.headers['Content-Range'] = "bytes #{from}-#{to}/#{file.size}"
         response.headers['Content-Length'] = "#{length}"
         self.status = 206
         prepare_file_headers
-        datastream.stream(request.headers['HTTP_RANGE']) do |block|
+        file.stream(request.headers['HTTP_RANGE']) do |block|
           response.stream.write block
         end
       ensure
@@ -111,7 +134,7 @@ module Hydra
       def send_file_contents
         self.status = 200
         prepare_file_headers
-        datastream.stream do |block|
+        file.stream do |block|
           response.stream.write block
         end
       ensure
@@ -120,22 +143,38 @@ module Hydra
 
       def prepare_file_headers
         send_file_headers! content_options
-        response.headers['Content-Type'] = datastream.mime_type
-        self.content_type = datastream.mime_type
+        response.headers['Content-Type'] = file.mime_type
+        self.content_type = file.mime_type
       end
 
       private
 
       def default_content_ds
-        if asset.class.respond_to?(:default_content_ds)
+        Deprecation.warn(DownloadBehavior, "default_content_ds is deprecated and will be removed in hydra-head 10.0, use default_file instead")
+        default_file
+      end
+
+      def default_file
+        if asset.class.respond_to?(:default_file_path)
+          asset.attached_files[asset.class.default_file_path]
+        elsif asset.class.respond_to?(:default_content_ds)
+          Deprecation.warn(DownloadBehavior, "default_content_ds is deprecated and will be removed in hydra-head 10.0, use default_file_path instead")
           asset.attached_files[asset.class.default_content_ds]
+        elsif asset.attached_files.key?(DownloadsController.default_file_path)
+          asset.attached_files[DownloadsController.default_file_path]
         elsif asset.attached_files.key?(DownloadsController.default_content_dsid)
+          Deprecation.warn(DownloadBehavior, "DownloadsController.default_content_dsid is deprecated and will be removed in hydra-head 10.0, use default_file_path instead")
           asset.attached_files[DownloadsController.default_content_dsid]
         end
       end
 
       module ClassMethods
         def default_content_dsid
+          Deprecation.warn(DownloadBehavior, "default_content_dsid is deprecated and will be removed in hydra-head 10.0, use default_file_path instead")
+          default_file_path
+        end
+
+        def default_file_path
           "content"
         end
       end
