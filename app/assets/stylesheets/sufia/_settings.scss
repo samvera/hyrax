@@ -7,6 +7,8 @@ $basic-black: #000;
 $blue-dark: #036;
 $blue-medium: #1C5798;
 $blue-medium-bright: #2674CA;
+$teal: #2CAEB7;
+$teal-light: #67ADA9;
 $brown-dark: #7D5D55;
 $brown-medium-dark: #A78352;
 $brown-medium: #B89972;
@@ -19,21 +21,53 @@ $gray-medium: #CECDCD;
 $gray-light: #DDD;
 $gray-lighter: #E1E1E1;
 $gray-lightish: #bbb;
+$yellow-medium: #FFC74E;
 $highlight-yellow: #F0CA00;
-$teal: #2CAEB7;
 $vermilion: #F30;
+$red-orange: #D6562B;
 
+
+// Dashboard
 $badge-background-color: $highlight-yellow;
 $badge-optional-background-color: $gray-medium;
 $badge-font-color: $classic-white;
+
 $content-wrapper-background-color: $cream-light;
+
 $dashboard-background-color: $classic-white;
 $dashboard-border-color: $gray-light;
+
 $icon-background-color: $vermilion;
 $icon-border-color: $classic-white;
 $icon-font-color: $classic-white;
 $icon-link-color: $basic-black;
 $icon-link-hover-color: $blue-medium-bright;
+
 $panel-background-color: $classic-white;
 $panel-dashboard-background-color: $teal;
 $panel-dashboard-font-color: $classic-white;
+
+// Buttons
+$add-background-color: $teal-light;
+$add-border-color: $teal-light;
+$add-text-color: $classic-white;
+$add-background-hover: $classic-white;
+$add-text-hover: $teal-light;
+
+$neutral-background-color: $yellow-medium;
+$neutral-border-color: $highlight-yellow;
+$neutral-text-color: $classic-white;
+$neutral-background-hover: $classic-white;
+$neutral-text-hover: $yellow-medium;
+
+$remove-background-color: $red-orange;
+$remove-border-color: $red-orange;
+$remove-text-color: $classic-white;
+$remove-background-hover: $classic-white;
+$remove-text-hover: $red-orange;
+
+$view-select-background-color: $blue-medium-bright;
+$view-select-border-color: $blue-medium-bright;
+$view-select-text-color: $classic-white;
+$view-select-background-hover: $classic-white;
+$view-select-text-hover: $blue-medium-bright;
