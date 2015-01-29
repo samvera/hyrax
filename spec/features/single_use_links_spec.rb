@@ -7,10 +7,10 @@ describe "Create and use single-use links", :type => :feature do
 
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:file) do
-    GenericFile.new.tap do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+    GenericFile.create do |f|
+      f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
+      f.label = 'world.png'
       f.apply_depositor_metadata(user)
-      f.save
     end
   end
 

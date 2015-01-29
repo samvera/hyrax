@@ -179,7 +179,7 @@ describe GenericFile, :type => :model do
     end
 
     it "should have content datastream" do
-      subject.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      subject.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
       expect(subject.content).to be_kind_of FileContentDatastream
     end
   end
@@ -330,7 +330,7 @@ describe GenericFile, :type => :model do
     describe "with a video", if: Sufia.config.enable_ffmpeg do
       before do
         allow(@f).to receive(mime_type: 'video/quicktime')  #Would get set by the characterization job
-        @f.add_file(File.open("#{fixture_path}/countdown.avi", 'rb'), 'content', 'countdown.avi')
+        @f.add_file(File.open("#{fixture_path}/countdown.avi", 'rb'), path: 'content', original_name: 'countdown.avi')
         @f.save
       end
       it "should make a png thumbnail" do
@@ -523,7 +523,7 @@ describe GenericFile, :type => :model do
       let(:f) { File.new(fixture_path + '/small_file.txt') }
 
       before do
-        subject.add_file(f, 'content', 'small_file.txt')
+        subject.add_file(f, path: 'content', original_name: 'small_file.txt')
         subject.apply_depositor_metadata('mjg36')
       end
 
@@ -537,7 +537,7 @@ describe GenericFile, :type => :model do
       it "does not save a new version of a GenericFile" do
         subject.save!
         allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError)
-        subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , 'content', 'sufia_generic_stub.txt')
+        subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , path: 'content', original_name: 'sufia_generic_stub.txt')
         subject.save
         expect(subject.reload.content.content).to eq "small\n"
       end

@@ -9,7 +9,7 @@
   <meta property="og:type" content="object"/>
   <meta property="og:title" content="<%= @generic_file.title.first %>"/>
   <meta property="og:description" content="<%= @generic_file.description.first.truncate(200) rescue @generic_file.title.first %>"/>
-  <meta property="og:image" content="<%= sufia.download_url(@generic_file, datastream_id: 'thumbnail') %>"/>
+  <meta property="og:image" content="<%= sufia.download_url(@generic_file, file: 'thumbnail') %>"/>
   <meta property="og:url" content="<%= sufia.generic_file_url(@generic_file) %>"/>
   <meta name="twitter:data1" content="<%= @generic_file.tag.join(', ') %>"/>
   <meta name="twitter:label1" content="Keywords"/>

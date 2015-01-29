@@ -17,7 +17,7 @@ describe Sufia::GenericFile::Actor do
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(characterize_message)
       expect(Sufia.queue).to receive(:push).with(deposit_message)
       expect(Sufia.queue).to receive(:push).with(characterize_message)
-      actor.create_content(uploaded_file, 'world.png', 'content')
+      actor.create_content(uploaded_file, 'world.png', 'content', 'image/png')
     end
 
     context "with two existing versions from different users" do
@@ -32,8 +32,8 @@ describe Sufia::GenericFile::Actor do
 
       before do
         allow(Sufia.queue).to receive(:push)
-        actor1.create_content(fixture_file_upload(file1), file1, 'content')
-        actor2.create_content(fixture_file_upload(file2), file2, 'content')
+        actor1.create_content(fixture_file_upload(file1), file1, 'content', 'image/png')
+        actor2.create_content(fixture_file_upload(file2), file2, 'content', 'image/jpeg')
       end
 
       it "should have two versions" do
@@ -90,7 +90,7 @@ describe Sufia::GenericFile::Actor do
 
     before do
       allow(actor).to receive(:save_characterize_and_record_committer).and_return("true")
-      actor.create_content(Tempfile.new(new_file), new_file, "content")
+      actor.create_content(Tempfile.new(new_file), new_file, "content", 'image/jpg')
     end
 
     it "will retain the object's original label" do

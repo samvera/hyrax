@@ -179,7 +179,7 @@ module Sufia
 
     def update_file
       if params[:filedata]
-        actor.update_content(params[:filedata], datastream_id)
+        actor.update_content(params[:filedata], file_path)
       else
         flash[:error] = 'Please select a file.'
         false
@@ -209,7 +209,7 @@ module Sufia
     def process_file(file)
       update_metadata_from_upload_screen
       actor.create_metadata(params[:batch_id])
-      if actor.create_content(file, file.original_filename, datastream_id)
+      if actor.create_content(file, file.original_filename, file_path, file.content_type)
         respond_to do |format|
           format.html {
             render 'jq_upload', formats: 'json', content_type: 'text/html'
@@ -238,8 +238,8 @@ module Sufia
 
     ActiveSupport::Deprecation.deprecate_methods(FilesControllerBehavior, :initialize_fields)
 
-    # The name of the datastream where we store the file data
-    def datastream_id
+    # The path of the fedora node where we store the file data
+    def file_path
       'content'
     end
 

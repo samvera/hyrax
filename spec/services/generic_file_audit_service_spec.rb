@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Sufia::GenericFileAuditService do
   let(:f) do
     GenericFile.create do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
       f.apply_depositor_metadata('mjg36')
     end
   end
@@ -14,7 +14,7 @@ describe Sufia::GenericFileAuditService do
     before do
       # force a second version
       gf = GenericFile.find(f.id)
-      gf.add_file('hello two', 'content', 'hello2.txt')
+      gf.add_file('hello two', path: 'content', original_name: 'hello2.txt')
       gf.save!
     end
 
@@ -30,7 +30,7 @@ describe Sufia::GenericFileAuditService do
     before do
       # force a second version
       gf = GenericFile.find(f.id)
-      gf.add_file('hello two', 'content', 'hello2.txt')
+      gf.add_file('hello two', path: 'content', original_name: 'hello2.txt')
       gf.save!
     end
 

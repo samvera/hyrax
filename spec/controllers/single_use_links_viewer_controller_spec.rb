@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe SingleUseLinksViewerController do
   let(:file) do
-    GenericFile.new.tap do |file|
-      file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+    GenericFile.create do |file|
+      file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png', mime_type: 'image/png')
+      file.label = 'world.png'
       file.apply_depositor_metadata('mjg')
-      file.save!
     end
   end
 
@@ -34,20 +34,16 @@ describe SingleUseLinksViewerController do
         get :download, id: download_link_hash
         expect(response.body).to eq expected_content
         expect(response).to be_success
+        expect { SingleUseLink.find_by_downloadKey!(download_link_hash) }.to raise_error ActiveRecord::RecordNotFound
       end
 
-      it "and_return 404 on second attempt" do
-        get :download, id: download_link_hash
-        expect(response).to be_success
-        get :download, id: download_link_hash
-        expect(response).to render_template('error/single_use_error')
-      end
+      context "and the key is not found" do
+        before { SingleUseLink.find_by_downloadKey!(download_link_hash).destroy }
 
-      it "and_return 404 on attempt to get download with show" do
-        get :download, id: download_link_hash
-        expect(response).to be_success
-        get :show, id:download_link_hash
-        expect(response).to render_template('error/single_use_error')
+        it "returns 404 if the key is not present" do
+          get :download, id: download_link_hash
+          expect(response).to render_template('error/single_use_error')
+        end
       end
     end
 
@@ -56,15 +52,18 @@ describe SingleUseLinksViewerController do
         get 'show', id: show_link_hash
         expect(response).to be_success
         expect(assigns[:asset].id).to eq file.id
+        expect { SingleUseLink.find_by_downloadKey!(show_link_hash) }.to raise_error ActiveRecord::RecordNotFound
       end
 
-      it "and_return 404 on second attempt" do
-        get :show, id: show_link_hash
-        expect(response).to be_success
-        get :show, id: show_link_hash
-        expect(response).to render_template('error/single_use_error')
+      context "and the key is not found" do
+        before { SingleUseLink.find_by_downloadKey!(show_link_hash).destroy }
+        it "returns 404 if the key is not present" do
+          get :show, id: show_link_hash
+          expect(response).to render_template('error/single_use_error')
+        end
       end
-      it "and_return 404 on attempt to get show path with download hash" do
+
+      it "returns 404 on attempt to get show path with download hash" do
         get :show, id: download_link_hash
         expect(response).to render_template('error/single_use_error')
       end

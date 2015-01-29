@@ -4,7 +4,7 @@ describe FileContentDatastream, :type => :model do
   describe "#latest_version" do
     let(:file) do
       GenericFile.create do |f|
-        f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
         f.apply_depositor_metadata('mjg36')
       end
     end
@@ -16,7 +16,7 @@ describe FileContentDatastream, :type => :model do
 
     context "with two versions" do
       before do
-        file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
         file.save
       end
       subject { file.content.latest_version.label }
@@ -44,13 +44,13 @@ describe FileContentDatastream, :type => :model do
     end
 
     it "should only return true when the datastream has actually changed" do
-      @generic_file.add_file(File.open(fixture_path + '/world.png', 'rb'), 'content', 'world.png')
+      @generic_file.add_file(File.open(fixture_path + '/world.png', 'rb'), path: 'content', original_name: 'world.png')
       expect(@generic_file.content).to be_changed
       @generic_file.save!
       expect(@generic_file.content).to_not be_changed
 
       # Add a thumbnail ds
-      @generic_file.add_file(File.open(fixture_path + '/world.png'), 'thumbnail', 'world.png')
+      @generic_file.add_file(File.open(fixture_path + '/world.png'), path: 'thumbnail', original_name: 'world.png')
       expect(@generic_file.thumbnail).to be_changed
       expect(@generic_file.content).to_not be_changed
 

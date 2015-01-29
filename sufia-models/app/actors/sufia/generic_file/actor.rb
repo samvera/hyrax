@@ -28,8 +28,10 @@ module Sufia::GenericFile
       yield(generic_file) if block_given?
     end
 
-    def create_content(file, file_name, dsid)
-      generic_file.add_file(file, dsid, file_name.truncate(255))
+    def create_content(file, file_name, path, mime_type)
+      generic_file.add_file(file, path: path, original_name: file_name, mime_type: mime_type)
+      generic_file.label ||= file_name
+      generic_file.title = [file_name] if generic_file.title.blank?
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_create_content)
           Sufia.config.after_create_content.call(generic_file, user)
@@ -47,8 +49,8 @@ module Sufia::GenericFile
       end
     end
 
-    def update_content(file, datastream_id)
-      generic_file.add_file(file, datastream_id, file.original_filename)
+    def update_content(file, path)
+      generic_file.add_file(file, path: path, original_name: file.original_filename, mime_type: file.content_type)
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_update_content)
           Sufia.config.after_update_content.call(generic_file, user)

@@ -4,10 +4,7 @@ describe CreateDerivativesJob do
   before do
     @ffmpeg_enabled = Sufia.config.enable_ffmpeg
     Sufia.config.enable_ffmpeg = true
-    @generic_file = GenericFile.new.tap do |gf|
-      gf.apply_depositor_metadata('jcoyne@example.com')
-      gf.save
-    end
+    @generic_file = GenericFile.create { |gf| gf.apply_depositor_metadata('jcoyne@example.com') }
   end
 
   after do
@@ -17,12 +14,14 @@ describe CreateDerivativesJob do
   subject { CreateDerivativesJob.new(@generic_file.id) }
 
   describe 'thumbnail generation' do
+    before do
+      @generic_file.add_file(File.open(fixture_path + '/' + file_name), path: 'content', original_name: file_name, mime_type: mime_type)
+      allow_any_instance_of(GenericFile).to receive(:mime_type).and_return(mime_type)
+      @generic_file.save!
+    end
     context 'with a video (.avi) file', unless: $in_travis do
-      before do
-        @generic_file.add_file(File.open(fixture_path + '/countdown.avi'), 'content', 'countdown.avi')
-        allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('video/avi')
-        @generic_file.save!
-      end
+      let(:mime_type) { 'video/avi' }
+      let(:file_name) { 'countdown.avi' }
 
       it 'lacks a thumbnail' do
         expect(@generic_file.thumbnail).not_to have_content
@@ -37,11 +36,8 @@ describe CreateDerivativesJob do
     end
 
     context 'with an audio (.wav) file', unless: $in_travis do
-      before do
-        @generic_file.add_file(File.open(fixture_path + '/piano_note.wav'), 'content', 'piano_note.wav')
-        allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('audio/wav')
-        @generic_file.save!
-      end
+      let(:mime_type) { 'audio/wav' }
+      let(:file_name) { 'piano_note.wav' }
 
       it 'lacks a thumbnail' do
         expect(@generic_file.thumbnail).not_to have_content
@@ -55,11 +51,8 @@ describe CreateDerivativesJob do
     end
 
     context 'with an image (.jp2) file' do
-      before do
-        @generic_file.add_file(File.open(fixture_path + '/image.jp2'), 'content', 'image.jp2')
-        allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('image/jp2')
-        @generic_file.save!
-      end
+      let(:mime_type) { 'image/jp2' }
+      let(:file_name) { 'image.jp2' }
 
       it 'lacks a thumbnail' do
         expect(@generic_file.thumbnail).not_to have_content
@@ -74,11 +67,8 @@ describe CreateDerivativesJob do
     end
 
     context 'with an office document (.docx) file', unless: $in_travis do
-      before do
-        @generic_file.add_file(File.open(fixture_path + '/charter.docx'), 'content', 'charter.docx')
-        allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-        @generic_file.save!
-      end
+      let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+      let(:file_name) { 'charter.docx' }
 
       it 'lacks a thumbnail' do
         expect(@generic_file.thumbnail).not_to have_content
@@ -94,12 +84,14 @@ describe CreateDerivativesJob do
   end
 
   describe 'audiovisual transcoding' do
+    before do
+      @generic_file.add_file(File.open(fixture_path + '/' + file_name), path: 'content', original_name: file_name, mime_type: mime_type)
+      allow_any_instance_of(GenericFile).to receive(:mime_type).and_return(mime_type)
+      @generic_file.save!
+    end
     context 'with a video (.avi) file', unless: $in_travis do
-      before do
-        @generic_file.add_file(File.open(fixture_path + '/countdown.avi'), 'content', 'countdown.avi')
-        allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('video/avi')
-        @generic_file.save!
-      end
+      let(:mime_type) { 'video/avi' }
+      let(:file_name) { 'countdown.avi' }
 
       it 'transcodes to webm and mp4' do
         subject.run
@@ -117,11 +109,8 @@ describe CreateDerivativesJob do
     end
 
     context 'with an audio (.wav) file', unless: $in_travis do
-      before do
-        @generic_file.add_file(File.open(fixture_path + '/piano_note.wav'), 'content', 'piano_note.wav')
-        allow_any_instance_of(GenericFile).to receive(:mime_type).and_return('audio/wav')
-        @generic_file.save!
-      end
+      let(:mime_type) { 'audio/wav' }
+      let(:file_name) { 'piano_note.wav' }
 
       it 'transcodes to mp3 and ogg' do
         subject.run
@@ -145,8 +134,8 @@ describe CreateDerivativesJob do
       #   @generic_file.save!
       # end
 
-      it 'should copy the content to the mp3 datastream and transcode to ogg' do
-        pending 'Need a way to do this in hydra-derivatives'
+      #Need a way to do this in hydra-derivatives
+      it 'should copy the content to the mp3 datastream and transcode to ogg', skip: true do
         subject.run
         reloaded = @generic_file.reload
         derivative = reloaded.attached_files['mp3']
@@ -166,8 +155,8 @@ describe CreateDerivativesJob do
       #   @generic_file.save!
       # end
 
-      it 'should copy the content to the ogg datastream and transcode to mp3' do
-        pending 'Need a way to do this in hydra-derivatives'
+      #Need a way to do this in hydra-derivatives
+      it 'should copy the content to the ogg datastream and transcode to mp3', skip: true do
         subject.run
         reloaded = @generic_file.reload
         derivative = reloaded.attached_files['mp3']

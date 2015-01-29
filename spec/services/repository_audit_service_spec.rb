@@ -4,7 +4,7 @@ describe Sufia::RepositoryAuditService do
   let(:user) { FactoryGirl.create(:user) }
   let!(:file) do
     GenericFile.create! do |file|
-      file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
       file.apply_depositor_metadata(user)
     end
   end
