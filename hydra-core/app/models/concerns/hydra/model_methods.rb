@@ -35,9 +35,11 @@ module Hydra::ModelMethods
   # @example Use :only_if_blank option to only update the values when the label is empty
   #   obj.set_title_and_label("My Title", :only_if_blank=> true)
   def set_title_and_label(new_title, opts={})
-    if opts[:only_if_blank] && respond_to?(:label) && label.blank?
-      self.label = new_title
-      set_title new_title
+    if opts[:only_if_blank]
+      if respond_to?(:label) && label.blank?
+        self.label = new_title
+        set_title new_title
+      end
     else
       self.label = new_title if respond_to? :label
       set_title new_title
