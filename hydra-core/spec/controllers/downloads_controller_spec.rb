@@ -25,9 +25,9 @@ describe DownloadsController do
     end
     let(:obj) do
       ContentHolder.new.tap do |obj|
-        obj.add_file('fizz', 'buzz', 'buzz.png', 'image/png')
-        obj.add_file('foobarfoobarfoobar', 'content', 'world.png', 'image/png')
-        obj.add_file("It's a stream", 'descMetadata', 'metadata.xml', 'text/plain')
+        obj.add_file('fizz', path: 'buzz', original_name: 'buzz.png', mime_type: 'image/png')
+        obj.add_file('foobarfoobarfoobar', path: 'content', original_name: 'world.png', mime_type: 'image/png')
+        obj.add_file("It's a stream", path: 'descMetadata', original_name: 'metadata.xml', mime_type: 'text/plain')
         obj.read_users = [@user.user_key]
         obj.save!
       end
