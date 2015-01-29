@@ -1,6 +1,7 @@
 en:
   sufia:
     account_name:       "My Institution Account Id"
+    account_label:      "User"
     deposit_agreement:  "Sufia's Deposit Agreement"
     document_language:  "en"
     upload_tooltip:     "Please accept Deposit Agreement before you can upload."

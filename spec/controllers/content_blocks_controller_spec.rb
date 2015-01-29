@@ -6,8 +6,13 @@ describe ContentBlocksController, :type => :controller do
     before { request.env["HTTP_REFERER"] = "whence_i_came" }
 
     context "when not logged in" do
-      it "should redirect to root path" do
+      it "UPDATE should redirect to sign_in path" do
         patch :update, id: content_block, content_block: { value: 'foo' }
+        expect(response).to redirect_to main_app.new_user_session_path
+      end
+
+      it "CREATE should redirect to sign_in path" do
+        post :create, content_block: { name: 'NNN', value: 'VVV' }
         expect(response).to redirect_to main_app.new_user_session_path
       end
     end
@@ -19,16 +24,31 @@ describe ContentBlocksController, :type => :controller do
       context "as a user in the admin group" do
         before { expect(user).to receive(:groups).and_return( ['admin', 'registered']) }
 
-        it "should save" do
+        it "UPDATE should save" do
           patch :update, id: content_block, content_block: { value: 'foo' }
           expect(response).to redirect_to "whence_i_came"
           expect(assigns[:content_block].value).to eq 'foo'
         end
+
+        it "CREATE should save" do
+          expect {
+            post :create, content_block: { name: 'NNN', value: 'VVV', external_key: 'key' }
+          }.to change { ContentBlock.count}.by(1)
+          expect(response).to redirect_to "whence_i_came"
+          expect(assigns[:content_block].name).to eq 'NNN'
+          expect(assigns[:content_block].value).to eq 'VVV'
+          expect(assigns[:content_block].external_key).to eq 'key'
+        end
       end
 
       context "as a user without permission" do
-        it "should redirect to root path" do
+        it "UPDATE should redirect to root path" do
           patch :update, id: content_block, content_block: { value: 'foo' }
+          expect(response).to redirect_to root_path
+        end
+
+        it "CREATE should redirect to root path" do
+          post :create, content_block: { name: 'NNN', value: 'VVV' }
           expect(response).to redirect_to root_path
         end
       end

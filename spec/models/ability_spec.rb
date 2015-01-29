@@ -7,6 +7,7 @@ describe Sufia::Ability, :type => :model do
     subject { Ability.new(user) }
     it { is_expected.not_to be_able_to(:create, GenericFile) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
+    it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
   end
 
@@ -15,6 +16,7 @@ describe Sufia::Ability, :type => :model do
     subject { Ability.new(user) }
     it { is_expected.to be_able_to(:create, GenericFile) }
     it { is_expected.not_to be_able_to(:create, TinymceAsset) }
+    it { is_expected.not_to be_able_to(:create, ContentBlock) }
     it { is_expected.not_to be_able_to(:update, ContentBlock) }
   end
 
@@ -24,6 +26,7 @@ describe Sufia::Ability, :type => :model do
     subject { Ability.new(user) }
     it { is_expected.to be_able_to(:create, GenericFile) }
     it { is_expected.to be_able_to(:create, TinymceAsset) }
+    it { is_expected.to be_able_to(:create, ContentBlock) }
     it { is_expected.to be_able_to(:update, ContentBlock) }
   end
 

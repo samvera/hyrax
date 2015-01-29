@@ -37,7 +37,7 @@ module Sufia
     def editor_abilities
       if user_groups.include? 'admin'
         can :create, TinymceAsset
-        can :update, ContentBlock
+        can [:create, :update], ContentBlock
       end
     end
 

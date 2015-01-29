@@ -37,7 +37,8 @@ This generator makes the following changes to your application:
       'add_linkedin_to_users.rb',
       'create_tinymce_assets.rb',
       'create_content_blocks.rb',
-      'create_featured_works.rb'
+      'create_featured_works.rb',
+      'add_external_key_to_content_blocks.rb'
     ].each do |file|
       better_migration_template file
     end
