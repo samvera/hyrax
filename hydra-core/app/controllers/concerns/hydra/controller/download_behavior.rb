@@ -6,6 +6,7 @@ module Hydra
 
       included do
         include Hydra::Controller::ControllerBehavior
+        include ActionController::Live
         before_filter :authorize_download!
       end
 
@@ -89,7 +90,7 @@ module Hydra
 
       # Create some headers for the datastream
       def content_options
-        {disposition: 'inline', type: file.mime_type, filename: file_name}
+        { disposition: 'inline', type: file.mime_type, filename: file_name }
       end
 
       # Override this if you'd like a different filename
@@ -113,7 +114,6 @@ module Hydra
         head :ok
       end
 
-
       # render an HTTP Range response
       def send_range
         _, range = request.headers['HTTP_RANGE'].split('bytes=')
@@ -124,21 +124,13 @@ module Hydra
         response.headers['Content-Length'] = "#{length}"
         self.status = 206
         prepare_file_headers
-        file.stream(request.headers['HTTP_RANGE']) do |block|
-          response.stream.write block
-        end
-      ensure
-        response.stream.close
+        stream_body file.stream(request.headers['HTTP_RANGE'])
       end
 
       def send_file_contents
         self.status = 200
         prepare_file_headers
-        file.stream do |block|
-          response.stream.write block
-        end
-      ensure
-        response.stream.close
+        stream_body file.stream
       end
 
       def prepare_file_headers
@@ -148,6 +140,14 @@ module Hydra
       end
 
       private
+
+      def stream_body(iostream)
+        iostream.each do |in_buff|
+          response.stream.write in_buff
+        end
+      ensure
+        response.stream.close
+      end
 
       def default_content_ds
         Deprecation.warn(DownloadBehavior, "default_content_ds is deprecated and will be removed in hydra-head 10.0, use default_file instead")

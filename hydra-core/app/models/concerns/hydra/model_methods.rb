@@ -13,12 +13,12 @@ module Hydra::ModelMethods
   #
   # @param [#read] file the IO object that is the blob
   # @param [String] file the IO object that is the blob
-  def add_file(file, dsid, file_name, mime_type=nil)
+  def add_file(file, path, file_name, mime_type=nil)
     mime_type ||= best_mime_for_filename(file_name)
-    options = {label: file_name, mime_type: mime_type, original_name: file_name}
-    options[:dsid] = dsid if dsid
-    add_file_datastream(file, options)
-    set_title_and_label( file_name, only_if_blank: true )
+    options = { mime_type: mime_type, original_name: file_name }
+    options[:path] = path if path
+    super(file, options)
+    set_title_and_label(file_name, only_if_blank: true)
   end
 
   def best_mime_for_filename(file_name)
@@ -35,14 +35,12 @@ module Hydra::ModelMethods
   # @example Use :only_if_blank option to only update the values when the label is empty
   #   obj.set_title_and_label("My Title", :only_if_blank=> true)
   def set_title_and_label(new_title, opts={})
-    if opts[:only_if_blank]
-      if self.label.nil? || self.label.empty?
-        self.label = new_title
-        self.set_title( new_title )
-      end
-    else
+    if opts[:only_if_blank] && respond_to?(:label) && label.blank?
       self.label = new_title
-      set_title( new_title )
+      set_title new_title
+    else
+      self.label = new_title if respond_to? :label
+      set_title new_title
     end
   end
 
@@ -54,6 +52,7 @@ module Hydra::ModelMethods
     if respond_to? :title=
       self.title = self.class.multiple?(:title) ? Array(new_title) : new_title
     elsif attached_files.has_key?("descMetadata")
+      Deprecation.warn ModelMethods, 'setting title in descMetadata is deprecated and will be remove in hydra-head 10.0. If you need this behavior declare `has_attribute :title`'
       if descMetadata.respond_to?(:title_values)
         descMetadata.title_values = new_title
       else
