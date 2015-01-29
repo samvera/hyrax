@@ -18,7 +18,6 @@ describe DownloadsController do
   describe "with a file" do
     before do
       class ContentHolder < ActiveFedora::Base
-        include Hydra::ModelMethods
         include Hydra::AccessControls::Permissions
         contains 'thumbnail'
       end

@@ -1,19 +1,11 @@
 require 'mime/types'
 
 module Hydra::ModelMethods
+  extend ActiveSupport::Concern
 
-  # Adds metadata about the depositor to the asset
-  # Most important behavior: if the asset has a rightsMetadata datastream, this method will add +depositor_id+ to its individual edit permissions.
-  # @param [String, #user_key] depositor
-  #
-  def apply_depositor_metadata(depositor)
-    depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
-
-    if respond_to? :depositor
-      self.depositor = depositor_id
-    end
-    self.edit_users += [depositor_id]
-    return true
+  included do
+    Deprecation.warn self, "Hydra::ModelMethods is deprecated and will be remove in hydra-head 10.0.0", caller(3)
+    include Hydra::WithDepositor
   end
 
   # Puts the contents of file (posted blob) into a datastream and sets the title and label
