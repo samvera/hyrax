@@ -8,6 +8,7 @@ describe Hydra::ModelMethods do
       include Hydra::AccessControls::Permissions
       include Hydra::ModelMethods
       property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false
+      attr_accessor :label
     end
   end
 
@@ -30,6 +31,29 @@ describe Hydra::ModelMethods do
       expect(subject).to receive(:set_title_and_label).with(file_name, only_if_blank: true )
       subject.add_file(mock_file, 'bar', file_name, 'image/png')
       expect(subject.bar.content).to eq mock_file
+    end
+  end
+
+  describe '#set_title_and_label' do
+    context 'when only_if_blank is true' do
+      before do
+        subject.label = initial_label
+        subject.set_title_and_label('second', only_if_blank: true)
+      end
+
+      context 'and label is already set' do
+        let(:initial_label) { 'first' }
+        it "should not update the label" do
+          expect(subject.label).to eq 'first'
+        end
+      end
+
+      context 'and label is not already set' do
+        let(:initial_label) { nil }
+        it "should not update the label" do
+          expect(subject.label).to eq 'second'
+        end
+      end
     end
   end
 
