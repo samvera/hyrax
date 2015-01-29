@@ -33,7 +33,7 @@ module GenericFileHelper
     if title.nil?
       image_tag "default.png", { alt: "No preview available", class: "img-responsive" }
     else
-      image_tag sufia.download_path(@generic_file, datastream_id: 'thumbnail'), { class: "img-responsive", alt: "#{title} of #{@generic_file.title.first}" }
+      image_tag sufia.download_path(@generic_file, file: 'thumbnail'), { class: "img-responsive", alt: "#{title} of #{@generic_file.title.first}" }
     end
   end
 

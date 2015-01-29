@@ -220,7 +220,7 @@ describe 'generic_files/show.html.erb', :type => :view do
 
     it 'displays og:image' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:image']")
-      expect(tag.attribute('content').value).to eq('http://test.host/downloads/123?datastream_id=thumbnail')
+      expect(tag.attribute('content').value).to eq('http://test.host/downloads/123?file=thumbnail')
     end
 
     it 'displays og:url' do

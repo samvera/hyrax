@@ -10,9 +10,9 @@ module Sufia
       end
     end
 
-  
+
     private
-    
+
     def perform_local_ingest
       if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
         if ingest_local_file
@@ -61,6 +61,5 @@ module Sufia
         Sufia.queue.push(IngestLocalFileJob.new(gf.id, current_user.directory, filename, current_user.user_key))
       end
     end
-    
   end # /FilesController::LocalIngestBehavior
 end # /Sufia

@@ -2,7 +2,8 @@ require 'sufia/single_use_error'
 
 class SingleUseLinksViewerController < ApplicationController
   include Sufia::DownloadsControllerBehavior
-  skip_before_filter :load_datastream, except: :download
+
+  skip_before_filter :load_file, except: :download
 
   class Ability
     include CanCan::Ability
@@ -25,7 +26,6 @@ class SingleUseLinksViewerController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :render_single_use_error
 
   def download
-    # send the data content
     raise not_found_exception unless single_use_link.path == sufia.download_path(id: @asset)
     send_content
   end
@@ -52,7 +52,7 @@ class SingleUseLinksViewerController < ApplicationController
   end
 
   def single_use_link
-    @single_use_link ||= SingleUseLink.find_by_downloadKey! params[:id]
+    @single_use_link ||= SingleUseLink.find_by_downloadKey!(params[:id])
   end
 
   def not_found_exception

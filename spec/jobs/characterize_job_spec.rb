@@ -5,15 +5,10 @@ describe CharacterizeJob do
     allow_any_instance_of(GenericFile).to receive(:reload_on_save?).and_return(false)
     # Don't actually create the derivatives -- that is tested elsewhere
     allow_any_instance_of(GenericFile).to receive(:create_derivatives)
-    @generic_file = GenericFile.new.tap do |gf|
+    @generic_file = GenericFile.create do |gf|
       gf.apply_depositor_metadata('jcoyne@example.com')
-      gf.add_file(File.open(fixture_path + '/charter.docx'), 'content', 'charter.docx')
-      gf.save
+      gf.add_file(File.open(fixture_path + '/charter.docx'), path: 'content', original_name: 'charter.docx')
     end
-  end
-
-  after do
-    @generic_file.destroy
   end
 
   subject { CharacterizeJob.new(@generic_file.id)}

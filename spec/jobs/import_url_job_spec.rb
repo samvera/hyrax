@@ -7,17 +7,17 @@ describe ImportUrlJob do
   let(:file_hash)  {'/673467823498723948237462429793840923582'}
 
   let(:generic_file) do
-    GenericFile.new.tap do |f|
+    GenericFile.create do |f|
       f.import_url = "http://example.org#{file_hash}"
       f.label = file_path
       f.apply_depositor_metadata(user.user_key)
-      f.save
     end
   end
 
   let(:mock_response) do
     double('response').tap do |http_res|
       allow(http_res).to receive(:start).and_yield
+      allow(http_res).to receive(:content_type).and_return('image/png')
       allow(http_res).to receive(:read_body).and_yield(File.open(File.expand_path('../../fixtures/world.png', __FILE__)).read)
     end
   end

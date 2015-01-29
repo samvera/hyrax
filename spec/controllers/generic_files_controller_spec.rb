@@ -42,7 +42,7 @@ describe GenericFilesController do
       context "when everything is perfect" do
         render_views
         it "spawns a content deposit event job" do
-          expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content').and_return(true)
+          expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content', 'image/png').and_return(true)
           xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
           expect(response.body).to eq '[{"name":null,"size":"","url":"/files/test123","thumbnail_url":"test123","delete_url":"deleteme","delete_type":"DELETE"}]'
           expect(flash[:error]).to be_nil
@@ -213,7 +213,7 @@ describe GenericFilesController do
   describe "audit" do
     let(:generic_file) do
       GenericFile.create do |gf|
-        gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        gf.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
         gf.apply_depositor_metadata(user)
       end
     end
@@ -407,8 +407,8 @@ describe GenericFilesController do
 
       before do
         allow_any_instance_of(GenericFile).to receive(:characterize)
-        actor1.create_content(fixture_file_upload(file1), file1, 'content')
-        actor2.create_content(fixture_file_upload(file2), file2, 'content')
+        actor1.create_content(fixture_file_upload(file1), file1, 'content', file1_type)
+        actor2.create_content(fixture_file_upload(file2), file2, 'content', file2_type)
       end
 
       describe "restoring a previous version" do
@@ -506,7 +506,7 @@ describe GenericFilesController do
     let(:generic_file) do
       GenericFile.create(id: 'test5') do |f|
         f.apply_depositor_metadata('archivist1@example.com')
-        f.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+        f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
         # grant public read access explicitly
         f.read_groups = ['public']
       end

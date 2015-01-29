@@ -4,7 +4,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   describe "image" do
     before(:all) do
       @file = GenericFile.new(id: 'foo123')
-      @file.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      @file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
       @file.characterize
     end
     it "should have a format label" do
@@ -43,13 +43,13 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
     it "should index into solr" do
       expect(solr_doc[Solrizer.solr_name("mime_type")].first).to eq "image/png"
-    end 
+    end
   end
 
   describe "video" do
     before(:all) do
       @file = GenericFile.new(id: 'foo123')
-      @file.add_file(File.open(fixture_path + '/sample_mpeg4.mp4'), 'content', 'sample_mpeg4.mp4')
+      @file.add_file(File.open(fixture_path + '/sample_mpeg4.mp4'), path: 'content', original_name: 'sample_mpeg4.mp4')
       @file.characterize
     end
     it "should have a format label" do
@@ -91,7 +91,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   describe "pdf" do
     before do
       @myfile = GenericFile.new(id: 'foo123')
-      @myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, 'content', 'sufia_test4.pdf')
+      @myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, path: 'content', original_name: 'sufia_test4.pdf', mime_type: 'application/pdf')
       @myfile.apply_depositor_metadata('mjg36')
       # characterize method saves
       @myfile.characterize

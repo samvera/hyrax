@@ -7,7 +7,7 @@ describe ChecksumAuditLog do
 
   let(:f) do
     GenericFile.create do |gf|
-      gf.add_file(File.open(fixture_path + '/world.png'), 'content', 'world.png')
+      gf.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
       gf.apply_depositor_metadata('mjg36')
     end
   end
