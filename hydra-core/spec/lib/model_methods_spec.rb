@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Hydra::ModelMethods do
 
-  before :all do
+  before do
+    allow(Deprecation).to receive(:warn)
     class TestModel < ActiveFedora::Base
       include Hydra::AccessControls::Permissions
       include Hydra::ModelMethods
@@ -10,31 +11,9 @@ describe Hydra::ModelMethods do
     end
   end
 
+  after { Object.send(:remove_const, :TestModel) }
+
   subject { TestModel.new }
-
-  describe "apply_depositor_metadata" do
-    it "should add edit access" do
-      subject.apply_depositor_metadata('naomi')
-      expect(subject.edit_users).to eq ['naomi']
-    end
-
-    it "should not overwrite people with edit access" do
-      subject.edit_users = ['jessie']
-      subject.apply_depositor_metadata('naomi')
-      expect(subject.edit_users).to match_array ['naomi', 'jessie']
-    end
-
-    it "should set depositor" do
-      subject.apply_depositor_metadata('chris')
-      expect(subject.depositor).to eq 'chris'
-    end
-
-    it "should accept objects that respond_to? :user_key" do
-      stub_user = double(:user, user_key: 'monty')
-      subject.apply_depositor_metadata(stub_user)
-      expect(subject.depositor).to eq 'monty'
-    end
-  end
 
   describe 'add_file' do
     let(:file_name) { "my_file.foo" }
@@ -57,6 +36,7 @@ describe Hydra::ModelMethods do
   describe '#set_title' do
     context "on a class with a title property" do
       before do
+        expect(Deprecation).to receive(:warn)
         class WithProperty < ActiveFedora::Base
           include Hydra::ModelMethods
           property :title, predicate: ::RDF::DC.title
