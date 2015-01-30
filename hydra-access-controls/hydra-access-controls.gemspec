@@ -31,5 +31,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sass-rails'
 
   gem.add_development_dependency "rake", '~> 10.1'
-  gem.add_development_dependency 'rspec' '~> 3.1'
+  gem.add_development_dependency 'rspec', '~> 3.1'
 end
