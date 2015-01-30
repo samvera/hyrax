@@ -1,3 +1,2 @@
 gem 'rspec-rails', '~> 3.1', group: :test
 gem 'rspec-its'
-gem 'active-fedora', github: 'projecthydra/active_fedora', ref: 'c53b3e4'

@@ -18,13 +18,12 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
-  gem.add_dependency "rails", '>= 3.2.3', '< 5'
-  gem.add_dependency 'block_helpers'
+  gem.add_dependency "rails", '~> 4.0'
   gem.add_dependency 'hydra-access-controls', version
   gem.add_dependency 'jettywrapper', '>= 2.0.0'
 
-  gem.add_development_dependency 'sqlite3'
-  gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'rspec-rails'
-  gem.add_development_dependency 'factory_girl_rails'
+  gem.add_development_dependency 'sqlite3', '~> 1.3'
+  gem.add_development_dependency 'yard', '~> 0.8.7'
+  gem.add_development_dependency 'rspec-rails', '~> 3.1'
+  gem.add_development_dependency 'factory_girl_rails', '~> 4.2'
 end
