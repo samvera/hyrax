@@ -19,19 +19,20 @@ class IngestLocalFileJob
     generic_file = GenericFile.find(generic_file_id)
     path = File.join(directory, filename)
 
-    generic_file.label = File.basename(filename)
-    generic_file.add_file(File.open(path), path: 'content', original_name: generic_file.label, mime_type: mime_type(filename))
-    generic_file.record_version_committer(user)
-    generic_file.save!
+    actor = Sufia::GenericFile::Actor.new(generic_file, user)
 
-    FileUtils.rm(path)
-    Sufia.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
+    if actor.create_content(File.open(path), filename, 'content', mime_type(filename))
+      FileUtils.rm(path)
+      Sufia.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
 
-    # add message to user for downloaded file
-    message = "The file (#{File.basename(filename)}) was successfully deposited."
-    job_user.send_message(user, message, 'Local file ingest')
-  rescue => error
-    job_user.send_message(user, error.message, 'Local file ingest error')
+      message = "The file (#{File.basename(filename)}) was successfully deposited."
+      subject = 'Local file ingest'
+    else
+      message = "There was a problem depositing #{File.basename(filename)}. Please contact a system admin."
+      subject = 'Local file ingest error'
+    end
+
+    job_user.send_message(user, message, subject)
   end
 
   def job_user
