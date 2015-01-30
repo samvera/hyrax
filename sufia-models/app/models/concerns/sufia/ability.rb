@@ -39,6 +39,7 @@ module Sufia
         can :create, TinymceAsset
         can [:create, :update], ContentBlock
       end
+      can :read, ContentBlock
     end
 
     def stats_abilities

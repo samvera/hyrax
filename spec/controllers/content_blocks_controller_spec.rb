@@ -15,6 +15,20 @@ describe ContentBlocksController, :type => :controller do
         post :create, content_block: { name: 'NNN', value: 'VVV' }
         expect(response).to redirect_to main_app.new_user_session_path
       end
+
+      context "get INDEX" do
+        let!(:current_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: Time.now) }
+        let!(:old_researcher) { ContentBlock.create(name: ContentBlock::RESEARCHER, created_at: 2.hours.ago) }
+        let!(:market_text) { ContentBlock.create(name: ContentBlock::MARKETING) }
+
+        before { get :index }
+
+        it "displays the list of featured researchers" do
+          expect(response).to be_successful
+          expect(response).to render_template(:index)
+          expect(assigns(:content_blocks)).to eq [current_researcher, old_researcher]
+        end
+      end
     end
 
     context "when logged in" do
