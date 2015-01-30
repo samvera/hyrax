@@ -1,3 +1,192 @@
+h3. 9.0.0 (2015-1-30)
+* 2015-01-30: Update gemspecs to point at ActiveFedora 9.0.0 Also added versions
+to gems that didn't have any. Fixes #192 Removed unused block_helpers depenency
+[Justin Coyne]
+
+* 2015-01-29: Fix broken specs. parameters passed to add_file were wrong [Justin
+Coyne]
+
+* 2015-01-29: Revert refactor of set_title_and_label from 5ba3481 It was not
+respecting only_if_blank if label was already set [Justin Coyne]
+
+* 2015-01-28: Deprecate Hydra::ModelMethods extract apply_depositor_metadata to
+Hydra::WithDepositor [Justin Coyne]
+
+* 2015-01-28: Refactor add_file so that it works with ActiveFedora ActiveFedora
+already has an add_file method that would clash without these changes [Justin
+Coyne]
+
+* 2015-01-28: Downloads should be streaming [Justin Coyne]
+
+* 2015-01-27: Deprecated Properties datastream set a custom "depositor" RDF
+property on the model instead [Justin Coyne]
+
+* 2015-01-27: Remove datastream from download Datastreams don't exist in Fedora 4,
+we use files instead [Justin Coyne]
+
+* 2015-01-23: Remove apply_superuser_permissions. This method wasn't doing
+anything [Justin Coyne]
+
+* 2015-01-16: Preparing for 9.0.0.rc3 release [Michael J. Giarlo]
+
+* 2015-01-16: Bump version to 9.0.0.rc3 [Michael J. Giarlo]
+
+* 2015-01-15: Point at updated jettywrapper and remove config_fedora task that is
+FCR3-specific [Michael J. Giarlo]
+
+* 2015-01-16: Refactor how access denied errors are handled This enables
+applications to override the behavior. [Justin Coyne]
+
+* 2015-01-12: Fix indenting on the lines the generator injects into the User class
+[Justin Coyne]
+
+* 2015-01-07: Preparing for 9.0.0.rc2 release [Michael J. Giarlo]
+
+* 2015-01-07: Pointing at AF 9.0.0.rc1 and bumping version to 9.0.0.rc1 [Michael
+J. Giarlo]
+
+* 2014-12-19: Test with the final release of rails 4.2 [Justin Coyne]
+
+* 2014-12-19: Preparing for 9.0.0.beta2 release [Justin Coyne]
+
+* 2014-12-19: Set title should set the title property if it's defined. Fixes #227
+[Justin Coyne]
+
+* 2014-12-17: Use the container based travis builds [Justin Coyne]
+
+* 2014-12-15: Compatibility with AF 9.0.0.beta7 -- explicitly declares
+single-value metadata fields [Matt Zumwalt]
+
+* 2014-12-04: Test with hydra-jetty v8.1.0 [Justin Coyne]
+
+* 2014-12-03: Preparing for 9.0.0.beta1 release [Justin Coyne]
+
+* 2014-12-03: Update rspec syntax [Justin Coyne]
+
+* 2014-12-03: Remove deprecated initialization of AF::File [Justin Coyne]
+
+* 2014-12-03: Use active-fedora 9.0.0.beta1 [Justin Coyne]
+
+* 2014-12-03: Cleanup rebase [Justin Coyne]
+
+* 2014-12-01: Remove calls to deprecated methods [Justin Coyne]
+
+* 2014-12-01: The APO lookup should use the correct solr_key [Justin Coyne]
+
+* 2014-12-01: Support for Rails 4.2.rc1 [Justin Coyne]
+
+* 2014-12-01: Use the predicate option instead of the deprecated option "property"
+[Justin Coyne]
+
+* 2014-11-15: Using ::RDF [Justin Coyne]
+
+* 2014-11-15: Updating AF 9 beta1 and hydra-jetty [Justin Coyne]
+
+* 2014-11-13: Use key? instead of keys.include? [Justin Coyne]
+
+* 2014-11-13: Reduce the number of writes to improve test performance [Justin
+Coyne]
+
+* 2014-11-13: Use the correct solr doc [Justin Coyne]
+
+* 2014-11-13: Fixed typo [Justin Coyne]
+
+* 2014-11-11: Use fcrepo4 beta 4 [Justin Coyne]
+
+* 2014-11-11: Datastream no longer has a digital_object to reference. Use the URI
+[Justin Coyne]
+
+* 2014-11-06: Extracting constant for magic strings [Justin Coyne]
+
+* 2014-11-05: Expose accessors for the properties on Permission [Justin Coyne]
+
+* 2014-11-03: Replace deprecated method pid with id [Justin Coyne]
+
+* 2014-10-31: ActiveFedora can specify the ldp dependency [Justin Coyne]
+
+* 2014-10-31: Allow the version of active-triples to be provided by active-fedora
+[Justin Coyne]
+
+* 2014-10-31: Removed call to deprecated datastreams method. Use attached_files
+instead [Justin Coyne]
+
+* 2014-10-30: Remove unused test file [Justin Coyne]
+
+* 2014-10-30: Replace deprecated has_metadata with contains [Justin Coyne]
+
+* 2014-10-30: Changed Datastream to File [Justin Coyne]
+
+* 2014-10-30: Test on rails 4.2.beta4 [Justin Coyne]
+
+* 2014-10-15: Move embargo and lease logic from Embargoable and into Embargo and
+Lease classes [Justin Coyne]
+
+* 2014-10-15: Fix hydra-core specs to work without rightsMetadata [Justin Coyne]
+
+* 2014-10-15: Remove the rightsMetadata datastreams [Justin Coyne]
+
+* 2014-10-15: Switch from use Hydra rightsMetadata XML to web access controls
+[Justin Coyne]
+
+* 2014-10-10: Unset pending on a test that is resolved with a Fedora upgrade
+[Justin Coyne]
+
+* 2014-10-10: Use a proper URI in the datastream test [Justin Coyne]
+
+* 2014-10-09: Make the base uri before trying to use it [Justin Coyne]
+
+* 2014-10-09: Lock to 0.0.8 version of ldp [Justin Coyne]
+
+* 2014-10-09: Upgrade hydra-jetty to fedora-4/master [Justin Coyne]
+
+* 2014-08-12: Decouple depositor from the properties datastream This enables a
+Fedora 4 app to just store the depositor as an assertion on the object [Justin
+Coyne]
+
+* 2014-07-25: ModelMethods#add_file should set the original_name. Fixes #198
+[Justin Coyne]
+
+* 2014-07-25: Allow user to supply mime-type to add_file. Ref. #198 [Justin Coyne]
+
+* 2014-07-23: Require mime-types gem [Justin Coyne]
+
+* 2014-07-23: Add backtraces on travis [Justin Coyne]
+
+* 2014-07-23: Convert download_controller to use ActiveFedora 8 [Justin Coyne]
+
+* 2014-07-22: Remove fixtures [Justin Coyne]
+
+* 2014-07-22: Working on upgrading the DownloadController to AF 8 [Justin Coyne]
+
+* 2014-07-22: Added sass-rails to gemfiles [Justin Coyne]
+
+* 2014-07-22: Adjust gemfiles for Rails 4.0 and 4.1 testing [Justin Coyne]
+
+* 2014-07-22: Use the fedora-4 version of hydra-jetty [Justin Coyne]
+
+* 2014-07-22: Bump rails version to 4.0.8 [Justin Coyne]
+
+* 2014-07-22: Remove deprecated methods [Justin Coyne]
+
+* 2014-04-24: Changes calls to Hydra::AdminPolicy#create to Hydra::AdminPolicy.new
+which works around an issue where records were not getting deleted due to an
+issue with LDP, combined with an issue where active fedora was updating records
+that were found when #create was called. Whew. [Justin Coyne]
+
+* 2014-04-24: Changes call to ActiveFedora::Datastream#id to
+ActiveFedora::Datastream#digital_object#id. [Justin Coyne]
+
+* 2014-04-24: Fixes bugs introduced by active_fedora 8. Deprecations, and changes
+in method signatures. [Justin Coyne]
+
+* 2014-04-24: setting the version [Justin Coyne]
+
+* 2014-04-24: Fixes undefined constant Deprecation in tests. [Justin Coyne]
+
+* 2014-04-24: First blush on getting an active fedora 8/ fedora 4 hydra-head
+[Justin Coyne]
+
+
 h3. 7.2.1 (2014-9-2)
 * 2014-09-02: Fix problem Cannot define multiple 'included' blocks. #201 & #202
 
