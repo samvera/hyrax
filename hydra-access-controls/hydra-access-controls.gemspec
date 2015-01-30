@@ -18,10 +18,10 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
-  gem.add_dependency 'activesupport'
-  gem.add_dependency "active-fedora", '~> 9.0.0.rc2'
-  gem.add_dependency 'cancancan'
-  gem.add_dependency 'deprecation'
+  gem.add_dependency 'activesupport', '~> 4.0'
+  gem.add_dependency "active-fedora", '~> 9.0.0'
+  gem.add_dependency 'cancancan', '~> 1.8'
+  gem.add_dependency 'deprecation', '~> 0.1.0'
   gem.add_dependency "blacklight", '~> 5.3'
 
   # sass-rails is typically generated into the app's gemfile by `rails new`
@@ -30,6 +30,6 @@ Gem::Specification.new do |gem|
   # declare a dependency on) sass-rails
   gem.add_dependency 'sass-rails'
 
-  gem.add_development_dependency "rake"
-  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency "rake", '~> 10.1'
+  gem.add_development_dependency 'rspec' '~> 3.1'
 end
