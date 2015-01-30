@@ -1,4 +1,5 @@
 Update /HYDRA_VERSION
-
+<pre>
 rake all:release
 git push
+</pre>
