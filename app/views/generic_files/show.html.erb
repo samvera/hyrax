@@ -1,29 +1,26 @@
 <% content_for(:twitter_meta) do %>
-<%
-   tweeter = User.find_by_user_key(@generic_file.depositor).twitter_handle
-   tweeter = tweeter.present? ? "@#{tweeter}" : t('sufia.product_twitter_handle') %>
   <meta name="twitter:card" content="product">
   <meta name="twitter:site" content="<%= t('sufia.product_twitter_handle') %>"/>
-  <meta name="twitter:creator" content="<%= tweeter %>"/>
+  <meta name="twitter:creator" content="<%= @presenter.tweeter %>"/>
   <meta property="og:site_name" content="<%= t('sufia.product_name') %>"/>
   <meta property="og:type" content="object"/>
-  <meta property="og:title" content="<%= @generic_file.title.first %>"/>
-  <meta property="og:description" content="<%= @generic_file.description.first.truncate(200) rescue @generic_file.title.first %>"/>
-  <meta property="og:image" content="<%= sufia.download_url(@generic_file, file: 'thumbnail') %>"/>
-  <meta property="og:url" content="<%= sufia.generic_file_url(@generic_file) %>"/>
-  <meta name="twitter:data1" content="<%= @generic_file.tag.join(', ') %>"/>
+  <meta property="og:title" content="<%= @presenter.title.first %>"/>
+  <meta property="og:description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>"/>
+  <meta property="og:image" content="<%= sufia.download_url(@presenter, file: 'thumbnail') %>"/>
+  <meta property="og:url" content="<%= sufia.generic_file_url(@presenter) %>"/>
+  <meta name="twitter:data1" content="<%= @presenter.tag.join(', ') %>"/>
   <meta name="twitter:label1" content="Keywords"/>
-  <meta name="twitter:data2" content="<%= @generic_file.rights.first %>"/>
+  <meta name="twitter:data2" content="<%= @presenter.rights.first %>"/>
   <meta name="twitter:label2" content="Rights"/>
 <% end %>
 
 <% content_for(:gscholar_meta) do %>
-  <meta name="citation_title" content="<%= @generic_file.title.first %>"/>
-  <% @generic_file.creator.each do |creator| %>
+  <meta name="citation_title" content="<%= @presenter.title.first %>"/>
+  <% @presenter.creator.each do |creator| %>
   <meta name="citation_author" content="<%= creator %>"/>
   <% end %>
-  <meta name="citation_publication_date" content="<%= @generic_file.date_created.first %>"/>
-  <meta name="citation_pdf_url" content="<%= sufia.download_url(@generic_file) %>"/>
+  <meta name="citation_publication_date" content="<%= @presenter.date_created.first %>"/>
+  <meta name="citation_pdf_url" content="<%= sufia.download_url(@presenter) %>"/>
   <!-- Sufia does not yet support these metadata -->
   <!--
     <meta name="citation_journal_title" content=""/>
@@ -49,8 +46,8 @@
     <%= render 'show_actions' %>
     <%= render 'show_collections' %>
   </div>
-  <div itemscope itemtype="<%= @generic_file.itemtype %>" class="col-xs-12 col-sm-8">
-    <h1 class="visibility"><%= @generic_file %> <%= render_visibility_badge %></h1>
+  <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
+    <h1 class="visibility"><%= @presenter %> <%= render_visibility_badge %></h1>
     <%= render 'show_descriptions' %>
     <%= render 'show_details' %>
     <%= render 'users/activity_log', events: @events %>
