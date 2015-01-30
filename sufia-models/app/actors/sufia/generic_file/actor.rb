@@ -86,6 +86,7 @@ module Sufia::GenericFile
     end
 
     # Takes an optional block and executes the block if the save was successful.
+    # returns false if the save was unsuccessful
     def save_and_record_committer
       save_tries = 0
       begin
