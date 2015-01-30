@@ -100,29 +100,6 @@ describe 'generic_files/show.html.erb', :type => :view do
         expect(depositor.properties['name'].first).to eq('bob')
       end
     end
-
-    describe 'resource type-specific itemtypes' do
-      before do
-          generic_file.resource_type = type
-          render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
-      end
-
-      context 'when resource_type is Audio' do
-        let(:type) { ['Audio'] }
-
-        it 'sets itemtype to AudioObject' do
-          expect(item.type).to eq('http://schema.org/AudioObject')
-        end
-      end
-
-      context 'when resource_type is Conference Proceeding' do
-        let(:type) { ['Conference Proceeding'] }
-
-        it 'sets itemtype to ScholarlyArticle' do
-          expect(item.type).to eq('http://schema.org/ScholarlyArticle')
-        end
-      end
-    end
   end
 
   describe 'google scholar' do

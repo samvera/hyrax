@@ -93,13 +93,6 @@ module Sufia
         end
       end
 
-      # Add a schema.org itemtype
-      def itemtype
-        # Look up the first non-empty resource type value in a hash from the config
-        Sufia.config.resource_types_to_schema[resource_type.to_a.reject { |type| type.empty? }.first] || 'http://schema.org/CreativeWork'
-      rescue
-        'http://schema.org/CreativeWork'
-      end
     end
   end
 end
