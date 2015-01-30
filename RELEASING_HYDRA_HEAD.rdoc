@@ -1,6 +1,0 @@
-Update /HYDRA_VERSION
-
-<code>
-rake all:release;
-git push
-</code>
