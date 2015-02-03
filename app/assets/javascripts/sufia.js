@@ -34,6 +34,7 @@
 //= require sufia/permissions
 //= require sufia/trophy
 //= require sufia/featured_works
+//= require sufia/featured_researcher
 //= require sufia/batch_select_all
 //= require sufia/edit_metadata
 //= require sufia/single_use_link

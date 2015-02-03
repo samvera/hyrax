@@ -27,9 +27,13 @@ module ContentBlockHelper
       concat hidden_field_tag 'content_block[name]', content_block.name
       concat f.text_area :value, id: editing_field_id, class: "tinymce", rows: 20, cols: 120
       concat f.label :external_key, content_block.external_key_name
-      concat f.text_field :external_key
+      concat f.text_field :external_key, class: key_field_class(content_block.name)
       concat content_tag(:div) { f.submit 'Save', class: "btn btn-primary" }
     }
+  end
+
+  def key_field_class(content_block_type)
+    content_block_type == ContentBlock::RESEARCHER ? 'select2-user' : ''
   end
 
   def new_form(name)
