@@ -2,6 +2,10 @@ h4 .small {
   color: $navbar-default-toggle-icon-bar-bg;
 }
 
+.table-responsive {
+  overflow-x: visible;
+}
+
 .table thead th {
   text-align: center;
 }
