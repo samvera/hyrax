@@ -1,17 +1,5 @@
 #masthead {
-  background: #0071BC; /* Old browsers */
-  background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0, #0071BC),
-      color-stop(1, #003457)
-  );
-  background-image: -o-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: -moz-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: -webkit-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: -ms-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: linear-gradient(to bottom, #0071BC 0%, #003457 100%);
+  background: $blue-dark;
   min-height: 4em;
 
   #logo span.glyphicon {
@@ -57,35 +45,43 @@
   }
 }
 
-#masthead_controls {
-  background-color: #D2B48C;
-  border-top: 1px solid #0071BC;
-  border-bottom: 1px solid #B89972;
-  .navbar {
-    background-color: #D2B48C;
-    margin-bottom: 0;
-    text-align: center;
-  }
-  .navbar li {
-    border-right: 1px solid #B89972;
-  }
-  .navbar a:link, .navbar a:visited {
-    color: #FFF;
-  }
-  .navbar a:hover {
-    background-color: #7D5D55;
-  }
-  .navbar-default {
-    border: 0;
-  }
-  .navbar-default .navbar-nav>.active>a,
-  .navbar-default .navbar-nav>.active>a:hover,
-  .navbar-default .navbar-nav>.active>a:focus {
-    background-color: #F7EEDE;
-    color: #555;
-  }
+#masthead_controls .navbar-default .navbar-nav > .active > a,
+#masthead_controls .navbar-default .navbar-nav > .active > a:hover,
+#masthead_controls .navbar-default .navbar-nav > .active > a:focus {
+  background-color: $blue-medium-bright;
+  color: $classic-white;
 }
 
+#masthead_controls {
+  border-top: 1px solid $blue-medium;
+  border-bottom: 1px solid $blue-medium;
+  background-color: $blue-medium-bright;
+  #search-submit-header {
+    background-color: $gray-dark;
+    border-top: 1px solid $gray-medium;
+    border-bottom: 1px solid $gray-medium;
+  }
+  .navbar {
+    background-color: $blue-medium-bright;
+    margin-bottom: 0;
+    li {
+      border-right: 2px solid $blue-medium;
+    }
+    li:first-child {
+      border-left: 2px solid $blue-medium;
+    }
+    a:link, a:visited {
+      background-color: $blue-medium-bright;
+      color: $classic-white;
+    }
+    a:hover {
+      background-color: $basic-black;
+    }
+  }
+  .navbar-default {
+    border: none;
+  }
+}
 
 .login_button {
   margin: 1.75em 3em 0 0;

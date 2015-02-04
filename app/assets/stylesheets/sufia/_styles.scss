@@ -55,23 +55,11 @@ button {
 }
 
 #footer {
+  background: $blue-dark;
   clear: both;
-  color: #FFF;
+  color: $classic-white;
   margin-top: 2em;
   padding: 1em;
-  background: #0071BC; /* Old browsers */
-  background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0, #0071BC),
-      color-stop(1, #003457)
-  );
-  background-image: -o-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: -moz-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: -webkit-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: -ms-linear-gradient(bottom, #0071BC 0%, #003457 100%);
-  background-image: linear-gradient(to bottom, #0071BC 0%, #003457 100%);
   min-height: 4em;
 }
 
