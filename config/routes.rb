@@ -118,6 +118,7 @@ Sufia::Engine.routes.draw do
   end
 
   resources :content_blocks, only: ['create', 'update']
+  get 'featured_researchers' => 'content_blocks#index', as: :featured_researchers
   post '/tinymce_assets' => 'tinymce_assets#create'
 
   get 'about' => 'pages#show', id: 'about_page'
