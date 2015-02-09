@@ -28,9 +28,9 @@ describe 'generic_files/show.html.erb', :type => :view do
       subject: ['Biology', 'Physiology', 'Ethnography'])
   end
 
-  let(:presenter) {
+  let(:presenter) do
     Sufia::GenericFilePresenter.new(generic_file)
-  }
+  end
 
   before do
     allow(generic_file).to receive(:content).and_return(content)
@@ -43,6 +43,18 @@ describe 'generic_files/show.html.erb', :type => :view do
     assign(:presenter, presenter)
     assign(:events, [])
     assign(:notify_number, 0)
+  end
+
+  describe 'title heading' do
+    before do
+      render template: 'generic_files/show.html.erb', layout: 'layouts/sufia-one-column'
+    end
+    let(:doc) { Nokogiri::HTML(rendered) }
+
+    it 'shows the first title' do
+      h1 = doc.xpath("//h1[@class='visibility']").text
+      expect(h1).to start_with 'My Title'
+    end
   end
 
   describe 'schema.org' do
