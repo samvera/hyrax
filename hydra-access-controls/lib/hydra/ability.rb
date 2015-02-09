@@ -3,7 +3,6 @@ require 'cancan'
 module Hydra
   module Ability
     extend ActiveSupport::Concern
-    extend Deprecation
     
     # once you include Hydra::Ability you can add custom permission methods by appending to ability_logic like so:
     #
@@ -155,18 +154,8 @@ module Hydra
         Hydra.config.permissions.read.group
       end
 
-      def edit_person_field
-        Deprecation.warn(Ability, "The edit_person_field class method is deprecated and will be removed from Hydra::Ability in hydra-head 8.0.  Use edit_user_field instead.", caller)
-        edit_user_field
-      end
-
       def edit_user_field 
         Hydra.config.permissions.edit.individual
-      end
-
-      def read_person_field
-        Deprecation.warn(Ability, "The read_person_field class method is deprecated and will be removed from Hydra::Ability in hydra-head 8.0.  Use read_user_field instead.", caller)
-        read_user_field
       end
 
       def read_user_field 

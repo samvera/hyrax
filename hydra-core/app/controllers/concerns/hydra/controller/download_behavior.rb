@@ -2,7 +2,6 @@ module Hydra
   module Controller
     module DownloadBehavior
       extend ActiveSupport::Concern
-      extend Deprecation
 
       included do
         include Hydra::Controller::ControllerBehavior
@@ -45,10 +44,6 @@ module Hydra
 
       # Customize the :download ability in your Ability class, or override this method
       def authorize_download!
-        if self.respond_to?(:can_download?)
-          Deprecation.warn(DownloadBehavior, "The `can_download?' method is deprecated and will not be supported in hydra-head 8.0.  Implement special authorization behavior by customizing the :download permission on ActiveFedora::Datastream in your Ability class.", caller)
-          current_ability.send(can_download? ? :can : :cannot, :download, ActiveFedora::Datastream, dsid: datastream.dsid, pid: datastream.pid)
-        end
         authorize! :download, datastream
       end
 
@@ -73,9 +68,7 @@ module Hydra
       end
       
       # Handle the HTTP show request
-      def send_content(asset_ = nil)
-        Deprecation.warn(DownloadBehavior, "The `asset' parameter of the `send_content' method is deprecated and will be removed from Hydra::Controller::DownloadBehavior in hydra-head 8.0", caller) if asset_
-
+      def send_content
         response.headers['Accept-Ranges'] = 'bytes'
 
         if request.head?

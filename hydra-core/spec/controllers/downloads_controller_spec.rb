@@ -186,33 +186,5 @@ describe DownloadsController do
       end
     end
 
-    describe "overriding the can_download? method" do
-      before { sign_in @user }
-      context "current_ability.can? returns true / can_download? returns false" do
-        it "should authorize according to can_download?" do
-          expect(controller.current_ability.can?(:download, @obj.datastreams['buzz'])).to be true
-          allow(controller).to receive(:can_download?).and_return(false)
-          Deprecation.silence(Hydra::Controller::DownloadBehavior) do
-            get :show, id: @obj, datastream_id: 'buzz'
-          end
-          expect(response).to redirect_to root_url
-        end
-      end
-      context "current_ability.can? returns false / can_download? returns true" do
-        before do
-          @obj.rightsMetadata.clear_permissions!
-          @obj.save
-        end
-        it "should authorize according to can_download?" do
-          expect(controller.current_ability.can?(:download, @obj.datastreams['buzz'])).to be false
-          allow(controller).to receive(:can_download?).and_return(true)
-          Deprecation.silence(Hydra::Controller::DownloadBehavior) do
-            get :show, id: @obj, datastream_id: 'buzz'
-          end
-          expect(response).to be_successful
-        end
-      end
-    end
-
   end
 end

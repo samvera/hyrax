@@ -3,7 +3,6 @@ module Hydra
   module Datastream
     # Implements Hydra RightsMetadata XML terminology for asserting access permissions
     class RightsMetadata < ActiveFedora::OmDatastream       
-      extend Deprecation
       
       set_terminology do |t|
         t.root(:path=>"rightsMetadata", :xmlns=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
@@ -152,11 +151,6 @@ module Hydra
         return quick_search_by_type(:group)
       end
       
-      def individuals
-        Deprecation.warn(RightsMetadata, "The method `individuals' is deprecated and will be removed from Hydra::Datastream::RightsMetadata in hydra-head 8.0.  Use `users' instead.", caller)
-        users
-      end
-
       # Reports on which users have which permissions
       # @return Hash in format {user_name => user_permissions, user_name => user_permissions}
       def users

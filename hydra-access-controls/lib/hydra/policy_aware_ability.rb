@@ -1,7 +1,6 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAbility
   extend ActiveSupport::Concern
-  extend Deprecation
   include Hydra::Ability
   
   # Extends Hydra::Ability.test_edit to try policy controls if object-level controls deny access
@@ -94,11 +93,6 @@ module Hydra::PolicyAwareAbility
     return rg
   end
 
-  def edit_persons_from_policy(policy_pid)
-    Deprecation.warn(Hydra::PolicyAwareAbility, "The edit_persons_from_policy method is deprecated and will be removed from Hydra::PolicyAwareAbility in hydra-head 8.0.  Use edit_users_from_policy instead.", caller)
-    edit_users_from_policy(policy_pid)
-  end
-
   # Returns the list of users granted edit access by the policy object identified by policy_pid
   def edit_users_from_policy(policy_pid)
     policy_permissions = policy_permissions_doc(policy_pid)
@@ -106,11 +100,6 @@ module Hydra::PolicyAwareAbility
     eu = ((policy_permissions == nil || policy_permissions.fetch(edit_user_field,nil) == nil) ? [] : policy_permissions.fetch(edit_user_field,nil))
     Rails.logger.debug("[CANCAN] -policy- edit_users: #{eu.inspect}")
     return eu
-  end
-
-  def read_persons_from_policy(policy_pid)
-    Deprecation.warn(Hydra::PolicyAwareAbility, "The read_persons_from_policy method is deprecated and will be removed from Hydra::PolicyAwareAbility in hydra-head 8.0.  Use read_users_from_policy instead.", caller)
-    read_users_from_policy(policy_pid)
   end
 
   # Returns the list of users granted read access by the policy object identified by policy_pid

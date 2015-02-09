@@ -2,10 +2,9 @@ source "http://rubygems.org"
 
 gemspec :path=>"../"
 
-gem 'activemodel', '~> 3.2.13'
+gem 'rails', '~> 4.2.0'
 
 group :development, :test do
-  gem 'rcov', :platform => :mri_18
   gem 'simplecov', :platform => :mri_19
   gem 'simplecov-rcov', :platform => :mri_19
 end

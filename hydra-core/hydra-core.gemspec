@@ -20,10 +20,10 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.9.3'
 
 
-  gem.add_dependency "rails", '>= 3.2.3', '< 5' 
+  gem.add_dependency "rails", '~> 4.0'
   gem.add_dependency 'block_helpers'
   gem.add_dependency 'hydra-access-controls', version
-  gem.add_dependency 'jettywrapper', ">=1.4.1"
+  gem.add_dependency 'jettywrapper', "~> 1.5"
   
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'yard'

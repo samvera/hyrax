@@ -2,7 +2,6 @@ module Hydra
   module AccessControls
     module Permissions
       extend ActiveSupport::Concern
-      extend Deprecation
 
       included do
         include Hydra::AccessControls::Visibility

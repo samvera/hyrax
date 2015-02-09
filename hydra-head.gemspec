@@ -17,11 +17,11 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_dependency('rails', '>= 3.2.6')
-  s.add_dependency('hydra-access-controls',   version)
-  s.add_dependency('hydra-core',   version)
+  s.add_dependency('rails', '~> 4.0')
+  s.add_dependency('hydra-access-controls', version)
+  s.add_dependency('hydra-core', version)
 
-  s.add_development_dependency "jettywrapper", '>= 1.4.0'
+  s.add_development_dependency "jettywrapper", '~> 1.5'
   s.add_development_dependency "yard" 
 
   s.add_development_dependency 'rspec-rails'
