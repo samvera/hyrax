@@ -26,8 +26,6 @@ module Worthwhile
       attr_accessor :file
       delegate :latest_version, to: :content
 
-      attr_accessible *terms_for_display
-
       # make filename single-value (Sufia::GenericFile::Characterization makes it multivalue)
       def filename
         if self[:filename].instance_of?(Array)
