@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in worthwhile.gemspec
 gemspec
 
-gem 'byebug' unless ENV['TRAVIS']
+gem 'slop', '~> 3.6.0' # This just helps us generate a valid Gemfile.lock when Rails 4.2 is installed (which requires byebug which has a dependency on slop)
+
 gem 'worthwhile-models', path: './worthwhile-models'
 
 group :test do
