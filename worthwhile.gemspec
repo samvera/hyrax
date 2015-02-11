@@ -22,9 +22,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hydra-head' # allow sufia-models to specify the version
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
   spec.add_dependency "active_attr"
-  spec.add_dependency "simple_form", '~> 3.1.0.rc2'
+  spec.add_dependency "simple_form", '~> 3.1.0'
   spec.add_dependency 'worthwhile-models', version
-  spec.add_dependency 'sufia-models', '6.0.0.beta1'
   spec.add_dependency 'hydra-collections' # allow sufia-models to specify the version
   spec.add_dependency 'hydra-derivatives' # allow sufia-models to specify the version
 
