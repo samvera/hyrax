@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :linked_resource, class: Worthwhile::LinkedResource  do
-    ignore do
+    transient do
       user {FactoryGirl.create(:user)}
     end
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED

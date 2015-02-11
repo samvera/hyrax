@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :generic_file, class: Worthwhile::GenericFile do
     factory :file_with_work do
-      ignore do
+      transient do
         user { FactoryGirl.create(:user) }
         content nil
       end

@@ -11,11 +11,11 @@ module CurationConcern
       self.class.human_readable_type
     end
 
-    def to_solr(solr_doc={}, opts={})
-      super(solr_doc, opts)
-      solr_doc[Solrizer.solr_name('human_readable_type',:facetable)] = human_readable_type
-      solr_doc[Solrizer.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
-      return solr_doc
+    def to_solr(solr_doc={})
+      super(solr_doc).tap do |solr_doc|
+        solr_doc[Solrizer.solr_name('human_readable_type',:facetable)] = human_readable_type
+        solr_doc[Solrizer.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
+      end
     end
 
   end

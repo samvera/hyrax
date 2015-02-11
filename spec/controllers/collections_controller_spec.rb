@@ -64,7 +64,7 @@ describe CollectionsController do
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq work1.id
-      afterupdate = GenericFile.find(work1.pid)
+      afterupdate = GenericFile.find(work1.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
 
@@ -82,33 +82,33 @@ describe CollectionsController do
     end
 
     it "should set collection on members" do
-      put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_public_generic_work.pid,work1.pid, work2.pid]
+      put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_public_generic_work.id,work1.id, work2.id]
       expect(response).to redirect_to collection_path(collection)
-      expect(assigns[:collection].members.map(&:pid)).to match_array([work2, my_public_generic_work, work1].map(&:pid))
-      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{work2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
+      expect(assigns[:collection].members.map(&:id)).to match_array([work2, my_public_generic_work, work1].map(&:id))
+      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{work2.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq work2.id
-      afterupdate = GenericFile.find(work2.pid)
+      afterupdate = GenericFile.find(work2.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
       put :update, id: collection.id, collection: {members: "remove"}, batch_document_ids: [work2]
-      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{work2.pid}\""],fl:['id',Solrizer.solr_name(:collection)]}
+      asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{work2.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq work2.id
-      afterupdate = GenericFile.find(work2.pid)
+      afterupdate = GenericFile.find(work2.id)
       expect(doc[Solrizer.solr_name(:collection)]).to be_nil
     end
 
     describe "adding members" do
       it "should add members and update all of the relevant solr documents" do
         expect(collection.members).to_not include my_other_public_generic_work
-        solr_doc_before_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, my_other_public_generic_work.pid).send(:solr_doc)
+        solr_doc_before_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, my_other_public_generic_work.id).send(:solr_doc)
         expect(solr_doc_before_remove[Solrizer.solr_name(:collection)]).to be_nil
-        put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_other_public_generic_work.pid]
+        put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_other_public_generic_work.id]
         expect(collection.reload.members).to include my_other_public_generic_work
-        solr_doc_after_add = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, my_other_public_generic_work.pid).send(:solr_doc)
-        expect(solr_doc_after_add[Solrizer.solr_name(:collection)]).to eq [collection.pid]
+        solr_doc_after_add = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, my_other_public_generic_work.id).send(:solr_doc)
+        expect(solr_doc_after_add[Solrizer.solr_name(:collection)]).to eq [collection.id]
       end
     end
 
@@ -120,11 +120,11 @@ describe CollectionsController do
       it "should remove members and update all of the relevant solr documents" do
         # BUG: This is returning inaccurate information
         #     expect(collection.reload.members).to include public_asset_not_mine
-        solr_doc_before_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.pid).send(:solr_doc)
-        expect(solr_doc_before_remove[Solrizer.solr_name(:collection)]).to eq [collection.pid]
-        put :update, id: collection.id, collection: {members:"remove"}, batch_document_ids:[public_asset_not_mine.pid]
+        solr_doc_before_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.id).send(:solr_doc)
+        expect(solr_doc_before_remove[Solrizer.solr_name(:collection)]).to eq [collection.id]
+        put :update, id: collection.id, collection: {members:"remove"}, batch_document_ids:[public_asset_not_mine.id]
         expect(collection.reload.members.count).to eq 0
-        solr_doc_after_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.pid).send(:solr_doc)
+        solr_doc_after_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.id).send(:solr_doc)
         expect(solr_doc_after_remove[Solrizer.solr_name(:collection)]).to be_nil
       end
     end
@@ -148,8 +148,8 @@ describe CollectionsController do
         expect(response).to be_successful
         expect(assigns[:collection].title).to eq collection.title
         ids = assigns[:member_docs].map(&:id)
-        expect(ids).to include work1.pid, work2.pid, my_public_generic_work.pid, public_asset_not_mine.pid
-        expect(ids).to_not include my_other_public_generic_work.pid, private_asset_not_mine.pid
+        expect(ids).to include work1.id, work2.id, my_public_generic_work.id, public_asset_not_mine.id
+        expect(ids).to_not include my_other_public_generic_work.id, private_asset_not_mine.id
       end
 
       context "as an admin" do
@@ -159,8 +159,8 @@ describe CollectionsController do
           expect(response).to be_successful
           expect(assigns[:collection].title).to eq collection.title
           ids = assigns[:member_docs].map(&:id)
-          expect(ids).to include work1.pid, work2.pid, my_public_generic_work.pid, public_asset_not_mine.pid, private_asset_not_mine.pid
-          expect(ids).to_not include my_other_public_generic_work.pid
+          expect(ids).to include work1.id, work2.id, my_public_generic_work.id, public_asset_not_mine.id, private_asset_not_mine.id
+          expect(ids).to_not include my_other_public_generic_work.id
         end
       end
 
@@ -170,22 +170,22 @@ describe CollectionsController do
           expect(response).to be_successful
           expect(assigns[:collection].title).to eq collection.title
           ids = assigns[:member_docs].map(&:id)
-          expect(ids).to include work1.pid, work2.pid, my_public_generic_work.pid
-          expect(ids).to_not include my_other_public_generic_work.pid, private_asset_not_mine.pid, public_asset_not_mine.pid
+          expect(ids).to include work1.id, work2.id, my_public_generic_work.id
+          expect(ids).to_not include my_other_public_generic_work.id, private_asset_not_mine.id, public_asset_not_mine.id
         end
       end
 
       context "when items have been added and removed" do
         it "should return the items that are in the collection and not return items that have been removed" do
-          put :update, id: collection.id, collection: {members:"remove"}, batch_document_ids:[public_asset_not_mine.pid]
-          panm_solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.pid).send(:solr_doc)
+          put :update, id: collection.id, collection: {members:"remove"}, batch_document_ids:[public_asset_not_mine.id]
+          panm_solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.id).send(:solr_doc)
           expect(panm_solr_doc[Solrizer.solr_name(:collection)]).to be_nil
           controller.batch = nil
-          put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_other_public_generic_work.pid]
+          put :update, id: collection.id, collection: {members:"add"}, batch_document_ids:[my_other_public_generic_work.id]
           get :show, id: collection.id
           ids = assigns[:member_docs].map(&:id)
-          expect(ids).to include work1.pid, work2.pid, my_public_generic_work.pid, my_other_public_generic_work.pid
-          expect(ids).to_not include public_asset_not_mine.pid
+          expect(ids).to include work1.id, work2.id, my_public_generic_work.id, my_other_public_generic_work.id
+          expect(ids).to_not include public_asset_not_mine.id
         end
       end
     end
@@ -195,7 +195,7 @@ describe CollectionsController do
         get :show, id: collection.id
         expect(assigns[:member_docs].count).to eq 2
         ids = assigns[:member_docs].map(&:id)
-        expect(ids).to include my_public_generic_work.pid, public_asset_not_mine.pid
+        expect(ids).to include my_public_generic_work.id, public_asset_not_mine.id
       end
     end
   end

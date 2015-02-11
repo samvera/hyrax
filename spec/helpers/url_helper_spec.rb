@@ -5,14 +5,16 @@ describe Worthwhile::UrlHelper do
     GenericWork.destroy_all
   end
   let(:profile) { ["{\"datastreams\":{}}"] }
-  let(:work) { GenericWork.create!(pid: 'sufia:123') }
-  let(:document) { SolrDocument.new("id"=>"sufia:123", "has_model_ssim"=>["info:fedora/afmodel:GenericWork"], 'object_profile_ssm' => profile) }
+  let(:work) { FactoryGirl.create(:generic_work) }
+  let(:document) { SolrDocument.new(work.to_solr) }
   subject { helper.url_for_document document }
 
-  it { should eq "/concern/generic_works/123" }
-
+  it { should eq "/concern/generic_works/#{work.id}" }
+  it "should use the curation_concern namespace" do
+    expect(helper.url_for_document document).to eq "/concern/generic_works/#{work.id}"
+  end
   context "when document is a Worthwhile::GenericFile" do
-    let(:document) { Worthwhile::GenericFile.new pid: 'foo:123' }
+    let(:document) { Worthwhile::GenericFile.new id: '123' }
     it { should eq "/concern/generic_files/123" }
   end
 end

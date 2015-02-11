@@ -21,9 +21,9 @@ describe Worthwhile::CollectionsHelper do
     before do
       allow(helper).to receive(:current_user).and_return(User.new)
     end
-    let!(:collection1) { Collection.create!(pid: 'test:123', title: 'One') }
-    let!(:collection2) { Collection.create!(pid: 'test:456', title: 'Two') }
-    let!(:collection3) { Collection.create!(pid: 'test:789', title: 'Thre') }
+    let!(:collection1) { Collection.create!(id: '123', title: 'One') }
+    let!(:collection2) { Collection.create!(id: '456', title: 'Two') }
+    let!(:collection3) { Collection.create!(id: '789', title: 'Thre') }
     subject { helper.collection_options_for_select(collection2) }
 
     it "should exclude the passed in collection" do

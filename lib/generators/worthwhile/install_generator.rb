@@ -36,6 +36,10 @@ module Worthwhile
         "include Worthwhile::ThemedLayoutController\n  with_themed_layout '1_column'\n"
     end
 
+    def remove_blacklight_scss
+      remove_file 'app/assets/stylesheets/blacklight.css.scss'
+    end
+
     def inject_routes
       inject_into_file 'config/routes.rb', :after => /devise_for :users\s*\n/ do
         "  mount Hydra::Collections::Engine => '/'\n"\

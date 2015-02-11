@@ -10,6 +10,17 @@ module CurationConcern
     include Hydra::Collections::Collectible
     include CurationConcern::HasRepresentative
 
+    included do
+      before_save :remove_self_from_members
+    end
+
+    # Ensures that a collection never contains itself
+    def remove_self_from_members
+      if member_ids.include?(id)
+        members.delete(self)
+      end
+    end
+
     def add_member(collectible)
       if can_add_to_members?(collectible)
         collectible.collections << self
@@ -23,11 +34,11 @@ module CurationConcern
       self.title.present? ? title : "No Title"
     end
 
-    def to_solr(solr_doc={}, opts={})
-      super.tap do |solr_doc|
+    def to_solr(solr_doc={})
+      super(solr_doc).tap do |solr_doc|
         Solrizer.set_field(solr_doc, 'generic_type', human_readable_type, :facetable)
-        solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile.noid_indexer)] = noid
-        index_collection_pids(solr_doc)
+        solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)] = noid
+        index_collection_ids(solr_doc)
       end
     end
 

@@ -45,7 +45,7 @@
         $listing.children('.has-warning').remove();
         $('.add', $activeFieldControls).remove();
         $activeFieldControls.prepend($removeControl);
-        $newChildren = $newField.children('input');
+        $newChildren = $newField.find('input');
         $newChildren.
           val('').
           removeProp('required');

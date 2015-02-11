@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe GenericWork do
+
   it "should have a title" do
     subject.title = ['foo']
     expect(subject.title).to eq ['foo']
@@ -18,7 +19,11 @@ describe GenericWork do
   describe "to_solr" do
     subject { FactoryGirl.build(:work, date_uploaded: Date.today).to_solr }
     it "indexes some fields" do
-      expect(subject.keys).to include 'desc_metadata__date_uploaded_dtsi'
+      expect(subject.keys).to include 'date_uploaded_dtsi'
+    end
+    it "inherits (and extends) to_solr behaviors from superclass" do
+      expect(subject.keys).to include(:id)
+      expect(subject.keys).to include("has_model_ssim")
     end
   end
 end

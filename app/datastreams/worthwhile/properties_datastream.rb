@@ -11,7 +11,7 @@ class Worthwhile::PropertiesDatastream < ActiveFedora::OmDatastream
     t.import_url 
 
     #This attribute should hold the selected file which represent the work.
-    t.representative
+    t.representative index_as: :symbol
   end
 
   def self.xml_template
@@ -21,7 +21,7 @@ class Worthwhile::PropertiesDatastream < ActiveFedora::OmDatastream
     builder.doc
   end
 
-  def prefix
+  def prefix(name)
     'properties_'
   end
 end

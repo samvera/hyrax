@@ -34,7 +34,7 @@ require File.expand_path('../matchers', __FILE__)
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 FactoryGirl.find_definitions
 
-
+require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
   config.fixture_path = File.expand_path("../fixtures", __FILE__)
@@ -50,6 +50,12 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+  end
+
+  config.before :each do |example|
+    unless (example.metadata[:type] == :view || example.metadata[:no_clean])
+      ActiveFedora::Cleaner.clean!
+    end
   end
 
   config.include FactoryGirl::Syntax::Methods

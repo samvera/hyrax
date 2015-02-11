@@ -18,7 +18,7 @@ describe CurationConcern::PermissionsController do
     let(:worker) { double }
 
     it "should add a worker to the queue" do
-      expect(VisibilityCopyWorker).to receive(:new).with(generic_work.pid).and_return(worker)
+      expect(VisibilityCopyWorker).to receive(:new).with(generic_work.id).and_return(worker)
       expect(Sufia.queue).to receive(:push).with(worker)
       post :copy, id: generic_work
       expect(response).to redirect_to controller.polymorphic_path([:curation_concern, generic_work])

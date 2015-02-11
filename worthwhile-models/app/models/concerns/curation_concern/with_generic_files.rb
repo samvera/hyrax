@@ -4,7 +4,7 @@ module CurationConcern
     extend ActiveSupport::Concern
 
     included do
-      has_many :generic_files, property: :is_part_of, class_name: "Worthwhile::GenericFile"
+      has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: "Worthwhile::GenericFile", inverse_of: :batch
       before_destroy :before_destroy_cleanup_generic_files
     end
 

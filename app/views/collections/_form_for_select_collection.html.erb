@@ -12,7 +12,7 @@
             Select the collection to add your files to:
             <div class="collection-list">
               <ul>
-                <% user_collections.sort! { |c1,c2| c1['desc_metadata__date_modified_dtsi'] <=> c2['desc_metadata__date_modified_dtsi'] }  %>
+                <% user_collections.sort! { |c1,c2| c1['date_modified_dtsi'] <=> c2['date_modified_dtsi'] }  %>
                 <% user_collections.each do |collection| %>
                   <li> <%= radio_button_tag(:id, collection.id, true, class: "collection-selector") %><%= label_tag(:collection, collection.title) %> </li>
                 <% end %>

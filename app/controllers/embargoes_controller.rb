@@ -1,6 +1,5 @@
 class EmbargoesController < ApplicationController
 
-  include Worthwhile::WithoutNamespace
   include Worthwhile::ManagesEmbargoes
   include Hydra::Collections::AcceptsBatches
 
