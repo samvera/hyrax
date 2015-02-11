@@ -11,14 +11,14 @@
   <tbody>
     <% curation_concern.collections.each do |collection| %>
       <tr class="collection attributes">
-        <%= content_tag :td, class: 'attribute title', data: { noid: collection.noid } do %>
+        <td class="attribute title">
           <%= link_to collection.title, collection %>
           <span class="pull-right">
             <% if can?(:edit, curation_concern) %>
               <%= button_for_remove_item_from_collection(curation_concern, collection) %>
             <% end %>
           </span>
-        <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

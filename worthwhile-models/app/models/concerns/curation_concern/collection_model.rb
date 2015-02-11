@@ -37,7 +37,6 @@ module CurationConcern
     def to_solr(solr_doc={})
       super(solr_doc).tap do |solr_doc|
         Solrizer.set_field(solr_doc, 'generic_type', human_readable_type, :facetable)
-        solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)] = noid
         index_collection_ids(solr_doc)
       end
     end

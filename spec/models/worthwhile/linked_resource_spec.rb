@@ -13,9 +13,9 @@ describe Worthwhile::LinkedResource do
     expect(subject.class.human_readable_short_description.length).to_not eq 0
   end
 
-  it 'uses #noid for #to_param' do
-    allow(subject).to receive(:persisted?).and_return(true)
-    expect(subject.to_param).to eq subject.noid
+  it 'uses #id for #to_param' do
+    expect(subject).to receive(:id).and_return '123'
+    expect(subject.to_param).to eq '123'
   end
 
   it 'has no url to display' do

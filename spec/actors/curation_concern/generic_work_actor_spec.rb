@@ -11,7 +11,7 @@ describe CurationConcern::GenericWorkActor do
   }
 
   describe '#create' do
-    let(:curation_concern) { GenericWork.new(id: Worthwhile::CurationConcern.mint_a_pid )}
+    let(:curation_concern) { GenericWork.new }
 
     context 'failure' do
       let(:attributes) {{}}

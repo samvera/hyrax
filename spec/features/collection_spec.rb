@@ -85,7 +85,7 @@ describe 'collection' do
 
     it "should delete a collection" do
       expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.noid}") do
+      within("#document_#{@collection.id}") do
         first(".itemtrash").click
       end
       expect(page).to_not have_content(@collection.title)
@@ -107,7 +107,7 @@ describe 'collection' do
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(@collection.title)
-      within('#document_'+@collection.noid) do
+      within('#document_'+@collection.id) do
         click_link("collection title")
       end
       expect(page).to have_content(@collection.title)
@@ -124,7 +124,7 @@ describe 'collection' do
 
     it "should hide collection descriptive metadata when searching a collection" do
       expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.noid}") do
+      within("#document_#{@collection.id}") do
         click_link("collection title")
       end
       expect(page).to have_content(@collection.title)
@@ -158,7 +158,7 @@ describe 'collection' do
 
     it "should edit and update collection metadata" do
       expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.noid}") do
+      within("#document_#{@collection.id}") do
         click_link('Edit Collection')
       end
       expect(page).to have_field('collection_title', with: @collection.title)
@@ -182,14 +182,14 @@ describe 'collection' do
     it "should remove a work from a collection" do
       skip "BUG removing works from a collection"
       expect(page).to have_content(@collection.title)
-      within("#document_#{@collection.noid}") do
+      within("#document_#{@collection.id}") do
         click_link('Edit Collection')
       end
       expect(page).to have_field('collection_title', with: @collection.title)
       expect(page).to have_field('collection_description', with: @collection.description)
       expect(page).to have_content(gw1.title)
       expect(page).to have_content(gw2.title)
-      within("#document_#{gw1.noid}") do
+      within("#document_#{gw1.id}") do
         click_button('Remove From Collection')
       end
       expect(page).to have_content(@collection.title)
@@ -201,7 +201,7 @@ describe 'collection' do
     it "should remove all works from a collection" do
       skip "batch collection operations (add/remove)"
       expect(page).to have_content(@collection.title)
-      within('#document_'+@collection.noid) do
+      within('#document_'+@collection.id) do
         click_link('Edit Collection')
       end
       expect(page).to have_field('collection_title', with: @collection.title)
@@ -230,7 +230,7 @@ describe 'collection' do
 
     it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(@collection.title)
-      within('#document_'+@collection.noid) do
+      within('#document_'+@collection.id) do
         click_link("collection title")
       end
       expect(page).to have_css(".pager")

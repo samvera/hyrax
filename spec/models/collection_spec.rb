@@ -61,7 +61,6 @@ describe Collection do
 
     it "should have required fields" do
       expect(solr_doc['generic_type_sim']).to eq ['Collection']
-      expect(solr_doc['noid_tsi']).to eq 'test123'
     end
 
   end

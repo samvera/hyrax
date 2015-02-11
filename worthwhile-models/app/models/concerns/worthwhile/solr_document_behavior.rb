@@ -14,7 +14,7 @@ module Worthwhile
     end
 
     def to_param
-      noid || id
+      id
     end
 
     def to_s
@@ -40,10 +40,6 @@ module Worthwhile
     # Method to return the ActiveFedora model
     def hydra_model
       self[Solrizer.solr_name('active_fedora_model', Solrizer::Descriptor.new(:string, :stored, :indexed))]
-    end
-
-    def noid
-      self[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)]
     end
 
     def human_readable_type

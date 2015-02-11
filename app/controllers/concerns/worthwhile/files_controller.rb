@@ -16,7 +16,6 @@ module Worthwhile
 
     # routed to /files/new
     def new
-      @batch_noid = Sufia::Noid.noidify(Sufia::IdService.mint)
     end
 
     # routed to /files/:id/edit

@@ -110,7 +110,7 @@ module Worthwhile::CatalogController
         label_name = solr_name("title", :stored_searchable, type: :string)
         contributor_name = solr_name("contributor", :stored_searchable, type: :string)
         field.solr_parameters = {
-          :qf => "#{title_name} noid_tsi #{label_name} file_format_tesim #{contributor_name}",
+          :qf => "#{title_name} #{label_name} file_format_tesim #{contributor_name}",
           :pf => "#{title_name}"
         }
       end

@@ -30,7 +30,6 @@ module CurationConcern::Curatable
   def to_solr(solr_doc={})
     super(solr_doc).tap do |solr_doc|
       index_collection_ids(solr_doc)
-      solr_doc[Solrizer.solr_name('noid', Sufia::GenericFile::Indexing.noid_indexer)] = id
       add_derived_date_created(solr_doc)
     end
   end
