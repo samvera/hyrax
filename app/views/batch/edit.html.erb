@@ -16,7 +16,7 @@
 
   <%= render 'generic_files/permission_form', f: f, batch: @batch %>
 
-  <div class="row" id="permissions_submit">
+  <div id="permissions_submit">
     <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg',
         onclick: "confirmation_needed = false;", id: "upload_submit", name: "update_permission" do %>
       <i class="glyphicon glyphicon-floppy-disk"></i> Save
