@@ -10,12 +10,11 @@ This generator makes the following changes to your application:
  3. Creates the sufia.rb configuration file
  4. Generates mailboxer
  5. Generates usage stats config
- 6. Installs Blacklight gallery
- 7. Runs full-text generator
- 8. Runs proxies generator
- 9. Runs cached stats generator
-10. Runs ORCID field generator
-11. Runs user stats generator
+ 6. Runs full-text generator
+ 7. Runs proxies generator
+ 8. Runs cached stats generator
+ 9. Runs ORCID field generator
+10. Runs user stats generator
        """
   def banner
     say_status("warning", "GENERATING SUFIA MODELS", :yellow)
@@ -78,10 +77,6 @@ This generator makes the following changes to your application:
 
   def configure_usage_stats
     generate 'sufia:models:usagestats'
-  end
-
-  def install_blacklight_gallery
-    generate "blacklight_gallery:install"
   end
 
   # Sets up full-text indexing (Solr config + jars)

@@ -15,6 +15,7 @@ module Sufia
    3. Adds controller behavior to the application controller
    4. Copies the catalog controller into the local app
    5. Adds Sufia::SolrDocumentBehavior to app/models/solr_document.rb
+   6. Installs Blacklight gallery
          """
 
     def run_required_generators
@@ -89,5 +90,10 @@ module Sufia
         puts "     \e[31mFailure\e[0m  Sufia requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
       end
     end
+
+    def install_blacklight_gallery
+      generate "blacklight_gallery:install"
+    end
+
   end
 end
