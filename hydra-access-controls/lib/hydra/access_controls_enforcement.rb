@@ -36,14 +36,6 @@ module Hydra::AccessControlsEnforcement
     false
   end
 
-  def is_public?
-    ActiveSupport::Deprecation.warn("Hydra::AccessControlsEnforcement.is_public? has been deprecated. Use can? instead.") 
-    load_permissions_from_solr
-    access_key = ActiveFedora::SolrService.solr_name("access", Hydra::Datastream::RightsMetadata.indexer)
-    @permissions_solr_document[access_key].present? && @permissions_solr_document[access_key].first.downcase == "public"
-  end
-  
-
   #
   # Action-specific enforcement
   #

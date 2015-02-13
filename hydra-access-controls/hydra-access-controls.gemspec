@@ -18,8 +18,8 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
-  gem.add_dependency 'activesupport'
-  gem.add_dependency "active-fedora", '~> 8.0.0.rc2'
+  gem.add_dependency 'activesupport', '~> 4.0'
+  gem.add_dependency "active-fedora", '~> 8.0.0'
   gem.add_dependency "om", '~> 3.0', '>= 3.0.7'
   gem.add_dependency 'cancancan'
   gem.add_dependency 'deprecation'
