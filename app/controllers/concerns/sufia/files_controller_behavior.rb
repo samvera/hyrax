@@ -40,6 +40,10 @@ module Sufia
       before_filter :build_breadcrumbs, only: [:show, :edit, :stats]
       load_resource only: [:audit]
       load_and_authorize_resource except: [:index, :audit]
+
+      class_attribute :edit_form_class, :presenter_class
+      self.edit_form_class = Sufia::Forms::GenericFileEditForm
+      self.presenter_class = Sufia::GenericFilePresenter
     end
 
     # routed to /files/new
@@ -143,7 +147,7 @@ module Sufia
     end
 
     def presenter
-      Sufia::GenericFilePresenter.new(@generic_file)
+      presenter_class.new(@generic_file)
     end
 
     def version_list
@@ -151,7 +155,7 @@ module Sufia
     end
 
     def edit_form
-      Sufia::Forms::GenericFileEditForm.new(@generic_file)
+      edit_form_class.new(@generic_file)
     end
 
     def audit_service
@@ -188,7 +192,7 @@ module Sufia
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      file_attributes = Sufia::Forms::GenericFileEditForm.model_attributes(params[:generic_file])
+      file_attributes = edit_form_class.model_attributes(params[:generic_file])
       actor.update_metadata(file_attributes, params[:visibility])
     end
 
