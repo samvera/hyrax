@@ -96,28 +96,12 @@ rake jetty:start
 ### To use the CSS and JavaScript and other assets that ship with Sufia...
 
 #### Modify app/assets/stylesheets/application.css
-Add this line:
-```
- *= require sufia
-```
-**Remove** this line:
-```*= require_tree .```
-
-_Removing the require_tree from application.css will ensure you're not loading the blacklight.css.  This is because blacklight's css styling does not mix well with sufia's default styling._
-
-#### Modify app/assets/javascripts/application.js
-
-Add this line at the bottom of the file:
-```
-//= require sufia
-```
-
-**Remove** this line, if present (typically, when using Rails 4):
+**Remove** this line, if present:
 ```
 //= require turbolinks
 ```
 
-Turbolinks does not mix well with Blacklight.
+Turbolinks causes the TinyMCE editor to not load.
 
 ### Install Notes
 

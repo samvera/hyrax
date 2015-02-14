@@ -61,6 +61,16 @@ module Sufia
       remove_file 'app/assets/stylesheets/blacklight.css.scss'
     end
 
+    def add_sufia_assets
+      insert_into_file 'app/assets/stylesheets/application.css', after: ' *= require_self' do
+        "\n *= require sufia"
+      end
+
+      gsub_file 'app/assets/javascripts/application.js',
+                '//= require_tree .', '//= require sufia'
+    end
+
+
     def tinymce_config
       copy_file "config/tinymce.yml", "config/tinymce.yml"
     end

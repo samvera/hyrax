@@ -27,14 +27,4 @@ class TestAppGenerator < Rails::Generators::Base
     gsub_file "config/initializers/sufia.rb",
               "config.analytics = false", "config.analytics = true"
   end
-
-  def add_sufia_assets
-    insert_into_file 'app/assets/stylesheets/application.css', after: ' *= require_self' do
-      "\n *= require sufia"
-    end
-
-    gsub_file 'app/assets/javascripts/application.js',
-              '//= require_tree .', '//= require sufia'
-  end
-
 end
