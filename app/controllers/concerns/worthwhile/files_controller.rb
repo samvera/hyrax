@@ -115,13 +115,13 @@ module Worthwhile
         respond_to do |format|
           format.html {
             if request.xhr?
-              render json: [@generic_file.to_jq_upload], content_type: 'text/html', layout: false
+              render 'jq_upload', formats: 'json', content_type: 'text/html'
             else
               redirect_to [:curation_concern, @generic_file.batch]
             end
           }
           format.json {
-            render json: [@generic_file.to_jq_upload]
+            render 'jq_upload'
           }
         end
       else
