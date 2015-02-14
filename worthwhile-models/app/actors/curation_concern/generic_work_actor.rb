@@ -4,7 +4,7 @@ module CurationConcern
     include Worthwhile::ManagesEmbargoesActor
 
     def create
-      assign_pid && interpret_visibility && super && attach_files && create_linked_resources && assign_representative && copy_visibility
+      assign_id && interpret_visibility && super && attach_files && create_linked_resources && assign_representative && copy_visibility
     end
 
     def update
@@ -16,9 +16,9 @@ module CurationConcern
 
     protected
 
-    # Is this here to ensure that the curation_concern has a pid set before any of the other methods are executed?
-    def assign_pid
-      curation_concern.send(:assign_pid)
+    # Is this here to ensure that the curation_concern has an id set before any of the other methods are executed?
+    def assign_id
+      curation_concern.send(:assign_id)
     end
 
     def files
