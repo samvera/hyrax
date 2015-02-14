@@ -77,9 +77,12 @@ module Worthwhile
 
     def add_helper
       copy_file "worthwhile_helper.rb", "app/helpers/worthwhile_helper.rb"
-      #inject_into_class 'app/helpers/application_helper.rb', ApplicationHelper, "  include WorthwhileHelper"
     end
-    
+
+    def add_collection_mixin
+      inject_into_class 'app/models/collection.rb', Collection, "  include Worthwhile::Collection"
+    end
+
     def add_config_file
       copy_file "worthwhile_config.rb", "config/initializers/worthwhile_config.rb"
     end
