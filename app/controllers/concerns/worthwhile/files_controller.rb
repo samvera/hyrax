@@ -111,7 +111,7 @@ module Worthwhile
     def process_file(file)
       update_metadata_from_upload_screen
       actor.create_metadata(parent_id)
-      if actor.create_content(file, file.original_filename, datastream_id)
+      if actor.create_content(file, file.original_filename, datastream_id, file.content_type)
         respond_to do |format|
           format.html {
             if request.xhr?
