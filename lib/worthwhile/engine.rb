@@ -2,6 +2,7 @@
 require 'blacklight'
 require 'worthwhile/models'
 require 'hydra-collections'
+require 'hydra-editor'
 
 module Worthwhile
   class Engine < ::Rails::Engine

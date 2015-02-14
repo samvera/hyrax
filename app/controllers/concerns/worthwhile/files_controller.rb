@@ -65,7 +65,7 @@ module Worthwhile
       elsif params.has_key? :files
         actor.update_content(params[:files].first, datastream_id)
       elsif params.has_key? :generic_file
-        actor.update_metadata(params[:generic_file], params[:generic_file][:visibility])
+        update_metadata
       end
       if success
         redirect_to [:curation_concern, @generic_file], notice:
@@ -77,6 +77,12 @@ module Worthwhile
       flash[:error] = error.message
       logger.error "GenericFilesController::update rescued #{error.class}\n\t#{error.message}\n #{error.backtrace.join("\n")}\n\n"
       render action: 'edit'
+    end
+
+    # this is provided so that implementing application can override this behavior and map params to different attributes
+    def update_metadata
+      file_attributes = Worthwhile::Forms::GenericFileEditForm.model_attributes(params[:generic_file])
+      actor.update_metadata(file_attributes, params[:generic_file][:visibility])
     end
 
     protected

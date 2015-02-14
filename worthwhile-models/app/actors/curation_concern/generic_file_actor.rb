@@ -17,7 +17,7 @@ module CurationConcern
       interpret_visibility # Note: this modifies the contents of attributes!
       update_visibility(attributes[:visibility]) if attributes.key?(:visibility)
       # generic_file.visibility = attributes[:visibility] if attributes.key?(:visibility)
-      generic_file.attributes = generic_file.sanitize_attributes(attributes)
+      generic_file.attributes = attributes
       generic_file.date_modified = DateTime.now
       remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?
       save_and_record_committer do

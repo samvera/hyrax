@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'worthwhile-models', version
   spec.add_dependency 'hydra-collections' # allow sufia-models to specify the version
   spec.add_dependency 'hydra-derivatives' # allow sufia-models to specify the version
+  spec.add_dependency 'hydra-editor' # allow sufia-models to specify the version
 
   spec.add_development_dependency "devise", "~> 3.0"
   spec.add_development_dependency "bundler", "~> 1.6"
