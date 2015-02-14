@@ -205,11 +205,11 @@ describe CurationConcern::GenericFilesController do
         before do
           allow(Sufia.queue).to receive(:push) # don't run characterization jobs
           # Create version 0
-          generic_file.add_file('123', 'content', 'file.txt')
+          generic_file.add_file('123', path: 'content', original_name: 'file.txt')
           generic_file.save!
 
           # Create version 1
-          generic_file.add_file('<xml>This is version 2</xml>', 'content', 'md.xml')
+          generic_file.add_file('<xml>This is version 2</xml>', path: 'content', original_name: 'md.xml')
           generic_file.save!
         end
 

@@ -10,7 +10,7 @@ FactoryGirl.define do
       after(:build) do |file, evaluator|
         file.apply_depositor_metadata(evaluator.user.user_key)
         if evaluator.content
-          file.add_file(evaluator.content.read, 'content', evaluator.content.original_filename)
+          file.add_file(evaluator.content, path: 'content', original_name: evaluator.content.original_filename)
         end
       end
     end

@@ -1,17 +1,8 @@
-     
       <% # header bar for doc items in index view -%>
       <div class="documentHeader">
-        
-        <%# main title container for doc partial view 
-            How many bootstrap columns need to be reserved
-            for bookmarks control depends on size. 
-        -%>
-        
         <h4 class="index_title">
           <% counter = document_counter_with_offset(document_counter) %>
-          <%= link_to_document document, label: document_show_link_field(document), counter: counter %>
+          <%= link_to_document document, document_show_link_field(document), counter: counter %>
         </h4>
 
       </div>
-      
-

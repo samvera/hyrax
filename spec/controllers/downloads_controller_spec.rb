@@ -42,11 +42,11 @@ describe DownloadsController do
       expect(response.body).to eq generic_file.content.content
     end
 
-    it 'sends requested datastream content' do
-      generic_file.datastreams['thumbnail'].content = image_file
+    it 'sends requested file content' do
+      generic_file.attached_files['thumbnail'].content = image_file
       generic_file.save!
       sign_in user
-      get :show, id: generic_file.to_param, datastream_id: 'thumbnail'
+      get :show, id: generic_file.to_param, file: 'thumbnail'
       expect(response.body).to eq generic_file.thumbnail.content
     end
   end
