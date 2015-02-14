@@ -11,10 +11,6 @@ module CurationConcern::Work
   # include CurationConcern::WithLinkedContributors
   # include CurationConcern::WithRelatedWorks
 
-  included do
-    has_metadata "properties", type: Worthwhile::PropertiesDatastream
-  end
-
   def to_solr(solr_doc={}, opts={})
     super(solr_doc).tap do |solr_doc|
       Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)

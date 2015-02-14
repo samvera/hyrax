@@ -13,8 +13,7 @@ module CurationConcern::Curatable
     # Modules in Curate's CurationConcern::Model that we _might_ pull in later
     # include Curate::ActiveModelAdaptor
 
-    has_metadata 'properties', type: Worthwhile::PropertiesDatastream
-    has_attributes :owner, datastream: :properties, multiple: false
+    property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
     class_attribute :human_readable_short_description
     attr_accessor :files
   end
