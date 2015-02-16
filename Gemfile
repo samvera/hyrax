@@ -20,10 +20,10 @@ if File.exists?(file)
 else
   gem 'rails', ENV['RAILS_VERSION'] if ENV['RAILS_VERSION']
 
-  if ENV['RAILS_VERSION'] and ENV['RAILS_VERSION'] =~ /^4.2/
+  if ENV['RAILS_VERSION'] and ENV['RAILS_VERSION'] !~ /^4.2/
+    gem 'sass-rails', "< 5.0"
+  else
     gem 'responders', "~> 2.0"
     gem 'sass-rails', ">= 5.0"
-  else
-    gem 'sass-rails', "< 5.0"
   end
 end
