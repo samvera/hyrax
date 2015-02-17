@@ -54,8 +54,8 @@ describe "dashboard/index.html.erb", :type => :view do
     end
 
     it "should have links to view and edit the user's profile" do
-      expect(@sidebar).to include '<a class="btn btn-default btn-raised" href="' + sufia.profile_path(@user) + '">View Profile</a>'
-      expect(@sidebar).to include '<a class="btn btn-default btn-raised" href="' + sufia.edit_profile_path(@user) + '">Edit Profile</a>'
+      expect(@sidebar).to include '<a class="btn btn-default" href="' + sufia.profile_path(@user) + '">View Profile</a>'
+      expect(@sidebar).to include '<a class="btn btn-default" href="' + sufia.edit_profile_path(@user) + '">Edit Profile</a>'
     end
 
     it "should display user statistics" do
