@@ -565,14 +565,14 @@ describe GenericFilesController do
   end
 
   describe "batch creation" do
-    context "when uploading a file" do 
-      let(:batch_id) { Sufia::IdService.mint }
+    context "when uploading a file" do
+      let(:batch_id) { ActiveFedora::Noid::Service.new.mint }
       let(:file1) { fixture_file_upload('/world.png','image/png') }
       let(:file2) { fixture_file_upload('/image.jpg','image/png') }
 
       it "should not create the batch on HTTP GET " do
         expect(Batch).to_not receive(:create)
-        xhr :get, :new 
+        xhr :get, :new
         expect(response).to be_success
       end
 
@@ -584,6 +584,6 @@ describe GenericFilesController do
         xhr :post, :create, files: [file2], Filename: 'An image', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
         expect(response).to be_success
       end
-    end  
+    end
   end
 end

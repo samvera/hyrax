@@ -14,11 +14,11 @@ module Sufia
       # Set some configuration defaults
       config.persistent_hostpath = "http://localhost/files/"
       config.enable_ffmpeg = false
-      config.noid_template = '.reeddeeddk'
       config.ffmpeg_path = 'ffmpeg'
       config.fits_message_length = 5
       config.temp_file_base = nil
       config.enable_noids = true
+      config.noid_template = '.reeddeeddk'
       config.minter_statefile = '/tmp/minter-state'
       config.redis_namespace = "sufia"
       config.fits_path = "fits.sh"
@@ -30,12 +30,8 @@ module Sufia
       config.max_notifications_for_dashboard = 5
       config.activity_to_show_default_seconds_since_now = 24*60*60
 
-      # Defaulting analytic start date to when ever the file was uploaded by leaving it blank
+      # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
       config.analytic_start_date = nil
-
-      config.translate_uri_to_id = lambda { |uri| uri.to_s.split('/')[-1] }
-      config.translate_id_to_uri = lambda { |id|
-        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Sufia::Noid.treeify(id)}" }
 
       config.autoload_paths += %W(
         #{config.root}/app/models/datastreams
@@ -53,11 +49,11 @@ module Sufia
       initializer 'requires' do
         require 'activerecord-import'
         require 'hydra/derivatives'
+        require 'active_fedora/noid'
         require 'sufia/models/file_content'
         require 'sufia/models/file_content/versions'
         require 'sufia/models/user_local_directory_behavior'
         require 'sufia/noid'
-        require 'sufia/id_service'
         require 'sufia/analytics'
         require 'sufia/pageview'
         require 'sufia/download'
@@ -70,8 +66,10 @@ module Sufia
           Hydra::Derivatives.fits_path      = c.fits_path
           Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
 
-          ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
-          ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
+          ActiveFedora::Base.translate_uri_to_id = ActiveFedora::Noid.config.translate_uri_to_id
+          ActiveFedora::Base.translate_id_to_uri = ActiveFedora::Noid.config.translate_id_to_uri
+          ActiveFedora::Noid.config.template = c.noid_template
+          ActiveFedora::Noid.config.statefile = c.minter_statefile
         end
       end
     end
