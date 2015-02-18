@@ -9,6 +9,8 @@ module Sufia
       rescue_from Sufia::SingleUseError, with: :render_single_use_error
       rescue_from CanCan::AccessDenied, with: :render_single_use_error
       rescue_from ActiveRecord::RecordNotFound, with: :render_single_use_error
+      class_attribute :presenter_class
+      self.presenter_class = Sufia::GenericFilePresenter
     end
 
     def download
@@ -30,7 +32,7 @@ module Sufia
     protected
 
     def presenter
-      Sufia::GenericFilePresenter.new(@asset)
+      presenter_class.new(@asset)
     end
 
     def authorize_download!
