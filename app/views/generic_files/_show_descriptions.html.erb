@@ -2,7 +2,7 @@
 <h2 class="non lower">Descriptions</h2>
 <table class="table table-striped"><!-- class="verticalheadings"> -->
   <tbody>
-  <% present_terms(@presenter) do |r, term| %>
+  <% present_terms(@presenter,@presenter.terms - [:title, :description]) do |r, term| %>
       <tr>
         <th><%= r.label(term) %></th>
         <td><%= r.value(term) %></td>

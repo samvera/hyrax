@@ -27,6 +27,10 @@ module GenericFileHelper
     end
   end
 
+  def display_multiple value
+    Array(value).join(" | ")
+  end
+
   private
 
   def download_image_tag title = nil

@@ -55,6 +55,11 @@ describe 'generic_files/show.html.erb', :type => :view do
       h1 = doc.xpath("//h1[@class='visibility']").text
       expect(h1).to start_with 'My Title'
     end
+
+    it 'shows the description' do
+      d1 = doc.xpath("//p[@class='genericfile_description']").text
+      expect(d1).to start_with 'Lorem ipsum'
+    end
   end
 
   describe 'schema.org' do
@@ -67,11 +72,6 @@ describe 'generic_files/show.html.erb', :type => :view do
       it 'draws schema.org fields' do
         # set itemtype to CreativeWork
         expect(item.type).to eq('http://schema.org/CreativeWork')
-
-        # set title as name
-        expect(item.properties['name'].first).to eq('My Title')
-
-        expect(item.properties['description'].first).to eq('Lorem ipsum lorem ipsum.')
 
         # tag as keywords
         expect(item.properties['keywords']).to include('bacon', 'sausage', 'eggs')
