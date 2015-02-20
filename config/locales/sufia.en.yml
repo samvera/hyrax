@@ -47,6 +47,12 @@ en:
       local_ingest:
         tab_label: "Network/Server Location"
       processing: "File is being processed; you may edit when processing has completed"
+      alert:
+        fail_html: "There was a problem during upload, none of your files uploaded correctly. Please %{reload_href}.  Use the %{contact_href} to report the error if it persists."
+        fail_restart_href_text: "start over"
+        contact_href_text: "contact form"
+        partial_fail_html: "One or more files did not upload successfully. To continue using the files that uploaded %{metadata_href}. <br /> Use the %{contact_href} to report the error if it persists."
+        partial_fail_metadata_href_text: "edit their metadata"
     homepage:
       featured_works:
         tab_label:          'Featured Works'

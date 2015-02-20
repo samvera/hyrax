@@ -27,7 +27,10 @@ var filestoupload =0;
     // option afterSubmit: function(form, event, data)
     var settings = $.extend( { }, options);
     var files_done =0;      
-    var error_string ='';      
+    var error_string ='';
+    $("#fail").hide();
+    $("#partial_fail").hide();
+    $("#errmsg").hide();
 
     function uploadStopped() {
       if (files_done == filestoupload && (files_done >0)){
@@ -36,12 +39,12 @@ var filestoupload =0;
       } else if (error_string.length > 0){
         // an error occured       
          if (files_done == 0) {
-            $("#fail").fadeIn('slow')
+            $("#fail").show()
          } else {
-            $("#partial_fail").fadeIn('slow')
+            $("#partial_fail").show()
          }          
          $("#errmsg").html(error_string);
-         $("#errmsg").fadeIn('slow');
+         $("#errmsg").show();
       }
     } 
 
