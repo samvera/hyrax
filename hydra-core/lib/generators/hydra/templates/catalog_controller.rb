@@ -8,10 +8,11 @@ class CatalogController < ApplicationController
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, :only=>:show
   # This applies appropriate access controls to all solr queries
-  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
 
 
   configure_blacklight do |config|
+    config.search_builder_class = Hydra::SearchBuilder
     config.default_solr_params = {
       :qt => 'search',
       :rows => 10

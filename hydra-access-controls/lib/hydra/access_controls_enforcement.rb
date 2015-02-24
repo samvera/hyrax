@@ -1,7 +1,8 @@
 module Hydra::AccessControlsEnforcement
   extend ActiveSupport::Concern
 
-  included do
+  included do |klass|
+    attr_writer :current_ability
     class_attribute :solr_access_filters_logic
 
     # Set defaults. Each symbol identifies a _method_ that must be in
@@ -12,6 +13,10 @@ module Hydra::AccessControlsEnforcement
     # CatalogController.solr_access_filters_logic.delete(:we_dont_want)
     self.solr_access_filters_logic = [:apply_group_permissions, :apply_user_permissions]
 
+  end
+
+  def current_ability
+    @current_ability || raise("current_ability has not been set on #{self}")
   end
 
   protected
@@ -59,15 +64,13 @@ module Hydra::AccessControlsEnforcement
   # * Applies a lucene query to the solr :q parameter for gated discovery
   # * Uses public_qt search handler if user does not have "read" permissions
   # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
   #
-  # @example This method should be added to your Catalog Controller's solr_search_params_logic
+  # @example This method should be added to your CatalogController's search_params_logic
   #   class CatalogController < ApplicationController
-  #     include Hydra::Controller::ControllerBehavior
-  #     CatalogController.solr_search_params_logic << :add_access_controls_to_solr_params
+  #     CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
   #   end
-  def add_access_controls_to_solr_params(solr_parameters, user_parameters)
-    apply_gated_discovery(solr_parameters, user_parameters)
+  def add_access_controls_to_solr_params(solr_parameters)
+    apply_gated_discovery(solr_parameters)
   end
 
 
@@ -83,11 +86,10 @@ module Hydra::AccessControlsEnforcement
 
   # Contrller before filter that sets up access-controlled lucene query in order to provide gated discovery behavior
   # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
-  def apply_gated_discovery(solr_parameters, user_parameters)
+  def apply_gated_discovery(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << gated_discovery_filters.join(" OR ")
-    logger.debug("Solr parameters: #{ solr_parameters.inspect }")
+    Rails.logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
 
 
