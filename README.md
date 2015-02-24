@@ -43,15 +43,16 @@ Sufia is available under [the Apache 2.0 license](LICENSE.md).
 We'd love to accept your contributions.  Please see our guide to [contributing to Sufia](CONTRIBUTING.md).
 
 ## Sufia needs the following software to work:
+
 1. Solr
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository
-1. A SQL RDBMS (MySQL, SQLite)
+1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/) key-value store
 1. [ImageMagick](http://www.imagemagick.org/)
 1. Ruby (*latest 2.1 recommended*)
-2. Rails (*latest 4.1 recommended*)
+1. Rails (*latest 4.1 recommended*)
 
-#### !! Ensure that you have all of the above components installed before you continue. !!
+#### NOTE: If you do not already have Solr and Fedora instances you can use in your development environment, you may use hydra-jetty (instructions are provided below to get you up and running quickly and with minimal hassle).
 
 ## Need Help?
 
@@ -87,6 +88,9 @@ rake db:migrate
 ```
 
 ### Get a copy of jetty (Solr and Fedora)
+
+If you already have instances of Solr and Fedora that you use, you may skip this step.
+
 ```
 rake jetty:clean
 rake sufia:jetty:config
