@@ -118,4 +118,21 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMicrosoft Word - sample.pdf.docx\n\n\n \n \n\n \n\n \n\n \n\nThis PDF file was created using CutePDF. \n\nwww.cutepdf.com")
     end
   end
+
+  describe "m4a" do
+    before do
+      @myfile = GenericFile.new(id: 'foo123')
+      @myfile.add_file(File.open(fixture_path + '/spoken-text.m4a', 'rb').read, path: 'content', original_name: 'spoken-text.m4a', mime_type: 'audio/mp4a-latm')
+      @myfile.apply_depositor_metadata('agw13')
+      # characterize method saves
+      @myfile.characterize
+      @myfile.reload
+    end
+
+    it "should return expected content for full text" do
+      expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLavf56.15.102")
+    end
+  end
+
+
 end
