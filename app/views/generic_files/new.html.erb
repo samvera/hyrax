@@ -1,4 +1,5 @@
 <h2>Upload</h2>
+<%= render partial: 'generic_files/upload/alerts' %>
 <%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
 <ul class="nav nav-tabs" role="tablist" title="Data Source Selectors" id="upload_tabs">
   <li class="active" id="computer_tab" title="<%= t('sufia.upload.my_computer.sr_tab_label')+' '+ t('sufia.upload.my_computer.tab_label') %>"><a role="tab" href="#local" data-toggle="tab"><i class="glyphicon glyphicon-folder-open" aria-hidden="true"></i> <%= t('sufia.upload.my_computer.tab_label')%></a></li>
