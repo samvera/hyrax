@@ -1,12 +1,7 @@
-
-<h2 class="non lower">Descriptions</h2>
-<table class="table table-striped"><!-- class="verticalheadings"> -->
-  <tbody>
+<h2>Descriptions</h2>
+<dl class="dl-horizontal file-show-term file-show-descriptions">
   <% present_terms(@presenter,@presenter.terms - [:title, :description]) do |r, term| %>
-      <tr>
-        <th><%= r.label(term) %></th>
-        <td><%= r.value(term) %></td>
-      </tr>
+  <dt><%= r.label(term) %></dt>
+      <dd><%= r.value(term) %></dd>
   <% end %>
-  </tbody>
-</table> <!-- /verticalheadings -->
+</dl>
