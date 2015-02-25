@@ -9,7 +9,7 @@ This generator adds usage stats methods to the user model in your application:
        """
 
   def banner
-    say_status("warning", "ADDING USER STATS-RELATED ABILITIES TO SUFIA MODELS", :yellow)
+    say_status("info", "ADDING USER STATS-RELATED ABILITIES TO SUFIA MODELS", :blue)
   end
 
   # Setup the database migrations

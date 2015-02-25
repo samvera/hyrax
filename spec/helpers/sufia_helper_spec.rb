@@ -155,6 +155,12 @@ describe SufiaHelper, type: :helper do
     end
   end
 
+  describe '#zotero_label' do
+    subject { helper }
+
+    it { is_expected.to respond_to(:zotero_label) }
+  end
+
   describe "#number_of_deposits" do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }

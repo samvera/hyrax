@@ -16,6 +16,10 @@ class TestAppGenerator < Rails::Generators::Base
     generate "browse_everything:config"
   end
 
+  def banner
+    say_status("info", "TEST ENVIRONMENT OVERRIDES", :blue)
+  end
+
   def add_analytics_config
     append_file 'config/analytics.yml' do
       "\n" +
@@ -31,5 +35,13 @@ class TestAppGenerator < Rails::Generators::Base
   def enable_analytics
     gsub_file "config/initializers/sufia.rb",
               "config.analytics = false", "config.analytics = true"
+  end
+
+  def enable_arkivo_api
+    generate 'sufia:models:arkivo_api'
+  end
+
+  def relax_routing_constraint
+    gsub_file 'config/initializers/arkivo_constraint.rb', 'false', 'true'
   end
 end

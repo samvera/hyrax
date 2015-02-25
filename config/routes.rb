@@ -110,6 +110,21 @@ Sufia::Engine.routes.draw do
     end
   end
 
+  # API routes
+  if Sufia.config.arkivo_api
+    namespace :api do
+      if defined?(Sufia::ArkivoConstraint)
+        constraints Sufia::ArkivoConstraint do
+          resources :items, except: [:index, :edit, :new], defaults: { format: :json }
+        end
+      end
+
+      get 'zotero' => 'zotero#initiate', as: :zotero_initiate
+      get 'zotero/callback' => 'zotero#callback', as: :zotero_callback
+    end
+  end
+
+  # Collections routes
   mount Hydra::Collections::Engine => '/'
 
   # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin

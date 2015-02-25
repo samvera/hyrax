@@ -20,7 +20,7 @@ This generator makes the following changes to your application:
        """
 
   def banner
-    say_status("warning", "GENERATING SUFIA MODELS", :yellow)
+    say_status("info", "GENERATING SUFIA MODELS", :blue)
   end
 
   def run_curation_concerns_models_installer

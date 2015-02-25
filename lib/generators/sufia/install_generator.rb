@@ -29,7 +29,7 @@ module Sufia
     end
 
     def banner
-      say_status("warning", "GENERATING SUFIA", :yellow)
+      say_status("info", "GENERATING SUFIA", :blue)
     end
 
     def insert_abilities

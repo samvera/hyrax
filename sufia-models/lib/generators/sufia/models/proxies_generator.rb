@@ -9,7 +9,7 @@ This generator adds proxies and transfers to your application:
        """
 
   def banner
-    say_status("warning", "ADDING PROXY/TRANSFER-RELATED SUFIA MODELS", :yellow)
+    say_status("info", "ADDING PROXY/TRANSFER-RELATED SUFIA MODELS", :blue)
   end
 
   # Setup the database migrations

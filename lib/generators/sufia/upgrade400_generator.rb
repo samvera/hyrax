@@ -21,7 +21,7 @@ This generator for upgrading sufia from 3.7.2 to 4.0 makes the following changes
        """
 
   def banner
-    say_status("warning", "UPGRADING SUFIA", :yellow)
+    say_status("info", "UPGRADING SUFIA", :blue)
   end
 
   # The engine routes have to come after the devise routes so that /users/sign_in will work

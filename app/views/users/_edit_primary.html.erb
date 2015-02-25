@@ -7,25 +7,27 @@
       <%= f.file_field :avatar %>
       <%= f.hidden_field :avatar_cache %>
       <span class="help-block">JPG, GIF, or PNG (less than 2MB)</span>
+
+      <div class="checkbox">
+        <%= f.label :remove_avatar do %>
+          <%= f.check_box :remove_avatar %>
+          Delete picture
+          <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="glyphicon glyphicon-question-sign"></i></a>
+        <% end %>
+      </div>
+      <div class="checkbox">
+        <%= f.label :update_directory do %>
+          <%= f.check_box :update_directory %>
+          Refresh directory info
+          <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from <%=t('sufia.institution_name') %>'s central directory (LDAP) and is cached by <%=t('sufia.product_name') %>.  If you have updated that information and don't see those changes in your <%=t('sufia.product_name') %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="glyphicon glyphicon-question-sign"></i></a>
+        <% end %>
+      </div>
     </div>
   </div><!-- .form-group -->
 
-  <div class="col-xs-offset-4 col-xs-8">
-    <div class="checkbox">
-      <%= f.label :remove_avatar do %>
-        <%= f.check_box :remove_avatar %>
-        Delete picture
-        <a href="#" id="delete_picture_help" rel="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="glyphicon glyphicon-question-sign"></i></a>
-      <% end %>
-    </div>
-    <div class="checkbox">
-      <%= f.label :update_directory do %>
-        <%= f.check_box :update_directory %>
-        Refresh directory info
-        <a href="#" id="refresh_directory_help" rel="popover" data-content="The information displayed in your profile comes from <%=t('sufia.institution_name') %>'s central directory (LDAP) and is cached by <%=t('sufia.product_name') %>.  If you have updated that information and don't see those changes in your <%=t('sufia.product_name') %> profile, check the box and save your profile." data-original-title="Refresh Directory Info"><i class="glyphicon glyphicon-question-sign"></i></a>
-      <% end %>
-    </div>
-  </div>
+  <% if Sufia.config.arkivo_api %>
+    <%= render partial: 'zotero', locals: { f: f, user: @user } %>
+  <% end %>
 
   <div class="form-group">
     <%= f.label :orcid, class: 'col-xs-4 control-label' do %>
@@ -65,4 +67,3 @@
 <div class="well">
   <%= render 'dashboard/_index_partials/proxy_rights' %>
 </div>
-

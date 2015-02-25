@@ -12,7 +12,7 @@ This generator for upgrading sufia-models from 3.7.2 to 4.0 makes the following 
        """
 
   def banner
-    say_status("warning", "UPGRADING SUFIA MODELS", :yellow)
+    say_status("info", "UPGRADING SUFIA MODELS", :blue)
   end
 
   # Setup the database migrations

@@ -9,7 +9,7 @@ This generator adds a field to hold users' ORCIDs to your application:
        """
 
   def banner
-    say_status("warning", "ADDING ORCID FIELD TO USER MODEL", :yellow)
+    say_status("info", "ADDING ORCID FIELD TO USER MODEL", :blue)
   end
 
   # Setup the database migration

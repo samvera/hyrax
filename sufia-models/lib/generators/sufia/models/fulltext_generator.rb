@@ -11,7 +11,7 @@ This generator makes the following changes to your application:
        """
 
   def banner
-    say_status("warning", "GENERATING SUFIA FULL-TEXT", :yellow)
+    say_status("info", "GENERATING SUFIA FULL-TEXT", :blue)
   end
 
   # Copy Sufia's solrconfig into the dir from which the jetty:config task pulls

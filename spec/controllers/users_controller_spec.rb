@@ -92,6 +92,7 @@ describe UsersController, type: :controller do
       end
     end
   end
+
   describe "#edit" do
     it "show edit form when user edits own profile" do
       get :edit, id: user.user_key
@@ -123,7 +124,7 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "when the user has trophies" do
+    context "when the user has trophies" do
       let(:work1) { GenericWork.create(title: ["w1"]) { |w| w.apply_depositor_metadata(user) } }
       let(:work2) { GenericWork.create(title: ["w2"]) { |w| w.apply_depositor_metadata(user) } }
       let(:work3) { GenericWork.create(title: ["w3"]) { |w| w.apply_depositor_metadata(user) } }
