@@ -48,6 +48,7 @@ namespace :sufia do
           xerces/xercesImpl/2.9.1/xercesImpl-2.9.1.jar
           org/apache/xmlbeans/xmlbeans/2.3.0/xmlbeans-2.3.0.jar
           org/tukaani/xz/1.0/xz-1.0.jar
+          org/aspectj/aspectjrt/1.8.5/aspectjrt-1.8.5.jar
         )
       FileUtils.mkdir_p(fulltext_dir) unless File.directory?(fulltext_dir)
       Dir.chdir(fulltext_dir) do
