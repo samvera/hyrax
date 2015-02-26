@@ -15,13 +15,17 @@ describe 'catalog/_sort_and_per_page.html.erb', :type => :view do
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
   end
 
-
-
   it 'appears on page without error' do
     render
     page = Capybara::Node::Simple.new(rendered)
     expect(page).to have_selector('span.page_entries', count: 1)
     expect(rendered).to include("<strong>4</strong> - <strong>6</strong> of <strong>20</strong>")
+  end
+  
+  it 'displays the relevance option for sorting' do
+    render
+    page = Capybara::Node::Simple.new(rendered)
+    expect(rendered).to include("<li><a href=\"/catalog?sort=score+desc%2C+date_uploaded_dtsi+desc\">relevance</a></li>")
   end
 
 end
