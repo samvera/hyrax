@@ -16,7 +16,7 @@ describe 'generic_files/show.html.erb', :type => :view do
       depositor: depositor.user_key,
       audit_stat: 1,
       title: ['My Title'],
-      description: ['Lorem ipsum lorem ipsum.'],
+      description: ['Lorem ipsum lorem ipsum. http://my.link.com'],
       tag: ['bacon', 'sausage', 'eggs'],
       rights: ['http://example.org/rights/1'],
       based_near: ['Seattle, WA, US'],
@@ -59,6 +59,11 @@ describe 'generic_files/show.html.erb', :type => :view do
     it 'shows the description' do
       d1 = doc.xpath("//p[@class='genericfile_description']").text
       expect(d1).to start_with 'Lorem ipsum'
+    end
+
+    it 'shows links in the description' do
+      a1 = doc.xpath("//p[@class='genericfile_description']/a").text
+      expect(a1).to start_with 'http://my.link.com'
     end
   end
 
@@ -168,7 +173,7 @@ describe 'generic_files/show.html.erb', :type => :view do
       expect(tag.attribute('content').value).to eq('My Title')
 
       tag = doc.xpath("//meta[@property='og:description']")
-      expect(tag.attribute('content').value).to eq('Lorem ipsum lorem ipsum.')
+      expect(tag.attribute('content').value).to eq('Lorem ipsum lorem ipsum. http://my.link.com')
 
       tag = doc.xpath("//meta[@property='og:image']")
       expect(tag.attribute('content').value).to eq('http://test.host/downloads/123?file=thumbnail')
