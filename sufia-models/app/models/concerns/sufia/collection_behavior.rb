@@ -18,7 +18,7 @@ module Sufia
     # Compute the sum of each file in the collection
     # Return an integer of the result
     def bytes
-      members.reduce(0) { |sum, gf| sum + gf.file_size.first.to_i }
+      members.reduce(0) { |sum, gf| sum + gf.content.size.to_i }
     end
   end
 end

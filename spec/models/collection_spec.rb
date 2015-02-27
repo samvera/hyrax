@@ -19,22 +19,17 @@ describe Collection, :type => :model do
   end
 
   describe "::bytes" do
-
+    subject { @collection.bytes }
     context "with no items" do
-      specify "is zero" do
-        @collection.save
-        expect(@collection.bytes).to eq 0
-      end
+      before { @collection.save }
+      it { is_expected.to eq 0 }
     end
 
-    context "with characterized GenericFiles" do
-      let(:file) { mock_model GenericFile, file_size: ["50"] }
-      before do
-        allow(@collection).to receive(:members).and_return([file, file])
-      end
-      specify "is the sum of the files' sizes" do
-        expect(@collection.bytes).to eq 100
-      end
+    context "with two 50 byte files" do
+      let(:bitstream) { double("content", size: "50")}
+      let(:file) { mock_model GenericFile, content: bitstream }
+      before { allow(@collection).to receive(:members).and_return([file, file]) }
+      it { is_expected.to eq 100 }
     end
 
   end
