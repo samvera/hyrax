@@ -12,7 +12,6 @@
     color: $file-show-term-color;
   }
   dd {
-    padding-bottom: .35em;
     word-wrap: break-word;
   }
 }
@@ -30,24 +29,27 @@
   column-width: 20em;
 }
 
-.collection-icon, .collection-icon-search, .collection-icon-small {
-  font-size: 12vw;
-  color: #fab801;
-  padding: 15px 0 0 10px;
+.collection-icon, .collection-icon-search {
+  display: block;
+  width: 100%;
+}
+
+.collection-icon {
+  padding: 15px 0 0 0;
 }
 
 .collection-icon-search {
-  font-size: 10vw;
+  padding: 15px 0 0 10px;
+}
+
+.collection-icon-small {
+  padding: 10px 0 0 0;
+  width: 1.5em;
 }
 
 .thumbnail {
   text-align: center;
 }
-
-.collection-icon-small {
-  font-size: 2vw;
-}
-
 
 .actions-controls-collections {
   display: block;
