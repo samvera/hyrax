@@ -1,3 +1,10 @@
+h3. 9.1.0 (2015-3-6)
+* Support blacklight 5.10.0
+
+* Don't autoload ModsAsset.
+
+* Deprecate ModsAsset.
+
 h3. 9.0.1 (2015-1-30)
 * 2015-01-30: Update gemspecs to point at ActiveFedora 9.0.0 Also added versions
 to gems that didn't have any. Fixes #192 Removed unused block_helpers depenency
