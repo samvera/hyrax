@@ -11,7 +11,7 @@ module Hydra
     included do
       include CanCan::Ability
       include Hydra::PermissionsQuery
-      include Blacklight::SolrHelper
+      include Blacklight::SearchHelper
       class_attribute :ability_logic
       self.ability_logic = [:create_permissions, :edit_permissions, :read_permissions, :download_permissions, :custom_permissions]
     end
