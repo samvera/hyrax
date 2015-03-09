@@ -77,7 +77,7 @@ In config/initializers/hydra_config.rb
 
 h3. Policy-based Enforcement (or Collecton-level enforcement)
 
-If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects (APOs) they are linked to with an isGovernedBy RDF relationship (stored in solr as _is_governed_by_ssim_ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
+If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects (APOs) they are linked to with an isGovernedBy RDF relationship (stored in solr as _isGovernedBy_ssim_ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
 
 AdminPolicy objects store their inheritable rightsMetadata in a datastream called defaultRights.  This datastream uses the regular Hydra rightsMetadata schema.  Each AdminPolicy object also has its own rightsMetadata datasream, like all other Hydra assets, which specifies who is able to _edit_ the Policy or _use_ it (associate it with objects).
 

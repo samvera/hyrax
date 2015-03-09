@@ -124,7 +124,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     before do
       allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles)
     end
-    let(:governed_field) { ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol) }
+    let(:governed_field) { ActiveFedora::SolrQueryBuilder.solr_name('isGovernedBy', :symbol) }
 
     it "should include policy-aware query" do
       # stubbing out policies_with_access because solr doesn't always return them in the same order.
