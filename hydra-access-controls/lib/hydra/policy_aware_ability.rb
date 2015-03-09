@@ -22,12 +22,9 @@ module Hydra::PolicyAwareAbility
   def policy_id_for(object_id)
     policy_id = policy_id_cache[object_id]
     return policy_id if policy_id
-    solr_result = ActiveFedora::Base.find_with_conditions({ id: object_id }, fl: governed_by_solr_field)
-    begin
-      policy_id_cache[object_id] = policy_id = value_from_solr_field(solr_result, governed_by_solr_field).first.gsub("info:fedora/", "")
-    rescue NoMethodError
-    end
-    return policy_id
+    solr_result = ActiveFedora::Base.find_with_conditions({ id: object_id }, fl: governed_by_solr_field).first
+    return unless solr_result
+    policy_id_cache[object_id] = policy_id = Array(solr_result[governed_by_solr_field]).first
   end
 
   def governed_by_solr_field
@@ -105,20 +102,6 @@ module Hydra::PolicyAwareAbility
   end
 
   private
-
-  # Grabs the value of field_name from solr_result
-  # @example
-  #   solr_result = Multiresimage.find_with_conditions({:id=>object_id}, :fl=>'isGovernedBy_ssim')
-  #   value_from_solr_field(solr_result, 'isGovernedBy_ssim')
-  #   => ["info:fedora/changeme:2278"]
-  def value_from_solr_field(solr_result, field_name)
-    field_from_result = solr_result.select {|x| x.has_key?(field_name)}.first
-    if field_from_result.nil?
-      nil
-    else
-      field_from_result[field_name]
-    end
-  end
 
   def policy_id_cache
     @policy_id_cache ||= {}
