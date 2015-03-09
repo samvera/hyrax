@@ -43,13 +43,11 @@ module Hydra::PolicyAwareAccessControlsEnforcement
 
   def apply_policy_user_permissions(permission_types = discovery_permissions)
     # for individual user access
-    user_access_filters = []
-    if current_user
-      permission_types.each do |type|
-        user_access_filters << escape_filter(Hydra.config.permissions.inheritable[type.to_sym].individual, current_user.user_key)
-      end
+    user = current_ability.current_user
+    return [] unless user && user.user_key.present?
+    permission_types.map do |type|
+      escape_filter(Hydra.config.permissions.inheritable[type.to_sym].individual, user.user_key)
     end
-    user_access_filters
   end
 
   # Returns the Model used for AdminPolicy objects.
