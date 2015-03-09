@@ -6,17 +6,17 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # appends the result of policy_clauses into the :fq
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
-  def apply_gated_discovery(solr_parameters, user_parameters)
+  def apply_gated_discovery(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << gated_discovery_filters.join(" OR ")
+    solr_parameters[:fq] << gated_discovery_filters.join(' OR '.freeze)
     logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
   end
 
   # returns solr query for finding all objects whose policies grant discover access to current_user
   def policy_clauses
-    policy_pids = policies_with_access
-    return nil if policy_pids.empty?
-    '(' + policy_pids.map {|pid| ActiveFedora::SolrQueryBuilder.construct_query_for_rel(is_governed_by: "info:fedora/#{pid}")}.join(' OR ') + ')'
+    policy_ids = policies_with_access
+    return nil if policy_ids.empty?
+    '(' + policy_ids.map {|pid| ActiveFedora::SolrQueryBuilder.construct_query_for_rel(is_governed_by: pid)}.join(' OR '.freeze) + ')'
   end
 
   # find all the policies that grant discover/read/edit permissions to this user or any of its groups
