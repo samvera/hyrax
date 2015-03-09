@@ -1,6 +1,5 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAccessControlsEnforcement
-  extend Deprecation
 
   # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access
   # appends the result of policy_clauses into the :fq
@@ -31,11 +30,6 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     result.map {|h| h['id']}
   end
 
-  def apply_policy_role_permissions(permission_types = discovery_permissions)
-    Deprecation.warn(Hydra::PolicyAwareAccessControlsEnforcement, "The method apply_policy_role_permissions is deprecated and will be removed from Hydra::PolicyAwareAccessControlsEnforcement in hydra-head 8.0.  Use apply_policy_group_permissions instead.", caller)
-    apply_policy_group_permissions(permission_types)
-  end
-
   def apply_policy_group_permissions(permission_types = discovery_permissions)
       # for groups
       user_access_filters = []
@@ -45,11 +39,6 @@ module Hydra::PolicyAwareAccessControlsEnforcement
         end
       end
       user_access_filters
-  end
-
-  def apply_policy_individual_permissions(permission_types = discovery_permissions)
-    Deprecation.warn(Hydra::PolicyAwareAccessControlsEnforcement, "The method apply_policy_individual_permissions is deprecated and will be removed from Hydra::PolicyAwareAccessControlsEnforcement in hydra-head 8.0.  Use apply_policy_user_permissions instead.", caller)
-    apply_policy_user_permissions(permission_types)
   end
 
   def apply_policy_user_permissions(permission_types = discovery_permissions)
