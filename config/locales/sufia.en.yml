@@ -65,8 +65,8 @@ en:
     dashboard:
       title:                    "My Dashboard"
       greeting:                 "Hello, "
-      upload:                   "Upload"
-      create_collection:        "Create Collection"
+      upload_html:                   '<span class="glyphicon glyphicon-upload"></span> Upload'
+      create_collection_html:        '<span class="glyphicon glyphicon-plus"></span> Create Collection'
       view_collections:         "View Collections"
       view_files:               "View Files"
       user_activity:            "User Activity"
