@@ -30,6 +30,15 @@ describe CollectionsController do
       }.to change{ Collection.count }.by(1)
     end
 
+    it "should remove blank strings from params before creating Collection" do
+      expect {
+        post :create, collection: {
+          title: "My First Collection ", creator: [""] }
+      }.to change{ Collection.count }.by(1)
+      expect(assigns[:collection].title).to eq("My First Collection ")
+      expect(assigns[:collection].creator).to eq([])
+    end
+
     it "should create a Collection with files I can access" do
       @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
@@ -113,6 +122,14 @@ describe CollectionsController do
         collection.reload
         expect(collection.creator).to eq ['Emily']
       end
+
+      it "should remove blank strings from params before updating Collection metadata" do
+        put :update, id: collection, collection: {
+          title: "My Next Collection ", creator: [""] }
+        expect(assigns[:collection].title).to eq("My Next Collection ")
+        expect(assigns[:collection].creator).to eq([])
+      end
+
     end
   end
 

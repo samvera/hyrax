@@ -144,42 +144,7 @@ class FitsDatastream < ActiveFedora::OmDatastream
     http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd",
                version: "0.6.0",
                timestamp: "1/25/12 11:04 AM") {
-        xml.identification {
-          xml.identity(format: '', mimetype: '',
-                       toolname: 'FITS', toolversion: '') {
-            xml.tool(toolname: '', toolversion: '')
-            xml.version(toolname: '', toolversion: '')
-            xml.externalIdentifier(toolname: '', toolversion: '')
-          }
-        }
-        xml.fileinfo {
-          xml.size(toolname: '', toolversion: '')
-          xml.creatingApplicatioName(toolname: '', toolversion: '',
-                                     status: '')
-          xml.lastmodified(toolname: '', toolversion: '', status: '')
-          xml.filepath(toolname: '', toolversion: '', status: '')
-          xml.filename(toolname: '', toolversion: '', status: '')
-          xml.md5checksum(toolname: '', toolversion: '', status: '')
-          xml.fslastmodified(toolname: '', toolversion: '', status: '')
-        }
-        xml.filestatus {
-          xml.tag! "well-formed", toolname: '', toolversion: '', status: ''
-          xml.valid(toolname: '', toolversion: '', status: '')
-        }
-        xml.metadata {
-          xml.document {
-            xml.title(toolname: '', toolversion: '', status: '')
-            xml.author(toolname: '', toolversion: '', status: '')
-            xml.pageCount(toolname: '', toolversion: '')
-            xml.isTagged(toolname: '', toolversion: '')
-            xml.hasOutline(toolname: '', toolversion: '')
-            xml.hasAnnotations(toolname: '', toolversion: '')
-            xml.isRightsManaged(toolname: '', toolversion: '',
-                                status: '')
-            xml.isProtected(toolname: '', toolversion: '')
-            xml.hasForms(toolname: '', toolversion: '', status: '')
-          }
-        }
+        xml.identification { xml.identity(toolname: 'FITS') }
       }
     end
     builder.doc
