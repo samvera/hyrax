@@ -1,3 +1,6 @@
+h3. 9.1.1 (2015-3-10)
+* Fixed policy based access controls for Fedora 4
+
 h3. 9.1.0 (2015-3-6)
 * Support blacklight 5.10.0
 
