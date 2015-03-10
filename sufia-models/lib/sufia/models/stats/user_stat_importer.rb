@@ -1,23 +1,28 @@
 module Sufia
   class UserStatImporter
 
+    UserRecord = Struct.new("UserRecord", :id, :user_key, :last_stats_update)
+
     def initialize(options={})
       @verbose = options[:verbose]
       @logging = options[:logging]
+      @delay_secs = options[:delay_secs].to_f
     end
 
     def import
       log_message('Begin import of User stats.')
-      ::User.find_each do |user|
+      sorted_users.each do |user|
         start_date = date_since_last_cache(user)
 
         stats = {}
         file_ids_for_user(user).each do |file_id|
           view_stats = FileViewStat.statistics(file_id, start_date, user.id)
           stats = tally_results(view_stats, :views, stats)
+          delay
 
           dl_stats = FileDownloadStat.statistics(file_id, start_date, user.id)
           stats = tally_results(dl_stats, :downloads, stats)
+          delay
         end
 
         create_or_update_user_stats(stats, user)
@@ -25,8 +30,22 @@ module Sufia
       log_message('User stats import complete.')
     end
 
+    # Returns an array of users sorted by the date of their last
+    # stats update. Users that have not been recently updated 
+    # will be at the top of the array.
+    def sorted_users
+      users = []
+      ::User.find_each do |user|
+        users.push(UserRecord.new(user.id, user.user_key, date_since_last_cache(user)))
+      end
+      users.sort! {|a, b| a.last_stats_update <=> b.last_stats_update}
+    end
 
 private
+
+    def delay 
+      sleep @delay_secs
+    end
 
     def date_since_last_cache(user)
       last_cached_stat = UserStat.where(user_id: user.id).order(date: :asc).last

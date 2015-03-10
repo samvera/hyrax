@@ -10,6 +10,7 @@ describe Sufia::UserStatImporter do
 
   let(:bilbo) { FactoryGirl.create(:user, email: 'bilbo@example.com') }
   let(:frodo) { FactoryGirl.create(:user, email: 'frodo@example.com') }
+  let!(:gollum) { FactoryGirl.create(:user, email: 'gollum@example.com') }
 
   let!(:bilbo_file_1) do
     GenericFile.new(id: 'bilbo1').tap do |f|
@@ -143,7 +144,7 @@ describe Sufia::UserStatImporter do
     end
 
     it "doesn't duplicate entries for existing dates" do
-      expect(User.count).to eq 2
+      expect(User.count).to eq 3
       expect(UserStat.count).to eq 3
 
       Sufia::UserStatImporter.new.import
@@ -163,6 +164,13 @@ describe Sufia::UserStatImporter do
       expect(frodos_stats[0].file_views).to eq(frodo_file_1_pageview_stats[0].pageviews)
 
       expect(frodos_stats[0].file_downloads).to eq(frodo_file_1_download_stats[0].totalEvents.to_i)
+    end
+
+    it "processes the oldest records first" do
+      # Since Gollum has no stats it will be the first one processed. 
+      # Followed by Frodo and Bilbo.
+      sorted_ids = Sufia::UserStatImporter.new.sorted_users.map { |u| u.id }
+      expect(sorted_ids).to eq([gollum.id, frodo.id, bilbo.id])
     end
   end
 end
