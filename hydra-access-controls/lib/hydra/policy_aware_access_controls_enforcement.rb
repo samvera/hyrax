@@ -1,22 +1,21 @@
 # Repeats access controls evaluation methods, but checks against a governing "Policy" object (or "Collection" object) that provides inherited access controls.
 module Hydra::PolicyAwareAccessControlsEnforcement
-  extend Deprecation
 
   # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access
   # appends the result of policy_clauses into the :fq
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
-  def apply_gated_discovery(solr_parameters, user_parameters)
+  def apply_gated_discovery(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << gated_discovery_filters.join(" OR ")
+    solr_parameters[:fq] << gated_discovery_filters.join(' OR '.freeze)
     logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
   end
 
   # returns solr query for finding all objects whose policies grant discover access to current_user
   def policy_clauses
-    policy_pids = policies_with_access
-    return nil if policy_pids.empty?
-    '(' + policy_pids.map {|pid| ActiveFedora::SolrQueryBuilder.construct_query_for_rel(is_governed_by: "info:fedora/#{pid}")}.join(' OR ') + ')'
+    policy_ids = policies_with_access
+    return nil if policy_ids.empty?
+    '(' + policy_ids.map {|id| ActiveFedora::SolrQueryBuilder.construct_query_for_rel(isGovernedBy: id)}.join(' OR '.freeze) + ')'
   end
 
   # find all the policies that grant discover/read/edit permissions to this user or any of its groups
@@ -31,11 +30,6 @@ module Hydra::PolicyAwareAccessControlsEnforcement
     result.map {|h| h['id']}
   end
 
-  def apply_policy_role_permissions(permission_types = discovery_permissions)
-    Deprecation.warn(Hydra::PolicyAwareAccessControlsEnforcement, "The method apply_policy_role_permissions is deprecated and will be removed from Hydra::PolicyAwareAccessControlsEnforcement in hydra-head 8.0.  Use apply_policy_group_permissions instead.", caller)
-    apply_policy_group_permissions(permission_types)
-  end
-
   def apply_policy_group_permissions(permission_types = discovery_permissions)
       # for groups
       user_access_filters = []
@@ -47,20 +41,13 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       user_access_filters
   end
 
-  def apply_policy_individual_permissions(permission_types = discovery_permissions)
-    Deprecation.warn(Hydra::PolicyAwareAccessControlsEnforcement, "The method apply_policy_individual_permissions is deprecated and will be removed from Hydra::PolicyAwareAccessControlsEnforcement in hydra-head 8.0.  Use apply_policy_user_permissions instead.", caller)
-    apply_policy_user_permissions(permission_types)
-  end
-
   def apply_policy_user_permissions(permission_types = discovery_permissions)
     # for individual user access
-    user_access_filters = []
-    if current_user
-      permission_types.each do |type|
-        user_access_filters << escape_filter(Hydra.config.permissions.inheritable[type.to_sym].individual, current_user.user_key)
-      end
+    user = current_ability.current_user
+    return [] unless user && user.user_key.present?
+    permission_types.map do |type|
+      escape_filter(Hydra.config.permissions.inheritable[type.to_sym].individual, user.user_key)
     end
-    user_access_filters
   end
 
   # Returns the Model used for AdminPolicy objects.

@@ -36,7 +36,7 @@ describe Hydra::PolicyAwareAbility do
 
   subject { PolicyAwareClass.new( User.new ) }
 
-  describe "policy_pid_for" do
+  describe "policy_id_for" do
     before do
       @policy2 = Hydra::AdminPolicy.create
       @policy2.default_permissions.create [
@@ -54,9 +54,9 @@ describe Hydra::PolicyAwareAbility do
     end
 
     it "should retrieve the pid doc for the current object's governing policy" do
-      expect(subject.policy_pid_for(@asset.id)).to eq @policy.id
-      expect(subject.policy_pid_for(@asset2.id)).to eq @policy2.id
-      expect(subject.policy_pid_for(@asset3.id)).to be_nil
+      expect(subject.policy_id_for(@asset.id)).to eq @policy.id
+      expect(subject.policy_id_for(@asset2.id)).to eq @policy2.id
+      expect(subject.policy_id_for(@asset3.id)).to be_nil
     end
   end
 

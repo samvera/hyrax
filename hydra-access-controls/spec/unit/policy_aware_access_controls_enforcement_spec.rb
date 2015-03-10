@@ -2,13 +2,17 @@ require 'spec_helper'
 
 describe Hydra::PolicyAwareAccessControlsEnforcement do
   before do
-    class PolicyMockController
+    class PolicyMockSearchBuilder
       include Hydra::AccessControlsEnforcement
       include Hydra::PolicyAwareAccessControlsEnforcement
       attr_accessor :params
 
+      def initialize(current_ability)
+        @current_ability = current_ability
+      end
+
       def current_ability
-        @current_ability ||= Ability.new(current_user)
+        @current_ability
       end
 
       def session
@@ -16,7 +20,6 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
       delegate :logger, to: :Rails
     end
-
     @sample_policies = []
     # user discover
     policy1 = Hydra::AdminPolicy.create("test-policy1")
@@ -84,19 +87,18 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     @policies_with_access = @sample_policies.select { |p| p.id != policy_no_access.id }
   end
 
-  subject { PolicyMockController.new }
+  let(:current_ability) { Ability.new(user) }
+  subject { PolicyMockSearchBuilder.new(current_ability) }
+  let(:user) { FactoryGirl.build(:sara_student) }
 
   before do
     @solr_parameters = {}
-    @user_parameters = {}
-    @user = FactoryGirl.build(:sara_student)
   end
 
   describe "policies_with_access" do
     context "Authenticated user" do
       before do
-        allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
-        allow(subject).to receive(:current_user).and_return(@user)
+        allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles)
       end
       it "should return the policies that provide discover permissions" do
         @policies_with_access.map {|p| p.id }.each do |p|
@@ -111,7 +113,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       end
     end
     context "Anonymous user" do
-      before { allow(subject).to receive(:current_user).and_return(nil) }
+      let(:user) { nil }
       it "should return the policies that provide discover permissions" do
         expect(subject.policies_with_access).to match_array ["test-policy7", "test-policy8"]
       end
@@ -120,33 +122,28 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
   describe "apply_gated_discovery" do
     before do
-      allow(RoleMapper).to receive(:roles).with(@user).and_return(@user.roles)
-      allow(subject).to receive(:current_user).and_return(@user)
+      allow(RoleMapper).to receive(:roles).with(user).and_return(user.roles)
     end
+    let(:governed_field) { ActiveFedora::SolrQueryBuilder.solr_name('isGovernedBy', :symbol) }
 
     it "should include policy-aware query" do
       # stubbing out policies_with_access because solr doesn't always return them in the same order.
-      policy_ids = (1..8).map {|n| "test:policy#{n}"}
+      policy_ids = (1..8).map {|n| "policies/#{n}"}
       expect(subject).to receive(:policies_with_access).and_return(policy_ids)
-      subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      governed_field = ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)
-      expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!raw f=#{governed_field}}info:fedora/test:policy1\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy2\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy3\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy4\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy5\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy6\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy7\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy8\")")
+      subject.apply_gated_discovery(@solr_parameters)
+      expect(@solr_parameters[:fq].first).to include(" OR (_query_:\"{!raw f=#{governed_field}}policies/1\" OR _query_:\"{!raw f=#{governed_field}}policies/2\" OR _query_:\"{!raw f=#{governed_field}}policies/3\" OR _query_:\"{!raw f=#{governed_field}}policies/4\" OR _query_:\"{!raw f=#{governed_field}}policies/5\" OR _query_:\"{!raw f=#{governed_field}}policies/6\" OR _query_:\"{!raw f=#{governed_field}}policies/7\" OR _query_:\"{!raw f=#{governed_field}}policies/8\")")
     end
 
     it "should not change anything if there are no clauses to add" do
       allow(subject).to receive(:policy_clauses).and_return(nil)
-      subject.apply_gated_discovery(@solr_parameters, @user_parameters)
-      expect(@solr_parameters[:fq].first).to_not include(" OR (#{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrQueryBuilder.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
+      subject.apply_gated_discovery(@solr_parameters)
+      expect(@solr_parameters[:fq].first).not_to include(" OR (_query_:\"{!raw f=#{governed_field}}policies/1\" OR _query_:\"{!raw f=#{governed_field}}policies/2\" OR _query_:\"{!raw f=#{governed_field}}policies/3\" OR _query_:\"{!raw f=#{governed_field}}policies/4\" OR _query_:\"{!raw f=#{governed_field}}policies/5\" OR _query_:\"{!raw f=#{governed_field}}policies/6\" OR _query_:\"{!raw f=#{governed_field}}policies/7\" OR _query_:\"{!raw f=#{governed_field}}policies/8\")")
     end
   end
 
   describe "apply_policy_role_permissions" do
-    before do
-      allow(subject).to receive(:current_user).and_return(@user)
-    end
-
     it "should escape slashes in the group names" do
-      allow(RoleMapper).to receive(:roles).with(@user).and_return(["abc/123","cde/567"])
+      allow(RoleMapper).to receive(:roles).with(user).and_return(["abc/123","cde/567"])
       user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
         expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\\/123")
@@ -155,7 +152,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     end
 
     it "should escape spaces in the group names" do
-      allow(RoleMapper).to receive(:roles).with(@user).and_return(["abc 123","cd/e 567"])
+      allow(RoleMapper).to receive(:roles).with(user).and_return(["abc 123","cd/e 567"])
       user_access_filters = subject.apply_policy_group_permissions
       ["edit","discover","read"].each do |type|
         expect(user_access_filters).to include("inheritable_#{type}_access_group_ssim\:abc\\ 123")
