@@ -6,9 +6,10 @@ module Sufia::UsersControllerBehavior
     layout "sufia-one-column"
     prepend_before_filter :find_user, except: [:index, :search, :notifications_number]
     before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
-    before_filter :user_is_current_user, only: [:edit, :update, :toggle_trophy]
-
     before_filter :user_not_current_user, only: [:follow, :unfollow]
+    authorize_resource only: [:edit, :update, :toggle_trophy]
+    # Catch permission errors
+    rescue_from CanCan::AccessDenied, with: :deny_access
   end
 
   def index
@@ -41,7 +42,6 @@ module Sufia::UsersControllerBehavior
 
   # Display form for users to edit their profile information
   def edit
-    @user = current_user
     @trophies = @user.trophy_files
   end
 
@@ -125,10 +125,6 @@ module Sufia::UsersControllerBehavior
     redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
   end
 
-  def user_is_current_user
-    redirect_to sufia.profile_path(@user.to_param), alert: "Permission denied: cannot access this page." unless @user == current_user
-  end
-
   def user_not_current_user
     redirect_to sufia.profile_path(@user.to_param), alert: "You cannot follow or unfollow yourself" if @user == current_user
   end
@@ -141,5 +137,9 @@ module Sufia::UsersControllerBehavior
            else sort
            end
     return sort_val
+  end
+
+  def deny_access(exception)
+    redirect_to sufia.profile_path(@user.to_param), alert: "Permission denied: cannot access this page."
   end
 end

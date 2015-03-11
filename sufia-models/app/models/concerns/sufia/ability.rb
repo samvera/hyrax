@@ -8,6 +8,7 @@ module Sufia
 
     def sufia_abilities
       generic_file_abilities
+      user_abilities
       featured_work_abilities
       editor_abilities
       stats_abilities
@@ -23,7 +24,10 @@ module Sufia
       can :reject, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
       # a user who sent a proxy deposit request can cancel it if it's pending.
       can :destroy, ProxyDepositRequest, sending_user_id: current_user.id, status: 'pending'
-      can :edit, ::User, id: current_user.id
+    end
+
+    def user_abilities
+      can [:edit, :update, :toggle_trophy], ::User, id: current_user.id
     end
 
     def featured_work_abilities
@@ -51,5 +55,6 @@ module Sufia
     def depositor_for_document(document_id)
       ::GenericFile.load_instance_from_solr(document_id).depositor
     end
+
   end
 end

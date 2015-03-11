@@ -103,10 +103,24 @@ describe UsersController, :type => :controller do
 
     context "when user attempts to edit another profile" do
       let(:another_user) { FactoryGirl.create(:user) }
-      it "redirects to show profile" do
-        get :edit, id: another_user.user_key
-        expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
-        expect(flash[:alert]).to include("Permission denied: cannot access this page.")
+      context 'with default abilities' do
+        it "redirects to show profile" do
+          expect_any_instance_of(Ability).to receive(:can?).with(:edit, another_user).and_return(false)
+          get :edit, id: another_user.to_param
+          expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
+          expect(flash[:alert]).to include("Permission denied: cannot access this page.")
+        end
+      end
+      context 'with a custom ability' do
+        before do
+          allow_any_instance_of(Ability).to receive(:can?).with(:edit, another_user).and_return(true)
+        end
+        it "allows user to edit another user's profile" do
+          get :edit, id: another_user.to_param
+          expect(response).to be_success
+          expect(response).not_to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
+          expect(flash[:alert]).to be_nil
+        end
       end
     end
 
