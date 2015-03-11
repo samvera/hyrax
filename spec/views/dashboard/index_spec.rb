@@ -94,7 +94,6 @@ describe "dashboard/index.html.erb", :type => :view do
     end
 
     context "with notifications" do
-
       before do
         assign(:notifications, FactoryGirl.create(:user_with_mail).mailbox.inbox)
       end
@@ -115,7 +114,37 @@ describe "dashboard/index.html.erb", :type => :view do
         render
         expect(rendered).to include "Single File 1"
       end
+    end
 
+    context 'with transfers' do
+      let(:user) { FactoryGirl.find_or_create(:jill) }
+      let(:another_user) { FactoryGirl.find_or_create(:archivist) }
+      let(:title1) { 'foobar' }
+      let(:title2) { 'bazquux' }
+
+      before do
+        GenericFile.new(title: [title1]).tap do |f|
+          f.apply_depositor_metadata(another_user.user_key)
+          f.save!
+          f.request_transfer_to(user)
+        end
+        GenericFile.new(title: [title2]).tap do |f|
+          f.apply_depositor_metadata(user.user_key)
+          f.save!
+          f.request_transfer_to(another_user)
+        end
+        allow(controller).to receive(:current_user).and_return(user)
+        assign(:incoming, ProxyDepositRequest.where(receiving_user_id: user.id))
+        assign(:outgoing, ProxyDepositRequest.where(sending_user_id: user.id))
+      end
+
+      it 'renders received and sent transfer requests' do
+        render
+        expect(rendered).not_to include "You haven't received any file transfers requests"
+        expect(rendered).not_to include "You haven't transferred any files"
+        expect(rendered).to include title1
+        expect(rendered).to include title2
+      end
     end
 
     context "without activities and notifications" do
