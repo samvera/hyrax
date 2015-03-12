@@ -8,8 +8,7 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 class CatalogController < ApplicationController
-  include Blacklight::Catalog
-  # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
+  include Hydra::Catalog
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
   include Sufia::Catalog
@@ -17,7 +16,7 @@ class CatalogController < ApplicationController
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, only: :show
   # This applies appropriate access controls to all solr queries
-  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
 
   skip_before_filter :default_html_head
 
@@ -30,6 +29,7 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
+    config.search_builder_class = Hydra::SearchBuilder
     #Show gallery view
     config.view.gallery.partials = [:index_header, :index]
     config.view.slideshow.partials = [:index]
