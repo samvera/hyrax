@@ -1,4 +1,4 @@
-h3. 9.1.2 (Unreleased)
+h3. 9.1.2 (2015-3-12)
 * Added Hydra::Catalog module to parallel Blacklight::Catalog
 * Extract Hydra::Controller::SearchBuilder from Hydra::Controller::ControllerBehavior
 
