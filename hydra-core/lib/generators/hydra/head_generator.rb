@@ -41,9 +41,19 @@ module Hydra
       end
     end
 
+    def overwrite_catalog_controller
+      copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
+    end
+
+    # Add Hydra to the application controller
+    def inject_hydra_controller_behavior
+      insert_into_file "app/controllers/application_controller.rb", after: "include Blacklight::Controller\n" do
+        "  include Hydra::Controller::ControllerBehavior\n"
+      end
+    end
+
     # Copy all files in templates/config directory to host config
     def create_configuration_files
-      copy_file "catalog_controller.rb", "app/controllers/catalog_controller.rb"
 
       # Initializers
       file_path = "config/initializers/hydra_config.rb"
