@@ -17,8 +17,8 @@ Gem::Specification.new do |gem|
   gem.license       = 'Apache2'
 
   gem.add_dependency 'sufia-models', version
-  gem.add_dependency 'blacklight_advanced_search', '~> 5.0'
-  gem.add_dependency 'blacklight', '< 5.10'
+  gem.add_dependency 'blacklight_advanced_search', '~> 5.1'
+  gem.add_dependency 'blacklight', '~> 5.10'
   gem.add_dependency 'tinymce-rails', '~> 4.0.19'
   gem.add_dependency 'tinymce-rails-imageupload', '~> 4.0.16.beta'
 
