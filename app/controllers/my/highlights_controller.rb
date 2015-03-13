@@ -1,7 +1,7 @@
 module My
   class HighlightsController < MyController
 
-    self.solr_search_params_logic += [
+    self.search_params_logic += [
       :show_only_highlighted_files
     ]
 

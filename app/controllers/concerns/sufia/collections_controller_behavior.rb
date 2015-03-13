@@ -13,7 +13,7 @@ module Sufia
       before_filter :has_access?, except: :show
       before_filter :build_breadcrumbs, only: [:edit, :show]
 
-      self.solr_search_params_logic += [:add_access_controls_to_solr_params]
+      self.search_params_logic += [:add_access_controls_to_solr_params]
 
       layout "sufia-one-column"
     end

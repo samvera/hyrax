@@ -21,7 +21,7 @@ module Sufia
       before_filter :find_collections, only: :index
 
       # This applies appropriate access controls to all solr queries (the internal method of this is overidden bellow to only include edit files)
-      self.solr_search_params_logic += [:add_access_controls_to_solr_params]
+      self.search_params_logic += [:add_access_controls_to_solr_params]
 
       layout 'sufia-dashboard'
     end

@@ -2,7 +2,7 @@ module Sufia
   module Catalog
     extend ActiveSupport::Concern
     included do
-      self.solr_search_params_logic += [:only_generic_files_and_collections]
+      self.search_params_logic += [:only_generic_files_and_collections]
     end
 
     protected

@@ -6,10 +6,10 @@ module Sufia::HomepageController
     include Hydra::Controller::ControllerBehavior
     include Blacklight::Catalog::SearchContext
     include Sufia::Controller
-    include Blacklight::SolrHelper
+    include Blacklight::SearchHelper
     include Hydra::Controller::SearchBuilder
 
-    self.solr_search_params_logic += [:only_generic_files, :add_access_controls_to_solr_params]
+    self.search_params_logic += [:only_generic_files, :add_access_controls_to_solr_params]
     layout 'homepage'
   end
 
