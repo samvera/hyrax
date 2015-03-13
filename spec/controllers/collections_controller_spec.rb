@@ -57,12 +57,13 @@ describe CollectionsController do
       expect(collection.members).to match_array [@asset1, @asset2]
     end
 
-    it "should add docs to collection if batch ids provided and add the collection id to the documents int he colledction" do
+    it "should add docs to the collection if a batch id is provided and add the collection id to the documents in the collection" do
+      pending "Change test because we don't re-index member documents anymore?"
       @asset1 = GenericFile.new(title: ["First of the Assets"])
       @asset1.apply_depositor_metadata(user.user_key)
       @asset1.save
       post :create, batch_document_ids: [@asset1.id],
-        collection: { title: "My Secong Collection ", description: "The Description\r\n\r\nand more" }
+        collection: { title: "My Second Collection ", description: "The Description\r\n\r\nand more" }
       expect(assigns[:collection].members).to eq [@asset1]
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{@asset1.id}\""],fl:['id',Solrizer.solr_name(:collection)]}
       expect(asset_results["response"]["numFound"]).to eq 1
@@ -97,6 +98,7 @@ describe CollectionsController do
       end
 
       it "should set collection on members" do
+        pending "Change test because we don't re-index member documents anymore?"
         put :update, id: collection, collection: {members:"add"}, batch_document_ids: [@asset3.id, @asset1.id, @asset2.id]
         expect(response).to redirect_to routes.url_helpers.collection_path(collection)
         expect(assigns[:collection].members).to match_array [@asset2, @asset3, @asset1]

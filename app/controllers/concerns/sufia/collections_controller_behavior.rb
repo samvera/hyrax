@@ -55,12 +55,7 @@ module Sufia
     def query_collection_members
       flash[:notice]=nil if flash[:notice] == "Select something first"
       query = params[:cq]
-
-      #merge in the user parameters and the attach the collection query
-      solr_params =  (params.symbolize_keys).merge(q: query)
-
-      # run the solr query to find the collections
-      (@response, @member_docs) = get_search_results(solr_params)
+      super
     end
 
     def after_destroy(id)

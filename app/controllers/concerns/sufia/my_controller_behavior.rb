@@ -3,7 +3,7 @@ require 'blacklight/catalog'
 module Sufia
   module MyControllerBehavior
     extend ActiveSupport::Concern
-    include Blacklight::Catalog
+    include Hydra::Catalog
     include Hydra::BatchEditBehavior
     include Hydra::Collections::SelectsCollections
   
