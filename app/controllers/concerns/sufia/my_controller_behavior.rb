@@ -11,17 +11,13 @@ module Sufia
       include Blacklight::Configurable
 
       self.copy_blacklight_config_from(CatalogController)
-
-      include BlacklightAdvancedSearch::ParseBasicQ
-      include BlacklightAdvancedSearch::Controller
       
       before_filter :authenticate_user!
       before_filter :enforce_show_permissions, only: :show
       before_filter :enforce_viewing_context_for_show_requests, only: :show
       before_filter :find_collections, only: :index
 
-      # This applies appropriate access controls to all solr queries (the internal method of this is overidden bellow to only include edit files)
-      self.search_params_logic += [:add_access_controls_to_solr_params]
+      self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
 
       layout 'sufia-dashboard'
     end

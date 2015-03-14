@@ -4,16 +4,13 @@ module Sufia
     include Hydra::CollectionsControllerBehavior
 
     included do
-      include Blacklight::Catalog::SearchContext
-      include BlacklightAdvancedSearch::ParseBasicQ
-      include BlacklightAdvancedSearch::Controller
       include Sufia::Breadcrumbs
 
       before_filter :filter_docs_with_read_access!, except: :show
       before_filter :has_access?, except: :show
       before_filter :build_breadcrumbs, only: [:edit, :show]
 
-      self.search_params_logic += [:add_access_controls_to_solr_params]
+      self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
 
       layout "sufia-one-column"
     end
@@ -58,7 +55,7 @@ module Sufia
 
     def query_collection_members
       flash[:notice]=nil if flash[:notice] == "Select something first"
-      query = params[:cq]
+      params[:q] = params[:cq]
       super
     end
 
