@@ -6,13 +6,6 @@ module My
       :show_only_generic_files
     ]
 
-    def show_only_shared_files(solr_parameters, user_parameters)
-      solr_parameters[:fq] ||= []
-      solr_parameters[:fq] += [
-        "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user.user_key)
-      ]
-    end
-
     def index
       super
       @selected_tab = :shared

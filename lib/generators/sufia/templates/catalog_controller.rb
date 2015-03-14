@@ -29,7 +29,7 @@ class CatalogController < ApplicationController
   end
 
   configure_blacklight do |config|
-    config.search_builder_class = Hydra::SearchBuilder
+    config.search_builder_class = Sufia::SearchBuilder
     #Show gallery view
     config.view.gallery.partials = [:index_header, :index]
     config.view.slideshow.partials = [:index]

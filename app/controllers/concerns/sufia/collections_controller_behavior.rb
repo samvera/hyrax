@@ -43,6 +43,10 @@ module Sufia
       Sufia::CollectionPresenter
     end
 
+    def collection_member_search_builder_class
+      Sufia::SearchBuilder
+    end
+
     def collection_params
       form_class.model_attributes(
         params.require(:collection).permit(:title, :description, :members, part_of: [],

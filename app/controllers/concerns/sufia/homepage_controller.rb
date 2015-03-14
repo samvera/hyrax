@@ -9,7 +9,7 @@ module Sufia::HomepageController
     include Blacklight::SearchHelper
     include Hydra::Controller::SearchBuilder
 
-    self.search_params_logic += [:only_generic_files, :add_access_controls_to_solr_params]
+    self.search_params_logic += [:show_only_generic_files, :add_access_controls_to_solr_params]
     layout 'homepage'
   end
 
@@ -25,19 +25,11 @@ module Sufia::HomepageController
 
   def recent
     # grab any recent documents
-    (_, @recent_documents) = get_search_results(q: '', sort:sort_field, rows: 4)
+    (_, @recent_documents) = search_results({q: '', sort:sort_field, rows: 4}, search_params_logic)
   end
 
   def sort_field
     "#{Solrizer.solr_name('system_create', :stored_sortable, type: :date)} desc"
-  end
-
-  # Limits search results just to GenericFiles
-  # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
-  def only_generic_files(solr_parameters, user_parameters)
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"GenericFile\""
   end
 
 end
