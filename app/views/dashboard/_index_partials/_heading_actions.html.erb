@@ -1,16 +1,18 @@
 <div class="col-xs-12 heading-row">
-  <div class="col-xs-6 col-sm-3 heading-tile">
-    <%= link_to sufia.new_generic_file_path do %>
-        <span class="glyphicon glyphicon-upload"></span>
-        <%= t("sufia.dashboard.upload") %>
-    <% end %>
-  </div>
-  <div class="col-xs-6 col-sm-3 heading-tile">
-    <%= link_to collections.new_collection_path, id: "hydra-collection-add" do %>
-        <span class="glyphicon glyphicon-plus"></span>
-        <%= t("sufia.dashboard.create_collection") %>
-    <% end %>
-  </div>
+  <% if can?(:create, GenericFile) %>
+    <div class="col-xs-6 col-sm-3 heading-tile">
+      <%= link_to sufia.new_generic_file_path do %>
+          <span class="glyphicon glyphicon-upload"></span>
+          <%= t("sufia.dashboard.upload") %>
+      <% end %>
+    </div>
+    <div class="col-xs-6 col-sm-3 heading-tile">
+      <%= link_to collections.new_collection_path, id: "hydra-collection-add" do %>
+          <span class="glyphicon glyphicon-plus"></span>
+          <%= t("sufia.dashboard.create_collection") %>
+      <% end %>
+    </div>
+  <% end  %>
   <div class="col-xs-6 col-sm-3 heading-tile">
     <%= link_to sufia.dashboard_collections_path, id: "hydra-collection-view" do %>
         <span class="glyphicon glyphicon-th"></span>

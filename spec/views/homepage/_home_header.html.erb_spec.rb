@@ -6,7 +6,7 @@ RSpec.describe "homepage/_home_header.html.erb" do
   describe "share your work button" do
     before do
       allow(controller).to receive(:current_ability).and_return(ability)
-      allow(ability).to receive(:can?).with(:view_upload).and_return(can_view_upload)
+      allow(ability).to receive(:can?).with(:view_upload, GenericFile).and_return(can_view_upload)
       stub_template "homepage/_marketing" => "marketing"
       render
     end

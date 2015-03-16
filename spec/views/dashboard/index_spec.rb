@@ -15,11 +15,15 @@ describe "dashboard/index.html.erb", :type => :view do
     allow(@user).to receive(:total_file_views).and_return(1)
     allow(@user).to receive(:total_file_downloads).and_return(3)
     allow(controller).to receive(:current_user).and_return(@user)
+    @ability = instance_double("Ability")
+    allow(controller).to receive(:current_ability).and_return(@ability)
+    allow(@ability).to receive(:can?).with(:create, GenericFile).and_return(can_create_file)
     allow(view).to receive(:number_of_files).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")
     assign(:activity, [])
     assign(:notifications, [])
   end
+  let(:can_create_file) { true }
 
   describe "heading" do
 
@@ -34,6 +38,14 @@ describe "dashboard/index.html.erb", :type => :view do
       expect(@heading).to have_link("View Files", sufia.dashboard_files_path)
       expect(@heading).to include "My Dashboard"
       expect(@heading).to include "Hello, Charles Francis Xavier"
+    end
+
+    context "when the user can't create files" do
+      let(:can_create_file) { false }
+      it "should not display the create buttons" do
+        expect(@heading).not_to have_link("Upload", sufia.new_generic_file_path)
+        expect(@heading).not_to have_link("Create Collection", collections.new_collection_path)
+      end
     end
 
   end
