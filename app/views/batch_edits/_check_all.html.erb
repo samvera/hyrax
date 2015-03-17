@@ -1,7 +1,7 @@
 <div class="dropdown batch_document_selector_all" >
   <%= check_box_tag 'check_all', 'yes', @all_checked, disabled: @disable_select_all %>
   <% if !@disable_select_all %>
-    <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog" title="click for selection options"></span></a>
+    <a class="dropdown-toggle"  data-toggle="dropdown" href="#"><span class="sr-only">Select to access selection options</span><span class="glyphicon glyphicon-cog"></span></a>
     <ul class="dropdown-menu">
       <%= render partial:"#{controller_name}/batch_edits_actions" %>
     </ul>
