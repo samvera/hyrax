@@ -48,7 +48,7 @@ module Sufia
 
     # routed to /files/new
     def new
-      @batch_id = Batch.create.id
+      @batch_id = Sufia::IdService.mint
     end
 
     # routed to /files/:id/edit
@@ -211,6 +211,9 @@ module Sufia
     end
 
     def process_file(file)
+
+      Batch.find_or_create(params[:batch_id])
+
       update_metadata_from_upload_screen
       actor.create_metadata(params[:batch_id])
       if actor.create_content(file, file.original_filename, file_path, file.content_type)
