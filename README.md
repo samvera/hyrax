@@ -96,7 +96,7 @@ Sufia requires the following software to work:
 
 ### Characterization
 
-1. Go to http://code.google.com/p/fits/downloads/list and download a copy of FITS & unpack it somewhere on your machine.  You can also install FITS on OSX with homebrew `brew install fits` (you may also have to create a symlink from `fits.sh -> fits` in the next step).
+1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS & unpack it somewhere on your machine.  You can also install FITS on OSX with homebrew `brew install fits` (you may also have to create a symlink from `fits.sh -> fits` in the next step).
 1. Mark fits.sh as executable (`chmod a+x fits.sh`)
 1. Run "fits.sh -h" from the command line and see a help message to ensure FITS is properly installed
 1. Give your Sufia app access to FITS by:
