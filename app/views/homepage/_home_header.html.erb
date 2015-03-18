@@ -1,12 +1,11 @@
 <div class="home_call_action col-xs-12 col-sm-4 pull-right">
-  <div class="home_share_work">
-    <%= link_to "<i class=\"glyphicon glyphicon-upload\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_generic_file_path, class: "btn btn-primary btn-lg btn-block", id: "contribute_link" %>
-    <p class="text-center"><a href="/terms/">Terms of Use</a></p>
-  </div><!-- /.home_share_work -->
+  <% if can?(:view_share_work, GenericFile) %>
+    <div class="home_share_work">
+      <%= link_to "<i class=\"glyphicon glyphicon-upload\"></i> #{t('sufia.share_button')}".html_safe, sufia.new_generic_file_path, class: "btn btn-primary btn-lg btn-block", id: "contribute_link" %>
+      <p class="text-center"><a href="/terms/">Terms of Use</a></p>
+    </div><!-- /.home_share_work -->
+  <% end %>
 </div><!-- /.col-xs-3 -->
 <div class="col-xs-12 col-sm-8">
   <%= render partial: "marketing" %>
 </div>
-
-
-

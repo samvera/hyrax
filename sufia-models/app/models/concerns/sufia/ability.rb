@@ -35,6 +35,7 @@ module Sufia
     end
 
     def generic_file_abilities
+      can :view_share_work, [GenericFile]
       can :create, [GenericFile, Collection] if user_groups.include? 'registered'
     end
 
