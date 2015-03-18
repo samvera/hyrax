@@ -29,9 +29,9 @@
       <% if document.registered? %>
         <span class="label label-info" title="<%= t('sufia.institution_name') %>"><%= t('sufia.institution_name') %></span>
       <% elsif document.public? %>
-        <span class="label label-success" title="Open Access">Open Access</span>
+        <span class="label label-success" title="<%= t('sufia.visibility.open_title_attr') %>"><%= t('sufia.visibility.open') %></span>
       <% else %>
-        <span class="label label-danger" title="Private">Private</span>
+        <span class="label label-danger" title="<%= t('sufia.visibility.private_title_attr') %>"><%= t('sufia.visibility.private') %></span>
       <% end %>
     </a>
   </td>

@@ -128,6 +128,8 @@ en:
     visibility:
       open: "Open Access"
       private: "Private"
+      open_title_attr: "Change the visibility of this resource"
+      private_title_attr: "Change the visibility of this resource"
     user_profile:
       no_followers: "No one is following you."
       no_following: "You are not following anyone."
