@@ -13,6 +13,7 @@ module Sufia::FilesController
     protected
 
       def create_from_browse_everything(params)
+        Batch.find_or_create(params[:batch_id])        
         params[:selected_files].each_pair do |index, file_info| 
           next if file_info.blank? || file_info["url"].blank?
           create_file_from_url(file_info["url"], file_info["file_name"])
@@ -22,7 +23,7 @@ module Sufia::FilesController
       
       # Generic utility for creating GenericFile from a URL
       # Used in to import files using URLs from a file picker like browse_everything 
-      def create_file_from_url(url, file_name, batch_id=nil)
+      def create_file_from_url(url, file_name)
         generic_file = ::GenericFile.new(import_url: url, label: file_name).tap do |gf|
           actor = Sufia::GenericFile::Actor.new(gf, current_user)
           actor.create_metadata(params[:batch_id])

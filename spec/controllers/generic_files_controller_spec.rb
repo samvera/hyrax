@@ -563,4 +563,27 @@ describe GenericFilesController do
       expect(user.mailbox.inbox[0].messages[0].subject).to eq "Test subject"
     end
   end
+
+  describe "batch creation" do
+    context "when uploading a file" do 
+      let(:batch_id) { Sufia::IdService.mint }
+      let(:file1) { fixture_file_upload('/world.png','image/png') }
+      let(:file2) { fixture_file_upload('/image.jpg','image/png') }
+
+      it "should not create the batch on HTTP GET " do
+        expect(Batch).to_not receive(:create)
+        xhr :get, :new 
+        expect(response).to be_success
+      end
+
+      it "should create the batch on HTTP POST with multiple files" do
+        expect(GenericFile).to receive(:new).twice
+        expect(Batch).to receive(:find_or_create).twice
+        xhr :post, :create, files: [file1], Filename: 'The world 1', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        expect(response).to be_success
+        xhr :post, :create, files: [file2], Filename: 'An image', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
+        expect(response).to be_success
+      end
+    end  
+  end
 end

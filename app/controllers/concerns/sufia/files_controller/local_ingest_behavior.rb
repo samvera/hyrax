@@ -44,6 +44,7 @@ module Sufia
           files << filename
         end
       end
+      Batch.find_or_create(params[:batch_id]) unless files.empty?
       files.each do |filename|
         ingest_one(filename, has_directories)
       end
