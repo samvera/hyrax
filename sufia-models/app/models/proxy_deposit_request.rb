@@ -28,7 +28,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   end
 
   def should_not_be_already_part_of_a_transfer
-    transfers = ProxyDepositRequest.where(pid: pid)
+    transfers = ProxyDepositRequest.where(pid: pid, status: 'pending')
     errors.add(:open_transfer, 'must close open transfer on the file before creating a new one') unless transfers.blank? || ( transfers.count == 1 && transfers[0].id == self.id)
   end
 
