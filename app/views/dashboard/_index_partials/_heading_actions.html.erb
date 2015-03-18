@@ -6,6 +6,8 @@
           <%= t("sufia.dashboard.upload") %>
       <% end %>
     </div>
+  <% end %>
+  <% if can?(:create, Collection) %>
     <div class="col-xs-6 col-sm-3 heading-tile">
       <%= link_to collections.new_collection_path, id: "hydra-collection-add" do %>
           <span class="glyphicon glyphicon-plus"></span>
