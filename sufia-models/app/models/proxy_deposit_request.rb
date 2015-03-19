@@ -1,5 +1,5 @@
 class ProxyDepositRequest < ActiveRecord::Base
-  include Blacklight::SolrHelper
+  include Blacklight::SearchHelper
   include ActionView::Helpers::UrlHelper
 
   belongs_to :receiving_user, class_name: 'User'

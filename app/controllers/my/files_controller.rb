@@ -1,7 +1,7 @@
 module My
   class FilesController < MyController
 
-    self.solr_search_params_logic += [
+    self.search_params_logic += [
       :show_only_files_deposited_by_current_user,
       :show_only_generic_files
     ]

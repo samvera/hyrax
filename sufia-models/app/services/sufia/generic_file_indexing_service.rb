@@ -6,7 +6,6 @@ module Sufia
         solr_doc[Solrizer.solr_name('file_format')] = object.file_format
         solr_doc[Solrizer.solr_name('file_format', :facetable)] = object.file_format
         solr_doc['all_text_timv'] = object.full_text.content
-        solr_doc = object.index_collection_ids(solr_doc)
       end
     end
   end
