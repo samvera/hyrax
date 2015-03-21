@@ -20,6 +20,20 @@ describe Sufia::GenericFile::Actor do
       actor.create_content(uploaded_file, 'world.png', 'content', 'image/png')
     end
 
+    context "when generic_file.title is empty and generic_file.label is not" do
+      let(:file)       { "world.png" }
+      let(:long_name)  { "an absurdly long title that goes on way to long and messes up the display of the page which should not need to be this big in order to show this impossibly long, long, long, oh so long string" }
+      let(:short_name) { "Nice Short Name" }
+      let(:actor)      { Sufia::GenericFile::Actor.new(generic_file, user) }
+      before do
+        allow(generic_file).to receive(:label).and_return(short_name)
+        allow(Sufia.queue).to receive(:push)
+        actor.create_content(fixture_file_upload(file), long_name, 'content', 'image/png')
+      end 
+      subject { generic_file.title }
+      it { is_expected.to eql [short_name] }
+    end
+
     context "with two existing versions from different users" do
 
       let(:file1)       { "world.png" }
