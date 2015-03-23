@@ -1,4 +1,4 @@
-class CharacterizeJob < ActiveFedoraPidBasedJob
+class CharacterizeJob < ActiveFedoraIdBasedJob
   def queue_name
     :characterize
   end

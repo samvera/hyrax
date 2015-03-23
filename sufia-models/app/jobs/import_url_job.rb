@@ -2,7 +2,7 @@ require 'net/https'
 require 'uri'
 require 'tempfile'
 
-class ImportUrlJob < ActiveFedoraPidBasedJob
+class ImportUrlJob < ActiveFedoraIdBasedJob
 
   def queue_name
     :import_url
