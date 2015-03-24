@@ -1,4 +1,4 @@
-class AuditJob < ActiveFedoraPidBasedJob
+class AuditJob < ActiveFedoraIdBasedJob
   def queue_name
     :audit
   end

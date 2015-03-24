@@ -1,4 +1,4 @@
-class CreateDerivativesJob < ActiveFedoraPidBasedJob
+class CreateDerivativesJob < ActiveFedoraIdBasedJob
   def queue_name
     :derivatives
   end
