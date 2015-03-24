@@ -4,20 +4,20 @@ class ContentDepositorChangeEventJob < EventJob
     :proxy_deposit
   end
 
-  attr_accessor :pid, :login, :reset
+  attr_accessor :id, :login, :reset
 
-  # @param [String] pid identifier of the file to be transfered
+  # @param [String] id identifier of the file to be transfered
   # @param [String] login the user key of the user the file is being transfered to.
   # @param [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
-  def initialize(pid, login, reset=false)
-    self.pid = pid
+  def initialize(id, login, reset=false)
+    self.id = id
     self.login = login
     self.reset = reset
   end
 
   def run
     # TODO: This should be in its own job, not this event job
-    file = ::GenericFile.find(pid)
+    file = ::GenericFile.find(id)
     file.proxy_depositor = file.depositor
     file.clear_permissions! if reset
     file.apply_depositor_metadata(login)
