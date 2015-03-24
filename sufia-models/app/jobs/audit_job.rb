@@ -6,7 +6,7 @@ class AuditJob < ActiveFedoraIdBasedJob
   PASS = 'Passing Audit Run'
   FAIL = 'Failing Audit Run'
 
-  attr_accessor :uri, :pid, :path
+  attr_accessor :uri, :id, :path
 
   # URI of the resource to audit.
   # This URI could include the actual resource (e.g. content) and the version to audit:
@@ -14,8 +14,7 @@ class AuditJob < ActiveFedoraIdBasedJob
   # but it could also just be:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content
   def initialize(id, path, uri)
-    super(uri)
-    self.pid = id
+    super(id)
     self.path = path
     self.uri = uri
   end
@@ -49,12 +48,12 @@ class AuditJob < ActiveFedoraIdBasedJob
 
       if fixity_ok
         passing = 1
-        ChecksumAuditLog.prune_history(pid, path)
+        ChecksumAuditLog.prune_history(id, path)
       else
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
         passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, pid: pid, version: uri, dsid: path)
+      ChecksumAuditLog.create!(pass: passing, pid: id, version: uri, dsid: path)
     end
 
     def logger
