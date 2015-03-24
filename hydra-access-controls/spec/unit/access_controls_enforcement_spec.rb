@@ -21,12 +21,11 @@ describe Hydra::AccessControlsEnforcement do
   describe "When I am searching for content" do
     before do
       @solr_parameters = {}
-      @user_parameters = {}
     end
     context "Given I am not logged in" do
       before do
         allow(subject).to receive(:current_user).and_return(User.new(:new_record=>true))
-        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+        subject.send(:apply_gated_discovery, @solr_parameters)
       end
       it "Then I should be treated as a member of the 'public' group" do
         expect(@solr_parameters[:fq].first).to eq 'edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public'
@@ -35,10 +34,10 @@ describe Hydra::AccessControlsEnforcement do
         expect(@solr_parameters[:fq].first).to_not match(/registered/) 
       end
       it "Then I should not have individual or group permissions"
-      it "Should changed based on the discovery_perissions" do
+      it "Should change based on the discovery_perissions" do
         @solr_parameters = {}
         discovery_permissions = ["read","edit"]
-        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+        subject.send(:apply_gated_discovery, @solr_parameters)
         ["edit","read"].each do |type|
           expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:public/)      
         end
@@ -52,7 +51,7 @@ describe Hydra::AccessControlsEnforcement do
         # This is a pretty fragile way to stub it...
         allow(RoleMapper).to receive(:byname).and_return(@user.user_key=>["faculty", "africana-faculty"])
         allow(subject).to receive(:current_user).and_return(@user)
-        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+        subject.send(:apply_gated_discovery, @solr_parameters)
       end
       it "Then I should be treated as a member of the 'public' and 'registered' groups" do
         ["discover","edit","read"].each do |type|
@@ -72,10 +71,10 @@ describe Hydra::AccessControlsEnforcement do
           end
         end
       end
-      it "Should changed based on the discovery_perissions" do
+      it "Should change based on the discovery_perissions" do
         @solr_parameters = {}
         discovery_permissions = ["read","edit"]
-        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+        subject.send(:apply_gated_discovery, @solr_parameters)
         ["faculty", "africana-faculty"].each do |group_id|
           ["edit","read"].each do |type|
             expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:#{group_id}/)      
@@ -117,16 +116,15 @@ describe Hydra::AccessControlsEnforcement do
       allow(RoleMapper).to receive(:roles).with(@stub_user).and_return(["archivist","researcher"])
       allow(subject).to receive(:current_user).and_return(@stub_user)
       @solr_parameters = {}
-      @user_parameters = {}
     end
     it "should set query fields for the user id checking against the discover, access, read fields" do
-      subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      subject.send(:apply_gated_discovery, @solr_parameters)
       ["discover","edit","read"].each do |type|
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_person_ssim\:#{@stub_user.user_key}/)      
       end
     end
     it "should set query fields for all roles the user is a member of checking against the discover, access, read fields" do
-      subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      subject.send(:apply_gated_discovery, @solr_parameters)
       ["discover","edit","read"].each do |type|
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:archivist/)        
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:researcher/)        
@@ -135,7 +133,7 @@ describe Hydra::AccessControlsEnforcement do
 
     it "should escape slashes in the group names" do
       allow(RoleMapper).to receive(:roles).with(@stub_user).and_return(["abc/123","cde/567"])
-      subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      subject.send(:apply_gated_discovery, @solr_parameters)
       ["discover","edit","read"].each do |type|
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:abc\\\/123/)        
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:cde\\\/567/)        
@@ -143,7 +141,7 @@ describe Hydra::AccessControlsEnforcement do
     end
     it "should escape spaces in the group names" do
       allow(RoleMapper).to receive(:roles).with(@stub_user).and_return(["abc 123","cd/e 567"])
-      subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      subject.send(:apply_gated_discovery, @solr_parameters)
       ["discover","edit","read"].each do |type|
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:abc\\ 123/)
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:cd\\\/e\\ 567/)
@@ -151,7 +149,7 @@ describe Hydra::AccessControlsEnforcement do
     end
     it "should escape colons in the group names" do
       allow(RoleMapper).to receive(:roles).with(@stub_user).and_return(["abc:123","cde:567"])
-      subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      subject.send(:apply_gated_discovery, @solr_parameters)
       ["discover","edit","read"].each do |type|
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:abc\\:123/)
         expect(@solr_parameters[:fq].first).to match(/#{type}_access_group_ssim\:cde\\:567/)

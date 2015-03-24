@@ -62,6 +62,8 @@ module Hydra
 
       # Fedora & Solr YAML files
       invoke('active_fedora:config')
+
+      copy_file 'config/blacklight.yml', force: true
     end
 
     # Add Hydra behaviors to the user model

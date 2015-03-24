@@ -12,9 +12,6 @@ module Hydra::Controller::ControllerBehavior
   extend ActiveSupport::Concern
 
   included do
-    # Other modules to auto-include
-    include Hydra::AccessControlsEnforcement
-  
     # Catch permission errors
     rescue_from CanCan::AccessDenied do |exception|
       if (exception.action == :edit)
@@ -27,7 +24,11 @@ module Hydra::Controller::ControllerBehavior
       end
     end
   end
-  
+
+  # Override blacklight to produce a search_builder that has the current collection in context
+  def search_builder processor_chain = search_params_logic
+    super.tap { |builder| builder.current_ability = current_ability }
+  end  
   
   # get the currently configured user identifier.  Can be overridden to return whatever (ie. login, email, etc)
   # defaults to using whatever you have set as the Devise authentication_key
