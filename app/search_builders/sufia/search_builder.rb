@@ -1,4 +1,4 @@
-class Sufia::SearchBuilder < Hydra::SearchBuilder
+module Sufia::SearchBuilder
 
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
   include Hydra::Collections::SearchBehaviors
