@@ -128,7 +128,7 @@ Add the following lines to your application's Gemfile.
 
 ```
 gem 'sufia', '6.0.0.rc4'
-gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
+gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
 Then install Sufia as a dependency of your app via `bundle install`
