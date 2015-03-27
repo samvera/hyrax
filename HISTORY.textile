@@ -1,3 +1,17 @@
+h3. 8.0.1 (2015-3-27)
+* 2015-03-13: Upgrade Blacklight to 5.10 [Chris Colvard]
+
+h3. 8.0.0 (2015-2-25)
+* 2015-02-08: hydra-head v8.0.0.rc1 [David Chandek-Stark]
+* 2014-12-03: Preparing for 8.0.0.beta1 release [Justin Coyne]
+* 2014-12-03: Use active-fedora 8.0.0.rc2 [Justin Coyne]
+
+h3. 7.2.2 (2014-9-26)
+* 2014-09-25: When setting/removing embargoes and leases, visibility should be tracked as changed [Justin Coyne]
+* 2014-09-25: Removed workaround for twbs/bootstrap-sass#647 [Justin Coyne]
+* 2014-09-25: Fix Rspec related deprecated behavior [Justin Coyne]
+* 2014-09-25: The build should run the hydra-core tests with rspec 3.1. Fixes #206[Justin Coyne]
+
 h3. 7.2.1 (2014-9-2)
 * 2014-09-02: Fix problem Cannot define multiple 'included' blocks. #201 & #202
 
