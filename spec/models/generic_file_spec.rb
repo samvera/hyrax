@@ -8,6 +8,11 @@ describe GenericFile, :type => :model do
     @file.apply_depositor_metadata(user.user_key)
   end
 
+  describe "rdf type" do
+    subject { described_class.new.type }
+    it { is_expected.to eq [::RDF::URI.new('http://pcdm.org/models#Object')] }
+  end
+
   context "when it is initialized" do
     it "has empty arrays for all the properties" do
       subject.attributes.each do |k,v|
