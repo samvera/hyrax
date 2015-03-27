@@ -1,7 +1,7 @@
 class ChecksumAuditLog < ActiveRecord::Base
 
   def self.get_audit_log(id, path, version_uri)
-    ChecksumAuditLog.find_or_create_by(pid: id, dsid: path, version: version_uri)
+    ChecksumAuditLog.find_or_create_by(generic_file_id: id, dsid: path, version: version_uri)
   end
 
   # Check to see if there are previous passing logs that we can delete
@@ -16,6 +16,6 @@ class ChecksumAuditLog < ActiveRecord::Base
   end
 
   def self.logs_for(id, path)
-    ChecksumAuditLog.where(pid: id, dsid: path).order('created_at desc, id desc')
+    ChecksumAuditLog.where(generic_file_id: id, dsid: path).order('created_at desc, id desc')
   end
 end

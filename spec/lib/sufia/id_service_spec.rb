@@ -14,18 +14,18 @@ describe Sufia::IdService do
       expect(Sufia::IdService.valid?(subject)).to be true
     end
 
-    context "when the pid already exists in Fedora" do
-      let(:mock_pid) { 'ef12ef12f' }
-      let(:unique_pid) { 'bb22bb22b' }
+    context "when the id already exists in Fedora" do
+      let(:mock_id) { 'ef12ef12f' }
+      let(:unique_id) { 'bb22bb22b' }
 
       before do
-        allow(Sufia::IdService).to receive(:next_id).and_return(mock_pid, unique_pid)
-        expect(ActiveFedora::Base).to receive(:exists?).with(mock_pid).and_return(true)
-        expect(ActiveFedora::Base).to receive(:exists?).with(unique_pid).and_return(false)
+        allow(Sufia::IdService).to receive(:next_id).and_return(mock_id, unique_id)
+        expect(ActiveFedora::Base).to receive(:exists?).with(mock_id).and_return(true)
+        expect(ActiveFedora::Base).to receive(:exists?).with(unique_id).and_return(false)
       end
 
-      it "should not assign that pid again" do
-        expect(subject).to eq unique_pid
+      it "should not assign that id again" do
+        expect(subject).to eq unique_id
       end
     end
   end

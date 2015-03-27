@@ -27,31 +27,31 @@ describe "Rake tasks" do
   end
 
   describe "sufia:migrate" do
-    let(:namespaced_pid) { "sufia:123" }
-    let(:corrected_pid)  { "123" }
+    let(:namespaced_id) { "sufia:123" }
+    let(:corrected_id)  { "123" }
     before do
       load File.expand_path("../../../sufia-models/lib/tasks/migrate.rake", __FILE__)
       Rake::Task.define_task(:environment)
     end
 
-    describe "deleting the namespace from ProxyDepositRequest#pid" do
+    describe "deleting the namespace from ProxyDepositRequest#generic_file_id" do
       let(:sender) { FactoryGirl.find_or_create(:jill) }
       let(:receiver) { FactoryGirl.find_or_create(:archivist) }
       before do
-        ProxyDepositRequest.create(pid: namespaced_pid, sending_user: sender, receiving_user: receiver, sender_comment: "please take this")
+        ProxyDepositRequest.create(generic_file_id: namespaced_id, sending_user: sender, receiving_user: receiver, sender_comment: "please take this")
         Rake::Task["sufia:migrate:proxy_deposits"].invoke
       end
-      subject { ProxyDepositRequest.first.pid }
-      it { is_expected.to eql corrected_pid }
+      subject { ProxyDepositRequest.first.generic_file_id }
+      it { is_expected.to eql corrected_id }
     end
 
-    describe "deleting the namespace from ChecksumAuditLog#pid" do
+    describe "deleting the namespace from ChecksumAuditLog#generic_file_id" do
       before do
-        ChecksumAuditLog.create(pid: namespaced_pid)
+        ChecksumAuditLog.create(generic_file_id: namespaced_id)
         Rake::Task["sufia:migrate:audit_logs"].invoke
       end
-      subject { ChecksumAuditLog.first.pid }
-      it { is_expected.to eql corrected_pid }
+      subject { ChecksumAuditLog.first.generic_file_id }
+      it { is_expected.to eql corrected_id }
     end
   end
 

@@ -23,7 +23,7 @@ module Sufia
       if req.deleted_file?
         req.title
       else
-        link_to(req.title, sufia.generic_file_path(req['pid'].split(':').last))
+        link_to(req.title, sufia.generic_file_path(req.generic_file_id))
       end
     end
 

@@ -5,7 +5,7 @@ module Sufia
     included do
       before_action :load_proxy_deposit_request, only: :create
       load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index
-      before_action :get_pid_and_authorize_depositor, only: [:new, :create]
+      before_action :get_id_and_authorize_depositor, only: [:new, :create]
       # Catch permission errors
       # TODO we should make this a module in Sufia
       rescue_from CanCan::AccessDenied do |exception|
@@ -19,7 +19,7 @@ module Sufia
     end
 
     def new
-      @generic_file = ::GenericFile.load_instance_from_solr(@pid)
+      @generic_file = ::GenericFile.load_instance_from_solr(@id)
     end
 
     def create
@@ -56,10 +56,10 @@ module Sufia
 
     private
 
-    def get_pid_and_authorize_depositor
-      @pid = params[:id]
-      authorize! :transfer, @pid
-      @proxy_deposit_request.pid = @pid
+    def get_id_and_authorize_depositor
+      @id = params[:id]
+      authorize! :transfer, @id
+      @proxy_deposit_request.generic_file_id = @id
     rescue CanCan::AccessDenied
       redirect_to root_url, alert: 'You are not authorized to transfer this file'
     end

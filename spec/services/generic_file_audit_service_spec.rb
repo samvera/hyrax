@@ -52,7 +52,7 @@ describe Sufia::GenericFileAuditService do
 
     context "when no audit is pasing" do
       before do
-       ChecksumAuditLog.create!(pass: 1, pid: f.id, version: f.content.versions.first.label, dsid: 'content')
+       ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.content.versions.first.label, dsid: 'content')
       end
 
       it "should report that audits have not been run" do
