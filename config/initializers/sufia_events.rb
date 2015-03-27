@@ -14,7 +14,6 @@ Sufia.config.after_update_metadata = lambda { |generic_file, user|
   Sufia.queue.push(ContentUpdateEventJob.new(generic_file.id, user.user_key))
 }
 
-Sufia.config.after_destroy = lambda { |pid, user|
-  Sufia.queue.push(ContentDeleteEventJob.new(pid, user.user_key))
+Sufia.config.after_destroy = lambda { |id, user|
+  Sufia.queue.push(ContentDeleteEventJob.new(id, user.user_key))
 }
-
