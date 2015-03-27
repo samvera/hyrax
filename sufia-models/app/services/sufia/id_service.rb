@@ -8,7 +8,6 @@ module Sufia
     end
 
     @minter = ::Noid::Minter.new(template: noid_template)
-    @pid = $$
     @semaphore = Mutex.new
     def self.valid?(identifier)
       # remove the fedora namespace since it's not part of the noid
@@ -18,8 +17,8 @@ module Sufia
     def self.mint
       @semaphore.synchronize do
         while true
-          pid = self.next_id
-          return pid unless ActiveFedora::Base.exists?(pid)
+          id = self.next_id
+          return id unless ActiveFedora::Base.exists?(id)
         end
       end
     end

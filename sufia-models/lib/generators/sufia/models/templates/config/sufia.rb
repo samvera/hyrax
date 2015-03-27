@@ -123,7 +123,7 @@ Sufia.config do |config|
   # NOTE: if you have always sent analytics to GA for downloads and page views leave this commented out
   # config.analytic_start_date = DateTime.new(2014,9,10)
   #
-  # Method of converting pids into URIs for storage in Fedora
+  # Method of converting ids into URIs for storage in Fedora
   # config.translate_uri_to_id = lambda { |uri| uri.to_s.split('/')[-1] }
   # config.translate_id_to_uri = lambda { |id|
   #      "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Sufia::Noid.treeify(id)}" }

@@ -59,8 +59,8 @@ describe AuditJob do
 
   describe "run_audit" do
     let(:uri) { file.content.versions.first.uri }
-    let!(:old) { ChecksumAuditLog.create(pid: file.id, dsid: 'content', version: uri, pass: 1, created_at: 2.minutes.ago) }
-    let!(:new) { ChecksumAuditLog.create(pid: file.id, dsid: 'content', version: uri, pass: 0) }
+    let!(:old) { ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 1, created_at: 2.minutes.ago) }
+    let!(:new) { ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 0) }
     let(:mock_service) { double('mock fixity check service') }
 
     before do

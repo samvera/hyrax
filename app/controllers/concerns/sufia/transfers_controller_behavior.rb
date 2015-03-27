@@ -59,7 +59,7 @@ module Sufia
     def get_id_and_authorize_depositor
       @id = params[:id]
       authorize! :transfer, @id
-      @proxy_deposit_request.pid = @id
+      @proxy_deposit_request.generic_file_id = @id
     rescue CanCan::AccessDenied
       redirect_to root_url, alert: 'You are not authorized to transfer this file'
     end

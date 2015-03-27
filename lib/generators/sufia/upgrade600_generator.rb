@@ -18,5 +18,9 @@ This generator for upgrading sufia to 6.0 makes the following changes to your ap
     end
   end
 
+  def migrations
+    generate "sufia:models:upgrade600"
+  end
+
 end
 

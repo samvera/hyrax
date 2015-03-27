@@ -14,8 +14,8 @@ describe ChecksumAuditLog do
 
   let(:version_uri) { f.content.versions.first.uri }
   let(:version_path) { 'content' }
-  let(:old) { ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
-  let(:new) { ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
+  let(:old) { ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
+  let(:new) { ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
 
   context "a file with multiple checksums audits" do
     specify "should return a list of logs for this datastream sorted by date descending" do
@@ -26,11 +26,11 @@ describe ChecksumAuditLog do
 
   context "after multiple checksum audits where the checksum does not change" do
     specify "only one of them should be kept" do
-      success1 = ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 1)
+      success1 = ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 1)
       ChecksumAuditLog.prune_history(f.id, version_path)
-      success2 = ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 1)
+      success2 = ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 1)
       ChecksumAuditLog.prune_history(f.id, version_path)
-      success3 = ChecksumAuditLog.create(pid: f.id, dsid: version_path, version: version_uri, pass: 1)
+      success3 = ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 1)
       ChecksumAuditLog.prune_history(f.id, version_path)
 
       expect { ChecksumAuditLog.find(success2.id) }.to raise_exception ActiveRecord::RecordNotFound
@@ -43,21 +43,21 @@ describe ChecksumAuditLog do
 
   context "should have an audit log history" do
     before do
-      ChecksumAuditLog.create(pid: f.id, dsid: 'content', version: 'v2', pass: 1)
-      ChecksumAuditLog.create(pid: f.id, dsid: 'thumbnail', version: 'v1', pass: 1)
+      ChecksumAuditLog.create(generic_file_id: f.id, dsid: 'content', version: 'v2', pass: 1)
+      ChecksumAuditLog.create(generic_file_id: f.id, dsid: 'thumbnail', version: 'v1', pass: 1)
     end
 
     specify "should have an audit log history" do
       audit = ChecksumAuditLog.get_audit_log(f.id, 'content', version_uri)
-      expect(audit.pid).to eq(f.id)
+      expect(audit.generic_file_id).to eq(f.id)
       expect(audit.version).to eq(version_uri)
 
       audit = ChecksumAuditLog.get_audit_log(f.id, 'content', 'v2')
-      expect(audit.pid).to eq(f.id)
+      expect(audit.generic_file_id).to eq(f.id)
       expect(audit.version).to eq('v2')
 
       audit = ChecksumAuditLog.get_audit_log(f.id, 'thumbnail', 'v1')
-      expect(audit.pid).to eq(f.id)
+      expect(audit.generic_file_id).to eq(f.id)
       expect(audit.version).to eq('v1')
 
     end

@@ -53,7 +53,7 @@ class AuditJob < ActiveFedoraIdBasedJob
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
         passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, pid: id, version: uri, dsid: path)
+      ChecksumAuditLog.create!(pass: passing, generic_file_id: id, version: uri, dsid: path)
     end
 
     def logger

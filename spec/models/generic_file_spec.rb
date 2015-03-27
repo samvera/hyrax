@@ -273,7 +273,7 @@ describe GenericFile, :type => :model do
 
   describe "to_solr" do
     before do
-      allow(subject).to receive(:id).and_return('stubbed_pid')
+      allow(subject).to receive(:id).and_return('stubbed_id')
       subject.part_of = ["Arabiana"]
       subject.contributor = ["Mohammad"]
       subject.creator = ["Allah"]

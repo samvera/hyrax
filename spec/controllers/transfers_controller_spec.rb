@@ -29,9 +29,9 @@ describe TransfersController, :type => :controller do
         get :index
         expect(response).to be_success
         expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:incoming].first.pid).to eq(incoming_file.id)
+        expect(assigns[:incoming].first.generic_file_id).to eq(incoming_file.id)
         expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:outgoing].first.pid).to eq(outgoing_file.id)
+        expect(assigns[:outgoing].first.generic_file_id).to eq(outgoing_file.id)
       end
 
       describe "When the incoming request is for a deleted file" do
@@ -60,7 +60,7 @@ describe TransfersController, :type => :controller do
           expect(response).to be_success
           expect(assigns[:generic_file]).to eq(file)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
-          expect(assigns[:proxy_deposit_request].pid).to eq(file.id)
+          expect(assigns[:proxy_deposit_request].generic_file_id).to eq(file.id)
         end
       end
     end
@@ -80,7 +80,7 @@ describe TransfersController, :type => :controller do
         expect(response).to redirect_to @routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
-        expect(proxy_request.pid).to eq(file.id)
+        expect(proxy_request.generic_file_id).to eq(file.id)
         expect(proxy_request.sending_user).to eq(user)
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
