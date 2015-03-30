@@ -1,4 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
 # Sufia
 
 [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia)
@@ -8,6 +7,7 @@
 [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
 [![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
 [![Coverage Status](https://img.shields.io/coveralls/projecthydra/sufia.svg)](https://coveralls.io/r/projecthydra/sufia?branch=master)
+[![Stories in Ready](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
 
 # Table of Contents
 
@@ -128,7 +128,7 @@ rails new my_app
 Add the following lines to your application's Gemfile.
 
 ```
-gem 'sufia', '6.0.0.rc4'
+gem 'sufia', '6.0.0'
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 ```
 
