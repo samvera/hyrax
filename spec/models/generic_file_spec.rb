@@ -66,9 +66,21 @@ describe GenericFile, :type => :model do
   end
 
   describe "assign_id" do
-    it "should use the id service" do
-      expect(Sufia::IdService).to receive(:mint)
-      subject.assign_id
+    context "with noids enabled (by default)" do
+      it "uses the noid service" do
+        expect_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).once
+        subject.assign_id
+      end
+    end
+
+    context "with noids disabled" do
+      before { Sufia.config.enable_noids = false }
+      after { Sufia.config.enable_noids = true }
+
+      it "does not use the noid service" do
+        expect_any_instance_of(ActiveFedora::Noid::Service).not_to receive(:mint)
+        subject.assign_id
+      end
     end
   end
 
@@ -416,35 +428,32 @@ describe GenericFile, :type => :model do
 
   describe "noid integration" do
     before do
-      allow(Sufia::IdService).to receive(:mint).once.and_return(noid)
+      allow_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).and_return(noid)
     end
 
     let(:noid) { 'wd3763094' }
 
     subject do
-      GenericFile.create do |f|
-        f.apply_depositor_metadata('mjg36')
-      end
+      GenericFile.create { |f| f.apply_depositor_metadata('mjg36') }
     end
 
     it "runs the overridden #assign_id method" do
-      expect(Sufia::IdService).to receive(:mint).once
-      GenericFile.create do |f|
-        f.apply_depositor_metadata('mjg36')
-      end
+      expect_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).once
+      GenericFile.create { |f| f.apply_depositor_metadata('mjg36') }
     end
 
-    it "should return the expected identifier" do
+    it "returns the expected identifier" do
       expect(subject.id).to eq noid
     end
 
-    it "should have a tree-like URL" do
+    it "has a treeified URL" do
       expect(subject.uri).to eq 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094'
     end
 
     context "when a url is provided" do
       let(:url) { 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094' }
-      it "should be able to get the id" do
+
+      it "transforms the url into an id" do
         expect(GenericFile.uri_to_id(url)).to eq 'wd3763094'
       end
     end
