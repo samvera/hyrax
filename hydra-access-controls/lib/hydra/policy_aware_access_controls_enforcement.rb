@@ -4,8 +4,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
   # Extends Hydra::AccessControlsEnforcement.apply_gated_discovery to reflect policy-provided access
   # appends the result of policy_clauses into the :fq
   # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
-  def apply_gated_discovery(solr_parameters, user_parameters)
+  def apply_gated_discovery(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << gated_discovery_filters.join(" OR ")
     logger.debug("POLICY-aware Solr parameters: #{ solr_parameters.inspect }")
@@ -43,13 +42,11 @@ module Hydra::PolicyAwareAccessControlsEnforcement
 
   def apply_policy_user_permissions(permission_types = discovery_permissions)
     # for individual user access
-    user_access_filters = []
-    if current_user
-      permission_types.each do |type|
-        user_access_filters << escape_filter(ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ), current_user.user_key)
-      end
+    user = current_ability.current_user
+    return [] unless user && user.user_key.present?
+    permission_types.map do |type|
+      escape_filter(ActiveFedora::SolrService.solr_name("inheritable_#{type}_access_person", Hydra::Datastream::RightsMetadata.indexer ), user.user_key)
     end
-    user_access_filters
   end
 
   # Returns the Model used for AdminPolicy objects.
