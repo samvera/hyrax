@@ -90,7 +90,6 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
   
   before do
     @solr_parameters = {}
-    @user_parameters = {}
     @user = FactoryGirl.build(:sara_student)
   end
   
@@ -129,13 +128,13 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       # stubbing out policies_with_access because solr doesn't always return them in the same order.
       policy_pids = (1..8).map {|n| "test:policy#{n}"}
       subject.should_receive(:policies_with_access).and_return(policy_pids)
-      subject.apply_gated_discovery(@solr_parameters, @user_parameters)
+      subject.apply_gated_discovery(@solr_parameters)
       governed_field = ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)
       @solr_parameters[:fq].first.should include(" OR (_query_:\"{!raw f=#{governed_field}}info:fedora/test:policy1\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy2\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy3\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy4\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy5\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy6\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy7\" OR _query_:\"{!raw f=#{governed_field}}info:fedora/test:policy8\")")
     end
     it "should not change anything if there are no clauses to add" do
       subject.stub(:policy_clauses).and_return(nil)
-      subject.apply_gated_discovery(@solr_parameters, @user_parameters)
+      subject.apply_gated_discovery(@solr_parameters)
       @solr_parameters[:fq].first.should_not include(" OR (#{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy1 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy2 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy3 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy4 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy5 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy6 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy7 OR #{ActiveFedora::SolrService.solr_name('is_governed_by', :symbol)}:info\\:fedora\\/test\\:policy8)")
     end
   end
