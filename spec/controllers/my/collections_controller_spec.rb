@@ -16,7 +16,7 @@ describe My::CollectionsController, :type => :controller do
           c.apply_depositor_metadata(@user.user_key)
           c.save!
         end
-        @unrelated_collection = Collection.new(title: "test collection").tap do |c|
+        @unrelated_collection = Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(FactoryGirl.create(:user).user_key)
         end
       end

@@ -10,7 +10,7 @@ module Sufia::SearchBuilder
     ]
   end
 
-  def show_only_files_deposited_by_current_user(solr_parameters)
+  def show_only_resources_deposited_by_current_user(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [
       ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: scope.current_user.user_key)
