@@ -312,7 +312,7 @@ This information is for people who want to modify the engine itself, not an appl
 
 [Install the gh-md-toc tool](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#installation), then ensure your README changes are up on GitHub, and then run:
 
-`gh-md-toc https://github.com/USERNAME/sufia/blog/BRANCH/README.md`
+`gh-md-toc https://github.com/USERNAME/sufia/blob/BRANCH/README.md`
 
 That will print to stdout the new TOC, which you can copy into `README.md`, commit, and push.
 
