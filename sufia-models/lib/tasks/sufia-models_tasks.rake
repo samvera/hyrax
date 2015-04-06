@@ -66,7 +66,7 @@ end
 
 def download_from_maven url, dst
   full_url = '/remotecontent?filepath=' + url
-  file = File.open(dst, "w")
+  file = File.open(dst, "wb")
   endpoint = Net::HTTP.new('search.maven.org', 443)
   endpoint.use_ssl = true
   endpoint.start do |http|
