@@ -78,6 +78,13 @@ describe BatchEditsController, :type => :controller do
       expect(GenericFile.find(one.id).subject).to eq ["zzz"]
       expect(GenericFile.find(two.id).subject).to eq ["zzz"]
     end
+
+    it "should update permissions" do
+      put :update, update_type: "update", visibility: "authenticated"
+      expect(response).to be_redirect
+      expect(GenericFile.find(one.id).visibility).to eq "authenticated"
+      expect(GenericFile.find(two.id).visibility).to eq "authenticated"
+    end
   end
 
 end

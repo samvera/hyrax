@@ -84,7 +84,8 @@ module Sufia
     end
 
     def generic_file_params
-      Forms::BatchEditForm.model_attributes(params[:generic_file])
+      file_params = params[:generic_file] || ActionController::Parameters.new()
+      Forms::BatchEditForm.model_attributes(file_params)
     end
 
     def redirect_to_return_controller
