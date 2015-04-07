@@ -28,6 +28,7 @@ describe UsersController, :type => :controller do
       let!(:trophy1) { user.trophies.create!(generic_file_id: file1.id) }
       let!(:trophy2) { user.trophies.create!(generic_file_id: file2.id) }
       let!(:trophy3) { user.trophies.create!(generic_file_id: file3.id) }
+      let!(:badtrophy) { user.trophies.create!(generic_file_id: 'not_a_generic_file') }
 
       it "show the user profile if user exists" do
         get :show, id: user.user_key
