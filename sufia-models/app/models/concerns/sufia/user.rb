@@ -77,8 +77,13 @@ module Sufia::User
 
   def trophy_files
     trophies.map do |t|
-      ::GenericFile.load_instance_from_solr(t.generic_file_id)
-    end
+      begin
+        ::GenericFile.load_instance_from_solr(t.generic_file_id)
+      rescue ActiveFedora::ObjectNotFoundError
+        logger.error("Invalid trophy for user #{user_key} (generic file id #{t.generic_file_id})")
+        nil
+      end
+    end.compact
   end
 
   # method needed for messaging
