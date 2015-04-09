@@ -55,6 +55,70 @@ describe CatalogController do
     end
   end
 
+  describe "content negotiation" do
+    describe "show" do
+      before do
+        allow(controller).to receive(:enforce_show_permissions)
+      end
+      context "with no asset" do
+        it "should return a not found response code" do
+          get 'show', :id => "test", :format => :nt
+
+          expect(response).to be_not_found
+        end
+      end
+      context "with an asset" do
+        let(:type) { RDF::URI("http://example.org/example") }
+        let(:related_uri) { related.rdf_subject }
+        let(:asset) do
+          ActiveFedora::Base.create do |g|
+            g.resource << [g.rdf_subject, RDF::DC.title, "Test Title"]
+            g.resource << [g.rdf_subject, RDF.type, type]
+            g.resource << [g.rdf_subject, RDF::DC.isReferencedBy, related_uri]
+          end
+        end
+        let(:related) do
+          ActiveFedora::Base.create
+        end
+        it "should be able to negotiate jsonld" do
+          get 'show', :id => asset.id, :format => :jsonld
+
+          expect(response).to be_success
+          graph = RDF::Reader.for(:jsonld).new(response.body)
+          expect(graph.statements.to_a.length).to eq 3
+        end
+        it "should be able to negotiate ttl" do
+          get 'show', :id => asset.id, :format => :ttl
+          
+          expect(response).to be_success
+          graph = RDF::Reader.for(:ttl).new(response.body)
+          expect(graph.statements.to_a.length).to eq 3
+        end
+        it "should return an n-triples graph with just the content put in" do
+          get 'show', :id => asset.id, :format => :nt
+
+          graph = RDF::Reader.for(:ntriples).new(response.body)
+          statements = graph.statements.to_a
+          expect(statements.length).to eq 3
+          expect(statements.first.subject).to eq asset.rdf_subject
+        end
+        context "with a configured subject converter" do
+          before do
+            Hydra.config.id_to_resource_uri = lambda { |id| "http://hydra.box/catalog/#{id}" }
+            get 'show', :id => asset.id, :format => :nt
+          end
+          it "should convert it" do
+            graph = RDF::Graph.new << RDF::Reader.for(:ntriples).new(response.body)
+            title_statement = graph.query([nil, RDF::DC.title, nil]).first
+            related_statement = graph.query([nil, RDF::DC.isReferencedBy, nil]).first
+            expect(title_statement.subject).to eq RDF::URI("http://hydra.box/catalog/#{asset.id}")
+            expect(related_statement.object).to eq RDF::URI("http://hydra.box/catalog/#{related.id}")
+          end
+        end
+      end
+    end
+  end
+
   describe "filters" do
     describe "show" do
       it "should trigger enforce_show_permissions" do

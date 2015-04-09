@@ -11,6 +11,8 @@ module Hydra
           self.permissions = value
         when :user_model
           self.user_model = value
+        when :id_to_resource_uri
+          self.id_to_resource_uri = value
         else
           raise "Unknown key"
       end
@@ -22,13 +24,25 @@ module Hydra
           permissions
         when :user_model
           user_model
+        when :id_to_resource_uri
+          id_to_resource_uri
         else
           raise "Unknown key #{key}"
       end
     end
 
     attr_reader :permissions
+    attr_writer :id_to_resource_uri
     attr_accessor :user_model
+
+    # This is purely used for translating an ID to user-facing URIs not used for
+    # persistence. Useful for storing RDF in Fedora but displaying their
+    # subjects in content negotiation as local to the application.
+    #
+    # @return [Lambda] a method to convert ID to a URI
+    def id_to_resource_uri
+      @id_to_resource_uri ||= ActiveFedora::Base.translate_id_to_uri
+    end
 
     def permissions= values
       @permissions.merge! values

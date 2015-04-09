@@ -76,6 +76,25 @@ module Hydra
       copy_file 'config/blacklight.yml', force: true
     end
 
+    def create_conneg_configuration
+      file_path = "config/initializers/mime_types.rb"
+      inject_into_file file_path, :before => /\Z/  do
+        "\nMime::Type.register \"application/n-triples\", :nt" + 
+        "\nMime::Type.register \"application/json\", :jsonld" +
+        "\nMime::Type.register \"text/turtle\", :ttl"
+      end
+    end
+
+    def inject_solr_document_conneg
+      file_path = "app/models/solr_document.rb"
+      if File.exists?(file_path)
+        inject_into_file file_path, :before => /end\Z/ do
+          "\n  # Do content negotiation for AF models. \n" + 
+          "\n  use_extension( Hydra::ContentNegotiation )\n"
+        end
+      end
+    end
+
     # Add Hydra behaviors to the user model
     def inject_hydra_user_behavior
       file_path = "app/models/#{model_name.underscore}.rb"
