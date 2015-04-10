@@ -18,7 +18,11 @@
               <% end %>
             </ul>
           <% else %>
-            <h3><%= t("sufia.user_profile.no_following") %></h3>
+            <% if @user.id == current_user.id %> 
+                <h3> <%= t("sufia.user_profile.no_following") %></h3>
+            <% else %>
+                <h3> <%= t("sufia.user_profile.no_following_other") %></h3>
+            <% end %>
           <% end %>
         </div>
         <div class="modal-footer">
