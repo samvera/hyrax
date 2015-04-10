@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Sufia was extracted from ScholarSphere developed by Penn State University}
   gem.homepage      = "http://github.com/projecthydra/sufia"
 
-  gem.files         = `git ls-files`.split($\)
+  gem.files         = `git ls-files | grep -v ^sufia-models`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "sufia"
