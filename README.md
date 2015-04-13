@@ -296,6 +296,51 @@ Chances are you will want to customize the default metadata provided by Sufia.  
 
 To add proxies and transfers to your **Sufia 4**-based app, run the 'sufia:models:proxies' generator and then run 'rake db:migrate'.  If you're already running Sufia 5 or 6, this is already added and you may skip this step.
 
+## Admin Users
+
+### One time setup for first admin
+
+Follow the directions for installing hydra-role-management.
+
+Add the following gem to Sufia installed app's Gemfile
+```
+gem "hydra-role-management"
+```
+ 
+### Adding an admin user
+
+In rails console, run the following commands to create the admin role.
+```
+r = Role.create name: "admin"
+```
+
+Add a user as the admin.
+```
+r.users << User.find_by_user_key( "your_admin_users_email@fake.email.org" )
+r.save
+```
+ 
+Confirm user was made an admin.
+```
+u = User.find_by_user_key( "your_admin_users_email@fake.email.org" )
+u.admin?
+  # shows SELECT statment
+ => true
+
+if u.admin? == true then SUCCESS
+```
+ 
+Confirm in browser
+
+* go to your Sufia install
+* login as the admin user
+* add /roles to the end of the main URL
+
+SUCCESS will look like...
+
+* you don't get an error on the /roles page
+* you see a button labeled "Create a new role"
+
 # License
 
 Sufia is available under [the Apache 2.0 license](LICENSE.md).
