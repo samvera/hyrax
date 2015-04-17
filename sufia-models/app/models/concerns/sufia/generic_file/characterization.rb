@@ -4,9 +4,9 @@ module Sufia
       extend ActiveSupport::Concern
       included do
         contains "characterization", class_name: 'FitsDatastream'
-        # TODO this can't be chaged to property until AF 9.1.1 is released
-        # TODO mime_type can have it's indexing hints moved here at that time.
-        has_attributes :mime_type, datastream: :characterization, multiple: false
+        property :mime_type,         delegate_to: 'characterization', multiple: false do |index|
+          index.as :stored_searchable
+        end
         property :format_label,      delegate_to: 'characterization'
         property :file_size,         delegate_to: 'characterization'
         property :last_modified,     delegate_to: 'characterization'
