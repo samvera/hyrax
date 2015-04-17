@@ -3,6 +3,8 @@ module Hydra::AccessControls
   GROUP_AGENT_URL_PREFIX = "http://projecthydra.org/ns/auth/group".freeze
   PERSON_AGENT_URL_PREFIX = 'http://projecthydra.org/ns/auth/person'.freeze
   class Permission < AccessControlList
+    has_many :admin_policies, inverse_of: :default_permissions, class_name: 'Hydra::AdminPolicy'
+
     def initialize(args)
       super()
       build_agent(args[:name], args[:type].to_s)
