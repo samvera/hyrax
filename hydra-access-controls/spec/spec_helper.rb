@@ -8,6 +8,8 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 Hydra::Engine.config.autoload_paths.each { |path| $LOAD_PATH.unshift path }
 
+require 'byebug' unless ENV['CI']
+
 if ENV['COVERAGE'] and RUBY_VERSION =~ /^1.9/
   require 'simplecov'
   require 'simplecov-rcov'

@@ -10,162 +10,174 @@ describe Hydra::PolicyAwareAbility do
         :embargo_release_date => "inheritable_embargo_release_date_dtsi"
     })
   end
+
   before do
     class PolicyAwareClass
       include Hydra::PolicyAwareAbility
     end
-    @policy = Hydra::AdminPolicy.create
-    # Set the inheritable permissions
-    @policy.default_permissions.create [
-        {:type=>"group", :access=>"read", :name=>"africana-faculty"},
-        {:type=>"group", :access=>"edit", :name=>"cool_kids"},
-        {:type=>"group", :access=>"edit", :name=>"in_crowd"},
-        {:type=>"person", :access=>"read", :name=>"nero"},
-        {:type=>"person", :access=>"edit", :name=>"julius_caesar"}
-      ]
-
-    @policy.save!
-    @asset = ModsAsset.new
-    @asset.admin_policy = @policy
-    @asset.save!
   end
+
+  let(:policy) do
+    Hydra::AdminPolicy.create do |p|
+      # Set the inheritable permissions
+      p.default_permissions.build [
+        { type: "group", access: "read", name: "africana-faculty" },
+        { type: "group", access: "edit", name: "cool_kids" },
+        { type: "group", access: "edit", name: "in_crowd" },
+        { type: "person", access: "read", name: "nero" },
+        { type: "person", access: "edit", name: "julius_caesar" }
+      ]
+    end
+  end
+  let(:asset) { ModsAsset.create { |a| a.admin_policy = policy } }
 
   after do
     Object.send(:remove_const, :PolicyAwareClass)
   end
 
-  subject { PolicyAwareClass.new( User.new ) }
+  let(:instance) { PolicyAwareClass.new( User.new ) }
 
   describe "policy_id_for" do
-    before do
-      @policy2 = Hydra::AdminPolicy.create
-      @policy2.default_permissions.create [
-         {:type=>"group", :access=>"read", :name=>"untenured-faculty"},
-         {:type=>"group", :access=>"edit", :name=>"awesome_kids"},
-         {:type=>"group", :access=>"edit", :name=>"bad_crowd"},
-         {:type=>"person", :access=>"read", :name=>"constantine"},
-         {:type=>"person", :access=>"edit", :name=>"brutus"}
+    let(:policy2) do
+      Hydra::AdminPolicy.create do |p|
+        # Set the inheritable permissions
+        p.default_permissions.build [
+          { type: "group", access: "read", name: "untenured-faculty" },
+          { type: "group", access: "edit", name: "awesome_kids" },
+          { type: "group", access: "edit", name: "bad_crowd" },
+          { type: "person", access: "read", name: "constantine" },
+          { type: "person", access: "edit", name: "brutus" }
         ]
-      @policy2.save
-      @asset2 = ModsAsset.new
-      @asset2.admin_policy = @policy2
-      @asset2.save
-      @asset3 = ModsAsset.create
+      end
     end
+    let(:asset2) { ModsAsset.create { |a| a.admin_policy = policy2 } }
+    let(:asset3) { ModsAsset.create }
 
     it "should retrieve the pid doc for the current object's governing policy" do
-      expect(subject.policy_id_for(@asset.id)).to eq @policy.id
-      expect(subject.policy_id_for(@asset2.id)).to eq @policy2.id
-      expect(subject.policy_id_for(@asset3.id)).to be_nil
+      expect(instance.policy_id_for(asset.id)).to eq policy.id
+      expect(instance.policy_id_for(asset2.id)).to eq policy2.id
+      expect(instance.policy_id_for(asset3.id)).to be_nil
     end
   end
 
   describe "policy_permissions_doc" do
     it "should retrieve the permissions doc for the current object's policy and store for re-use" do
-      expect(subject).to receive(:get_permissions_solr_response_for_doc_id).with(@policy.id).once.and_return("mock solr doc")
-      expect(subject.policy_permissions_doc(@policy.id)).to eq "mock solr doc"
-      expect(subject.policy_permissions_doc(@policy.id)).to eq "mock solr doc"
-      expect(subject.policy_permissions_doc(@policy.id)).to eq "mock solr doc"
+      expect(instance).to receive(:get_permissions_solr_response_for_doc_id).with(policy.id).once.and_return("mock solr doc")
+      expect(instance.policy_permissions_doc(policy.id)).to eq "mock solr doc"
+      expect(instance.policy_permissions_doc(policy.id)).to eq "mock solr doc"
+      expect(instance.policy_permissions_doc(policy.id)).to eq "mock solr doc"
     end
   end
+
   describe "test_edit_from_policy" do
     context "public user" do
       it "should return false" do
-        allow(subject).to receive(:user_groups).and_return(["public"])
-        expect(subject.test_edit_from_policy(@asset.id)).to be false
+        allow(instance).to receive(:user_groups).and_return(["public"])
+        expect(instance.test_edit_from_policy(asset.id)).to be false
       end
     end
     context "registered user" do
       it "should return false" do
-        expect(subject.user_groups).to include("registered")
-        expect(subject.test_edit_from_policy(@asset.id)).to be false
+        expect(instance.user_groups).to include("registered")
+        expect(instance.test_edit_from_policy(asset.id)).to be false
       end
     end
     context "user with policy read access only" do
       it "should return false" do
-        allow(subject.current_user).to receive(:user_key).and_return("nero")
-        expect(subject.test_edit_from_policy(@asset.id)).to be false
+        allow(instance.current_user).to receive(:user_key).and_return("nero")
+        expect(instance.test_edit_from_policy(asset.id)).to be false
       end
     end
     context "user with policy edit access" do
       it "should return true" do
-        allow(subject.current_user).to receive(:user_key).and_return("julius_caesar")
-        expect(subject.test_edit_from_policy(@asset.id)).to be true
+        allow(instance.current_user).to receive(:user_key).and_return("julius_caesar")
+        expect(instance.test_edit_from_policy(asset.id)).to be true
       end
     end
     context "user in group with policy read access" do
       it "should return false" do
-        allow(subject).to receive(:user_groups).and_return(["africana-faculty"])
-        expect(subject.test_edit_from_policy(@asset.id)).to be false
+        allow(instance).to receive(:user_groups).and_return(["africana-faculty"])
+        expect(instance.test_edit_from_policy(asset.id)).to be false
       end
     end
     context "user in group with policy edit access" do
       it "should return true" do
-        allow(subject).to receive(:user_groups).and_return(["cool_kids"])
-        expect(subject.test_edit_from_policy(@asset.id)).to be true
+        allow(instance).to receive(:user_groups).and_return(["cool_kids"])
+        expect(instance.test_edit_from_policy(asset.id)).to be true
       end
     end
   end
+
   describe "test_read_from_policy" do
     context "public user" do
       it "should return false" do
-        allow(subject).to receive(:user_groups).and_return(["public"])
-        expect(subject.test_read_from_policy(@asset.id)).to be false
+        allow(instance).to receive(:user_groups).and_return(["public"])
+        expect(instance.test_read_from_policy(asset.id)).to be false
       end
     end
     context "registered user" do
       it "should return false" do
-        expect(subject.user_groups).to include("registered")
-        expect(subject.test_read_from_policy(@asset.id)).to be false
+        expect(instance.user_groups).to include("registered")
+        expect(instance.test_read_from_policy(asset.id)).to be false
       end
     end
     context "user with policy read access only" do
       it "should return false" do
-        allow(subject.current_user).to receive(:user_key).and_return("nero")
-        expect(subject.test_read_from_policy(@asset.id)).to be true
+        allow(instance.current_user).to receive(:user_key).and_return("nero")
+        expect(instance.test_read_from_policy(asset.id)).to be true
       end
     end
     context "user with policy edit access" do
       it "should return true" do
-        allow(subject.current_user).to receive(:user_key).and_return("julius_caesar")
-        expect(subject.test_read_from_policy(@asset.id)).to be true
+        allow(instance.current_user).to receive(:user_key).and_return("julius_caesar")
+        expect(instance.test_read_from_policy(asset.id)).to be true
       end
     end
     context "user in group with policy read access" do
       it "should return false" do
-        allow(subject).to receive(:user_groups).and_return(["africana-faculty"])
-        expect(subject.test_read_from_policy(@asset.id)).to be true
+        allow(instance).to receive(:user_groups).and_return(["africana-faculty"])
+        expect(instance.test_read_from_policy(asset.id)).to be true
       end
     end
     context "user in group with policy edit access" do
       it "should return true" do
-        allow(subject).to receive(:user_groups).and_return(["cool_kids"])
-        expect(subject.test_read_from_policy(@asset.id)).to be true
+        allow(instance).to receive(:user_groups).and_return(["cool_kids"])
+        expect(instance.test_read_from_policy(asset.id)).to be true
       end
     end
   end
+
   describe "edit_groups_from_policy" do
+    subject { instance.edit_groups_from_policy(policy.id) }
+
     it "should retrieve the list of groups with edit access from the policy" do
-      result = subject.edit_groups_from_policy(@policy.id)
-      expect(result.length).to eq 2
-      expect(result).to include("cool_kids","in_crowd")
+      expect(subject).to match_array ["cool_kids", "in_crowd"]
     end
   end
+
   describe "edit_persons_from_policy" do
+    subject do
+      instance.edit_users_from_policy(policy.id)
+    end
+
     it "should retrieve the list of individuals with edit access from the policy" do
-      expect(subject.edit_users_from_policy(@policy.id)).to eq ["julius_caesar"]
+      expect(subject).to eq ["julius_caesar"]
     end
   end
+
   describe "read_groups_from_policy" do
+    subject { instance.read_groups_from_policy(policy.id) }
+
     it "should retrieve the list of groups with read access from the policy" do
-      result = subject.read_groups_from_policy(@policy.id)
-      expect(result.length).to eq 3
-      expect(result).to include("cool_kids", "in_crowd", "africana-faculty")
+      expect(subject).to match_array ["cool_kids", "in_crowd", "africana-faculty"]
     end
   end
-  describe "read_persons_from_policy" do
+
+  describe "read_users_from_policy" do
+    subject { instance.read_users_from_policy(policy.id) }
+
     it "should retrieve the list of individuals with read access from the policy" do
-      expect(subject.read_users_from_policy(@policy.id)).to eq ["julius_caesar","nero"]
+      expect(subject).to eq ["julius_caesar", "nero"]
     end
   end
 end

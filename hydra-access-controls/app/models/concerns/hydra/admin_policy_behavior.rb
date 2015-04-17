@@ -3,7 +3,7 @@ module Hydra
     extend ActiveSupport::Concern
 
     included do
-      has_and_belongs_to_many :default_permissions, predicate: Hydra::ACL.defaultPermissions, class_name: 'Hydra::AccessControls::Permission'
+      has_and_belongs_to_many :default_permissions, predicate: Hydra::ACL.defaultPermissions, class_name: 'Hydra::AccessControls::Permission', inverse_of: :admin_policies
       belongs_to :default_embargo, predicate: Hydra::ACL.hasEmbargo, class_name: 'Hydra::AccessControls::Embargo'
     end
 
@@ -22,8 +22,9 @@ module Hydra
     end
 
     def merged_policies
-      default_permissions.each_with_object({}) do |policy, h|
-        args = policy.to_hash
+      # Workaround for https://github.com/projecthydra/active_fedora/issues/775
+      default_permissions.to_a.uniq.each_with_object({}) do |permission, h|
+        args = permission.to_hash
         h[args[:access]] ||= {}
         h[args[:access]][args[:type]] ||= []
         h[args[:access]][args[:type]] << args[:name]
@@ -48,18 +49,5 @@ module Hydra
       end
       defaultRights.update_permissions(perm_hash)
     end
-
-    ## Returns a list with all the permissions on the object.
-    # @example
-    #  [{:name=>"group1", :access=>"discover", :type=>'group'},
-    #  {:name=>"group2", :access=>"discover", :type=>'group'},
-    #  {:name=>"user2", :access=>"read", :type=>'user'},
-    #  {:name=>"user1", :access=>"edit", :type=>'user'},
-    #  {:name=>"user3", :access=>"read", :type=>'user'}]
-    def default_permissions
-      (defaultRights.groups.map {|x| {:type=>'group', :access=>x[1], :name=>x[0] }} + 
-       defaultRights.users.map {|x| {:type=>'user', :access=>x[1], :name=>x[0]}})
-    end
-
   end
 end

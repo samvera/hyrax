@@ -60,9 +60,9 @@ describe Hydra::AdminPolicy do
   end
 
   describe "Inheritable rights" do
+    let(:policy) { described_class.new }
     before do
-      @policy = Hydra::AdminPolicy.new
-      @policy.default_permissions.build([
+      policy.default_permissions.build([
         {:name=>"africana-faculty", :access=>"edit", :type=>"group"},
         {:name=>"cool-kids", :access=>"edit", :type=>"group"},
         {:name=>"julius_caesar", :access=>"edit", :type=>"person"},
@@ -71,11 +71,23 @@ describe Hydra::AdminPolicy do
         {:name=>"posers", :access=>"discover", :type=>"group"},
         {:name=>"constantine", :access=>"discover", :type=>"person"}
       ])
-      @policy.build_default_embargo.embargo_release_date = "2102-10-01"
+      policy.build_default_embargo.embargo_release_date = "2102-10-01"
     end
 
-    describe "to_solr" do
-      subject { @policy.to_solr }
+    describe "persisting" do
+      before do
+        policy.save!
+        policy.reload
+      end
+
+      it "has the permissions that were set" do
+        expect(policy.default_permissions.size).to eq 7
+      end
+
+    end
+
+    describe "indexing" do
+      subject { policy.to_solr }
 
       it "should not affect normal solr permissions fields" do
         expect(subject).to_not have_key Hydra.config.permissions.discover.group
