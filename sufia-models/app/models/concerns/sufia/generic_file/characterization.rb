@@ -4,23 +4,52 @@ module Sufia
       extend ActiveSupport::Concern
       included do
         contains "characterization", class_name: 'FitsDatastream'
+        # TODO this can't be chaged to property until AF 9.1.1 is released
+        # TODO mime_type can have it's indexing hints moved here at that time.
         has_attributes :mime_type, datastream: :characterization, multiple: false
-        has_attributes :format_label, :file_size, :last_modified,
-                                        :filename, :original_checksum, :rights_basis,
-                                        :copyright_basis, :copyright_note,
-                                        :well_formed, :valid, :status_message,
-                                        :file_title, :file_author, :page_count,
-                                        :file_language, :word_count, :character_count,
-                                        :paragraph_count, :line_count, :table_count,
-                                        :graphics_count, :byte_order, :compression,
-                                        :color_space, :profile_name,
-                                        :profile_version, :orientation, :color_map,
-                                        :image_producer, :capture_device,
-                                        :scanning_software, :exif_version,
-                                        :gps_timestamp, :latitude, :longitude,
-                                        :character_set, :markup_basis,
-                                        :markup_language, :bit_depth,
-                                        :channels, :data_format, :offset, :frame_rate, datastream: :characterization, multiple: true
+        property :format_label,      delegate_to: 'characterization'
+        property :file_size,         delegate_to: 'characterization'
+        property :last_modified,     delegate_to: 'characterization'
+        property :filename,          delegate_to: 'characterization'
+        property :original_checksum, delegate_to: 'characterization'
+        property :rights_basis,      delegate_to: 'characterization'
+        property :copyright_basis,   delegate_to: 'characterization'
+        property :copyright_note,    delegate_to: 'characterization'
+        property :well_formed,       delegate_to: 'characterization'
+        property :valid,             delegate_to: 'characterization'
+        property :status_message,    delegate_to: 'characterization'
+        property :file_title,        delegate_to: 'characterization'
+        property :file_author,       delegate_to: 'characterization'
+        property :page_count,        delegate_to: 'characterization'
+        property :file_language,     delegate_to: 'characterization'
+        property :word_count,        delegate_to: 'characterization'
+        property :character_count,   delegate_to: 'characterization'
+        property :paragraph_count,   delegate_to: 'characterization'
+        property :line_count,        delegate_to: 'characterization'
+        property :table_count,       delegate_to: 'characterization'
+        property :graphics_count,    delegate_to: 'characterization'
+        property :byte_order,        delegate_to: 'characterization'
+        property :compression,       delegate_to: 'characterization'
+        property :color_space,       delegate_to: 'characterization'
+        property :profile_name,      delegate_to: 'characterization'
+        property :profile_version,   delegate_to: 'characterization'
+        property :orientation,       delegate_to: 'characterization'
+        property :color_map,         delegate_to: 'characterization'
+        property :image_producer,    delegate_to: 'characterization'
+        property :capture_device,    delegate_to: 'characterization'
+        property :scanning_software, delegate_to: 'characterization'
+        property :exif_version,      delegate_to: 'characterization'
+        property :gps_timestamp,     delegate_to: 'characterization'
+        property :latitude,          delegate_to: 'characterization'
+        property :longitude,         delegate_to: 'characterization'
+        property :character_set,     delegate_to: 'characterization'
+        property :markup_basis,      delegate_to: 'characterization'
+        property :markup_language,   delegate_to: 'characterization'
+        property :bit_depth,         delegate_to: 'characterization'
+        property :channels,          delegate_to: 'characterization'
+        property :data_format,       delegate_to: 'characterization'
+        property :offset,            delegate_to: 'characterization'
+        property :frame_rate,        delegate_to: 'characterization'
 
       end
 
