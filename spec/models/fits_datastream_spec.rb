@@ -35,14 +35,9 @@ describe FitsDatastream, type: :model, unless: $in_travis do
     let(:datastream) { @file.characterization }
     let(:xml) { datastream.ng_xml }
     let(:namespace) { {'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output'} }
-    let(:solr_doc) { @file.to_solr }
 
     it "should make the fits XML" do
       expect(xml.xpath('//ns:imageWidth/text()', namespace).inner_text).to eq '50'
-    end
-
-    it "should index into solr" do
-      expect(solr_doc[Solrizer.solr_name("mime_type")].first).to eq "image/png"
     end
   end
 

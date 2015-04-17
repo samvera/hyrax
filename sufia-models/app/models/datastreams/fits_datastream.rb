@@ -1,10 +1,6 @@
 class FitsDatastream < ActiveFedora::OmDatastream
   include OM::XML::Document
 
-  def prefix(_)
-    ""
-  end
-
   set_terminology do |t|
     t.root(path: "fits",
            xmlns: "http://hul.harvard.edu/ois/xml/ns/fits/fits_output",
@@ -12,7 +8,7 @@ class FitsDatastream < ActiveFedora::OmDatastream
     t.identification {
       t.identity {
         t.format_label(path: {attribute: "format"})
-        t.mime_type(path: {attribute: "mimetype"}, index_as: [:stored_searchable])
+        t.mime_type(path: {attribute: "mimetype"})
       }
     }
     t.fileinfo {
