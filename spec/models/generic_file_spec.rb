@@ -505,6 +505,27 @@ describe GenericFile, :type => :model do
   describe "permissions validation" do
     before { subject.apply_depositor_metadata('mjg36') }
 
+    describe "overriding" do
+      let(:asset) { SampleKlass.new }
+      before do
+        class SampleKlass < GenericFile
+          def paranoid_edit_permissions
+            []
+          end
+        end
+        asset.apply_depositor_metadata('mjg36')
+      end
+      after do
+        Object.send(:remove_const, :SampleKlass)
+      end
+      context "when public has edit access" do
+        before { asset.edit_groups = ['public'] }
+        it "should be valid" do
+          expect(asset).to be_valid
+        end
+      end
+    end
+
     context "when the depositor does not have edit access" do
       before do
         subject.permissions = [ Hydra::AccessControls::Permission.new(type: 'person', name: 'mjg36', access: 'read')]
