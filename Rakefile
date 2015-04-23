@@ -7,7 +7,7 @@ Dir.glob('tasks/*.rake').each { |r| import r }
 
 require 'jettywrapper'
 require 'engine_cart/rake_task'
-Jettywrapper.hydra_jetty_version = "v8.1.1"
+Jettywrapper.hydra_jetty_version = "v8.3.1"
 
 task ci: ['engine_cart:generate', 'jetty:clean'] do
   jetty_params = Jettywrapper.load_config

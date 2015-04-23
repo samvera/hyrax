@@ -40,7 +40,7 @@ module Worthwhile::CurationConcernController
       after_create_response
     else
       setup_form
-      respond_with([:curation_concern, curation_concern]) do |wants|
+      respond_with(:curation_concern, curation_concern) do |wants|
         wants.html { render 'new', status: :unprocessable_entity }
       end
     end
@@ -57,7 +57,7 @@ module Worthwhile::CurationConcernController
       after_update_response
     else
       setup_form
-      respond_with([:curation_concern, curation_concern]) do |wants|
+      respond_with(:curation_concern, curation_concern) do |wants|
         wants.html { render 'edit', status: :unprocessable_entity }
       end
     end
@@ -88,7 +88,7 @@ module Worthwhile::CurationConcernController
       # Calling the new action to make sure we are doing our best to preserve
       # the input values; Its a stretch but hopefully it'll work
       self.new
-      respond_with([:curation_concern, curation_concern]) do |wants|
+      respond_with(:curation_concern, curation_concern) do |wants|
         wants.html {
           flash.now[:error] = "You must accept the contributor agreement"
           render 'new', status: :conflict
@@ -102,7 +102,7 @@ module Worthwhile::CurationConcernController
     end
 
     def after_create_response
-      respond_with([:curation_concern, curation_concern])
+      respond_with(:curation_concern, curation_concern)
     end
 
     def after_update_response
@@ -110,7 +110,7 @@ module Worthwhile::CurationConcernController
       if actor.visibility_changed?
         redirect_to confirm_curation_concern_permission_path(curation_concern)
       else
-        respond_with([:curation_concern, curation_concern])
+        respond_with(:curation_concern, curation_concern)
       end
     end
 
@@ -122,7 +122,7 @@ module Worthwhile::CurationConcernController
     end
 
     def attributes_for_actor
-      params[hash_key_for_curation_concern]
+      params.fetch(hash_key_for_curation_concern, {}).permit!
     end
 
     def hash_key_for_curation_concern

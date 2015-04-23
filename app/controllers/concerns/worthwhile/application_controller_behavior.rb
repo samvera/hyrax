@@ -19,5 +19,10 @@ module Worthwhile
         render file: "#{Rails.root}/public/404", format: :html, status: :not_found, layout: false
       end
     end
+
+    def current_ability
+      user_signed_in? ? current_user.ability : super
+    end
+
   end
 end

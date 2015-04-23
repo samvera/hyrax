@@ -11,6 +11,18 @@ module Worthwhile
       else
         polymorphic_path([:curation_concern, doc])
       end
-    end 
+    end
+
+    def track_collection_path(*args)
+      track_solr_document_path(*args)
+    end
+
+    def track_generic_work_path(*args)
+      track_solr_document_path(*args)
+    end
+
+    def track_generic_file_path(*args)
+      track_solr_document_path(*args)
+    end
   end
 end

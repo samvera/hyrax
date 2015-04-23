@@ -13,9 +13,9 @@ class CurationConcern::LinkedResourcesController < ApplicationController
   def create
     curation_concern.batch = parent
     if actor.create
-      respond_with([:curation_concern, parent])
+      respond_with(:curation_concern, parent)
     else
-      respond_with([:curation_concern, curation_concern]) { |wants|
+      respond_with(:curation_concern, curation_concern) { |wants|
         wants.html { render 'new', status: :unprocessable_entity }
       }
     end
@@ -27,9 +27,9 @@ class CurationConcern::LinkedResourcesController < ApplicationController
 
   def update
     if actor.update
-      respond_with([:curation_concern, curation_concern.batch])
+      respond_with(:curation_concern, curation_concern.batch)
     else
-      respond_with([:curation_concern, curation_concern]) { |wants|
+      respond_with(:curation_concern, curation_concern) { |wants|
         wants.html { render 'edit', status: :unprocessable_entity }
       }
     end
@@ -39,7 +39,7 @@ class CurationConcern::LinkedResourcesController < ApplicationController
     parent = curation_concern.batch
     flash[:notice] = "Deleted #{curation_concern}"
     curation_concern.destroy
-    respond_with([:curation_concern, parent])
+    respond_with(:curation_concern, parent)
   end
 
   def attach_action_breadcrumb
@@ -49,7 +49,12 @@ class CurationConcern::LinkedResourcesController < ApplicationController
 
   attr_writer :actor
   def actor
-    @actor ||= Worthwhile::CurationConcern.actor(curation_concern, current_user, params[:linked_resource])
+    @actor ||= Worthwhile::CurationConcern.actor(curation_concern, current_user, attributes)
+  end
+
+  def attributes
+    # params.fetch(:generic_file, {}).dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
+    params.fetch(:linked_resource, {}).permit!.dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
   end
 
   def curation_concern

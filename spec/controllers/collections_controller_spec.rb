@@ -64,7 +64,7 @@ describe CollectionsController do
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq work1.id
-      afterupdate = GenericFile.find(work1.id)
+      afterupdate = GenericWork.find(work1.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
 
@@ -89,7 +89,7 @@ describe CollectionsController do
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq work2.id
-      afterupdate = GenericFile.find(work2.id)
+      afterupdate = GenericWork.find(work2.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
       put :update, id: collection.id, collection: {members: "remove"}, batch_document_ids: [work2]
       asset_results = ActiveFedora::SolrService.instance.conn.get "select", params:{fq:["id:\"#{work2.id}\""],fl:['id',Solrizer.solr_name(:collection)]}

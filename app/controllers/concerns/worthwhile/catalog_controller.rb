@@ -1,6 +1,6 @@
 module Worthwhile::CatalogController
   extend ActiveSupport::Concern
-  include Blacklight::Catalog
+  include Hydra::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BreadcrumbsOnRails::ActionController
@@ -13,9 +13,12 @@ module Worthwhile::CatalogController
     before_filter :enforce_show_permissions, only: :show
     # This applies appropriate access controls to all solr queries
     CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
-    CatalogController.solr_search_params_logic += [:filter_models]
+    self.solr_search_params_logic += [:filter_models]
+    self.search_params_logic += [:only_generic_files_and_curation_concerns]
 
     configure_blacklight do |config|
+
+      config.search_builder_class = Worthwhile::SearchBuilder
       ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
       config.default_solr_params = {
         qf: search_config['qf'],
@@ -291,11 +294,6 @@ module Worthwhile::CatalogController
 
   protected
 
-    # Override Hydra::PolicyAwareAccessControlsEnforcement
-    def gated_discovery_filters
-      return [] if current_user && (current_user.groups.include? 'admin')
-      super
-    end
 
     # Overriding Blacklight so that the search results can be displayed in a way compatible with
     # tokenInput javascript library.  This is used for suggesting "Related Works" to attach.

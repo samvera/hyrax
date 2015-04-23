@@ -81,8 +81,8 @@ module Worthwhile
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      file_attributes = Worthwhile::Forms::GenericFileEditForm.model_attributes(params[:generic_file])
-      actor.update_metadata(file_attributes, params[:generic_file][:visibility])
+      file_attributes = Worthwhile::Forms::GenericFileEditForm.model_attributes(attributes)
+      actor.update_metadata(file_attributes, attributes[:visibility])
     end
 
     protected
@@ -96,7 +96,8 @@ module Worthwhile
     end
 
     def attributes
-      params.fetch(:generic_file, {}).dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
+      # params.fetch(:generic_file, {}).dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
+      params.fetch(:generic_file, {}).permit!.dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
     end
 
     def json_error(error, name=nil, additional_arguments={})

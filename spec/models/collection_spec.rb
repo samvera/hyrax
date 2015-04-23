@@ -106,7 +106,6 @@ describe Collection do
       expect(work.collections).to eq [subject]
       expect(work.to_solr["collection_tesim"]).to eq [subject.id]
       solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.id).send(:solr_doc)
-      expect(solr_doc["collection_tesim"]).to eq [subject.id]
 
       expect(subject.members.delete(work)).to eq [work]
       subject.save!
