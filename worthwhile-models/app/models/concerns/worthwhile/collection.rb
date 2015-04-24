@@ -9,8 +9,7 @@ module Worthwhile
       include ::CurationConcern::WithGenericFiles
 
       # override Hydra::Collection to add :solr_page_size
-      has_and_belongs_to_many :members, predicate:  ActiveFedora::RDF::Fcrepo::RelsExt.hasCollectionMember, class_name: "ActiveFedora::Base" , after_remove: :update_member,
-                              solr_page_size: 70
+      has_and_belongs_to_many :members, predicate:  ActiveFedora::RDF::Fcrepo::RelsExt.hasCollectionMember, class_name: "ActiveFedora::Base", solr_page_size: 70
     end
 
   end

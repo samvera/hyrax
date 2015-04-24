@@ -80,7 +80,10 @@ module Worthwhile
     end
 
     def add_collection_mixin
-      inject_into_class 'app/models/collection.rb', Collection, "  include Worthwhile::Collection"
+      inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
+        "\n  include Worthwhile::Collection"
+      end
+      # inject_into_class 'app/models/collection.rb', Collection, "  include Worthwhile::Collection"
     end
 
     def add_config_file
