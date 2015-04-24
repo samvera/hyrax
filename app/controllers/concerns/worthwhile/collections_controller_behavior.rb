@@ -45,7 +45,7 @@ module Worthwhile
       solr_params =  (params.symbolize_keys).merge(q: query)
 
       # run the solr query to find the collections
-      (@response, @member_docs) = get_search_results(solr_params)
+      (@response, @member_docs) = search_results(solr_params)
     end
 
     def after_destroy(id)
