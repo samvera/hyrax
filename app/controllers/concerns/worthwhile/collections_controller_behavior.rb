@@ -4,7 +4,6 @@ module Worthwhile
     include Hydra::CollectionsControllerBehavior
     include Blacklight::Catalog::SearchContext
     include Worthwhile::ThemedLayoutController
-    include Hydra::AccessControlsEnforcement
 
     included do
       before_filter :filter_docs_with_read_access!, except: [:show, :new]
