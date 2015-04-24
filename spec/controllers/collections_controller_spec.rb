@@ -120,12 +120,8 @@ describe CollectionsController do
       it "should remove members and update all of the relevant solr documents" do
         # BUG: This is returning inaccurate information
         #     expect(collection.reload.members).to include public_asset_not_mine
-        solr_doc_before_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.id).send(:solr_doc)
-        expect(solr_doc_before_remove[Solrizer.solr_name(:collection)]).to eq [collection.id]
-        put :update, id: collection.id, collection: {members:"remove"}, batch_document_ids:[public_asset_not_mine.id]
-        expect(collection.reload.members.count).to eq 0
-        solr_doc_after_remove = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, public_asset_not_mine.id).send(:solr_doc)
-        expect(solr_doc_after_remove[Solrizer.solr_name(:collection)]).to be_nil
+        put :update, id: collection, collection: { members: "remove" }, batch_document_ids: [public_asset_not_mine.id]
+        expect(collection.reload.members).to be_empty
       end
     end
   end
