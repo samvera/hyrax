@@ -23,8 +23,6 @@ module CurationConcern
 
     def add_member(collectible)
       if can_add_to_members?(collectible)
-        collectible.collections << self
-        collectible.save
         self.members << collectible
         self.save
       end
@@ -37,7 +35,6 @@ module CurationConcern
     def to_solr(solr_doc={})
       super(solr_doc).tap do |solr_doc|
         Solrizer.set_field(solr_doc, 'generic_type', human_readable_type, :facetable)
-        index_collection_ids(solr_doc)
       end
     end
 
