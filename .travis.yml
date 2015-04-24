@@ -1,6 +1,8 @@
 language: ruby
+cache: bundler
+sudo: false
 rvm:
-  - 2.1
+  - 2.2
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
@@ -8,8 +10,7 @@ notifications:
   email:
     recipients:
       - "justin@curationexperts.com"
-      - "matt@curationexperts.com"
-      - "alicia@curationexperts.com"
+      - "matt.zumwalt@gmail.com"
     on_success: "change"
     on_failure: "always"
   irc:
