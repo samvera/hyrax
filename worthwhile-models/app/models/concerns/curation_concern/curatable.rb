@@ -28,7 +28,6 @@ module CurationConcern::Curatable
 
   def to_solr(solr_doc={})
     super(solr_doc).tap do |solr_doc|
-      index_collection_ids(solr_doc)
       add_derived_date_created(solr_doc)
     end
   end
