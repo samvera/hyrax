@@ -96,8 +96,6 @@ describe CollectionsController do
       expect(asset_results["response"]["numFound"]).to eq 1
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq work2.id
-      afterupdate = GenericFile.find(work2.id)
-      expect(doc[Solrizer.solr_name(:collection)]).to be_nil
     end
 
     describe "adding members" do
