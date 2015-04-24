@@ -5,6 +5,7 @@ describe Collection do
 
   before do
     subject.title = 'A title'
+    subject.apply_depositor_metadata('foo')
   end
 
   it 'can be part of a collection' do
@@ -15,13 +16,6 @@ describe Collection do
     another_collection = FactoryGirl.create(:collection)
     subject.members << another_collection
     expect(subject.members).to eq [another_collection]
-  end
-
-  it 'updates solr with ids of its parent collections' do
-    another_collection = FactoryGirl.create(:collection)
-    another_collection.members << subject
-    another_collection.save
-    expect(subject.reload.to_solr[Solrizer.solr_name(:collection)]).to eq [another_collection.id]
   end
 
   it 'cannot contain itself' do
@@ -79,7 +73,6 @@ describe Collection do
 
       work.reload
       expect(work.collections).to eq [subject]
-      expect(work.to_solr["collection_sim"]).to eq [subject.id]
     end
 
     it 'returns nil if there is nothing to add' do
@@ -104,20 +97,13 @@ describe Collection do
 
       work.reload
       expect(work.collections).to eq [subject]
-      expect(work.to_solr["collection_tesim"]).to eq [subject.id]
-      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.id).send(:solr_doc)
 
       expect(subject.members.delete(work)).to eq [work]
       subject.save!
       expect(reloaded_subject.members).to eq []
 
-      solr_doc = ActiveFedora::SolrInstanceLoader.new(ActiveFedora::Base, work.id).send(:solr_doc)
-      expect(solr_doc["collection_tesim"]).to be_nil
-
-
       work.reload
       expect(work.collections).to eq []
-      expect(work.to_solr["collection_tesim"]).to eq []
     end
   end
 
