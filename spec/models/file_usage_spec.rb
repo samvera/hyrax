@@ -155,4 +155,27 @@ describe FileUsage, :type => :model do
 
     end
   end
+
+  describe "on a migrated file" do 
+    let(:date_uploaded) { "2014-12-31" }
+
+    let(:file_migrated) do
+      GenericFile.new.tap do |file|
+        file.apply_depositor_metadata("awead")
+        file.date_uploaded = date_uploaded
+        file.save
+      end
+    end
+
+    let(:usage) {
+      expect(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
+      expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+      FileUsage.new(file_migrated.id)
+    }
+
+    it "should use the date_uploaded for analytics" do
+      expect(usage.created).to eq(date_uploaded)
+    end
+  end
+
 end
