@@ -57,7 +57,6 @@ describe CatalogController do
     context "searching just my works" do
       it "should return just my works" do
         get 'index', works: 'mine', 'f' => {'generic_type_sim' => 'Work'}
-        debugger
         expect(response).to be_successful
         expect(assigns(:document_list).map(&:id)).to eq [work1.id]
       end
