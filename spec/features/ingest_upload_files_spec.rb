@@ -18,9 +18,8 @@ describe "Uploading files via web form", :type => :feature do
       attach_file("files[]", File.dirname(__FILE__)+"/../../spec/fixtures/image.jp2")
       attach_file("files[]", File.dirname(__FILE__)+"/../../spec/fixtures/jp2_fits.xml")
       expect(page).to have_css("button#main_upload_start[disabled]")
-      find('#main_upload_start_span').hover do
-        expect(page).to have_content "Please accept Deposit Agreement before you can upload."
-      end
+      find('#main_upload_start_span').hover
+      expect(page).to have_content "Please accept Deposit Agreement before you can upload."
     end
   end
 end
