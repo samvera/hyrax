@@ -634,4 +634,13 @@ describe GenericFile, :type => :model do
       it { is_expected.not_to be_public }
     end
   end
+
+    describe " work associations" do
+      let(:work) { Sufia::Works::GenericWork.new }
+      subject { GenericFile.new(work: work) }
+
+      it "should belong to works" do
+        expect(subject.work).to eq work
+      end
+    end
 end

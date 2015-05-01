@@ -21,5 +21,6 @@ module Sufia
     include Hydra::Collections::Collectible
     include Sufia::GenericFile::Batches
     include Sufia::GenericFile::Indexing
+    include Sufia::GenericFile::Works
   end
 end
