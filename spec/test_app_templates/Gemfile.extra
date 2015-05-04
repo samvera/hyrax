@@ -1,4 +1,14 @@
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
 gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '13df67f'
 
+gem 'active-fedora', github: 'terrellt/active_fedora', ref: '068f11f'
+gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: '6a07c77'
+gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: 'deb5f80'
+
+gem 'active-triples', github: 'ActiveTriples/ActiveTriples', ref: 'b99360d'
+gem 'active_fedora-noid', github: 'projecthydra-labs/active_fedora-noid', ref: '38079e4'
+
+# from the bring_works_inline_with_pcdm branch
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '7416a52'
+
 

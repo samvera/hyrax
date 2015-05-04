@@ -17,10 +17,10 @@ describe GenericWork do
   describe "associations" do
     let(:file) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
     context "base model" do
-      subject { GenericWork.create(title: ['test'], files: [file]) }
+      subject { GenericWork.create(title: ['test'], generic_files: [file]) }
 
       it "should have many generic files" do
-        expect(subject.files).to eq [file]
+        expect(subject.generic_files).to eq [file]
       end
     end
 
@@ -30,10 +30,10 @@ describe GenericWork do
         end
       end
 
-      subject { TestWork.create(title: ['test'], files: [file]) }
+      subject { TestWork.create(title: ['test'], generic_files: [file]) }
 
       it "should have many generic files" do
-        expect(subject.files).to eq [file]
+        expect(subject.generic_files).to eq [file]
       end
     end
   end

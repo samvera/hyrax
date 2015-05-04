@@ -4,7 +4,9 @@ module CurationConcern
     include ManagesPermissionsActor
 
     def create
-      assign_pid  && super && attach_files && create_linked_resources && copy_permissions
+      # set the @files ivar then remove the files attribute so it isn't set by default.
+      files && attributes.delete(:files)
+      assign_pid && super && attach_files && create_linked_resources && copy_permissions
     end
 
     def update
