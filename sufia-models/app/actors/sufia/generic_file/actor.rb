@@ -83,7 +83,6 @@ module Sufia::GenericFile
 
     def destroy
       generic_file.destroy
-      FeaturedWork.where(generic_file_id: generic_file.id).destroy_all
       if Sufia.config.respond_to?(:after_destroy)
         Sufia.config.after_destroy.call(generic_file.id, user)
       end

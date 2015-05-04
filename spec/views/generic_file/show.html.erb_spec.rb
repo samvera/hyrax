@@ -194,30 +194,6 @@ describe 'generic_files/show.html.erb', :type => :view do
     end
   end
 
-  describe 'no feature link' do
-    before do
-      allow(generic_file).to receive(:public?).and_return(public)
-      render
-    end
-    let(:page) { Capybara::Node::Simple.new(rendered) }
-
-    context "public file" do
-      let(:public) { true }
-
-      it "does not show feature link for public file" do
-        expect(page).to have_no_selector('a[data-behavior="feature"]')
-      end
-    end
-
-    context "non public file" do
-      let(:public) { false }
-
-      it "does not show feature link for non public file" do
-        expect(page).to have_no_selector('a[data-behavior="feature"]', count: 1)
-      end
-    end
-  end
-
   describe 'collections list' do
     before do
       allow(generic_file).to receive(:collections).and_return(collections)

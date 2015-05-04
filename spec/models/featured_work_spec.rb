@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe FeaturedWork, :type => :model do
-  let(:feature) { FeaturedWork.create(generic_file_id:"99") }
+  let(:feature) { FeaturedWork.create(generic_work_id:"99") }
 
   it "should have a file" do
-    expect(feature.generic_file_id).to eq "99"
+    expect(feature.generic_work_id).to eq "99"
   end
 
   it "should not allow six features" do
     5.times do |n|
-      expect(FeaturedWork.create(generic_file_id:n.to_s)).to_not be_new_record 
+      expect(FeaturedWork.create(generic_work_id:n.to_s)).to_not be_new_record 
     end
-    FeaturedWork.create(generic_file_id:"6").tap do |sixth|
+    FeaturedWork.create(generic_work_id:"6").tap do |sixth|
       expect(sixth).to be_new_record 
       expect(sixth.errors.full_messages).to eq ["Limited to 5 featured works."]
     end
@@ -29,7 +29,7 @@ describe FeaturedWork, :type => :model do
     context "when five exist" do
       before do
         5.times do |n|
-          FeaturedWork.create(generic_file_id:n.to_s)
+          FeaturedWork.create(generic_work_id:n.to_s)
         end
       end
 

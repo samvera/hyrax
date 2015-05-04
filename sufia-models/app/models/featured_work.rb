@@ -11,7 +11,7 @@ class FeaturedWork < ActiveRecord::Base
     end
   end
 
-  attr_accessor :generic_file_solr_document
+  attr_accessor :generic_work_solr_document
 
   class << self
     def can_create_another?

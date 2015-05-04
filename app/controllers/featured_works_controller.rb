@@ -2,7 +2,7 @@ class FeaturedWorksController < ApplicationController
 
   def create
     authorize! :create, FeaturedWork
-    @featured_work = FeaturedWork.new(generic_file_id: params[:id])
+    @featured_work = FeaturedWork.new(generic_work_id: params[:id])
 
     respond_to do |format|
       if @featured_work.save
@@ -15,7 +15,7 @@ class FeaturedWorksController < ApplicationController
 
   def destroy
     authorize! :destroy, FeaturedWork
-    @featured_work = FeaturedWork.find_by(generic_file_id: params[:id])
+    @featured_work = FeaturedWork.find_by(generic_work_id: params[:id])
     @featured_work.destroy
       
     respond_to do |format|
