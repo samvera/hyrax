@@ -218,7 +218,7 @@ describe 'generic_files/show.html.erb', :type => :view do
     end
   end
 
-  describe 'featured' do
+  describe 'no feature link' do
     before do
       allow(generic_file).to receive(:public?).and_return(public)
       render
@@ -228,8 +228,8 @@ describe 'generic_files/show.html.erb', :type => :view do
     context "public file" do
       let(:public) { true }
 
-      it "shows featured feature link for public file" do
-        expect(page).to have_selector('a[data-behavior="feature"]', count: 1)
+      it "does not show feature link for public file" do
+        expect(page).to have_no_selector('a[data-behavior="feature"]')
       end
     end
 
