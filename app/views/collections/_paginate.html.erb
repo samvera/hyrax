@@ -1,6 +1,0 @@
-<% if @response.total_pages > 1 %>
-    <div class="pager">
-      <%= paginate @response, outer_window: 2, theme: 'blacklight', route_set: collections %>
-      <div class="clearfix"></div>
-    </div><!-- /pager -->
-<% end %>

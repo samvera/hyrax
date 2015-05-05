@@ -79,12 +79,12 @@ module Worthwhile
       copy_file "worthwhile_helper.rb", "app/helpers/worthwhile_helper.rb"
     end
 
-    def add_collection_mixin
-      inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
-        "\n  include Worthwhile::Collection"
-      end
-      # inject_into_class 'app/models/collection.rb', Collection, "  include Worthwhile::Collection"
-    end
+    # def add_collection_mixin
+    #   inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
+    #     "\n  include Worthwhile::Collection"
+    #   end
+    #   # inject_into_class 'app/models/collection.rb', Collection, "  include Worthwhile::Collection"
+    # end
 
     def add_config_file
       copy_file "worthwhile_config.rb", "config/initializers/worthwhile_config.rb"

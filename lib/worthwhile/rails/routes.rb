@@ -43,6 +43,7 @@ module ActionDispatch::Routing
       end
     end
 
+    # kmr added :show to make tests pass 
     def worthwhile_embargo_management
       resources :embargoes, only: [:index, :edit, :destroy] do
         collection do

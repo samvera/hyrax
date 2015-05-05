@@ -4,7 +4,6 @@ module CurationConcern::Work
   include ::CurationConcern::WithGenericFiles
   include Hydra::AccessControls::Embargoable
   include ::CurationConcern::WithEditors
-  include CurationConcern::WithLinkedResources
 
   # Modules in Curate's CurationConcern::Work that we _might_ pull in later
   # include Curate::ActiveModelAdaptor
