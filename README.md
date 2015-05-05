@@ -16,10 +16,11 @@
   * [Creating a Sufia-based app](#creating-a-sufia-based-app)
     * [Prerequisites](#prerequisites)
       * [Characterization](#characterization)
+      * [Derivatives](#derivatives)
     * [Environments](#environments)
     * [Ruby](#ruby)
     * [Rails](#rails)
-    * [Sufia-related dependencies](#sufia-related-dependencies)
+    * [Sufia's Ruby-related dependencies](#sufias-ruby-related-dependencies)
       * [Pagination](#pagination)
     * [Install Sufia](#install-sufia)
     * [Database tables and indexes](#database-tables-and-indexes)
@@ -92,20 +93,25 @@ Sufia requires the following software to work:
 1. Solr
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
-1. [Redis](http://redis.io/) key-value store
-1. [ImageMagick](http://www.imagemagick.org/)
-1. [FITS](#characterization)
+1. [Redis](http://redis.io/), a key-value store
+1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
+1. [FITS](#characterization) version 0.6.x
+1. [LibreOffice](#derivatives)
 
 **NOTE: If you do not already have Solr and Fedora instances you can use in your development environment, you may use hydra-jetty (instructions are provided below to get you up and running quickly and with minimal hassle).**
 
 ### Characterization
 
-1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS & unpack it somewhere on your machine.  You can also install FITS on OSX with homebrew `brew install fits` (you may also have to create a symlink from `fits.sh -> fits` in the next step).
+1. Go to http://projects.iq.harvard.edu/fits/downloads and download a copy of FITS (be sure to get version 0.6.2) & unpack it somewhere on your machine.
 1. Mark fits.sh as executable (`chmod a+x fits.sh`)
 1. Run "fits.sh -h" from the command line and see a help message to ensure FITS is properly installed
 1. Give your Sufia app access to FITS by:
     1. Adding the full fits.sh path to your PATH (e.g., in your .bash_profile), **OR**
     1. Changing `config/initializers/sufia.rb` to point to your FITS location:  `config.fits_path = "/<your full path>/fits.sh"`
+
+### Derivatives
+
+Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your .bash_profile, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/<your full path to>/LibreOffice.app/Contents/MacOS/"
 
 ## Environments
 
@@ -122,11 +128,11 @@ We recommend either Ruby 2.2 or the latest 2.1 version.
 Generate a new Rails application.  We recommend either Rails 4.2 or the latest 4.1 version.
 
 ```
-gem install rails -v 4.1.8
+gem install rails -v '>=4.2'
 rails new my_app
 ```
 
-## Sufia-related dependencies
+## Sufia's Ruby-related dependencies
 
 Add the following lines to your application's Gemfile.
 
@@ -309,7 +315,7 @@ Add the following gem to Sufia installed app's Gemfile
 ```
 gem "hydra-role-management"
 ```
- 
+
 ### Adding an admin user
 
 In rails console, run the following commands to create the admin role.
@@ -322,7 +328,7 @@ Add a user as the admin.
 r.users << User.find_by_user_key( "your_admin_users_email@fake.email.org" )
 r.save
 ```
- 
+
 Confirm user was made an admin.
 ```
 u = User.find_by_user_key( "your_admin_users_email@fake.email.org" )
@@ -332,7 +338,7 @@ u.admin?
 
 if u.admin? == true then SUCCESS
 ```
- 
+
 Confirm in browser
 
 * go to your Sufia install
@@ -365,6 +371,8 @@ This information is for people who want to modify the engine itself, not an appl
 That will print to stdout the new TOC, which you can copy into `README.md`, commit, and push.
 
 ## Run the test suite
+
+The test suite also requires [PhantomJS](http://phantomjs.org/), version 1.9.x.
 
 ```
 rake jetty:start
