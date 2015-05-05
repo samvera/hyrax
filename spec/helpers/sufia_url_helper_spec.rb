@@ -12,4 +12,9 @@ describe SufiaUrlHelper do
     subject { helper.track_generic_file_path(document) }
     it { is_expected.to eq '/catalog/foo123/track' }
   end
+
+  describe "#track_sufia_works_generic_work_path" do
+    subject { helper.track_sufia_works_generic_work_path(document) }
+    it { is_expected.to eq '/catalog/foo123/track' }
+  end
 end

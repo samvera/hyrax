@@ -9,6 +9,12 @@ describe 'Routes', :type => :routing do
     end
   end
 
+  describe 'GenericWork' do
+    it "should route to show" do
+      expect({ get: '/works/4' }).to route_to(controller: 'sufia/works/generic_works', action: 'show', id: '4')
+    end
+  end
+
   describe 'GenericFile' do
     it 'should route to citation' do
       expect({ get: '/files/1/citation' }).to route_to(controller: 'generic_files', action: 'citation', id: '1')

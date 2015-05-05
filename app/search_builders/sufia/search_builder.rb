@@ -39,12 +39,12 @@ module Sufia::SearchBuilder
     ]
   end
 
-  # Limits search results just to GenericFiles and collections
+  # Limits search results just to GenericWorks and collections
   # @param solr_parameters the current solr parameters
-  # @param user_parameters the current user-subitted parameters
-  def only_generic_files_and_collections(solr_parameters)
+  # @param user_parameters the current user-submitted parameters
+  def only_works_and_collections(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"GenericFile\" \"Collection\")"
+    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"Sufia::Works::GenericWork\" \"Collection\")"
   end
 
 end

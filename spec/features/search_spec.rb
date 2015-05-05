@@ -1,10 +1,17 @@
 require 'spec_helper'
 
 describe 'searching' do
-  let!(:file) { FactoryGirl.create(:public_file, title: ["Toothbrush"]) }
+  let!(:work) {
+    Sufia::Works::GenericWork.new.tap do |work|
+      work.title = ["Toothbrush"]
+      work.apply_depositor_metadata('Frodo')
+      work.read_groups = ['public']
+      work.save!
+    end
+  }
 
   context "as a public user" do
-    it "should find the file and have a gallery" do
+    it "using the gallery view" do
       visit '/'
       fill_in "search-field-header", with: "Toothbrush"
       click_button "search-submit-header"

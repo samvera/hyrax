@@ -2,5 +2,6 @@
 module Sufia::Works
   class GenericWork < Work
     include Sufia::Works::CurationConcern::WithBasicMetadata
+    include Sufia::GenericFile::Permissions
   end
 end
