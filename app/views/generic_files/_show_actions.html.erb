@@ -13,15 +13,15 @@
             <%= link_to "Edit", sufia.edit_generic_file_path(@generic_file) %>
           <% end %>
       <% end %>
-      <% if can?(:create, FeaturedWork) && @generic_file.public? %>
-        <% if FeaturedWork.can_create_another? && !@generic_file.featured?%>
+      <!--<%# if can?(:create, FeaturedWork) && @generic_file.public? %>
+        <%# if FeaturedWork.can_create_another? && !@generic_file.featured?%>
           &nbsp;|&nbsp;
-          <%= link_to "Feature", sufia.featured_work_path(@generic_file, format: :json), data: {behavior: 'feature'} %>
-        <% elsif @generic_file.featured? %>
+          <%#= link_to "Feature", sufia.featured_work_path(@generic_file, format: :json), data: {behavior: 'feature'} %>
+        <%# elsif @generic_file.featured? %>
           &nbsp;|&nbsp;
           Featured
-        <% end %>
-      <% end %>
+        <%# end %>
+      <%# end %>-->
     </p>
     <p>Export to:
       <%= link_to 'EndNote', sufia.generic_file_path(@generic_file, format: 'endnote') %>
