@@ -27,6 +27,9 @@ Sufia::Engine.routes.draw do
     end
   end
 
+  # GenericWorks
+  get '/works/:id', controller: 'sufia/works/generic_works', action: :show, as: 'sufia_works_generic_work'
+
   # Depositors routes for proxy deposit
   post 'users/:user_id/depositors' => 'depositors#create', as: 'user_depositors'
   delete 'users/:user_id/depositors/:id' => 'depositors#destroy', as: 'user_depositor'
