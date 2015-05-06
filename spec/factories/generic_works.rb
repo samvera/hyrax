@@ -13,13 +13,12 @@ FactoryGirl.define do
     end
 
 
-    factory :public_generic_work do
+    factory :public_generic_work, aliases: [:public_work] do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 
     factory :work_with_files do
       after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.create(:generic_file) }}
     end
-
   end
 end

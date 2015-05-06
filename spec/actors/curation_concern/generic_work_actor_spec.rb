@@ -147,7 +147,6 @@ describe Sufia::CurationConcern::GenericWorkActor do
 
       it "should add to collections" do
         reload = Sufia::Works::GenericWork.find(curation_concern.id)
-        puts curation_concern.collection_ids
         expect(reload.collections).to eq [collection1]
 
         expect(subject.update).to be true

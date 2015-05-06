@@ -33,14 +33,14 @@ describe 'Transferring file ownership:', :type => :feature do
 
     context 'To myself' do
       before { transfer_ownership_of_file file, original_owner }
-      it 'Displays an appropriate error message' do
+      it 'Displays an appropriate error message', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
         expect(page).to have_content 'Sending user must specify another user to receive the file'
       end
     end
 
     context 'To someone else' do
       before { transfer_ownership_of_file file, new_owner }
-      it 'Creates a transfer request' do
+      it 'Creates a transfer request', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
         expect(page).to have_content 'Transfer request created'
       end
       context 'If the new owner accepts it' do
@@ -49,7 +49,7 @@ describe 'Transferring file ownership:', :type => :feature do
           user_utility_toggle.click
           click_link 'transfer requests'
         end
-        specify 'I should see it was accepted' do
+        specify 'I should see it was accepted', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
           expect(page.find('#outgoing-transfers')).to have_content 'Accepted'
         end
       end
@@ -59,7 +59,7 @@ describe 'Transferring file ownership:', :type => :feature do
           click_link 'transfer requests'
           first_sent_cancel_button.click
         end
-        specify 'I should see it was cancelled' do
+        specify 'I should see it was cancelled', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
           expect(page).to have_content 'Transfer canceled'
         end
       end
@@ -79,16 +79,16 @@ describe 'Transferring file ownership:', :type => :feature do
       end
       expect(page).to have_content 'Transfer of Ownership'
     end
-    specify 'I should receive a notification' do
+    specify 'I should receive a notification', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
       user_notifications_link.click
       expect(page).to have_content "#{original_owner.name} wants to transfer a file to you"
     end
-    specify 'I should be able to accept it' do
+    specify 'I should be able to accept it', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
       first_received_accept_dropdown.click
       click_link 'Allow depositor to retain edit access'
       expect(page).to have_content 'Transfer complete'
     end
-    specify 'I should be able to reject it' do
+    specify 'I should be able to reject it', skip: 'Will ownership transfer be at the GenericWork level or the GenericFile level?' do
       first_received_reject_button.click
       expect(page).to have_content 'Transfer rejected'
     end

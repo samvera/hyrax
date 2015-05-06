@@ -2,7 +2,13 @@ require 'spec_helper'
 
 describe "Browse Dashboard", type: :feature do
   let(:user) { FactoryGirl.create(:user) }
-  let!(:fixtures) { create_file_fixtures(user.user_key) }
+
+  let!(:dissertation) { FactoryGirl.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w"lorem ipsum dolor sit amet") }
+
+  let!(:mp3_work) { FactoryGirl.create(:public_work, user: user, title: ["Test Document MP3"], subject: %w"consectetur adipisicing elit") }
+
+  let!(:audio_work) { FactoryGirl.create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w"sed do eiusmod tempor incididunt ut labore") }
+
 
   before do
     sign_in user
@@ -15,28 +21,18 @@ describe "Browse Dashboard", type: :feature do
     expect(page).to have_content("Fake PDF Title")
   end
 
-  context "within my files page" do
+  it 'has buttons for user actions' do
+    expect(page).to have_link("Create Collection")
+    expect(page).to have_link("Upload")
+  end
 
+
+  context "within my files page" do
     before do
       visit "/dashboard/files"
     end
 
-    it "should display all the necessary information" do
-      # TODO this would make a good view test.
-      within("#document_#{fixtures.first.id}") do
-        click_button("Select an action")
-      end
-      expect(page).to have_content("Edit File")
-      expect(page).to have_content("Download File")
-      expect(page).to_not have_content("Is part of:")
-      first(".label-success") do
-        expect(page).to have_content("Open Access")
-      end
-      expect(page).to have_link("Create Collection")
-      expect(page).to have_link("Upload")
-    end
-
-    it "should allow you to search your own files and remove constraints" do
+    it "should allow you to search your own works and remove constraints" do
       fill_in "q", with: "PDF"
       click_button "search-submit-header"
       expect(page).to have_content("Fake PDF Title")
@@ -52,32 +48,23 @@ describe "Browse Dashboard", type: :feature do
       click_link "Subject"
       click_link "more Subjects"
       click_link "consectetur"
-      within("#document_#{fixtures[1].id}") do
-        click_link "Display all details of Test Document MP3.mp3"
+
+      within("#document_#{mp3_work.id}") do
+        expect(page).to have_link("Display all details of Test Document MP3", href: sufia.generic_work_path(mp3_work))
       end
-      expect(page).to have_content("File Details")
     end
 
-    it "should allow me to edit files (from the fixtures)" do
-      # TODO this would make a good view test.
-      fill_in "q", with: "Wav"
-      click_button "search-submit-header"
-      click_button "Select an action"
-      click_link "Edit File"
-      expect(page).to have_content("Edit Fake Wav File.wav")
-    end
-
-    it "should refresh the page of files" do
+    it "should refresh the page" do
       # TODO this would make a good view test.
       click_button "Refresh"
-      within("#document_#{fixtures.first.id}") do
+      within("#document_#{dissertation.id}") do
         click_button("Select an action")
-        expect(page).to have_content("Edit File")
-        expect(page).to have_content("Download File")
+        expect(page).to have_content("Edit Work")
+        expect(page).to have_content("Download Work")
       end
     end
 
-    it "should allow me to edit files in batches" do
+    it "should allow me to edit works in batches", skip: 'Not yet implemented' do
       first('input#check_all').click
       click_button('Edit Selected')
       expect(page).to have_content('3 files')
