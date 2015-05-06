@@ -8,6 +8,7 @@ module Sufia::Works
       include Sufia::ModelMethods
       include Hydra::Collections::Collectible
       include Solrizer::Common
+      include Sufia::GenericFile::Permissions
     end
   end
 end
