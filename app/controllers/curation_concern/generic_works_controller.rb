@@ -17,6 +17,10 @@ module CurationConcern
       Sufia::Forms::GenericWorkEditForm
     end
 
+    def presenter_class
+      Sufia::GenericWorkPresenter
+    end
+
     # Override this method if you wish to customize the way access is denied
     def deny_access(exception)
       if exception.action == :edit
