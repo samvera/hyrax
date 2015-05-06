@@ -28,6 +28,7 @@ module Worthwhile::CurationConcernController
 
 
   def new
+    form
   end
 
   def create
@@ -35,16 +36,18 @@ module Worthwhile::CurationConcernController
       after_create_response
     else
       setup_form
-      respond_with([:curation_concern, curation_concern]) do |wants|
+      respond_with(form) do |wants|
         wants.html { render 'new', status: :unprocessable_entity }
       end
     end
   end
 
   def show
+    presenter
   end
 
   def edit
+    form
   end
 
   def update
@@ -108,4 +111,14 @@ module Worthwhile::CurationConcernController
     def hash_key_for_curation_concern
       self.class.curation_concern_type.name.split("::").last.underscore.to_sym
     end
-end
+
+    def form
+      @form ||= form_class.new(curation_concern)
+    end
+
+
+    def presenter
+      @presenter ||= presenter_class.new(curation_concern)
+    end
+
+  end
