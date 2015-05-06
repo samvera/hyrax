@@ -2,7 +2,7 @@ module CurationConcern
   class GenericWorksController < ApplicationController
     include Worthwhile::CurationConcernController
     include Sufia::Controller
-    set_curation_concern_type Sufia::Works::GenericWork
+    set_curation_concern_type GenericWork
 
     def generic_work_params
       form_class.model_attributes(

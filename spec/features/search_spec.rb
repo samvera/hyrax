@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'searching' do
   let!(:work) {
-    Sufia::Works::GenericWork.new.tap do |work|
+    GenericWork.new.tap do |work|
       work.title = ["Toothbrush"]
       work.apply_depositor_metadata('Frodo')
       work.read_groups = ['public']

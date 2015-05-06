@@ -103,5 +103,9 @@ module Sufia
       hydra_model == 'Collection'
     end
 
+    def generic_work?
+      hydra_model == 'GenericWork'
+    end
+
   end
 end

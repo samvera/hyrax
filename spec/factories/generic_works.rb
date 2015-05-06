@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :work, aliases: [:generic_work, :private_generic_work], class: Sufia::Works::GenericWork do
+  factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do
       user { FactoryGirl.create(:user) }
       embargo_date { Date.tomorrow.to_s }

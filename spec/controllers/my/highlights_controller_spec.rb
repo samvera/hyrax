@@ -9,7 +9,7 @@ describe My::HighlightsController, :type => :controller do
 
     describe "#index" do
       before do
-        Sufia::Works::GenericWork.destroy_all
+        GenericWork.destroy_all
         Collection.destroy_all
         @highlighted_work = FactoryGirl.create(:generic_work).tap do |r|
           r.apply_depositor_metadata @user
@@ -35,9 +35,9 @@ describe My::HighlightsController, :type => :controller do
       end
 
       it "should paginate" do
-        @work1 = Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(@user) }         
+        @work1 = GenericWork.create { |w| w.apply_depositor_metadata(@user) }
         @user.trophies.create(generic_work_id: @work1.id)
-        @work2 = Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(@user) }          
+        @work2 = GenericWork.create { |w| w.apply_depositor_metadata(@user) }
         @user.trophies.create(generic_work_id: @work2.id)
         get :index, per_page: 2
         expect(assigns[:document_list].length).to eq 2

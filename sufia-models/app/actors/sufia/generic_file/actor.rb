@@ -27,15 +27,15 @@ module Sufia::GenericFile
       end
 
       if work_id.blank?
-        work = Sufia::Works::GenericWork.new
+        work = GenericWork.new
         work.apply_depositor_metadata(user)
         work.date_uploaded = time_in_utc
         work.date_modified = time_in_utc
         work.creator = [user.name]
       else
-        work = Sufia::Works::GenericWork.find(work_id)
+        work = GenericWork.find(work_id)
       end
-      generic_file.work = work
+      generic_file.generic_work = work
       yield(generic_file) if block_given?
     end
 

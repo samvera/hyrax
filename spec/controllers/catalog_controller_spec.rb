@@ -12,7 +12,7 @@ describe CatalogController, :type => :controller do
   describe "#index" do
 
     let!(:rocks) {
-      Sufia::Works::GenericWork.new.tap do |work|
+      GenericWork.new.tap do |work|
         work.title = ['Rock Documents']
         work.read_groups = ['public']
         work.apply_depositor_metadata('mjg36')
@@ -21,7 +21,7 @@ describe CatalogController, :type => :controller do
     }
 
     let!(:clouds) {
-      Sufia::Works::GenericWork.new.tap do |work|
+      GenericWork.new.tap do |work|
         work.title = ['Cloud Documents']
         work.read_groups = ['public']
         work.apply_depositor_metadata('mjg36')

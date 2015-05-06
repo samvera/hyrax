@@ -10,7 +10,7 @@ describe 'catalog searching', :type => :feature do
 
   context 'with works and collections' do
     let!(:jills_work) {
-      Sufia::Works::GenericWork.new.tap do |work|
+      GenericWork.new.tap do |work|
         work.title = ["Jill's Research"]
         work.tag = ['jills_tag', 'shared_tag']
         work.apply_depositor_metadata('jilluser')
@@ -20,7 +20,7 @@ describe 'catalog searching', :type => :feature do
     }
 
     let!(:jacks_work) {
-      Sufia::Works::GenericWork.new.tap do |work|
+      GenericWork.new.tap do |work|
         work.title = ["Jack's Research"]
         work.tag = ['jacks_tag', 'shared_tag']
         work.apply_depositor_metadata('jackuser')

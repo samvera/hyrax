@@ -73,8 +73,8 @@ module CurationConcern
       generic_file = GenericFile.new
       actor = Sufia::GenericFile::Actor.new(generic_file, user)
       actor.create_content(file, file.original_filename, file_path, file.content_type)
-      generic_file.work = curation_concern
       actor.create_metadata(curation_concern.id, curation_concern.id)
+      generic_file.generic_work = curation_concern
       generic_file.visibility = visibility
 
       stat = Worthwhile::CurationConcern.attach_file(generic_file, user, file)

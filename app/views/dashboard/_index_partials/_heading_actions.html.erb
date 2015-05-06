@@ -1,5 +1,5 @@
 <div class="col-xs-12 heading-row">
-  <% if can?(:create, Sufia::Works::GenericWork) %>
+  <% if can?(:create, GenericWork) %>
     <div class="col-xs-6 col-sm-2 heading-tile">
       <%= link_to sufia.new_generic_work_path do %>
           <span class="glyphicon glyphicon-upload"></span>

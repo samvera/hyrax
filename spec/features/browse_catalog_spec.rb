@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Browse catalog:", :type => :feature do
 
   let!(:jills_work) {
-    Sufia::Works::GenericWork.new.tap do |work|
+    GenericWork.new.tap do |work|
       work.title = ["Jill's Research"]
       (1..25).each do |i|
         work.tag << ["tag#{sprintf('%02d', i)}"]
@@ -15,7 +15,7 @@ describe "Browse catalog:", :type => :feature do
   }
 
   let!(:jacks_work) {
-    Sufia::Works::GenericWork.new.tap do |work|
+    GenericWork.new.tap do |work|
     work.title = ["Jack's Research"]
     work.tag = ['jacks_tag']
     work.apply_depositor_metadata('jackuser')

@@ -31,7 +31,7 @@ describe 'users/show.html.erb', :type => :view do
 
   context "with trophy" do
 
-    let(:generic_work) { stub_model(Sufia::Works::GenericWork, title: ["Fake object"], id: "abc123") }
+    let(:generic_work) { stub_model(GenericWork, title: ["Fake object"], id: "abc123") }
     before do
       allow(view).to receive(:search_session).and_return({})
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)

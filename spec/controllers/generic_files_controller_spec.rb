@@ -104,13 +104,13 @@ describe GenericFilesController do
       end
 
       context "when a work id is passed" do
-        let (:work) { Sufia::Works::GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+        let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
         it "records the work" do
           xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, work_id: work.id, terms_of_service: '1'
           expect(response).to be_success
           saved_file = GenericFile.find('test123')
-          expect(saved_file.work_id).to eq work.id
-          expect(saved_file.work).to eq work
+          expect(saved_file.generic_work_id).to eq work.id
+          expect(saved_file.generic_work).to eq work
         end
 
       end
@@ -119,7 +119,7 @@ describe GenericFilesController do
           xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, terms_of_service: '1'
           expect(response).to be_success
           saved_file = GenericFile.find('test123')
-          expect(saved_file.work_id).not_to be_nil
+          expect(saved_file.generic_work_id).not_to be_nil
         end
 
       end
@@ -148,13 +148,13 @@ describe GenericFilesController do
 
 
       context "when a work id is passed" do
-        let (:work) { Sufia::Works::GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+        let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
         it "records the work" do
           expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
           expect(Sufia.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id, work_id: work.id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
-          created_files.each {|f| expect(f.work).to eq work}
+          created_files.each {|f| expect(f.generic_work).to eq work}
         end
 
       end
@@ -164,7 +164,7 @@ describe GenericFilesController do
           expect(Sufia.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
-          expect(created_files[0].work).not_to eq created_files[1].work
+          expect(created_files[0].generic_work).not_to eq created_files[1].generic_work
         end
 
       end
@@ -246,13 +246,13 @@ describe GenericFilesController do
         end
 
         context "when a work id is passed" do
-          let (:work) { Sufia::Works::GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+          let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
           it "records the work" do
             expect {
               post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id, work_id: work.id
             }.to change(GenericFile, :count).by(2)
             created_files = GenericFile.all
-            created_files.each {|f| expect(f.work).to eq work}
+            created_files.each {|f| expect(f.generic_work).to eq work}
           end
 
         end
@@ -263,7 +263,7 @@ describe GenericFilesController do
               post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
             }.to change(GenericFile, :count).by(2)
             created_files = GenericFile.all
-            expect(created_files[0].work).not_to eq created_files[1].work
+            expect(created_files[0].generic_work).not_to eq created_files[1].generic_work
           end
 
         end

@@ -14,7 +14,7 @@
   <tbody>
   <% docs.each_with_index do |document,counter| %>
     <% case document.hydra_model %>
-    <% when "Sufia::Works::GenericWork" %>
+    <% when "GenericWork" %>
       <%= render partial: 'my/_index_partials/list_works', locals: { document: document, counter: counter } %>
     <% when "GenericFile" %>
       <%= render partial: 'my/_index_partials/list_files', locals: {document: document, counter: counter} %>

@@ -619,11 +619,11 @@ describe GenericFile, :type => :model do
   end
 
     describe " work associations" do
-      let(:work) { Sufia::Works::GenericWork.new }
-      subject { GenericFile.new(work: work) }
+      let(:work) { GenericWork.new }
+      subject { GenericFile.new(generic_work: work) }
 
       it "should belong to works" do
-        expect(subject.work).to eq work
+        expect(subject.generic_work).to eq work
       end
     end
 end

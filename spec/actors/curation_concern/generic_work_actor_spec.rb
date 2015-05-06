@@ -18,7 +18,7 @@ describe Sufia::CurationConcern::GenericWorkActor do
   }
 
   describe '#create' do
-    let(:curation_concern) { Sufia::Works::GenericWork.new(id: assign_id )}
+    let(:curation_concern) { GenericWork.new(id: assign_id )}
 
     context 'failure' do
       let(:attributes) {{}}
@@ -57,7 +57,7 @@ describe Sufia::CurationConcern::GenericWorkActor do
             expect(curation_concern.depositor).to eq user.user_key
 
             expect(curation_concern.generic_file_ids.count).to eq 1
-            expect(curation_concern.generic_files.first.work).to eq curation_concern
+            expect(curation_concern.generic_files.first.generic_work).to eq curation_concern
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
             generic_file = curation_concern.generic_files.first
             file.rewind
@@ -147,12 +147,12 @@ describe Sufia::CurationConcern::GenericWorkActor do
       end
 
       it "should add to collections" do
-        reload = Sufia::Works::GenericWork.find(curation_concern.id)
+        reload = GenericWork.find(curation_concern.id)
         expect(reload.collections).to eq [collection1]
 
         expect(subject.update).to be true
 
-        reload = Sufia::Works::GenericWork.find(curation_concern.id)
+        reload = GenericWork.find(curation_concern.id)
         expect(reload.identifier).to be_blank
         expect(reload).to be_persisted
         expect(reload.collections.count).to eq 1
