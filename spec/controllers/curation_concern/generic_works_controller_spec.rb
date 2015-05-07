@@ -47,7 +47,7 @@ describe CurationConcern::GenericWorksController do
     it "should create a work" do
       expect {
         post :create, generic_work: { title: ["a title"] }
-      }.to change { Sufia::Works::GenericWork.count }.by(1)
+      }.to change { GenericWork.count }.by(1)
       expect(response).to redirect_to Sufia::Engine.routes.url_helpers.generic_work_path(assigns[:curation_concern])
     end
   end
@@ -120,7 +120,7 @@ describe CurationConcern::GenericWorksController do
     it "should delete the work" do
       delete :destroy, id: work_to_be_deleted
       expect(response).to redirect_to(main_app.catalog_index_path)
-      expect { Sufia::Works::GenericWork.find(work_to_be_deleted.id) }.to raise_error
+      expect { GenericWork.find(work_to_be_deleted.id) }.to raise_error
     end
 
     context "someone elses public work" do

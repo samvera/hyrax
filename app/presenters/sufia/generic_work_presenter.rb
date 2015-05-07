@@ -1,7 +1,7 @@
 module Sufia
   class GenericWorkPresenter
     include Hydra::Presenter
-    self.model_class = Sufia::Works::GenericWork
+    self.model_class = GenericWork
     # Terms is the list of fields displayed
     self.terms = [:resource_type, :title, :creator, :contributor, :description, :tag, :rights,
        :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url]

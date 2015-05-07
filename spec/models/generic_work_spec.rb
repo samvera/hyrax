@@ -1,6 +1,12 @@
 require 'spec_helper'
 
-describe Sufia::Works::GenericWork do
+describe GenericWork do
+
+  describe ".properties" do
+    subject { described_class.properties.keys }
+    it { is_expected.to include("has_model", "create_date", "modified_date") }
+  end
+
   describe "basic metadata" do
     it "should have dc properties" do
       subject.title = ['foo', 'bar']
@@ -11,7 +17,7 @@ describe Sufia::Works::GenericWork do
   describe "associations" do
     let(:file) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
     context "base model" do
-      subject { Sufia::Works::GenericWork.create(title: ['test'], files: [file]) }
+      subject { GenericWork.create(title: ['test'], files: [file]) }
 
       it "should have many generic files" do
         expect(subject.files).to eq [file]
@@ -20,7 +26,7 @@ describe Sufia::Works::GenericWork do
 
     context "sub-class" do
       before do
-        class TestWork < Sufia::Works::GenericWork
+        class TestWork < GenericWork
         end
       end
 
@@ -35,7 +41,7 @@ describe Sufia::Works::GenericWork do
   describe "trophies" do
     before do
       u = FactoryGirl.find_or_create(:jill)
-      @w = Sufia::Works::GenericWork.new.tap do |gw|
+      @w = GenericWork.new.tap do |gw|
         gw.apply_depositor_metadata(u)
         gw.save!
       end
@@ -53,7 +59,7 @@ describe Sufia::Works::GenericWork do
   describe "#destroy", skip: "Is this behavior we need? Could other works be pointing at the file?" do
     let(:file1) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
     let(:file2) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
-    let!(:work) { Sufia::Works::GenericWork.create(files: [file1, file2]) }
+    let!(:work) { GenericWork.create(files: [file1, file2]) }
 
     it "should destroy the files" do
       expect { work.destroy }.to change{ GenericFile.count }.by(-2)

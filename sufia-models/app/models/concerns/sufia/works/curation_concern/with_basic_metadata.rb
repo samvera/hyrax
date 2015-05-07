@@ -27,6 +27,14 @@ module Sufia::Works
         include GenericWorkRdfProperties
       end
 
+      def collection?
+        false
+      end
+
+      def generic_work?
+        true
+      end
+
     end
   end
 end

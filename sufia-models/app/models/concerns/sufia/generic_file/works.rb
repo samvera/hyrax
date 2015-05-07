@@ -4,7 +4,7 @@ module Sufia
       extend ActiveSupport::Concern
       included do
         # TODO this could actually be "has_one", but that's not implemented
-        belongs_to :work, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.hasPart, class_name: "Sufia::Works::Work"
+        belongs_to :generic_work, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.hasPart
       end
 
     end

@@ -8,7 +8,7 @@ module Sufia
 
       before_filter :has_access?, except: :show
       before_filter :build_breadcrumbs, only: [:edit, :show]
-      load_and_authorize_resource except: [:index, :audit], class: Sufia::Works::GenericWork
+      load_and_authorize_resource except: [:index, :audit], class: GenericWork
 
       layout "sufia-one-column"
     end

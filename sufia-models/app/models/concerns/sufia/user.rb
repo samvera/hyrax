@@ -78,7 +78,7 @@ module Sufia::User
   def trophy_works
     trophies.map do |t|
       begin
-        ::Sufia::Works::GenericWork.load_instance_from_solr(t.generic_work_id)
+        ::GenericWork.load_instance_from_solr(t.generic_work_id)
       rescue ActiveFedora::ObjectNotFoundError
         logger.error("Invalid trophy for user #{user_key} (generic work id #{t.generic_work_id})")
         nil

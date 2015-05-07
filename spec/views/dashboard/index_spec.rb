@@ -18,7 +18,7 @@ describe "dashboard/index.html.erb", :type => :view do
     @ability = instance_double("Ability")
     allow(controller).to receive(:current_ability).and_return(@ability)
     allow(@ability).to receive(:can?).with(:create, GenericFile).and_return(can_create_file)
-    allow(@ability).to receive(:can?).with(:create, Sufia::Works::GenericWork).and_return(can_create_work)
+    allow(@ability).to receive(:can?).with(:create, GenericWork).and_return(can_create_work)
     allow(@ability).to receive(:can?).with(:create, Collection).and_return(can_create_collection)
     allow(view).to receive(:number_of_files).and_return("15")
     allow(view).to receive(:number_of_collections).and_return("3")

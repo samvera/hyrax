@@ -1,6 +1,6 @@
 module SufiaUrlHelper
 
-  def track_sufia_works_generic_work_path(*args)
+  def track_generic_work_path(*args)
     track_solr_document_path(*args)
   end
 

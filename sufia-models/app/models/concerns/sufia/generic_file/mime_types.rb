@@ -27,6 +27,10 @@ module Sufia
         false
       end
 
+      def generic_work?
+        false
+      end
+
       def file_format
         return nil if self.mime_type.blank? and self.format_label.blank?
         return self.mime_type.split('/')[1]+ " ("+self.format_label.join(", ")+")" unless self.mime_type.blank? or self.format_label.blank?
