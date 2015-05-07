@@ -102,6 +102,28 @@ describe GenericFilesController do
           expect(response.body).to include("Error occurred while creating generic file.")
         end
       end
+
+      context "when a work id is passed" do
+        let (:work) { Sufia::Works::GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+        it "records the work" do
+          xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, work_id: work.id, terms_of_service: '1'
+          expect(response).to be_success
+          saved_file = GenericFile.find('test123')
+          expect(saved_file.work_id).to eq work.id
+          expect(saved_file.work).to eq work
+        end
+
+      end
+      context "when a work id is not passed" do
+        it "creates the work" do
+          xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, terms_of_service: '1'
+          expect(response).to be_success
+          saved_file = GenericFile.find('test123')
+          expect(saved_file.work_id).not_to be_nil
+        end
+
+      end
+
     end
 
     context "with browse-everything" do
@@ -123,6 +145,31 @@ describe GenericFilesController do
           expect(created_files.map {|f| f.label}).to include(filename)
         end
       end
+
+
+      context "when a work id is passed" do
+        let (:work) { Sufia::Works::GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+        it "records the work" do
+          expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+          expect(Sufia.queue).to receive(:push).with("ImportJob").twice
+          expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id, work_id: work.id }.to change(GenericFile, :count).by(2)
+          created_files = GenericFile.all
+          created_files.each {|f| expect(f.work).to eq work}
+        end
+
+      end
+      context "when a work id is not passed" do
+        it "creates the work" do
+          expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+          expect(Sufia.queue).to receive(:push).with("ImportJob").twice
+          expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
+          created_files = GenericFile.all
+          expect(created_files[0].work).not_to eq created_files[1].work
+        end
+
+      end
+
+
     end
 
     context "with local_file" do
@@ -189,12 +236,36 @@ describe GenericFilesController do
           expect(File).not_to exist("#{mock_upload_directory}/world.png")
           # And into the storage directory
           files = Batch.find(batch_id).generic_files
-          expect(files.first.label).to eq 'world.png'
+          file_labels = files.map {|f| f.label}
+          expect(file_labels).to include 'world.png'
           # TODO: use files.select once projecthydra/active_fedora#609 is fixed
           ['icons.zip', 'Example.ogg'].each do |filename|
             expect(files.map { |f| f.relative_path if f.label.match(filename) }.compact.first).to eq "import/files/#{filename}"
           end
           expect(files.map { |f| f.relative_path if f.label.match("dublin_core_rdf_descMetadata.nt") }.compact.first).to eq 'import/metadata/dublin_core_rdf_descMetadata.nt'
+        end
+
+        context "when a work id is passed" do
+          let (:work) { Sufia::Works::GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+          it "records the work" do
+            expect {
+              post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id, work_id: work.id
+            }.to change(GenericFile, :count).by(2)
+            created_files = GenericFile.all
+            created_files.each {|f| expect(f.work).to eq work}
+          end
+
+        end
+
+        context "when a work id is not passed" do
+          it "creates the work" do
+            expect {
+              post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
+            }.to change(GenericFile, :count).by(2)
+            created_files = GenericFile.all
+            expect(created_files[0].work).not_to eq created_files[1].work
+          end
+
         end
       end
 

@@ -64,7 +64,7 @@ module CurationConcern
         link.batch = curation_concern
         link.label = curation_concern.human_readable_type
       end
-      Sufia::GenericFile::Actor.new(resource, user).create_metadata(curation_concern.id)
+      Sufia::GenericFile::Actor.new(resource, user).create_metadata(curation_concern.id, curation_concern.id)
       resource.save
     end
 
@@ -74,7 +74,7 @@ module CurationConcern
       actor = Sufia::GenericFile::Actor.new(generic_file, user)
       actor.create_content(file, file.original_filename, file_path, file.content_type)
       generic_file.work = curation_concern
-      actor.create_metadata(curation_concern.id)
+      actor.create_metadata(curation_concern.id, curation_concern.id)
       generic_file.visibility = visibility
 
       stat = Worthwhile::CurationConcern.attach_file(generic_file, user, file)
