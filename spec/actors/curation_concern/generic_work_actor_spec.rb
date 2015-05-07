@@ -46,8 +46,11 @@ describe Sufia::CurationConcern::GenericWorkActor do
           it 'should stamp each file with the access rights' do
             s2 = double('characterize job')
             s3 = double('content deposit job')
+            s4 = double('copy visibility job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
             allow(ContentDepositEventJob).to receive(:new).and_return(s3)
+            allow(CopyPermissionsJob).to receive(:new).and_return(s4)
+            expect(Sufia.queue).to receive(:push).with(s4).once
             expect(Sufia.queue).to receive(:push).with(s3).once
             expect(Sufia.queue).to receive(:push).with(s2).once
             expect(subject.create).to be true
@@ -78,8 +81,11 @@ describe Sufia::CurationConcern::GenericWorkActor do
           it 'should stamp each file with the access rights' do
             s2 = double('characterize job')
             s3 = double('content deposit job')
+            s4 = double('copy visibility job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
             allow(ContentDepositEventJob).to receive(:new).and_return(s3)
+            allow(CopyPermissionsJob).to receive(:new).and_return(s4)
+            expect(Sufia.queue).to receive(:push).with(s4).once
             expect(Sufia.queue).to receive(:push).with(s3).twice
             expect(Sufia.queue).to receive(:push).with(s2).twice
 
@@ -94,6 +100,15 @@ describe Sufia::CurationConcern::GenericWorkActor do
 
           end
         end
+      end
+
+      context 'CopyPermissionsJob' do
+            it "should accept ( :pid_for_object_to_copy_permissions_from ) as a parameter" do
+              expect { CopyPermissionsJob.new( :pid_for_object_to_copy_permissions_from ) }.to_not raise_error
+            end
+            it "should not accept ( :foo, :bar ) as parameters" do
+              expect { CopyPermissionsJob.new( :foo, :bar ) }.to raise_error
+            end
       end
 
       context "with a present and a blank title" do
