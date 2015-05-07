@@ -1,8 +1,9 @@
-        <div class="tab-pane" id="proxies">
-          <h2>Proxies</h2>
-          <% @user.can_receive_deposits_from.each do |depositor| %>
-              <tr><td><%= link_to_profile depositor.user_key %></td>
-              </tr>
-          <% end %>
+<div class="tab-pane" id="proxies">
+  <h2>Proxies</h2>
+  <ul>
+  <% @user.can_receive_deposits_from.each do |depositor| %>
+    <li><%= link_to_profile depositor.user_key %></li>
+  <% end %>
+  </ul>
 
-        </div> <!-- /profile -->
+</div> <!-- /profile -->
