@@ -74,7 +74,6 @@ module Sufia::UsersControllerBehavior
        redirect_to root_path, alert: "You do not have permissions to the work"
        return false
      end
-     # TODO  make sure current user has access to work
      t = current_user.trophies.where(generic_work_id: params[:work_id]).first
      if t
        t.destroy
