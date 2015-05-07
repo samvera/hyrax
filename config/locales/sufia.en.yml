@@ -70,6 +70,7 @@ en:
       create_collection_html:        '<span class="glyphicon glyphicon-plus"></span> Create Collection'
       view_collections:         "View Collections"
       view_files:               "View Files"
+      create_work:              "Create Work"
       user_activity:            "User Activity"
       no_activity:              "User has no recent activity"
       user_notiticiations:      "User Notifications"
