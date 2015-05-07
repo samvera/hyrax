@@ -32,6 +32,24 @@ describe Sufia::Works::GenericWork do
     end
   end
 
+  describe "trophies" do
+    before do
+      u = FactoryGirl.find_or_create(:jill)
+      @w = Sufia::Works::GenericWork.new.tap do |gw|
+        gw.apply_depositor_metadata(u)
+        gw.save!
+      end
+      @t = Trophy.create(user_id: u.id, generic_work_id: @w.id)
+    end
+    it "should have a trophy" do
+      expect(Trophy.where(generic_work_id: @w.id).count).to eq 1
+    end
+    it "should remove all trophies when work is deleted" do
+      @w.destroy
+      expect(Trophy.where(generic_work_id: @w.id).count).to eq 0
+    end
+  end
+
   describe "#destroy", skip: "Is this behavior we need? Could other works be pointing at the file?" do
     let(:file1) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
     let(:file2) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }

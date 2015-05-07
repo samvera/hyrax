@@ -75,12 +75,12 @@ module Sufia::User
     user_key.gsub(/\./, '-dot-')
   end
 
-  def trophy_files
+  def trophy_works
     trophies.map do |t|
       begin
-        ::GenericFile.load_instance_from_solr(t.generic_file_id)
+        ::Sufia::Works::GenericWork.load_instance_from_solr(t.generic_work_id)
       rescue ActiveFedora::ObjectNotFoundError
-        logger.error("Invalid trophy for user #{user_key} (generic file id #{t.generic_file_id})")
+        logger.error("Invalid trophy for user #{user_key} (generic work id #{t.generic_work_id})")
         nil
       end
     end.compact

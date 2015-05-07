@@ -35,14 +35,14 @@ module Sufia::UsersControllerBehavior
     else
       @events = []
     end
-    @trophies = @user.trophy_files
+    @trophies = @user.trophy_works
     @followers = @user.followers
     @following = @user.all_following
   end
 
   # Display form for users to edit their profile information
   def edit
-    @trophies = @user.trophy_files
+    @trophies = @user.trophy_works
   end
 
   # Process changes from profile form
@@ -59,7 +59,7 @@ module Sufia::UsersControllerBehavior
     # TODO this should be moved to TrophiesController
     params.keys.select {|k, v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
       smash_trophy = smash_trophy.sub /^remove_trophy_/, ''
-      current_user.trophies.where(generic_file_id: smash_trophy).destroy_all
+      current_user.trophies.where(generic_work_id: smash_trophy).destroy_all
     end
     Sufia.queue.push(UserEditProfileEventJob.new(@user.user_key))
     redirect_to sufia.profile_path(@user.to_param), notice: "Your profile has been updated"
@@ -70,18 +70,18 @@ module Sufia::UsersControllerBehavior
   end
 
   def toggle_trophy
-     unless current_user.can? :edit, params[:file_id]
-       redirect_to root_path, alert: "You do not have permissions to the file"
+     unless current_user.can? :edit, params[:work_id]
+       redirect_to root_path, alert: "You do not have permissions to the work"
        return false
      end
-     # TODO  make sure current user has access to file
-     t = current_user.trophies.where(generic_file_id: params[:file_id]).first
+     # TODO  make sure current user has access to work
+     t = current_user.trophies.where(generic_work_id: params[:work_id]).first
      if t
        t.destroy
        #TODO do this better says Mike
        return false if t.persisted?
      else
-       t = current_user.trophies.create(generic_file_id: params[:file_id])
+       t = current_user.trophies.create(generic_work_id: params[:work_id])
        return false unless t.persisted?
      end
      render json: t

@@ -9,18 +9,24 @@ describe My::HighlightsController, :type => :controller do
 
     describe "#index" do
       before do
-        GenericFile.destroy_all
+        Sufia::Works::GenericWork.destroy_all
         Collection.destroy_all
-        @highlighted_file = FactoryGirl.create(:generic_file, depositor: @user)
-        @user.trophies.create(generic_file_id: @highlighted_file.id)
-        @normal_file = FactoryGirl.create(:generic_file, depositor: @user)
+        @highlighted_work = FactoryGirl.create(:generic_work).tap do |r|
+          r.apply_depositor_metadata @user
+          r.save!
+        end
+        @user.trophies.create(generic_work_id: @highlighted_work.id)
+        @normal_work = FactoryGirl.create(:generic_work).tap do |r|
+          r.apply_depositor_metadata @user
+          r.save!
+        end
         other_user = FactoryGirl.create(:user)
-        @unrelated_highlighted_file = FactoryGirl.create(:generic_file).tap do |r|
+        @unrelated_highlighted_work = FactoryGirl.create(:generic_work).tap do |r|
           r.apply_depositor_metadata other_user
           r.edit_users += [@user.user_key]
           r.save!
         end
-        other_user.trophies.create(generic_file_id: @unrelated_highlighted_file.id)
+        other_user.trophies.create(generic_work_id: @unrelated_highlighted_work.id)
       end
 
       it "should respond with success" do
@@ -28,9 +34,11 @@ describe My::HighlightsController, :type => :controller do
         expect(response).to be_successful
       end
 
-      it "should paginate" do          
-        @user.trophies.create(generic_file_id: FactoryGirl.create(:generic_file, depositor: @user).id)
-        @user.trophies.create(generic_file_id: FactoryGirl.create(:generic_file, depositor: @user).id)
+      it "should paginate" do
+        @work1 = Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(@user) }         
+        @user.trophies.create(generic_work_id: @work1.id)
+        @work2 = Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(@user) }          
+        @user.trophies.create(generic_work_id: @work2.id)
         get :index, per_page: 2
         expect(assigns[:document_list].length).to eq 2
         get :index, per_page: 2, page: 2
@@ -40,11 +48,11 @@ describe My::HighlightsController, :type => :controller do
       it "shows the correct files" do
         get :index
         # shows documents I've highlighted
-        expect(assigns[:document_list].map(&:id)).to include(@highlighted_file.id)
+        expect(assigns[:document_list].map(&:id)).to include(@highlighted_work.id)
         # doesn't show non-highlighted files
-        expect(assigns[:document_list].map(&:id)).to_not include(@normal_file.id)
+        expect(assigns[:document_list].map(&:id)).to_not include(@normal_work.id)
         # doesn't show other users' highlighted files
-        expect(assigns[:document_list].map(&:id)).to_not include(@unrelated_highlighted_file.id)
+        expect(assigns[:document_list].map(&:id)).to_not include(@unrelated_highlighted_work.id)
       end
     end
   end

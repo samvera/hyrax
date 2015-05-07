@@ -31,20 +31,26 @@ module Sufia
     # example:
     #   config.index.thumbnail_method = :sufia_thumbnail_tag
     def sufia_thumbnail_tag(document, options)
-      # collection
-      if (document.collection?)
-        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
-
-      # file
+      # TODO this should be fixed by ticket FIX-1073
+      # work
+      if (document.class == Sufia::Works::GenericWork)
+        "generic work"
       else
-        path = if document.image? || document.pdf? || document.video? || document.office_document?
-          sufia.download_path document, file: 'thumbnail'
-        elsif document.audio?
-          "audio.png"
+        # collection
+        if (document.collection?)
+          content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
+
+        # file
         else
-          "default.png"
+          path = if document.image? || document.pdf? || document.video? || document.office_document?
+            sufia.download_path document, file: 'thumbnail'
+          elsif document.audio?
+            "audio.png"
+          else
+            "default.png"
+          end
+          image_tag path, options
         end
-        image_tag path, options
       end
     end
 

@@ -85,17 +85,17 @@ describe User, :type => :model do
     end
   end
 
-  describe "trophy_files" do
+  describe "trophy_works" do
     let(:user) { FactoryGirl.create(:user) }
-    let(:file1) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
-    let(:file2) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
-    let(:file3) { GenericFile.create { |f| f.apply_depositor_metadata(user) } }
-    let!(:trophy1) { user.trophies.create!(generic_file_id: file1.id) }
-    let!(:trophy2) { user.trophies.create!(generic_file_id: file2.id) }
-    let!(:trophy3) { user.trophies.create!(generic_file_id: file3.id) }
+    let(:work1) { Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+    let(:work2) { Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+    let(:work3) { Sufia::Works::GenericWork.create { |w| w.apply_depositor_metadata(user) } }
+    let!(:trophy1) { user.trophies.create!(generic_work_id: work1.id) }
+    let!(:trophy2) { user.trophies.create!(generic_work_id: work2.id) }
+    let!(:trophy3) { user.trophies.create!(generic_work_id: work3.id) }
 
-    it "should return a list of generic files" do
-      expect(user.trophy_files).to eq [file1, file2, file3]
+    it "should return a list of generic works" do
+      expect(user.trophy_works).to eq [work1, work2, work3]
     end
 
   end
