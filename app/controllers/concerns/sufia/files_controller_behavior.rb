@@ -215,7 +215,7 @@ module Sufia
       Batch.find_or_create(params[:batch_id])
 
       update_metadata_from_upload_screen
-      actor.create_metadata(params[:batch_id])
+      actor.create_metadata(params[:batch_id], params[:work_id])
       if actor.create_content(file, file.original_filename, file_path, file.content_type)
         respond_to do |format|
           format.html {

@@ -13,7 +13,7 @@ module Sufia::GenericFile
     # it is typically used in conjunction with create_content, which does do a save.
     # If you want to save when using create_metadata, you can do this:
     #   create_metadata(batch_id) { |gf| gf.save }
-    def create_metadata(batch_id)
+    def create_metadata(batch_id, work_id)
       generic_file.apply_depositor_metadata(user)
       time_in_utc = DateTime.now.new_offset(0)
       generic_file.date_uploaded = time_in_utc
@@ -25,6 +25,17 @@ module Sufia::GenericFile
       else
         ActiveFedora::Base.logger.warn "unable to find batch to attach to"
       end
+
+      if work_id.blank?
+        work = Sufia::Works::GenericWork.new
+        work.apply_depositor_metadata(user)
+        work.date_uploaded = time_in_utc
+        work.date_modified = time_in_utc
+        work.creator = [user.name]
+      else
+        work = Sufia::Works::GenericWork.find(work_id)
+      end
+      generic_file.work = work
       yield(generic_file) if block_given?
     end
 

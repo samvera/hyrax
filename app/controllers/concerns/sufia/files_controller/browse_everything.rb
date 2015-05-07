@@ -26,7 +26,7 @@ module Sufia::FilesController
       def create_file_from_url(url, file_name)
         generic_file = ::GenericFile.new(import_url: url, label: file_name).tap do |gf|
           actor = Sufia::GenericFile::Actor.new(gf, current_user)
-          actor.create_metadata(params[:batch_id])
+          actor.create_metadata(params[:batch_id], params[:work_id])
           gf.save!
           Sufia.queue.push(ImportUrlJob.new(gf.id))
         end
