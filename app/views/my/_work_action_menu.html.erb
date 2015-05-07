@@ -16,13 +16,6 @@
     </li>
 
     <li role="menuitem" tabindex="-1">
-      <%= link_to('#') do %>
-        <i class="glyphicon glyphicon-download-alt" aria-hidden="true"></i>
-        <span> TODO: Download Work </span>
-      <% end %>
-    </li>
-
-    <li role="menuitem" tabindex="-1">
       <%= link_to(sufia.generic_work_path(document.id), method: :delete, data: { confirm: "Deleting a work from #{t('sufia.product_name')} is permanent. Click OK to delete this work from #{t('sufia.product_name')}, or Cancel to cancel this operation" }) do %>
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
         <span> Delete Work </span>

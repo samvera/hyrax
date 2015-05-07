@@ -60,7 +60,6 @@ describe "Browse Dashboard", type: :feature do
       within("#document_#{dissertation.id}") do
         click_button("Select an action")
         expect(page).to have_content("Edit Work")
-        expect(page).to have_content("Download Work")
       end
     end
 
