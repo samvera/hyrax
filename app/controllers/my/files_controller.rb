@@ -3,7 +3,7 @@ module My
 
     self.search_params_logic += [
       :show_only_resources_deposited_by_current_user,
-      :show_only_generic_files
+      :show_only_generic_works
     ]
 
     def index

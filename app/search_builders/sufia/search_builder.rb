@@ -24,6 +24,13 @@ module Sufia::SearchBuilder
     ]
   end
 
+  def show_only_generic_works(solr_parameters)
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] += [
+      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: Sufia::Works::GenericWork.to_class_uri)
+    ]
+  end
+
   def show_only_shared_files(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [

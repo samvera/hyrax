@@ -47,7 +47,7 @@ describe 'collection', :type => :feature do
       create_collection(title2, description2)
     end
 
-    it "should create collection from the dashboard and include files", js: true do
+    it "should create collection from the dashboard and include files", js: true, skip: 'pending future work to add works to collections' do
       visit '/dashboard/files'
       first('input#check_all').click
       click_button "Add to Collection" # opens the modal
