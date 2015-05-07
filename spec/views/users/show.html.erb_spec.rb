@@ -31,19 +31,19 @@ describe 'users/show.html.erb', :type => :view do
 
   context "with trophy" do
 
-    let(:generic_file) { stub_model(GenericFile, title: ["Fake object"], id: "abc123") }
+    let(:generic_work) { stub_model(Sufia::Works::GenericWork, title: ["Fake object"], id: "abc123") }
     before do
       allow(view).to receive(:search_session).and_return({})
       allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
       allow(view).to receive(:current_search_session).and_return(nil)
-      assign(:trophies, [generic_file])
+      assign(:trophies, [generic_work])
     end
 
     it "should have trophy" do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector(".tab-content > div#contributions.tab-pane")
-      expect(page).to have_selector("#trophyrow_#{generic_file.id}")
+      expect(page).to have_selector("#trophyrow_#{generic_work.id}")
 
     end
   end
