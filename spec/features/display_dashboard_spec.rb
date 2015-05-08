@@ -25,8 +25,8 @@ describe "The Dashboard", :type => :feature do
       expect(page).to have_content "Create New Collection"
     end
 
-    it "should let the user view files" do
-      click_link "View Files"
+    it "should let the user view works" do
+      click_link "View Works"
       expect(page).to have_content "My Files"
       expect(page).to have_content "My Collections"
       expect(page).to have_content "My Highlights"

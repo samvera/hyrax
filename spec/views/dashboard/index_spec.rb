@@ -39,7 +39,7 @@ describe "dashboard/index.html.erb", :type => :view do
     it "should display welcome message and links" do
       expect(@heading).to have_link("Create Work", sufia.new_generic_work_path)
       expect(@heading).to have_link("Create Collection", collections.new_collection_path)
-      expect(@heading).to have_link("View Files", sufia.dashboard_files_path)
+      expect(@heading).to have_link("View Works", sufia.dashboard_files_path)
       expect(@heading).to have_link("Upload", sufia.new_generic_file_path)
       expect(@heading).to include "My Dashboard"
       expect(@heading).to include "Hello, Charles Francis Xavier"
