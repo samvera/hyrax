@@ -16,8 +16,10 @@
               <%= t("sufia.dashboard.my.sr.show_label") %>
             </span>
             <%= document.title_or_label %>
-            <br /> TODO: list collections for this work
           <% end %>
+
+          <br />
+          <%= render_collection_links(document) %>
 
         </div>
       </div>

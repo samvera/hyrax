@@ -45,7 +45,54 @@ describe SolrDocument, type: :model do
         end
       end
     end
+  end
 
+  describe '#collection_ids' do
+    context 'when the object belongs to collections' do
+      subject { SolrDocument.new(id: '123', title_tesim: ['A generic work'], collection_ids_tesim: ['123', '456', '789']) }
+
+      it 'returns the list of collection IDs' do
+        expect(subject.collection_ids).to eq ['123', '456', '789']
+      end
+    end
+
+    context 'when the object does not belong to any collections' do
+      subject { SolrDocument.new(id: '123', title_tesim: ['A generic work']) }
+
+      it 'returns an empty array' do
+        expect(subject.collection_ids).to eq []
+      end
+    end
+  end
+
+  describe '#collections' do
+    context 'when the object belongs to a collection' do
+      let(:coll_id) { '456' }
+      let(:work_attrs) {{ id: '123', title_tesim: ['A generic work'], collection_ids_tesim: [coll_id] }}
+
+      let(:coll_attrs) {{ id: coll_id, title_tesim: ['A Collection'] }}
+
+      subject { SolrDocument.new(work_attrs) }
+
+      before do
+        ActiveFedora::SolrService.add(coll_attrs)
+        ActiveFedora::SolrService.commit
+      end
+
+      it 'returns the solr docs for the collections' do
+        expect(subject.collections.count).to eq 1
+        solr_doc = subject.collections.first
+        expect(solr_doc).to be_kind_of SolrDocument
+        expect(solr_doc['id']).to eq coll_id
+        expect(solr_doc['title_tesim']).to eq coll_attrs[:title_tesim]
+      end
+    end
+
+    context 'when the object does not belong to any collections' do
+      it 'returns empty array' do
+        expect(subject.collections).to eq []
+      end
+    end
   end
 
 end
