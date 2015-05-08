@@ -19,9 +19,9 @@ en:
           all:
             label_short:  "All"
             label_long:   "All of Sufia"
-          my_files:
-            label_short:  "My Files"
-            label_long:   "My Files"
+          my_works:
+            label_short:  "My Works"
+            label_long:   "My Works"
           my_collections:
             label_short:  "My Collections"
             label_long:   "My Collections"
