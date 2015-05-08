@@ -23,7 +23,7 @@ describe GenericWorkHelper do
       end
 
       it 'renders a list of links to the collections' do
-        expect(helper.render_collection_links(work_doc)).to match /Is part of/
+        expect(helper.render_collection_links(work_doc)).to match /Is part of/i
 
         expect(helper.render_collection_links(work_doc)).to match "href=\"/collections/#{coll_1.id}\""
         expect(helper.render_collection_links(work_doc)).to match "href=\"/collections/#{coll_2.id}\""
