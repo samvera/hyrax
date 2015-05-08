@@ -9,7 +9,7 @@ module Sufia::HomepageController
     include Blacklight::SearchHelper
     include Hydra::Controller::SearchBuilder
 
-    self.search_params_logic += [:show_only_generic_files, :add_access_controls_to_solr_params]
+    self.search_params_logic += [:show_only_generic_works, :add_access_controls_to_solr_params]
     layout 'homepage'
   end
 
