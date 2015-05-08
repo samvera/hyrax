@@ -1,17 +1,17 @@
-<%= simple_form_for [:curation_concern, curation_concern], html: { multipart: true } do |f| %>
+<%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
   <div id="works_edit">
     <h2 class="non lower">Describe Your Work</h2>
     <p>The more descriptive information you provide the better we can serve your needs.</p>
     <p>Please consider releasing your work as an <span class="label label-success">Open Access</span> work.</p>
     <p><small class="pull-left"><span class="error">*</span> required</small></p>
-    <p><small class="pull-right"><%= link_to 'Switch to Batch Upload', new_generic_file_path, class: 'a' %></small></p>
+    <p><small class="pull-right"><%= link_to 'Switch to Batch Upload', sufia.new_generic_file_path, class: 'a' %></small></p>
     <div class="well">
       <% f.object.terms.each do |term| %>
         <%= render_edit_field_partial(term, f: f) %>
       <% end %>
     </div>
 
-    <%= render partial: 'curation_concern/base/permission_form' %>
+    <%= render partial: 'curation_concern/base/permission_form', locals: { f: f } %>
 
     <div class="primary-actions">
       <%= f.submit 'Save and Add Files', class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
