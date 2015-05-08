@@ -6,13 +6,14 @@ class BatchUpdateJob
     :batch_update
   end
 
-  attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied
+  attr_accessor :login, :title, :file_attributes, :batch_id, :visibility, :saved, :denied, :work_attributes
 
   def initialize(login, batch_id, title, file_attributes, visibility)
     self.login = login
     self.title = title || {}
     self.file_attributes = file_attributes
     self.visibility = visibility
+    self.work_attributes = file_attributes.merge({ visibility: visibility })
     self.batch_id = batch_id
     self.saved = []
     self.denied = []
@@ -41,22 +42,17 @@ class BatchUpdateJob
       denied << gf
       return
     end
+    # update the file using the actor after setting the title
     gf.title = title[gf.id] if title[gf.id]
-    gf.attributes = file_attributes
-    gf.visibility= visibility
+    Sufia::GenericFile::Actor.new(gf, user).update_metadata(file_attributes, visibility)
 
-    save_tries = 0
-    begin
-      gf.save!
-    rescue RSolr::Error::Http => error
-      save_tries += 1
-      ActiveFedora::Base.logger.warn "BatchUpdateJob caught RSOLR error on #{gf.id}: #{error.inspect}"
-      # fail for good if the tries is greater than 3
-      raise error if save_tries >=3
-      sleep 0.01
-      retry
-    end #
-    Sufia.queue.push(ContentUpdateEventJob.new(gf.id, login))
+    # update the work to the same metadata as the file.
+    # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
+    unless gf.generic_work.blank?
+      gf.generic_work.title = title[gf.id] if title[gf.id]
+      CurationConcern::GenericWorkActor.new(gf.generic_work, user, work_attributes).update
+    end
+
     saved << gf
   end
 

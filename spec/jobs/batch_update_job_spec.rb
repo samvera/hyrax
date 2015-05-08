@@ -5,15 +5,18 @@ describe BatchUpdateJob do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:batch) { Batch.create }
 
+  let(:work1) { FactoryGirl.create(:work, user: user) }
+  let(:work2) { FactoryGirl.create(:work, user: user) }
+
   let!(:file) do
-    GenericFile.new(batch: batch) do |file|
+    GenericFile.new(batch: batch, generic_work: work1) do |file|
       file.apply_depositor_metadata(user)
       file.save!
     end
   end
 
   let!(:file2) do
-    GenericFile.new(batch: batch) do |file|
+    GenericFile.new(batch: batch, generic_work: work2) do |file|
       file.apply_depositor_metadata(user)
       file.save!
     end
@@ -23,10 +26,10 @@ describe BatchUpdateJob do
     let(:title) { { file.id => ['File One'], file2.id => ['File Two'] }}
     let(:metadata) do
       { read_groups_string: '', read_users_string: 'archivist1, archivist2',
-        tag: [''] }.with_indifferent_access
+        tag: [''], permissions_attributes: {"1"=>{type:"person", name: "cam@psu.edu", access:"edit"}}  }.with_indifferent_access
     end
 
-    let(:visibility) { nil }
+    let(:visibility) { "open" }
 
     let(:job) { BatchUpdateJob.new(user.user_key, batch.id, title, metadata, visibility) }
 
@@ -64,8 +67,22 @@ describe BatchUpdateJob do
         job.run
       end
 
-      it "should update the titles" do
+      it "updates the titles" do
         expect(file.reload.title).to eq ['File One']
+        expect(file.edit_users).to eq [user.user_key, 'cam@psu.edu']
+        expect(file.visibility).to eq "open"
+        expect(file2.reload.title).to eq ['File Two']
+        expect(file2.edit_users).to eq [user.user_key, 'cam@psu.edu']
+        expect(file2.visibility).to eq "open"
+      end
+
+      it "updates the works metadata" do
+        expect(work1.reload.title).to eq ['File One']
+        expect(work1.edit_users).to eq [user.user_key, 'cam@psu.edu']
+        expect(work1.visibility).to eq "open"
+        expect(work2.reload.title).to eq ['File Two']
+        expect(work2.edit_users).to eq [user.user_key, 'cam@psu.edu']
+        expect(work2.visibility).to eq "open"
       end
     end
   end
