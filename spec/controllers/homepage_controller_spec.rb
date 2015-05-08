@@ -4,18 +4,11 @@ describe HomepageController, :type => :controller do
   routes { Rails.application.class.routes }
 
   describe "#index" do
-    before do
-      @gf1 = GenericFile.new(title:['Test Document PDF'], filename:['test.pdf'], tag:['rocks'], read_groups:['public'])
-      @gf1.apply_depositor_metadata('mjg36')
-      @gf1.save
-      @gf2 = GenericFile.new(title:['Test Private Document'], filename:['test2.doc'], tag:['clouds'], contributor:['Contrib1'], read_groups:['private'])
-      @gf2.apply_depositor_metadata('mjg36')
-      @gf2.save
-    end
-
     let(:user) { FactoryGirl.find_or_create(:jill) }
+    before { sign_in user }
+
     before do
-      sign_in user
+      2.times { FactoryGirl.create(:work, user: user) }
     end
 
     context 'with existing featured researcher' do
@@ -56,25 +49,25 @@ describe HomepageController, :type => :controller do
       expect(titles).to_not include('Test Private Document')
     end
 
-    it "should include only GenericFile objects in recent documents" do
+    it "should include only GenericWork objects in recent documents" do
       get :index
       assigns(:recent_documents).each do |doc|
-        expect(doc[Solrizer.solr_name("has_model", :symbol)]).to eql ["GenericFile"]
+        expect(doc[Solrizer.solr_name("has_model", :symbol)]).to eql ["GenericWork"]
       end
-    end 
+    end
 
     context "with a document not created this second" do
       before do
-        gf3 = GenericFile.new(title:['Test 3 Document'], read_groups:['public'])
-        gf3.apply_depositor_metadata('mjg36')
+        gw3 = GenericWork.new(title:['Test 3 Document'], read_groups:['public'])
+        gw3.apply_depositor_metadata('mjg36')
         # stubbing to_solr so we know we have something that didn't create in the current second
-        old_to_solr = gf3.method(:to_solr)
-        allow(gf3).to receive(:to_solr) do
+        old_to_solr = gw3.method(:to_solr)
+        allow(gw3).to receive(:to_solr) do
           old_to_solr.call.merge(
             Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
           )
         end
-        gf3.save
+        gw3.save
       end
 
       it "should set recent documents in the right order" do
@@ -89,8 +82,10 @@ describe HomepageController, :type => :controller do
     end
 
     context "with featured works" do
+      let!(:my_work) { FactoryGirl.create(:work, user: user) }
+
       before do
-        FeaturedWork.create!(generic_file_id: @gf1.id)
+        FeaturedWork.create!(generic_file_id: my_work.id)
       end
 
       it "should set featured works" do
