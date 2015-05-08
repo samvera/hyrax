@@ -1,0 +1,46 @@
+    <!-- The file upload form used as target for the file upload widget -->
+      <%= hidden_field_tag(:total_upload_size, 0) %>
+      <%= hidden_field_tag(:relative_path) %>
+      <%= hidden_field_tag(:batch_id, @batch_id) %>
+      <%= hidden_field_tag "file_coming_from", "local" %>
+      <%= render partial: 'generic_files/upload/tos_checkbox' %>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="col-md-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-primary fileinput-button">
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                    <span aria-hidden="true">Select files...</span>
+                    <input type="file" name="files[]" multiple />
+                </span>
+                <% ua = request.env['HTTP_USER_AGENT'] %>
+                <% if !!(ua =~ /Chrome/) %>
+                <span class="btn btn-primary fileinput-button">
+                    <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
+                    <span aria-hidden="true">Select folder...</span>
+                    <input type="file" name="files[]" directory webkitdirectory mozdirectory />
+                </span>
+                <% end %>
+                <div id="main_upload_start_span" class="activate-container visible-all-inline-block" data-toggle="tooltip" data-title="<%= t('sufia.upload_tooltip') %>">
+                  <button type="submit" class="activate-submit btn btn-info start" id="main_upload_start">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                </div>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+            </div>
+            <div class="col-md-5 fileupload-progress">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- The loading indicator is shown during image processing -->
+        <div class="fileupload-loading"></div>
+        <br />
+        <!-- The table listing the files available for upload/download -->
+        <table id="file-table" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
