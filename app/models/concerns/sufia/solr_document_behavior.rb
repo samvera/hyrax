@@ -99,6 +99,20 @@ module Sufia
       Array(self[::Ability.edit_user_field])
     end
 
+    def collection_ids
+      Array(self['collection_ids_tesim'])
+    end
+
+    # Find the solr documents for the collections this object belongs to
+    def collections
+      return @collections if @collections
+      query = 'id:' + collection_ids.map{|id| '"' + id + '"' }.join(' OR ')
+      result = Blacklight.default_index.connection.select(params: { q: query })
+      @collections = result['response']['docs'].map do |hash|
+        SolrDocument.new(hash)
+      end
+    end
+
     def collection?
       hydra_model == 'Collection'
     end

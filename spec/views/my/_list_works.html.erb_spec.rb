@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe 'my/_index_partials/_list_works.html.erb' do
 
-  let(:title) { 'Work Title' }
-  let(:work) { FactoryGirl.create(:work, title: [title]) }
+  let(:work_title) { 'Work Title' }
+  let(:coll_title) { 'Collection Title' }
+  let(:collection) { FactoryGirl.create(:collection, title: coll_title) }
+  let!(:work) { FactoryGirl.create(:work, title: [work_title], collections: [collection]) }
   let(:doc) { SolrDocument.new(work.to_solr) }
 
   let(:config) { My::FilesController.new.blacklight_config }
@@ -15,9 +17,10 @@ describe 'my/_index_partials/_list_works.html.erb' do
 
   it 'the line item displays the work and its actions' do
     expect(rendered).to have_selector("tr#document_#{work.id}")
-    expect(rendered).to have_link title, href: sufia.generic_work_path(work)
+    expect(rendered).to have_link work_title, href: sufia.generic_work_path(work)
     expect(rendered).to have_link 'Edit Work', href: sufia.edit_generic_work_path(work)
     expect(rendered).to have_link 'Delete Work', href: sufia.generic_work_path(work)
+    expect(rendered).to have_link coll_title, href: collections.collection_path(collection)
   end
 
 end
