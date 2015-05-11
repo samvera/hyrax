@@ -24,19 +24,6 @@ describe FileContentDatastream, :type => :model do
     end
   end
 
-  describe "extract_metadata" do
-    let(:datastream) { FileContentDatastream.new('foo/content') }
-    let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: File.new(fixture_path + '/world.png'),
-                                                 filename: 'world.png') }
-    before { datastream.content = file }
-    let(:document) { Nokogiri::XML.parse(datastream.extract_metadata).root }
-    let(:namespace) { { 'ns'=>'http://hul.harvard.edu/ois/xml/ns/fits/fits_output' } }
-
-    it "should return an xml document", unless: $in_travis do
-      expect(document.xpath('//ns:identity/@mimetype', namespace).first.value).to eq 'image/png'
-    end
-  end
-
   describe "changed?" do
     before do
       @generic_file = GenericFile.new

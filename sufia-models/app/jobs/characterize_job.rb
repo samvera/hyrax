@@ -4,7 +4,8 @@ class CharacterizeJob < ActiveFedoraIdBasedJob
   end
 
   def run
-    generic_file.characterize
+    Sufia::CharacterizationService.run(generic_file)
+    generic_file.save
     Sufia.queue.push(CreateDerivativesJob.new(generic_file.id))
   end
 end

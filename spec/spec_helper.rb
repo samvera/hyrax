@@ -40,17 +40,16 @@ $in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
 
 if $in_travis
   # Monkey-patches the FITS runner to return the PDF FITS fixture
-  module Hydra
-    module Derivatives
-      module ExtractMetadata
-        def extract_metadata
-          return unless has_content?
-          Hydra::FileCharacterization.characterize(content, filename_for_characterization, :fits) do |config|
-            config[:fits] = lambda { |filename|
-              filename = File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
-              File.read(filename)
-            }
-          end
+  require 'sufia/characterization_service'
+  module Sufia
+    class CharacterizationService
+      def extract_metadata
+        return unless generic_file.content.has_content?
+        Hydra::FileCharacterization.characterize(generic_file.content.content, filename_for_characterization, :fits) do |config|
+          config[:fits] = lambda { |filename|
+            filename = File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
+            File.read(filename)
+          }
         end
       end
     end

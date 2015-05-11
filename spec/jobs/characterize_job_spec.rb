@@ -1,20 +1,21 @@
 require 'spec_helper'
 
 describe CharacterizeJob do
+
   before do
-    allow_any_instance_of(GenericFile).to receive(:reload_on_save?).and_return(false)
-    # Don't actually create the derivatives -- that is tested elsewhere
-    allow_any_instance_of(GenericFile).to receive(:create_derivatives)
-    @generic_file = GenericFile.create do |gf|
-      gf.apply_depositor_metadata('jcoyne@example.com')
-      gf.add_file(File.open(fixture_path + '/charter.docx'), path: 'content', original_name: 'charter.docx')
-    end
+    allow(ActiveFedora::Base).to receive(:find).and_return(generic_file)
+    allow(CreateDerivativesJob).to receive(:new).with(generic_file.id).and_return(job)
   end
 
-  subject { CharacterizeJob.new(@generic_file.id)}
+  let(:generic_file) { double(id: '123') }
+  let(:job) { double }
 
-  it 'spawns a CreateDerivatives job' do
-    expect(CreateDerivativesJob).to receive(:new).with(@generic_file.id).once.and_call_original
+  subject { CharacterizeJob.new(generic_file.id)}
+
+  it 'characterizes and spawns a CreateDerivatives job' do
+    expect(Sufia::CharacterizationService).to receive(:run).with(generic_file)
+    expect(generic_file).to receive(:save)
+    expect(Sufia.queue).to receive(:push).with(job)
     subject.run
   end
 end

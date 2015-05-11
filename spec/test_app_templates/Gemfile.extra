@@ -1,3 +1,4 @@
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
+gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '13df67f'
 
 

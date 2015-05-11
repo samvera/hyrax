@@ -7,7 +7,7 @@ describe GenericFilesController do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
-    allow_any_instance_of(GenericFile).to receive(:characterize)
+    allow_any_instance_of(Sufia::CharacterizationService).to receive(:characterize)
   end
 
   describe "#create" do
@@ -465,7 +465,6 @@ describe GenericFilesController do
       let(:actor2)      { Sufia::GenericFile::Actor.new(generic_file, second_user) }
 
       before do
-        allow_any_instance_of(GenericFile).to receive(:characterize)
         actor1.create_content(fixture_file_upload(file1), file1, 'content', file1_type)
         actor2.create_content(fixture_file_upload(file2), file2, 'content', file2_type)
       end
