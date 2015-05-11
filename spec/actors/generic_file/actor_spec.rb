@@ -79,18 +79,6 @@ describe Sufia::GenericFile::Actor do
     end
   end
 
-  describe "#featured_work" do
-    let(:gf) { FactoryGirl.create(:generic_file, visibility: 'open') }
-    let(:actor) { Sufia::GenericFile::Actor.new(gf, user)}
-
-    before { FeaturedWork.create(generic_file_id: gf.id) }
-
-    it "should be removed if document is not public" do
-      # Switch document from public to restricted
-      expect { actor.update_metadata({}, 'restricted') }.to change { FeaturedWork.count }.by(-1)
-    end
-  end
-
   context "when a label is already specified" do
     let(:label)    { "test_file.png" }
     let(:new_file) { "foo.jpg" }

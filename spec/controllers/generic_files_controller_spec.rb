@@ -315,18 +315,6 @@ describe GenericFilesController do
         delete :destroy, id: generic_file
       }.to change { GenericFile.exists?(generic_file.id) }.from(true).to(false)
     end
-
-    context "when the file is featured" do
-      before do
-        FeaturedWork.create(generic_file_id: generic_file.id)
-        expect(Sufia.queue).to receive(:push).with(delete_message)
-      end
-      it "should make the file not featured" do
-        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to include(generic_file.id)
-        delete :destroy, id: generic_file.id
-        expect(FeaturedWorkList.new.featured_works.map(&:generic_file_id)).to_not include(generic_file.id)
-      end
-    end
   end
 
   describe 'stats' do
