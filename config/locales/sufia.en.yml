@@ -204,6 +204,8 @@ en:
         language: "The language of the file content."
         publisher: "The person or group making the file available. Generally this is the institution."
         rights: "Licensing and distribution information governing access to the file. Select from the provided drop-down list. &lt;em&gt;This is a required field&lt;/em&gt;."
+      collection:
+        creator_html: 'The person or group responsible for the collection. Usually this is the author of the collected content. Personal names should be entered with the last name first, e.g. "Smith, John." <em>This is a required field</em>.'
 
     aria_label:
       generic_file:
