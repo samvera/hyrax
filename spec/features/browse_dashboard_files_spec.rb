@@ -63,10 +63,11 @@ describe "Browse Dashboard", type: :feature do
       end
     end
 
-    it "should allow me to edit works in batches", skip: 'Not yet implemented' do
+    it "should allow me to delete works in batches",  js: true do
       first('input#check_all').click
-      click_button('Edit Selected')
-      expect(page).to have_content('3 files')
+      expect {
+        click_button('Delete Selected')
+      }.to change{ GenericWork.count }.by(-3)
     end
 
     it "should link to my other tabs" do
