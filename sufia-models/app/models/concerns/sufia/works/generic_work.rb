@@ -5,7 +5,7 @@ module Sufia::Works
 
     include Sufia::Works::Work
     include Sufia::Works::CurationConcern::WithBasicMetadata
+    include Sufia::Works::GenericWork::Metadata
     include Sufia::GenericFile::Permissions
-    include Sufia::GenericFile::Metadata
   end
 end
