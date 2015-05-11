@@ -9,11 +9,16 @@ describe 'event jobs' do
     @gf.apply_depositor_metadata(@user)
     @gf.title = ['Hamlet']
     @gf.save
+    @gw = GenericWork.new(id: 'test-456')
+    @gw.apply_depositor_metadata(@user)
+    @gw.title = ['BethsMac']
+    @gw.save
   end
   after do
     $redis.keys('events:*').each { |key| $redis.del key }
     $redis.keys('User:*').each { |key| $redis.del key }
     $redis.keys('GenericFile:*').each { |key| $redis.del key }
+    $redis.keys('GenericWork:*').each { |key| $redis.del key }
   end
   it "should log user edit profile events" do
     # UserEditProfile should log the event to the editor's dashboard and his/her followers' dashboards
@@ -87,16 +92,16 @@ describe 'event jobs' do
     @third_user.follow(@another_user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     allow(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/files/test-123">Hamlet</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
-    ContentDepositorChangeEventJob.new('test-123', @another_user.user_key).run
+    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/works/test-456">BethsMac</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
+    ContentDepositorChangeEventJob.new('test-456', @another_user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
     expect(@another_user.events.length).to eq(1)
     expect(@another_user.events.first).to eq(event)
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
-    expect(@gf.events.length).to eq(1)
-    expect(@gf.events.first).to eq(event)
+    expect(@gw.events.length).to eq(1)
+    expect(@gw.events.first).to eq(event)
   end
   it "should log content update events" do
     # ContentUpdate should log the event to the depositor's profile, followers' dashboards, and the GF

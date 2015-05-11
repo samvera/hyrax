@@ -3,7 +3,6 @@ require 'spec_helper'
 describe CurationConcern::GenericWorksController do
   let(:public_work_factory_name) { :public_generic_work }
   let(:private_work_factory_name) { :work }
-
   let(:user) { FactoryGirl.create(:user) }
   before { sign_in user }
 
@@ -44,12 +43,21 @@ describe CurationConcern::GenericWorksController do
   end
 
   describe "#create" do
+    let!(:jill) { FactoryGirl.find_or_create(:jill) }
     it "should create a work" do
       expect {
         post :create, generic_work: { title: ["a title"] }
       }.to change { GenericWork.count }.by(1)
       expect(response).to redirect_to Sufia::Engine.routes.url_helpers.generic_work_path(assigns[:curation_concern])
     end
+
+    it "should record on_behalf_of" do
+      post :create, generic_work: { id: 'test123', title: ["work title"], on_behalf_of: 'jilluser@example.com'}
+      expect(response).to redirect_to Sufia::Engine.routes.url_helpers.generic_work_path('test123')
+      saved_work = GenericWork.find('test123')
+      expect(saved_work.on_behalf_of).to eq 'jilluser@example.com'
+    end
+
   end
 
   describe "#edit" do

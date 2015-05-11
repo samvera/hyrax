@@ -11,5 +11,6 @@ module Sufia::Works
     include Sufia::GenericFile::Batches
     include Sufia::GenericFile::Content
     include Sufia::GenericFile::Permissions
+    include Sufia::Works::GenericWork::ProxyDeposit
   end
 end

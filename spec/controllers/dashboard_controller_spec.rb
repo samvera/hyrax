@@ -35,11 +35,11 @@ describe DashboardController, :type => :controller do
     context 'with transfers' do
       let(:another_user) { FactoryGirl.find_or_create(:archivist) }
       context 'when incoming' do
-        let!(:incoming_file) do
-            GenericFile.new.tap do |f|
-              f.apply_depositor_metadata(another_user.user_key)
-              f.save!
-              f.request_transfer_to(user)
+        let!(:incoming_work) do
+            GenericWork.new.tap do |w|
+              w.apply_depositor_metadata(another_user.user_key)
+              w.save!
+              w.request_transfer_to(user)
             end
         end
 
@@ -47,16 +47,16 @@ describe DashboardController, :type => :controller do
           get :index
           expect(response).to be_success
           expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-          expect(assigns[:incoming].first.generic_file_id).to eq(incoming_file.id)
+          expect(assigns[:incoming].first.generic_work_id).to eq(incoming_work.id)
         end
       end
 
       context 'when outgoing' do
-        let!(:outgoing_file) do
-            GenericFile.new.tap do |f|
-              f.apply_depositor_metadata(user.user_key)
-              f.save!
-              f.request_transfer_to(another_user)
+        let!(:outgoing_work) do
+            GenericWork.new.tap do |w|
+              w.apply_depositor_metadata(user.user_key)
+              w.save!
+              w.request_transfer_to(another_user)
             end
         end
 
@@ -64,7 +64,7 @@ describe DashboardController, :type => :controller do
           get :index
           expect(response).to be_success
           expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-          expect(assigns[:outgoing].first.generic_file_id).to eq(outgoing_file.id)
+          expect(assigns[:outgoing].first.generic_work_id).to eq(outgoing_work.id)
         end
      end
     end

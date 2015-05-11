@@ -104,6 +104,32 @@ describe GenericWork do
     end
   end
 
+  describe "created for someone (proxy)" do
+    let(:work) { GenericWork.new.tap {|gw| gw.apply_depositor_metadata("user")} }
+    let(:transfer_to) { FactoryGirl.find_or_create(:jill) }
+
+    it "transfers the request" do
+      work.on_behalf_of = transfer_to.user_key
+      stub_job = double('change depositor job')
+      allow(ContentDepositorChangeEventJob).to receive(:new).and_return(stub_job)
+      expect(Sufia.queue).to receive(:push).with(stub_job).once.and_return(true)
+      work.save!
+    end
+  end
+
+  describe "delegations" do
+    let(:work) { GenericWork.new.tap {|gw| gw.apply_depositor_metadata("user")} }
+    let(:proxy_depositor) { FactoryGirl.find_or_create(:jill) }
+    before do
+      work.proxy_depositor = proxy_depositor.user_key
+    end
+    it "should include proxies" do
+      expect(work).to respond_to(:relative_path)
+      expect(work).to respond_to(:depositor)
+      expect(work.proxy_depositor).to eq proxy_depositor.user_key
+    end
+  end
+
   describe "trophies" do
     before do
       u = FactoryGirl.find_or_create(:jill)

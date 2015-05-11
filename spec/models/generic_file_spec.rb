@@ -24,32 +24,7 @@ describe GenericFile, :type => :model do
       end
     end
   end
-
-  describe "created for someone (proxy)" do
-    before do
-      @transfer_to = FactoryGirl.find_or_create(:jill)
-    end
-
-    it "transfers the request" do
-      @file.on_behalf_of = @transfer_to.user_key
-      stub_job = double('change depositor job')
-      allow(ContentDepositorChangeEventJob).to receive(:new).and_return(stub_job)
-      expect(Sufia.queue).to receive(:push).with(stub_job).once.and_return(true)
-      @file.save!
-    end
-  end
-
-  describe "delegations" do
-    before do
-      @file.proxy_depositor = "sally@example.com"
-    end
-    it "should include proxies" do
-      expect(@file).to respond_to(:relative_path)
-      expect(@file).to respond_to(:depositor)
-      expect(@file.proxy_depositor).to eq 'sally@example.com'
-    end
-  end
-
+  
   describe '#to_s' do
     it 'uses the provided titles' do
       subject.title = ["Hello", "World"]

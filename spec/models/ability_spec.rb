@@ -40,34 +40,34 @@ describe Sufia::Ability, :type => :model do
   describe "proxies and transfers" do
     let(:sender) { FactoryGirl.find_or_create(:jill) }
     let(:user) { FactoryGirl.find_or_create(:archivist) }
-    let(:file) do
-      GenericFile.new.tap do|file|
-        file.apply_depositor_metadata(sender.user_key)
-        file.save!
+    let(:work) do
+      GenericWork.new.tap do|work|
+        work.apply_depositor_metadata(sender.user_key)
+        work.save!
       end
     end
     subject { Ability.new(user) }
-    it { should_not be_able_to(:transfer, file.id) }
+    it { should_not be_able_to(:transfer, work.id) }
 
     describe "depositor_for_document" do
       it "should return the depositor" do
-        expect(subject.send(:depositor_for_document, file.id)).to eq sender.user_key
+        expect(subject.send(:depositor_for_document, work.id)).to eq sender.user_key
       end
     end
 
-    context "with a ProxyDepositRequest for a file they have deposited" do
+    context "with a ProxyDepositRequest for a work they have deposited" do
       subject { Ability.new(sender) }
-      it { should be_able_to(:transfer, file.id) }
+      it { should be_able_to(:transfer, work.id) }
     end
 
     context "with a ProxyDepositRequest that they receive" do
-      let(:request) { ProxyDepositRequest.create!(generic_file_id: file.id, receiving_user: user, sending_user: sender) }
+      let(:request) { ProxyDepositRequest.create!(generic_work_id: work.id, receiving_user: user, sending_user: sender) }
       it { should be_able_to(:accept, request) }
       it { should be_able_to(:reject, request) }
       it { should_not be_able_to(:destroy, request) }
 
       context "and the request has already been accepted" do
-        let(:request) { ProxyDepositRequest.create!(generic_file_id: file.id, receiving_user: user, sending_user: sender, status: 'accepted') }
+        let(:request) { ProxyDepositRequest.create!(generic_work_id: work.id, receiving_user: user, sending_user: sender, status: 'accepted') }
         it { should_not be_able_to(:accept, request) }
         it { should_not be_able_to(:reject, request) }
         it { should_not be_able_to(:destroy, request) }
@@ -75,13 +75,13 @@ describe Sufia::Ability, :type => :model do
     end
 
     context "with a ProxyDepositRequest they are the sender of" do
-      let(:request) { ProxyDepositRequest.create!(generic_file_id: file.id, receiving_user: sender, sending_user: user) }
+      let(:request) { ProxyDepositRequest.create!(generic_work_id: work.id, receiving_user: sender, sending_user: user) }
       it { should_not be_able_to(:accept, request) }
       it { should_not be_able_to(:reject, request) }
       it { should be_able_to(:destroy, request) }
 
       context "and the request has already been accepted" do
-        let(:request) { ProxyDepositRequest.create!(generic_file_id: file.id, receiving_user: sender, sending_user: user, status: 'accepted') }
+        let(:request) { ProxyDepositRequest.create!(generic_work_id: work.id, receiving_user: sender, sending_user: user, status: 'accepted') }
         it { should_not be_able_to(:accept, request) }
         it { should_not be_able_to(:reject, request) }
         it { should_not be_able_to(:destroy, request) }

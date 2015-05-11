@@ -20,10 +20,10 @@ module Sufia
     end
 
     def show_transfer_request_title(req)
-      if req.deleted_file?
+      if req.deleted_work?
         req.title
       else
-        link_to(req.title, sufia.generic_file_path(req.generic_file_id))
+        link_to(req.title, sufia.generic_work_path(req.generic_work_id))
       end
     end
 

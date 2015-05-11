@@ -15,7 +15,6 @@ module Sufia
     include Sufia::GenericFile::Content
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::FullTextIndexing
-    include Sufia::GenericFile::ProxyDeposit
     include Hydra::Collections::Collectible
     include Sufia::GenericFile::Batches
     include Sufia::GenericFile::Indexing

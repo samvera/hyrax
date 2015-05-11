@@ -34,14 +34,14 @@ describe "Rake tasks" do
       Rake::Task.define_task(:environment)
     end
 
-    describe "deleting the namespace from ProxyDepositRequest#generic_file_id" do
+    describe "deleting the namespace from ProxyDepositRequest#generic_work_id" do
       let(:sender) { FactoryGirl.find_or_create(:jill) }
       let(:receiver) { FactoryGirl.find_or_create(:archivist) }
       before do
-        ProxyDepositRequest.create(generic_file_id: namespaced_id, sending_user: sender, receiving_user: receiver, sender_comment: "please take this")
+        ProxyDepositRequest.create(generic_work_id: namespaced_id, sending_user: sender, receiving_user: receiver, sender_comment: "please take this")
         Rake::Task["sufia:migrate:proxy_deposits"].invoke
       end
-      subject { ProxyDepositRequest.first.generic_file_id }
+      subject { ProxyDepositRequest.first.generic_work_id }
       it { is_expected.to eql corrected_id }
     end
 

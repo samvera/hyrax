@@ -4,7 +4,7 @@
     desc "Migrate proxy deposits"
     task proxy_deposits: :environment do
       ProxyDepositRequest.all.each do |pd|
-        pd.generic_file_id = pd.generic_file_id.delete "#{Sufia.config.redis_namespace}:"
+        pd.generic_work_id = pd.generic_work_id.delete "#{Sufia.config.redis_namespace}:"
         pd.save
       end
     end

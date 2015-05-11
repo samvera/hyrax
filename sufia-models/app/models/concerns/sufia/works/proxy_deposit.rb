@@ -1,5 +1,5 @@
-module Sufia
-  module GenericFile
+module Sufia::Works
+  module GenericWork
     module ProxyDeposit
       extend ActiveSupport::Concern
 
@@ -24,7 +24,7 @@ module Sufia
       def request_transfer_to(target)
         raise ArgumentError, "Must provide a target" unless target
         deposit_user = ::User.find_by_user_key(depositor)
-        ProxyDepositRequest.create!(generic_file_id: id, receiving_user: target, sending_user: deposit_user)
+        ProxyDepositRequest.create!(generic_work_id: id, receiving_user: target, sending_user: deposit_user)
       end
     end
   end
