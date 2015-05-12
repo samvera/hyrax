@@ -69,35 +69,6 @@ module Sufia
         characterization.sample_rate.blank? ? characterization.video_sample_rate : characterization.sample_rate
       end
 
-      ## Extract the metadata from the content datastream and record it in the characterization datastream
-      def characterize
-        metadata = content.extract_metadata
-        characterization.ng_xml = metadata if metadata.present?
-        append_metadata
-        self.filename = [content.original_name]
-        save
-      end
-
-      # Populate GenericFile's properties with fields from FITS (e.g. Author from pdfs)
-      def append_metadata
-        terms = self.characterization_terms
-        Sufia.config.fits_to_desc_mapping.each_pair do |k, v|
-          if terms.has_key?(k)
-            # coerce to array to remove a conditional
-            terms[k] = [terms[k]] unless terms[k].is_a? Array
-            terms[k].each do |term_value|
-              proxy_term = self.send(v)
-              if proxy_term.kind_of?(Array)
-                proxy_term << term_value unless proxy_term.include?(term_value)
-              else
-                # these are single-valued terms which cannot be appended to
-                self.send("#{v}=", term_value)
-              end
-            end
-          end
-        end
-      end
-
       def characterization_terms
         h = {}
         self.characterization.class.terminology.terms.each_pair do |k, v|

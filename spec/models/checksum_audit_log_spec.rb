@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe ChecksumAuditLog do
   before do
-    allow_any_instance_of(GenericFile).to receive(:characterize).and_return(true) # stub out characterization so it does not get audited
+    # stub out characterization so it does not get audited
+    allow_any_instance_of(Sufia::CharacterizationService).to receive(:characterize)
   end
 
   let(:f) do
