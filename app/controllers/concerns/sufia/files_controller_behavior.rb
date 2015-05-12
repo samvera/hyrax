@@ -163,7 +163,7 @@ module Sufia
     end
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label
+      params.has_key?(:revision) && params[:revision] != Sufia::VersioningService.latest_version_of(@generic_file.content).label
     end
 
     def wants_to_upload_new_version?
@@ -183,7 +183,7 @@ module Sufia
 
     def update_file
       if params[:filedata]
-        actor.update_content(params[:filedata], file_path)
+        actor.update_content(params[:filedata])
       else
         flash[:error] = 'Please select a file.'
         false
@@ -216,7 +216,7 @@ module Sufia
 
       update_metadata_from_upload_screen
       actor.create_metadata(params[:batch_id], params[:work_id])
-      if actor.create_content(file, file.original_filename, file_path, file.content_type)
+      if actor.create_content(file, file.original_filename, file.content_type)
         respond_to do |format|
           format.html {
             render 'jq_upload', formats: 'json', content_type: 'text/html'
@@ -244,11 +244,6 @@ module Sufia
     end
 
     ActiveSupport::Deprecation.deprecate_methods(FilesControllerBehavior, :initialize_fields)
-
-    # The path of the fedora node where we store the file data
-    def file_path
-      'content'
-    end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     # called when creating or updating metadata

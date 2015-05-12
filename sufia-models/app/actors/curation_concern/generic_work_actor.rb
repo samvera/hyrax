@@ -69,10 +69,11 @@ module CurationConcern
     end
 
     private
+
     def attach_file(file)
       generic_file = GenericFile.new
       actor = Sufia::GenericFile::Actor.new(generic_file, user)
-      actor.create_content(file, file.original_filename, file_path, file.content_type)
+      actor.create_content(file, file.original_filename, file.content_type)
       actor.create_metadata(curation_concern.id, curation_concern.id)
       generic_file.generic_work = curation_concern
       generic_file.visibility = visibility
@@ -80,16 +81,5 @@ module CurationConcern
       stat = Worthwhile::CurationConcern.attach_file(generic_file, user, file)
       curation_concern.generic_files += [generic_file]
     end
-
-
-    def valid_file?(file_path)
-      return file_path.present? && File.exists?(file_path) && !File.zero?(file_path)
-    end
-
-    # The path of the fedora node where we store the file data
-    def file_path
-      'content'
-    end
-
   end
 end

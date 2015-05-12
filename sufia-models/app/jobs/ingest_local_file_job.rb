@@ -12,7 +12,6 @@ class IngestLocalFileJob
     self.user_key = user_key
   end
 
-  #TODO this should use Actor#create_content
   def run
     user = User.find_by_user_key(user_key)
     raise "Unable to find user for #{user_key}" unless user
@@ -21,7 +20,7 @@ class IngestLocalFileJob
 
     actor = Sufia::GenericFile::Actor.new(generic_file, user)
 
-    if actor.create_content(File.open(path), filename, 'content', mime_type(filename))
+    if actor.create_content(File.open(path), filename, mime_type(filename))
       FileUtils.rm(path)
       Sufia.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
 

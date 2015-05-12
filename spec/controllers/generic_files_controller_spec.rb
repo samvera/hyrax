@@ -42,7 +42,7 @@ describe GenericFilesController do
       context "when everything is perfect" do
         render_views
         it "spawns a content deposit event job" do
-          expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'content', 'image/png').and_return(true)
+          expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'image/png').and_return(true)
           xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
           expect(response.body).to eq '[{"name":null,"size":null,"url":"/files/test123","thumbnail_url":"test123","delete_url":"deleteme","delete_type":"DELETE"}]'
           expect(flash[:error]).to be_nil
@@ -66,11 +66,6 @@ describe GenericFilesController do
           # Confirming that date_uploaded and date_modified were set
           expect(saved_file.date_uploaded).to eq date_today.new_offset(0)
           expect(saved_file.date_modified).to eq date_today.new_offset(0)
-        end
-
-        it "should record what user created the first version of content" do
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
-          expect(VersionCommitter.pluck(:committer_login).last).to eq user.user_key
         end
 
         it "should set the depositor id" do
@@ -190,7 +185,6 @@ describe GenericFilesController do
 
       after do
         Sufia.config.enable_local_ingest = false
-        allow_any_instance_of(FileContentDatastream).to receive(:live?).and_return(true)
       end
 
       context "when User model defines a directory path" do
@@ -465,8 +459,8 @@ describe GenericFilesController do
       let(:actor2)      { Sufia::GenericFile::Actor.new(generic_file, second_user) }
 
       before do
-        actor1.create_content(fixture_file_upload(file1), file1, 'content', file1_type)
-        actor2.create_content(fixture_file_upload(file2), file2, 'content', file2_type)
+        actor1.create_content(fixture_file_upload(file1), file1, file1_type)
+        actor2.create_content(fixture_file_upload(file2), file2, file2_type)
       end
 
       describe "restoring a previous version" do
@@ -478,12 +472,12 @@ describe GenericFilesController do
 
           let(:restored_content) { generic_file.reload.content }
           let(:versions)         { restored_content.versions }
-          let(:latest_version)   { restored_content.latest_version }
+          let(:latest_version)   { Sufia::VersioningService.latest_version_of(restored_content) }
 
-          it "should restore the first versions's content and metadata" do
+          it "restores the first versions's content and metadata" do
             expect(restored_content.mime_type).to eq file1_type
             expect(restored_content.original_name).to eq file1
-            expect(versions.all.count).to eq 3
+            expect(versions.all.count).to eq 4
             expect(versions.last.label).to eq latest_version.label
             expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user.user_key]
           end

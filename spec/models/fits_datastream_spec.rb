@@ -90,7 +90,6 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       @myfile.apply_depositor_metadata('mjg36')
       # characterize method saves
       Sufia::CharacterizationService.run(@myfile)
-      @myfile.reload
     end
 
     it "should return expected results after a save" do
@@ -120,7 +119,6 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       @myfile.apply_depositor_metadata('agw13')
       # characterize method saves
       Sufia::CharacterizationService.run(@myfile)
-      @myfile.reload
     end
 
     it "should return expected content for full text" do

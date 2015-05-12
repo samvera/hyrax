@@ -203,9 +203,9 @@ describe GenericFile, :type => :model do
       expect(subject.characterization).to be_kind_of FitsDatastream
     end
 
-    it "should have content datastream" do
+    it "should have attached content" do
       subject.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      expect(subject.content).to be_kind_of FileContentDatastream
+      expect(subject.content).to be_kind_of ActiveFedora::File
     end
   end
 
@@ -618,12 +618,12 @@ describe GenericFile, :type => :model do
     end
   end
 
-    describe " work associations" do
-      let(:work) { GenericWork.new }
-      subject { GenericFile.new(generic_work: work) }
+  describe "work associations" do
+    let(:work) { GenericWork.new }
+    subject { GenericFile.new(generic_work: work) }
 
-      it "should belong to works" do
-        expect(subject.generic_work).to eq work
-      end
+    it "should belong to works" do
+      expect(subject.generic_work).to eq work
     end
+  end
 end

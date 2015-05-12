@@ -13,7 +13,7 @@ describe ChecksumAuditLog do
     end
   end
 
-  let(:version_uri) { f.content.versions.first.uri }
+  let(:version_uri) { Sufia::VersioningService.create(f.content); f.content.versions.first.uri }
   let(:version_path) { 'content' }
   let(:old) { ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
   let(:new) { ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
@@ -48,7 +48,7 @@ describe ChecksumAuditLog do
       ChecksumAuditLog.create(generic_file_id: f.id, dsid: 'thumbnail', version: 'v1', pass: 1)
     end
 
-    specify "should have an audit log history" do
+    it "has an audit log history" do
       audit = ChecksumAuditLog.get_audit_log(f.id, 'content', version_uri)
       expect(audit.generic_file_id).to eq(f.id)
       expect(audit.version).to eq(version_uri)

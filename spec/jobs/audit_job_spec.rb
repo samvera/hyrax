@@ -12,24 +12,23 @@ describe AuditJob do
 
   let(:job) { AuditJob.new(file.id, 'content', uri) }
 
-  describe "audit on content" do
-    let(:uri) { file.content.uri }
-    it "should pass" do
-      expect(job.run).to eq(true)
+  describe "#run" do
+    subject { job.run }
+    context "on content" do
+      let(:uri) { file.content.uri }
+      it { is_expected.to be true }
     end
-  end
 
-  describe "audit on a version of the content" do
-    let(:uri) { file.content.versions.first.uri }
-    it "should pass" do
-      expect(job.run).to eq(true)
+    context "on a version of the content" do
+      before { Sufia::VersioningService.create(file.content) }
+      let(:uri) { Sufia::VersioningService.latest_version_of(file.content).uri }
+      it { is_expected.to be true }
     end
-  end
 
-  describe "audit on an invalid version of the content" do
-    let(:uri) { file.content.versions.first.uri + "bogus" }
-    it "should fail" do
-      expect(job.run).to eq(false)
+    context "on an invalid version of the content" do
+      before { Sufia::VersioningService.create(file.content) }
+      let(:uri) { Sufia::VersioningService.latest_version_of(file.content).uri + 'bogus' }
+      it { is_expected.to be false }
     end
   end
 
@@ -59,13 +58,14 @@ describe AuditJob do
 
   describe "run_audit" do
     let(:uri) { file.content.versions.first.uri }
-    let!(:old) { ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 1, created_at: 2.minutes.ago) }
-    let!(:new) { ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 0) }
     let(:mock_service) { double('mock fixity check service') }
 
     before do
       allow(ActiveFedora::FixityService).to receive(:new).and_return(mock_service)
       allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
+      Sufia::VersioningService.create(file.content)
+      ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 1, created_at: 2.minutes.ago)
+      ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 0)
     end
 
     it "should not prune failed audits" do
