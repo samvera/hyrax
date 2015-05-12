@@ -64,10 +64,7 @@ module Sufia
     protected
 
     def destroy_batch
-      batch.each do |doc_id|
-        gf = ::GenericFile.find(doc_id)
-        gf.destroy
-      end
+      batch.each { |id| ActiveFedora::Base.find(id).destroy }
       after_update
     end
 
