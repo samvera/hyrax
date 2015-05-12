@@ -2,9 +2,8 @@ module Sufia
   class GenericWorkIndexingService < ActiveFedora::IndexingService
 
     def generate_solr_document
-      super.tap do |solr_doc|
-        solr_doc[Solrizer.solr_name('collection_ids')] = object.collection_ids
-      end
+      # leaving this in place since I know we will want to add generic files into the work's solr index
+      super
     end
 
   end
