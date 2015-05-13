@@ -9,12 +9,11 @@ env:
 notifications:
   email:
     recipients:
-      - "justin@curationexperts.com"
+      - "eliotj@princeton.edu"
+      - "kr2@princeton.edu"
+      - "jstroop@princeton.edu"
       - "matt.zumwalt@gmail.com"
     on_success: "change"
     on_failure: "always"
-  irc:
-    channels:
-      - "irc.freenode.org#curationexperts"
     template:
       - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
