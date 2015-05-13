@@ -22,7 +22,8 @@ Gem::Specification.new do |spec|
   # spec.add_dependency 'hydra-head', "~> 9.0.0.beta1"
   # spec.add_dependency "active-fedora", "~> 9.0.0.beta5"
   spec.add_dependency "active_attr"
-  spec.add_dependency 'sufia-models', '~> 6.0.0.rc3'
+  spec.add_dependency 'sufia-models', '~> 6.0.0'
+  spec.add_dependency 'active_fedora-noid'
   spec.add_dependency 'hydra-collections'
 
   spec.add_development_dependency "bundler", "~> 1.6"

@@ -11,3 +11,4 @@ jetty
 .rvmrc
 .ruby-*
 ./spec/internal
+.DS_store

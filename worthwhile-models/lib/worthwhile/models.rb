@@ -5,3 +5,9 @@ module Worthwhile
   end
 end
 
+
+module CurationConcerns
+  module Models
+  end
+end
+

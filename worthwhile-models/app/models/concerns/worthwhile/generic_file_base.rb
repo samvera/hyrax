@@ -2,10 +2,10 @@ module Worthwhile
   module GenericFileBase
     extend ActiveSupport::Concern
     include Hydra::AccessControls::Embargoable
-    include Sufia::ModelMethods
-    include Sufia::Noid
+    include CurationConcerns::ModelMethods
+    include CurationConcerns::Noid
     include Sufia::GenericFile::MimeTypes
-    include Sufia::GenericFile::Export
+    include CurationConcerns::GenericFile::Export
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
@@ -14,9 +14,9 @@ module Worthwhile
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::FullTextIndexing
     include Hydra::Collections::Collectible
-    include Sufia::GenericFile::Batches
+    include CurationConcerns::GenericFile::Batches
     include Sufia::GenericFile::Indexing
-    include Sufia::Permissions::Readable # Only include Sufia::Permissions::Readable, not Sufia::Permissions::Writable
+    include CurationConcerns::Permissions::Readable # Only include Sufia::Permissions::Readable, not Sufia::Permissions::Writable
 
     included do
       belongs_to :batch, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: 'ActiveFedora::Base'

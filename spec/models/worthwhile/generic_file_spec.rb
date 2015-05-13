@@ -32,6 +32,27 @@ describe Worthwhile::GenericFile do
     end
   end
 
+  ### This block extracted from Sufia generic_work_spec.rb
+  describe "assign_id" do
+    context "with noids enabled (by default)" do
+      it "uses the noid service" do
+        expect_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).once
+        subject.assign_id
+      end
+    end
+
+    context "with noids disabled" do
+      before { Sufia.config.enable_noids = false }
+      after { Sufia.config.enable_noids = true }
+
+      it "does not use the noid service" do
+        expect_any_instance_of(ActiveFedora::Noid::Service).not_to receive(:mint)
+        subject.assign_id
+      end
+    end
+  end
+
+
   describe 'with a parent work' do
     let(:parent_id) { 'id123' }
     let!(:parent) {
@@ -42,6 +63,23 @@ describe Worthwhile::GenericFile do
     }
 
     subject { Worthwhile::GenericFile.create(batch: parent) }
+
+    describe '#related_files' do
+      let(:sibling) { Worthwhile::GenericFile.create(batch: parent) }
+      before do
+        sibling.save!
+      end
+
+      it "has a related file in a batch" do
+        expect(subject.related_files).to eq([sibling])
+      end
+    end
+
+    describe '#processing?' do
+      it "is not currently being processed by a batch" do
+        expect(subject.processing?).to eq false
+      end
+    end
 
     describe '#remove_representative_relationship' do
       let(:some_other_id) { 'something456' }
