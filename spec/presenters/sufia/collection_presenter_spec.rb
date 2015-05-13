@@ -8,7 +8,7 @@ describe Sufia::CollectionPresenter do
                             :language, :identifier, :based_near, :related_url] }
   end
 
-  let(:collection) { Collection.new(description: 'a nice collection', title: 'A clever title') }
+  let(:collection) { Collection.new(id: '111', description: 'a nice collection', title: 'A clever title') }
   let(:presenter) { described_class.new(collection) }
 
   describe "#terms_with_values" do
