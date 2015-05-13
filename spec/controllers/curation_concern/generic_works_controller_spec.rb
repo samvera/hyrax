@@ -18,10 +18,9 @@ describe CurationConcern::GenericWorksController do
 
     context "someone elses private work" do
       let(:a_work) { FactoryGirl.create(private_work_factory_name) }
-      it "should show 401 Unauthorized" do
+      it "should redirect and show unauthorized message" do
         get :show, id: a_work
-        expect(response.status).to eq 401
-        expect(response).to render_template(:unauthorized)
+        expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.') 
       end
     end
 
@@ -72,10 +71,9 @@ describe CurationConcern::GenericWorksController do
 
     context "someone elses private work" do
       let(:a_work) { FactoryGirl.create(private_work_factory_name) }
-      it "should show 401 Unauthorized" do
+      it "should redirect and show unauthorized message" do
         get :edit, id: a_work
-        expect(response.status).to eq 401
-        expect(response).to render_template(:unauthorized)
+        expect(response).to fail_redirect_and_flash([:curation_concern, assigns[:curation_concern]], 'You are not authorized to access this page.')
       end
     end
 
@@ -83,8 +81,7 @@ describe CurationConcern::GenericWorksController do
       let(:a_work) { FactoryGirl.create(public_work_factory_name) }
       it "should show me the page" do
         get :edit, id: a_work
-        expect(response.status).to eq 401
-        expect(response).to render_template(:unauthorized)
+        expect(response).to fail_redirect_and_flash([:curation_concern, assigns[:curation_concern]], 'You are not authorized to access this page.')
       end
     end
 
@@ -124,10 +121,9 @@ describe CurationConcern::GenericWorksController do
 
     context "someone elses public work" do
       let(:a_work) { FactoryGirl.create(public_work_factory_name) }
-      it "should show 401 Unauthorized" do
+      it "should redirect and show unauthorized message" do
         get :update, id: a_work
-        expect(response.status).to eq 401
-        expect(response).to render_template(:unauthorized)
+        expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.')
       end
     end
 
@@ -152,10 +148,9 @@ describe CurationConcern::GenericWorksController do
 
     context "someone elses public work" do
       let(:work_to_be_deleted) { FactoryGirl.create(private_work_factory_name) }
-      it "should show 401 Unauthorized" do
+      it "should redirect and show unauthorized message" do
         delete :destroy, id: work_to_be_deleted
-        expect(response.status).to eq 401
-        expect(response).to render_template(:unauthorized)
+        expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.')
       end
     end
 

@@ -20,7 +20,7 @@ module Worthwhile
 
     # routed to /files/:id/edit
     def edit
-      @generic_file.initialize_fields
+      # @generic_file.initialize_fields
       @groups = current_user.groups
     end
 

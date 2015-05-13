@@ -9,7 +9,7 @@ module Worthwhile
       
       unless current_user.new_record?
         can :create, Worthwhile::ClassifyConcern
-        can :create, [Worthwhile::GenericFile, Worthwhile::LinkedResource]
+        can :create, [Worthwhile::GenericFile] #, Worthwhile::LinkedResource]
       end
 
       if user_groups.include? 'admin'
@@ -24,7 +24,7 @@ module Worthwhile
     def everyone_can_create_curation_concerns
       unless current_user.new_record?
         can :create, [Worthwhile.configuration.curation_concerns]
-        can :create, Collection
+        #can :create, Collection
       end
     end
 
