@@ -89,16 +89,5 @@ describe GenericWork do
     end
   end
 
-  describe '#to_solr' do
-    let(:collection) { FactoryGirl.create(:collection, title: 'My Collection') }
-    let(:work) { FactoryGirl.create(:work, title: ['My Work'], collections: [collection]) }
-
-    subject { work.to_solr }
-
-    it 'indexes the properties' do
-      expect(subject['collection_ids_tesim']).to eq [collection.id]
-    end
-  end
-
 end
 
