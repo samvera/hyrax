@@ -17,7 +17,7 @@ describe Sufia::GenericFile::Actor do
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(characterize_message)
       expect(Sufia.queue).to receive(:push).with(deposit_message)
       expect(Sufia.queue).to receive(:push).with(characterize_message)
-      actor.create_content(uploaded_file, 'world.png', 'content', 'image/png')
+      actor.create_content(uploaded_file, 'world.png', 'image/png')
     end
 
     context "when generic_file.title is empty and generic_file.label is not" do
@@ -28,8 +28,8 @@ describe Sufia::GenericFile::Actor do
       before do
         allow(generic_file).to receive(:label).and_return(short_name)
         allow(Sufia.queue).to receive(:push)
-        actor.create_content(fixture_file_upload(file), long_name, 'content', 'image/png')
-      end 
+        actor.create_content(fixture_file_upload(file), long_name, 'image/png')
+      end
       subject { generic_file.title }
       it { is_expected.to eql [short_name] }
     end
@@ -46,8 +46,8 @@ describe Sufia::GenericFile::Actor do
 
       before do
         allow(Sufia.queue).to receive(:push)
-        actor1.create_content(fixture_file_upload(file1), file1, 'content', 'image/png')
-        actor2.create_content(fixture_file_upload(file2), file2, 'content', 'image/jpeg')
+        actor1.create_content(fixture_file_upload(file1), file1, 'image/png')
+        actor2.create_content(fixture_file_upload(file2), file2, 'image/jpeg')
       end
 
       it "should have two versions" do
@@ -55,7 +55,7 @@ describe Sufia::GenericFile::Actor do
       end
 
       it "should have the current version" do
-        expect(generic_file.content.latest_version.label).to eq 'version2'
+        expect(Sufia::VersioningService.latest_version_of(generic_file.content).label).to eq 'version2'
         expect(generic_file.content.mime_type).to eq "image/jpeg"
         expect(generic_file.content.original_name).to eq file2
       end
@@ -92,7 +92,7 @@ describe Sufia::GenericFile::Actor do
 
     before do
       allow(actor).to receive(:save_characterize_and_record_committer).and_return("true")
-      actor.create_content(Tempfile.new(new_file), new_file, "content", 'image/jpg')
+      actor.create_content(Tempfile.new(new_file), new_file, 'image/jpg')
     end
 
     it "will retain the object's original label" do

@@ -50,8 +50,6 @@ module Sufia
         require 'activerecord-import'
         require 'hydra/derivatives'
         require 'active_fedora/noid'
-        require 'sufia/models/file_content'
-        require 'sufia/models/file_content/versions'
         require 'sufia/models/user_local_directory_behavior'
         require 'sufia/noid'
         require 'sufia/analytics'

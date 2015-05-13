@@ -4,7 +4,7 @@ module Sufia
       extend ActiveSupport::Concern
 
       included do
-        contains "content", class_name: 'FileContentDatastream'
+        contains "content"
         contains "thumbnail"
       end
 

@@ -12,7 +12,6 @@ module Sufia
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Content
-    include Sufia::GenericFile::Versions
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::FullTextIndexing
     include Sufia::GenericFile::ProxyDeposit

@@ -12,10 +12,12 @@ describe Sufia::GenericFileAuditService do
 
   describe "#audit" do
     before do
+      Sufia::VersioningService.create(f.content)
       # force a second version
       gf = GenericFile.find(f.id)
       gf.add_file('hello two', path: 'content', original_name: 'hello2.txt')
       gf.save!
+      Sufia::VersioningService.create(gf.content)
     end
 
     context "force an audit on a file with two versions" do
@@ -28,10 +30,12 @@ describe Sufia::GenericFileAuditService do
 
   describe "#audit_file" do
     before do
+      Sufia::VersioningService.create(f.content)
       # force a second version
       gf = GenericFile.find(f.id)
       gf.add_file('hello two', path: 'content', original_name: 'hello2.txt')
       gf.save!
+      Sufia::VersioningService.create(gf.content)
     end
 
     context "force an audit on a specific version" do
@@ -52,7 +56,8 @@ describe Sufia::GenericFileAuditService do
 
     context "when no audit is pasing" do
       before do
-       ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.content.versions.first.label, dsid: 'content')
+        Sufia::VersioningService.create(f.content)
+        ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.content.versions.first.label, dsid: 'content')
       end
 
       it "should report that audits have not been run" do

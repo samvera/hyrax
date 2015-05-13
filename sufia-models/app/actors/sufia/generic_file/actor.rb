@@ -39,8 +39,9 @@ module Sufia::GenericFile
       yield(generic_file) if block_given?
     end
 
-    def create_content(file, file_name, path, mime_type)
-      generic_file.add_file(file, path: path, original_name: file_name, mime_type: mime_type)
+    def create_content(file, file_name, mime_type)
+      generic_file.add_file(file, path: file_path, original_name: file_name, mime_type: mime_type)
+      generic_file.content.versionable = true
       generic_file.label ||= file_name
       generic_file.title = [generic_file.label] if generic_file.title.blank?
       save_characterize_and_record_committer do
@@ -60,8 +61,8 @@ module Sufia::GenericFile
       end
     end
 
-    def update_content(file, path)
-      generic_file.add_file(file, path: path, original_name: file.original_filename, mime_type: file.content_type)
+    def update_content(file)
+      generic_file.add_file(file, path: file_path, original_name: file.original_filename, mime_type: file.content_type)
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_update_content)
           Sufia.config.after_update_content.call(generic_file, user)
@@ -74,7 +75,7 @@ module Sufia::GenericFile
       update_visibility(visibility)
       generic_file.date_modified = DateTime.now
       remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?
-      save_and_record_committer do
+      save do
         if Sufia.config.respond_to?(:after_update_metadata)
           Sufia.config.after_update_metadata.call(generic_file, user)
         end
@@ -88,21 +89,24 @@ module Sufia::GenericFile
       end
     end
 
-    # Takes an optional block and executes the block if the save was successful.
+    # Saves the generic file, queues a job to characterize it, and records the committer.
+    # Takes a block which is run if the save was successful.
     def save_characterize_and_record_committer
-      save_and_record_committer { push_characterize_job }.tap do |val|
-        yield if block_given? && val
+      save do
+        push_characterize_job
+        Sufia::VersioningService.create(generic_file.content, user)
+        yield if block_given?
       end
     end
 
     # Takes an optional block and executes the block if the save was successful.
     # returns false if the save was unsuccessful
-    def save_and_record_committer
+    def save
       save_tries = 0
       begin
         return false unless generic_file.save
       rescue RSolr::Error::Http => error
-        ActiveFedora::Base.logger.warn "Sufia::GenericFile::Actor::save_and_record_committer Caught RSOLR error #{error.inspect}"
+        ActiveFedora::Base.logger.warn "Sufia::GenericFile::Actor#save Caught RSOLR error #{error.inspect}"
         save_tries+=1
         # fail for good if the tries is greater than 3
         raise error if save_tries >=3
@@ -110,7 +114,6 @@ module Sufia::GenericFile
         retry
       end
       yield if block_given?
-      generic_file.record_version_committer(user)
       true
     end
 
@@ -131,6 +134,10 @@ module Sufia::GenericFile
     end
 
     protected
+
+      def file_path
+        'content'.freeze
+      end
 
       # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
       def update_visibility(visibility)
