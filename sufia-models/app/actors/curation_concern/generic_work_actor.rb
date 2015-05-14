@@ -1,14 +1,15 @@
 
 module CurationConcern
   class GenericWorkActor < CurationConcern::BaseActor
+    include ManagesPermissionsActor
 
     def create
-      assign_pid && super && attach_files && create_linked_resources
+      assign_pid  && super && attach_files && create_linked_resources && copy_permissions
     end
 
     def update
       add_to_collections(attributes.delete(:collection_ids))  &&
-        super && attach_files && create_linked_resources
+        super && attach_files && create_linked_resources && copy_permissions
     end
 
     delegate :visibility_changed?, to: :curation_concern
@@ -80,6 +81,15 @@ module CurationConcern
 
       stat = Worthwhile::CurationConcern.attach_file(generic_file, user, file)
       curation_concern.generic_files += [generic_file]
+    end
+    
+    def valid_file?(file_path)
+      return file_path.present? && File.exists?(file_path) && !File.zero?(file_path)
+    end
+
+    # The path of the fedora node where we store the file data
+    def file_path
+      'content'
     end
   end
 end

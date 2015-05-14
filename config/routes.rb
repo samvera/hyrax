@@ -112,6 +112,16 @@ Sufia::Engine.routes.draw do
   post 'contact' => 'contact_form#create', as: :contact_form_index
   get 'contact' => 'contact_form#new'
 
+  # Permissions routes
+  namespace :curation_concern, path: :concern do
+    resources( :permissions, only:[]) do
+      member do
+        get :confirm
+        post :copy
+      end
+    end
+  end
+  
   mount Hydra::Collections::Engine => '/'
 
   # Resque monitoring routes. Don't bother with this route unless Sufia::ResqueAdmin
