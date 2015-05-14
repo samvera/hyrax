@@ -25,7 +25,7 @@ describe 'collections/_show_document_list_menu.html.erb', :type => :view do
     }
 
     before do
-      allow(view).to receive(:current_user).and_return(:user)
+      allow(view).to receive(:current_user).and_return(user)
       allow(collection).to receive(:title).and_return('collection title abc')
       allow(work).to receive(:title).and_return('work title abc')
     end
