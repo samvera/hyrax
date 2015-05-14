@@ -9,6 +9,6 @@ gem 'active-triples', github: 'ActiveTriples/ActiveTriples', ref: 'b99360d'
 gem 'active_fedora-noid', github: 'projecthydra-labs/active_fedora-noid', ref: '38079e4'
 
 # from the bring_works_inline_with_pcdm branch
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '7416a52'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '66669b5289c4d2729fea1782bee3d00ce56ecb0c'
 
 
