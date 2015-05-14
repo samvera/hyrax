@@ -237,14 +237,6 @@ module Sufia
       params[:terms_of_service] == '1'
     end
 
-    # override this method if you need to initialize more complex RDF assertions (b-nodes)
-    # @deprecated use @generic_file.initialize_fields instead
-    def initialize_fields(file)
-      file.initialize_fields
-    end
-
-    ActiveSupport::Deprecation.deprecate_methods(FilesControllerBehavior, :initialize_fields)
-
     # this is provided so that implementing application can override this behavior and map params to different attributes
     # called when creating or updating metadata
     def update_metadata_from_upload_screen
