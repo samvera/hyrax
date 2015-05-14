@@ -7,7 +7,6 @@ module Sufia
       layout "sufia-one-column"
 
       before_filter :has_access?
-      ActiveSupport::Deprecation.deprecate_methods(BatchController, :initialize_fields)
       class_attribute :edit_form_class
       self.edit_form_class = Sufia::Forms::BatchEditForm 
     end
@@ -37,11 +36,6 @@ module Sufia
     def edit_form
       generic_file = ::GenericFile.new(creator: [current_user.name], title: @batch.generic_files.map(&:label))
       edit_form_class.new(generic_file)
-    end
-
-    # override this method if you need to initialize more complex RDF assertions (b-nodes)
-    def initialize_fields(file)
-      file.initialize_fields
     end
 
     def uploading_on_behalf_of? batch
