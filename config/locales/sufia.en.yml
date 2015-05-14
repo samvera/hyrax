@@ -161,6 +161,8 @@ en:
         add_another_keyword: "add another Keyword"
         add_another_creator: "add another Creator"
         add_another_rights: "add another Rights"
+      generic_work:
+        edit: "Edit"
     mailbox:
       date:     'Date'
       subject:  'Subject'
