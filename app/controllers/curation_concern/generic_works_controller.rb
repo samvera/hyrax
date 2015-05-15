@@ -30,5 +30,15 @@ module CurationConcern
       end
     end
 
+
+    def after_create_response
+      puts "\n\nparams #{params[:save_with_files]}"
+      if params[:save_with_files].blank?
+        redirect_to sufia.generic_work_path(curation_concern.id)
+      else
+        redirect_to sufia.new_generic_file_path work_id: curation_concern.id
+      end
+    end
+
   end
 end
