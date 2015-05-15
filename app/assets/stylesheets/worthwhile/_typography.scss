@@ -77,8 +77,7 @@ legend {
   font-weight:normal;
 }
 
-.redacted,
-.unratified .contributor_agreement p {
+.redacted {
   font-family:'BLOKKNeue-Regular';
 }
 
@@ -103,10 +102,6 @@ legend {
 
 .centered {
   text-align:center;
-}
-
-.contributor_agreement.human_readable {
- font-size:150%;
 }
 
 .doi {

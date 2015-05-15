@@ -1,5 +1,5 @@
 <%= simple_form_for [:curation_concern, curation_concern] do |f| %>
-  
+
   <% if f.error_notification -%>
     <div class="alert alert-danger fade in">
       <strong>Wait don't go!</strong> There was a problem with your submission. Please review the errors below:
@@ -10,8 +10,6 @@
   <%= render 'form_descriptive_fields', curation_concern: curation_concern, f: f %>
 
   <%= render 'form_supplementary_fields', curation_concern: curation_concern, f: f %>
-
-  <%= render 'form_contributor_agreement', curation_concern: curation_concern, contributor_agreement: contributor_agreement %>
 
   <div class="row">
     <div class="col-md-12 form-actions">

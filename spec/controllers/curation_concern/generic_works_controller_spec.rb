@@ -20,7 +20,7 @@ describe CurationConcern::GenericWorksController do
       let(:a_work) { FactoryGirl.create(private_work_factory_name) }
       it "should redirect and show unauthorized message" do
         get :show, id: a_work
-        expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.') 
+        expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.')
       end
     end
 
@@ -54,7 +54,7 @@ describe CurationConcern::GenericWorksController do
   describe "#create" do
     it "should create a work" do
       expect {
-        post :create, accept_contributor_agreement: "accept", generic_work: { title: ["a title"] }
+        post :create, generic_work: { title: ["a title"] }
       }.to change { GenericWork.count }.by(1)
       expect(response).to redirect_to [:curation_concern, assigns[:curation_concern]]
     end

@@ -10,7 +10,6 @@ module Worthwhile::CurationConcernController
     class_attribute :curation_concern_type
     attr_accessor :curation_concern
     helper_method :curation_concern
-    helper_method :contributor_agreement
 
     respond_to :html
   end
@@ -26,16 +25,12 @@ module Worthwhile::CurationConcernController
     end
   end
 
-  def contributor_agreement
-    @contributor_agreement ||= Worthwhile::ContributorAgreement.new(curation_concern, current_user, params)
-  end
-
 
   def new
   end
 
   def create
-    return unless verify_acceptance_of_user_agreement!
+    # return unless verify_acceptance_of_user_agreement!
     if actor.create
       after_create_response
     else
@@ -83,19 +78,19 @@ module Worthwhile::CurationConcernController
       end
     end
 
-    def verify_acceptance_of_user_agreement!
-      return true if contributor_agreement.is_being_accepted?
-      # Calling the new action to make sure we are doing our best to preserve
-      # the input values; Its a stretch but hopefully it'll work
-      self.new
-      respond_with(:curation_concern, curation_concern) do |wants|
-        wants.html {
-          flash.now[:error] = "You must accept the contributor agreement"
-          render 'new', status: :conflict
-        }
-      end
-      false
-    end
+    # def verify_acceptance_of_user_agreement!
+    #   return true if contributor_agreement.is_being_accepted?
+    #   # Calling the new action to make sure we are doing our best to preserve
+    #   # the input values; Its a stretch but hopefully it'll work
+    #   self.new
+    #   respond_with(:curation_concern, curation_concern) do |wants|
+    #     wants.html {
+    #       flash.now[:error] = "You must accept the contributor agreement"
+    #       render 'new', status: :conflict
+    #     }
+    #   end
+    #   false
+    # end
 
     def _prefixes
       @_prefixes ||= super + ['curation_concern/base']

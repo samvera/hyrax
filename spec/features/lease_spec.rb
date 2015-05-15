@@ -14,7 +14,6 @@ describe "leases" do
       visit '/'
       click_link 'New Generic Work'
       fill_in 'Title', with: 'Lease test'
-      check 'I have read and accept the contributor license agreement'
       choose 'Lease'
       fill_in "generic_work_lease_expiration_date", with: future_date
       select 'Open Access', from: 'Is available for'

@@ -5,7 +5,6 @@
 //= require worthwhile/link_groups
 //= require worthwhile/proxy_rights
 //= require worthwhile/facet_mine
-//= require worthwhile/accept_contributor_agreement
 //= require worthwhile/proxy_submission
 //= require worthwhile/embargoes
 
@@ -42,4 +41,3 @@ Blacklight.onLoad(function() {
   $("[data-toggle='dropdown']").dropdown();
 
 });
-

@@ -16,7 +16,6 @@ describe 'embargo' do
     it "can be created, displayed and updated" do
       click_link 'New Generic Work'
       fill_in 'Title', with: 'Embargo test'
-      check 'I have read and accept the contributor license agreement'
       choose 'Embargo'
       fill_in "generic_work_embargo_release_date", with: future_date
       select 'Private', from: 'Restricted to'
