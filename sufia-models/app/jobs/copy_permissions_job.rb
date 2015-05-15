@@ -10,7 +10,8 @@ class CopyPermissionsJob
   end
 
   def run
-    work = ActiveFedora::Base.load_instance_from_solr(id)
+    # work = ActiveFedora::Base.load_instance_from_solr(id)
+    work = ActiveFedora::Base.find(id)  # Hydra::Works::GenericWork is not compatible with load_instance_from_solr.  Using (slower) ActiveFedora::Base.find instead.
     if work.respond_to?(:generic_files)
       work.generic_files.each do |file|
 

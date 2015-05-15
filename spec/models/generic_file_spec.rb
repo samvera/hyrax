@@ -10,7 +10,11 @@ describe GenericFile, :type => :model do
 
   describe "rdf type" do
     subject { described_class.new.type }
-    it { is_expected.to eq [::RDF::URI.new('http://pcdm.org/models#Object')] }
+    it { is_expected.to include(RDFVocabularies::PCDMTerms.Object,WorksVocabularies::WorksTerms.GenericFile) }
+  end
+
+  it "is a Hydra::Works GenericFile" do
+    expect(Hydra::Works.generic_file?(subject)).to be_truthy
   end
 
   context "when it is initialized" do
