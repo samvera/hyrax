@@ -31,9 +31,11 @@
 <div>
   <!-- Use CSS class h2 rather than HTML h2 tag to allow header and search box to align vertically -->
   <span class="h2"><%= header_title %></span>
-  <%= render partial: 'search_form'%>
+  <%= render partial: 'search_form'%><br/><br/>
 </div>
-
+<div style="float: right">
+<%= link_to t('sufia.collection.select_works'), sufia.dashboard_files_path %> | <%= link_to t('sufia.collection.add_work'), sufia.new_generic_work_path %>
+</div>
 <%= render_document_index @member_docs %>
 
 <%= render partial: 'paginate' %>

@@ -2,6 +2,9 @@ en:
   sufia:
     account_name:       "My Institution Account Id"
     account_label:      "User"
+    collection:
+       add_work:        "Add Work"
+       select_works:    "Select Works"
     deposit_agreement:  "Sufia's Deposit Agreement"
     document_language:  "en"
     upload_tooltip:     "Please accept Deposit Agreement before you can upload."
