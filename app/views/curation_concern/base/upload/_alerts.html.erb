@@ -1,0 +1,9 @@
+<div class="alert alert-warning" id="fail">
+  <%= t("sufia.upload.alert.fail_html", reload_href: link_to(t("sufia.upload.alert.fail_restart_href_text"), sufia.new_generic_file_path), contact_href: link_to(t("sufia.upload.alert.contact_href_text"), sufia.contact_form_index_path)) %>
+</div>
+
+<div class="alert alert-warning" id="partial_fail">
+  <%= t("sufia.upload.alert.partial_fail_html", metadata_href: link_to(t("sufia.upload.alert.partial_fail_metadata_href_text"), GenericFilesController.upload_complete_path(@batch_id), class: 'btn'), contact_href: link_to(t("sufia.upload.alert.contact_href_text"), sufia.contact_form_index_path)) %>
+</div>
+
+<div class="alert alert-warning" id="errmsg"> </div>

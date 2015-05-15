@@ -1,0 +1,115 @@
+<% depositor = f.object.depositor || batch.generic_files.first.depositor %>
+<% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
+<% public_perm = true if params[:controller] == 'batch' %>
+<% registered_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
+
+<h2><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %>
+      <small>(applied to all files just uploaded)</small><% end %>
+</h2>
+
+<div class="alert alert-info hidden" id="save_perm_note">Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
+<div class="alert alert-warning hidden" id="permissions_error">
+  <a class="close" data-dismiss="alert" href="#">
+    <span class="sr-only">Close this alert</span>
+    <span aria-hidden="true">×</span>
+  </a>
+<span id="permissions_error_text"></span></div>
+
+<div class="well">
+
+  <h3>Visibility - <small>who should have the ability to read and download</small>
+    <span id="visibility_tooltip" class="h5"><%= visibility_help %></span>
+  </h3>
+  <div class="radio">
+    <label>
+      <input type="radio" id="visibility_open" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC %>" <% if !public_perm.blank? %> checked="true"<% end %>/> <span class="label label-success">Open Access</span> Visible to the world.
+    </label>
+    <label>
+      <input type="radio" id="visibility_psu" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if !registered_perm.blank? %> checked="true"<% end %> /><span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
+    </label>
+    <label>
+      <input type="radio" id="visibility_restricted" name="visibility" value="<%=Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE %>"<% if registered_perm.blank? and public_perm.blank?%> checked="true"<% end %> /> <span class="label label-danger">Private</span> Visible to users/groups specified below, if any.
+    </label>
+  </div>
+
+  <!-- Share With -->
+  <div class="row">
+    <h3 class="col-sm-12">Share With <small>(optional)</small>
+      <span id="share_with_tooltip" class="h5"><%= share_with_help %></span>
+    </h3>
+  </div>
+
+  <div class="form-group row">
+    <div id="new-user">
+      <p class="col-sm-12">Enter <%=t('sufia.account_label') %> (one at a time)</p>
+      <p class="sr-only">Use the add button to give access to one <%=t('sufia.account_label') %> at a time (it will be added to the list below).  Select the user, by name or <%=t('sufia.account_label') %>. Then select the access level you wish to grant and click on Add this <%= t('sufia.account_label') %> to complete adding the permission.</p>
+      <div class="col-sm-5">
+        <label for="new_user_name_skel" class="sr-only"><%= t('sufia.account_label') %> (without the <%= t('sufia.directory.suffix') %> part)</label>
+        <%= text_field_tag 'new_user_name_skel', nil %>
+      </div>
+      <div class="col-sm-4">
+        <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
+        <%= select_tag 'new_user_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'form-control' %>
+      </div>
+      <div class="col-sm-3">
+        <button class="btn btn-mini btn-inverse" id="add_new_user_skel">
+          <span class="sr-only">Add this <%= t('sufia.account_label') %></span>
+          <span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>
+        </button>
+        <br /> <span id="directory_user_result"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div id="new-group" >
+      <p class="sr-only">Use the add button to give access to one group at a time (it will be added to the list below).</p>
+      <div class="col-sm-5">
+        <label for="new_group_name_skel" class="sr-only">Group</label>
+        <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
+      </div>
+      <div class="col-sm-4">
+        <label for="new_group_permission_skel" class="sr-only">Access type to grant</label>
+        <%= select_tag 'new_group_permission_skel', options_for_select(Sufia.config.permission_levels), class: 'form-control' %>
+      </div>
+      <div class="col-sm-3">
+        <span class="sr-only">Add this group</span>
+        <button class="btn btn-mini btn-inverse" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
+        <br /><span id="directory_group_result"></span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.well -->
+
+<table class="table table-bordered">
+  <tr>
+    <th width="60%">Person/Group</th>
+    <th width="40%">Access Level</th>
+  </tr>
+  <tr id="file_permissions">
+    <td>
+      <%= label_tag :owner_access, class: "control-label" do %>
+        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
+      <% end %>
+    </td>
+    <td>
+      <%= Sufia.config.owner_permission_levels.keys[0] %>
+    </td>
+  </tr>
+  <%= f.fields_for :permissions do |permission_fields| %>
+    <%# skip the public, penn state (aka registered), and depositor perms as they are displayed first at the top %>
+    <% next if ['public', 'registered', depositor].include? permission_fields.object.agent_name.downcase %>
+    <tr>
+      <td><%= permission_fields.label :agent_name, class: "control-label" do %>
+        <%= user_display_name_and_key(permission_fields.object.agent_name) %>
+      <% end %></td>
+      <td>
+        <div class="col-sm-8">
+          <%= permission_fields.select :access, Sufia.config.permission_levels, {}, class: 'form-control select_perm' %>
+        </div>
+        <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">X</button>
+      </td>
+    </tr>
+  <% end %>
+</table>
