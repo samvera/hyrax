@@ -5,6 +5,7 @@ module Sufia
         solr_doc[Solrizer.solr_name('label')] = object.label
         solr_doc[Solrizer.solr_name('file_format')] = object.file_format
         solr_doc[Solrizer.solr_name('file_format', :facetable)] = object.file_format
+        solr_doc[Solrizer.solr_name(:file_size, :symbol)] = object.file_size[0]
         solr_doc['all_text_timv'] = object.full_text.content
       end
     end

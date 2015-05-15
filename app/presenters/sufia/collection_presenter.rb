@@ -29,7 +29,7 @@ module Sufia
     end
 
     def size
-      number_to_human_size(model.bytes)
+      number_to_human_size(Sufia::CollectionSizeService.run(model))
     end
 
     def total_items
