@@ -1,4 +1,4 @@
-<% depositor = f.object.depositor || batch.generic_files.first.depositor %>
+<% depositor = @form.depositor %>
 <% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
 <% public_perm = true if params[:controller] == 'batch' %>
 <% registered_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>

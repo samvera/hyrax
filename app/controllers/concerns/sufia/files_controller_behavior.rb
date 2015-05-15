@@ -49,6 +49,7 @@ module Sufia
     # routed to /files/new
     def new
       @batch_id = ActiveFedora::Noid::Service.new.mint
+      @work_id = params[:work_id]
     end
 
     # routed to /files/:id/edit

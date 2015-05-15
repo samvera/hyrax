@@ -19,10 +19,5 @@
       <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
     </div>
 
-    <%= render partial: 'works/base/upload/alerts' %>
-    <ul class="nav nav-tabs" role="tablist" title="Data Source Selectors" id="upload_tabs">
-      <li class="active" id="computer_tab" title="<%= t('sufia.upload.my_computer.sr_tab_label')+' '+ t('sufia.upload.my_computer.tab_label') %>"><a role="tab" href="#local" data-toggle="tab"><i class="glyphicon glyphicon-folder-open" aria-hidden="true"></i> <%= t('sufia.upload.my_computer.tab_label')%></a></li>
-    </ul>
-    <%= render partial: 'works/base/multiple_upload' %>
   </div>
 <% end %>
