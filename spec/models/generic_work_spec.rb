@@ -2,6 +2,74 @@ require 'spec_helper'
 
 describe GenericWork do
 
+  describe "Using services in Hydra::PCDM" do 
+    # Ideally we shouldn't need to call Hydra::PCDM 
+    # from Sufia. For now I am because some of the
+    # functionality that I want to test has not been 
+    # implemented in Hydra::Works.
+    collection = Hydra::PCDM::Collection.create
+    object1 = Hydra::PCDM::Object.create
+    object2 = Hydra::PCDM::Object.create
+    Hydra::PCDM::AddObjectToCollection.call(collection, object1)
+    Hydra::PCDM::AddObjectToCollection.call(collection, object2)
+    objects = Hydra::PCDM::GetObjectsFromCollection.call(collection)
+    puts objects
+  end
+
+  describe "Using services in Hydra::Works" do 
+    gf = Hydra::Works::GenericFile.create
+    path = fixture_path + '/world.png'
+    Hydra::Works::UploadFileToGenericFile.call(gf, path)
+  end
+
+  describe "Prototyping for GenericWorkActor.attach_file Ticket #103" do 
+    # See https://github.com/projecthydra-labs/hydra-works/issues/103
+    # 
+    # Original
+    # generic_file = GenericFile.new  
+    # actor = Sufia::GenericFile::Actor.new(generic_file, user)
+    # actor.create_content(file, file.original_filename, file.content_type)
+    # actor.create_metadata(curation_concern.id, curation_concern.id)
+    # generic_file.generic_work = curation_concern
+    # generic_file.visibility = visibility
+    # stat = Worthwhile::CurationConcern.attach_file(generic_file, user, file)
+    # curation_concern.generic_files += [generic_file]
+
+    # Prototype
+    #   Currently Sufia::GenericFile includes Hydra::Works::GenericFileBehavior
+    #   which implies a Non-RDF Source (with only tech metadata and RDF type 
+    #   PCDMTerms.File)  
+    # 
+    #   Is this correct? Should Sufia::GenericFile map to a pcdm:File or to 
+    #   pcdm:Object?
+    #    
+    #   If Sufia::GenericFile maps to pcdm:File we need a new class to hold the 
+    #   many derivatives of the file (binary, text, thumb) Sufia::MasterFile ?
+    #
+    #   If Sufia::GenericFile maps to pcdm:Object (via include 
+    #   Hydra::Works::GenericWork) that will allow for many pcdm:Files
+    #   objects to be attached (one per derivative.) I think this is what we want. 
+    #   If we do this, then our GenericWork will also need to be mapped to 
+    #   pcdm:Object to perform its role as container for other pcdm:Objects.
+    #
+    #   See also https://docs.google.com/drawings/d/1-NkkRPpGpZGoTimEpYTaGM1uUPRaT0SamuWDITvtG_8/edit
+    #
+    # TODO: 
+    #   Update our GenericFile include Hydra::Works::GenericWork
+    #   (as opossed to Hydra::Works::GenericFileBehavior)
+    #   
+    #   Update our GenericWork (currently GenericWorkActor)
+    # 
+    #   Is that right?
+    # 
+    # require 'byebug'; byebug
+    gw = Hydra::Works::GenericWork.create  
+    gf = Hydra::Works::GenericFile.create
+    path = fixture_path + '/world.png'
+    Hydra::Works::UploadFileToGenericFile.call(gf, path)
+    # TODO: We still need this service: Hydra::Works::AddFileToWork.call(gw, gf)
+  end
+
   describe ".properties" do
     subject { described_class.properties.keys }
     it { is_expected.to include("has_model", "create_date", "modified_date") }
