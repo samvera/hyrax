@@ -84,7 +84,7 @@ module CurationConcern
       stat = Worthwhile::CurationConcern.attach_file(generic_file, user, file)
       curation_concern.generic_files += [generic_file]
     end
-    
+
     def valid_file?(file_path)
       return file_path.present? && File.exists?(file_path) && !File.zero?(file_path)
     end
