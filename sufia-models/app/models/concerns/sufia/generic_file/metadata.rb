@@ -91,7 +91,6 @@ module Sufia
         rescue
           puts "tables for vocabularies missing"
         end
-        type ::RDF::URI.new('http://pcdm.org/models#Object')
       end
 
     end

@@ -3,6 +3,7 @@ module Sufia
 
   module GenericFile
     extend ActiveSupport::Concern
+    include Hydra::Works::GenericFileBehavior
     include Sufia::ModelMethods
     include Sufia::Noid
     include Sufia::GenericFile::MimeTypes

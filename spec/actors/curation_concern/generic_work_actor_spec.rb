@@ -59,7 +59,7 @@ describe Sufia::CurationConcern::GenericWorkActor do
             expect(curation_concern.date_modified).to eq Date.today
             expect(curation_concern.depositor).to eq user.user_key
 
-            expect(curation_concern.generic_file_ids.count).to eq 1
+            expect(curation_concern.generic_files.count).to eq 1
             expect(curation_concern.generic_files.first.generic_work).to eq curation_concern
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
             generic_file = curation_concern.generic_files.first
@@ -95,7 +95,7 @@ describe Sufia::CurationConcern::GenericWorkActor do
             expect(curation_concern.date_modified).to eq Date.today
             expect(curation_concern.depositor).to eq user.user_key
 
-            expect(curation_concern.generic_file_ids.count).to eq 2
+            expect(curation_concern.generic_files.count).to eq 2
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
 
           end

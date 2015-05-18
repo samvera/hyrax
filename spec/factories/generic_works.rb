@@ -18,7 +18,7 @@ FactoryGirl.define do
     end
 
     factory :work_with_files do
-      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.create(:generic_file) }}
+      after(:build) { |work, _| work.generic_files = [FactoryGirl.create(:generic_file), FactoryGirl.create(:generic_file)] }
     end
   end
 end

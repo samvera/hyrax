@@ -2,7 +2,7 @@
 module Sufia::Works
   module GenericWork
     extend ActiveSupport::Concern
-
+    include Hydra::Works::GenericWorkBehavior
     include Sufia::Works::Work
     include Sufia::Works::CurationConcern::WithBasicMetadata
     include Sufia::Works::GenericWork::Metadata

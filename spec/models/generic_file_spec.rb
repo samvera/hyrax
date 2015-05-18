@@ -10,7 +10,11 @@ describe GenericFile, :type => :model do
 
   describe "rdf type" do
     subject { described_class.new.type }
-    it { is_expected.to eq [::RDF::URI.new('http://pcdm.org/models#Object')] }
+    it { is_expected.to include(RDFVocabularies::PCDMTerms.Object,WorksVocabularies::WorksTerms.GenericFile) }
+  end
+
+  it "is a Hydra::Works GenericFile" do
+    expect(Hydra::Works.generic_file?(subject)).to be_truthy
   end
 
   context "when it is initialized" do
@@ -288,61 +292,17 @@ describe GenericFile, :type => :model do
     end
   end
 
-  describe "to_solr" do
-    before do
-      allow(subject).to receive(:id).and_return('stubbed_id')
-      subject.part_of = ["Arabiana"]
-      subject.contributor = ["Mohammad"]
-      subject.creator = ["Allah"]
-      subject.title = ["The Work"]
-      subject.description = ["The work by Allah"]
-      subject.publisher = ["Vertigo Comics"]
-      subject.date_created = ["1200-01-01"]
-      subject.date_uploaded = Date.parse("2011-01-01")
-      subject.date_modified = Date.parse("2012-01-01")
-      subject.subject = ["Theology"]
-      subject.language = ["Arabic"]
-      subject.rights = ["Wide open, buddy."]
-      subject.resource_type = ["Book"]
-      subject.identifier = ["urn:isbn:1234567890"]
-      subject.based_near = ["Medina, Saudi Arabia"]
-      subject.related_url = ["http://example.org/TheWork/"]
-      subject.mime_type = "image/jpeg"
-      subject.format_label = ["JPEG Image"]
-      subject.full_text.content = 'abcxyz'
-    end
-
-    it "supports to_solr" do
-      local = subject.to_solr
-      expect(local[Solrizer.solr_name("part_of")]).to be_nil
-      expect(local[Solrizer.solr_name("date_uploaded")]).to be_nil
-      expect(local[Solrizer.solr_name("date_modified")]).to be_nil
-      expect(local[Solrizer.solr_name("date_uploaded", :stored_sortable, type: :date)]).to eq '2011-01-01T00:00:00Z'
-      expect(local[Solrizer.solr_name("date_modified", :stored_sortable, type: :date)]).to eq '2012-01-01T00:00:00Z'
-      expect(local[Solrizer.solr_name("rights")]).to eq ["Wide open, buddy."]
-      expect(local[Solrizer.solr_name("related_url")]).to eq ["http://example.org/TheWork/"]
-      expect(local[Solrizer.solr_name("contributor")]).to eq ["Mohammad"]
-      expect(local[Solrizer.solr_name("creator")]).to eq ["Allah"]
-      expect(local[Solrizer.solr_name("title")]).to eq ["The Work"]
-      expect(local[Solrizer.solr_name("title", :facetable)]).to eq ["The Work"]
-      expect(local[Solrizer.solr_name("description")]).to eq ["The work by Allah"]
-      expect(local[Solrizer.solr_name("publisher")]).to eq ["Vertigo Comics"]
-      expect(local[Solrizer.solr_name("subject")]).to eq ["Theology"]
-      expect(local[Solrizer.solr_name("language")]).to eq ["Arabic"]
-      expect(local[Solrizer.solr_name("date_created")]).to eq ["1200-01-01"]
-      expect(local[Solrizer.solr_name("resource_type")]).to eq ["Book"]
-      expect(local[Solrizer.solr_name("file_format")]).to eq "jpeg (JPEG Image)"
-      expect(local[Solrizer.solr_name("identifier")]).to eq ["urn:isbn:1234567890"]
-      expect(local[Solrizer.solr_name("based_near")]).to eq ["Medina, Saudi Arabia"]
-      expect(local[Solrizer.solr_name("mime_type")]).to eq ["image/jpeg"]
-      expect(local['all_text_timv']).to eq('abcxyz')
-    end
+  describe "#indexer" do
+    subject { described_class.indexer }
+    it { is_expected.to eq Sufia::GenericFileIndexingService }
   end
+
   it "should support multi-valued fields in solr" do
     subject.tag = ["tag1", "tag2"]
     expect { subject.save }.not_to raise_error
     subject.delete
   end
+
   it "should support setting and getting the relative_path value" do
     subject.relative_path = "documents/research/NSF/2010"
     expect(subject.relative_path).to eq "documents/research/NSF/2010"
