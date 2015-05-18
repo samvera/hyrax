@@ -1,2 +1,15 @@
-TODO: Placeholder for a generic work <br />
 <%= generic_work.title %>
+<li>
+  <h2>
+    <%= link_to generic_work.title_or_label, sufia.generic_work_path(generic_work) %>
+  </h2>
+  <div class="row">
+    <div class="col-sm-3">
+      <%= render_thumbnail_tag generic_work %>
+    </div>
+    <div class="col-sm-9">
+      <%= render 'shared/attributes', work: generic_work %>
+      </table>
+    </div>
+</li>
+
