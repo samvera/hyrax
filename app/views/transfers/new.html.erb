@@ -1,6 +1,6 @@
 <h1>Transfer ownership of "<%= @proxy_deposit_request.title %>"</h1>
 <span class="sr-only">Select a user to transfer <%= @proxy_deposit_request.title %> to, add optional comments and then press transfer.</span>
-<%= form_for @proxy_deposit_request, url: sufia.generic_file_transfers_path(@generic_file), html: {class: 'form-horizontal', id: 'new_transfer'} do |f| %>
+<%= form_for @proxy_deposit_request, url: sufia.generic_work_transfers_path(@generic_work), html: {class: 'form-horizontal', id: 'new_transfer'} do |f| %>
   <div class="well">
     <%= error_messages_for(f.object) %>
     <div class="control-group">
@@ -18,6 +18,6 @@
   </div>
 
   <div class="form-actions">
-    <%= f.submit "Transfer", class: 'btn btn-primary', data: {confirm: "Are you sure you want to transfer ownership of this file to another user? Click Ok to transfer or Cancel to return to the transfer screen"} %>
+    <%= f.submit "Transfer", class: 'btn btn-primary', data: {confirm: "Are you sure you want to transfer ownership of this work to another user? Click Ok to transfer or Cancel to return to the transfer screen"} %>
   </div>
 <% end %>

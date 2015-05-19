@@ -20,7 +20,6 @@ Sufia::Engine.routes.draw do
   resources :generic_files, path: :files, except: :index do
     member do
       resource :featured_work, only: [:create, :destroy]
-      resources :transfers, as: :generic_file_transfers, only: [:new, :create]
       get 'citation'
       get 'stats'
       post 'audit'
@@ -29,6 +28,9 @@ Sufia::Engine.routes.draw do
 
   # Generic work routes
   resources :generic_works, path: :works, controller: 'curation_concern/generic_works', except: :index do
+    member do
+      resources :transfers, as: :generic_work_transfers, only: [:new, :create]
+    end
   end
 
   # GenericWorks

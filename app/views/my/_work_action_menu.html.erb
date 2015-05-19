@@ -28,13 +28,11 @@
         <span> TODO: Highlight Work on Profile </span>
       <% end %>
     </li>
-
     <li role="menuitem" tabindex="-1">
-      <%= link_to('#') do %>
-        <i class="glyphicon glyphicon-transfer" aria-hidden="true"></i>
-        <span> TODO: Transfer Ownership of Work </span>
+      <%= link_to( sufia.new_generic_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: 'Transfer Ownership of Work') do %>
+        <i aria-hidden="true" class='glyphicon glyphicon-transfer'></i>
+        <span> Transfer Ownership of Work </span>
       <% end %>
     </li>
-
   </ul>
 </div>
