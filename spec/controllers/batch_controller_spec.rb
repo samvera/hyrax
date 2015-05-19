@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe BatchController do
   let(:user) { FactoryGirl.find_or_create(:jill) }
+  let(:other_user){ FactoryGirl.find_or_create(:curator) }
   before do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
@@ -22,16 +23,30 @@ describe BatchController do
       end
     end
 
-    describe "when submiting files on behalf of another user" do
-      let(:somebody_else_file) do 
-        f = GenericFile.create(title: ['Original Title']) { |gf| gf.apply_depositor_metadata('current_user') }
-        f.on_behalf_of = 'somebody@else.org'
-        f.save!
-        f
+    describe "when submiting works on behalf of another user" do
+      let(:somebody_else_work) do 
+        GenericWork.create.tap do |w|
+          w.title= ['Original Title']
+          w.apply_depositor_metadata(user) 
+          w.on_behalf_of = other_user.user_key
+          w.save!
+        end
       end      
-      let(:batch) { Batch.create { |b| b.generic_files.push(somebody_else_file) } }
+      let(:somebody_else_file) do
+        GenericFile.new.tap do |f|
+          f.title= ['Original Title']
+          f.generic_work= somebody_else_work 
+          f.apply_depositor_metadata(user) 
+          f.save!
+        end
+      end
+      let(:batch) do
+        b = Batch.create { |b| b.generic_files.push(somebody_else_file) } 
+        b
+      end
+     
       it "should go to my shares page" do
-        post :update, id: batch, "generic_file"=>{"permissions_attributes"=>[{"type" => "group", "name" => "public", "access" => "read"}]}
+        post :update, id: batch.id, "generic_file"=>{"permissions_attributes"=>[{"type" => "group", "name" => "public", "access" => "read"}]}
         expect(response).to redirect_to routes.url_helpers.dashboard_shares_path
       end
     end

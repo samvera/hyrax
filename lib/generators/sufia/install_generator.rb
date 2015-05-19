@@ -105,6 +105,10 @@ module Sufia
       generate "sufia:upgrade600"
     end
 
+    def install_sufia_700
+      generate "sufia:upgrade700"
+    end
+
     def install_blacklight_gallery
       generate "blacklight_gallery:install"
     end

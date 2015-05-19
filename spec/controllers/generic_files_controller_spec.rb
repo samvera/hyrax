@@ -21,14 +21,6 @@ describe GenericFilesController do
         allow(GenericFile).to receive(:new).and_return(mock)
       end
 
-      it "should record on_behalf_of" do
-        file = fixture_file_upload('/world.png','image/png')
-        xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
-        expect(response).to be_success
-        saved_file = GenericFile.find('test123')
-        expect(saved_file.on_behalf_of).to eq 'carolyn'
-      end
-
       context "when the file submitted isn't a file" do
         let(:file) { 'hello' }
 

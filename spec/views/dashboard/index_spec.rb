@@ -151,15 +151,15 @@ describe "dashboard/index.html.erb", :type => :view do
       let(:title2) { 'bazquux' }
 
       before do
-        GenericFile.new(title: [title1]).tap do |f|
-          f.apply_depositor_metadata(another_user.user_key)
-          f.save!
-          f.request_transfer_to(user)
+        GenericWork.new(title: [title1]).tap do |w|
+          w.apply_depositor_metadata(another_user.user_key)
+          w.save!
+          w.request_transfer_to(user)
         end
-        GenericFile.new(title: [title2]).tap do |f|
-          f.apply_depositor_metadata(user.user_key)
-          f.save!
-          f.request_transfer_to(another_user)
+        GenericWork.new(title: [title2]).tap do |w|
+          w.apply_depositor_metadata(user.user_key)
+          w.save!
+          w.request_transfer_to(another_user)
         end
         allow(controller).to receive(:current_user).and_return(user)
         assign(:incoming, ProxyDepositRequest.where(receiving_user_id: user.id))
@@ -168,8 +168,8 @@ describe "dashboard/index.html.erb", :type => :view do
 
       it 'renders received and sent transfer requests' do
         render
-        expect(rendered).not_to include "You haven't received any file transfers requests"
-        expect(rendered).not_to include "You haven't transferred any files"
+        expect(rendered).not_to include "You haven't received any work transfers requests"
+        expect(rendered).not_to include "You haven't transferred any works"
         expect(rendered).to include title1
         expect(rendered).to include title2
       end

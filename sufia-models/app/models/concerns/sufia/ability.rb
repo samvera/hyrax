@@ -54,7 +54,7 @@ module Sufia
     private
 
     def depositor_for_document(document_id)
-      ::GenericFile.load_instance_from_solr(document_id).depositor
+      ::GenericWork.load_instance_from_solr(document_id).depositor
     end
 
   end

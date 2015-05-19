@@ -19,7 +19,7 @@ module Sufia
     end
 
     def new
-      @generic_file = ::GenericFile.load_instance_from_solr(@id)
+      @generic_work = ::GenericWork.load_instance_from_solr(@id)
     end
 
     def create
@@ -32,7 +32,7 @@ module Sufia
     end
 
     def index
-      @incoming = ProxyDepositRequest.where(receiving_user_id: current_user.id).reject &:deleted_file?
+      @incoming = ProxyDepositRequest.where(receiving_user_id: current_user.id).reject &:deleted_work?
       @outgoing = ProxyDepositRequest.where(sending_user_id: current_user.id)
     end
 
@@ -59,9 +59,9 @@ module Sufia
     def get_id_and_authorize_depositor
       @id = params[:id]
       authorize! :transfer, @id
-      @proxy_deposit_request.generic_file_id = @id
+      @proxy_deposit_request.generic_work_id = @id
     rescue CanCan::AccessDenied
-      redirect_to root_url, alert: 'You are not authorized to transfer this file'
+      redirect_to root_url, alert: 'You are not authorized to transfer this work.'
     end
 
     def load_proxy_deposit_request

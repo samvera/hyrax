@@ -9,10 +9,10 @@ class EventJob
     :event
   end
 
-  attr_accessor :generic_file_id, :depositor_id
+  attr_accessor :id, :depositor_id
 
-  def initialize(generic_file_id, depositor_id)
-    self.generic_file_id = generic_file_id
+  def initialize(id, depositor_id)
+    self.id = id
     self.depositor_id = depositor_id
   end
 

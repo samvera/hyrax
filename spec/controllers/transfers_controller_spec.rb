@@ -10,18 +10,18 @@ describe TransfersController, :type => :controller do
     end
 
     describe "#index" do
-      let!(:incoming_file) do
-        GenericFile.new.tap do |f|
-          f.apply_depositor_metadata(another_user.user_key)
-          f.save!
-          f.request_transfer_to(user)
+      let!(:incoming_work) do
+        GenericWork.new.tap do |w|
+          w.apply_depositor_metadata(another_user.user_key)
+          w.save!
+          w.request_transfer_to(user)
         end
       end
-      let!(:outgoing_file) do
-        GenericFile.new.tap do |f|
-          f.apply_depositor_metadata(user.user_key)
-          f.save!
-          f.request_transfer_to(another_user)
+      let!(:outgoing_work) do
+        GenericWork.new.tap do |w|
+          w.apply_depositor_metadata(user.user_key)
+          w.save!
+          w.request_transfer_to(another_user)
         end
       end
 
@@ -29,16 +29,16 @@ describe TransfersController, :type => :controller do
         get :index
         expect(response).to be_success
         expect(assigns[:incoming].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:incoming].first.generic_file_id).to eq(incoming_file.id)
+        expect(assigns[:incoming].first.generic_work_id).to eq(incoming_work.id)
         expect(assigns[:outgoing].first).to be_kind_of ProxyDepositRequest
-        expect(assigns[:outgoing].first.generic_file_id).to eq(outgoing_file.id)
+        expect(assigns[:outgoing].first.generic_work_id).to eq(outgoing_work.id)
       end
 
-      describe "When the incoming request is for a deleted file" do
+      describe "When the incoming request is for a deleted work" do
         before do
-          incoming_file.destroy
+          incoming_work.destroy
         end
-        it "should not show that file" do
+        it "should not show that work" do
           get :index
           expect(response).to be_success
           expect(assigns[:incoming]).to be_empty
@@ -47,49 +47,49 @@ describe TransfersController, :type => :controller do
     end
 
     describe "#new" do
-      let(:file) do
-        GenericFile.new.tap do |f|
-          f.apply_depositor_metadata(user.user_key)
-          f.save!
+      let(:work) do
+        GenericWork.new.tap do |w|
+          w.apply_depositor_metadata(user.user_key)
+          w.save!
         end
       end
       context 'when user is the depositor' do
         it "should be successful" do
           sign_in user
-          get :new, id: file
+          get :new, id: work.id
           expect(response).to be_success
-          expect(assigns[:generic_file]).to eq(file)
+          expect(assigns[:generic_work]).to eq(work)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
-          expect(assigns[:proxy_deposit_request].generic_file_id).to eq(file.id)
+          expect(assigns[:proxy_deposit_request].generic_work_id).to eq(work.id)
         end
       end
     end
 
     describe "#create" do
-      let(:file) do
-        GenericFile.new.tap do |f|
-          f.apply_depositor_metadata(user.user_key)
-          f.save!
+      let(:work) do
+        GenericWork.new.tap do |w|
+          w.apply_depositor_metadata(user.user_key)
+          w.save!
         end
       end
       it "should be successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect {
-          post :create, id: file, proxy_deposit_request: {transfer_to: another_user.user_key}
+          post :create, id: work.id, proxy_deposit_request: {transfer_to: another_user.user_key}
         }.to change(ProxyDepositRequest, :count).by(1)
         expect(response).to redirect_to @routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
-        expect(proxy_request.generic_file_id).to eq(file.id)
+        expect(proxy_request.generic_work_id).to eq(work.id)
         expect(proxy_request.sending_user).to eq(user)
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
         expect(notification.subject).to eq("Ownership Change Request")
-        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a file to you. Review all <a href=\"#{@routes.url_helpers.transfers_path}\">transfer requests</a>")
+        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a work to you. Review all <a href=\"#{@routes.url_helpers.transfers_path}\">transfer requests</a>")
       end
       it "should give an error if the user is not found" do
         expect {
-          post :create, id: file, proxy_deposit_request: {transfer_to: 'foo' }
+          post :create, id: work.id, proxy_deposit_request: {transfer_to: 'foo' }
         }.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
         expect(response).to redirect_to(root_path)
@@ -98,11 +98,11 @@ describe TransfersController, :type => :controller do
 
     describe "#accept" do
       context "when I am the receiver" do
-        let!(:incoming_file) do
-          GenericFile.new.tap do |f|
-            f.apply_depositor_metadata(another_user.user_key)
-            f.save!
-            f.request_transfer_to(user)
+        let!(:incoming_work) do
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(another_user.user_key)
+            w.save!
+            w.request_transfer_to(user)
           end
         end
         it "should be successful when retaining access rights" do
@@ -110,14 +110,14 @@ describe TransfersController, :type => :controller do
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_file.reload.edit_users).to eq([another_user.user_key, user.user_key])
+          expect(incoming_work.reload.edit_users).to eq([another_user.user_key, user.user_key])
         end
         it "should be successful when resetting access rights" do
           put :accept, id: user.proxy_deposit_requests.first, reset: true
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_file.reload.edit_users).to eq([user.user_key])
+          expect(incoming_work.reload.edit_users).to eq([user.user_key])
         end
         it "should handle sticky requests " do
           put :accept, id: user.proxy_deposit_requests.first, sticky: true
@@ -129,11 +129,11 @@ describe TransfersController, :type => :controller do
       end
 
       context "accepting one that isn't mine" do
-        let!(:incoming_file) do
-          GenericFile.new.tap do |f|
-            f.apply_depositor_metadata(user.user_key)
-            f.save!
-            f.request_transfer_to(another_user)
+        let!(:incoming_work) do
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(user.user_key)
+            w.save!
+            w.request_transfer_to(another_user)
           end
         end
         it "should not allow me" do
@@ -146,11 +146,11 @@ describe TransfersController, :type => :controller do
 
     describe "#reject" do
       context "when I am the receiver" do
-        let!(:incoming_file) do
-          GenericFile.new.tap do |f|
-            f.apply_depositor_metadata(another_user.user_key)
-            f.save!
-            f.request_transfer_to(user)
+        let!(:incoming_work) do
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(another_user.user_key)
+            w.save!
+            w.request_transfer_to(user)
           end
         end
         it "should be successful" do
@@ -162,11 +162,11 @@ describe TransfersController, :type => :controller do
       end
 
       context "accepting one that isn't mine" do
-        let!(:incoming_file) do
-          GenericFile.new.tap do |f|
-            f.apply_depositor_metadata(user.user_key)
-            f.save!
-            f.request_transfer_to(another_user)
+        let!(:incoming_work) do
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(user.user_key)
+            w.save!
+            w.request_transfer_to(another_user)
           end
         end
         it "should not allow me" do
@@ -179,11 +179,11 @@ describe TransfersController, :type => :controller do
 
     describe "#destroy" do
       context "when I am the sender" do
-        let!(:incoming_file) do
-          GenericFile.new.tap do |f|
-            f.apply_depositor_metadata(user.user_key)
-            f.save!
-            f.request_transfer_to(another_user)
+        let!(:incoming_work) do
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(user.user_key)
+            w.save!
+            w.request_transfer_to(another_user)
           end
         end
         it "should be successful" do
@@ -194,11 +194,11 @@ describe TransfersController, :type => :controller do
       end
 
       context "accepting one that isn't mine" do
-        let!(:incoming_file) do
-          GenericFile.new.tap do |f|
-            f.apply_depositor_metadata(another_user.user_key)
-            f.save!
-            f.request_transfer_to(user)
+        let!(:incoming_work) do
+          GenericWork.new.tap do |w|
+            w.apply_depositor_metadata(another_user.user_key)
+            w.save!
+            w.request_transfer_to(user)
           end
         end
         it "should not allow me" do

@@ -4,16 +4,16 @@ describe ProxyDepositRequest, type: :model do
   let(:sender) { FactoryGirl.find_or_create(:jill) }
   let(:receiver) { FactoryGirl.find_or_create(:archivist) }
   let(:receiver2) { FactoryGirl.find_or_create(:curator) }
-  let(:file) do
-    GenericFile.new.tap do |f|
-      f.title = ["Test file"]
-      f.apply_depositor_metadata(sender.user_key)
-      f.save!
+  let(:work) do
+    GenericWork.new.tap do |w|
+      w.title = ["Test work"]
+      w.apply_depositor_metadata(sender.user_key)
+      w.save!
     end
   end
 
   subject do
-    ProxyDepositRequest.new(generic_file_id: file.id, sending_user: sender,
+    ProxyDepositRequest.new(generic_work_id: work.id, sending_user: sender,
       receiving_user: receiver, sender_comment: "please take this")
   end
 
@@ -23,7 +23,7 @@ describe ProxyDepositRequest, type: :model do
   its(:sender_comment) { is_expected.to eq 'please take this' }
 
   it "has a title for the file" do
-    expect(subject.title).to eq('Test file')
+    expect(subject.title).to eq('Test work')
   end
 
   context "After approval" do
@@ -33,15 +33,15 @@ describe ProxyDepositRequest, type: :model do
 
     its(:status) { is_expected.to eq 'accepted' }
     its(:fulfillment_date) { is_expected.not_to be_nil }
-    its(:deleted_file?) { is_expected.to be false }
+    its(:deleted_work?) { is_expected.to be false }
 
-    describe "and the file is deleted" do
+    describe "and the work is deleted" do
       before do
-        file.destroy
+        work.destroy
       end
 
-      its(:title) { is_expected.to eq 'file not found' }
-      its(:deleted_file?) { is_expected.to be true }
+      its(:title) { is_expected.to eq 'work not found' }
+      its(:deleted_work?) { is_expected.to be true }
     end
   end
 
@@ -78,7 +78,7 @@ describe ProxyDepositRequest, type: :model do
         subject.transfer_to = receiver.user_key
         subject.save!
         proxy_request = receiver.proxy_deposit_requests.first
-        expect(proxy_request.generic_file_id).to eq(file.id)
+        expect(proxy_request.generic_work_id).to eq(work.id)
         expect(proxy_request.sending_user).to eq(sender)
       end
     end
@@ -87,17 +87,17 @@ describe ProxyDepositRequest, type: :model do
       it 'raises an error' do
         subject.transfer_to = sender.user_key
         expect(subject).not_to be_valid
-        expect(subject.errors[:sending_user]).to eq(['must specify another user to receive the file'])
+        expect(subject.errors[:sending_user]).to eq(['must specify another user to receive the work'])
       end
     end
 
-    context 'when the file is already being transferred' do
-      let(:subject2) {ProxyDepositRequest.new(generic_file_id: file.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this')}
+    context 'when the work is already being transferred' do
+      let(:subject2) {ProxyDepositRequest.new(generic_work_id: work.id, sending_user: sender, receiving_user: receiver2, sender_comment: 'please take this')}
 
       it 'raises an error' do
         subject.save!
         expect(subject2).not_to be_valid
-        expect(subject2.errors[:open_transfer]).to eq(['must close open transfer on the file before creating a new one'])
+        expect(subject2.errors[:open_transfer]).to eq(['must close open transfer on the work before creating a new one'])
       end
 
       context 'when the first transfer is closed' do
