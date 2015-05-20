@@ -8,6 +8,7 @@ module Sufia
 
     self.copy_blacklight_config_from(CatalogController)
 
+    # @param [SolrDocument] item represents a GenericWork
     def self.run(item)
       new(item).list_collections
     end

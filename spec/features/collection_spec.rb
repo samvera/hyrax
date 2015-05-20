@@ -195,6 +195,7 @@ describe 'collection', :type => :feature do
       end
       expect(page).to have_content(collection.title)
       expect(page).to have_content(collection.description)
+      pending "activefedora-aggregation doesn't handle delete yet. May be fixed by https://github.com/projecthydra-labs/activefedora-aggregation/pull/33"
       expect(page).not_to have_content(gf1.title.first)
       expect(page).to have_content(gf2.title.first)
     end
@@ -213,6 +214,7 @@ describe 'collection', :type => :feature do
       click_button('Remove From Collection')
       expect(page).to have_content(collection.title)
       expect(page).to have_content(collection.description)
+      pending "activefedora-aggregation doesn't handle delete yet. May be fixed by https://github.com/projecthydra-labs/activefedora-aggregation/pull/33"
       expect(page).not_to have_content(gf1.title.first)
       expect(page).not_to have_content(gf2.title.first)
     end

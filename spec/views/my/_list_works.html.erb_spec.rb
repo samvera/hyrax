@@ -4,15 +4,17 @@ describe 'my/_index_partials/_list_works.html.erb' do
 
   let(:work_title) { 'Work Title' }
   let(:coll_title) { 'Collection Title' }
-  let(:collection) { FactoryGirl.create(:collection, title: coll_title) }
-  let!(:work) { FactoryGirl.create(:work, title: [work_title], collections: [collection]) }
+  let(:collection) { FactoryGirl.build(:collection, id: '3197z497t', title: coll_title) }
+  let!(:work) { FactoryGirl.build(:work, id: '3197z511f', title: [work_title]) }
   let(:doc) { SolrDocument.new(work.to_solr) }
 
   let(:config) { My::FilesController.new.blacklight_config }
+  let(:members) { [SolrDocument.new(collection.to_solr)] }
 
   before do
+    expect(Sufia::CollectionMemberService).to receive(:run).with(doc).and_return(members)
     allow(view).to receive(:blacklight_config) { config }
-    render partial: 'my/_index_partials/list_works', locals: { document: doc }
+    render 'my/_index_partials/list_works', document: doc
   end
 
   it 'the line item displays the work and its actions' do
@@ -22,5 +24,4 @@ describe 'my/_index_partials/_list_works.html.erb' do
     expect(rendered).to have_link 'Delete Work', href: sufia.generic_work_path(work)
     expect(rendered).to have_link coll_title, href: collections.collection_path(collection)
   end
-
 end

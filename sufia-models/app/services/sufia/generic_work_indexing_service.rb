@@ -1,5 +1,5 @@
 module Sufia
-  class GenericWorkIndexingService < Hydra::PCDM::Indexer
+  class GenericWorkIndexingService < Hydra::PCDM::ObjectIndexer
 
     def generate_solr_document
       # leaving this in place since I know we will want to add generic files into the work's solr index

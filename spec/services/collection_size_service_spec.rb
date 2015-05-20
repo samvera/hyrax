@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Sufia::CollectionSizeService do
 
 
-  let(:coll1_attrs) {{ id: 'col1', title_tesim: ['A Collection 1'], hasCollectionMember_ssim: works }}
+  let(:coll1_attrs) {{ id: 'col1', title_tesim: ['A Collection 1'], members_ssim: works }}
 
   let(:coll1) { SolrDocument.new(coll1_attrs) }
 
@@ -74,5 +74,4 @@ describe Sufia::CollectionSizeService do
       end
     end
   end
-
 end
