@@ -16,8 +16,8 @@ describe GenericWorkHelper do
 
       let(:coll_ids) { ['111', '222'] }
       let(:coll_titles) { ['Collection 111', 'Collection 222'] }
-      let(:coll1_attrs) {{ id: coll_ids[0], title_tesim: [coll_titles[0]], hasCollectionMember_ssim: [work_doc.id] }}
-      let(:coll2_attrs) {{ id: coll_ids[1], title_tesim: [coll_titles[1]], hasCollectionMember_ssim: [work_doc.id, 'abc123'] }}
+      let(:coll1_attrs) {{ id: coll_ids[0], title_tesim: [coll_titles[0]], members_ssim: [work_doc.id] }}
+      let(:coll2_attrs) {{ id: coll_ids[1], title_tesim: [coll_titles[1]], members_ssim: [work_doc.id, 'abc123'] }}
       before do
         ActiveFedora::SolrService.add(coll1_attrs)
         ActiveFedora::SolrService.add(coll2_attrs)

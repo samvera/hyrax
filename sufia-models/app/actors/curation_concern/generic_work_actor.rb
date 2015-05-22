@@ -10,7 +10,7 @@ module CurationConcern
     end
 
     def update
-      add_to_collections(attributes.delete(:collection_ids))  &&
+      add_to_collections(attributes.delete(:collection_ids)) &&
         super && attach_files && create_linked_resources && copy_permissions
     end
 
@@ -34,7 +34,7 @@ module CurationConcern
       end
     end
 
-    # The default behavior of active_fedora's has_and_belongs_to_many association,
+    # The default behavior of active_fedora's aggregates association,
     # when assigning the id accessor (e.g. collection_ids = ['foo:1']) is to add
     # to new collections, but not remove from old collections.
     # This method ensures it's removed from the old collections.
@@ -46,7 +46,11 @@ module CurationConcern
       end
 
       #add to new
-      curation_concern.collection_ids = new_collection_ids
+      new_collection_ids.each do |coll_id|
+        collection = Collection.find(coll_id)
+        collection.members << curation_concern
+        collection.save
+      end
       true
     end
 
