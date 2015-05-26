@@ -1,6 +1,6 @@
 module CurationConcern
   class GenericWorksController < ApplicationController
-    include Worthwhile::CurationConcernController
+    include CurationConcerns::CurationConcernController
     set_curation_concern_type GenericWork
   end
 end

@@ -1,4 +1,4 @@
 class SessionsController < Devise::SessionsController
-  include Worthwhile::ThemedLayoutController
+  include CurationConcerns::ThemedLayoutController
   with_themed_layout '1_column'
 end

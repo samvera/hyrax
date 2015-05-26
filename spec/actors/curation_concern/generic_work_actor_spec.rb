@@ -4,10 +4,10 @@ describe CurationConcern::GenericWorkActor do
   include ActionDispatch::TestProcess
 
   let(:user) { FactoryGirl.create(:user) }
-  let(:file) { worthwhile_fixture_file_upload('files/image.png', 'image/png') }
+  let(:file) { curation_concerns_fixture_file_upload('files/image.png', 'image/png') }
 
   subject {
-    Worthwhile::CurationConcern.actor(curation_concern, user, attributes)
+    CurationConcerns::CurationConcern.actor(curation_concern, user, attributes)
   }
 
   describe '#create' do

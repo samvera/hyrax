@@ -26,7 +26,7 @@ if ENV['COVERAGE'] || ENV['CI']
   end
 end
 
-require 'worthwhile'
+require 'curation_concerns'
 
 Dir["./spec/support/**/*.rb"].sort.each {|f| require f}
 require File.expand_path('../matchers', __FILE__)

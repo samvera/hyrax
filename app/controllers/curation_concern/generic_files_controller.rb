@@ -1,6 +1,6 @@
 module CurationConcern
   class GenericFilesController < ApplicationController
-    include Worthwhile::FilesController
+    include CurationConcerns::FilesController
 
     def generic_file_params
       if params.has_key?(:generic_file)

@@ -6,7 +6,7 @@ describe DownloadsController do
     let(:another_user) { FactoryGirl.create(:user) }
     let(:image_file) { File.open(Rails.root.join('../fixtures/files/image.png')) }
     let(:generic_file) {
-      FactoryGirl.create(:file_with_work, user: user, content: worthwhile_fixture_file_upload('files/image.png', 'image/png', false))
+      FactoryGirl.create(:file_with_work, user: user, content: curation_concerns_fixture_file_upload('files/image.png', 'image/png', false))
     }
 
     it "raise not_found if the object does not exist" do

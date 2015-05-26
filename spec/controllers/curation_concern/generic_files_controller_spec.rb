@@ -10,8 +10,8 @@ describe CurationConcern::GenericFilesController do
 
     describe "#create" do
       before do
-        Worthwhile::GenericFile.destroy_all
-        allow(Worthwhile::GenericFile).to receive(:new).and_return(Worthwhile::GenericFile.new(id: '123'))
+        CurationConcerns::GenericFile.destroy_all
+        allow(CurationConcerns::GenericFile).to receive(:new).and_return(CurationConcerns::GenericFile.new(id: '123'))
       end
 
       context "on the happy path" do
@@ -34,7 +34,7 @@ describe CurationConcern::GenericFilesController do
                               visibility_after_lease: "restricted",
                               visibility: "restricted"}
             expect(response).to be_success
-          }.to change { Worthwhile::GenericFile.count }.by(1)
+          }.to change { CurationConcerns::GenericFile.count }.by(1)
           expect(flash[:error]).to be_nil
           saved_file = assigns[:generic_file].reload
 
@@ -89,7 +89,7 @@ describe CurationConcern::GenericFilesController do
 
       context "when solr is down" do
         it "should error out of create and save after on continuos rsolr error" do
-          allow_any_instance_of(Worthwhile::GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
+          allow_any_instance_of(CurationConcerns::GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
 
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
@@ -101,7 +101,7 @@ describe CurationConcern::GenericFilesController do
 
     describe "destroy" do
       let(:generic_file) do
-        Worthwhile::GenericFile.new.tap do |gf|
+        CurationConcerns::GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
           gf.batch = parent
           gf.save!
@@ -109,16 +109,16 @@ describe CurationConcern::GenericFilesController do
       end
 
       it "should delete the file" do
-        expect(Worthwhile::GenericFile.find(generic_file.id)).to be_kind_of Worthwhile::GenericFile
+        expect(CurationConcerns::GenericFile.find(generic_file.id)).to be_kind_of CurationConcerns::GenericFile
         delete :destroy, id: generic_file
-        expect { Worthwhile::GenericFile.find(generic_file.id) }.to raise_error Ldp::Gone
+        expect { CurationConcerns::GenericFile.find(generic_file.id) }.to raise_error Ldp::Gone
         expect(response).to redirect_to [:curation_concern, parent]
       end
     end
 
     describe "update" do
       let!(:generic_file) do
-        Worthwhile::GenericFile.new.tap do |gf|
+        CurationConcerns::GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
           gf.batch = parent
           gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
@@ -139,7 +139,7 @@ describe CurationConcern::GenericFilesController do
         end
 
         it "should go back to edit on an error" do
-          allow_any_instance_of(Worthwhile::GenericFile).to receive(:valid?).and_return(false)
+          allow_any_instance_of(CurationConcerns::GenericFile).to receive(:valid?).and_return(false)
           post :update, id: generic_file, generic_file:
             {title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}]}
           expect(response).to be_successful
@@ -226,7 +226,7 @@ describe CurationConcern::GenericFilesController do
 
   context "someone elses files" do
     let(:generic_file) do
-      Worthwhile::GenericFile.new.tap do |gf|
+      CurationConcerns::GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata('archivist1@example.com')
         gf.read_groups = ['public']
         gf.batch = parent

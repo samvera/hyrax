@@ -1,0 +1,19 @@
+Description:
+  This generator creates the necessary files for work that extends
+  CurationConcerns's GenericWork.
+
+Example:
+  rails generate curation_concerns:work ScholarlyPaper
+
+  This will create:
+    app/repository_models/scholarly_paper.rb
+    app/actors/curation_concern/scholarly_paper_actor.rb
+    app/controllers/curation_concern/scholarly_papers_controller.rb
+    app/views/curation_concern/scholarly_papers/.keep
+    spec/factories/scholarly_paper_factory.rb
+    spec/repository_models/scholarly_paper_spec.rb
+    spec/actors/curation_concern/scholarly_paper_actor_spec.rb
+    spec/controllers/curation_concern/scholarly_papers_controller_spec.rb
+
+  This will also:
+    register ScholarlyPaper as a valid curation concern

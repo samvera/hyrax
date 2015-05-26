@@ -1,3 +1,3 @@
 class CatalogController < ApplicationController
-  include Worthwhile::CatalogController
+  include CurationConcerns::CatalogController
 end

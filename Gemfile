@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in worthwhile.gemspec
+# Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 
 gem 'slop', '~> 3.6.0' # This just helps us generate a valid Gemfile.lock when Rails 4.2 is installed (which requires byebug which has a dependency on slop)
 
-gem 'worthwhile-models', path: './worthwhile-models'
+gem 'curation_concerns-models', path: './curation_concerns-models'
 
 group :test do
   gem 'simplecov', '~> 0.9', require: false

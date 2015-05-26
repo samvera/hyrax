@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Worthwhile::ThumbnailHelper do
+describe CurationConcerns::ThumbnailHelper do
   let(:work) { GenericWork.new }
   let(:document) { SolrDocument.new work.to_solr }
   subject { helper.thumbnail_tag document, {} }

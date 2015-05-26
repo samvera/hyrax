@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe WorthwhileHelper do
+describe CurationConcernsHelper do
   describe "render_constraints_query" do
     before do
       # Stub methods from Blacklight::SearchFields

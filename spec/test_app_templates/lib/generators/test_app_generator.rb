@@ -11,7 +11,7 @@ class TestAppGenerator < Rails::Generators::Base
   # end
 
   def run_generator
-    generate 'worthwhile:install'
+    generate 'curation_concerns:install'
   end
 
   def run_migrations

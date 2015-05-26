@@ -2,7 +2,7 @@
 <% include_collections_link ||= can?(:create, Collection) %>
 <% if include_works_link || include_collections_link %>
   <div class="btn-group add-content">
-    <%= link_to worthwhile.new_classify_concern_path, id: "add-content", class: "btn btn-primary dropdown-toggle", data: { toggle: "dropdown"} do %>
+    <%= link_to curation_concerns.new_classify_concern_path, id: "add-content", class: "btn btn-primary dropdown-toggle", data: { toggle: "dropdown"} do %>
       <span class="icon icon-white glyphicon-plus"></span><span class="visuallyhidden">Add</span>
     <% end %>
     <ul class="dropdown-menu quick-create">
@@ -10,7 +10,7 @@
         <li>
           <strong class="menu-heading item-with-options">Add a Work</strong>
           <ul class="item-options quick-classify">
-            <% Worthwhile::QuickClassificationQuery.each_for_context(current_user) do |concern| %>
+            <% CurationConcerns::QuickClassificationQuery.each_for_context(current_user) do |concern| %>
               <li><%= link_to(
                     "New #{concern.human_readable_type}",
                     main_app.new_polymorphic_path([:curation_concern, concern]),
@@ -19,7 +19,7 @@
                   ) %>
               </li>
             <% end %>
-            <li><%= link_to 'More Options', worthwhile.new_classify_concern_path, class: 'item-option link-to-full-list', role: 'menuitem' %></li>
+            <li><%= link_to 'More Options', curation_concerns.new_classify_concern_path, class: 'item-option link-to-full-list', role: 'menuitem' %></li>
           </ul>
         </li>
         <li class="divider"></li>

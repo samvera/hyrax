@@ -1,0 +1,100 @@
+@import 'curation_concerns/global-variables';
+
+/* Aligning content types by leveraging text-align:justify
+  http://www.barrelny.com/blog/text-align-justify-and-rwd/
+*/
+
+.classify-work {
+  list-style-type:none;
+  text-align: justify;
+  font-size: 0.1px;
+  margin:0 0 2em;
+}
+
+/* 2 Column */
+.classify-work > .work-type {
+  border:1px solid #EEE;
+  box-sizing:border-box;
+  display:inline-block;
+  font-size: $font-size-base;
+  padding:.5em;
+  position:relative;
+  text-align:center;
+  margin:1em 4%;
+  width:40%;
+}
+
+/* 3 Column */
+@media (min-width: 600px){
+  .classify-work > .work-type {
+    margin:1em 2%;
+    width:29%;
+  }
+}
+
+/* 4 Column */
+@media (min-width: 1000px){
+  .classify-work > .work-type {
+    margin:1em 2%;
+    width:21%;
+  }
+}
+
+/* 5 Column */
+@media (min-width: 1200px){
+  .classify-work > .work-type {
+    margin:1em 1%;
+    width:18%;
+  }
+}
+
+.classify-work > .placeholder {
+  border-color:transparent;
+}
+
+.classify-work > .upcoming {
+  color:#ACACAC;
+  color:rgba(51, 51, 51, 0.5);
+}
+
+.classify-work > .upcoming:before {
+  background-color:#FFF;
+  background-color:rgba(255, 255, 255, 0.8);
+  color:#F00;
+  content:"Coming Soon";
+  font-size:1.5em;
+  left:0;
+  position:absolute;
+  text-align:center;
+  text-shadow:0 0 2px #CCC, 0 0 1em #FFF;
+  top:40%;
+  width:100%;
+  z-index:1;
+
+  -webkit-transform: rotate(-30deg);
+  -moz-transform: rotate(-30deg);
+  -ms-transform: rotate(-30deg);
+  -o-transform: rotate(-30deg);
+  transform: rotate(-30deg);
+}
+
+#main .upcoming .title {
+  color:#8096AE;
+  color:rgba(0, 43, 91, 0.5);
+}
+
+.classify-work .title {
+  margin-top:0;
+}
+
+.classify-work .short-description {
+  font-size:1em;
+  height:4.29em; /* Leave space for three lines */
+  line-height:1.43;
+  text-align:left;
+  margin-bottom:0;
+}
+
+.classify-work .add-button {
+  margin:.5em 0;
+}

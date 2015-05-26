@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Worthwhile::LeaseService do
+describe CurationConcerns::LeaseService do
 
   before { GenericWork.destroy_all }
 

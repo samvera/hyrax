@@ -1,3 +1,3 @@
 class GenericWorkMetadata < ActiveFedora::NtriplesRDFDatastream
-  include Worthwhile::GenericWorkRdfProperties
+  include CurationConcerns::GenericWorkRdfProperties
 end

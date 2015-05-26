@@ -1,5 +1,5 @@
 class CurationConcern::PermissionsController < ApplicationController
-  include Worthwhile::CurationConcernController
+  include CurationConcerns::CurationConcernController
   with_themed_layout '1_column'
   self.curation_concern_type = ActiveFedora::Base
 

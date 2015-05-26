@@ -1,6 +1,6 @@
 class EmbargoesController < ApplicationController
 
-  include Worthwhile::ManagesEmbargoes
+  include CurationConcerns::ManagesEmbargoes
   include Hydra::Collections::AcceptsBatches
 
   skip_before_filter :normalize_identifier, only: :update

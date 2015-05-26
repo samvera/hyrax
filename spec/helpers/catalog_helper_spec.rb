@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Worthwhile::CatalogHelper do
+describe CurationConcerns::CatalogHelper do
   before do
     helper.params[:controller] = 'catalog'
     allow(helper).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)

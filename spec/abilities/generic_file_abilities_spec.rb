@@ -17,7 +17,7 @@ describe "User" do
         let(:creating_user) { user }
         let(:current_user) { user }
         it {
-          should be_able_to(:create, Worthwhile::GenericFile.new)
+          should be_able_to(:create, CurationConcerns::GenericFile.new)
           should be_able_to(:read, generic_file)
           should be_able_to(:update, generic_file)
           should_not be_able_to(:delete, generic_file)
@@ -29,7 +29,7 @@ describe "User" do
         let(:creating_user) { user }
         let(:current_user) { manager_user }
         it {
-          should be_able_to(:create, Worthwhile::GenericFile.new)
+          should be_able_to(:create, CurationConcerns::GenericFile.new)
           should be_able_to(:read, generic_file)
           should be_able_to(:update, generic_file)
           should be_able_to(:destroy, generic_file)
@@ -40,7 +40,7 @@ describe "User" do
         let(:creating_user) { FactoryGirl.create(:user) }
         let(:current_user) { user }
         it {
-          should be_able_to(:create, Worthwhile::GenericFile.new)
+          should be_able_to(:create, CurationConcerns::GenericFile.new)
           should_not be_able_to(:read, generic_file)
           should_not be_able_to(:update, generic_file)
           should_not be_able_to(:delete, generic_file)
@@ -51,7 +51,7 @@ describe "User" do
         let(:creating_user) { FactoryGirl.create(:user) }
         let(:current_user) { nil }
         it {
-          should_not be_able_to(:create, Worthwhile::GenericFile.new)
+          should_not be_able_to(:create, CurationConcerns::GenericFile.new)
           should_not be_able_to(:read, generic_file)
           should_not be_able_to(:update, generic_file)
           should_not be_able_to(:delete, generic_file)

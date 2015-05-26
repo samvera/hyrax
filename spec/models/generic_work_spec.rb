@@ -12,7 +12,7 @@ describe GenericWork do
 
     it "should have two files" do
       expect(subject.generic_files.size).to eq 2
-      expect(subject.generic_files.first).to be_kind_of Worthwhile::GenericFile
+      expect(subject.generic_files.first).to be_kind_of CurationConcerns::GenericFile
     end
   end
 

@@ -1,10 +1,10 @@
 root    = File.expand_path('../../', __FILE__)
-version = File.read("#{root}/WORTHWHILE_VERSION").strip
+version = File.read("#{root}/VERSION").strip
 tag     = "v#{version}"
 
 directory 'pkg'
 
-['worthwhile-models', 'worthwhile'].each do |framework|
+['curation_concerns-models', 'curation_concerns'].each do |framework|
   namespace framework do
     gem     = "pkg/#{framework}-#{version}.gem"
     gemspec = "#{framework}.gemspec"
@@ -15,7 +15,7 @@ directory 'pkg'
 
     task :update_version_rb do
       glob = root.dup
-      if framework == "worthwhile"
+      if framework == "curation_concerns"
         glob << "/lib/*"
       else
         glob << "/#{framework}/lib/**"
@@ -36,7 +36,7 @@ directory 'pkg'
     end
     task gem => %w(update_version_rb pkg) do
       cmd = ""
-      cmd << "cd #{framework} && " unless framework == "worthwhile"
+      cmd << "cd #{framework} && " unless framework == "curation_concerns"
       cmd << "gem build #{gemspec} && mv #{framework}-#{version}.gem #{root}/pkg/"
       sh cmd
     end
@@ -56,12 +56,12 @@ end
 
 
 namespace :all do
-  task build: ['worthwhile-models:build', 'worthwhile:build']
-  task install: ['worthwhile-models:install', 'worthwhile:install']
-  task push: ['worthwhile-models:push', 'worthwhile:push']
+  task build: ['curation_concerns-models:build', 'curation_concerns:build']
+  task install: ['curation_concerns-models:install', 'curation_concerns:install']
+  task push: ['curation_concerns-models:push', 'curation_concerns:push']
 
   task :ensure_clean_state do
-    unless `git status -s | grep -v WORTHWHILE_VERSION | grep -v History.md`.strip.empty?
+    unless `git status -s | grep -v VERSION | grep -v History.md`.strip.empty?
       abort "[ABORTING] `git status` reports a dirty tree. Make sure all changes are committed"
     end
 
@@ -87,7 +87,7 @@ namespace :all do
     sh "git push --tags"
   end
 
-  desc "Release both worthwhile and worthwhile-models and update the version to #{version} in all locations"
+  desc "Release both curation_concerns and curation_concerns-models and update the version to #{version} in all locations"
   task release: %w(ensure_clean_state build commit tag push)
 end
 

@@ -1,0 +1,13 @@
+===============================================================================
+
+After creating your work you may wish to:
+
+  1. Add custom views:
+
+      Your newly created work's controller extends from
+      CurationConcern::GenericWorksController; This means that it will use the
+      views found in CurationConcerns::Engine.root/app/views/curation_concern/base.
+
+  2. Modify the model and datastreams
+
+===============================================================================

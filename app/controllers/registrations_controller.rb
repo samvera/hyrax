@@ -1,5 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
-  include Worthwhile::ThemedLayoutController
+  include CurationConcerns::ThemedLayoutController
   with_themed_layout '1_column'
 
   protected

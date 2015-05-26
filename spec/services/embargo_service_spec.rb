@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Worthwhile::EmbargoService do
+describe CurationConcerns::EmbargoService do
   let(:future_date) { 2.days.from_now }
   let(:past_date) { 2.days.ago }
 

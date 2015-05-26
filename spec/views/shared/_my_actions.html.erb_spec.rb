@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'shared/_my_actions.html.erb' do
-  include Worthwhile::SearchPathsHelper
+  include CurationConcerns::SearchPathsHelper
   context "for admins" do
     it 'has links to edit and add to collections' do
       allow(view).to receive(:current_user).and_return(FactoryGirl.create(:user))
