@@ -25,12 +25,12 @@ module Hydra::Controller::ControllerBehavior
   # Override this method if you wish to customize the way access is denied
   def deny_access(exception)
     if exception.action == :edit
-      redirect_to({ action: 'show' }, alert: exception.message)
+      redirect_to(main_app.url_for(action: 'show'), alert: exception.message)
     elsif current_user and current_user.persisted?
-      redirect_to root_path, alert: exception.message
+      redirect_to main_app.root_path, alert: exception.message
     else
       session['user_return_to'.freeze] = request.url
-      redirect_to new_user_session_path, alert: exception.message
+      redirect_to main_app.new_user_session_path, alert: exception.message
     end
   end
 
