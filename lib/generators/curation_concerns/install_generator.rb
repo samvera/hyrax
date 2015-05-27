@@ -45,7 +45,7 @@ module CurationConcerns
         "  mount Hydra::Collections::Engine => '/'\n"\
         "  mount CurationConcerns::Engine, at: '/'\n"\
         "  curation_concerns_collections\n"\
-        "  curation_concerns_curation_concerns\n"\
+        "  curation_concerns_basic_routes\n"\
         "  curation_concerns_embargo_management\n"\
       end
     end

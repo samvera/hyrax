@@ -29,7 +29,7 @@ module CurationConcerns
             end
           else
             search_field = options[:search_field] || method_name
-            li_value = link_to_if(options[:catalog_search_link], h(value), catalog_index_path(search_field: search_field, q: h(value)))
+            li_value = link_to_if(options[:catalog_search_link], h(value), main_app.catalog_index_path(search_field: search_field, q: h(value)))
             markup << %(<li class="attribute #{method_name}"> #{li_value} </li>\n)
           end
         end

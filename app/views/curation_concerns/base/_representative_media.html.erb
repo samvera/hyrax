@@ -1,0 +1,8 @@
+<% if work.representative.present? && (gf = CurationConcerns::GenericFile.load_instance_from_solr(work.representative)) %>
+  <%= render partial: 'curation_concerns/generic_files/media_display', locals: {generic_file: gf, dom_class_name: 'representative_image'} %>
+<% elsif work.representative.present? %>
+  <%= image_tag download_path(work.representative, {:datastream_id => 'thumbnail'}), class: 'representative_image' %>
+<% else %>
+  <%= image_tag 'nope.png', class: "canonical-image" %>
+<% end %>
+

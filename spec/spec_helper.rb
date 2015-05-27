@@ -64,6 +64,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) { Warden.test_reset! }
   config.include Controllers::EngineHelpers, type: :controller
+  config.include Rails.application.routes.url_helpers, type: :routing
   config.include Capybara::DSL
   config.infer_spec_type_from_file_location!
   config.deprecation_stream

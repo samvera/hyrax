@@ -1,0 +1,21 @@
+<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_header do %>
+  <h1><%= curation_concern %> <span class="human_readable_type">(<%= curation_concern.human_readable_type %>)</span></h1>
+<% end %>
+
+<%= render 'representative_media', work: curation_concern %>
+<%= render 'attributes', curation_concern: curation_concern %>
+<%= render 'related_files', curation_concern: curation_concern %>
+
+<% collector = can?(:collect, curation_concern) %>
+<% editor    = can?(:edit,    curation_concern) %>
+
+<% if collector || editor %>
+  <div class="form-actions">
+    <% if editor %>
+      <%= link_to "Edit This #{curation_concern.human_readable_type}", edit_polymorphic_path([main_app, :curation_concerns, curation_concern]), class: 'btn btn-primary' %>
+      <%= link_to "Delete This #{curation_concern.human_readable_type}", [main_app, :curation_concerns, curation_concern], class: 'btn btn-primary', data: { confirm: "Delete this #{curation_concern.human_readable_type}?" }, method: :delete %>
+      <%= link_to "Attach a File", main_app.new_curation_concerns_generic_file_path(curation_concern), class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+<% end %>

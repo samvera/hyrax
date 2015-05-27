@@ -27,7 +27,7 @@ class LeasesController < ApplicationController
 
   protected
     def _prefixes
-      # This allows us to use the unauthorized template in curation_concern/base
-      @_prefixes ||= super + ['curation_concern/base']
+      # This allows us to use the unauthorized template in curation_concerns/base
+      @_prefixes ||= super + ['curation_concerns/base']
     end
 end

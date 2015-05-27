@@ -1,0 +1,16 @@
+<% if can?(:edit, generic_file) %>
+  <%= link_to( 'Edit', edit_polymorphic_path([main_app, :curation_concerns, generic_file]),
+    { class: 'btn btn-default', title: "Edit #{generic_file}" }) %>
+  <%= link_to( 'Rollback', main_app.versions_curation_concerns_generic_file_path(generic_file),
+    { class: 'btn btn-default', title: "Rollback to previous version" }) %>
+<% end %>
+<% if can?(:destroy, generic_file) %>
+  <%= link_to( 'Delete', polymorphic_path([main_app, :curation_concerns, generic_file]),
+    class: 'btn btn-default', method: :delete, title: "Delete #{generic_file}",
+    data: {confirm: "Deleting #{generic_file} from #{t('sufia.product_name')} is permanent. Click OK to delete this from #{t('sufia.product_name')}, or Cancel to cancel this operation"}
+  )%>
+<% end %>
+<% if can?(:read, generic_file) %>
+  <%= link_to 'Download', main_app.download_path(generic_file),
+    class: 'btn btn-default', title: "Download #{generic_file.to_s.inspect}", target: "_blank" %>
+<% end %>

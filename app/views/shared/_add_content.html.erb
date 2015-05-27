@@ -13,7 +13,7 @@
             <% CurationConcerns::QuickClassificationQuery.each_for_context(current_user) do |concern| %>
               <li><%= link_to(
                     "New #{concern.human_readable_type}",
-                    main_app.new_polymorphic_path([:curation_concern, concern]),
+                    main_app.new_polymorphic_path([:curation_concerns, concern]),
                     class: "item-option contextual-quick-classify #{dom_class(concern, 'new').gsub('_', '-')}",
                     role: 'menuitem'
                   ) %>

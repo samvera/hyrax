@@ -11,7 +11,7 @@ class EmbargoesController < ApplicationController
     remove_embargo(curation_concern)
     flash[:notice] = curation_concern.embargo_history.last
     if update_files
-      redirect_to confirm_curation_concern_permission_path(curation_concern)
+      redirect_to confirm_curation_concerns_permission_path(curation_concern)
     else
       redirect_to edit_embargo_path(curation_concern)
     end
@@ -31,8 +31,8 @@ class EmbargoesController < ApplicationController
 
   protected
     def _prefixes
-      # This allows us to use the unauthorized template in curation_concern/base
-      @_prefixes ||= super + ['curation_concern/base']
+      # This allows us to use the unauthorized template in curation_concerns/base
+      @_prefixes ||= super + ['curation_concerns/base']
     end
 
     def remove_embargo(work)

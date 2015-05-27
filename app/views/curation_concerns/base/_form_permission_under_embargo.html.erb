@@ -1,0 +1,16 @@
+<fieldset id="set-access-controls">
+  <legend>
+    Access Rights
+    <small>Who should be able to view or download this content?</small>
+  </legend>
+
+  <section class="help-block">
+    <p>
+      <strong>This work is under embargo.</strong>  You can change the settings of the embargo here, or you can visit the <%= link_to 'Embargo Management Page', main_app.edit_embargo_path(curation_concern) %> to deactivate it.
+    </p>
+  </section>
+
+    <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" />
+    <%= render "form_permission_embargo", curation_concern: curation_concern, f: f  %>
+
+</fieldset>

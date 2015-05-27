@@ -74,7 +74,7 @@ describe EmbargoesController do
 
         it "should deactivate embargo, update the visibility and redirect" do
           expect(a_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-          expect(response).to redirect_to confirm_curation_concern_permission_path(a_work)
+          expect(response).to redirect_to confirm_curation_concerns_permission_path(a_work)
         end
       end
     end

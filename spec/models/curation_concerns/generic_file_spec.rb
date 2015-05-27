@@ -65,7 +65,7 @@ describe CurationConcerns::GenericFile do
     subject { CurationConcerns::GenericFile.create(batch: parent) }
 
     describe '#related_files' do
-      let(:sibling) { Worthwhile::GenericFile.create(batch: parent) }
+      let(:sibling) { CurationConcerns::GenericFile.create(batch: parent) }
       before do
         sibling.save!
       end

@@ -1,0 +1,21 @@
+<div class="panel panel-default permissions-confirm">
+  <div class="panel-heading">
+    <h4>Apply changes to contents?<h4>
+  </div>
+  <div class="panel-body">
+    <% if curation_concern.under_embargo? %>
+      <p>You've applied an embargo to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing its visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.embargo_release_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
+      <p>Would you like to apply the same embargo to all of the files within the  <%= curation_concern.human_readable_type %> as well?</p>
+    <% elsif curation_concern.active_lease? %>
+      <p>You've applied a lease to this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, changing its visibility to <b><%= visibility_badge(curation_concern.visibility) %></b> until <%= curation_concern.lease_expiration_date.to_date.to_formatted_s(:long_ordinal) %>.</p>
+      <p>Would you like to apply the same lease to all of the files within the  <%= curation_concern.human_readable_type %> as well?</p>
+    <% else %>
+      <p>You've changed the permissions on this <%= curation_concern.human_readable_type %>, <i><%= curation_concern %></i>, making it visible to <b><%= visibility_badge(curation_concern.visibility) %></b>.</p>
+      <p>Would you like change all of the files within the <%= curation_concern.human_readable_type %> to <b><%= visibility_badge(curation_concern.visibility) %></b> as well?</p>
+    <% end %>
+  </div>
+  <div class="form-actions panel-footer">
+    <%= button_to "Yes please.", main_app.copy_curation_concerns_permission_path(curation_concern), class: 'btn btn-primary' %>
+    <%= link_to "No. I'll update it manually.", polymorphic_path([main_app, :curation_concerns, curation_concern]), class: 'btn' %>
+  </div>
+</div>

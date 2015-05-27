@@ -1,0 +1,20 @@
+<!-- direct copy of sufia's app/views/generic_files/_media_display.html.erb  -->
+<% if generic_file.image? %>
+  <%= link_to image_tag(download_path(generic_file, datastream_id: 'thumbnail'),{class:"img-responsive", alt:"Download the full-sized image of #{generic_file.title.first}"})+"Download the full-sized image", download_path(generic_file), { target:"_new", title:"Download the full-sized image"}%>
+<% elsif generic_file.video? %>
+  <video controls="controls" class="video-js vjs-default-skin" data-setup="{}" preload="auto">
+    <source src="<%= download_path(generic_file, datastream_id: 'webm') %>" type="video/webm" />
+    <source src="<%= download_path(generic_file, datastream_id: 'mp4') %>" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+<% elsif generic_file.audio? %>
+    <audio controls="controls" class="audiojs" preload="auto">
+    <source src="<%= download_path(generic_file, datastream_id: 'ogg') %>" type="audio/ogg" />
+    <source src="<%= download_path(generic_file, datastream_id: 'mp3') %>" type="audio/mpeg" />
+    Your browser does not support the audio tag.
+  </audio>
+<% elsif generic_file.pdf?%>
+  <%= link_to image_tag(download_path(generic_file, datastream_id: 'thumbnail'),{class:"img-responsive", alt:"Download the full-sized PDF of #{generic_file.title.first}"})+"Download the full-sized PDF", download_path(generic_file), { target:"_new", title:"Download the full-sized PDF"}%>
+<% else %>
+  <%= link_to image_tag("default.png", {alt:"No preview available", class:"img-responsive"}),  main_app.download_path(generic_file), { target:"_new", title:"Download the document"} %>
+<% end %>

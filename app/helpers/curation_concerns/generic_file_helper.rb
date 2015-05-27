@@ -10,9 +10,9 @@ module CurationConcerns::GenericFileHelper
 
   def parent_path(parent)
     if parent.is_a?(Collection)
-      collection_path(parent)
+      main_app.collection_path(parent)
     else
-      polymorphic_path([:curation_concern, parent])
+      polymorphic_path([main_app, :curation_concerns, parent])
     end
   end
     

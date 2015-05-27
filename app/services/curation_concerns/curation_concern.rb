@@ -3,7 +3,7 @@ module CurationConcerns
 
     def self.actor(curation_concern, *args)
       actor_identifier = curation_concern.class.to_s.split('::').last
-      klass = "CurationConcern::#{actor_identifier}Actor".constantize
+      klass = "CurationConcerns::#{actor_identifier}Actor".constantize
       klass.new(curation_concern, *args)
     end
 

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe CurationConcern::CollectionModel do
+describe CurationConcerns::CollectionModel do
   before do
     class EssentialCollection < ActiveFedora::Base
-      include CurationConcern::CollectionModel
+      include CurationConcerns::CollectionModel
       def members; @members ||= []; end
       def save; true; end
     end

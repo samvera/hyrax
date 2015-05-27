@@ -12,7 +12,7 @@
           <h3 class="title"><%= klass.human_readable_type %></h3>
           <p class="short-description"><%= klass.human_readable_short_description %></p>
           <%= link_to 'Add New',
-            main_app.new_polymorphic_path([:curation_concern, klass]),
+            main_app.new_polymorphic_path([:curation_concerns, klass]),
             class: "add-button btn btn-primary #{dom_class(klass, 'add_new')}"
           %>
         </li>

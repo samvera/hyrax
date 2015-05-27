@@ -5,7 +5,7 @@ module CurationConcerns
     include CurationConcerns::ModelMethods
     include CurationConcerns::Noid
     include Sufia::GenericFile::MimeTypes
-    include CurationConcerns::GenericFile::Export
+    include CurationConcerns::File::Export
     include Sufia::GenericFile::Characterization
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
@@ -14,7 +14,7 @@ module CurationConcerns
     include Sufia::GenericFile::VirusCheck
     include Sufia::GenericFile::FullTextIndexing
     include Hydra::Collections::Collectible
-    include CurationConcerns::GenericFile::Batches
+    include CurationConcerns::File::Batches
     include Sufia::GenericFile::Indexing
     include CurationConcerns::Permissions::Readable # Only include Sufia::Permissions::Readable, not Sufia::Permissions::Writable
 

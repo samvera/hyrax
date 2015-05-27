@@ -1,5 +1,5 @@
 shared_examples 'is_a_curation_concern_model' do
-  CurationConcern::FactoryHelpers.load_factories_for(self, described_class)
+  CurationConcerns::FactoryHelpers.load_factories_for(self, described_class)
 
   it 'is registered for classification' do
     expect(CurationConcerns.configuration.registered_curation_concern_types).to include(described_class.name)

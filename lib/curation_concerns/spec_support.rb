@@ -4,7 +4,7 @@
 spec_directory = File.expand_path('../../../spec', __FILE__)
 
 # Dir["#{spec_directory}/factories/**/*.rb"].each { |f| require f }
-Dir["#{spec_directory}/support/curation_concern/*.rb"].each { |f| require f }
+Dir["#{spec_directory}/support/curation_concerns/*.rb"].each { |f| require f }
 Dir["#{spec_directory}/support/shared/*.rb"].each { |f| require f }
 
 

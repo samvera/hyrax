@@ -34,7 +34,7 @@ module CurationConcerns::CurationConcernController
       after_create_response
     else
       setup_form
-      respond_with(:curation_concern, curation_concern) do |wants|
+      respond_with(:curation_concerns, curation_concern) do |wants|
         wants.html { render 'new', status: :unprocessable_entity }
       end
     end
@@ -51,7 +51,7 @@ module CurationConcerns::CurationConcernController
       after_update_response
     else
       setup_form
-      respond_with(:curation_concern, curation_concern) do |wants|
+      respond_with(:curation_concerns, curation_concern) do |wants|
         wants.html { render 'edit', status: :unprocessable_entity }
       end
     end
@@ -92,19 +92,19 @@ module CurationConcerns::CurationConcernController
     # end
 
     def _prefixes
-      @_prefixes ||= super + ['curation_concern/base']
+      @_prefixes ||= super + ['curation_concerns/base']
     end
 
     def after_create_response
-      respond_with(:curation_concern, curation_concern)
+      respond_with(main_app, :curation_concerns, curation_concern)
     end
 
     def after_update_response
       #TODO visibility or lease/embargo status
       if actor.visibility_changed?
-        redirect_to confirm_curation_concern_permission_path(curation_concern)
+        redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
       else
-        respond_with(:curation_concern, curation_concern)
+        respond_with(main_app, :curation_concerns, curation_concern)
       end
     end
 

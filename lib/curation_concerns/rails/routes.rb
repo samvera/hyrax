@@ -1,9 +1,9 @@
 module ActionDispatch::Routing
   class Mapper
 
-    def curation_concerns_curation_concerns
+    def curation_concerns_basic_routes
       resources :downloads, only: :show
-      namespace :curation_concern, path: :concern do
+      namespace :curation_concerns, path: :concern do
         CurationConcerns.configuration.registered_curation_concern_types.map(&:tableize).each do |curation_concern_name|
           namespaced_resources curation_concern_name, except: [:index]
         end

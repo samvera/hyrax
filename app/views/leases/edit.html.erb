@@ -3,7 +3,7 @@
 <% end %>
 
 <h2>Current Lease</h2>
-<%= simple_form_for [:curation_concern, curation_concern] do |f| %>
+<%= simple_form_for [:curation_concerns, curation_concern] do |f| %>
   <fieldset id="set-access-controls">
     <section class="help-block">
       <p>
@@ -17,7 +17,7 @@
 
     <div class="form-group">
       <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE %>" />
-      <%= render "curation_concern/base/form_permission_lease", curation_concern: curation_concern, f: f  %>
+      <%= render "curation_concerns/base/form_permission_lease", curation_concern: curation_concern, f: f  %>
     </div>
   </fieldset>
 
@@ -30,7 +30,7 @@
         <%= f.submit "Apply Lease", class: 'btn btn-primary' %>
       <% end %>
       <%= link_to 'Cancel and manage all leases', leases_path, class: 'btn btn-default' %>
-      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concern, curation_concern]), class: 'btn btn-default' %>
+      <%= link_to "Return to editing this #{curation_concern.human_readable_type}", edit_polymorphic_path([:curation_concerns, curation_concern]), class: 'btn btn-default' %>
     </div>
   </div>
 <% end %>

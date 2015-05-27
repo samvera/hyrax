@@ -5,7 +5,6 @@
 //= require curation_concerns/link_groups
 //= require curation_concerns/proxy_rights
 //= require curation_concerns/facet_mine
-//= require curation_concerns/accept_contributor_agreement
 //= require curation_concerns/proxy_submission
 //= require curation_concerns/embargoes
 

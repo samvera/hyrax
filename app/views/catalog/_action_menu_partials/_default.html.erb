@@ -3,14 +3,14 @@
   <ul class="dropdown-menu">
     <% if can? :edit, document %>
       <li>
-        <%= link_to [:edit, :curation_concern, document], class: 'itemicon itemedit' do %><i class="glyphicon glyphicon-pencil"></i> Edit <%= document.human_readable_type %>
+        <%= link_to [:edit, :curation_concerns, document], class: 'itemicon itemedit' do %><i class="glyphicon glyphicon-pencil"></i> Edit <%= document.human_readable_type %>
         <% end %>
       </li>
       <li>
         <% if @collection # We're on the view page for @collection. -%>
           <%= link_to_remove_from_collection(document) %>
         <% else %>
-          <%= link_to [:curation_concern, document], class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
+          <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
                           confirm: "Deleting a collection from #{t('sufia.product_name')} is permanent. Click OK to delete this collection from #{t('sufia.product_name')}, or Cancel to cancel this operation" } do %>
                           <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
           <% end %>

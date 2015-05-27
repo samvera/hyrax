@@ -1,0 +1,18 @@
+<fieldset id="set-access-controls">
+  <legend>
+    Access Rights
+    <small>Who should be able to view or download this content?</small>
+  </legend>
+
+  <section class="help-block">
+    <p>
+      <strong>This work is under lease.</strong>  You can change the settings of the lease here, or you can visit the <%= link_to 'Lease Management Page', main_app.edit_lease_path(curation_concern) %> to deactivate it.
+    </p>
+  </section>
+
+  <div class="form-group">
+    <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE %>" />
+    <%= render "form_permission_lease", curation_concern: curation_concern, f: f  %>
+  </div>
+
+</fieldset>

@@ -55,7 +55,7 @@ module CurationConcerns
 
     def destroy
       @generic_file.destroy
-      redirect_to [:curation_concern, @generic_file.batch], notice: "The file has been deleted."
+      redirect_to [main_app, :curation_concerns, @generic_file.batch], notice: "The file has been deleted."
     end
 
     # routed to /files/:id (PUT)
@@ -68,8 +68,8 @@ module CurationConcerns
         update_metadata
       end
       if success
-        redirect_to [:curation_concern, @generic_file], notice:
-          "The file #{view_context.link_to(@generic_file, [main_app, :curation_concern, @generic_file])} has been updated."
+        redirect_to [main_app, :curation_concerns, @generic_file], notice:
+          "The file #{view_context.link_to(@generic_file, [main_app, :curation_concerns, @generic_file])} has been updated."
       else
         render action: 'edit'
       end
@@ -92,7 +92,7 @@ module CurationConcerns
     end
 
     def actor
-      @actor ||= ::CurationConcern::GenericFileActor.new(@generic_file, current_user, attributes)
+      @actor ||= ::CurationConcerns::GenericFileActor.new(@generic_file, current_user, attributes)
     end
 
     def attributes
@@ -107,8 +107,8 @@ module CurationConcerns
     end
 
     def _prefixes
-      # This allows us to use the unauthorized and form_permission template in curation_concern/base
-      @_prefixes ||= super + ['curation_concern/base']
+      # This allows us to use the unauthorized and form_permission template in curation_concerns/base
+      @_prefixes ||= super + ['curation_concerns/base']
     end
 
     def empty_file?(file)
@@ -124,7 +124,7 @@ module CurationConcerns
             if request.xhr?
               render 'jq_upload', formats: 'json', content_type: 'text/html'
             else
-              redirect_to [:curation_concern, @generic_file.batch]
+              redirect_to [main_app, :curation_concerns, @generic_file.batch]
             end
           }
           format.json {

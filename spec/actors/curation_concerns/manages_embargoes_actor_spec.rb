@@ -2,7 +2,7 @@ require 'spec_helper'
 describe CurationConcerns::ManagesEmbargoesActor do
 
   let(:model) {
-    Class.new(CurationConcern::BaseActor) {
+    Class.new(CurationConcerns::BaseActor) {
       include CurationConcerns::ManagesEmbargoesActor
     }
   }
