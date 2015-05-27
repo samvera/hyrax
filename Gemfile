@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'hydra-head', github:'flyingzumwalt/hydra-head', ref:'89e139f' # Rely on this branch until projecthydra/hydra-head#262 Pull Request is resolved https://github.com/projecthydra/hydra-head/pull/262
+
 # Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 
