@@ -1,7 +1,7 @@
 module CurationConcerns
    # This is a direct copy of Sufia::GenericFile::Metadata with a few modifications:
   # * title & description are single-value instead of multivalue
-  module WithBasicMetadata
+  module DefaultMetadata
     extend ActiveSupport::Concern
 
     included do

@@ -1,10 +1,5 @@
 module CurationConcerns
-  module ModelMethods
-    extend ActiveSupport::Concern
-
-    included do
-      include Hydra::WithDepositor
-    end
+  module Serializers
 
     def to_s
       if title.present?

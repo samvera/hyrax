@@ -1,5 +1,5 @@
 module CurationConcerns
   class GenericFile < ActiveFedora::Base
-    include CurationConcerns::GenericFileBase
+    include CurationConcerns::GenericFileBehavior
   end
 end

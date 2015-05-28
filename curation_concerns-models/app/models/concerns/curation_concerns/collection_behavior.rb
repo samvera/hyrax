@@ -1,5 +1,5 @@
 module CurationConcerns
-   module CollectionModel
+   module CollectionBehavior
     extend ActiveSupport::Concern
 
     include Hydra::AccessControls::Permissions

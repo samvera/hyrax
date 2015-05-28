@@ -8,7 +8,8 @@ module CurationConcerns::Curatable
     # leaving these in causes generic_work_specs to fail
     # include CurationConcerns::Permissions::Readable
     # include CurationConcerns::Permissions::Writable
-    include CurationConcerns::ModelMethods
+    include CurationConcerns::Serializers
+    include Hydra::WithDepositor
     include Hydra::Collections::Collectible
     include Solrizer::Common
     include ::CurationConcerns::HasRepresentative

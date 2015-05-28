@@ -1,8 +1,9 @@
 module CurationConcerns
-  module GenericFileBase
+  module GenericFileBehavior
     extend ActiveSupport::Concern
     include Hydra::AccessControls::Embargoable
-    include CurationConcerns::ModelMethods
+    include CurationConcerns::Serializers
+    include Hydra::WithDepositor
     include CurationConcerns::Noid
     include Sufia::GenericFile::MimeTypes
     include CurationConcerns::File::Export
