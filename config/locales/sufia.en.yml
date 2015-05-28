@@ -84,9 +84,9 @@ en:
       additional_notifications: "See all notifications"
       proxy_activity:           "Proxy Activity"
       transfer_of_ownership:    "Transfer of Ownership"
-      transfer_files_link:      "Select files to transfer"
-      no_transfer_requests:     "You haven't received any file transfer requests"
-      no_transfers:             "You haven't transferred any files"
+      transfer_works_link:      "Select works to transfer"
+      no_transfer_requests:     "You haven't received any work transfer requests"
+      no_transfers:             "You haven't transferred any work"
       stats:
         heading:            "Your Statistics"
         files:              "Files you've deposited"
