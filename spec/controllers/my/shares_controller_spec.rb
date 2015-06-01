@@ -21,18 +21,27 @@ describe My::SharesController, type: :controller do
       end
       }
 
-      let!(:shared_with_someone_else) { create(:file_set).tap do |r|
-        r.apply_depositor_metadata user
-        r.edit_users += [other_user.user_key]
-        r.save!
+      let!(:read_shared_with_me) do
+        create(:file_set, user: other_user).tap do |r|
+          r.read_users += [user.user_key]
+          r.save!
+        end
       end
-      }
 
-      let!(:my_collection) { Collection.new(title: "My collection").tap do |c|
-        c.apply_depositor_metadata(user.user_key)
-        c.save!
+      let!(:shared_with_someone_else) do
+        create(:file_set).tap do |r|
+          r.apply_depositor_metadata user
+          r.edit_users += [other_user.user_key]
+          r.save!
+        end
       end
-      }
+
+      let!(:my_collection) do
+        Collection.new(title: "My collection") do |c|
+          c.apply_depositor_metadata(user.user_key)
+          c.save!
+        end
+      end
 
       it "responds with success" do
         get :index
@@ -67,6 +76,8 @@ describe My::SharesController, type: :controller do
         expect(assigns[:document_list].map(&:id)).to_not include(shared_with_someone_else.id)
         # doesn't show my collections
         expect(assigns[:document_list].map(&:id)).to_not include my_collection.id
+        # doesn't show files I can see but have no edit access
+        expect(assigns[:document_list].map(&:id)).to_not include read_shared_with_me.id
       end
     end
   end
