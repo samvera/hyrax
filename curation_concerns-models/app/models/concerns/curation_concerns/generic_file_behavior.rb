@@ -5,19 +5,17 @@ module CurationConcerns
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid
-    include Sufia::GenericFile::MimeTypes
     include CurationConcerns::File::Export
-    include Sufia::GenericFile::Characterization
+    include CurationConcerns::File::Characterization
     include CurationConcerns::File::Permissions
-    include Sufia::GenericFile::Derivatives
-    include Sufia::GenericFile::Metadata
+    include CurationConcerns::File::GenericMetadata
     include Sufia::GenericFile::Content
-    include Sufia::GenericFile::Versions
-    include Sufia::GenericFile::VirusCheck
-    include Sufia::GenericFile::FullTextIndexing
+    include CurationConcerns::File::Versions
+    include CurationConcerns::File::VirusCheck
+    include CurationConcerns::File::FullTextIndexing
     include Hydra::Collections::Collectible
     include CurationConcerns::File::Batches
-    include Sufia::GenericFile::Indexing
+    include CurationConcerns::File::Indexing
     include CurationConcerns::File::BelongsToWork
     include Hydra::AccessControls::Embargoable
 
@@ -37,6 +35,7 @@ module CurationConcerns
           self[:filename]
         end
       end
+
     end
 
     def human_readable_type

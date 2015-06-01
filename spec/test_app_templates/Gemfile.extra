@@ -7,5 +7,5 @@ gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: 'c8a4654'
 gem 'active-triples'
 gem 'active_fedora-noid', github: 'projecthydra-labs/active_fedora-noid', ref: '38079e4'
 
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '4164209'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '13e49c6c'
 gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '486ed3b'
