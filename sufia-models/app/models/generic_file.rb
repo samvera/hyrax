@@ -1,3 +1,4 @@
+# Override this file locally if you want to define your own GenericFile class
 class GenericFile < ActiveFedora::Base
-  include Sufia::GenericFile
+  include ::CurationConcerns::GenericFileBehavior
 end

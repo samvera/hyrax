@@ -1,14 +1,16 @@
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
+### from curation_concerns Gemfile.extra
+gem 'hydra-head', github:'projecthydra/hydra-head'
 gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '13df67f'
 
-gem 'active-fedora', github: 'projecthydra/active_fedora', ref:'57ac754'
-gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: 'eef02b0'
-gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: 'c8a4654'
+gem 'active-fedora', github: 'projecthydra/active_fedora', ref:'6c6f3e9337076a8333eeb6eb46552315cf96264f'
+gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: '0dfe4f4'
+gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: '11f46014'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '259f4e6'
+
 
 gem 'active-triples'
 gem 'active_fedora-noid', github: 'projecthydra-labs/active_fedora-noid', ref: '38079e4'
 
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '4164209'
 gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '486ed3b'
-
-
+### /curation_concerns Gemfile.extra

@@ -6,7 +6,7 @@ module Sufia::Works
       module ClassMethods
 
         def indexer
-          Sufia::GenericWorkIndexingService
+          CurationConcerns::GenericWorkIndexingService
         end
 
       end

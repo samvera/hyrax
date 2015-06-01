@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 # Please see sufia.gemspec for dependency information.
 gemspec
 
+gem 'curation_concerns', github:'projecthydra-labs/curation_concerns'
 gem 'sufia-models', path: './sufia-models'
 gem 'slop', '~> 3.6.0' # This just helps us generate a valid Gemfile.lock when Rails 4.2 is installed (which requires byebug which has a dependency on slop)
 

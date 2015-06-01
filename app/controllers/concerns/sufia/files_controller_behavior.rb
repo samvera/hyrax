@@ -42,8 +42,8 @@ module Sufia
       load_and_authorize_resource except: [:index, :audit]
 
       class_attribute :edit_form_class, :presenter_class
-      self.edit_form_class = Sufia::Forms::GenericFileEditForm
-      self.presenter_class = Sufia::GenericFilePresenter
+      self.edit_form_class = CurationConcerns::Forms::GenericFileEditForm
+      self.presenter_class = CurationConcerns::GenericFilePresenter
     end
 
     # routed to /files/new

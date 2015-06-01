@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sufia::GenericFileIndexingService do
+describe CurationConcerns::GenericFileIndexingService do
   let(:objects) { [double(id: 'o1'), double(id: 'o2')] }
 
   let(:generic_file) do
