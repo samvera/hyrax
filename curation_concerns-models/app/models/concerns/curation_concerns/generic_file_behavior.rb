@@ -1,13 +1,14 @@
 module CurationConcerns
   module GenericFileBehavior
     extend ActiveSupport::Concern
-    include Hydra::AccessControls::Embargoable
-    include CurationConcerns::Serializers
+    include Hydra::Works::GenericFileBehavior
     include Hydra::WithDepositor
+    include CurationConcerns::Serializers
     include CurationConcerns::Noid
     include Sufia::GenericFile::MimeTypes
     include CurationConcerns::File::Export
     include Sufia::GenericFile::Characterization
+    include CurationConcerns::File::Permissions
     include Sufia::GenericFile::Derivatives
     include Sufia::GenericFile::Metadata
     include Sufia::GenericFile::Content
@@ -17,7 +18,8 @@ module CurationConcerns
     include Hydra::Collections::Collectible
     include CurationConcerns::File::Batches
     include Sufia::GenericFile::Indexing
-    include CurationConcerns::Permissions::Readable # Only include Sufia::Permissions::Readable, not Sufia::Permissions::Writable
+    include CurationConcerns::File::BelongsToWork
+    include Hydra::AccessControls::Embargoable
 
     included do
       belongs_to :batch, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: 'ActiveFedora::Base'

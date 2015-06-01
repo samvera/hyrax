@@ -26,13 +26,13 @@ if File.exists?(file)
   instance_eval File.read(file)
 else
   gem 'rails', ENV['RAILS_VERSION'] if ENV['RAILS_VERSION']
-
   if ENV['RAILS_VERSION'] and ENV['RAILS_VERSION'] !~ /^4.2/
     gem 'sass-rails', "< 5.0"
   else
     gem 'responders', "~> 2.0"
     gem 'sass-rails', ">= 5.0"
   end
+
   extra_file = File.expand_path("../spec/test_app_templates/Gemfile.extra", __FILE__)
   instance_eval File.read(extra_file)
 end

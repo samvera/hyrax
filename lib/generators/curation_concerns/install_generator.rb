@@ -5,6 +5,11 @@ module CurationConcerns
 
     source_root File.expand_path('../templates', __FILE__)
 
+    # BEGIN Blacklight Stuff
+    # Really just relying on the blacklight generator to
+    #   * set up devise
+    #   * add solr.yml
+    # ... so ultimately aiming to stop using it.
     def run_blacklight_generator
       say_status("warning", "GENERATING BL", :yellow)
       generate 'blacklight:install', '--devise'
@@ -40,6 +45,8 @@ module CurationConcerns
       remove_file 'app/assets/stylesheets/blacklight.css.scss'
     end
 
+    # END Blacklight stuff
+
     def inject_routes
       inject_into_file 'config/routes.rb', :after => /devise_for :users\s*\n/ do
         "  mount Hydra::Collections::Engine => '/'\n"\
@@ -50,25 +57,25 @@ module CurationConcerns
       end
     end
 
-    def inject_ability
-      inject_into_file 'app/models/ability.rb', :after => /Hydra::Ability\s*\n/ do
-        "  include CurationConcerns::Ability\n"\
-        "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
-      end
-    end
+    # def inject_ability
+    #   inject_into_file 'app/models/ability.rb', :after => /Hydra::Ability\s*\n/ do
+    #     "  include CurationConcerns::Ability\n"\
+    #     "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
+    #   end
+    # end
 
-    # Add behaviors to the SolrDocument model
-    def inject_solr_document_behavior
-      file_path = "app/models/solr_document.rb"
-      if File.exists?(file_path)
-        inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
-          "\n  # Adds CurationConcerns behaviors to the SolrDocument.\n" +
-            "  include CurationConcerns::SolrDocumentBehavior\n"
-        end
-      else
-        puts "     \e[31mFailure\e[0m  CurationConcerns requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
-      end
-    end
+    # # Add behaviors to the SolrDocument model
+    # def inject_solr_document_behavior
+    #   file_path = "app/models/solr_document.rb"
+    #   if File.exists?(file_path)
+    #     inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
+    #       "\n  # Adds CurationConcerns behaviors to the SolrDocument.\n" +
+    #         "  include CurationConcerns::SolrDocumentBehavior\n"
+    #     end
+    #   else
+    #     puts "     \e[31mFailure\e[0m  CurationConcerns requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
+    #   end
+    # end
 
     def assets
       copy_file "curation_concerns.css.scss", "app/assets/stylesheets/curation_concerns.css.scss"

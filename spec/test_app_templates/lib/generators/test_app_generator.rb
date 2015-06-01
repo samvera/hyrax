@@ -10,7 +10,7 @@ class TestAppGenerator < Rails::Generators::Base
   #   end
   # end
 
-  def run_generator
+  def install_engine
     generate 'curation_concerns:install'
   end
 
