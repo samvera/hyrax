@@ -6,6 +6,7 @@ module Sufia
       @verbose = options[:verbose]
       @logging = options[:logging]
       @delay_secs = options[:delay_secs].to_f
+      @number_of_retries = options[:number_of_retries].to_i
     end
 
     def import
@@ -13,14 +14,17 @@ module Sufia
       sorted_users.each do |user|
         start_date = date_since_last_cache(user)
 
+        # this user has already been processed today continue without delay
+        next if start_date.to_date >= Date.today
+
         stats = {}
         file_ids_for_user(user).each do |file_id|
-          view_stats = FileViewStat.statistics(file_id, start_date, user.id)
-          stats = tally_results(view_stats, :views, stats)
+          view_stats = rescue_and_retry("Retried FileViewStat on #{user} for file #{file_id} too many times.") { FileViewStat.statistics(file_id, start_date, user.id) }
+          stats = tally_results(view_stats, :views, stats) unless view_stats.blank?
           delay
 
-          dl_stats = FileDownloadStat.statistics(file_id, start_date, user.id)
-          stats = tally_results(dl_stats, :downloads, stats)
+          dl_stats = rescue_and_retry("Retried FileDownloadStat on #{user} for file #{file_id} too many times.") { FileDownloadStat.statistics(file_id, start_date, user.id) }
+          stats = tally_results(dl_stats, :downloads, stats) unless dl_stats.blank?
           delay
         end
 
@@ -44,6 +48,22 @@ module Sufia
 
       def delay
         sleep @delay_secs
+      end
+
+      def rescue_and_retry(fail_message)
+        retry_count = 0
+        begin
+          return yield
+        rescue StandardError => e
+          retry_count += 1
+          if retry_count < @number_of_retries
+            delay
+            retry
+          else
+            log_message fail_message
+            log_message "Last exception #{e}"
+          end
+        end
       end
 
       def date_since_last_cache(user)

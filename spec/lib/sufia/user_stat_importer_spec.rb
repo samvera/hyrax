@@ -131,6 +131,50 @@ describe Sufia::UserStatImporter do
 
       expect(UserStat.count).to eq bilbos_stats.count + frodos_stats.count
     end
+
+    context "when Google analytics throws an error" do
+      let(:importer) { described_class.new(number_of_retries: 4) }
+
+      context "both error out completely" do
+        before do
+          expect(FileDownloadStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
+          expect(FileViewStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
+        end
+
+        it "stops after 4 tries on each of the 3 files" do
+          importer.import
+          expect(UserStat.count).to eq 0
+        end
+      end
+
+      context "Only View stats error out completely" do
+        before do
+          expect(FileViewStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
+        end
+        it "gathers the download stats even though the view stats are failing" do
+          importer.import
+          expect(UserStat.count).to eq 8 # 2 users for 4 days
+          UserStat.all.each do |stat|
+            expect(stat.file_views).to eq 0
+            expect(stat.file_downloads).not_to eq 0
+          end
+        end
+      end
+
+      context "Only Download stats error out completely" do
+        before do
+          expect(FileDownloadStat).to receive(:ga_statistics).exactly(12).times.and_raise(StandardError.new("GA error"))
+        end
+        it "gathers the view stats even though the download stats are failing" do
+          importer.import
+          expect(UserStat.count).to eq 8 # 2 users for 4 days
+          UserStat.all.each do |stat|
+            expect(stat.file_views).not_to eq 0
+            expect(stat.file_downloads).to eq 0
+          end
+        end
+      end
+    end
   end
 
   describe 'with existing data in cache' do
@@ -169,6 +213,22 @@ describe Sufia::UserStatImporter do
       # Followed by Frodo and Bilbo.
       sorted_ids = described_class.new.sorted_users.map(&:id)
       expect(sorted_ids).to eq([gollum.id, frodo.id, bilbo.id])
+    end
+
+    context "a user is already up to date" do
+      let(:importer) { described_class.new }
+      before do
+        allow(importer).to receive(:sorted_users).and_return([gollum, frodo, bilbo])
+        UserStat.create!(user_id: bilbo.id, date: dates[3], file_views: 999, file_downloads: 555)
+      end
+
+      it "skips if we already have uptodate information" do
+        expect(importer).to receive(:file_ids_for_user).with(gollum).and_call_original
+        expect(importer).to receive(:file_ids_for_user).with(frodo).and_call_original
+        # expect(importer).to receive(:file_ids_for_user).with(frodo.id).and_call_original
+        expect(importer).not_to receive(:file_ids_for_user).with(bilbo)
+        importer.import
+      end
     end
   end
 end
