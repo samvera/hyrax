@@ -8,7 +8,7 @@ module CurationConcerns
     end
 
     def self.attach_file(generic_file, user, file_to_attach)
-      Sufia::GenericFile::Actor.new(generic_file, user).create_content(file_to_attach, file_to_attach.original_filename, 'content', file_to_attach.content_type)
+      CurationConcerns::GenericFileActor.new(generic_file, user).create_content(file_to_attach, file_to_attach.original_filename, file_to_attach.content_type)
     end
   end
 end

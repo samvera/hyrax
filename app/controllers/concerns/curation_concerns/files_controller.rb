@@ -63,7 +63,7 @@ module CurationConcerns
       success = if wants_to_revert?
         actor.revert_content(params[:revision])
       elsif params.has_key? :files
-        actor.update_content(params[:files].first, datastream_id)
+        actor.update_content(params[:files].first)
       elsif params.has_key? :generic_file
         update_metadata
       end
@@ -81,8 +81,10 @@ module CurationConcerns
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
+      # attrs_without_visibility_info = actor.interpret_visibility(attributes)
+      # debugger
       file_attributes = CurationConcerns::Forms::GenericFileEditForm.model_attributes(attributes)
-      actor.update_metadata(file_attributes, attributes[:visibility])
+      actor.update_metadata(file_attributes, attributes)
     end
 
     protected
@@ -92,7 +94,7 @@ module CurationConcerns
     end
 
     def actor
-      @actor ||= ::CurationConcerns::GenericFileActor.new(@generic_file, current_user, attributes)
+      @actor ||= ::CurationConcerns::GenericFileActor.new(@generic_file, current_user)
     end
 
     def attributes
@@ -117,8 +119,8 @@ module CurationConcerns
 
     def process_file(file)
       update_metadata_from_upload_screen
-      actor.create_metadata(parent_id)
-      if actor.create_content(file, file.original_filename, datastream_id, file.content_type)
+      actor.create_metadata(params[:batch_id], parent_id)
+      if actor.create_content(file, file.original_filename, file.content_type)
         respond_to do |format|
           format.html {
             if request.xhr?

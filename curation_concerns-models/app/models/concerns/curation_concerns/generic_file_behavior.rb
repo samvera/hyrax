@@ -8,9 +8,9 @@ module CurationConcerns
     include CurationConcerns::File::Export
     include CurationConcerns::File::Characterization
     include CurationConcerns::File::Permissions
-    include CurationConcerns::File::GenericMetadata
+    include CurationConcerns::File::BasicMetadata
     include Sufia::GenericFile::Content
-    include CurationConcerns::File::Versions
+    # include CurationConcerns::File::Versions
     include CurationConcerns::File::VirusCheck
     include CurationConcerns::File::FullTextIndexing
     include Hydra::Collections::Collectible
@@ -36,6 +36,10 @@ module CurationConcerns
         end
       end
 
+    end
+
+    def generic_work?
+      false
     end
 
     def human_readable_type

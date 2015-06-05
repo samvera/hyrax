@@ -1,6 +1,6 @@
 module CurationConcerns
   module File
-    module GenericMetadata
+    module BasicMetadata
       extend ActiveSupport::Concern
 
       included do

@@ -4,7 +4,8 @@ describe DownloadsController do
   describe '#show' do
     let(:user) { FactoryGirl.create(:user) }
     let(:another_user) { FactoryGirl.create(:user) }
-    let(:image_file) { File.open(Rails.root.join('../fixtures/files/image.png')) }
+    let(:image_file_path) { Rails.root.join('../fixtures/files/image.png') }
+    let(:image_file) { File.open(image_file_path) }
     let(:generic_file) {
       FactoryGirl.create(:file_with_work, user: user, content: curation_concerns_fixture_file_upload('files/image.png', 'image/png', false))
     }
@@ -43,8 +44,10 @@ describe DownloadsController do
     end
 
     it 'sends requested file content' do
-      generic_file.attached_files['thumbnail'].content = image_file
-      generic_file.save!
+      Hydra::Works::AddFileToGenericFile.call(generic_file, image_file_path, :thumbnail)
+      # generic_file.thumbnail.content = image_file
+      # generic_file.save!
+      # Hydra::Works::GenerateThumbnail.call(generic_file, content: :content)
       sign_in user
       get :show, id: generic_file.to_param, file: 'thumbnail'
       expect(response.body).to eq generic_file.thumbnail.content
