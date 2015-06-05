@@ -37,6 +37,7 @@ Metrics/MethodLength:
 Metrics/ClassLength:
   Exclude:
     - 'lib/generators/sufia/templates/catalog_controller.rb'
+    - 'lib/generators/sufia/install_generator.rb'
     - 'sufia-models/app/models/datastreams/fits_datastream.rb'
     - 'sufia-models/app/actors/sufia/file_set/actor.rb'
 

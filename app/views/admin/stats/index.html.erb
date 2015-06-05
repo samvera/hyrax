@@ -1,0 +1,68 @@
+<div class="stats">
+  <h1>Statistics for <%= application_name %>
+    <%= Sufia::VERSION %></h1>
+  <br/>
+
+  <h2>Total Files: <%= @files_count[:total] %> </h2>
+  <br/>
+  <h3>Totals by Visibility</h3>
+  <ul>
+    <li>Open Access <span class="count">(<%= @files_count[:public] %>)</span></li>
+    <li><%= t("sufia.admin.stats.registered") %> <span class="count">(<%= @files_count[:registered] %>)</span></li>
+    <li>Private <span class="count">(<%= @files_count[:private] %>)</span></li>
+  </ul>
+
+  <h3>Top File Formats</h3>
+  <ul>
+    <% @top_formats.each do |k, v| %>
+      <li><%= k %> <span class="count">(<%= v %>)</span></li>
+    <% end %>
+  </ul>
+
+  <br/>
+
+  <h2>Total <%= application_name %> Users:&nbsp; <%= @users_count %> </h2>
+  <br/>
+
+  <h3>Newest Users</h3>
+  <%= form_for "users_stats", url: sufia.admin_stats_path, method: "GET" do |f| %>
+  <%= f.label "Display users registered since" %>
+  <input type="date" name="users_stats[start_date]" value="<%= @users_stats[:start_date] %>"></input>
+  <%= f.submit "Load Stats" %>
+  <%- end %>
+
+  <%- if @users_stats[:start_date] %>
+    <div>Total: <%= @recent_users.count %></div>
+  <%- else %>
+    Five most recent users:
+  <%- end %>
+
+  <ul>
+    <% @recent_users.each do |usr| %>
+      <li>
+        <a href="<%= sufia.profile_path(usr.user_key) %>" title="View user's profile"><%= usr.name %></a>
+        <%- if usr.department %>
+          of <%= usr.department %>
+        <%- end %>
+        registered
+      <span class="date">
+        <%= usr.created_at.to_time.strftime("%m/%d/%Y") %>
+      </span>
+      </li>
+    <% end %>
+  </ul>
+
+
+  <br/>
+  <h3>Most Active Users (top <%= @active_users.count %>)</h3>
+  <ul>
+    <% @active_users.each do |k, v| %>
+      <li>
+        <%= link_to_profile(k) %> <span class="count">(<%= v %>)</span>
+      </li>
+    <% end %>
+    <% if !params[:dep_count] %>
+      <p><%= link_to "View top 20", sufia.admin_stats_path, controller: "stats", dep_count: "20" %> </p>
+    <% end %>
+  </ul>
+</div>
