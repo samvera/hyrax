@@ -47,6 +47,10 @@ ul.listing .add, ul.listing .remove {
   color: $remove-text-hover;
 }
 
+span.facet-label .remove {
+  background-color: $panel-background-color;
+}
+
 .btn-warning {
   background-color: $neutral-background-color;
   border-color: $neutral-border-color;
