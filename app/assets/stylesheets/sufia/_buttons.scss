@@ -35,20 +35,16 @@ ul.listing .add, ul.listing .remove {
   }
 }
 
-.remove, .btn-danger {
+span.appliedFilter .remove, .btn-danger {
   background-color: $remove-background-color;
   border-color: $remove-border-color;
   color: $remove-text-color;
 }
-.remove:hover, .remove:focus,
+span.appliedFilter .remove:hover, span.appliedFilter .remove:focus,
 .btn-danger:hover, .btn-danger:focus {
   background-color: $remove-background-hover;
   border-color: $remove-border-color;
   color: $remove-text-hover;
-}
-
-span.facet-label .remove {
-  background-color: $panel-background-color;
 }
 
 .btn-warning {
