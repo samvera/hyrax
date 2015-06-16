@@ -80,7 +80,6 @@ module CurationConcerns
       model_attributes.delete(:visibility)  # Applying this attribute is handled by update_visibility
       generic_file.attributes = model_attributes
       generic_file.date_modified = DateTime.now
-      remove_from_feature_works if generic_file.visibility_changed? && !generic_file.public?
       save do
         if Sufia.config.respond_to?(:after_update_metadata)
           Sufia.config.after_update_metadata.call(generic_file, user)
@@ -151,11 +150,6 @@ module CurationConcerns
     end
 
     private
-
-    def remove_from_feature_works
-      featured_work = FeaturedWork.find_by_generic_file_id(generic_file.id)
-      featured_work.destroy unless featured_work.nil?
-    end
 
     # copy visibility from source_concern to destination_concern
     def copy_visibility(source_concern, destination_concern)

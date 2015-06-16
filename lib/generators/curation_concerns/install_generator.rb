@@ -57,25 +57,25 @@ module CurationConcerns
       end
     end
 
-    # def inject_ability
-    #   inject_into_file 'app/models/ability.rb', :after => /Hydra::Ability\s*\n/ do
-    #     "  include CurationConcerns::Ability\n"\
-    #     "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
-    #   end
-    # end
+    def inject_ability
+      inject_into_file 'app/models/ability.rb', :after => /Hydra::Ability\s*\n/ do
+        "  include CurationConcerns::Ability\n"\
+        "  self.ability_logic += [:everyone_can_create_curation_concerns]\n\n"
+      end
+    end
 
-    # # Add behaviors to the SolrDocument model
-    # def inject_solr_document_behavior
-    #   file_path = "app/models/solr_document.rb"
-    #   if File.exists?(file_path)
-    #     inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
-    #       "\n  # Adds CurationConcerns behaviors to the SolrDocument.\n" +
-    #         "  include CurationConcerns::SolrDocumentBehavior\n"
-    #     end
-    #   else
-    #     puts "     \e[31mFailure\e[0m  CurationConcerns requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
-    #   end
-    # end
+    # Add behaviors to the SolrDocument model
+    def inject_solr_document_behavior
+      file_path = "app/models/solr_document.rb"
+      if File.exists?(file_path)
+        inject_into_file file_path, after: /include Blacklight::Solr::Document.*$/ do
+          "\n  # Adds CurationConcerns behaviors to the SolrDocument.\n" +
+            "  include CurationConcerns::SolrDocumentBehavior\n"
+        end
+      else
+        puts "     \e[31mFailure\e[0m  CurationConcerns requires a SolrDocument object. This generators assumes that the model is defined in the file #{file_path}, which does not exist."
+      end
+    end
 
     def assets
       copy_file "curation_concerns.css.scss", "app/assets/stylesheets/curation_concerns.css.scss"
@@ -86,12 +86,12 @@ module CurationConcerns
       copy_file "curation_concerns_helper.rb", "app/helpers/curation_concerns_helper.rb"
     end
 
-    # def add_collection_mixin
-    #   inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
-    #     "\n  include CurationConcerns::Collection"
-    #   end
-    #   # inject_into_class 'app/models/collection.rb', Collection, "  include CurationConcerns::Collection"
-    # end
+    def add_collection_mixin
+      inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
+        "\n  include CurationConcerns::CollectionBehavior"
+      end
+      # inject_into_class 'app/models/collection.rb', Collection, "  include CurationConcerns::Collection"
+    end
 
     def add_config_file
       copy_file "curation_concerns_config.rb", "config/initializers/curation_concerns_config.rb"
