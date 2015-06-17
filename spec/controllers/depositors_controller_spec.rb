@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe DepositorsController, :type => :controller do
-  let (:user) { FactoryGirl.find_or_create(:jill) }
-  let (:grantee) { FactoryGirl.find_or_create(:archivist) }
+describe DepositorsController do
+  let(:user) { FactoryGirl.create(:user) }
+  let(:grantee) { FactoryGirl.create(:user) }
 
   describe "as a logged in user" do
     before do
@@ -38,12 +38,16 @@ describe DepositorsController, :type => :controller do
     end
     describe "create" do
       it "should not be successful" do
-        expect { post :create, user_id: user, grantee_id: grantee, format: 'json' }.to raise_error
+        post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json'
+        expect(response).to redirect_to root_path
+        expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
     describe "destroy" do
       it "should not be successful" do
-        expect { delete :destroy, user_id: user, id: grantee, format: 'json' }.to raise_error
+        delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json'
+        expect(response).to redirect_to root_path
+        expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
   end
