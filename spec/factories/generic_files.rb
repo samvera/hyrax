@@ -11,8 +11,11 @@ FactoryGirl.define do
 
       after(:build) do |file, evaluator|
         file.title = ['testfile']
+      end
+      after(:create) do |file, evaluator|
         if evaluator.content
-          file.add_file(evaluator.content, path: 'content', original_name: evaluator.content.original_filename)
+          # Hydra::Works::AddFileToGenericFile.call(file, evaluator.content, :original_file)
+          Hydra::Works::UploadFileToGenericFile.call(file, evaluator.content)
         end
       end
     end
