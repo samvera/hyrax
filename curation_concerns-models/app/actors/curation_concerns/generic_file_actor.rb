@@ -46,7 +46,6 @@ module CurationConcerns
 
     def create_content(file, file_name, mime_type)
       generic_file.add_file(file, path: file_path, original_name: file_name, mime_type: mime_type)
-      generic_file.content.versionable = true
       generic_file.label ||= file_name
       generic_file.title = [generic_file.label] if generic_file.title.blank?
       save_characterize_and_record_committer do
@@ -57,8 +56,7 @@ module CurationConcerns
     end
 
     def revert_content(revision_id)
-      generic_file.content.restore_version(revision_id)
-      generic_file.content.create_version
+      generic_file.original_file.restore_version(revision_id)
       save_characterize_and_record_committer do
         if Sufia.config.respond_to?(:after_revert_content)
           Sufia.config.after_revert_content.call(generic_file, user, revision_id)
@@ -99,7 +97,9 @@ module CurationConcerns
     def save_characterize_and_record_committer
       save do
         push_characterize_job
-        Sufia::VersioningService.create(generic_file.content, user)
+        if generic_file.original_file
+          CurationConcerns::VersioningService.create(generic_file.original_file, user)
+        end
         yield if block_given?
       end
     end

@@ -202,22 +202,20 @@ describe CurationConcerns::GenericFilesController do
       context "restoring an old version" do
         before do
           allow(Sufia.queue).to receive(:push) # don't run characterization jobs
-          # Create version 0
-          generic_file.add_file('123', path: 'content', original_name: 'file.txt')
-          generic_file.save!
-
           # Create version 1
-          generic_file.add_file('<xml>This is version 2</xml>', path: 'content', original_name: 'md.xml')
-          generic_file.save!
+          Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('small_file.txt'), :original_file)
+          # Create version 2
+          Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('sufia_generic_stub.txt'), :original_file)
         end
 
         it "should be successful" do
-          expect(generic_file.latest_version.label).to eq('version2')
+          expect(generic_file.latest_content_version.label).to eq('version2')
+          expect(generic_file.original_file.content).to eq("This is a test fixture for sufia: <%= @id %>.\n")
           post :update, id: generic_file, revision: 'version1'
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
-          reloaded = generic_file.reload.content
-          expect(reloaded.latest_version.label).to eq 'version3'
-          expect(reloaded.content).to eq '123'
+          reloaded = generic_file.reload.original_file
+          expect(reloaded.versions.last.label).to eq 'version3'
+          expect(reloaded.content).to eq "small\n"
           expect(reloaded.mime_type).to eq 'text/plain'
         end
       end

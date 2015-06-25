@@ -25,7 +25,6 @@ module CurationConcerns
       before_destroy :remove_representative_relationship
 
       attr_accessor :file
-      delegate :latest_version, to: :content
 
       # make filename single-value (Sufia::GenericFile::Characterization makes it multivalue)
       def filename

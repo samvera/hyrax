@@ -3,7 +3,7 @@ module CurationConcerns
     module Versions
       @@count = 0
       def record_version_committer(user)
-        version = content.latest_version
+        version = self.latest_version
         # content datastream not (yet?) present
         return if version.nil?
         @@count += 1

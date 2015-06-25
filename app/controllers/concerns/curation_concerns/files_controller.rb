@@ -90,7 +90,7 @@ module CurationConcerns
     protected
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != @generic_file.content.latest_version.label
+      params.has_key?(:revision) && params[:revision] != @generic_file.latest_content_version.label
     end
 
     def actor
