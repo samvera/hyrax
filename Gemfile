@@ -1,12 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'hydra-head', github:'flyingzumwalt/hydra-head', ref:'89e139f' # Rely on this branch until projecthydra/hydra-head#262 Pull Request is resolved https://github.com/projecthydra/hydra-head/pull/262
-# gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '690b8d20'
-gem 'hydra-works', path:'../hydra-works'
-gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref:'eef02b0'
-gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm'
-gem 'active-fedora', github: 'projecthydra/active_fedora'
-
 # Specify your gem's dependencies in curation_concerns.gemspec
 gemspec
 

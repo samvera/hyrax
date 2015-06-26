@@ -1,3 +1,4 @@
+gem 'hydra-head', github:'flyingzumwalt/hydra-head', ref:'89e139f' # Rely on this branch until projecthydra/hydra-head#262 Pull Request is resolved https://github.com/projecthydra/hydra-head/pull/262
 gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '13df67f'
 
 gem 'sufia-models', github: 'projecthydra/sufia', ref:'7558ae3'
