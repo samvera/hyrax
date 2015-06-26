@@ -17,8 +17,12 @@ FactoryGirl.define do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 
+    factory :work_with_one_file do
+      after(:create) { |work, _| Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file)) }
+    end
+
     factory :work_with_files do
-      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.create(:generic_file) }}
+      after(:create) { |work, _| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file)) } }
     end
 
     factory :embargoed_work do
@@ -26,8 +30,8 @@ FactoryGirl.define do
     end
 
     factory :embargoed_work_with_files do
-      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.create(:generic_file) }}
       after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+      after(:create) { |work, _| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file)) } }
     end
 
     factory :leased_work do
@@ -35,8 +39,8 @@ FactoryGirl.define do
     end
 
     factory :leased_work_with_files do
-      after(:build) { |work, _| 2.times { work.generic_files << FactoryGirl.create(:generic_file) }}
       after(:build) { |work, evaluator| work.apply_lease(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
+      after(:create) { |work, _| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file)) } }
     end
   end
 end

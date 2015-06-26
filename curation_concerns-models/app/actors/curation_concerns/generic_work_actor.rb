@@ -71,12 +71,15 @@ module CurationConcerns
         link.batch = curation_concern
         link.label = curation_concern.human_readable_type
       end
-      Sufia::GenericFile::Actor.new(resource, user).create_metadata(curation_concern.id, curation_concern.id)
+      CurationConcerns::GenericFileActor.new(resource, user).create_metadata(curation_concern.id, curation_concern.id)
       resource.save
     end
 
     def assign_representative
-      curation_concern.representative = curation_concern.generic_file_ids.first
+      @generic_files ||= []
+      unless curation_concern.representative
+        curation_concern.representative = @generic_files.first.id unless @generic_files.empty?
+      end
       curation_concern.save
     end
 
@@ -84,14 +87,13 @@ module CurationConcerns
 
     def attach_file(file)
       generic_file = GenericFile.new
-      actor = Sufia::GenericFile::Actor.new(generic_file, user)
-      actor.create_content(file, file.original_filename, file.content_type)
-      actor.create_metadata(curation_concern.id, curation_concern.id)
-      generic_file.generic_work = curation_concern
+      generic_file_actor = CurationConcerns::GenericFileActor.new(generic_file, user)
+      generic_file_actor.create_metadata(curation_concern.id, curation_concern.id)
       generic_file.visibility = visibility
-
-      stat = CurationConcerns::CurationConcern.attach_file(generic_file, user, file)
-      curation_concern.generic_files += [generic_file]
+      generic_file_actor.create_content(file, file.original_filename, file.content_type)
+      @generic_files ||= []
+      @generic_files << generic_file # This is so that other methods like assign_representative can access the generic_files wihtout reloading them from fedora
+      Hydra::Works::AddGenericFileToGenericWork.call(curation_concern, generic_file)
     end
 
     def valid_file?(file_path)

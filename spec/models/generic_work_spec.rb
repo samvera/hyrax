@@ -8,7 +8,7 @@ describe GenericWork do
   end
 
   context "with attached files" do
-    subject { FactoryGirl.build(:work_with_files) }
+    subject { FactoryGirl.create(:work_with_files) }
 
     it "should have two files" do
       expect(subject.generic_files.size).to eq 2

@@ -36,11 +36,11 @@ module CurationConcerns
         work.date_uploaded = time_in_utc
         work.date_modified = time_in_utc
         work.creator = [user.name]
+        Hydra::Works::AddGenericFileToGenericWork(work, generic_file)
       else
         work = GenericWork.find(work_id)
         copy_visibility(work, generic_file)
       end
-      generic_file.generic_work = work
       yield(generic_file) if block_given?
     end
 

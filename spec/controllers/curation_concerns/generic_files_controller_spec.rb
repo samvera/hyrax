@@ -101,11 +101,12 @@ describe CurationConcerns::GenericFilesController do
 
     describe "destroy" do
       let(:generic_file) do
-        CurationConcerns::GenericFile.new.tap do |gf|
+        generic_file = CurationConcerns::GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
-          gf.batch = parent
           gf.save!
         end
+        Hydra::Works::AddGenericFileToGenericWork.call(parent, generic_file)
+        generic_file
       end
 
       it "should delete the file" do
@@ -118,12 +119,13 @@ describe CurationConcerns::GenericFilesController do
 
     describe "update" do
       let!(:generic_file) do
-        CurationConcerns::GenericFile.new.tap do |gf|
+        generic_file = CurationConcerns::GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
-          gf.batch = parent
           gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           gf.save!
         end
+        Hydra::Works::AddGenericFileToGenericWork.call(parent, generic_file)
+        generic_file
       end
 
       after do
@@ -224,12 +226,13 @@ describe CurationConcerns::GenericFilesController do
 
   context "someone elses files" do
     let(:generic_file) do
-      CurationConcerns::GenericFile.new.tap do |gf|
+      generic_file = CurationConcerns::GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata('archivist1@example.com')
         gf.read_groups = ['public']
-        gf.batch = parent
         gf.save!
       end
+      Hydra::Works::AddGenericFileToGenericWork.call(parent, generic_file)
+      generic_file
     end
     after do
       # GenericFile.find('sufia:5').destroy

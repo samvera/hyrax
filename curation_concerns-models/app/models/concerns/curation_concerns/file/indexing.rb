@@ -6,7 +6,7 @@ module CurationConcerns
       module ClassMethods
         # override the default indexing service
         def indexer
-          Sufia::GenericFileIndexingService
+          CurationConcerns::GenericFileIndexingService
         end
       end
     end

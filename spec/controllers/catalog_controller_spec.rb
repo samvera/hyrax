@@ -6,19 +6,16 @@ describe CatalogController do
   end
 
   describe "when logged in" do
-    let(:user) { FactoryGirl.create(:user) }
-    let!(:work1) { FactoryGirl.create(:public_generic_work, user: user) }
-    let!(:work2) { FactoryGirl.create(:public_generic_work) }
-    #let!(:linked_resource) { FactoryGirl.create(:linked_resource, user: user, batch:work1) }
-    #let!(:collection) { FactoryGirl.create(:collection, user: user) }
-    let!(:file) { FactoryGirl.create(:generic_file, batch:work1) }
+    let(:user)    { FactoryGirl.create(:user) }
+    let!(:work1)  { FactoryGirl.create(:work_with_one_file, user: user) }
+    let!(:work2)  { FactoryGirl.create(:public_generic_work) }
+    let!(:file)   { work1.generic_files.first }
     before do
       sign_in user
     end
 
     context "when there is private content" do
       let!(:private_work) { FactoryGirl.create(:private_generic_work) }
-      #let!(:private_collection) { FactoryGirl.create(:private_collection) }
 
       it "excludes it" do
         get 'index'
@@ -88,7 +85,6 @@ describe CatalogController do
     let(:manager_user) { FactoryGirl.create(:user) }
     let!(:work1) { FactoryGirl.create(:private_generic_work, user: creating_user) }
     let!(:work2) { FactoryGirl.create(:embargoed_work, user: creating_user) }
-    #let!(:collection) { FactoryGirl.create(:private_collection, user: creating_user) }
 
     before do
       allow_any_instance_of(User).to receive(:groups).and_return(['admin'])

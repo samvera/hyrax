@@ -16,14 +16,10 @@ module CurationConcerns
     include Hydra::Collections::Collectible
     include CurationConcerns::File::Batches
     include CurationConcerns::File::Indexing
-    include CurationConcerns::File::BelongsToWork
+    include CurationConcerns::File::BelongsToWorks
     include Hydra::AccessControls::Embargoable
 
     included do
-      belongs_to :batch, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: 'ActiveFedora::Base'
-
-      before_destroy :remove_representative_relationship
-
       attr_accessor :file
 
       # make filename single-value (Sufia::GenericFile::Characterization makes it multivalue)
@@ -34,7 +30,6 @@ module CurationConcerns
           self[:filename]
         end
       end
-
     end
 
     def generic_work?
@@ -51,19 +46,6 @@ module CurationConcerns
 
     def copy_permissions_from(obj)
       self.datastreams['rightsMetadata'].ng_xml = obj.datastreams['rightsMetadata'].ng_xml
-    end
-
-    def update_parent_representative_if_empty(obj)
-      return unless obj.representative.blank?
-      obj.representative = self.id
-      obj.save
-    end
-
-    def remove_representative_relationship
-      return unless ActiveFedora::Base.exists?(batch)
-      return unless batch.representative == self.id
-      batch.representative = nil
-      batch.save
     end
 
     def to_solr(solr_doc = {})

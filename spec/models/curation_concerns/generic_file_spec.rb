@@ -164,7 +164,7 @@ describe CurationConcerns::GenericFile do
 
   describe "#indexer" do
     subject { described_class.indexer }
-    it { is_expected.to eq Sufia::GenericFileIndexingService }
+    it { is_expected.to eq CurationConcerns::GenericFileIndexingService }
   end
 
   it "should support multi-valued fields in solr" do
@@ -216,19 +216,6 @@ describe CurationConcerns::GenericFile do
         f.apply_depositor_metadata('mjg36')
         f.batch_id = batch_id
         f.save
-      end
-    end
-
-    context "when the files belong to a batch" do
-      let(:batch) { Batch.create }
-      let(:batch_id) { batch.id }
-
-      context "related_files" do
-        it "should return related files and not return itself" do
-          expect(f1.related_files).to match_array [f2, f3]
-          expect(f2.related_files).to match_array [f1, f3]
-          expect(f3.related_files).to match_array [f1, f2]
-        end
       end
     end
 
@@ -441,11 +428,10 @@ describe CurationConcerns::GenericFile do
   end
 
   describe "work associations" do
-    let(:work) { GenericWork.new }
-    subject { CurationConcerns::GenericFile.new(generic_work: work) }
-
+    let(:work) { FactoryGirl.create(:work_with_one_file) }
+    subject { work.generic_files.first.reload }
     it "should belong to works" do
-      expect(subject.generic_work).to eq work
+      expect(subject.generic_works).to eq [work]
     end
   end
 
@@ -523,46 +509,24 @@ describe CurationConcerns::GenericFile do
     end
   end
 
-
   describe 'with a parent work' do
-    let(:parent_id) { 'id123' }
-    let!(:parent) {
-      # if ActiveFedora::Base.exists?(parent_id)
-      #   ActiveFedora::Base.eradicate(parent_id)
-      # end
-      GenericWork.new id: parent_id, title: ['asdf']
-    }
 
-    subject { CurationConcerns::GenericFile.create(batch: parent) }
+    let(:parent) { FactoryGirl.create(:work_with_one_file) }
+    let(:parent_id) { parent.id }
 
     describe '#related_files' do
-      let(:sibling) {
-        sibling = CurationConcerns::GenericFile.create(batch: parent)
-        sibling.apply_depositor_metadata(user)
-        sibling
-      }
-      before do
-        sibling.save!
-      end
-
-      it "has a related file in a batch" do
+      let(:parent) { FactoryGirl.create(:work_with_files) }
+      let(:sibling) { parent.generic_files.last }
+      subject { parent.generic_files.first.reload }
+      it "returns related files, but not itself" do
         expect(subject.related_files).to eq([sibling])
-      end
-    end
-
-    describe '#processing?' do
-      it "is not currently being processed by a batch" do
-        expect(subject.processing?).to eq false
+        expect(sibling.reload.related_files).to eq([subject])
       end
     end
 
     describe '#remove_representative_relationship' do
       let(:some_other_id) { 'something456' }
-      before do
-        parent.representative = some_other_id
-        parent.save!
-      end
-
+      subject { parent.generic_files.first.reload }
       context "the parent object doesn't exist" do
         before do
           parent.representative = subject.id
@@ -572,17 +536,20 @@ describe CurationConcerns::GenericFile do
         end
 
         it "doesn't raise an error" do
+          pending "Currently, destroying a work destroys its children, so this test is not relevant.  Looks like this is the default behavior of :aggregates association from activefedora-aggregation ?"
           expect(ActiveFedora::Base.exists?(@parent_id)).to eq false
           expect {
-            subject.remove_representative_relationship
+            subject.reload.remove_representative_relationship
           }.to_not raise_error
         end
       end
 
       context 'it is not the representative' do
+        before do
+          parent.representative = some_other_id
+          parent.save!
+        end
         it "doesn't update parent work when file is deleted" do
-          expect(subject.batch).to eq parent
-          expect(parent.representative).to eq some_other_id
           subject.destroy
           expect(parent.representative).to eq some_other_id
         end
@@ -593,12 +560,9 @@ describe CurationConcerns::GenericFile do
           parent.representative = subject.id
           parent.save!
         end
-
         it 'updates the parent work when the file is deleted' do
-          expect(subject.batch).to eq parent
-          expect(parent.representative).to eq subject.id
           subject.destroy
-          expect(parent.representative).to be_nil
+          expect(parent.reload.representative).to be_nil
         end
       end
     end

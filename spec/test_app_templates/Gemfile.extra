@@ -5,8 +5,8 @@ gem 'sufia-models', github: 'projecthydra/sufia', ref:'7558ae3'
 
 gem 'active-fedora', github: 'projecthydra/active_fedora', ref:'caadc73'
 gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: '0dfe4f4'
-gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: 'a06b42a'
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: 'e287c66'
+gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: 'ec389e0'
+gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '7fece28'
 
 
 gem 'active-triples'

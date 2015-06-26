@@ -7,7 +7,7 @@ module CurationConcerns
       klass.new(curation_concern, *args)
     end
 
-    def self.attach_file(generic_file, user, file_to_attach)
+    def self.attach_file_to_generic_file(generic_file, user, file_to_attach)
       CurationConcerns::GenericFileActor.new(generic_file, user).create_content(file_to_attach, file_to_attach.original_filename, file_to_attach.content_type)
     end
   end
