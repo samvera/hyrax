@@ -1,9 +1,7 @@
 module CurationConcerns
   module Permissions
-    extend ActiveSupport::Autoload
-
-    autoload :Writable
-    autoload :Readable
-
+    extend ActiveSupport::Concern
+      include CurationConcerns::Permissions::Writable
+	    include CurationConcerns::Permissions::Readable
   end
 end

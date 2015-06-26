@@ -92,7 +92,7 @@ describe CurationConcerns::GenericWorkActor do
           it 'should stamp each file with the access rights' do
             s2 = double('characterize job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
-            expect(Sufia.queue).to receive(:push).with(s2).once
+            expect(CurationConcerns.queue).to receive(:push).with(s2).once
             expect(subject.create).to be true
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq Date.today
@@ -122,7 +122,7 @@ describe CurationConcerns::GenericWorkActor do
           it 'should stamp each file with the access rights' do
             s2 = double('characterize job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
-            expect(Sufia.queue).to receive(:push).with(s2).twice
+            expect(CurationConcerns.queue).to receive(:push).with(s2).twice
 
             expect(subject.create).to be true
             expect(curation_concern).to be_persisted

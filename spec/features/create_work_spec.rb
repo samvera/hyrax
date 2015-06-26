@@ -10,7 +10,7 @@ describe "Creating a new Work" do
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     s2 = double('resque message')
     expect(CharacterizeJob).to receive(:new).and_return(s2)
-    expect(Sufia.queue).to receive(:push).with(s2).once
+    expect(CurationConcerns.queue).to receive(:push).with(s2).once
   end
 
   it "should create the work and allow you to attach a file" do
@@ -33,4 +33,3 @@ describe "Creating a new Work" do
     end
   end
 end
-

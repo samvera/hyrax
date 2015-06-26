@@ -4,7 +4,7 @@ module CurationConcerns
 
     include Hydra::AccessControls::Permissions
     include Hydra::AccessControls::WithAccessRight
-    include Sufia::Noid
+    include CurationConcerns::Noid
     include CurationConcerns::HumanReadableType
     include Hydra::Collection
     include Hydra::Collections::Collectible

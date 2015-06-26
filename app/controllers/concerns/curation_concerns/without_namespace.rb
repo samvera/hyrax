@@ -9,7 +9,7 @@ module CurationConcerns
 
     protected
       def normalize_identifier
-        params[:id] = Sufia::Noid.namespaceize(params[:id])
+        params[:id] = CurationConcerns::Noid.namespaceize(params[:id])
       end
   end
 end

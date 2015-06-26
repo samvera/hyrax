@@ -4,4 +4,3 @@ class ActiveFedoraPidBasedJob < ActiveFedoraIdBasedJob
     Deprecation.warn ActiveFedoraPidBasedJob, "ActiveFedoraPidBasedJob is deprecated; use ActiveFedoraIdBasedJob instead."
   end
 end
-

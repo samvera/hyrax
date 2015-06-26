@@ -4,7 +4,7 @@ module CurationConcerns
     # @param [ActiveFedora::File] content
     # @param [User] user
     def self.create(content, user=nil)
-      content.create_version  # skip creating version because Works::AddFileToGenericFile service already does it
+      content.create_version
       record_committer(content, user) if user
     end
 

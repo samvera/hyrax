@@ -82,15 +82,6 @@ module CurationConcerns
         property :source, predicate: ::RDF::DC.source do |index|
           index.as :stored_searchable
         end
-
-        # TODO: Move this somewhere more appropriate
-        begin
-          LocalAuthority.register_vocabulary(self, "subject", "lc_subjects")
-          LocalAuthority.register_vocabulary(self, "language", "lexvo_languages")
-          LocalAuthority.register_vocabulary(self, "tag", "lc_genres")
-        rescue
-          puts "tables for vocabularies missing"
-        end
       end
 
     end

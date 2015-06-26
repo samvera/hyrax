@@ -57,7 +57,7 @@ module CurationConcerns
     def apply_save_data_to_curation_concern
       attributes[:rights] = Array(attributes[:rights]) if attributes.key? :rights
       remove_blank_attributes!
-      curation_concern.attributes = attributes
+      curation_concern.attributes = attributes.symbolize_keys
       curation_concern.date_modified = Date.today
     end
 
@@ -74,7 +74,11 @@ module CurationConcerns
     # => { 'title' => ['first', 'second'] }
     def remove_blank_attributes!
       multivalued_form_attributes.each_with_object(attributes) do |(k, v), h|
-        h[k] = v.select(&:present?)
+        if v.instance_of? Array
+          h[k] = v.select(&:present?)
+        else
+          h[k] = v
+        end
       end
     end
 

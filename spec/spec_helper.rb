@@ -14,6 +14,7 @@ Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15
 require 'capybara/rspec'
 require 'capybara/rails'
 
+$in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
 
 if ENV['COVERAGE'] || ENV['CI']
   require 'simplecov'
@@ -70,7 +71,6 @@ RSpec.configure do |config|
   config.deprecation_stream
 end
 
-## Helper from sufia
 module FactoryGirl
   def self.find_or_create(handle, by = :email)
     tmpl = FactoryGirl.build(handle)

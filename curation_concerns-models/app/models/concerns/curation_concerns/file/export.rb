@@ -21,8 +21,8 @@ module CurationConcerns
           '%G' => [:language],
           '%[' => [:date_modified],
           '%9' => [:resource_type],
-          '%~' => I18n.t('sufia.product_name'),
-          '%W' => I18n.t('sufia.institution_name')
+          '%~' => I18n.t('curation_concerns.product_name'),
+          '%W' => I18n.t('curation_concerns.institution_name')
         }
         text = []
         text << "%0 GenericFile"

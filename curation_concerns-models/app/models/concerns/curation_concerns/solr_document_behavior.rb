@@ -1,6 +1,3 @@
-# This was moved out of sufia-models and into sufia/app/models.
-# Copied the file in here to retain the functionality until/unless the file gets moved back into sufia-models.
-# -*- encoding : utf-8 -*-
 module CurationConcerns
   module SolrDocumentBehavior
     def title_or_label

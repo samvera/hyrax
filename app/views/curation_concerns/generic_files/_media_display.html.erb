@@ -1,4 +1,3 @@
-<!-- direct copy of sufia's app/views/generic_files/_media_display.html.erb  -->
 <% if generic_file.image? %>
   <%= link_to image_tag(download_path(generic_file, datastream_id: 'thumbnail'),{class:"img-responsive", alt:"Download the full-sized image of #{generic_file.title.first}"})+"Download the full-sized image", download_path(generic_file), { target:"_new", title:"Download the full-sized image"}%>
 <% elsif generic_file.video? %>

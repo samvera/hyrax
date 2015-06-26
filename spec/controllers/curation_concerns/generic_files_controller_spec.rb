@@ -24,7 +24,7 @@ describe CurationConcerns::GenericFilesController do
         xit "spawns a CharacterizeJob" do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with('123').and_return(s2)
-          expect(Sufia.queue).to receive(:push).with(s2).once
+          expect(CurationConcerns.queue).to receive(:push).with(s2).once
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
               generic_file: { "title"=>[""], visibility_during_embargo: "restricted",
@@ -59,7 +59,7 @@ describe CurationConcerns::GenericFilesController do
         it "copies visibility from the parent" do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with('123').and_return(s2)
-          expect(Sufia.queue).to receive(:push).with(s2).once
+          expect(CurationConcerns.queue).to receive(:push).with(s2).once
           xhr :post, :create, files: [file], parent_id: parent
           expect(assigns[:generic_file]).to be_persisted
           saved_file = assigns[:generic_file].reload
@@ -78,9 +78,8 @@ describe CurationConcerns::GenericFilesController do
       end
 
       context "when the file has a virus" do
-        it "displays a flash error" do
-          skip
-          expect(Sufia::GenericFile::Actions).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+        xit "displays a flash error" do
+          expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(flash[:error]).to include('A virus was found')
@@ -194,7 +193,7 @@ describe CurationConcerns::GenericFilesController do
         it "should be successful" do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
-          expect(Sufia.queue).to receive(:push).with(s2).once
+          expect(CurationConcerns.queue).to receive(:push).with(s2).once
           post :update, id: generic_file, files: [file]
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
           # expect(generic_file.reload.label).to eq 'image.png' # commented out because Characterization behavior is broken & will be replaced by Hydra::Works::File::Characterization
@@ -203,16 +202,16 @@ describe CurationConcerns::GenericFilesController do
 
       context "restoring an old version" do
         before do
-          allow(Sufia.queue).to receive(:push) # don't run characterization jobs
+          allow(CurationConcerns.queue).to receive(:push) # don't run characterization jobs
           # Create version 1
           Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('small_file.txt'), :original_file)
           # Create version 2
-          Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('sufia_generic_stub.txt'), :original_file)
+          Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('curation_concerns_generic_stub.txt'), :original_file)
         end
 
         it "should be successful" do
           expect(generic_file.latest_content_version.label).to eq('version2')
-          expect(generic_file.original_file.content).to eq("This is a test fixture for sufia: <%= @id %>.\n")
+          expect(generic_file.original_file.content).to eq("This is a test fixture for curation_concerns: <%= @id %>.\n")
           post :update, id: generic_file, revision: 'version1'
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
           reloaded = generic_file.reload.original_file
@@ -235,7 +234,7 @@ describe CurationConcerns::GenericFilesController do
       generic_file
     end
     after do
-      # GenericFile.find('sufia:5').destroy
+      # GenericFile.find('curation_concerns:5').destroy
     end
     describe "edit" do
       it "should give me a flash error" do

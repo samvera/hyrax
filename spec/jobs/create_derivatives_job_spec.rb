@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CreateDerivativesJob do
+describe CurationConcerns::CreateDerivativesService do
   before do
     @ffmpeg_enabled = CurationConcerns.config.enable_ffmpeg
     CurationConcerns.config.enable_ffmpeg = true
@@ -15,6 +15,7 @@ describe CreateDerivativesJob do
 
   subject { CreateDerivativesJob.new('123') }
 
+  # Should be refactored to test CurationConcerns::CreateDerivativesService
   it "should run the derivative creation service and save" do
     expect(CurationConcerns::CreateDerivativesService).to receive(:run).with(generic_file)
     expect(generic_file).to receive(:save)

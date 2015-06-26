@@ -7,7 +7,7 @@ module CurationConcerns
 
     def initialize(generic_file, user)
       # we're setting attributes and curation_concern to bridge the difference
-      # between Sufia::GenericFile::Actor and ManagesEmbargoesActor
+      # between CurationConcerns::GenericFileActor and ManagesEmbargoesActor
       @curation_concern = generic_file
       @generic_file = generic_file
       @user = user
@@ -117,7 +117,7 @@ module CurationConcerns
       begin
         return false unless generic_file.save
       rescue RSolr::Error::Http => error
-        ActiveFedora::Base.logger.warn "Sufia::GenericFile::Actor#save Caught RSOLR error #{error.inspect}"
+        ActiveFedora::Base.logger.warn "CurationConcerns::GenericFileActor#save Caught RSOLR error #{error.inspect}"
         save_tries+=1
         # fail for good if the tries is greater than 3
         raise error if save_tries >=3
@@ -129,7 +129,7 @@ module CurationConcerns
     end
 
     def push_characterize_job
-      Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
+      CurationConcerns.queue.push(CharacterizeJob.new(@generic_file.id))
     end
 
     class << self
@@ -140,7 +140,7 @@ module CurationConcerns
           return
         end
         scan_result = ClamAV.instance.scanfile(path)
-        raise Sufia::VirusFoundError.new("A virus was found in #{path}: #{scan_result}") unless scan_result == 0
+        raise CurationConcerns::VirusFoundError.new("A virus was found in #{path}: #{scan_result}") unless scan_result == 0
       end
     end
 
@@ -159,4 +159,3 @@ module CurationConcerns
     end
   end
 end
-

@@ -21,8 +21,8 @@ module CurationConcerns
       say_status("warning", "GENERATING RSPEC-RAILS", :yellow)
       generate 'rspec:install'
 
-      say_status("warning", "GENERATING SUFIA", :yellow)
-      generate "sufia:models:install#{options[:force] ? ' -f' : ''}"
+      say_status("warning", "GENERATING CURATION_CONCERNS", :yellow)
+      generate "curation_concerns:models:install#{options[:force] ? ' -f' : ''}"
     end
 
     def remove_catalog_controller
@@ -87,7 +87,7 @@ module CurationConcerns
     end
 
     def add_collection_mixin
-      inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
+      inject_into_file 'app/models/collection.rb', after: /CurationConcerns::Collection.*$/ do
         "\n  include CurationConcerns::CollectionBehavior"
       end
       # inject_into_class 'app/models/collection.rb', Collection, "  include CurationConcerns::Collection"

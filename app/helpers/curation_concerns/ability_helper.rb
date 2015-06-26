@@ -13,7 +13,7 @@ module CurationConcerns
     def visibility_options(variant)
       options = [
           ['Open Access',Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC],
-          [t('sufia.institution_name'),Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED],
+          [t('curation_concerns.institution_name'),Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED],
           ['Private',Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE]
       ]
       case variant

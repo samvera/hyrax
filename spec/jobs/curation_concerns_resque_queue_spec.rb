@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Sufia::Resque::Queue do
-  let(:subject) { Sufia::Resque::Queue.new "test_queue" }
+describe CurationConcerns::Resque::Queue do
+  let(:subject) { CurationConcerns::Resque::Queue.new "test_queue" }
   let(:job) { double('job') }
 
   context "with no retries" do
