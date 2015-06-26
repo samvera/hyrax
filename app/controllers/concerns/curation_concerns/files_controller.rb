@@ -55,7 +55,7 @@ module CurationConcerns
 
     def destroy
       @generic_file.destroy
-      redirect_to [main_app, :curation_concerns, @generic_file.batch], notice: "The file has been deleted."
+      redirect_to [main_app, :curation_concerns, @generic_file.generic_works.first], notice: "The file has been deleted."
     end
 
     # routed to /files/:id (PUT)
@@ -82,7 +82,6 @@ module CurationConcerns
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
       # attrs_without_visibility_info = actor.interpret_visibility(attributes)
-      # debugger
       file_attributes = CurationConcerns::Forms::GenericFileEditForm.model_attributes(attributes)
       actor.update_metadata(file_attributes, attributes)
     end
@@ -126,7 +125,7 @@ module CurationConcerns
             if request.xhr?
               render 'jq_upload', formats: 'json', content_type: 'text/html'
             else
-              redirect_to [main_app, :curation_concerns, @generic_file.batch]
+              redirect_to [main_app, :curation_concerns, @generic_file.generic_works.first]
             end
           }
           format.json {

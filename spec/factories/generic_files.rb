@@ -6,17 +6,14 @@ FactoryGirl.define do
     end
 
     factory :file_with_work do
-
-      batch { FactoryGirl.create(:generic_work, user: user) }
-
       after(:build) do |file, evaluator|
         file.title = ['testfile']
       end
       after(:create) do |file, evaluator|
         if evaluator.content
-          # Hydra::Works::AddFileToGenericFile.call(file, evaluator.content, :original_file)
           Hydra::Works::UploadFileToGenericFile.call(file, evaluator.content)
         end
+        Hydra::Works::AddGenericFileToGenericWork.call(FactoryGirl.create(:generic_work, user: evaluator.user), file)
       end
     end
     before(:create) do |file, evaluator|

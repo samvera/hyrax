@@ -6,7 +6,7 @@ module CurationConcerns
     end
 
     def curation_concerns_permissions
-      
+
       unless current_user.new_record?
         can :create, CurationConcerns::ClassifyConcern
         can :create, [CurationConcerns::GenericFile] #, CurationConcerns::LinkedResource]

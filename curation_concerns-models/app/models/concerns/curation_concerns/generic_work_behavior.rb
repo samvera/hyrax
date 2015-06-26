@@ -1,5 +1,6 @@
 module CurationConcerns::GenericWorkBehavior
   extend ActiveSupport::Concern
+  include Hydra::Works::GenericWorkBehavior
   include ::CurationConcerns::Curatable
   include ::CurationConcerns::WithGenericFiles
   include Hydra::AccessControls::Embargoable

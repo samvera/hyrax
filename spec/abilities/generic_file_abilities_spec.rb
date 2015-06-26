@@ -10,7 +10,7 @@ describe "User" do
     let(:user) { FactoryGirl.create(:user) }
     let(:current_user) { user }
     let(:generic_work) {  FactoryGirl.create(:generic_work, visibility: visibility, user:creating_user) }
-    let(:generic_file) {  FactoryGirl.create(:file_with_work, visibility: visibility, user:creating_user) }
+    let(:generic_file) {  FactoryGirl.create(:generic_file, visibility: visibility, user:creating_user) }
 
     describe 'without embargo' do
       describe 'creator of object' do

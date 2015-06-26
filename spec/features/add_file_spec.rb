@@ -27,6 +27,8 @@ describe "Add an attached file" do
       click_on("Attach to Generic Work")
     end
 
+    visit "/concern/generic_works/#{work.id}"
+
     within '.related_files' do
       expect(page).to have_link "image.png"
     end
