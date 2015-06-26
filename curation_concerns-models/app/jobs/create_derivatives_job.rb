@@ -8,7 +8,7 @@ class CreateDerivativesJob < ActiveFedoraIdBasedJob
     if generic_file.video?
       return unless Sufia.config.enable_ffmpeg
     end
-    generic_file.create_derivatives
+    CurationConcerns::CreateDerivativesService.run(generic_file)
     generic_file.save
   end
 end

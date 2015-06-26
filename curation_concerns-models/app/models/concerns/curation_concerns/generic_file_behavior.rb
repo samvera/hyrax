@@ -1,23 +1,23 @@
 module CurationConcerns
   module GenericFileBehavior
     extend ActiveSupport::Concern
-    include Hydra::AccessControls::Embargoable
-    include CurationConcerns::Serializers
+    include Hydra::Works::GenericFileBehavior
     include Hydra::WithDepositor
+    include CurationConcerns::Serializers
     include CurationConcerns::Noid
-    include Sufia::GenericFile::MimeTypes
     include CurationConcerns::File::Export
-    include Sufia::GenericFile::Characterization
-    include Sufia::GenericFile::Derivatives
-    include Sufia::GenericFile::Metadata
+    include CurationConcerns::File::Characterization
+    include CurationConcerns::File::Permissions
+    include CurationConcerns::File::BasicMetadata
     include Sufia::GenericFile::Content
-    include Sufia::GenericFile::Versions
-    include Sufia::GenericFile::VirusCheck
-    include Sufia::GenericFile::FullTextIndexing
+    # include CurationConcerns::File::Versions
+    include CurationConcerns::File::VirusCheck
+    include CurationConcerns::File::FullTextIndexing
     include Hydra::Collections::Collectible
     include CurationConcerns::File::Batches
-    include Sufia::GenericFile::Indexing
-    include CurationConcerns::Permissions::Readable # Only include Sufia::Permissions::Readable, not Sufia::Permissions::Writable
+    include CurationConcerns::File::Indexing
+    include CurationConcerns::File::BelongsToWork
+    include Hydra::AccessControls::Embargoable
 
     included do
       belongs_to :batch, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: 'ActiveFedora::Base'
@@ -25,7 +25,6 @@ module CurationConcerns
       before_destroy :remove_representative_relationship
 
       attr_accessor :file
-      delegate :latest_version, to: :content
 
       # make filename single-value (Sufia::GenericFile::Characterization makes it multivalue)
       def filename
@@ -35,6 +34,11 @@ module CurationConcerns
           self[:filename]
         end
       end
+
+    end
+
+    def generic_work?
+      false
     end
 
     def human_readable_type

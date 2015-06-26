@@ -82,7 +82,7 @@ describe EmbargoesController do
 
   describe "#update" do
     context "when I have permission to edit the object" do
-      let(:a_file) { FactoryGirl.build(:generic_file, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
+      let(:a_file) { FactoryGirl.create(:generic_file, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
       let(:release_date) { Date.today+2 }
       before do
         a_work.generic_files << a_file

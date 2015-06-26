@@ -1,4 +1,4 @@
-module CurationConcerns::WorkBehavior
+module CurationConcerns::GenericWorkBehavior
   extend ActiveSupport::Concern
   include ::CurationConcerns::Curatable
   include ::CurationConcerns::WithGenericFiles

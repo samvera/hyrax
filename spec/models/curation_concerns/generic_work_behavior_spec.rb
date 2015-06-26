@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe CurationConcerns::WorkBehavior do
+describe CurationConcerns::GenericWorkBehavior do
   before do
     class EssentialWork < ActiveFedora::Base
-      include CurationConcerns::WorkBehavior
+      include CurationConcerns::GenericWorkBehavior
     end
   end
   after do

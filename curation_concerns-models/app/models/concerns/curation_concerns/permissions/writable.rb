@@ -13,7 +13,7 @@ module CurationConcerns
 
       def paranoid_permissions
         valid = true
-        VALIDATIONS.each do |validation|
+        paranoid_edit_permissions.each do |validation|
           if validation[:condition].call(self)
             errors[validation[:key]] ||= []
             errors[validation[:key]] << validation[:message]
@@ -23,12 +23,13 @@ module CurationConcerns
         return valid
       end
 
-      VALIDATIONS = [
-        {key: :edit_users, message: 'Depositor must have edit access', condition: lambda { |obj| !obj.edit_users.include?(obj.depositor) }},
-        {key: :edit_groups, message: 'Public cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('public') }},
-        {key: :edit_groups, message: 'Registered cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('registered') }}
-      ]
-
+      def paranoid_edit_permissions
+        [
+            {key: :edit_users, message: 'Depositor must have edit access', condition: lambda { |obj| !obj.edit_users.include?(obj.depositor) }},
+            {key: :edit_groups, message: 'Public cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('public') }},
+            {key: :edit_groups, message: 'Registered cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('registered') }}
+        ]
+      end
 
       def clear_permissions!
         self.permissions = []

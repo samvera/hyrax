@@ -5,6 +5,11 @@ module CurationConcerns
 
     source_root File.expand_path('../templates', __FILE__)
 
+    # BEGIN Blacklight Stuff
+    # Really just relying on the blacklight generator to
+    #   * set up devise
+    #   * add solr.yml
+    # ... so ultimately aiming to stop using it.
     def run_blacklight_generator
       say_status("warning", "GENERATING BL", :yellow)
       generate 'blacklight:install', '--devise'
@@ -39,6 +44,8 @@ module CurationConcerns
     def remove_blacklight_scss
       remove_file 'app/assets/stylesheets/blacklight.css.scss'
     end
+
+    # END Blacklight stuff
 
     def inject_routes
       inject_into_file 'config/routes.rb', :after => /devise_for :users\s*\n/ do
@@ -79,12 +86,12 @@ module CurationConcerns
       copy_file "curation_concerns_helper.rb", "app/helpers/curation_concerns_helper.rb"
     end
 
-    # def add_collection_mixin
-    #   inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
-    #     "\n  include CurationConcerns::Collection"
-    #   end
-    #   # inject_into_class 'app/models/collection.rb', Collection, "  include CurationConcerns::Collection"
-    # end
+    def add_collection_mixin
+      inject_into_file 'app/models/collection.rb', after: /Sufia::Collection.*$/ do
+        "\n  include CurationConcerns::CollectionBehavior"
+      end
+      # inject_into_class 'app/models/collection.rb', Collection, "  include CurationConcerns::Collection"
+    end
 
     def add_config_file
       copy_file "curation_concerns_config.rb", "config/initializers/curation_concerns_config.rb"
