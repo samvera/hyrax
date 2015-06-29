@@ -8,13 +8,11 @@
       <span class="fa fa-bars"></span>
     </button>
 
-  <h4>
-    <%= t("sufia.dashboard.my.facet_label.#{current_tab}") %>
-  </h4>
-    </div>
+    <h3><%= t("sufia.dashboard.my.facet_label.#{current_tab}") %></h3>
+  </div>
 
   <div id="facet-panel-collapse" class="collapse panel-group">
-  <%= render_facet_partials %>
-</div>
+    <%= render_facet_partials %>
+  </div>
 </div>
 <% end %>

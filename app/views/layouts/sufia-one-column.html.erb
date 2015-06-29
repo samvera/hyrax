@@ -8,6 +8,7 @@
 <div  id="wrapper">
   <div class="container-fluid">
     <div id="page-positioner">
+      <a href="#skip_to_content" class="sr-only">Skip to Content</a>
       <%= render partial: '/masthead' %>
       <%= render partial: '/controls' %>
       <%= render partial: '/flash_msg' %>
@@ -19,6 +20,7 @@
             </div>
           </div>
         <% end %>
+        <a name="skip_to_content"></a>
         <div id="content" class="row">
           <div class="col-xs-12">
             <%= yield %>
