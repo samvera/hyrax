@@ -90,7 +90,7 @@ module Hydra
     # Download permissions are exercised in Hydra::Controller::DownloadBehavior
     def download_permissions
       can :download, ActiveFedora::File do |file|
-        parent_uri = file.uri.sub(/\/[^\/]*$/, '')
+        parent_uri = file.uri.to_s.sub(/\/[^\/]*$/, '')
         parent_id = ActiveFedora::Base.uri_to_id(parent_uri)
         can? :read, parent_id # i.e, can download if can read parent resource
       end

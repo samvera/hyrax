@@ -238,24 +238,42 @@ describe Ability do
     subject { Ability.new(user) }
     let(:asset) { FactoryGirl.create(:asset) }
     let(:user) { FactoryGirl.build(:user) }
-    let(:file) { ActiveFedora::File.new("#{asset.uri}/ds1") }
+    let(:file) { ActiveFedora::File.new() }
 
+    before { allow(file).to receive(:uri).and_return(uri) }
     after { asset.destroy }
 
-    context "user has read permission on the object" do
-      before do
-        asset.read_users = [user.user_key]
-        asset.save!
+    context "in AF < 9.2" do
+      let(:uri) { "#{asset.uri}/ds1" }
+
+      context "user has read permission on the object" do
+        before do
+          asset.read_users = [user.user_key]
+          asset.save!
+        end
+
+        it { should be_able_to(:read, asset.id) }
+        it { should be_able_to(:download, file) }
       end
 
-      it { should be_able_to(:read, asset.id) }
-      it { should be_able_to(:download, file) }
+      context "user lacks read permission on the object and file" do
+        it { should_not be_able_to(:read, asset) }
+        it { should_not be_able_to(:download, file) }
+      end
     end
 
-    context "user lacks read permission on the object and file" do
-      it { should_not be_able_to(:read, asset) }
-      it { should_not be_able_to(:download, file) }
+    context "in AF >= 9.2" do
+      let(:uri) { RDF::URI("#{asset.uri}/ds1") }
+
+      context "user has read permission on the object" do
+        before do
+          asset.read_users = [user.user_key]
+          asset.save!
+        end
+
+        it { should be_able_to(:read, asset.id) }
+        it { should be_able_to(:download, file) }
+      end
     end
   end
-
 end
