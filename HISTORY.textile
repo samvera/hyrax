@@ -1,3 +1,12 @@
+h3. 9.2.0.rc1 (2015-6-30)
+* Support ActiveFedora 9.2.0 [Justin Coyne]
+
+* Fixed typo in warning messages. Fixes #263 [Hector Correa]
+
+* uses explicit syntax about the scope of url routes used when redirecting a user based on access denial [Matt Zumwalt]
+
+* Add Content Negotiation [Trey Terrell]
+
 h3. 9.1.4 (2015-4-17)
 * Admin Policies should remember their permissions. Fixes #257 [Justin Coyne]
 
