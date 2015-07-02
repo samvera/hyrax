@@ -220,6 +220,7 @@ module Sufia
                else
                  "default.png"
                end
+        options[:alt] = " "
         image_tag path, options
       end
   end
