@@ -9,7 +9,7 @@ module CurationConcerns
 
       unless current_user.new_record?
         can :create, CurationConcerns::ClassifyConcern
-        can :create, [CurationConcerns::GenericFile] #, CurationConcerns::LinkedResource]
+        can :create, [CurationConcerns::GenericFile]
       end
 
       if user_groups.include? 'admin'

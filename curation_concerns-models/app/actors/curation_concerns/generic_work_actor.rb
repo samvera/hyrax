@@ -6,12 +6,12 @@ module CurationConcerns
     def create
       # set the @files ivar then remove the files attribute so it isn't set by default.
       files && attributes.delete(:files)
-      assign_pid && interpret_visibility && super && attach_files && create_linked_resources && assign_representative && copy_visibility
+      assign_pid && interpret_visibility && super && attach_files && assign_representative && copy_visibility
     end
 
     def update
       add_to_collections(attributes.delete(:collection_ids)) &&
-          interpret_visibility && super && attach_files && create_linked_resources && copy_visibility
+          interpret_visibility && super && attach_files && copy_visibility
     end
 
     delegate :visibility_changed?, to: :curation_concern
@@ -52,27 +52,6 @@ module CurationConcerns
         collection.save
       end
       true
-    end
-
-    def linked_resource_urls
-      @linked_resource_urls ||= Array(attributes[:linked_resource_urls]).flatten.compact
-    end
-
-    def create_linked_resources
-      linked_resource_urls.all? do |link_resource_url|
-        create_linked_resource(link_resource_url)
-      end
-    end
-
-    def create_linked_resource(link_resource_url)
-      return true unless link_resource_url.present?
-      resource = CurationConcerns::LinkedResource.new.tap do |link|
-        link.url = link_resource_url
-        link.batch = curation_concern
-        link.label = curation_concern.human_readable_type
-      end
-      CurationConcerns::GenericFileActor.new(resource, user).create_metadata(curation_concern.id, curation_concern.id)
-      resource.save
     end
 
     def assign_representative
