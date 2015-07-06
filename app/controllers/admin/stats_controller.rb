@@ -61,12 +61,11 @@ class Admin::StatsController < ApplicationController
     end
 
     def recent_users
-      # users since date
-      if @users_stats[:start_date]
-        return User.where('created_at >= ?', @users_stats[:start_date])
-      end
+      # no dates return the top 5
+      return User.order('created_at DESC').limit(5) if @users_stats[:start_date].blank?
 
-      # 5 most recent
-      User.order('created_at DESC').limit(5)
+      start_date = DateTime.parse @users_stats[:start_date]
+      end_date = DateTime.parse(@users_stats[:end_date]).end_of_day unless @users_stats[:end_date].blank?
+      User.recent_users start_date, end_date
     end
 end

@@ -23,14 +23,26 @@ describe Admin::StatsController, type: :controller do
     end
 
     describe "querying user_stats" do
+      let(:one_day_ago_date) { 1.day.ago.to_datetime }
+      let(:two_days_ago_date) { 2.days.ago.to_datetime.end_of_day }
+      let(:one_day_ago) { one_day_ago_date.strftime("%Y-%m-%d") }
+      let(:two_days_ago) { two_days_ago_date.strftime("%Y-%m-%d") }
+
       it "defaults to latest 5 users" do
         get :index
         expect(assigns[:recent_users]).to eq(User.order('created_at DESC').limit(5))
       end
-      it "allows queries against user_stats" do
+
+      it "allows queries against user_stats without an end date " do
         expect(User).to receive(:where).with('id' => user1.id).once.and_return([user1])
-        expect(User).to receive(:where).with('created_at >= ?', 1.day.ago.strftime("%Y-%m-%d")).and_return([user2])
-        get :index, users_stats: { start_date: 1.day.ago.strftime("%Y-%m-%d") }
+        expect(User).to receive(:recent_users).with(one_day_ago_date, nil).and_return([user2])
+        get :index, users_stats: { start_date: one_day_ago }
+        expect(assigns[:recent_users]).to eq([user2])
+      end
+
+      it "allows queries against user_stats with an end date" do
+        expect(User).to receive(:recent_users).with(two_days_ago_date, one_day_ago_date).and_return([user2])
+        get :index, users_stats: { start_date: two_days_ago, end_date: one_day_ago }
         expect(assigns[:recent_users]).to eq([user2])
       end
     end

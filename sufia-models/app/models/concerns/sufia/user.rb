@@ -167,5 +167,10 @@ module Sufia::User
     def from_url_component(component)
       User.find_by_user_key(component.gsub(/-dot-/, '.'))
     end
+
+    def recent_users(start_date, end_date = nil)
+      end_date ||= DateTime.now # doing or eq here so that if the user passes nil we still get now
+      User.where(created_at: start_date..end_date)
+    end
   end
 end
