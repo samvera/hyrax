@@ -19,11 +19,11 @@ describe Hydra::AccessControls::Permissions do
     subject.read_groups=['group1', 'group2']
     subject.edit_users=['user1']
     subject.read_users=['user2', 'user3']
-    expect(subject.permissions).to match_array [Hydra::AccessControls::Permission.new(:type=>"group", :access=>"read", :name=>"group1"),
-        Hydra::AccessControls::Permission.new({:type=>"group", :access=>"read", :name=>"group2"}),
-        Hydra::AccessControls::Permission.new({:type=>"person", :access=>"read", :name=>"user2"}),
-        Hydra::AccessControls::Permission.new({:type=>"person", :access=>"read", :name=>"user3"}),
-        Hydra::AccessControls::Permission.new({:type=>"person", :access=>"edit", :name=>"user1"})]
+    expect(subject.permissions).to match_array [Hydra::AccessControls::Permission.new(type: "group", access: "read", name: "group1"),
+        Hydra::AccessControls::Permission.new({ type: "group", access: "read", name: "group2" }),
+        Hydra::AccessControls::Permission.new({ type: "person", access: "read", name: "user2" }),
+        Hydra::AccessControls::Permission.new({ type: "person", access: "read", name: "user3" }),
+        Hydra::AccessControls::Permission.new({ type: "person", access: "edit", name: "user1" })]
   end
 
   describe "building a new permission" do
@@ -40,33 +40,33 @@ describe Hydra::AccessControls::Permissions do
     describe "with nested attributes" do
       before do
         subject.save!
-        subject.permissions_attributes = [{:type=>"person", :access=>"edit", :name=>"jcoyne"}]
+        subject.permissions_attributes = [{ type: "person", access: "edit", name: "jcoyne" }]
       end
       context "when a hash is passed" do
         before do
-          subject.permissions_attributes = {'0' => {type: "group", access:"read", name:"group1"},
-                                            '1' => {type: 'person', access: 'edit', name: 'user2'}}
+          subject.permissions_attributes = {'0' => { type: "group", access:"read", name:"group1" },
+                                            '1' => { type: 'person', access: 'edit', name: 'user2' }}
         end
         it "should handle a hash" do
           expect(subject.permissions.size).to eq 3
           expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
           expect(subject.permissions.map(&:to_hash)).to match_array [
-              {type: "person", access: "edit", name: "jcoyne"},
-              {type: "group", access: "read", name: "group1"},
-              {type: "person", access: "edit", name: "user2"}]
+              { type: "person", access: "edit", name: "jcoyne" },
+              { type: "group", access: "read", name: "group1" },
+              { type: "person", access: "edit", name: "user2" }]
         end
       end
 
-      it "should create new group permissions" do
-        subject.permissions_attributes = [{type: "group", access: "read", name: "group1"}]
+      it "creates new group permissions" do
+        subject.permissions_attributes = [{ type: "group", access: "read", name: "group1" }]
         expect(subject.permissions.size).to eq 2
         expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
         expect(subject.permissions[0].to_hash).to eq(type: "person", access: "edit", name: "jcoyne")
         expect(subject.permissions[1].to_hash).to eq(type: "group", access: "read", name: "group1")
       end
 
-      it "should create new user permissions" do
-        subject.permissions_attributes = [{:type=>"person", :access=>"read", :name=>"user1"}]
+      it "creates new user permissions" do
+        subject.permissions_attributes = [{ type: "person", access: "read", name: "user1" }]
         expect(subject.permissions.size).to eq 2
         expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
         expect(subject.permissions[0].to_hash).to eq(type: "person", access: "edit", name: "jcoyne")
@@ -74,9 +74,9 @@ describe Hydra::AccessControls::Permissions do
       end
 
       context "when called multiple times" do
-        it "should not replace existing groups" do
-          subject.permissions_attributes = [{:type=>"group", :access=>"read", :name=>"group1"}]
-          subject.permissions_attributes = [{:type=>"group", :access=>"read", :name=>"group2"}]
+        it "doesn't replace existing groups" do
+          subject.permissions_attributes = [{ type: "group", access: "read", name: "group1" }]
+          subject.permissions_attributes = [{ type: "group", access: "read", name: "group2" }]
           expect(subject.permissions.size).to eq 3
           expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
           expect(subject.permissions[0].to_hash).to eq(type: "person", access: "edit", name: "jcoyne")
@@ -84,9 +84,9 @@ describe Hydra::AccessControls::Permissions do
           expect(subject.permissions[2].to_hash).to eq(type: "group", access: "read", name: "group2")
         end
 
-        it "should not replace existing users" do
-          subject.permissions_attributes = [{:type=>"person", :access=>"read", :name=>"user1"}]
-          subject.permissions_attributes = [{:type=>"person", :access=>"read", :name=>"user2"}]
+        it "doesn't replace existing users" do
+          subject.permissions_attributes = [{ type: "person", access: "read", name: "user1" }]
+          subject.permissions_attributes = [{ type: "person", access: "read", name: "user2" }]
           expect(subject.permissions.size).to eq 3
           expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
           expect(subject.permissions[0].to_hash).to eq(type: "person", access: "edit", name: "jcoyne")
@@ -94,49 +94,74 @@ describe Hydra::AccessControls::Permissions do
           expect(subject.permissions[2].to_hash).to eq(type: "person", access: "read", name: "user2")
         end
 
-        it "should update permissions on existing users" do
-          subject.update permissions_attributes: [{:type=>"person", :access=>"read", :name=>"user1"}]
-          subject.update permissions_attributes: [{:type=>"person", :access=>"edit", :name=>"user1"}]
+        it "updates permissions on existing users" do
+          subject.update permissions_attributes: [{ type: "person", access: "read", name: "user1" }]
+          subject.update permissions_attributes: [{ type: "person", access: "edit", name: "user1" }]
           expect(subject.permissions.size).to eq 2
           expect(subject.permissions.to_a).to all(be_a(Hydra::AccessControls::Permission))
           expect(subject.permissions[0].to_hash).to eq(type: "person", access: "edit", name: "jcoyne")
           expect(subject.permissions[1].to_hash).to eq(type: "person", access: "edit", name: "user1")
         end
 
-        it "should update permissions on existing groups" do
-          subject.update permissions_attributes: [{:type=>"group", :access=>"read", :name=>"group1"}]
-          subject.update permissions_attributes: [{:type=>"group", :access=>"edit", :name=>"group1"}]
+        it "updates permissions on existing groups" do
+          subject.update permissions_attributes: [{ type: "group", access: "read", name: "group1" }]
+          subject.update permissions_attributes: [{ type: "group", access: "edit", name: "group1" }]
           expect(subject.permissions.map(&:to_hash)).to match_array [
-                                            {:type=>"group", :access=>"edit", :name=>"group1"},
-                                            {:type=>"person", :access=>"edit", :name=>"jcoyne"}]
+                                            { type: "group", access: "edit", name: "group1" },
+                                            { type: "person", access: "edit", name: "jcoyne" }]
         end
       end
 
-      it "should remove permissions on existing users" do
-        subject.update permissions_attributes: [{:type=>"person", :access=>"read", :name=>"user1"}]
-        subject.update permissions_attributes: [{:id=>ActiveFedora::Base.uri_to_id(subject.permissions.last.rdf_subject.to_s), :type=>"person", :access=>"edit", :name=>"user1", _destroy: true}]
-        expect(subject.permissions.reload.map(&:to_hash)).to eq [{ :name=>"jcoyne", :type=>"person", :access=>"edit" }]
-      end
+      context "when the destroy flag is set" do
+        let(:reloaded) { subject.permissions.reload.map(&:to_hash) }
+        let(:permissions_id) { ActiveFedora::Base.uri_to_id(subject.permissions.last.rdf_subject.to_s) }
 
-      it "should remove permissions on existing groups" do
-        subject.update permissions_attributes: [{:type=>"group", :access=>"read", :name=>"group1"}]
-        subject.update permissions_attributes: [{:id=>ActiveFedora::Base.uri_to_id(subject.permissions.last.rdf_subject.to_s), :type=>"group", :access=>"edit", :name=>"group1", _destroy: '1'}]
-        expect(subject.permissions.reload.map(&:to_hash)).to eq [{:type=>"person", :access=>"edit", :name=>"jcoyne"}]
-      end
+        context "to a truthy value" do
+          context "when updating users" do
+            before do
+              subject.update permissions_attributes: [{ type: "person", access: "read", name: "user1" }]
+              subject.update permissions_attributes: [{ id: permissions_id, type: "person", access: "edit", name: "user1", _destroy: true}]
+            end
 
-      it "should not remove when destroy flag is falsy" do
-        subject.update permissions_attributes: [{:type=>"group", :access=>"read", :name=>"group1"}]
-        subject.update permissions_attributes: [{:id=>ActiveFedora::Base.uri_to_id(subject.permissions.last.rdf_subject.to_s), :type=>"group", :access=>"edit", :name=>"group1", _destroy: '0'}]
-        expect(subject.permissions.reload.map(&:to_hash)).to match_array [{:type=>"group", :access=>"edit", :name=>"group1"},
-                                                          {:type=>"person", :access=>"edit", :name=>"jcoyne"}]
+            it "removes permissions on existing users" do
+              indexed_result = ActiveFedora::SolrService.query("id:#{subject.id}").first['edit_access_person_ssim']
+              expect(indexed_result).to eq ['jcoyne']
+              expect(reloaded).to eq [{ name: "jcoyne", type: "person", access: "edit" }]
+            end
+          end
+
+          context "when updating groups" do
+            before do
+              subject.update permissions_attributes: [{ type: "group", access: "read", name: "group1" }]
+              subject.update permissions_attributes: [{ id: permissions_id, type: "group", access: "edit", name: "group1", _destroy: '1' }]
+            end
+
+            it "removes permissions on existing groups" do
+              #See what actually gets stored in solr
+              indexed_result = ActiveFedora::SolrService.query("id:#{subject.id}").first['edit_access_group_ssim']
+              expect(indexed_result).to be_nil
+              expect(reloaded).to eq [{ type: "person", access: "edit", name: "jcoyne" }]
+            end
+          end
+        end
+
+        context "to a falsy value" do
+
+          it "doesn't remove the record" do
+            subject.update permissions_attributes: [{ type: "group", access: "read", name: "group1" }]
+            subject.update permissions_attributes: [{ id: permissions_id, type: "group", access: "edit", name: "group1", _destroy: '0' }]
+            expect(reloaded).to match_array [{ type: "group", access: "edit", name: "group1" },
+                                             { type: "person", access: "edit", name: "jcoyne" }]
+          end
+        end
       end
     end
 
     describe "with the setter" do
       before do
         subject.permissions = [
-          Hydra::AccessControls::Permission.new(:type=>"group", :access=>"edit", :name=>"group1"),
-          Hydra::AccessControls::Permission.new(:type=>"person", :access=>"edit", :name=>"jcoyne")]
+          Hydra::AccessControls::Permission.new(type: "group", access: "edit", name: "group1"),
+          Hydra::AccessControls::Permission.new(type: "person", access: "edit", name: "jcoyne")]
         subject.save!
       end
       it "should set the permissions" do
@@ -177,12 +202,12 @@ describe Hydra::AccessControls::Permissions do
       subject.set_read_groups(['group-2', 'group-3'], ['group-6'])
       # 'group-7' is not eligible to be revoked
       expect(subject.permissions.map(&:to_hash)).to match_array([
-        {name: 'group-2', type: 'group', access: 'read'},
-        {name: 'group-3', type: 'group', access: 'read'},
-        {name: 'group-7', type: 'group', access: 'read'},
-        {name: 'group-8', type: 'group', access: 'edit'},
-        {name: 'person1', type: 'person', access: 'read'},
-        {name: 'person2', type: 'person', access: 'discover'}])
+        { name: 'group-2', type: 'group', access: 'read' },
+        { name: 'group-3', type: 'group', access: 'read' },
+        { name: 'group-7', type: 'group', access: 'read' },
+        { name: 'group-8', type: 'group', access: 'edit' },
+        { name: 'person1', type: 'person', access: 'read' },
+        { name: 'person2', type: 'person', access: 'discover' }])
     end
   end
 end
