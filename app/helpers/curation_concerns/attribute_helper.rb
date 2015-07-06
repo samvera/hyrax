@@ -25,7 +25,7 @@ module CurationConcerns
             if parsedUri.nil?
               markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
             else
-              markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(Sufia.config.cc_licenses_reverse[value])}</a></li>\n)
+              markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(CurationConcerns.config.cc_licenses_reverse[value])}</a></li>\n)
             end
           else
             search_field = options[:search_field] || method_name
