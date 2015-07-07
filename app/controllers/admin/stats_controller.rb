@@ -29,10 +29,23 @@ class Admin::StatsController < ApplicationController
     end
 
     def document_by_permission
+      return document_by_date_by_permission if @users_stats[:file_start_date]
+
       files_count = {}
       files_count[:total] = GenericWork.count
-      files_count[:public] = GenericWork.where(Solrizer.solr_name('read_access_group', :symbol) => 'public').count
-      files_count[:registered] = GenericWork.where(Solrizer.solr_name('read_access_group', :symbol) => 'registered').count
+      files_count[:public] = GenericWork.where_public.count
+      files_count[:registered] = GenericWork.where_registered.count
+      files_count[:private] = files_count[:total] - (files_count[:registered] + files_count[:public])
+      files_count
+    end
+
+    def document_by_date_by_permission
+      start_date = DateTime.parse(@users_stats[:file_start_date])
+      end_date = DateTime.parse(@users_stats[:file_end_date]).end_of_day unless @users_stats[:file_end_date].blank?
+      files_count = {}
+      files_count[:total] = GenericWork.find_by_date_created(start_date, end_date).count
+      files_count[:public] = GenericWork.find_by_date_created(start_date, end_date).merge(GenericWork.where_public).count
+      files_count[:registered] = GenericWork.find_by_date_created(start_date, end_date).merge(GenericWork.where_registered).count
       files_count[:private] = files_count[:total] - (files_count[:registered] + files_count[:public])
       files_count
     end

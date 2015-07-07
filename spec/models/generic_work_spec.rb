@@ -77,4 +77,101 @@ describe GenericWork do
       expect(subject).to respond_to(:identifier)
     end
   end
+
+  describe "find_by_date_created" do
+    let!(:work) { create(:generic_work) }
+    subject { described_class.find_by_date_created(start_date, end_date) }
+
+    context "with no start date" do
+      let(:start_date) { nil }
+      let(:end_date) { nil }
+      it { is_expected.to eq [] }
+    end
+
+    context "with no end date" do
+      let(:start_date) { 1.day.ago }
+      let(:end_date) { nil }
+      it { is_expected.to eq [work] }
+    end
+
+    context "with an end date" do
+      let(:start_date) { 1.day.ago }
+      let(:end_date) { DateTime.now }
+      it { is_expected.to eq [work] }
+    end
+  end
+
+  describe "where_access_is" do
+    subject { described_class.where_access_is access_level }
+    let!(:work) { create(:generic_work, read_groups: read_groups) }
+
+    context "when file is private" do
+      let(:read_groups) { ["private"] }
+      context "when access level is private" do
+        let(:access_level) { 'private' }
+        it { is_expected.to eq [work] }
+      end
+      context "when access level is public" do
+        let(:access_level) { 'public' }
+        it { is_expected.to eq [] }
+      end
+      context "when access level is registered" do
+        let(:access_level) { 'registered' }
+        it { is_expected.to eq [] }
+      end
+    end
+
+    context "when file is public" do
+      let(:read_groups) { ["public"] }
+      context "when access level is private" do
+        let(:access_level) { 'private' }
+        it { is_expected.to eq [] }
+      end
+      context "when access level is public" do
+        let(:access_level) { 'public' }
+        it { is_expected.to eq [work] }
+      end
+      context "when access level is registered" do
+        let(:access_level) { 'registered' }
+        it { is_expected.to eq [] }
+      end
+    end
+
+    context "when file is registered" do
+      let(:read_groups) { ["registered"] }
+      context "when access level is private" do
+        let(:access_level) { 'private' }
+        it { is_expected.to eq [] }
+      end
+      context "when access level is public" do
+        let(:access_level) { 'public' }
+        it { is_expected.to eq [] }
+      end
+      context "when access level is registered" do
+        let(:access_level) { 'registered' }
+        it { is_expected.to eq [work] }
+      end
+    end
+  end
+
+  describe "where_private" do
+    it "calls where_access_is with private" do
+      expect(described_class).to receive(:where_access_is).with('private')
+      described_class.where_private
+    end
+  end
+
+  describe "where_registered" do
+    it "calls where_access_is with registered" do
+      expect(described_class).to receive(:where_access_is).with('registered')
+      described_class.where_registered
+    end
+  end
+
+  describe "where_public" do
+    it "calls where_access_is with public" do
+      expect(described_class).to receive(:where_access_is).with('public')
+      described_class.where_public
+    end
+  end
 end

@@ -185,6 +185,10 @@ en:
     admin:
       stats:
         registered: "Registered"
+        deposited_form:
+          heading: "Display Files Deposited:"
+          start_label: "Start"
+          end_label: "end [defaults to now]"
 
   simple_form:
     labels:

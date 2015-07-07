@@ -1,0 +1,16 @@
+<h2>File Statistics</h2>
+<%= form_for "users_stats", url: sufia.admin_stats_path, method: "GET" do |f| %>
+<%= f.label "#{ t("sufia.admin.stats.deposited_form.heading") } #{ t("sufia.admin.stats.deposited_form.start_label") }" %>
+<input type="date" name="users_stats[file_start_date]" value="<%= @users_stats[:file_start_date] %>"></input>
+<%= f.label t("sufia.admin.stats.deposited_form.end_label") %>
+<input type="date" name="users_stats[file_end_date]" value="<%= @users_stats[:file_end_date] %>"></input>
+<%= f.submit "Load Stats" %>
+<h3>Total Files: <%= @files_count[:total] %> </h3>
+<br/>
+<%- end %>
+<h3>Totals by Visibility</h3>
+<ul>
+  <li>Open Access <span class="count">(<%= @files_count[:public] %>)</span></li>
+  <li><%= t("sufia.admin.stats.registered") %> <span class="count">(<%= @files_count[:registered] %>)</span></li>
+  <li>Private <span class="count">(<%= @files_count[:private] %>)</span></li>
+</ul>
