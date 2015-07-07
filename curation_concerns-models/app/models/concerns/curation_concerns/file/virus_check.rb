@@ -10,9 +10,9 @@ module CurationConcerns
       # Default behavior is to raise a validation error and halt the save if a virus is found
       def detect_viruses
         return unless content.changed?
-        Sufia::GenericFile::Actor.virus_check(local_path_for_content)
+        CurationConcerns::GenericFileActor.virus_check(local_path_for_content)
         true
-      rescue Sufia::VirusFoundError => virus
+      rescue CurationConcerns::VirusFoundError => virus
         logger.warn(virus.message)
         errors.add(:base, virus.message)
         false

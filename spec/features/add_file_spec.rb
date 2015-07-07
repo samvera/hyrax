@@ -9,7 +9,7 @@ describe "Add an attached file" do
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     s2 = double('resque message')
     expect(CharacterizeJob).to receive(:new).and_return(s2)
-    expect(Sufia.queue).to receive(:push).with(s2).once
+    expect(CurationConcerns.queue).to receive(:push).with(s2).once
   end
 
   it "should update the file" do
@@ -28,4 +28,3 @@ describe "Add an attached file" do
     end
   end
 end
-

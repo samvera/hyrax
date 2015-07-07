@@ -11,7 +11,6 @@ FactoryGirl.define do
       end
     end
 
-    # taken from Sufia user factory
     factory :jill do
       email 'jilluser@example.com'
     end

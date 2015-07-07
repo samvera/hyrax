@@ -5,11 +5,11 @@ module CurationConcerns
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid
+    include CurationConcerns::Permissions
     include CurationConcerns::File::Export
     include CurationConcerns::File::Characterization
-    include CurationConcerns::File::Permissions
     include CurationConcerns::File::BasicMetadata
-    include Sufia::GenericFile::Content
+    include CurationConcerns::File::Content
     # include CurationConcerns::File::Versions
     include CurationConcerns::File::VirusCheck
     include CurationConcerns::File::FullTextIndexing
@@ -22,7 +22,7 @@ module CurationConcerns
     included do
       attr_accessor :file
 
-      # make filename single-value (Sufia::GenericFile::Characterization makes it multivalue)
+      # make filename single-value (CurationConcerns::File::Characterization makes it multivalue)
       def filename
         if self[:filename].instance_of?(Array)
           self[:filename].first

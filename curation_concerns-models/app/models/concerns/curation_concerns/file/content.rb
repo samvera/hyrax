@@ -4,8 +4,13 @@ module CurationConcerns
       extend ActiveSupport::Concern
 
       # Basically an alias to Hydra::Works::GenericFile#original_file
-      def content
-        file_of_type(::RDF::URI("http://pcdm.org/OriginalFile"))
+      # def content
+      #   file_of_type(::RDF::URI("http://pcdm.org/OriginalFile"))
+      # end
+
+      included do
+        contains "content"
+        contains "thumbnail"
       end
 
       # def thumbnail

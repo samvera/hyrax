@@ -1,4 +1,4 @@
-module Sufia
+module CurationConcerns
   class GenericWorkIndexingService < Hydra::PCDM::ObjectIndexer
 
     def generate_solr_document

@@ -19,14 +19,14 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hydra-head' # allow sufia-models to specify the version
+  spec.add_dependency 'hydra-head'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
   spec.add_dependency "active_attr"
   spec.add_dependency "simple_form", '~> 3.1.0'
   spec.add_dependency 'curation_concerns-models', version
-  spec.add_dependency 'hydra-collections' # allow sufia-models to specify the version
-  spec.add_dependency 'hydra-derivatives' # allow sufia-models to specify the version
-  spec.add_dependency 'hydra-editor' # allow sufia-models to specify the version
+  spec.add_dependency 'hydra-collections' # allow curation_concerns-models to specify the version
+  spec.add_dependency 'hydra-derivatives' # allow hydra-works to specify the version
+  spec.add_dependency 'hydra-editor'
 
   spec.add_development_dependency "devise", "~> 3.0"
   spec.add_development_dependency "bundler", "~> 1.6"

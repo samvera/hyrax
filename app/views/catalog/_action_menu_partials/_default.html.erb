@@ -11,7 +11,7 @@
           <%= link_to_remove_from_collection(document) %>
         <% else %>
           <%= link_to [:curation_concerns, document], class: 'itemicon itemtrash', title: 'Delete Collection', method: :delete, data: {
-                          confirm: "Deleting a collection from #{t('sufia.product_name')} is permanent. Click OK to delete this collection from #{t('sufia.product_name')}, or Cancel to cancel this operation" } do %>
+                          confirm: "Deleting a collection from #{t('curation_concerns.product_name')} is permanent. Click OK to delete this collection from #{t('curation_concerns.product_name')}, or Cancel to cancel this operation" } do %>
                           <i class="glyphicon glyphicon-trash"></i> Delete <%= document.human_readable_type %>
           <% end %>
         <% end %>

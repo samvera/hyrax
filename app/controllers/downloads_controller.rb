@@ -23,7 +23,6 @@ class DownloadsController < ApplicationController
     f
   end
 
-  # Use (Works::GenericFile) :original_file as the default, not (old Sufia) :content
   def self.default_content_path
     :original_file
   end

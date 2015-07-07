@@ -35,7 +35,7 @@ describe CurationConcerns::GenericFileActor do
     let(:deposit_message) { double('deposit message') }
     let(:characterize_message) { double('characterize message') }
     before do
-      allow(Sufia.queue).to receive(:push)
+      allow(CurationConcerns.queue).to receive(:push)
     end
 
     it "uses the provided mime_type" do
@@ -50,7 +50,7 @@ describe CurationConcerns::GenericFileActor do
       let(:actor)      { CurationConcerns::GenericFileActor.new(generic_file, user) }
       before do
         allow(generic_file).to receive(:label).and_return(short_name)
-        allow(Sufia.queue).to receive(:push)
+        allow(CurationConcerns.queue).to receive(:push)
         actor.create_content(fixture_file_upload(file), long_name, 'image/png')
       end
       subject { generic_file.title }
@@ -68,7 +68,7 @@ describe CurationConcerns::GenericFileActor do
       let(:versions)     { generic_file.original_file.versions }
 
       before do
-        allow(Sufia.queue).to receive(:push)
+        allow(CurationConcerns.queue).to receive(:push)
         actor1.create_content(fixture_file_upload(file1), file1, 'image/png')
         actor2.create_content(fixture_file_upload(file2), file2, 'text/plain')
       end

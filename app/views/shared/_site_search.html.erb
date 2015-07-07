@@ -1,10 +1,10 @@
 <%= form_tag main_app.catalog_index_path, :method => :get, :class => "search-form" do %>
   <fieldset>
-    <legend class="accessible-hidden">Search <%=t('sufia.product_name')%></legend>
-    <%= label_tag :catalog_search, t('sufia.search.form.q.label'), :class => "accessible-hidden" %>
+    <legend class="accessible-hidden">Search <%=t('curation_concerns.product_name')%></legend>
+    <%= label_tag :catalog_search, t('curation_concerns.search.form.q.label'), :class => "accessible-hidden" %>
     <%= render_hash_as_hidden_fields(params_for_search().except(:q, :search_field, :qt, :page, :utf8)) %>
     <%= text_field_tag(:q, params[:q], :class => "q search-query", :id => "catalog_search",
-                       :placeholder => t('sufia.search.form.q.placeholder'), :size => "30", :tabindex => "1", :type => "search") %>
+                       :placeholder => t('curation_concerns.search.form.q.placeholder'), :size => "30", :tabindex => "1", :type => "search") %>
                       <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="2">
       <i class="glyphicon glyphicon-search icon-white"></i><span class="accessible-hidden">Search</span>
     </button>

@@ -19,7 +19,7 @@ describe CurationConcerns::PermissionsController do
 
     it "should add a worker to the queue" do
       expect(VisibilityCopyWorker).to receive(:new).with(generic_work.id).and_return(worker)
-      expect(Sufia.queue).to receive(:push).with(worker)
+      expect(CurationConcerns.queue).to receive(:push).with(worker)
       post :copy, id: generic_work
       expect(response).to redirect_to main_app.curation_concerns_generic_work_path(generic_work)
       expect(flash[:notice]).to eq 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'

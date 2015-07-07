@@ -30,7 +30,11 @@ To generate a new CurationConcern type, use the `curation_concerns:work` rails g
 
 If you are modifying the curation_concerns gem and want to run the test suite, follow these steps to set up the test environment.
 
-    $ rake jetty:clean
     $ rake engine_cart:generate
+    $ cd spec/internal
+    $ rake jetty:clean
+    $ rake curation_concerns:jetty:config
+    $ rake jetty:start
+    $ cd ../..
     $ rake spec
 

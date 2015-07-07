@@ -129,12 +129,12 @@ describe CurationConcerns::CreateDerivativesService do
     describe 'with an mp3 file' do
       # Uncomment when this is no longer pending
       # before do
-      #   @generic_file.add_file(File.open(fixture_path + '/sufia/sufia_test5.mp3'), 'content', 'sufia_test5.mp3')
+      #   @generic_file.add_file(File.open(fixture_path + '/curation_concerns/curation_concerns_test5.mp3'), 'content', 'curation_concerns_test5.mp3')
       #   @generic_file.save!
       # end
 
       #Need a way to do this in hydra-derivatives
-      it 'should copy the content to the mp3 datastream and transcode to ogg', skip: true do
+      xit 'should copy the content to the mp3 datastream and transcode to ogg' do
         subject.create_derivatives
         derivative = @generic_file.attached_files['mp3']
         expect(derivative.content.size).to eq(@generic_file.content.content.size)
@@ -154,7 +154,7 @@ describe CurationConcerns::CreateDerivativesService do
       # end
 
       #Need a way to do this in hydra-derivatives
-      it 'should copy the content to the ogg datastream and transcode to mp3', skip: true do
+      xit 'should copy the content to the ogg datastream and transcode to mp3' do
         subject.create_derivatives
         derivative = @generic_file.attached_files['mp3']
         expect(derivative).not_to be_nil

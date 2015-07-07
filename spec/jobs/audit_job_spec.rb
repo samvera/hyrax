@@ -33,7 +33,7 @@ describe AuditJob do
     end
   end
 
-  ### TODO - Needs Refactoring after Sufia is Broken up
+  ### TODO - Needs Refactoring after Sufia is broken up
   # describe "sending mail" do
   #   let(:uri) { file.content.uri }
   #   let(:inbox) { user.mailbox.inbox }
@@ -45,13 +45,13 @@ describe AuditJob do
   #
   #   context "when the audit passes" do
   #     let(:result) { true }
-  #     it "should not send mail" do
+  #     xit "should not send mail" do
   #       expect(inbox.count).to eq(0)
   #     end
   #   end
   #   context "when the audit fails" do
   #     let(:result) { false }
-  #     it "should send failing mail" do
+  #     xit "should send failing mail" do
   #       expect(inbox.count).to eq(1)
   #       inbox.each { |msg| expect(msg.last_message.subject).to eq(AuditJob::FAIL) }
   #     end
@@ -69,7 +69,7 @@ describe AuditJob do
   #     allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
   #   end
   #
-  #   it "should not prune failed audits" do
+  #   xit "should not prune failed audits" do
   #     5.times { job.send(:run_audit) }
   #     expect(ChecksumAuditLog.logs_for(file.id, 'content').map(&:pass)).to eq [0, 1, 0, 0, 1, 0, 1]
   #   end

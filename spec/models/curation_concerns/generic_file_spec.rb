@@ -375,7 +375,7 @@ describe CurationConcerns::GenericFile do
       end
 
       it "populates the errors hash during validation" do
-        allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
+        allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(CurationConcerns::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
         subject.save
         expect(subject).not_to be_persisted
         expect(subject.errors.messages).to eq(base: ["A virus was found in #{f.path}: EL CRAPO VIRUS"])
@@ -383,8 +383,8 @@ describe CurationConcerns::GenericFile do
 
       it "does not save a new version of a GenericFile" do
         subject.save!
-        allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError)
-        subject.add_file(File.new(fixture_path + '/sufia_generic_stub.txt') , path: 'content', original_name: 'sufia_generic_stub.txt')
+        allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(CurationConcerns::VirusFoundError)
+        subject.add_file(File.new(fixture_path + '/curation_concerns_generic_stub.txt') , path: 'content', original_name: 'curation_concerns_generic_stub.txt')
         subject.save
         expect(subject.reload.content.content).to eq "small\n"
       end
@@ -418,6 +418,7 @@ describe CurationConcerns::GenericFile do
   describe "public?" do
     context "when read group is set to public" do
       before { subject.read_groups = ['public'] }
+
       it { is_expected.to be_public }
     end
 
