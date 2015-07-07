@@ -11,7 +11,6 @@ describe CurationConcerns::GenericFilesController do
     describe "#create" do
       before do
         CurationConcerns::GenericFile.destroy_all
-        allow(CurationConcerns::GenericFile).to receive(:new).and_return(CurationConcerns::GenericFile.new(id: '123'))
       end
 
       context "on the happy path" do
@@ -23,7 +22,7 @@ describe CurationConcerns::GenericFilesController do
 
         xit "spawns a CharacterizeJob" do
           s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).with('123').and_return(s2)
+          expect(CharacterizeJob).to receive(:new).and_return(s2)
           expect(CurationConcerns.queue).to receive(:push).with(s2).once
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
@@ -39,7 +38,7 @@ describe CurationConcerns::GenericFilesController do
           saved_file = assigns[:generic_file].reload
 
           expect(saved_file.label).to eq 'image.png'
-          expect(saved_file.batch).to eq parent
+          expect(parent.reload.generic_files).to include saved_file
           # Confirming that date_uploaded and date_modified were set
           # expect(saved_file.date_uploaded).to eq date_today
           expect(saved_file.date_modified).to eq date_today
@@ -58,8 +57,8 @@ describe CurationConcerns::GenericFilesController do
 
         it "copies visibility from the parent" do
           s2 = double('one')
-          expect(CharacterizeJob).to receive(:new).with('123').and_return(s2)
-          expect(CurationConcerns.queue).to receive(:push).with(s2).once
+          expect(CharacterizeJob).to receive(:new).and_return(s2)
+          allow(CurationConcerns.queue).to receive(:push).with(s2).once
           xhr :post, :create, files: [file], parent_id: parent
           expect(assigns[:generic_file]).to be_persisted
           saved_file = assigns[:generic_file].reload
