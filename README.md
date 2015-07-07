@@ -1,5 +1,5 @@
 # Curation Concern
-[![Build Status](https://travis-ci.org/projecthydra-labs/curation_concerns.png)](https://travis-ci.org/pulibrary/curation_concerns)
+[![Build Status](https://travis-ci.org/projecthydra-labs/curation_concerns.png)](https://travis-ci.org/projecthydra-labs/curation_concerns)
 [![Coverage Status](https://coveralls.io/repos/projecthydra-labs/curation_concerns/badge.svg?branch=master)](https://coveralls.io/r/projecthydra-labs/curation_concerns?branch=master)
 
 A Hydra-based Rails Engine that extends an application, adding the ability to Create, Read, Update and Destroy (CRUD) CurationConcern objects (a.k.a. "Works") and provides a generator for defining new CurationConcern types with custom workflow, views, access controls, etc.
