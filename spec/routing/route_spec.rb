@@ -48,38 +48,6 @@ describe 'Routes', :type => :routing do
     end
   end
 
-  ### TODO: There are LinkedResource routes but no controller. The routes should either be removed or the 
-  # describe 'LinkedResource' do
-  #   it 'should route to create' do
-  #     expect({ post: 'concern/container/1/linked_resources' }).to route_to(controller: 'curation_concerns/linked_resources', action: 'create', parent_id: '1')
-  #   end
-
-  #   it 'should route to new' do
-  #     expect({ get: 'concern/container/2/linked_resources/new' }).to route_to(controller: 'curation_concerns/linked_resources', action: 'new', parent_id: '2')
-  #   end
-
-  #   it 'should route to edit' do
-  #     expect({ get: 'concern/linked_resources/3/edit' }).to route_to(controller: 'curation_concerns/linked_resources', action: 'edit', id: '3')
-  #   end
-
-  #   it "should route to show" do
-  #     expect({ get: 'concern/linked_resources/4' }).to route_to(controller: 'curation_concerns/linked_resources', action: 'show', id: '4')
-  #   end
-
-  #   it "should route to update" do
-  #     expect({ put: 'concern/linked_resources/5' }).to route_to(controller: 'curation_concerns/linked_resources', action: 'update', id: '5')
-  #   end
-
-  #   it "should route to destroy" do
-  #     expect({ delete: 'concern/linked_resources/6' }).to route_to(controller: 'curation_concerns/linked_resources', action: 'destroy', id: '6')
-  #   end
-
-  #   it "should *not* route to index" do
-  #     expect({ get: 'concern/linked_resources' }).not_to route_to(controller: 'curation_concerns/linked_resources', action: 'index')
-  #   end
-  # end  
-
-
   describe 'GenericFile' do
     it 'should route to create' do
       expect({ post: 'concern/container/1/generic_files' }).to route_to(controller: 'curation_concerns/generic_files', action: 'create', parent_id: '1')
