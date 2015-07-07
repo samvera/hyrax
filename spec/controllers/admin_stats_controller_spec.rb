@@ -63,9 +63,9 @@ describe Admin::StatsController, type: :controller do
     describe "counts" do
       context "when date range not set" do
         before do
-          create(:generic_work, user: user1)
-          create(:public_generic_work, user: user1)
-          create(:registered_generic_work, user: user1)
+          build(:generic_work, user: user1, id: "abc1223").update_index
+          build(:public_generic_work, user: user1, id: "bbb1223").update_index
+          build(:registered_generic_work, user: user1, id: "ccc1223").update_index
           Collection.create(title: "test") do |c|
             c.apply_depositor_metadata(user1.user_key)
           end
@@ -96,6 +96,34 @@ describe Admin::StatsController, type: :controller do
           expect(GenericWork).to receive(:where_registered).and_call_original
           get :index, users_stats: { file_start_date: 1.day.ago.strftime("%Y-%m-%d"), file_end_date: 0.days.ago.strftime("%Y-%m-%d") }
         end
+      end
+    end
+
+    describe "depositor counts" do
+      before do
+        GenericWork.new(id: "abc123") do |gf|
+          gf.apply_depositor_metadata(user1)
+          gf.update_index
+        end
+        GenericWork.new(id: "def123") do |gf|
+          gf.apply_depositor_metadata(user2)
+          gf.update_index
+        end
+        GenericWork.new(id: "zzz123") do |gf|
+          gf.create_date = [2.days.ago]
+          gf.apply_depositor_metadata(user1)
+          gf.update_index
+        end
+      end
+
+      it "gathers user deposits" do
+        get :index
+        expect(assigns[:depositors]).to include({ key: user1.user_key, deposits: 2, user: user1 }, key: user2.user_key, deposits: 1, user: user2)
+      end
+
+      it "gathers user deposits during a date range" do
+        get :index, deposit_stats: { start_date: 1.day.ago.strftime("%Y-%m-%d"), end_date: 0.days.ago.strftime("%Y-%m-%d") }
+        expect(assigns[:depositors]).to include({ key: user1.user_key, deposits: 1, user: user1 }, key: user2.user_key, deposits: 1, user: user2)
       end
     end
   end

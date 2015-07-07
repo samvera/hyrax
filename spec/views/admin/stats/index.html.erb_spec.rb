@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe "admin/stats/index.html.erb" do
+  before do
+    assign(:files_count, {})
+    assign(:top_formats, [])
+    assign(:users_stats, {})
+    assign(:recent_users, [])
+    assign(:deposit_stats, {})
+    assign(:depositors, [])
+  end
+
   context "default depositors" do
     let(:top_5_active_users) do
       users = {}
@@ -8,10 +17,6 @@ describe "admin/stats/index.html.erb" do
       users
     end
     before do
-      assign(:files_count, {})
-      assign(:top_formats, [])
-      assign(:users_stats, {})
-      assign(:recent_users, [])
       assign(:active_users, top_5_active_users)
       render
     end
@@ -28,10 +33,6 @@ describe "admin/stats/index.html.erb" do
       users
     end
     before do
-      assign(:files_count, {})
-      assign(:top_formats, [])
-      assign(:users_stats, {})
-      assign(:recent_users, [])
       assign(:active_users, top_20_active_users)
       params[:dep_count] = 20
       render

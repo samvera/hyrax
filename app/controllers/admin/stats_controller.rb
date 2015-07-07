@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 
 class Admin::StatsController < ApplicationController
+  include Sufia::Admin::DepositorStats
+
   def index
     # total user count
     @users_count = User.count
@@ -18,6 +20,8 @@ class Admin::StatsController < ApplicationController
     # Query Solr for top file formats
     @top_formats = top_formats
 
+    @deposit_stats = params.fetch(:deposit_stats, {})
+    @depositors = depositors(@deposit_stats)
     render 'index'
   end
 

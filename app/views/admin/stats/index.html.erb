@@ -31,4 +31,6 @@
       <p><%= link_to "View top 20", sufia.admin_stats_path, controller: "stats", dep_count: "20" %> </p>
     <% end %>
   </ul>
+
+  <%= render "admin/stats/deposits" %>
 </div>

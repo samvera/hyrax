@@ -9,13 +9,17 @@ module Sufia
         # @param [DateTime] end_datetime ending date time for range query
         def find_by_date_created(start_datetime, end_datetime = nil)
           return [] if start_datetime.blank? # no date just return nothing
+          where(build_date_query(start_datetime, end_datetime))
+        end
+
+        def build_date_query(start_datetime, end_datetime)
           start_date_str =  start_datetime.utc.strftime(date_format)
           end_date_str = if end_datetime.blank?
                            "*"
                          else
                            end_datetime.utc.strftime(date_format)
                          end
-          where "system_create_dtsi:[#{start_date_str} TO #{end_date_str}]"
+          "system_create_dtsi:[#{start_date_str} TO #{end_date_str}]"
         end
 
         def where_private

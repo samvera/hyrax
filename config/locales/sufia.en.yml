@@ -189,6 +189,10 @@ en:
           heading: "Display Files Deposited:"
           start_label: "Start"
           end_label: "end [defaults to now]"
+        user_deposits:
+          heading: "Display files deposited by users"
+          start_label: "Starting"
+          end_label: "Ending [defaults to now]"
 
   simple_form:
     labels:
