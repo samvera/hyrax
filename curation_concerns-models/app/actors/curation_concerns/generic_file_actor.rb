@@ -13,10 +13,15 @@ module CurationConcerns
       @user = user
     end
 
-    # in order to avoid two saves in a row, create_metadata does not save the file by default.
-    # it is typically used in conjunction with create_content, which does do a save.
-    # If you want to save when using create_metadata, you can do this:
-    #   create_metadata(batch_id) { |gf| gf.save }
+    # Adds the appropriate metadata, visibility and relationships to generic_file
+    #
+    # *Note*: In past versions of Sufia this method did not perform a save because it is mainly used in conjunction with
+    # create_content, which also performs a save.  However, due to the relationship between Hydra::PCDM objects,
+    # we have to save both the parent work and the generic_file in order to record the "metadata" relationship
+    # between them.
+    # @param [String] batch_id id of the batch that the file was uploaded within
+    # @param [String] work_id id of the parent work that will contain the generic_file.  If you don't provide a work_id, a parent work will be created for you.
+
     def create_metadata(batch_id, work_id)
       generic_file.apply_depositor_metadata(user)
       time_in_utc = DateTime.now.new_offset(0)
@@ -36,21 +41,23 @@ module CurationConcerns
         work.date_uploaded = time_in_utc
         work.date_modified = time_in_utc
         work.creator = [user.name]
-        Hydra::Works::AddGenericFileToGenericWork(work, generic_file)
+        work.save
       else
         work = GenericWork.find(work_id)
         copy_visibility(work, generic_file)
       end
+      Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
       yield(generic_file) if block_given?
     end
 
     def create_content(file, file_name, mime_type)
-      generic_file.add_file(file, path: file_path, original_name: file_name, mime_type: mime_type)
+      # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
+      Hydra::Works::UploadFileToGenericFile.call(generic_file, file.path, versioning: false, mime_type: mime_type, original_name: file_name)
       generic_file.label ||= file_name
       generic_file.title = [generic_file.label] if generic_file.title.blank?
       save_characterize_and_record_committer do
-        if Sufia.config.respond_to?(:after_create_content)
-          Sufia.config.after_create_content.call(generic_file, user)
+        if CurationConcerns.config.respond_to?(:after_create_content)
+          CurationConcerns.config.after_create_content.call(generic_file, user)
         end
       end
     end
@@ -58,17 +65,18 @@ module CurationConcerns
     def revert_content(revision_id)
       generic_file.original_file.restore_version(revision_id)
       save_characterize_and_record_committer do
-        if Sufia.config.respond_to?(:after_revert_content)
-          Sufia.config.after_revert_content.call(generic_file, user, revision_id)
+        if CurationConcerns.config.respond_to?(:after_revert_content)
+          CurationConcerns.config.after_revert_content.call(generic_file, user, revision_id)
         end
       end
     end
 
     def update_content(file)
-      generic_file.add_file(file, path: file_path, original_name: file.original_filename, mime_type: file.content_type)
+      # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
+      Hydra::Works::UploadFileToGenericFile.call(generic_file, file.path, versioning: false, mime_type: file.content_type, original_name: file.original_filename)
       save_characterize_and_record_committer do
-        if Sufia.config.respond_to?(:after_update_content)
-          Sufia.config.after_update_content.call(generic_file, user)
+        if CurationConcerns.config.respond_to?(:after_update_content)
+          CurationConcerns.config.after_update_content.call(generic_file, user)
         end
       end
     end
@@ -79,16 +87,16 @@ module CurationConcerns
       generic_file.attributes = model_attributes
       generic_file.date_modified = DateTime.now
       save do
-        if Sufia.config.respond_to?(:after_update_metadata)
-          Sufia.config.after_update_metadata.call(generic_file, user)
+        if CurationConcerns.config.respond_to?(:after_update_metadata)
+          CurationConcerns.config.after_update_metadata.call(generic_file, user)
         end
       end
     end
 
     def destroy
       generic_file.destroy
-      if Sufia.config.respond_to?(:after_destroy)
-        Sufia.config.after_destroy.call(generic_file.id, user)
+      if CurationConcerns.config.respond_to?(:after_destroy)
+        CurationConcerns.config.after_destroy.call(generic_file.id, user)
       end
     end
 
@@ -97,9 +105,7 @@ module CurationConcerns
     def save_characterize_and_record_committer
       save do
         push_characterize_job
-        if generic_file.original_file
-          CurationConcerns::VersioningService.create(generic_file.original_file, user)
-        end
+        CurationConcerns::VersioningService.create(generic_file.original_file, user)
         yield if block_given?
       end
     end
@@ -139,10 +145,6 @@ module CurationConcerns
     end
 
     protected
-
-    def file_path
-      'content'.freeze
-    end
 
     # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
     def update_visibility(attributes)

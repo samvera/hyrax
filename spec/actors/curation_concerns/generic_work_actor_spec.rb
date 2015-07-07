@@ -103,7 +103,7 @@ describe CurationConcerns::GenericWorkActor do
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
             generic_file = curation_concern.generic_files.first
             file.rewind
-            expect(generic_file.content.content).to eq file.read
+            expect(generic_file.original_file.content).to eq file.read
 
             expect(curation_concern).to be_authenticated_only_access
             expect(generic_file).to be_authenticated_only_access

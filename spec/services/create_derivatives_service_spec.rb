@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe CurationConcerns::CreateDerivativesService do
   before do
-    @ffmpeg_enabled = Sufia.config.enable_ffmpeg
-    Sufia.config.enable_ffmpeg = true
+    @ffmpeg_enabled = CurationConcerns.config.enable_ffmpeg
+    CurationConcerns.config.enable_ffmpeg = true
     @generic_file = GenericFile.create { |gf| gf.apply_depositor_metadata('jcoyne@example.com') }
   end
 
   after do
-    Sufia.config.enable_ffmpeg = @ffmpeg_enabled
+    CurationConcerns.config.enable_ffmpeg = @ffmpeg_enabled
   end
 
   subject { described_class.new(@generic_file) }

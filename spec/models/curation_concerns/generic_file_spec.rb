@@ -182,7 +182,7 @@ describe CurationConcerns::GenericFile do
       @f = CurationConcerns::GenericFile.new
       @f.apply_depositor_metadata('mjg36')
     end
-    describe "with a video", if: Sufia.config.enable_ffmpeg do
+    describe "with a video", if: CurationConcerns.config.enable_ffmpeg do
       before do
         allow(@f).to receive(mime_type: 'video/quicktime')  #Would get set by the characterization job
         @f.add_file(File.open("#{fixture_path}/countdown.avi", 'rb'), path: 'content', original_name: 'countdown.avi')
@@ -499,8 +499,8 @@ describe CurationConcerns::GenericFile do
     end
 
     context "with noids disabled" do
-      before { Sufia.config.enable_noids = false }
-      after { Sufia.config.enable_noids = true }
+      before { CurationConcerns.config.enable_noids = false }
+      after { CurationConcerns.config.enable_noids = true }
 
       it "does not use the noid service" do
         expect_any_instance_of(ActiveFedora::Noid::Service).not_to receive(:mint)

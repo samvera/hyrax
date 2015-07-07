@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe CreateDerivativesJob do
   before do
-    @ffmpeg_enabled = Sufia.config.enable_ffmpeg
-    Sufia.config.enable_ffmpeg = true
+    @ffmpeg_enabled = CurationConcerns.config.enable_ffmpeg
+    CurationConcerns.config.enable_ffmpeg = true
     allow(ActiveFedora::Base).to receive(:find).with('123').and_return(generic_file)
     allow(generic_file.content).to receive(:has_content?).and_return(true)
   end
   let(:generic_file) { GenericFile.new }
 
   after do
-    Sufia.config.enable_ffmpeg = @ffmpeg_enabled
+    CurationConcerns.config.enable_ffmpeg = @ffmpeg_enabled
   end
 
   subject { CreateDerivativesJob.new('123') }

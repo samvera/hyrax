@@ -9,8 +9,8 @@ describe CurationConcerns::VersioningService do
     end
 
     before do
-      # Add the original_file (this service automatically creates a version after saving)
-      Hydra::Works::AddFileToGenericFile.call(file, fixture_file_path('world.png'), :original_file)
+      # Add the original_file (this service  creates a version after saving when you call it with versioning: true)
+      Hydra::Works::AddFileToGenericFile.call(file, fixture_file_path('world.png'), :original_file, versioning: true)
     end
 
     describe  "latest_version_of" do
