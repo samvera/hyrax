@@ -31,6 +31,7 @@ describe CurationConcerns::GenericFileActor do
       end
     end
   end
+
   describe "#create_content" do
     let(:deposit_message) { double('deposit message') }
     let(:characterize_message) { double('characterize message') }
@@ -93,14 +94,6 @@ describe CurationConcerns::GenericFileActor do
         expect(VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]
         expect(VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [second_user.user_key]
       end
-    end
-  end
-
-  describe "#virus_check" do
-    it "should return the results of running ClamAV scanfile method" do
-      pending "Must decide whether this belongs in Sufia or CurationConcerns.  See https://github.com/projecthydra-labs/curation_concerns/issues/37"
-      expect(ClamAV.instance).to receive(:scanfile).and_return(1)
-      expect { CurationConcerns::GenericFileActor.virus_check(File.new(fixture_path + '/world.png')) }.to raise_error(Sufia::VirusFoundError)
     end
   end
 

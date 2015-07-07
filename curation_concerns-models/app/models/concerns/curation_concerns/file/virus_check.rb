@@ -9,8 +9,8 @@ module CurationConcerns
 
       # Default behavior is to raise a validation error and halt the save if a virus is found
       def detect_viruses
-        return unless content.changed?
-        CurationConcerns::GenericFileActor.virus_check(local_path_for_content)
+        return unless original_file && original_file.new_record?
+        CurationConcerns::VirusDetectionService.run(original_file)
         true
       rescue CurationConcerns::VirusFoundError => virus
         logger.warn(virus.message)
@@ -18,20 +18,6 @@ module CurationConcerns
         false
       end
 
-      private
-
-        def local_path_for_content
-          if content.content.respond_to?(:path)
-            content.content.path
-          else
-            Tempfile.open('') do |t|
-              t.binmode
-              t.write(content.content)
-              t.close
-              t.path
-            end
-          end
-        end
     end
   end
 end

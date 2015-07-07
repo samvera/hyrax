@@ -366,27 +366,28 @@ describe CurationConcerns::GenericFile do
   end
 
   describe "file content validation" do
-    context "when file contains a virus" do
-      let(:f) { File.new(fixture_path + '/small_file.txt') }
+    subject                       { FactoryGirl.create(:generic_file) }
+    let(:file_path)         { fixture_path + '/small_file.txt' }
 
+    context "when file contains a virus" do
       before do
-        subject.add_file(f, path: 'content', original_name: 'small_file.txt')
-        subject.apply_depositor_metadata('mjg36')
+        allow(CurationConcerns::VirusDetectionService).to receive(:run).and_raise(CurationConcerns::VirusFoundError, "A virus was found in !!THE FILE PATH!!: EL CRAPO VIRUS")
+        # TODO: Test that this works with Hydra::Works::UploadFileToGenericFile. see https://github.com/projecthydra-labs/hydra-works/pull/139
+        # Hydra::Works::UploadFileToGenericFile.call(subject, file_path, original_name: 'small_file.txt')
+        of = subject.build_original_file
+        of.content = File.open(file_path)
       end
 
       it "populates the errors hash during validation" do
-        allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(CurationConcerns::VirusFoundError, "A virus was found in #{f.path}: EL CRAPO VIRUS")
-        subject.save
-        expect(subject).not_to be_persisted
-        expect(subject.errors.messages).to eq(base: ["A virus was found in #{f.path}: EL CRAPO VIRUS"])
+        expect(subject).to_not be_valid
+        expect(subject.errors.messages).to eq(base: ["A virus was found in !!THE FILE PATH!!: EL CRAPO VIRUS"])
       end
 
-      it "does not save a new version of a GenericFile" do
-        subject.save!
-        allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(CurationConcerns::VirusFoundError)
-        subject.add_file(File.new(fixture_path + '/curation_concerns_generic_stub.txt') , path: 'content', original_name: 'curation_concerns_generic_stub.txt')
+      it "does not save the file or create a new version" do
+        original_version_count = subject.versions.count
         subject.save
-        expect(subject.reload.content.content).to eq "small\n"
+        expect(subject.versions.count).to eq original_version_count
+        expect(subject.reload.original_file).to be_nil
       end
     end
   end

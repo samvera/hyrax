@@ -132,18 +132,6 @@ module CurationConcerns
       CurationConcerns.queue.push(CharacterizeJob.new(@generic_file.id))
     end
 
-    class << self
-      def virus_check(file)
-        path = file.is_a?(String) ? file : file.path
-        unless defined?(ClamAV)
-          ActiveFedora::Base.logger.warn "Virus checking disabled, #{path} not checked"
-          return
-        end
-        scan_result = ClamAV.instance.scanfile(path)
-        raise CurationConcerns::VirusFoundError.new("A virus was found in #{path}: #{scan_result}") unless scan_result == 0
-      end
-    end
-
     protected
 
     # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
