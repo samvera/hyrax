@@ -19,17 +19,20 @@ module CurationConcerns
     def characterize
       store_metadata(extract_metadata)
       store_fulltext(extract_fulltext)
-      generic_file.filename = [generic_file.content.original_name]
+      generic_file.filename = [generic_file.original_file.original_name]
     end
 
     protected
 
       def store_fulltext(extracted_text)
-        generic_file.full_text.content = extracted_text if extracted_text.present?
+        if extracted_text.present?
+          extracted_text_file = generic_file.build_extracted_text
+          extracted_text_file.content = extracted_text
+        end
       end
 
       def extract_fulltext
-        FullTextExtractionService.run(@generic_file)
+        FullTextExtractionService.run(generic_file)
       end
 
       def store_metadata(metadata)
@@ -38,8 +41,8 @@ module CurationConcerns
       end
 
       def extract_metadata
-        return unless generic_file.content.has_content?
-        Hydra::FileCharacterization.characterize(generic_file.content.content, filename_for_characterization.join, :fits) do |config|
+        return unless generic_file.original_file.has_content?
+        Hydra::FileCharacterization.characterize(generic_file.original_file.content, filename_for_characterization.join, :fits) do |config|
           config[:fits] = Hydra::Derivatives.fits_path
         end
       end
