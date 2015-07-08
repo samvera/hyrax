@@ -19,12 +19,19 @@ Then:
     $ rails generate curation_concerns:install
     $ rake db:migrate
 
+# Usage
+
 ## Generator
 
 To generate a new CurationConcern type, use the `curation_concerns:work` rails generator.  Follow the Usage instructions provided on the command line when you run:
 
     rails generate curation_concerns:work
 
+## Virus Detection
+
+To turn on virus detection, install clamav on your system and add the `clamav` gem to your Gemfile
+
+    gem 'clamav'
 
 ## Testing
 

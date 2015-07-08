@@ -77,3 +77,17 @@ module FactoryGirl
     tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by)) || FactoryGirl.create(handle)
   end
 end
+
+if defined?(ClamAV)
+  ClamAV.instance.loaddb
+else
+  class ClamAV
+    include Singleton
+    def scanfile(f)
+      0
+    end
+    def loaddb
+      nil
+    end
+  end
+end
