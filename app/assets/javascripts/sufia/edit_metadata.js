@@ -3,7 +3,7 @@ Blacklight.onLoad(function() {
     var autocomplete_opts = {
       minLength: 2,
       source: function( request, response ) {
-        $.getJSON( "/authorities/file_sets/" + field, {
+        $.getJSON( "/authorities/generic_works/" + field, {
           q: request.term
         }, response );
       },
@@ -45,7 +45,9 @@ Blacklight.onLoad(function() {
     },
     minLength: 2
   };
-  $("#file_set_based_near").autocomplete(get_autocomplete_opts("location"));
+
+  var autocomplete_model = "generic_work"
+  $("input." + autocomplete_model + "_based_near").autocomplete(get_autocomplete_opts("location"));
 
   var autocomplete_vocab = new Object();
 
@@ -55,9 +57,9 @@ Blacklight.onLoad(function() {
   // loop over the autocomplete fields and attach the
   // events for autocomplete and create other array values for autocomplete
   for (var i=0; i < autocomplete_vocab.url_var.length; i++) {
-    autocomplete_vocab.field_name.push('file_set_' + autocomplete_vocab.url_var[i]);
+    autocomplete_vocab.field_name.push(autocomplete_model + '_' + autocomplete_vocab.url_var[i]);
     // autocompletes
-    $("#" + autocomplete_vocab.field_name[i])
+    $("input." + autocomplete_vocab.field_name[i])
         // don't navigate away from the field on tab when selecting an item
         .bind( "keydown", function( event ) {
             if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -74,7 +76,7 @@ Blacklight.onLoad(function() {
     var $cloneElem = $(cloneElem);
     // FIXME this code (comparing the id) depends on a bug. Each input has an id and the id is
     // duplicated when you press the plus button. This is not valid html.
-    if ($cloneElem.attr("id") == 'file_set_based_near') {
+    if ($cloneElem.attr("id") == autocomplete_model + '_based_near') {
       $cloneElem.autocomplete(cities_autocomplete_opts);
     } else if ( (index = $.inArray($cloneElem.attr("id"), autocomplete_vocab.field_name)) != -1 ) {
       $cloneElem.autocomplete(get_autocomplete_opts(autocomplete_vocab.url_var[index]));
