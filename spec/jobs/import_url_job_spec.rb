@@ -39,7 +39,7 @@ describe ImportUrlJob do
   #     allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
   #     expect(CurationConcerns.queue).to receive(:push).with(s2).once
   #
-  #     expect(Sufia::GenericFile::Actor).to receive(:virus_check).and_return(false)
+  #     expect(CurationConcerns::GenericFileActor).to receive(:virus_check).and_return(false)
   #   end
   #
   #   xit "should create a content datastream" do
@@ -59,7 +59,7 @@ describe ImportUrlJob do
   #     allow(CharacterizeJob).to receive(:new).with(generic_file.id).never
   #   end
   #   xit "should abort if virus check fails" do
-  #     allow(Sufia::GenericFile::Actor).to receive(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+  #     allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
   #     job.run
   #     expect(user.mailbox.inbox.first.subject).to eq("File Import Error")
   #   end
