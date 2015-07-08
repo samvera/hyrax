@@ -43,7 +43,7 @@ module Sufia
 
       class_attribute :edit_form_class, :presenter_class
       self.edit_form_class = CurationConcerns::Forms::GenericFileEditForm
-      self.presenter_class = CurationConcerns::GenericFilePresenter
+      self.presenter_class = Sufia::GenericFilePresenter
     end
 
     # routed to /files/new
@@ -164,7 +164,7 @@ module Sufia
     end
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != Sufia::VersioningService.latest_version_of(@generic_file.content).label
+      params.has_key?(:revision) && params[:revision] != CurationConcerns::VersioningService.latest_version_of(@generic_file.content).label
     end
 
     def wants_to_upload_new_version?
@@ -175,7 +175,7 @@ module Sufia
     end
 
     def actor
-      @actor ||= Sufia::GenericFile::Actor.new(@generic_file, current_user)
+      @actor ||= CurationConcerns::GenericFileActor.new(@generic_file, current_user)
     end
 
     def update_version

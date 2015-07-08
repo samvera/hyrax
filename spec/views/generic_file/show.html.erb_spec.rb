@@ -29,7 +29,7 @@ describe 'generic_files/show.html.erb', :type => :view do
   end
 
   let(:presenter) do
-    CurationConcerns::GenericFilePresenter.new(generic_file)
+    Sufia::GenericFilePresenter.new(generic_file)
   end
 
   before do

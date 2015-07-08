@@ -18,7 +18,7 @@ class IngestLocalFileJob
     generic_file = GenericFile.find(generic_file_id)
     path = File.join(directory, filename)
 
-    actor = Sufia::GenericFile::Actor.new(generic_file, user)
+    actor = CurationConcerns::GenericFileActor.new(generic_file, user)
 
     if actor.create_content(File.open(path), filename, mime_type(filename))
       FileUtils.rm(path)

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sufia::PresenterRenderer, type: :view do
   let(:generic_file) { GenericFile.new }
-  let(:presenter) { CurationConcerns::GenericFilePresenter.new(generic_file) }
+  let(:presenter) { Sufia::GenericFilePresenter.new(generic_file) }
   let(:renderer) { Sufia::PresenterRenderer.new(presenter, view) }
 
   describe "#label" do
