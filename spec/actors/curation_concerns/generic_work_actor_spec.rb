@@ -173,34 +173,29 @@ describe CurationConcerns::GenericWorkActor do
       end
     end
 
-    # context 'adding to collections' do
-    #   let!(:collection1) { FactoryGirl.create(:collection, user: user) }
-    #   let!(:collection2) { FactoryGirl.create(:collection, user: user) }
-    #   let(:attributes) {
-    #     FactoryGirl.attributes_for(:generic_work,
-    #                                visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-    #                                collection_ids: [collection2.id])
-    #   }
-    #   before do
-    #     curation_concern.apply_depositor_metadata(user.user_key)
-    #     curation_concern.save!
-    #     collection1.add_member(curation_concern)
-    #   end
+    context 'adding to collections' do
+      let!(:collection1) { FactoryGirl.create(:collection, user: user) }
+      let!(:collection2) { FactoryGirl.create(:collection, user: user) }
+      let(:attributes) {
+        FactoryGirl.attributes_for(:generic_work, collection_ids: [collection2.id])
+      }
+      before do
+        curation_concern.apply_depositor_metadata(user.user_key)
+        curation_concern.save!
+        collection1.add_member(curation_concern)
+      end
 
-    #   it "should add to collections" do
-    #     reload = GenericWork.find(curation_concern.id)
-    #     expect(reload.collections).to eq [collection1]
+      it "should add to collections" do
+        reload = GenericWork.find(curation_concern.id)
+        expect(reload.collections).to eq [collection1]  # before running actor.update, the work is in collection1
 
-    #     expect(subject.update).to be true
+        expect(subject.update).to be true
 
-    #     reload = GenericWork.find(curation_concern.id)
-    #     expect(reload.identifier).to be_blank
-    #     expect(reload).to be_persisted
-    #     expect(reload).to be_open_access
-    #     expect(reload.collections.count).to eq 1
-    #     expect(reload.collections).to eq [collection2]
-    #     expect(subject).to be_visibility_changed
-    #   end
-    # end
+        reload = GenericWork.find(curation_concern.id)
+        expect(reload.identifier).to be_blank
+        expect(reload).to be_persisted
+        expect(reload.collections).to eq [collection2]  # after running actor.update, the work is in collection2 and no longer in collection1
+      end
+    end
   end
 end
