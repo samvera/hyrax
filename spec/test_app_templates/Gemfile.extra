@@ -1,5 +1,5 @@
 gem 'hydra-head', github:'projecthydra/hydra-head'
-gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '13df67f'
+gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '7a8377c'
 
 gem 'active-fedora', github: 'projecthydra/active_fedora', ref:'6c6f3e9337076a8333eeb6eb46552315cf96264f'
 gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: '0dfe4f4'

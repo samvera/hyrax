@@ -3,8 +3,8 @@ require 'spec_helper'
 describe FitsDatastream, type: :model, unless: $in_travis do
   describe "image" do
     before(:all) do
-      @file = GenericFile.new(id: 'foo123')
-      @file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
+      @file = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
+      Hydra::Works::AddFileToGenericFile.call(@file, File.join(fixture_path + '/world.png'), :original_file)
       CurationConcerns::CharacterizationService.run(@file)
     end
     it "should have a format label" do
@@ -43,8 +43,8 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
   describe "video" do
     before(:all) do
-      @file = GenericFile.new(id: 'foo123')
-      @file.add_file(File.open(fixture_path + '/sample_mpeg4.mp4'), path: 'content', original_name: 'sample_mpeg4.mp4')
+      @file = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
+      Hydra::Works::AddFileToGenericFile.call(@file, File.join(fixture_path + '/sample_mpeg4.mp4'), :original_file)
       CurationConcerns::CharacterizationService.run(@file)
     end
     it "should have a format label" do
@@ -85,9 +85,8 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
   describe "pdf" do
     before do
-      @myfile = GenericFile.new(id: 'foo123')
-      @myfile.add_file(File.open(fixture_path + '/test4.pdf', 'rb').read, path: 'content', original_name: 'test4.pdf', mime_type: 'application/pdf')
-      @myfile.apply_depositor_metadata('mjg36')
+      @myfile = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
+      Hydra::Works::AddFileToGenericFile.call(@myfile, File.join(fixture_path + '/test4.pdf'), :original_file)
       # characterize method saves
       CurationConcerns::CharacterizationService.run(@myfile)
     end
@@ -107,21 +106,20 @@ describe FitsDatastream, type: :model, unless: $in_travis do
 
       expect(@myfile.format_label).to eq ["Portable Document Format"]
       expect(@myfile.title).to include("Microsoft Word - sample.pdf.docx")
-      expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMicrosoft Word - sample.pdf.docx\n\n\n \n \n\n \n\n \n\n \n\nThis PDF file was created using CutePDF. \n\nwww.cutepdf.com")
+      expect(@myfile.extracted_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMicrosoft Word - sample.pdf.docx\n\n\n \n \n\n \n\n \n\n \n\nThis PDF file was created using CutePDF. \n\nwww.cutepdf.com")
     end
   end
 
   describe "m4a" do
     before do
-      @myfile = GenericFile.new(id: 'foo123')
-      @myfile.add_file(File.open(fixture_path + '/spoken-text.m4a', 'rb').read, path: 'content', original_name: 'spoken-text.m4a', mime_type: 'audio/mp4a-latm')
-      @myfile.apply_depositor_metadata('agw13')
+      @myfile = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
+      Hydra::Works::AddFileToGenericFile.call(@myfile, File.join(fixture_path + '/spoken-text.m4a'), :original_file)
       # characterize method saves
       CurationConcerns::CharacterizationService.run(@myfile)
     end
 
     it "should return expected content for full text" do
-      expect(@myfile.full_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLavf56.15.102")
+      expect(@myfile.extracted_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLavf56.15.102")
     end
   end
 
