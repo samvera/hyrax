@@ -1,3 +1,6 @@
+h3. 9.2.0 (2015-7-8)
+* Don't index permissions marked for destruction [Justin Coyne]
+
 h3. 9.2.0.rc1 (2015-6-30)
 * Support ActiveFedora 9.2.0 [Justin Coyne]
 
