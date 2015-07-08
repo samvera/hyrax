@@ -5,23 +5,24 @@ module CurationConcerns
 
     source_root File.expand_path('../templates', __FILE__)
 
-    # BEGIN Blacklight Stuff
-    # Really just relying on the blacklight generator to
-    #   * set up devise
-    #   * add solr.yml
-    # ... so ultimately aiming to stop using it.
-    def run_blacklight_generator
-      say_status("warning", "GENERATING BL", :yellow)
-      generate 'blacklight:install', '--devise'
+    argument :model_name, type: :string , default: "user"
+    desc """
+  This generator makes the following changes to your application:
+   1. Runs installers for blacklight & hydra-head (which also install & configure devise)
+   2. Runs curation_concerns:models:install
+   3. Injects CurationConcerns routes
+   4. Adds CurationConcerns abilities into the Ability class
+   5. Adds controller behavior to the application controller
+   6. Copies the catalog controller into the local app
+   7. Adds CurationConcerns::SolrDocumentBehavior to app/models/solr_document.rb
+         """
 
-      say_status("warning", "GENERATING HYDRA-HEAD", :yellow)
+    def run_required_generators
+      # say_status("warning", "GENERATING BL", :yellow)
+      generate "blacklight:install --devise"
+      # say_status("warning", "GENERATING HYDRA-HEAD", :yellow)
       generate "hydra:head -f"
-
-      # TODO this should probably move to the hydra:head generator because it installs the gem
-      say_status("warning", "GENERATING RSPEC-RAILS", :yellow)
-      generate 'rspec:install'
-
-      say_status("warning", "GENERATING CURATION_CONCERNS", :yellow)
+      # say_status("warning", "GENERATING CURATION_CONCERNS", :yellow)
       generate "curation_concerns:models:install#{options[:force] ? ' -f' : ''}"
     end
 

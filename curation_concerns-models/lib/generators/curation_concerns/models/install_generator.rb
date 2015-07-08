@@ -7,7 +7,7 @@ class CurationConcerns::Models::InstallGenerator < CurationConcerns::Models::Abs
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Creates the curation_concerns.rb configuration file and several others
- 3. Creates the collections.rb model
+ 3. Creates the generic_file.rb, generic_work.rb and collection.rb models
  4. Runs full-text generator
        """
   def banner
@@ -50,6 +50,14 @@ This generator makes the following changes to your application:
 
   def create_collection
     copy_file 'app/models/collection.rb', 'app/models/collection.rb'
+  end
+
+  def create_generic_work
+    copy_file 'app/models/generic_work.rb', 'app/models/generic_work.rb'
+  end
+
+  def create_generic_file
+    copy_file 'app/models/generic_file.rb', 'app/models/generic_file.rb'
   end
 
   # Sets up full-text indexing (Solr config + jars)
