@@ -5,7 +5,7 @@ module CurationConcerns
       new(generic_file).extract
     end
 
-    delegate :content, :logger, :mime_type, :id, to: :@generic_file
+    delegate :original_file, :logger, :mime_type, :id, to: :@generic_file
 
     def initialize(generic_file)
       @generic_file = generic_file
@@ -14,12 +14,12 @@ module CurationConcerns
     def extract
       uri = URI("#{connection_url}/update/extract?extractOnly=true&wt=json&extractFormat=text")
       req = Net::HTTP.new(uri.host, uri.port)
-      resp = req.post(uri.to_s, content.content, {
+      resp = req.post(uri.to_s, original_file.content, {
           'Content-type' => "#{mime_type};charset=utf-8",
-          'Content-Length' => content.content.size.to_s
+          'Content-Length' => original_file.content.size.to_s
         })
       raise "URL '#{uri}' returned code #{resp.code}" unless resp.code == "200"
-      content.content.rewind if content.content.respond_to?(:rewind)
+      original_file.content.rewind if original_file.content.respond_to?(:rewind)
       JSON.parse(resp.body)[''].rstrip
     rescue => e
       logger.error("Error extracting content from #{id}: #{e.inspect}")
