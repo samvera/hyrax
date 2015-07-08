@@ -392,9 +392,18 @@ module Hydra
       def search_by_type_and_mode(type, mode)
         case type
         when :group
-          permissions.to_a.select { |p| group_agent?(p.agent) && p.mode.first.rdf_subject == mode }
+          search_by_mode(mode) { |agent| group_agent?(agent) }
         when :person
-          permissions.to_a.select { |p| person_agent?(p.agent) && p.mode.first.rdf_subject == mode }
+          search_by_mode(mode) { |agent| person_agent?(agent) }
+        end
+      end
+
+      # @param [RDF::URI] mode One of the permissions modes, e.g. ACL.Write, ACL.Read, etc.
+      # @yieldparam [Array<ActiveFedora::Base>] agent the agent type assertions
+      # @return [Array<Permission>] list of permissions where the mode is as selected, the block evaluates to true and the target is not marked for delete
+      def search_by_mode(mode, &block)
+        permissions.to_a.select do |p|
+          yield(p.agent) && !p.marked_for_destruction? && p.mode.first.rdf_subject == mode
         end
       end
 
