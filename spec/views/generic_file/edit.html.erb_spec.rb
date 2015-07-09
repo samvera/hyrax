@@ -20,7 +20,7 @@ describe 'generic_files/edit.html.erb', :no_clean do
     }
 
     let(:form) {
-      Sufia::Forms::GenericFileEditForm.new(generic_file)
+      CurationConcerns::Forms::GenericFileEditForm.new(generic_file)
     }
 
     before do

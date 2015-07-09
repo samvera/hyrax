@@ -44,7 +44,7 @@ class BatchUpdateJob
     end
     # update the file using the actor after setting the title
     gf.title = title[gf.id] if title[gf.id]
-    Sufia::GenericFile::Actor.new(gf, user).update_metadata(file_attributes, visibility)
+    CurationConcerns::GenericFileActor.new(gf, user).update_metadata(file_attributes, visibility)
 
     # update the work to the same metadata as the file.
     # NOTE: For the moment we are assuming copied metadata.  This is likely to change.

@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.name          = "sufia-models"
   spec.version       = version
   spec.authors       = [
-    "Jeremy Friesen",
+    "Jeremy Friesen","Carolyn Cole", "Justin Coyne", 'Michael J. Giarlo', "Matt Zumwalt"
   ]
   spec.email         = [
     "jeremy.n.friesen@gmail.com",

@@ -2,7 +2,8 @@ require_relative 'abstract_migration_generator'
 
 class Sufia::Models::InstallGenerator < Sufia::Models::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
-  argument     :model_name, type: :string , default: "user"
+  argument     :model_name, type: :string , default: "user", desc:"Model name for User model (primarily passed to devise, but also used elsewhere)"
+  class_option :skip_curation_concerns, type: :boolean, default: false, desc:"whether to skip the curation_concerns:models installer"
   desc """
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
@@ -16,8 +17,13 @@ This generator makes the following changes to your application:
  9. Runs ORCID field generator
 10. Runs user stats generator
        """
+
   def banner
     say_status("warning", "GENERATING SUFIA MODELS", :yellow)
+  end
+
+  def run_curation_concerns_models_installer
+    generate 'curation_concerns:models:install' unless options[:skip_curation_concerns]
   end
 
   # Setup the database migrations
@@ -28,8 +34,6 @@ This generator makes the following changes to your application:
       "create_single_use_links.rb",
       "add_ldap_attrs_to_user.rb",
       "add_avatars_to_users.rb",
-      "create_checksum_audit_logs.rb",
-      "create_version_committers.rb",
       "add_groups_to_users.rb",
       "create_local_authorities.rb",
       "create_trophies.rb",
@@ -43,11 +47,15 @@ This generator makes the following changes to your application:
     end
   end
 
+  def create_config_file
+    copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
+  end
+
   # Add behaviors to the user model
   def inject_sufia_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exists?(file_path)
-      inject_into_file file_path, after: /include Hydra\:\:User.*$/ do
+      inject_into_file file_path, after: /include CurationConcerns\:\:User.*$/ do
         "# Connects this user object to Sufia behaviors. " +
           "\n include Sufia::User\n"
       end
@@ -56,19 +64,20 @@ This generator makes the following changes to your application:
     end
   end
 
-  def create_configuration_files
-    append_file 'config/initializers/mime_types.rb',
-                     "\nMime::Type.register 'application/x-endnote-refer', :endnote", {verbose: false }
-    copy_file 'config/sufia.rb', 'config/initializers/sufia.rb'
-    copy_file 'config/redis.yml', 'config/redis.yml'
-    copy_file 'config/resque-pool.yml', 'config/resque-pool.yml'
-    copy_file 'config/redis_config.rb', 'config/initializers/redis_config.rb'
-    copy_file 'config/resque_admin.rb', 'config/initializers/resque_admin.rb'
-    copy_file 'config/resque_config.rb', 'config/initializers/resque_config.rb'
+  def inject_sufia_collection_behavior
+    insert_into_file 'app/models/collection.rb', after: 'include CurationConcerns::CollectionBehavior' do
+      "\n  include Sufia::CollectionBehavior"
+    end
   end
 
-  def create_collection
-    copy_file 'app/models/collection.rb', 'app/models/collection.rb'
+  def inject_sufia_generic_work_behavior
+    insert_into_file 'app/models/generic_work.rb', after: 'include ::CurationConcerns::GenericWorkBehavior' do
+      "\n  include ::Sufia::GenericWorkBehavior"
+    end
+  end
+
+  def inject_sufia_generic_file_behavior
+    # Currently no Sufia::GenericFileBehavior to inject (no need)
   end
 
   def install_mailboxer
@@ -77,11 +86,6 @@ This generator makes the following changes to your application:
 
   def configure_usage_stats
     generate 'sufia:models:usagestats'
-  end
-
-  # Sets up full-text indexing (Solr config + jars)
-  def full_text_indexing
-    generate "sufia:models:fulltext"
   end
 
   # Sets up proxies and transfers

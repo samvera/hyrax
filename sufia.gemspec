@@ -2,7 +2,7 @@
 version = File.read(File.expand_path("../SUFIA_VERSION",__FILE__)).strip
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Justin Coyne", 'Michael J. Giarlo']
+  gem.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt"]
   gem.email         = ["justin@curationexperts.com", 'leftwing@alumni.rutgers.edu']
   gem.description   = %q{Sufia is a Rails engine for creating a self-deposit institutional repository}
   gem.summary       = %q{Sufia was extracted from ScholarSphere developed by Penn State University}
@@ -28,6 +28,7 @@ Gem::Specification.new do |gem|
   # declare a dependency on) sass-rails
   gem.add_dependency 'sass-rails'
 
+  gem.add_dependency 'curation_concerns'
   gem.add_dependency 'hydra-batch-edit', '~> 1.1'
   gem.add_dependency 'browse-everything', '~> 0.4'
   gem.add_dependency 'daemons', '~> 1.1'

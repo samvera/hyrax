@@ -1,6 +1,6 @@
 module Sufia
   module Forms
-    class BatchEditForm < GenericFileEditForm
+    class BatchEditForm < CurationConcerns::Forms::GenericFileEditForm
     end
   end
 end

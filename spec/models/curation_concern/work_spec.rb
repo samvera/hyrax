@@ -29,6 +29,6 @@ describe Sufia::Works::CurationConcern::Work do
 
   describe "#indexer" do
     subject { EssentialWork.indexer }
-    it { is_expected.to eq Sufia::GenericWorkIndexingService }
+    it { is_expected.to eq CurationConcerns::GenericWorkIndexingService }
   end
 end

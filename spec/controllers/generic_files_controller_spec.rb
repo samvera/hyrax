@@ -34,7 +34,7 @@ describe GenericFilesController do
       context "when everything is perfect" do
         render_views
         it "spawns a content deposit event job" do
-          expect_any_instance_of(Sufia::GenericFile::Actor).to receive(:create_content).with(file, 'world.png', 'image/png').and_return(true)
+          expect_any_instance_of(CurationConcerns::GenericFileActor).to receive(:create_content).with(file, 'world.png', 'image/png').and_return(true)
           xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
           expect(response.body).to eq '[{"name":null,"size":null,"url":"/files/test123","thumbnail_url":"test123","delete_url":"deleteme","delete_type":"DELETE"}]'
           expect(flash[:error]).to be_nil
@@ -73,7 +73,7 @@ describe GenericFilesController do
 
       context "when the file has a virus" do
         it "displays a flash error when file has a virus" do
-          expect(Sufia::GenericFile::Actor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+          expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
           expect(flash[:error]).to include('A virus was found')
@@ -385,7 +385,7 @@ describe GenericFilesController do
 
       expect(response).to be_success
       expect(assigns[:generic_file]).to eq generic_file
-      expect(assigns[:form]).to be_kind_of Sufia::Forms::GenericFileEditForm
+      expect(assigns[:form]).to be_kind_of CurationConcerns::Forms::GenericFileEditForm
       expect(assigns[:version_list]).to be_kind_of Sufia::VersionListPresenter
       expect(response).to render_template(:edit)
     end
@@ -447,8 +447,8 @@ describe GenericFilesController do
       let(:file2_type)  { "image/jpeg" }
       let(:second_user) { FactoryGirl.create(:user) }
       let(:version1)    { "version1" }
-      let(:actor1)      { Sufia::GenericFile::Actor.new(generic_file, user) }
-      let(:actor2)      { Sufia::GenericFile::Actor.new(generic_file, second_user) }
+      let(:actor1)      { CurationConcerns::GenericFileActor.new(generic_file, user) }
+      let(:actor2)      { CurationConcerns::GenericFileActor.new(generic_file, second_user) }
 
       before do
         actor1.create_content(fixture_file_upload(file1), file1, file1_type)
@@ -464,7 +464,7 @@ describe GenericFilesController do
 
           let(:restored_content) { generic_file.reload.content }
           let(:versions)         { restored_content.versions }
-          let(:latest_version)   { Sufia::VersioningService.latest_version_of(restored_content) }
+          let(:latest_version)   { CurationConcerns::VersioningService.latest_version_of(restored_content) }
 
           it "restores the first versions's content and metadata" do
             expect(restored_content.mime_type).to eq file1_type
@@ -522,7 +522,7 @@ describe GenericFilesController do
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
       allow(CreateDerivativesJob).to receive(:new).with(generic_file.id).and_return(s2)
       file = fixture_file_upload('/world.png', 'image/png')
-      expect(Sufia::GenericFile::Actor).to receive(:virus_check).and_return(0)
+      expect(CurationConcerns::GenericFileActor).to receive(:virus_check).and_return(0)
       expect(Sufia.queue).to receive(:push).with(s2).once
       post :update, id: generic_file.id, filedata: file, 'Filename' => 'The world',
           generic_file: { tag: [''],

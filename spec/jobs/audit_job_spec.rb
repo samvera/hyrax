@@ -20,14 +20,14 @@ describe AuditJob do
     end
 
     context "on a version of the content" do
-      before { Sufia::VersioningService.create(file.content) }
-      let(:uri) { Sufia::VersioningService.latest_version_of(file.content).uri }
+      before { CurationConcerns::VersioningService.create(file.content) }
+      let(:uri) { CurationConcerns::VersioningService.latest_version_of(file.content).uri }
       it { is_expected.to be true }
     end
 
     context "on an invalid version of the content" do
-      before { Sufia::VersioningService.create(file.content) }
-      let(:uri) { Sufia::VersioningService.latest_version_of(file.content).uri + 'bogus' }
+      before { CurationConcerns::VersioningService.create(file.content) }
+      let(:uri) { CurationConcerns::VersioningService.latest_version_of(file.content).uri + 'bogus' }
       it { is_expected.to be false }
     end
   end
@@ -63,7 +63,7 @@ describe AuditJob do
     before do
       allow(ActiveFedora::FixityService).to receive(:new).and_return(mock_service)
       allow(mock_service).to receive(:check).and_return(true, false, false, true, false)
-      Sufia::VersioningService.create(file.content)
+      CurationConcerns::VersioningService.create(file.content)
       ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 1, created_at: 2.minutes.ago)
       ChecksumAuditLog.create(generic_file_id: file.id, dsid: 'content', version: uri, pass: 0)
     end

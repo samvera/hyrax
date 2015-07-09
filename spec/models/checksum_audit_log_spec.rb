@@ -13,7 +13,7 @@ describe ChecksumAuditLog do
     end
   end
 
-  let(:version_uri) { Sufia::VersioningService.create(f.content); f.content.versions.first.uri }
+  let(:version_uri) { CurationConcerns::VersioningService.create(f.content); f.content.versions.first.uri }
   let(:version_path) { 'content' }
   let(:old) { ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
   let(:new) { ChecksumAuditLog.create(generic_file_id: f.id, dsid: version_path, version: version_uri, pass: 0, created_at: 1.minute.ago) }
