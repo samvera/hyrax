@@ -11,7 +11,7 @@ describe 'Routes', :type => :routing do
 
   describe 'GenericWork' do
     it "should route to show" do
-      expect({ get: '/works/4' }).to route_to(controller: 'curation_concern/generic_works', action: 'show', id: '4')
+      expect({ get: '/works/4' }).to route_to(controller: 'curation_concerns/generic_works', action: 'show', id: '4')
     end
   end
 

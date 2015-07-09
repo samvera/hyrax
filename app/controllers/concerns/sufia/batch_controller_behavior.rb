@@ -41,7 +41,7 @@ module Sufia
     def uploading_on_behalf_of? batch
       return false if batch.generic_files.empty?
 
-      work = batch.generic_files.first.generic_work
+      work = batch.generic_files.first.generic_works.first
       return false if work.nil? || work.on_behalf_of.blank?
       current_user.user_key != work.on_behalf_of
     end

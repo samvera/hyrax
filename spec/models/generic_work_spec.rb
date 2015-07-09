@@ -33,30 +33,6 @@ describe GenericWork do
     end
   end
 
-  describe "associations" do
-    let(:file) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
-    context "base model" do
-      subject { GenericWork.create(title: ['test'], generic_files: [file]) }
-
-      it "should have many generic files" do
-        expect(subject.generic_files).to eq [file]
-      end
-    end
-
-    context "sub-class" do
-      before do
-        class TestWork < GenericWork
-        end
-      end
-
-      subject { TestWork.create(title: ['test'], generic_files: [file]) }
-
-      it "should have many generic files" do
-        expect(subject.generic_files).to eq [file]
-      end
-    end
-  end
-
   describe "created for someone (proxy)" do
     let(:work) { GenericWork.new.tap {|gw| gw.apply_depositor_metadata("user")} }
     let(:transfer_to) { FactoryGirl.find_or_create(:jill) }
@@ -101,16 +77,6 @@ describe GenericWork do
     end
   end
 
-  describe "#destroy", skip: "Is this behavior we need? Could other works be pointing at the file?" do
-    let(:file1) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
-    let(:file2) { GenericFile.new.tap {|gf| gf.apply_depositor_metadata("user")} }
-    let!(:work) { GenericWork.create(files: [file1, file2]) }
-
-    it "should destroy the files" do
-      expect { work.destroy }.to change{ GenericFile.count }.by(-2)
-    end
-  end
-
   describe "metadata" do
     it "should have descriptive metadata" do
       expect(subject).to respond_to(:relative_path)
@@ -132,11 +98,6 @@ describe GenericWork do
       expect(subject).to respond_to(:resource_type)
       expect(subject).to respond_to(:identifier)
     end
-  end
-
-  describe "#indexer" do
-    subject { described_class.indexer }
-    it { is_expected.to eq CurationConcerns::GenericWorkIndexingService }
   end
 end
 

@@ -73,7 +73,7 @@ describe GenericFilesController do
 
       context "when the file has a virus" do
         it "displays a flash error when file has a virus" do
-          expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+          expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
           expect(flash[:error]).to include('A virus was found')
@@ -96,8 +96,7 @@ describe GenericFilesController do
           xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, work_id: work.id, terms_of_service: '1'
           expect(response).to be_success
           saved_file = GenericFile.find('test123')
-          expect(saved_file.generic_work_id).to eq work.id
-          expect(saved_file.generic_work).to eq work
+          expect(saved_file.generic_works.first).to eq work
         end
 
       end
@@ -106,7 +105,7 @@ describe GenericFilesController do
           xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, terms_of_service: '1'
           expect(response).to be_success
           saved_file = GenericFile.find('test123')
-          expect(saved_file.generic_work_id).not_to be_nil
+          expect(saved_file.generic_works).not_to be_empty
         end
 
       end
@@ -141,7 +140,7 @@ describe GenericFilesController do
           expect(Sufia.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id, work_id: work.id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
-          created_files.each {|f| expect(f.generic_work).to eq work}
+          created_files.each {|f| expect(f.generic_works).to include work}
         end
 
       end
@@ -151,7 +150,7 @@ describe GenericFilesController do
           expect(Sufia.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
-          expect(created_files[0].generic_work).not_to eq created_files[1].generic_work
+          expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
         end
 
       end
@@ -238,7 +237,7 @@ describe GenericFilesController do
               post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id, work_id: work.id
             }.to change(GenericFile, :count).by(2)
             created_files = GenericFile.all
-            created_files.each {|f| expect(f.generic_work).to eq work}
+            created_files.each {|f| expect(f.generic_works).to include work}
           end
 
         end
@@ -249,7 +248,7 @@ describe GenericFilesController do
               post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
             }.to change(GenericFile, :count).by(2)
             created_files = GenericFile.all
-            expect(created_files[0].generic_work).not_to eq created_files[1].generic_work
+            expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
           end
 
         end
@@ -269,9 +268,10 @@ describe GenericFilesController do
 
   describe "audit" do
     let(:generic_file) do
-      GenericFile.create do |gf|
-        gf.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
+      GenericFile.new do |gf|
         gf.apply_depositor_metadata(user)
+        gf.save!
+        Hydra::Works::UploadFileToGenericFile.call(gf, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
       end
     end
 
@@ -548,11 +548,12 @@ describe GenericFilesController do
 
   describe "someone elses files" do
     let(:generic_file) do
-      GenericFile.create(id: 'test5') do |f|
+      GenericFile.new(id: 'test5') do |f|
         f.apply_depositor_metadata('archivist1@example.com')
-        f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
         # grant public read access explicitly
         f.read_groups = ['public']
+        f.save!
+        Hydra::Works::UploadFileToGenericFile.call(f, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
       end
     end
 

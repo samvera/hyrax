@@ -109,35 +109,47 @@ describe CatalogController, :type => :controller do
     end
 
     context 'works by file metadata' do
-
-      let(:work1_id) { '123' }
-      let(:work2_id) { '456' }
-      let(:file1_id) { 'f123' }
-      let(:file2_id) { 'f456' }
-      let(:work1) { GenericWork.new(id: work1_id, title: ["me too"], read_groups: ['public']) }
-      let(:work2) { GenericWork.new(id: work2_id, title: ["find me"], read_groups: ['public']) }
-      let(:file1) { GenericFile.new(id: file1_id, title: ["find me"], generic_work: work1, read_groups: ['public']) }
-      let(:file2) { GenericFile.new(id: file2_id, title: ["other file"], generic_work: work1, read_groups: ['public']) }
-
-      let (:objects) { [work1, work2, file1, file2]}
-
+      let (:objects) { [] } # Can't use this shorthand due to the complexity of relationships between GenericFiles and GenericWorks
+      # Building the objects in a before(:all) to minimize the overhead of creating and destroying all these objects in Fedora three times
+      before(:all) do
+        user =  FactoryGirl.find_or_create(:jill)
+        work1 = FactoryGirl.create(:generic_work, title: ["me too"], read_groups: ['public'], user:user)
+        work2 = FactoryGirl.create(:generic_work, title: ["find me"], read_groups: ['public'], user:user)
+        file1 = GenericFile.new.tap do |f|
+            f.title= ['find me']
+            f.apply_depositor_metadata(user)
+            f.save!
+            Hydra::Works::AddGenericFileToGenericWork.call(work1, f)
+          end
+        file2 = GenericFile.new.tap do |f|
+            f.title= ['other file']
+            f.apply_depositor_metadata(user)
+            f.save!
+            Hydra::Works::AddGenericFileToGenericWork.call(work1, f)
+        end
+        @user = user
+        @work1 = work1
+        @work2 = work2
+        @file1 = file1
+        @file2 = file2
+      end
 
       it "finds work and work that contains file with title" do
         get :index, q: 'find me'
         expect(assigns(:document_list).count).to eq 2
-        expect(assigns(:document_list).map(&:id)).to include(work1_id, work2_id)
+        expect(assigns(:document_list).map(&:id)).to include(@work1.id, @work2.id)
       end
 
       it "finds work that contains file with title" do
         get :index, q: 'other file'
         expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to include(work1_id)
+        expect(assigns(:document_list).map(&:id)).to include(@work1.id)
       end
 
       it "finds work with title" do
         get :index, q: 'me too'
         expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to include(work1_id)
+        expect(assigns(:document_list).map(&:id)).to include(@work1.id)
       end
 
     end

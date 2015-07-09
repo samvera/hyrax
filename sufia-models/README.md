@@ -27,7 +27,7 @@ Or install it yourself as:
 
 ## Usage
 
-This project is closely tied to [Sufia](https://github.com/projecthydra/sufia).
+This project is closely tied to [sufia-core](https://github.com/projecthydra-labs/sufia-core).
 Presently this gems tests are found in the sufia gem (I'm working on it).
 
 ## Contributing

@@ -5,10 +5,11 @@ describe DownloadsController, :type => :controller do
   describe "with a file" do
     let(:depositor) { FactoryGirl.find_or_create(:archivist) }
     let(:file) do
-      GenericFile.create do |f|
+      GenericFile.new do |f|
         f.apply_depositor_metadata(depositor.user_key)
         f.label = 'world.png'
-        f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png', mime_type: 'image/png')
+        f.save!
+        Hydra::Works::UploadFileToGenericFile.call(f, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
       end
     end
 
@@ -23,11 +24,11 @@ describe DownloadsController, :type => :controller do
           allow(controller).to receive(:render) # send_data calls render internally
         end
         let(:object) { ActiveFedora::Base.find(file.id) }
-        let(:expected_datastream) { object.content }
+        let(:expected_datastream) { object.original_file }
         let(:expected_content) { expected_datastream.content }
 
         it "should default to returning configured default download" do
-          expect(DownloadsController.default_file_path).to eq "content"
+          expect(DownloadsController.default_file_path).to eq "original_file"
           expect(controller).to receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
           get "show", id: file
           expect(response).to be_success

@@ -1,6 +1,6 @@
 /*!
  * flyingzumwalt: jquery.tagcloud.js v. 0.1.0
- *    (contains modifications for use in projecthydra/sufia)
+ *    (contains modifications for use in projecthydra-labs/sufia-core)
  *
  * Forked from:
  *

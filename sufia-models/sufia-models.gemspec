@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   # This is a temporary homepage until we've had a chance to review the
   # process
-  spec.homepage      = "https://github.com/projecthydra/sufia"
+  spec.homepage      = "https://github.com/projecthydra-labs/sufia-core"
   spec.license       = "Apache2"
 
   spec.files         = `git ls-files`.split($/)

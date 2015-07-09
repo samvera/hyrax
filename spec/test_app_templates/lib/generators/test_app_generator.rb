@@ -7,6 +7,11 @@ class TestAppGenerator < Rails::Generators::Base
     generate 'sufia:install', '-f'
   end
 
+  def comment_out_web_console
+    gsub_file "Gemfile",
+              "gem 'web-console'", "# gem 'web-console'"
+  end
+
   def browse_everything_config
     generate "browse_everything:config"
   end
