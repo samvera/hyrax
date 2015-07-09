@@ -18,11 +18,11 @@ module CurationConcerns
          """
 
     def run_required_generators
-      # say_status("warning", "GENERATING BL", :yellow)
+      say_status("warning", "[CurationConcerns] GENERATING BLACKLIGHT", :yellow)
       generate "blacklight:install --devise"
-      # say_status("warning", "GENERATING HYDRA-HEAD", :yellow)
+      say_status("warning", "[CurationConcerns] GENERATING HYDRA-HEAD", :yellow)
       generate "hydra:head -f"
-      # say_status("warning", "GENERATING CURATION_CONCERNS", :yellow)
+      say_status("warning", "[CurationConcerns] GENERATING CURATION_CONCERNS MODELS", :yellow)
       generate "curation_concerns:models:install#{options[:force] ? ' -f' : ''}"
     end
 
@@ -33,6 +33,7 @@ module CurationConcerns
 
     def inject_application_controller_behavior
       inject_into_file 'app/controllers/application_controller.rb', :after => /Blacklight::Controller\s*\n/ do
+        "\n  # Adds CurationConcerns behaviors to the application controller.\n" +
         "  include CurationConcerns::ApplicationControllerBehavior\n"
       end
     end
