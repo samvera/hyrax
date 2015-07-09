@@ -39,7 +39,7 @@ module Hydra
 
       def public_visibility!
         visibility_will_change! unless visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        set_read_groups([Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC], [])
+        set_read_groups([Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC], [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED])
       end
 
       def registered_visibility!
