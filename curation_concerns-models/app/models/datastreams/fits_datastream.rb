@@ -73,7 +73,7 @@ class FitsDatastream < ActiveFedora::OmDatastream
         t.width(path: "imageWidth")
         t.height(path: "imageHeight")
         t.duration(path: "duration")
-        t.sample_rate(path: "audioSampleRate")
+        t.sample_rate(path: "sampleRate")
         t.frame_rate(path: "frameRate")
       }
     }
