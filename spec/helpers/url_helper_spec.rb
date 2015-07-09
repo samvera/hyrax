@@ -13,8 +13,8 @@ describe CurationConcerns::UrlHelper do
   it "should use the curation_concern namespace" do
     expect(helper.url_for_document document).to eq "/concern/generic_works/#{work.id}"
   end
-  context "when document is a CurationConcerns::GenericFile" do
-    let(:document) { CurationConcerns::GenericFile.new id: '123' }
+  context "when document is a GenericFile" do
+    let(:document) { GenericFile.new id: '123' }
     it { should eq "/concern/generic_files/123" }
   end
 end

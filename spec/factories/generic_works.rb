@@ -2,7 +2,6 @@ FactoryGirl.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do
       user { FactoryGirl.create(:user) }
-      embargo_date { Date.tomorrow.to_s }
     end
 
     title ["Test title"]
@@ -25,22 +24,27 @@ FactoryGirl.define do
       after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
     end
 
-    factory :embargoed_work do
-      after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
-    end
+    factory :with_embargo_date do
+      transient do
+        embargo_date { Date.tomorrow.to_s }
+      end
+      factory :embargoed_work do
+        after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+      end
 
-    factory :embargoed_work_with_files do
-      after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
-      after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
-    end
+      factory :embargoed_work_with_files do
+        after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+        after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+      end
 
-    factory :leased_work do
-      after(:build) { |work, evaluator| work.apply_lease(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
-    end
+      factory :leased_work do
+        after(:build) { |work, evaluator| work.apply_lease(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
+      end
 
-    factory :leased_work_with_files do
-      after(:build) { |work, evaluator| work.apply_lease(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
-      after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+      factory :leased_work_with_files do
+        after(:build) { |work, evaluator| work.apply_lease(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
+        after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+      end
     end
   end
 end

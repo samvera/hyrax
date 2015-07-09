@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :generic_file, class: CurationConcerns::GenericFile do
+  factory :generic_file, class: GenericFile do
     transient do
       user { FactoryGirl.create(:user) }
       content nil

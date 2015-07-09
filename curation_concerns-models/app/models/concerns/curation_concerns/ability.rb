@@ -9,11 +9,12 @@ module CurationConcerns
 
       unless current_user.new_record?
         can :create, CurationConcerns::ClassifyConcern
-        can :create, [CurationConcerns::GenericFile]
+        # TODO: Shouldn't this be in `everyone_can_create_curation_concerns` ?
+        can :create, ::GenericFile
       end
 
       if user_groups.include? 'admin'
-       can [:discover, :show, :read, :edit, :update, :destroy], :all
+       can [:create, :discover, :show, :read, :edit, :update, :destroy], :all
       end
 
       can :collect, :all
@@ -24,6 +25,7 @@ module CurationConcerns
     def everyone_can_create_curation_concerns
       unless current_user.new_record?
         can :create, [CurationConcerns.configuration.curation_concerns]
+        # can :create, GenericFile
         #can :create, Collection
       end
     end

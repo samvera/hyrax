@@ -10,7 +10,7 @@ describe CurationConcerns::GenericFilesController do
 
     describe "#create" do
       before do
-        CurationConcerns::GenericFile.destroy_all
+        GenericFile.destroy_all
       end
 
       context "on the happy path" do
@@ -33,7 +33,7 @@ describe CurationConcerns::GenericFilesController do
                               visibility_after_lease: "restricted",
                               visibility: "restricted"}
             expect(response).to be_success
-          }.to change { CurationConcerns::GenericFile.count }.by(1)
+          }.to change { GenericFile.count }.by(1)
           expect(flash[:error]).to be_nil
           saved_file = assigns[:generic_file].reload
 
@@ -87,7 +87,7 @@ describe CurationConcerns::GenericFilesController do
 
       context "when solr is down" do
         it "should error out of create and save after on continuos rsolr error" do
-          allow_any_instance_of(CurationConcerns::GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
+          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
 
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
@@ -99,7 +99,7 @@ describe CurationConcerns::GenericFilesController do
 
     describe "destroy" do
       let(:generic_file) do
-        generic_file = CurationConcerns::GenericFile.new.tap do |gf|
+        generic_file = GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
           gf.save!
         end
@@ -108,16 +108,16 @@ describe CurationConcerns::GenericFilesController do
       end
 
       it "should delete the file" do
-        expect(CurationConcerns::GenericFile.find(generic_file.id)).to be_kind_of CurationConcerns::GenericFile
+        expect(GenericFile.find(generic_file.id)).to be_kind_of GenericFile
         delete :destroy, id: generic_file
-        expect { CurationConcerns::GenericFile.find(generic_file.id) }.to raise_error Ldp::Gone
+        expect { GenericFile.find(generic_file.id) }.to raise_error Ldp::Gone
         expect(response).to redirect_to main_app.curation_concerns_generic_work_path(parent)
       end
     end
 
     describe "update" do
       let!(:generic_file) do
-        generic_file = CurationConcerns::GenericFile.new.tap do |gf|
+        generic_file = GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
           gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           gf.save!
@@ -139,7 +139,7 @@ describe CurationConcerns::GenericFilesController do
         end
 
         it "should go back to edit on an error" do
-          allow_any_instance_of(CurationConcerns::GenericFile).to receive(:valid?).and_return(false)
+          allow_any_instance_of(GenericFile).to receive(:valid?).and_return(false)
           post :update, id: generic_file, generic_file:
             {title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}]}
           expect(response).to be_successful
@@ -224,7 +224,7 @@ describe CurationConcerns::GenericFilesController do
 
   context "someone elses files" do
     let(:generic_file) do
-      generic_file = CurationConcerns::GenericFile.new.tap do |gf|
+      generic_file = GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata('archivist1@example.com')
         gf.read_groups = ['public']
         gf.save!
