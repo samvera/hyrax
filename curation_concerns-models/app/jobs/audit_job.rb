@@ -3,9 +3,6 @@ class AuditJob < ActiveFedoraIdBasedJob
     :audit
   end
 
-  PASS = 'Passing Audit Run'
-  FAIL = 'Failing Audit Run'
-
   attr_accessor :uri, :id, :path
 
   # URI of the resource to audit.
@@ -24,15 +21,11 @@ class AuditJob < ActiveFedoraIdBasedJob
     log = run_audit
     fixity_ok = (log.pass == 1)
     unless fixity_ok
-      # send the user a message about the failing audit
-      login = generic_file.depositor
-      user = User.find_by_user_key(login)
-      logger.warn "User '#{login}' not found" unless user
-      job_user = User.audituser()
-      file_title = generic_file.title.first
-      message = "The audit run at #{log.created_at} for #{file_title} (#{uri}) failed."
-      subject = FAIL
-      job_user.send_message(user, message, subject)
+      if CurationConcerns.config.respond_to?(:after_audit_failure)
+        file_title = generic_file.title.first
+        message = "The audit run at #{log.created_at} for #{file_title} (#{uri}) failed."
+        CurationConcerns.config.after_audit_failure.call(generic_file, message, FAIL)
+      end
     end
     fixity_ok
   end
