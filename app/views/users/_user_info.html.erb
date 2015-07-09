@@ -5,7 +5,7 @@
   <dd class="col-xs-7"><%= link_to user.orcid, user.orcid, { target: '_blank' } %></dd>
 <% end %>
 
-<% if user.zotero_userid.present? %>
+<% if Sufia.config.arkivo_api && user.zotero_userid.present? %>
   <dt class="col-xs-5"><%= zotero_label(html_class: 'profile') %></dt>
   <dd class="col-xs-7"><%= link_to zotero_profile_url(user.zotero_userid), zotero_profile_url(user.zotero_userid), { target: '_blank' } %></dd>
 <% end %>
