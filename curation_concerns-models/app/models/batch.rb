@@ -2,7 +2,7 @@ class Batch < ActiveFedora::Base
   include Hydra::AccessControls::Permissions
   include CurationConcerns::Noid
 
-  has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name:"CurationConcerns::GenericFile"
+  has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name:"GenericFile"
 
   property :creator, predicate: ::RDF::DC.creator
   property :title, predicate: ::RDF::DC.title

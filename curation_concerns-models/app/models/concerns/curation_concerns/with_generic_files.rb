@@ -4,8 +4,7 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     included do
-      # The generic_files method comes from Hydra::Works::AggregatesGenericFiles
-      # has_many :generic_files, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf, class_name: "CurationConcerns::GenericFile", inverse_of: :batch
+      # The generic_files association and its accessor methods comes from Hydra::Works::AggregatesGenericFiles
       before_destroy :before_destroy_cleanup_generic_files
     end
 

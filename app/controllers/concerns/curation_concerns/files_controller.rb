@@ -5,7 +5,7 @@ module CurationConcerns
     included do
       include CurationConcerns::ThemedLayoutController
       with_themed_layout '1_column'
-      load_and_authorize_resource class: CurationConcerns::GenericFile
+      load_and_authorize_resource class: ::GenericFile
       helper_method :curation_concern
       include CurationConcerns::ParentContainer
     end
