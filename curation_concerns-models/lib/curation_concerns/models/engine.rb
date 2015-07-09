@@ -35,11 +35,6 @@ module CurationConcerns
         #{config.root}/app/models/datastreams
       )
 
-      initializer "patches" do
-        require 'curation_concerns/models/active_fedora/redis'
-        require 'curation_concerns/models/active_record/redis'
-      end
-
       initializer 'requires' do
         require 'active_fedora/noid'
         require 'curation_concerns/noid'

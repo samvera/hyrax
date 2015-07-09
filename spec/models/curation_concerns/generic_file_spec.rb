@@ -3,11 +3,6 @@ require 'spec_helper'
 describe CurationConcerns::GenericFile do
 
   let(:user) { FactoryGirl.find_or_create(:jill) }
-  # subject {
-  #   file = CurationConcerns::GenericFile.new
-  #   file.apply_depositor_metadata(user.user_key)
-  #   file
-  # }
 
   describe "rdf type" do
     subject { described_class.new.type }
@@ -122,15 +117,6 @@ describe CurationConcerns::GenericFile do
 
     describe "that have been saved" do
       before { subject.apply_depositor_metadata('jcoyne') }
-
-      it "should have activity stream-related methods defined" do
-        subject.save!
-        f = subject.reload
-        expect(f).to respond_to(:stream)
-        expect(f).to respond_to(:events)
-        expect(f).to respond_to(:create_event)
-        expect(f).to respond_to(:log_event)
-      end
 
       it "should be able to set values via delegated methods" do
         subject.related_url = ["http://example.org/"]
@@ -535,14 +521,6 @@ describe CurationConcerns::GenericFile do
           parent.save!
           @parent_id = parent.id
           parent.destroy
-        end
-
-        it "doesn't raise an error" do
-          pending "Currently, destroying a work destroys its children, so this test is not relevant.  Looks like this is the default behavior of :aggregates association from activefedora-aggregation ?"
-          expect(ActiveFedora::Base.exists?(@parent_id)).to eq false
-          expect {
-            subject.reload.remove_representative_relationship
-          }.to_not raise_error
         end
       end
 
