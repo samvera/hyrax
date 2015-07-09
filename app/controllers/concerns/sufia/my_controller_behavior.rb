@@ -17,6 +17,7 @@ module Sufia
       before_action :enforce_show_permissions, only: :show
       before_action :enforce_viewing_context_for_show_requests, only: :show
       before_action :find_collections, only: :index
+      before_action :find_collections_with_edit_access, only: :index
 
       self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
 
