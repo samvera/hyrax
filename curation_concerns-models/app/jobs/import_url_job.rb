@@ -15,11 +15,17 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
       path, mime_type = copy_remote_file(generic_file.import_url, f)
       # attach downloaded file to generic file stubbed out
       if CurationConcerns::GenericFileActor.new(generic_file, user).create_content(f, path, mime_type)
-        # add message to user for downloaded file
-        message = "The file (#{generic_file.label}) was successfully imported."
-        job_user.send_message(user, message, 'File Import')
+
+        # send message to user on download success
+        if CurationConcerns.config.respond_to?(:after_import_url_success)
+          CurationConcerns.config.after_import_url_success.call(generic_file)
+        end
       else
-        job_user.send_message(user, generic_file.errors.full_messages.join(', '), 'File Import Error')
+
+        # send message to user on download failure
+        if CurationConcerns.config.respond_to?(:after_import_url_failure)
+          CurationConcerns.config.after_import_url_failure.call(generic_file)
+        end
       end
     end
   end
