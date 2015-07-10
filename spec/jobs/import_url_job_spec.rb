@@ -25,7 +25,7 @@ describe ImportUrlJob do
   subject(:job) { ImportUrlJob.new(generic_file.id) }
 
   it "should have no content at the outset" do
-    expect(generic_file.content.size).to be_nil
+    expect(generic_file.original_file).to be_nil
   end
 
   ### TODO - Needs Refactoring after Sufia is Broken up

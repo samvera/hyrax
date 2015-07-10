@@ -24,7 +24,7 @@ describe CurationConcerns::CreateDerivativesService do
       let(:file_name) { 'countdown.avi' }
 
       it 'lacks a thumbnail' do
-        expect(@generic_file.thumbnail).not_to have_content
+        expect(@generic_file.thumbnail).to be_nil
       end
 
       it 'generates a thumbnail on job run' do
@@ -40,12 +40,12 @@ describe CurationConcerns::CreateDerivativesService do
       let(:file_name) { 'piano_note.wav' }
 
       it 'lacks a thumbnail' do
-        expect(@generic_file.thumbnail).not_to have_content
+        expect(@generic_file.thumbnail).to be_nil
       end
 
       it 'does not generate a thumbnail on job run' do
         subject.create_derivatives
-        expect(@generic_file.thumbnail).not_to have_content
+        expect(@generic_file.thumbnail).to be_nil
       end
     end
 
@@ -54,7 +54,7 @@ describe CurationConcerns::CreateDerivativesService do
       let(:file_name) { 'image.jp2' }
 
       it 'lacks a thumbnail' do
-        expect(@generic_file.thumbnail).not_to have_content
+        expect(@generic_file.thumbnail).to be_nil
       end
 
       it 'generates a thumbnail on job run' do
@@ -70,7 +70,7 @@ describe CurationConcerns::CreateDerivativesService do
       let(:file_name) { 'charter.docx' }
 
       it 'lacks a thumbnail' do
-        expect(@generic_file.thumbnail).not_to have_content
+        expect(@generic_file.thumbnail).to be_nil
       end
 
       it 'generates a thumbnail on job run' do
