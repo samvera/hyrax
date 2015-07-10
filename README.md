@@ -37,11 +37,10 @@ To turn on virus detection, install clamav on your system and add the `clamav` g
 
 If you are modifying the curation_concerns gem and want to run the test suite, follow these steps to set up the test environment.
 
+```
     $ rake engine_cart:generate
-    $ cd spec/internal
     $ rake jetty:clean
     $ rake curation_concerns:jetty:config
     $ rake jetty:start
-    $ cd ../..
     $ rake spec
-
+```
