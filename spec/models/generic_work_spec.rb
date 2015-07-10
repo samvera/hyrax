@@ -16,6 +16,11 @@ describe GenericWork do
     end
   end
 
+  describe "#indexer" do
+    subject { described_class.indexer }
+    it { is_expected.to eq CurationConcerns::GenericWorkIndexingService }
+  end
+
   describe "to_solr" do
     subject { FactoryGirl.build(:work, date_uploaded: Date.today).to_solr }
     it "indexes some fields" do

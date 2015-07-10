@@ -6,6 +6,12 @@ module CurationConcerns::GenericWorkBehavior
   include Hydra::AccessControls::Embargoable
   include ::CurationConcerns::WithEditors
 
+  module ClassMethods
+    def indexer
+      CurationConcerns::GenericWorkIndexingService
+    end
+  end
+
   # Modules in Curate's CurationConcerns::Work that we _might_ pull in later
   # include Curate::ActiveModelAdaptor
   # include CurationConcerns::WithLinkedContributors
