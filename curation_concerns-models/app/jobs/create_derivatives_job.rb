@@ -4,7 +4,7 @@ class CreateDerivativesJob < ActiveFedoraIdBasedJob
   end
 
   def run
-    return unless generic_file.content.has_content?
+    return unless generic_file.original_file.has_content?
     if generic_file.video?
       return unless CurationConcerns.config.enable_ffmpeg
     end

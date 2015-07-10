@@ -5,7 +5,7 @@ describe CurationConcerns::CreateDerivativesService do
     @ffmpeg_enabled = CurationConcerns.config.enable_ffmpeg
     CurationConcerns.config.enable_ffmpeg = true
     allow(ActiveFedora::Base).to receive(:find).with('123').and_return(generic_file)
-    allow(generic_file.content).to receive(:has_content?).and_return(true)
+    allow(generic_file).to receive(:original_file).and_return(double("orignal_file", :has_content? => true))
   end
   let(:generic_file) { GenericFile.new }
 
