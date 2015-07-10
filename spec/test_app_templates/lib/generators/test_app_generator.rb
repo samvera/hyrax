@@ -10,4 +10,5 @@ class TestAppGenerator < Rails::Generators::Base
   def run_migrations
     rake "db:migrate"
   end
+
 end

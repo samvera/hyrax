@@ -9,6 +9,9 @@ require 'jettywrapper'
 require 'engine_cart/rake_task'
 Jettywrapper.hydra_jetty_version = "v8.3.1"
 
+# This makes it possible to run curation_concerns:jetty:config from here.
+import 'curation_concerns-models/lib/tasks/curation_concerns-models_tasks.rake'
+
 task ci: ['engine_cart:generate', 'jetty:clean'] do
   jetty_params = Jettywrapper.load_config
   jetty_params[:startup_wait]= 90
