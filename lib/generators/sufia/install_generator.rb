@@ -23,6 +23,11 @@ module Sufia
       generate "sufia:models:install --skip-curation-concerns"   # skip curation_concerns installer because it was alredy run by
     end
 
+    # TODO make the curation_concerns installer take a --skip-assets flag
+    def remove_curation_concerns_scss
+      remove_file 'app/assets/stylesheets/curation_concerns.css.scss'
+    end
+
     def banner
       say_status("warning", "GENERATING SUFIA", :yellow)
     end
