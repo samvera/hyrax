@@ -29,3 +29,5 @@ notifications:
       - "%{repository}//%{branch}@%{commit} by %{author}: %{message} - %{build_url}"
 services:
   - redis-server
+before_script:
+  - jdk_switcher use oraclejdk8
