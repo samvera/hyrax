@@ -59,7 +59,7 @@ module Sufia
         actor = CurationConcerns::GenericFileActor.new(gf, current_user)
         actor.create_metadata(params[:batch_id], params[:work_id])
         gf.save!
-        Sufia.queue.push(IngestLocalFileJob.new(gf.id, current_user.directory, filename, current_user.user_key))
+        CurationConcerns.queue.push(IngestLocalFileJob.new(gf.id, current_user.directory, filename, current_user.user_key))
       end
     end
   end # /FilesController::LocalIngestBehavior

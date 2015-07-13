@@ -15,7 +15,7 @@ describe CharacterizeJob do
   it 'characterizes and spawns a CreateDerivatives job' do
     expect(Sufia::CharacterizationService).to receive(:run).with(generic_file)
     expect(generic_file).to receive(:save)
-    expect(Sufia.queue).to receive(:push).with(job)
+    expect(CurationConcerns.queue).to receive(:push).with(job)
     subject.run
   end
 end

@@ -22,7 +22,7 @@ class IngestLocalFileJob
 
     if actor.create_content(File.open(path), filename, mime_type(filename))
       FileUtils.rm(path)
-      Sufia.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
+      CurationConcerns.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
 
       message = "The file (#{File.basename(filename)}) was successfully deposited."
       subject = 'Local file ingest'
