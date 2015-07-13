@@ -32,11 +32,11 @@ describe ImportUrlJob do
     before do
       s1 = double('content deposit event')
       allow(ContentDepositEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1).once
-      expect(Sufia.queue).to receive(:push).with(s1).once
+      expect(CurationConcerns.queue).to receive(:push).with(s1).once
 
       s2 = double('characterize')
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
-      expect(Sufia.queue).to receive(:push).with(s2).once
+      expect(CurationConcerns.queue).to receive(:push).with(s2).once
 
       expect(CurationConcerns::GenericFileActor).to receive(:virus_check).and_return(false)
     end

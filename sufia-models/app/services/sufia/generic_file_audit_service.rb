@@ -62,7 +62,7 @@ module Sufia
       def audit_file(file, uri, label = nil)
         latest_audit = ChecksumAuditLog.logs_for(generic_file.id, file).first
         return latest_audit unless needs_audit?(latest_audit)
-        Sufia.queue.push(AuditJob.new(generic_file.id, file, uri))
+        CurationConcerns.queue.push(AuditJob.new(generic_file.id, file, uri))
         latest_audit || ChecksumAuditLog.new(pass: NO_RUNS, generic_file_id: generic_file.id, dsid: file, version: label)
       end
 

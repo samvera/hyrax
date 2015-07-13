@@ -56,9 +56,9 @@ describe BatchUpdateJob do
         expect_any_instance_of(User).to receive(:can?).with(:edit, file).and_return(true)
         expect_any_instance_of(User).to receive(:can?).with(:edit, file2).and_return(true)
         expect(ContentUpdateEventJob).to receive(:new).with(file.id, user.user_key).and_return(s1)
-        expect(Sufia.queue).to receive(:push).with(s1).once
+        expect(CurationConcerns.queue).to receive(:push).with(s1).once
         expect(ContentUpdateEventJob).to receive(:new).with(file2.id, user.user_key).and_return(s2)
-        expect(Sufia.queue).to receive(:push).with(s2).once
+        expect(CurationConcerns.queue).to receive(:push).with(s2).once
         job.run
         expect(user.mailbox.inbox[0].messages[0].subject).to eq("Batch upload complete")
         expect(user.mailbox.inbox[0].messages[0].body).to include("data-content")
@@ -68,7 +68,7 @@ describe BatchUpdateJob do
 
     describe "updates metadata" do
       before do
-        allow(Sufia.queue).to receive(:push)
+        allow(CurationConcerns.queue).to receive(:push)
         job.run
       end
 

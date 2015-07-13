@@ -156,7 +156,7 @@ describe UsersController, :type => :controller do
       expect(user.avatar?).to be false
       s1 = double('one')
       expect(UserEditProfileEventJob).to receive(:new).with(user.user_key).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+      expect(CurationConcerns.queue).to receive(:push).with(s1).once
       f = fixture_file_upload('/1.5mb-avatar.jpg', 'image/jpg')
       post :update, id: user.user_key, user: { avatar: f }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
@@ -164,7 +164,7 @@ describe UsersController, :type => :controller do
       expect(User.find_by_user_key(user.user_key).avatar?).to be true
     end
     it "should validate the content type of an avatar" do
-      expect(Sufia.queue).to receive(:push).never
+      expect(CurationConcerns.queue).to receive(:push).never
       f = fixture_file_upload('/image.jp2', 'image/jp2')
       post :update, id: user.user_key, user: { avatar: f }
       expect(response).to redirect_to(@routes.url_helpers.edit_profile_path(user.to_param))
@@ -172,7 +172,7 @@ describe UsersController, :type => :controller do
     end
     it "should validate the size of an avatar" do
       f = fixture_file_upload('/4-20.png', 'image/png')
-      expect(Sufia.queue).to receive(:push).never
+      expect(CurationConcerns.queue).to receive(:push).never
       post :update, id: user.user_key, user: { avatar: f }
       expect(response).to redirect_to(@routes.url_helpers.edit_profile_path(user.to_param))
       expect(flash[:alert]).to include("Avatar file size must be less than 2MB")
@@ -187,7 +187,7 @@ describe UsersController, :type => :controller do
       it "should delete an avatar" do
         s1 = double('one')
         expect(UserEditProfileEventJob).to receive(:new).with(user.user_key).and_return(s1)
-        expect(Sufia.queue).to receive(:push).with(s1).once
+        expect(CurationConcerns.queue).to receive(:push).with(s1).once
         post :update, id: user.user_key, user: { remove_avatar: 'true' }
         expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
         expect(flash[:notice]).to include("Your profile has been updated")
@@ -198,7 +198,7 @@ describe UsersController, :type => :controller do
     it "should refresh directory attributes" do
       s1 = double('one')
       expect(UserEditProfileEventJob).to receive(:new).with(user.user_key).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+      expect(CurationConcerns.queue).to receive(:push).with(s1).once
       expect_any_instance_of(User).to receive(:populate_attributes).once
       post :update, id: user.user_key, user: { update_directory: 'true' }
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
@@ -250,20 +250,20 @@ describe UsersController, :type => :controller do
       expect(user.following?(another_user)).to be false
       s1 = double('one')
       expect(UserFollowEventJob).to receive(:new).with(user.user_key, another_user.user_key).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+      expect(CurationConcerns.queue).to receive(:push).with(s1).once
       post :follow, id: another_user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are following #{another_user.user_key}")
     end
     it "should redirect to profile if already following and not log an event" do
       allow_any_instance_of(User).to receive(:following?).with(another_user).and_return(true)
-      expect(Sufia.queue).to receive(:push).never
+      expect(CurationConcerns.queue).to receive(:push).never
       post :follow, id: another_user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are following #{another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
-      expect(Sufia.queue).to receive(:push).never
+      expect(CurationConcerns.queue).to receive(:push).never
       post :follow, id: user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
       expect(flash[:alert]).to include("You cannot follow or unfollow yourself")
@@ -276,20 +276,20 @@ describe UsersController, :type => :controller do
       allow_any_instance_of(User).to receive(:following?).with(another_user).and_return(true)
       s1 = double('one')
       expect(UserUnfollowEventJob).to receive(:new).with(user.user_key, another_user.user_key).and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+      expect(CurationConcerns.queue).to receive(:push).with(s1).once
       post :unfollow, id: another_user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are no longer following #{another_user.user_key}")
     end
     it "should redirect to profile if not following and not log an event" do
       allow(user).to receive(:following?).with(another_user).and_return(false)
-      expect(Sufia.queue).to receive(:push).never
+      expect(CurationConcerns.queue).to receive(:push).never
       post :unfollow, id: another_user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(another_user.to_param))
       expect(flash[:notice]).to include("You are no longer following #{another_user.user_key}")
     end
     it "should redirect to profile if user attempts to self-follow and not log an event" do
-      expect(Sufia.queue).to receive(:push).never
+      expect(CurationConcerns.queue).to receive(:push).never
       post :unfollow, id: user.user_key
       expect(response).to redirect_to(@routes.url_helpers.profile_path(user.to_param))
       expect(flash[:alert]).to include("You cannot follow or unfollow yourself")

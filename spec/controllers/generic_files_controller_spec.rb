@@ -121,7 +121,7 @@ describe GenericFilesController do
       end
       it "should ingest files from provide URLs" do
         expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
-        expect(Sufia.queue).to receive(:push).with("ImportJob").twice
+        expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
         expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
         created_files = GenericFile.all
         ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
@@ -137,7 +137,7 @@ describe GenericFilesController do
         let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
         it "records the work" do
           expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
-          expect(Sufia.queue).to receive(:push).with("ImportJob").twice
+          expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id, work_id: work.id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
           created_files.each {|f| expect(f.generic_works).to include work}
@@ -147,7 +147,7 @@ describe GenericFilesController do
       context "when a work id is not passed" do
         it "creates the work" do
           expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
-          expect(Sufia.queue).to receive(:push).with("ImportJob").twice
+          expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
           expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
@@ -296,7 +296,7 @@ describe GenericFilesController do
     end
     let(:delete_message) { double('delete message') }
     it "should delete the file" do
-      expect(Sufia.queue).to receive(:push).with(delete_message)
+      expect(CurationConcerns.queue).to receive(:push).with(delete_message)
       expect {
         delete :destroy, id: generic_file
       }.to change { GenericFile.exists?(generic_file.id) }.from(true).to(false)
@@ -405,7 +405,7 @@ describe GenericFilesController do
       end
 
       it "should spawn a content update event job" do
-        expect(Sufia.queue).to receive(:push).with(update_message)
+        expect(CurationConcerns.queue).to receive(:push).with(update_message)
         post :update, id: generic_file, generic_file: { title: ['new_title'], tag: [''],
                                                         permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}] }
       end
@@ -413,11 +413,11 @@ describe GenericFilesController do
       it "spawns a content new version event job" do
         s1 = double('one')
         allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
-        expect(Sufia.queue).to receive(:push).with(s1).once
+        expect(CurationConcerns.queue).to receive(:push).with(s1).once
 
         s2 = double('one')
         allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
-        expect(Sufia.queue).to receive(:push).with(s2).once
+        expect(CurationConcerns.queue).to receive(:push).with(s2).once
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: generic_file, filedata: file, generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
       end
@@ -427,11 +427,11 @@ describe GenericFilesController do
       it "spawns a content new version event job" do
         s1 = double('one')
         allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
-        expect(Sufia.queue).to receive(:push).with(s1).once
+        expect(CurationConcerns.queue).to receive(:push).with(s1).once
 
         s2 = double('one')
         allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
-        expect(Sufia.queue).to receive(:push).with(s2).once
+        expect(CurationConcerns.queue).to receive(:push).with(s2).once
 
         file = fixture_file_upload('/world.png', 'image/png')
         post :update, id: generic_file, filedata: file, generic_file: {tag: [''],
@@ -516,14 +516,14 @@ describe GenericFilesController do
     it "spawns a virus check" do
       s1 = double('one')
       allow(ContentNewVersionEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(s1)
-      expect(Sufia.queue).to receive(:push).with(s1).once
+      expect(CurationConcerns.queue).to receive(:push).with(s1).once
 
       s2 = double('one')
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
       allow(CreateDerivativesJob).to receive(:new).with(generic_file.id).and_return(s2)
       file = fixture_file_upload('/world.png', 'image/png')
       expect(CurationConcerns::GenericFileActor).to receive(:virus_check).and_return(0)
-      expect(Sufia.queue).to receive(:push).with(s2).once
+      expect(CurationConcerns.queue).to receive(:push).with(s2).once
       post :update, id: generic_file.id, filedata: file, 'Filename' => 'The world',
           generic_file: { tag: [''],
                           permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
