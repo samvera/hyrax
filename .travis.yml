@@ -3,17 +3,12 @@ cache: bundler
 sudo: false
 rvm:
   - 2.2
-matrix:
-  include:
-    - rvm: 2.1
-      env: "RAILS_VERSION=4.2.1"
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
   matrix:
-    - "RAILS_VERSION=4.1.10"
-    - "RAILS_VERSION=4.2.1"
+    - "RAILS_VERSION=4.2.3"
 
 notifications:
   email:
