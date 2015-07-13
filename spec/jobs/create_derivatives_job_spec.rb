@@ -5,7 +5,7 @@ describe CreateDerivativesJob do
     @ffmpeg_enabled = Sufia.config.enable_ffmpeg
     Sufia.config.enable_ffmpeg = true
     allow(ActiveFedora::Base).to receive(:find).with('123').and_return(generic_file)
-    allow(generic_file.content).to receive(:has_content?).and_return(true)
+    allow(generic_file.original_file).to receive(:has_content?).and_return(true)
   end
   let(:generic_file) { GenericFile.new }
 

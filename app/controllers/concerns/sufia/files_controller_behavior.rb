@@ -152,7 +152,7 @@ module Sufia
     end
 
     def version_list
-      Sufia::VersionListPresenter.new(@generic_file.content.versions.all)
+      Sufia::VersionListPresenter.new(@generic_file.original_file.versions.all)
     end
 
     def edit_form
@@ -164,7 +164,7 @@ module Sufia
     end
 
     def wants_to_revert?
-      params.has_key?(:revision) && params[:revision] != CurationConcerns::VersioningService.latest_version_of(@generic_file.content).label
+      params.has_key?(:revision) && params[:revision] != CurationConcerns::VersioningService.latest_version_of(@generic_file.original_file).label
     end
 
     def wants_to_upload_new_version?

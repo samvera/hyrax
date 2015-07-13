@@ -25,7 +25,7 @@ describe ImportUrlJob do
   subject(:job) { ImportUrlJob.new(generic_file.id) }
 
   it "should have no content at the outset" do
-    expect(generic_file.content.size).to be_nil
+    expect(generic_file.original_file.size).to be_nil
   end
 
   context "after running the job" do
@@ -41,10 +41,10 @@ describe ImportUrlJob do
       expect(CurationConcerns::GenericFileActor).to receive(:virus_check).and_return(false)
     end
 
-    it "should create a content datastream" do
+    it "should create a original_file" do
       expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       job.run
-      expect(generic_file.reload.content.size).to eq 4218
+      expect(generic_file.reload.original_file.size).to eq 4218
       expect(user.mailbox.inbox.first.last_message.body).to eq("The file (#{file_path}) was successfully imported.")
     end
   end
