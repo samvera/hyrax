@@ -58,7 +58,7 @@ describe ImportUrlJob do
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).never
     end
     it "should abort if virus check fails" do
-      allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
       job.run
       expect(user.mailbox.inbox.first.subject).to eq("File Import Error")
     end

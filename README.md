@@ -4,10 +4,10 @@
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
 [![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/sufia)
-[![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia)
-[![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
-[![Coverage Status](https://img.shields.io/coveralls/projecthydra/sufia.svg)](https://coveralls.io/r/projecthydra/sufia?branch=master)
-[![Stories in Ready](https://badge.waffle.io/projecthydra/sufia.png?label=ready&title=Ready)](https://waffle.io/projecthydra/sufia)
+[![Build Status](https://travis-ci.org/projecthydra-labs/sufia-core.png?branch=master)](https://travis-ci.org/projecthydra-labs/sufia-core)
+[![Dependency Status](https://gemnasium.com/projecthydra-labs/sufia-core.png)](https://gemnasium.com/projecthydra-labs/sufia-core)
+[![Coverage Status](https://img.shields.io/coveralls/projecthydra-labs/sufia-core.svg)](https://coveralls.io/r/projecthydra-labs/sufia-core?branch=master)
+[![Stories in Ready](https://badge.waffle.io/projecthydra-labs/sufia-core.png?label=ready&title=Ready)](https://waffle.io/projecthydra-labs/sufia-core)
 
 # Table of Contents
 
@@ -186,7 +186,7 @@ Next you will need to spawn Resque's workers. The following command will run unt
 QUEUE=* rake environment resque:work
 ```
 
-Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra/sufia/blob/master/sufia-models/lib/generators/sufia/models/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
+Or, if you prefer (e.g., in production-like environments), you may want to set up a `config/resque-pool.yml` -- [here is a simple example](https://github.com/projecthydra-labs/sufia-core/blob/master/sufia-models/lib/generators/sufia/models/templates/config/resque-pool.yml) -- and run resque-pool which will manage your background workers in a dedicated process.
 
 ```
 resque-pool --daemon --environment development start
@@ -299,7 +299,7 @@ The contents of the cloud are retrieved as JSON from Blacklight's CatalogControl
 
 ## Customizing metadata
 
-Chances are you will want to customize the default metadata provided by Sufia.  Here's [a guide](https://github.com/projecthydra/sufia/wiki/Customizing-Metadata) to help you with that
+Chances are you will want to customize the default metadata provided by Sufia.  Here's [a guide](https://github.com/projecthydra-labs/sufia-core/wiki/Customizing-Metadata) to help you with that
 
 ## Proxies and Transfers (Sufia 4.x only)
 

@@ -15,16 +15,16 @@ describe IngestLocalFileJob do
 
   it "should have attached a file" do
     job.run
-    expect(generic_file.reload.content.size).to eq(4218)
+    expect(generic_file.reload.original_file.size).to eq(4218)
   end
 
   describe "virus checking" do
     it "should run virus check" do
-      expect(CurationConcerns::GenericFileActor).to receive(:virus_check).and_return(0)
+      expect(CurationConcerns::VirusDetectionService).to receive(:detect_viruses).and_return(0)
       job.run
     end
     it "should abort if virus check fails" do
-      allow(CurationConcerns::GenericFileActor).to receive(:virus_check).and_raise(Sufia::VirusFoundError.new('A virus was found'))
+      allow(CurationConcerns::VirusDetectionService).to receive(:detect_viruses).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
       job.run
       expect(user.mailbox.inbox.first.subject).to eq("Local file ingest error")
     end

@@ -35,9 +35,9 @@ describe BatchController do
       let(:somebody_else_file) do
         GenericFile.new.tap do |f|
           f.title= ['Original Title']
-          f.generic_work= somebody_else_work 
-          f.apply_depositor_metadata(user) 
+          f.apply_depositor_metadata(user)
           f.save!
+          Hydra::Works::AddGenericFileToGenericWork.call(somebody_else_work, f)
         end
       end
       let(:batch) do

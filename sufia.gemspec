@@ -4,9 +4,9 @@ version = File.read(File.expand_path("../SUFIA_VERSION",__FILE__)).strip
 Gem::Specification.new do |gem|
   gem.authors       = ["Justin Coyne", 'Michael J. Giarlo', "Carolyn Cole", "Matt Zumwalt"]
   gem.email         = ["justin@curationexperts.com", 'leftwing@alumni.rutgers.edu']
-  gem.description   = %q{Sufia is a Rails engine for creating a self-deposit institutional repository}
-  gem.summary       = %q{Sufia was extracted from ScholarSphere developed by Penn State University}
-  gem.homepage      = "http://github.com/projecthydra/sufia"
+  gem.description   = %q{sufia-core is a Rails engine for creating a self-deposit institutional repository}
+  gem.summary       = %q{sufia-core was originally extracted from ScholarSphere developed by Penn State University.  It's now used and maintained by an active community of adopters.}
+  gem.homepage      = "http://github.com/projecthydra-labs/sufia-core"
 
   gem.files         = `git ls-files | grep -v ^sufia-models`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
@@ -26,6 +26,7 @@ Gem::Specification.new do |gem|
   # In rails 3 it's put into the "assets" group and thus not available to the
   # app. Blacklight 5.2 requires bootstrap-sass which requires (but does not
   # declare a dependency on) sass-rails
+  gem.add_dependency "bootstrap-sass", "3.3.4.1" # Pin to specific bootstrap-sass version. see https://github.com/dpla/KriKri/commit/a55e0bb5aad862203291cd79627eb2cefffffa82
   gem.add_dependency 'sass-rails'
 
   gem.add_dependency 'curation_concerns'
@@ -42,7 +43,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'select2-rails', '~> 3.5.9'
   gem.add_dependency "devise", "~> 3.0"
 
-  gem.add_development_dependency 'engine_cart', '~> 0.5'
+  gem.add_development_dependency 'engine_cart', '~> 0.7'
   gem.add_development_dependency 'mida', '~> 0.3'
   gem.add_development_dependency 'database_cleaner', '~> 1.3'
   gem.add_development_dependency 'rspec-rails', '~> 3.1'
