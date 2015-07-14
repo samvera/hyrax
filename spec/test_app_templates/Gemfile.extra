@@ -8,4 +8,7 @@ gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: '11f46014'
 gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '259f4e6'
 gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '486ed3b'
 
+# Waiting on 9.2.1 (for the embargo/lease optimization)
+gem 'hydra-head', github:'projecthydra/hydra-head', ref: 'd437c65'
+
 ### /curation_concerns Gemfile.extra
