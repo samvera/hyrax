@@ -18,12 +18,12 @@
           <div class="row">
             <%= simple_form_for @file_set, url: batch_edits_path, method: :put, remote: true,
               builder: Sufia::FormBuilder, html: { id: "form_#{term.to_s}", class: "ajax-form"} do |f| %>
-              <div class="col-sm-2 col-sm-offset-1">
+              <div class="col-xs-12 col-sm-4">
                 <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
                   <%= f.input_label term %> <span class="chevron"></span>
                 </a>
               </div>
-              <div id="collapse_<%= term %>" class="collapse scrolly col-sm-6">
+              <div id="collapse_<%= term %>" class="collapse scrolly col-xs-12 col-sm-7">
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
                   <%# TODO we don't need to show required %>
