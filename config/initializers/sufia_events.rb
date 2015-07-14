@@ -1,3 +1,4 @@
+# These events are triggered by actions within CurationConcerns Actors
 CurationConcerns.config.after_create_content = lambda { |generic_file, user|
   CurationConcerns.queue.push(ContentDepositEventJob.new(generic_file.id, user.user_key))
 }
