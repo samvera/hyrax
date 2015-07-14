@@ -462,7 +462,7 @@ describe GenericFilesController do
             post :update, id: generic_file, revision: version1
           end
 
-          let(:restored_content) { generic_file.reload.content }
+          let(:restored_content) { generic_file.reload.original_file }
           let(:versions)         { restored_content.versions }
           let(:latest_version)   { CurationConcerns::VersioningService.latest_version_of(restored_content) }
 

@@ -46,8 +46,8 @@ if $in_travis
   module Sufia
     class CharacterizationService
       def extract_metadata
-        return unless generic_file.content.has_content?
-        Hydra::FileCharacterization.characterize(generic_file.content.content, filename_for_characterization, :fits) do |config|
+        return unless generic_file.original_file.has_content?
+        Hydra::FileCharacterization.characterize(generic_file.original_file.content, filename_for_characterization, :fits) do |config|
           config[:fits] = lambda { |filename|
             filename = File.expand_path("../fixtures/pdf_fits.xml", __FILE__)
             File.read(filename)

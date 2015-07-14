@@ -20,8 +20,8 @@ module Sufia
       end
     end
 
-    # TODO: Run audits on all attached files. We're only auditing "content" at tht moment
-    # Pushes an AuditJob for each version of content if it hasn't been audited recently
+    # TODO: Run audits on all attached files. We're only auditing "original_file" at the moment
+    # Pushes an AuditJob for each version of original_file if it hasn't been audited recently
     # Returns the set of most recent audit status for each version of the content file
     def audit
       audit_content([])
@@ -30,10 +30,10 @@ module Sufia
 
     private
       def audit_content(log)
-        if generic_file.content.has_versions?
+        if generic_file.original_file.has_versions?
           audit_file_versions("content", log)
         else
-          log << audit_file("content", generic_file.content.uri)
+          log << audit_file("content", generic_file.original_file.uri)
         end
       end
 
