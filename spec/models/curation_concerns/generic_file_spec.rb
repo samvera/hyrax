@@ -184,32 +184,27 @@ describe CurationConcerns::GenericFile do
 
   describe "#related_files" do
     let!(:f1) do
-      CurationConcerns::GenericFile.new.tap do |f|
-        f.apply_depositor_metadata('mjg36')
-        f.batch_id = batch_id
-        f.save
-      end
-    end
-    let!(:f2) do
-      CurationConcerns::GenericFile.new.tap do |f|
-        f.apply_depositor_metadata('mjg36')
-        f.batch_id = batch_id
-        f.save
-      end
-    end
-    let!(:f3) do
-      CurationConcerns::GenericFile.new.tap do |f|
-        f.apply_depositor_metadata('mjg36')
-        f.batch_id = batch_id
-        f.save
-      end
+      CurationConcerns::GenericFile.new
+      # CurationConcerns::GenericFile.new.tap do |f|
+      #   f.apply_depositor_metadata('mjg36')
+      #   f.save
+      # end
     end
 
     context "when there are no related files" do
-      let(:batch_id) { nil }
-
-      it "should return an empty array when there are no related files" do
+      it "should return an empty array" do
         expect(f1.related_files).to eq []
+      end
+    end
+
+    context "when there are related files" do
+      let(:parent_work)   { FactoryGirl.create(:work_with_files)}
+      let(:f1)            { parent_work.generic_files.first }
+      let(:f2)            { parent_work.generic_files.last }
+      subject { f1.reload.related_files }
+      it "returns all generic_files contained in parent work(s) but excludes itself" do
+        expect(subject).to include(f2)
+        expect(subject).to_not include(f1)
       end
     end
   end
