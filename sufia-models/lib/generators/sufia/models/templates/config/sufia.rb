@@ -78,7 +78,8 @@ Sufia.config do |config|
     "Edit" => "edit"
   }
 
-  config.queue = Sufia::Resque::Queue
+  # Specify an alternative queue implementation
+  # config.queue = CurationConcerns::Resque::Queue
 
   # Enable displaying usage statistics in the UI
   # Defaults to FALSE
