@@ -18,12 +18,28 @@ describe Hydra::AccessControls::Embargoable do
   let(:past_date) { Date.today-2 }
   subject { TestModel.new }
 
-  context 'validations' do
-    subject { ModsAsset.new(lease_expiration_date: past_date, embargo_release_date: past_date) }
-    it "validates embargo_release_date and lease_expiration_date" do
-      expect(subject).to_not be_valid
-      expect(subject.errors[:lease_expiration_date]).to eq ['Must be a future date']
-      expect(subject.errors[:embargo_release_date]).to eq ['Must be a future date']
+  describe 'validations' do
+    context "with dates" do
+      subject { ModsAsset.new(lease_expiration_date: past_date, embargo_release_date: past_date) }
+      it "validates embargo_release_date and lease_expiration_date" do
+        expect(subject).to_not be_valid
+        expect(subject.errors[:lease_expiration_date]).to eq ['Must be a future date']
+        expect(subject.errors[:embargo_release_date]).to eq ['Must be a future date']
+      end
+    end
+
+    context "without an embargo" do
+      subject { ModsAsset.new }
+
+      before { subject.valid? }
+
+      it "doesn't create a new embargo" do
+        expect(subject.embargo).to be_nil
+      end
+
+      it "doesn't create a new lease" do
+        expect(subject.lease).to be_nil
+      end
     end
   end
 
