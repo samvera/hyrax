@@ -2,25 +2,6 @@ require 'spec_helper'
 
 describe GenericWork do
 
-  describe "Using services in Hydra::PCDM" do
-    # Ideally we shouldn't need to call Hydra::PCDM
-    # from Sufia. For now I am because some of the
-    # functionality that I want to test has not been
-    # implemented in Hydra::Works.
-    collection = Hydra::PCDM::Collection.create
-    object1 = Hydra::PCDM::Object.create
-    object2 = Hydra::PCDM::Object.create
-    Hydra::PCDM::AddObjectToCollection.call(collection, object1)
-    Hydra::PCDM::AddObjectToCollection.call(collection, object2)
-    objects = Hydra::PCDM::GetObjectsFromCollection.call(collection)
-  end
-
-  describe "Using services in Hydra::Works" do
-    gf = Hydra::Works::GenericFile::Base.create
-    path = fixture_path + '/world.png'
-    Hydra::Works::UploadFileToGenericFile.call(gf, path)
-  end
-
   describe ".properties" do
     subject { described_class.properties.keys }
     it { is_expected.to include("has_model", "create_date", "modified_date") }
