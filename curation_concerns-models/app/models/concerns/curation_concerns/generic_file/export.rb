@@ -1,5 +1,5 @@
 module CurationConcerns
-  module File
+  module GenericFile
     module Export
       # MIME: 'application/x-endnote-refer'
       def export_as_endnote

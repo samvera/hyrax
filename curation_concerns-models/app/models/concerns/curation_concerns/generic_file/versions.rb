@@ -1,5 +1,5 @@
 module CurationConcerns
-  module File
+  module GenericFile
     module Versions
       @@count = 0
       def record_version_committer(user)

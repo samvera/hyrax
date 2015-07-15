@@ -1,5 +1,5 @@
 module CurationConcerns
-  module File
+  module GenericFile
     module BelongsToWorks
       extend ActiveSupport::Concern
 

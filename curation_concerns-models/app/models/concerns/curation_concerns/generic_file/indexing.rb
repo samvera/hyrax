@@ -1,5 +1,5 @@
 module CurationConcerns
-  module File
+  module GenericFile
     module Indexing
       extend ActiveSupport::Concern
 

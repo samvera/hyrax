@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+# This tests the GenericWork model that is inserted into the host app by curation_concerns:models:install
+# It includes the CurationConcerns::GenericWorkBehavior module and nothing else
+# So this test covers both the GenericWorkBehavior module and the generated GenericWork model
 describe GenericWork do
 
   it "should have a title" do

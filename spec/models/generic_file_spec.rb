@@ -1,6 +1,9 @@
 require 'spec_helper'
 
-describe CurationConcerns::GenericFile do
+# This tests the GenericFile model that is inserted into the host app by curation_concerns:models:install
+# It includes the CurationConcerns::GenericFileBehavior module and nothing else
+# So this test covers both the GenericFileBehavior module and the generated GenericFile model
+describe GenericFile do
 
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
@@ -165,7 +168,7 @@ describe CurationConcerns::GenericFile do
   end
   describe "create_thumbnail" do
     before do
-      @f = CurationConcerns::GenericFile.new
+      @f = GenericFile.new
       @f.apply_depositor_metadata('mjg36')
     end
     describe "with a video", if: CurationConcerns.config.enable_ffmpeg do
@@ -183,13 +186,7 @@ describe CurationConcerns::GenericFile do
   end
 
   describe "#related_files" do
-    let!(:f1) do
-      CurationConcerns::GenericFile.new
-      # CurationConcerns::GenericFile.new.tap do |f|
-      #   f.apply_depositor_metadata('mjg36')
-      #   f.save
-      # end
-    end
+    let!(:f1)   { GenericFile.new }
 
     context "when there are no related files" do
       it "should return an empty array" do
@@ -217,12 +214,12 @@ describe CurationConcerns::GenericFile do
     let(:noid) { 'wd3763094' }
 
     subject do
-      CurationConcerns::GenericFile.create { |f| f.apply_depositor_metadata('mjg36') }
+      GenericFile.create { |f| f.apply_depositor_metadata('mjg36') }
     end
 
     it "runs the overridden #assign_id method" do
       expect_any_instance_of(ActiveFedora::Noid::Service).to receive(:mint).once
-      CurationConcerns::GenericFile.create { |f| f.apply_depositor_metadata('mjg36') }
+      GenericFile.create { |f| f.apply_depositor_metadata('mjg36') }
     end
 
     it "returns the expected identifier" do
@@ -237,14 +234,14 @@ describe CurationConcerns::GenericFile do
       let(:url) { 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094' }
 
       it "transforms the url into an id" do
-        expect(CurationConcerns::GenericFile.uri_to_id(url)).to eq 'wd3763094'
+        expect(GenericFile.uri_to_id(url)).to eq 'wd3763094'
       end
     end
   end
 
   context "with access control metadata" do
     subject do
-      CurationConcerns::GenericFile.new do |m|
+      GenericFile.new do |m|
         m.apply_depositor_metadata('jcoyne')
         m.permissions_attributes = [{type: 'person', access: 'read', name: "person1"},
                                     {type: 'person', access: 'read', name: "person2"},

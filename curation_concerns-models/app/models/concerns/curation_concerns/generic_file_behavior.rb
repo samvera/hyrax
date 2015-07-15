@@ -6,22 +6,21 @@ module CurationConcerns
     include CurationConcerns::Serializers
     include CurationConcerns::Noid
     include CurationConcerns::Permissions
-    include CurationConcerns::File::Export
-    include CurationConcerns::File::Characterization
-    include CurationConcerns::File::BasicMetadata
-    include CurationConcerns::File::Content
-    # include CurationConcerns::File::Versions
-    include CurationConcerns::File::VirusCheck
-    include CurationConcerns::File::FullTextIndexing
+    include CurationConcerns::GenericFile::Export
+    include CurationConcerns::GenericFile::Characterization
+    include CurationConcerns::GenericFile::BasicMetadata
+    include CurationConcerns::GenericFile::Content
+    include CurationConcerns::GenericFile::VirusCheck
+    include CurationConcerns::GenericFile::FullTextIndexing
     include Hydra::Collections::Collectible
-    include CurationConcerns::File::Indexing
-    include CurationConcerns::File::BelongsToWorks
+    include CurationConcerns::GenericFile::Indexing
+    include CurationConcerns::GenericFile::BelongsToWorks
     include Hydra::AccessControls::Embargoable
 
     included do
       attr_accessor :file
 
-      # make filename single-value (CurationConcerns::File::Characterization makes it multivalue)
+      # make filename single-value (CurationConcerns::GenericFile::Characterization makes it multivalue)
       def filename
         if self[:filename].instance_of?(Array)
           self[:filename].first
