@@ -9,6 +9,6 @@ gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '259f4e6'
 gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '486ed3b'
 
 # Waiting on 9.2.1 (for the embargo/lease optimization)
-gem 'hydra-head', github:'projecthydra/hydra-head', ref: 'd437c65'
+gem 'hydra-head', github:'projecthydra/hydra-head', ref: '4c8263e'
 
 ### /curation_concerns Gemfile.extra
