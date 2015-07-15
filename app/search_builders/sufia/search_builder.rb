@@ -78,8 +78,8 @@ module Sufia::SearchBuilder
     "{!dismax v=$user_query}"
   end
 
-  # join from file id to work relationship solrized generic_work_id
+  # join from file id to work relationship solrized generic_work_ids
   def join_for_works_from_files
-    "{!join from=#{Solrizer.solr_name('generic_work_id', :symbol)} to=id}#{dismax_query}"
+    "{!join from=#{Solrizer.solr_name('generic_work_ids', :symbol)} to=id}#{dismax_query}"
   end
 end
