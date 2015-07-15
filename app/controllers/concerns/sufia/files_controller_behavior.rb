@@ -160,7 +160,7 @@ module Sufia
     end
 
     def audit_service
-      Sufia::GenericFileAuditService.new(@generic_file)
+      CurationConcerns::GenericFileAuditService.new(@generic_file)
     end
 
     def wants_to_revert?
