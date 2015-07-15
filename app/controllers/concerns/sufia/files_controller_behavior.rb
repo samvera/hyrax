@@ -49,7 +49,7 @@ module Sufia
     # routed to /files/new
     def new
       @batch_id = ActiveFedora::Noid::Service.new.mint
-      @work_id = params[:work_id]
+      @work_id = params[:parent_id]
     end
 
     # routed to /files/:id/edit
@@ -67,33 +67,6 @@ module Sufia
       actor.destroy
       redirect_to self.class.destroy_complete_path(params), notice:
         render_to_string(partial: 'generic_files/asset_deleted_flash', locals: { generic_file: @generic_file })
-    end
-
-    # routed to /files (POST)
-    def create
-      create_from_upload(params)
-    end
-
-    def create_from_upload(params)
-      # check error condition No files
-      return json_error("Error! No file to save") if !params.has_key?(:files)
-
-      file = params[:files].detect {|f| f.respond_to?(:original_filename) }
-      if !file
-        json_error "Error! No file for upload", 'unknown file', status: :unprocessable_entity
-      elsif (empty_file?(file))
-        json_error "Error! Zero Length File!", file.original_filename
-      elsif (!terms_accepted?)
-        json_error "You must accept the terms of service!", file.original_filename
-      else
-        process_file(file)
-      end
-    rescue => error
-      logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
-      json_error "Error occurred while creating generic file."
-    ensure
-      # remove the tempfile (only if it is a temp file)
-      file.tempfile.delete if file.respond_to?(:tempfile)
     end
 
     # routed to /files/:id/citation
@@ -152,7 +125,8 @@ module Sufia
     end
 
     def version_list
-      Sufia::VersionListPresenter.new(@generic_file.original_file.versions.all)
+      all_versions = @generic_file.original_file.nil? ? [] : @generic_file.original_file.versions.all
+      Sufia::VersionListPresenter.new(all_versions)
     end
 
     def edit_form
@@ -193,8 +167,7 @@ module Sufia
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata
-      file_attributes = edit_form_class.model_attributes(params[:generic_file])
-      actor.update_metadata(file_attributes, params[:visibility])
+      actor.update_metadata(file_attributes, unfiltered_attributes)
     end
 
     def update_visibility
@@ -212,25 +185,8 @@ module Sufia
     end
 
     def process_file(file)
-
       Batch.find_or_create(params[:batch_id])
-
-      update_metadata_from_upload_screen
-      actor.create_metadata(params[:batch_id], params[:work_id])
-      if actor.create_content(file, file.original_filename, file.content_type)
-        respond_to do |format|
-          format.html {
-            render 'jq_upload', formats: 'json', content_type: 'text/html'
-          }
-          format.json {
-            render 'jq_upload'
-          }
-        end
-      else
-        msg = @generic_file.errors.full_messages.join(', ')
-        flash[:error] = msg
-        json_error "Error creating generic file: #{msg}"
-      end
+      super(file)
     end
 
     # override this method if you want to change how the terms are accepted on upload.
@@ -241,9 +197,21 @@ module Sufia
     # this is provided so that implementing application can override this behavior and map params to different attributes
     # called when creating or updating metadata
     def update_metadata_from_upload_screen
-      # Relative path is set by the jquery uploader when uploading a directory
-      @generic_file.relative_path = params[:relative_path] if params[:relative_path]
       @generic_file.on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
+      super
     end
+
+    # The attributes appropriate for updating generic_file objects
+    def file_attributes
+      edit_form_class.model_attributes(params[:generic_file])
+    end
+
+    # Returns a duplicate of the :generic_file params
+    # *Danger*: permits all attributes in params[:generic_file], so could present security vulnerabilities if you do something like generic_file.attributes=unfiltered_attributes
+    # Does not filter out attributes like :visibility, which is not returned by file_attributes, so that the actor can use that info
+    def unfiltered_attributes
+      params.fetch(:generic_file, {}).permit!.dup  # use a copy of the hash so that original params stays untouched when interpret_visibility modifies things
+    end
+
   end
 end

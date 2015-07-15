@@ -298,22 +298,22 @@ describe UsersController, :type => :controller do
 
   describe "#toggle_trophy" do
      let(:work) { GenericWork.create { |w| w.apply_depositor_metadata(user) } }
-     let(:work_id) { work.id }
+     let(:parent_id) { work.id }
      let(:another_user) { FactoryGirl.create(:user) }
 
      it "should trophy a work" do
-      post :toggle_trophy, {id: user.user_key, work_id: work_id}
+      post :toggle_trophy, {id: user.user_key, parent_id: parent_id}
       json = JSON.parse(response.body)
       expect(json['user_id']).to eq user.id
-      expect(json['generic_work_id']).to eq work_id
+      expect(json['generic_work_id']).to eq parent_id
     end
      it "should not trophy a work for a different user" do
-      post :toggle_trophy, {id: another_user.user_key, work_id: work_id}
+      post :toggle_trophy, {id: another_user.user_key, parent_id: parent_id}
       expect(response).to_not be_success
     end
      it "should not trophy a work with no edit privs" do
       sign_in another_user
-      post :toggle_trophy, {id: another_user.user_key, work_id: work_id}
+      post :toggle_trophy, {id: another_user.user_key, parent_id: parent_id}
       expect(response).to_not be_success
     end
   end

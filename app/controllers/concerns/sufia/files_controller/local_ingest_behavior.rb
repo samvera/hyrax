@@ -57,7 +57,7 @@ module Sufia
       generic_file = ::GenericFile.new(label: basename).tap do |gf|
         gf.relative_path = filename if filename != basename
         actor = CurationConcerns::GenericFileActor.new(gf, current_user)
-        actor.create_metadata(params[:batch_id], params[:work_id])
+        actor.create_metadata(params[:batch_id], params[:parent_id])
         gf.save!
         CurationConcerns.queue.push(IngestLocalFileJob.new(gf.id, current_user.directory, filename, current_user.user_key))
       end
