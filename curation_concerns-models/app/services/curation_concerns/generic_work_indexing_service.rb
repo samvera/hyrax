@@ -1,10 +1,13 @@
 module CurationConcerns
-  class GenericWorkIndexingService < Hydra::PCDM::ObjectIndexer
+  class GenericWorkIndexingService < ActiveFedora::IndexingService
 
     def generate_solr_document
-      # leaving this in place since I know we will want to add generic files into the work's solr index
       super.tap do |solr_doc|
-        solr_doc[Solrizer.solr_name('generic_files')] = object.generic_file_ids
+        # We know that all the members of GenericWorks are GenericFiles so we can use
+        # member_ids which requires fewer Fedora API calls than generic_file_ids.
+        # generic_file_ids requires loading all the members from Fedora but member_ids
+        # looks just at solr
+        solr_doc[Solrizer.solr_name('generic_file_ids', :symbol)] = object.member_ids
       end
     end
 

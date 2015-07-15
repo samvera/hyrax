@@ -378,8 +378,6 @@ describe CurationConcerns::GenericFile do
     end
   end
 
-
-
   describe "to_solr" do
     before do
       subject.title = ['One Flew Over the Cuckoo\'s Nest']
