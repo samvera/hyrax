@@ -22,9 +22,9 @@ class AuditJob < ActiveFedoraIdBasedJob
     fixity_ok = (log.pass == 1)
     unless fixity_ok
       if CurationConcerns.config.respond_to?(:after_audit_failure)
-        file_title = generic_file.title.first
-        message = "The audit run at #{log.created_at} for #{file_title} (#{uri}) failed."
-        CurationConcerns.config.after_audit_failure.call(generic_file, message)
+        login = generic_file.depositor
+        user = User.find_by_user_key(login)
+        CurationConcerns.config.after_audit_failure.call(generic_file, user, log.created_at)
       end
     end
     fixity_ok
