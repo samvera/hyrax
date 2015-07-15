@@ -45,12 +45,8 @@ module Hydra
       # The lease_visibility! and embargo_visibility! methods rely on this to deactivate the lease when applicable.
       def visibility=(value)
         # If changing from embargo or lease, deactivate the lease/embargo and wipe out the associated metadata before proceeding
-        if !embargo_release_date.nil?
-          deactivate_embargo! unless value == visibility_during_embargo
-        end
-        if !lease_expiration_date.nil?
-          deactivate_lease! unless value == visibility_during_lease
-        end
+        deactivate_embargo! if deactivate_embargo?(value)
+        deactivate_lease! if deactivate_lease?(value)
         super
       end
 
@@ -150,6 +146,19 @@ module Hydra
           end
         end
       end
+
+      private
+
+        # @return [true, false] true if there is an embargo set up and the visibility will change
+        def deactivate_embargo?(value)
+          embargo && embargo.embargo_release_date && value != embargo.visibility_during_embargo
+        end
+
+        # @return [true, false] true if there is a lease set up and the visibility will change
+        def deactivate_lease?(value)
+          lease && lease.lease_expiration_date && value != lease.visibility_during_lease
+        end
+
     end
   end
 end
