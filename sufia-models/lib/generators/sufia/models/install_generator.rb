@@ -77,7 +77,9 @@ This generator makes the following changes to your application:
   end
 
   def inject_sufia_generic_file_behavior
-    # Currently no Sufia::GenericFileBehavior to inject (no need)
+    insert_into_file 'app/models/generic_file.rb', after: 'include ::CurationConcerns::GenericFileBehavior' do
+      "\n  include ::Sufia::GenericFileBehavior"
+    end
   end
 
   def install_mailboxer
