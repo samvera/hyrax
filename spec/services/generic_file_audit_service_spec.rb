@@ -1,48 +1,28 @@
 require 'spec_helper'
 
 describe CurationConcerns::GenericFileAuditService do
-  let(:f) do
-    GenericFile.create do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      f.apply_depositor_metadata('mjg36')
-    end
-  end
-
+  let(:f)       { FactoryGirl.create(:generic_file, content: fixture_path + '/world.png' )}
   let(:service) { CurationConcerns::GenericFileAuditService.new(f) }
 
   describe "#audit" do
-    before do
-      CurationConcerns::VersioningService.create(f.content)
-      # force a second version
-      gf = GenericFile.find(f.id)
-      gf.add_file('hello two', path: 'content', original_name: 'hello2.txt')
-      gf.save!
-      CurationConcerns::VersioningService.create(gf.content)
-    end
-
-    context "force an audit on a file with two versions" do
+    context "when a file has two versions" do
+      before do
+        CurationConcerns::VersioningService.create(f.original_file)  # create a second version -- the factory creates the first version when it attaches +content+
+      end
       subject { service.audit }
-      specify "should return two log results" do
+      specify "returns two log results" do
         expect(subject.length).to eq(2)
       end
     end
   end
 
   describe "#audit_file" do
-    before do
-      CurationConcerns::VersioningService.create(f.content)
-      # force a second version
-      gf = GenericFile.find(f.id)
-      gf.add_file('hello two', path: 'content', original_name: 'hello2.txt')
-      gf.save!
-      CurationConcerns::VersioningService.create(gf.content)
-    end
-
-    context "force an audit on a specific version" do
-      subject { service.send(:audit_file, "content", f.content.versions.first.uri) }
-      specify "should return a single log result" do
-        expect(subject).to_not be_nil
-      end
+    let(:file_to_audit) { f.original_file.versions.first }
+    subject { service.send(:audit_file, "original_file", file_to_audit) }
+    specify "returns a single ChecksumAuditLog for the given file" do
+      expect(subject).to be_kind_of ChecksumAuditLog
+      expect(subject.generic_file_id).to eq(f.id)
+      expect(subject.version).to eq(file_to_audit.uri)
     end
   end
 
@@ -56,8 +36,8 @@ describe CurationConcerns::GenericFileAuditService do
 
     context "when no audit is pasing" do
       before do
-        CurationConcerns::VersioningService.create(f.content)
-        ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.content.versions.first.label, dsid: 'content')
+        CurationConcerns::VersioningService.create(f.original_file)
+        ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.original_file.versions.first.uri, dsid: 'original_file')
       end
 
       it "should report that audits have not been run" do

@@ -30,23 +30,22 @@ module CurationConcerns
 
     private
       def audit_content(log)
-        if generic_file.content.has_versions?
-          audit_file_versions("content", log)
+        if generic_file.original_file.has_versions?
+          audit_file_versions("original_file", generic_file.original_file, log)
         else
-          log << audit_file("content", generic_file.content.uri.to_s)
+          log << audit_file("original_file", generic_file.original_file)
         end
       end
 
-      def audit_file_versions file, log
-        generic_file.attached_files[file].versions.all.each do |version|
-          log << audit_file(file, version.uri,  version.label)
+      def audit_file_versions association_name, file, log
+        file.versions.all.each do |version|
+          log << audit_file(association_name, version)
         end
         log
       end
 
       def audit_stat
         audit_results = audit.collect { |result| result["pass"] }
-
         # check how many non runs we had
         non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum += 1 : sum }
         if non_runs == 0
@@ -59,11 +58,14 @@ module CurationConcerns
         end
       end
 
-      def audit_file(file, uri, label = nil)
-        latest_audit = ChecksumAuditLog.logs_for(generic_file.id, file).first
+      # @param [String] association_name used to find the file within its parent object (usually "original_file")
+      # @param [ActiveFedora::File] file to be audited
+      # @param [String] label of the version being audited
+      def audit_file(association_name, file)
+        latest_audit = ChecksumAuditLog.logs_for(generic_file.id, association_name).first
         return latest_audit unless needs_audit?(latest_audit)
-        CurationConcerns.queue.push(AuditJob.new(generic_file.id, file, uri))
-        latest_audit || ChecksumAuditLog.new(pass: NO_RUNS, generic_file_id: generic_file.id, dsid: file, version: label)
+        CurationConcerns.queue.push(AuditJob.new(generic_file.id, association_name, file.uri))
+        latest_audit || ChecksumAuditLog.new(pass: NO_RUNS, generic_file_id: generic_file.id, dsid: association_name, version: file.uri)
       end
 
       def needs_audit?(latest_audit)

@@ -3,16 +3,19 @@ class AuditJob < ActiveFedoraIdBasedJob
     :audit
   end
 
-  attr_accessor :uri, :id, :path
+  attr_accessor :uri, :id, :association_name
 
   # URI of the resource to audit.
   # This URI could include the actual resource (e.g. content) and the version to audit:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content/fcr:versions/version1
   # but it could also just be:
   #     http://localhost:8983/fedora/rest/test/a/b/c/abcxyz/content
-  def initialize(id, path, uri)
+  # @param [String] id of the parent object
+  # @param [String] association_name used to find the file within its parent object (usually "original_file")
+  # @param [String] uri of the specific file/version to be audited
+  def initialize(id, association_name, uri)
     super(id)
-    self.path = path
+    self.association_name = association_name
     self.uri = uri
   end
 
@@ -41,12 +44,12 @@ class AuditJob < ActiveFedoraIdBasedJob
 
       if fixity_ok
         passing = 1
-        ChecksumAuditLog.prune_history(id, path)
+        ChecksumAuditLog.prune_history(id, association_name)
       else
         logger.warn "***AUDIT*** Audit failed for #{uri} #{error_msg}"
         passing = 0
       end
-      ChecksumAuditLog.create!(pass: passing, generic_file_id: id, version: uri, dsid: path)
+      ChecksumAuditLog.create!(pass: passing, generic_file_id: id, version: uri, dsid: association_name)
     end
 
     def logger
