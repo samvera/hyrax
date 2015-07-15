@@ -547,9 +547,9 @@ describe GenericFilesController do
     end
   end
 
-  describe "someone elses files" do
+  describe "someone else's files" do
     let(:generic_file) do
-      GenericFile.create(id: 'test5', read_groups: ['public']) do |f|
+      GenericFile.create(read_groups: ['public']) do |f|
         f.apply_depositor_metadata('archivist1@example.com')
       end
     end
@@ -561,7 +561,7 @@ describe GenericFilesController do
     describe "edit" do
       it "sets flash error" do
         get :edit, id: generic_file
-        expect(response).to redirect_to @routes.url_helpers.generic_file_path('test5')
+        expect(response).to redirect_to @routes.url_helpers.generic_file_path(generic_file)
         expect(flash[:alert]).not_to be_nil
         expect(flash[:alert]).not_to be_empty
         expect(flash[:alert]).to include("You do not have sufficient privileges to edit this document")
