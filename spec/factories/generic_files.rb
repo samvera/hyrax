@@ -5,6 +5,12 @@ FactoryGirl.define do
       content nil
     end
 
+    after(:create) do |file, evaluator|
+      if evaluator.content
+        Hydra::Works::UploadFileToGenericFile.call(file, evaluator.content)
+      end
+    end
+
     factory :file_with_work do
       after(:build) do |file, evaluator|
         file.title = ['testfile']
