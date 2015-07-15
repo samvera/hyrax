@@ -44,15 +44,32 @@ describe Hydra::AccessControls::Embargoable do
   end
 
   context 'visibility=' do
-    it "when changing from embargo, wipes out associated embargo metadata" do
-      subject.embargo_release_date = future_date.to_s
-      expect(subject).to receive(:deactivate_embargo!)
-      subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+    context "when the object is not under embargo or lease" do
+      before do
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      end
+      it "doesn't create embargo or lease" do
+        expect(subject.embargo).to be_nil
+        expect(subject.lease).to be_nil
+      end
+    end
+
+    context "when changing from embargo" do
+      before do
+        subject.embargo_release_date = future_date.to_s
+      end
+      it "wipes out associated embargo metadata" do
+        expect(subject).to receive(:deactivate_embargo!)
+        subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      end
     end
 
     context "when changing from lease" do
-      it "wipes out associated lease metadata and marks visibility as changed" do
+      before do
         subject.apply_lease(future_date.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
+      end
+
+      it "wipes out associated lease metadata and marks visibility as changed" do
         expect(subject).to receive(:deactivate_lease!)
         subject.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         expect(subject).to be_visibility_changed

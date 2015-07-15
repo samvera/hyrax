@@ -12,14 +12,13 @@ describe Hydra::AccessControls::Visibility do
   end
 
   describe "setting visibility" do
-    before {
+    before do
       class Foo < ActiveFedora::Base
         include Hydra::AccessControls::Permissions
       end
-    }
-    after {
-      Object.send(:remove_const, :Foo)
-    }
+    end
+
+    after { Object.send(:remove_const, :Foo) }
 
     subject { Foo.new }
 
