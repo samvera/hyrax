@@ -5,7 +5,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
     before(:all) do
       @file = GenericFile.new(id: 'foo123')
       @file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      Sufia::CharacterizationService.run(@file)
+      CurationConcern::CharacterizationService.run(@file)
     end
     it "should have a format label" do
       expect(@file.format_label).to eq ["Portable Network Graphics"]
@@ -45,7 +45,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
     before(:all) do
       @file = GenericFile.new(id: 'foo123')
       @file.add_file(File.open(fixture_path + '/sample_mpeg4.mp4'), path: 'content', original_name: 'sample_mpeg4.mp4')
-      Sufia::CharacterizationService.run(@file)
+      CurationConcern::CharacterizationService.run(@file)
     end
     it "should have a format label" do
       expect(@file.format_label).to eq ["ISO Media, MPEG v4 system, version 2"]
@@ -89,7 +89,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       @myfile.add_file(File.open(fixture_path + '/sufia/sufia_test4.pdf', 'rb').read, path: 'content', original_name: 'sufia_test4.pdf', mime_type: 'application/pdf')
       @myfile.apply_depositor_metadata('mjg36')
       # characterize method saves
-      Sufia::CharacterizationService.run(@myfile)
+      CurationConcern::CharacterizationService.run(@myfile)
     end
 
     it "should return expected results after a save" do
@@ -118,7 +118,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       @myfile.add_file(File.open(fixture_path + '/spoken-text.m4a', 'rb').read, path: 'content', original_name: 'spoken-text.m4a', mime_type: 'audio/mp4a-latm')
       @myfile.apply_depositor_metadata('agw13')
       # characterize method saves
-      Sufia::CharacterizationService.run(@myfile)
+      CurationConcern::CharacterizationService.run(@myfile)
     end
 
     it "should return expected content for full text" do

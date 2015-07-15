@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ChecksumAuditLog do
   before do
     # stub out characterization so it does not get audited
-    allow_any_instance_of(Sufia::CharacterizationService).to receive(:characterize)
+    allow_any_instance_of(CharacterizeJob).to receive(:run)
   end
 
   let(:f) do
