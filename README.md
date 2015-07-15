@@ -173,7 +173,9 @@ rake db:migrate
 
 ## Solr and Fedora
 
-If you already have instances of Solr and Fedora that you would like to use, you may skip this step. Otherwise feel free to use the bundled copy of Jetty, a Java servlet container that is configured to run versions of Solr and Fedora that are known to work with Sufia.
+If you already have instances of Solr and Fedora that you would like to use, you may skip this step. Otherwise feel free to use [hydra-jetty](https://github.com/projecthydra/hydra-jetty), the bundled copy of Jetty, a Java servlet container that is configured to run versions of Solr and Fedora that are known to work with Sufia. Hydra-jetty (since v8.4.0) requires Java 8.
+
+The following rake tasks will install hydra-jetty and start up Jetty with Solr and Fedora.
 
 ```
 rake jetty:clean
