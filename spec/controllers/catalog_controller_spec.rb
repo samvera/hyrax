@@ -11,37 +11,23 @@ describe CatalogController, :type => :controller do
 
   describe "#index" do
 
-    let!(:rocks) {
-      GenericWork.new(id: 'rock123').tap do |work|
-        work.title = ['Rock Documents']
-        work.read_groups = ['public']
-        work.apply_depositor_metadata('mjg36')
-      end
+    let(:rocks) {
+      GenericWork.new(id: 'rock123', title: ['Rock Documents'], read_groups: ['public'])
     }
 
-    let!(:clouds) {
-      GenericWork.new(id: 'cloud123').tap do |work|
-        work.title = ['Cloud Documents']
-        work.read_groups = ['public']
-        work.apply_depositor_metadata('mjg36')
-        work.contributor = ['frodo']
-      end
+    let(:clouds) {
+      GenericWork.new(id: 'cloud123', title: ['Cloud Documents'], read_groups: ['public'],
+                      contributor: ['frodo'])
     }
 
     before do
       objects.each { |obj| ActiveFedora::SolrService.add(obj.to_solr) }
       ActiveFedora::SolrService.commit
     end
+
     context 'with a non-work file' do
-      let!(:file) {
-        GenericFile.new(id: 'file123').tap do |file|
-        file.title('File about Rocks')
-        file.filename = ['test.pdf']
-        file.read_groups = ['public']
-        file.apply_depositor_metadata('mjg36')
-        end
-      }
-      let (:objects) { [file, rocks, clouds]}
+      let(:file) { GenericFile.new(id: 'file123') }
+      let(:objects) { [file, rocks, clouds]}
 
       it 'finds works, not files' do
         get :index
@@ -56,8 +42,8 @@ describe CatalogController, :type => :controller do
     end
 
     context 'with collections' do
-      let!(:collection) {
-        Collection.new(id: 'collection1', title: 'my collection', tag: ['rocks'], read_groups: ['public']).tap do |c|
+      let(:collection) {
+        Collection.new(id: 'collection1', title: 'my collection', tag: ['rocks'], read_groups: ['public']) do |c|
            c.apply_depositor_metadata('mjg36')
         end
       }
@@ -77,9 +63,7 @@ describe CatalogController, :type => :controller do
         get :index, q: 'rocks', owner: 'all'
         expect(response).to be_success
         expect(response).to render_template('catalog/index')
-        expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to eq [rocks.id]
-        expect(assigns(:document_list).first[Solrizer.solr_name("title")]).to eq ['Rock Documents']
+        expect(assigns(:document_list).map(&:id)).to contain_exactly(rocks.id)
       end
     end
 
@@ -92,8 +76,7 @@ describe CatalogController, :type => :controller do
       it 'finds faceted works' do
         expect(response).to be_success
         expect(response).to render_template('catalog/index')
-        expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to eq [clouds.id]
+        expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
       end
     end
 
@@ -103,57 +86,54 @@ describe CatalogController, :type => :controller do
         get :index, q: 'full_textfull_text'
         expect(response).to be_success
         expect(response).to render_template('catalog/index')
-        expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to eq [clouds.id]
+        expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
       end
     end
 
     context 'works by file metadata' do
-      let (:objects) { [] } # Can't use this shorthand due to the complexity of relationships between GenericFiles and GenericWorks
-      # Building the objects in a before(:all) to minimize the overhead of creating and destroying all these objects in Fedora three times
-      before(:all) do
-        user =  FactoryGirl.find_or_create(:jill)
-        work1 = FactoryGirl.create(:generic_work, title: ["me too"], read_groups: ['public'], user:user)
-        work2 = FactoryGirl.create(:generic_work, title: ["find me"], read_groups: ['public'], user:user)
-        file1 = GenericFile.new.tap do |f|
-            f.title= ['find me']
-            f.apply_depositor_metadata(user)
-            f.save!
-            Hydra::Works::AddGenericFileToGenericWork.call(work1, f)
-          end
-        file2 = GenericFile.new.tap do |f|
-            f.title= ['other file']
-            f.apply_depositor_metadata(user)
-            f.save!
-            Hydra::Works::AddGenericFileToGenericWork.call(work1, f)
-        end
-        @user = user
-        @work1 = work1
-        @work2 = work2
-        @file1 = file1
-        @file2 = file2
+      let (:objects) do
+        [double(to_solr: file1), double(to_solr: file2),
+         double(to_solr: work1), double(to_solr: work2)]
+      end
+
+      let(:work1) do
+        { has_model_ssim: ["GenericWork"], id: "ff365c76z", title_tesim: ["me too"],
+          objects_ssim: ["ff365c78h", "ff365c79s"],
+          read_access_group_ssim: ["public"], edit_access_person_ssim: ["user1@example.com"] }
+      end
+
+      let(:work2) do
+        { has_model_ssim: ["GenericWork"], id: "ff365c777", title_tesim: ["find me"],
+          objects_ssim: [],
+          read_access_group_ssim: ["public"], edit_access_person_ssim: ["user2@example.com"] }
+      end
+
+      let(:file1) do
+        { has_model_ssim: ["GenericFile"], id: "ff365c78h", title_tesim: ["find me"],
+          objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
+          edit_access_person_ssim: ["jilluser@example.com"]}
+      end
+
+      let(:file2) do
+        { has_model_ssim: ["GenericFile"], id: "ff365c79s", title_tesim: ["other file"],
+          objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
+          edit_access_person_ssim: ["jilluser@example.com"]}
       end
 
       it "finds work and work that contains file with title" do
         get :index, q: 'find me'
-        expect(assigns(:document_list).count).to eq 2
-        expect(assigns(:document_list).map(&:id)).to include(@work1.id, @work2.id)
+        expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id], work2[:id])
       end
 
       it "finds work that contains file with title" do
         get :index, q: 'other file'
-        expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to include(@work1.id)
+        expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
 
       it "finds work with title" do
         get :index, q: 'me too'
-        expect(assigns(:document_list).count).to eq 1
-        expect(assigns(:document_list).map(&:id)).to include(@work1.id)
+        expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
-
     end
-
   end  # describe "#index"
-
 end

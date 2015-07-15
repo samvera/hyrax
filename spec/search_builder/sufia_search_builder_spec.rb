@@ -15,7 +15,7 @@ describe Sufia::SearchBuilder do
     it "creates a valid solr join for works and files" do
       subject.show_works_or_works_that_contain_files(solr_params)
       expect(solr_params[:user_query]).to eq user_query
-      expect(solr_params[:q]).to eq "{!lucene}_query_:\"{!dismax v=$user_query}\" _query_:\"{!join from=generic_work_id_ssim to=id}{!dismax v=$user_query}\""
+      expect(solr_params[:q]).to eq "{!lucene}_query_:\"{!dismax v=$user_query}\" _query_:\"{!join from=generic_work_ids_ssim to=id}{!dismax v=$user_query}\""
     end
   end
 
