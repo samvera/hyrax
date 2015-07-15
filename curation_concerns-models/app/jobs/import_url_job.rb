@@ -18,13 +18,13 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
 
         # send message to user on download success
         if CurationConcerns.config.respond_to?(:after_import_url_success)
-          CurationConcerns.config.after_import_url_success.call(generic_file)
+          CurationConcerns.config.after_import_url_success.call(generic_file, user)
         end
       else
 
         # send message to user on download failure
         if CurationConcerns.config.respond_to?(:after_import_url_failure)
-          CurationConcerns.config.after_import_url_failure.call(generic_file)
+          CurationConcerns.config.after_import_url_failure.call(generic_file, user)
         end
       end
     end
