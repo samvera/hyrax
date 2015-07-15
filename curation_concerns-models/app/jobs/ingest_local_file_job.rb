@@ -22,16 +22,18 @@ class IngestLocalFileJob
 
     if actor.create_content(File.open(path), filename, mime_type(filename))
       FileUtils.rm(path)
-      CurationConcerns.queue.push(ContentDepositEventJob.new(generic_file.id, user_key))
 
-      message = "The file (#{File.basename(filename)}) was successfully deposited."
-      subject = 'Local file ingest'
+      # send message to user on import success
+      if CurationConcerns.config.respond_to?(:after_import_local_file_success)
+        CurationConcerns.config.after_import_local_file_success.call(generic_file, user, filename)
+      end
     else
-      message = "There was a problem depositing #{File.basename(filename)}. Please contact a system admin."
-      subject = 'Local file ingest error'
-    end
 
-    job_user.send_message(user, message, subject)
+      # send message to user on import failure
+      if CurationConcerns.config.respond_to?(:after_import_local_file_failure)
+        CurationConcerns.config.after_import_local_file_failure.call(generic_file, user, filename)
+      end
+    end
   end
 
   def job_user
