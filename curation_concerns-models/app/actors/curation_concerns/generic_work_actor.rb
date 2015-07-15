@@ -65,7 +65,7 @@ module CurationConcerns
     private
 
     def attach_file(file)
-      generic_file = GenericFile.new
+      generic_file = ::GenericFile.new
       generic_file_actor = CurationConcerns::GenericFileActor.new(generic_file, user)
       generic_file_actor.create_metadata(curation_concern.id, curation_concern.id)
       generic_file.visibility = visibility

@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe "Creating a new Work" do
   let(:user) { FactoryGirl.create(:user) }
-  # let!(:work) { FactoryGirl.create(:work, user: user) }
 
   before do
     sign_in user
@@ -15,8 +14,6 @@ describe "Creating a new Work" do
 
   it "should create the work and allow you to attach a file" do
     visit "/concern/generic_works/new"
-
-
     # within("form.new_generic_file") do
     #   attach_file("Upload a file", fixture_file_path('files/image.png'))
     #   click_button "Attach to Generic Work"
@@ -27,7 +24,6 @@ describe "Creating a new Work" do
       choose("visibility_open")
       click_on("Create Generic work")
     end
-
     within '.related_files' do
       expect(page).to have_link "image.png"
     end

@@ -29,7 +29,8 @@ module CurationConcerns
       generic_file.date_modified = time_in_utc
       generic_file.creator = [user.name]
 
-      if batch_id
+      # TODO: Remove this? see https://github.com/projecthydra-labs/curation_concerns/issues/27
+      if batch_id && generic_file.respond_to?(:batch_id=)
         generic_file.batch_id = batch_id
       else
         ActiveFedora::Base.logger.warn "unable to find batch to attach to"
