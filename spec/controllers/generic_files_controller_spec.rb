@@ -7,7 +7,9 @@ describe GenericFilesController do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
     allow(controller).to receive(:clear_session_user) ## Don't clear out the authenticated session
-    allow_any_instance_of(Sufia::CharacterizationService).to receive(:characterize)
+
+    # prevents characterization and derivative creation
+    allow_any_instance_of(CharacterizeJob).to receive(:run)
   end
 
   describe "#create" do
@@ -40,7 +42,7 @@ describe GenericFilesController do
           expect(flash[:error]).to be_nil
         end
 
-        it "should create and save a file asset from the given params" do
+        it "creates and save a file asset from the given params" do
           date_today = DateTime.now
           allow(DateTime).to receive(:now).and_return(date_today)
           expect {
@@ -60,7 +62,7 @@ describe GenericFilesController do
           expect(saved_file.date_modified).to eq date_today.new_offset(0)
         end
 
-        it "should set the depositor id" do
+        it "sets the depositor id" do
           xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
           expect(response).to be_success
 
@@ -81,7 +83,7 @@ describe GenericFilesController do
       end
 
       context "when solr continuously has errors" do
-        it "should error out of create and save after on continuos rsolr error" do
+        it "errors out of create and save after on continuos rsolr error" do
           allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
 
           file = fixture_file_upload('/world.png','image/png')
@@ -119,7 +121,7 @@ describe GenericFilesController do
       before do
         @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
       end
-      it "should ingest files from provide URLs" do
+      it "ingests files from provide URLs" do
         expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
         expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
         expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
@@ -144,6 +146,7 @@ describe GenericFilesController do
         end
 
       end
+
       context "when a work id is not passed" do
         it "creates the work" do
           expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
@@ -152,11 +155,9 @@ describe GenericFilesController do
           created_files = GenericFile.all
           expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
         end
-
       end
-
-
     end
+
 
     context "with local_file" do
       let(:mock_url) {"http://example.com"}
@@ -183,7 +184,7 @@ describe GenericFilesController do
           allow_any_instance_of(User).to receive(:directory).and_return(mock_upload_directory)
         end
 
-        it "should ingest files from the filesystem" do
+        it "ingests files from the filesystem" do
           expect {
             post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
           }.to change(GenericFile, :count).by(2)
@@ -197,7 +198,7 @@ describe GenericFilesController do
           expect(files.to_a.map(&:label)).to eq ['world.png', 'image.jpg']
         end
 
-        it "should ingest redirect to another location" do
+        it "ingests redirect to another location" do
           expect(GenericFilesController).to receive(:upload_complete_path).and_return(mock_url)
           expect {
             post :create, local_file: ["world.png"], batch_id: batch_id
@@ -210,7 +211,7 @@ describe GenericFilesController do
           expect(files.first.label).to eq 'world.png'
         end
 
-        it "should ingest directories from the filesystem" do
+        it "ingests directories from the filesystem" do
           expect {
             post :create, local_file: ["world.png", "import"], batch_id: batch_id
           }.to change(GenericFile, :count).by(4)
@@ -255,7 +256,7 @@ describe GenericFilesController do
       end
 
       context "when User model does not define directory path" do
-        it "should return an error message and redirect to file upload page" do
+        it "returns an error message and redirect to file upload page" do
           expect {
             post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id
           }.to_not change(GenericFile, :count)
@@ -275,7 +276,7 @@ describe GenericFilesController do
       end
     end
 
-    it "should return json with the result" do
+    it "returns json with the result" do
       xhr :post, :audit, id: generic_file
       expect(response).to be_success
       json = JSON.parse(response.body)
@@ -295,7 +296,7 @@ describe GenericFilesController do
       allow(ContentDeleteEventJob).to receive(:new).with(generic_file.id, user.user_key).and_return(delete_message)
     end
     let(:delete_message) { double('delete message') }
-    it "should delete the file" do
+    it "deletes the file" do
       expect(CurationConcerns.queue).to receive(:push).with(delete_message)
       expect {
         delete :destroy, id: generic_file
@@ -376,7 +377,7 @@ describe GenericFilesController do
       end
     end
 
-    it "should set the breadcrumbs and versions presenter" do
+    it "sets the breadcrumbs and versions presenter" do
       allow(controller.request).to receive(:referer).and_return('foo')
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.my.files'), Sufia::Engine.routes.url_helpers.dashboard_files_path)
@@ -404,7 +405,7 @@ describe GenericFilesController do
         allow(ContentUpdateEventJob).to receive(:new).with(generic_file.id, 'jilluser@example.com').and_return(update_message)
       end
 
-      it "should spawn a content update event job" do
+      it "spawns a content update event job" do
         expect(CurationConcerns.queue).to receive(:push).with(update_message)
         post :update, id: generic_file, generic_file: { title: ['new_title'], tag: [''],
                                                         permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}] }
@@ -479,7 +480,7 @@ describe GenericFilesController do
           before do
             sign_in second_user
           end
-          it "should not create a new version" do
+          it "doesn't create a new version" do
             post :update, id: generic_file, revision: version1
             expect(response).to be_redirect
           end
@@ -487,7 +488,7 @@ describe GenericFilesController do
       end
     end
 
-    it "should add new groups and users" do
+    it "adds new groups and users" do
       post :update, id: generic_file,
         generic_file: { tag: [''],
                         permissions_attributes: [
@@ -500,7 +501,7 @@ describe GenericFilesController do
       expect(assigns[:generic_file].edit_users).to include("user1", user.user_key)
     end
 
-    it "should update existing groups and users" do
+    it "updates existing groups and users" do
       generic_file.edit_groups = ['group3']
       generic_file.save
       post :update, id: generic_file,
@@ -548,17 +549,17 @@ describe GenericFilesController do
 
   describe "someone elses files" do
     let(:generic_file) do
-      GenericFile.new(id: 'test5') do |f|
+      GenericFile.create(id: 'test5', read_groups: ['public']) do |f|
         f.apply_depositor_metadata('archivist1@example.com')
-        # grant public read access explicitly
-        f.read_groups = ['public']
-        f.save!
-        Hydra::Works::UploadFileToGenericFile.call(f, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
       end
     end
 
+    before do
+      Hydra::Works::UploadFileToGenericFile.call(generic_file, fixture_path + '/world.png', original_name: 'world.png', mime_type: 'image/png')
+    end
+
     describe "edit" do
-      it "should give me a flash error" do
+      it "sets flash error" do
         get :edit, id: generic_file
         expect(response).to redirect_to @routes.url_helpers.generic_file_path('test5')
         expect(flash[:alert]).not_to be_nil
@@ -568,7 +569,7 @@ describe GenericFilesController do
     end
 
     describe "#show" do
-      it "should show me the file and set breadcrumbs" do
+      it "shows me the file and set breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('sufia.dashboard.title'), Sufia::Engine.routes.url_helpers.dashboard_index_path)
         get :show, id: generic_file
         expect(response).to be_successful
@@ -577,6 +578,7 @@ describe GenericFilesController do
         expect(assigns[:generic_file]).to eq generic_file
         expect(assigns[:audit_status]).to eq 'Audits have not yet been run on this file.'
       end
+
       it 'renders an endnote file' do
         get :show, id: generic_file, format: 'endnote'
         expect(response).to be_successful
@@ -585,13 +587,14 @@ describe GenericFilesController do
   end
 
   describe "flash" do
-    it "should not let the user submit if they logout" do
+    it "doesn't let the user submit if they logout" do
       sign_out user
       get :new
       expect(response).to_not be_success
       expect(flash[:alert]).to include("You need to sign in or sign up before continuing")
     end
-    it "should filter flash if they signin" do
+
+    it "filters flash if they signin" do
       sign_in user
       get :new
       expect(flash[:alert]).to be_nil
@@ -602,7 +605,8 @@ describe GenericFilesController do
     before do
       User.audituser.send_message(user, "Test message", "Test subject")
     end
-    it "should display notifications" do
+
+    it "displays notifications" do
       get :new
       expect(assigns[:notify_number]).to eq 1
       expect(user.mailbox.inbox[0].messages[0].subject).to eq "Test subject"

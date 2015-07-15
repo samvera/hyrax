@@ -42,7 +42,6 @@ $in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
 
 if $in_travis
   # Monkey-patches the FITS runner to return the PDF FITS fixture
-  require 'sufia/characterization_service'
   module CurationConcerns
     class CharacterizationService
       def self.run(generic_file)
