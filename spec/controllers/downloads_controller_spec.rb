@@ -27,8 +27,8 @@ describe DownloadsController, :type => :controller do
         let(:expected_datastream) { object.original_file }
         let(:expected_content) { expected_datastream.content }
 
-        it "should default to returning configured default download" do
-          expect(DownloadsController.default_file_path).to eq "original_file"
+        it "defaults to returning configured default download" do
+          expect(DownloadsController.default_content_path).to eq :original_file
           expect(controller).to receive(:send_file_headers!).with({filename: 'world.png', disposition: 'inline', type: 'image/png' })
           get "show", id: file
           expect(response).to be_success

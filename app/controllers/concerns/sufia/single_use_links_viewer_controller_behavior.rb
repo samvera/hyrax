@@ -3,7 +3,7 @@ require 'sufia/single_use_error'
 module Sufia
   module SingleUseLinksViewerControllerBehavior
     extend ActiveSupport::Concern
-    include Sufia::DownloadsControllerBehavior
+    include CurationConcerns::DownloadBehavior
     included do
       skip_before_filter :load_file, except: :download
       rescue_from Sufia::SingleUseError, with: :render_single_use_error
