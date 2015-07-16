@@ -32,24 +32,21 @@ module Sufia
     #   config.index.thumbnail_method = :sufia_thumbnail_tag
     def sufia_thumbnail_tag(document, options)
 
-      # collection
-      if (document.collection?)
-        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
-
-      # generic work TODO: what should be the icon here...
-      elsif (document.generic_work?)
-        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
-
-      # file
-      else
-        path = if document.image? || document.pdf? || document.video? || document.office_document?
-          sufia.download_path document, file: 'thumbnail'
-        elsif document.audio?
-          "audio.png"
+      if document.kind_of? ActiveFedora::Base
+        case document
+        when Collection
+          collection_thumbnail
+        when GenericWork
+          work_thumbnail
         else
-          "default.png"
+          file_thumbnail(document, options)
         end
-        image_tag path, options
+      elsif document.collection?
+        collection_thumbnail
+      elsif document.generic_work?
+        work_thumbnail
+      else
+        file_thumbnail(document, options)
       end
     end
 
@@ -182,20 +179,39 @@ module Sufia
 
     private
 
-    def search_action_for_dashboard
-      case params[:controller]
-      when "my/files"
-        sufia.dashboard_files_path
-      when "my/collections"
-        sufia.dashboard_collections_path
-      when "my/shares"
-        sufia.dashboard_shares_path
-      when "my/highlights"
-        sufia.dashboard_highlights_path
-      else
-        sufia.dashboard_files_path
+      def search_action_for_dashboard
+        case params[:controller]
+        when "my/files"
+          sufia.dashboard_files_path
+        when "my/collections"
+          sufia.dashboard_collections_path
+        when "my/shares"
+          sufia.dashboard_shares_path
+        when "my/highlights"
+          sufia.dashboard_highlights_path
+        else
+          sufia.dashboard_files_path
+        end
       end
-    end
+
+      def collection_thumbnail
+        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
+      end
+
+      def work_thumbnail
+        content_tag(:span, "", class: "glyphicon glyphicon-th collection-icon-search")
+      end
+
+      def file_thumbnail(document, options)
+        path = if document.image? || document.pdf? || document.video? || document.office_document?
+          sufia.download_path document, file: 'thumbnail'
+        elsif document.audio?
+          "audio.png"
+        else
+          "default.png"
+        end
+        image_tag path, options
+      end
 
   end
 end
