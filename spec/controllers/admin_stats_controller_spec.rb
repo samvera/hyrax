@@ -114,6 +114,10 @@ describe Admin::StatsController, type: :controller do
           gf.apply_depositor_metadata(user1)
           gf.update_index
         end
+        Collection.new(id: "ccc123") do |c|
+          c.apply_depositor_metadata(user1)
+          c.update_index
+        end
       end
 
       it "gathers user deposits" do
@@ -124,6 +128,26 @@ describe Admin::StatsController, type: :controller do
       it "gathers user deposits during a date range" do
         get :index, deposit_stats: { start_date: 1.day.ago.strftime("%Y-%m-%d"), end_date: 0.days.ago.strftime("%Y-%m-%d") }
         expect(assigns[:depositors]).to include({ key: user1.user_key, deposits: 1, user: user1 }, key: user2.user_key, deposits: 1, user: user2)
+      end
+
+      context "more than 10 users" do
+        let(:users) { [] }
+        before do
+          (1..12).each do |number|
+            luser = User.create(email: "user#{number}@blah.com", password: "blahbalh")
+            users << luser
+            GenericWork.new(id: "more#{number}") do |gf|
+              gf.apply_depositor_metadata(luser)
+              gf.update_index
+            end
+          end
+        end
+
+        it "gathers user deposits" do
+          get :index
+          expect(assigns[:depositors]).to include({ key: user1.user_key, deposits: 2, user: user1 }, key: user2.user_key, deposits: 1, user: user2)
+          users.each { |user| expect(assigns[:depositors]).to include(key: user.user_key, deposits: 1, user: user) }
+        end
       end
     end
   end
