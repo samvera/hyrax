@@ -1,6 +1,7 @@
 class ContentBlock < ActiveRecord::Base
   MARKETING  = 'marketing_text'
   RESEARCHER = 'featured_researcher'
+  ANNOUNCEMENT = 'announcement_text'
 
   def self.recent_researchers
     where(name: RESEARCHER).order('created_at DESC')

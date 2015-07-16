@@ -92,5 +92,14 @@ describe HomepageController, type: :controller do
         expect(assigns(:featured_work_list)).to be_kind_of FeaturedWorkList
       end
     end
+
+    it "sets announcement content block" do
+      get :index
+      expect(response).to be_success
+      assigns(:announcement_text).tap do |announcement|
+        expect(announcement).to be_kind_of ContentBlock
+        expect(announcement.name).to eq 'announcement_text'
+      end
+    end
   end
 end
