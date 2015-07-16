@@ -1,5 +1,5 @@
 module CurationConcerns
-  module File
+  module GenericFile
     module VirusCheck
       extend ActiveSupport::Concern
 

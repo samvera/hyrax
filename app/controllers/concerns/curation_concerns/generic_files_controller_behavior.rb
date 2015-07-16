@@ -1,5 +1,5 @@
 module CurationConcerns
-  module FilesController
+  module GenericFilesControllerBehavior
     extend ActiveSupport::Concern
 
     included do
