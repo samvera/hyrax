@@ -38,7 +38,7 @@ module CurationConcerns::GenericWorkBehavior
 
   # Returns a string identifying the path associated with the object. ActionPack uses this to find a suitable partial to represent the object.
   def to_partial_path
-    "curation_concern/#{super}"
+    "curation_concerns/#{super}"
   end
 
   def can_be_member_of_collection?(collection)

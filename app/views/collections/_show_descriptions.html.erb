@@ -1,0 +1,10 @@
+<h2 class="non lower">Descriptions</h2>
+<table class="table table-striped"><!-- class="verticalheadings"> -->
+  <tbody>
+    <%= render :partial=>'collections/show_fields/title', locals: {collection: @collection} %>
+    <%= render :partial=>'collections/show_fields/creator', locals: {collection: @collection} %>
+    <%= render :partial=>'collections/show_fields/description', locals: {collection: @collection} %>
+    
+
+  </tbody>
+</table> <!-- /verticalheadings -->

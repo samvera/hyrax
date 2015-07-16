@@ -8,6 +8,7 @@ require 'devise'
 
 require 'rspec/its'
 require 'rspec/rails'
+require 'rspec/active_model/mocks'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.default_wait_time = ENV['TRAVIS'] ? 30 : 15

@@ -1,6 +1,8 @@
 module CurationConcerns
-   module CollectionBehavior
+  module CollectionBehavior
     extend ActiveSupport::Concern
+
+    include Hydra::Works::CollectionBehavior
 
     include Hydra::AccessControls::Permissions
     include Hydra::AccessControls::WithAccessRight
@@ -9,9 +11,11 @@ module CurationConcerns
     include Hydra::Collection
     include Hydra::Collections::Collectible
     include CurationConcerns::HasRepresentative
+    include CurationConcerns::Permissions
 
     included do
       before_save :remove_self_from_members
+      validates :title, presence: true
     end
 
     # Ensures that a collection never contains itself
@@ -32,6 +36,10 @@ module CurationConcerns
       title.present? ? title : "No Title"
     end
 
+    def bytes
+      members.reduce(0) { |sum, gf| sum + gf.content.size.to_i }
+    end
+
     def to_solr(solr_doc={})
       super(solr_doc).tap do |solr_doc|
         Solrizer.set_field(solr_doc, 'generic_type', human_readable_type, :facetable)
@@ -44,8 +52,8 @@ module CurationConcerns
 
     private
 
-      def can_add_to_members?(collectible)
-        collectible.try(:can_be_member_of_collection?, self)
-      end
+    def can_add_to_members?(collectible)
+      collectible.try(:can_be_member_of_collection?, self)
+    end
   end
 end

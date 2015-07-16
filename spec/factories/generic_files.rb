@@ -1,4 +1,6 @@
 FactoryGirl.define do
+  # The ::GenericFile model is defined in spec/internal/app/models by the
+  # curation_concerns:install generator.
   factory :generic_file, class: GenericFile do
     transient do
       user { FactoryGirl.create(:user) }
@@ -22,7 +24,7 @@ FactoryGirl.define do
         Hydra::Works::AddGenericFileToGenericWork.call(FactoryGirl.create(:generic_work, user: evaluator.user), file)
       end
     end
-    before(:create) do |file, evaluator|
+    after(:build) do |file, evaluator|
       file.apply_depositor_metadata(evaluator.user.user_key)
     end
   end

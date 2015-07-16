@@ -1,0 +1,15 @@
+<% modal_id = collection_modal_id(collectible) %>
+<% modal_title_id = "#{modal_id}-title" %>
+
+<div class="modal fade" id="<%= modal_id %>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="<% modal_title_id %>" class="modal-title">Add <%= collectible %> to one of your collections:</h4>
+      </div>
+      <div class="unpadded modal-body">
+        <%= render 'collections/form_to_add_member', collectible: collectible, fieldset_class: 'with-side-padding with-top-padding', select_label_id: modal_title_id %>
+      </div>
+    </div>
+  </div>
+</div>

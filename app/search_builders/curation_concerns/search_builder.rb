@@ -1,4 +1,6 @@
 class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
+  include BlacklightAdvancedSearch::AdvancedSearchBuilder 
+  include Hydra::Collections::SearchBehaviors
 
   def only_generic_files_and_curation_concerns(solr_parameters)
     solr_parameters[:fq] ||= []
@@ -45,4 +47,3 @@ class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
     [ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::Collection.to_class_uri)]
   end
 end
-

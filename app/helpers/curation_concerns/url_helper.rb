@@ -6,7 +6,7 @@ module CurationConcerns
     def url_for_document doc, options = {}
       if Hydra::Works.generic_file?(doc)
         main_app.curation_concerns_generic_file_path(doc)
-      elsif Hydra::Works.generic_file?(doc)
+      elsif doc.collection?
         doc
       else
         polymorphic_path([main_app, :curation_concerns, doc])

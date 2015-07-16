@@ -1,0 +1,6 @@
+<%#= button_to label, ,  :class=>"btn btn-primary collection-remove", 'data-behavior'=>'hydra-collections-remove', members:"delete", batch_document_ids:[document.id] %>
+
+<%= form_for collection, url:collections.collection_path(collection.id), :method=>:put, as:'collection' do |f| %>
+  <%= single_item_action_remove_form_fields(f,document) %>
+  <%= f.submit label, :class => "btn btn-danger collection-remove" %>
+<% end %>
