@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe GenericWork do
 
-  it "should have a title" do
+  it "has a title" do
     subject.title = ['foo']
     expect(subject.title).to eq ['foo']
   end
@@ -10,7 +10,7 @@ describe GenericWork do
   context "with attached files" do
     subject { FactoryGirl.create(:work_with_files) }
 
-    it "should have two files" do
+    it "has two files" do
       expect(subject.generic_files.size).to eq 2
       expect(subject.generic_files.first).to be_kind_of GenericFile
     end
@@ -30,5 +30,11 @@ describe GenericWork do
       expect(subject.keys).to include(:id)
       expect(subject.keys).to include("has_model_ssim")
     end
+  end
+
+  describe "#to_partial_path" do
+    let(:work) { described_class.new }
+    subject { work.to_partial_path }
+    it { is_expected.to eq 'curation_concern/generic_works/generic_work' }
   end
 end

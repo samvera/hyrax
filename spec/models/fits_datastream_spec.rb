@@ -7,28 +7,28 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       Hydra::Works::AddFileToGenericFile.call(@file, File.join(fixture_path + '/world.png'), :original_file)
       CurationConcerns::CharacterizationService.run(@file)
     end
-    it "should have a format label" do
+    it "has a format label" do
       expect(@file.format_label).to eq ["Portable Network Graphics"]
     end
-    it "should have a mime type" do
+    it "has a mime type" do
       expect(@file.mime_type).to eq "image/png"
     end
-    it "should have a file size" do
+    it "has a file size" do
       expect(@file.file_size).to eq ["4218"]
     end
-    it "should have a last modified timestamp" do
+    it "has a last modified timestamp" do
       expect(@file.last_modified).to_not be_empty
     end
-    it "should have a filename" do
+    it "has a filename" do
       expect(@file.filename).to_not be_empty
     end
-    it "should have a checksum" do
+    it "has a checksum" do
       expect(@file.original_checksum).to eq ["28da6259ae5707c68708192a40b3e85c"]
     end
-    it "should have a height" do
+    it "has a height" do
       expect(@file.height).to eq ["50"]
     end
-    it "should have a width" do
+    it "has a width" do
       expect(@file.width).to eq ["50"]
     end
 
@@ -47,37 +47,37 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       Hydra::Works::AddFileToGenericFile.call(@file, File.join(fixture_path + '/sample_mpeg4.mp4'), :original_file)
       CurationConcerns::CharacterizationService.run(@file)
     end
-    it "should have a format label" do
+    it "has a format label" do
       expect(@file.format_label).to eq ["ISO Media, MPEG v4 system, version 2"]
     end
-    it "should have a mime type" do
+    it "has a mime type" do
       expect(@file.mime_type).to eq "video/mp4"
     end
-    it "should have a file size" do
+    it "has a file size" do
       expect(@file.file_size).to eq ["245779"]
     end
-    it "should have a last modified timestamp" do
+    it "has a last modified timestamp" do
       expect(@file.last_modified).to_not be_empty
     end
-    it "should have a filename" do
+    it "has a filename" do
       expect(@file.filename).to_not be_empty
     end
-    it "should have a checksum" do
+    it "has a checksum" do
       expect(@file.original_checksum).to eq ["dc77a8de8c091c19d86df74280f6feb7"]
     end
-    it "should have a width" do
+    it "has a width" do
       expect(@file.width).to eq ["190"]
     end
-    it "should have a height" do
+    it "has a height" do
       expect(@file.height).to eq ["240"]
     end
-    it "should have a sample_rate" do
+    it "has a sample_rate" do
       expect(@file.sample_rate).to eq ["32000"]
     end
-    it "should have a duration" do
+    it "has a duration" do
       expect(@file.duration).to eq ["4.97 s"]
     end
-    it "should have a frame_rate" do
+    it "has a frame_rate" do
       expect(@file.frame_rate.count).to eq 1
       expect(@file.frame_rate[0].to_f).to eq 30.0
     end
@@ -91,7 +91,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       CurationConcerns::CharacterizationService.run(@myfile)
     end
 
-    it "should return expected results after a save" do
+    it "returns expected results after a save" do
       expect(@myfile.file_size).to eq ['218882']
       expect(@myfile.original_checksum).to eq ['5a2d761cab7c15b2b3bb3465ce64586d']
 
@@ -118,7 +118,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
       CurationConcerns::CharacterizationService.run(@myfile)
     end
 
-    it "should return expected content for full text" do
+    it "returns expected content for full text" do
       expect(@myfile.extracted_text.content).to eq("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLavf56.15.102")
     end
   end
