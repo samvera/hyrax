@@ -22,16 +22,8 @@ module CurationConcerns
 
       # make filename single-value (CurationConcerns::GenericFile::Characterization makes it multivalue)
       def filename
-        if self[:filename].instance_of?(Array)
-          self[:filename].first
-        else
-          self[:filename]
-        end
+        self[:filename].first
       end
-    end
-
-    def generic_work?
-      false
     end
 
     def human_readable_type
@@ -40,10 +32,6 @@ module CurationConcerns
 
     def representative
       to_param
-    end
-
-    def copy_permissions_from(obj)
-      self.datastreams['rightsMetadata'].ng_xml = obj.datastreams['rightsMetadata'].ng_xml
     end
 
     def to_solr(solr_doc = {})

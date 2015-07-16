@@ -24,12 +24,12 @@ module CurationConcerns
     def add_member(collectible)
       if can_add_to_members?(collectible)
         self.members << collectible
-        self.save
+        save
       end
     end
 
     def to_s
-      self.title.present? ? title : "No Title"
+      title.present? ? title : "No Title"
     end
 
     def to_solr(solr_doc={})
@@ -42,28 +42,10 @@ module CurationConcerns
       collection == self ? false : true
     end
 
-
-    # ------------------------------------------------
-    # overriding method from active-fedora:
-    # lib/active_fedora/semantic_node.rb
-    #
-    # The purpose of this override is to ensure that
-    # a collection cannot contain itself.
-    #
-    # TODO:  After active-fedora 7.0 is released, this
-    # logic can be moved into a before_add callback.
-    # ------------------------------------------------
-    def add_relationship(predicate, target, literal=false)
-      return if self == target
-      super
-    end
-
     private
-    def can_add_to_members?(collectible)
-      collectible.can_be_member_of_collection?(self)
-    rescue NoMethodError
-      false
-    end
 
+      def can_add_to_members?(collectible)
+        collectible.try(:can_be_member_of_collection?, self)
+      end
   end
 end

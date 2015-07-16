@@ -32,10 +32,6 @@ module CurationConcerns::GenericWorkBehavior
     end
   end
 
-  def as_rdf_object
-    RDF::URI.new(internal_uri)
-  end
-
   def to_s
     title.join(', ')
   end
@@ -46,22 +42,6 @@ module CurationConcerns::GenericWorkBehavior
   end
 
   def can_be_member_of_collection?(collection)
-    collection == self ? false : true
+    true
   end
-
-  protected
-
-  def index_collection_ids(solr_doc)
-    solr_doc[Solrizer.solr_name(:collection, :facetable)] ||= []
-    solr_doc[Solrizer.solr_name(:collection)] ||= []
-    self.collection_ids.each do |collection_id|
-      collection_obj = ActiveFedora::Base.load_instance_from_solr(collection_id)
-      if collection_obj.is_a?(Collection)
-        solr_doc[Solrizer.solr_name(:collection, :facetable)] << collection_id
-        solr_doc[Solrizer.solr_name(:collection)] << collection_id
-      end
-    end
-    solr_doc
-  end
-
 end
