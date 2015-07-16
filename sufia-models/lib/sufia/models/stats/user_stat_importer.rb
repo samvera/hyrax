@@ -38,7 +38,7 @@ module Sufia
       ::User.find_each do |user|
         users.push(UserRecord.new(user.id, user.user_key, date_since_last_cache(user)))
       end
-      users.sort! {|a, b| a.last_stats_update <=> b.last_stats_update}
+      users.sort {|a, b| a.last_stats_update <=> b.last_stats_update}
     end
 
 private

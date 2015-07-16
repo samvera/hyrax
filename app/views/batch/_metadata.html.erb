@@ -4,7 +4,7 @@
     <div class="col-sm-8">
       <h3>Applies to individual files uploaded</h3>
       <%= content_tag :p, t('sufia.batch.help.title'), class: "help-block" %>
-      <% @batch.generic_files.sort! { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
+      <% @batch.generic_files.sort { |a,b| a.label.downcase <=> b.label.downcase }.each_with_index  do |gen_f, index| %>
         <div class="form-group">
           <%= f.input_label :title, as: :multi_value_with_help, label: "Title #{index + 1}" %>
           <div id="additional_title_clone">
