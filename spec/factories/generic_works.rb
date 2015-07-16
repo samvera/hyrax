@@ -1,5 +1,7 @@
 FactoryGirl.define do
-  factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
+  # The ::GenericWork model is defined in spec/internal/app/models by the
+  # curation_concerns:install generator.
+  factory :generic_work, aliases: [:work, :private_generic_work], class: GenericWork do
     transient do
       user { FactoryGirl.create(:user) }
     end

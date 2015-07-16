@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'hydra-head'
+  spec.add_dependency 'hydra-head', '~> 9.0'
   spec.add_dependency "breadcrumbs_on_rails", "~> 2.3.0"
   spec.add_dependency "active_attr"
   spec.add_dependency "simple_form", '~> 3.1.0'
@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hydra-collections' # allow curation_concerns-models to specify the version
   spec.add_dependency 'hydra-derivatives' # allow hydra-works to specify the version
   spec.add_dependency 'hydra-editor'
+  spec.add_dependency 'blacklight_advanced_search', ['>= 5.1.4', '< 6.0']
 
   spec.add_development_dependency "devise", "~> 3.0"
   spec.add_development_dependency "bundler", "~> 1.6"
@@ -36,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency 'rspec-html-matchers'
+  spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara"
   spec.add_development_dependency "poltergeist", ">= 1.5.0"
   spec.add_development_dependency "factory_girl"

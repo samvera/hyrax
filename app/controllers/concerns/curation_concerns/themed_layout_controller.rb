@@ -4,7 +4,7 @@ module CurationConcerns::ThemedLayoutController
 
   included do
     class_attribute :theme
-    self.theme = 'curate_nd'
+    self.theme = 'curation_concerns'
     helper_method :theme
     helper_method :show_site_actions?
     helper_method :show_site_search?

@@ -31,20 +31,20 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
   end
   def create_controller_spec
     return unless rspec_installed?
-    template("controller_spec.rb.erb", "spec/controllers/curation_concern/#{plural_file_name}_controller_spec.rb")
+    template("controller_spec.rb.erb", "spec/controllers/curation_concerns/#{plural_file_name}_controller_spec.rb")
   end
 
   def create_actor_spec
     return unless rspec_installed?
-    template("actor_spec.rb.erb", "spec/actors/curation_concern/#{file_name}_actor_spec.rb")
+    template("actor_spec.rb.erb", "spec/actors/curation_concerns/#{file_name}_actor_spec.rb")
   end
 
   def create_controller
-    template("controller.rb.erb", "app/controllers/curation_concern/#{plural_file_name}_controller.rb")
+    template("controller.rb.erb", "app/controllers/curation_concerns/#{plural_file_name}_controller.rb")
   end
 
   def create_actor
-    template("actor.rb.erb", "app/actors/curation_concern/#{file_name}_actor.rb")
+    template("actor.rb.erb", "app/actors/curation_concerns/#{file_name}_actor.rb")
   end
 
   def register_work
@@ -57,7 +57,7 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
   end
 
   def create_views
-    create_file "app/views/curation_concern/#{plural_file_name}/_#{file_name}.html.erb" do
+    create_file "app/views/curation_concerns/#{plural_file_name}/_#{file_name}.html.erb" do
       data = "<%# This is a search result view %>\n"
       data << "<%= render 'catalog/document', document: #{file_name}, document_counter: #{file_name}_counter  %>\n"
       data

@@ -1,0 +1,21 @@
+<% fieldset_class  ||= '' %>
+<% select_label_id ||= '' %>
+
+<%= form_tag collections.collections_path, method: :put do %>
+  <fieldset class="required <%= fieldset_class %>">
+    <%= hidden_field_tag 'collection[members]', 'add' %>
+    <%= hidden_field_tag 'batch_document_ids[]', collectible.id %>
+
+    <div class="form-group collection_id">
+      <div class="controls">
+        <%= select_tag :id, collection_options_for_select(collectible), prompt: 'Make a Selection',
+          class: 'form-control', :'aria-labelledby' => select_label_id %>
+      </div>
+    </div>
+
+  </fieldset>
+  <div class="form-actions with-side-padding with-footroom">
+    <%= submit_tag "Add to collection", class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', root_path, class: 'btn btn-default', data: { dismiss: 'modal' } %>
+  </div>
+<% end %>
