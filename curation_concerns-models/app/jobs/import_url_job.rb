@@ -11,6 +11,10 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
 
     Tempfile.open(id.tr('/', '_')) do |f|
       copy_remote_file(file_set.import_url, f)
+
+      # reload the generic file once the data is copied since this is a long running task
+      file_set.reload
+
       # attach downloaded file to generic file stubbed out
       if CurationConcerns::FileSetActor.new(file_set, user).create_content(f)
         # send message to user on download success
