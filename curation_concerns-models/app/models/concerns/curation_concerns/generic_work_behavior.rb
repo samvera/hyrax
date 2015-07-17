@@ -17,7 +17,6 @@ module CurationConcerns::GenericWorkBehavior
   included do
     property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
     class_attribute :human_readable_short_description
-    attr_accessor :files
   end
 
   module ClassMethods
