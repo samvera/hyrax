@@ -78,10 +78,10 @@ module Hydra
 
     def create_conneg_configuration
       file_path = "config/initializers/mime_types.rb"
-      inject_into_file file_path, :before => /\Z/  do
-        "\nMime::Type.register \"application/n-triples\", :nt" + 
-        "\nMime::Type.register \"application/json\", :jsonld" +
-        "\nMime::Type.register \"text/turtle\", :ttl"
+      append_to_file file_path do
+        "Mime::Type.register \"application/n-triples\", :nt\n" + 
+        "Mime::Type.register \"application/json\", :jsonld\n" +
+        "Mime::Type.register \"text/turtle\", :ttl"
       end
     end
 
