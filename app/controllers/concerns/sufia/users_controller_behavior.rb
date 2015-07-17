@@ -70,17 +70,17 @@ module Sufia::UsersControllerBehavior
   end
 
   def toggle_trophy
-     unless current_user.can? :edit, params[:work_id]
+     unless current_user.can? :edit, params[:parent_id]
        redirect_to root_path, alert: "You do not have permissions to the work"
        return false
      end
-     t = current_user.trophies.where(generic_work_id: params[:work_id]).first
+     t = current_user.trophies.where(generic_work_id: params[:parent_id]).first
      if t
        t.destroy
        #TODO do this better says Mike
        return false if t.persisted?
      else
-       t = current_user.trophies.create(generic_work_id: params[:work_id])
+       t = current_user.trophies.create(generic_work_id: params[:parent_id])
        return false unless t.persisted?
      end
      render json: t
