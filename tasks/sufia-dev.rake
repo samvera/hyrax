@@ -7,7 +7,7 @@ require 'jettywrapper'
 require 'engine_cart/rake_task'
 
 desc 'Spin up hydra-jetty and run specs'
-task ci: ['engine_cart:generate', 'jetty:clean', 'sufia:jetty:config'] do
+task ci: ['engine_cart:generate', 'jetty:clean', 'curation_concerns:jetty:config'] do
   puts 'running continuous integration'
   jetty_params = Jettywrapper.load_config
   error = Jettywrapper.wrap(jetty_params) do
