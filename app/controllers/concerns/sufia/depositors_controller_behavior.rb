@@ -7,6 +7,17 @@ module Sufia
       before_filter :validate_users, only: :create
     end
 
+
+    # Overriding the default behavior from Hydra::Core::ContorllerBehavior
+    def deny_access(exception)
+      if current_user and current_user.persisted?
+        redirect_to root_path, alert: exception.message
+      else
+        session['user_return_to'.freeze] = request.url
+        redirect_to new_user_session_path, alert: exception.message
+      end
+    end
+
     def create
       grantor = authorize_and_return_grantor
       grantee = ::User.from_url_component(params[:grantee_id])
