@@ -3,12 +3,12 @@ module Sufia
     extend ActiveSupport::Concern
     include Hydra::Controller::ControllerBehavior
 
-    included do 
+    included do
       layout "sufia-one-column"
 
       before_filter :has_access?
       class_attribute :edit_form_class
-      self.edit_form_class = Sufia::Forms::BatchEditForm 
+      self.edit_form_class = Sufia::Forms::BatchEditForm
     end
 
     def edit
