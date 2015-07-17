@@ -26,12 +26,6 @@ module CurationConcerns::GenericWorkBehavior
     end
   end
 
-  def to_solr(solr_doc={}, opts={})
-    super(solr_doc).tap do |solr_doc|
-      Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)
-    end
-  end
-
   def to_s
     title.join(', ')
   end
