@@ -12,7 +12,6 @@ module CurationConcerns::GenericWorkBehavior
   include ::CurationConcerns::HasRepresentative
   include ::CurationConcerns::WithGenericFiles
   include Hydra::AccessControls::Embargoable
-  include ::CurationConcerns::WithEditors
 
   included do
     property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
