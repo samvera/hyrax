@@ -1,4 +1,4 @@
-gem 'curation_concerns', github:'projecthydra-labs/curation_concerns', ref:'232871f'
+gem 'curation_concerns', github:'projecthydra-labs/curation_concerns', ref:'3b87e17'
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia'
 ### from curation_concerns Gemfile.extra
 gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '13df67f'
