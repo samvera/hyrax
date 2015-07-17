@@ -2,6 +2,6 @@
 #  `rails generate curation_concerns:work <%= class_name %>`
 class <%= class_name %> < ActiveFedora::Base
   include ::CurationConcerns::GenericWorkBehavior
-  include ::CurationConcerns::GenericFile::BasicMetadata
+  include ::CurationConcerns::BasicMetadata
   validates_presence_of :title,  message: 'Your work must have a title.'
 end

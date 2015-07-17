@@ -8,7 +8,7 @@ module CurationConcerns
     include CurationConcerns::Permissions
     include CurationConcerns::GenericFile::Export
     include CurationConcerns::GenericFile::Characterization
-    include CurationConcerns::GenericFile::BasicMetadata
+    include CurationConcerns::BasicMetadata
     include CurationConcerns::GenericFile::Content
     include CurationConcerns::GenericFile::VirusCheck
     include CurationConcerns::GenericFile::FullTextIndexing
