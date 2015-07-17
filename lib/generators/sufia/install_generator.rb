@@ -52,8 +52,10 @@ module Sufia
     end
 
     def use_blacklight_layout_theme
-      gsub_file 'app/controllers/application_controller.rb', /with_themed_layout '1_column'/,
-                "  \n  theme =  'sufia'"
+      file_path = "app/controllers/application_controller.rb"
+      if File.exists?(file_path)
+        gsub_file file_path, /with_themed_layout '1_column'/, "layout 'sufia-one-column'"
+      end
     end
 
     def catalog_controller
