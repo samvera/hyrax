@@ -1,4 +1,4 @@
-//= require curation_concerns/manage_repeating_fields
+//= require hydra-editor/hydra-editor
 //= require curation_concerns/help_modal
 //= require curation_concerns/select_works
 //= require curation_concerns/link_users
@@ -13,19 +13,6 @@
 // Turbolinks's page change event.
 Blacklight.onLoad(function() {
   $('abbr').tooltip();
-
-  $('body').on('keypress', '.multi-text-field', function(event) {
-    var $activeField = $(event.target).parents('.field-wrapper'),
-        $activeFieldControls = $activeField.children('.field-controls'),
-        $addControl=$activeFieldControls.children('.add'),
-        $removeControl=$activeFieldControls.children('.remove');
-    if (event.keyCode == 13) {
-      event.preventDefault();
-      $addControl.click()
-      $removeControl.click()
-    }
-  });
-  $('.multi_value.form-group').manage_fields();
   $('.link-users').linkUsers();
   $('.link-groups').linkGroups();
   $('.proxy-rights').proxyRights();
@@ -35,8 +22,6 @@ Blacklight.onLoad(function() {
 //    format: 'yyyy-mm-dd',
 //    startDate: '+1d'
 //  });
-
-  $('.remove-member').on('ajax:success', function(){window.location.href = window.location.href});
 
   $("[data-toggle='dropdown']").dropdown();
 
