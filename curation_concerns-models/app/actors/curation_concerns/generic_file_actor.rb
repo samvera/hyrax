@@ -44,7 +44,7 @@ module CurationConcerns
         work.creator = [user.name]
         work.save
       else
-        work = GenericWork.find(work_id)
+        work = ActiveFedora::Base.find(work_id)
         copy_visibility(work, generic_file)
       end
       Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
