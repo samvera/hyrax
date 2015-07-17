@@ -6,12 +6,12 @@ Example:
   rails generate curation_concerns:work ScholarlyPaper
 
   This will create:
-    app/repository_models/scholarly_paper.rb
+    app/models/scholarly_paper.rb
     app/actors/curation_concerns/scholarly_paper_actor.rb
     app/controllers/curation_concerns/scholarly_papers_controller.rb
     app/views/curation_concerns/scholarly_papers/.keep
     spec/factories/scholarly_paper_factory.rb
-    spec/repository_models/scholarly_paper_spec.rb
+    spec/models/scholarly_paper_spec.rb
     spec/actors/curation_concerns/scholarly_paper_actor_spec.rb
     spec/controllers/curation_concerns/scholarly_papers_controller_spec.rb
 
