@@ -65,7 +65,7 @@ This generator makes the following changes to your application:
   end
 
   def inject_sufia_collection_behavior
-    insert_into_file 'app/models/collection.rb', after: 'include CurationConcerns::CollectionBehavior' do
+    insert_into_file 'app/models/collection.rb', after: 'include ::CurationConcerns::CollectionBehavior' do
       "\n  include Sufia::CollectionBehavior"
     end
   end
