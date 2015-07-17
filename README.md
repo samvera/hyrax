@@ -170,7 +170,7 @@ If you already have instances of Solr and Fedora that you would like to use, you
 
 ```
 rake jetty:clean
-rake sufia:jetty:config
+rake curation_concerns:jetty:config
 rake jetty:start
 ```
 

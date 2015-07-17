@@ -22,6 +22,6 @@ This generator makes the following changes to your application:
 
   # Copy config, schema, and jars into jetty dir if it exists
   def reconfigure_jetty
-    rake "sufia:jetty:config" if File.directory?('jetty')
+    rake "curation_concerns:jetty:config" if File.directory?('jetty')
   end
 end
