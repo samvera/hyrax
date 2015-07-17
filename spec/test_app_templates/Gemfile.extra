@@ -11,4 +11,6 @@ gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '486ed3b
 # Waiting on 9.2.1 (for the embargo/lease optimization)
 gem 'hydra-head', github:'projecthydra/hydra-head', ref: '4c8263e'
 
+gem 'active-fedora', github:'projecthydra/active_fedora', ref: '4d0e9fdc'
+
 ### /curation_concerns Gemfile.extra
