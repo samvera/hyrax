@@ -23,11 +23,11 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
   # Because I want the output of CurationConcerns::WorkGenerator to include all the processed files.
   def create_model_spec
     return unless rspec_installed?
-    template "model_spec.rb.erb", "spec/repository_models/#{file_name}_spec.rb"
+    template "model_spec.rb.erb", "spec/models/#{file_name}_spec.rb"
   end
 
   def create_model
-    template("model.rb.erb", "app/repository_models/#{file_name}.rb")
+    template("model.rb.erb", "app/models/#{file_name}.rb")
   end
   def create_controller_spec
     return unless rspec_installed?
