@@ -13,6 +13,8 @@ module Sufia
       self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
 
       layout "sufia-one-column"
+      # include the link_to_remove_from_collection view helper methods
+      helper CurationConcerns::CollectionsHelper
     end
 
     def new
