@@ -55,4 +55,4 @@ module Sufia
       @current_ability ||= SingleUseLinksViewerController::Ability.new current_user, single_use_link
     end
   end
-end 
+end

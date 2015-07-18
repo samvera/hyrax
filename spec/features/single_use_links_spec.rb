@@ -7,11 +7,14 @@ describe "Create and use single-use links", :type => :feature do
 
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:file) do
-    GenericFile.create do |f|
-      f.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      f.label = 'world.png'
-      f.apply_depositor_metadata(user)
+    GenericFile.create do |gf|
+      gf.label = 'world.png'
+      gf.apply_depositor_metadata(user)
     end
+  end
+
+  before do
+    Hydra::Works::AddFileToGenericFile.call(file, fixture_path + '/world.png', :original_file, versioning: false)
   end
 
   before do
@@ -27,20 +30,11 @@ describe "Create and use single-use links", :type => :feature do
   end
 
   describe "download link" do
-    before do
-      @old_driver = Capybara.current_driver
-      Capybara.current_driver = :rack_test
-    end
-
-    after do
-      Capybara.current_driver = @old_driver
-    end
-
     it "downloads the file contents" do
       visit generate_download_single_use_link_path(id: file)
       expect(page).to have_css '.download-link'
       find('.download-link').click
-      expected_content = ActiveFedora::Base.find(file.id).content.content
+      expected_content = ActiveFedora::Base.find(file.id).original_file.content
       expect(page.source).to eq expected_content
     end
   end
