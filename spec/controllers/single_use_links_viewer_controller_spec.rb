@@ -2,11 +2,14 @@ require 'spec_helper'
 
 describe SingleUseLinksViewerController do
   let(:file) do
-    GenericFile.create do |file|
-      file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png', mime_type: 'image/png')
-      file.label = 'world.png'
-      file.apply_depositor_metadata('mjg')
+    GenericFile.create do |gf|
+      gf.label = 'world.png'
+      gf.apply_depositor_metadata('mjg')
     end
+  end
+
+  before do
+    Hydra::Works::AddFileToGenericFile.call(file, fixture_path + '/world.png', :original_file, versioning: false)
   end
 
   describe "retrieval links" do
@@ -27,7 +30,7 @@ describe SingleUseLinksViewerController do
     end
 
     describe "GET 'download'" do
-      let(:expected_content) { ActiveFedora::Base.find(file.id).content.content }
+      let(:expected_content) { ActiveFedora::Base.find(file.id).original_file.content }
 
       it "and_return http success" do
         expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'inline', type: 'image/png')
