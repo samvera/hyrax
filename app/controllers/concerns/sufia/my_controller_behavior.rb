@@ -6,12 +6,12 @@ module Sufia
     include Hydra::Catalog
     include Hydra::BatchEditBehavior
     include Hydra::Collections::SelectsCollections
-  
+
     included do
       include Blacklight::Configurable
 
       self.copy_blacklight_config_from(CatalogController)
-      
+
       before_filter :authenticate_user!
       before_filter :enforce_show_permissions, only: :show
       before_filter :enforce_viewing_context_for_show_requests, only: :show
