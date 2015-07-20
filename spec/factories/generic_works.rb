@@ -19,11 +19,13 @@ FactoryGirl.define do
     end
 
     factory :work_with_one_file do
-      after(:create) { |work, evaluator| Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename:['filename.pdf'])) }
+      before(:create) do |work, evaluator|
+        Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename:['filename.pdf']))
+      end
     end
 
     factory :work_with_files do
-      after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+      before(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
     end
 
     factory :with_embargo_date do

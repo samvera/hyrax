@@ -29,13 +29,13 @@ describe ImportUrlJob do
   end
 
   context "after running the job" do
-    before do  
+    before do
       s1 = double('characterize')
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s1)
       expect(CurationConcerns.queue).to receive(:push).with(s1).once
       expect(CurationConcerns::VirusDetectionService).to receive(:run).and_return(false)
     end
-  
+
     it "should create a content datastream" do
       expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       job.run
