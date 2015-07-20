@@ -621,7 +621,6 @@ describe GenericFilesController do
       end
 
       it "should create the batch on HTTP POST with multiple files" do
-        expect(GenericFile).to receive(:new).twice
         expect(Batch).to receive(:find_or_create).twice
         xhr :post, :create, files: [file1], Filename: 'The world 1', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
         expect(response).to be_success
