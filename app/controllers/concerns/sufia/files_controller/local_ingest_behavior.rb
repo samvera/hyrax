@@ -16,7 +16,7 @@ module Sufia
     def perform_local_ingest
       if Sufia.config.enable_local_ingest && current_user.respond_to?(:directory)
         if ingest_local_file
-          redirect_to GenericFilesController.upload_complete_path( params[:batch_id])
+          redirect_to GenericFilesController.upload_complete_path(params[:batch_id])
         else
           flash[:alert] = "Error importing files from user directory."
           render :new
