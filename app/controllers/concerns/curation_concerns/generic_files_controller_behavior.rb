@@ -139,11 +139,6 @@ module CurationConcerns
       end
     end
 
-    # The name of the datastream where we store the file data
-    def datastream_id
-      'content'
-    end
-
     # this is provided so that implementing application can override this behavior and map params to different attributes
     def update_metadata_from_upload_screen
       # Relative path is set by the jquery uploader when uploading a directory
