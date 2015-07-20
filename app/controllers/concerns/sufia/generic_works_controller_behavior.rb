@@ -3,6 +3,8 @@ module Sufia
     extend ActiveSupport::Concern
     include Sufia::Controller
 
+    include CurationConcerns::CurationConcernController
+
     included do
       include Sufia::Breadcrumbs
 
@@ -10,6 +12,7 @@ module Sufia
       before_filter :build_breadcrumbs, only: [:edit, :show]
       load_and_authorize_resource except: [:index, :audit], class: GenericWork
 
+      set_curation_concern_type GenericWork
       layout "sufia-one-column"
     end
 
@@ -73,7 +76,7 @@ module Sufia
     end
 
     def form_class
-      Sufia::Forms::GenericWorkEditForm
+      CurationConcerns::Forms::GenericWorkEditForm
     end
 
   end
