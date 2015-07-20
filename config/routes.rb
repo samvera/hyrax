@@ -27,7 +27,7 @@ Sufia::Engine.routes.draw do
   end
 
   # Generic work routes
-  resources :generic_works, path: :works, controller: 'curation_concerns/generic_works', except: :index do
+  resources :generic_works, path: :works, except: :index do
     member do
       resources :transfers, as: :generic_work_transfers, only: [:new, :create]
     end
