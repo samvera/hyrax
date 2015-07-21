@@ -80,7 +80,7 @@ module Hydra
       file_path = "config/initializers/mime_types.rb"
       append_to_file file_path do
         "Mime::Type.register \"application/n-triples\", :nt\n" + 
-        "Mime::Type.register \"application/json\", :jsonld\n" +
+        "Mime::Type.register \"application/ld+json\", :jsonld\n" +
         "Mime::Type.register \"text/turtle\", :ttl"
       end
     end

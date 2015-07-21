@@ -84,6 +84,7 @@ describe CatalogController do
           get 'show', :id => asset.id, :format => :jsonld
 
           expect(response).to be_success
+          expect(response.headers['Content-Type']).to include("application/ld+json")
           graph = RDF::Reader.for(:jsonld).new(response.body)
           expect(graph.statements.to_a.length).to eq 3
         end
