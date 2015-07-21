@@ -6,7 +6,8 @@ module CurationConcerns
     def create
       # set the @files ivar then remove the files attribute so it isn't set by default.
       files && attributes.delete(:files)
-      assign_pid && interpret_visibility && super && attach_files && assign_representative && copy_visibility
+      # Files must be attached before saving in order to persist their relationship to the work
+      assign_pid && interpret_visibility && attach_files && super && assign_representative && copy_visibility
     end
 
     def update
@@ -67,6 +68,7 @@ module CurationConcerns
     def attach_file(file)
       generic_file = ::GenericFile.new
       generic_file_actor = CurationConcerns::GenericFileActor.new(generic_file, user)
+      #TODO we're passing an ID rather than an object. This means the actor does an unnecessary lookup
       generic_file_actor.create_metadata(curation_concern.id, curation_concern.id)
       generic_file.visibility = visibility
       generic_file_actor.create_content(file, file.original_filename, file.content_type)

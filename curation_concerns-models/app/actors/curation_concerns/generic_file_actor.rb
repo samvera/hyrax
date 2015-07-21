@@ -42,12 +42,13 @@ module CurationConcerns
         work.date_uploaded = time_in_utc
         work.date_modified = time_in_utc
         work.creator = [user.name]
-        work.save
       else
         work = ActiveFedora::Base.find(work_id)
         copy_visibility(work, generic_file)
       end
       Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
+      # Save the work so the association between the work and the generic_file is persisted (head_id)
+      work.save
       yield(generic_file) if block_given?
     end
 

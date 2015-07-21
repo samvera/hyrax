@@ -14,15 +14,7 @@ module CurationConcerns
     include CurationConcerns::Permissions
 
     included do
-      before_save :remove_self_from_members
       validates :title, presence: true
-    end
-
-    # Ensures that a collection never contains itself
-    def remove_self_from_members
-      if member_ids.include?(id)
-        members.delete(self)
-      end
     end
 
     def add_member(collectible)

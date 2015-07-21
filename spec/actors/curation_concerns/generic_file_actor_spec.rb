@@ -80,7 +80,7 @@ describe CurationConcerns::GenericFileActor do
 
       it "should have the current version" do
         expect(CurationConcerns::VersioningService.latest_version_of(generic_file.original_file).label).to eq 'version2'
-        expect(generic_file.original_file.content.read).to eq fixture_file_upload(file2).read
+        expect(generic_file.original_file.content).to eq fixture_file_upload(file2).read
         expect(generic_file.original_file.mime_type).to eq "text/plain"
         expect(generic_file.original_file.original_name).to eq file2
       end
