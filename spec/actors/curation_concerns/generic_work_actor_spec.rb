@@ -185,16 +185,18 @@ describe CurationConcerns::GenericWorkActor do
         collection1.add_member(curation_concern)
       end
 
-      it "should add to collections" do
-        reload = GenericWork.find(curation_concern.id)
-        expect(reload.collections).to eq [collection1]  # before running actor.update, the work is in collection1
+      it "remove from the old collection and adds to the new collection" do
+        curation_concern.reload
+        expect(curation_concern.parent_collections).to eq [collection1]
+        # before running actor.update, the work is in collection1
 
         expect(subject.update).to be true
 
-        reload = GenericWork.find(curation_concern.id)
-        expect(reload.identifier).to be_blank
-        expect(reload).to be_persisted
-        expect(reload.collections).to eq [collection2]  # after running actor.update, the work is in collection2 and no longer in collection1
+        curation_concern.reload
+        expect(curation_concern.identifier).to be_blank
+        expect(curation_concern).to be_persisted
+        # after running actor.update, the work is in collection2 and no longer in collection1
+        expect(curation_concern.parent_collections).to eq [collection2]
       end
     end
   end
