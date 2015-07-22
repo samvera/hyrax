@@ -8,5 +8,4 @@ gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: 'fac9bc2'
 
 gem 'active-triples'
 gem 'active_fedora-noid', github: 'projecthydra-labs/active_fedora-noid', ref: '38079e4'
-#
-# gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '486ed3b'
+gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '6178fa4'

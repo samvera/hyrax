@@ -7,7 +7,6 @@ module CurationConcerns::GenericWorkBehavior
   include CurationConcerns::Permissions
   include CurationConcerns::Serializers
   include Hydra::WithDepositor
-  include Hydra::Collections::Collectible
   include Solrizer::Common
   include ::CurationConcerns::HasRepresentative
   include ::CurationConcerns::WithGenericFiles

@@ -12,7 +12,6 @@ module CurationConcerns
     include CurationConcerns::GenericFile::Content
     include CurationConcerns::GenericFile::VirusCheck
     include CurationConcerns::GenericFile::FullTextIndexing
-    include Hydra::Collections::Collectible
     include CurationConcerns::GenericFile::Indexing
     include CurationConcerns::GenericFile::BelongsToWorks
     include Hydra::AccessControls::Embargoable

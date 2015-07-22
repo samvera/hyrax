@@ -13,7 +13,7 @@ describe CurationConcerns::GenericWorkBehavior do
   subject { EssentialWork.new }
 
   it "should mix together all the goodness" do
-    [::CurationConcerns::WithGenericFiles, ::CurationConcerns::HumanReadableType, CurationConcerns::Noid, CurationConcerns::Serializers, Hydra::WithDepositor,  Hydra::AccessControls::Embargoable, Hydra::Collections::Collectible, Solrizer::Common].each do |mixin|
+    [::CurationConcerns::WithGenericFiles, ::CurationConcerns::HumanReadableType, CurationConcerns::Noid, CurationConcerns::Serializers, Hydra::WithDepositor, Hydra::AccessControls::Embargoable, Solrizer::Common].each do |mixin|
       expect(subject.class.ancestors).to include(mixin)
     end
   end

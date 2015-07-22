@@ -2,14 +2,10 @@ module CurationConcerns
   module CollectionBehavior
     extend ActiveSupport::Concern
 
-    include Hydra::Works::CollectionBehavior
-
-    include Hydra::AccessControls::Permissions
     include Hydra::AccessControls::WithAccessRight
+    include Hydra::Collection
     include CurationConcerns::Noid
     include CurationConcerns::HumanReadableType
-    include Hydra::Collection
-    include Hydra::Collections::Collectible
     include CurationConcerns::HasRepresentative
     include CurationConcerns::Permissions
 
