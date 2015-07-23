@@ -25,7 +25,7 @@ describe LeasesController do
 
   describe "#edit" do
     context "when I do not have edit permissions for the object" do
-      xit "should redirect" do
+      it "should redirect" do
         get :edit, id: not_my_work
         expect(response.status).to eq 302
         expect(flash[:alert]).to eq 'You are not authorized to access this page.'
