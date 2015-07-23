@@ -72,7 +72,8 @@ describe CurationConcerns::GenericFilesController do
       end
 
       context "when the file has a virus" do
-        xit "displays a flash error" do
+        it "displays a flash error" do
+          skip "pending hydra-works#89"
           expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], parent_id: parent,
                permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
@@ -189,7 +190,7 @@ describe CurationConcerns::GenericFilesController do
           expect(CurationConcerns.queue).to receive(:push).with(s2).once
           post :update, id: generic_file, files: [file]
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
-          pending "Characterization behavior is broken & will be replaced by Hydra::Works::File::Characterization"
+          skip "pending hydra-works#89"
           expect(generic_file.reload.label).to eq 'image.png'
         end
       end
