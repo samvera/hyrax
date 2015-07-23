@@ -17,42 +17,37 @@ describe CurationConcerns::GenericFilesController do
         let(:date_today) { DateTime.now }
 
         before do
-          allow(Date).to receive(:today).and_return(date_today)
+          allow(DateTime).to receive(:now).and_return(date_today)
         end
 
-        xit "spawns a CharacterizeJob" do
+        it "spawns a CharacterizeJob" do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).and_return(s2)
           expect(CurationConcerns.queue).to receive(:push).with(s2).once
           expect {
             xhr :post, :create, files: [file], parent_id: parent,
-              generic_file: { "title"=>[""], visibility_during_embargo: "restricted",
-                              embargo_release_date: "2014-08-23",
-                              visibility_after_embargo: "open", visibility_during_lease: "open",
-                              lease_expiration_date: "2014-08-23",
-                              visibility_after_lease: "restricted",
+              generic_file: { "title"=>["test title"],
                               visibility: "restricted"}
             expect(response).to be_success
           }.to change { GenericFile.count }.by(1)
           expect(flash[:error]).to be_nil
           saved_file = assigns[:generic_file].reload
 
+          expect(saved_file.title).to eq ['test title']
           expect(saved_file.label).to eq 'image.png'
           expect(parent.reload.generic_files).to include saved_file
           # Confirming that date_uploaded and date_modified were set
-          # expect(saved_file.date_uploaded).to eq date_today
-          expect(saved_file.date_modified).to eq date_today
+          expect(saved_file.date_uploaded).to eq date_today.utc
+          expect(saved_file.date_modified).to eq date_today.utc
           expect(saved_file.depositor).to eq user.email
 
-          expect(saved_file.content.versions.count).to eq(3)
-          expect(saved_file.content.latest_version).to be_instance_of(ActiveFedora::VersionsGraph::ResourceVersion)
+          expect(saved_file.original_file.versions.count).to eq(3)
+          expect(saved_file.original_file.versions.last).to be_instance_of(ActiveFedora::VersionsGraph::ResourceVersion)
 
           # Confirm that embargo/lease are not set.
           expect(saved_file).to_not be_under_embargo
           expect(saved_file).to_not be_active_lease
-          # Presently it's coping from the parent and disregarding what is on the form.
-          # expect(saved_file.visibility).to eq 'restricted'
-          expect(saved_file.visibility).to eq 'open'
+          expect(saved_file.visibility).to eq 'restricted'
         end
 
         it "copies visibility from the parent" do
@@ -148,12 +143,11 @@ describe CurationConcerns::GenericFilesController do
         end
 
         it "should add a new groups and users" do
-          skip
           post :update, id: generic_file, generic_file:
             { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'group', name: 'group1', access: 'read'}, { type: 'person', name: 'user1', access: 'edit'}]}
 
           expect(assigns[:generic_file].read_groups).to eq ["group1"]
-          expect(assigns[:generic_file].edit_users).to include("user1", @user.user_key)
+          expect(assigns[:generic_file].edit_users).to include("user1")
         end
 
         it "should update existing groups and users" do
@@ -195,7 +189,8 @@ describe CurationConcerns::GenericFilesController do
           expect(CurationConcerns.queue).to receive(:push).with(s2).once
           post :update, id: generic_file, files: [file]
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
-          # expect(generic_file.reload.label).to eq 'image.png' # commented out because Characterization behavior is broken & will be replaced by Hydra::Works::File::Characterization
+          pending "Characterization behavior is broken & will be replaced by Hydra::Works::File::Characterization"
+          expect(generic_file.reload.label).to eq 'image.png'
         end
       end
 
