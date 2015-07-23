@@ -21,8 +21,9 @@ module CurationConcerns
     # between them.
     # @param [String] batch_id id of the batch that the file was uploaded within
     # @param [String] work_id id of the parent work that will contain the generic_file.  If you don't provide a work_id, a parent work will be created for you.
+    # @param [Hash] generic_file_params specifying the visibility, lease and/or embargo of the generic file.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
-    def create_metadata(batch_id, work_id)
+    def create_metadata(batch_id, work_id, generic_file_params={})
       generic_file.apply_depositor_metadata(user)
       time_in_utc = DateTime.now.new_offset(0)
       generic_file.date_uploaded = time_in_utc
@@ -44,8 +45,14 @@ module CurationConcerns
         work.creator = [user.name]
       else
         work = ActiveFedora::Base.find(work_id)
+      end
+
+      if !((generic_file_params || {}).keys  & ["visibility", "embargo_release_date", "lease_expiration_date"]).empty?
+        interpret_visibility generic_file_params
+      else
         copy_visibility(work, generic_file)
       end
+
       Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
       # Save the work so the association between the work and the generic_file is persisted (head_id)
       work.save
