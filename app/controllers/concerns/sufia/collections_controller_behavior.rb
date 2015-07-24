@@ -43,7 +43,7 @@ module Sufia
     end
 
     def collection_member_search_builder_class
-      ::SearchBuilder
+      ::CollectionSearchBuilder
     end
 
     def collection_params

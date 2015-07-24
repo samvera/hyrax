@@ -24,7 +24,7 @@ module Sufia
     end
 
     def collection_search_builder
-      @collection_search_builder ||= CollectionSearchBuilder.new([:include_item_ids, :add_paging_to_solr], self)
+      @collection_search_builder ||= ParentCollectionSearchBuilder.new([:include_item_ids, :add_paging_to_solr], self)
     end
 
   end

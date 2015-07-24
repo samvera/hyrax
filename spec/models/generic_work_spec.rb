@@ -28,7 +28,7 @@ describe GenericWork do
   end
 
   describe "delegations" do
-    let(:work) { GenericWork.new.tap {|gw| gw.apply_depositor_metadata("user")} }
+    let(:work) { GenericWork.new {|gw| gw.apply_depositor_metadata("user")} }
     let(:proxy_depositor) { FactoryGirl.find_or_create(:jill) }
     before do
       work.proxy_depositor = proxy_depositor.user_key

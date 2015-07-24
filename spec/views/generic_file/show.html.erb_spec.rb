@@ -79,14 +79,14 @@ describe 'generic_files/show.html.erb', :type => :view do
         expect(item.type).to eq('http://schema.org/CreativeWork')
 
         # tag as keywords
-	expect(item.properties['keywords']).to be_nil
-	expect(item.properties['contentLocation']).to be_nil
-	expect(item.properties['contributor']).to be_nil
-	expect(item.properties['creator']).to be_nil
-	expect(item.properties['dateCreated']).to be_nil
-	expect(item.properties['inLanguage']).to be_nil
-	expect(item.properties['publisher']).to be_nil
-	expect(item.properties['about']).to be_nil
+        expect(item.properties['keywords']).to be_nil
+        expect(item.properties['contentLocation']).to be_nil
+        expect(item.properties['contributor']).to be_nil
+        expect(item.properties['creator']).to be_nil
+        expect(item.properties['dateCreated']).to be_nil
+        expect(item.properties['inLanguage']).to be_nil
+        expect(item.properties['publisher']).to be_nil
+        expect(item.properties['about']).to be_nil
 
         depositor = item.properties['accountablePerson'].first
         expect(depositor.type).to eq('http://schema.org/Person')
@@ -196,7 +196,7 @@ describe 'generic_files/show.html.erb', :type => :view do
 
   describe 'collections list' do
     before do
-      allow(generic_file).to receive(:collections).and_return(collections)
+      allow(generic_file).to receive(:parent_collections).and_return(collections)
       render
     end
 

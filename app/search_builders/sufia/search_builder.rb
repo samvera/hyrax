@@ -1,4 +1,5 @@
 module Sufia::SearchBuilder
+  extend ActiveSupport::Concern
 
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
   include Hydra::Collections::SearchBehaviors

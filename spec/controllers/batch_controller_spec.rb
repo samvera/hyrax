@@ -24,29 +24,28 @@ describe BatchController do
     end
 
     describe "when submiting works on behalf of another user" do
-      let(:somebody_else_work) do 
-        GenericWork.create.tap do |w|
-          w.title= ['Original Title']
-          w.apply_depositor_metadata(user) 
-          w.on_behalf_of = other_user.user_key
-          w.save!
+      let(:somebody_else_work) do
+        GenericWork.create(title: ['Original Title'], on_behalf_of: other_user.user_key) do |w|
+          w.apply_depositor_metadata(user)
         end
-      end      
+      end
+
       let(:somebody_else_file) do
-        GenericFile.new.tap do |f|
-          f.title= ['Original Title']
+        GenericFile.new(title: ['Original Title']) do |f|
           f.apply_depositor_metadata(user)
-          f.save!
-          Hydra::Works::AddGenericFileToGenericWork.call(somebody_else_work, f)
         end
       end
       let(:batch) do
-        b = Batch.create { |b| b.generic_files.push(somebody_else_file) } 
-        b
+        Batch.create { |b| b.generic_files.push(somebody_else_file) }
       end
-     
-      it "should go to my shares page" do
-        post :update, id: batch.id, "generic_file"=>{"permissions_attributes"=>[{"type" => "group", "name" => "public", "access" => "read"}]}
+
+      before do
+        Hydra::Works::AddGenericFileToGenericWork.call(somebody_else_work, somebody_else_file)
+        somebody_else_work.save
+      end
+
+      it "redirects to my shares page" do
+        post :update, id: batch, generic_file: { permissions_attributes: [{ type: "group", name: "public", access: "read" }] }
         expect(response).to redirect_to routes.url_helpers.dashboard_shares_path
       end
     end

@@ -1,11 +1,11 @@
     <h2 class="non lower">Collections</h2>
-    <% if @generic_file.collections.blank? %>
+    <% if @generic_file.parent_collections.blank? %>
         <p><%= t('sufia.file.collections_list.empty') %></p>
     <% else %>
         <p><%= t('sufia.file.collections_list.heading') %></p>
       <table class="table table-striped">
         <tbody>
-        <% @generic_file.collections.each do |collection| %>
+        <% @generic_file.parent_collections.each do |collection| %>
         <tr class="collection attributes">
           <%= content_tag :td, class: 'attribute title', data: { id: collection.id } do %>
             <%= link_to collection.title, collections.collection_path(collection) %>
