@@ -52,10 +52,6 @@ This generator makes the following changes to your application:
     copy_file 'app/models/collection.rb', 'app/models/collection.rb'
   end
 
-  def create_generic_work
-    copy_file 'app/models/generic_work.rb', 'app/models/generic_work.rb'
-  end
-
   def create_generic_file
     copy_file 'app/models/generic_file.rb', 'app/models/generic_file.rb'
   end

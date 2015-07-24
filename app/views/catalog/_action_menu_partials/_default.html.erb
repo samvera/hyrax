@@ -23,4 +23,5 @@
       </li>
     <% end %>
   </ul>
+  <%= render 'collections/add_to_collection_modal', collectible: document if can? :collect, document %>
 </div>

@@ -1,6 +1,7 @@
 # Generated via
 #  `rails generate curation_concerns:work <%= class_name %>`
 module CurationConcerns
-  class <%= class_name %>Actor < CurationConcerns::GenericWorkActor
+  class <%= class_name %>Actor < CurationConcerns::BaseActor
+    include ::CurationConcerns::WorkActorBehavior
   end
 end
