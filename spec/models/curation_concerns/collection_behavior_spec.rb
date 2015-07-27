@@ -65,4 +65,43 @@ describe CurationConcerns::CollectionBehavior do
       end
     end
   end
+
+  context 'is a pcdm:Collection instance' do
+    let(:collection1) { FactoryGirl.build(:collection) }
+    let(:work1) { FactoryGirl.build(:work) }
+
+    it 'should be a pcdm:Collection' do
+      expect(subject.pcdm_collection?).to be true
+      expect(subject.type).to include RDFVocabularies::PCDMTerms.Collection
+    end
+    it 'should not be a pcdm:Object' do
+      expect(subject.pcdm_object?).to be false
+      expect(subject.type).to_not include RDFVocabularies::PCDMTerms.Object
+    end
+    it 'should have child objects' do
+      expect(subject.child_objects).to eq []
+      expect(subject.child_object_ids).to eq []
+      expect(subject.child_objects << work1).to eq [work1]
+      expect(subject.child_objects).to eq [work1]
+      expect(subject.child_object_ids).to eq [work1.id]
+    end
+    it 'should have child collections' do
+      expect(subject.child_collections).to eq []
+      expect(subject.child_collection_ids).to eq []
+      expect(subject.child_collections << collection1).to eq [collection1]
+      expect(subject.child_collections).to eq [collection1]
+      expect(subject.child_collection_ids).to eq [collection1.id]
+    end
+    it 'should have related objects' do
+      expect(subject.related_objects).to eq []
+      expect(subject.related_objects << work1).to eq [work1]
+      expect(subject.related_objects).to eq [work1]
+    end
+    it 'should have parent collections' do
+      expect(subject.parent_collections).to eq []
+      expect(collection1.child_collections << subject).to eq [subject]
+      collection1.save
+      expect(subject.parent_collections).to eq [collection1]
+    end
+  end
 end
