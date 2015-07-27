@@ -11,4 +11,14 @@ class TestAppGenerator < Rails::Generators::Base
     rake "db:migrate"
   end
 
+  def generate_generic_work
+    generate 'curation_concerns:work GenericWork'
+  end
+
+  def remove_generic_work_specs
+    remove_file 'spec/models/generic_work_spec.rb'
+    remove_file 'spec/controllers/curation_concerns/generic_works_controller_spec.rb'
+    remove_file 'spec/actors/curation_concerns/generic_work_actor_spec.rb'
+  end
+
 end

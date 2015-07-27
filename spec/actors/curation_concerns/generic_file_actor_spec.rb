@@ -17,11 +17,6 @@ describe CurationConcerns::GenericFileActor do
       actor.create_metadata(batch_id, work_id)
       actor.create_content(uploaded_file, 'world.png', 'image/png')
     end
-    context "when no work_id is provided" do
-      it "creates a parent work and adds the file to it" do
-        expect(subject.generic_works).to_not be_empty
-      end
-    end
     context "when a work_id is provided" do
       let(:work) { FactoryGirl.create(:generic_work) }
       let(:work_id) { work.id }

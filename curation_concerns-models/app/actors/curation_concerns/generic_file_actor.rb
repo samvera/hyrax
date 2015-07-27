@@ -20,7 +20,7 @@ module CurationConcerns
     # we have to save both the parent work and the generic_file in order to record the "metadata" relationship
     # between them.
     # @param [String] batch_id id of the batch that the file was uploaded within
-    # @param [String] work_id id of the parent work that will contain the generic_file.  If you don't provide a work_id, a parent work will be created for you.
+    # @param [String] work_id id of the parent work that will contain the generic_file.
     # @param [Hash] generic_file_params specifying the visibility, lease and/or embargo of the generic file.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
     def create_metadata(batch_id, work_id, generic_file_params={})
@@ -29,7 +29,6 @@ module CurationConcerns
       generic_file.date_uploaded = time_in_utc
       generic_file.date_modified = time_in_utc
       generic_file.creator = [user.name]
-
       # TODO: Remove this? see https://github.com/projecthydra-labs/curation_concerns/issues/27
       if batch_id && generic_file.respond_to?(:batch_id=)
         generic_file.batch_id = batch_id
@@ -37,25 +36,18 @@ module CurationConcerns
         ActiveFedora::Base.logger.warn "unable to find batch to attach to"
       end
 
-      if work_id.blank?
-        work = GenericWork.new
-        work.apply_depositor_metadata(user)
-        work.date_uploaded = time_in_utc
-        work.date_modified = time_in_utc
-        work.creator = [user.name]
-      else
+      unless work_id.blank?
         work = ActiveFedora::Base.find(work_id)
-      end
 
-      if !((generic_file_params || {}).keys  & ["visibility", "embargo_release_date", "lease_expiration_date"]).empty?
-        interpret_visibility generic_file_params
-      else
-        copy_visibility(work, generic_file)
+        if !((generic_file_params || {}).keys  & ["visibility", "embargo_release_date", "lease_expiration_date"]).empty?
+          interpret_visibility generic_file_params
+        else
+          copy_visibility(work, generic_file)
+        end
+        Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
+        # Save the work so the association between the work and the generic_file is persisted (head_id)
+        work.save
       end
-
-      Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
-      # Save the work so the association between the work and the generic_file is persisted (head_id)
-      work.save
       yield(generic_file) if block_given?
     end
 
