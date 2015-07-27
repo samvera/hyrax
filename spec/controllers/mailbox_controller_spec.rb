@@ -1,50 +1,34 @@
 require 'spec_helper'
 
 describe MailboxController, type: :controller do
-  before(:each) do
-    @user = FactoryGirl.find_or_create(:jill)
-    @another_user = FactoryGirl.find_or_create(:archivist)
-    @message = "Test Message"
-    @subject = "Test Subject"
-    @rec1 = @another_user.send_message(@user, @message, @subject)
-    @rec2 = @user.send_message(@another_user, @message, @subject)
+  let(:mock_box) { {} }
+
+  before do
     allow_any_instance_of(described_class).to receive(:authenticate_user!).and_return(true)
-    sign_in @user
+    allow(UserMailbox).to receive(:new).and_return(mock_box)
   end
 
   describe "#index" do
     it "shows message" do
+      expect(mock_box).to receive(:inbox).and_return(["test"])
       get :index
       expect(response).to be_success
-      expect(assigns[:messages].first.last_message.body).to eq('Test Message')
-      expect(assigns[:messages].first.last_message.subject).to eq('Test Subject')
-      expect(@user.mailbox.inbox(unread: true).count).to eq(0)
+      expect(assigns[:messages]).to eq(["test"])
     end
   end
+
+  describe "#delete_all" do
+    it "deletes all messages" do
+      expect(mock_box).to receive(:delete_all)
+      get :delete_all
+    end
+  end
+
   describe "#delete" do
     it "deletes message" do
-      rec = @another_user.send_message(@user, 'message 2', 'subject 2')
-      expect {
-        delete :destroy, id: rec.conversation.id
-        expect(response).to redirect_to(@routes.url_helpers.notifications_path)
-      }.to change { @user.mailbox.inbox.count }.by(-1)
-    end
-    it "does not delete message" do
-      @curator = FactoryGirl.find_or_create(:curator)
-      rec = @another_user.send_message(@curator, 'message 3', 'subject 3')
-      expect {
-        delete :destroy, id: rec.conversation.id
-        expect(response).to redirect_to(@routes.url_helpers.notifications_path)
-      }.to_not change { @curator.mailbox.inbox.count }
-    end
-  end
-  describe "#delete_all" do
-    it "deletes message" do
-      @another_user.send_message(@user, 'message 2', 'subject 2')
-      @another_user.send_message(@user, 'message 3', 'subject 3')
-      expect(@user.mailbox.inbox.count).to eq(3)
-      get :delete_all
-      expect(@user.mailbox.inbox.count).to eq(0)
+      expect(mock_box).to receive(:destroy).with("4")
+      delete :destroy, id: "4"
+      expect(response).to redirect_to(@routes.url_helpers.notifications_path)
     end
   end
 end
