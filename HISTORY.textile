@@ -1,3 +1,19 @@
+h3. 9.2.1 (2015-07-28)
+* 2015-07-17: Append MIME types in the install generator. Fixes #132 [Michael J.
+Giarlo]
+
+* 2015-07-15: Setting visibility= doesn't create an embargo/lease if one doesn't
+exist. Fixes #272 [Justin Coyne]
+
+* 2015-07-14: Set travis to use JDK 8 [Justin Coyne]
+
+* 2015-07-14: Embargoable#valid? shouldn't create a Lease or Embargo This should
+be a significant speedup for projects that use Embargoable Ref
+https://github.com/projecthydra-labs/sufia-core/issues/31 [Justin Coyne]
+
+* 2015-07-09: Fix permissions when setting visibility to public from
+authenticated. [Olli Lyytinen]
+
 h3. 9.2.0 (2015-7-8)
 * Don't index permissions marked for destruction [Justin Coyne]
 
