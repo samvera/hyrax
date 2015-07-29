@@ -2,7 +2,7 @@ module Hydra
   module ContentNegotiation
     def self.extended(document)
       document.will_export_as(:nt, "application/n-triples")
-      document.will_export_as(:jsonld, "application/json")
+      document.will_export_as(:jsonld, "application/ld+json")
       document.will_export_as(:ttl, "text/turtle")
     end
 
