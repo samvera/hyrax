@@ -5,14 +5,22 @@ module Hydra
       include Hydra::AccessControls::WithAccessRight
 
       included do
-        validates :lease_expiration_date, :'hydra/future_date' => true, if: :lease
-        validates :embargo_release_date, :'hydra/future_date' => true, if: :embargo
+        validates :lease_expiration_date, :'hydra/future_date' => true, if: :enforce_future_date_for_lease?
+        validates :embargo_release_date, :'hydra/future_date' => true, if: :enforce_future_date_for_embargo?
 
         belongs_to :embargo, predicate: Hydra::ACL.hasEmbargo, class_name: 'Hydra::AccessControls::Embargo'
         belongs_to :lease, predicate: Hydra::ACL.hasLease, class_name: 'Hydra::AccessControls::Lease'
 
         delegate :visibility_during_embargo, :visibility_during_embargo=, :visibility_after_embargo, :visibility_after_embargo=, :embargo_release_date, :embargo_release_date=, :embargo_history, :embargo_history=, to: :existing_or_new_embargo
         delegate :visibility_during_lease, :visibility_during_lease=, :visibility_after_lease, :visibility_after_lease=, :lease_expiration_date, :lease_expiration_date=, :lease_history, :lease_history=, to: :existing_or_new_lease
+      end
+
+      def enforce_future_date_for_lease?
+        lease
+      end
+
+      def enforce_future_date_for_embargo?
+        embargo
       end
 
       # if the embargo exists return it, if not, build one and return it
