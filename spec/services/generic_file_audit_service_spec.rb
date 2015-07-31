@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CurationConcerns::GenericFileAuditService do
-  let(:f)       { FactoryGirl.create(:generic_file, content: fixture_path + '/world.png' )}
+  let(:f)       { FactoryGirl.create(:generic_file, content: File.open(fixture_file_path('world.png')) )}
   let(:service) { CurationConcerns::GenericFileAuditService.new(f) }
 
   describe "#audit" do

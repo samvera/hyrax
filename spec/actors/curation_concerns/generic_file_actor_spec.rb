@@ -15,7 +15,7 @@ describe CurationConcerns::GenericFileActor do
     before do
       allow(actor).to receive(:save_characterize_and_record_committer).and_return("true")
       actor.create_metadata(batch_id, work_id)
-      actor.create_content(uploaded_file, 'world.png', 'image/png')
+      actor.create_content(uploaded_file)
     end
     context "when a work_id is provided" do
       let(:work) { FactoryGirl.create(:generic_work) }
@@ -35,7 +35,7 @@ describe CurationConcerns::GenericFileActor do
     end
 
     it "uses the provided mime_type" do
-      actor.create_content(uploaded_file, 'world.png', 'image/png')
+      actor.create_content(uploaded_file)
       expect(generic_file.original_file.mime_type).to eq "image/png"
     end
 
@@ -47,7 +47,7 @@ describe CurationConcerns::GenericFileActor do
       before do
         allow(generic_file).to receive(:label).and_return(short_name)
         allow(CurationConcerns.queue).to receive(:push)
-        actor.create_content(fixture_file_upload(file), long_name, 'image/png')
+        actor.create_content(fixture_file_upload(file))
       end
       subject { generic_file.title }
       it { is_expected.to eql [short_name] }
@@ -65,8 +65,8 @@ describe CurationConcerns::GenericFileActor do
 
       before do
         allow(CurationConcerns.queue).to receive(:push)
-        actor1.create_content(fixture_file_upload(file1), file1, 'image/png')
-        actor2.create_content(fixture_file_upload(file2), file2, 'text/plain')
+        actor1.create_content(fixture_file_upload(file1))
+        actor2.create_content(fixture_file_upload(file2))
       end
 
       it "should have two versions" do
@@ -106,7 +106,7 @@ describe CurationConcerns::GenericFileActor do
     before do
       allow(actor).to receive(:save_characterize_and_record_committer).and_return("true")
       allow(Hydra::Works::UploadFileToGenericFile).to receive(:call)
-      actor.create_content(Tempfile.new(new_file), new_file, 'image/jpg')
+      actor.create_content(Tempfile.new(new_file))
     end
 
     it "will retain the object's original label" do

@@ -20,12 +20,12 @@ FactoryGirl.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename:['filename.pdf']))
+        work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename:['filename.pdf'])
       end
     end
 
     factory :work_with_files do
-      before(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+      before(:create) { |work, evaluator| 2.times { work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user) } }
     end
 
     factory :with_embargo_date do
@@ -38,7 +38,7 @@ FactoryGirl.define do
 
       factory :embargoed_work_with_files do
         after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
-        after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+        after(:create) { |work, evaluator| 2.times { work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user) } }
       end
 
       factory :leased_work do
@@ -47,7 +47,7 @@ FactoryGirl.define do
 
       factory :leased_work_with_files do
         after(:build) { |work, evaluator| work.apply_lease(evaluator.embargo_date, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) }
-        after(:create) { |work, evaluator| 2.times { Hydra::Works::AddGenericFileToGenericWork.call(work, FactoryGirl.create(:generic_file, user: evaluator.user)) } }
+        after(:create) { |work, evaluator| 2.times { work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user) } }
       end
     end
   end

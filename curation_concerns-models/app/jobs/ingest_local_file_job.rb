@@ -16,11 +16,12 @@ class IngestLocalFileJob
     user = User.find_by_user_key(user_key)
     raise "Unable to find user for #{user_key}" unless user
     generic_file = GenericFile.find(generic_file_id)
+    generic_file.label ||= filename
     path = File.join(directory, filename)
 
     actor = CurationConcerns::GenericFileActor.new(generic_file, user)
 
-    if actor.create_content(File.open(path), filename, mime_type(filename))
+    if actor.create_content(File.open(path))
       FileUtils.rm(path)
 
       # send message to user on import success

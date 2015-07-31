@@ -7,11 +7,11 @@ describe CollectionsController do
   end
 
   let(:user) { FactoryGirl.create(:user) }
-  let(:asset1) { FactoryGirl.build(:generic_file, title: ["First of the Assets"], user: user) }
-  let(:asset2) { FactoryGirl.build(:generic_file, title: ["Second of the Assets"], user: user, depositor: user.user_key) }
-  let(:asset3) { FactoryGirl.build(:generic_file, title: ["Third of the Assets"]) }
-  let!(:asset4) { FactoryGirl.create(:generic_file, title: ["Fourth of the Assets"], user: user) }
-  let(:bogus_depositor_asset) { FactoryGirl.create(:generic_file, title: ["Bogus Asset"], depositor: 'abc') }
+  let(:asset1) { FactoryGirl.build(:generic_work, title: ["First of the Assets"], user: user) }
+  let(:asset2) { FactoryGirl.build(:generic_work, title: ["Second of the Assets"], user: user, depositor: user.user_key) }
+  let(:asset3) { FactoryGirl.build(:generic_work, title: ["Third of the Assets"]) }
+  let!(:asset4) { FactoryGirl.create(:generic_work, title: ["Fourth of the Assets"], user: user) }
+  let(:bogus_depositor_asset) { FactoryGirl.create(:generic_work, title: ["Bogus Asset"], depositor: 'abc') }
   let(:collection_attrs) { FactoryGirl.attributes_for(:collection, title: "My First Collection ", description: "The Description\r\n\r\nand more") }
   let(:collection) { FactoryGirl.create(:collection, title: "Collection Title", user: user) }
 
@@ -66,7 +66,7 @@ describe CollectionsController do
       doc = asset_results["response"]["docs"].first
       expect(doc["id"]).to eq asset1.id
 
-      afterupdate = GenericFile.find(asset1.id)
+      afterupdate = GenericWork.find(asset1.id)
       expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
     end
 
@@ -95,7 +95,7 @@ describe CollectionsController do
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset2.id
 
-        afterupdate = GenericFile.find(asset2.id)
+        afterupdate = GenericWork.find(asset2.id)
         expect(doc[Solrizer.solr_name(:collection)]).to eq afterupdate.to_solr[Solrizer.solr_name(:collection)]
 
         put :update, id: collection,
@@ -107,7 +107,7 @@ describe CollectionsController do
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset2.id
 
-        afterupdate = GenericFile.find(asset2.id)
+        afterupdate = GenericWork.find(asset2.id)
         expect(doc[Solrizer.solr_name(:collection)]).to be_nil
       end
     end

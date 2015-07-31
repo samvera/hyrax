@@ -85,7 +85,7 @@ describe EmbargoesController do
       let(:a_file) { FactoryGirl.create(:generic_file, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
       let(:release_date) { Date.today+2 }
       before do
-        Hydra::Works::AddGenericFileToGenericWork.call(a_work, a_file)
+        a_work.generic_files << a_file
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

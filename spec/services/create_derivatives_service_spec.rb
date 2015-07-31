@@ -15,7 +15,7 @@ describe CurationConcerns::CreateDerivativesService do
 
   describe 'thumbnail generation' do
     before do
-      Hydra::Works::AddFileToGenericFile.call(@generic_file, File.join(fixture_path, file_name), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@generic_file, File.open(fixture_file_path(file_name)), :original_file)
       allow_any_instance_of(GenericFile).to receive(:mime_type).and_return(mime_type)
       @generic_file.save!
     end
@@ -84,7 +84,7 @@ describe CurationConcerns::CreateDerivativesService do
 
   describe 'audiovisual transcoding' do
     before do
-      Hydra::Works::AddFileToGenericFile.call(@generic_file, File.join(fixture_path, file_name), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@generic_file, File.open(fixture_file_path(file_name)), :original_file)
       allow_any_instance_of(GenericFile).to receive(:mime_type).and_return(mime_type)
       @generic_file.save!
     end

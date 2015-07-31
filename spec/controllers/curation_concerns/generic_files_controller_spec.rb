@@ -99,7 +99,7 @@ describe CurationConcerns::GenericFilesController do
           gf.apply_depositor_metadata(user)
           gf.save!
         end
-        Hydra::Works::AddGenericFileToGenericWork.call(parent, generic_file)
+        parent.generic_files << generic_file
         generic_file
       end
 
@@ -118,7 +118,7 @@ describe CurationConcerns::GenericFilesController do
           gf.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           gf.save!
         end
-        Hydra::Works::AddGenericFileToGenericWork.call(parent, generic_file)
+        parent.generic_files << generic_file
         generic_file
       end
 
@@ -199,9 +199,9 @@ describe CurationConcerns::GenericFilesController do
         before do
           allow(CurationConcerns.queue).to receive(:push) # don't run characterization jobs
           # Create version 1
-          Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('small_file.txt'), :original_file)
+          Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('small_file.txt')), :original_file)
           # Create version 2
-          Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('curation_concerns_generic_stub.txt'), :original_file)
+          Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('curation_concerns_generic_stub.txt')), :original_file)
         end
 
         it "should be successful" do
@@ -225,7 +225,7 @@ describe CurationConcerns::GenericFilesController do
         gf.read_groups = ['public']
         gf.save!
       end
-      Hydra::Works::AddGenericFileToGenericWork.call(parent, generic_file)
+      parent.generic_files << generic_file
       generic_file
     end
     after do
