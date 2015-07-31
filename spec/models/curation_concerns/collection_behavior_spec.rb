@@ -79,11 +79,11 @@ describe CurationConcerns::CollectionBehavior do
       expect(subject.type).to_not include RDFVocabularies::PCDMTerms.Object
     end
     it 'should have child objects' do
-      expect(subject.child_objects).to eq []
-      expect(subject.child_object_ids).to eq []
-      expect(subject.child_objects << work1).to eq [work1]
-      expect(subject.child_objects).to eq [work1]
-      expect(subject.child_object_ids).to eq [work1.id]
+      expect(subject.child_generic_works).to eq []
+      expect(subject.child_generic_work_ids).to eq []
+      expect(subject.child_generic_works << work1).to eq [work1]
+      expect(subject.child_generic_works).to eq [work1]
+      expect(subject.child_generic_work_ids).to eq [work1.id]
     end
     it 'should have child collections' do
       expect(subject.child_collections).to eq []

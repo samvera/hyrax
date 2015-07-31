@@ -21,7 +21,7 @@ FactoryGirl.define do
         if evaluator.content
           Hydra::Works::UploadFileToGenericFile.call(file, evaluator.content)
         end
-        Hydra::Works::AddGenericFileToGenericWork.call(FactoryGirl.create(:generic_work, user: evaluator.user), file)
+        FactoryGirl.create(:generic_work, user: evaluator.user).generic_files << file
       end
     end
     after(:build) do |file, evaluator|

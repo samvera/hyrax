@@ -99,7 +99,7 @@ describe CurationConcerns::GenericWorkActor do
             expect(curation_concern.date_modified).to eq Date.today
             expect(curation_concern.depositor).to eq user.user_key
             expect(curation_concern.representative).to_not be_nil
-            expect(curation_concern.generic_files.count).to eq 1
+            expect(curation_concern.generic_files.size).to eq 1
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
             generic_file = curation_concern.generic_files.first
             file.rewind
@@ -130,7 +130,7 @@ describe CurationConcerns::GenericWorkActor do
             expect(curation_concern.date_modified).to eq Date.today
             expect(curation_concern.depositor).to eq user.user_key
 
-            expect(curation_concern.generic_files.count).to eq 2
+            expect(curation_concern.generic_files.size).to eq 2
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
 
             expect(curation_concern).to be_authenticated_only_access

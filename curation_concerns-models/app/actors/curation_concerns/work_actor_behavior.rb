@@ -71,10 +71,10 @@ module CurationConcerns::WorkActorBehavior
     #TODO we're passing an ID rather than an object. This means the actor does an unnecessary lookup
     generic_file_actor.create_metadata(curation_concern.id, curation_concern.id)
     generic_file.visibility = visibility
-    generic_file_actor.create_content(file, file.original_filename, file.content_type)
+    generic_file_actor.create_content(file)
     @generic_files ||= []
     @generic_files << generic_file # This is so that other methods like assign_representative can access the generic_files wihtout reloading them from fedora
-    Hydra::Works::AddGenericFileToGenericWork.call(curation_concern, generic_file)
+    curation_concern.generic_files << generic_file
   end
 
   def valid_file?(file_path)

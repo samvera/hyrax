@@ -6,7 +6,7 @@ describe AuditJob do
   let(:file) do
     generic_file = GenericFile.create do |file|
       file.apply_depositor_metadata(user)
-      Hydra::Works::AddFileToGenericFile.call(file, fixture_file_path('world.png'), :original_file, versioning: true)
+      Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_file_path('world.png')), :original_file, versioning: true)
     end
   end
 

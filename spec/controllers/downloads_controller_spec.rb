@@ -5,7 +5,7 @@ describe DownloadsController do
     let(:user) { FactoryGirl.create(:user) }
     let(:another_user) { FactoryGirl.create(:user) }
     let(:generic_file) {
-      FactoryGirl.create(:file_with_work, user: user, content: fixture_file_path('files/image.png'))
+      FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_file_path('files/image.png')))
     }
 
     it "raise not_found if the object does not exist" do
@@ -42,7 +42,7 @@ describe DownloadsController do
     end
 
     it 'sends requested file content' do
-      Hydra::Works::AddFileToGenericFile.call(generic_file, fixture_file_path('world.png'), :thumbnail)
+      Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('world.png')), :thumbnail)
       sign_in user
       get :show, id: generic_file.to_param, file: 'thumbnail'
       expect(response.body).to eq generic_file.thumbnail.content

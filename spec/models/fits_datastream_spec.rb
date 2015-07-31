@@ -4,7 +4,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   describe "image" do
     before(:all) do
       @file = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@file, File.join(fixture_path + '/world.png'), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@file, File.open(fixture_file_path('world.png')), :original_file)
       CurationConcerns::CharacterizationService.run(@file)
     end
     it "has a format label" do
@@ -44,7 +44,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   describe "video" do
     before(:all) do
       @file = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@file, File.join(fixture_path + '/sample_mpeg4.mp4'), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@file, File.open(fixture_file_path('sample_mpeg4.mp4')), :original_file)
       CurationConcerns::CharacterizationService.run(@file)
     end
     it "has a format label" do
@@ -86,7 +86,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   describe "pdf" do
     before do
       @myfile = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@myfile, File.join(fixture_path + '/test4.pdf'), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@myfile, File.open(fixture_file_path('test4.pdf')), :original_file)
       # characterize method saves
       CurationConcerns::CharacterizationService.run(@myfile)
     end
@@ -113,7 +113,7 @@ describe FitsDatastream, type: :model, unless: $in_travis do
   describe "m4a" do
     before do
       @myfile = GenericFile.create { |gf| gf.apply_depositor_metadata('blah') }
-      Hydra::Works::AddFileToGenericFile.call(@myfile, File.join(fixture_path + '/spoken-text.m4a'), :original_file)
+      Hydra::Works::AddFileToGenericFile.call(@myfile, File.open(fixture_file_path('spoken-text.m4a')), :original_file)
       # characterize method saves
       CurationConcerns::CharacterizationService.run(@myfile)
     end

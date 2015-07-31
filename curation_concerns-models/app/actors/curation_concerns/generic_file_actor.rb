@@ -44,17 +44,17 @@ module CurationConcerns
         else
           copy_visibility(work, generic_file)
         end
-        Hydra::Works::AddGenericFileToGenericWork.call(work, generic_file)
+        work.generic_files << generic_file
         # Save the work so the association between the work and the generic_file is persisted (head_id)
         work.save
       end
       yield(generic_file) if block_given?
     end
 
-    def create_content(file, file_name, mime_type)
+    def create_content(file)
       # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
-      Hydra::Works::UploadFileToGenericFile.call(generic_file, file.path, versioning: false, mime_type: mime_type, original_name: file_name)
-      generic_file.label ||= file_name
+      Hydra::Works::UploadFileToGenericFile.call(generic_file, file, versioning: false)
+      generic_file.label ||= file.original_filename
       generic_file.title = [generic_file.label] if generic_file.title.blank?
       save_characterize_and_record_committer do
         if CurationConcerns.config.respond_to?(:after_create_content)
@@ -74,7 +74,7 @@ module CurationConcerns
 
     def update_content(file)
       # Tell UploadFileToGenericFile service to skip versioning because versions will be minted by VersionCommitter (called by save_characterize_and_record_committer) when necessary
-      Hydra::Works::UploadFileToGenericFile.call(generic_file, file.path, versioning: false, mime_type: file.content_type, original_name: file.original_filename)
+      Hydra::Works::UploadFileToGenericFile.call(generic_file, file, versioning: false)
       save_characterize_and_record_committer do
         if CurationConcerns.config.respond_to?(:after_update_content)
           CurationConcerns.config.after_update_content.call(generic_file, user)

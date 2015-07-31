@@ -12,9 +12,9 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
     user = User.find_by_user_key(generic_file.depositor)
 
     Tempfile.open(id.gsub('/', '_')) do |f|
-      path, mime_type = copy_remote_file(generic_file.import_url, f)
+      copy_remote_file(generic_file.import_url, f)
       # attach downloaded file to generic file stubbed out
-      if CurationConcerns::GenericFileActor.new(generic_file, user).create_content(f, path, mime_type)
+      if CurationConcerns::GenericFileActor.new(generic_file, user).create_content(f)
 
         # send message to user on download success
         if CurationConcerns.config.respond_to?(:after_import_url_success)
@@ -47,9 +47,7 @@ class ImportUrlJob < ActiveFedoraIdBasedJob
         end
       end
     end
-
     f.rewind
-    return uri.path, mime_type
   end
 
   def job_user

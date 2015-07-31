@@ -16,7 +16,7 @@ describe CurationConcerns::CharacterizationService do
   describe "characterize", unless: $in_travis do
     subject   { described_class.new(generic_file) }
     before do
-      Hydra::Works::UploadFileToGenericFile.call(generic_file, fixture_path + '/charter.docx', original_name: 'charter.docx')
+      Hydra::Works::UploadFileToGenericFile.call(generic_file, File.open(fixture_file_path('charter.docx')))
     end
     it "characterizes, extracts fulltext and stores the results" do
       expect(subject).to receive(:extract_fulltext).and_return("The fulltext")

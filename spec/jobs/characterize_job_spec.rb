@@ -6,7 +6,7 @@ describe CharacterizeJob do
   let(:generic_file) do
     GenericFile.create do |file|
       file.apply_depositor_metadata(user)
-      Hydra::Works::AddFileToGenericFile.call(file, fixture_path + '/charter.docx', :original_file, original_name: 'charter.docx')
+      Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_file_path('charter.docx')), :original_file)
     end
   end
 
