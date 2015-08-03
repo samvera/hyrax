@@ -349,7 +349,8 @@ describe GenericFile do
 
     context "when file contains a virus" do
       before do
-        allow(CurationConcerns::VirusDetectionService).to receive(:run).and_raise(CurationConcerns::VirusFoundError, "A virus was found in !!THE FILE PATH!!: EL CRAPO VIRUS")
+        allow(subject).to receive(:warn) # suppress virus warnings
+        expect(ClamAV.instance).to receive(:scanfile).and_return("EL CRAPO VIRUS")
         # TODO: Test that this works with Hydra::Works::UploadFileToGenericFile. see https://github.com/projecthydra-labs/hydra-works/pull/139
         # Hydra::Works::UploadFileToGenericFile.call(subject, file_path, original_name: 'small_file.txt')
         of = subject.build_original_file
@@ -358,7 +359,7 @@ describe GenericFile do
 
       it "populates the errors hash during validation" do
         expect(subject).to_not be_valid
-        expect(subject.errors.messages).to eq(base: ["A virus was found in !!THE FILE PATH!!: EL CRAPO VIRUS"])
+        expect(subject.errors.messages[:base].first).to match /A virus was found in .*: EL CRAPO VIRUS/
       end
 
       it "does not save the file or create a new version" do
