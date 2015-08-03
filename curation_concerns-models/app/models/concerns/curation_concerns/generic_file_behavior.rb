@@ -2,6 +2,7 @@ module CurationConcerns
   module GenericFileBehavior
     extend ActiveSupport::Concern
     include Hydra::Works::GenericFileBehavior
+    include Hydra::Works::GenericFile::VirusCheck
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid
@@ -10,7 +11,6 @@ module CurationConcerns
     include CurationConcerns::GenericFile::Characterization
     include CurationConcerns::BasicMetadata
     include CurationConcerns::GenericFile::Content
-    include CurationConcerns::GenericFile::VirusCheck
     include CurationConcerns::GenericFile::FullTextIndexing
     include CurationConcerns::GenericFile::Indexing
     include CurationConcerns::GenericFile::BelongsToWorks

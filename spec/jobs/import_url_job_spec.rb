@@ -33,7 +33,7 @@ describe ImportUrlJob do
       s1 = double('characterize')
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s1)
       expect(CurationConcerns.queue).to receive(:push).with(s1).once
-      expect(CurationConcerns::VirusDetectionService).to receive(:run).and_return(false)
+      expect(ClamAV.instance).to receive(:scanfile).and_return(0)
     end
 
     it "should create a content datastream" do
