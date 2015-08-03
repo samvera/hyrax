@@ -1,3 +1,8 @@
+h3. 9.2.2 (2015-08-03)
+* 2015-07-30: Moved condition logic to its own method to give app developer a chance to configure it to not perform future date validation [val99erie]
+
+* 2015-07-21: Changes content header for JSON-LD mimetype. [Andrew Myers]
+
 h3. 9.2.1 (2015-07-28)
 * 2015-07-17: Append MIME types in the install generator. Fixes #132 [Michael J.
 Giarlo]
@@ -14,10 +19,10 @@ https://github.com/projecthydra-labs/sufia-core/issues/31 [Justin Coyne]
 * 2015-07-09: Fix permissions when setting visibility to public from
 authenticated. [Olli Lyytinen]
 
-h3. 9.2.0 (2015-7-8)
+h3. 9.2.0 (2015-07-08)
 * Don't index permissions marked for destruction [Justin Coyne]
 
-h3. 9.2.0.rc1 (2015-6-30)
+h3. 9.2.0.rc1 (2015-06-30)
 * Support ActiveFedora 9.2.0 [Justin Coyne]
 
 * Fixed typo in warning messages. Fixes #263 [Hector Correa]
