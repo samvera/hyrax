@@ -138,8 +138,7 @@ describe DownloadsController do
         it "head request" do
           request.env["HTTP_RANGE"] = 'bytes=0-15'
           head :show, id: parent, file: 'webm'
-          # See https://github.com/rails/rails/issues/18714
-          # expect(response.headers['Content-Length']).to eq 16
+          expect(response.headers['Content-Length']).to eq 16
           expect(response.headers['Accept-Ranges']).to eq 'bytes'
           expect(response.headers['Content-Type']).to eq 'video/webm'
         end
@@ -148,8 +147,7 @@ describe DownloadsController do
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq 'one1two2threfour'
           expect(response.headers["Content-Range"]).to eq 'bytes 0-15/16'
-          # See https://github.com/rails/rails/issues/18714
-          # expect(response.headers["Content-Length"]).to eq '16'
+          expect(response.headers["Content-Length"]).to eq '16'
           expect(response.headers['Accept-Ranges']).to eq 'bytes'
           expect(response.headers['Content-Type']).to eq "video/webm"
           expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"MyVideo.webm\""
@@ -165,16 +163,14 @@ describe DownloadsController do
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq '1two2threfour'
           expect(response.headers["Content-Range"]).to eq 'bytes 3-15/16'
-          # See https://github.com/rails/rails/issues/18714
-          # expect(response.headers["Content-Length"]).to eq '13'
+          expect(response.headers["Content-Length"]).to eq '13'
         end
         it "should get a range not ending at the end" do
           request.env["HTTP_RANGE"] = 'bytes=4-11'
           get :show, id: '1234', file: 'webm'
           expect(response.body).to eq 'two2thre'
           expect(response.headers["Content-Range"]).to eq 'bytes 4-11/16'
-          # See https://github.com/rails/rails/issues/18714
-          # expect(response.headers["Content-Length"]).to eq '8'
+          expect(response.headers["Content-Length"]).to eq '8'
         end
       end
     end
