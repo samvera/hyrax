@@ -9,7 +9,7 @@ describe CurationConcerns::GenericFileAuditService do
       before do
         CurationConcerns::VersioningService.create(f.original_file)  # create a second version -- the factory creates the first version when it attaches +content+
       end
-      subject { service.audit }
+      subject { service.audit[f.original_file.id] }
       specify "returns two log results" do
         expect(subject.length).to eq(2)
       end
@@ -17,17 +17,23 @@ describe CurationConcerns::GenericFileAuditService do
   end
 
   describe "#audit_file" do
-    let(:file_to_audit) { f.original_file.versions.first }
-    subject { service.send(:audit_file, "original_file", file_to_audit) }
+    subject { service.send(:audit_file, f.original_file) }
+    specify "returns a single result" do
+      expect(subject.length).to eq(1)
+    end
+  end
+
+  describe "#audit_file_version" do
+    subject { service.send(:audit_file_version, f.original_file.id, f.original_file.uri) }
     specify "returns a single ChecksumAuditLog for the given file" do
       expect(subject).to be_kind_of ChecksumAuditLog
       expect(subject.generic_file_id).to eq(f.id)
-      expect(subject.version).to eq(file_to_audit.uri)
+      expect(subject.version).to eq(f.original_file.uri)
     end
   end
 
   describe "#audit_stat" do
-    subject { service.send(:audit_stat) }
+    subject { service.send(:audit_stat, f.original_file) }
     context "when no audits have been run" do
       it "should report that audits have not been run" do
         expect(subject).to eq "Audits have not yet been run on this file."
@@ -37,33 +43,28 @@ describe CurationConcerns::GenericFileAuditService do
     context "when no audit is pasing" do
       before do
         CurationConcerns::VersioningService.create(f.original_file)
-        ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.original_file.versions.first.uri, dsid: 'original_file')
+        ChecksumAuditLog.create!(pass: 1, generic_file_id: f.id, version: f.original_file.versions.first.uri, file_id: 'original_file')
       end
 
       it "should report that audits have not been run" do
-        expect(subject).to eq 1
+        expect(subject).to eq "Some audits have not been run, but the ones run were passing."
       end
     end
   end
 
   describe "#human_readable_audit_status" do
-    subject do
-      expect(service).to receive(:audit_stat).and_return(audit_stat)
-      service.human_readable_audit_status
-    end
-
     context "when audit_stat is 0" do
-      let(:audit_stat) { 0 }
+      subject { service.human_readable_audit_status 0 }
       it { is_expected.to eq 'failing' }
     end
 
     context "when audit_stat is 1" do
-      let(:audit_stat) { 1 }
+      subject { service.human_readable_audit_status 1 }
       it { is_expected.to eq 'passing' }
     end
 
     context "when audit_stat is something else" do
-      let(:audit_stat) { 'something else' }
+      subject { service.human_readable_audit_status 'something else' }
       it { is_expected.to eq 'something else' }
     end
   end
