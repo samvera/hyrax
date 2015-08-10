@@ -6,30 +6,21 @@
     <%= batch_edit_select(document) %>&nbsp;
     <%# This block is for adding/removing the magic wand while batch updates are processing %>
     <% if fs.processing? %>
-        <i class="glyphicon glyphicon-time <%= 'ss-'+fs.batch.id %>"/>
+      <span class="glyphicon glyphicon-time <%= 'ss-'+fs.batch.id %>"></span>
     <% elsif fs.depositor != @user.user_key %>
-        <i class="glyphicon glyphicon-share-alt"/>
+      <span class="glyphicon glyphicon-share-alt"></span>
     <% end %>
   </td>
-  <td>
-    <div class="media">
-      <%= link_to sufia.file_set_path(document), class: "media-left", "aria-hidden" => true do %>
-        <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
-      <% end %>
-      <div class="media-body">
-        <div class="media-heading">
-          <%= link_to sufia.file_set_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" do %>
-              <span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span>
-              <%= document.title_or_label %>
-          <% end %>
-          <a href="#" class="small" title="Click for more details">
-            <i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"  aria-hidden="true"></i>
-            <span class="sr-only"> <%= "#{t("sufia.dashboard.my.sr.detail_label")} #{document.title_or_label}" %></span>
-          </a>
-        </div>
-        <%= render_collection_list(fs) %>
-      </div>
-    </div>
+  <td class="file-listing-links">
+    <%= link_to sufia.file_set_path(document), id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" do %>
+        <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail pull-left" }, { suppress_link: true } %>
+        <div class="file-listing-title"><span class="sr-only"><%= t("sufia.dashboard.my.sr.show_label") %> </span> <%= document.title_or_label %></div>
+    <% end %>
+    <a href="#" class="small" title="Click for more details">
+      <span id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only"><%= "#{t("sufia.dashboard.my.sr.detail_label")} #{document.title_or_label}" %></span>
+    </a>
+    <div class="part_of_collection"><%= render_collection_list(fs) %></div>
   </td>
   <td class="text-center"><%= document.date_uploaded %> </td>
   <td class="text-center">
