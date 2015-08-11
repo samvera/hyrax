@@ -16,7 +16,18 @@ describe Hydra::AccessControls::Embargoable do
 
   let(:future_date) { Date.today+2 }
   let(:past_date) { Date.today-2 }
-  subject { TestModel.new }
+  let(:model) { TestModel.new }
+  subject { model }
+
+  describe '#embargo_indexer_class' do
+    subject { model.embargo_indexer_class }
+    it { is_expected.to eq Hydra::AccessControls::EmbargoIndexer }
+  end
+
+  describe '#lease_indexer_class' do
+    subject { model.lease_indexer_class }
+    it { is_expected.to eq Hydra::AccessControls::LeaseIndexer }
+  end
 
   describe 'validations' do
     context "with dates" do
