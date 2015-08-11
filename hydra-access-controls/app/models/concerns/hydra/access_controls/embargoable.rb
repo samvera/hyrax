@@ -35,9 +35,17 @@ module Hydra
 
       def to_solr(solr_doc = {})
         super.tap do |doc|
-          doc.merge!(embargo.to_hash) if embargo
-          doc.merge!(lease.to_hash) if lease
+          doc.merge!(embargo_indexer_class.new(embargo).generate_solr_document) if embargo
+          doc.merge!(lease_indexer_class.new(lease).generate_solr_document) if lease
         end
+      end
+
+      def embargo_indexer_class
+        EmbargoIndexer
+      end
+
+      def lease_indexer_class
+        LeaseIndexer
       end
 
       def under_embargo?
