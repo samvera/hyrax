@@ -4,9 +4,7 @@ module CurationConcerns
     # override Blacklight so we can use our 'curation_concern' namespace
     # We may also pass in a ActiveFedora document instead of a SolrDocument
     def url_for_document doc, options = {}
-      if Hydra::Works.generic_file?(doc)
-        main_app.curation_concerns_generic_file_path(doc)
-      elsif doc.collection?
+      if doc.collection?
         doc
       else
         polymorphic_path([main_app, :curation_concerns, doc])

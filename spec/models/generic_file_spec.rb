@@ -13,7 +13,7 @@ describe GenericFile do
   end
 
   it "is a Hydra::Works GenericFile" do
-    expect(Hydra::Works.generic_file?(subject)).to be_truthy
+    expect(subject.works_generic_file?).to be_truthy
   end
 
   it "should have depositor" do

@@ -8,7 +8,8 @@ class CreateDerivativesJob < ActiveFedoraIdBasedJob
     if generic_file.video?
       return unless CurationConcerns.config.enable_ffmpeg
     end
-    CurationConcerns::CreateDerivativesService.run(generic_file)
+    
+    generic_file.create_derivatives
     generic_file.save
   end
 end

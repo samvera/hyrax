@@ -19,7 +19,6 @@ describe IngestLocalFileJob do
   
   it "should have attached a file" do
     expect(CurationConcerns::CharacterizationService).to receive(:run).with(generic_file)
-    expect(CurationConcerns::CreateDerivativesService).to receive(:run).with(generic_file)
     job.run
     expect(generic_file.reload.original_file.size).to eq(4218)
   end
