@@ -1,11 +1,1 @@
-gem 'hydra-head', github:'projecthydra/hydra-head'
-gem 'hydra-derivatives', github: 'projecthydra/hydra-derivatives', ref: '44d00bd'
-
-gem 'active-fedora', github: 'projecthydra/active_fedora', ref: 'bd506dc'
-gem 'activefedora-aggregation', github: 'projecthydra-labs/activefedora-aggregation', ref: 'fb967dd'
-gem 'hydra-pcdm', github: 'projecthydra-labs/hydra-pcdm', ref: '75b2181'
-gem 'hydra-works', github: 'projecthydra-labs/hydra-works', ref: '8472b2c'
-
-gem 'active-triples'
-gem 'active_fedora-noid', github: 'projecthydra-labs/active_fedora-noid', ref: '38079e4'
-gem 'hydra-collections', github: 'projecthydra/hydra-collections', ref: '08a2d77'
+# placeholder to use for pinning against specific gem commit references
