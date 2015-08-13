@@ -1,15 +1,6 @@
 require 'spec_helper'
 
-describe CurationConcerns::GenericFile::Derivatives do
-  before do
-    @ffmpeg_enabled = CurationConcerns.config.enable_ffmpeg
-    CurationConcerns.config.enable_ffmpeg = true
-  end
-
-  after do
-    CurationConcerns.config.enable_ffmpeg = @ffmpeg_enabled
-  end
-
+describe CurationConcerns::GenericFile do
 
   describe 'audiovisual transcoding' do
     before do
@@ -18,6 +9,7 @@ describe CurationConcerns::GenericFile::Derivatives do
       allow_any_instance_of(Hydra::Works::GenericFile::Base).to receive(:mime_type).and_return(mime_type)
       generic_file.save!
     end
+
 
     context 'with a video (.avi) file', unless: $in_travis do
       let(:mime_type) { 'video/avi' }

@@ -6,7 +6,6 @@ module CurationConcerns
     include Hydra::WithDepositor
     include CurationConcerns::Serializers
     include CurationConcerns::Noid
-    include CurationConcerns::GenericFile::Derivatives
     include CurationConcerns::Permissions
     include CurationConcerns::GenericFile::Export
     include CurationConcerns::GenericFile::Characterization
