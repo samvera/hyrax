@@ -4,17 +4,17 @@ module CurationConcerns
     # This is because unlike Blacklight, there is no way to change the search_field in the curation_concerns UI
     ##
     # Render the query constraints
-    # 
+    #
     # @param [Hash] query parameters
     # @return [String]
     def render_constraints_query(localized_params = params)
       # So simple don't need a view template, we can just do it here.
-      return "".html_safe if localized_params[:q].blank?
+      return ''.html_safe if localized_params[:q].blank?
 
       render_constraint_element(constraint_query_label(localized_params),
-            localized_params[:q],
-            classes: ["query"],
-            remove: url_for(localized_params.except(:search_field).merge(q: nil, action: 'index')))
+                                localized_params[:q],
+                                classes: ['query'],
+                                remove: url_for(localized_params.except(:search_field).merge(q: nil, action: 'index')))
     end
 
     ##

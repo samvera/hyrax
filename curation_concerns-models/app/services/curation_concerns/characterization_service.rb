@@ -25,10 +25,9 @@ module CurationConcerns
     protected
 
       def store_fulltext(extracted_text)
-        if extracted_text.present?
-          extracted_text_file = generic_file.build_extracted_text
-          extracted_text_file.content = extracted_text
-        end
+        return unless extracted_text.present?
+        extracted_text_file = generic_file.build_extracted_text
+        extracted_text_file.content = extracted_text
       end
 
       def extract_fulltext
@@ -51,21 +50,19 @@ module CurationConcerns
       def append_metadata
         terms = generic_file.characterization_terms
         CurationConcerns.config.fits_to_desc_mapping.each_pair do |k, v|
-          if terms.has_key?(k)
-            # coerce to array to remove a conditional
-            terms[k] = [terms[k]] unless terms[k].is_a? Array
-            terms[k].each do |term_value|
-              proxy_term = generic_file.send(v)
-              if proxy_term.kind_of?(Array)
-                proxy_term << term_value unless proxy_term.include?(term_value)
-              else
-                # these are single-valued terms which cannot be appended to
-                generic_file.send("#{v}=", term_value)
-              end
+          next unless terms.key?(k)
+          # coerce to array to remove a conditional
+          terms[k] = [terms[k]] unless terms[k].is_a? Array
+          terms[k].each do |term_value|
+            proxy_term = generic_file.send(v)
+            if proxy_term.is_a?(Array)
+              proxy_term << term_value unless proxy_term.include?(term_value)
+            else
+              # these are single-valued terms which cannot be appended to
+              generic_file.send("#{v}=", term_value)
             end
           end
         end
       end
-
   end
 end

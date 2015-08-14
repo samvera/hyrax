@@ -14,7 +14,7 @@ class IngestLocalFileJob
 
   def run
     user = User.find_by_user_key(user_key)
-    raise "Unable to find user for #{user_key}" unless user
+    fail "Unable to find user for #{user_key}" unless user
     generic_file = GenericFile.find(generic_file_id)
     generic_file.label ||= filename
     path = File.join(directory, filename)
@@ -43,6 +43,6 @@ class IngestLocalFileJob
 
   def mime_type(file_name)
     mime_types = MIME::Types.of(file_name)
-    mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    mime_types.empty? ? 'application/octet-stream' : mime_types.first.content_type
   end
 end

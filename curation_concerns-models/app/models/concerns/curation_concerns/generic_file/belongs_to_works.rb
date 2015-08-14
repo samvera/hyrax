@@ -8,31 +8,29 @@ module CurationConcerns
       end
 
       def generic_works
-        self.parent_objects  # parent_objects is provided by Hydra::PCDM::ObjectBehavior
+        parent_objects # parent_objects is provided by Hydra::PCDM::ObjectBehavior
       end
 
       def generic_work_ids
-        generic_works.map { |work| work.id }
+        generic_works.map(&:id)
       end
 
       # Returns the first parent object
       # This is a hack to handle things like GenericFiles inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
       def parent
-        self.parent_objects.first
+        parent_objects.first
       end
 
       # Returns the id of first parent object
       # This is a hack to handle things like GenericFiles inheriting access controls from their parent.  (see CurationConcerns::ParentContainer in app/controllers/concerns/curation_concers/parent_container.rb)
-      def parent_id
-        parent.id
-      end
+      delegate :id, to: :parent, prefix: true
 
       # Files with sibling relationships
       # Returns all GenericFiles aggregated by any of the GenericWorks that aggregate the current object
       def related_files
         generic_works = self.generic_works
         return [] if generic_works.empty?
-        generic_works.flat_map {|work| work.generic_files.select {|generic_file| generic_file.id != self.id } }
+        generic_works.flat_map { |work| work.generic_files.select { |generic_file| generic_file.id != id } }
       end
 
       # If any parent works are pointing at this object as their representative, remove that pointer.
@@ -40,14 +38,12 @@ module CurationConcerns
         generic_works = self.generic_works
         return if generic_works.empty?
         generic_works.each do |work|
-          if work.representative == self.id
+          if work.representative == id
             work.representative = nil
             work.save
           end
         end
       end
-
     end
   end
 end
-

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Editing attached files" do
+describe 'Editing attached files' do
   let(:user) { create(:user) }
   let!(:parent) { create(:work_with_one_file, user: user) }
   let!(:generic_file) { parent.generic_files.first }
@@ -14,17 +14,17 @@ describe "Editing attached files" do
     expect(CurationConcerns.queue).to receive(:push).with(s2).once
   end
 
-  it "updates the file" do
+  it 'updates the file' do
     visit "/concern/generic_works/#{parent.id}"
     click_link 'Edit'
     expect(page).to have_content "Updating Attached File to \"Test title\""
 
-    attach_file("Upload a file", fixture_file_path('files/image.png'))
-    click_button "Update Attached File"
+    attach_file('Upload a file', fixture_file_path('files/image.png'))
+    click_button 'Update Attached File'
 
-    expect(page).to have_content "The file A Contained Generic File has been updated."
+    expect(page).to have_content 'The file A Contained Generic File has been updated.'
 
-    #TODO this stuff belongs in an Actor or Controller test:
+    # TODO: this stuff belongs in an Actor or Controller test:
     generic_file.reload
     expect(generic_file.original_file.original_name).to eq 'image.png'
     expect(generic_file.original_file.mime_type).to eq 'image/png'

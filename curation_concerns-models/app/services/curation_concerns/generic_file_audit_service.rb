@@ -10,19 +10,19 @@ module CurationConcerns
     # provides a human readable version of the audit status
     def human_readable_audit_status(stat)
       case stat
-        when 0
-          'failing'
-        when 1
-          'passing'
-        else
-          stat
+      when 0
+        'failing'
+      when 1
+        'passing'
+      else
+        stat
       end
     end
 
     # Audits each version of each file if it hasn't been audited recently
     # Returns the set of most recent audit status for each version of the content file
     # @param [Hash] log container for messages, mapping file ids to status
-    def audit(log={})
+    def audit(log = {})
       generic_file.files.each { |f| log[f.id] = audit_file(f) }
       log
     end
@@ -32,7 +32,7 @@ module CurationConcerns
       # Retrieve or generate the audit check for a file (all versions are checked for versioned files)
       # @param [ActiveFedora::File] file to audit
       # @param [Array] log container for messages
-      def audit_file(file, log=[])
+      def audit_file(file, log = [])
         versions = file.has_versions? ? file.versions.all : file
         versions.each { |v| log << audit_file_version(file.id, v.uri) }
         log
@@ -41,9 +41,9 @@ module CurationConcerns
       # Retrieve or generate the audit check for a file and provide a human-readable status message.
       # @param [ActiveFedora::File] file to audit
       def audit_stat(file)
-        audit_results = audit_file(file).collect { |result| result["pass"] }
+        audit_results = audit_file(file).collect { |result| result['pass'] }
         # check how many non runs we had
-        non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum += 1 : sum }
+        non_runs = audit_results.reduce(0) { |sum, value| value == NO_RUNS ? sum + 1 : sum }
         if non_runs == 0
           audit_results.reduce(true) { |sum, value| sum && value }
         elsif non_runs < audit_results.length
@@ -80,6 +80,5 @@ module CurationConcerns
       def days_since_last_audit(latest_audit)
         (DateTime.now - latest_audit.updated_at.to_date).to_i
       end
-
   end
 end

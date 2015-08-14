@@ -3,11 +3,10 @@ require 'spec_helper'
 describe DownloadsController do
   describe '#show' do
     let(:user) { FactoryGirl.create(:user) }
-    let(:generic_file) {
+    let(:generic_file) do
       FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_file_path('files/image.png')))
-    }
-
-    it "raise not_found if the object does not exist" do
+    end
+    it 'raise not_found if the object does not exist' do
       get :show, id: '8675309'
       expect(response).to be_not_found
     end
@@ -17,19 +16,19 @@ describe DownloadsController do
       before do
         sign_in another_user
       end
-      it "redirects to root" do
+      it 'redirects to root' do
         get :show, id: generic_file.to_param
         expect(response).to redirect_to root_path
-        expect(flash["alert"]).to eq "You are not authorized to access this page."
+        expect(flash['alert']).to eq 'You are not authorized to access this page.'
       end
     end
 
     context "when user isn't logged in" do
       # before { generic_file }
-      it "redirects to sign in" do
+      it 'redirects to sign in' do
         get :show, id: generic_file.to_param
         expect(response).to redirect_to new_user_session_path
-        expect(flash["alert"]).to eq "You are not authorized to access this page."
+        expect(flash['alert']).to eq 'You are not authorized to access this page.'
       end
     end
 

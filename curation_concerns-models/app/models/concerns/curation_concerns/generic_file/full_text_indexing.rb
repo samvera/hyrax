@@ -6,7 +6,6 @@ module CurationConcerns
       included do
         contains 'full_text'
       end
-
     end
   end
 end

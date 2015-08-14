@@ -10,14 +10,13 @@ describe CharacterizeJob do
     end
   end
 
-  subject { CharacterizeJob.new(generic_file.id) }
+  subject { described_class.new(generic_file.id) }
 
   # Now that CreateDerivativesJob calls generic_file.create_derivatives directly
-  # this test needs to be travis exempt.  
+  # this test needs to be travis exempt.
   it 'runs CurationConcerns::CharacterizationService that spawns a CreateDerivativesJob', unless: $in_travis do
     expect(CurationConcerns::CharacterizationService).to receive(:run).with(generic_file)
     expect(CreateDerivativesJob).to receive(:new).with(generic_file.id).once.and_call_original
     subject.run
   end
-
 end

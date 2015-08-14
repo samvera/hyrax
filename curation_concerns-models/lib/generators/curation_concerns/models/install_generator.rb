@@ -2,23 +2,23 @@ require_relative 'abstract_migration_generator'
 
 class CurationConcerns::Models::InstallGenerator < CurationConcerns::Models::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
-  argument     :model_name, type: :string , default: "user"
-  desc """
+  argument :model_name, type: :string, default: 'user'
+  desc ''"
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
  2. Creates the curation_concerns.rb configuration file and several others
  3. Creates the generic_file.rb, generic_work.rb and collection.rb models
  4. Runs full-text generator
-       """
+       "''
   def banner
-    say_status("warning", "GENERATING CURATION_CONCERNS MODELS", :yellow)
+    say_status('warning', 'GENERATING CURATION_CONCERNS MODELS', :yellow)
   end
 
   # Setup the database migrations
   def copy_migrations
     [
-      "create_version_committers.rb",
-      "create_checksum_audit_logs.rb"#,
+      'create_version_committers.rb',
+      'create_checksum_audit_logs.rb' # ,
     ].each do |file|
       better_migration_template file
     end
@@ -27,9 +27,9 @@ This generator makes the following changes to your application:
   # Add behaviors to the user model
   def inject_curation_concerns_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
-    if File.exists?(file_path)
+    if File.exist?(file_path)
       inject_into_file file_path, after: /include Hydra\:\:User.*$/ do
-        "\n  # Connects this user object to Curation Concerns behaviors." +
+        "\n  # Connects this user object to Curation Concerns behaviors." \
         "\n  include CurationConcerns::User\n"
       end
     else
@@ -39,7 +39,7 @@ This generator makes the following changes to your application:
 
   def create_configuration_files
     append_file 'config/initializers/mime_types.rb',
-                     "\nMime::Type.register 'application/x-endnote-refer', :endnote", {verbose: false }
+                "\nMime::Type.register 'application/x-endnote-refer', :endnote", verbose: false
     copy_file 'config/curation_concerns.rb', 'config/initializers/curation_concerns.rb'
     copy_file 'config/redis.yml', 'config/redis.yml'
     copy_file 'config/resque-pool.yml', 'config/resque-pool.yml'
@@ -58,13 +58,11 @@ This generator makes the following changes to your application:
 
   # Sets up full-text indexing (Solr config + jars)
   def full_text_indexing
-    generate "curation_concerns:models:fulltext"
+    generate 'curation_concerns:models:fulltext'
   end
 
   # Adds clamav initializtion
   def clamav
     generate 'curation_concerns:models:clamav'
   end
-
-
 end

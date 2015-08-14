@@ -8,6 +8,7 @@ module CurationConcerns
     end
 
     protected
+
       def normalize_identifier
         params[:id] = CurationConcerns::Noid.namespaceize(params[:id])
       end

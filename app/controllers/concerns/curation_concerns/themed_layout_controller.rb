@@ -27,5 +27,4 @@ module CurationConcerns::ThemedLayoutController
   def show_site_search?
     true
   end
-
 end

@@ -1,14 +1,13 @@
 module CurationConcerns
-   # This is a direct copy of Sufia::GenericFile::Metadata with a few modifications:
+  # This is a direct copy of Sufia::GenericFile::Metadata with a few modifications:
   # * title & description are single-value instead of multivalue
   module DefaultMetadata
     extend ActiveSupport::Concern
 
     included do
-
       property :label, predicate: ::RDF::DC.title, multiple: false
 
-      property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false do |index|
+      property :depositor, predicate: ::RDF::URI.new('http://id.loc.gov/vocabulary/relators/dpt'), multiple: false do |index|
         index.as :symbol, :stored_searchable
       end
 
@@ -22,7 +21,7 @@ module CurationConcerns
       property :resource_type, predicate: ::RDF::DC.type do |index|
         index.as :stored_searchable, :facetable
       end
-      property :title, predicate: ::RDF::DC.title, multiple:false do |index|
+      property :title, predicate: ::RDF::DC.title, multiple: false do |index|
         index.as :stored_searchable, :facetable
       end
       property :creator, predicate: ::RDF::DC.creator do |index|
@@ -79,18 +78,18 @@ module CurationConcerns
 
       # TODO: Move this somewhere more appropriate
       begin
-        LocalAuthority.register_vocabulary(self, "subject", "lc_subjects")
-        LocalAuthority.register_vocabulary(self, "language", "lexvo_languages")
-        LocalAuthority.register_vocabulary(self, "tag", "lc_genres")
+        LocalAuthority.register_vocabulary(self, 'subject', 'lc_subjects')
+        LocalAuthority.register_vocabulary(self, 'language', 'lexvo_languages')
+        LocalAuthority.register_vocabulary(self, 'tag', 'lc_genres')
       rescue
-        puts "tables for vocabularies missing"
+        puts 'tables for vocabularies missing'
       end
     end
 
     # Add a schema.org itemtype
     def itemtype
       # Look up the first non-empty resource type value in a hash from the config
-      CurationConcerns.config.resource_types_to_schema[resource_type.to_a.reject { |type| type.empty? }.first] || 'http://schema.org/CreativeWork'
+      CurationConcerns.config.resource_types_to_schema[resource_type.to_a.reject(&:empty?).first] || 'http://schema.org/CreativeWork'
     rescue
       'http://schema.org/CreativeWork'
     end

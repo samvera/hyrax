@@ -1,11 +1,10 @@
 module CurationConcerns::GenericFileHelper
-
   def generic_file_title(gf)
-    can?(:read, gf) ? gf.to_s : "File"
+    can?(:read, gf) ? gf.to_s : 'File'
   end
 
   def generic_file_link_name(gf)
-    can?(:read, gf) ? gf.filename : "File"
+    can?(:read, gf) ? gf.filename : 'File'
   end
 
   def parent_path(parent)
@@ -15,5 +14,4 @@ module CurationConcerns::GenericFileHelper
       polymorphic_path([main_app, :curation_concerns, parent])
     end
   end
-    
 end

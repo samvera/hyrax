@@ -6,7 +6,7 @@ FactoryGirl.define do
       user { FactoryGirl.create(:user) }
     end
 
-    title "Test collection title"
+    title 'Test collection title'
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)

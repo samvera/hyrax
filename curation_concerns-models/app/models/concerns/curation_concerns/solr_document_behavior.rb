@@ -48,7 +48,7 @@ module CurationConcerns
     end
 
     def date_uploaded
-      field = self[Solrizer.solr_name("date_uploaded", :stored_sortable, type: :date)]
+      field = self[Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date)]
       return unless field.present?
       begin
         Date.parse(field).to_formatted_s(:standard)
@@ -58,7 +58,7 @@ module CurationConcerns
     end
 
     def depositor(default = '')
-      val = Array(self[Solrizer.solr_name("depositor")]).first
+      val = Array(self[Solrizer.solr_name('depositor')]).first
       val.present? ? val : default
     end
 
@@ -75,23 +75,23 @@ module CurationConcerns
     end
 
     def file_format
-       Array(self[Solrizer.solr_name('file_format')]).first
+      Array(self[Solrizer.solr_name('file_format')]).first
     end
 
     def creator
-      Array(self[Solrizer.solr_name("creator")]).first
+      Array(self[Solrizer.solr_name('creator')]).first
     end
 
     def tags
-      Array(self[Solrizer.solr_name("tag")])
+      Array(self[Solrizer.solr_name('tag')])
     end
 
     def resource_type
-      Array(self[Solrizer.solr_name("resource_type")])
+      Array(self[Solrizer.solr_name('resource_type')])
     end
 
     def mime_type
-      Array(self[Solrizer.solr_name("mime_type")]).first
+      Array(self[Solrizer.solr_name('mime_type')]).first
     end
 
     def read_groups
@@ -115,21 +115,21 @@ module CurationConcerns
     end
 
     def pdf?
-      ['application/pdf'].include? self.mime_type
+      ['application/pdf'].include? mime_type
     end
 
     def image?
-      ['image/png','image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif', 'image/tiff'].include? self.mime_type
+      ['image/png', 'image/jpeg', 'image/jpg', 'image/jp2', 'image/bmp', 'image/gif', 'image/tiff'].include? mime_type
     end
 
     def video?
-      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf'].include? self.mime_type
+      ['video/mpeg', 'video/mp4', 'video/webm', 'video/x-msvideo', 'video/avi', 'video/quicktime', 'application/mxf'].include? mime_type
     end
 
     def audio?
       # audio/x-wave is the mime type that fits 0.6.0 returns for a wav file.
       # audio/mpeg is the mime type that fits 0.6.0 returns for an mp3 file.
-      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? self.mime_type
+      ['audio/mp3', 'audio/mpeg', 'audio/x-wave', 'audio/x-wav', 'audio/ogg'].include? mime_type
     end
   end
 end

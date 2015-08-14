@@ -5,7 +5,7 @@ module CurationConcerns
     include Hydra::Collections::AcceptsBatches
 
     included do
-      skip_before_filter :normalize_identifier, only: :update
+      skip_before_action :normalize_identifier, only: :update
     end
 
     def index
@@ -37,14 +37,15 @@ module CurationConcerns
 
     protected
 
-    def _prefixes
-      # This allows us to use the unauthorized template in curation_concerns/base
-      @_prefixes ||= super + ['curation_concerns/base']
-    end
-    def remove_embargo(work)
-      work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
-      work.deactivate_embargo!
-      work.save
-    end
+      def _prefixes
+        # This allows us to use the unauthorized template in curation_concerns/base
+        @_prefixes ||= super + ['curation_concerns/base']
+      end
+
+      def remove_embargo(work)
+        work.embargo_visibility! # If the embargo has lapsed, update the current visibility.
+        work.deactivate_embargo!
+        work.save
+      end
   end
 end

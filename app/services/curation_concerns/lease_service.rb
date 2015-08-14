@@ -20,4 +20,3 @@ module CurationConcerns
     end
   end
 end
-

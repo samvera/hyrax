@@ -7,7 +7,6 @@ describe 'shared/_my_actions.html.erb' do
     allow(view).to receive(:current_user).and_return(build(:user, email: 'geraldine@example.com'))
   end
   context "for admins" do
-
     before do
       allow(view).to receive(:can?).and_return(true)
       render

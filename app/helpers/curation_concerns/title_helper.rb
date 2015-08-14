@@ -1,7 +1,6 @@
 module CurationConcerns::TitleHelper
-
   def construct_page_title(*elements)
-    (elements.flatten.compact + [application_name]).join(" // ")
+    (elements.flatten.compact + [application_name]).join(' // ')
   end
 
   def curation_concern_page_title(curation_concern)
@@ -14,10 +13,7 @@ module CurationConcerns::TitleHelper
 
   def default_page_title
     text = controller_name.singularize.titleize
-    if action_name
-      text = "#{action_name.titleize} " + text
-    end
+    text = "#{action_name.titleize} " + text if action_name
     construct_page_title(text)
   end
-
 end

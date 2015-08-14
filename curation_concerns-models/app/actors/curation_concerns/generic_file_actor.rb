@@ -23,7 +23,7 @@ module CurationConcerns
     # @param [String] work_id id of the parent work that will contain the generic_file.
     # @param [Hash] generic_file_params specifying the visibility, lease and/or embargo of the generic file.  If you don't provide at least one of visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
 
-    def create_metadata(batch_id, work_id, generic_file_params={})
+    def create_metadata(batch_id, work_id, generic_file_params = {})
       generic_file.apply_depositor_metadata(user)
       time_in_utc = DateTime.now.new_offset(0)
       generic_file.date_uploaded = time_in_utc
@@ -33,13 +33,13 @@ module CurationConcerns
       if batch_id && generic_file.respond_to?(:batch_id=)
         generic_file.batch_id = batch_id
       else
-        ActiveFedora::Base.logger.warn "unable to find batch to attach to"
+        ActiveFedora::Base.logger.warn 'unable to find batch to attach to'
       end
 
       unless work_id.blank?
         work = ActiveFedora::Base.find(work_id)
 
-        if !((generic_file_params || {}).keys  & ["visibility", "embargo_release_date", "lease_expiration_date"]).empty?
+        if !((generic_file_params || {}).keys & %w(visibility embargo_release_date lease_expiration_date)).empty?
           interpret_visibility generic_file_params
         else
           copy_visibility(work, generic_file)
@@ -84,7 +84,7 @@ module CurationConcerns
 
     def update_metadata(model_attributes, all_attributes)
       update_visibility(all_attributes)
-      model_attributes.delete(:visibility)  # Applying this attribute is handled by update_visibility
+      model_attributes.delete(:visibility) # Applying this attribute is handled by update_visibility
       generic_file.attributes = model_attributes
       generic_file.date_modified = DateTime.now
       save do
@@ -96,9 +96,7 @@ module CurationConcerns
 
     def destroy
       generic_file.destroy
-      if CurationConcerns.config.respond_to?(:after_destroy)
-        CurationConcerns.config.after_destroy.call(generic_file.id, user)
-      end
+      CurationConcerns.config.after_destroy.call(generic_file.id, user) if CurationConcerns.config.respond_to?(:after_destroy)
     end
 
     # Saves the generic file, queues a job to characterize it, and records the committer.
@@ -119,9 +117,9 @@ module CurationConcerns
         return false unless generic_file.save
       rescue RSolr::Error::Http => error
         ActiveFedora::Base.logger.warn "CurationConcerns::GenericFileActor#save Caught RSOLR error #{error.inspect}"
-        save_tries+=1
+        save_tries += 1
         # fail for good if the tries is greater than 3
-        raise error if save_tries >=3
+        raise error if save_tries >= 3
         sleep 0.01
         retry
       end
@@ -135,16 +133,16 @@ module CurationConcerns
 
     protected
 
-    # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
-    def update_visibility(attributes)
-      interpret_visibility(attributes)  # relies on CurationConcerns::ManagesEmbargoesActor to interpret and apply visibility
-    end
+      # This method can be overridden in case there is a custom approach for visibility (e.g. embargo)
+      def update_visibility(attributes)
+        interpret_visibility(attributes) # relies on CurationConcerns::ManagesEmbargoesActor to interpret and apply visibility
+      end
 
     private
 
-    # copy visibility from source_concern to destination_concern
-    def copy_visibility(source_concern, destination_concern)
-      destination_concern.visibility =  source_concern.visibility
-    end
+      # copy visibility from source_concern to destination_concern
+      def copy_visibility(source_concern, destination_concern)
+        destination_concern.visibility =  source_concern.visibility
+      end
   end
 end

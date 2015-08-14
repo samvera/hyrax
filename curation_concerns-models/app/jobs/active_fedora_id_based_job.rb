@@ -17,6 +17,6 @@ class ActiveFedoraIdBasedJob
   alias_method :generic_file_id, :id
 
   def run
-    raise RuntimeError, "Define #run in a subclass"
+    fail 'Define #run in a subclass'
   end
 end

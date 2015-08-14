@@ -1,6 +1,6 @@
 # Copied from Curate
 module CurationConcerns
-   module WithGenericFiles
+  module WithGenericFiles
     extend ActiveSupport::Concern
 
     included do
@@ -11,7 +11,7 @@ module CurationConcerns
     # Stopgap unil ActiveFedora ContainerAssociation includes an *_ids accessor.
     # At the moment, this is no more efficient than calling generic_files, but hopefully that will change in the future.
     def generic_file_ids
-      generic_files.map { |generic_file| generic_file.id }
+      generic_files.map(&:id)
     end
 
     def before_destroy_cleanup_generic_files
@@ -24,6 +24,5 @@ module CurationConcerns
         gf.save!
       end
     end
-
   end
 end

@@ -2,34 +2,34 @@ require 'spec_helper'
 
 describe CurationConcerns::GenericFilesController do
   let(:user) { FactoryGirl.create(:user) }
-  let(:file) { fixture_file_upload('files/image.png','image/png') }
-  let(:parent) { FactoryGirl.create(:generic_work, edit_users: [user.user_key], visibility:Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+  let(:file) { fixture_file_upload('files/image.png', 'image/png') }
+  let(:parent) { FactoryGirl.create(:generic_work, edit_users: [user.user_key], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
 
-  context "when signed in" do
+  context 'when signed in' do
     before { sign_in user }
 
-    describe "#create" do
+    describe '#create' do
       before do
         GenericFile.destroy_all
       end
 
-      context "on the happy path" do
+      context 'on the happy path' do
         let(:date_today) { DateTime.now }
 
         before do
           allow(DateTime).to receive(:now).and_return(date_today)
         end
 
-        it "spawns a CharacterizeJob" do
+        it 'spawns a CharacterizeJob' do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).and_return(s2)
           expect(CurationConcerns.queue).to receive(:push).with(s2).once
-          expect {
+          expect do
             xhr :post, :create, files: [file], parent_id: parent,
-              generic_file: { "title"=>["test title"],
-                              visibility: "restricted"}
+                                generic_file: { 'title' => ['test title'],
+                                                visibility: 'restricted' }
             expect(response).to be_success
-          }.to change { GenericFile.count }.by(1)
+          end.to change { GenericFile.count }.by(1)
           expect(flash[:error]).to be_nil
           saved_file = assigns[:generic_file].reload
 
@@ -50,7 +50,7 @@ describe CurationConcerns::GenericFilesController do
           expect(saved_file.visibility).to eq 'restricted'
         end
 
-        it "copies visibility from the parent" do
+        it 'copies visibility from the parent' do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).and_return(s2)
           allow(CurationConcerns.queue).to receive(:push).with(s2).once
@@ -62,38 +62,37 @@ describe CurationConcerns::GenericFilesController do
       end
 
       context "on something that isn't a file" do
-        it "should render error" do
+        it 'renders error' do
           xhr :post, :create, files: ['hello'], parent_id: parent,
-               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(response.status).to eq 422
           err = JSON.parse(response.body).first['error']
           expect(err).to match(/no file for upload/i)
         end
       end
 
-      context "when the file has a virus" do
-        it "displays a flash error" do
-          skip "pending hydra-works#89"
+      context 'when the file has a virus' do
+        it 'displays a flash error' do
+          skip 'pending hydra-works#89'
           expect(CurationConcerns::GenericFileActor).to receive(:virus_check).with(file.path).and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
           xhr :post, :create, files: [file], parent_id: parent,
-               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
           expect(flash[:error]).to include('A virus was found')
         end
       end
 
-      context "when solr is down" do
-        it "should error out of create and save after on continuos rsolr error" do
-          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
+      context 'when solr is down' do
+        it 'errors out of create and save after on continuos rsolr error' do
+          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({}, {}))
 
           xhr :post, :create, files: [file], parent_id: parent,
-               permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
-          expect(response.body).to include("Error occurred while creating generic file.")
+                              permission: { group: { 'public' => 'read' } }, terms_of_service: '1'
+          expect(response.body).to include('Error occurred while creating generic file.')
         end
       end
-
     end
 
-    describe "destroy" do
+    describe 'destroy' do
       let(:generic_file) do
         generic_file = GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
@@ -103,7 +102,7 @@ describe CurationConcerns::GenericFilesController do
         generic_file
       end
 
-      it "should delete the file" do
+      it 'deletes the file' do
         expect(GenericFile.find(generic_file.id)).to be_kind_of GenericFile
         delete :destroy, id: generic_file
         expect { GenericFile.find(generic_file.id) }.to raise_error Ldp::Gone
@@ -111,7 +110,7 @@ describe CurationConcerns::GenericFilesController do
       end
     end
 
-    describe "update" do
+    describe 'update' do
       let!(:generic_file) do
         generic_file = GenericFile.new.tap do |gf|
           gf.apply_depositor_metadata(user)
@@ -126,55 +125,55 @@ describe CurationConcerns::GenericFilesController do
         generic_file.destroy
       end
 
-      context "updating metadata" do
-        it "should be successful and update attributes" do
+      context 'updating metadata' do
+        it 'is successful and update attributes' do
           post :update, id: generic_file, generic_file:
-            {title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}]}
+            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
           expect(assigns[:generic_file].title).to eq(['new_title'])
         end
 
-        it "should go back to edit on an error" do
+        it 'goes back to edit on an error' do
           allow_any_instance_of(GenericFile).to receive(:valid?).and_return(false)
           post :update, id: generic_file, generic_file:
-            {title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}]}
+            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
           expect(response).to be_successful
           expect(response).to render_template('edit')
           expect(assigns[:generic_file]).to eq generic_file
         end
 
-        it "should add a new groups and users" do
+        it 'adds a new groups and users' do
           post :update, id: generic_file, generic_file:
-            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'group', name: 'group1', access: 'read'}, { type: 'person', name: 'user1', access: 'edit'}]}
+            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'group', name: 'group1', access: 'read' }, { type: 'person', name: 'user1', access: 'edit' }] }
 
-          expect(assigns[:generic_file].read_groups).to eq ["group1"]
-          expect(assigns[:generic_file].edit_users).to include("user1")
+          expect(assigns[:generic_file].read_groups).to eq ['group1']
+          expect(assigns[:generic_file].edit_users).to include('user1')
         end
 
-        it "should update existing groups and users" do
+        it 'updates existing groups and users' do
           generic_file.read_groups = ['group3']
-          generic_file.save! # TODO slow , more than one save.
+          generic_file.save! # TODO: slow , more than one save.
           post :update, id: generic_file, generic_file:
-            { title: ['new_title'], tag: [''], permissions_attributes:[{ type: 'group', name: 'group3', access: 'edit'}] }
-          expect(assigns[:generic_file].edit_groups).to eq ["group3"]
+            { title: ['new_title'], tag: [''], permissions_attributes: [{ type: 'group', name: 'group3', access: 'edit' }] }
+          expect(assigns[:generic_file].edit_groups).to eq ['group3']
         end
 
-        context "updating visibility" do
-          it "should apply public" do
+        context 'updating visibility' do
+          it 'applies public' do
             new_visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-            post :update, id: generic_file, generic_file: {visibility: new_visibility, embargo_release_date:""}
+            post :update, id: generic_file, generic_file: { visibility: new_visibility, embargo_release_date: '' }
             expect(generic_file.reload.visibility).to eq new_visibility
           end
 
-          it "should apply embargo" do
+          it 'applies embargo' do
             post :update, id: generic_file, generic_file: {
               visibility: 'embargo',
-              visibility_during_embargo: "restricted",
-              embargo_release_date: "2099-09-05",
-              visibility_after_embargo: "open",
-              visibility_during_lease: "open",
-              lease_expiration_date: "2099-09-05",
-              visibility_after_lease: "restricted"
+              visibility_during_embargo: 'restricted',
+              embargo_release_date: '2099-09-05',
+              visibility_after_embargo: 'open',
+              visibility_during_lease: 'open',
+              lease_expiration_date: '2099-09-05',
+              visibility_after_lease: 'restricted'
             }
             generic_file.reload
             expect(generic_file).to be_under_embargo
@@ -183,19 +182,19 @@ describe CurationConcerns::GenericFilesController do
         end
       end
 
-      context "updating file content" do
-        it "should be successful" do
+      context 'updating file content' do
+        it 'is successful' do
           s2 = double('one')
           expect(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
           expect(CurationConcerns.queue).to receive(:push).with(s2).once
           post :update, id: generic_file, files: [file]
           expect(response).to redirect_to main_app.curation_concerns_generic_file_path(generic_file)
-          skip "pending hydra-works#89"
+          skip 'pending hydra-works#89'
           expect(generic_file.reload.label).to eq 'image.png'
         end
       end
 
-      context "restoring an old version" do
+      context 'restoring an old version' do
         before do
           allow(CurationConcerns.queue).to receive(:push) # don't run characterization jobs
           # Create version 1
@@ -204,7 +203,7 @@ describe CurationConcerns::GenericFilesController do
           Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('curation_concerns_generic_stub.txt')), :original_file)
         end
 
-        it "should be successful" do
+        it 'is successful' do
           expect(generic_file.latest_content_version.label).to eq('version2')
           expect(generic_file.original_file.content).to eq("This is a test fixture for curation_concerns: <%= @id %>.\n")
           post :update, id: generic_file, revision: 'version1'
@@ -218,7 +217,7 @@ describe CurationConcerns::GenericFilesController do
     end
   end
 
-  context "someone elses files" do
+  context 'someone elses files' do
     let(:generic_file) do
       generic_file = GenericFile.new.tap do |gf|
         gf.apply_depositor_metadata('archivist1@example.com')
@@ -231,19 +230,19 @@ describe CurationConcerns::GenericFilesController do
     after do
       # GenericFile.find('curation_concerns:5').destroy
     end
-    describe "edit" do
-      it "should give me a flash error" do
+    describe 'edit' do
+      it 'gives me a flash error' do
         get :edit, id: generic_file
         expect(response).to fail_redirect_and_flash(main_app.curation_concerns_generic_file_path(generic_file), 'You are not authorized to access this page.')
       end
     end
-    describe "view" do
-      it "should show me the file" do
+    describe 'view' do
+      it 'shows me the file' do
         get :show, id: generic_file
         expect(response).to be_success
       end
     end
-    it "should not let the user submit if they logout" do
+    it 'does not let the user submit if they logout' do
       get :new, parent_id: parent
       expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You are not authorized to access this page.')
     end

@@ -6,13 +6,12 @@ FactoryGirl.define do
       user { FactoryGirl.create(:user) }
     end
 
-    title ["Test title"]
+    title ['Test title']
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
     after(:build) do |work, evaluator|
       work.apply_depositor_metadata(evaluator.user.user_key)
     end
-
 
     factory :public_generic_work do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -20,7 +19,7 @@ FactoryGirl.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename: 'filename.pdf')
+        work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user, title: ['A Contained Generic File'], filename: 'filename.pdf')
       end
     end
 

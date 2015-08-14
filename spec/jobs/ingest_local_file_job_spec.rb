@@ -8,16 +8,16 @@ describe IngestLocalFileJob do
       file.apply_depositor_metadata(user)
     end
   end
-  
-  let(:job) { IngestLocalFileJob.new(generic_file.id, mock_upload_directory, "world.png", user.user_key) }
+
+  let(:job) { described_class.new(generic_file.id, mock_upload_directory, 'world.png', user.user_key) }
   let(:mock_upload_directory) { 'spec/mock_upload_directory' }
-  
+
   before do
-    Dir.mkdir mock_upload_directory unless File.exists? mock_upload_directory
+    Dir.mkdir mock_upload_directory unless File.exist? mock_upload_directory
     FileUtils.copy(File.expand_path('../../fixtures/world.png', __FILE__), mock_upload_directory)
   end
-  
-  it "should have attached a file" do
+
+  it 'has attached a file' do
     expect(CurationConcerns::CharacterizationService).to receive(:run).with(generic_file)
     job.run
     expect(generic_file.reload.original_file.size).to eq(4218)

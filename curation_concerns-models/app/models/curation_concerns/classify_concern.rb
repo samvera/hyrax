@@ -7,7 +7,7 @@ module CurationConcerns
     validates(
       :curation_concern_type,
       presence: true,
-      inclusion: { in: lambda { |record| record.registered_curation_concern_types } }
+      inclusion: { in: ->(record) { record.registered_curation_concern_types } }
     )
 
     def all_curation_concern_classes
@@ -25,17 +25,17 @@ module CurationConcerns
     end
 
     def curation_concern_class
-      if possible_curation_concern_types.detect{|name, class_name|
-          class_name == curation_concern_type
-        }
+      if possible_curation_concern_types.detect do|_name, class_name|
+        class_name == curation_concern_type
+      end
         self.class.to_class(curation_concern_type)
       else
-        raise RuntimeError, "Invalid :curation_concern_type"
+        fail 'Invalid :curation_concern_type'
       end
     end
 
     def self.to_class(type)
-      # TODO we may want to allow a different (or nil) namespace
+      # TODO: we may want to allow a different (or nil) namespace
       type.camelize.constantize
       # begin
       #   "::#{type.camelize}".constantize

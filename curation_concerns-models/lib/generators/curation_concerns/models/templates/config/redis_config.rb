@@ -4,25 +4,32 @@ if defined?(PhusionPassenger)
     if forked
       # Re-establish redis connection
       require 'redis'
-      config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
+      config = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
 
       # The important two lines
       $redis.client.disconnect if $redis
-      $redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
+      $redis = begin
+                 Redis.new(host: config[:host], port: config[:port], thread_safe: true)
+               rescue
+                 nil
+               end
       Resque.redis = $redis
       Resque.redis.namespace = "#{CurationConcerns.config.redis_namespace}:#{Rails.env}"
       Resque.redis.client.reconnect if Resque.redis
     end
   end
 else
-  config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
-  $redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
+  config = YAML.load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
+  $redis = begin
+             Redis.new(host: config[:host], port: config[:port], thread_safe: true)
+           rescue
+             nil
+           end
 end
-
 
 # Code borrowed from Obie's Redis patterns talk at RailsConf'12
 Nest.class_eval do
-  def initialize(key, redis=$redis)
+  def initialize(key, redis = $redis)
     super(key.to_param)
     @redis = redis
   end
