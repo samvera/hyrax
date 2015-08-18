@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe RoleMapper do
   it "should define the 4 roles" do
-    expect(RoleMapper.role_names.sort).to eq %w(admin_policy_object_editor archivist donor patron researcher) 
+    expect(RoleMapper.role_names.sort).to eq %w(admin_policy_object_editor archivist donor patron researcher)
   end
   it "should quer[iy]able for roles for a given user" do
     expect(RoleMapper.roles('leland_himself@example.com').sort).to eq ['archivist', 'donor', 'patron']
