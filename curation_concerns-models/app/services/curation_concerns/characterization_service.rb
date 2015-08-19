@@ -19,7 +19,7 @@ module CurationConcerns
     def characterize
       store_metadata(extract_metadata)
       store_fulltext(extract_fulltext)
-      generic_file.filename = [generic_file.original_file.original_name]
+      generic_file.filename = generic_file.original_file.original_name
     end
 
     protected

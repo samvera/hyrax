@@ -18,11 +18,6 @@ module CurationConcerns
 
     included do
       attr_accessor :file
-
-      # make filename single-value (CurationConcerns::GenericFile::Characterization makes it multivalue)
-      def filename
-        self[:filename].first
-      end
     end
 
     def human_readable_type
