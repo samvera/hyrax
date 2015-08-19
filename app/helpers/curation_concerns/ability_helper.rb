@@ -31,7 +31,7 @@ module CurationConcerns
         when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           content_tag :span, "Open Access", class:"label label-success"
         when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-          content_tag :span, t('sufia.institution_name'), class:"label label-info"
+          content_tag :span, t('curation_concerns.institution_name'), class:"label label-info"
         when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
           content_tag :span, "Private", class:"label label-danger"
         when Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO

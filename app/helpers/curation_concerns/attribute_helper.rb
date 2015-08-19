@@ -56,7 +56,7 @@ module CurationConcerns
               dom_label_class, link_title = 'label-success', 'Open Access'
             end
           elsif hash[Hydra.config.permissions.read.group].include?('registered')
-            dom_label_class, link_title = "label-info", t('sufia.institution_name')
+            dom_label_class, link_title = "label-info", t('curation_concerns.institution_name')
           end
         end
         return dom_label_class, link_title

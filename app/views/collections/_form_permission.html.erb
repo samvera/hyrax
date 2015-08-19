@@ -24,7 +24,7 @@
       </label>
       <label class="radio">
         <input type="radio" id="visibility_registered" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED %>" <% if @collection.authenticated_only_access? %> checked="true"<% end %> />
-        <span class="label label-info"><%=t('sufia.institution_name') %></span> Visible to all <%=t('sufia.institution_name') %> users.
+        <span class="label label-info"><%=t('curation_concerns.institution_name') %></span> Visible to all <%=t('curation_concerns.institution_name') %> users.
       </label>
       <label class="radio">
         <input type="radio" id="visibility_restricted" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE%>" <% if @collection.private_access? %> checked="true"<% end %>/>
