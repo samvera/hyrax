@@ -19,7 +19,7 @@ module CurationConcerns
 
     # Overrides Hydra::Controller::DownloadBehavior#load_file, which is hard-coded to assume files are in BasicContainer (PCDM Objects use direct containment)
     # Override this method to change which file is shown.
-    # Loads the file specified by the HTTP parameter `:file_id`.
+    # Loads the file specified by the HTTP parameter `:file`.
     # If this object does not have a file by that name, return the default file
     # as returned by {#default_file}
     # @return [ActiveFedora::File] the file

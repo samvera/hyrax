@@ -7,11 +7,11 @@ describe CurationConcerns::ThumbnailHelper do
 
   context "with a representative" do
     before do
-      allow(work).to receive(:representative).and_return('curation_concerns:test123')
+      allow(work).to receive(:representative).and_return('test-123')
     end
     it "draws the thumbnail" do
       expect(subject).to eq "<img alt=\"Thumbnail\" class=\"canonical-image\" " \
-        "src=\"/downloads/curation_concerns:test123?datastream_id=thumbnail\" />"
+        "src=\"/downloads/test-123?file=thumbnail\" />"
     end
   end
 

@@ -20,7 +20,7 @@ FactoryGirl.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename:['filename.pdf'])
+        work.generic_files << FactoryGirl.create(:generic_file, user: evaluator.user, title:['A Contained Generic File'], filename: 'filename.pdf')
       end
     end
 

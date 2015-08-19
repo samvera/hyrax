@@ -10,7 +10,7 @@ module CurationConcerns
         property :format_label,      delegate_to: 'characterization'
         property :file_size,         delegate_to: 'characterization'
         property :last_modified,     delegate_to: 'characterization'
-        property :filename,          delegate_to: 'characterization'
+        property :filename,          delegate_to: 'characterization', multiple: false
         property :original_checksum, delegate_to: 'characterization'
         property :rights_basis,      delegate_to: 'characterization'
         property :copyright_basis,   delegate_to: 'characterization'
