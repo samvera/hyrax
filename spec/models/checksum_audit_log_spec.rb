@@ -7,14 +7,15 @@ describe ChecksumAuditLog do
   end
 
   let(:f) do
-    GenericFile.create do |gf|
-      gf.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
+    file = GenericFile.create do |gf|
       gf.apply_depositor_metadata('mjg36')
     end
+    Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_path + '/world.png'), :original_file)
+    file
   end
 
-  let(:version_uri) { CurationConcerns::VersioningService.create(f.content); f.content.versions.first.uri }
-  let(:content_id) { f.content.id }
+  let(:version_uri) { CurationConcerns::VersioningService.create(f.original_file); f.original_file.versions.first.uri }
+  let(:content_id) { f.original_file.id }
   let(:old) { ChecksumAuditLog.create(generic_file_id: f.id, file_id: content_id, version: version_uri, pass: 1, created_at: 2.minutes.ago) }
   let(:new) { ChecksumAuditLog.create(generic_file_id: f.id, file_id: content_id, version: version_uri, pass: 0, created_at: 1.minute.ago) }
 
@@ -44,16 +45,16 @@ describe ChecksumAuditLog do
 
   context "should have an audit log history" do
     before do
-      ChecksumAuditLog.create(generic_file_id: f.id, file_id: f.content.id, version: 'v2', pass: 1)
+      ChecksumAuditLog.create(generic_file_id: f.id, file_id: content_id, version: 'v2', pass: 1)
       ChecksumAuditLog.create(generic_file_id: f.id, file_id: 'thumbnail', version: 'v1', pass: 1)
     end
 
     it "has an audit log history" do
-      audit = ChecksumAuditLog.get_audit_log(f.id, f.content.id, version_uri)
+      audit = ChecksumAuditLog.get_audit_log(f.id, content_id, version_uri)
       expect(audit.generic_file_id).to eq(f.id)
       expect(audit.version).to eq(version_uri)
 
-      audit = ChecksumAuditLog.get_audit_log(f.id, f.content.id, 'v2')
+      audit = ChecksumAuditLog.get_audit_log(f.id, content_id, 'v2')
       expect(audit.generic_file_id).to eq(f.id)
       expect(audit.version).to eq('v2')
 
