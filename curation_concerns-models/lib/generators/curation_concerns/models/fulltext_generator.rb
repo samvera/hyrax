@@ -17,8 +17,7 @@ This generator makes the following changes to your application:
   # Copy CurationConcerns's solrconfig into the dir from which the jetty:config task pulls
   # CurationConcerns's solrconfig includes full-text extraction
   def copy_solr_config
-    src = File.join(__FILE__, '..', '..', '..', '..', '..', '..', 'solr_conf', 'conf', 'solrconfig.xml')
-    copy_file File.expand_path(src), 'solr_conf/conf/solrconfig.xml', force: true
+    copy_file 'config/solrconfig.xml', 'solr_conf/conf/solrconfig.xml', force: true
   end
 
   # Copy config, schema, and jars into jetty dir if it exists
