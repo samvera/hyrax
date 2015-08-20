@@ -76,8 +76,10 @@ describe GenericFile do
     end
 
     it "should have attached content" do
-      subject.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')
-      expect(subject.content).to be_kind_of ActiveFedora::File
+      subject.apply_depositor_metadata('jcoyne')
+      subject.save
+      Hydra::Works::AddFileToGenericFile.call(subject, File.open(fixture_path + '/world.png'), :original_file)
+      expect(subject.original_file).to be_kind_of ActiveFedora::File
     end
   end
 
@@ -174,8 +176,9 @@ describe GenericFile do
     describe "with a video", if: CurationConcerns.config.enable_ffmpeg do
       before do
         allow(@f).to receive(mime_type: 'video/quicktime')  #Would get set by the characterization job
-        @f.add_file(File.open("#{fixture_path}/countdown.avi", 'rb'), path: 'content', original_name: 'countdown.avi')
         @f.save
+        Hydra::Works::AddFileToGenericFile.call(subject, File.open("#{fixture_path}/countdown.avi", 'rb'), :original_file)
+
       end
       it "should make a png thumbnail" do
         @f.create_thumbnail
