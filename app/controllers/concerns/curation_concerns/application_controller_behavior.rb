@@ -20,9 +20,5 @@ module CurationConcerns
       end
     end
 
-    def current_ability
-      user_signed_in? ? current_user.ability : super
-    end
-
   end
 end
