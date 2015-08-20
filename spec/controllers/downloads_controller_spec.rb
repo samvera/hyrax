@@ -3,7 +3,6 @@ require 'spec_helper'
 describe DownloadsController do
   describe '#show' do
     let(:user) { FactoryGirl.create(:user) }
-    let(:another_user) { FactoryGirl.create(:user) }
     let(:generic_file) {
       FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_file_path('files/image.png')))
     }
@@ -14,8 +13,8 @@ describe DownloadsController do
     end
 
     context "when user doesn't have access" do
+      let(:another_user) { FactoryGirl.create(:user) }
       before do
-        # generic_file
         sign_in another_user
       end
       it "redirects to root" do
@@ -34,18 +33,41 @@ describe DownloadsController do
       end
     end
 
-    it 'sends the file if the user has access' do
-      # generic_file
-      sign_in user
-      get :show, id: generic_file.to_param
-      expect(response.body).to eq generic_file.original_file.content
-    end
+    context "when the user has access" do
+      before do
+        sign_in user
+      end
 
-    it 'sends requested file content' do
-      Hydra::Works::AddFileToGenericFile.call(generic_file, File.open(fixture_file_path('world.png')), :thumbnail)
-      sign_in user
-      get :show, id: generic_file.to_param, file: 'thumbnail'
-      expect(response.body).to eq generic_file.thumbnail.content
+      it 'sends the original file' do
+        get :show, id: generic_file
+        expect(response.body).to eq generic_file.original_file.content
+      end
+
+      context "with an alternative file" do
+        context "that is persisted" do
+          before do
+            content = File.open(fixture_file_path('world.png'))
+            Hydra::Works::AddFileToGenericFile.call(generic_file, content, :thumbnail)
+          end
+
+          it 'sends requested file content' do
+            get :show, id: generic_file, file: 'thumbnail'
+            expect(response.body).to eq generic_file.thumbnail.content
+          end
+        end
+
+        context "that isn't persisted" do
+          it "returns 404 if the requested file does not exist" do
+            get :show, id: generic_file, file: 'thumbnail'
+            expect(response.status).to eq 404
+          end
+        end
+      end
+
+      it "returns 404 if the requested association does not exist" do
+        get :show, id: generic_file, file: 'non-existant'
+        expect(response.status).to eq 404
+      end
     end
   end
 end
