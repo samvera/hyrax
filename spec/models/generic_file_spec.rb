@@ -230,7 +230,7 @@ describe GenericFile do
     end
 
     it "has a treeified URL" do
-      expect(subject.uri).to eq 'http://localhost:8983/fedora/rest/test/wd/37/63/09/wd3763094'
+      expect(subject.uri.to_s).to end_with '/wd/37/63/09/wd3763094'
     end
 
     context "when a url is provided" do
