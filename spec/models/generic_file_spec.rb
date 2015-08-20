@@ -75,11 +75,8 @@ describe GenericFile do
       expect(subject.characterization).to be_kind_of FitsDatastream
     end
 
-    it "should have attached content" do
-      subject.apply_depositor_metadata('jcoyne')
-      subject.save
-      Hydra::Works::AddFileToGenericFile.call(subject, File.open(fixture_path + '/world.png'), :original_file)
-      expect(subject.original_file).to be_kind_of ActiveFedora::File
+    it "has attached content" do
+      expect(subject.association(:original_file)).to be_kind_of ActiveFedora::Associations::DirectlyContainsOneAssociation
     end
   end
 
