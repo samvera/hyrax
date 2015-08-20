@@ -9,15 +9,10 @@ module CurationConcerns
       attr_accessor :curation_concern
       helper_method :curation_concern
       load_and_authorize_resource class: ActiveFedora::Base, instance_name: :curation_concern
-
-      def deny_access(exception)
-        redirect_to root_path, alert: exception.message
-      end
     end
 
-
-    def index
-      authorize! :discover, :embargo
+    def deny_access(exception)
+      redirect_to root_path, alert: exception.message
     end
 
     def edit
