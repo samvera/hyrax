@@ -28,7 +28,7 @@ module CurationConcerns
       time_in_utc = DateTime.now.new_offset(0)
       generic_file.date_uploaded = time_in_utc
       generic_file.date_modified = time_in_utc
-      generic_file.creator = [user.name]
+      generic_file.creator = [user.user_key]
       # TODO: Remove this? see https://github.com/projecthydra-labs/curation_concerns/issues/27
       if batch_id && generic_file.respond_to?(:batch_id=)
         generic_file.batch_id = batch_id

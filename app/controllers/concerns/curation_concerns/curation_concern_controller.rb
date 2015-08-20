@@ -73,7 +73,7 @@ module CurationConcerns::CurationConcernController
     # Override setup_form in concrete controllers to get the form ready for display
     def setup_form
       if curation_concern.respond_to?(:contributor) && curation_concern.contributor.blank?
-        curation_concern.contributor << current_user.name
+        curation_concern.contributor << current_user.user_key
       end
     end
 

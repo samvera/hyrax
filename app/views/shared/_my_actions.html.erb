@@ -1,6 +1,6 @@
 <div class="btn-group my-actions">
   <a class="btn btn-primary dropdown-toggle user-display-name" data-toggle="dropdown" href="#">
-    <%= current_user.name.blank? ? 'Me' : current_user.name %>
+    <%= current_user.user_key %>
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
