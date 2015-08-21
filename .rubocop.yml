@@ -13,6 +13,10 @@ AllCops:
     - 'spec/internal/**/*'
     - 'curation_concerns-models/app/models/concerns/curation_concerns/generic_file/export.rb'
 
+Lint/AssignmentInCondition:
+  Exclude:
+    - 'curation_concerns-models/app/services/curation_concerns/persist_derivatives.rb'
+
 Metrics/LineLength:
   Enabled: false
 
@@ -65,6 +69,14 @@ Style/BlockEndNewline:
     - 'spec/**/*'
 
 Style/MultilineBlockLayout:
+  Exclude:
+    - 'spec/**/*'
+
+Style/Semicolon:
+  Exclude:
+    - 'spec/**/*'
+
+Style/Lambda:
   Exclude:
     - 'spec/**/*'
 

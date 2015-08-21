@@ -13,8 +13,13 @@ module CurationConcerns
     # Render the 404 page if the file doesn't exist.
     # Otherwise renders the file.
     def show
-      if file
+      case file
+      when ActiveFedora::File
+        # For original files that are stored in fedora
         super
+      when String
+        # For derivatives stored on the local file system
+        send_file file, type: mime_type_for(file), disposition: 'inline'
       else
         render_404
       end
@@ -28,17 +33,18 @@ module CurationConcerns
         authorize! :read, asset
       end
 
-      # Overrides Hydra::Controller::DownloadBehavior#load_file, which is hard-coded to assume files are in BasicContainer (PCDM Objects use direct containment)
+      # Overrides Hydra::Controller::DownloadBehavior#load_file, which is hard-coded to assume files are in BasicContainer.
       # Override this method to change which file is shown.
       # Loads the file specified by the HTTP parameter `:file`.
       # If this object does not have a file by that name, return the default file
       # as returned by {#default_file}
-      # @return [ActiveFedora::File] the file
+      # @return [ActiveFedora::File, String, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
       def load_file
         file_reference = params[:file]
         return default_file unless file_reference
-        association = dereference_file(file_reference)
-        association.reader if association
+
+        file_path = CurationConcerns::DerivativePath.derivative_path_for_reference(asset, file_reference)
+        File.exist?(file_path) ? file_path : nil
       end
 
       def default_file
@@ -52,6 +58,10 @@ module CurationConcerns
       end
 
     private
+
+      def mime_type_for(file)
+        MIME::Types.type_for(File.extname(file)).first.content_type
+      end
 
       def dereference_file(file_reference)
         return false if file_reference.nil?

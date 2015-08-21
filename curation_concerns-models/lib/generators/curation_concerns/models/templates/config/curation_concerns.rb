@@ -95,6 +95,9 @@ CurationConcerns.configure do |config|
   # Specify the form of hostpath to be used in Endnote exports
   # config.persistent_hostpath = 'http://localhost/files/'
 
+  # Location on local file system where derivatives will be stored.
+  # config.derivatives_path = File.join(Rails.root, 'tmp', 'derivatives')
+
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
   # config.enable_ffmpeg = true
 
