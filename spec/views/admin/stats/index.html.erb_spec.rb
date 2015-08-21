@@ -1,13 +1,18 @@
 require 'spec_helper'
 
 describe "admin/stats/index.html.erb" do
+  let(:presenter) do
+    Sufia::AdminStatsPresenter.new.tap do |p|
+      p.files_count = {}
+      p.top_formats = []
+      p.users_stats = {}
+      p.recent_users = []
+      p.deposit_stats = {}
+      p.depositors = []
+    end
+  end
   before do
-    assign(:files_count, {})
-    assign(:top_formats, [])
-    assign(:users_stats, {})
-    assign(:recent_users, [])
-    assign(:deposit_stats, {})
-    assign(:depositors, [])
+    assign(:presenter, presenter)
   end
 
   context "default depositors" do
@@ -17,7 +22,7 @@ describe "admin/stats/index.html.erb" do
       users
     end
     before do
-      assign(:active_users, top_5_active_users)
+      presenter.active_users = top_5_active_users
       render
     end
     it "shows top 5 depositors and option to view more" do
@@ -33,7 +38,7 @@ describe "admin/stats/index.html.erb" do
       users
     end
     before do
-      assign(:active_users, top_20_active_users)
+      presenter.active_users = top_20_active_users
       params[:dep_count] = 20
       render
     end

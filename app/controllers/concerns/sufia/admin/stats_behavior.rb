@@ -8,24 +8,26 @@ module Sufia
       end
 
       def index
+        @presenter = AdminStatsPresenter.new
+
         # total user count
-        @users_count = ::User.count
+        @presenter.users_count = ::User.count
 
         # The most recent users to join
-        @users_stats = params.fetch(:users_stats, {})
-        @recent_users = recent_users
+        @presenter.users_stats = params.fetch(:users_stats, {})
+        @presenter.recent_users = recent_users(@presenter.users_stats)
 
         # Query Solr for top depositors
-        @active_users = top_depositors
+        @presenter.active_users = top_depositors
 
         # Count of documents by permissions
-        @files_count = document_by_permission
+        @presenter.files_count = document_by_permission(@presenter.users_stats)
 
         # Query Solr for top file formats
-        @top_formats = top_formats
+        @presenter.top_formats = top_formats
 
-        @deposit_stats = params.fetch(:deposit_stats, {})
-        @depositors = depositors(@deposit_stats)
+        @presenter.deposit_stats = params.fetch(:deposit_stats, {})
+        @presenter.depositors = depositors(@presenter.deposit_stats)
         render 'index'
       end
 
@@ -36,8 +38,8 @@ module Sufia
           count.in?(5..20) ? count : 5
         end
 
-        def document_by_permission
-          return document_by_date_by_permission if @users_stats[:file_start_date]
+        def document_by_permission(users_stats)
+          return document_by_date_by_permission(users_stats) if users_stats[:file_start_date]
 
           files_count = {}
           files_count[:total] = GenericWork.count
@@ -47,9 +49,9 @@ module Sufia
           files_count
         end
 
-        def document_by_date_by_permission
-          start_date = DateTime.parse(@users_stats[:file_start_date])
-          end_date = DateTime.parse(@users_stats[:file_end_date]).end_of_day unless @users_stats[:file_end_date].blank?
+        def document_by_date_by_permission(users_stats)
+          start_date = DateTime.parse(users_stats[:file_start_date])
+          end_date = DateTime.parse(users_stats[:file_end_date]).end_of_day unless users_stats[:file_end_date].blank?
           files_count = {}
           files_count[:total] = GenericWork.find_by_date_created(start_date, end_date).count
           files_count[:public] = GenericWork.find_by_date_created(start_date, end_date).merge(GenericWork.where_public).count
@@ -81,12 +83,12 @@ module Sufia
           Hash[*tuples]
         end
 
-        def recent_users
+        def recent_users(users_stats)
           # no dates return the top 5
-          return ::User.order('created_at DESC').limit(5) if @users_stats[:start_date].blank?
+          return ::User.order('created_at DESC').limit(5) if users_stats[:start_date].blank?
 
-          start_date = DateTime.parse @users_stats[:start_date]
-          end_date = DateTime.parse(@users_stats[:end_date]).end_of_day unless @users_stats[:end_date].blank?
+          start_date = DateTime.parse users_stats[:start_date]
+          end_date = DateTime.parse(users_stats[:end_date]).end_of_day unless users_stats[:end_date].blank?
           ::User.recent_users start_date, end_date
         end
     end
