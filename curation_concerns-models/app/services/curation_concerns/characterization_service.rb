@@ -2,9 +2,6 @@ module CurationConcerns
   # Run FITS to gather technical metadata about the content and the full text.
   # Store this extracted metadata in the characterization datastream.
   class CharacterizationService
-    include Hydra::Derivatives::ExtractMetadata
-
-    delegate :mime_type, :uri, to: :@generic_file
     attr_reader :generic_file
 
     def self.run(generic_file)
@@ -19,7 +16,7 @@ module CurationConcerns
     def characterize
       store_metadata(extract_metadata)
       store_fulltext(extract_fulltext)
-      generic_file.filename = generic_file.original_file.original_name
+      generic_file.filename = original_file.original_name
     end
 
     protected
@@ -40,9 +37,13 @@ module CurationConcerns
         append_metadata
       end
 
+      def original_file
+        generic_file.original_file
+      end
+
       def extract_metadata
-        return unless generic_file.original_file.has_content?
-        Hydra::FileCharacterization.characterize(generic_file.original_file.content, filename_for_characterization.join, :fits) do |config|
+        return unless original_file.has_content?
+        Hydra::FileCharacterization.characterize(original_file.content, original_file.original_name, :fits) do |config|
           config[:fits] = Hydra::Derivatives.fits_path
         end
       end
