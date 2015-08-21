@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe Blacklight::ConfigurationHelperBehavior do
-
-  describe "creator facet" do
+  describe 'creator facet' do
     before do
       allow(helper).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     end

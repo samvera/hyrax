@@ -1,4 +1,7 @@
-ENV["RAILS_ENV"] ||= 'test'
+require 'coveralls'
+Coveralls.wear!
+
+ENV['RAILS_ENV'] ||= 'test'
 
 require 'factory_girl'
 require 'database_cleaner'
@@ -17,29 +20,29 @@ require 'capybara/rails'
 
 $in_travis = !ENV['TRAVIS'].nil? && ENV['TRAVIS'] == 'true'
 
-if ENV['COVERAGE'] || ENV['CI']
+if ENV['COVERAGE'] || $in_travis
   require 'simplecov'
-  require 'coveralls'
 
-  ENGINE_ROOT = File.expand_path('../..', __FILE__)
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter if ENV["CI"]
-  SimpleCov.start do
-    add_filter '/spec/'
+  SimpleCov.root(File.expand_path('../..', __FILE__))
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  SimpleCov.start('rails') do
+    add_filter '/spec'
   end
+  SimpleCov.command_name('spec')
 end
 
 require 'curation_concerns'
 
-Dir["./spec/support/**/*.rb"].sort.each {|f| require f}
+Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 require File.expand_path('../matchers', __FILE__)
 
-FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
+FactoryGirl.definition_file_paths = [File.expand_path('../factories', __FILE__)]
 FactoryGirl.find_definitions
 
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
-  config.fixture_path = File.expand_path("../fixtures", __FILE__)
+  config.fixture_path = File.expand_path('../fixtures', __FILE__)
 
   config.before :each do
     if Capybara.current_driver == :rack_test
@@ -55,7 +58,7 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
-    unless (example.metadata[:type] == :view || example.metadata[:no_clean])
+    unless example.metadata[:type] == :view || example.metadata[:no_clean]
       ActiveFedora::Cleaner.clean!
     end
   end
@@ -84,9 +87,10 @@ if defined?(ClamAV)
 else
   class ClamAV
     include Singleton
-    def scanfile(f)
+    def scanfile(_f)
       0
     end
+
     def loaddb
       nil
     end

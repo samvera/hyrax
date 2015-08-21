@@ -1,19 +1,16 @@
 module CurationConcerns
   module Models
-
     def self.config(&block)
       @@config ||= Engine::Configuration.new
       yield @@config if block
-      return @@config
+      @@config
     end
 
-
     class Engine < ::Rails::Engine
-
       require 'curation_concerns/models/resque'
 
       # Set some configuration defaults
-      config.persistent_hostpath = "http://localhost/files/"
+      config.persistent_hostpath = 'http://localhost/files/'
       config.enable_ffmpeg = false
       config.ffmpeg_path = 'ffmpeg'
       config.fits_message_length = 5
@@ -21,8 +18,8 @@ module CurationConcerns
       config.enable_noids = true
       config.noid_template = '.reeddeeddk'
       config.minter_statefile = '/tmp/minter-state'
-      config.redis_namespace = "curation_concerns"
-      config.fits_path = "fits.sh"
+      config.redis_namespace = 'curation_concerns'
+      config.fits_path = 'fits.sh'
       config.enable_local_ingest = nil
       config.queue = CurationConcerns::Resque::Queue
 
@@ -54,8 +51,6 @@ module CurationConcerns
           ActiveFedora::Noid.config.statefile = c.minter_statefile
         end
       end
-
     end
-
   end
 end

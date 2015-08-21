@@ -66,15 +66,15 @@ module CurationConcerns::CurationConcernController
   attr_writer :actor
 
   protected
+
     def actor
       @actor ||= CurationConcerns::CurationConcern.actor(curation_concern, current_user, attributes_for_actor)
     end
 
     # Override setup_form in concrete controllers to get the form ready for display
     def setup_form
-      if curation_concern.respond_to?(:contributor) && curation_concern.contributor.blank?
-        curation_concern.contributor << current_user.user_key
-      end
+      return unless curation_concern.respond_to?(:contributor) && curation_concern.contributor.blank?
+      curation_concern.contributor << current_user.user_key
     end
 
     # def verify_acceptance_of_user_agreement!
@@ -100,7 +100,7 @@ module CurationConcerns::CurationConcernController
     end
 
     def after_update_response
-      #TODO visibility or lease/embargo status
+      # TODO: visibility or lease/embargo status
       if actor.visibility_changed?
         redirect_to main_app.confirm_curation_concerns_permission_path(curation_concern)
       else
@@ -110,9 +110,9 @@ module CurationConcerns::CurationConcernController
 
     def after_destroy_response(title)
       flash[:notice] = "Deleted #{title}"
-      respond_with { |wants|
+      respond_with do |wants|
         wants.html { redirect_to main_app.catalog_index_path }
-      }
+      end
     end
 
     def attributes_for_actor

@@ -3,8 +3,8 @@ require 'spec_helper'
 describe ImportUrlJob do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
-  let(:file_path) {  fixture_path + '/world.png' }
-  let(:file_hash)  {'/673467823498723948237462429793840923582'}
+  let(:file_path) { fixture_path + '/world.png' }
+  let(:file_hash) { '/673467823498723948237462429793840923582' }
 
   let(:generic_file) do
     GenericFile.create do |f|
@@ -22,13 +22,13 @@ describe ImportUrlJob do
     end
   end
 
-  subject(:job) { ImportUrlJob.new(generic_file.id) }
+  subject(:job) { described_class.new(generic_file.id) }
 
-  it "should have no content at the outset" do
+  it 'has no content at the outset' do
     expect(generic_file.original_file).to be_nil
   end
 
-  context "after running the job" do
+  context 'after running the job' do
     before do
       s1 = double('characterize')
       allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s1)
@@ -36,7 +36,7 @@ describe ImportUrlJob do
       expect(ClamAV.instance).to receive(:scanfile).and_return(0)
     end
 
-    it "should create a content datastream" do
+    it 'creates a content datastream' do
       expect_any_instance_of(Net::HTTP).to receive(:request_get).with(file_hash).and_yield(mock_response)
       job.run
       expect(generic_file.reload.original_file.size).to eq 4218

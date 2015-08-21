@@ -5,7 +5,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
   config.include Features::SessionHelpers, type: :feature
   config.include Features::FixtureFileUpload
-  
+
   config.before(:each, type: :feature) do
     Warden.test_mode!
     @old_resque_inline_value = Resque.inline

@@ -19,12 +19,12 @@ module CurationConcerns
 
     def [](key)
       case key
-        when :size
-          size
-        when :total_items
-          total_items
-        else
-          super
+      when :size
+        size
+      when :total_items
+        total_items
+      else
+        super
       end
     end
 
@@ -35,6 +35,5 @@ module CurationConcerns
     def total_items
       model.members.count
     end
-
   end
 end

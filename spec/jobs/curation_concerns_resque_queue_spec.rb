@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe CurationConcerns::Resque::Queue do
-  let(:subject) { CurationConcerns::Resque::Queue.new "test_queue" }
+  let(:subject) { described_class.new 'test_queue' }
   let(:job) { double('job') }
 
-  context "with no retries" do
-    it "queues the job" do
+  context 'with no retries' do
+    it 'queues the job' do
       expect(::Resque).to receive(:enqueue_to).once.and_return(true)
       subject.push(job)
     end
@@ -16,7 +16,7 @@ describe CurationConcerns::Resque::Queue do
       call_count = 0
       allow(::Resque).to receive(:enqueue_to) do
         call_count += 1
-        call_count == 1 ? raise(Redis::TimeoutError) : true
+        call_count == 1 ? fail(Redis::TimeoutError) : true
       end
     end
 
@@ -42,7 +42,7 @@ describe CurationConcerns::Resque::Queue do
     end
 
     it 'logs an error' do
-      expect(ActiveFedora::Base.logger).to receive(:error).with("Redis is down!")
+      expect(ActiveFedora::Base.logger).to receive(:error).with('Redis is down!')
       subject.push(job)
     end
   end

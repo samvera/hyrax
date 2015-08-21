@@ -13,7 +13,6 @@ module CurationConcerns
       def private?
         !(public? || registered?)
       end
-
     end
   end
 end

@@ -13,7 +13,6 @@ class CurationConcerns::PermissionsController < ApplicationController
   end
 
   def curation_concern
-    @curation_concern ||= self.curation_concern_type.find(params[:id], cast: true)
+    @curation_concern ||= curation_concern_type.find(params[:id], cast: true)
   end
-
 end

@@ -21,6 +21,7 @@ module CurationConcerns
     end
 
     protected
+
       # Customize the :download ability in your Ability class, or override this method
       def authorize_download!
         # authorize! :download, file # can't use this because Hydra::Ability#download_permissions assumes that files are in Basic Container (and thus include the asset's uri)
@@ -36,11 +37,9 @@ module CurationConcerns
       def load_file
         file_reference = params[:file]
         return default_file unless file_reference
-        if association = dereference_file(file_reference)
-          association.reader
-        end
+        association = dereference_file(file_reference)
+        association.reader if association
       end
-
 
       def default_file
         if asset.class.respond_to?(:default_file_path)
@@ -48,9 +47,8 @@ module CurationConcerns
         else
           default_file_reference = DownloadsController.default_content_path
         end
-        if association = dereference_file(default_file_reference)
-          association.reader
-        end
+        association = dereference_file(default_file_reference)
+        association.reader if association
       end
 
     private
@@ -58,7 +56,7 @@ module CurationConcerns
       def dereference_file(file_reference)
         return false if file_reference.nil?
         association = asset.association(file_reference.to_sym)
-        association if association && association.kind_of?(ActiveFedora::Associations::SingularAssociation)
+        association if association && association.is_a?(ActiveFedora::Associations::SingularAssociation)
       end
   end
 end

@@ -10,7 +10,6 @@ describe 'catalog/index.html.erb' do
     allow(view).to receive(:search_action_path).and_return('/catalog')
     allow(view).to receive(:has_search_parameters?).and_return(true)
 
-
     allow(view).to receive(:current_users_collections).and_return([])
     allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
     stub_template 'catalog/_search_sidebar.html.erb' => ''
@@ -24,7 +23,7 @@ describe 'catalog/index.html.erb' do
     params[:view] = 'gallery'
 
     resp = []
-    assign(:response, resp )
+    assign(:response, resp)
     allow(resp).to receive(:total_pages).and_return(1)
     allow(resp).to receive(:current_page).and_return(1)
     allow(resp).to receive(:limit_value).and_return(10)
@@ -36,24 +35,22 @@ describe 'catalog/index.html.erb' do
     assign(:document_list, [doc])
   end
 
-  context "when user does not have permissions" do
-    before  { allow(view).to receive(:can?).and_return(false) }
+  context 'when user does not have permissions' do
+    before { allow(view).to receive(:can?).and_return(false) }
     it 'appears on page without error' do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_link(collection.title)
-      expect(page).to have_content "List of files deposited"
+      expect(page).to have_content 'List of files deposited'
     end
   end
-  context "when user has all the permissions" do
-    before  { allow(view).to receive(:can?).and_return(true) }
+  context 'when user has all the permissions' do
+    before { allow(view).to receive(:can?).and_return(true) }
     it 'appears on page without error' do
       render
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_link(collection.title)
-      expect(page).to have_content "List of files deposited"
+      expect(page).to have_content 'List of files deposited'
     end
   end
-
-
 end

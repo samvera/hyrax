@@ -1,5 +1,5 @@
-require "curation_concerns/models/version"
-require "curation_concerns/models/engine"
+require 'curation_concerns/models/version'
+require 'curation_concerns/models/engine'
 
 require 'hydra/head'
 require 'nest'
@@ -27,6 +27,6 @@ module CurationConcerns
 
     yield @@config if block
 
-    return @@config
+    @@config
   end
 end

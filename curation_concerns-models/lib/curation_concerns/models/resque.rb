@@ -15,12 +15,12 @@ module CurationConcerns
         begin
           ::Resque.enqueue_to queue, MarshaledJob, Base64.encode64(Marshal.dump(job))
         rescue Redis::CannotConnectError
-          ActiveFedora::Base.logger.error "Redis is down!"
+          ActiveFedora::Base.logger.error 'Redis is down!'
         rescue Redis::TimeoutError => error
           ActiveFedora::Base.logger.warn "Redis Timed out.  Trying again! #{job.inspect}"
-          push_tries+=1
+          push_tries += 1
           # fail for good if the tries is greater than 3
-          raise error if push_tries >=3
+          raise error if push_tries >= 3
           sleep 0.01
           retry
         end

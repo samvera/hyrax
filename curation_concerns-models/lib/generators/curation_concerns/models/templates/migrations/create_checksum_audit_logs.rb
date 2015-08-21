@@ -9,7 +9,7 @@ class CreateChecksumAuditLogs < ActiveRecord::Migration
       t.string :actual_result
       t.timestamps
     end
-    add_index :checksum_audit_logs, [:generic_file_id, :file_id], name: 'by_generic_file_id_and_file_id', order: {created_at: "DESC" }
+    add_index :checksum_audit_logs, [:generic_file_id, :file_id], name: 'by_generic_file_id_and_file_id', order: { created_at: 'DESC' }
   end
 
   def self.down

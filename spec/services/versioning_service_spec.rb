@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe CurationConcerns::VersioningService do
-  describe "#latest_version_of" do
+  describe '#latest_version_of' do
     let(:file) do
-      generic_file = GenericFile.create do |f|
+      GenericFile.create do |f|
         f.apply_depositor_metadata('mjg36')
       end
     end
@@ -13,20 +13,19 @@ describe CurationConcerns::VersioningService do
       Hydra::Works::AddFileToGenericFile.call(file, File.open(fixture_file_path('world.png')), :original_file, versioning: true)
     end
 
-    describe  "latest_version_of" do
+    describe 'latest_version_of' do
       subject { described_class.latest_version_of(file.original_file).label }
 
-      context "with one version" do
-        it { is_expected.to eq "version1" }
+      context 'with one version' do
+        it { is_expected.to eq 'version1' }
       end
 
-      context "with two versions" do
+      context 'with two versions' do
         before do
           file.original_file.create_version
         end
-        it { is_expected.to eq "version2" }
+        it { is_expected.to eq 'version2' }
       end
     end
   end
-
 end

@@ -20,9 +20,8 @@ class AuditJob < ActiveFedoraIdBasedJob
   end
 
   def run
-    fixity_ok = false
     log = run_audit
-    fixity_ok = (log.pass == 1)
+    fixity_ok = log.pass == 1
     unless fixity_ok
       if CurationConcerns.config.respond_to?(:after_audit_failure)
         login = generic_file.depositor
@@ -39,7 +38,7 @@ class AuditJob < ActiveFedoraIdBasedJob
       begin
         fixity_ok = ActiveFedora::FixityService.new(uri).check
       rescue Ldp::NotFound
-        error_msg = "resource not found"
+        error_msg = 'resource not found'
       end
 
       if fixity_ok

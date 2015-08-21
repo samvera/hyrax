@@ -1,6 +1,7 @@
 module CurationConcerns
   module FactoryHelpers
     module_function
+
     def load_factories_for(context, klass)
       context.instance_exec(klass) do |curation_concern_class|
         let(:curation_concern_type_underscore) { curation_concern_class.name.underscore }

@@ -1,5 +1,4 @@
 class ChecksumAuditLog < ActiveRecord::Base
-
   def self.get_audit_log(id, path, version_uri)
     ChecksumAuditLog.find_or_create_by(generic_file_id: id, file_id: path, version: version_uri)
   end

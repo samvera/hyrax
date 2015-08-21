@@ -1,6 +1,5 @@
 module CurationConcerns
   class GenericWorkIndexingService < ActiveFedora::IndexingService
-
     def generate_solr_document
       super.tap do |solr_doc|
         # We know that all the members of GenericWorks are GenericFiles so we can use
@@ -11,6 +10,5 @@ module CurationConcerns
         Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)
       end
     end
-
   end
 end

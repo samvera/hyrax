@@ -6,16 +6,16 @@ describe 'collection' do
     click_link 'Add a Collection'
     fill_in('Title', with: title)
     fill_in('collection_description', with: description)
-    click_button("Create Collection")
+    click_button('Create Collection')
     expect(page).to have_content 'Items in this Collection'
     expect(page).to have_content title
     expect(page).to have_content description
   end
 
-  let(:title1) {"Test Collection 1"}
-  let(:description1) {"Description for collection 1 we are testing."}
-  let(:title2) {"Test Collection 2"}
-  let(:description2) {"Description for collection 2 we are testing."}
+  let(:title1) { 'Test Collection 1' }
+  let(:description1) { 'Description for collection 1 we are testing.' }
+  let(:title2) { 'Test Collection 2' }
+  let(:description2) { 'Description for collection 2 we are testing.' }
 
   let(:user) { FactoryGirl.create(:user, email: 'user1@example.com') }
   let(:user_key) { user.user_key }
@@ -28,8 +28,8 @@ describe 'collection' do
       end
     end
   end
-  let(:gw1) { generic_works[0]}
-  let(:gw2) { generic_works[1]}
+  let(:gw1) { generic_works[0] }
+  let(:gw2) { generic_works[1] }
 
   before(:all) do
     @old_resque_inline_value = Resque.inline
@@ -47,13 +47,13 @@ describe 'collection' do
       sign_in user
       visit search_path_for_my_collections
     end
-    it "should create a collection" do
-      title = "Genealogies of the American West"
-      description = "All about Genealogies of the American West"
+    it 'creates a collection' do
+      title = 'Genealogies of the American West'
+      description = 'All about Genealogies of the American West'
       click_link 'Add a Collection'
       fill_in('Title', with: title)
       fill_in('collection_description', with: description)
-      click_button("Create Collection")
+      click_button('Create Collection')
       expect(page).to have_content 'Items in this Collection'
       expect(page).to have_content title
       expect(page).to have_content description
@@ -61,55 +61,54 @@ describe 'collection' do
   end
 
   describe 'delete collection' do
-    before (:each) do
-      @collection = Collection.new title:'collection title'
+    before do
+      @collection = Collection.new title: 'collection title'
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
       @collection.save
       sign_in user
-      visit main_app.catalog_index_path(:'f[generic_type_sim][]' => 'Collection', works: 'mine')
+      visit main_app.catalog_index_path('f[generic_type_sim][]': 'Collection', works: 'mine')
     end
 
-    it "should delete a collection" do
+    it 'deletes a collection' do
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.id}") do
-        first(".itemtrash").click
+        first('.itemtrash').click
       end
       expect(page).to_not have_content(@collection.title)
-      expect(page).to have_content("Collection was successfully deleted.")
+      expect(page).to have_content('Collection was successfully deleted.')
     end
   end
 
   describe 'show collection' do
     before do
-      @collection = FactoryGirl.create(:collection, user:user, title: 'collection title', description:'collection description')
+      @collection = FactoryGirl.create(:collection, user: user, title: 'collection title', description: 'collection description')
       # @collection = Collection.new title: 'collection title'
       # @collection.description = ['collection description']
       # @collection.apply_depositor_metadata(user_key)
-      @collection.members = [gw1,gw2]
+      @collection.members = [gw1, gw2]
       @collection.save
       sign_in user
       visit search_path_for_my_collections
     end
 
-    it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
+    it 'shows a collection with a listing of Descriptive Metadata and catalog-style search results' do
       expect(page).to have_content(@collection.title)
-      within('#document_'+@collection.id) do
-        click_link("collection title")
+      within('#document_' + @collection.id) do
+        click_link('collection title')
       end
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
       expect(page).to have_content(gw1.title.first)
       expect(page).to have_content(gw2.title.first)
-      expect(page).to_not have_css(".pager")
-
+      expect(page).to_not have_css('.pager')
     end
 
-    it "should hide collection descriptive metadata when searching a collection" do
+    it 'hides collection descriptive metadata when searching a collection' do
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.id}") do
-        click_link("collection title")
+        click_link('collection title')
       end
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
@@ -118,19 +117,19 @@ describe 'collection' do
       fill_in('collection_search', with: gw1.title.first)
       click_button('collection_submit')
       # Should not have Collection Descriptive metadata table
-      expect(page).to_not have_content("Descriptions")
+      expect(page).to_not have_content('Descriptions')
       expect(page).to have_content(@collection.title)
       expect(page).to have_content(@collection.description)
       # Should have search results / contents listing
       expect(page).to have_content(gw1.title.first)
       expect(page).to_not have_content(gw2.title.first)
       # Should not have Dashboard content in contents listing
-      expect(page).to_not have_content("Visibility")
+      expect(page).to_not have_content('Visibility')
     end
   end
 
   describe 'edit collection' do
-    before (:each) do
+    before do
       @collection = Collection.new(title: 'Awesome Title')
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
@@ -140,22 +139,22 @@ describe 'collection' do
       visit search_path_for_my_collections
     end
 
-    it "should edit and update collection metadata" do
+    it 'edits and update collection metadata' do
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.id}") do
         click_link('Edit Collection')
       end
       expect(page).to have_field('collection_title', with: @collection.title)
       expect(page).to have_field('collection_description', with: @collection.description)
-      new_title = "Altered Title"
-      new_description = "Completely new Description text."
-      creators = ["Dorje Trollo", "Vajrayogini"]
+      new_title = 'Altered Title'
+      new_description = 'Completely new Description text.'
+      creators = ['Dorje Trollo', 'Vajrayogini']
       fill_in('Title', with: new_title)
       fill_in('collection_description', with: new_description)
       fill_in('Creator', with: creators.first)
-      #within('.form-actions') do
-        click_button('Update Collection')
-      #end
+      # within('.form-actions') do
+      click_button('Update Collection')
+      # end
       expect(page).to_not have_content(@collection.title)
       expect(page).to_not have_content(@collection.description)
       expect(page).to have_content(new_title)
@@ -163,7 +162,7 @@ describe 'collection' do
       expect(page).to have_content(creators.first)
     end
 
-    it "should remove a work from a collection" do
+    it 'removes a work from a collection' do
       expect(page).to have_content(@collection.title)
       within("#document_#{@collection.id}") do
         click_link('Edit Collection')
@@ -181,10 +180,10 @@ describe 'collection' do
       expect(page).to have_content(gw2.title.first)
     end
 
-    it "should remove all works from a collection" do
-      skip "This is from Sufia, not sure if it should be here."
+    it 'removes all works from a collection' do
+      skip 'This is from Sufia, not sure if it should be here.'
       expect(page).to have_content(@collection.title)
-      within('#document_'+@collection.id) do
+      within('#document_' + @collection.id) do
         click_link('Edit Collection')
       end
       expect(page).to have_field('collection_title', with: @collection.title)
@@ -201,8 +200,8 @@ describe 'collection' do
   end
 
   describe 'show pages of a collection' do
-    before (:each) do
-      @collection = Collection.new title:'collection title'
+    before do
+      @collection = Collection.new title: 'collection title'
       @collection.description = 'collection description'
       @collection.apply_depositor_metadata(user_key)
       @collection.members = generic_works
@@ -211,12 +210,12 @@ describe 'collection' do
       visit search_path_for_my_collections
     end
 
-    it "should show a collection with a listing of Descriptive Metadata and catalog-style search results" do
+    it 'shows a collection with a listing of Descriptive Metadata and catalog-style search results' do
       expect(page).to have_content(@collection.title)
-      within('#document_'+@collection.id) do
-        click_link("collection title")
+      within('#document_' + @collection.id) do
+        click_link('collection title')
       end
-      expect(page).to have_css(".pager")
+      expect(page).to have_css('.pager')
     end
   end
 end

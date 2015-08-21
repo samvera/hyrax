@@ -1,6 +1,5 @@
 module ActionDispatch::Routing
   class Mapper
-
     def curation_concerns_basic_routes
       resources :downloads, only: :show
       namespace :curation_concerns, path: :concern do
@@ -41,7 +40,7 @@ module ActionDispatch::Routing
       end
     end
 
-    # kmr added :show to make tests pass 
+    # kmr added :show to make tests pass
     def curation_concerns_embargo_management
       resources :embargoes, only: [:index, :edit, :destroy] do
         collection do
@@ -56,21 +55,22 @@ module ActionDispatch::Routing
     end
 
     private
-    # Namespaces routes appropriately
-    # @example route_namespaced_target("curation_concerns/generic_work") is equivalent to
-    #   namespace "curation_concerns" do
-    #     resources "generic_work", except: [:index]
-    #   end
-    def namespaced_resources(target, opts={})
-      if target.include?("/")
-        the_namespace = target[0..target.index("/")-1]
-        new_target = target[target.index("/")+1..-1]
-        namespace the_namespace do
-          namespaced_resources(new_target, opts)
+
+      # Namespaces routes appropriately
+      # @example route_namespaced_target("curation_concerns/generic_work") is equivalent to
+      #   namespace "curation_concerns" do
+      #     resources "generic_work", except: [:index]
+      #   end
+      def namespaced_resources(target, opts = {})
+        if target.include?('/')
+          the_namespace = target[0..target.index('/') - 1]
+          new_target = target[target.index('/') + 1..-1]
+          namespace the_namespace do
+            namespaced_resources(new_target, opts)
+          end
+        else
+          resources target, opts
         end
-      else
-        resources target, opts
       end
-    end
   end
 end

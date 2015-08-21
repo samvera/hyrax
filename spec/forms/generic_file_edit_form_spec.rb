@@ -3,10 +3,10 @@ require 'spec_helper'
 describe CurationConcerns::Forms::GenericFileEditForm do
   subject { described_class.new(GenericFile.new) }
 
-  describe "#terms" do
-    it "should return a list" do
+  describe '#terms' do
+    it 'returns a list' do
       expect(subject.terms).to eq([:resource_type, :title, :creator, :contributor, :description, :tag,
-                    :rights, :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url])
+                                   :rights, :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url])
     end
 
     it "doesn't contain fields that users shouldn't be allowed to edit" do
@@ -15,19 +15,18 @@ describe CurationConcerns::Forms::GenericFileEditForm do
     end
   end
 
-  it "should initialize multivalued fields" do
+  it 'initializes multivalued fields' do
     expect(subject.title).to eq ['']
   end
 
-  describe ".model_attributes" do
-    let(:params) { ActionController::Parameters.new(title: ['foo'], description: [''], "permissions_attributes"=>{"2"=>{"access"=>"edit", "_destroy"=>"true", "id"=>"a987551e-b87f-427a-8721-3e5942273125"}})}
+  describe '.model_attributes' do
+    let(:params) { ActionController::Parameters.new(title: ['foo'], description: [''], 'permissions_attributes' => { '2' => { 'access' => 'edit', '_destroy' => 'true', 'id' => 'a987551e-b87f-427a-8721-3e5942273125' } }) }
     subject { described_class.model_attributes(params) }
 
-    it "should only change title" do
-      expect(subject['title']).to eq ["foo"]
+    it 'changes only the title' do
+      expect(subject['title']).to eq ['foo']
       expect(subject['description']).to be_empty
-      expect(subject['permissions_attributes']).to eq("2" => {"access"=>"edit", "id"=>"a987551e-b87f-427a-8721-3e5942273125", "_destroy"=>"true"})
+      expect(subject['permissions_attributes']).to eq('2' => { 'access' => 'edit', 'id' => 'a987551e-b87f-427a-8721-3e5942273125', '_destroy' => 'true' })
     end
   end
-
 end

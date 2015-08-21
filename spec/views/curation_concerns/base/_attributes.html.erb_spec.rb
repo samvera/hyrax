@@ -1,14 +1,15 @@
 require 'spec_helper'
 
 describe 'curation_concerns/base/_attributes.html.erb' do
-
   let(:creator)     { 'Bilbo' }
   let(:contributor) { 'Frodo' }
   let(:subject)     { 'history' }
 
-  let(:curation_concern) { double(creator: [creator],
-                                  contributor: [contributor],
-                                  subject: [subject]) }
+  let(:curation_concern) do
+    double(creator: [creator],
+           contributor: [contributor],
+           subject: [subject])
+  end
 
   before do
     allow(view).to receive(:dom_class) { '' }

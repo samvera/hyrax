@@ -3,7 +3,7 @@ module CurationConcerns
     module Characterization
       extend ActiveSupport::Concern
       included do
-        contains "characterization", class_name: 'FitsDatastream'
+        contains 'characterization', class_name: 'FitsDatastream'
         property :mime_type,         delegate_to: 'characterization', multiple: false do |index|
           index.as :stored_searchable
         end
@@ -50,7 +50,6 @@ module CurationConcerns
         property :data_format,       delegate_to: 'characterization'
         property :offset,            delegate_to: 'characterization'
         property :frame_rate,        delegate_to: 'characterization'
-
       end
 
       def width
@@ -71,11 +70,11 @@ module CurationConcerns
 
       def characterization_terms
         h = {}
-        self.characterization.class.terminology.terms.each_pair do |k, v|
+        characterization.class.terminology.terms.each_pair do |_k, v|
           next unless v.respond_to? :proxied_term
           term = v.proxied_term
           begin
-            value = self.send(term.name)
+            value = send(term.name)
             h[term.name] = value unless value.empty?
           rescue NoMethodError
             next
@@ -83,7 +82,6 @@ module CurationConcerns
         end
         h
       end
-
     end
   end
 end

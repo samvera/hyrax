@@ -4,7 +4,7 @@ RSpec::Matchers.define :have_unique_field do |expected_field_name|
   match do |subject|
     expect(subject).to respond_to(expected_field_name)
     field_value = subject.send(expected_field_name)
-    field_value.nil? || !field_value.kind_of?(Array)
+    field_value.nil? || !field_value.is_a?(Array)
   end
 
   description do

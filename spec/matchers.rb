@@ -3,11 +3,12 @@ require 'rspec/matchers'
 if defined?($SHOW_MATCHERS)
   module RSpec::Shim
     def define(matcher_name, *args, &block)
-      $SHOW_MATCHERS[matcher_name] = caller.first.split(":")[0..1]
+      $SHOW_MATCHERS[matcher_name] = caller.first.split(':')[0..1]
       super
     end
+
     def matcher(matcher_name, *args, &block)
-      $SHOW_MATCHERS[matcher_name] = caller.first.split(":")[0..1]
+      $SHOW_MATCHERS[matcher_name] = caller.first.split(':')[0..1]
       super
     end
   end

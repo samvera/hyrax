@@ -32,7 +32,7 @@ module CurationConcerns::GenericWorkBehavior
     "curation_concerns/#{super}"
   end
 
-  def can_be_member_of_collection?(collection)
+  def can_be_member_of_collection?(_collection)
     true
   end
 end

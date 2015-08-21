@@ -30,10 +30,10 @@ module CurationConcerns
     end
 
     def to_solr(solr_doc = {})
-      super(solr_doc).tap do |solr_doc|
+      super(solr_doc).tap do |doc|
         # Enables Riiif to not have to recalculate this each time.
-        solr_doc['height_isi'] = Integer(height.first) if height.present?
-        solr_doc['width_isi'] = Integer(width.first) if width.present?
+        doc['height_isi'] = Integer(height.first) if height.present?
+        doc['width_isi'] = Integer(width.first) if width.present?
       end
     end
   end

@@ -3,11 +3,7 @@ module CurationConcerns
     include CurationConcerns::GenericFilesControllerBehavior
 
     def generic_file_params
-      if params.has_key?(:generic_file)
-        params.require(:generic_file).permit!
-      end
+      params.require(:generic_file).permit! if params.key?(:generic_file)
     end
-
   end
 end
-

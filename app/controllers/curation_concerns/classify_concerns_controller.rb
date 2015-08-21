@@ -3,14 +3,12 @@ module CurationConcerns
     include CurationConcerns::ThemedLayoutController
     with_themed_layout '1_column'
     respond_to :html
-    before_filter :authenticate_user!
+    before_action :authenticate_user!
     load_and_authorize_resource
 
-    add_breadcrumb 'Submit a work', lambda {|controller| controller.request.path }
+    add_breadcrumb 'Submit a work', ->(controller) { controller.request.path }
 
-    def classify_concern
-      @classify_concern
-    end
+    attr_reader :classify_concern
     helper_method :classify_concern
 
     def new

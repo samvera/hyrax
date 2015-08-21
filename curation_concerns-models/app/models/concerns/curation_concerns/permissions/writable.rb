@@ -3,7 +3,7 @@ module CurationConcerns
     module Writable
       extend ActiveSupport::Concern
 
-      #we're overriding the permissions= method which is in Hydra::AccessControls::Permissions
+      # we're overriding the permissions= method which is in Hydra::AccessControls::Permissions
       include Hydra::AccessControls::Permissions
       include Hydra::AccessControls::Visibility
 
@@ -14,20 +14,19 @@ module CurationConcerns
       def paranoid_permissions
         valid = true
         paranoid_edit_permissions.each do |validation|
-          if validation[:condition].call(self)
-            errors[validation[:key]] ||= []
-            errors[validation[:key]] << validation[:message]
-            valid = false
-          end
+          next unless validation[:condition].call(self)
+          errors[validation[:key]] ||= []
+          errors[validation[:key]] << validation[:message]
+          valid = false
         end
-        return valid
+        valid
       end
 
       def paranoid_edit_permissions
         [
-            {key: :edit_users, message: 'Depositor must have edit access', condition: lambda { |obj| !obj.edit_users.include?(obj.depositor) }},
-            {key: :edit_groups, message: 'Public cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('public') }},
-            {key: :edit_groups, message: 'Registered cannot have edit access', condition: lambda { |obj| obj.edit_groups.include?('registered') }}
+          { key: :edit_users, message: 'Depositor must have edit access', condition: ->(obj) { !obj.edit_users.include?(obj.depositor) } },
+          { key: :edit_groups, message: 'Public cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('public') } },
+          { key: :edit_groups, message: 'Registered cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('registered') } }
         ]
       end
 
@@ -56,20 +55,18 @@ module CurationConcerns
 
       private
 
-      def permission_hash
-        old_perms = self.permissions
-        user_perms =  {}
-        old_perms.select{|r| r[:type] == 'user'}.each do |r|
-          user_perms[r[:name]] = r[:access]
+        def permission_hash
+          old_perms = permissions
+          user_perms = {}
+          old_perms.select { |r| r[:type] == 'user' }.each do |r|
+            user_perms[r[:name]] = r[:access]
+          end
+          group_perms = {}
+          old_perms.select { |r| r[:type] == 'group' }.each do |r|
+            group_perms[r[:name]] = r[:access]
+          end
+          { 'person' => user_perms, 'group' => group_perms }
         end
-        user_perms
-        group_perms =  {}
-        old_perms.select{|r| r[:type] == 'group'}.each do |r|
-          group_perms[r[:name]] = r[:access]
-        end
-        {'person'=>user_perms, 'group'=>group_perms}
-      end
-
     end
   end
 end

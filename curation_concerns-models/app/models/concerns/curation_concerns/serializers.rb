@@ -1,15 +1,13 @@
 module CurationConcerns
   module Serializers
-
     def to_s
       if title.present?
-        Array(title).join(" | ")
+        Array(title).join(' | ')
       elsif label.present?
-        Array(label).join(" | ")
+        Array(label).join(' | ')
       else
-        "No Title"
+        'No Title'
       end
     end
-
   end
 end

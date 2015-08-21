@@ -3,10 +3,9 @@ module CurationConcerns
     extend ActiveSupport::Concern
 
     included do
-
       property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 
-      property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false do |index|
+      property :depositor, predicate: ::RDF::URI.new('http://id.loc.gov/vocabulary/relators/dpt'), multiple: false do |index|
         index.as :symbol, :stored_searchable
       end
 
@@ -82,6 +81,5 @@ module CurationConcerns
         index.as :stored_searchable
       end
     end
-
   end
 end

@@ -1,16 +1,15 @@
 require 'spec_helper'
 
 describe VisibilityCopyWorker do
-
-  describe "an open access work" do
+  describe 'an open access work' do
     let(:work) { FactoryGirl.create(:work_with_files) }
-    subject { VisibilityCopyWorker.new(work.id) }
+    subject { described_class.new(work.id) }
 
-    it "should have no content at the outset" do
+    it 'has no content at the outset' do
       expect(work.generic_files.first.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
     end
 
-    it "should copy visibility to its contained files" do
+    it 'copies visibility to its contained files' do
       work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
       work.save
       subject.run
@@ -20,9 +19,9 @@ describe VisibilityCopyWorker do
     end
   end
 
-  describe "an embargoed work" do
+  describe 'an embargoed work' do
     let(:work) { FactoryGirl.create(:embargoed_work_with_files) }
-    subject { VisibilityCopyWorker.new(work.id) }
+    subject { described_class.new(work.id) }
 
     before do
       expect(work.visibility).to eq 'restricted'
@@ -30,23 +29,23 @@ describe VisibilityCopyWorker do
       expect(work.generic_files.first).to_not be_under_embargo
     end
 
-    context "when run" do
+    context 'when run' do
       before do
         subject.run
         work.reload
       end
       let(:file) { work.generic_files.first }
 
-      it "should copy visibility to its contained files and apply a copy of the embargo to the files" do
+      it 'copies visibility to its contained files and apply a copy of the embargo to the files' do
         expect(file).to be_under_embargo
         expect(file.embargo.id).to_not eq work.embargo.id
       end
     end
   end
 
-  describe "an leased work" do
+  describe 'an leased work' do
     let(:work) { FactoryGirl.create(:leased_work_with_files) }
-    subject { VisibilityCopyWorker.new(work.id) }
+    subject { described_class.new(work.id) }
 
     before do
       expect(work.visibility).to eq 'open'
@@ -54,14 +53,14 @@ describe VisibilityCopyWorker do
       expect(work.generic_files.first).to_not be_active_lease
     end
 
-    context "when run" do
+    context 'when run' do
       before do
         subject.run
         work.reload
       end
       let(:file) { work.generic_files.first }
 
-      it "should copy visibility to its contained files and apply a copy of the lease to the files" do
+      it 'copies visibility to its contained files and apply a copy of the lease to the files' do
         expect(file).to be_active_lease
         expect(file.lease.id).to_not eq work.lease.id
       end

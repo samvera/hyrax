@@ -6,18 +6,18 @@ describe CurationConcerns::GenericWorkActor do
   let(:user) { FactoryGirl.create(:user) }
   let(:file) { curation_concerns_fixture_file_upload('files/image.png', 'image/png') }
 
-  subject {
+  subject do
     CurationConcerns::CurationConcern.actor(curation_concern, user, attributes)
-  }
+  end
 
   describe '#create' do
     let(:curation_concern) { GenericWork.new }
 
     context 'failure' do
-      let(:attributes) {{}}
+      let(:attributes) { {} }
 
       it 'returns false' do
-        expect_any_instance_of(CurationConcerns::GenericWorkActor).to receive(:save).and_return(false)
+        expect_any_instance_of(described_class).to receive(:save).and_return(false)
         allow(subject).to receive(:attach_files).and_return(true)
         expect(subject.create).to be false
       end
@@ -27,15 +27,17 @@ describe CurationConcerns::GenericWorkActor do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
 
       context 'with embargo' do
-        let(:attributes) { { title: ["New embargo"], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
-                           visibility_during_embargo: "authenticated", embargo_release_date: date.to_s,
-                           visibility_after_embargo: "open", visibility_during_lease: "open",
-                           lease_expiration_date: "2014-06-12", visibility_after_lease: "restricted",
-                           rights: ["http://creativecommons.org/licenses/by/3.0/us/"] } }
+        let(:attributes) do
+          { title: ['New embargo'], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+            visibility_during_embargo: 'authenticated', embargo_release_date: date.to_s,
+            visibility_after_embargo: 'open', visibility_during_lease: 'open',
+            lease_expiration_date: '2014-06-12', visibility_after_lease: 'restricted',
+            rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
+        end
 
-        context "with a valid embargo date" do
+        context 'with a valid embargo date' do
           let(:date) { Date.today + 2 }
-          it "should interpret and apply embargo and lease visibility settings" do
+          it 'interprets and apply embargo and lease visibility settings' do
             subject.create
             expect(curation_concern).to be_persisted
             expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
@@ -44,9 +46,9 @@ describe CurationConcerns::GenericWorkActor do
           end
         end
 
-        context "when embargo_release_date is in the past" do
-          let(:date) { Date.today-2 }
-          it "should set error on curation_concern and return false" do
+        context 'when embargo_release_date is in the past' do
+          let(:date) { Date.today - 2 }
+          it 'sets error on curation_concern and return false' do
             expect(subject.create).to be false
             expect(subject.curation_concern.errors[:embargo_release_date].first).to eq 'Must be a future date'
           end
@@ -54,15 +56,17 @@ describe CurationConcerns::GenericWorkActor do
       end
 
       context 'with lease' do
-        let(:attributes) { { title: ["New embargo"], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
-                           visibility_during_embargo: "authenticated", embargo_release_date: '2099-05-12',
-                           visibility_after_embargo: "open", visibility_during_lease: "open",
-                           lease_expiration_date: date.to_s, visibility_after_lease: "restricted",
-                           rights: ["http://creativecommons.org/licenses/by/3.0/us/"] } }
+        let(:attributes) do
+          { title: ['New embargo'], visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
+            visibility_during_embargo: 'authenticated', embargo_release_date: '2099-05-12',
+            visibility_after_embargo: 'open', visibility_during_lease: 'open',
+            lease_expiration_date: date.to_s, visibility_after_lease: 'restricted',
+            rights: ['http://creativecommons.org/licenses/by/3.0/us/'] }
+        end
 
-        context "with a valid lease date" do
+        context 'with a valid lease date' do
           let(:date) { Date.today + 2 }
-          it "should interpret and apply embargo and lease visibility settings" do
+          it 'interprets and apply embargo and lease visibility settings' do
             subject.create
             expect(curation_concern).to be_persisted
             expect(curation_concern.embargo_release_date).to be_nil
@@ -72,9 +76,9 @@ describe CurationConcerns::GenericWorkActor do
           end
         end
 
-        context "when lease_expiration_date is in the past" do
-          let(:date) { Date.today-2 }
-          it "should set error on curation_concern and return false" do
+        context 'when lease_expiration_date is in the past' do
+          let(:date) { Date.today - 2 }
+          it 'sets error on curation_concern and return false' do
             expect(subject.create).to be false
             expect(subject.curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
           end
@@ -82,14 +86,14 @@ describe CurationConcerns::GenericWorkActor do
       end
 
       context 'with a file' do
-        let(:attributes) {
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap {|a|
+        let(:attributes) do
+          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do|a|
             a[:files] = file
-          }
-        }
+          end
+        end
 
         context 'authenticated visibility' do
-          it 'should stamp each file with the access rights' do
+          it 'stamps each file with the access rights' do
             s2 = double('characterize job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
             expect(CurationConcerns.queue).to receive(:push).with(s2).once
@@ -112,14 +116,14 @@ describe CurationConcerns::GenericWorkActor do
       end
 
       context 'with multiple files file' do
-        let(:attributes) {
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap {|a|
+        let(:attributes) do
+          FactoryGirl.attributes_for(:generic_work, visibility: visibility).tap do|a|
             a[:files] = [file, file]
-          }
-        }
+          end
+        end
 
         context 'authenticated visibility' do
-          it 'should stamp each file with the access rights' do
+          it 'stamps each file with the access rights' do
             s2 = double('characterize job')
             allow(CharacterizeJob).to receive(:new).and_return(s2)
             expect(CurationConcerns.queue).to receive(:push).with(s2).twice
@@ -138,12 +142,12 @@ describe CurationConcerns::GenericWorkActor do
         end
       end
 
-      context "with a present and a blank title" do
-        let(:attributes) {
+      context 'with a present and a blank title' do
+        let(:attributes) do
           FactoryGirl.attributes_for(:generic_work, title: ['this is present', ''])
-        }
+        end
 
-        it 'should stamp each link with the access rights' do
+        it 'stamps each link with the access rights' do
           expect(subject.create).to be true
           expect(curation_concern).to be_persisted
           expect(curation_concern.title).to eq ['this is present']
@@ -153,20 +157,20 @@ describe CurationConcerns::GenericWorkActor do
   end
 
   describe '#update' do
-    let(:curation_concern) { FactoryGirl.create(:generic_work, user: user)}
+    let(:curation_concern) { FactoryGirl.create(:generic_work, user: user) }
 
     context 'failure' do
-      let(:attributes) {{}}
+      let(:attributes) { {} }
 
       it 'returns false' do
-        expect_any_instance_of(CurationConcerns::GenericWorkActor).to receive(:save).and_return(false)
+        expect_any_instance_of(described_class).to receive(:save).and_return(false)
         expect(subject.update).to be false
       end
     end
 
     context 'valid attributes' do
-      let(:attributes) {{}}
-      it "should interpret and apply embargo and lease visibility settings" do
+      let(:attributes) { {} }
+      it 'interprets and apply embargo and lease visibility settings' do
         expect(subject).to receive(:interpret_lease_visibility).and_return(true)
         expect(subject).to receive(:interpret_embargo_visibility).and_return(true)
         subject.update
@@ -176,16 +180,16 @@ describe CurationConcerns::GenericWorkActor do
     context 'adding to collections' do
       let!(:collection1) { FactoryGirl.create(:collection, user: user) }
       let!(:collection2) { FactoryGirl.create(:collection, user: user) }
-      let(:attributes) {
+      let(:attributes) do
         FactoryGirl.attributes_for(:generic_work, collection_ids: [collection2.id])
-      }
+      end
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
         curation_concern.save!
         collection1.add_member(curation_concern)
       end
 
-      it "remove from the old collection and adds to the new collection" do
+      it 'remove from the old collection and adds to the new collection' do
         curation_concern.reload
         expect(curation_concern.parent_collections).to eq [collection1]
         # before running actor.update, the work is in collection1

@@ -1,5 +1,4 @@
 module CurationConcerns
-
   class << self
     attr_accessor :configuration
   end
@@ -15,21 +14,21 @@ module CurationConcerns
     # virus is found; Any other returned value means a virus was found
     attr_writer :default_antivirus_instance
     def default_antivirus_instance
-      @default_antivirus_instance ||= lambda {|file_path|
+      @default_antivirus_instance ||= lambda do|_file_path|
         AntiVirusScanner::NO_VIRUS_FOUND_RETURN_VALUE
-      }
+      end
     end
 
     # Configure default search options from config/search_config.yml
     attr_writer :search_config
     def search_config
-      @search_config ||= "search_config not set"
+      @search_config ||= 'search_config not set'
     end
 
     # Configure the application root url.
     attr_writer :application_root_url
     def application_root_url
-      @application_root_url || (raise RuntimeError.new("Make sure to set your CurationConcerns.configuration.application_root_url"))
+      @application_root_url || (fail 'Make sure to set your CurationConcerns.configuration.application_root_url')
     end
 
     # When was this last built/deployed
@@ -38,7 +37,7 @@ module CurationConcerns
       # If you restart the server, this could be out of sync; A better
       # implementation is to read something from the file system. However
       # that detail is an exercise for the developer.
-      @build_identifier ||= Time.now.strftime("%Y-%m-%d %H:%M:%S")
+      @build_identifier ||= Time.now.strftime('%Y-%m-%d %H:%M:%S')
     end
 
     # Override characterization runner
@@ -47,8 +46,8 @@ module CurationConcerns
     def register_curation_concern(*curation_concern_types)
       Array(curation_concern_types).flatten.compact.each do |cc_type|
         class_name = normalize_concern_name(cc_type)
-        if ! registered_curation_concern_types.include?(class_name)
-          self.registered_curation_concern_types << class_name
+        unless registered_curation_concern_types.include?(class_name)
+          registered_curation_concern_types << class_name
         end
       end
     end
@@ -65,9 +64,9 @@ module CurationConcerns
 
     private
 
-    def normalize_concern_name(c)
-      c.to_s.camelize
-    end
+      def normalize_concern_name(c)
+        c.to_s.camelize
+      end
   end
 
   configure {}

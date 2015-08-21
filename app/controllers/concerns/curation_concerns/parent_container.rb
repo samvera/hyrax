@@ -7,7 +7,7 @@ module CurationConcerns::ParentContainer
   end
 
   def parent
-    @parent ||= new_or_create? ? ActiveFedora::Base.find(parent_id) : curation_concern.parent_objects.first  # parent_objects method is inherited from Hydra::PCDM::ObjectBehavior
+    @parent ||= new_or_create? ? ActiveFedora::Base.find(parent_id) : curation_concern.parent_objects.first # parent_objects method is inherited from Hydra::PCDM::ObjectBehavior
   end
 
   def parent_id
@@ -17,7 +17,7 @@ module CurationConcerns::ParentContainer
   protected
 
     def new_or_create?
-      ['create', 'new'].include? action_name
+      %w(create new).include? action_name
     end
 
     def namespaced_parent_id
@@ -29,5 +29,4 @@ module CurationConcerns::ParentContainer
     def authorize_edit_parent_rights!
       authorize! :edit, parent_id
     end
-
 end

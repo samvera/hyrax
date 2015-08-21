@@ -14,7 +14,7 @@ FactoryGirl.define do
     end
 
     factory :file_with_work do
-      after(:build) do |file, evaluator|
+      after(:build) do |file, _evaluator|
         file.title = ['testfile']
       end
       after(:create) do |file, evaluator|

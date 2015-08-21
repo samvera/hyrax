@@ -7,10 +7,14 @@ gem 'slop', '~> 3.6.0' # This just helps us generate a valid Gemfile.lock when R
 
 gem 'curation_concerns-models', path: './curation_concerns-models'
 
-group :test do
+group :development, :test do
+  gem 'rubocop', require: false
+  gem 'rubocop-rspec', require: false
   gem 'simplecov', '~> 0.9', require: false
   gem 'coveralls', require: false
   gem 'poltergeist'
+  gem 'pry' unless ENV['CI']
+  gem 'pry-byebug' unless ENV['CI']
 end
 
 file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path("../spec/internal", __FILE__))
