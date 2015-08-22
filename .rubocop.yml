@@ -13,10 +13,6 @@ AllCops:
     - 'spec/internal/**/*'
     - 'curation_concerns-models/app/models/concerns/curation_concerns/generic_file/export.rb'
 
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'lib/generators/curation_concerns/templates/curation_concerns_config.rb'
-
 Metrics/LineLength:
   Enabled: false
 

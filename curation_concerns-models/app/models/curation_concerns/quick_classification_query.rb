@@ -9,7 +9,7 @@ module CurationConcerns
     def initialize(user, options = {})
       @user = user
       @concern_name_normalizer = options.fetch(:concern_name_normalizer, ClassifyConcern.method(:to_class))
-      @registered_curation_concern_names = options.fetch(:registered_curation_concern_names, CurationConcerns.configuration.registered_curation_concern_types)
+      @registered_curation_concern_names = options.fetch(:registered_curation_concern_names, CurationConcerns.config.registered_curation_concern_types)
     end
 
     def all

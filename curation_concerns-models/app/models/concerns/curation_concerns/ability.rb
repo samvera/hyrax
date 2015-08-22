@@ -23,7 +23,7 @@ module CurationConcerns
     # to submit content
     def everyone_can_create_curation_concerns
       return if current_user.new_record?
-      can :create, [CurationConcerns.configuration.curation_concerns]
+      can :create, [CurationConcerns.config.curation_concerns]
       can :create, ::Collection
     end
   end

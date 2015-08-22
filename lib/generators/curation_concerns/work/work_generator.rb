@@ -49,19 +49,16 @@ class CurationConcerns::WorkGenerator < Rails::Generators::NamedBase
   end
 
   def register_work
-    inject_into_file 'config/initializers/curation_concerns_config.rb', after: "CurationConcerns.configure do |config|\n" do
-      data = ''
-      data << "  # Injected via `rails g curation_concerns:work #{class_name}`\n"
-      data << "  config.register_curation_concern :#{file_name}\n"
-      data
+    inject_into_file 'config/initializers/curation_concerns.rb', after: "CurationConcerns.configure do |config|\n" do
+      "  # Injected via `rails g curation_concerns:work #{class_name}`\n" \
+      "  config.register_curation_concern :#{file_name}\n"
     end
   end
 
   def create_views
     create_file "app/views/curation_concerns/#{plural_file_name}/_#{file_name}.html.erb" do
-      data = "<%# This is a search result view %>\n"
-      data << "<%= render 'catalog/document', document: #{file_name}, document_counter: #{file_name}_counter  %>\n"
-      data
+      "<%# This is a search result view %>\n" \
+      "<%= render 'catalog/document', document: #{file_name}, document_counter: #{file_name}_counter  %>\n"
     end
   end
 
