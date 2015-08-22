@@ -1,11 +1,5 @@
 module CurationConcerns
   module Models
-    def self.config(&block)
-      @@config ||= Engine::Configuration.new
-      yield @@config if block
-      @@config
-    end
-
     class Engine < ::Rails::Engine
       require 'curation_concerns/models/resque'
 
