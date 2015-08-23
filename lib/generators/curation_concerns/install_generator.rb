@@ -94,9 +94,5 @@ module CurationConcerns
     def add_helper
       copy_file 'curation_concerns_helper.rb', 'app/helpers/curation_concerns_helper.rb'
     end
-
-    def add_config_file
-      copy_file 'curation_concerns_config.rb', 'config/initializers/curation_concerns_config.rb'
-    end
   end
 end

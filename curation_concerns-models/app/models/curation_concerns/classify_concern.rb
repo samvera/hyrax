@@ -15,7 +15,7 @@ module CurationConcerns
     end
 
     def registered_curation_concern_types
-      CurationConcerns.configuration.registered_curation_concern_types
+      CurationConcerns.config.registered_curation_concern_types
     end
 
     def possible_curation_concern_types

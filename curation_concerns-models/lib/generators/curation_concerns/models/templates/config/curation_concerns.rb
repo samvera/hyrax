@@ -1,4 +1,4 @@
-CurationConcerns.config do |config|
+CurationConcerns.configure do |config|
   config.fits_to_desc_mapping = {
     file_title: :title,
     file_author: :creator

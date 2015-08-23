@@ -20,7 +20,7 @@ module CurationConcerns
 
     # generated new GenericWork models get registered as curation concerns and need a
     # track_model_path to render Blacklight-related views
-    CurationConcerns.configuration.registered_curation_concern_types.each do |concern|
+    CurationConcerns.config.registered_curation_concern_types.each do |concern|
       define_method("track_#{concern.underscore}_path") { |*args| main_app.track_solr_document_path(*args) }
     end
   end

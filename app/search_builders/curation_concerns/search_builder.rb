@@ -4,13 +4,13 @@ class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
 
   def only_generic_files_and_curation_concerns(solr_parameters)
     solr_parameters[:fq] ||= []
-    types_to_include = CurationConcerns.configuration.registered_curation_concern_types.dup
+    types_to_include = CurationConcerns.config.registered_curation_concern_types.dup
     types_to_include << 'Collection'
     formatted_type_names = types_to_include.map { |class_name| "\"#{class_name}\"" }.join(' ')
 
     solr_parameters[:fq] << "#{Solrizer.solr_name('has_model', :symbol)}:(#{formatted_type_names})"
 
-    # CurationConcerns.configuration.registered_curation_concern_types.each do |curation_concern_class_name|
+    # CurationConcerns.config.registered_curation_concern_types.each do |curation_concern_class_name|
     #   solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"GenericFile\" \"Collection\")"
     # end
   end
@@ -36,7 +36,7 @@ class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
 
   def work_clauses
     return [] if blacklight_params.key?(:f) && Array(blacklight_params[:f][:generic_type_sim]).include?('Collection')
-    CurationConcerns.configuration.registered_curation_concern_types.map(&:constantize).map do |klass|
+    CurationConcerns.config.registered_curation_concern_types.map(&:constantize).map do |klass|
       ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: klass.to_class_uri)
     end
   end

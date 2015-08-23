@@ -3,23 +3,6 @@ module CurationConcerns
     class Engine < ::Rails::Engine
       require 'curation_concerns/models/resque'
 
-      # Set some configuration defaults
-      config.persistent_hostpath = 'http://localhost/files/'
-      config.enable_ffmpeg = false
-      config.ffmpeg_path = 'ffmpeg'
-      config.fits_message_length = 5
-      config.temp_file_base = nil
-      config.enable_noids = true
-      config.noid_template = '.reeddeeddk'
-      config.minter_statefile = '/tmp/minter-state'
-      config.redis_namespace = 'curation_concerns'
-      config.fits_path = 'fits.sh'
-      config.enable_local_ingest = nil
-      config.queue = CurationConcerns::Resque::Queue
-
-      # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
-      config.analytic_start_date = nil
-
       config.autoload_paths += %W(
         #{config.root}/app/actors/concerns
         #{config.root}/lib/curation_concerns

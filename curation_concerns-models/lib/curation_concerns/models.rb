@@ -15,18 +15,13 @@ module CurationConcerns
   autoload :Utils, 'curation_concerns/models/utils'
   autoload :Permissions
   autoload :Messages
+  eager_autoload do
+    autoload :Configuration
+  end
 
   attr_writer :queue
 
   def self.queue
     @queue ||= config.queue.new('curation_concerns')
-  end
-
-  def self.config(&block)
-    @@config ||= CurationConcerns::Models::Engine::Configuration.new
-
-    yield @@config if block
-
-    @@config
   end
 end

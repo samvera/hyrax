@@ -3,7 +3,7 @@ module CurationConcerns
     # Returns true if can create at least one type of work
     def can_ever_create_works?
       can = false
-      CurationConcerns.configuration.curation_concerns.each do |curation_concern_type|
+      CurationConcerns.config.curation_concerns.each do |curation_concern_type|
         break if can
         can = can?(:create, curation_concern_type)
       end
