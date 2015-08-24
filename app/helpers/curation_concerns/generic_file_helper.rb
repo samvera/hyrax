@@ -14,4 +14,23 @@ module CurationConcerns::GenericFileHelper
       polymorphic_path([main_app, :curation_concerns, parent])
     end
   end
+
+  def media_display(generic_file)
+    render media_display_partial(generic_file), generic_file: generic_file
+  end
+
+  def media_display_partial(generic_file)
+    'curation_concerns/generic_files/media_display/' +
+      if generic_file.image?
+        'image'
+      elsif generic_file.video?
+        'video'
+      elsif generic_file.audio?
+        'audio'
+      elsif generic_file.pdf?
+        'pdf'
+      else
+        'default'
+      end
+  end
 end
