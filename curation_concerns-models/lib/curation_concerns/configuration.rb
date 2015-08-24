@@ -31,6 +31,12 @@ module CurationConcerns
       @application_root_url || (fail 'Make sure to set your CurationConcerns.config.application_root_url')
     end
 
+    # Path on the local file system where derivatives will be stored
+    attr_writer :derivatives_path
+    def derivatives_path
+      @derivatives_path ||= File.join(Rails.root, 'tmp', 'derivatives')
+    end
+
     # When was this last built/deployed
     attr_writer :build_identifier
     def build_identifier

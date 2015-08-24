@@ -24,7 +24,6 @@ describe DownloadsController do
     end
 
     context "when user isn't logged in" do
-      # before { generic_file }
       it 'redirects to sign in' do
         get :show, id: generic_file.to_param
         expect(response).to redirect_to new_user_session_path
@@ -44,14 +43,17 @@ describe DownloadsController do
 
       context "with an alternative file" do
         context "that is persisted" do
+          let(:file) { File.open(fixture_file_path('world.png'), 'rb') }
+
+          let(:content) { file.rewind; file.read }
+
           before do
-            content = File.open(fixture_file_path('world.png'))
-            Hydra::Works::AddFileToGenericFile.call(generic_file, content, :thumbnail)
+            CurationConcerns::PersistDerivatives.call(generic_file, file, 'thumbnail')
           end
 
           it 'sends requested file content' do
             get :show, id: generic_file, file: 'thumbnail'
-            expect(response.body).to eq generic_file.thumbnail.content
+            expect(response.body).to eq content
           end
         end
 
