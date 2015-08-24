@@ -67,7 +67,7 @@ describe 'collection' do
       @collection.apply_depositor_metadata(user_key)
       @collection.save
       sign_in user
-      visit main_app.catalog_index_path('f[generic_type_sim][]': 'Collection', works: 'mine')
+      visit main_app.catalog_index_path('f[generic_type_sim][]' => 'Collection', works: 'mine')
     end
 
     it 'deletes a collection' do
