@@ -1,0 +1,7 @@
+  <%= link_to main_app.download_path(generic_file), target: "_new", title: "Download the full-sized PDF" do%>
+    <%= image_tag main_app.download_path(generic_file, file: 'thumbnail'),
+                  class: "img-responsive",
+                  alt: "Download the full-sized PDF of #{generic_file.title.first}" %>
+    Download the full-sized PDF
+  <% end %>
+
