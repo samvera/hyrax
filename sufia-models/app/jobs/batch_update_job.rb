@@ -13,15 +13,15 @@ class BatchUpdateJob
     self.title = title || {}
     self.file_attributes = file_attributes
     self.visibility = visibility
-    self.work_attributes = file_attributes.merge({ visibility: visibility })
+    self.work_attributes = file_attributes.merge(visibility: visibility)
     self.batch_id = batch_id
     self.saved = []
     self.denied = []
   end
 
   def run
-    batch = Batch.find_or_create(self.batch_id)
-    user = User.find_by_user_key(self.login)
+    batch = Batch.find_or_create(batch_id)
+    user = User.find_by_user_key(login)
 
     batch.generic_files.each do |gf|
       update_file(gf, user)
@@ -44,7 +44,7 @@ class BatchUpdateJob
     end
     # update the file using the actor after setting the title
     gf.title = title[gf.id] if title[gf.id]
-    CurationConcerns::GenericFileActor.new(gf, user).update_metadata(file_attributes, { visibility: visibility })
+    CurationConcerns::GenericFileActor.new(gf, user).update_metadata(file_attributes, visibility: visibility)
 
     # update the work to the same metadata as the file.
     # NOTE: For the moment we are assuming copied metadata.  This is likely to change.
@@ -58,13 +58,13 @@ class BatchUpdateJob
     saved << gf
   end
 
-  def send_user_success_message user, batch
+  def send_user_success_message(user, batch)
     message = saved.count > 1 ? multiple_success(batch.id, saved) : single_success(batch.id, saved.first)
-    User.batchuser.send_message(user, message, success_subject, sanitize_text = false)
+    User.batchuser.send_message(user, message, success_subject, false)
   end
 
-  def send_user_failure_message user, batch
+  def send_user_failure_message(user, batch)
     message = denied.count > 1 ? multiple_failure(batch.id, denied) : single_failure(batch.id, denied.first)
-    User.batchuser.send_message(user, message, failure_subject, sanitize_text = false)
+    User.batchuser.send_message(user, message, failure_subject, false)
   end
 end

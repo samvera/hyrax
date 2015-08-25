@@ -16,7 +16,7 @@ describe 'batch/edit.html.erb' do
     render
   end
 
-  it "should draw the page" do
+  it "draws the page" do
     # form
     expect(rendered).to have_selector "form#new_generic_file"
     # should have browser validations
@@ -35,7 +35,5 @@ describe 'batch/edit.html.erb' do
     page.all('select#generic_file_rights option').each do |elem|
       expect(elem.value).to_not be_empty
     end
-
   end
 end
-

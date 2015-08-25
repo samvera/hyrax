@@ -1,6 +1,5 @@
 module My
   class HighlightsController < MyController
-
     self.search_params_logic += [
       :show_only_highlighted_works
     ]
@@ -12,9 +11,8 @@ module My
 
     protected
 
-    def search_action_url *args
-      sufia.dashboard_highlights_url *args
-    end
-
+      def search_action_url(*args)
+        sufia.dashboard_highlights_url(*args)
+      end
   end
 end

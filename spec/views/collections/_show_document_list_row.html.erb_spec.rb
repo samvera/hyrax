@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe 'collections/_show_document_list_row.html.erb', :type => :view do
-
+describe 'collections/_show_document_list_row.html.erb', type: :view do
   let(:user) { FactoryGirl.find_or_create(:jill) }
 
   let(:work) do
@@ -22,13 +21,13 @@ describe 'collections/_show_document_list_row.html.erb', :type => :view do
       allow(view).to receive(:render_collection_links).and_return("collections: #{collection.title}")
     end
 
-    it "should render collections links" do
-      render(partial: 'collections/show_document_list_row.html.erb', locals: {document: work})
+    it "renders collections links" do
+      render(partial: 'collections/show_document_list_row.html.erb', locals: { document: work })
       expect(rendered).to have_content 'My awesome collection'
     end
 
-    it "should render works" do
-      render(partial: 'collections/show_document_list_row.html.erb', locals: {document: work})
+    it "renders works" do
+      render(partial: 'collections/show_document_list_row.html.erb', locals: { document: work })
       expect(rendered).to have_content 'One Hundred Years of Solitude'
     end
   end

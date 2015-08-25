@@ -6,7 +6,7 @@ module Sufia
 
     attr_reader :item
 
-    self.copy_blacklight_config_from(CatalogController)
+    copy_blacklight_config_from(CatalogController)
 
     # @param [SolrDocument] item represents a GenericWork
     def self.run(item)
@@ -17,7 +17,7 @@ module Sufia
       @item = item
     end
 
-    def list_collections()
+    def list_collections
       query = collection_search_builder.rows(1000)
       resp = repository.search(query)
       resp.documents
@@ -26,6 +26,5 @@ module Sufia
     def collection_search_builder
       @collection_search_builder ||= ParentCollectionSearchBuilder.new([:include_item_ids, :add_paging_to_solr], self)
     end
-
   end
 end

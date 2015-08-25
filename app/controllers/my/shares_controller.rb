@@ -1,6 +1,5 @@
 module My
   class SharesController < MyController
-
     self.search_params_logic += [
       :show_only_shared_files,
       :show_only_generic_files
@@ -13,9 +12,8 @@ module My
 
     protected
 
-    def search_action_url *args
-      sufia.dashboard_shares_url *args
-    end
-
+      def search_action_url(*args)
+        sufia.dashboard_shares_url(*args)
+      end
   end
 end

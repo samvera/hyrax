@@ -8,8 +8,8 @@ module Sufia
     included do
       include Sufia::Breadcrumbs
 
-      before_filter :has_access?, except: :show
-      before_filter :build_breadcrumbs, only: [:edit, :show]
+      before_action :has_access?, except: :show
+      before_action :build_breadcrumbs, only: [:edit, :show]
       load_and_authorize_resource except: [:index, :audit], class: GenericWork
 
       set_curation_concern_type GenericWork
@@ -41,43 +41,39 @@ module Sufia
 
     protected
 
-    def after_create
-      respond_to do |format|
-        format.html { redirect_to sufia.generic_work_path(@generic_work), notice: 'GenericWork was successfully created.' }
-        format.json { render json: @generic_work, status: :created, location: @generic_work }
+      def after_create
+        respond_to do |format|
+          format.html { redirect_to sufia.generic_work_path(@generic_work), notice: 'GenericWork was successfully created.' }
+          format.json { render json: @generic_work, status: :created, location: @generic_work }
+        end
       end
 
-    end
+      def after_create_error
+      end
 
-    def after_create_error
-
-    end
-
-    def generic_work_params
-      form_class.model_attributes(
+      def generic_work_params
+        form_class.model_attributes(
           params.require(:generic_work).permit(:title, :description, :members, :on_behalf_of, part_of: [],
-          contributor: [], creator: [], publisher: [], date_created: [], subject: [],
-          language: [], rights: [], resource_type: [], identifier: [], based_near: [],
-          tag: [], related_url: [])
-      )
+                                                                                              contributor: [], creator: [], publisher: [], date_created: [], subject: [],
+                                                                                              language: [], rights: [], resource_type: [], identifier: [], based_near: [],
+                                                                                              tag: [], related_url: [])
+        )
+      end
 
-    end
+      def presenter
+        @presenter ||= presenter_class.new(@generic_work)
+      end
 
-    def presenter
-      @presenter ||= presenter_class.new(@generic_work)
-    end
+      def presenter_class
+        Sufia::GenericWorkPresenter
+      end
 
-    def presenter_class
-      Sufia::GenericWorkPresenter
-    end
+      def form
+        @form ||= form_class.new(@generic_work)
+      end
 
-    def form
-      @form ||= form_class.new(@generic_work)
-    end
-
-    def form_class
-      CurationConcerns::Forms::GenericWorkEditForm
-    end
-
+      def form_class
+        CurationConcerns::Forms::GenericWorkEditForm
+      end
   end
 end

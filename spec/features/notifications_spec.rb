@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe "Notifications page", :type => :feature do
-
+describe "Notifications page", type: :feature do
   before do
     sign_in FactoryGirl.create(:user_with_mail)
     visit "/notifications"
   end
 
-  it "should list notifications with date, subject and message" do
+  it "lists notifications with date, subject and message" do
     expect(page).to have_content "User Notifications"
     expect(page.find(:xpath, '//thead/tr')).to have_content "Date"
     expect(page.find(:xpath, '//thead/tr')).to have_content "Subject"
@@ -19,7 +18,4 @@ describe "Notifications page", :type => :feature do
     expect(page).to have_content "Batch upload permission denied  "
     expect(page).to have_content "Batch upload complete"
   end
-
-
-
 end

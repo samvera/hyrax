@@ -4,6 +4,6 @@ module Sufia
 
     metrics :totalEvents
     dimensions :eventCategory, :eventAction, :eventLabel, :date
-    filter :for_file, &lambda {|id| matches(:eventLabel, id)}
-  end 
+    filter :for_file, &->(id) { matches(:eventLabel, id) }
+  end
 end

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe FileViewStat, :type => :model do
-  let (:file_id) {"99"}
-  let (:user_id) {123}
-  let (:date) {DateTime.new}
-  let (:file_stat) {FileViewStat.create(views:"25", date: date, file_id: file_id, user_id: user_id)}
+RSpec.describe FileViewStat, type: :model do
+  let(:file_id) { "99" }
+  let(:user_id) { 123 }
+  let(:date) { DateTime.new }
+  let(:file_stat) { described_class.create(views: "25", date: date, file_id: file_id, user_id: user_id) }
 
   it "has attributes" do
     expect(file_stat).to respond_to(:views)
@@ -17,14 +17,13 @@ RSpec.describe FileViewStat, :type => :model do
   end
 
   describe "#get_float_statistics" do
-
     let(:dates) {
       ldates = []
-      4.downto(0) {|idx| ldates << (Date.today-idx.day) }
+      4.downto(0) { |idx| ldates << (Date.today - idx.day) }
       ldates
     }
     let(:date_strs) {
-      dates.map {|date|  date.strftime("%Y%m%d") }
+      dates.map { |date| date.strftime("%Y%m%d") }
     }
 
     let(:view_output) {
@@ -38,51 +37,46 @@ RSpec.describe FileViewStat, :type => :model do
     # results from the Legato gem.
     let(:sample_pageview_statistics) {
       [
-          OpenStruct.new(date: date_strs[0], pageviews: 4),
-          OpenStruct.new(date: date_strs[1], pageviews: 8),
-          OpenStruct.new(date: date_strs[2], pageviews: 6),
-          OpenStruct.new(date: date_strs[3], pageviews: 10),
-          #OpenStruct.new(date: date_strs[4], pageviews: 2)
+        OpenStruct.new(date: date_strs[0], pageviews: 4),
+        OpenStruct.new(date: date_strs[1], pageviews: 8),
+        OpenStruct.new(date: date_strs[2], pageviews: 6),
+        OpenStruct.new(date: date_strs[3], pageviews: 10),
+        # OpenStruct.new(date: date_strs[4], pageviews: 2)
       ]
     }
     describe "cache empty" do
-      let (:stats) {
-        expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        FileViewStat.statistics(file_id, Date.today-4.day, user_id)
-      }
+      let(:stats) do
+        expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+        described_class.statistics(file_id, Date.today - 4.day, user_id)
+      end
 
       it "includes cached ga data" do
-        expect(FileViewStat.to_flots stats).to include(*view_output)
+        expect(described_class.to_flots stats).to include(*view_output)
       end
 
       it "caches data" do
-        expect(FileViewStat.to_flots stats).to include(*view_output)
+        expect(described_class.to_flots stats).to include(*view_output)
         expect(stats.first.user_id).to eq user_id
 
         # at this point all data should be cached
-        allow(FileViewStat).to receive(:ga_statistics).with(Date.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
+        allow(described_class).to receive(:ga_statistics).with(Date.today, file_id).and_raise("We should not call Google Analytics All data should be cached!")
 
-        stats2 = FileViewStat.statistics(file_id,Date.today-5.day)
-        expect(FileViewStat.to_flots stats2).to include(*view_output)
+        stats2 = described_class.statistics(file_id, Date.today - 5.day)
+        expect(described_class.to_flots stats2).to include(*view_output)
       end
-
     end
 
     describe "cache loaded" do
+      let!(:file_view_stat) { described_class.create(date: (Date.today - 5.day).to_datetime, file_id: file_id, views: "25") }
 
-      let!(:file_view_stat) { FileViewStat.create(date: (Date.today-5.day).to_datetime, file_id: file_id, views:"25")}
-
-      let (:stats) {
-        expect(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-        FileViewStat.statistics(file_id,Date.today-5.day)
-      }
-
-      it "includes cached data" do
-        expect(FileViewStat.to_flots stats).to include([file_view_stat.date.to_i*1000,file_view_stat.views],*view_output)
+      let(:stats) do
+        expect(described_class).to receive(:ga_statistics).and_return(sample_pageview_statistics)
+        described_class.statistics(file_id, Date.today - 5.day)
       end
 
+      it "includes cached data" do
+        expect(described_class.to_flots stats).to include([file_view_stat.date.to_i * 1000, file_view_stat.views], *view_output)
+      end
     end
-
   end
 end
-

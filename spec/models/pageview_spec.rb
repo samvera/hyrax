@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Sufia::Pageview, :type => :model do
+describe Sufia::Pageview, type: :model do
   before do
-    @pageview = Sufia::Pageview
+    @pageview = described_class
   end
 
   it 'has a pageviews metric' do
-    expect(@pageview.metrics).to be  == Legato::ListParameter.new(:metrics, [:pageviews])
+    expect(@pageview.metrics).to be == Legato::ListParameter.new(:metrics, [:pageviews])
   end
 
   it 'has a date dimension' do

@@ -9,8 +9,8 @@ class FeaturedWorkListsController < ApplicationController
   end
 
   protected
+
     def list_params
       params.require(:featured_work_list).permit(featured_works_attributes: [:id, :order])
     end
 end
-

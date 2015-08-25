@@ -1,18 +1,18 @@
 module Sufia
   module SufiaHelperBehavior
-    def orcid_label(style_class='')
-      "#{image_tag 'orcid.png', { alt: t('sufia.user_profile.orcid.alt'), class: style_class }} #{t('sufia.user_profile.orcid.label')}".html_safe
+    def orcid_label(style_class = '')
+      "#{image_tag 'orcid.png', alt: t('sufia.user_profile.orcid.alt'), class: style_class} #{t('sufia.user_profile.orcid.label')}".html_safe
     end
 
     def error_messages_for(object)
-      if object.try(:errors) and object.errors.full_messages.any?
+      if object.try(:errors) && object.errors.full_messages.any?
         content_tag(:div, class: 'alert alert-block alert-error validation-errors') do
           content_tag(:h4, I18n.t('sufia.errors.header', model: object.class.model_name.human.downcase), class: 'alert-heading') +
             content_tag(:ul) do
-            object.errors.full_messages.map do |message|
-              content_tag(:li, message)
-            end.join('').html_safe
-          end
+              object.errors.full_messages.map do |message|
+                content_tag(:li, message)
+              end.join('').html_safe
+            end
         end
       else
         '' # return empty string
@@ -31,8 +31,7 @@ module Sufia
     # example:
     #   config.index.thumbnail_method = :sufia_thumbnail_tag
     def sufia_thumbnail_tag(document, options)
-
-      if document.kind_of? ActiveFedora::Base
+      if document.is_a?(ActiveFedora::Base)
         case document
         when Collection
           collection_thumbnail
@@ -74,7 +73,9 @@ module Sufia
 
     def display_user_name(recent_document)
       return "no display name" unless recent_document.depositor
-      ::User.find_by_user_key(recent_document.depositor).name rescue recent_document.depositor
+      ::User.find_by_user_key(recent_document.depositor).name
+    rescue
+      recent_document.depositor
     end
 
     def number_of_deposits(user)
@@ -89,14 +90,14 @@ module Sufia
     # @param solr_field [String] The name of the solr field to link to without its suffix (:facetable)
     # @param empty_message [String] ('No value entered') The message to display if no values are passed in.
     # @param separator [String] (', ') The value to join with.
-    def link_to_facet_list(values, solr_field, empty_message="No value entered", separator=", ")
+    def link_to_facet_list(values, solr_field, empty_message = "No value entered", separator = ", ")
       return empty_message if values.blank?
       facet_field = Solrizer.solr_name(solr_field, :facetable)
-      safe_join(values.map{ |item| link_to_facet(item, facet_field) }, separator)
+      safe_join(values.map { |item| link_to_facet(item, facet_field) }, separator)
     end
 
     def link_to_field(fieldname, fieldvalue, displayvalue = nil)
-      p = { search_field: 'advanced', fieldname => '"'+fieldvalue+'"' }
+      p = { search_field: 'advanced', fieldname => '"' + fieldvalue + '"' }
       link_url = catalog_index_path(p)
       display = displayvalue.blank? ? fieldvalue : displayvalue
       link_to(display, link_url)
@@ -113,10 +114,10 @@ module Sufia
       return login if user.nil?
 
       text = if user.respond_to? :name
-        user.name
-      else
-        login
-      end
+               user.name
+             else
+               login
+             end
 
       link_to text, Sufia::Engine.routes.url_helpers.profile_path(user)
     end
@@ -155,12 +156,12 @@ module Sufia
       end
     end
 
-    def render_visibility_link document
-      link_to render_visibility_label(document), sufia.edit_generic_file_path(document, {anchor: "permissions_display"}),
-        id: "permission_"+document.id, class: "visibility-link"
+    def render_visibility_link(document)
+      link_to render_visibility_label(document), sufia.edit_generic_file_path(document, anchor: "permissions_display"),
+              id: "permission_" + document.id, class: "visibility-link"
     end
 
-    def render_visibility_label document
+    def render_visibility_label(document)
       if document.registered?
         content_tag :span, t('sufia.institution_name'), class: "label label-info", title: t('sufia.institution_name')
       elsif document.public?
@@ -204,14 +205,13 @@ module Sufia
 
       def file_thumbnail(document, options)
         path = if document.image? || document.pdf? || document.video? || document.office_document?
-          sufia.download_path document, file: 'thumbnail'
-        elsif document.audio?
-          "audio.png"
-        else
-          "default.png"
-        end
+                 sufia.download_path document, file: 'thumbnail'
+               elsif document.audio?
+                 "audio.png"
+               else
+                 "default.png"
+               end
         image_tag path, options
       end
-
   end
 end

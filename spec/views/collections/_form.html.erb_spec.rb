@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'collections/_form.html.erb' do
   let(:collection) { Collection.new(title: 'the title', description: 'the description',
-                                     creator: ['the creator'])}
+                                    creator: ['the creator'])}
 
   let(:collection_form) { Sufia::Forms::CollectionEditForm.new(collection) }
 
@@ -11,7 +11,7 @@ describe 'collections/_form.html.erb' do
     assign(:form, collection_form)
   end
 
-  it "should draw the metadata fields for collection" do
+  it "draws the metadata fields for collection" do
     render
     expect(rendered).to have_selector("input#collection_title")
     expect(rendered).to_not have_selector("div#additional_title.multi_value")

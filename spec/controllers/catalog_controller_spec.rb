@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CatalogController, :type => :controller do
+describe CatalogController, type: :controller do
   routes { Rails.application.class.routes }
 
   let(:user) { FactoryGirl.find_or_create(:jill) }
@@ -10,7 +10,6 @@ describe CatalogController, :type => :controller do
   end
 
   describe "#index" do
-
     let(:rocks) {
       GenericWork.new(id: 'rock123', title: ['Rock Documents'], read_groups: ['public'])
     }
@@ -27,7 +26,7 @@ describe CatalogController, :type => :controller do
 
     context 'with a non-work file' do
       let(:file) { GenericFile.new(id: 'file123') }
-      let(:objects) { [file, rocks, clouds]}
+      let(:objects) { [file, rocks, clouds] }
 
       it 'finds works, not files' do
         get :index
@@ -35,8 +34,8 @@ describe CatalogController, :type => :controller do
         expect(response).to render_template('catalog/index')
 
         ids = assigns(:document_list).map(&:id)
-        expect(ids).to     include rocks.id
-        expect(ids).to     include clouds.id
+        expect(ids).to include rocks.id
+        expect(ids).to include clouds.id
         expect(ids).not_to include file.id
       end
     end
@@ -44,10 +43,10 @@ describe CatalogController, :type => :controller do
     context 'with collections' do
       let(:collection) {
         Collection.new(id: 'collection1', title: 'my collection', tag: ['rocks'], read_groups: ['public']) do |c|
-           c.apply_depositor_metadata('mjg36')
+          c.apply_depositor_metadata('mjg36')
         end
       }
-      let (:objects) { [collection, rocks, clouds]}
+      let(:objects) { [collection, rocks, clouds] }
 
       it 'finds collections' do
         xhr :get, :index, q: 'rocks'
@@ -58,7 +57,7 @@ describe CatalogController, :type => :controller do
     end
 
     describe 'term search' do
-      let (:objects) { [rocks, clouds]}
+      let(:objects) { [rocks, clouds] }
       it 'finds works with the given search term' do
         get :index, q: 'rocks', owner: 'all'
         expect(response).to be_success
@@ -68,9 +67,9 @@ describe CatalogController, :type => :controller do
     end
 
     describe 'facet search' do
-      let (:objects) { [rocks, clouds]}
+      let(:objects) { [rocks, clouds] }
       before do
-        get :index, {'f' => {'contributor_tesim' => ['frodo']}}
+        get :index, 'f' => { 'contributor_tesim' => ['frodo'] }
       end
 
       it 'finds faceted works' do
@@ -81,7 +80,7 @@ describe CatalogController, :type => :controller do
     end
 
     describe 'full-text search', skip: 'Will GenericWorks have a full_text search?' do
-      let (:objects) { [rocks, clouds]}
+      let(:objects) { [rocks, clouds] }
       it 'finds matching records' do
         get :index, q: 'full_textfull_text'
         expect(response).to be_success
@@ -91,7 +90,7 @@ describe CatalogController, :type => :controller do
     end
 
     context 'works by file metadata' do
-      let (:objects) do
+      let(:objects) do
         [double(to_solr: file1), double(to_solr: file2),
          double(to_solr: work1), double(to_solr: work2)]
       end
@@ -111,13 +110,13 @@ describe CatalogController, :type => :controller do
       let(:file1) do
         { has_model_ssim: ["GenericFile"], id: "ff365c78h", title_tesim: ["find me"],
           objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
-          edit_access_person_ssim: ["jilluser@example.com"]}
+          edit_access_person_ssim: ["jilluser@example.com"] }
       end
 
       let(:file2) do
         { has_model_ssim: ["GenericFile"], id: "ff365c79s", title_tesim: ["other file"],
           objects_ssim: [], generic_work_ids_ssim: ["ff365c76z"],
-          edit_access_person_ssim: ["jilluser@example.com"]}
+          edit_access_person_ssim: ["jilluser@example.com"] }
       end
 
       it "finds work and work that contains file with title" do
@@ -135,5 +134,5 @@ describe CatalogController, :type => :controller do
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
     end
-  end  # describe "#index"
+  end # describe "#index"
 end

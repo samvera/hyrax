@@ -1,5 +1,4 @@
 class ContentDepositorChangeEventJob < EventJob
-
   def queue_name
     :proxy_deposit
   end
@@ -9,7 +8,7 @@ class ContentDepositorChangeEventJob < EventJob
   # @param [String] id identifier of the generic work to be transfered
   # @param [String] login the user key of the user the generic work is being transfered to.
   # @param [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
-  def initialize(id, login, reset=false)
+  def initialize(id, login, reset = false)
     self.id = id
     self.login = login
     self.reset = reset

@@ -1,5 +1,4 @@
 class FeaturedWorksController < ApplicationController
-
   def create
     authorize! :create, FeaturedWork
     @featured_work = FeaturedWork.new(generic_work_id: params[:id])
@@ -9,7 +8,7 @@ class FeaturedWorksController < ApplicationController
         format.json { render json: @featured_work, status: :created }
       else
         format.json { render json: @featured_work.errors, status: :unprocessable_entity }
-      end        
+      end
     end
   end
 
@@ -17,10 +16,9 @@ class FeaturedWorksController < ApplicationController
     authorize! :destroy, FeaturedWork
     @featured_work = FeaturedWork.find_by(generic_work_id: params[:id])
     @featured_work.destroy
-      
+
     respond_to do |format|
       format.json { head :no_content }
     end
   end
-
 end

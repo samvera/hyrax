@@ -9,5 +9,4 @@ class CollectionSearchBuilder < Hydra::SearchBuilder
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << "{!join from=generic_file_ids_ssim to=id}{!join from=child_object_ids_ssim to=id}id:#{collection.id}"
   end
-
 end

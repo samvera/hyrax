@@ -12,13 +12,13 @@ describe "homepage/_home_header.html.erb" do
     end
     context "when the user can view" do
       let(:can_view_share_work) { true }
-      it "should display" do
+      it "displays" do
         expect(rendered).to have_content t("sufia.share_button")
       end
     end
     context "when the user can't view" do
       let(:can_view_share_work) { false }
-      it "should not display" do
+      it "does not display" do
         expect(rendered).not_to have_content t("sufia.share_button")
       end
     end

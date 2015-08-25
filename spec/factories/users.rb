@@ -19,31 +19,30 @@ FactoryGirl.define do
 
         # Create examples of single file successes and failures
         (1..10).each do |number|
-          file = MockFile.new(number.to_s, "Single File #{number.to_s}")
-          User.batchuser().send_message(user, message.single_success("single-batch-success", file), message.success_subject, sanitize_text = false)
-          User.batchuser().send_message(user, message.single_failure("single-batch-failure", file), message.failure_subject, sanitize_text = false)
+          file = MockFile.new(number.to_s, "Single File #{number}")
+          User.batchuser.send_message(user, message.single_success("single-batch-success", file), message.success_subject, false)
+          User.batchuser.send_message(user, message.single_failure("single-batch-failure", file), message.failure_subject, false)
         end
 
         # Create examples of mulitple file successes and failures
         files = []
         (1..50).each do |number|
-          files << MockFile.new(number.to_s, "File #{number.to_s}")
+          files << MockFile.new(number.to_s, "File #{number}")
         end
-        User.batchuser().send_message(user, message.multiple_success("multiple-batch-success", files), message.success_subject, sanitize_text = false)
-        User.batchuser().send_message(user, message.multiple_failure("multiple-batch-failure", files), message.failure_subject, sanitize_text = false)
+        User.batchuser.send_message(user, message.multiple_success("multiple-batch-success", files), message.success_subject, false)
+        User.batchuser.send_message(user, message.multiple_failure("multiple-batch-failure", files), message.failure_subject, false)
       end
     end
 
     factory :curator do
       email 'curator1@example.com'
     end
-
   end
 end
 
 class MockFile
   attr_accessor :to_s, :id
-  def initialize id, string
+  def initialize(id, string)
     self.id = id
     self.to_s = string
   end

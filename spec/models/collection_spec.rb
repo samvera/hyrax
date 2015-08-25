@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Collection do
   let(:user) { create(:user) }
   let(:collection) do
-    Collection.new(title: "test collection") do |c|
+    described_class.new(title: "test collection") do |c|
       c.apply_depositor_metadata(user)
     end
   end
@@ -14,8 +14,8 @@ describe Collection do
   end
 
   it "validates title" do
-     collection.title = nil
-     expect(collection).not_to be_valid
+    collection.title = nil
+    expect(collection).not_to be_valid
   end
 
   describe "::bytes" do
@@ -27,13 +27,12 @@ describe Collection do
     end
 
     context "with two 50 byte files" do
-      let(:bitstream) { double("content", size: "50")}
+      let(:bitstream) { double("content", size: "50") }
       let(:file) { mock_model GenericFile, content: bitstream }
 
       before { allow(collection).to receive(:members).and_return([file, file]) }
 
       it { is_expected.to eq 100 }
     end
-
   end
 end

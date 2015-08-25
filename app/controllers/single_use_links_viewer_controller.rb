@@ -16,5 +16,4 @@ class SingleUseLinksViewerController < ApplicationController
       end if single_use_link
     end
   end
-
 end

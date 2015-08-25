@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeaturedWorkListsController, :type => :controller do
+describe FeaturedWorkListsController, type: :controller do
   describe "#create" do
     before do
       expect(controller).to receive(:authorize!).with(:update, FeaturedWork)
@@ -9,10 +9,10 @@ describe FeaturedWorkListsController, :type => :controller do
     let(:feature1) { FactoryGirl.create(:featured_work) }
     let(:feature2) { FactoryGirl.create(:featured_work) }
 
-    it "should be successful" do
+    it "is successful" do
       post :create, format: :json, featured_work_list: {
-        featured_works_attributes: [{id: feature1.id, order: "2"},
-                                    {id: feature2.id, order: "1"}]
+        featured_works_attributes: [{ id: feature1.id, order: "2" },
+                                    { id: feature2.id, order: "1" }]
       }
       expect(feature1.reload.order).to eq 2
     end

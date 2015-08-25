@@ -1,4 +1,4 @@
-  module Sufia
+module Sufia
   module Breadcrumbs
     extend ActiveSupport::Concern
 
@@ -11,9 +11,7 @@
     end
 
     def default_trail
-      if user_signed_in?
-        add_breadcrumb I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path
-      end
+      add_breadcrumb I18n.t('sufia.dashboard.title'), sufia.dashboard_index_path if user_signed_in?
     end
 
     def trail_from_referer
@@ -37,9 +35,8 @@
     end
 
     def add_breadcrumb_for_action
-      if /edit|stats/ =~ action_name && controller_name == "generic_files"
-        add_breadcrumb I18n.t("sufia.generic_file.browse_view"), sufia.generic_file_path(params["id"])
-      end
+      return unless /edit|stats/ =~ action_name && controller_name == "generic_files"
+      add_breadcrumb I18n.t("sufia.generic_file.browse_view"), sufia.generic_file_path(params["id"])
     end
   end
 end

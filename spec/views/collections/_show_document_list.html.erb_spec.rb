@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe 'collections/_show_document_list.html.erb', :type => :view do
-
+describe 'collections/_show_document_list.html.erb', type: :view do
   let(:user) { FactoryGirl.find_or_create(:jill) }
   let(:collection) { mock_model(Collection) }
 
@@ -12,7 +11,7 @@ describe 'collections/_show_document_list.html.erb', :type => :view do
     gf
   end
 
-  let(:documents) {[file]}
+  let(:documents) { [file] }
 
   context 'when not logged in' do
     before do
@@ -22,10 +21,9 @@ describe 'collections/_show_document_list.html.erb', :type => :view do
       allow(file).to receive(:edit_people).and_return([])
     end
 
-    it "should render collection" do
-      render(partial: 'collections/show_document_list.html.erb', locals: {documents: documents})
+    it "renders collection" do
+      render(partial: 'collections/show_document_list.html.erb', locals: { documents: documents })
       expect(rendered).to have_content 'One Hundred Years of Solitude'
     end
   end
-
 end

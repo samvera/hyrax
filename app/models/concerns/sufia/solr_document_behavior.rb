@@ -68,7 +68,7 @@ module Sufia
     end
 
     def file_format
-       Array(self[Solrizer.solr_name('file_format')]).first
+      Array(self[Solrizer.solr_name('file_format')]).first
     end
 
     def creator
@@ -106,7 +106,7 @@ module Sufia
     # Find the solr documents for the collections this object belongs to
     def collections
       return @collections if @collections
-      query = 'id:' + collection_ids.map{|id| '"' + id + '"' }.join(' OR ')
+      query = 'id:' + collection_ids.map { |id| '"' + id + '"' }.join(' OR ')
       result = Blacklight.default_index.connection.select(params: { q: query })
       @collections = result['response']['docs'].map do |hash|
         SolrDocument.new(hash)
@@ -120,6 +120,5 @@ module Sufia
     def generic_work?
       hydra_model == 'GenericWork'
     end
-
   end
 end

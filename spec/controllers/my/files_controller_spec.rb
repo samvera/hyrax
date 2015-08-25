@@ -1,18 +1,17 @@
 require 'spec_helper'
 
-describe My::FilesController, :type => :controller do
-
+describe My::FilesController, type: :controller do
   let(:user) { FactoryGirl.find_or_create(:archivist) }
 
   before { sign_in user }
 
-  it "should respond with success" do
+  it "responds with success" do
     get :index
     expect(response).to be_successful
     expect(response).to render_template :index
   end
 
-  it "should paginate" do
+  it "paginates" do
     3.times { FactoryGirl.create(:work, user: user) }
     get :index, per_page: 2
     expect(assigns[:document_list].length).to eq 2
@@ -22,24 +21,23 @@ describe My::FilesController, :type => :controller do
 
   describe "batch processing" do
     include Sufia::Messages
-    let (:batch_id) {"batch_id"}
-    let (:batch_id2) {"batch_id2"}
-    let (:batch) {double}
+    let(:batch_id) { "batch_id" }
+    let(:batch_id2) { "batch_id2" }
+    let(:batch) { double }
 
     before do
       allow(batch).to receive(:id).and_return(batch_id)
-      User.batchuser().send_message(user, single_success(batch_id, batch), success_subject, sanitize_text = false)
-      User.batchuser().send_message(user, multiple_success(batch_id2, [batch]), success_subject, sanitize_text = false)
+      User.batchuser.send_message(user, single_success(batch_id, batch), success_subject, false)
+      User.batchuser.send_message(user, multiple_success(batch_id2, [batch]), success_subject, false)
       get :index
     end
 
     it "gets batches that are complete" do
       expect(assigns(:batches).count).to eq(2)
-      expect(assigns(:batches)).to include("ss-"+batch_id)
-      expect(assigns(:batches)).to include("ss-"+batch_id2)
+      expect(assigns(:batches)).to include("ss-" + batch_id)
+      expect(assigns(:batches)).to include("ss-" + batch_id2)
     end
   end
-
 
   context 'with different types of records' do
     let(:someone_else) { FactoryGirl.find_or_create(:user) }
@@ -74,6 +72,5 @@ describe My::FilesController, :type => :controller do
       expect(doc_ids).to_not include(wrong_type.id)
       expect(doc_ids).to_not include(my_file.id)
     end
-  end  # context 'with different types of records'
-
+  end # context 'with different types of records'
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ContentBlocksController, :type => :controller do
+describe ContentBlocksController, type: :controller do
   describe "#update" do
     let(:content_block) { FactoryGirl.create(:content_block) }
     before { request.env["HTTP_REFERER"] = "whence_i_came" }
@@ -36,7 +36,7 @@ describe ContentBlocksController, :type => :controller do
       before { allow(controller).to receive_messages(current_user: user) }
 
       context "as a user in the admin group" do
-        before { expect(user).to receive(:groups).and_return( ['admin', 'registered']) }
+        before { expect(user).to receive(:groups).and_return(['admin', 'registered']) }
 
         it "UPDATE should save" do
           patch :update, id: content_block, content_block: { value: 'foo' }
@@ -47,7 +47,7 @@ describe ContentBlocksController, :type => :controller do
         it "CREATE should save" do
           expect {
             post :create, content_block: { name: 'NNN', value: 'VVV', external_key: 'key' }
-          }.to change { ContentBlock.count}.by(1)
+          }.to change { ContentBlock.count }.by(1)
           expect(response).to redirect_to "whence_i_came"
           expect(assigns[:content_block].name).to eq 'NNN'
           expect(assigns[:content_block].value).to eq 'VVV'

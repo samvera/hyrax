@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe My::CollectionsController, :type => :controller do
+describe My::CollectionsController, type: :controller do
   describe "logged in user" do
-    before (:each) do
+    before do
       @user = FactoryGirl.find_or_create(:archivist)
       sign_in @user
     end
@@ -12,29 +12,25 @@ describe My::CollectionsController, :type => :controller do
         GenericFile.destroy_all
         Collection.destroy_all
         @my_file = FactoryGirl.create(:generic_file, depositor: @user)
-        @my_collection = Collection.new(title: "test collection").tap do |c|
+        @my_collection = Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(@user.user_key)
-          c.save!
         end
         @unrelated_collection = Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(FactoryGirl.create(:user).user_key)
         end
       end
 
-      it "should respond with success" do
+      it "responds with success" do
         get :index
         expect(response).to be_successful
       end
 
-      it "should paginate" do          
-        other_user = FactoryGirl.create(:user)
-        Collection.new(title: "test collection").tap do |c|
+      it "paginates" do
+        Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(@user.user_key)
-          c.save!
         end
-        Collection.new(title: "test collection").tap do |c|
+        Collection.create(title: "test collection") do |c|
           c.apply_depositor_metadata(@user.user_key)
-          c.save!
         end
         get :index, per_page: 2
         expect(assigns[:document_list].length).to eq 2
@@ -53,5 +49,4 @@ describe My::CollectionsController, :type => :controller do
       end
     end
   end
-
 end

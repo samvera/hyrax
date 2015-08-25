@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TransfersController, :type => :controller do
+describe TransfersController, type: :controller do
   describe "with a signed in user" do
     let(:another_user) { FactoryGirl.find_or_create(:jill) }
     let(:user) { FactoryGirl.find_or_create(:archivist) }
@@ -38,7 +38,7 @@ describe TransfersController, :type => :controller do
         before do
           incoming_work.destroy
         end
-        it "should not show that work" do
+        it "does not show that work" do
           get :index
           expect(response).to be_success
           expect(assigns[:incoming]).to be_empty
@@ -54,7 +54,7 @@ describe TransfersController, :type => :controller do
         end
       end
       context 'when user is the depositor' do
-        it "should be successful" do
+        it "is successful" do
           sign_in user
           get :new, id: work.id
           expect(response).to be_success
@@ -72,10 +72,10 @@ describe TransfersController, :type => :controller do
           w.save!
         end
       end
-      it "should be successful" do
+      it "is successful" do
         allow_any_instance_of(User).to receive(:display_name).and_return("Jill Z. User")
         expect {
-          post :create, id: work.id, proxy_deposit_request: {transfer_to: another_user.user_key}
+          post :create, id: work.id, proxy_deposit_request: { transfer_to: another_user.user_key }
         }.to change(ProxyDepositRequest, :count).by(1)
         expect(response).to redirect_to @routes.url_helpers.transfers_path
         expect(flash[:notice]).to eq('Transfer request created')
@@ -87,9 +87,9 @@ describe TransfersController, :type => :controller do
         expect(notification.subject).to eq("Ownership Change Request")
         expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> wants to transfer a work to you. Review all <a href=\"#{@routes.url_helpers.transfers_path}\">transfer requests</a>")
       end
-      it "should give an error if the user is not found" do
+      it "gives an error if the user is not found" do
         expect {
-          post :create, id: work.id, proxy_deposit_request: {transfer_to: 'foo' }
+          post :create, id: work.id, proxy_deposit_request: { transfer_to: 'foo' }
         }.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
         expect(response).to redirect_to(root_path)
@@ -105,21 +105,21 @@ describe TransfersController, :type => :controller do
             w.request_transfer_to(user)
           end
         end
-        it "should be successful when retaining access rights" do
+        it "is successful when retaining access rights" do
           put :accept, id: user.proxy_deposit_requests.first
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to eq([another_user.user_key, user.user_key])
         end
-        it "should be successful when resetting access rights" do
+        it "is successful when resetting access rights" do
           put :accept, id: user.proxy_deposit_requests.first, reset: true
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
           expect(incoming_work.reload.edit_users).to eq([user.user_key])
         end
-        it "should handle sticky requests " do
+        it "handles sticky requests" do
           put :accept, id: user.proxy_deposit_requests.first, sticky: true
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer complete")
@@ -136,7 +136,7 @@ describe TransfersController, :type => :controller do
             w.request_transfer_to(another_user)
           end
         end
-        it "should not allow me" do
+        it "does not allow me" do
           put :accept, id: another_user.proxy_deposit_requests.first
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq("You are not authorized to access this page.")
@@ -153,7 +153,7 @@ describe TransfersController, :type => :controller do
             w.request_transfer_to(user)
           end
         end
-        it "should be successful" do
+        it "is successful" do
           put :reject, id: user.proxy_deposit_requests.first
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer rejected")
@@ -169,7 +169,7 @@ describe TransfersController, :type => :controller do
             w.request_transfer_to(another_user)
           end
         end
-        it "should not allow me" do
+        it "does not allow me" do
           put :reject, id: another_user.proxy_deposit_requests.first
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq("You are not authorized to access this page.")
@@ -186,7 +186,7 @@ describe TransfersController, :type => :controller do
             w.request_transfer_to(another_user)
           end
         end
-        it "should be successful" do
+        it "is successful" do
           delete :destroy, id: another_user.proxy_deposit_requests.first
           expect(response).to redirect_to @routes.url_helpers.transfers_path
           expect(flash[:notice]).to eq("Transfer canceled")
@@ -201,7 +201,7 @@ describe TransfersController, :type => :controller do
             w.request_transfer_to(user)
           end
         end
-        it "should not allow me" do
+        it "does not allow me" do
           delete :destroy, id: user.proxy_deposit_requests.first
           expect(response).to redirect_to root_path
           expect(flash[:alert]).to eq("You are not authorized to access this page.")

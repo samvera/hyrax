@@ -5,7 +5,7 @@ module Sufia
 
       yield @@config if block
 
-      return @@config
+      @@config
     end
 
     class Engine < ::Rails::Engine
@@ -28,7 +28,7 @@ module Sufia
       config.analytics = false
       config.queue = CurationConcerns::Resque::Queue
       config.max_notifications_for_dashboard = 5
-      config.activity_to_show_default_seconds_since_now = 24*60*60
+      config.activity_to_show_default_seconds_since_now = 24 * 60 * 60
 
       # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
       config.analytic_start_date = nil

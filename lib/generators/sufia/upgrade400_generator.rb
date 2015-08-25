@@ -7,7 +7,7 @@ class Sufia::Upgrade400Generator < Rails::Generators::Base
 
   source_root File.expand_path('../templates', __FILE__)
 
-  argument :model_name, type: :string , default: "user"
+  argument :model_name, type: :string, default: "user"
   desc """
 This generator for upgrading sufia from 3.7.2 to 4.0 makes the following changes to your application:
  1. Updates the root route
@@ -38,11 +38,10 @@ This generator for upgrading sufia from 3.7.2 to 4.0 makes the following changes
 
   # Add Sufia behaviors to the catalog controller
   def inject_sufia_controller_behavior
-    controller_name = "CatalogController"
     file_path = "app/controllers/catalog_controller.rb"
-    if File.exists?(file_path)
+    if File.exist?(file_path)
       insert_into_file file_path, after: 'include Hydra::Controller::ControllerBehavior' do
-        "\n  # Adds Sufia behaviors to the catalog controller\n" +
+        "\n  # Adds Sufia behaviors to the catalog controller\n" \
         "  include Sufia::Catalog\n"
       end
     else
@@ -68,9 +67,9 @@ This generator for upgrading sufia from 3.7.2 to 4.0 makes the following changes
 
   def blacklight_marc
     file_path = 'app/models/solr_document.rb'
-    return unless File.exists?(file_path) &&
-      file_contains?('app/models/solr_document.rb', 'Blacklight::Solr::Document::Marc') &&
-      !file_contains?('Gemfile', 'blacklight-marc')
+    return unless File.exist?(file_path) &&
+                  file_contains?('app/models/solr_document.rb', 'Blacklight::Solr::Document::Marc') &&
+                  !file_contains?('Gemfile', 'blacklight-marc')
     insert_into_file 'Gemfile', after: /gem 'sufia'.*$/ do
       "\ngem 'blacklight-marc'"
     end
@@ -85,7 +84,7 @@ This generator for upgrading sufia from 3.7.2 to 4.0 makes the following changes
 
   private
 
-  def file_contains?(path, string)
-    File.readlines(path).grep(/#{string}/).any?
-  end
+    def file_contains?(path, string)
+      File.readlines(path).grep(/#{string}/).any?
+    end
 end

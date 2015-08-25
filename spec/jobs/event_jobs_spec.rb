@@ -20,7 +20,7 @@ describe 'event jobs' do
     $redis.keys('GenericFile:*').each { |key| $redis.del key }
     $redis.keys('GenericWork:*').each { |key| $redis.del key }
   end
-  it "should log user edit profile events" do
+  it "logs user edit profile events" do
     # UserEditProfile should log the event to the editor's dashboard and his/her followers' dashboards
     @another_user.follow(@user)
     count_user = @user.events.length
@@ -33,7 +33,7 @@ describe 'event jobs' do
     expect(@another_user.events.length).to eq(count_another + 1)
     expect(@another_user.events.first).to eq(event)
   end
-  it "should log user follow events" do
+  it "logs user follow events" do
     # UserFollow should log the event to the follower's dashboard, the followee's dashboard, and followers' dashboards
     @third_user.follow(@user)
     expect(@user.events.length).to eq(0)
@@ -49,7 +49,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
   end
-  it "should log user unfollow events" do
+  it "logs user unfollow events" do
     # UserUnfollow should log the event to the unfollower's dashboard, the unfollowee's dashboard, and followers' dashboards
     @third_user.follow(@user)
     @user.follow(@another_user)
@@ -66,7 +66,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
   end
-  it "should log content deposit events" do
+  it "logs content deposit events" do
     # ContentDeposit should log the event to the depositor's profile, followers' dashboards, and the GF
     @another_user.follow(@user)
     @third_user.follow(@user)
@@ -76,7 +76,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@gf.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deposited <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentDepositEventJob.new('test-123', @user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -92,7 +92,7 @@ describe 'event jobs' do
     @third_user.follow(@another_user)
     allow_any_instance_of(User).to receive(:can?).and_return(true)
     allow(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/works/test-456">BethsMac</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has transferred <a href="/works/test-456">BethsMac</a> to user <a href="/users/archivist1@example-dot-com">archivist1@example.com</a>', timestamp: '1' }
     ContentDepositorChangeEventJob.new('test-456', @another_user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -103,7 +103,7 @@ describe 'event jobs' do
     expect(@gw.events.length).to eq(1)
     expect(@gw.events.first).to eq(event)
   end
-  it "should log content update events" do
+  it "logs content update events" do
     # ContentUpdate should log the event to the depositor's profile, followers' dashboards, and the GF
     @another_user.follow(@user)
     @third_user.follow(@user)
@@ -113,7 +113,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@gf.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentUpdateEventJob.new('test-123', @user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -124,7 +124,7 @@ describe 'event jobs' do
     expect(@gf.events.length).to eq(1)
     expect(@gf.events.first).to eq(event)
   end
-  it "should log content new version events" do
+  it "logs content new version events" do
     # ContentNewVersion should log the event to the depositor's profile, followers' dashboards, and the GF
     @another_user.follow(@user)
     @third_user.follow(@user)
@@ -134,7 +134,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@gf.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has added a new version of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentNewVersionEventJob.new('test-123', @user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -145,7 +145,7 @@ describe 'event jobs' do
     expect(@gf.events.length).to eq(1)
     expect(@gf.events.first).to eq(event)
   end
-  it "should log content restored version events" do
+  it "logs content restored version events" do
     # ContentRestoredVersion should log the event to the depositor's profile, followers' dashboards, and the GF
     @another_user.follow(@user)
     @third_user.follow(@user)
@@ -155,7 +155,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(0)
     expect(@gf.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has restored a version \'content.0\' of <a href="/files/test-123">Hamlet</a>', timestamp: '1' }
     ContentRestoredVersionEventJob.new('test-123', @user.user_key, 'content.0').run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -166,7 +166,7 @@ describe 'event jobs' do
     expect(@gf.events.length).to eq(1)
     expect(@gf.events.first).to eq(event)
   end
-  it "should log content delete events" do
+  it "logs content delete events" do
     # ContentDelete should log the event to the depositor's profile and followers' dashboards
     @another_user.follow(@user)
     @third_user.follow(@user)
@@ -174,7 +174,7 @@ describe 'event jobs' do
     expect(@another_user.events.length).to eq(0)
     expect(@third_user.events.length).to eq(0)
     expect(Time).to receive(:now).at_least(:once).and_return(1)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deleted file \'test-123\'', timestamp: '1' }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has deleted file \'test-123\'', timestamp: '1' }
     ContentDeleteEventJob.new('test-123', @user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)
@@ -183,7 +183,7 @@ describe 'event jobs' do
     expect(@third_user.events.length).to eq(1)
     expect(@third_user.events.first).to eq(event)
   end
-  it "should not log content-related jobs to followers who lack access" do
+  it "does not log content-related jobs to followers who lack access" do
     # No Content-related eventjobs should log an event to a follower who does not have access to the GF
     @another_user.follow(@user)
     @third_user.follow(@user)
@@ -193,7 +193,7 @@ describe 'event jobs' do
     expect(@gf.events.length).to eq(0)
     @now = Time.now
     expect(Time).to receive(:now).at_least(:once).and_return(@now)
-    event = {action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: @now.to_i.to_s }
+    event = { action: 'User <a href="/users/jilluser@example-dot-com">jilluser@example.com</a> has updated <a href="/files/test-123">Hamlet</a>', timestamp: @now.to_i.to_s }
     ContentUpdateEventJob.new('test-123', @user.user_key).run
     expect(@user.profile_events.length).to eq(1)
     expect(@user.profile_events.first).to eq(event)

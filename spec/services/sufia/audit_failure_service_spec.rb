@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sufia::AuditFailureService do
-  let!(:depositor){ FactoryGirl.find_or_create(:jill) }
+  let!(:depositor) { FactoryGirl.find_or_create(:jill) }
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }
   let(:file) do

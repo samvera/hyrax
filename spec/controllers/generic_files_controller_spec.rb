@@ -14,11 +14,11 @@ describe GenericFilesController do
 
   describe "#create" do
     context "when uploading a file" do
-      let(:generic_file)        { FactoryGirl.build(:generic_file) }
-      let(:reloaded_generic_file)  { generic_file.reload }
+      let(:generic_file) { FactoryGirl.build(:generic_file) }
+      let(:reloaded_generic_file) { generic_file.reload }
       let(:batch)       { Batch.create }
       let(:batch_id)    { batch.id }
-      let(:file)        { fixture_file_upload('/world.png','image/png') }
+      let(:file)        { fixture_file_upload('/world.png', 'image/png') }
 
       before do
         allow(GenericFile).to receive(:new).and_return(generic_file)
@@ -27,8 +27,8 @@ describe GenericFilesController do
       context "when the file submitted isn't a file" do
         let(:file) { 'hello' }
 
-        it "should render 422 error" do
-          xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+        it "renders 422 error" do
+          xhr :post, :create, files: [file], Filename: "The World", batch_id: 'sample_batch_id', permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           expect(response.status).to eq 422
           expect(JSON.parse(response.body).first['error']).to match(/no file for upload/i)
         end
@@ -38,8 +38,8 @@ describe GenericFilesController do
         render_views
         it "spawns a content deposit event job" do
           expect_any_instance_of(CurationConcerns::GenericFileActor).to receive(:create_content).with(file, 'world.png', 'image/png').and_return(true)
-          xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: {group: { public: 'read' } }, terms_of_service: '1'
-          expect(response.body).to eq %Q([{"name":null,"size":null,"url":"/files/#{generic_file.id}","thumbnail_url":"#{generic_file.id}","delete_url":"deleteme","delete_type":"DELETE"}])
+          xhr :post, :create, files: [file], 'Filename' => 'The world', batch_id: batch_id, permission: { group: { public: 'read' } }, terms_of_service: '1'
+          expect(response.body).to eq %([{"name":null,"size":null,"url":"/files/#{generic_file.id}","thumbnail_url":"#{generic_file.id}","delete_url":"deleteme","delete_type":"DELETE"}])
           expect(flash[:error]).to be_nil
         end
 
@@ -48,21 +48,21 @@ describe GenericFilesController do
           allow(DateTime).to receive(:now).and_return(date_today)
           expect {
             xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id,
-                      permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+                                permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           }.to change { GenericFile.count }.by(1)
           expect(response).to be_success
 
           # This is confirming that the correct file was attached
           expect(reloaded_generic_file.label).to eq 'world.png'
           file.rewind
-          expect(reloaded_generic_file.original_file.content).to eq (file.read)
+          expect(reloaded_generic_file.original_file.content).to eq(file.read)
           # Confirming that date_uploaded and date_modified were set
           expect(reloaded_generic_file.date_uploaded).to eq date_today.new_offset(0)
           expect(reloaded_generic_file.date_modified).to eq date_today.new_offset(0)
         end
 
         it "sets the depositor id" do
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: batch_id, permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
           expect(response).to be_success
 
           # This is confirming that apply_depositor_metadata recorded the depositor
@@ -74,7 +74,7 @@ describe GenericFilesController do
       context "when the file has a virus" do
         it "displays a flash error" do
           expect(CurationConcerns::VirusDetectionService).to receive(:run).at_least(1).times.and_raise(CurationConcerns::VirusFoundError.new('A virus was found'))
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: '1'
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: { "group" => { "public" => "read" } }, terms_of_service: '1'
           expect(flash[:error]).not_to be_blank
           expect(flash[:error]).to include('A virus was found')
         end
@@ -82,22 +82,26 @@ describe GenericFilesController do
 
       context "when solr continuously has errors" do
         it "errors out of create and save" do
-          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({},{}))
+          allow_any_instance_of(GenericFile).to receive(:save).and_raise(RSolr::Error::Http.new({}, {}))
 
-          file = fixture_file_upload('/world.png','image/png')
-          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: {"group"=>{"public"=>"read"} }, terms_of_service: "1"
+          file = fixture_file_upload('/world.png', 'image/png')
+          xhr :post, :create, files: [file], Filename: "The world", batch_id: "sample_batch_id", permission: { "group" => { "public" => "read" } }, terms_of_service: "1"
           expect(response.body).to include("Error occurred while creating generic file.")
         end
       end
 
       context "when a work id is passed" do
-        let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+        let(:work) do
+          GenericWork.new do |w|
+            w.apply_depositor_metadata(user)
+            w.save!
+          end
+        end
         it "records the work" do
           xhr :post, :create, files: [file], Filename: 'The world', batch_id: batch_id, parent_id: work.id, terms_of_service: '1'
           expect(response).to be_success
           expect(reloaded_generic_file.generic_works.first).to eq work
         end
-
       end
       context "when a work id is not passed" do
         it "creates the work" do
@@ -105,9 +109,7 @@ describe GenericFilesController do
           expect(response).to be_success
           expect(reloaded_generic_file.generic_works).not_to be_empty
         end
-
       end
-
     end
 
     context "with browse-everything" do
@@ -115,37 +117,40 @@ describe GenericFilesController do
       let(:batch_id) { batch.id }
 
       before do
-        @json_from_browse_everything = {"0"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires"=>"2014-03-31T20:37:36.214Z", "file_name"=>"filepicker-demo.txt.txt"}, "1"=>{"url"=>"https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires"=>"2014-03-31T20:37:36.731Z", "file_name"=>"Getting+Started.pdf"}}
+        @json_from_browse_everything = { "0" => { "url" => "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt", "expires" => "2014-03-31T20:37:36.214Z", "file_name" => "filepicker-demo.txt.txt" }, "1" => { "url" => "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "expires" => "2014-03-31T20:37:36.731Z", "file_name" => "Getting+Started.pdf" } }
       end
       it "ingests files from provide URLs" do
-        expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+        expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
         expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
         expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
         created_files = GenericFile.all
         ["https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf", "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt"].each do |url|
-          expect(created_files.map {|f| f.import_url}).to include(url)
+          expect(created_files.map(&:import_url)).to include(url)
         end
-        ["filepicker-demo.txt.txt","Getting+Started.pdf"].each do |filename|
-          expect(created_files.map {|f| f.label}).to include(filename)
+        ["filepicker-demo.txt.txt", "Getting+Started.pdf"].each do |filename|
+          expect(created_files.map(&:label)).to include(filename)
         end
       end
 
-
       context "when a work id is passed" do
-        let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+        let(:work) do
+          GenericWork.new do |w|
+            w.apply_depositor_metadata(user)
+            w.save!
+          end
+        end
         it "records the work" do
-          expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+          expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
           expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id, parent_id: work.id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
-          created_files.each {|f| expect(f.generic_works).to include work}
+          created_files.each { |f| expect(f.generic_works).to include work }
         end
-
       end
 
       context "when a work id is not passed" do
         it "creates the work" do
-          expect(ImportUrlJob).to receive(:new).twice {"ImportJob"}
+          expect(ImportUrlJob).to receive(:new).twice { "ImportJob" }
           expect(CurationConcerns.queue).to receive(:push).with("ImportJob").twice
           expect { post :create, selected_files: @json_from_browse_everything, batch_id: batch_id }.to change(GenericFile, :count).by(2)
           created_files = GenericFile.all
@@ -154,9 +159,8 @@ describe GenericFilesController do
       end
     end
 
-
     context "with local_file" do
-      let(:generic_file_url) {"http://example.com"}
+      let(:generic_file_url) { "http://example.com" }
       let(:generic_file_upload_directory) { 'spec/mock_upload_directory' }
       let(:batch) { Batch.create }
       let(:batch_id) { batch.id }
@@ -195,7 +199,7 @@ describe GenericFilesController do
         end
 
         it "ingests redirect to another location" do
-          expect(GenericFilesController).to receive(:upload_complete_path).and_return(generic_file_url)
+          expect(described_class).to receive(:upload_complete_path).and_return(generic_file_url)
           expect {
             post :create, local_file: ["world.png"], batch_id: batch_id
           }.to change(GenericFile, :count).by(1)
@@ -218,7 +222,7 @@ describe GenericFilesController do
           expect(File).not_to exist("#{generic_file_upload_directory}/world.png")
           # And into the storage directory
           files = Batch.find(batch_id).generic_files
-          file_labels = files.map {|f| f.label}
+          file_labels = files.map(&:label)
           expect(file_labels).to include 'world.png'
           # TODO: use files.select once projecthydra/active_fedora#609 is fixed
           ['icons.zip', 'Example.ogg'].each do |filename|
@@ -228,15 +232,19 @@ describe GenericFilesController do
         end
 
         context "when a work id is passed" do
-          let (:work) { GenericWork.new {|w| w.apply_depositor_metadata(user); w.save! } }
+          let(:work) do
+            GenericWork.new do |w|
+              w.apply_depositor_metadata(user)
+              w.save!
+            end
+          end
           it "records the work" do
             expect {
               post :create, local_file: ["world.png", "image.jpg"], batch_id: batch_id, parent_id: work.id
             }.to change(GenericFile, :count).by(2)
             created_files = GenericFile.all
-            created_files.each {|f| expect(f.generic_works).to include work}
+            created_files.each { |f| expect(f.generic_works).to include work }
           end
-
         end
 
         context "when a work id is not passed" do
@@ -247,7 +255,6 @@ describe GenericFilesController do
             created_files = GenericFile.all
             expect(created_files[0].generic_works.first).not_to eq created_files[1].generic_works.first
           end
-
         end
       end
 
@@ -311,11 +318,11 @@ describe GenericFilesController do
         sign_in user
         generic_file_query = double('query')
         allow(generic_file_query).to receive(:for_path).and_return([
-            OpenStruct.new(date: '2014-01-01', pageviews: 4),
-            OpenStruct.new(date: '2014-01-02', pageviews: 8),
-            OpenStruct.new(date: '2014-01-03', pageviews: 6),
-            OpenStruct.new(date: '2014-01-04', pageviews: 10),
-            OpenStruct.new(date: '2014-01-05', pageviews: 2)])
+          OpenStruct.new(date: '2014-01-01', pageviews: 4),
+          OpenStruct.new(date: '2014-01-02', pageviews: 8),
+          OpenStruct.new(date: '2014-01-03', pageviews: 6),
+          OpenStruct.new(date: '2014-01-04', pageviews: 10),
+          OpenStruct.new(date: '2014-01-05', pageviews: 2)])
         allow(generic_file_query).to receive(:map).and_return(generic_file_query.for_path.map(&:marshal_dump))
         profile = double('profile')
         allow(profile).to receive(:sufia__pageview).and_return(generic_file_query)
@@ -403,7 +410,7 @@ describe GenericFilesController do
       it "spawns a content update event job" do
         expect(CurationConcerns.queue).to receive(:push).with(update_message)
         post :update, id: generic_file, generic_file: { title: ['new_title'], tag: [''],
-                                                        permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit'}] }
+                                                        permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] }
       end
 
       it "spawns a content new version event job" do
@@ -415,7 +422,7 @@ describe GenericFilesController do
         allow(CharacterizeJob).to receive(:new).with(generic_file.id).and_return(s2)
         expect(CurationConcerns.queue).to receive(:push).with(s2).once
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: generic_file, filedata: file, generic_file: {tag: [''], permissions: { new_user_name: {archivist1: 'edit' } } }
+        post :update, id: generic_file, filedata: file, generic_file: { tag: [''], permissions: { new_user_name: { archivist1: 'edit' } } }
       end
     end
 
@@ -430,13 +437,12 @@ describe GenericFilesController do
         expect(CurationConcerns.queue).to receive(:push).with(s2).once
 
         file = fixture_file_upload('/world.png', 'image/png')
-        post :update, id: generic_file, filedata: file, generic_file: {tag: [''],
-                                                        permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit'}] }
+        post :update, id: generic_file, filedata: file, generic_file: { tag: [''],
+                                                                        permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
       end
     end
 
     context "with two existing versions from different users" do
-
       let(:file1)       { "world.png" }
       let(:file1_type)  { "image/png" }
       let(:file2)       { "image.jpg" }
@@ -485,11 +491,11 @@ describe GenericFilesController do
 
     it "adds new groups and users" do
       post :update, id: generic_file,
-        generic_file: { tag: [''],
-                        permissions_attributes: [
-                          { type: 'person', name: 'user1', access: 'edit' },
-                          { type: 'group', name: 'group1', access: 'read' }
-                        ]
+                    generic_file: { tag: [''],
+                                    permissions_attributes: [
+                                      { type: 'person', name: 'user1', access: 'edit' },
+                                      { type: 'group', name: 'group1', access: 'read' }
+                                    ]
                       }
 
       expect(assigns[:generic_file].read_groups).to eq ["group1"]
@@ -500,10 +506,10 @@ describe GenericFilesController do
       generic_file.edit_groups = ['group3']
       generic_file.save
       post :update, id: generic_file,
-        generic_file: { tag: [''],
-                        permissions_attributes: [
-                          { id: generic_file.permissions.last.id, type: 'group', name: 'group3', access: 'read'}
-                        ]
+                    generic_file: { tag: [''],
+                                    permissions_attributes: [
+                                      { id: generic_file.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
+                                    ]
                       }
 
       expect(assigns[:generic_file].read_groups).to eq(["group3"])
@@ -521,8 +527,8 @@ describe GenericFilesController do
       expect(CurationConcerns::VirusDetectionService).to receive(:run).at_least(1).times.and_return(nil)
       expect(CurationConcerns.queue).to receive(:push).with(s2).once
       post :update, id: generic_file.id, filedata: file, 'Filename' => 'The world',
-          generic_file: { tag: [''],
-                          permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
+                    generic_file: { tag: [''],
+                                    permissions_attributes: [{ type: 'user', name: 'archivist1', access: 'edit' }] }
     end
 
     context "when there's an error saving" do
@@ -533,7 +539,7 @@ describe GenericFilesController do
       end
       it "redirects to edit" do
         expect_any_instance_of(GenericFile).to receive(:valid?).and_return(false)
-        post :update, id: generic_file, generic_file: {:tag=>['']}
+        post :update, id: generic_file, generic_file: { tag: [''] }
         expect(response).to be_successful
         expect(response).to render_template('edit')
         expect(assigns[:generic_file]).to eq generic_file
@@ -614,13 +620,13 @@ describe GenericFilesController do
       let(:file1) { fixture_file_upload('/world.png', 'image/png') }
       let(:file2) { fixture_file_upload('/image.jpg', 'image/png') }
 
-      it "should not create the batch on HTTP GET " do
+      it "does not create the batch on HTTP GET" do
         expect(Batch).not_to receive(:create)
         xhr :get, :new
         expect(response).to be_success
       end
 
-      it "should create the batch on HTTP POST with multiple files" do
+      it "creates the batch on HTTP POST with multiple files" do
         expect(Batch).to receive(:find_or_create).twice
         xhr :post, :create, files: [file1], Filename: 'The world 1', batch_id: batch_id, on_behalf_of: 'carolyn', terms_of_service: '1'
         expect(response).to be_success

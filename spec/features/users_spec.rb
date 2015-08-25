@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe "User Profile", :type => :feature do
-
+describe "User Profile", type: :feature do
   before do
     sign_in FactoryGirl.create(:curator)
   end
 
   context 'when visiting user profile' do
-    it 'should render page properly' do
+    it 'renders page properly' do
       visit '/users/curator1@example-dot-com'
       expect(page).to have_content('curator1@example.com')
       expect(page).to have_content('Edit Your Profile')
@@ -15,7 +14,7 @@ describe "User Profile", :type => :feature do
   end
 
   context 'when clicking all users' do
-    it 'should display all users' do
+    it 'displays all users' do
       visit '/users/curator1@example-dot-com'
       click_link 'View Users'
       expect(page).to have_xpath("//td/a[@href='/users/curator1@example-dot-com']")
@@ -35,7 +34,7 @@ describe "User Profile", :type => :feature do
   end
 
   context 'user profile' do
-    it 'should be searchable' do
+    it 'is searchable' do
       @archivist = FactoryGirl.find_or_create(:archivist)
       visit '/users/curator1@example-dot-com'
       click_link 'View Users'

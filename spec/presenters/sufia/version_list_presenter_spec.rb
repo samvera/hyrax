@@ -17,10 +17,10 @@ describe Sufia::VersionListPresenter, :no_clean do
     end
   end
 
-  subject { Sufia::VersionListPresenter.new([resource_version, resource_version2]) }
+  subject { described_class.new([resource_version, resource_version2]) }
 
   describe "#each" do
-    it "should yield version_presenters" do
+    it "yields version_presenters" do
       versions_descending = []
       subject.each do |v|
         expect(v).to be_kind_of Sufia::VersionPresenter

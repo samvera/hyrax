@@ -3,7 +3,6 @@ module Sufia::Works
     extend ActiveSupport::Concern
 
     included do
-
       property :label, predicate: ::RDF::RDFS.label, multiple: false
 
       property :depositor, predicate: ::RDF::URI.new("http://id.loc.gov/vocabulary/relators/dpt"), multiple: false do |index|
@@ -78,6 +77,5 @@ module Sufia::Works
 
       type ::RDF::URI.new('http://pcdm.org/models#Object')
     end
-
   end
 end

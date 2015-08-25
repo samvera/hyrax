@@ -29,6 +29,6 @@ module Sufia
 
     yield @@config if block
 
-    return @@config
+    @@config
   end
 end

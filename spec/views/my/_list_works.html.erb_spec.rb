@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'my/_index_partials/_list_works.html.erb' do
-
   let(:work_title) { 'Work Title' }
   let(:coll_title) { 'Collection Title' }
   let(:collection) { FactoryGirl.build(:collection, id: '3197z497t', title: coll_title) }
@@ -14,7 +13,7 @@ describe 'my/_index_partials/_list_works.html.erb' do
   before do
     expect(Sufia::CollectionMemberService).to receive(:run).with(doc).and_return(members)
     allow(view).to receive(:blacklight_config) { config }
-    view.lookup_context.prefixes = %w[collections]
+    view.lookup_context.prefixes = %w(collections)
     assign(:collection, collection)
     render 'my/_index_partials/list_works', document: doc
   end

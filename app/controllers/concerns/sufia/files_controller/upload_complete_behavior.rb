@@ -4,7 +4,7 @@ module Sufia
       Sufia::Engine.routes.url_helpers.batch_edit_path(batch_id)
     end
 
-    def destroy_complete_path(params)
+    def destroy_complete_path(_params)
       Sufia::Engine.routes.url_helpers.dashboard_files_path
     end
   end # /FilesController::UploadCompleteBehavior

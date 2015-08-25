@@ -44,7 +44,7 @@ This generator for upgrading sufia-models from 3.7.2 to 4.0 makes the following 
         "  # Defaults to FALSE\n" +
         "  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info\n" +
         "  #config.analytics = false\n"
-      end
+    end
   end
 
   # Sets up full-text indexing (Solr config + jars)

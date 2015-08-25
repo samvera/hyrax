@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'searching' do
-
   let(:user) { create :jill }
   let(:subject_value) { 'fffzzz' }
   let!(:work) {
@@ -34,7 +33,7 @@ describe 'searching' do
       within "#search-results" do
         expect(page).to have_content "Toothbrush"
       end
-      
+
       click_link "Gallery"
       expect(page).to have_content "You searched for: Toothbrush"
       within "#documents" do
@@ -45,24 +44,24 @@ describe 'searching' do
     it "only searches all" do
       visit '/'
       expect(page).to have_content("All")
-      expect(page).to have_css("a[data-search-label*=All]", visible:false)
-      expect(page).to_not have_css("a[data-search-label*='My Works']", visible:false)
-      expect(page).to_not have_css("a[data-search-label*='My Collections']", visible:false)
-      expect(page).to_not have_css("a[data-search-label*='My Highlights']", visible:false)
-      expect(page).to_not have_css("a[data-search-label*='My Shares']", visible:false)
-      
+      expect(page).to have_css("a[data-search-label*=All]", visible: false)
+      expect(page).to_not have_css("a[data-search-label*='My Works']", visible: false)
+      expect(page).to_not have_css("a[data-search-label*='My Collections']", visible: false)
+      expect(page).to_not have_css("a[data-search-label*='My Highlights']", visible: false)
+      expect(page).to_not have_css("a[data-search-label*='My Shares']", visible: false)
+
       click_button("All")
       expect(page).to have_content("All of Sufia")
       fill_in "search-field-header", with: subject_value
       click_button("Go")
-      
+
       expect(page).to have_content('Search Results')
       expect(page).to have_content "Toothbrush"
       expect(page).to have_content('collection title abc')
       expect(page).to have_css("img.collection-icon")
     end
 
-    it "should not display search options for dashboard files" do
+    it "does not display search options for dashboard files" do
       visit "/"
       within(".input-group-btn") do
         expect(page).to_not have_content("My Files")
@@ -71,5 +70,4 @@ describe 'searching' do
       end
     end
   end
-    
 end

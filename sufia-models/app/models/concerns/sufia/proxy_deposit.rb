@@ -15,7 +15,6 @@ module Sufia
       after_create :create_transfer_request
     end
 
-
     def create_transfer_request
       CurationConcerns.queue.push(ContentDepositorChangeEventJob.new(id, on_behalf_of)) if on_behalf_of.present?
     end

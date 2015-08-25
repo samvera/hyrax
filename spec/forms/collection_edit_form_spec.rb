@@ -5,7 +5,7 @@ describe Sufia::Forms::CollectionEditForm do
   let(:form) { described_class.new(collection) }
 
   describe "#terms" do
-    subject { form.terms}
+    subject { form.terms }
     it { is_expected.to eq [:resource_type, :title, :creator, :contributor, :description,
                             :tag, :rights, :publisher, :date_created, :subject, :language,
                             :identifier, :based_near, :related_url] }
@@ -13,7 +13,7 @@ describe Sufia::Forms::CollectionEditForm do
 
   describe "unique?" do
     context "with :title" do
-      subject { Sufia::Forms::CollectionEditForm.unique?(:title) }
+      subject { described_class.unique?(:title) }
       it { is_expected.to be true }
     end
   end

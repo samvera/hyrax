@@ -15,6 +15,5 @@ module Sufia
         "No Title"
       end
     end
-
   end
 end

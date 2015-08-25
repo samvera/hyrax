@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe Sufia::Download, :type => :model do
-
+describe Sufia::Download, type: :model do
   before do
-    @download = Sufia::Download
+    @download = described_class
   end
 
   it 'has an events metric' do
-    expect(@download.metrics).to be  == Legato::ListParameter.new(:metrics, [:totalEvents])
+    expect(@download.metrics).to be == Legato::ListParameter.new(:metrics, [:totalEvents])
   end
 
   it 'has dimensions' do
@@ -17,5 +16,4 @@ describe Sufia::Download, :type => :model do
   it 'responds to :for_file' do
     expect(@download).to respond_to(:for_file)
   end
-
 end

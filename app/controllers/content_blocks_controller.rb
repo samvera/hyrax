@@ -1,6 +1,6 @@
 class ContentBlocksController < ApplicationController
   load_and_authorize_resource except: :index
-  before_filter :load_featured_researchers, only: :index
+  before_action :load_featured_researchers, only: :index
   authorize_resource only: :index
 
   def index
@@ -16,18 +16,17 @@ class ContentBlocksController < ApplicationController
     redirect_to :back
   end
 
-protected
+  protected
 
-  def create_params
-    params.require(:content_block).permit([:name, :value, :external_key])
-  end
+    def create_params
+      params.require(:content_block).permit([:name, :value, :external_key])
+    end
 
-  def update_params
-    params.require(:content_block).permit([:value, :external_key])
-  end
+    def update_params
+      params.require(:content_block).permit([:value, :external_key])
+    end
 
-  def load_featured_researchers
-    @content_blocks = ContentBlock.recent_researchers.page(params[:page])
-  end
-
+    def load_featured_researchers
+      @content_blocks = ContentBlock.recent_researchers.page(params[:page])
+    end
 end

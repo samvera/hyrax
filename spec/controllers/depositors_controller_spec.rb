@@ -10,13 +10,13 @@ describe DepositorsController do
     end
 
     describe "create" do
-      it "should be successful" do
-        expect { post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' }.to change{ ProxyDepositRights.count }.by(1)
+      it "is successful" do
+        expect { post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json' }.to change { ProxyDepositRights.count }.by(1)
         expect(response).to be_success
       end
 
-      it "should not add current user" do
-        expect { post :create, user_id: user.user_key, grantee_id: user.user_key, format: 'json' }.to change{ ProxyDepositRights.count }.by(0)
+      it "does not add current user" do
+        expect { post :create, user_id: user.user_key, grantee_id: user.user_key, format: 'json' }.to change { ProxyDepositRights.count }.by(0)
         expect(response).to be_success
         expect(response.body).to be_blank
       end
@@ -26,8 +26,8 @@ describe DepositorsController do
       before do
         user.can_receive_deposits_from << grantee
       end
-      it "should be successful" do
-        expect { delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json' }.to change{ ProxyDepositRights.count }.by(-1)
+      it "is successful" do
+        expect { delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json' }.to change { ProxyDepositRights.count }.by(-1)
       end
     end
   end
@@ -37,14 +37,14 @@ describe DepositorsController do
       sign_in FactoryGirl.create(:curator)
     end
     describe "create" do
-      it "should not be successful" do
+      it "does not be successful" do
         post :create, user_id: user.user_key, grantee_id: grantee.user_key, format: 'json'
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."
       end
     end
     describe "destroy" do
-      it "should not be successful" do
+      it "does not be successful" do
         delete :destroy, user_id: user.user_key, id: grantee.user_key, format: 'json'
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq "You are not authorized to access this page."

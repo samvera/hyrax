@@ -3,7 +3,7 @@ class CreateFileDownloadStats < ActiveRecord::Migration
     create_table :file_download_stats do |t|
       t.datetime :date
       t.integer :downloads
-      t.string  :file_id
+      t.string :file_id
 
       t.timestamps
     end

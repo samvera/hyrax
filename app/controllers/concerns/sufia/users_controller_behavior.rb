@@ -5,27 +5,25 @@ module Sufia::UsersControllerBehavior
     include Blacklight::Catalog::SearchContext
     layout "sufia-one-column"
     prepend_before_filter :find_user, except: [:index, :search, :notifications_number]
-    before_filter :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
-    before_filter :user_not_current_user, only: [:follow, :unfollow]
+    before_action :authenticate_user!, only: [:edit, :update, :follow, :unfollow, :toggle_trophy]
+    before_action :user_not_current_user, only: [:follow, :unfollow]
     authorize_resource only: [:edit, :update, :toggle_trophy]
     # Catch permission errors
     rescue_from CanCan::AccessDenied, with: :deny_access
   end
 
   def index
-    sort_val = get_sort
-    query = params[:uq].blank? ? nil : "%"+params[:uq].downcase+"%"
+    query = params[:uq].blank? ? nil : "%" + params[:uq].downcase + "%"
     base = User.where(*base_query)
     unless query.blank?
       base = base.where("#{Devise.authentication_keys.first} like lower(?) OR display_name like lower(?)", query, query)
     end
-    @users = base.references(:trophies).order(sort_val).page(params[:page]).per(10)
+    @users = base.references(:trophies).order(sort_value).page(params[:page]).per(10)
 
     respond_to do |format|
       format.html
       format.json { render json: @users.to_json }
     end
-
   end
 
   # Display user profile
@@ -56,9 +54,9 @@ module Sufia::UsersControllerBehavior
       redirect_to sufia.edit_profile_path(@user.to_param), alert: @user.errors.full_messages
       return
     end
-    # TODO this should be moved to TrophiesController
-    params.keys.select {|k, v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
-      smash_trophy = smash_trophy.sub /^remove_trophy_/, ''
+    # TODO: this should be moved to TrophiesController
+    params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
+      smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
       current_user.trophies.where(generic_work_id: smash_trophy).destroy_all
     end
     CurationConcerns.queue.push(UserEditProfileEventJob.new(@user.user_key))
@@ -70,20 +68,20 @@ module Sufia::UsersControllerBehavior
   end
 
   def toggle_trophy
-     unless current_user.can? :edit, params[:parent_id]
-       redirect_to root_path, alert: "You do not have permissions to the work"
-       return false
-     end
-     t = current_user.trophies.where(generic_work_id: params[:parent_id]).first
-     if t
-       t.destroy
-       #TODO do this better says Mike
-       return false if t.persisted?
-     else
-       t = current_user.trophies.create(generic_work_id: params[:parent_id])
-       return false unless t.persisted?
-     end
-     render json: t
+    unless current_user.can? :edit, params[:parent_id]
+      redirect_to root_path, alert: "You do not have permissions to the work"
+      return false
+    end
+    t = current_user.trophies.where(generic_work_id: params[:parent_id]).first
+    if t
+      t.destroy
+      # TODO: do this better says Mike
+      return false if t.persisted?
+    else
+      t = current_user.trophies.create(generic_work_id: params[:parent_id])
+      return false unless t.persisted?
+    end
+    render json: t
   end
 
   # Follow a user
@@ -92,7 +90,7 @@ module Sufia::UsersControllerBehavior
       current_user.follow(@user)
       CurationConcerns.queue.push(UserFollowEventJob.new(current_user.user_key, @user.user_key))
     end
-    redirect_to sufia.profile_path(@user.to_param), notice: "You are following #{@user.to_s}"
+    redirect_to sufia.profile_path(@user.to_param), notice: "You are following #{@user}"
   end
 
   # Unfollow a user
@@ -101,44 +99,45 @@ module Sufia::UsersControllerBehavior
       current_user.stop_following(@user)
       CurationConcerns.queue.push(UserUnfollowEventJob.new(current_user.user_key, @user.user_key))
     end
-    redirect_to sufia.profile_path(@user.to_param), notice: "You are no longer following #{@user.to_s}"
+    redirect_to sufia.profile_path(@user.to_param), notice: "You are no longer following #{@user}"
   end
 
   protected
 
-  def user_params
-    params.require(:user).permit(:email, :login, :display_name, :address, :admin_area,
-      :department, :title, :office, :chat_id, :website, :affiliation,
-      :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
-      :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar, :orcid)
-  end
+    def user_params
+      params.require(:user).permit(:email, :login, :display_name, :address, :admin_area,
+                                   :department, :title, :office, :chat_id, :website, :affiliation,
+                                   :telephone, :avatar, :group_list, :groups_last_update, :facebook_handle,
+                                   :twitter_handle, :googleplus_handle, :linkedin_handle, :remove_avatar, :orcid)
+    end
 
+    # You can override base_query to return a list of arguments
+    def base_query
+      [nil]
+    end
 
-  # You can override base_query to return a list of arguments
-  def base_query
-    [nil]
-  end
+    def find_user
+      @user = User.from_url_component(params[:id])
+      redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
+    end
 
-  def find_user
-    @user = User.from_url_component(params[:id])
-    redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
-  end
+    def user_not_current_user
+      redirect_to sufia.profile_path(@user.to_param), alert: "You cannot follow or unfollow yourself" if @user == current_user
+    end
 
-  def user_not_current_user
-    redirect_to sufia.profile_path(@user.to_param), alert: "You cannot follow or unfollow yourself" if @user == current_user
-  end
+    def sort_value
+      sort = params[:sort].blank? ? "name" : params[:sort]
+      case sort
+      when 'name'
+        'display_name'
+      when 'name desc'
+        'display_name DESC'
+      else
+        sort
+      end
+    end
 
-  def get_sort
-    sort = params[:sort].blank? ? "name" : params[:sort]
-    sort_val = case sort
-           when "name"  then "display_name"
-           when "name desc"   then "display_name DESC"
-           else sort
-           end
-    return sort_val
-  end
-
-  def deny_access(exception)
-    redirect_to sufia.profile_path(@user.to_param), alert: "Permission denied: cannot access this page."
-  end
+    def deny_access(_exception)
+      redirect_to sufia.profile_path(@user.to_param), alert: "Permission denied: cannot access this page."
+    end
 end

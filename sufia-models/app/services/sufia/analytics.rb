@@ -20,29 +20,28 @@ module Sufia
     # @return [OAuth2::AccessToken] An OAuth2 access token for GA
     def self.token
       scope = 'https://www.googleapis.com/auth/analytics.readonly'
-      client = Google::APIClient.new(application_name: self.config['app_name'],
-        application_version: self.config['app_version'])
-      key = Google::APIClient::PKCS12.load_key(self.config['privkey_path'],
-        self.config['privkey_secret'])
-      service_account = Google::APIClient::JWTAsserter.new(self.config['client_email'], scope,
-        key)
+      client = Google::APIClient.new(application_name: config['app_name'],
+                                     application_version: config['app_version'])
+      key = Google::APIClient::PKCS12.load_key(config['privkey_path'],
+                                               config['privkey_secret'])
+      service_account = Google::APIClient::JWTAsserter.new(config['client_email'], scope,
+                                                           key)
       client.authorization = service_account.authorize
-      oauth_client = OAuth2::Client.new('', '', {
-          authorize_url: 'https://accounts.google.com/o/oauth2/auth',
-          token_url: 'https://accounts.google.com/o/oauth2/token'})
+      oauth_client = OAuth2::Client.new('', '',           authorize_url: 'https://accounts.google.com/o/oauth2/auth',
+                                                          token_url: 'https://accounts.google.com/o/oauth2/token')
       OAuth2::AccessToken.new(oauth_client, client.authorization.access_token)
     end
 
     # Return a user object linked to a Google Analytics account
     # @return [Legato::User] A user account wit GA access
     def self.user
-      Legato::User.new(self.token)
+      Legato::User.new(token)
     end
 
     # Return a Google Analytics profile matching specified ID
     # @ return [Legato::Management::Profile] A user profile associated with GA
     def self.profile
-      self.user.profiles.detect do |profile|
+      user.profiles.detect do |profile|
         profile.web_property_id == Sufia.config.google_analytics_id
       end
     end

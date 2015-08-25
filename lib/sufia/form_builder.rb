@@ -8,7 +8,7 @@ module Sufia
       input      = find_input(attribute_name, options)
       wrapper    = find_wrapper(input.input_type, options)
       components = (wrapper.components.map(&:namespace) & ATTRIBUTE_COMPONENTS) + [:input]
-      components = components.map { |component| SimpleForm::Wrappers::Leaf.new(component) }
+      components.map { |component| SimpleForm::Wrappers::Leaf.new(component) }
 
       input.label.html_safe
     end

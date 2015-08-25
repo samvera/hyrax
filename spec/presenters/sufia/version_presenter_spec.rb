@@ -9,7 +9,7 @@ describe Sufia::VersionPresenter, :no_clean do
     end
   end
 
-  let(:presenter) { Sufia::VersionPresenter.new(resource_version) }
+  let(:presenter) { described_class.new(resource_version) }
 
   describe "#label" do
     subject { presenter.label }

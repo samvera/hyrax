@@ -8,6 +8,7 @@ class StaticController < ApplicationController
       format.js { render layout: false }
     end
   end
+
   def mendeley
     respond_to do |format|
       format.html

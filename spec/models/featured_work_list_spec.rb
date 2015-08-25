@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FeaturedWorkList, :type => :model do
+describe FeaturedWorkList, type: :model do
   let(:work1) { create(:generic_work) }
   let(:work2) { create(:generic_work) }
 
@@ -10,7 +10,7 @@ describe FeaturedWorkList, :type => :model do
       create(:featured_work, generic_work_id: work2.id)
     end
 
-    it 'should be a list of the featured work objects, each with the generic_work\'s solr_doc' do
+    it 'is a list of the featured work objects, each with the generic_work\'s solr_doc' do
       expect(subject.featured_works.size).to eq 2
       solr_doc = subject.featured_works.first.generic_work_solr_document
       expect(solr_doc).to be_kind_of SolrDocument
@@ -25,7 +25,7 @@ describe FeaturedWorkList, :type => :model do
       work1.destroy
     end
 
-    it 'should be a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do
+    it 'is a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do
       expect(subject.featured_works.size).to eq 1
       solr_doc = subject.featured_works.first.generic_work_solr_document
       expect(solr_doc).to be_kind_of SolrDocument

@@ -1,5 +1,4 @@
 module RakeOutput
-
   # saves original $stdout in variable
   # set $stdout as local instance of StringIO
   # yields to code execution

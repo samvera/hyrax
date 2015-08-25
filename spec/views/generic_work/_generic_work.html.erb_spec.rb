@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe 'generic_works/_generic_work.html.erb', :type => :view do
+describe 'generic_works/_generic_work.html.erb', type: :view do
   context 'displaying a generic_file' do
     let(:generic_work) do
       mock_model(SolrDocument,
-                  title: "work title", id: "123", depositor: "user1", creator: "igor",
-                  description: "a monster work", tags: ["moster", "mash"],
-                  date_uploaded: DateTime.now, collection?: false, generic_work?: true,
-                  hydra_model: "GenericWork", title_or_label: "A monster hit"
+                 title: "work title", id: "123", depositor: "user1", creator: "igor",
+                 description: "a monster work", tags: ["moster", "mash"],
+                 date_uploaded: DateTime.now, collection?: false, generic_work?: true,
+                 hydra_model: "GenericWork", title_or_label: "A monster hit"
                 )
     end
 

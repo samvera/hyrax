@@ -2,8 +2,8 @@ require_relative 'abstract_migration_generator'
 
 class Sufia::Models::InstallGenerator < Sufia::Models::AbstractMigrationGenerator
   source_root File.expand_path('../templates', __FILE__)
-  argument     :model_name, type: :string , default: "user", desc:"Model name for User model (primarily passed to devise, but also used elsewhere)"
-  class_option :skip_curation_concerns, type: :boolean, default: false, desc:"whether to skip the curation_concerns:models installer"
+  argument :model_name, type: :string, default: "user", desc: "Model name for User model (primarily passed to devise, but also used elsewhere)"
+  class_option :skip_curation_concerns, type: :boolean, default: false, desc: "whether to skip the curation_concerns:models installer"
   desc """
 This generator makes the following changes to your application:
  1. Creates several database migrations if they do not exist in /db/migrate
@@ -54,10 +54,10 @@ This generator makes the following changes to your application:
   # Add behaviors to the user model
   def inject_sufia_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
-    if File.exists?(file_path)
+    if File.exist?(file_path)
       inject_into_file file_path, after: /include CurationConcerns\:\:User.*$/ do
         "\n  # Connects this user object to Sufia behaviors." +
-        "\n  include Sufia::User\n"
+          "\n  include Sufia::User\n"
       end
     else
       puts "     \e[31mFailure\e[0m  Sufia requires a user object. This generators assumes that the model is defined in the file #{file_path}, which does not exist.  If you used a different name, please re-run the generator and provide that name as an argument. Such as \b  rails -g sufia client"

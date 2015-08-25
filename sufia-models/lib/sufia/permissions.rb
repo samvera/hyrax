@@ -4,6 +4,5 @@ module Sufia
 
     autoload :Writable
     autoload :Readable
-
   end
 end

@@ -25,5 +25,4 @@ describe Sufia::Analytics do
   it 'responds to :profile' do
     expect(subject).to respond_to(:profile)
   end
-
 end

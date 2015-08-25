@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'proxy', :type => :feature do
+describe 'proxy', type: :feature do
   let(:user) { FactoryGirl.find_or_create(:archivist) }
   let(:second_user) { FactoryGirl.find_or_create(:jill) }
 
@@ -33,9 +33,8 @@ describe 'proxy', :type => :feature do
       end
       select(second_user.user_key, from: 'on_behalf_of')
       test_file_path = File.expand_path('../../fixtures/small_file.txt', __FILE__)
-      page.execute_script(%Q{$("input[type=file]").first().css("opacity", "1").css("-moz-transform", "none");$("input[type=file]").first().attr('id',"fileselect");})
+      page.execute_script(%{$("input[type=file]").first().css("opacity", "1").css("-moz-transform", "none");$("input[type=file]").first().attr('id',"fileselect");})
       attach_file("fileselect", test_file_path)
-      redirect_url = find("#redirect-loc", visible: false).text
       click_button('Start upload')
       expect(page).to have_content('Apply Metadata')
       fill_in('generic_file_title', with: 'MY Title for the World')

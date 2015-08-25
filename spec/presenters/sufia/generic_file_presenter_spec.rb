@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe Sufia::GenericFilePresenter do
   describe ".terms" do
-    it "should return a list" do
+    it "returns a list" do
       expect(described_class.terms).to eq([:resource_type, :title,
-        :creator, :contributor, :description, :tag, :rights, :publisher,
-        :date_created, :subject, :language, :identifier, :based_near,
-        :related_url])
+                                           :creator, :contributor, :description, :tag, :rights, :publisher,
+                                           :date_created, :subject, :language, :identifier, :based_near,
+                                           :related_url])
     end
   end
 
-  let(:presenter) { Sufia::GenericFilePresenter.new(file) }
+  let(:presenter) { described_class.new(file) }
 
   describe '#tweeter' do
     let(:file) { build(:generic_file).tap { |f| f.apply_depositor_metadata(user) } }

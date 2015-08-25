@@ -1,8 +1,7 @@
 class DirectoryController < ApplicationController
-
   # Stub method.  Override this in your application if you want directory lookups
   def user
-    #render json: User.directory_attributes(params[:uid])
+    # render json: User.directory_attributes(params[:uid])
     render json: ''
   end
 
@@ -25,7 +24,7 @@ class DirectoryController < ApplicationController
 
   # Stub method.  Override this in your application if you want directory lookups
   def group
-    #render json: Group.exists?(params[:cn])
+    # render json: Group.exists?(params[:cn])
     render json: false
   end
 end
