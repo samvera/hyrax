@@ -1,17 +1,17 @@
-<% @page_title = "#{@collection.title} - #{application_name}" %>
+<% @page_title = "#{@presenter.title} - #{application_name}" %>
 
-<h1 class="lower"><%= @collection.title %></h1>
+<h1 class="lower"><%= @presenter.title %></h1>
 
-<%= render partial: 'curation_concerns/base/representative_media', locals: {work: @collection} %>
+<%= render 'curation_concerns/base/representative_media', work: @presenter %>
 
-<h3><%=@collection.description%> </h3>
+<h3><%= @presenter.description %> </h3>
 
 <% unless has_collection_search_parameters? %>
   <%= render partial: 'collections/show_actions' %>
-  <%= render 'attributes', curation_concern: @collection %>
+  <%= render 'attributes', curation_concern: @presenter %>
 <% end %>
 
-<%= render partial: 'search_form'%>
+<%= render 'search_form' %>
 <%= render 'sort_and_per_page' %>
 
 <% if has_collection_search_parameters? %>

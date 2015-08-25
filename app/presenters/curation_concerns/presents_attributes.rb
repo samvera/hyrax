@@ -1,5 +1,6 @@
 module CurationConcerns
-  module AttributeHelper
+  module PresentsAttributes
+    include ActionView::Helpers::UrlHelper
     # If options[:catalog_search_link] is false,
     # it will return the attribute value as text.
     # If options[:catalog_search_link] is true,
@@ -9,11 +10,13 @@ module CurationConcerns
     # how the attribute name should appear on the search URL,
     # you can explicitly set the URL's search field name using
     # options[:search_field].
-    def curation_concern_attribute_to_html(curation_concern, method_name, label = nil, options = {})
-      return unless curation_concern.respond_to?(method_name)
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def attribute_to_html(method_name, label = nil, options = {})
+      return unless respond_to?(method_name)
       markup = ''
-      label ||= derived_label_for(curation_concern, method_name)
-      subject = curation_concern.send(method_name)
+      label ||= derived_label_for(method_name)
+
+      subject = send(method_name)
       return markup if !subject.present? && !options[:include_empty]
       markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
       [subject].flatten.compact.each do |value|
@@ -26,22 +29,22 @@ module CurationConcerns
             nil
           end
           if parsed_uri.nil?
-            markup << %(<li class="attribute #{method_name}">#{h(value)}</li>\n)
+            markup << %(<li class="attribute #{method_name}">#{ERB::Util.h(value)}</li>\n)
           else
-            markup << %(<li class="attribute #{method_name}"><a href=#{h(value)} target="_blank"> #{h(CurationConcerns.config.cc_licenses_reverse[value])}</a></li>\n)
+            markup << %(<li class="attribute #{method_name}"><a href=#{ERB::Util.h(value)} target="_blank"> #{ERB::Util.h(CurationConcerns.config.cc_licenses_reverse[value])}</a></li>\n)
           end
         else
           search_field = options[:search_field] || method_name
-          li_value = link_to_if(options[:catalog_search_link], h(value), main_app.catalog_index_path(search_field: search_field, q: h(value)))
-          markup << %(<li class="attribute #{method_name}"> #{li_value} </li>\n)
+          li_value = link_to_if(options[:catalog_search_link], ERB::Util.h(value), Rails.application.routes.url_helpers.catalog_index_path(search_field: search_field, q: ERB::Util.h(value)))
+          markup << %(<li class="attribute #{method_name}">#{li_value}</li>\n)
         end
       end
       markup << %(</ul></td></tr>)
       markup.html_safe
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-    def permission_badge_for(curation_concern, solr_document = nil)
-      solr_document ||= curation_concern.to_solr
+    def permission_badge
       dom_label_class, link_title = extract_dom_label_class_and_link_title(solr_document)
       %(<span class="label #{dom_label_class}" title="#{link_title}">#{link_title}</span>).html_safe
     end

@@ -2,17 +2,21 @@ class CurationConcerns::SearchBuilder < Hydra::SearchBuilder
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
   include Hydra::Collections::SearchBehaviors
 
-  def only_generic_files_and_curation_concerns(solr_parameters)
+  def only_curation_concerns(solr_parameters)
     solr_parameters[:fq] ||= []
     types_to_include = CurationConcerns.config.registered_curation_concern_types.dup
     types_to_include << 'Collection'
     formatted_type_names = types_to_include.map { |class_name| "\"#{class_name}\"" }.join(' ')
 
     solr_parameters[:fq] << "#{Solrizer.solr_name('has_model', :symbol)}:(#{formatted_type_names})"
+  end
 
-    # CurationConcerns.config.registered_curation_concern_types.each do |curation_concern_class_name|
-    #   solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:(\"GenericFile\" \"Collection\")"
-    # end
+  def only_generic_files(solr_parameters)
+    solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: GenericFile.to_class_uri)
+  end
+
+  def find_one(solr_parameters)
+    solr_parameters[:fq] << "_query_:\"{!raw f=id}#{blacklight_params.fetch(:id)}\""
   end
 
   # Override Hydra::AccessControlsEnforcement (or Hydra::PolicyAwareAccessControlsEnforcement)

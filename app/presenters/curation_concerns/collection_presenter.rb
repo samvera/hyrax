@@ -1,39 +1,22 @@
 module CurationConcerns
   class CollectionPresenter
-    include Hydra::Presenter
-    include ActionView::Helpers::NumberHelper
+    include ModelProxy
+    include PresentsAttributes
+    attr_accessor :solr_document, :current_ability
 
-    self.model_class = ::Collection
-    # Terms is the list of fields displayed by app/views/collections/_show_descriptions.html.erb
-    self.terms = [:title, :total_items, :size, :resource_type, :description, :creator, :contributor,
-                  :tag, :rights, :publisher, :date_created, :subject, :language, :identifier,
-                  :based_near, :related_url]
-
-    # Depositor and permissions are not displayed in app/views/collections/_show_descriptions.html.erb
-    # so don't include them in `terms'.
-    # delegate :depositor, :permissions, to: :model
-
-    def terms_with_values
-      terms.select { |t| self[t].present? }
+    # @param [SolrDocument] solr_document
+    # @param [Ability] current_ability
+    def initialize(solr_document, current_ability)
+      @solr_document = solr_document
+      @current_ability = current_ability
     end
 
-    def [](key)
-      case key
-      when :size
-        size
-      when :total_items
-        total_items
-      else
-        super
-      end
-    end
+    # CurationConcern methods
+    delegate :stringify_keys, :human_readable_type, :collection?, :representative,
+             to: :solr_document
 
-    def size
-      number_to_human_size(model.bytes)
-    end
-
-    def total_items
-      model.members.count
-    end
+    # Metadata Methods
+    delegate :title, :description, :creator, :contributor, :subject, :publisher, :language,
+             :embargo_release_date, :lease_expiration_date, :rights, to: :solr_document
   end
 end

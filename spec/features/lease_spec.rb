@@ -19,7 +19,8 @@ describe 'leases' do
       select 'Private', from: 'then restrict it to'
       click_button 'Create Generic work'
 
-      expect(page).to have_content(future_date.to_datetime.iso8601) # chosen lease date is on the show page
+      # chosen lease date is on the show page
+      expect(page).to have_content(future_date.to_datetime.iso8601.sub(/\+00:00/, 'Z'))
 
       click_link 'Edit This Generic Work'
       click_link 'Lease Management Page'

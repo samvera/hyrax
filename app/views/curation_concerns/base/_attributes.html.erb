@@ -1,25 +1,25 @@
-<table class="table table-striped <%= dom_class(curation_concern) %> attributes">
+<table class="table table-striped <%= dom_class(@presenter) %> attributes">
   <caption class="table-heading"><h2>Attributes</h2></caption>
   <thead>
     <tr><th>Attribute Name</th><th>Values</th></tr>
   </thead>
   <tbody>
-  <%= curation_concern_attribute_to_html(curation_concern, :description, 'Abstract') %>
-  <%= curation_concern_attribute_to_html(curation_concern, :creator, 'Creator', { catalog_search_link: true }) %>
-  <%= curation_concern_attribute_to_html(curation_concern, :contributor, 'Contributors', { catalog_search_link: true }) %>
-  <%= curation_concern_attribute_to_html(curation_concern, :subject, "Subject", { catalog_search_link: true }) %>
-  <%= curation_concern_attribute_to_html(curation_concern, :publisher, "Publisher") %>
-  <%#= curation_concern_attribute_to_html(curation_concern, :bibliographic_citation, "Bibliographic Citation") %>
-  <%#= curation_concern_attribute_to_html(curation_concern, :source, "Source") %>
-  <%= curation_concern_attribute_to_html(curation_concern, :language, "Language") %>
+  <%= @presenter.attribute_to_html(:description, 'Abstract') %>
+  <%= @presenter.attribute_to_html(:creator, 'Creator', { catalog_search_link: true }) %>
+  <%= @presenter.attribute_to_html(:contributor, 'Contributors', { catalog_search_link: true }) %>
+  <%= @presenter.attribute_to_html(:subject, "Subject", { catalog_search_link: true }) %>
+  <%= @presenter.attribute_to_html(:publisher, "Publisher") %>
+  <%#= @presenter.attribute_to_html(:bibliographic_citation, "Bibliographic Citation") %>
+  <%#= @presenter.attribute_to_html(:source, "Source") %>
+  <%= @presenter.attribute_to_html(:language, "Language") %>
   <tr>
     <th>Access Rights</th>
     <td>
-      <%= permission_badge_for(curation_concern) %>
+      <%= @presenter.permission_badge %>
     </td>
   </tr>
-  <%= curation_concern_attribute_to_html(curation_concern, :embargo_release_date, "Embargo Release Date") %>
-  <%= curation_concern_attribute_to_html(curation_concern, :lease_expiration_date, "Lease Expiration Date") %>
-  <%= curation_concern_attribute_to_html(curation_concern, :rights, "Content License") %>
+  <%= @presenter.attribute_to_html(:embargo_release_date, "Embargo Release Date") %>
+  <%= @presenter.attribute_to_html(:lease_expiration_date, "Lease Expiration Date") %>
+  <%= @presenter.attribute_to_html(:rights, "Content License") %>
   </tbody>
 </table>

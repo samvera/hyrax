@@ -1,4 +1,4 @@
-<% if can? :edit, @collection %>
+<% if can? :edit, @presenter.id %>
   <h2 class="non lower">Actions</h2>
   <p>
       <%= link_to "Edit", collections.edit_collection_path, class: 'btn btn-primary' %> &nbsp;&nbsp;
