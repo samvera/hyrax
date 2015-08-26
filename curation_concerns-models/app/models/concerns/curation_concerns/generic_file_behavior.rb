@@ -8,7 +8,6 @@ module CurationConcerns
     include CurationConcerns::Noid
     include CurationConcerns::GenericFile::Derivatives
     include CurationConcerns::Permissions
-    include CurationConcerns::GenericFile::Export
     include CurationConcerns::GenericFile::Characterization
     include CurationConcerns::BasicMetadata
     include CurationConcerns::GenericFile::Content

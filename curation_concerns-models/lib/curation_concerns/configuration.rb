@@ -46,12 +46,6 @@ module CurationConcerns
       @build_identifier ||= Time.now.strftime('%Y-%m-%d %H:%M:%S')
     end
 
-    # Set some configuration defaults
-    attr_writer :persistent_hostpath
-    def persistent_hostpath
-      @persistent_hostpath ||= 'http://localhost/files/'
-    end
-
     attr_writer :enable_ffmpeg
     def enable_ffmpeg
       return @enable_ffmpeg unless @enable_ffmpeg.nil?
