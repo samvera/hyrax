@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency 'rspec-html-matchers'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
-  spec.add_development_dependency "capybara"
+  spec.add_development_dependency "capybara", '~> 2.5'
   spec.add_development_dependency "poltergeist", ">= 1.5.0"
   spec.add_development_dependency "factory_girl"
   spec.add_development_dependency "database_cleaner", "< 1.1.0"
