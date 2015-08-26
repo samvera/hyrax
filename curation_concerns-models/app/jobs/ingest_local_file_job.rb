@@ -36,13 +36,4 @@ class IngestLocalFileJob
       end
     end
   end
-
-  def job_user
-    User.batchuser
-  end
-
-  def mime_type(file_name)
-    mime_types = MIME::Types.of(file_name)
-    mime_types.empty? ? 'application/octet-stream' : mime_types.first.content_type
-  end
 end
