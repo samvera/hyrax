@@ -7,7 +7,7 @@ module CurationConcerns
     ##
     # Give our SolrDocument an ActiveModel::Naming appropriate route_key
     def route_key
-      get(Solrizer.solr_name('has_model', :symbol)).split(':').last.downcase
+      get(Solrizer.solr_name('has_model', :symbol)).downcase
     end
 
     def to_param
@@ -82,8 +82,36 @@ module CurationConcerns
       Array(self[Solrizer.solr_name('creator')]).first
     end
 
+    def contributor
+      Array(self[Solrizer.solr_name('contributor')]).first
+    end
+
+    def subject
+      Array(self[Solrizer.solr_name('subject')]).first
+    end
+
+    def publisher
+      Array(self[Solrizer.solr_name('publisher')]).first
+    end
+
+    def language
+      Array(self[Solrizer.solr_name('language')]).first
+    end
+
     def tags
       Array(self[Solrizer.solr_name('tag')])
+    end
+
+    def embargo_release_date
+      self['embargo_release_date_dtsi']
+    end
+
+    def lease_expiration_date
+      self['lease_expiration_date_dtsi']
+    end
+
+    def rights
+      self[Solrizer.solr_name('rights')]
     end
 
     def resource_type

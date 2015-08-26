@@ -6,8 +6,25 @@ module CurationConcerns::ParentContainer
     # before_filter :authorize_edit_parent_rights!, except: [:show]  # Not sure we actually want this enforced any more (was originally in worthwhile), especially since GenericFiles and GenericWorks (which are PCDM::Objects)can belong to multiple parents
   end
 
+  # TODO: this is slow, refactor to return a Presenter (fetch from solr)
   def parent
-    @parent ||= new_or_create? ? ActiveFedora::Base.find(parent_id) : curation_concern.parent_objects.first # parent_objects method is inherited from Hydra::PCDM::ObjectBehavior
+    @parent ||= new_or_create? ? find_parent_by_id : lookup_parent_from_child
+  end
+
+  def find_parent_by_id
+    ActiveFedora::Base.find(parent_id)
+  end
+
+  def lookup_parent_from_child
+    if curation_concern
+      # parent_objects method is inherited from Hydra::PCDM::ObjectBehavior
+      curation_concern.parent_objects.first
+    elsif @presenter
+
+      CurationConcerns::ParentService.parent_for(@presenter.id)
+    else
+      raise "no child"
+    end
   end
 
   def parent_id

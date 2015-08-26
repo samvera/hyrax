@@ -5,17 +5,19 @@ describe 'curation_concerns/base/_attributes.html.erb' do
   let(:contributor) { 'Frodo' }
   let(:subject)     { 'history' }
 
-  let(:curation_concern) do
-    double(creator: [creator],
-           contributor: [contributor],
-           subject: [subject])
+  let(:solr_document) { SolrDocument.new(subject_tesim: subject,
+                                         contributor_tesim: contributor,
+                                         creator_tesim: creator) }
+  let(:ability) { nil }
+  let(:presenter) do
+    CurationConcerns::GenericWorkShowPresenter.new(solr_document, ability)
   end
 
   before do
     allow(view).to receive(:dom_class) { '' }
-    allow(view).to receive(:permission_badge_for) { '' }
 
-    render partial: 'attributes', locals: { curation_concern: curation_concern }
+    assign(:presenter, presenter)
+    render
   end
 
   it 'has links to search for other objects with the same metadata' do

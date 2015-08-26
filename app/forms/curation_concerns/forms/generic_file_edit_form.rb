@@ -1,14 +1,14 @@
 module CurationConcerns
   module Forms
-    class GenericFileEditForm < GenericFilePresenter
+    class GenericFileEditForm
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
       self.required_fields = [:title, :creator, :tag, :rights]
 
-      # def self.build_permitted_params
-      #   super.merge {
-      # :visibility, :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo, :visibility_during_lease, :lease_expiration_date, :visibility_after_lease }
-      # end
+      self.model_class = ::GenericFile
+
+      self.terms = [:resource_type, :title, :creator, :contributor, :description, :tag, :rights,
+                    :publisher, :date_created, :subject, :language, :identifier, :based_near, :related_url]
     end
   end
 end

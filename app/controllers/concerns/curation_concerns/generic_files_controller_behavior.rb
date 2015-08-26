@@ -5,9 +5,12 @@ module CurationConcerns
     included do
       include CurationConcerns::ThemedLayoutController
       with_themed_layout '1_column'
-      load_and_authorize_resource class: ::GenericFile
+      load_and_authorize_resource class: ::GenericFile, except: :show
       helper_method :curation_concern
       include CurationConcerns::ParentContainer
+      include Blacklight::Base
+      include Hydra::Controller::SearchBuilder
+      copy_blacklight_config_from(::CatalogController)
     end
 
     def curation_concern
@@ -20,7 +23,6 @@ module CurationConcerns
 
     # routed to /files/:id/edit
     def edit
-      # @generic_file.initialize_fields
       @groups = current_user.groups
     end
 
@@ -51,6 +53,16 @@ module CurationConcerns
 
     # routed to /files/:id
     def show
+      _, document_list = search_results(params, [:add_access_controls_to_solr_params, :find_one, :only_generic_files])
+      curation_concern = document_list.first
+      raise CanCan::AccessDenied unless curation_concern
+      @presenter = show_presenter.new(curation_concern, current_ability)
+    end
+
+    # Gives the class of the show presenter. Override this if you want
+    # to use a different presenter.
+    def show_presenter
+      CurationConcerns::GenericFilePresenter
     end
 
     def destroy

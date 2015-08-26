@@ -2,11 +2,13 @@ module CurationConcerns
   module CollectionsControllerBehavior
     extend ActiveSupport::Concern
     include Hydra::CollectionsControllerBehavior
+    include Hydra::Controller::SearchBuilder
 
     included do
       before_action :filter_docs_with_read_access!, except: :show
       self.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
       layout 'curation_concerns/1_column'
+      skip_load_and_authorize_resource only: :show
     end
 
     def new
@@ -20,14 +22,24 @@ module CurationConcerns
     end
 
     def show
-      super
       presenter
+      super
+    end
+
+    # overriding the method in Hydra::Collections so the search builder can find the collection
+    def collection
+      action_name == 'show' ? @presenter : @collection
     end
 
     protected
 
       def presenter
-        @presenter ||= presenter_class.new(@collection)
+        @presenter ||= begin
+          _, document_list = search_results(params, self.class.search_params_logic + [:find_one])
+          curation_concern = document_list.first
+          raise CanCan::AccessDenied unless curation_concern
+          presenter_class.new(curation_concern, current_ability)
+        end
       end
 
       def presenter_class

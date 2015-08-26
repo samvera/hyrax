@@ -2,9 +2,9 @@
   <td>
     <%= render_thumbnail_tag generic_file %>
   </td>
-  <td class="attribute filename"><%= link_to(generic_file_link_name(generic_file), main_app.curation_concerns_generic_file_path(generic_file)) %></td>
+  <td class="attribute filename"><%= link_to(generic_file.link_name, main_app.curation_concerns_generic_file_path(generic_file)) %></td>
   <td class="attribute date_uploaded"><%= generic_file.date_uploaded %></td>
-  <td class="attribute permission"><%= permission_badge_for(generic_file) %></td>
+  <td class="attribute permission"><%= generic_file.permission_badge %></td>
   <td>
     <%= render 'curation_concerns/generic_files/actions', generic_file: generic_file %>
   </td>

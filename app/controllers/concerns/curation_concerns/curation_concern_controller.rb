@@ -1,8 +1,10 @@
 module CurationConcerns::CurationConcernController
   extend ActiveSupport::Concern
-  include Blacklight::Catalog::SearchContext
+  include Blacklight::Base
+  include Hydra::Controller::SearchBuilder
 
   included do
+    copy_blacklight_config_from(CatalogController)
     include CurationConcerns::ThemedLayoutController
     with_themed_layout '1_column'
     helper CurationConcerns::AbilityHelper
@@ -16,7 +18,7 @@ module CurationConcerns::CurationConcernController
 
   module ClassMethods
     def set_curation_concern_type(curation_concern_type)
-      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern
+      load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: :show
       self.curation_concern_type = curation_concern_type
     end
 
@@ -40,7 +42,20 @@ module CurationConcerns::CurationConcernController
     end
   end
 
+  # Finds a solr document matching the id and sets @presenter
+  # @raises CanCan::AccessDenied if the document is not found
+  #   or the user doesn't have access to it.
   def show
+    _, document_list = search_results(params, CatalogController.search_params_logic + [:find_one])
+    curation_concern = document_list.first
+    raise CanCan::AccessDenied unless curation_concern
+    @presenter = show_presenter.new(curation_concern, current_ability)
+  end
+
+  # Gives the class of the show presenter. Override this if you want
+  # to use a different presenter.
+  def show_presenter
+    CurationConcerns::GenericWorkShowPresenter
   end
 
   def edit

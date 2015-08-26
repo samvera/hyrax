@@ -142,7 +142,7 @@ describe CollectionsController do
         get :show, id: collection
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of CurationConcerns::CollectionPresenter
-        expect(assigns[:collection].title).to eq collection.title
+        expect(assigns[:presenter].title).to eq collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
       end
     end
